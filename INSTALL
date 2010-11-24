@@ -1,0 +1,134 @@
+Healpix 2.11 Installation
+=========================
+
+Healpix 2.11 contains 5 independent packages (Fortran90, IDL, C, C++ and java) 
+whose installation procedure is summarized below.
+
+Every effort has been made to make the installation and usage of Healpix easy and straightforward.
+However we highly recommend the user to read the documentation
+(see   
+   doc/html/main.htm  
+or
+   doc/html/install.htm  
+or  
+   doc/pdf/install.pdf 
+or   
+   http://healpix.jpl.nasa.gov/healpixSoftwareDocumentation.shtml)
+
+All packages, expect the java one, can be configured, compiled and tested with the commands
+./configure [-L]
+ make
+ make test
+
+the 'configure' script lets you pick which package(s) you want to configure.
+Type 'configure -h' for more information on that script online options.
+
+Installing the F90 package
+--------------------------
+See 
+   doc/html/install.htm  
+or  
+   doc/pdf/install.pdf 
+for a detailled description of the installation procedure 
+and the list of requirements.
+
+If those requirements are met, simply running
+   ./configure [-L]
+   make f90-all
+   make f90-test
+should be enough to install and test the package.
+
+More information on the F90 package can be found at
+  doc/pdf/facilities.pdf
+  doc/pdf/subroutines.pdf
+or
+  doc/html/facilities.htm
+  doc/html/subroutines.htm
+
+
+Configuring the IDL package
+--------------------------
+
+The 
+   ./configure [-L]
+script *must* be run to ensure that the Healpix IDL routines will be available
+and to select the softwares used to visualize the images (Postscript and Png) 
+created by those routines.
+Then the
+  hidl
+  hidlde
+commands will give you access to IDL augmented of Healpix routines.
+
+For more information on the IDL package see
+  doc/html/idl.htm
+  doc/pdf/idl.pdf
+
+
+Installing the C package
+------------------------
+
+The sequence
+  ./configure [-L]
+  make c-all
+  make c-test
+should do the job.
+
+If it fails, see src/C/README
+or
+   doc/html/install.htm  
+or  
+   doc/pdf/install.pdf 
+
+For more information on the C package see
+  doc/html/csub.htm
+  doc/pdf/csub.pdf
+
+
+Installing the C++ package
+--------------------------
+
+To install the C++ package, a cfitsio tar ball (of the form cfitisio*.tar.gz) 
+must be available, then do
+
+   ./configure [-L]
+   make cpp-all
+   make cpp-test
+
+See src/cxx/README.compilation
+or
+   doc/html/install.htm  
+or  
+   doc/pdf/install.pdf 
+
+For more information on the C++ package see
+  doc/html/index_cxx.htm (always available)
+or
+  src/cxx/doc/index.html (available when package installed)
+
+
+Installing the java package
+---------------------------
+
+See src/java/README
+
+For more information on the java package see
+  doc/html/java/index.html
+or 
+  src/java/healpixjava/healpixdocs/index.html
+
+=========================================
+
+
+For background information on healpix see
+   http://healpix.jpl.nasa.gov
+or
+   doc/pdf/intro.pdf
+or
+   doc/html/intro.htm
+
+
+For questions/comments/suggestions on Healpix: 
+  healpix@jpl.nasa.gov
+
+
+

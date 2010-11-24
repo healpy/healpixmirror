@@ -1,0 +1,62 @@
+README
+======
+
+Compilation and Installation
+----------------------------
+
+See the header in the 'subs/Makefile'.
+
+You can alternatively try to run the script 'doinstall'
+
+Usage
+-----
+
+To use in your 'c' code, include the line
+ 
+#include "chealpix.h"
+ 
+in your code and link with something like 
+ 
+gcc -o myprog myprog.c -I<incdir> -L<libdir> -lchealpix
+
+where <incdir> is where you've installed the '.h' files and 
+<libdir> is where you've installed the libraries (See the header of 
+the 'Makefile').
+
+You will also need the 'cfitsio' library. See 
+http://heasarc.gsfc.nasa.gov/docs/software/fitsio/fitsio.html
+
+Disclaimer and Acknowledgements:
+--------------------------------
+
+The software is almost wholely work done by others. The original HEALPix
+software was written by Gorski, Hivon, Hansen, Stompor, Banday and
+Bartelmann. The 'C' routines were taken from Reza Ansari's C++ libraries
+that are being created for Planck.
+
+Ken Ganga has made minor modifications to the Ansari code to make it work in
+'C'. 
+
+Description of Individual Files:
+--------------------------------
+
+Makefile             : A UNIX makefile to build and install the library
+README               : This file
+ang2pix_nest.c       : Converts coordinates to pixel number in nested scheme
+ang2pix_ring.c       : Converts coordinates to pixel number in ring scheme
+chealpix.h           : Header file to be included to define the functions
+get_fits_size.c	     : returns number of elements in FITS file
+mk_pix2xy.c          : Utility routine. Never called directly
+mk_xy2pix.c          : Utility routine. Never called directly
+nest2ring.c          : Converts pixel number from nested to ring scheme
+nside2npix.c         : Given 'nside', calculates number of pixels in full sky
+pix2ang_nest.c       : Convers pixel number to coordinates in nested scheme
+pix2ang_ring.c       : Convers pixel number to coordinates in ring scheme
+read_healpix_map     : reads a Healpix map
+ring2nest.c          : Converts pixel number from ring to nested scheme
+write_healpix_map    : writes a Healpix map
+
+test_chealpix.c      : Test routine for pixel operations (to be compared to IDL)
+test_chealpix2.c     : Test routine for pixel operations (self contained)
+test_chealpix.pro    : IDL routine used to compare to output of test_chealpix
+test_cio.c	     : Test routine for FITS I/O

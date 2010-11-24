@@ -1,0 +1,86 @@
+
+ This sub-directory contains IDL procedures from external libraries 
+ which are required for use by the HEALPix IDL facilities.
+
+ These procedures are included in the HEALPix package unchanged and 
+ solely for the purpose of making it self contained. In this way,
+ we remove the 'burden' of installation of additional libraries from 
+ the end user.
+
+ The respective copyrights, restrictions and disclaimers of the original 
+ libraries apply for these procedures.
+
+ o  ./astron/ : required routines from  THE IDL ASTRONOMY USER'S LIBRARY 
+    (http://idlastro.gsfc.nasa.gov/homepage.html)
+
+ o  ./cgis/ : required routines from the COBE cgis library
+    (http://space.gsfc.nasa.gov/astro/cobe/cgis.html)
+
+ o ./obsolete_astron/ : routines from the Astron library which are now considered
+   obsolete, but may still be needed by Healpix (or by user-developped applications).
+
+
+ 2000-03-03
+ updated 2007-05-15
+ AJB, KMG, EH
+
+----------------
+ NB : the routines in the ./astron directory have been updated to 
+ match the May 2002 version of the astron library.
+
+ 2002-08-19
+ EH, AJB, KMG
+
+----------------
+
+NB : the routines in the ./astron directory have been updated to 
+ match the Dec 17, 2004 version of the astron library, 
+ except for MRDFITS, which was updated Feb 7, 2005
+
+ 2005-02-10
+ EH
+----------------
+
+NB : the routines in the ./astron directory have been updated to 
+ match the April 14, 2007 (*) version of the astron library,
+ except for FITS_READ, READFITS, WRITEFITS and FXADDPAR which have been updated
+ on May 16, 2007, and CHECK_FITS which was updated on May 25.
+ It now should be possible to read/write FITS files larger than 2GB on 64bit architectures.
+
+ (*) This version of astron requires IDL v5.5 or newer.
+
+ 2005-05-15
+ EH
+----------------
+
+NB : the routines in the ./astron directory have been updated to 
+ match the March 7, 2008 (*) version of the astron library.
+ It now should be possible to read/write FITS files larger than 2GB on 64bit architectures.
+
+ (*) This version of astron requires IDL v5.6 or newer.
+
+ 2008-03-18
+ EH
+----------------
+
+NB : the routines in the ./astron directory have been updated to 
+ match the Nov 25, 2009 (*) version of the astron library.
+ NUMLINES is now obsolete (see obsolete_astron),
+ IDL_VALIDNAME is now part of IDL,
+ and many other routines have been updated.
+
+ (*) This version of astron requires IDL v6.1 or newer.
+
+ 2009-11-27
+ EH
+----------------
+
+NB : the routines MAKE_ASTR, PUTAST (and WCS_GETPOLE) and SXADDHIST have been added,
+ as well as their subsidiaries, while all routines have been updated to 
+ match the May 24, 2010 version of the astron library.
+ The routines AD2XY, BSORT, EXTAST, GCIRC, MINMAX, 
+ WCS_ROTATE, WCSSPH2XY, WCSXY2SPH, XY2AD required by Ximview have been added.
+
+ 2010-05-26
+ EH
+----------------
