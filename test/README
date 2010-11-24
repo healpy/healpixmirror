@@ -1,0 +1,44 @@
+
+test data for Healpix 2.1
+
+used by 'make test'
+
+*.par: input parameter file of each code
+
+*.fits: input data and reference for comparison of output
+
+   --  cl.fits: input power spectrum of current release.
+       currently identical to wmap_lcdm_pl_model_yr1_v1.fits (see Note below)
+   --  cl_old.fits: input power spectrum of previous Healpix releases
+
+*.gif: GIF image of the reference maps
+
+
+
+test*.fits: output data of runs
+
+test*.gif: output figures of runs
+
+
+
+see Installation Document for details
+
+
+Notes: 
+     1) The file wmap_lcdm_pl_model_yr1_v1.fits currently matches cl.fits
+  which was used for test simulations present in this directory.
+
+  It is WMAP 1yr best fit, Spergel et al, 2003; with B modes = 0
+  assuming a power low spectrum. It is identical to
+  http://lambda.gsfc.nasa.gov/data/map/powspec/wmap_lcdm_pl_model_yr1_v1.fits
+  except for cosmetic editions of the FITS header
+
+     2) The file wmap_lcdm_sz_lens_wmap5_cl_v3.fits 
+ has been added in this directory for convenience, even though
+ it is currently *NOT* used in any of the simulations included here.
+
+ It is adapted from WMAP 5yr best fit model for l-CDM + SZ + lensing with B mode = 0
+ input file = wmap_lcdm_sz_lens_wmap5_cl_v3.dat;
+ For the list of parameters, see 
+ http://lambda.gsfc.nasa.gov/product/map/dr3/params/lcdm_sz_lens_wmap5.cfm
+
