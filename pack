@@ -1,0 +1,150 @@
+#!/bin/sh
+
+. hpxconfig_functions.sh
+
+updateVersion () {
+  current=`grep -v '#' ./Version`
+  reldate=`date +%Y-%m-%d`
+  tmpfile="./tmpfile"
+  version=${current}
+
+  echoLn "Enter version number ($current) "
+  read answer
+  [ "x$answer" != "x" ] && version="$answer"
+  echo $version $reldate
+
+  # update configure script
+  infile='./configure'
+  echo "editing ${infile}"
+  cat $infile |\
+      sed "s|^HPXVERSION=.*|HPXVERSION=${version}|g" >\
+      $tmpfile
+  mv $tmpfile $infile
+  chmod u+x ${infile}
+
+  # update INSTALL
+  infile='./INSTALL'
+  echo "editing ${infile}"
+  cat $infile |\
+      sed "s|$current|$version|g" >\
+      $tmpfile
+  mv $tmpfile $infile
+
+  # update main directory Version file
+  infile='./Version'
+  echo "editing ${infile}"
+  cat $infile |\
+      sed "s|$current|$version|g" >\
+      $tmpfile
+  mv $tmpfile $infile
+
+  # update IDL init_healpix file
+  infile='./src/idl/misc/init_healpix.pro'
+  echo "editing ${infile}"
+  cat $infile |\
+      sed "s|version =.*$|version = '$version'|g" |\
+      sed "s|date =.*$|date = '$reldate'|g" >\
+      $tmpfile
+  mv $tmpfile $infile
+
+  # update doc/Tex/hpxversion.tex file
+  infile='./doc/Tex/hpxversion.tex'
+  echo "editing ${infile}"
+  cat $infile |\
+      sed "s|newcommand{\\\\hpxversion}.*$|newcommand{\\\\hpxversion}{$version}|g" >\
+      $tmpfile
+  mv $tmpfile $infile
+  cat $infile
+
+  # update F90 healpix_types file (2009-07-01)
+  infile='./src/f90/mod/healpix_types.F90'
+  echo "editing ${infile}"
+  cat $infile |\
+      sed "s|healpix_version =.*$|healpix_version = '$version'|g" >\
+      $tmpfile
+  mv $tmpfile $infile
+}
+
+#---------------
+
+echo "This script will destroy several files and subdirectories"
+echo "Are you sure you want to proceed ? [NO/yes]"
+read answer
+if [ "$answer" != "yes" ]; then
+    echo "Exiting."
+    exit 0
+fi
+
+OS=`uname -s`
+updateVersion
+
+here=`pwd`
+mkdir -p doc/html
+mkdir -p doc/pdf
+
+echo "installing java Documentation"
+cd src/java/healpixjava
+ant docs
+cd $here
+cp -pr src/java/healpixjava/healpixdocs doc/html/java
+
+echo "cleaning up C++..."
+cd src/cxx
+export HEALPIX_TARGET=generic_gcc
+make doc
+cd $here
+# rm -r src/cxx/doc
+mv src/cxx/doc/index.html src/cxx/doc/index_cxx.htm
+cp src/cxx/doc/index_cxx.htm src/cxx/doc/index_cxx.html
+mv src/cxx/doc/* doc/html
+rmdir src/cxx/doc
+cd src/cxx
+[ -r Makefile ] && make tidy
+\rm -rf ${HEALPIX_TARGET}
+\rm -rf build.${HEALPIX_TARGET}
+cd $here
+
+echo "removing CVS directories..."
+find . -type d -name CVS -exec rm -rf {} \;
+
+echo "removing change logs..."
+find . -name ChangeLog -exec rm -f {} \;
+
+echo "generating documentations"
+rm -f healpix-dynamicPages/pdf/*.pdf
+cd doc/TeX
+make pdf
+make html
+cd $here
+
+echo "dealing with Ximview doc"
+mkdir -p doc/html/ximview
+cp -p src/idl/ximview/docs/* doc/html/ximview/
+
+echo "removing doc/TeX and doc/*.txt..."
+rm -rf doc/TeX
+#rm -rf test/ben
+rm -f doc/*.txt
+#mv public_html_healpix/content/HEALPix_Documentation_html doc/html
+rm -rf public_html_healpix
+mv healpix-dynamicPages/html/* doc/html
+mv healpix-dynamicPages/pdf/*  doc/pdf
+rm -rf healpix-dynamicPages/
+rm -rf DONE.txt TODO Bugs.txt
+rm -rf include bin lib
+
+echo "removing non-releasable programs..."
+for p in quad_ring; do
+    echo "  $p..."
+    rm -rf src/f90/$p
+    sed 's/'$p' *//' Makefile.in > Makefile.save
+    mv Makefile.save Makefile.in
+done
+rm -rf extra
+
+echo "--------------------"
+echo $version $reldate
+echo "--------------------"
+
+echo "removing myself..."
+rm -f $0

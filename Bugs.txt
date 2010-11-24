@@ -1,0 +1,928 @@
+October 21, 2004 (M.Reinecke)
+src/f90/map2gif/map2gif.f90:
+        remove double deallocation of "image"
+
+#--------------------------------------------------
+
+After April 2004 (patch #02, v1.22)
+
+src/f90/mod/pix_tools.f90:
+	next_in_line_nest: edited for Nside = 1   	2004-05-28
+	in_ring: edition for bug at low phi (Tristan Beau)	2004-05-28, 2004-06-01
+	remove_dipole: added optional 'mask'
+
+src/f90/hotspot/HotSpots.f90:
+	correct ORDERING of output file (David Larson) 2004-05-28
+
+
+----------------------------------
+
+editions by EH on or after July 21, 2004
+
+src/f90/mod/extensions.F90 : cosmetic cleaning
+
+src/f90/mod/misc_utils.f90 : cosmetic cleaning
+
+src/f90/mod/fits_tools.f90 :
+	overload (SP/DP) output_map and write_bintab
+   	write_dbintab has been renamed write_plm
+
+
+==================================
+
+addition wrt 1.2
+fits2cl : show kwd has been added
+
+replaced STOPs by MESSAGEs
+toolkit/ang2pix_nest.pro
+toolkit/ang2pix_ring.pro
+toolkit/nest2ring.pro
+toolkit/pix2ang_nest.pro
+toolkit/pix2ang_ring.pro
+toolkit/pix2vec_nest.pro
+toolkit/pix2vec_ring.pro
+toolkit/ring2nest.pro
+toolkit/ud_grade_cut4.pro
+toolkit/vec2pix_nest.pro
+toolkit/vec2pix_ring.pro
+
+src/f90/anafast/anafast.f90  die_alloc -> assert_alloc
+[diff -bBr -x CVS --brief . ~/Healpix_1.2x/src/idl/]
+
+utilities -> misc_utils
+
+----------- After aug 17, 2004 --------------
+src/idl/toolkit/in_ring.pro:
+	correction for bug at low phi (Tristan Beau)		2004-05-28, 2004-06-01
+
+src/idl/visu/oplot_graticule.pro :
+  oplot_graticule : did not combine correctly changes in
+   astrophysical coordinates with arbitrary rotation
+   detected and corrected by EH			Feb 25, 2003
+
+src/idl/misc/init_healpix.pro:
+  updated release number and release date	Aug 17, 2004
+
+src/idl/visu/proj2out.pro:
+  test !d.name variable			????
+
+src/idl/fits/fits2cl.pro:			Aug 31, 2004
+	added HELP keyword, updated header
+src/idl/fits/cl2fits.pro:
+	added HELP keyword, updated header
+src/idl/fits/write_tqu.pro:
+	removed Nside from documentation header
+
+-----
+
+src/f90/hotspot/HotSpots.f90:			Aug 17, 2004
+	added back NSIDE in output file + extra kwds (GRAIN ...)
+	make use of fatal_error instead of stop 1
+	cosmetics ('ONLY')
+
+src/f90/anafast/anafast.f90:			Aug 17, 2004
+	cosmetics
+
+src/f90/mod/pix_tools.f90:			Aug 17, 2004
+	remove_dipole: declare do_mask
+	Dec : added inclusive in query_strip  ---> TO BE DONE IN IDL
+	      new ring2z routine
+src/f90/mod/alm_tools.f90:			Aug 24, 2004
+	cleaning
+	added plm_gen
+	added alm2map_der (only in non-precomputed case)
+	removed precalculation of trig
+	changed ring to DP in ring_synthesis
+  Oct 2004: reduced size of recfac and lam_fact
+          : introduced m_max_syn and m_max_ana
+	  use init_fft_plan defined in healpix_fft(w) <<<<<<<<<<<<<<<<<<<<
+  Nov-Dec 2004: increased speed, reduced memory, overloaded
+
+src/f90/mod/alm_tools_omp.f90:			Aug 24, 2004
+	cleaning
+	added plm_gen
+<<<<<<< Bugs.txt
+	added alm2map_der (Aug 29)
+=======
+	added alm2map_der (only in non-precomputed case)
+>>>>>>> 1.3
+	changed ring to DP in ring_synthesis2
+	TODO : use init_fft_plan <<<<<<<<<<<<<<<<<<<<
+ N0v-Dec 2004 : removed
+
+src/f90/mod/fitstools.f90:
+	added getnumext_fits
+	added extno in getsize_fits
+
+
+-----
+configure : copied from 1.22
+			remove 'ifcold' case handling
+config_preview : copied from 1.22
+
+src/f90/mod/Makefile : compile extension before misc_util
+			remove 'ifcold' case handling
+src/f90/lib/Makefile : 	remove 'ifcold' case handling
+./Makefile.in		remove 'ifcold' case handling
+
+------
+C
+
+src/C/subs: added npix2nside, ang2vec, vec2ang
+
+===========
+
+Pro Absoft
+**********
+configure
+        add Pro item in identify_compiler
+        -I -> -p
+
+src/f90/mod/Makefile:
+ .junk.f90 --> .junk.F90
+
+src/f90/mod/healpix_fft.F90
+ maxval(nn)  --> nn(1)
+
+src/f90/mod/ud_gradenr.f90
+ remove use of pointer p_out => map_out
+
+-----------
+
+TODO: 
+
+F90:
+add mask into anafast ?
+see /home/efh/Healpix_1.2x/src/f90/anafast/anafast.f90.next
+
+check euler_matrix in map2gif
+
+alm_tools:
+ - remove alm_tools_omp (now merged into alm_tools)
+    - remove PARALL field in Makefile.in and configure
+
+ - remove FFTW ? if not, deal with init_fft
+
+---
+
+IDL: update astro library,
+include routines related to readcol: zparcheck and remchar
+
+update release date in init_healpix.pro
+
+what is !d.name on Mac ?
+
+==========================================================
+
+
+in 1.20:
+
+Sept 06, 2005
+Pawel Bielewicz wrote:
+> I found small error in file src/f90/mod/healpix_fftw.F90 . Routine 
+> s_c_complex_fft returns input array instead of Fourier coefficients.  Line 
+> 159: 
+> 
+>    data(i) = cmplx (data2(2*i-1),data2(2*i))
+> 
+> should be replaced with
+> 
+>    data(i) = cmplx (buffer(2*i-1),buffer(2*i))
+
+in 2.0
+
+Sept 06, 2005
+in src/f90/mod/healix_fft.F90
+in subroutine complex_fft_orig
+  data2 = transfer (data, data2, size=size(data2))
+-->
+  do i=1,size(data)
+     data2(2*i-1) = real (data(i+lb-1), kind=dp)
+     data2(2*i  ) = aimag(data(i+lb-1))
+  enddo
+
+  data = transfer (data2, data, size=size(data))
+-->
+  do i=1,size(data)
+     data(i+lb-1) = cmplx(data2(2*i-1), data2(2*i), kind=dp)
+  enddo
+
+
+
+
+=======================  Sept 14 ===========
+
+********** DONE **********
+f90 -64 -O -I/usr/local/Healpix_2.00/include -mp -c -o alm_tools.o alm_tools.f90
+
+module alm_tools
+      ^
+f90-855 f90: ERROR ALM_TOOLS, File = alm_tools.f90, Line = 28, Column = 8
+ The compiler has detected errors in module "ALM_TOOLS".  No module information file will be created for this module.
+
+         do k0=0,2
+            ^
+f90-1510 f90: ERROR ALM2MAP_POL_DER_S, File = alm_map_ss_inc.f90, Line = 2309, Column = 14
+ Variable "K0" must have its data scope explicitly declared because DEFAULT(NONE) was specified.
+
+            do di = 0,2
+               ^
+f90-1510 f90: ERROR ALM2MAP_POL_DER_S, File = alm_map_ss_inc.f90, Line = 2343, Column = 17
+ Variable "DI" must have its data scope explicitly declared because DEFAULT(NONE) was specified.
+
+         do k0=0,2
+            ^
+f90-1510 f90: ERROR ALM2MAP_POL_DER_D, File = alm_map_dd_inc.f90, Line = 2309, Column = 14
+ Variable "K0" must have its data scope explicitly declared because DEFAULT(NONE) was specified.
+
+            do di = 0,2
+               ^
+f90-1510 f90: ERROR ALM2MAP_POL_DER_D, File = alm_map_dd_inc.f90, Line = 2343, Column = 17
+ Variable "DI" must have its data scope explicitly declared because DEFAULT(NONE) was specified.
+
+f90: MIPSpro Fortran 90 Version 7.3  (f61) Wed Sep 14, 2005  15:23:20
+f90: 11135 source lines
+f90: 5 Error(s), 0 Warning(s), 0 Other message(s), 0 ANSI(s)
+cf90: "explain cf90-message number" gives more information about each message
+gmake[1]: *** [alm_tools.o] Error 2
+gmake[1]: Leaving directory `/usr/local/Healpix_2.00/src/f90/mod'
+gmake: *** [modules] Error 2
+
+
+=======================
+
+
+>
+154,155c154,158
+<   private :: l_min_ylm
+<   private :: get_pixel_layout
+---
+> !  private :: l_min_ylm
+>   public :: l_min_ylm
+> !  private :: get_pixel_layout
+>   public :: get_pixel_layout
+>   public :: select_rings
+157c160,161
+<   private :: gen_recfac, gen_lamfac, gen_lamfac_der, gen_mfac, compute_lam_mm, gen_normpol
+---
+> !  private :: gen_recfac, gen_lamfac, gen_lamfac_der, gen_mfac, compute_lam_mm, gen_normpol
+>   public :: gen_recfac, gen_lamfac, gen_lamfac_der, gen_mfac, compute_lam_mm, gen_normpol 
+
+=======================
+
+configure
+  line 427 (xlf90 and Darwin)
+replace
+		FFLAGS="$FFLAGS -qfree=f90 -qsuffix=f=f90:cpp=f90"
+by
+		FFLAGS="$FFLAGS -qfree=f90 -qsuffix=f=f90:cpp=F90"
+
+
+
+edition for 2.01
+
+ science related bugs
+ --------------------
+	src/f90/mod/pix_tools.f90:        fixes bug in NEIGHBOURS_NEST routine for Nside=1
+	src/f90/anafast/ana_sub_inc.f90   correct treatment of mask in iterative map analysis of ANAFAST
+		(occurring when maskfile *and* iter_order are simultaneously not to their default value)
+	src/cxx/Healpix_cxx/healpix_base.cc corrects bug in list of nearest neighbours returned
+                by Healpix_Base::neighbors()
+
+ compilation related problems
+ ----------------------------
+	src/f90/mod/alm_map_template.f90: correction of compilation bug for OpenMP+SGI
+	src/f90/mod/alm_tools.f90:        made internal subroutines public for usage with MPI
+	src/f90/mod/healpix_fft.F90:      remove TRANSFER calls for compatibility with Gfortran
+
+	configure:  bug correction for xlf90+Darwin
+
+ cosmetics
+ ---------
+	Version: updated version number (2.01)
+
+
+=======================================================================
+
+edition for 2.02
+
+	src/idl/toolkit/median_filter.pro	Mar 2006  bugs correction (MAMD)
+						Jul 2006  /nested problem Kwangil Seon
+	src/idl/visu/proj2out.pro		?	  ?
+	src/idl/visu/test_preview.pro		Mar 2006: added comments before crash
+	src/idl/visu/preview_file.pro		Mar 2006: added comments before crash
+	src/idl/visu/loaddata_healpix.pro	Feb 2006: edited to deal with multi-extension polarized cut sky files
+						Apr 2006: edited to deal with arrays (online option) with more than 3 rows
+	src/idl/misc/init_healpix.pro		2006-05-22: print caution message in version 5.5a which has touchy expand_path
+	src/idl/misc/remove_dipole.pro		Jun 2006     total() -> total(,/double) for improved accuracy
+	src/idl/fits/change_polcconv.pro	Jan 2007:  added /force
+	src/idl/toolkit/ud_grade.pro		Jan 2007: ensure that orderings are meaningful
+	src/idl/misc/decode_ordering.pro	Jan 2007    NEW
+	src/idl/visu/gnom2fits.pro		Jan 2007: fixed problem with header
+	src/idl/fits/read_fits_s.pro		Jan 2007: graceful exit if file contains image
+
+        src/idl/fits/write_fits_cut4.pro                  default extension
+	src/idl/fits/read_fits_s.pro		Jan 2007  read file with image but no extension
+	src/idl/fits/fits2cl.pro		Feb 2007 read alm files generated by LevelS beam2alm
+	src/idl/visu/outline_coord2uv.pro	Mar 2007 accepts scalar RA and DEC, issues error message if
+							PSYM, LINE, COORD, ... are not scalar.
+	src/idl/fits/read_fits_s.pro
+	src/idl/fits/read_fits_map.pro
+	src/idl/fits/selectread.pro
+	src/idl/fits/fits2alm.pro		Jan 2008: remove heap pointers created by TBINFO
+	src/idl/fits/tbfree.pro  (*New*)
+	
+
+
+	src/f90/mod/statistics.f90		Mar 2006: PGF + memory leak
+	src/f90/mod/fits_template.f90			  several bugs
+	src/f90/mod/fitstools.f90			  Sun compiler
+	src/f90/mod/mpi_alm_tools.f90			  better vector operations: APPLY to 
+	src/f90/mod/alm_tools.f90		Mar 2006: MPI		
+	src/f90/mod/pix_tools.f90               Jun 2006: correct bug in
+							  neighbours_nest for Nside=1
+	src/f90/mod/fitstools.f90		Feb-April 2007: beef up write_dits_cut4, 
+							close file when exiting getnumext_fits
+	
+	doc/TeX/create_alm.tex			?? 2006:  changed IN to INOUT for rng_handle
+	doc/TeX/output_map.tex			Jan 2007: corrected example,
+						pointed out that 2D map is expected
+	doc/TeX/ud_grade_idl.tex 		Jan 2007: cosmetics
+		change_polcconv_idl.tex			  added force keyword
+	
+----------------
+editions between 2.1beta0 and 2.10
+ doc/Tex/mollview_idl.tex                      (comment on FITS keyword for gnomview + cosmetics)
+
+ src/idl/interfaces/isynfast.pro               (deal with output FITS map)
+ src/idl/interfaces/hpx_xface_generic.pro      (hide error message from ulimit)  [T. Poutanen]
+ src/idl/fits/selectread.pro                  (deal with FITS file with very large TFORM) [R. Keskitalo]
+ src/idl/fits/read_fits_s.pro			ditto
+ src/f90/plmgen/plmgen.f90			check that nside and lmax are small enough
+ doc/Tex/plmgen.tex				document that limitation
+
+ pack						replace index_ccx.htm by index_cxx.html
+ doc/TeX/install.tex
+ doc/TeX/main.html
+ doc/TeX/idl.tex				add cursor patch for MacOSX 10.5 (Leopard)
+ doc/TeX/mollcursor_idl.tex
+
+ Makefile.in					add distclean
+ src/C/subs/Makefile				add tidy and distclean
+ hpxconfig_functions.sh				add distclean for C, C++, F90, and tidy for C
+ src/f90/smoothing/smo_sub_inc.f90		only read T ring weights for T only smoothing, even if polarized input map
+ src/f90/mod/alm_map_template.f90		bug correction on map2alm for T only map: only pass temperature weights
+ src/idl/visu/cartview.pro			added asinh
+ src/idl/visu/color_map.pro
+ src/idl/visu/data2cart.pro
+ src/idl/visu/data2gnom.pro
+ src/idl/visu/data2moll.pro
+ src/idl/visu/data2orth.pro
+ src/idl/visu/gnomview.pro
+ src/idl/visu/hpx2gs.pro
+ src/idl/visu/loaddata_healpix.pro
+ src/idl/visu/mollview.pro
+ src/idl/visu/orthview.pro
+ doc/TeX/install.tex
+ doc/TeX/idl.tex
+ doc/TeX/mollview_idl.tex
+ moved asinh.pro from src/idl/ximview/astrolib/ to src/idl/zzz_external/astron/
+
+doc/TeX/alm2map_spin.tex
+doc/TeX/install.tex
+doc/TeX/intro.tex
+doc/TeX/map2alm.tex
+doc/TeX/map2alm_iterative.tex
+doc/TeX/map2alm_spin.tex
+doc/TeX/subroutines.tex
+
+## src/idl/interfaces/isynfast.pro src/idl/interfaces/hpx_xface_generic.pro src/idl/fits/selectread.pro src/idl/fits/read_fits_s.pro			
+
+-------------
+between 2.1beta0 and 2.1beta1
+ doc/TeX/idl.tex
+ doc/TeX/install.tex
+
+after 2.1beta1
+ src/idl/interfaces/ianafast
+ src/idl/toolkit/neighbours_nest.pro
+ remove bit_manipulation.pro
+ doc/TeX/neighbours_nest_idl.tex
+ doc/TeX/isynfast_idl.tex
+ hpxconfig_functions.sh
+
+
+------------------
+
+ after 2.10 (July 24, 2008)
+
+ src/idl/misc/solve_kw_conflict.pro		edited  Aug 19 (replace defined and defnd)
+ src/idl/misc/remove_dipole.pro			edited  Aug 21 (cosmetics)
+ src/idl/toolkit/assert_pixindex_type.pro   	added   Aug 19: deal with non-integer pixels
+ src/idl/toolkit/nest2ring.pro			edited  Aug 19: deal with non-integer pixels
+ src/idl/toolkit/pix2ang_nest.pro
+ src/idl/toolkit/pix2ang_ring.pro
+ src/idl/toolkit/pix2vec_nest.pro
+ src/idl/toolkit/pix2vec_ring.pro
+ src/idl/toolkit/ring2nest.pro
+ src/idl/toolkit/template_pixel_nest.pro
+ src/idl/toolkit/template_pixel_ring.pro
+ src/idl/toolkit/test_tk.pro
+ src/idl/interfaces/isynfast.pro		edited Aug 27: deal cleanly with alm generation mode
+ src/idl/interfaces/ianafast.pro		edited Aug 27: cosmetics
+ src/idl/interfaces/hpx_mem2file.pro		edited Oct 14: exit gracefully in ordering not provided for online map
+
+ src/C/subs/Makefile				edited Aug 19: replace test_* by ./test_* (ie, . not in path)
+
+ doc/TeX/remove_dipole_idl.tex			edited Aug 21 (cosmetics)
+
+ src/f90/mod/fitstools.f90			edited Aug 27, # of TTYPE in dump_alms and write_*, recorrected Oct 14.
+ src/f90/mod/fits_template.f90
+
+ configure					edited Oct 15: ready for 2.11, bug correction with IDL and bash, -L option,...
+ hpxconfig_functions.sh
+ INSTALL
+ doc/TeX/install.tex
+
+ src/f90/mod/paramfile_io.f90			edited Oct 15: bug correction in interactive mode
+ src/idl/HEALPix_startup			edited Oct 22: print welcome message
+ src/idl/init_healpix.pro			edited Oct 22: uses 'getenv'
+
+doc/Tex/hpxversion.tex				edited Oct 24:  2.10 -> 2.11
+doc/Tex/idlversion.tex				5.6 -> 6.0
+doc/Tex/install.tex				2_10 -> 2_11
+
+doc/Tex/output_map.tex				cosmetics
+doc/Tex/write_asctab.tex
+doc/Tex/write_bintabh.texls
+doc/Tex/write_fits_cut4.tex
+
+doc/Tex/write_minimal_header.tex		typo on routine label
+
+ src/cxx/Healpix_cxx/alm_map_tools.cc	        edited Oct 28: error in alm2map_der
+ src/idl/fits/cl2fits.pro			edited Oct 28: prints out 'BL2FITS' in beamwindow mode
+
+src/idl/visu/color_map.pro			edited Oct 30: deal properly with MIN and MAX in ASINH
+src/idl/fits/selectread.pro			can offset polarization norm (POLARIZATION=1)
+src/idl/visu/loaddata_healpix.pro
+src/idl/visu/mollview.pro 
+src/idl/visu/proj2out.pro			cosmetics
+
+src/f90/mod/statistics.f90			2008-11-05: initialize eps and absdev to 0 in comp_stats_*
+ src/idl/visu/*view.pro				2008-11-05: restore original settings when exiting
+ src/idl/visu/record_original_settings.pro			**NEW**
+ src/f90/mod/alm_tools.f90			2008-11-06: correction of a crash bug in map2alm_iterative
+ src/f90/mod/alm_map_template.f90
+
+
+Bugs fixed in 2.11
+==================
+
+general
+	-- installation:	
+	   -- Fixed IDL installation problem under (ba)sh
+	   -- Check consistency of cfitsio library with F90 routines
+	   -- introduced command line options for  ./configure	
+	   -- fixed infinite loop in main Makefile's tidy and distclean options
+	-- documentation:	
+	   -- ``IDL routines'': rightfully says that IDL6.0 or more recent is required
+	
+C	
+	-- Makefile no longer assumes that current directory ('.') is in PATH
+	
+
+C++
+	-- fixed error affecting equatorial pixels in maps generated by  alm2map*
+	
+
+Fortran90
+	-- fixed problem with  TTYPE* when writing FITS header (was also affecting IDL's  isynfast)
+	-- fixed crash causing bug in  map2alm_iterative subroutine (was affecting  anafast, sky_ng_sims and  smoothing facilities)
+	-- fixed un-initialized variables in  compute_statistics subroutine
+	-- fixed parameters parsing problem in interactive mode of  synfast, anafast, ...
+	
+
+IDL
+	-- issues warning when non-integer pixel indexes are fed to  nest2ring, ring2nest, pix2ang_*, pix2vec_*,   ...
+	-- more stable and elegant behaviour of  isynfast and  ianafast
+	--  cartview, gnomview, mollview, orthview:
+	    -- deal properly with  MIN and  MAX in  ASINH mode
+	    -- polarization norm map can be offset ( POLARIZATION=1 mode)
+	    -- original color table and plot settings are restored when leaving these routines
+	--  ximview:
+	    -- fixed problem with cut-sky FITS files
+	    -- color scale bar added to PNG output
+	-- cosmetic editions to  remove_dipole
+	
+
+Java
+	none
+
+------------------------
+creation of a tag (v2_11) and a branch (v2_11_patches) 2008-11-21
+cvs tag v2_11 .                     # freeze 2.11
+cvs tag -b -r v2_11 v2_11_patches   # for future patches to 2.11
+to maintain version 2.11
+------------------------
+
+hpxconfig_functions.sh        	2008-11-17: corrected typo in C 'c-shared' target
+             				detects correctly gfortran for version >= 4.3
+                       		2008-11-21: solved potential problem with multiple cfitio*.tar.gz for C++
+            				introduced ${HEAD}
+             				replaced ~ with ${HOME}
+configure			2009-01-08: changed first line #!/bin/sh  -> #! /bin/sh
+						added comments on shells
+
+src/idl/fits/selectread.pro   	2008-12-02: replace || with OR when dealing with non-scalar tests
+
+src/f90/mod/alm_tools.f90
+src/f90/mod/alm_map_template.f90  2008-12-??: use pointers in map2alm_iterative
+				  2009-01-07: discard fact_norm in create_alm (was crashing PGF90)
+
+src/cxx/alice/planck.make	  2009-01-07: replaced 'test' by 'test_alice'
+
+src/f90/mod/head_fits.F90	  2009-01-08: corrected typo in FITS header written by write_minimal_header (DY_Y -> DY_T)
+
+
+misc/init_astrolib.pro		  2009-01-19: wrapper to astrolib
+fits/alm2fits.pro		  2009-01-19: replace !debug with call to init_astrolib
+fits/cl2fits.pro
+fits/fits2alm.pro
+fits/fits2cl.pro
+fits/getsize_fits.pro
+fits/read_fits_cut4.pro
+fits/read_fits_map.pro
+fits/read_fits_s.pro
+fits/read_tqu.pro
+fits/write_fits_map.pro
+fits/write_fits_sb.pro
+
+src/f90/ngsims_full_sky/sky_ng_sim_bin.F90 2009-02-02: 1st editions
+
+src/C/subs/Makefile: 		2009-02-09: link both test codes with cfitsio
+
+                 version 2.11c (2009-02-19)
+--------------------------------------------------------------------------
+
+src/idl/visu/loadata_healpix.pro   2009-03-26: removed nagging help,header
+src/idl/toolkit/ud_grade_cut4.pro  2009-03-27: faster routine, supports Nside>8192
+src/idl/toolkit/query_disc.pro	2009-04-08: returns -1 in case nlist=0
+
+src/idl/toolkit/ring_num.pro    2009-04-30: returns 64-bit integers instead of 32-bit integers
+
+src/idl/interfaces/hpx_xface_generic.pro  2009-04-30: tmpdir= now works and IDL_TMPDIR used as default
+src/idl/interfaces/ianafast.pro
+src/idl/interfaces/ismoothing.pro
+src/idl/interfaces/isynfast.pro
+doc/Tex/ianafast_idl.tex
+doc/Tex/ismoothing_idl.tex
+doc/Tex/isynfast_idl.tex
+
+src/idl/visu/color_map.pro	2009-04-30:  use user provided Min and Max in Log mode
+
+src/idl/toolkit/ud_grade.pro	2009-05-07: correctly flags bad output pixels with bad_data value (instead of NaN) when upgrading maps
+
+--------------------
+
+src/idl/visu/cartview.pro	2009-05-28: added RETAIN kwd
+
+src/idl/visu/data2gnom.pro      2009-05-05: deal with map without any valid pixel
+
+src/idl/visu/data2moll.pro      2009-05-05: deal with map without any valid pixel
+
+src/idl/visu/data2orth.pro	2009-05-04: added /shaded to orthview.
+src/idl/visu/data2orth.pro      2009-05-05: deal with map without any valid pixel
+
+src/idl/visu/gnomview.pro	2009-05-28: added RETAIN kwd
+
+src/idl/visu/mollview.pro	2009-05-04: added /shaded to orthview.
+src/idl/visu/mollview.pro	2009-05-28: added RETAIN kwd
+
+src/idl/visu/orthview.pro	2009-05-04: added /shaded to orthview.
+src/idl/visu/orthview.pro       2009-05-28: implemented EXECUTE in orthview, added RETAIN kwd
+
+src/idl/visu/proj2out.pro	2009-05-27: single call to tvrd()
+src/idl/visu/proj2out.pro       2009-05-28: use Z buffer when window<0
+
+
+doc/TeX/mollview_idl.tex	2009-05-28: edited documentation (window<0, retain, shaded)
+
+
+src/C/subs/Makefile		2009-06-18 : added WLRPATH
+hpxconfig_functions.sh
+Makefile.in			2009-06-18: support parallel compilation (make -j)
+src/f90/mod/Makefile   		2009-06-?? : support parallel compilation (make -j)
+hpxconfig_functions.sh		2009-06-26 : introduced printf
+				2009-07-10: MacOS debugging (WLRPATH ;  libgif -> libhpxgif)
+
+src/f90/lib/Makefile 		2009-07-10: libgif -> libhpxgif
+src/f90/map2gif/Makefile
+
+				
+src/f90/alteralm/alt_sub_inc.f90	2009-06-26 use healpix_version:
+src/f90/anafast/ana_sub_inc.f90 
+src/f90/hotspot/HotSpots.f90
+src/f90/map2gif/map2gif.f90
+src/f90/median_filter/med_sub_inc.f90
+src/f90/ngsims_full_sky/sky_ng_sim.F90
+src/f90/ngsims_full_sky/sky_ng_sim.F90
+src/f90/plmgen/plmgen.f90
+src/f90/smoothing/smo_sub_inc.f90
+src/f90/synfast/syn_sub_inc.f90
+src/f90/ud_grade/udg_sub_inc.f90
+
+
+doc/TeX/idl.tex			2009-07-13: new features
+doc/Tex/hpx_version.tex		2009-07-16: version number
+doc/Tex/convert_oldhpx2cmbfast_idl.tex
+doc/Tex/mollcursor_idl.tex
+doc/TeX/install.tex		2009-07-30: cosmetics
+doc/Tex/healpix.sty
+doc/Tex/healpix.perl
+Makefile.in			2009-07-30: add " " around variables
+
+				version 2.12 (2009-07-31)
+--------------------------------------------------------------
+**********************************************************
+NEW STUFF:
+
+src/f90/mod/alm_tools.f90
+src/f90/mod/alm_map_template.f90  2009-01-08: introduced sub_ring2map sub_map2ring
+src/f90/mod/healpix_types.F90     2009-02-??: introduced healpix_version
+
+src/f90/mod/pix_tools.F90          2009-03-25: heavy editions to support Nside>8192
+				2010-06-25: finished, except medfilt
+src/f90/mod/pixel_routines.F90                 new
+src/f90/mod/num_rec.F90        	2009-06-17 (.f90 -> F90) supports large npix and i8b in sort and isort
+src/f90/mod/source_gen_sort_inc.f90            new
+
+src/f90/mod/paramfile_io.F90 	2010-06-25: synch with 2_11_patches
+src/f90/mod/statistics.f90  	2010-06-25: support for i8b of tstats, compute_statistics, print_statistics 
+						(except median computation)
+
+src/f90/synfast/*          	2010-06-25: synch + I8B support
+src/f90/anafast/*          	2010-06-25: synch + I8B support
+src/f90/smoothing/*          	2010-06-25: synch + I8B support
+src/f90/median_filter/*
+src/f90/map2gif/*		2010-11-23: moll projection accepts -lat; uses euler_matrix_new
+src/f90/ud_grade
+
+
+src/f90/mod/fitstools.F90       2010-06-25: synch + I8B support
+src/f90/mod/fits_template.f90   2010-06-25: synch + I8B support
+src/f90/mod/udgrade_template.f90 2010-06-25: I8B support + some rewriting >>> TO BE TESTED
+
+src/f90/alteralm/		2010-11-23: nothing to be done, because of alm writing limitations
+src/f90/hotspot/*		2010-11-23: accepts Nside > 8192              TO BE TESTED
+
+src/f90/mod/long_intrisic.F90   2010-11-23: added long_count
+
+TODO
+----
+   fits2alm, alm2fits, read_alms, write_alms, dump_alms, ... are limited to l<46340
+ngsims_full_sky/sky_ng_sim*.F90 
+plmgen
+**********************************************************
+
+pack : 2009-08-03, make tar ball, TO BE TESTED
+
+src/f90/ngsims_full_sky/sky_ng_sim_bin.F90 :  2009-08-03, wrapped-around line 360 which was
+					      longer than 132 characters
+
+src/java/healpixjava:			      2009-08-03, updated to healpix.rev.95671.tar.gz
+
+
+src/idl/ximview:			      2009-08-06	XIMVIEW 0.6.2, 
+* Bug fix in grid2hp_index, hpx2hp, xph2hp
+* version changed to 0.6.2 in various doc & readme files
+* Astrolib GCIRC added to astron directory (delete if included in latest zzz_external collection).
+
+doc/TeX/hpxversion.tex			      2009-08-06
+idl.tex
+install.tex
+
+    release 2.12a
+
+-------------------------------------------
+
+doc/Tex/alm2map_spin.tex		2009-09-03, corrected typo on alm definition
+doc/Tex/map2alm_spin.tes
+src/idl/interfaces/ismoothing.pro	2009-09-07, correctly uses w8dir keyword
+src/idl/interfaces/ianafast.pro
+src/f90/mod/paramfile_io.f90 -> .F90 	2009-09-07, renamed, added get_healpix_*_dir
+./anafast/ana_sub_inc.f90
+./anafast/anafast.f90
+./median_filter/med_sub_inc.f90
+./median_filter/median_filter.f90
+./mod/alm_tools.f90
+./mod/misc_utils.F90
+./ngsims_full_sky/sky_ng_sim.F90
+./ngsims_full_sky/sky_ng_sim_bin.F90
+./smoothing/smo_sub_inc.f90
+./smoothing/smoothing.f90
+./synfast/syn_sub_inc.f90
+./synfast/synfast.f90
+
+src/idl/interfaces/ismoothing.pro	2009-09-??: typo in w8dir
+
+src/idl/misc/init_healpix.pro		2009-09-09: define !healpix.path.* sub-structures
+src/idl/interfaces/ianafast.pro
+src/idl/interfaces/hpx_xface_generic.pro
+src/idl/misc/healpixwindow.pro
+src/idl/misc/init_healpix.pro		2009-09-14: corrected typo
+
+pack					2009-09-14: do_split regime: split tar file for HFI-DPC
+
+
+
+src/idl/visu/				2009-09-30 -- 10-05: support true colors, added MAP_OUT to gnomview
+./cartview.pro
+./color_map.pro
+./data2cart.pro
+./data2gnom.pro
+./data2moll.pro
+./data2orth.pro
+./gnomview.pro
+./loaddata_healpix.pro
+./mollview.pro
+./orthview.pro
+./proj2out.pro
+./test_preview.pro
+
+src/idl/visu/find_min_max_valid.pro	2009-10-05: new
+src/idl/misc/healpix_doc.pro		2009-10-07: new
+src/idl/misc/init_healpix.pro		2009-10-07: added healpix.path.doc.()
+
+src/idl/zzz_external/			2009-10-09: switched to 2009-08-20 version of astro_lib
+
+src/idl/misc/is_gdl.pro			2009-10-28: new
+src/idl/visu/proj2out.pro		2009-10-28: edited for GDL
+
+src/idl/misc/healpixwindow.pro		2009-10-28: findfile -> file_test
+src/idl/visu/loaddata_healpix.pro
+src/idl/visu/test_preview.pro
+
+src/idl/misc/idl/remove_dipole.pro	2009-10-31: SVD -> SVDC, double precision output monop and dip, ready for GDL
+
+mollview.pro				2009-11-04: implement TRANSPARENT keyword
+gnomview.pro
+message_gif.pro				2009-11-04: nothing
+proj2out.pro				2009-11-05: GDL retrofitting
+install.tex				2009-11-05: about GDL
+
+src/idl/fits/write_fits_sb.pro		2009-11-15: larger buffersize for faster writing
+
+selectread.pro				2009-11-16
+
+src/idl/visu/data2*.pro			2009-11-17
+
+doc/TeX/pdf_index.tex			2009-11-18: new
+add_ordering_fits			2009-11-20
+hpx_mem2file
+write_fits_map
+write_tqu
+fits2alm				added LMAX, LMIN, HELP
+
+fits2cl.pro				2009-11-25: added LLFACTOR
+doc/TeX/fits2cl_idl.tex
+
+
+doc/TeX/				2009-11-25: cosmetics
+Makefile
+cartview_idl.tex
+fits2alm_idl.tex
+fits2cl_idl.tex
+gnomview_idl.tex
+hpxversion.tex
+idl.tex
+mollview_idl.tex
+orthview_idl.tex
+
+concatnl.tex				2009-11-26: paramfile\_io.f90 -> paramfile\_io.F90
+parse_xxx.tex
+scan_directories.tex
+get_healpix_xxx_dir.tex			2009-11-26: new
+
+src/f90/mod/paramfile_io.F90		2009-11-26: corrected typos in get_healpix_*_dir functions
+
+doc/TeX/				2009-11-26: cosmetics
+assert.tex
+concatnl.tex
+install.tex
+parse_xxx.tex
+pdf_index.tex
+pix_tools.tex
+scan_directories.tex
+subroutines.tex
+synfast.tex
+
+update of astron library 2009-11-27:
+src/idl/zzz_external/astron/
+fits_read.pro fxaddpar.pro mrdfits.pro readcol.pro readfits.pro tag_exist.pro
+
+removed
+src/idl/misc/readcol.pro
+
+pack					2009-11-27
+
+
+	release 2.13a (2009-Nov-27)
+---------------------------------------------------------------------------------
+
+
+
+src/idl/visu/proj2out: 			2009-12-07: fix ypos and retain, 
+						outline, graticule, igraticule work with window<0
+					2009-12-17: fixed problem with /shade
+						output 8-byte PNG files
+
+src/idl/misc/remove_dipole.pro		2009-12-11: added SILENT; COORD* can be lower case
+doc/TeX/remove_dipole_idl.tex		2010-02-19
+doc/TeX/idl.tex
+
+
+doc/Tex/screenshots/			2009-12-17: new directory
+
+
+src/idl/fits/write_tqu.pro		2010-01-28: make sure that error= keyword is set (to 0) when routines works smoothly
+src/idl/fits/write_fits_map.pro
+src/idl/interfaces/hpx_mem2file.pro	2010-02-19: make sure error=0 by default
+src/idl/toolkit/angdist.pro		2010-03-01: bug correction
+
+src/idl/fits/alm2fits.pro		2010-01-29: added HELP keyword
+doc/Tex/alm2fits_idl.tex		2010-02-19
+doc/Tex/fits2alm_idl.tex
+
+src/f90/mod/alm_map_template.f90	2010-02-10: bug correction in alm2map_pol_der_XX
+src/f90/mod/alm_tools.f90	
+doc/TeX/facilities.tex			2010-02-19
+doc/TeX/subroutines.tex
+doc/TeX/synfast.tex
+doc/TeX/install.tex
+
+src/idl/toolkit/ud_grade.pro		2010-02-17: fixed bug with processing of flagged pixels in DP maps
+
+
+	release 2.14 (2010-Mar-04)
+---------------------------------------------------------------------------------
+
+src/idl/misc/healpix_doc.pro		2010-03-12: index.htm -> main.htm
+
+
+src/idl/toolkit/query_polygon.pro	2010-03-12: corrected typo on size of vertex array
+doc/Tex/query_polygon_idl.tex		2010-03-12: added /help keyword in TeX documentation
+
+src/idl/visu/proj2out.pro		2010-03-18: define use_z_buffer to allow PS output
+
+	release 2.14a (2010-Mar-22)
+---------------------------------------------------------------------------------
+
+src/idl/misc/remove_dipole.pro		2010-03-31: compute covariance matrix;
+                           issue error message if map is not 1-dimensional.
+
+doc/TeX/remove_dipole_idl.tex		2010-03-31: update documentation (covariance).
+
+
+
+
+visu/color_map.pro			2010-04-01: improve graticules plotting and remove
+      						FP exceptions
+visu/oplot_graticule.pro
+visu/oplot_sphere.pro
+visu/vec2moll.pro
+
+
+src/f90/mod_remove_dipole_inc.f90	2010-04-21: remove warnings on mask and weights
+
+
+
+src/idl/visu/*view.pro			2010-04-21: added CHARTHICK support, accepts array of outlines
+src/idl/visu/proj2out.pro
+
+src/idl/visu/mollview.pro		2010-04-21: added MAP_OUT to mollview and cartview
+src/idl/visu/data2moll.pro
+src/idl/visu/cartview.pro
+src/idl/visu/data2cart.pro
+src/idl/visu/hortview.pro		2010-05-11: added MAP_OUT to orthview
+src/idl/visu/data2hort.pro
+src/idl/visu/proj2map_out.pro		            new
+
+src/idl/fits/write_fits_map.pro		2010-05-11: adds BAD_DATA to FITS header
+src/idl/fits/write_fits_sb.pro
+
+
+src/idl/zzz_external:			2010-05-26: update and new routines
+
+src/idl/visu/test_preview
+src/idl/visu/preview_file
+
+src/f90/mod/fits_template.f90		2010-06-16: work-around ifort bug in dump_alms, write_alms
+
+-------------------- 2.15 (June 16, 2010) ------------
+
+src/idl/visu/loaddata_healpix.pro	2010-06-17: force pixel_list to be undefined by default
+
+-------------------- 2.15a (June 18, 2010) ------------
+
+hpxconfig_functions.sh			2010-06-22: supports zsh
+
