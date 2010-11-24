@@ -1,0 +1,394 @@
+% -*- LaTeX -*-
+
+% PLEASE USE THIS FILE AS A TEMPLATE FOR THE DOCUMENTATION OF YOUR OWN
+% FACILITIES: IN PARTICULAR, IT IS IMPORTANT TO NOTE COMMENTS MADE IN
+% THE TEXT AND TO FOLLOW THIS ORDERING. THE FORMAT FOLLOWS ONE USED BY
+% THE COBE-DMR PROJECT.	
+% A.J. Banday, April 1999.
+
+
+
+
+\sloppy
+
+
+
+\title{\healpix IDL Facility User Guidelines}
+\docid{xxxxview} \section[xxxxview]{ }
+\docrv{Version 1.2}
+\author{Eric Hivon}
+\abstract{This document describes the \healpix facility xxxxview.}
+
+
+  \newenvironment{qualifiers_xxxxview} % customized for xxxxview IDL routines
+    {\rule{\hsize}{0.7mm}
+     \textsc{\Large{\textbf{QUALIFIERS}}}\hfill\newline
+	}
+
+  \newenvironment{keywords_xxxxview} % customized for xxxxview IDL routines
+    {\rule{\hsize}{0.7mm}
+     \textsc{\Large{\textbf{KEYWORDS}}}\hfill\newline
+	\renewcommand{\arraystretch}{4.5}
+	}
+
+% \usepackage{supertab}
+
+\begin{facility}
+{This IDL facility provides a means to visualise a full sky Cartesian/Gnomonic/Mollweide/Orthographic projection of
+\healpix and COBE Quad-Cube maps in an IDL environment. It also offers the possibility to
+generate gif and postscript images of the projected map.}
+{src/idl/visu/xxxxview.pro}
+\end{facility}
+
+\begin{IDLformat}
+{XXXXVIEW, File, [Select, ] [COLT=, ... 
+            ... UNITS=, XPOS=, YPOS= ]
+}
+\end{IDLformat}
+
+
+% \newcommand{head_column}{{\textbf{name} & \textbf{routine} & \textbf{description}}}
+
+Routine codes : \\
+C : cartview, G : gnomview, M : mollview, O : orthview, 
+all : all of them
+
+
+% \begin{qualifiers_xxxxview}
+\begin{tabular}{p{0.15\hsize} p{0.1\hsize} p{0.7\hsize}}
+\hline  
+\textbf{name} & \textbf{routines} & \textbf{description} \\ \hline
+                   &   &                            \\ %%% for presentation
+
+{File}  & all   & \begin{minipage}[t]{\hsize}
+          by default :          name of a FITS file containing 
+               the healpix map in an extension or in the image field \\
+          if Online is set :    name of a variable containing
+               the healpix map \\
+          if Save is set   :    name of an IDL saveset file containing
+               the healpix map stored under the variable  {\tt data} \\
+	\nodefault\end{minipage}\\ 
+
+{Select}  & all   & \begin{minipage}[t]{\hsize}
+		  column of the BIN FITS table to be plotted, can be either  \\
+                -- a name : value given in TTYPEi of the FITS file \\
+                        NOT case sensitive and can be truncated, \\
+                        (only letters, digits and underscore are valid) \\
+               -- an integer        : number i of the column
+                            containing the data, starting with 1 \\
+                   \default 1
+               (see the Examples below)\end{minipage}\\
+
+
+{Colt=}  & all   &  color table number, in [0,40]
+        	\default {33 (Blue-Red)} \\ 
+
+{Coord=}  & all   & \begin{minipage}[t]{\hsize}
+		vector with 1 or 2 elements describing the coordinate system of the map;
+                either\\
+		       -- 'C' or 'Q' : Celestial2000 = eQuatorial, \\
+                       -- 'E'        : Ecliptic, \\
+                       -- 'G'        : Galactic  \\
+               if coord = ['x','y'] the map is rotated from system 'x' to system 'y' \\
+               if coord = ['y'] the map is rotated to coordinate system 'y' (with the
+               original system assumed to be Galactic unless indicated otherwise in the
+                input file) \\
+                  \seealso Rot\end{minipage}\\
+
+{Factor=} & all & multiplicative factor to be applied to the data \\
+
+{Fits=} & -G-- & \begin{minipage}[t]{\hsize}
+	string containing the name of an output fits file with
+        the rectangular map in the primary image \\
+ 	      if set to 1            : output the plot in
+        plot\_gnomonic.fits \\
+ 	      if set to a file name  : output the plot in that file  \\
+ 	\default {0: no .FITS done}\end{minipage}\\
+
+
+
+{Gal\_cut=}  & --M-   & (positive float) specifies the symmetric galactic cut in degrees
+              outside of which the monopole and/or dipole fitting is done
+	\default{0: monopole and dipole fit done on the whole sky}
+              (see also: No\_dipole, No\_monopole) \\
+
+{Gif=}  & all   & \parbox[t]{\hsize}{
+		string containing the name of a .GIF output \\
+	      if set to 1            : output the plot in plot\_[projection].gif \\
+	      if set to a file name  : output the plot in that file \\
+	Please note that the resulting GIF image might not always look
+	      as excpected. The reason for this is problems with
+	      'backing store' in the IDL-routine TVRD. Please read the IDL
+	      documentation for more information. \\
+	\default {no .GIF done} \\              \seealso Crop, Png, Ps and Preview}\\
+
+\end{tabular}
+%------------------------------------
+\begin{tabular}{p{0.15\hsize} p{0.1\hsize} p{0.7\hsize}}
+\hline  
+\textbf{name} & \textbf{routines} & \textbf{description} \\ \hline
+
+{Graticule=}  & all   & \parbox[t]{\hsize}{
+	if set, puts a graticule with delta\_long = delta\_lat = gdef
+         degrees \\
+         if set to a scalar $x>$ gmin delta\_long = delta\_lat = $x$ \\
+         if set to [x,y] with $x,y >$ gmin then delta\_long = $x$ and delta\_lat = $y$ \\
+          cartview : gdef =  5, gmin =  0 \\
+          gnomview : gdef =  5, gmin =  0 \\
+          mollview : gdef = 45, gmin = 10 \\
+          orthview : gdef = 45, gmin = 10 \\
+	\default {0 [no graticule]}
+	}\\
+
+{Hxsize=}  & all   & \parbox[t]{\hsize}{
+		horizontal dimension (in cm) of the Postscript printout \\
+    		\default {26 cm $\simeq$ 10 in} \\               \seealso Pxsize}\\
+
+{Max=}  & all   & \parbox[t]{\hsize}{
+	Set the maximum value for the plotted signal \\ \default{is to use the actual signal
+	maximum}.}\\
+
+{Min=}  & all   & \parbox[t]{\hsize}{
+	Set the minimum value for the plotted signal \\\default{is to use the actual signal minimum}.}\\	
+
+{Outline=} & all &  \parbox[t]{\hsize}{
+	structure containing the description of one (or several) contour(s) to
+      be overplot on the final map.\\
+           For each contour, the corresponding (sub)structure should contain, in that order :  \\
+            -- coordinate system (either, 'C', 'G', or 'E') of the contour\\
+            -- RA/longitude coordinates of the contour vertices (array) \\
+            -- Dec/latitude coordinates of the contour vertices ((array)\\
+		see also Coord, Graticule}\\
+ 
+{Png=}  & all   & \parbox[t]{\hsize}{
+		string containing the name of a .PNG output \\
+	      if set to 1            : output the plot in plot\_[projection].png \\
+	      if set to a file name  : output the plot in that file \\
+	Please note that the resulting PNG image might not always look
+	      as excpected. The reason for this is problems with
+	      'backing store' in the IDL-routine TVRD. Please read the IDL
+	      documentation for more information. \\
+	\default {no .PNG done} \\              \seealso Crop, Gif, Ps and Preview}\\
+
+{Polarization=} & all & \parbox[t]{\hsize}{
+	if set to
+	\begin{itemize}
+         \item[0] no polarization information is plotted. 
+
+         \item[1]
+             the AMPLITUDE $P = \sqrt( U^2 + Q^2 )$ of the polarisation is plotted 
+	(as long as the input data contains polarisation information
+             (ie, Stokes parameter Q and U for each pixel)) 
+
+         \item[2]
+             the ANGLE $\phi = \tan^{-1}(U/Q) /2$ of the polarisation is plotted \\
+             Note: the angles are color coded with a fixed color table (independant of Colt)
+
+         \item[3]
+             --the temperature is color coded (with a color table defined by Colt)\\
+             --and the polarisation is overplot as a headless VECTOR
+	\end{itemize}
+	\default{0}
+	}   \\
+
+\end{tabular}
+%-----------------------------------------------------------
+\begin{tabular}{p{0.15\hsize} p{0.1\hsize} p{0.70\hsize}}
+\hline  
+\textbf{name} & \textbf{routines} & \textbf{description} \\ \hline
+                   &   &                            \\ %%% for presentation
+
+{Ps=}  & all   &  \parbox[t]{\hsize}{
+	      if set to 0            : no postscript output \\
+	      if set to 1            : output the plot in plot\_cartesian, plot\_gnomic.ps,
+	      plot\_mollweide.ps or plot\_orthographic respectively \\
+	      if set to a file name  : output the plot in that file \\
+		\default 0 \\
+               \seealso Preview, Gif, Png}\\
+
+{Pxsize=}  & all   & \parbox[t]{\hsize}{
+		set the number of horizontal screen\_pixels or postscript\_color\_dots of the plot
+    		(useful for high definition color printer)\\
+    		\default {800} }\\
+
+{Pysize=}  & CG--   & \parbox[t]{\hsize}{
+		set the number of vertical screen\_pixels or postscript\_color\_dots of the plot \\
+    		\default {Pxsize}} \\
+
+
+{Reso\_arcmin=} & CGMO &  \parbox[t]{\hsize}{
+		size of screen\_pixels or postscript\_color\_dots in arcmin \\
+        		\default{1.5}} \\
+
+{Rot=}  & all & \parbox[t]{\hsize}{
+		vector with 1, 2 or 3 elements specifing the rotation angles in DEGREES
+               to apply to the map in the 'output' coordinate system (see Coord)
+             = ( lon0, [lat0, rat0])  \\
+               lon0 : longitude of the point to be put at the center of the plot
+		       the longitude increases Eastward, ie to the left of the plot
+ 		      \default 0 \\
+               lat0 : latitude of the point to be put at the center of the plot
+ 		      \default 0 \\
+               rot0 : anti clockwise rotation to apply to the sky around the
+                     center (lon0, lat0) before projecting
+                     \default 0 }\\
+
+{Subtitle=}  & all   & \parbox[t]{\hsize}{
+		String containing the subtitle to the plot\\ \seealso Titleplot}\\
+
+{Titleplot=}  & all   & \parbox[t]{\hsize}{
+		String containing the title of the plot, 
+     		if not set the title will be File\\ \seealso Subtitle}\\
+
+{Units=}  & all   & \parbox[t]{\hsize}{
+		String containing the units, to be put on the right
+		hand side of the color bar, overrides the value read from the input file,
+		if any\\ \seealso Nobar, Nolabels}\\
+
+{Xpos=}  & all   & \parbox[t]{\hsize}{
+		The X position on the screen of the lower left corner
+	        of the window, in device coordinate}\\
+
+{Ypos=}  & all   & The Y position on the screen of the lower left corner 
+               of the window, in device coordinate
+
+\end{tabular}
+% \end{qualifiers_xxxxview}
+\newpage
+%======================================================
+\begin{keywords_xxxxview}
+\begin{tabular}{p{0.15\hsize} p{0.1\hsize} p{0.70\hsize}}
+\hline  
+\textbf{name} & \textbf{routines} & \textbf{description} \\ \hline
+                   &   &                            \\ %%% for presentation
+{Crop}  & CGMO   & \parbox[t]{\hsize}{
+		if set the GIF file only contains the mollweide map and
+               not the title, color bar, ... \\
+                \seealso Gif}\\
+
+{Flip=}  & all   & if set the longitude increases to the right, whereas by
+                default (astronomical convention) it increases towards the left \\
+ 
+{Half\_Sky=} & ---O & if set, only shows only one half of the sky 
+   (centered on (0,0) or on the location parametrized by Rot) instead of the full sky \\
+ 
+{Help=} & all & if set, the routine header is printed (by doc\_library)
+      and nothing else is done \\
+
+
+
+{Hist\_Equal}  & all   &  \parbox[t]{\hsize}{
+		if set,     uses a histogram equalized color mapping
+			(useful for non gaussian data field)
+		\default {uses linear color mapping and 
+                     		puts the level 0 in the middle
+                     		of the color scale (ie, green for Blue-Red)
+				unless Min and Max are not symmetric}\\
+                     \seealso Log}\\
+
+{Log}  & all   & \parbox[t]{\hsize}{
+		display the log of map. This is intended for
+ 	application to positive definite maps only, eg. Galactic foreground emission templates \\	\seealso Hist}\\
+
+{Nested}  & all   & \parbox[t]{\hsize}{
+	specify that the online file is ordered in the nested scheme}\\
+
+{No\_dipole=}  & CGMO   & \parbox[t]{\hsize}{
+		if set  (and Gal\_cut is not set) 
+                the best fit monopole *and* dipole over all valid pixels are
+                removed; \\
+                if Gal\_cut is set to $b>0$, the best monopole and dipole fit is performed on all valid
+                pixels with $|$galactic latitude$|>b$ (in deg) and is removed from
+                all valid pixels \\
+	     \default {0 (no monopole or dipole removal)}\\
+              can NOT be used together with No\_monopole \\ \seealso {Gal\_cut, No\_monopole}}\\
+
+{No\_monopole=}  & CGMO   & \parbox[t]{\hsize}{
+		if set (and Gal\_cut is not set) 
+                the best fit monopole over all valid pixels is
+                removed; \\
+                if Gal\_cut is set to $b>0$, the best monopole fit is performed on all valid
+                pixels with $|$galactic latitude$|>b$ (in deg) and is removed from
+                all valid pixels \\
+	     \default {0 (no monopole removal)}\\
+              can NOT be used together with No\_dipole \\ \seealso {Gal\_cut, No\_dipole}}\\
+
+\end{tabular}
+%--------------------------------------------------------
+\begin{tabular}{p{0.15\hsize} p{0.1\hsize} p{0.70\hsize}}
+\hline  
+\textbf{name} & \textbf{routines} & \textbf{description} \\ \hline
+
+
+{Nobar}  & all   & if set, color bar is not present \\
+
+{Nolabels}  & all   & if set, color bar labels (min and max) are not present, \default
+	{labels are present} \\
+
+{Noposition} & -G-- & if set, the astronomical location of the map
+        central point is not indicated \\
+ 
+
+{Online}  & all   & \parbox[t]{\hsize}{
+		if set, you can put directly a \healpix vector or an IDL
+    		structure on File (useful when the data to be plotted are already
+    		available on line)
+		N.B. : the content of File is NOT altered in the
+		process, \\ **  can not be used with /SAVE  **}\\
+
+{Preview}  & all   & \parbox[t]{\hsize}{
+		if set, there is a 'ghostview' preview of the
+	        postscript file or a 'xv' preview of the gif file\\
+	 \seealso Gif, Png and Ps}\\
+
+{Save}  & all   & \parbox[t]{\hsize}{
+		if set, tells that File is in IDL saveset format, 
+    		the variable saved should be DATA \\
+                 ** can not be used with /ONLINE **}\\
+
+\end{tabular}
+\end{keywords_xxxxview}
+%***************************************************************
+
+\begin{description}
+{xxxxview reads in a \healpix sky map in FITS format and generates a
+Mollweide projection of it, that can be visualized on the screen or
+exported in a GIF or Postscript file. xxxxview allows the selection of
+the coordinate system, map size, color table, color bar inclusion,
+linear or log scaling, histogram equalised
+color scaling, maximum and 
+minimum range for the plot, plot-title {\it etc}. It also allows the representation of the
+polarization field. }
+\end{description}
+
+
+
+\begin{related}
+  \begin{sulist}{} %%%% NOTE the ``extra'' brace here %%%%
+  \item[idl] version 5.0 or more is necessary to run xxxxview
+  \item[ghostview] ghostview or a similar facility is required to view
+	  the Postscript image generated by xxxxview.
+  \item[xv] xv or a similar facility is required to view the
+            gif image generated by xxxxview (a browser can also 
+            be used).
+  \item[synfast] This \healpix facility will generate the FITS format 
+            sky map to be input to xxxxview.
+  \end{sulist}
+\end{related}
+
+
+\begin{example}
+{
+\begin{tabular}{ll} %%%% use this tabular format %%%%
+xxxxview, & \lq planck100GHZ-LFI.fits', min=-100, max=100, /graticule, \$ \\
+	& title='Simulated Planck LFI Sky Map at 100GHz'\\
+\end{tabular}
+}
+{xxxxview reads in the map $\lq$ planck100GHZ-LFI.fits' and generates
+an output image in which
+the temperature scale has been set to lie between $\pm$ 100 ($\mu$K),
+a graticule with a 45 degree step in longitude and latitude is drawn,
+and the title $\lq$ Simulated Planck LFI Sky Map at 100GHz' appended to the image.
+}
+\end{example}
+

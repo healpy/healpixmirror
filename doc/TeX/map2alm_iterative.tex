@@ -1,0 +1,137 @@
+
+\sloppy
+
+
+\title{\healpix Fortran Subroutines Overview}
+\docid{map2alm\_iterative*} \section[map2alm\_iterative*]{ }
+\label{sub:map2alm_iterative}
+\docrv{Version 2.1}
+\author{Eric Hivon}
+\abstract{This document describes the \healpix Fortran90 subroutine MAP2ALM\_ITERATIVE*.}
+
+\begin{facility}
+{This routine covers and extends the functionalities of \htmlref{map2alm}{sub:map2alm}: it
+analyzes a (polarised) \healpix {\em RING ordered} map and returns
+its $a_{lm}$ coefficients for temperature (and polarisation) up to a specified
+multipole, and use precomputed harmonics if those
+are provided, but it also can also perform an iterative (Jacobi) determination of the $a_{lm}$, and
+apply a pixel mask if one is provided.}
+{src/f90/mod/alm\_tools.f90}
+\end{facility}
+
+\begin{f90format}
+{nsmax, nlmax, nmmax, iter\_order, map\_TQU, alm\_TGC [, zbounds, w8ring\_TQU ,
+plm, mask]}
+\end{f90format}
+
+\begin{arguments}
+{
+\begin{tabular}{p{0.4\hsize} p{0.05\hsize} p{0.05\hsize} p{0.40\hsize}} \hline  
+\textbf{name~\&~dimensionality} & \textbf{kind} & \textbf{in/out} & \textbf{description} \\ \hline
+                   &   &   &                           \\ %%% for presentation
+nsmax & I4B & IN & the $N_{side}$ value of the map to analyse. \\
+nlmax & I4B & IN & the maximum $\ell$ value for the analysis. \\
+nmmax & I4B & IN & the maximum $m$ value for the analysis. \\
+%
+iter\_order & I4B & IN & the order of Jacobi iteration. Increasing that order
+improves the accuracy of the final $a_{lm}$ but increases the computation time $
+T_{\rm CPU} \propto 1 + 2 \times $iter\_order. 
+iter\_order $=0$ is a straight analysis, while iter\_order $=3$ is usually a
+good compromise. \\
+%
+map\_TQU(0:12*nsmax**2-1, 1:p) & SP/ DP & INOUT & input map. $p$ is 1 or 3
+depending if temperature (T) only or temperature and polarisation (T, Q, U) are
+to be analysed. It will be altered on output if a mask is provided.\\
+\end{tabular}
+
+\begin{tabular}{p{0.4\hsize} p{0.05\hsize} p{0.05\hsize} p{0.40\hsize}}   \hline  
+alm\_TGC(1:p, 0:nlmax, 0:nmmax) & SPC/ DPC & OUT & The $a_{lm}$ values output
+from the analysis. 
+$p$ is 1 or 3 depending on whether polarisation is included or not. In the former
+case, the first index is (1,2,3) corresponding to (T,E,B). \\
+%
+zbounds(1:2), \hskip 6cm OPTIONAL  & DP & IN & section of the map on which to perform the $a_{lm}$
+                   analysis, expressed in terms of $z=\sin({\rm latitude}) =
+                   \cos(\theta).$ If zbounds(1)$<$zbounds(2), the analysis is
+                   performed {\em on} the strip zbounds(1)$<z<$zbounds(2); if not,
+                   it is performed {\em outside} of the strip
+                   zbounds(2)$<z<$zbounds(1). If absent, the whole map is
+analyzed\\
+%
+w8ring\_TQU(1:2*nsmax,1:p), \hskip 6cm OPTIONAL  & DP & IN & ring weights for
+quadrature corrections. p is 1 for a temperature analysis and 3 for (T,Q,U). If absent, the
+ring weights are all set to 1.\\
+%
+plm(0:,1:p), \hskip 6cm OPTIONAL & DP & IN & If this
+optional matrix is passed, precomputed scalar (and tensor) $P_{lm}(\theta)$ are
+used instead of recursion. \\
+%
+mask(0:12*nsmax**2-1,1:q), \hskip 6cm OPTIONAL & SP/ DP & IN & pixel mask,
+assumed to have the same resolution (and RING ordering) as the map. The map {\tt
+map\_TQU} is
+multiplied by that mask before being analyzed, and will therefore be altered on
+output. 
+$q$ should be in $\{1,2,3\}$. If $p=q=3$, then each of
+the 3 masks is applied to the respective map. If $p=3$ and $q=2$, the first mask
+is applied to the first map, and the second mask to the second (Q) and third (U)
+map. If $p=3$ and $q=1$, the same mask is applied to the 3 maps. Note: the output
+$a_{lm}$ are computed directly on the masked map, and are {\em not} corrected for the
+loss of power, correlation or leakage created by the mask.
+\end{tabular}
+}
+\end{arguments}
+%%\newpage
+
+\begin{example}
+{
+use healpix\_types\\
+use alm\_tools\\
+use pix\_tools\\
+integer(i4b) :: nside, lmax, npix, iter \\
+real(sp), allocatable, dimension(:,:) :: map \\
+real(sp), allocatable, dimension(:) :: mask \\
+complex(spc), allocatable, dimension(:,:,:) :: alm \\
+\\
+nside = 256 \\
+lmax = 512 \\
+iter = 2\\
+npix = nside2npix(nside) \\
+allocate(map(0:npix-1,1:3)) \\
+allocate(mask(0:npix-1)) \\
+mask(0:) = 0. ! set unvalid pixels to 0\\
+mask(0:10000-1) = 1. ! valid pixels \\
+allocate(alm(1:3, 0:lmax, 0:lmax)\\
+call map2alm\_iterative(nside, lmax, lmax, iter, map, alm, mask=mask)  \\
+}
+{
+Analyses temperature and polarisation signals in the first 10000 pixels of {\tt map} (as
+determined by {\tt mask}). The map has
+an $N_{side}$ of 256, and the analysis is supposed to be performed up
+to 512 in $\ell$ and m. The resulting $a_{lm}$ coefficients for
+temperature and polarisation are returned in {\tt alm}. Uniform weights are
+assumed. In order to improve the $al{lm}$ accuracy, 2 Jacobi iterations are performed.
+}
+\end{example}
+
+\begin{modules}
+  \begin{sulist}{} %%%% NOTE the ``extra'' brace here %%%%
+  \item[ring\_analysis] Performs FFT for the ring analysis.
+  \item[\htmlref{map2alm}{sub:map2alm}] Perform the alm analysis
+  \item[\textbf{misc\_util}] module, containing:
+  \item[assert\_alloc] routine to print error message when an array is not
+  properly allocated		
+  \end{sulist}
+\end{modules}
+
+\begin{related}
+  \begin{sulist}{} %%%% NOTE the ``extra'' brace here %%%%
+  \item[anafast] executable using \thedocid \ to analyse maps.
+  \item[\htmlref{alm2map}{sub:alm2map}] routine performing the inverse transform of \thedocid.
+  \item[\htmlref{alm2map\_spin}{sub:alm2map_spin}] synthesize spin weighted maps.
+  \item[\htmlref{map2alm\_spin}{sub:map2alm_spin}] analyze spin weighted maps.
+  \end{sulist}
+\end{related}
+
+\rule{\hsize}{2mm}
+
+\newpage

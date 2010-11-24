@@ -1,0 +1,86 @@
+% -*- LaTeX -*-
+
+
+\renewcommand{\facname}{{rotate\_coord}}
+\renewcommand{\FACNAME}{{ROTATE\_COORD}}
+
+\sloppy
+
+
+
+\title{\healpix IDL Facility User Guidelines}
+\docid{\facname} \section[\facname]{ }
+\label{idl:rotate_coord}
+\docrv{Version 1.0}
+\author{Eric Hivon}
+\abstract{This document describes the \healpix IDL facility \facname.}
+
+
+
+
+\begin{facility}
+{This IDL facility provides a means to rotate a set of 3D position
+vectors (and their Stokes parameters Q and U) between to astrophysical coordinate systems
+or by an arbitrary rotation.
+}
+{src/idl/misc/\facname.pro}
+\end{facility}
+
+\begin{IDLformat}
+{Outvec = \FACNAME( Invec [, Inco=, Outco=, Euler\_Matrix=, Stokes\_Parameters=] )}
+\end{IDLformat}
+
+\begin{qualifiers}
+  \begin{qulist}{} %%%% NOTE the ``extra'' brace here %%%%
+    \item[Invec]  input,  array of size (n,3) : set of 3D position vectors
+    \item[Outvec] output, array of size (n,3) : rotated 3D vectors
+    \item[Inco=]   input, character string (either 'Q' or 'C': equatorial,
+    'G': galactic or 'E': ecliptic) describing the input coordinate system 
+    \item[Outco=]  input, character string (see above) describing the output
+          coordinate system.\\
+    Can not be used together with Euler\_Matrix
+    \item[Euler\_Matrix=] input, array of size (3,3). Euler Matrix
+       describing the rotation to apply to vectors.
+       \default{unity : no rotation}.\\
+       Can not be used together with a change in coordinates.
+    \item[Stokes\_Parameters=] input and output, array of size (n, 2) :
+      values of the Q and U Stokes parameters on the sphere for each of
+      the input position vector. Q and U are defined wrt the local
+      parallel and meridian and are therefore transformed in a non
+      trivial way in case of rotation
+  \end{qulist}
+\end{qualifiers}
+
+% \begin{keywords}
+%   \begin{kwlist}{} %%% extra brace
+%   \end{kwlist}
+% \end{keywords}  
+
+\begin{codedescription}
+{\thedocid \ is a generalisation of the Astro library routine {\tt skyconv}. It allows
+a rotation of 3D position vectors between two standard astronomic coordinates
+system but also an arbitrary rotation described by its Euler Matrix.
+It can also be applied to compute the effect of a rotation on the
+linear polarization Stokes parameters (Q and U) expressed in local
+coordinates system at the location of each of the input 3D vectors.}
+\end{codedescription}
+
+
+
+\begin{related}
+  \begin{sulist}{} %%%% NOTE the ``extra'' brace here %%%%
+    \item[idl] version \idlversion or more is necessary to run \thedocid.
+    \item[\htmlref{euler\_matrix\_new}{idl:euler_matrix_new}] constructs the Euler Matrix for a set of
+    three angles and three axes of rotation
+  \end{sulist}
+\end{related}
+
+% \begin{example}
+% {
+% \begin{tabular}{ll} %%%% use this tabular format %%%%
+% \end{tabular}
+% }
+% {
+% }
+% \end{example}
+

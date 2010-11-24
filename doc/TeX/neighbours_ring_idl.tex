@@ -1,0 +1,82 @@
+% -*- LaTeX -*-
+
+
+\renewcommand{\facname}{{neighbours\_ring }}
+
+\sloppy
+
+
+\title{\healpix IDL Facility User Guidelines}
+\docid{neighbours\_ring} \section[neighbours\_ring]{ }
+\label{idl:neighbours_ring}
+\docrv{Version 1.0}
+\author{Eric Hivon}
+\abstract{This document describes the \healpix IDL facility \facname.}
+
+
+\begin{facility}
+{This IDL facility returns the number and indices of the topological immediate neighbours 
+of a central pixel. The pixels
+are ordered in a clockwise sense (when watching the sphere from the outside) 
+about the central pixel with the
+southernmost pixel in first element. For the four pixels in the southern 
+corners of the
+equatorial faces which have two equally southern neighbours the
+routine returns the southwestern pixel first and proceeds clockwise.}
+{src/idl/toolkit/neighbours\_ring.pro}
+\end{facility}
+
+\begin{IDLformat}
+{\facname(Nside, Ipix0, Listpix [,Nneigh])}
+\end{IDLformat}
+
+\begin{qualifiers}
+  \begin{qulist}{} %%%% NOTE the ``extra'' brace here %%%%
+    \item[Nside] \healpix resolution parameter (scalar integer),
+         should be a valid Nside (power of 2)
+    \item[Ipix0] RING-scheme index of central pixel in [0,12*Nside$^2$-1]
+    \item[Listpix] output: list of neighbouring pixel (RING scheme index) of
+size {\tt Nneigh}
+    \item[Nneigh] optional output: number of neighbours of pixel {\tt \#Ipix0}. 
+   Usually 8, sometimes 7 (for 8 particular pixels) or 6 (if Nside=1)
+  \end{qulist}
+\end{qualifiers}
+
+% \begin{keywords}
+%   \begin{kwlist}{} %%% extra brace
+%     \item[] 
+%   \end{kwlist}
+% \end{keywords}  
+
+\begin{codedescription}
+{\facname calls ring2nest, neighbours\_nest and nest2ring}
+\end{codedescription}
+
+
+
+\begin{related}
+  \begin{sulist}{} %%%% NOTE the ``extra'' brace here %%%%
+    \item[idl] version \idlversion or more is necessary to run \facname.
+    \item[\htmlref{neighbours\_nest}{idl:neighbours_nest}] returns topological immediate
+neighbouring pixels of a given central pixel, using NESTED indexing.
+    \item[\htmlref{query\_disc}{idl:query_disc}, 
+          \htmlref{query\_polygon}{idl:query_polygon},]
+    \item[\htmlref{query\_strip}{idl:query_strip}, \htmlref{query\_triangle}{idl:query_triangle}] render the list of pixels enclosed
+  respectively in a given disc, polygon, latitude strip and triangle
+    \item[\htmlref{nest2ring}{idl:pix_tools}, \htmlref{ring2nest}{idl:pix_tools}] conversion between NESTED and RING indices
+  \end{sulist}
+\end{related}
+
+\begin{example}
+{
+\begin{tabular}{ll} %%%% use this tabular format %%%%
+\facname, 4, 1, list, nneigh \\
+print,nneigh,list\\
+\end{tabular}
+}
+{
+will return:8 \hskip 1cm    16  6  5  0  3  2  8  7
+listing the RING-indexed 8 neighbors of pixel \#1 for Nside=4
+}
+\end{example}
+

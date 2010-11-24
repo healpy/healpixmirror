@@ -1,0 +1,114 @@
+\sloppy
+\docid{alm2map\_spin*}\section[alm2map\_spin*]{ }
+\label{sub:alm2map_spin}
+\docrv{Version 2.0}
+\author{Eric Hivon}
+\abstract{This document describes the \healpix Fortran90 subroutine ALM2MAP\_SPIN*.}
+
+\begin{facility}
+{This routine produces the maps of arbitrary spin $s$ and $-s$ given their alm
+coefficients.
+%
+A (complex) map $S$ of spin $s$ is a linear combination of the spin weighted harmonics ${_s}Y_{lm}$
+\begin{equation}
+	{_s}S(p) = \sum_{lm} {_s}a_{lm}\ \ {_s}Y_{lm}(p)
+\end{equation}
+for $l \ge |m|, l \ge |s|$,
+and is such that ${_s}S^* = {_{-s}}S$.\\
+%
+\thedocid\ expects the alm coefficients to be provided as
+\begin{eqnarray}
+	%typo correction on spin sign of second term of RHS, 2009-09-03
+	{_{|s|}}a^{+}_{lm} &\myequal& - ( {_{|s|}}a_{lm} + (-1)^s {_{-|s|}}a_{lm} )/2 \\
+	{_{|s|}}a^{-}_{lm} &\myequal& - ( {_{|s|}}a_{lm} - (-1)^s {_{-|s|}}a_{lm} )/(2i)
+\end{eqnarray}
+for $m\ge 0$, knowing that, just as for spin 0 maps, the
+coefficients for $m<0$ are given by 
+\begin{eqnarray}
+{_{|s|}}a^{+}_{l-m} &\myequal& (-1)^m {_{|s|}}a^{+*}_{lm}, \\
+{_{|s|}}a^{-}_{l-m} &\myequal& (-1)^m {_{|s|}}a^{-*}_{lm}.
+\end{eqnarray}
+%
+The two (real) maps produced by \thedocid\ are  defined respectively as
+\begin{eqnarray}
+	{_{|s|}}S^+ &\myequal& ({_{|s|}}S + {_{-|s|}}S)/2 \\
+	{_{|s|}}S^- &\myequal& ({_{|s|}}S - {_{-|s|}}S)/(2i).
+\end{eqnarray}
+%
+With these definitions, ${_2}a^{+}$, ${_2}a^{-}$, ${_2}S^+$ and ${_2}S^-$
+match \healpix polarization $a^E, a^B, Q$ and $U$ respectively. However, for
+$s=0$, $\ _{0}a^+_{lm} = -a^T_{lm}$, $\ _{0}a^-_{lm} = 0$, $\ {_0}S^+ = T$, $\ {_0}S^- = 0.$}
+{src/f90/mod/alm\_tools.f90}
+\end{facility}
+
+\begin{f90format}
+{nsmax, nlmax, nmmax, spin, alm, map}
+\end{f90format}
+
+\begin{arguments}
+{
+\begin{tabular}{p{0.35\hsize} p{0.05\hsize} p{0.1\hsize} p{0.40\hsize}} \hline  
+\textbf{name~\&~dimensionality} & \textbf{kind} & \textbf{in/out} & \textbf{description} \\ \hline
+                   &   &   &                           \\ %%% for presentation
+nsmax & I4B & IN & the $N_{side}$ value of the map to synthesize. \\
+nlmax & I4B & IN & the maximum $\ell$ value used for the $a_{lm}$. \\
+nmmax & I4B & IN & the maximum $m$ value used for the $a_{lm}$. \\
+spin & I4B & IN & spin $s$ of the maps to be generated (only its absolute value
+is relevant). \\
+alm(1:2, 0:nlmax, 0:nmmax) & SPC/ DPC & IN & The ${_{|s|}}a^+_{lm}$ and ${_{|s|}}a^-_{lm}$ values to make the map
+                   from.\\
+map(0:12*nsmax**2-1, 1:2) & SP/ DP & OUT & ${_{|s|}}S^+$ and ${_{|s|}}S^-$ output maps
+\end{tabular}
+}
+\end{arguments}
+
+\begin{example}
+{
+use healpix\_types \\
+use pix\_tools, only : nside2npix \\
+use alm\_tools, only : alm2map\_spin \\
+integer(I4B) :: nside, lmax, mmax, npix, spin\\
+real(SP), dimension(:,:), allocatable :: map \\
+complex(SPC), dimension(:,:,:), allocatable :: alm \\
+\ldots \\
+nside=256 ; lmax=512 ; mmax=lmax ; spin=4\\
+npix=nside2npix(nside)\\
+allocate(alm(1:2,0:lmax,0:mmax))\\
+allocate(map(0:npix-1,1:2))\\
+\ldots \\
+call alm2map\_spin(nside, lmax, mmax, spin, alm, map)  \\
+}
+{
+Make spin-4 maps from the $a_{lm}$ passed in alm. The maps have $N_{side}$ of 256, and are constructed from $a_{lm}$ values up to 512 in $\ell$ and $m$.
+}
+\end{example}
+
+\begin{modules}
+  \begin{sulist}{} %%%% NOTE the ``extra'' brace here %%%%
+  \item[\htmlref{ring\_synthesis}{sub:ring_synthesis}] Performs FFT over $m$ for synthesis of the rings.
+  \item[compute\_lam\_mm, get\_pixel\_layout, ]
+  \item[gen\_lamfac\_der, gen\_mfac, gen\_mfac\_spin, do\_lam\_lm\_spin, ] 
+  \item[gen\_recfac, gen\_recfac\_spin, init\_rescale, l\_min\_ylm] Ancillary routines used
+  for $Y_{\ell m}$ recursion
+  \item[\textbf{misc\_utils}] module, containing:
+  \item[assert\_alloc] routine to print error message, when an array can not be
+  allocated properly
+  \end{sulist}
+\end{modules}
+
+\begin{related}
+  \begin{sulist}{} %%%% NOTE the ``extra'' brace here %%%%
+   \item[\htmlref{alm2map}{sub:alm2map}] routine generating maps of temperature
+   and polarisation from their  $a_{\ell m}$
+   \item[\htmlref{alm2map\_der}{sub:alm2map_der}] routine generating maps of temperature
+   and polarisation, and their spatial derivatives, from their  $a_{\ell m}$
+   \item[\htmlref{map2alm\_spin}{sub:map2alm_spin}] routine performing the inverse transform
+   of alm2map.
+  \item[\htmlref{create\_alm}{sub:create_alm}] routine to generate randomly
+  distributed $a_{\ell m}$ coefficients according to a given power spectrum
+  \end{sulist}
+\end{related}
+
+\rule{\hsize}{2mm}
+
+\newpage

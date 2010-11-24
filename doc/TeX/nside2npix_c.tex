@@ -1,0 +1,52 @@
+
+
+\sloppy
+
+
+\title{\healpix C Subroutines Overview}
+\docid{nside2npix} \section[nside2npix]{ }
+\label{csub:nside2npix}
+\docrv{Version 1.0}
+\author{E. Hivon}
+\abstract{This document describes the \healpix C subroutine NSIDE2NPIX.}
+
+\begin{facility}
+{Function to provide the number of pixels $\npix$ over the full sky corresponding
+to resolution parameter $\nside$. 
+}
+{src/C/subs/nside2npix.c}
+\end{facility}
+
+\begin{Cfunction}
+{long nside2npix(const long nside)}
+\end{Cfunction}
+
+\begin{arguments}
+{
+\begin{tabular}{p{0.3\hsize} p{0.05\hsize} p{0.1\hsize} p{0.45\hsize}} \hline  
+\textbf{name\&dimensionality} & \textbf{kind} & \textbf{in/out} & \textbf{description} \\ \hline
+                   &   &   &                           \\ %%% for presentation
+nside & long & IN & the $N_{side}$ parameter of the map. \\
+\thedocid  & long & OUT & returns the number of pixels $N_{pix}$ of the map $\npix=12\nside^2$.\\
+\end{tabular}
+}
+\end{arguments}
+
+\begin{example}
+{
+npix= nside2npix(256);  \\
+}
+{
+Returns the pixel the number of \healpix pixels (786432) for the resolution
+parameter 256.
+}
+\end{example}
+% \begin{related}
+%   \begin{sulist}{} %%%% NOTE the ``extra'' brace here %%%%
+%   \item[\htmlref{npix2nside}{sub:npix2nside}] returns resolution parameter corresponding to the number of pixels.
+% %   \item[pix2xxx] conversion between pixel index and position on the sky.
+%   \end{sulist}
+% \end{related}
+
+\rule{\hsize}{2mm}
+

@@ -1,0 +1,76 @@
+
+\sloppy
+
+
+\title{\healpix Fortran Subroutines Overview}
+\docid{read\_conbintab*} \section[read\_conbintab*]{ }
+\label{sub:read_conbintab}
+\docrv{Version 2.0}
+\author{Frode K.~Hansen, Eric Hivon}
+\abstract{This document describes the \healpix Fortran90 subroutine READ\_CONBINTAB.}
+
+\begin{facility}
+{This routine reads a FITS file containing  $a_{lm}$  values for constained
+  realisation. The FITS file is supposed to contain one integer column with
+  $index=\ell^2+\ell+m+1$ and 2 or 4 single (or double) precision columns with
+  real/imaginary  $a_{lm}$  values and real/imaginary   standard deviation on
+  these $a_{lm}$. It is supposed to contain either 1 or 3 extension(s) containing
+  respectively the $a_{lm}$ for T and if applicable E and B.}
+{src/f90/mod/fitstools.f90}
+\end{facility}
+
+\begin{f90format}
+{filename, alms, nalms [, units, extno]}
+\end{f90format}
+
+\begin{arguments}
+{
+\begin{tabular}{p{0.4\hsize} p{0.05\hsize} p{0.05\hsize} p{0.40\hsize}} \hline  
+\textbf{name\&dimensionality} & \textbf{kind} & \textbf{in/out} & \textbf{description} \\ \hline
+                   &   &   &                           \\ %%% for presentation
+filename(LEN=\filenamelen) & CHR & IN & filename of FITS file containing $a_{lm}$. \\
+nalms & I4B & IN & Number of  $a_{lm}$  values to read from the file. \\
+alms(0:nalms-1,1:6) & SP/ DP & OUT & the $a_{lm}$ read from the file. alms(i,1)
+                   and alms(i,2) contain the $\ell$ and $m$ values for the ith
+                   $a_{lm}$ . alms(i,3) and alms(i,4) contain the real and
+                   imaginary value of the ith  $a_{lm}$ . Finally, the
+                   standard deviation for the ith  $a_{lm}$  is contained in
+                   alms(i,5) (real) and alms(i,6) (imaginary). \\
+units(len=20)(1:) \hskip 6cm (OPTIONAL)& CHR & OUT & character string containing the units of the
+                   $a_{\ell m}$ \\
+extno \hskip 6cm (OPTIONAL) & I4B & IN & extension (0 based) of the FITS file to be read
+
+\end{tabular}
+}
+\end{arguments}
+\newpage
+
+\begin{example}
+{
+call read\_conbintab ('alms.fits',alms,65*66/2)  \\
+}
+{
+Read 65*66/2 (the number of $a_{lm}$ needed to fill the whole range from l=0 to l=64)  $a_{lm}$  values from the file `alms.fits' into the array alms(0:65*66/2-1,1:6). 
+}
+\end{example}
+
+\begin{modules}
+  \begin{sulist}{} %%%% NOTE the ``extra'' brace here %%%%
+  \item[\textbf{fitstools}] module, containing:
+  \item[printerror] routine for printing FITS error messages.
+  \item[\textbf{cfitsio}] library for FITS file handling.		
+  \end{sulist}
+\end{modules}
+
+\begin{related}
+  \begin{sulist}{} %%%% NOTE the ``extra'' brace here %%%%
+  \item[\htmlref{alms2fits}{sub:alms2fits}, \htmlref{dump\_alms}{sub:dump_alms}] routines to write $a_{lm}$ to a FITS-file 
+  \item[\htmlref{fits2alms}{sub:fits2alms}] has the same function as read\_conbintab but is more general.
+  \item[\htmlref{number\_of\_alms}{sub:number_of_alms},[\htmlref{getsize\_fits}{sub:getsize_fits}]
+  can be used to find out the number of $a_{lm}$ available in the file.
+  \end{sulist}
+\end{related}
+
+\rule{\hsize}{2mm}
+
+\newpage

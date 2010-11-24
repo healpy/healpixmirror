@@ -1,0 +1,339 @@
+
+\sloppy
+
+
+\title{\healpix Fortran Facility User Guidelines}
+\docid{synfast} \section[synfast]{\nosectionname}
+\label{fac:synfast}
+\docrv{Version 1.2}
+\author{Frode K.~Hansen, Benjamin D.~Wandelt, Eric Hivon}
+\abstract{This document describes the \healpix facility SYNFAST.}
+
+\begin{facility}
+{This program can be used to create  \healpix maps (temperature only
+or temperature and polarisation)  computed as realisations 
+of random Gaussian
+fields on a sphere characterized by the user provided 
+theoretical power spectra,
+or as constrained realisations of such fields characterised by the user
+provided $a_{\ell m}$ coefficients and/or power spectra.
+Total operation count scales as
+ ${\cal {O}}(N_{\rm pix}^{3/2})$ with a prefactor dependent on the limiting spherical harmonics
+order $\ell_{max}$ of the actual problem. 
+The map resolution, Gaussian beam FWHM,  
+and random seed for the simulation can be selected by the user.
+Spherical harmonics are either generated using the recurrence relations
+during the execution of spectral synthesis, or  precomputed and read in
+before the synthesis is executed to shorten the computation in repetitive
+applications.}
+{src/f90/synfast/synfast.f90}
+\end{facility}
+
+\begin{f90facility}
+{synfast [options] [parameter\_file]}
+\end{f90facility}
+
+\begin{options}
+  \begin{optionlistwide}{} %%%% NOTE the ``extra'' brace here %%%%
+    \item[{\tt -d}]
+    \item[{\tt -}{\tt -}{\tt double}] double precision mode (see Notes on double/single precision modes on page~\pageref{page:ioprec})
+    \item[{\tt -s}]
+    \item[{\tt -}{\tt -}{\tt single}] single precision mode (default)
+  \end{optionlistwide}
+\end{options}
+
+\begin{qualifiers}
+  \begin{qulistwide}{} %%%% NOTE the ``extra'' brace here %%%%
+    \item[{infile = }] Defines the input power spectrum file,
+	(default= cl.fits). Note that {\tt infile} is now optional :
+    synfast can run even if only {\tt almsfile} is provided.
+    \item[{outfile = }] Defines the output map file,
+(default= map.fits). Note that {\tt outfile} is now optional: if it set to 
+      `' (empty string),  mo map is synthesized but the $a_{lm}$ generated can be output.
+    \item[{outfile\_alms = }] Defines the FITS file in which to output $a_{lm}$ used
+      for the simulation (default= `')
+     \item[{simul\_type = }] Defines the simulation type, 1=temperature only,
+       2=polarisation, 3=temperature and its first spatial derivatives,
+       4=temperature and its first and second spatial derivatives, 5=temperature
+       and polarisation, and their first and second derivatives, 6=same as 5
+       plus the second derivatives of (T,Q,U).
+(default= 1).
+    \item[{nsmax = }] Defines the resolution of the map.
+(default= 32)
+     \item[{nlmax = }] Defines the maximum $\ell$ value 
+to be used in the simulation. WARNING: $\ell_{max}$ can not exceed
+the value $4\cdot$ {\tt nsmax}, because the coefficients of the  average Fourier 
+pixel window functions
+are precomputed and provided up to this limit.
+(default= 64)
+      \item[{iseed = }] Defines the random seed to be used 
+for the generation of $a_{lm}$s from the power spectrum.
+(default= -1)
+    \item[{fwhm\_arcmin = }] Defines the FWHM size in arcminutes 
+of the simulated Gaussian beam.
+(default= 420.0)
+%
+    \item[{beam\_file = }] Defines the FITS file describing the
+    Legendre window
+    function of the circular beam to be used for the
+    simulation. If set to an existing file name, it will override the
+    {\tt fhwm\_arcmin} given above. (default=`')
+%
+     \item[{almsfile = }] Defines the input filename for a file
+    containing $a_{lm}$s for constrained realisations. 
+(default= `'). If {\tt apply\_windows} is {\em false} 
+those $a_{lm}$s are used as they are, without being multiplied
+by the beam or pixel window function (with the assumption that they already have the
+    correct window functions). If {\tt apply\_windows} is {\em true}, the beam and
+    pixel window functions chosen above are applied to the constraining $a_{lm}$ (with the
+    assumption that those are free of beam and pixel window function). The code
+    does not check the validity of these asumptions; if none is true, use the
+    \htmlref{alteralm}{fac:alteralm} facility to modify or remove
+    the window functions contained in the constraining $a_{lm}$.
+%
+     \item[{apply\_windows=}] Determines how the constraining $a_{lm}$  read from
+     {\tt almsfile} are
+     treated with respect to window functions; see above for details. 
+     y, yes, t, true, .true. and 1 are considered as {\em true}, while n, no, f,
+     false, .false. and 0 are considered as {\em false}, (default = .false.).
+%
+     \item[{plmfile = }] Defines the input  filename for a file
+    containing  precomputed Legendre polynomials $P_{lm}$.
+(default= `')
+     \item[{windowfile = }] Defines the input filename  for the pixel
+    smoothing windows 
+(default= pixel\_window\_n????.fits, see Notes on default files and directories on page~\pageref{page:defdir})
+     \item[{winfiledir = }] Defines the directory in which windowfile
+    is located (default : see Notes on default files and directories on page~\pageref{page:defdir}).
+  \end{qulistwide}
+\end{qualifiers}
+
+\begin{codedescription}
+{%
+Synfast reads the power spectrum from a file in  ascii FITS
+format. This can contain either just the temperature power spectrum $C^T_l$s or 
+temperature and polarisation power spectra: $C^T_l$, $C^E_l$, $C^B_l$
+and $C^{T\times E}_l$. If {\tt simul\_type = 2} synfast generates 
+Q and U maps as well as the temperature map. The output map(s)
+is (are) saved in a FITS file. 
+The $C_l$s are used up to the specified 
+$\ell_{lmax}$, which can not exceed $4\times$ nsmax. If {\tt simul\_type = 3} or
+{\tt 4} the first derivatives of the temperature field or the first and second derivatives respectively
+are output as well as the temperature itself: $T(p)$, $\left({\partial T}/{\partial \theta}, {\partial T}/{\partial \phi}/\sin\theta \right)\myhtmlimage{}
+$, $\left({\partial^2 T}/{\partial \theta^2}, {\partial^2 T}/{\partial
+  \theta\partial\phi}/\sin\theta,\right.\myhtmlimage{}$ 
+$\left.{\partial^2 T}/{\partial \phi^2}/\sin^2\theta \right)\myhtmlimage{}$.
+If {\tt simul\_type = 5} or
+{\tt 6} the first derivatives of the (T,Q,U) fields or the first and second derivatives respectively
+are output as well as the field themself: $T(p)$,  $Q(p)$,  $U(p)$,
+$\left({\partial T}/{\partial \theta}, {\partial Q}/{\partial \theta}, {\partial
+  U}/{\partial \theta}; {\partial T}/{\partial \phi}/\sin\theta, \ldots \right)\myhtmlimage{}
+$, $\left({\partial^2 T}/{\partial \theta^2},\ldots; {\partial^2 T}/{\partial
+  \theta\partial\phi}/\sin\theta,\ldots ;\right.\myhtmlimage{}$ 
+$\left.{\partial^2 T}/{\partial \phi^2}/\sin^2\theta \ldots \right)\myhtmlimage{}$
+
+The random sequence seed for generation of $a_{lm}$ from the
+power spectrum should be non-zero integer. If 0 is provided, a seed is generated
+randomly by the code, based on the current date and time.
+The map can be convolved with a gaussian beam for which a beamsize can
+be specified, or for an arbitrary {\em circular} beam for which the
+Legendre transform is provided. The map is automatically convolved with a pixel window
+function. These are stored in FITS files  in
+the {\tt healpix/data} directory. If synfast is not run in a directory
+which has these files, or from a directory which can reach these files
+by a `{\tt ../data/}' or `{\tt ./data/}' specification, the system
+variable {\tt HEALPIX} is used to locate the main \healpix directory
+and its {\tt data} subdirectory is scanned. Failing this, the location of these
+files must be specified (using winfiledir). In the interactive mode this is
+requested only when necessary (see Notes on default directories on page~\pageref{page:defdir}).
+
+If some of the $a_{lm}$ in the simulations are constrained eg. from observations, a FITS file
+with these $a_{lm}$ can be read. This FITS file contains 
+the $a_{lm}$ for certain $\ell$ and $m$ values
+and also the standard deviation for these $a_{lm}$. The sky
+realisation which synfast produces will be statistically consistent
+with the constraining $a_{lm}$.
+
+The code can also be used
+to generate a set of $a_{lm}$ matching the input power spectra, beam size and
+pixel size with or without actually synthesizing the map. Those $a_{lm}$ can be
+used as an input (constraining $a_{lm}$) to another synfast run.
+%---------------------------------
+\\
+\latexonly{{{\bf ...}}}
+}
+\end{codedescription}
+%
+\begin{cd_contd}
+{
+%---------------------------------
+Spherical harmonics values in the synthesis are obtained from a
+recurrence on associated Legendre polynomials $P_{lm}(\theta)$. 
+This recurrence consumes most of the CPU time used by synfast. 
+We have therefore included the option to read in the  precomputed values 
+of 
+$P_{lm}(\theta)$ from a file generated by the \healpix facility
+\htmlref{plmgen}{fac:plmgen}.
+This represents a tradeoff between memory usage and computing time.
+
+Synfast will issue a warning if the input FITS file for the power spectrum does
+not contain the keyword {\tt POLNORM}. This keyword indicates that the convention
+used for polarization is consistent with CMBFAST (and consistent with \healpix
+1.2). See the 
+\latexhtml{\htmladdnormallink{\healpix Primer}{intro.pdf}}{%
+           \htmladdnormallink{\healpix Primer}{intro.htm}}
+for details on the
+polarization convention and the interface with CMBFAST. If the
+keyword is not found, {\em no attempt will be made} to renormalize the power
+spectrum. 
+If the keyword is present, it will be inherited by the simulated map.
+}
+\end{cd_contd}
+
+
+\begin{datasets}
+{
+\begin{tabular}{p{0.3\hsize} p{0.35\hsize}} \hline  
+  \textbf{Dataset} & \textbf{Description} \\ \hline
+                   &                      \\ %%% for presentation
+  /data/pixel\_window\_nxxxx.fits & Files containing pixel windows for
+                   various nsmax.\\ 
+                   &                      \\ \hline %%% for presentation
+\end{tabular}
+} 
+\end{datasets}
+
+\begin{support}
+%   \begin{sulistwide}{} %%%% NOTE the ``extra'' brace here %%%%
+  \begin{sulist}{} %%%% NOTE the ``extra'' brace here %%%%
+  \item[\htmlref{map2gif}{fac:map2gif}] This \healpix Fortran facility can be used to visualise the
+  output map.
+  \item[mollview] This \healpix IDL facility can be used to visualise the
+  output map.
+  \item[\htmlref{alteralm}{fac:alteralm}] This \healpix Fortran facility can be
+  used to implement the beam and pixel window functions on the constraining
+  $a_lm$s ({\tt almsfile} file).
+  \item[\htmlref{anafast}{fac:anafast}] This \healpix Fortran facility can analyse a \healpix map and 
+     	       save the $a_{lm}$ and $C_l$s to be read by synfast.
+  \item[\htmlref{plmgen}{fac:plmgen}] This \healpix Fortran facility can be used to generate precomputed Legendre polynomials.
+		
+  \end{sulist}
+%  \end{sulistwide}
+\end{support}
+
+\begin{examples}{1}
+{
+\begin{tabular}{ll} %%%% use this tabular format %%%%
+synfast  \\
+\end{tabular}
+}
+{
+Synfast runs in interactive mode, self-explanatory.
+}
+\end{examples}
+
+\vfill\newpage
+
+\begin{examples}{2}
+{
+\begin{tabular}{ll} %%%% use this tabular format %%%%
+synfast  filename \\
+\end{tabular}
+}
+{When 'filename' is present, synfast enters the non-interactive mode and parses
+its inputs from the file 'filename'. This has the following
+structure: the first entry is a qualifier which announces to the parser
+which input immediately follows. If this input is omitted in the
+input file, the parser assumes the default value.
+If the equality sign is omitted, then the parser ignores the entry.
+In this way comments may also be included in the file.
+In this example, the file contains the following qualifiers:\hfill\newline
+\fileparam{simul\_type = 1}
+\fileparam{nsmax = 32}
+\fileparam{nlmax = 64}
+\fileparam{iseed = -1}
+\fileparam{fwhm\_arcmin = 420.0}
+\fileparam{infile = cl.fits}
+\fileparam{outfile = map.fits}
+
+Synfast reads in the $C_l$ power spectrum in 'cl.fits' up to $l=64$, and produces the map
+'map.fits' which has $N_{\rm side}=32$.
+The map is convolved with a beam of FWHM 420.0 arcminutes. The $iseed=-1$ sets
+the random seed for the realisation. A different $iseed$ would have given a different 
+realisation from the same power spectrum.
+
+Since \hfill\newline
+\fileparam{outfile\_alms }
+\fileparam{almsfile }
+\fileparam{apply\_windows }
+\fileparam{plmfile }
+\fileparam{beam\_file }
+\fileparam{windowfile }
+were omitted, they take their default values (empty strings). 
+This means that no file for constrained realisation or precomputed
+Legendre polynomials are read, the $a_{lm}$ generated in the process are not
+output, and synfast attempts to find the pixel
+window files in the default directories (see page~\pageref{page:defdir}).
+}
+\end{examples}
+
+\begin{release}
+  \begin{relist}
+    \item Initial release (\healpix 0.90)
+    \item Optional non-interactive operation. Proper FITS file
+    support. Improved reccurence algorithm for $P_{lm}(\theta)$ which can compute to higher $\ell$ values. Improved pixel windows averaged over
+    actual HEALPix pixels. New functionality: constrained realisations, precomputed
+    $P_{lm}$. (\healpix 1.00)
+    \item New functionality: constrained realisations and pixel
+    windows are now available for polarization as well. Arbitrary
+    circular beams can be used. New parser (\healpix 1.20)
+    \item New functionnality: the generated $a_{lm}$ can be output, and the map
+    synthesis itself can be skipped. First and second derivatives of the
+    temperature field can be produced on demand.
+    \item New functionnality: First and second derivatives of the
+    $Q$ and $U$ Stokes field can be produced on demand.
+    \item Bug correction: corrected numerical errors on derivatives 
+$\partial X/\partial\theta$, 
+$\partial^2 X/(\partial\theta\partial\phi\sin\theta)$, 
+$\partial^2 X/\partial \theta^2$, 
+for $X=Q,U$. See \htmlref{this appendix}{sec:bug_synder} for details.
+  (\healpix 2.14)
+  \end{relist}
+\end{release}
+
+\begin{messages}
+{
+\begin{tabular}{p{0.25\hsize} p{0.1\hsize} p{0.35\hsize}} \hline  
+  \textbf{Message} & \textbf{Severity} & \textbf{Text} \\ \hline
+                   &                   &   \\ %%% for presentation
+can not allocate memory for array xxx &  Fatal & You do not have
+                   sufficient system resources to run this
+                   facility at the map resolution you required. 
+  Try a lower map resolution.  \\ 
+                   &                   &   \\ \hline %%% for presentation
+
+this is not a binary table & & the fitsfile you have specified is not 
+of the proper format \\
+                   &                   &   \\ \hline %%% for presentation
+there are undefined values in the table! & & the fitsfile you have specified is not 
+of the proper format \\
+                  &                   &   \\ \hline %%% for presentation
+the header in xxx is too long & & the fitsfile you have specified is not 
+of the proper format \\
+                  &                   &   \\ \hline %%% for presentation
+XXX-keyword not found & & the fitsfile you have specified is not 
+of the proper format \\
+                  &                   &   \\ \hline %%% for presentation
+found xxx in the file, expected:yyyy & & the specified fitsfile does not
+contain the proper amount of data. \\
+                   &                   &   \\ \hline %%% for presentation
+
+
+
+\end{tabular}
+} 
+\end{messages}
+
+\rule{\hsize}{2mm}
+
+\newpage

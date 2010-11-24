@@ -1,0 +1,61 @@
+
+\sloppy
+
+
+\title{\healpix Fortran Subroutines Overview}
+\docid{getdisc\_ring} \section[getdisc\_ring]{ }
+\label{sub:getdisc_ring}
+\docrv{Version 1.2}
+% \author{Frode K.~Hansen}
+\author{Eric Hivon}
+\abstract{This document describes the \healpix Fortran90 subroutine GETDISC\_RING.}
+
+\begin{facility}
+{ %Routine to find the pixel index of all pixels within an angular distance radius from a defined center.
+{\bf This routine is obsolete, use \htmlref{query\_disc}{sub:query_disc} instead} }
+{src/f90/mod/pix\_tools.f90}
+\end{facility}
+
+% \begin{f90format}
+% {nside, vector0, radius, listpix, nlist}
+% \end{f90format}
+
+% \begin{arguments}
+% {
+% \begin{tabular}{p{0.4\hsize} p{0.05\hsize} p{0.1\hsize} p{0.35\hsize}} \hline  
+% \textbf{name\&dimensionality} & \textbf{kind} & \textbf{in/out} & \textbf{description} \\ \hline
+%                    &   &   &                           \\ %%% for presentation
+% nside & I4B & IN & the $N_{side}$ parameter of the map. \\
+% vector0(3) & DP & IN & cartesian vector pointing at the central position. \\
+% radius & DP & IN & radius from central position in radians. \\
+% listpix(0:*) & I4B & OUT & the pixel indexs for all pixels inside $radius$. Make sure that the size of the array is big enough to contain all pixels. \\ 
+% nlist & I4B & OUT & The number of pixels listed in $listpix$. \\
+% \end{tabular}
+% }
+% \end{arguments}
+
+% \begin{example}
+% {
+% call getdisc\_ring(256,(0,0,1),pi/2,listpix,nlist)  \\
+% }
+% {
+% Returns the pixel indexs of all pixels north of the equatorial line in a $N_{side}=256$ map.
+% }
+% \end{example}
+% \newpage
+% \begin{modules}
+%   \begin{sulist}{} %%%% NOTE the ``extra'' brace here %%%%
+%  \item[\htmlref{in\_ring}{sub:in_ring}] routine to find the pixels in a certain slice of a given ring.		
+%   \end{sulist}
+% \end{modules}
+
+% \begin{related}
+%   \begin{sulist}{} %%%% NOTE the ``extra'' brace here %%%%
+%   \item[\htmlref{pix2ang}{sub:pix_tools}, \htmlref{ang2pix}{sub:pix_tools}] convert between angle and pixel number.
+%   \item[\htmlref{pix2vec}{sub:pix_tools}, \htmlref{vec2pix}{sub:pix_tools}] convert between a cartesian vector and pixel number.
+%   \end{sulist}
+% \end{related}
+
+\rule{\hsize}{2mm}
+
+\newpage

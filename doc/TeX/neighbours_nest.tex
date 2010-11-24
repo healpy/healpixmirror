@@ -1,0 +1,75 @@
+
+\sloppy
+
+\title{\healpix Fortran Subroutines Overview}
+\docid{neighbours\_nest} \section[neighbours\_nest]{ }
+\label{sub:neighbours_nest}
+\docrv{Version 2.0}
+\author{}
+\abstract{This document describes the \healpix Fortran90 subroutine NEIGHBOURS\_NEST.}
+
+\begin{facility}
+{This subroutine returns the number and locations (in terms of pixel
+numbers) of the topological neighbours of a central pixel. The pixels
+are ordered in a clockwise sense about the central pixel with the
+southernmost pixel in first element. For the 4 pixels in the southern corners of the
+equatorial faces which have two equally southern neighbours the
+routine returns the southwestern pixel first and proceeds clockwise.}
+{src/f90/mod/pix\_tools.f90}
+\end{facility}
+
+\begin{f90format}
+{nside, ipix, list, nneigh}
+\end{f90format}
+
+\begin{arguments}
+{
+\begin{tabular}{p{0.4\hsize} p{0.05\hsize} p{0.1\hsize} p{0.35\hsize}} \hline  
+\textbf{name~\&~dimensionality} & \textbf{kind} & \textbf{in/out} & \textbf{description} \\ \hline
+                   &   &   &                           \\ %%% for presentation
+nside & I4B & IN & The $N_{side}$ parameter of the map. \\
+ipix & I4B & IN & The pixel number of the central pixel. \\
+list(8) & I4B & OUT & On exit, the vector of neighbouring pixels. This
+                   contains $nneigh$ relevant elements.\\
+nneigh & I4B & OUT & The number of neighbours (mostly 8, except at
+                   8 sites, where there are only 7 neighbours).\\
+\end{tabular}
+}
+\end{arguments}
+
+\begin{example}
+{
+use pix\_tools \\
+integer :: n, list(1:8) \\
+call neighbours\_nest(4, 1, list, nneigh)  \\
+print*,nneigh \\
+print*,list(1:nneigh)
+}
+{
+This returns {\tt nneigh}$=8$ and a vector {\tt list}, which contains the pixel
+numbers ( 90,  0,  2,  3,  6,  4,  94,  91).}
+\end{example}
+
+\begin{modules}
+  \begin{sulist}{} %%%% NOTE the ``extra'' brace here %%%%
+ \item[mk\_xy2pix, mk\_pix2xy] precomputing arrays for the conversion
+ of NESTED pixel numbers to Cartesian coords in each face.
+ \item[pix2xy\_nest, xy2pix\_nest] Conversion between NESTED pixel numbers to Cartesian coords in each face.
+ \item[\textbf{bit\_manipulation}] module, containing:
+ \item[invMSB, invLSB,swapLSBMSB,invswapLSBMSB] functions which manipulate the bit vector which
+ represents the NESTED pixel numbers. They correspond to
+ NorthWest<->SouthEast, SouthWest<->NorthEast, East<->West and
+ North-South flips of the diamond faces, respectively.
+  \end{sulist}
+\end{modules}
+
+\begin{related}
+  \begin{sulist}{} %%%% NOTE the ``extra'' brace here %%%%
+  \item[\htmlref{pix2ang}{sub:pix_tools}, \htmlref{ang2pix}{sub:pix_tools}] convert between angle and pixel number.
+  \item[\htmlref{pix2vec}{sub:pix_tools}, \htmlref{vec2pix}{sub:pix_tools}] convert between a cartesian vector and pixel number.
+  \end{sulist}
+\end{related}
+
+\rule{\hsize}{2mm}
+
+

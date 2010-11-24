@@ -1,0 +1,118 @@
+
+
+\sloppy
+
+\title{\healpix Fortran Subroutines Overview}
+\docid{get\_healpix\_main\_dir,~$\ldots$} \section[get\_healpix\_data\_dir, get\_healpix\_main\_dir, get\_healpix\_test\_dir]{ }
+\label{sub:get_healpix_xxx_dir}
+\docrv{Version 2.0}
+\author{Eric Hivon}
+\abstract{This document describes the \healpix Fortran90 functions in module paramfile\_io.}
+
+\begin{facility}
+{A few functions are available to return the full path to \healpix main directory
+and its {\tt data} and {\tt test} subdirectories. This allow those paths to be
+controlled by preprocessing macros or environment variables in case of
+non-standard installation of the \healpix directory structure.}
+{src/f90/mod/paramfile\_io.F90}
+\end{facility}
+
+%-------------------------------
+
+\rule{\hsize}{0.7mm}
+\textsc{\large{\textbf{FUNCTIONS: }}}\hfill\newline
+{\tt hmd = get\_healpix\_main\_dir()} 
+
+ \begin{tabular}{@{}p{0.3\hsize}@{\hspace{1ex}}
+                        p{0.7\hsize}@{}} & returns the full path to the main
+			\healpix directory. It will be determined, in this
+			order, from the value of the
+			preprocessing macros {\tt HEALPIX} and {\tt HEALPIXDIR}
+			if they are defined or the
+			environment variable {\tt \$HEALPIX} otherwise\\
+     \end{tabular}\\\\
+
+{\tt hdd = get\_healpix\_data\_dir()} 
+
+ \begin{tabular}{@{}p{0.3\hsize}@{\hspace{1ex}}
+                        p{0.7\hsize}@{}} & returns the full path to
+			\healpix {\tt data} subdirectory. It will be determined
+			from the preprocessing macro {\tt HEALPIXDATA} or the environment variable {\tt
+			\$HEALPIXDATA}. If both fail, it will return the list of directories \{{\tt
+			. ../data ./data .. \$HEALPIX \$HEALPIX/data \$HEALPIX/../data
+			\$HEALPIX$\backslash$data}\} separated by LineFeed.
+\\
+     \end{tabular}\\\\
+
+
+{\tt htd = get\_healpix\_test\_dir()} 
+
+ \begin{tabular}{@{}p{0.3\hsize}@{\hspace{1ex}}
+                        p{0.7\hsize}@{}} & returns the full path to
+			\healpix {\tt test} subdirectory. It will be determined,
+			in this order, from the preprocessing macro {\tt HEALPIXTEST}, the environment
+			variable {\tt \$HEALPIXTEST} or {\tt \$HEALPIX/test}.\\
+     \end{tabular}\\\\
+
+\vskip 3cm
+%-------------------------------
+
+% \begin{arguments}
+% {
+% \begin{tabular}{p{0.30\hsize} p{0.05\hsize} p{0.08\hsize} p{0.47\hsize}} \hline  
+% \textbf{name~\&~dimensionality} & \textbf{kind} & \textbf{in/out} & \textbf{description} \\ \hline
+%                    &   &   &                           \\ %%% for presentation
+% test & LGT & IN & result of a logical test \\
+% msg \hfill OPTIONAL & CHR & IN & character string describing nature of error \\
+% errorcode \hfill OPTIONAL & I4B & IN & error status given to code interruption \\
+% status & I4B & IN & value of the {\tt stat} flag returned by the F90 {\tt allocate} command \\
+% code & CHR & IN & name of program or code in which allocation is made \\
+% array & CHR & IN & name of array allocated \\
+% directory & CHR & IN & directory name (contains a '/')\\
+% filename & CHR & IN & file name \\
+% \end{tabular}
+% }
+% \end{arguments}
+
+%-------------------------------
+
+% \begin{example}
+% {
+% program my\_code \\
+% use misc\_utils \\
+% real, allocatable, dimension(:) :: vector\\
+% integer :: status \\
+% real :: a = -1. \\
+% \\
+% allocate(vector(12345),stat=status) \\
+% call assert\_alloc(status, 'my\_code', 'vector') \\
+% \\
+% call assert\_directory\_present('/home') \\
+% \\
+% call assert(a > 0., 'a is NEGATIVE !!!') \\
+% \\
+% end program my\_code\\
+% }
+% { Will issue a error message and stops the code if {\tt vector} can not be allocated, will stop the
+%   code if '/home' is not found, and will stop the code and complain loudly about it 
+% because {\tt a} is actually negative.
+% }
+% \end{example}
+
+%% \begin{modules}
+%%   \begin{sulist}{} %%%% NOTE the ``extra'' brace here %%%%
+%%  \item[mk\_pix2xy, mk\_xy2pix] routines used in the conversion between pixel values and ``cartesian'' coordinates on the Healpix face.
+%%   \end{sulist}
+%% \end{modules}
+
+%% \begin{related}
+%%   \begin{sulist}{} %%%% NOTE the ``extra'' brace here %%%%
+%%   \item[\htmlref{neighbours\_nest}{sub:neighbours_nest}] find neighbouring pixels.
+%%   \item[\htmlref{ang2vec}{sub:ang2vec}] convert $(\theta,\phi)$ spherical coordinates into $(x,y,z)$ cartesian coordinates.
+%%   \item[\htmlref{vec2ang}{sub:vec2ang}] convert $(x,y,z)$ cartesian coordinates into $(\theta,\phi)$ spherical coordinates.
+%%   \end{sulist}
+%% \end{related}
+
+\rule{\hsize}{2mm}
+
+\newpage

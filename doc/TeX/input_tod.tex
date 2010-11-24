@@ -1,0 +1,71 @@
+
+\sloppy
+
+
+\title{\healpix Fortran Subroutines Overview}
+\docid{input\_tod*} \section[input\_tod*]{ }
+\label{sub:input_tod}
+\docrv{Version 2.0}
+\author{Eric Hivon \& Frode K.~Hansen}
+\abstract{This document describes the \healpix Fortran90 subroutine INPUT\_TOD*.}
+
+\begin{facility}
+{This routine reads a large binary table (for instance a Time Ordered Data
+ set) from a FITS file. The user can choose to read only a section of the table,
+ starting from an arbitrary position. 
+The data can be read into a single or double precision array.}
+{src/f90/mod/fitstools.f90}
+\end{facility}
+
+\begin{f90format}
+{filename, tod, npix, ntods [, header, firstpix, fmissval]}
+\end{f90format}
+
+\begin{arguments}
+{
+\begin{tabular}{p{0.3\hsize} p{0.05\hsize} p{0.05\hsize} p{0.5\hsize}} \hline  
+\textbf{name~\&~dimensionality} & \textbf{kind} & \textbf{in/out} & \textbf{description} \\ \hline
+                   &   &   &                           \\ %%% for presentation
+filename (LEN = \filenamelen) & CHR & IN & FITS file to be read from \\
+tod(0:npix-1,1:ntods)    & SP/ DP & OUT & array constructed
+                   from the data present in the file (from the sample {\tt
+                   firstpix} to {\tt firstpix + npix} - 1. Missing pixels or time
+                   samples are filled with {\tt fmissval}. \\
+npix      & I8B & IN & number of pixels or samples to be read. See Note below. \\
+ntods     & I4B & IN &  number of columns to read  \\
+header(LEN=80)(1:) \ (OPTIONAL)    & CHR & OUT &   FITS extension header \\
+firstpix \ \ (OPTIONAL) & I8B & IN & first pixel (or time sample) to read from
+                   (0 based). \default 0. See Note below. \\
+fmissval \ \ (OPTIONAL) & SP/ DP & IN &  value to be given to missing pixels, its default
+                   value is 0. Should be of the same type as {\tt tod}.
+\end{tabular}
+{\bf Note :} Indices and number of data elements larger than
+                   $2^{31}$ are only accessible in FITS files on computers with 64 bit
+                   enabled compilers and with some specific compilation options of
+                   cfitsio (see cfitsio documentation).
+}
+\end{arguments}
+
+\begin{modules}
+  \begin{sulist}{} %%%% NOTE the ``extra'' brace here %%%%
+  \item[\textbf{fitstools}] module, containing:
+  \item[printerror] routine for printing FITS error messages.
+  \item[\textbf{cfitsio}] library for FITS file handling.		
+  \end{sulist}
+\end{modules}
+
+\begin{related}
+  \begin{sulist}{} %%%% NOTE the ``extra'' brace here %%%%
+  \item[anafast] executable that reads a \healpix map and analyses it. 
+  \item[synfast] executable that generate full sky \healpix maps
+  \item[\htmlref{getsize\_fits}{sub:getsize_fits}] subroutine to know the size of a FITS file.
+  \item[\htmlref{write\_bintabh}{sub:write_bintabh}] subroutine to write large arrays into FITS files
+  \item[\htmlref{output\_map}{sub:output_map}] subroutine to write a FITS file from a \healpix map
+  \item[\htmlref{input\_map}{sub:input_map}] subroutine to read a \healpix map
+  (either full sky of cut sky) from a FITS file
+  \end{sulist}
+\end{related}
+
+\rule{\hsize}{2mm}
+
+\newpage

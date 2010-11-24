@@ -1,0 +1,144 @@
+% -*- LaTeX -*-
+
+
+\renewcommand{\facname}{{read\_fits\_cut4 }}
+\renewcommand{\FACNAME}{{READ\_FITS\_CUT4 }}
+\sloppy
+
+
+
+\title{\healpix IDL Facility User Guidelines}
+\docid{\facname} \section[\facname]{ }
+\label{idl:read_fits_cut4}
+\docrv{Version 1.2}
+\author{Eric Hivon}
+\abstract{This document describes the \healpix facility \facname.}
+
+
+
+
+\begin{facility}
+{This IDL facility reads a cut sky \healpix map from a FITS file according to
+the \healpix convention. The format used for the
+FITS file follows the one used for Boomerang98 and is adapted from
+COBE/DMR. This routine can also be used to read polarized cut sky map, where
+each Stokes parameter is stored in a different extension of the same FITS file.}
+{src/idl/fits/read\_fits\_cut4.pro}
+\end{facility}
+
+\begin{IDLformat}
+{\FACNAME, File, Pixel, Signal [, N\_Obs, Serror, EXTENSION=, HDR=, XHDR=, NSIDE=,
+    ORDERING=, COORDSYS=]
+}
+\end{IDLformat}
+
+\begin{qualifiers}
+  \begin{qulist}{} %%%% NOTE the ``extra'' brace here %%%%
+ 	\item[{File}] 
+          name of a FITS file in which the map is to be written
+
+ 	\item[{Pixel}] 
+	 (OUT, LONG vector), \\ index of observed (or valid) pixels
+
+ 	\item[{Signal}] 
+	 (OUT, FLOAT vector), \\ value of signal in each observed pixel
+
+ 	\item[{N\_Obs}] 
+	 (OUT, LONG or INT vector, Optional), \\ number of observation per pixel
+
+ 	\item[{Serror}] 
+	 (OUT, FLOAT vector, Optional), \\{\em rms} of signal in pixel. For white noise,
+                   this is $\propto 1/\sqrt{{\rm n\_obs}}$
+
+  \end{qulist}
+\end{qualifiers}
+
+\begin{keywords}
+  \begin{kwlist}{} %%% extra brace
+    	\item[EXTENSION =] 	
+		(IN, optional), \\
+		0 based number of extension to read. Extension 0 contains the
+temperature information, while extensions 1 and 2 contain respectively the Q
+and U Stokes parameters related information. \default{0} 
+
+    	\item[HDR =] 	
+		(OUT, optional), \\
+		String array containing the primary header. 
+
+    	\item[XHDR =] 	
+		(OUT, optional), \\
+		String array containing the extension header. 
+
+	 \item[{NSIDE=}]
+		(OUT, optional), \\
+	        returns on output the \healpix resolution parameter, as read
+		from the FITS header. Set to -1 if not found
+
+	 \item[{ORDERING=}]
+	        (OUT, optional), \\
+	        returns on output the pixel ordering, as read from the FITS
+	        header. Either 'RING' or 'NESTED' or ' ' (if not found).
+
+	 \item[{COORDSYS=}]
+	        (OUT, optional), \\
+	        returns on output the astrophysical coordinate system used, 
+		as read from FITS header (value of keywords COORDSYS or SKYCOORD)
+
+  \end{kwlist}
+\end{keywords}
+
+%% \begin{keywords}
+%%   \begin{kwlist}{} %%% extra brace
+%% 	\item[{Nested}] if set, specifies that the map is in the NESTED ordering
+%% 	scheme\\
+%% 	\seealso Ordering and Ring 
+%% 	\item[{Ring}] if set, specifies that the map is in the RING ordering
+%% 	scheme\\
+%% 	\seealso Ordering and Nested
+%%    \end{kwlist}
+%% \end{keywords}
+
+\begin{codedescription}
+% {\parbox[t]{\hsize}{\facname writes out the information contained in {\tt Prim\_stc} and {\tt
+% Exten\_stc} in the primary unit and extension of the FITS file
+% {\tt File} respectively . Coordinate systems can also be specified by {\tt Coordsys}. Specifying the
+% ordering scheme is compulsary and can be done either in {\tt Header} or by setting {\tt
+% Ordering} or {\tt Nested} or {\tt Ring} to the correct value. If {\tt
+% Ordering} or {\tt Nested} or {\tt Ring} is set, its value overrides what is
+% given in {\tt Header}. \\
+
+% The data is assumed to represent a full sky data set with 
+% the number of data points npix = 12*Nside*Nside
+% unless   
+% \\Partial is set OR the input fits header contains OBJECT =
+%                'PARTIAL' \\
+%        AND \\
+%          the Nside qualifier is given a valid value OR the FITS header contains
+%                  a NSIDE}}
+\end{codedescription}
+
+
+
+\begin{related}
+  \begin{sulist}{} %%%% NOTE the ``extra'' brace here %%%%
+  \item[idl] version \idlversion or more is necessary to run \facname
+  \item[\htmlref{write\_fits\_cut4}{idl:write_fits_cut4}] This \healpix IDL
+facility can be used to generate the FITS format {\em cut-sky} maps complient
+with \healpix convention and readable by \facname.
+\input{item_read_fits_idl}
+    \item[sxpar] This IDL routine (included in \healpix package) can be
+  used to extract FITS keywords from the header(s) HDR or XHDR read with \facname.
+  \end{sulist}
+\end{related}
+
+
+% \begin{example}
+% {
+% \begin{tabular}{ll} %%%% use this tabular format %%%%
+% \end{tabular}
+% }
+% {
+% }
+% \end{example}
+
+

@@ -1,0 +1,103 @@
+% -*- LaTeX -*-
+
+
+\renewcommand{\facname}{{euler\_matrix\_new}}
+\renewcommand{\FACNAME}{{EULER\_MATRIX\_NEW}}
+
+\sloppy
+
+
+
+\title{\healpix IDL Facility User Guidelines}
+\docid{\facname} \section[\facname]{ }
+\label{idl:euler_matrix_new}
+\docrv{Version 1.0}
+\author{Eric Hivon}
+\abstract{This document describes the \healpix IDL facility \facname.}
+
+
+
+
+\begin{facility}
+{This IDL facility provides a means to generate a 3D rotation Euler
+matrix parametrized by three angles and three axes of rotation.
+}
+{src/idl/misc/\facname.pro}
+\end{facility}
+
+\begin{IDLformat}
+{matrix = \FACNAME(a1, a2, a3 [, X=, Y=, ZYX=, DEG=]) }
+\end{IDLformat}
+
+\begin{qualifiers}
+  \begin{qulist}{} %%%% NOTE the ``extra'' brace here %%%%
+    \item[matrix] a 3x3 array containing the Euler matrix
+    \item[a1] input, float scalar, 
+    angle of the first rotation, expressed in radians,
+    unless DEG (see below) is set
+    \item[a2] angle of the second rotation, same units as a1
+    \item[a3] angle of the third rotation, same units as a1
+  \end{qulist}
+\end{qualifiers}
+    
+\begin{keywords}
+  \begin{kwlist}{} %%% extra brace
+    \item[DEG=] if set, the angles are in degrees instead of radians
+    \item[X=] if set, uses the classical mechanics convention (ZXZ):\\
+	rotation a1 around original Z axis, \\
+	rotation a2 around intermediate X axis, \\
+        rotation a3 around final Z axis \\
+        (see Goldstein for more details). \\
+	\default{this convention is used}
+
+    \item[Y=] if set, uses the quantum mechanics convention (ZYZ):\\
+	rotation a1 around original Z axis, \\
+	rotation a2 around intermediate Y axis, \\
+        rotation a3 around final Z axis.
+
+    \item[ZYX=] if set, uses the aeronautics convention (ZYX):\\
+	rotation a1 around original Z axis, \\
+	rotation a2 around intermediate Y axis, \\
+        rotation a3 around final X axis.
+  \end{kwlist}
+\end{keywords}  
+
+\begin{codedescription}
+{\parbox[t]{\hsize}{\facname\ ~\ allows the generation of a rotation Euler matrix. The user
+can choose the three Euler angles, and the three axes of rotation.
+
+If vec is an N$\times$3 array containing N 3D vectors, \\
+    vecr = vec  \# euler\_matrix\_new(a1,a2,a3,/Y) \\
+will be the rotated vectors\\
+ 
+This routine supersedes euler\_matrix, which had inconsistent angle
+definitions. The relation between the two routines is as follows  :
+\\[.2cm]
+%
+euler\_matrix\_new(a,b,c,/X)  =  euler\_matrix($-$a,$-$b,$-$c,/X) \\
+= Transpose(euler\_matrix(c, b, a,/X)) \\[.2cm]
+%
+euler\_matrix\_new(a,b,c,/Y)  =  euler\_matrix($-$a, b,$-$c,/Y) \\
+= Transpose(euler\_matrix(c,$-$b, a,/Y)) \\[.2cm]
+%
+euler\_matrix\_new(a,b,c,/Z)  =  euler\_matrix($-$a, b,$-$c,/Z)
+}}
+\end{codedescription}
+
+\begin{related}
+  \begin{sulist}{} %%%% NOTE the ``extra'' brace here %%%%
+    \item[idl] version \idlversion or more is necessary to run \thedocid.
+    \item[\htmlref{rotate\_coord}{idl:rotate_coord}] apply a rotation to a set of position vectors and
+    polarization Stokes parameters.
+  \end{sulist}
+\end{related}
+
+% \begin{example}
+% {
+% \begin{tabular}{ll} %%%% use this tabular format %%%%
+% \end{tabular}
+% }
+% {
+% }
+% \end{example}
+

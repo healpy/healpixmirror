@@ -1,0 +1,95 @@
+% -*- LaTeX -*-
+
+
+\renewcommand{\facname}{{bin\_llcl}}
+\renewcommand{\FACNAME}{{BIN\_LLCL}}
+
+\sloppy
+
+
+
+\title{\healpix IDL Facility User Guidelines}
+\docid{\facname} \section[\facname]{ }
+\label{idl:bin_llcl}
+\docrv{Version 1.0}
+\author{Eric Hivon}
+\abstract{This document describes the \healpix IDL facility \facname.}
+
+
+
+
+\begin{facility}
+{This IDL facility provides a means to bin an angular power spectrum into
+arbitrary bins.
+}
+{src/idl/misc/\facname.pro}
+\end{facility}
+
+\begin{IDLformat}
+{\FACNAME, Llcl\_in, Bin, L\_out, Llcl\_out, [Dllcl, DELTAL=, /FLATTEN, /HELP, /UNIFORM]
+}
+\end{IDLformat}
+
+\begin{qualifiers}
+  \begin{qulist}{} %%%% NOTE the ``extra'' brace here %%%%
+    \item[Llcl\_in] 1D vector: {\bf input} power spectrum (given for each $l$ starting at 0).
+    \item[Bin] {\bf input}: binning in $l$ to be applied, \hfill \\
+--either a scalar interpreted as the step size of a regular binning, the first
+bins are then \{0, {\tt bin} - 1\},\{{\tt bin}, 2{\tt bin}-1\}, $\ldots$\hfill
+\\ --or a 1D vector, interpreted as the lower bound of 
+each bin, ie the first bins are \{bin[0],bin[1]-1\}, \{bin[1], bin[2]-1\}, $\ldots$\\
+	\item[L\_out] contains on {\bf output} the center of each bin $l_b$.
+	\item[Llcl\_out] contains on {\bf output} the binned power spectrum
+$C(b)$, ie the (weighted) average of the input $C(l)$ over each bin.
+	\item[Dllcl] {\bf optional}, contains on {\bf output} a rough estimate of the rms of the binned C(l) for a full
+sky observation $C(b) \sqrt{ 2 / ((2l_b+1) \Delta l_b)}$
+	\item[DELTAL=] {\bf optional}, contains on {\bf output} the size of each bin $\Delta l(b)$
+  \end{qulist}
+\end{qualifiers}
+
+\begin{keywords}
+  \begin{kwlist}{} %%% extra brace
+	\item[/FLATTEN] if set, the $C(l)$ is internally multiplied by
+$l(l+1)/2\pi$ before being binned. \\
+By default, the input {\tt Llcl\_in} is binned as is.
+	\item[/HELP] if set, an extended help is printed and the code exits.
+    \item[/UNIFORM] if set, the $C(l)$ in each bin is given the same weight.\\
+By default a weight $\propto 2l+1$ is used (inverse cosmic variance
+weighting). Note that this weighting affects {\tt Llcl\_out} but not {\tt
+L\_out}.
+  \end{kwlist}
+\end{keywords}  
+
+\begin{codedescription}
+{\facname\ bins the input power spectrum (as is, or after flattening by a
+$\l(\l+1)/2\pi$ factor) according to an arbitrary binning scheme defined by the
+user. Different weighting scheme (uniform or inverse variance) can be applied inside the bins.}
+\end{codedescription}
+
+
+
+\begin{related}
+  \begin{sulist}{} %%%% NOTE the ``extra'' brace here %%%%
+    \item[idl] version \idlversion or more is necessary to run \thedocid.
+    \item[\htmlref{fits2cl}{idl:fits2cl}] facility to read a power spectrum from
+a FITS file.
+  \end{sulist}
+\end{related}
+
+\begin{example}
+ {
+ \begin{tabular}{l} %%%% use this tabular format %%%%
+\htmlref{init\_healpix}{idl:init_healpix}\\
+\htmlref{fits2cl}{idl:fits2cl}, cl, \htmlref{!healpix.directory}{idl:init_healpix}+'/test/cl.fits', multipoles=l \\
+fl =  l*(l+1) / (2. * !pi) \\
+\thedocid, fl*cl[*,0], 10, lb, bbcb, /uniform \\
+plot, l, fl*cl[*,0] \\
+oplot, lb, bbcb, psym = 4
+ \end{tabular}
+ }
+ {
+Read a power spectrum, bin it with a binsize of 10 and a uniform weighting, and overplot the input
+spectrum and its binned version.
+ }
+ \end{example}
+

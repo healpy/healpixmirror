@@ -1,0 +1,63 @@
+
+\sloppy
+
+
+\title{\healpix Fortran Subroutines Overview}
+\docid{get\_fits\_size} \section[get\_fits\_size]{ }
+\label{csub:get_fits_size}
+\docrv{Version 1.2}
+\author{Eric Hivon}
+\abstract{This document describes the \healpix C subroutine GET\_FITS\_SIZE.}
+
+\begin{facility}
+{This routine reads the number of pixels, the resolution parameter and the pixel ordering of a FITS file containing a \healpix map.}
+{src/C/subs/get\_fits\_size.c}
+\end{facility}
+
+\begin{Cfunction}
+{long \thedocid(char *filename, long *nside, char *ordering)}
+\end{Cfunction}
+
+\begin{arguments}
+{
+\begin{tabular}{p{0.3\hsize} p{0.05\hsize} p{0.05\hsize} p{0.5\hsize}} \hline  
+\textbf{name\&dimensionality} & \textbf{kind} & \textbf{in/out} & \textbf{description} \\ \hline
+                   &   &   &                           \\ %%% for presentation
+\thedocid & long & OUT & number of pixels the FITS file \\
+filename & char & IN & filename of the FITS-file containing the \healpix map. \\
+ordering  & char & OUT & pixel ordering, either 'RING' or 'NESTED' \\
+nside  & long & OUT & Healpix resolution parameter Nside
+\end{tabular}
+}
+\end{arguments}
+
+\begin{example}
+{
+long npix, nside ; \\
+char file[180]=''map.fits'' ;\\
+char order[10] ; \\
+npix= get\_fits\_size(file, \&nside, order)  \\
+}
+{
+Returns in npix the number of pixel in the file 'map.fits', and read in nside or
+order its resolution parameter or ordering scheme}
+\end{example}
+% \newpage
+% \begin{modules}
+%   \begin{sulist}{} %%%% NOTE the ``extra'' brace here %%%%
+%   \item[\textbf{fitstools}] module, containing:
+%   \item[printerror] routine for printing FITS error messages.
+%   \item[\textbf{cfitsio}] library for FITS file handling.		
+%   \end{sulist}
+% \end{modules}
+
+\begin{related}
+  \begin{sulist}{} %%%% NOTE the ``extra'' brace here %%%%
+  \item[\htmlref{read\_healpix\_map}{csub:read_healpix_map}] subroutine to read \healpix maps
+  \item[\htmlref{write\_healpix\_map}{csub:write_healpix_map}] subroutine to write \healpix maps
+  \end{sulist}
+\end{related}
+
+\rule{\hsize}{2mm}
+
+\newpage

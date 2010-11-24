@@ -1,0 +1,343 @@
+% -*- LaTeX -*-
+
+% PLEASE USE THIS FILE AS A TEMPLATE FOR THE DOCUMENTATION OF YOUR OWN
+% FACILITIES: IN PARTICULAR, IT IS IMPORTANT TO NOTE COMMENTS MADE IN
+% THE TEXT AND TO FOLLOW THIS ORDERING. THE FORMAT FOLLOWS ONE USED BY
+% THE COBE-DMR PROJECT.	
+% A.J. Banday, April 1999.
+
+\documentclass[12pt,twoside]{article}
+%%\usepackage{healrut}
+\usepackage{healpix,html,makeidx,tabularx}
+\begin{htmlonly}
+\renewcommand{\ell}{l}
+\renewcommand{\lq}{'}
+\input{hpxversion}
+\end{htmlonly}
+\newcommand{\nside}{{N_{\rm side}}}
+\newcommand{\npix}{{N_{\rm pix}}}
+\newcommand{\ntemplate}{{N_{\rm templates}}}
+%\newcommand{\myhtmlimage}[1]{\htmlimage{#1}}
+\newcommand{\myhtmlimage}[1]{ }
+\newcommand{\aboutoptional}{Arguments appearing in \optional{italic} are
+optional.}
+\newcommand{\linklatexhtml}[3]{% \linklatexhtml{name}{latex_target}{html_target}
+\latexhtml{\htmladdnormallink{#1}{#2}}{\htmladdnormallink{#1}{#3}}}
+% to make sure that in html, the &=& in eqnarray appears normally,
+% replace &=& with &\myequal& hereafter
+\newcommand{\myequal}{=}
+\begin{htmlonly}
+\renewcommand{\myequal}{$=$}
+\end{htmlonly}
+
+%\includeonly{}
+\sloppy
+\setcounter{secnumdepth}{0}
+\setcounter{tocdepth}{10}
+\begin{document}
+
+\title{\healpix Fortran90 Subroutines Overview}
+\label{sub:subroutines}
+\docrv{Version \hpxversion}
+\author{Eric Hivon, Hans K.~Eriksen, Frode K.~Hansen, Benjamin D.~Wandelt, Krzysztof M.~G\'orski,
+Anthony J.~Banday and Martin Reinecke}
+\abstract{This document is an overview of the \healpix Fortran90 subroutines.}
+\date{\today}
+\frontpage
+
+\tableofcontents
+\newpage
+\section[Conventions]{{\Large Conventions}}
+Here we list some conventions which are used in this document.
+\\
+\hrule
+\begin{tabular}{@{}p{0.3\hsize}@{\hspace{1ex}}
+                        p{0.7\hsize}@{}}  &  \\
+
+
+$\mathbf{*}$ & Fortran90 allows generic names which refer to several specific
+subroutines. Which one of the specific routines is called depends on
+the type and rank of the arguments supplied in the call. We tag
+generic names with a $*$ in this document.\\
+\\
+$\mathbf{N_{side}}$ & \healpix resolution parameter --- see the
+\healpix Primer.\\
+\\
+$\mathbf{map}$ & We use the word ``map'' referring to a function,
+defined on the set of all \healpix pixels.
+\\
+$\mathbf{\theta}$ & The polar angle or colatitude on the sphere,
+ranging from 0 at the North Pole to $\pi$ at the South Pole.\\
+\\
+$\mathbf{\phi}$ & The azimuthal angle on the sphere, $\phi\in[0,2\pi[$.\\
+\\
+\end{tabular}
+
+%% {\bf{missing documentation
+%% (, pow2alm\_units)}}
+
+%--------------------------------------------
+\section[Changes between release 2.13 and 2.14]{Changes between release 2.13 and 2.14}
+\begin{itemize}
+\item In \htmlref{alm2map\_der}{sub:alm2map_der} routine, a numerical bug affecting the accuracy of the Stokes parameter derivatives 
+$\partial X/\partial\theta$, 
+$\partial^2 X/(\partial\theta\partial\phi\sin\theta)$, 
+$\partial^2 X/\partial \theta^2$, 
+for $X=Q,U$ has been corrected. See \linklatexhtml{''Fortran
+Facilities''}{facilities.pdf}{facilities.htm} Appendix for details.
+\end{itemize}
+
+%--------------------------------------------
+\section[Changes between release 2.0 and 2.13]{Changes between release 2.0 and 2.13}
+\begin{itemize}
+\item New functions in version 2.13: 
+\begin{itemize}
+	\item\htmlref{%
+get\_healpix\_data\_dir, %
+get\_healpix\_main\_dir, %
+get\_healpix\_test\_dir%
+}{sub:get_healpix_xxx_dir} return full path to \healpix directories.
+\end{itemize}
+\item New routines in version 2.10: 
+\begin{itemize}
+	\item\htmlref{alm2map\_spin}{sub:alm2map_spin}: synthesis of maps of
+arbitrary spin
+	\item\htmlref{map2alm\_iterative}{sub:map2alm_iterative}: iterative analysis of map
+	\item\htmlref{map2alm\_spin}{sub:map2alm_spin}: analysis of maps of
+arbitrary spin
+	\item\htmlref{healpix\_modules}{sub:healpix_modules}: meta-module
+	\item\htmlref{write\_minimal\_header}{sub:write_minimal_header}: routine
+to write minimal FITS header
+	\item\htmlref{parse\_check\_unused}{sub:parse_xxx}: prints out
+parameters present in parameter file but not used by the code.
+\end{itemize}
+\item Improved routines:
+\begin{itemize}
+\item \htmlref{query\_strip}{sub:query_strip}: the {\tt inclusive} option now
+returns {\em all} (and only) the pixels overlapping, even partially, with the
+strip
+\item \htmlref{query\_disc}{sub:query_disc}: when the disc center is on one of
+the poles, {\em only} the pixels overlapping with the disc are now returned.
+\item \htmlref{remove\_dipole}{sub:remove_dipole}: can now deal with non-uniform
+pixel weights.
+\item \htmlref{parse\_init}{sub:parse_xxx}: silent mode
+\item \htmlref{parse\_string}{sub:parse_xxx}: can expand environment variables
+(\$\{XXX\}) and leading \verb+~+$\!${\tt /}
+\end{itemize}
+
+\end{itemize}
+
+%--------------------------------------------
+\section[Changes between release 1.2 and 2.0]{Changes between release 1.2 and 2.0}
+Some new features have been added
+\begin{itemize}
+\item Most routines dealing with maps and $a_{\ell m}$ (eg, create\_alm, map2alm, alm2map,
+  convert\_inplace, convert\_nest2ring, udgrade\_nest, udgrade\_ring) or inputting or outputting  data (read\_*, write\_*)
+ now accept both single and double precision arguments.
+\item The routines \htmlref{{\tt map2alm}}{sub:map2alm} and  \htmlref{{\tt remove\_dipole}}{sub:remove_dipole} can now deal with
+  {\em non-symmetric} azimuthal cut sky. For backward compatibility, the former calling sequence
+  is still accepted.
+\item most routines are now parallelized with OpenMP (for shared memory architecture), and some of them are
+also parallelized with MPI (for distributed memory architecture)
+\end{itemize}
+
+
+Some new routines have been introduced since version 1.2, as listed below.
+\begin{itemize}
+\item New routines in version 2.0
+\begin{itemize}
+\item \htmlref{add\_dipole}{sub:add_dipole}
+\item \htmlref{alm2cl}{sub:alm2cl}
+\item \htmlref{alm2map\_der}{sub:alm2map_der}
+\item \htmlref{fits2cl}{sub:fits2cl} (replaces read\_asctab)
+\item \htmlref{nside2ntemplates}{sub:nside2ntemplates}
+\item \htmlref{plm\_gen}{sub:plm_gen}
+\item \htmlref{rand\_gauss}{sub:rand_gauss}, \htmlref{rand\_init}{sub:rand_init}, \htmlref{rand\_uni}{sub:rand_uni}
+\item \htmlref{same\_shape\_pixels\_nest}{sub:same_shape_pixels_xxx}, \htmlref{same\_shape\_pixels\_ring}{sub:same_shape_pixels_xxx}
+\item \htmlref{template\_pixel\_nest}{sub:template_pixel_xxx}, \htmlref{template\_pixel\_ring}{sub:template_pixel_xxx}
+\item \htmlref{write\_plm}{sub:write_plm} (replaces write\_dbintab)
+\end{itemize}
+\item New modules or modules with new name
+\begin{itemize}
+\item \textbf{misc\_utils:} fatal\_error, \htmlref{assert}{sub:assert}, assert\_present, assert\_not\_present, 
+       assert\_alloc, file\_present, assert\_directory\_present, 
+\htmlref{string}{sub:string}
+\htmlref{strupcase}{sub:string}
+\htmlref{strlowcase}{sub:string}
+, upcase, lowcase, wall\_clock\_time, 
+\htmlref{brag\_openmp}{sub:brag_openmp}
+\item \textbf {rngmod:} \htmlref{rand\_gauss}{sub:rand_gauss}, \htmlref{rand\_init}{sub:rand_init}, \htmlref{rand\_uni}{sub:rand_uni}
+\end{itemize}
+
+\item The following routines are superseded.
+\begin{itemize}
+\item read\_asctab (replaced by \htmlref{fits2cl}{sub:fits2cl})
+\item write\_dbintab (replaced by \htmlref{write\_plm}{sub:write_plm})
+\end{itemize}
+
+\end{itemize}
+
+%--------------------------------------------
+\section{Changes between release 1.1 and 1.2}
+Some new routines have been introduced since version 1.1, as listed below.
+% Most of the routines that already existed now have extended
+% capabilities.
+% Those of them with improved or extended user interface are listed
+% below. They all remain backward compatible (ie, they can be used with codes written
+% around version 1.1 without any edition).
+
+\begin{itemize}
+\item New routines in version 1.2
+\begin{itemize}
+\item \htmlref{angdist}{sub:angdist}
+\item \htmlref{complex\_fft}{sub:complex_fft}
+\item \htmlref{concatnl}{sub:concatnl}
+\item \htmlref{del\_card}{sub:del_card}
+\item \htmlref{get\_card}{sub:get_card}
+\item \htmlref{getargument}{sub:getargument}
+\item \htmlref{getenvironment}{sub:getenvironment}
+\item \htmlref{input\_tod*}{sub:input_tod}
+\item \htmlref{nArguments}{sub:narguments}
+\item parse\_double, parse\_init, parse\_int, parse\_lgt, parse\_long,
+parse\_real, parse\_string (see \htmlref{parse\_xxx}{sub:parse_xxx}) 
+\item \htmlref{query\_disc}{sub:query_disc} (replaces \htmlref{getdisc\_ring}{sub:getdisc_ring})
+\item \htmlref{query\_polygon}{sub:query_polygon}
+\item \htmlref{query\_strip}{sub:query_strip}
+\item \htmlref{query\_triangle}{sub:query_triangle}
+\item \htmlref{read\_fits\_cut4}{sub:read_fits_cut4}
+\item \htmlref{real\_fft}{sub:real_fft}
+\item \htmlref{scan\_directories}{sub:scan_directories}
+\item \htmlref{surface\_triangle}{sub:surface_triangle}
+\item \htmlref{vect\_prod}{sub:vect_prod}
+\item \htmlref{write\_bintabh}{sub:write_bintabh}
+\item \htmlref{write\_fits\_cut4}{sub:write_fits_cut4}
+\end{itemize}
+
+\item New modules or modules with new name
+\begin{itemize}
+\item the modules {\tt extension} (C extensions), {\tt healpix\_fft} (FFT
+operations), {\tt paramfile\_io} (parameter parsing) have
+been introduced,
+\item the module {\tt wrap\_fits} has been renamed {\tt head\_fits} to
+reflect its extended capabilities in manipulating FITS headers.
+\end{itemize}
+
+\item The following routines are superseded. They have been moved to the
+{\tt obsolete} module.
+\begin{itemize}
+\item ask\_inputmap, ask\_outputmap, ask\_lrange (initially in {\tt fitstools} module)
+\item setpar, getpar, anafast\_parser, anafast\_setpar, anafast\_getpar,
+hotspots\_parser, hotspots\_setpar, hotspots\_getpar, udgrade\_parser,
+udgrade\_setpar, udgrade\_getpar, smoothing\_parser, smoothing\_setpar,
+smoothing\_getpar (initially in {\tt utilities} module).
+\end{itemize}
+
+\end{itemize}
+
+
+
+
+\newpage
+\include{add_card}
+\include{add_dipole}
+\include{alm2cl}
+\include{alm2map}
+\include{alm2map_der}
+\include{alm2map_spin}
+\include{alms2fits}
+\include{alter_alm} % put in its right alphabetical place
+\include{ang2vec}
+\include{angdist}
+\include{assert}
+\include{brag_openmp}
+\include{complex_fft}
+\include{compute_statistics}
+\include{concatnl}
+\include{convert_inplace}
+\include{convert_nest2ring}
+\include{convert_ring2nest}
+\include{coordsys2euler_zyz}
+\include{create_alm}
+\include{del_card}
+\include{dump_alms}
+\include{fits2alms}
+\include{fits2cl}
+\include{gaussbeam}
+\include{generate_beam}
+\include{get_card}
+\include{get_healpix_xxx_dir}
+\include{getargument}
+\include{getenvironment}
+\include{getdisc_ring}
+\include{getnumext_fits}
+\include{getsize_fits}
+\include{healpix_modules}
+\include{healpix_types}
+\include{in_ring}
+\include{input_map}
+\include{input_tod}
+\include{map2alm}
+\include{map2alm_iterative}
+\include{map2alm_spin}
+\include{medfiltmap}
+\include{median}
+\include{merge_headers}
+\include{mpi_alm_tools}
+\include{mpi_alm2map}
+\include{mpi_alm2map_simple}
+\include{mpi_alm2map_slave}
+\include{mpi_cleanup_alm_tools}
+\include{mpi_initialize_alm_tools}
+\include{mpi_map2alm}
+\include{mpi_map2alm_simple}
+\include{mpi_map2alm_slave}
+\include{narguments}
+\include{neighbours_nest}
+\include{npix2nside}
+\include{nside2npix}
+\include{nside2ntemplates}
+\include{number_of_alms}
+\include{output_map}
+\include{parse_xxx}
+\include{pixel_window}
+\include{pix_tools}
+\include{planck_rng}
+\include{plm_gen}
+\include{query_disc}
+\include{query_polygon}
+\include{query_strip}
+\include{query_triangle}
+\include{rand_gauss}
+\include{rand_init}
+\include{rand_uni}
+\include{read_asctab}
+\include{read_bintab}
+\include{read_conbintab}
+\include{read_dbintab}
+\include{read_fits_cut4}
+\include{read_par}
+\include{real_fft}
+\include{remove_dipole}
+\include{ring_analysis}
+\include{ring_num}
+\include{ring_synthesis}
+\include{rotate_alm}
+\include{same_shape_pixels_xxx}
+\include{scan_directories}
+\include{string}
+\include{surface_triangle}
+\include{template_pixel_xxx}
+\include{udgrade_nest}
+\include{udgrade_ring}
+\include{vec2ang}
+\include{vect_prod}
+\include{write_asctab}
+\include{write_bintab}
+\include{write_bintabh}
+\include{write_dbintab}
+\include{write_fits_cut4}
+\include{write_minimal_header}
+\include{write_plm}
+\include{xcc_v_convert}
+
+\end{document}

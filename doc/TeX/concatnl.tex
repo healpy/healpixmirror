@@ -1,0 +1,54 @@
+
+
+\sloppy
+
+
+\title{\healpix Fortran Subroutines Overview}
+\docid{concatnl} \section[concatnl]{ }
+\label{sub:concatnl}
+\docrv{Version 1.1}
+\author{E. Hivon}
+\abstract{This document describes the \healpix Fortran90 subroutine CONCATNL.}
+
+\begin{facility}
+{Function to concatenate up to 10 subtrings interspaced with LineFeed
+character. Upon printing each subtring will be on a different line.
+}
+{src/f90/mod/paramfile\_io.F90}
+\end{facility}
+
+\begin{f90function}
+{string1[, string2, string3, ...]}
+\end{f90function}
+
+\begin{arguments}
+{
+\begin{tabular}{p{0.3\hsize} p{0.05\hsize} p{0.1\hsize} p{0.45\hsize}} \hline  
+\textbf{name~\&~dimensionality} & \textbf{kind} & \textbf{in/out} & \textbf{description} \\ \hline
+                   &   &   &                           \\ %%% for presentation
+string1 & CHR & IN & the first substring to be concatenated. \\
+string2 & CHR & IN \hskip 1cm optional& the second substring (if any) to be concatenated. \\
+string3 & CHR & IN \hskip 1cm optional& ... up to 10 substrings can be concatenated. \\
+var & CHR & OUT & concatenation of the substrings interspaced with LineFeed character.\\
+\end{tabular}
+}
+\end{arguments}
+
+\begin{example}
+{
+use paramfile\_io \\
+print*,concatnl('a','bbbbbbbb','C 10 3') 
+}
+{\parbox[t]{2.2cm}{
+Will~return:
+\parbox[t]{2cm}{\tt{a\\ bbbbbbbb\\ C 10 3}}}
+}
+\end{example}
+\begin{related}
+  \begin{sulist}{} %%%% NOTE the ``extra'' brace here %%%%
+  \item[\htmlref{parse\_xxx}{sub:parse_xxx}] parse an ASCII file for parameters definition
+  \end{sulist}
+\end{related}
+
+\rule{\hsize}{2mm}
+

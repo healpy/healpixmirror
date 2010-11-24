@@ -1,0 +1,41 @@
+% -*- LaTeX -*-
+
+\documentclass[12pt,twoside]{article}
+%\usepackage{healpix,psfig,html}
+%\usepackage{healpix,graphicx,html,makeidx}
+\usepackage{html}
+\usepackage{color}
+%\usepackage[dvips]{color}
+\input{hpxversion}
+% \begin{htmlonly}
+% \input{hpxversion}
+% \input{idlversion}
+% \input{gdlversion}
+% \end{htmlonly}
+
+% \newcommand{\healpixwebpage}{http://healpix.jpl.nasa.gov}
+% \renewcommand{\contentsname}{{TABLE OF CONTENTS}}
+
+\newcommand{\linklatexhtml}[3]{% \linklatexhtml{name}{latex_target}{html_target}
+\latexhtml{\htmladdnormallink{#1}{#2}}{\htmladdnormallink{#1}{#3}}}
+
+\begin{document} %------------------------------------------------------------
+
+
+\definecolor{lightgray}{gray}{.55}
+
+%The following documentation is available in the form of .pdf files.
+{\Large HEALPix \hpxversion\ PDF documentation:}
+\begin{itemize}
+    \item \linklatexhtml{The HEALPix \textbf{Primer}}{intro.pdf}{}
+    \item \linklatexhtml{HEALPix Facility \textbf{Installation} Guidelines}{install.pdf}{}
+    \item \linklatexhtml{HEALPix \textbf{Fortran90 Facilities} User Guidelines}{facilities.pdf}{}
+    \item \linklatexhtml{HEALPix \textbf{Fortran90 Subroutines} Overview}{subroutines.pdf}{}
+    \item \linklatexhtml{HEALPix \textbf{IDL Facilities} Overview}{idl.pdf}{}
+    \item \textcolor{lightgray} {Ximview Help Page (HTML Only)}
+    \item \linklatexhtml{HEALPix \textbf{C Subroutines} Overview}{csub.pdf}{}
+    \item \textcolor{lightgray} {HEALPix C++ Facilities and Subroutines Overview (HTML Only)}
+    \item \textcolor{lightgray} {HEALPix Java Overview (HTML Only)}
+\end{itemize}
+
+\end{document}

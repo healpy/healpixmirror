@@ -1,0 +1,40 @@
+\documentclass{report}
+\usepackage{graphicx}
+
+%
+% this merge 4 PS file into one
+% to convert into PNG use
+%%% convert -page 600x500 merge_reftqu.ps merge_reftqu.png
+% convert -page 600x520 merge_reftqu.ps merge_reftqu.png
+% 
+%% \textwidth =18cm
+\textwidth =21cm
+\textheight =27cm
+\topmargin=-.5cm
+%% \oddsidemargin=-0.51cm
+%% \evensidemargin=-0.51cm
+\oddsidemargin=-1.5cm
+\evensidemargin=-1.5cm
+
+\begin{document}
+\thispagestyle{empty}
+\vbox{
+%% \vskip 10cm
+\vskip 8cm
+\hbox{
+\includegraphics[width=0.45\textwidth]{ref_hpx.ps}
+%% \hskip 2cm
+%% \hskip 1cm
+\hfill
+\includegraphics[width=0.45\textwidth]{ref_iau.ps}
+}
+\hbox{
+\includegraphics[width=0.45\textwidth]{ref2_hpx.ps}
+%% \hskip 2cm
+%% \hskip 1cm
+\hfill
+\includegraphics[width=0.45\textwidth]{ref2_iau.ps}
+}
+}
+
+\end{document}

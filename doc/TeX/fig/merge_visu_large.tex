@@ -1,0 +1,31 @@
+\documentclass[landscape]{report}
+\usepackage{graphicx}
+
+%
+% this merge 4 PS file into one
+% 
+% latex merge_visu_large ; dvips -t landscape merge_visu_large.dvi ; convert -rotate -90 merge_visu_large.ps merge_visu_large.png
+%\textwidth =21cm
+\textwidth =29cm
+\textheight =19cm
+\topmargin=-.5cm
+\oddsidemargin=-1.5cm
+\evensidemargin=-1.5cm
+
+\begin{document}
+\thispagestyle{empty}
+\vbox{
+\vskip -2cm
+\hbox{
+\includegraphics[width=0.60\textwidth]{plot_cartesian2.ps}
+\hfill
+\includegraphics[width=0.30\textwidth]{plot_gnomic.ps}
+}
+\hbox{
+\includegraphics[width=0.45\textwidth]{plot_mollweide2.ps}
+\hfill
+\includegraphics[width=0.45\textwidth]{plot_orthographic2.ps}
+}
+}
+
+\end{document}

@@ -1,0 +1,115 @@
+% -*- LaTeX -*-
+
+
+
+
+\sloppy
+
+
+
+\title{\healpix IDL Facility User Guidelines}
+\docid{fits2alm} \section[fits2alm]{ }
+\label{idl:fits2alm}
+\docrv{Version 2.0}
+\author{Anthony J.~Banday, Eric Hivon}
+\abstract{This document describes the \healpix facility fits2alm.}
+
+
+
+
+\begin{facility}
+{This IDL routine provides a means to 
+read from a FITS file binary table extension(s) containing spherical
+harmonic coefficients $a_{\ell m}$ (and optional errors) and their index. Reads
+header information if required. The facility is intended to enable 
+the user to read the output from the \healpix facilities \textbf{anafast} and \textbf{synfast}.
+}
+{src/idl/fits/fits2alm.pro}
+
+\end{facility}
+
+\begin{IDLformat}
+{FITS2ALM, index, alm\_array, fitsfile, [signal, /HELP, HDR=, LMAX=, LMIN=, XHDR= ]}
+\end{IDLformat}
+
+\begin{qualifiers}
+  \begin{qulist}{} %%%% NOTE the ``extra'' brace here %%%%
+    \item[index] Long array containing the index for the corresponding
+                 array of $a_{\ell m}$ coefficients (and errors if required). The
+                 index ${i}$ is related to $(l,m)$ by the relation \hfill\newline
+                 $i$ = $\ell^2$ + $\ell$ + $m$ + 1. \newline This has dimension
+    nl (see below).
+    \item[alm\_array] Real or double array of alm coefficients read from the
+      file. This has dimension (nl,nalm,nsig) -- corresponding to\hfill\newline
+      nl   = number of $(l,m)$ indices \hfill\newline
+      nalm = 2 for real and imaginary parts of alm coefficients or
+             4 for above plus corresponding error values \hfill\newline
+      nsig = number of signals to be written (1 for any of T E B
+             or 3 if ALL to be written). Each signal is stored
+             in a separate extension.
+    \item[fitsfile] String containing the name of the file to be
+      read.
+    \item[signal] String defining the signal coefficients to read
+                  Valid options: 'T', 'E', 'B' or 'ALL' \hfill\newline
+	\default{'T'}.  
+  \end{qulist}
+\end{qualifiers}
+
+\begin{keywords}
+  \begin{kwlist}{} %%% extra brace
+    \item[HDR=] String array containing the primary header read from the FITS
+      file. 
+    \item[/HELP] If set, the routine documentation header is shown and the routine exits	
+    \item[LMAX=] Largest $l$ multipole  to be output
+    \item[LMIN=] Smallest $l$ multipole to be output. If LMIN (resp. LMAX) is below (above) the range of $l$'s present in the file,
+              it will be silently ignored
+    \item[XHDR=] String array containing the read extension header(s). If
+                  ALL signals are required, then the three extension 
+                  headers are returned appended into one string array.
+  \end{kwlist}
+\end{keywords}  
+
+\begin{codedescription}
+{\thedocid\ reads binary table extension(s) 
+which contain the $a_{\ell m}$ coefficients (and associated errors if present)
+from a FITS file. FITS headers can also optionally be read from the 
+input file. 
+}
+\end{codedescription}
+
+
+
+\begin{related}
+  \begin{sulist}{} %%%% NOTE the ``extra'' brace here %%%%
+    \item[idl] version \idlversion or more is necessary to run \thedocid.
+    \item[\htmlref{alm2fits}{idl:alm2fits}] provides the complimentary routine to write
+      $a_{lm}$ coefficients into a FITS file.
+    \item[\htmlref{index2lm}{idl:index2lm}] converts the index $i$ = $\ell^2$ +
+    $\ell$ + $m$ + 1 returned by \thedocid\ into $\ell$ and $m$
+    \item[\htmlref{lm2index}{idl:lm2index}] converts ($\ell$, $m$) vectors into $i$ = $\ell^2$ +
+    $\ell$ + $m$ + 1
+    \item[\htmlref{fits2cl}{idl:fits2cl}] routine to read/compute $C(l)$ power spectra from a file containing $C(l)$ or $a_{lm}$ coefficients
+%     \item[alteralm] provides $a_{\ell m}$ coefficients file to be read by \thedocid.
+%     \item[anafast] provides $a_{\ell m}$ coefficients file to be read by \thedocid.
+%     \item[synfast] provides $a_{\ell m}$ coefficients file to be read by \thedocid.
+    \item[\htmlref{ianafast}{idl:ianafast}, \htmlref{isynfast}{idl:isynfast}]
+IDL routine providing $a_{\ell m}$ coefficients file to be read by \thedocid.
+    \item[alteralm, anafast, synfast] F90 facilities providing $a_{\ell m}$ coefficients file to be read by \thedocid.
+  \end{sulist}
+\end{related}
+
+\begin{example}
+{
+\begin{tabular}{l} %%%% use this tabular format %%%%
+\thedocid, index, alm, 'alm.fits', HDR = hdr, XHDR = xhdr \\
+\end{tabular}
+}
+{
+\thedocid\ reads from the input FITS file {\tt alm.fits} 
+the $a_{\ell m}$ coefficients into the variable {\tt alm}  with optional headers
+passed by the string variables {\tt hdr} and {\tt xhdr}. Upon return {\tt index}
+will contain the value of $\ell^2$ + $\ell$ + $m$ + 1 for each $a_{\ell m}$
+found in the file.
+}
+\end{example}
+

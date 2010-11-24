@@ -1,0 +1,173 @@
+% -*- LaTeX -*-
+
+
+\renewcommand{\facname}{{pix2xxx, ang2xxx,... }}
+\renewcommand{\FACNAME}{{PIX2XXX, ANG2XXX,...}}
+
+\sloppy
+
+
+
+\title{\healpix IDL Facility User Guidelines}
+\docid{pix2xxx, ang2xxx, vec2xxx, nest2ring, ring2nest} \section[pix2xxx,
+ang2xxx, vec2xxx, nest2ring,ring2nest]{ }
+\label{idl:pix_tools}
+\docrv{Version 1.1}
+\author{Eric Hivon} % same layout as Frode pix_tools
+\abstract{This document describes the \healpix IDL facilities \facname}
+
+
+
+
+\begin{facility}
+{These routines provide conversion between pixel number in the \healpix map and $(\theta,\phi)$ or $(x,y,z)$ coordinates on the sphere. Some of these routines are listed here.
+}
+{src/idl/toolkit/}
+\end{facility}
+
+% \begin{IDLformat}
+% {Npix=\FACNAME(Nside [,ERROR=])}
+% \end{IDLformat}
+
+\begin{qualifiers}
+{
+\begin{tabular}{p{0.15\hsize} p{0.15\hsize} p{0.1\hsize} p{0.50\hsize}} \hline  
+\textbf{name (dim.)} & \textbf{type} & \textbf{in/out} & \textbf{description} \\ \hline
+                   &   &   &                           \\ %%% for presentation
+nside & scalar integer & IN & $N_{side}$ parameter for the \healpix map. \\
+ipnest(n) & vector integer & --- & pixel identification number in NESTED scheme over the range \{0,$N_{pix}-1$\}. \\
+ipring(n) & vector integer & --- & pixel identification number in RING scheme over the range \{0,$N_{pix}-1$\}. \\
+theta(n) & vector double & --- & colatitude in radians measured southward from
+                   north pole in \{0,$\pi$\}\\
+phi(n) & vector double & --- & longitude in radians, measured eastward in \{0,$2\pi$\}. \\ 
+vector(n,3) & array double & --- & three dimensional cartesian position vector
+                   $(x,y,z)$. The north pole is $(0,0,1)$. An output vector is
+                   normalised to unity. The coordinates are ordered as follows
+                   $x(0),\ldots,x(n-1),\ y(0),\ldots,y(n-1),\ z(0),\ldots,z(n-1)$
+                   \\
+vertex(n,3,4) & array double & optional OUT & three dimensional cartesian position vector
+                   $(x,y,z)$. Contains the location of the four vertices
+                   (=corners) of a
+                   pixel in the order North, West, South, East. The coordinates
+                   are ordered as follows
+                   $x_N(0),\ldots,x_N(n-1),\ y_N(0),\ldots,y_N(n-1),\ z_N(0),\ldots,z_N(n-1)$,
+                   $x_W(0),\ldots,x_W(n-1),\ y_W(0),\ldots,y_W(n-1),\
+                   z_W(0),\ldots,z_W(n-1)$,
+			and so on with South and East vertices
+\end{tabular}
+}
+\end{qualifiers}
+
+\rule{\hsize}{0.7mm}
+\textsc{\large{\textbf{ROUTINES: }}}\hfill\newline
+{\tt pix2ang\_ring, nside, ipring, theta, phi} 
+
+ \begin{tabular}{@{}p{0.3\hsize}@{\hspace{1ex}}
+                        p{0.7\hsize}@{}}
+                                         & renders $theta$ and $phi$ coordinates of the nominal pixel center given the pixel number $ipring$ and a map resolution parameter $nside$. \\
+     \end{tabular}\\\\
+{\tt pix2vec\_ring, nside, ipring, vector [,vertex]} 
+
+ \begin{tabular}{@{}p{0.3\hsize}@{\hspace{1ex}}
+                        p{0.7\hsize}@{}}
+                                         & renders cartesian vector coordinates of
+                        the nominal pixel center given the pixel number $ipring$
+                        and a map resolution parameter $nside$. Optionally returns 
+                        the location of the 4 vertices for the pixel(s) under
+                        consideration \\
+     \end{tabular}\\\\
+{\tt ang2pix\_ring, nside, theta, phi, ipring} 
+
+ \begin{tabular}{@{}p{0.3\hsize}@{\hspace{1ex}}
+                        p{0.7\hsize}@{}}
+                                         & renders the pixel number $ipring$ for a pixel which, given the map resolution parameter $nside$, contains the point on the sphere at angular coordinates $theta$ and $phi$. \\
+     \end{tabular}\\\\
+{\tt vec2pix\_ring, nside, vector, ipring} 
+
+ \begin{tabular}{@{}p{0.3\hsize}@{\hspace{1ex}}
+                        p{0.7\hsize}@{}}
+                                         & renders the pixel number $ipring$ for a pixel which, given the map resolution parameter $nside$, contains the point on the sphere at cartesian coordinates $vector$. \\
+     \end{tabular}\\\\
+{\tt pix2ang\_nest, nside, ipnest, theta, phi} 
+
+ \begin{tabular}{@{}p{0.3\hsize}@{\hspace{1ex}}
+                        p{0.7\hsize}@{}}
+                                         & renders $theta$ and $phi$ coordinates of the nominal pixel center given the pixel number $ipnest$ and a map resolution parameter $nside$. \\
+     \end{tabular}\\\\
+{\tt pix2vec\_nest, nside, ipnest, vector [,vertex]} 
+
+ \begin{tabular}{@{}p{0.3\hsize}@{\hspace{1ex}}
+                        p{0.7\hsize}@{}}
+                                         & renders cartesian vector coordinates of
+                        the nominal pixel center given the pixel number $ipnest$
+                        and a map resolution parameter $nside$. Optionally returns
+                        the location of the 4 vertices for the pixel(s) under consideration\\
+     \end{tabular}\\\\
+{\tt ang2pix\_nest, nside, theta, phi, ipnest} 
+
+ \begin{tabular}{@{}p{0.3\hsize}@{\hspace{1ex}}
+                        p{0.7\hsize}@{}}
+                                         & renders the pixel number $ipnest$ for a pixel which, given the map resolution parameter $nside$, contains the point on the sphere at angular coordinates $theta$ and $phi$. \\
+     \end{tabular}\\\\
+{\tt vec2pix\_nest, nside, vector, ipnest} 
+
+ \begin{tabular}{@{}p{0.3\hsize}@{\hspace{1ex}}
+                        p{0.7\hsize}@{}}
+                                         & renders the pixel number $ipnest$ for a pixel which, given the map resolution parameter $nside$, contains the point on the sphere at cartesian coordinates $vector$. \\
+     \end{tabular}\\\\
+{\tt nest2ring, nside, ipnest, ipring} 
+
+ \begin{tabular}{@{}p{0.3\hsize}@{\hspace{1ex}}
+                        p{0.7\hsize}@{}}
+                                         & performs conversion from NESTED to RING pixel number. \\
+     \end{tabular}\\\\
+{\tt ring2nest, nside, ipring, ipnest} 
+
+ \begin{tabular}{@{}p{0.3\hsize}@{\hspace{1ex}}
+                        p{0.7\hsize}@{}}
+                                         & performs conversion from RING to NESTED pixel number. \\
+     \end{tabular}\\\\
+
+% \begin{keywords}
+%   \begin{kwlist}{} %%% extra brace
+%     \item[ERROR =] error flag, set to 1 on output if Nside is NOT valid, or
+%     stays to 0 otherwise.
+%   \end{kwlist}
+% \end{keywords}  
+
+% \begin{codedescription}
+% {\facname checks that the given Nside is valid (power of 2 in
+% $\{1,\ldots,8192\}$) and then computes the
+% corresponding number of pixels $N_{\rm pix} = 12N_{\rm side}^2$.}
+% \end{codedescription}
+
+
+
+\begin{related}
+  \begin{sulist}{} %%%% NOTE the ``extra'' brace here %%%%
+    \item[idl] version \idlversion or more is necessary to run \facname.	
+    \item[\htmlref{npix2nside}{idl:npix2nside}] computes Nside (resolution) corresponding to Npix (total
+    pixel number)
+    \item[\htmlref{nside2npix}{idl:nside2npix}] computes Npix corresponding to Nside
+    \item[\htmlref{ang2vec}{idl:ang2vec}, \htmlref{vec2ang}{idl:vec2ang}] geometrical conversion between position angles and position vector
+  \end{sulist}
+\end{related}
+
+\begin{example}
+{
+\begin{tabular}{ll} %%%% use this tabular format %%%%
+pix2ang\_ring, 256, [17,1000], theta, phi \\
+print,theta,phi
+\end{tabular}
+}
+{
+\begin{minipage}{11cm}
+returns  \\
+    0.0095683558  \hskip 1cm   0.070182078 \\
+       2.8797933  \hskip 1cm         5.4620872 \\
+position of 2 pixels 17 and 1000 in the RING scheme with parameter 256.
+\end{minipage}
+}
+\end{example}
+
+

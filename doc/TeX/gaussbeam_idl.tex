@@ -1,0 +1,87 @@
+% -*- LaTeX -*-
+
+
+\renewcommand{\facname}{{gaussbeam }}
+\renewcommand{\FACNAME}{{GAUSSBEAM }}
+\renewcommand{\l}{{$\ell$ }}
+
+\sloppy
+
+
+
+\title{\healpix IDL Facility User Guidelines}
+\docid{\facname} \section[\facname]{ }
+\label{idl:gaussbeam}
+\docrv{Version 1.2}
+\author{Eric Hivon}
+\abstract{This document describes the \healpix IDL facility \facname.}
+
+
+
+
+\begin{facility}
+{This IDL facility provides the window function in $\ell$ space for a
+gaussian axisymmetric beam of given FWHM.
+}
+{src/idl/misc/gaussbeam.pro}
+\end{facility}
+
+\begin{IDLformat}
+{beam=\FACNAME(Fwhm, Lmax [, Dim])}
+\end{IDLformat}
+
+\begin{qualifiers}
+  \begin{qulist}{} %%%% NOTE the ``extra'' brace here %%%%
+    \item[Fwhm] Full Width Half Maximum of the gaussian beam, in arcmin (scalar real)
+    \item[Lmax] the window function is computed for the multipoles $\ell$ in \{0,...,Lmax\}
+    \item[Dim] scalar integer, optional. \\
+     If absent or set to 0 or 1,
+          the output has size (Lmax+1) and is the temperature beam;\\
+     if set to $2 \le$ Dim $\le 4$ ,
+          the output has size (Lmax+1,Dim)
+          and contains in that order : \\
+	  the TEMPERATURE beam,\\
+          the GRAD/ELECTRIC polarization beam\\
+          the CURL/MAGNETIC polarization beam\\
+          the TEMPERATURE*GRAD beam
+  \end{qulist}
+\end{qualifiers}
+
+% \begin{keywords}
+%   \begin{kwlist}{} %%% extra brace
+%   \end{kwlist}
+% \end{keywords}  
+
+\begin{codedescription}
+{\facname computes the $\ell$ space window function of a gaussian beam of FWHM
+Fwhm. For a sky of underlying power spectrum $C(\ell)$ observed with beam of
+given FWHM, the measured power spectrum will be $C(\ell)_{\rm meas} = C(\ell)
+B(\ell)^2$ where $B(\ell)$ is given by gaussbeam(Fwhm,Lmax). The
+polarization beam is also provided (when Dim $>$ 1) assuming a perfectly
+co-polarized beam (eg, Challinor et al 2000, astro-ph/0008228)}
+\end{codedescription}
+
+
+
+\begin{related}
+  \begin{sulist}{} %%%% NOTE the ``extra'' brace here %%%%
+    \item[idl] version \idlversion or more is necessary to run \facname
+    \item[\htmlref{healpixwindow}{idl:healpixwindow}] computes the \l space window function associated with
+    a \healpix pixel size
+    \item[synfast] f90 code to generate CMB maps of given power spectrum convolved with a gaussian beam
+    \item[smoothing] f90 code to smooth existing \healpix maps with a gaussian beam
+    \item[anafast] f90 code to compute the power spectrum of a \healpix sky map
+  \end{sulist}
+\end{related}
+
+\begin{example}
+{
+\begin{tabular}{ll} %%%% use this tabular format %%%%
+beam = gaussbeam(5.,1200)
+\end{tabular}
+}
+{
+beam contains the window function in \{0,...,1200\} of a gaussian beam of fwhm 5 arcmin}
+\end{example}
+
+

@@ -1,0 +1,64 @@
+
+\sloppy
+
+
+\title{\healpix Fortran Subroutines Overview}
+\docid{read\_dbintab} \section[read\_dbintab]{ }
+\label{sub:read_dbintab}
+\docrv{Version 1.1}
+\author{Frode K.~Hansen}
+\abstract{This document describes the \healpix Fortran90 subroutine READ\_DBINTAB.}
+
+\begin{facility}
+{This routine reads a double precision binary array from a FITS-file. It is used by \healpix to read precomputed $P_{lm}(\theta)$ values and pixel window functions.}
+{src/f90/mod/fitstools.f90}
+\end{facility}
+
+\begin{f90format}
+{filename, map, npixtot, nmaps, nullval, anynull, units}
+\end{f90format}
+
+\begin{arguments}
+{
+\begin{tabular}{p{0.4\hsize} p{0.05\hsize} p{0.1\hsize} p{0.35\hsize}} \hline  
+\textbf{name~\&~dimensionality} & \textbf{kind} & \textbf{in/out} & \textbf{description} \\ \hline
+                   &   &   &                           \\ %%% for presentation
+filename(LEN=\filenamelen) & CHR & IN & filename of FITS-file containing the double precision array. \\
+npixtot & I4B & IN & Number of values to be read from the file.\\
+nmaps & I4B & IN & number of 1-dim. arrays, 1 for scalar $P_{lm}\!\!$ s and pixel windows, 3 for scalar and tensor $P_{lm}\!\!$ s. \\
+map(0:npixtot-1,1:nmaps) & DP & OUT & the array read from the FITS-file.\\
+nullval & DP & OUT & value of missing pixels in the array. \\
+anynull & LGT & OUT & TRUE, if there are missing pixels, and FALSE otherwise. \\
+units(len=20)(1:nmaps) & CHR & OUT & respective physical units of the maps in the FITS file.
+\end{tabular}
+}
+\end{arguments}
+\newpage
+
+\begin{example}
+{
+call read\_dbintab ('plm\_32.fits',plm,65*66*32,1,nullval,anynull)  \\
+}
+{
+Reads precomputed scalar $P_{lm}(\theta)$ from the file `plm\_32.fits'. The values are returned in the array plm(0:65*66*32,1:1). The number of values 65*66*32 is the number of precomputed $P_{lm}(\theta)$ for a $N_{side}=32$, $lmax=64$ map. If there are missing values in the file, anynull is TRUE and nullval contains the values of these pixels.
+}
+\end{example}
+
+\begin{modules}
+  \begin{sulist}{} %%%% NOTE the ``extra'' brace here %%%%
+  \item[\textbf{fitstools}] module, containing:
+  \item[printerror] routine for printing FITS error messages.
+  \item[\textbf{cfitsio}] library for FITS file handling.		
+  \end{sulist}
+\end{modules}
+
+\begin{related}
+  \begin{sulist}{} %%%% NOTE the ``extra'' brace here %%%%
+  \item[plmgen] Executable to create files with precomputed $P_{lm}(\theta)$.
+  \item[\htmlref{write\_dbintab}{sub:write_dbintab}] Routine to create a file to be read by read\_dbintab.
+  \end{sulist}
+\end{related}
+
+\rule{\hsize}{2mm}
+
+\newpage

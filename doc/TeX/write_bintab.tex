@@ -1,0 +1,69 @@
+
+\sloppy
+
+
+\title{\healpix Fortran Subroutines Overview}
+\docid{write\_bintab*} \section[write\_bintab*]{ }
+\label{sub:write_bintab}
+\docrv{Version 1.1}
+\author{Frode K.~Hansen, Eric Hivon}
+\abstract{This document describes the \healpix Fortran90 subroutine WRITE\_BINTAB.}
+
+\begin{facility}
+{This routine creates a binary FITS-file from a \healpix map. The routine can save a temperature map or both temperature and polarisation maps (T,Q,U) to the file.}
+{src/f90/mod/fitstools.f90}
+\end{facility}
+
+\begin{f90format}
+{map, npix, nmap, header, nlheader, filename \optional{[, extno]}}
+\end{f90format}
+\aboutoptional
+
+\begin{arguments}
+{
+\begin{tabular}{p{0.30\hsize} p{0.05\hsize} p{0.08\hsize} p{0.49\hsize}} \hline  
+\textbf{name~\&~dimensionality} & \textbf{kind} & \textbf{in/out} & \textbf{description} \\ \hline
+                   &   &   &                           \\ %%% for presentation
+map(0:npix-1,1:nmap) & SP/ DP & IN & the map to write to the FITS-file.\\
+npix & I4B & IN & Number of pixels in the map.\\
+nmap & I4B & IN & number of maps to be written, 1 for temperature only, and 3 for (T,Q,U). \\
+header(LEN=80) (1:nlheader) & CHR & IN & The header for the FITS-file. \\
+nlheader & I4B & IN & number of header lines to write to the file. \\
+filename(LEN=8) & CHR & IN & the map(s) is (are) written to a FITS-file with this filename. \\
+\optional{extno}	& I4B & IN & extension number in which to write the data (0
+                   based). \default {0}
+\end{tabular}
+}
+\end{arguments}
+
+\begin{example}
+{
+call write\_bintab (map,12*32**2,3,header,120,'map.fits')  \\
+}
+{
+Makes a binary FITS-file called `map.fits' from the \healpix maps (T,Q,U) in the array map(0:12*32**2-1,1:3). The number of pixels 12*32**2 corresponds to the number of pixels in a $N_{side}=32$ \healpix map. The header for the FITS-file is given in the string array header and the number of lines in the header is 120. 
+}
+\end{example}
+\begin{modules}
+  \begin{sulist}{} %%%% NOTE the ``extra'' brace here %%%%
+  \item[\textbf{fitstools}] module, containing:
+  \item[printerror] routine for printing FITS error messages.
+  \item[\textbf{cfitsio}] library for FITS file handling.		
+  \end{sulist}
+\end{modules}
+
+\begin{related}
+  \begin{sulist}{} %%%% NOTE the ``extra'' brace here %%%%
+  \item[\htmlref{input\_map}{sub:input_map}, \htmlref{read\_bintab}{sub:read_bintab}] routines which read a file created by \thedocid. 
+  \item[\htmlref{map2alm}{sub:map2alm}] subroutine which analyse a map and returns the $a_{lm}$ coeffecients.
+  \item[\htmlref{output\_map}{sub:output_map}] subroutine which calls \thedocid
+  \item[\htmlref{write\_bintabh}{sub:write_bintabh}] subroutine to write a large
+array into a FITS file piece by piece
+  \item[\htmlref{input\_tod*}{sub:input_tod}] subroutine to read an arbitrary subsection of
+  a large binary table
+  \item[\htmlref{write\_minimal\_header}{sub:write_minimal_header}] routine to write minimal FITS header\end{sulist}
+\end{related}
+
+\rule{\hsize}{2mm}
+
+\newpage

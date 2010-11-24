@@ -1,0 +1,85 @@
+% -*- LaTeX -*-
+
+
+\renewcommand{\facname}{{vec2ang }}
+\renewcommand{\FACNAME}{{VEC2ANG }}
+
+\sloppy
+
+
+
+\title{\healpix IDL Facility User Guidelines}
+\docid{\facname} \section[\facname]{ }
+\label{idl:vec2ang}
+\docrv{Version 1.0}
+\author{Eric Hivon}
+\abstract{This document describes the \healpix IDL facility \facname.}
+
+
+
+
+\begin{facility}
+{This IDL facility convert the 3D position vectors of points into their angles
+on the sphere.
+}
+{src/idl/toolkit/vec2ang.pro}
+\end{facility}
+
+\begin{IDLformat}
+{\FACNAME, Vector, Theta, Phi [, ASTRO=]}
+\end{IDLformat}
+
+\begin{qualifiers}
+  \begin{qulist}{} %%%% NOTE the ``extra'' brace here %%%%
+    \item[Vector] input, array, \\
+	three dimensional cartesian position vector
+                   $(x,y,z)$ (not necessarily normalised). The north pole is $(0,0,1)$. 
+	The coordinates are ordered as follows
+                   $x(0),\ldots,x(n-1),\ y(0),\ldots,y(n-1),\ z(0),\ldots,z(n-1)$
+    \item[Theta] output, vector, \\
+	vector, colatitude in radians measured southward from north pole in
+    [0,$\pi$] (mathematical coordinates).\\
+       If ASTRO is set, Theta is the latitude in degrees measured 
+       northward from the equator, in [-90, 90] (astronomical coordinates).
+    \item[Phi] output, vector, \\
+	longitude in radians measured eastward, in [0, $2\pi$] (mathematical coordinates).\\
+ 	If ASTRO is set, Phi is the longitude in degree measured eastward, in
+    [0,360] (astronomical coordinates).
+  \end{qulist}
+\end{qualifiers}
+
+\begin{keywords}
+  \begin{kwlist}{} %%% extra brace
+    \item[ASTRO =] if set Theta and Phi are the latitude and longitude in
+    degrees (astronomical coordinates) instead of the colatitude and longitude
+    in radians (mathematical coordinates).
+  \end{kwlist}
+\end{keywords}  
+
+\begin{codedescription}
+{\facname performs the geometrical transform from the 3D position vectors
+$(x,y,z)$ of
+points 
+into their angles $(\theta,\phi)$ on the sphere:
+$x = \sin\theta\cos\phi$, $y=\sin\theta\sin\phi$, $z=\cos\theta$}
+\end{codedescription}
+
+
+
+\begin{related}
+  \begin{sulist}{} %%%% NOTE the ``extra'' brace here %%%%
+    \item[idl] version \idlversion or more is necessary to run \facname.	
+    \item[\htmlref{pix2xxx}{idl:pix_tools}, ... ] conversion between vector or angles and pixel index
+    \item[\htmlref{ang2vec}{idl:ang2vec}] conversion from angles to position vectors
+  \end{sulist}
+\end{related}
+
+\begin{example}
+{
+\begin{tabular}{ll} %%%% use this tabular format %%%%
+\end{tabular}
+}
+{
+}
+\end{example}
+

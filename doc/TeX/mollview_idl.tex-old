@@ -1,0 +1,244 @@
+% -*- LaTeX -*-
+
+% PLEASE USE THIS FILE AS A TEMPLATE FOR THE DOCUMENTATION OF YOUR OWN
+% FACILITIES: IN PARTICULAR, IT IS IMPORTANT TO NOTE COMMENTS MADE IN
+% THE TEXT AND TO FOLLOW THIS ORDERING. THE FORMAT FOLLOWS ONE USED BY
+% THE COBE-DMR PROJECT.	
+% A.J. Banday, April 1999.
+
+
+
+
+\sloppy
+
+
+
+\title{\healpix IDL Facility User Guidelines}
+\docid{mollview} \section[mollview]{ }
+\docrv{Version 1.1}
+\author{Eric Hivon}
+\abstract{This document describes the \healpix facility mollview.}
+
+
+
+
+\begin{facility}
+{This IDL facility provides a means to visualise a full sky Mollweide projection of
+\healpix and COBE Quad-Cube maps in an IDL environment. It also offers the possibility to
+generate gif and postscript images of the projected map.}
+{src/idl/visu/mollview.pro}
+\end{facility}
+
+\begin{IDLformat}
+{MOLLVIEW, File, [Select, ] [COLT=, ... 
+            ... UNITS=, XPOS=, YPOS= ]
+}
+\end{IDLformat}
+
+\begin{qualifiers}
+  \begin{qulist}{} %%%% NOTE the ``extra'' brace here %%%%
+ 	\item[{File}] 
+          by default :          name of a FITS file containing 
+               the healpix map in an extension or in the image field \\
+          if Online is set :    name of a variable containing
+               the healpix map \\
+          if Save is set   :    name of an IDL saveset file containing
+               the healpix map stored under the variable  {\tt data}
+ 	\\
+	\nodefault
+
+       \item[{Select}]
+		  column of the BIN FITS table to be plotted  \\
+               can be either -- a name : value given in TTYPEi of the FITS file \\
+                        NOT case sensitive and can be truncated, \\
+                        (only letters, digits and underscore are valid) \\
+               or -- an integer        : number i of the column
+                            containing the data, starting with 1
+                   \default 1
+               (see the Examples below)
+
+ 	\item[{Colt=}]  color table number, in [0,40]
+        	\default {33 (Blue-Red)}
+
+      	\item[{Coord=}] vector with 1 or 2 elements describing the coordinate system of the map 
+                either 'C' or 'Q' : Celestial2000 = eQuatorial, \\
+                       'E'        : Ecliptic, \\
+                       'G'        : Galactic  \\
+               if coord = ['x','y'] the map is rotated from system 'x' to system 'y' \\
+               if coord = ['y'] the map is rotated to coordinate system 'y' (with the
+               original system assumed to be Galactic unless indicated otherwise in the
+                file) \\
+                  \seealso Rot
+
+        \item[{Flip=}] if set the longitude increases to the right, whereas by
+                default (astronomical convention) it increases towards the left
+ 
+        \item[{Gal\_cut=}] (positive float) specifies the symmetric galactic cut in degrees
+              outside of which the the monopole and/or dipole fitting is done
+	\default{0: monopole and dipole fit done on the whole sky}
+              (see also: No\_dipole, No\_monopole)
+
+	\item[{Gif=}] string containing the name of a .GIF output \\
+	      if set to 1            : output the plot in plot\_mollweide.gif \\
+	      if set to a file name  : output the plot in that file \\
+	Please note that the resulting GIF image might not always look
+	      as excpected. The reason for this is problems with
+	      'backing store' in the IDL-routine TVRD. Please read the IDL
+	      documentation for more information. \\
+	\default {no .GIF done} \\              \seealso Crop, Ps and Preview
+
+ 	\item[{Graticule=}] if set, puts a graticule with delta\_long = delta\_lat = 45
+         degrees \\
+         if set to a scalar $>$ 10 delta\_long = delta\_lat = graticule \\
+         if set to [x,y] with x,y $>$ 10 then delta\_long = x and delta\_lat = y \\
+	\default {0 [no graticule]}
+
+ 	\item[{Hxsize=}] horizontal dimension (in cm) of the Postscript printout
+    		\default {26 cm ~ 10 in} \\               \seealso Pxsize
+
+ 	\item[{Max=}] Set the maximum value for the plotted signal \default{is to use the actual signal maximum}.
+ 	\item[{Min=}] Set the minimum value for the plotted signal \default{is to use the actual signal minimum}.
+
+	\item[{Ps=}] 
+	      if set to 1            : output the plot in plot\_mollweide.ps \\
+	      if set to a file name  : output the plot in that file \\
+		\default 0 \\
+               \seealso Preview
+
+ 	\item[{Pxsize=}] set the number of horizontal screen\_pixels or postscript\_color\_dots of the plot
+    		\default {800} 
+    		(useful for high definition color printer)
+
+ 
+ 	\item[{Rot=}] vector with 1, 2 or 3 elements specifing the rotation angles in DEGREES
+               to apply to the map in the 'output' coordinate system (see Coord)
+             = ( lon0, [lat0, rat0])  \\
+               lon0 : longitude of the point to be put at the center of the plot
+		       the longitude increases Eastward, ie to the left of the plot
+ 		      \default 0 \\
+               lat0 : latitude of the point to be put at the center of the plot
+ 		      \default 0 \\
+               rot0 : anti clockwise rotation to apply to the sky around the
+                     center (lon0, lat0) before projecting
+                     \default 0 
+
+ 	\item[{Subtitle=}] String containing the subtitle to the plot\\ \seealso Titleplot
+
+ 	\item[{Titleplot=}] String containing the title of the plot, 
+     		if not set the title will be File\\ \seealso Subtitle
+
+	\item[{Units=}] String containing the units, to be put on the right
+		hand side of the color bar, overrides the value read from the input file,
+		if any\\ \seealso Nobar
+
+	\item[{Xpos=}] The X position on the screen of the lower left corner
+	        of the window, in device coordinate
+
+	\item[{Ypos=}] The Y position on the screen of the lower left corner 
+               of the window, in device coordinate
+
+  \end{qulist}
+\end{qualifiers}
+
+\begin{keywords}
+  \begin{kwlist}{} %%% extra brace
+       \item[{Crop}] if set the GIF file only contains the mollweide map and
+               not the title, color bar, ... \\
+                \seealso Gif
+
+	\item[{Hist\_Equal}]  if set,     uses a histogram equalized color mapping
+			(useful for non gaussian data field)
+		\default {uses linear color mapping and 
+                     		puts the level 0 in the middle
+                     		of the color scale (ie, green for Blue-Red)
+				unless Min and Max are not symmetric}\\
+                     \seealso Log
+
+ 	\item[{Log}] display the log of map. This is intended for
+ 	application to positive definite maps only, eg. Galactic foreground emission templates \\	\seealso Hist
+
+	\item[{Nested}] specify that the online file is ordered in the nested scheme
+
+        \item[{No\_dipole=}] if set  (and Gal\_cut is not set) 
+                the best fit monopole *and* dipole over all valid pixels are
+                removed; \\
+                if Gal\_cut is set to $b>0$, the best monopole and dipole fit is performed on all valid
+                pixels with $|$galactic latitude$|>b$ (in deg) and is removed from
+                all valid pixels \\
+	     \default {0 (no monopole or dipole removal)}\\
+              can NOT be used together with No\_monopole \\ \seealso {Gal\_cut, No\_monopole}
+
+        \item[{No\_monopole=}] if set (and Gal\_cut is not set) 
+                the best fit monopole over all valid pixels is
+                removed; \\
+                if Gal\_cut is set to $b>0$, the best monopole fit is performed on all valid
+                pixels with $|$galactic latitude$|>b$ (in deg) and is removed from
+                all valid pixels \\
+	     \default {0 (no monopole removal)}\\
+              can NOT be used together with No\_dipole \\ \seealso {Gal\_cut, No\_dipole}
+
+
+
+ 	\item[{Nobar}] if set, no color bar is present
+
+	\item[{Nolabels}] if set, no color bar label (min and max) is present, \default
+	{labels are present}
+
+ 	\item[{Online}] if set, you can put directly a \healpix vector or an IDL
+    		structure on File (useful when the data to be plotted are already
+    		available on line)
+		N.B. : the content of File is NOT altered in the
+		process, \\ **  can not be used with /SAVE  **
+
+	\item[{Preview}] if set, there is a 'ghostview' preview of the
+	        postscript file or a 'xv' preview of the gif file\\
+	 \seealso Gif and Ps
+
+ 	\item[{Save}] if set, tells that File is in IDL saveset format, 
+    		the variable saved should be DATA \\
+                 ** can not be used with /ONLINE **
+
+  \end{kwlist}
+\end{keywords}
+
+\begin{description}
+{mollview reads in a \healpix sky map in FITS format and generates a
+Mollweide projection of it, that can be visualized on the screen or
+exported in a GIF or Postscript file. mollview allows the selection of
+the coordinate system, map size, color table, color bar inclusion,
+linear or log scaling, histogram equalised
+color scaling, maximum and 
+minimum range for the plot, plot-title {\it etc}. }
+\end{description}
+
+
+
+\begin{related}
+  \begin{sulist}{} %%%% NOTE the ``extra'' brace here %%%%
+  \item[idl] version 5.0 or more is necessary to run mollview
+  \item[ghostview] ghostview or a similar facility is required to view
+	  the Postscript image generated by mollview.
+  \item[xv] xv or a similar facility is required to view the
+            gif image generated by mollview (a browser can also 
+            be used).
+  \item[synfast] This \healpix facility will generate the FITS format 
+            sky map to be input to mollview.
+  \end{sulist}
+\end{related}
+
+
+\begin{example}
+{
+\begin{tabular}{ll} %%%% use this tabular format %%%%
+mollview, & \lq planck100GHZ-LFI.fits', min=-100, max=100, /graticule, \$ \\
+	& title='Simulated Planck LFI Sky Map at 100GHz'\\
+\end{tabular}
+}
+{mollview reads in the map $\lq$ planck100GHZ-LFI.fits' and generates
+an output image in which
+the temperature scale has been set to lie between $\pm$ 100 ($\mu$K),
+a graticule with a 45 degree step in longitude and latitude is drawn,
+and the title $\lq$ Simulated Planck LFI Sky Map at 100GHz' appended to the image.
+}
+\end{example}
+

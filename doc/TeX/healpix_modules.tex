@@ -1,0 +1,58 @@
+% -*- LaTeX -*-
+
+\sloppy
+
+
+\title{\healpix Fortran Subroutines Overview}
+\docid{healpix\_modules} \section[healpix\_modules module]{ }
+\label{sub:healpix_modules}
+\docrv{Version 2.0}
+\author{Eric Hivon}
+\abstract{This document describes the \healpix Fortran90 module HEALPIX\_MODULES.}
+
+\begin{facility}
+{This module is a meta module containing most of the \healpix modules. It currently includes
+\begin{itemize}
+\setlength{\itemsep}{-5pt}
+  \item {\tt{alm\_tools}},
+  \item {\tt{bit\_manipulation}},
+  \item {\tt{coord\_v\_convert}},
+  \item {\tt{extension}},
+  \item {\tt{fitstools}},
+  \item {\tt{head\_fits}},
+  \item {\tt{healpix\_fft}},
+  \item \htmlref{{\tt{healpix\_types}}}{sub:healpix_types},
+%  \item m\_indmed
+  \item {\tt{misc\_utils}},
+  \item {\tt{num\_rec}},
+  \item {\tt{obsolete}},
+  \item {\tt{paramfile\_io}},
+  \item {\tt{pix\_tools}},
+  \item {\tt{ran\_tools}},
+  \item {\tt{rngmod}},
+  \item {\tt{statistics}},
+  \item {\tt{udgrade\_nr}},
+  \item {\tt{utilities}}.
+\end{itemize}
+
+Note that {\tt{mpi\_alm\_tools}} is not included since it requires the MPI library for compilation.
+}
+{src/f90/mod/healpix\_modules.f90}
+\end{facility}
+
+
+\begin{example}
+{
+use healpix\_modules \\
+print*,' pi = ',PI \\
+print*,' number of pixels in a Nside=64 map:',nside2npix(64)
+}
+{
+Invoking {\tt{healpix\_modules}} gives access to all \healpix routines and parameters.
+}
+\end{example}
+
+
+\rule{\hsize}{2mm}
+
+\newpage

@@ -1,0 +1,62 @@
+
+\sloppy
+
+
+\title{\healpix Fortran Subroutines Overview}
+\docid{vect\_prod} \section[vect\_prod]{ }
+\label{sub:vect_prod}
+\docrv{Version 1.2}
+\author{Eric Hivon}
+\abstract{This document describes the \healpix Fortran90 subroutine VECT\_PROD.}
+
+\begin{facility}
+{Returns the vectorial product of two vectors.} 
+{src/f90/mod/pix\_tools.f90}
+\end{facility}
+
+\begin{f90format}
+{v1, v2, v3}
+\end{f90format}
+
+\begin{arguments}
+{
+\begin{tabular}{p{0.25\hsize} p{0.05\hsize} p{0.1\hsize} p{0.5\hsize}} \hline 
+\textbf{name\&dimensionality} & \textbf{kind} & \textbf{in/out} & \textbf{description} \\ \hline
+                   &   &   &                           \\ %%% for presentation
+v1(3) & DP & IN & cartesian vector ${\bf v}_1$. \\
+v2(3) & DP & IN & cartesian vector ${\bf v}_2$. \\
+v3(3) & DP & OUT & cartesian vector ${\bf v}_3 = {\bf v}_1 \times {\bf v}_2$ \\
+\end{tabular}
+}
+\end{arguments}
+
+\begin{example}
+{
+use healpix\_types \\
+use pix\_tools,    only : vect\_prod \\
+real(DP), dimension(3) :: vec\\
+real(DP) :: one = 1.0\_dp \\
+call vect\_prod((/2,0,0/)*one, (/0,1,0/)*one, vec)  \\
+print*, vec
+}
+{
+will return : 0.00E+000  0.00E+000   2.00
+}
+\end{example}
+% \newpage
+% \begin{modules}
+%   \begin{sulist}{} %%%% NOTE the ``extra'' brace here %%%%
+%  \item[\htmlref{in\_ring}{sub:in_ring}] routine to find the pixels in a certain slice of a given ring.		
+%  \item[\htmlref{ring\_num}{sub:ring_num}] function to return the ring number corresponding to the coordinate $z$
+%   \end{sulist}
+% \end{modules}
+
+\begin{related}
+  \begin{sulist}{} %%%% NOTE the ``extra'' brace here %%%%
+  \item[\htmlref{angdist}{sub:angdist}] computes the angular distance between 2 vectors
+  \end{sulist}
+\end{related}
+
+\rule{\hsize}{2mm}
+
+\newpage

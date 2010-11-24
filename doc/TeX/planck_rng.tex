@@ -1,0 +1,75 @@
+
+\sloppy
+
+
+\title{\healpix Fortran Subroutines Overview}
+\docid{planck\_rng} \section[planck\_rng derived type]{ }
+\label{sub:planck_rng}
+\docrv{Version 2.0}
+\author{Eric Hivon}
+\abstract{This document describes the \healpix Fortran90 type \thedocid.}
+
+\begin{facility}
+{The derived type \thedocid\ is used by the Random Number Generation routines 
+\htmlref{rand\_init}{sub:rand_init},
+\htmlref{rand\_uni}{sub:rand_uni}, 
+\htmlref{rand\_gauss}{sub:rand_gauss} to describe fully the current RNG
+sequence.\\
+Most users do not need to know about the \thedocid\ definition. It may be
+useful for those wanting to take a snapshot of the RNG sequence they are using (by eg,
+dumping the latest values of \thedocid\ structure on disk) so that the same sequence can be resumed
+later on from that same point.}
+{src/f90/mod/rngmod.f90}
+\end{facility}
+
+
+% %---------------------
+% \newenvironment{mytable}[1]{%
+% \begin{minipage}[b]{\linewidth}{%
+% % \renewcommand{\thefootnote}{\fnsymbol{footnote}}
+% % \renewcommand{\footnoterule}{}
+% {#1}
+% }%
+% \end{minipage}
+% }
+%---------------------
+
+The type \thedocid\ is a structure defined as
+
+\begin{mytable}{%
+\begin{tabularx}{\linewidth}{lc X}
+name & type  & definition \\
+\hline
+x, y, z, w & I4B & internal variables of uniform RNG\\
+gset & DP & internal variable for Gaussian RNG\\
+empty & LGT & flag used by Gaussian RNG\\
+\hline
+\end{tabularx}
+}%
+\end{mytable}
+
+
+
+% \begin{example}
+% {
+% use planck\_rng \\
+% real(kind=DP) :: dx \\
+% print*,' pi = ',PI
+% }
+% {
+% The value of {\tt PI}, as well as all other \thedocid\ parameters are made known
+% to the code
+% }
+% \end{example}
+
+\begin{related}
+  \begin{sulist}{} %%%% NOTE the ``extra'' brace here %%%%
+  \item[\htmlref{rand\_gauss}{sub:rand_gauss}] function which returns a  random normal deviate.
+  \item[\htmlref{rand\_uni}{sub:rand_uni}] function which returns a random uniform deviate.
+   \item[\htmlref{rand\_init}{sub:rand_init}] subroutine to initiate a random number sequence. 
+  \end{sulist}
+\end{related}
+
+\rule{\hsize}{2mm}
+
+\newpage

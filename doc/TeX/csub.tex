@@ -1,0 +1,101 @@
+% -*- LaTeX -*-
+
+% PLEASE USE THIS FILE AS A TEMPLATE FOR THE DOCUMENTATION OF YOUR OWN
+% FACILITIES: IN PARTICULAR, IT IS IMPORTANT TO NOTE COMMENTS MADE IN
+% THE TEXT AND TO FOLLOW THIS ORDERING. THE FORMAT FOLLOWS ONE USED BY
+% THE COBE-DMR PROJECT.	
+% A.J. Banday, April 1999.
+
+\documentclass[12pt,twoside]{article}
+%%\usepackage{healrut}
+\usepackage{healpix,html,makeidx}
+\begin{htmlonly}
+\renewcommand{\ell}{l}
+\renewcommand{\lq}{`}
+\input{hpxversion}
+\end{htmlonly}
+\newcommand{\nside}{{N_{\rm side}}}
+\newcommand{\npix}{{N_{\rm pix}}}
+%\newcommand{\myhtmlimage}[1]{\htmlimage{#1}}
+\newcommand{\myhtmlimage}[1]{ }
+
+%\includeonly{}
+\sloppy
+\setcounter{secnumdepth}{0}
+\begin{document}
+
+\title{\healpix C Subroutines Overview}
+\label{sub:subroutines}
+\docrv{Version \hpxversion}
+% \docrv{Version 1.20}
+\author{Eric Hivon, Anthony J.~Banday, Matthias Bartelmann, Frode K.~Hansen,
+Krzysztof M.~G\'orski, Martin Reinecke and Benjamin D.~Wandelt}
+\abstract{This document is an overview of the \healpix C subroutines.}
+\date{\today}
+\frontpage
+%%   \pagestyle{myheadings}
+%%   \markboth{left}{right}
+
+\tableofcontents
+\newpage
+\section[Conventions]{{\Large Conventions}}
+Here we list some conventions which are used in this document.
+\\
+\hrule
+\begin{tabular}{@{}p{0.3\hsize}@{\hspace{1ex}}
+                        p{0.7\hsize}@{}}  &  \\
+
+
+$\mathbf{N_{side}}$ & \healpix resolution parameter --- see the
+\healpix Primer.\\
+\\
+% $\mathbf{map}$ & We use the word ``map'' referring to a function,
+% defined on the set of all \healpix pixels. %'' ``
+\\
+$\mathbf{\theta}$ & The polar angle or colatitude on the sphere,
+ranging from 0 at the North Pole to $\pi$ at the South Pole.\\
+\\
+$\mathbf{\phi}$ & The azimuthal angle on the sphere, $\phi\in[0,2\pi[$.\\
+\\
+\end{tabular}
+
+\section[Compilation and Installation]{{\Large Compilation and Installation}}
+A tentative compilation and installation script is provided in {\tt
+src/C/doinstall.s}.
+If it does not work, you can try editing the {\tt
+src/C/subs/Makefile} by hand.
+
+\section[Usage]{{\Large Usage}}
+To use in your 'c' code, include the line 
+ 
+{\tt \#include "chealpix.h" } 
+ 
+in your code and link with something like 
+ 
+{\tt gcc -o myprog myprog.c -I<incdir> -L<libdir> -lchealpix}
+
+where <incdir> is where you've installed the '.h' files and 
+<libdir> is where you've installed the libraries (See the header of 
+the 'subs/Makefile').
+
+You will also need the 'cfitsio' library. See 
+\htmladdnormallink{{\tt http://heasarc.gsfc.nasa.gov/docs/software/fitsio/}}
+			{http://heasarc.gsfc.nasa.gov/docs/software/fitsio/}
+
+\section[Note on the C routines]{{\Large Note on the C routines}}
+This small set of C routines is provided as a start up kit to users wanting to
+link the \healpix routines with some other languages (C, C++, IDL, perl, ...),
+and it was actually mainly provided by various users (see individual routines
+for details). As for the rest of the
+\healpix package, all interested persons are welcome to contribute to this effort.
+
+\newpage
+\include{ang2vec_c}
+\include{get_fits_size_c}
+\include{nside2npix_c}
+\include{pix_tools_c}
+\include{read_healpix_map_c}
+\include{vec2ang_c}
+\include{write_healpix_map_c}
+
+\end{document}

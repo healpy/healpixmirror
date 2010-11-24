@@ -1,0 +1,73 @@
+
+\sloppy
+
+
+\title{\healpix Fortran Subroutines Overview}
+\docid{query\_triangle} \section[query\_triangle]{ }
+\label{sub:query_triangle}
+\docrv{Version 1.2}
+\author{Eric Hivon}
+\abstract{This document describes the \healpix Fortran90 subroutine QUERY\_TRIANGLE.}
+
+\begin{facility}
+{Routine to find the index of all pixels enclosed in a spherical triangle described by its three vertices. The output indices can be either in the RING or NESTED scheme} 
+{src/f90/mod/pix\_tools.f90}
+\end{facility}
+
+\begin{f90format}
+{nside, v1, v2, v3, listpix, nlist [, nest, inclusive]}
+\end{f90format}
+
+\begin{arguments}
+{
+\begin{tabular}{p{0.28\hsize} p{0.05\hsize} p{0.1\hsize} p{0.47\hsize}} \hline 
+\textbf{name\&dimensionality} & \textbf{kind} & \textbf{in/out} & \textbf{description} \\ \hline
+                   &   &   &                           \\ %%% for presentation
+nside & I4B & IN & the $N_{side}$ parameter of the map. \\
+v1(3) & DP & IN & cartesian vector pointing at the triangle first vertex. \\
+v2(3) & DP & IN & cartesian vector pointing at the triangle second vertex. \\
+v3(3) & DP & IN & cartesian vector pointing at the triangle third vertex. \\
+listpix(0:*) & I4B & OUT & the index for all pixels enclosed in the triangle. Make sure that the size of the array is big enough to contain all pixels. \\ 
+nlist & I4B & OUT & The number of pixels listed in $listpix$. \\
+nest\ \ (OPTIONAL) & I4B & IN &  The pixel indices are in the NESTED numbering scheme if nest=1, and in RING scheme otherwise. \\
+inclusive\ \ (OPTIONAL) & I4B & IN & If set to 1, all the pixels overlapping
+                   (even partially)
+                   with the triangle are listed, otherwise only those whose
+                   center lies within the triangle are listed. \\
+\end{tabular}
+}
+\end{arguments}
+
+\begin{example}
+{
+call query\_triangle(256,(/1,0,0/),(/0,1,0/),(/0,0,1/),listpix,nlist)  \\
+}
+{
+Returns the RING pixel index of the (98560) pixels in the octant ($x,y,z>0$) in a $N_{side}=256$ map.
+}
+\end{example}
+%\newpage
+\begin{modules}
+  \begin{sulist}{} %%%% NOTE the ``extra'' brace here %%%%
+ \item[\htmlref{in\_ring}{sub:in_ring}] routine to find the pixels in a certain slice of a given ring.		
+ \item[intrs\_intrv] routine to compute the intersection of 2 intervals on a circle
+ \item[\htmlref{ring\_num}{sub:ring_num}] function to return the ring number corresponding to the coordinate $z$
+ \item[\htmlref{vect\_prod}{sub:vect_prod}] routine to compute the vectorial product of two 3D vectors
+  \end{sulist}
+\end{modules}
+
+\begin{related}
+  \begin{sulist}{} %%%% NOTE the ``extra'' brace here %%%%
+  \item[\htmlref{pix2ang}{sub:pix_tools}, \htmlref{ang2pix}{sub:pix_tools}] convert between angle and pixel number.
+  \item[\htmlref{pix2vec}{sub:pix_tools}, \htmlref{vec2pix}{sub:pix_tools}] convert between a cartesian vector and pixel number.
+  \item[\htmlref{query\_disc}{sub:query_disc}, \htmlref{query\_polygon}{sub:query_polygon},]
+  \item[\htmlref{query\_strip}{sub:query_strip}, query\_triangle] render the list of pixels enclosed
+  respectively in a given disc, polygon, latitude strip and triangle
+  \item[\htmlref{surface\_triangle}{sub:surface_triangle}] computes the surface of a spherical triangle defined by 3 vertices
+
+  \end{sulist}
+\end{related}
+
+\rule{\hsize}{2mm}
+
+\newpage

@@ -1,0 +1,70 @@
+
+\sloppy
+
+
+\title{\healpix Fortran Subroutines Overview}
+\docid{add\_dipole*} \section[add\_dipole*]{ }
+\label{sub:add_dipole}
+\docrv{Version 2.0}
+\author{Eric Hivon}
+\abstract{This document describes the \healpix Fortran90 subroutine ADD\_DIPOLE.}
+
+\begin{facility}
+{This routine provides a means to add a monopole and dipole to a \healpix map.}
+{src/f90/mod/pix\_tools.f90}
+\end{facility}
+
+\begin{f90format}
+{nside, map, ordering, degree, multipoles [, fmissval]}
+\end{f90format}
+
+\begin{arguments}
+{
+\begin{tabular}{p{0.32\hsize} p{0.05\hsize} p{0.08\hsize} p{0.45\hsize}} \hline  
+\textbf{name~\&~dimensionality} & \textbf{kind} & \textbf{in/out} & \textbf{description} \\ \hline
+                   &   &   &                           \\ %%% for presentation
+nside & I4B & IN & value of $\nside$ resolution parameter for input map\\
+map(0:12*nside*nside-1) & SP/ DP & INOUT & \healpix map to which the monopole and dipole will be
+                   added. Those are added to {\em all unflagged pixels}. \\
+ordering & I4B & IN & \healpix\ scheme 1:RING, 2: NESTED \\
+degree & I4B & IN & multipoles to add. It is either 0 (nothing done),
+                   1 (monopole only) or 2 (monopole and dipole) \\
+multipoles(0:degree*degree-1) & DP & IN & values of monopole and
+                   dipole to add.  The monopole is described as a scalar in the same
+                   units as the input map, the dipole as a 3D cartesian vector, 
+		   in the same units. \\
+fmissval  \hskip 4cm (OPTIONAL) & SP/ DP & IN & value used to flag bad pixel on input
+                   \default{-1.6375e30}. Pixels with that value are left unchanged.\\
+\end{tabular}
+}
+\end{arguments}
+\newpage
+\begin{example}
+{
+call \thedocid (128, map, 1, 2, ($\backslash$ 10.0\_dp, 0.0\_dp, 1.2\_dp,
+0.0\_dp $\backslash$) )  \\
+}
+{
+{\tt map} is a \healpix\ map of resolution $\nside=128$, with the RING ordering scheme. A
+monopole of amplitude 10 and a dipole of amplitude 1.2 and directed along the
+$y$ axis will be added to it.
+}
+\end{example}
+
+\begin{modules}
+  \begin{sulist}{} %%%% NOTE the ``extra'' brace here %%%%
+  \item[\textbf{pix\_tools}] module, containing:
+%  \item[\textbf{pix\_tools}] module, containing:
+  \end{sulist}
+\end{modules}
+
+\begin{related}
+  \begin{sulist}{} %%%% NOTE the ``extra'' brace here %%%%
+  \item[\htmlref{remove\_dipole}{sub:remove_dipole}] routine to remove the best fit monopole and
+  monopole from a map.
+  \end{sulist}
+\end{related}
+
+\rule{\hsize}{2mm}
+
+\newpage

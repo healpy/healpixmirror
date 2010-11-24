@@ -1,0 +1,78 @@
+
+\sloppy
+
+
+\title{\healpix Fortran Subroutines Overview}
+\docid{query\_strip} \section[query\_strip]{ }
+\label{sub:query_strip}
+\docrv{Version 1.2}
+\author{Eric Hivon}
+\abstract{This document describes the \healpix Fortran90 subroutine QUERY\_STRIP.}
+
+\begin{facility}
+{Routine to find the index of all pixels enclosed in a latitude strip. The output indices can be either in the RING or NESTED scheme} 
+{src/f90/mod/pix\_tools.f90}
+\end{facility}
+
+\begin{f90format}
+{nside, theta1, theta2, listpix, nlist [, nest, inclusive]}
+\end{f90format}
+
+\begin{arguments}
+{
+\begin{tabular}{p{0.25\hsize} p{0.05\hsize} p{0.1\hsize} p{0.5\hsize}} \hline  
+\textbf{name\&dimensionality} & \textbf{kind} & \textbf{in/out} & \textbf{description} \\ \hline
+                   &   &   &                           \\ %%% for presentation
+nside & I4B & IN & the $N_{side}$ parameter of the map. \\
+theta1 & DP & IN & colatitude lower bound in radians measured from North Pole
+                   (between 0 and $\pi$). \\
+theta2 & DP & IN & colatitude upper bound in radians measured from North Pole (between 0 and $\pi$). If
+                   theta1$<$ theta2, the pixels lying in [theta1,theta2]
+                   are output, otherwise, the pixel lying in [0,
+                   theta2] and those lying in [theta1, $\pi$] are output.\\
+listpix(0:*) & I4B & OUT & the index for all pixels enclosed in the
+                   strip(s). Make sure that the size of the array is big enough to contain all pixels. \\ 
+nlist & I4B & OUT & The number of pixels listed in $listpix$. \\
+nest\ \ (OPTIONAL) & I4B & IN &  The pixel indices are in the NESTED numbering scheme if nest=1, and in RING scheme otherwise. \\
+inclusive\ \ (OPTIONAL) & I4B & IN & If set to 1, all the pixels overlapping
+                   (even partially)
+                   with the strip are listed; otherwise only those whose
+                   center lies within the strip are listed. \\
+\end{tabular}
+}
+\end{arguments}
+
+\begin{example}
+{
+call query\_strip(256,0.75*PI,0.2*PI,listpix,nlist,nest=1)  \\
+}
+{
+Returns the NESTED pixel index of all pixels with colatitude in
+[0,$\pi/5$] and those with colatitude in [$3\pi/4$,$\pi$]
+}
+\end{example}
+%\newpage
+\begin{modules}
+  \begin{sulist}{} %%%% NOTE the ``extra'' brace here %%%%
+ \item[\htmlref{in\_ring}{sub:in_ring}] routine to find the pixels in a certain slice of a given ring.		
+ \item[intrs\_intrv] routine to compute the intersection of 2 intervals on a circle
+ \item[\htmlref{ring\_num}{sub:ring_num}] function to return the ring number corresponding to the coordinate $z$
+ \item[\htmlref{vect\_prod}{sub:vect_prod}] routine to compute the vectorial product of two 3D vectors
+  \end{sulist}
+\end{modules}
+
+\begin{related}
+  \begin{sulist}{} %%%% NOTE the ``extra'' brace here %%%%
+  \item[\htmlref{pix2ang}{sub:pix_tools}, \htmlref{ang2pix}{sub:pix_tools}] convert between angle and pixel number.
+  \item[\htmlref{pix2vec}{sub:pix_tools}, \htmlref{vec2pix}{sub:pix_tools}] convert between a cartesian vector and pixel number.
+  \item[\htmlref{query\_disc}{sub:query_disc}, \htmlref{query\_polygon}{sub:query_polygon},]
+  \item[query\_strip, \htmlref{query\_triangle}{sub:query_triangle}] render the list of pixels enclosed
+  respectively in a given disc, polygon, latitude strip and triangle
+  \item[\htmlref{surface\_triangle}{sub:surface_triangle}] computes the surface of a spherical triangle defined by 3 vertices
+
+  \end{sulist}
+\end{related}
+
+\rule{\hsize}{2mm}
+
+\newpage

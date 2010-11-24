@@ -1,0 +1,119 @@
+% -*- LaTeX -*-
+
+
+\renewcommand{\facname}{{change\_polcconv }}
+\renewcommand{\FACNAME}{{CHANGE\_POLCCONV }}
+\sloppy
+
+\title{\healpix IDL Facility User Guidelines}
+\docid{\facname} \section[\facname]{ }
+\label{idl:change_polcconv}
+\docrv{Version 1.2}
+\author{Eric Hivon}
+\abstract{This document describes the \healpix facility \facname.}
+
+\begin{facility}
+{This IDL facility  changes the coordinate convention in FITS file containing a polarised sky map.
+The main effect is to change the sign of the U Stokes parameter,
+and add/update the POLCCONV FITS header with either
+COSMO or IAU value.}
+{src/idl/fits/change\_polcconv.pro}
+\end{facility}
+
+\begin{IDLformat}
+{\FACNAME, File\_In, File\_Out [, /I2C, /C2I, /C2C, /I2I, /FORCE]
+}
+\end{IDLformat}
+
+\begin{qualifiers}
+  \begin{qulist}{} %%%% NOTE the ``extra'' brace here %%%%
+ 	\item[{File\_In}] 
+          name of a FITS file to be read
+
+ 	\item[{File\_Out}] 
+          name of a FITS file to be written, after modification of the
+          polarisation coordinate convention, if applicable
+
+  \end{qulist}
+\end{qualifiers}
+
+\begin{keywords}
+  \begin{kwlist}{} %%% extra brace
+        \item[{/I2C}] changes from IAU to COSMO coordinate convention \\
+            -if POLCCONV is not found or found with value 'IAU', it is
+             added/replaced with value 'COSMO', and the sign of the U stokes
+             parameter map is changed \\
+            -if POLCCONV already has value 'COSMO', File\_In is copied
+            unchanged into File\_Out
+
+        \item[{/C2I}] changes from COSMO to IAU coordinate convention \\
+            -if POLCCONV is not found or found with value 'COSMO', it is
+             added/replaced with value 'IAU', and the sign of the U stokes
+             parameter map is changed \\
+            -if POLCCONV already has value 'IAU',  File\_In is copied
+            unchanged into File\_Out
+
+        \item[{/C2C}] does NOT change coordinate system \\
+            -if POLCCONV is found with value 'IAU', program will issue error
+            message and no file is written \\
+            -in all other case POLCCONV is set/added with value 'COSMO', but
+             data is NOT changed
+
+        \item[{/I2I}] does NOT change coordinate system \\
+            -if POLCCONV is found with value 'COSMO', program will issue error
+            message and no file is written \\
+            -in all other case POLCCONV is set/added with value 'IAU', but
+             data is NOT changed
+
+        \item[{/FORCE}] if set, the value of POLCCONV read from the FITS header is
+          ignored.
+              The sign of U is swapped (if used with /C2I or /I2C), and the
+              FITS keyword is updated accordingly.
+
+   \end{kwlist}
+\end{keywords}
+
+\begin{codedescription}
+{This routine will change the sign of the $U$ Stokes parameters (and related
+quantities, such as the $TU$ and $QU$ cross-correlations) and update the
+'POLCCONV' FITS keyword where applicable.
+The recognised format are: \\
+- standard Healpix  full sky polarised format \\
+- cut sky Healpix polarised format \\
+- WMAP 2nd year polarised format}
+\end{codedescription}
+
+
+
+\begin{related}
+  \begin{sulist}{} %%%% NOTE the ``extra'' brace here %%%%
+  \item[idl] version \idlversion or more is necessary to run \facname
+  \item[\htmlref{write\_fits\_cut4}{idl:write_fits_cut4}] This \healpix IDL
+  facility can be used to write a (polarised or unpolarised) cut sky map into a
+  FITS file.
+  \item[\htmlref{read\_fits\_cut4}{idl:read_fits_cut4}] This \healpix IDL
+  facility can be used to read a (polarised or unpolarised) cut sky map from a
+  FITS file.
+  \item[\htmlref{write\_tqu}{idl:write_tqu}] This \healpix IDL
+  facility can be used to write a polarised full sky map (with either the
+  standard Healpix format or the WMAP 2nd year format) into a
+  FITS file
+  \item[\htmlref{read\_tqu}{idl:read_tqu}] This \healpix IDL
+  facility can be used to read a polarised cut sky map from a
+  FITS file
+  \end{sulist}
+\end{related}
+
+
+\begin{example}
+{
+\begin{tabular}{ll} %%%% use this tabular format %%%%
+change\_polcconv, 'map\_cosmo.fits','map\_iau.fits',/c2i
+\end{tabular}
+}
+{ Modify the file 'map\_cosmo.fits', which was using the 'COSMO' convention for
+  polarisation coordinate convention into 'map\_iau.fits' which uses the 'IAU' convention
+}
+\end{example}
+
+

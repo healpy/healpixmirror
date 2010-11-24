@@ -1,0 +1,63 @@
+
+
+\sloppy
+
+
+\title{\healpix Fortran Subroutines Overview}
+\docid{scan\_directories} \section[scan\_directories]{ }
+\label{sub:scan_directories}
+\docrv{Version 1.0}
+\author{E. Hivon}
+\abstract{This document describes the \healpix Fortran90 subroutine SCAN\_DIRECTORIES.}
+
+\begin{facility}
+{Function to scan a set of directories for a given file
+}
+{src/f90/mod/paramfile\_io.F90}
+\end{facility}
+
+\begin{f90function}
+{directories, filename, fullpath}
+\end{f90function}
+
+\begin{arguments}
+{
+\begin{tabular}{p{0.3\hsize} p{0.05\hsize} p{0.1\hsize} p{0.45\hsize}} \hline  
+\textbf{name\&dimensionality} & \textbf{kind} & \textbf{in/out} & \textbf{description} \\ \hline
+                   &   &   &                           \\ %%% for presentation
+directories & CHR & IN & contains the set of directories (up to 20), separated by an ASCII
+                   character of value $<$ 32  (see {\tt{\htmlref{concatnl}{sub:concatnl}}}). During the
+                   search, it is assumed that the
+                   given directories and filename can be separated by nothing,
+                   a $/$ (slash) or a $\backslash$ (backslash)\\
+filename & CHR & IN & the file to be found. \\
+fullpath & CHR & OUT & returns the full path to the first occurrence of the
+                   file among the directories provided. Empty if the file is not
+                   found. The search is not recursive.  \\
+var & LGT & OUT & set to true if the file is found, to false otherwise.\\
+\end{tabular}
+}
+\end{arguments}
+
+\begin{example}
+{
+use paramfile\_io \\
+character(len=filenamelen) :: dirs, full \\
+logical(lgt) :: found \\
+dirs = concatnl('dir1','$/$dir2','$/$dir2$/$subdir1$/$') ! build directories list. \\
+found = \thedocid(dirs, 'myfile', full) ! do the search \\
+if (found) print*,trim(full)
+}
+{{Search for 'myfile' in the directories  'dir1', '$/$dir2', '$/$dir2$/$subdir1$/$'}}
+\end{example}
+
+\begin{related}
+  \begin{sulist}{} %%%% NOTE the ``extra'' brace here %%%%
+  \item[\htmlref{parse\_xxx}{sub:parse_xxx}] parse an ASCII file for parameters definition
+  \item[\htmlref{concatnl}{sub:concatnl}] concatenates a set of substrings into one string, interspaced
+  with LineFeed character
+  \end{sulist}
+\end{related}
+
+\rule{\hsize}{2mm}
+

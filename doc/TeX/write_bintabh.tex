@@ -1,0 +1,101 @@
+
+\sloppy
+
+
+\title{\healpix Fortran Subroutines Overview}
+\docid{write\_bintabh} \section[write\_bintabh]{ }
+\label{sub:write_bintabh}
+\docrv{Version 1.1}
+\author{Frode K.~Hansen}
+\abstract{This document describes the \healpix Fortran90 subroutine WRITE\_BINTABH.}
+
+\begin{facility}
+{This routine is designed to write large (or huge) arrays into a binary table
+extension of a FITS file. The user can
+choose to write the array piece by piece. This is designed to deal with Time
+Ordered Data set (tod).}
+{src/f90/mod/fitstools.f90}
+\end{facility}
+
+\begin{f90format}
+{tod, npix, ntod, header, nlheader, filename, \optional{[extno, firstpix, repeat]}}
+\end{f90format}
+\aboutoptional
+
+\begin{arguments}
+{
+\begin{tabular}{p{0.35\hsize} p{0.05\hsize} p{0.08\hsize} p{0.45\hsize}} \hline  
+\textbf{name~\&~dimensionality} & \textbf{kind} & \textbf{in/out} & \textbf{description} \\ \hline
+                   &   &   &                           \\ %%% for presentation
+tod(0:npix-1,1:ntod) & SP & IN & the map or tod
+  to write to the FITS-file. It will be written in the file at the location
+                   corresponding to pixels (or time samples)
+                   {\tt firstpix} to {\tt firtpix + npix} -1.\\
+npix & I8B & IN & Number of pixels or time samples in the map or TOD. See Note below.\\
+ntod & I4B & IN & number of maps or tods to be written. \\
+header(LEN=80) (1:nlheader) & CHR & IN & The header for the FITS-file. \\
+nlheader & I4B & IN & number of header lines to write to the file. \\
+filename(LEN=\filenamelen) & CHR & IN & the array is written into a FITS-file with this filename. \\
+\optional{extno} & I4B & IN & extension number in which to write the data (0
+                   based).  \default 0 \\
+\optional{firstpix} & I8B & IN & 0 location in the FITS file of the first
+                   pixel (or time sample) to be written (0 based). \default 
+                   0. See Note below.
+                   \\
+\optional{repeat} & I4B & IN & length of the element vector used in the binary
+                   table. \default{1024} if {\tt npix} $\propto 1024$; 12000 if
+                   {\tt npix} $> 12000$ and 1 otherwise. Choosing a large {\tt
+                   repeat} for multi-column tables ({\tt ntod} $>1$) generally
+                   speeds up the I/O. It also helps bringing the number of rows
+                   of the table under $2^{31}$, which is a hard limit of
+                   cfitsio. 
+\end{tabular}
+{\bf Note :} Indices and number of data elements larger than
+                   $2^{31}$ are only accessible in FITS files on computers with 64 bit
+                   enabled compilers and with some specific compilation options of
+                   cfitsio (see cfitsio documentation).
+}
+\end{arguments}
+
+\begin{example}
+{
+use healpix\_types \\
+use fitstools, only : \thedocid \\
+character(len=80), dimension(1:128) :: hdr \\
+real(SP), dimension(0:49,1) :: tod \\
+hdr(:) = ' ' \\
+tod(:,1) = 1. \\
+call \thedocid (tod, 50\_i8b, 1, header, 128, 'tod.fits', firstpix=0\_i8b, repeat=10)  \\
+tod = tod * 3. \\
+call \thedocid (tod, 20\_i8b, 1, header, 128, 'tod.fits', firstpix=40\_i8b)  
+}
+{
+Writes into the FITS file `tod.fits' a 1 column binary table, where the first 40
+data samples have the value $1.$ and the next 20 have the value $3.$ (Note that
+in this example the
+second call to \thedocid \ overwrites some of the pixels written by the first call). The samples will be
+written in element vectors of length 10. The header for the FITS-file is given in the
+string array {\tt hdr} and the number of lines in the header is 128. 
+}
+\end{example}
+
+\begin{modules}
+  \begin{sulist}{} %%%% NOTE the ``extra'' brace here %%%%
+  \item[\textbf{fitstools}] module, containing:
+  \item[printerror] routine for printing FITS error messages.
+  \item[\textbf{cfitsio}] library for FITS file handling.		
+  \end{sulist}
+\end{modules}
+
+\begin{related}
+  \begin{sulist}{} %%%% NOTE the ``extra'' brace here %%%%
+  \item[\htmlref{input\_tod*}{sub:input_tod}] routine that reads a file created by \thedocid. 
+  \item[\htmlref{input\_map}{sub:input_map},
+  \htmlref{read\_bintab}{sub:read_bintab}] routines to read \healpix sky map,
+  \item[\htmlref{write\_minimal\_header}{sub:write_minimal_header}] routine to write minimal FITS header
+  \end{sulist}
+\end{related}
+
+\rule{\hsize}{2mm}
+
+\newpage

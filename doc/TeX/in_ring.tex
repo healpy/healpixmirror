@@ -1,0 +1,68 @@
+
+\sloppy
+
+
+\title{\healpix Fortran Subroutines Overview}
+\docid{in\_ring} \section[in\_ring]{ }
+\label{sub:in_ring}
+\docrv{Version 1.2}
+% \author{Frode K.~Hansen}
+\author{Eric Hivon}
+\abstract{This document describes the \healpix Fortran90 subroutine IN\_RING.}
+
+\begin{facility}
+{Routine to find the pixel index of all pixels on a slice of a given
+ring. The output indices can be either in the RING or NESTED scheme,
+depending on the {\tt nest} keyword.}
+{src/f90/mod/pix\_tools.f90}
+\end{facility}
+
+\begin{f90format}
+{nside, iz, phi0, dphi, listir, nir, nest}
+\end{f90format}
+
+\begin{arguments}
+{
+\begin{tabular}{p{0.4\hsize} p{0.05\hsize} p{0.1\hsize} p{0.35\hsize}} \hline  
+\textbf{name~\&~dimensionality} & \textbf{kind} & \textbf{in/out} & \textbf{description} \\ \hline
+                   &   &   &                           \\ %%% for presentation
+nside & I4B & IN & the $N_{side}$ parameter of the map. \\
+iz & I4B & IN & ring number, counted southwards from the north pole. \\
+phi0 & DP & IN & central $\phi$ position in the slice. \\
+dphi & DP & IN & defines the size of the slice. The slice has length $2\times dphi$ along the ring with center at $phi0$. \\ 
+listir(0:4*nside-1) & I4B & OUT & The pixel indexes in the slice. \\
+nir & I4B & OUT & the number of pixels in the slice. \\
+nest\ \ (OPTIONAL) & I4B & IN &  The pixel indexes are in the NESTED numbering scheme if nest=1, and in RING scheme otherwise. \\
+\end{tabular}
+}
+\end{arguments}
+
+\begin{example}
+{
+call in\_ring(256, 10, 0, 0.1, listir, nir, nest=1)  \\
+}
+{
+Returns the NESTED pixel index of all pixels within 0.1 radians on each side of $\phi=0$ on the 10th ring.
+}
+\end{example}
+
+\newpage
+\begin{modules}
+  \begin{sulist}{} %%%% NOTE the ``extra'' brace here %%%%
+ \item[\htmlref{ring2nest}{sub:pix_tools}] conversion from RING scheme pixel index to NESTED scheme pixel index
+ \item[next\_in\_line\_nest] returns NESTED index of pixel lying to the East of the
+ current pixel and on the same ring
+  \end{sulist}
+\end{modules}
+
+\begin{related}
+  \begin{sulist}{} %%%% NOTE the ``extra'' brace here %%%%
+  \item[\htmlref{pix2ang}{sub:pix_tools}, \htmlref{ang2pix}{sub:pix_tools}] convert between angle and pixel number.
+  \item[\htmlref{pix2vec}{sub:pix_tools}, \htmlref{vec2pix}{sub:pix_tools}] convert between a cartesian vector and pixel number.
+  \item[\htmlref{getdisc\_ring}{sub:getdisc_ring}] find all pixels within a certain radius.
+  \end{sulist}
+\end{related}
+
+\rule{\hsize}{2mm}
+
+\newpage

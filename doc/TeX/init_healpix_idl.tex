@@ -1,0 +1,101 @@
+% -*- LaTeX -*-
+
+
+\renewcommand{\facname}{{init\_healpix }}
+\renewcommand{\FACNAME}{{INIT\_HEALPIX }}
+
+\sloppy
+
+
+
+\title{\healpix IDL Facility User Guidelines}
+\docid{init\_healpix} \section[init\_healpix and !healpix system variable]{ }
+\label{idl:init_healpix}
+\docrv{Version 1.0}
+\author{Eric Hivon}
+\abstract{This document describes the \healpix IDL facility \facname.}
+
+
+
+
+\begin{facility}
+{This IDL facility creates an IDL system variable (!HEALPIX) containing various
+\healpix related quantities}
+{src/idl/misc/init\_healpix.pro}
+\end{facility}
+
+\begin{IDLformat}
+{\FACNAME [,VERBOSE=]}
+\end{IDLformat}
+
+\begin{keywords}
+  \begin{kwlist}{} %%% extra brace
+    \item[VERBOSE =] if set, turn on the verbose mode, giving a short
+    description of the variables just created.
+  \end{kwlist}
+\end{keywords}  
+
+\begin{codedescription}
+{\thedocid\  defines the IDL system variable and structure !HEALPIX
+containing several quantities and character string necessary to \healpix, eg : allowed
+resolution parameters Nside, full path to package directory, package version...}
+\end{codedescription}
+
+
+
+\begin{related}
+  \begin{sulist}{} %%%% NOTE the ``extra'' brace here %%%%
+    \item[idl] version \idlversion or more is necessary to run \thedocid.	
+    \item[!HEALPIX] IDL system variable defined by \thedocid.
+  \end{sulist}
+\end{related}
+
+\begin{examples}{1}
+{
+\begin{tabular}{ll} %%%% use this tabular format %%%%
+\thedocid,/verbose
+\end{tabular}
+}
+{\thedocid\  will create the system variable !Healpix, and give a short
+description of the tags available, as shown below
+
+\texttt{\footnotesize{Initializing !HEALPIX system variable \newline
+This system variable contains some information on Healpix : \newline
+!HEALPIX.VERSION   = current version number,\newline
+!HEALPIX.DATE      = date of release,\newline
+!HEALPIX.DIRECTORY = directory containing Healpix package,\newline
+!HEALPIX.PATH      = structure containing:\newline
+!HEALPIX.PATH.BIN  = structure containing binary path :\newline
+!HEALPIX.PATH.BIN.CXX  =     C++\newline
+!HEALPIX.PATH.BIN.F90  =     Fortran90\newline
+!HEALPIX.PATH.DATA = path to data subdirectory,\newline
+!HEALPIX.PATH.DOC  = path to doc subdirectories (.html, .pdf),\newline
+!HEALPIX.PATH.TEST = path to test subdirectory,\newline
+!HEALPIX.NSIDE     = list of all valid values of Nside parameter,\newline
+!HEALPIX.BAD\_VALUE = value of flag given to missing pixels in FITS files,\newline
+!HEALPIX.COMMENT   = this description.
+}}
+}
+
+\end{examples}%
+%----------------
+\begin{examples}{2}
+{
+\begin{tabular}{ll} %%%% use this tabular format %%%%
+help, !healpix, /structure
+\end{tabular}
+}
+{will print the content of the !Healpix system structure.
+}
+\end{examples}
+% %----------------
+% \begin{examples}{3}
+% {
+% \begin{tabular}{ll} %%%% use this tabular format %%%%
+% print, !healpix.comment, form='(a)'
+% \end{tabular}
+% }
+% {will print the content of the !Healpix system structure.
+% }
+% \end{examples}
+

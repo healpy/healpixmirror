@@ -1,0 +1,57 @@
+
+
+\sloppy
+
+\title{\healpix Fortran Subroutines Overview}
+\docid{ring\_num} \section[ring\_num]{ }
+\label{sub:ring_num}
+\docrv{Version 1.1}
+\author{Frode K.~Hansen}
+\abstract{This document describes the \healpix Fortran90 function RING\_NUM.}
+
+
+\begin{facility}
+{This function returns the ring number for a z coordinate.}
+{src/f90/mod/pix\_tools.f90}
+\end{facility}
+
+\begin{f90function}
+{nside, z}
+\end{f90function}
+
+\begin{arguments}
+{
+\begin{tabular}{p{0.4\hsize} p{0.05\hsize} p{0.1\hsize} p{0.35\hsize}} \hline  
+\textbf{name\&dimensionality} & \textbf{kind} & \textbf{in/out} & \textbf{description} \\ \hline
+                   &   &   &                           \\ %%% for presentation
+nside & I4B & IN & the $N_{side}$ parameter of the map. \\
+z & DP & IN & the z coordinate to find the ring number for. \\
+
+\end{tabular}
+}
+\end{arguments}
+
+\begin{example}
+{
+print*,ring\_num(256, 0.5)  \\
+}
+{
+Prints the ring number of the ring at position $z=0.5$.
+}
+\end{example}
+
+\begin{modules}
+  \begin{sulist}{} %%%% NOTE the ``extra'' brace here %%%%
+ \item[None]	
+  \end{sulist}
+\end{modules}
+\newpage
+\begin{related}
+  \begin{sulist}{} %%%% NOTE the ``extra'' brace here %%%%
+ \item[\htmlref{in\_ring}{sub:in_ring}] Returns the pixels in a slice on a given ring.
+  \end{sulist}
+\end{related}
+
+\rule{\hsize}{2mm}
+
+\newpage

@@ -1,0 +1,135 @@
+
+\sloppy
+
+
+\title{\healpix Fortran Subroutines Overview}
+\docid{map2alm\_spin*} \section[map2alm\_spin*]{ }
+\label{sub:map2alm_spin}
+\docrv{Version 2.1}
+\author{Eric Hivon}
+\abstract{This document describes the \healpix Fortran90 subroutine MAP2ALM\_SPIN*.}
+
+\begin{facility}
+{This routine extracts the alm coefficients out of maps of spin $s$ and $-s$.
+%
+A (complex) map $S$ of spin $s$ is a linear combination of the spin weighted harmonics ${_s}Y_{lm}$
+\begin{equation}
+	{_s}S(p) = \sum_{lm} {_s}a_{lm}\ \ {_s}Y_{lm}(p)
+\end{equation}
+for $l \ge |m|, l \ge |s|$,
+and is such that ${_s}S^* = {_{-s}}S$.\\
+%
+The two (real) input maps for \thedocid\ are defined respectively as
+\begin{eqnarray}
+	{_{|s|}}S^+ &\myequal& ({_{|s|}}S + {_{-|s|}}S)/2 \\
+	{_{|s|}}S^- &\myequal& ({_{|s|}}S - {_{-|s|}}S)/(2i).
+\end{eqnarray}
+%
+\thedocid\ outputs the alm coefficients defined as
+\begin{eqnarray}
+	%typo correction on spin sign of second term of RHS, 2009-09-03
+	{_{|s|}}a^{+}_{lm} &\myequal& - ( {_{|s|}}a_{lm} + (-1)^s {_{-|s|}}a_{lm} )/2 \\
+	{_{|s|}}a^{-}_{lm} &\myequal& - ( {_{|s|}}a_{lm} - (-1)^s {_{-|s|}}a_{lm} )/(2i)
+\end{eqnarray}
+for $m\ge 0$, knowing that, just as for spin 0 maps, the
+coefficients for $m<0$ are given by 
+\begin{eqnarray}
+{_{|s|}}a^{+}_{l-m} &\myequal& (-1)^m {_{|s|}}a^{+*}_{lm}, \\
+{_{|s|}}a^{-}_{l-m} &\myequal& (-1)^m {_{|s|}}a^{-*}_{lm}.
+\end{eqnarray}
+%
+With these definitions, ${_2}a^{+}$, ${_2}a^{-}$, ${_2}S^+$ and ${_2}S^-$
+match \healpix  polarization $a^E, a^B, Q$ and $U$ respectively. However, for
+$s=0$, $\ _{0}a^+_{lm} = -a^T_{lm}$, $\ _{0}a^-_{lm} = 0$, $\ {_0}S^+ = T$, $\ {_0}S^- = 0.$
+}
+{src/f90/mod/alm\_tools.f90}
+\end{facility}
+
+\begin{f90format}
+{nsmax, nlmax, nmmax, spin, map, alm [, zbounds, w8ring\_TQU]}
+\end{f90format}
+
+\begin{arguments}
+{
+\begin{tabular}{p{0.4\hsize} p{0.05\hsize} p{0.05\hsize} p{0.40\hsize}} \hline  
+\textbf{name~\&~dimensionality} & \textbf{kind} & \textbf{in/out} & \textbf{description} \\ \hline
+                   &   &   &                           \\ %%% for presentation
+nsmax & I4B & IN & the $N_{side}$ value of the map to analyse. \\
+nlmax & I4B & IN & the maximum $\ell$ value for the analysis. \\
+nmmax & I4B & IN & the maximum $m$ value for the analysis. \\
+spin & I4B & IN & the spin $s$ of the maps to be analysed (only its absolute
+value is relevant).\\
+map(0:12*nsmax**2-1, 1:2) & SP/ DP & IN & ${_{|s|}}S^+$ and ${_{|s|}}S^-$ input maps\\
+alm(1:2, 0:nlmax, 0:nmmax) & SPC/ DPC & OUT & The ${_{|s|}}a^+_{lm}$ and
+${_{|s|}}a^-_{lm}$ output values. \\
+zbounds(1:2), \hskip 4cm OPTIONAL & DP & IN & section of the map on which to perform the $a_{lm}$
+                   analysis, expressed in terms of $z=\sin({\rm latitude}) =
+                   \cos(\theta).$ If zbounds(1)$<$zbounds(2), the analysis is
+                   performed {\em on} the strip zbounds(1)$<z<$zbounds(2); if not,
+                   it is performed {\em outside} of the strip
+                   zbounds(2)$<z<$zbounds(1). \\
+w8ring(1:2*nsmax,1:2), \hskip 3cm OPTIONAL & DP & IN & ring weights for quadrature corrections. If ring weights are not used, this array should be 1 everywhere.
+\end{tabular}
+}
+\end{arguments}
+%%\newpage
+
+\begin{example}
+{
+use \htmlref{healpix\_types}{sub:healpix_types}\\
+use alm\_tools\\
+use pix\_tools\\
+integer(\htmlref{i4b}{sub:healpix_types}) :: nside, lmax, spin \\
+% real(\htmlref{dp}{sub:healpix_types}), allocatable, dimension(:,:) :: dw8 \\
+% real(dp), dimension(2) :: z \\
+real(\htmlref{sp}{sub:healpix_types}), allocatable, dimension(:,:) :: map \\
+complex(\htmlref{spc}{sub:healpix_types}), allocatable, dimension(:,:,:) :: alm \\
+\\
+nside = 256 \\
+lmax = 512 \\
+spin = 5 \\
+allocate(map(0:nside2npix(nside)-1,1:2)) \\
+allocate(alm(1:2, 0:lmax, 0:lmax)\\
+...\\
+% allocate(dw8(1:2*nside, 1:2)) \\
+% dw8 = 1.0\_dp \\
+% z = sin(10.0\_dp * \htmlref{DEG2RAD}{sub:healpix_types}) \\
+% call map2alm(nside, lmax, lmax, map, alm, ($\backslash$ z, -z $\backslash$) , dw8, plm(0:(lmax+1)*(lmax+2)*nside-1))  \\
+call map2alm\_spin(nside, lmax, lmax, spin, map, alm)  \\
+}
+{
+Analyses spin 5 and -5 maps. The maps have
+an $N_{side}$ of 256, and the analysis is performed up
+to 512 in $\ell$ and m. The resulting $a_{lm}$ coefficients for
+are returned in alm.
+}
+\end{example}
+
+\begin{modules}
+  \begin{sulist}{} %%%% NOTE the ``extra'' brace here %%%%
+  \item[ring\_analysis] Performs FFT for the ring analysis.
+  \item[compute\_lam\_mm, get\_pixel\_layout, ]
+  \item[gen\_lamfac\_der, gen\_mfac,  ] 
+  \item[gen\_recfac, init\_rescale, l\_min\_ylm] Ancillary routines used
+  for $\ {_s}Y_{\ell m}$ recursion
+  \item[\textbf{misc\_util}] module, containing:
+  \item[assert\_alloc] routine to print error message when an array is not
+  properly allocated		
+  \end{sulist}
+\end{modules}
+
+\begin{related}
+  \begin{sulist}{} %%%% NOTE the ``extra'' brace here %%%%
+%  \item[anafast] executable using \thedocid to analyse maps.
+  \item[\htmlref{alm2map\_spin}{sub:alm2map_spin}] routine performing the inverse transform
+of \thedocid.
+   \item[\htmlref{map2alm}{sub:map2alm}] routine analyzing temperature and
+polarization maps
+%   \item[\htmlref{map2alm\_iterative}{sub:map2alm_iterative}] similar to
+% \thedocid\ with iterative scheme.
+  \end{sulist}
+\end{related}
+
+\rule{\hsize}{2mm}
+
+\newpage

@@ -1,0 +1,108 @@
+
+\sloppy
+
+
+\title{\healpix Fortran Subroutines Overview}
+\docid{rotate\_alm*} \section[rotate\_alm*]{ }
+\label{sub:rotate_alm}
+\docrv{Version 2.0}
+\author{Eric Hivon}
+\abstract{This document describes the \healpix Fortran90 subroutine ROTATE\_ALM.}
+
+\begin{facility}
+{This routine transform the scalar (and tensor) $a_{\ell m}$ coefficients to
+emulate the effect of an arbitrary rotation of the underlying map. The rotation is done
+directly on the $a_{\ell m}$ using the Wigner rotation matrices, computed by
+recursion.
+To rotate the $a_{\ell m}$ for $\ell \leq \ell_{\rm max}$ the number of
+operations scales like $\ell^3_{\rm max}$.}
+{src/f90/mod/alm\_tools.f90}
+\end{facility}
+
+\begin{f90format}
+{lmax, alm\_TGC, psi, theta, phi}
+\end{f90format}
+
+\begin{arguments}
+{
+\begin{tabular}{p{0.36\hsize} p{0.05\hsize} p{0.09\hsize} p{0.40\hsize}} \hline  
+\textbf{name~\&~dimensionality} & \textbf{kind} & \textbf{in/out} & \textbf{description} \\ \hline
+                   &   &   &                           \\ %%% for presentation
+nlmax & I4B & IN & maximum $\ell$ value for the $a_{\ell m}$.\\
+alm\_TGC(1:p,0:nlmax,0:nlmax) & SPC/ DPC & INOUT & complex $a_{\ell m}$ values
+                   before and after rotation of the coordinate system.  
+	The first index here runs from 1:1 for
+                   temperature only, and 1:3 for polarisation. In the latter
+                   case,  1=T, 2=E, 3=B. \\
+% \end{tabular}
+% \begin{tabular}{p{0.36\hsize} p{0.05\hsize} p{0.09\hsize} p{0.40\hsize}}
+%                    \hline  
+psi	& DP & IN & first rotation: angle $\psi$ about the z-axis.
+All angles are in radians and should lie in [-2$\pi$,2$\pi$], the rotations are
+active and the referential system is assumed to be right handed, the routine
+\htmlref{coordsys2euler\_zyz}{sub:coordsys2euler_zyz} can be used to generate
+the Euler angles
+$\psi, \theta, \varphi$ for rotation between standard astronomical coordinate
+systems; \\
+theta	& DP & IN & second rotation: angle $\theta$ about the original
+(unrotated) y-axis; \\
+phi	& DP & IN & third rotation: angle $\varphi$ about the original (unrotated) z-axis;
+\end{tabular}
+}
+\end{arguments}
+
+\begin{example}
+{
+use alm\_tools, only: rotate\_alm \\
+...\\
+call rotate\_alm(64, alm\_TGC, PI/3., 0.5\_dp, 0.0\_dp)  \\
+}
+{
+Transforms scalar and tensor $a_{lm}$ for $\ell_{\rm
+  max}=m_{\rm max} = 64$ to emulate a rotation of the underlying map by
+($\psi=\pi/3, \theta=0.5, \varphi=0\myhtmlimage{}$).
+}
+\end{example}
+
+\begin{example}
+{
+use coord\_v\_convert, only: coordsys2euler\_zyz \\
+use alm\_tools, only: rotate\_alm \\
+...\\
+call coordsys2euler\_zyz(2000.0\_dp, 2000.0\_dp, 'E', 'G', psi, theta, phi) \\
+call rotate\_alm(64, alm\_TGC, psi, theta, phi)  \\
+}
+{
+Rotate the $a_{lm}$ from Ecliptic to Galactic coordinates.
+}
+\end{example}
+
+% \begin{modules}
+%   \begin{sulist}{} %%%% NOTE the ``extra'' brace here %%%%
+%   \item[\textbf{alm\_tools}] module, containing:
+% 	\item[\htmlref{generate\_beam}{sub:generate_beam}] routine to generate beam window function
+% 	\item[\htmlref{pixel\_window}{sub:pixel_window}] routine to generate pixel window function
+%   \end{sulist}
+% \end{modules}
+
+\begin{related}
+  \begin{sulist}{} %%%% NOTE the ``extra'' brace here %%%%
+  \item[\htmlref{coordsys2euler\_zyz}{sub:coordsys2euler_zyz}] can be used to generate
+the Euler angles $\psi, \theta, \varphi \myhtmlimage{}$ for rotation between standard astronomical coordinate systems
+  \item[\htmlref{create\_alm}{sub:create_alm}] Routine to create $a_{\ell m}$ coefficients.
+  \item[\htmlref{alter\_alm}{sub:alter_alm}] Routine to modify $a_{\ell m}$
+  coefficients to apply or remove the effect of an instrumental beam.
+  \item[\htmlref{map2alm}{sub:map2alm}]  Routines to analyze a \healpix sky map into its $a_{\ell m}$
+  coefficients.
+  \item[\htmlref{alm2map}{sub:alm2map}] Routines to synthetize a \healpix sky map from its $a_{\ell m}$
+  coefficients.
+  \item[\htmlref{alms2fits}{sub:alms2fits}, \htmlref{dump\_alms}{sub:dump_alms}]
+  Routines to save a set of $a_{lm}$ in a FITS file.  
+  \item[\htmlref{xcc\_v\_convert}{sub:xcc_v_convert}] rotates a 3D coordinate
+vector from one astronomical coordinate system to another.
+  \end{sulist}
+\end{related}
+
+\rule{\hsize}{2mm}
+
+\newpage

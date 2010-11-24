@@ -1,0 +1,870 @@
+% -*- LaTeX -*-
+
+% PLEASE USE THIS FILE AS A TEMPLATE FOR THE DOCUMENTATION OF YOUR OWN
+% FACILITIES: IN PARTICULAR, IT IS IMPORTANT TO NOTE COMMENTS MADE IN
+% THE TEXT AND TO FOLLOW THIS ORDERING. THE FORMAT FOLLOWS ONE USED BY
+% THE COBE-DMR PROJECT.	
+% A.J. Banday, April 1999.
+
+\sloppy
+
+\title{\healpix IDL Facility User Guidelines}
+\docid{mollview} \section[mollview]{ }
+\label{idl:\thedocid}
+\docrv{Version 1.2}
+\author{Eric Hivon}
+\abstract{This document describes the \healpix facility mollview.}
+
+
+
+% q customized for mollview IDL routines
+  \newenvironment{qualifiers_mollview}
+    {\rule{\hsize}{0.7mm}
+     \textsc{\Large{\textbf{QUALIFIERS}}}\hfill\newline%
+	\renewcommand{\arraystretch}{1.5}%
+	}
+
+% k customized for mollview IDL routines
+  \newenvironment{keywords_mollview}
+    {\rule{\hsize}{0.7mm}
+     \textsc{\Large{\textbf{KEYWORDS}}}\hfill\newline%
+	\renewcommand{\arraystretch}{1.5}%
+	}
+
+% \usepackage{supertab}
+
+% \newcommand{\layout}{{{p{0.18\hsize} p{0.09\hsize} p{0.70\hsize}}}}
+\newcommand{\sizeone}{0.19\hsize}
+\newcommand{\sizetwo}{0.08\hsize}
+\newcommand{\sizethr}{0.70\hsize}
+
+\begin{facility}
+{This IDL facility provides a means to visualise a full sky Mollweide projection of
+\healpix and COBE Quad-Cube maps in an IDL environment. 
+It also offers the possibility to
+generate GIF, PNG and Postscript color-coded images of the projected map. 
+The projected (but not color-coded) data can also be output in FITS files and
+IDL arrays.}
+{src/idl/visu/mollview.pro}
+\end{facility}
+
+\newcommand{\mollbacktotop}{\latexhtml{%
+%%%%%%\mylink{idl:mollview:TOP}{Back to Format}% for PDF
+}{
+\mylink{idl:mollview:TOP}{Back to Format}% for HTML
+}}
+\mytarget{idl:mollview:TOP}{}
+
+
+\begin{IDLformat}
+{MOLLVIEW, %  File, [Select, ] [/ASINH, CHARSIZE=, COLT=, ... 
+%            ... WINDOW=, XPOS=, YPOS= ]
+%grep '&' mollview_idl.tex | grep -v hline | grep -v presentation | grep '^{' | awk '{print $1}'
+%
+\normalsize{
+\input{mollview_format_idl}}
+}
+\end{IDLformat}
+
+% \newcommand{head_column}{{\textbf{name} & \textbf{routine} &
+%            \textbf{description}}}
+
+%\vskip 1cm
+Several visualization routines have a similar interface. Their {\bf qualifiers} and
+{\bf keywords} are all listed here, and the routines to which they apply are coded
+in the 'routine' column as: \\
+C: \htmlref{cartview}{idl:cartview},
+G: \htmlref{gnomview}{idl:gnomview}, 
+M: \htmlref{mollview}{idl:mollview},
+O: \htmlref{orthview}{idl:orthview} and all: all of them
+%\vskip 2cm 
+\vskip 0.4cm
+
+{\bf Qualifiers} should appear in the order indicated. They can take a range of values, and some of them are optional.\\
+{\bf Keywords} are optional, and can appear in any order. They take the form {\tt keyword=value} and can be abbreviated to a non ambiguous form
+(ie, {\tt factor=10.0} can be replaced by {\tt fac = 10.0}). They generally can take a range of values, but
+some of them (noted as {\tt /keyword} below) are boolean switches: they are either present (or set to 1) or absent (or set
+to 0).
+
+\vfill
+\newpage
+\begin{qualifiers_mollview}
+\begin{tabular}{p{\sizeone} p{\sizetwo} p{\sizethr}}
+%% \begin{tabular}{p{0.14\hsize} p{0.08\hsize} p{0.75\hsize}}
+\hline  
+\textbf{name} & \textbf{routines} & \textbf{\ description} \\ \hline
+%                    &   &                            \\ %%% for presentation
+\mytargetb{idl:mollview:file}{File}  & all   & \parbox[t]{0.95\hsize}{%
+		Required\\
+                    name of a (possibly gzip compressed) FITS file containing 
+               the \healpix\ map in an extension or in the image field, \\
+          {\em or}\  \  name of an {\em online} variable (either array or
+structure) containing the (RING or \mylink{idl:mollview:polarization}{NESTED} ordered) \healpix\ map (See note below);\\
+          if Save is set   :    name of an IDL saveset file containing
+               the \healpix\ map stored under the variable  {\tt data} \\
+	\nodefault\\
+\underline{Note on online data}: in order to preserve the integrity of the input data, 
+		the content of the array or structure {\tt File} is replicated
+before being possibly altered by the map making process. 
+Therefore plotting online data will require more memory than reading the data from disc directly, and is not recommended
+		to visualize data sets of size comparable to that of the
+computer memory.\\ 
+\underline{Note on high resolution cut sky data}: cut sky data (in which less
+than 50\% of the sky is observed), can be processed with a minimal memory
+foot-print, by not allocating fake full map. In the current release, two
+restrictions apply: the input data set must be read from a FITS file in 'cut4'
+format, and the \mylink{idl:mollview:polarization}{\tt POLARIZATION} IDL keyword (described below) must be 0 (default value). See the
+Examples \#4 below (on page~\pageref{page:example_hires_cutsky}). \\
+\seealso \mylink{idl:mollview:truecolors}{\tt TrueColors}.}\\
+
+\mytargetb{idl:mollview:select}{Select}  & all   & \parbox[t]{0.95\hsize}{Optional\\
+		  column of the BIN FITS table to be plotted, can be either  \\
+                -- a name : value given in TTYPEi of the FITS file \\
+                        NOT case sensitive and can be truncated, \\
+                        (only letters, digits and underscore are valid) \\
+               -- an integer        : number i of the column
+                            containing the data, starting with 1 (also valid if
+		  \mylink{idl:mollview:file}{{\tt File}} is an online array) \\
+                   \default {1 for full sky maps, 'SIGNAL' column for FITS files
+		  containing cut sky maps}
+               (see the Examples below)}\\
+
+\end{tabular}
+\end{qualifiers_mollview}
+\vskip 1cm
+\mollbacktotop
+%======================================================
+\newpage
+\begin{keywords_mollview}
+\begin{tabular}{p{\sizeone} p{\sizetwo} p{\sizethr}}
+\hline  
+\textbf{name} & \textbf{routines} & \textbf{\ description} \\ \hline
+%                    &   &                            \\ %%% for presentation
+{/ASINH}\mytarget{idl:mollview:asinh}   & all & \parbox[t]{\hsize}{  if set, the color table is altered to emulate the effect of replacing
+            the data by $\sinh^{-1}$(data) in order to enhance the low contrast regions.
+            Can be used in conjonction with Factor and Offset, but can {\em not} be
+            used with /LOG nor /HIST\_EQUAL.
+		\seealso \mylink{idl:mollview:factor}{Factor}, \mylink{idl:mollview:hist_equal}{Hist\_Equal}, \mylink{idl:mollview:log}{Log}, \mylink{idl:mollview:offset}{Offset}
+	}\\
+
+{CHARSIZE=}\mytarget{idl:mollview:charsize}  & all   &  
+	overall multiplicative factor applied to the size of
+        all characters appearing on the plot
+        	\default {1.0} \\ 
+
+{CHARTHICK=}\mytarget{idl:mollview:charthick} & all & character thickness (in
+\mylink{idl:mollview:titleplot}{TITLE}, \mylink{idl:mollview:subtitle}{SUBTITLE} and
+color bar labeling). Other characters thickness (such as
+\mylink{idl:mollview:glsize}{graticule labels}), can be controlled with !P.CHARTHICK.
+                \default {1} \\
+
+{COLT=}\mytarget{idl:mollview:colt}  & all   & \parbox[t]{\hsize}{ color table number, in [-40,40]. If colt$<0$, the IDL color
+        	table abs(colt) is used, but the scale is
+               reversed (ie a red to blue scale becomes a blue to red
+        	scale). Note: -0.1 can be used as negative 0.\\
+        	\default {33 (Blue-Red)} \\
+\seealso \mylink{idl:mollview:truecolors}{\tt TrueColors}}\\ 
+
+{COORD=}\mytarget{idl:mollview:coord}  & all   & \parbox[t]{\hsize}{
+		vector with 1 or 2 elements describing the coordinate system of the map;
+                either\\
+		       -- 'C' or 'Q' : Celestial2000 = eQuatorial, \\
+                       -- 'E'        : Ecliptic, \\
+                       -- 'G'        : Galactic  \\
+               if coord = ['x','y'] the map is rotated from system 'x' to system 'y' \\
+               if coord = ['y'] the map is rotated to coordinate system 'y' (with the
+               original system assumed to be Galactic unless indicated otherwise in the
+                input file) \\
+                  \seealso \mylink{idl:mollview:rot}{Rot}}\\
+
+
+{/CROP}\mytarget{idl:mollview:crop}  & all   & \parbox[t]{\hsize}{
+		if set the GIF/PNG file only contains the map and
+               no title, color bar, ... \\
+                \seealso \mylink{idl:mollview:gif}{Gif}, \mylink{idl:mollview:png}{Png}}\\
+
+%
+\end{tabular}
+\mollbacktotop
+%-----------------------------------------------------------
+\begin{tabular}{p{\sizeone} p{\sizetwo} p{\sizethr}}
+\hline  
+\textbf{name} & \textbf{routines} & \textbf{\ description} \\ \hline
+%                   &   &                            \\ %%% for presentation
+
+{EXECUTE=}\mytarget{idl:mollview:execute}  & all   & \parbox[t]{\hsize}{
+		character string containing IDL command(s) to be executed in the
+plotting window. See 
+Figure~\ref{fig:plot_example_execute} on page~\pageref{page:plot_example_execute}}\\
+
+{FACTOR=}\mytarget{idl:mollview:factor} & all & \parbox[t]{\hsize}{scalar multiplicative factor to be applied to the
+	valid data \\
+	the data plotted is of the form Factor*(data + Offset) \\
+	This does not affect the flagged pixels \\
+	Can be used together with ASINH or LOG \\
+	When used with TRUECOLORS, FACTOR can be a 3-element vector. \\
+        \seealso \mylink{idl:mollview:asinh}{ASINH}, \mylink{idl:mollview:offset}{Offset}, \mylink{idl:mollview:log}{LOG}, \mylink{idl:mollview:truecolors}{Truecolors} \\
+	\default {1.0} } \\
+
+{FITS=}\mytarget{idl:mollview:fits} %\hyperdef{cross}{idl:mollview:fits} %
+		& all & \parbox[t]{\hsize}{
+	string containing the name of an output FITS file with
+        the projected map in the primary image \\
+ 	      -- if set to 1            : output the plot in
+        plot\_{\em proj}.fits, where {\em proj} is either {\em cartesian, gnomic,
+mollweide}, or  {\em orthographic} depending on the projection in use;\\
+ 	      -- if set to a file name  : output the plot in that file.  \\
+ 	\default {0: no .FITS done}\\
+In the case of Orthographic projection,
+\mylink{idl:mollview:half_sky}{HALF\_SKY} must be set.\\
+%
+Except for the color mapping, all the keywords and options apply to the
+projected map, ie: its size is determined by
+\mylink{idl:mollview:pxsize}{PXSIZE} (and \mylink{idl:mollview:pysize}{PYSIZE}
+when applicable), its angular resolution by \mylink{idl:mollview:reso_arcmin}{RESO\_ARCMIN}
+when applicable, its orientation and coordinates by 
+\mylink{idl:mollview:rot}{ROT} and 
+\mylink{idl:mollview:coord}{COORD} respectively, ... \\
+%
+	For compatibility with standard FITS viewers (including 
+\htmladdnormallink{STIFF}{http://www.astromatic.net/category/softwareposts/stiff})%
+, unobserved pixels, and
+pixels outside the sphere, take the value {\tt NaN} (ie {\tt !values.f\_nan} in IDL).
+The resulting FITS file can be read in IDL with eg. map={\tt readfits}({\em filename}). 
+\\
+	\seealso \mylink{idl:mollview:map_out}{Map\_out}}\\
+
+{/FLIP}\mytarget{idl:mollview:flip}  & all   & if set the longitude increases to the right, whereas by
+                default (astronomical convention) it increases towards the left \\
+ 
+%
+\end{tabular}
+\mollbacktotop
+%-----------------------------------------------------------
+\begin{tabular}{p{\sizeone} p{\sizetwo} p{\sizethr}}
+\hline  
+\textbf{name} & \textbf{routines} & \textbf{\ description} \\ \hline
+%                   &   &                            \\ %%% for presentation
+
+
+{GAL\_CUT=}\mytarget{idl:mollview:gal_cut}  & --MO   & (positive float) specifies the symmetric galactic cut in degrees
+              outside of which the monopole and/or dipole fitting is done
+	\default{0: monopole and dipole fit done on the whole sky}
+              (\seealso \mylink{idl:mollview:no_dipole}{No\_dipole}, \mylink{idl:mollview:no_monopole}{No\_monopole}) \\
+
+{GIF=}\mytarget{idl:mollview:gif}  & all   & \parbox[t]{\hsize}{
+		string containing the name of a .GIF output \\
+	      if set to 1            : output the plot in plot\_[projection].gif \\
+	      if set to a file name  : output the plot in that file \\
+	Please note that the resulting GIF image might not always look
+	      as expected. The reason for this is a problem with
+	      'backing store' in the IDL-routine TVRD. Please read the IDL
+	      documentation for more information. \\
+	\default {no .GIF done} \\              \seealso \mylink{idl:mollview:crop}{Crop}, \mylink{idl:mollview:png}{Png}, \mylink{idl:mollview:ps}{Ps}, \mylink{idl:mollview:preview}{Preview}
+and \mylink{idl:mollview:retain}{Retain}}\\
+
+{GLSIZE=}\mytarget{idl:mollview:glsize} & all & \parbox[t]{\hsize}{
+	character size of the graticule labels in units of {\tt Charsize}. \\
+	\default{0: no labeling of graticules}. \\
+	\seealso \mylink{idl:mollview:charsize}{Charsize}, \mylink{idl:mollview:graticule}{Graticule}
+	}\\
+
+{GRATICULE=}\mytarget{idl:mollview:graticule}  & all   & \parbox[t]{\hsize}{
+	if set, puts a graticule (ie, longitude and latitude grid) 
+	in the {\em output} astrophysical coordinates
+	with delta\_long = delta\_lat = gdef
+         degrees \\
+         if set to a scalar $x>$ gmin then delta\_long = delta\_lat = $x$ \\
+         if set to [x,y] with $x,y >$ gmin then delta\_long = $x$ and delta\_lat = $y$ \\
+          cartview : gdef = 45, gmin =  0 \\
+          gnomview : gdef =  5, gmin =  0 \\
+          mollview : gdef = 45, gmin = 10 \\
+          orthview : gdef = 45, gmin = 10 \\
+	Note that the graticule will rotate with the sphere is Rot is set.
+	To outline only the equator set graticule=[360,90].
+	The automatic labeling of the graticule is controlled by {\tt Glsize}\\
+	\default {0 [no graticule]} \\
+	\seealso \mylink{idl:mollview:igraticule}{Igraticule}, \mylink{idl:mollview:rot}{Rot}, \mylink{idl:mollview:coord}{Coord}, \mylink{idl:mollview:glsize}{Glsize}
+	}\\
+
+\end{tabular}
+\mollbacktotop
+%-----------------------------------------------------------
+\begin{tabular}{p{\sizeone} p{\sizetwo} p{\sizethr}}
+\hline  
+\textbf{name} & \textbf{routines} & \textbf{\ description} \\ \hline
+%                   &   &                            \\ %%% for presentation
+{/HALF\_SKY}\mytarget{idl:mollview:half_sky} & ---O & if set, only shows only one half of the sky 
+   (centered on (0,0) or on the location parametrized by \mylink{idl:mollview:rot}{Rot}) instead of the full sky \\
+ 
+{HBOUND=}\mytarget{idl:mollview:hbound} & all & if set to a valid $\nside$, will overplot the \healpix\ pixel
+boundaries corresponding to that $\nside$
+on top of the map. \\
+
+{/HELP}\mytarget{idl:mollview:help} & all & if set, the routine header is printed (by doc\_library)
+      and nothing else is done \\
+
+{/HIST\_EQUAL}\mytarget{idl:mollview:hist_equal}  & all   &  \parbox[t]{\hsize}{
+		if set,     uses a histogram equalized color mapping
+			(useful for non gaussian data field)
+		\default {uses linear color mapping and 
+                     		puts the level 0 in the middle
+                     		of the color scale (ie, green for Blue-Red)
+				unless \mylink{idl:mollview:min}{Min} and 
+	                               \mylink{idl:mollview:max}{Max} are not symmetric}\\
+                     \seealso \mylink{idl:mollview:asinh}{Asinh}, \mylink{idl:mollview:log}{Log}}\\
+
+{HXSIZE=}\mytarget{idl:mollview:hxsize}  & all   & \parbox[t]{\hsize}{
+		horizontal dimension (in cm) of the \mylink{idl:mollview:ps}{Postscript} printout \\
+    		\default {26 cm $\simeq$ 10 in} \\               \seealso \mylink{idl:mollview:pxsize}{Pxsize}}\\
+
+{IGLSIZE=}\mytarget{idl:mollview:iglsize} & all & \parbox[t]{\hsize}{
+	character size of the input coordinates graticule labels in units of {\tt Charsize}. \\
+	\default{0: no labeling of graticules}. \\
+	\seealso \mylink{idl:mollview:charsize}{Charsize}, \mylink{idl:mollview:igraticule}{Igraticule}
+	}\\
+
+{IGRATICULE=}\mytarget{idl:mollview:igraticule}  & all   & \parbox[t]{\hsize}{
+	if set, puts a graticule (ie, longitude and latitude grid) 
+	in the {\em input} astrophysical coordinates.
+	See Graticule for conventions and details.
+	If both Graticule and Igraticule are set, the latter will
+	be represented with dashes.\\
+	The automatic labeling of the graticule is controlled by {\tt Iglsize}\\
+	\default {0 [no graticule]} \\
+	\seealso \mylink{idl:mollview:graticule}{Graticule}, 
+\mylink{idl:mollview:rot}{Rot}, \mylink{idl:mollview:coord}{Coord}, 
+\mylink{idl:mollview:iglsize}{Iglsize}
+	}\\
+
+{/LOG}\mytarget{idl:mollview:log}  & all   & \parbox[t]{\hsize}{
+		display the log of map. This is intended for
+ 	application to positive definite maps only, eg. Galactic foreground
+	emission templates; for arbitrary maps, use /ASINH instead.	 \\
+	\seealso \mylink{idl:mollview:asinh}{Asinh}, \mylink{idl:mollview:factor}{Factor}, \mylink{idl:mollview:hist_equal}{Hist\_Equal}, \mylink{idl:mollview:offset}{Offset}}\\
+
+{MAP\_OUT=}\mytarget{idl:mollview:map_out} & all & \parbox[t]{\hsize}{
+	variable that will contain the projected map on output.\\
+%
+Except for the color mapping, all the keywords and options apply to the
+projected map, ie: its size is determined by
+\mylink{idl:mollview:pxsize}{PXSIZE} (and \mylink{idl:mollview:pysize}{PYSIZE}
+when applicable), its angular resolution by \mylink{idl:mollview:reso_arcmin}{RESO\_ARCMIN}
+when applicable, its orientation and coordinates by 
+\mylink{idl:mollview:rot}{ROT} and 
+\mylink{idl:mollview:coord}{COORD} respectively, ... \\
+%
+Unobserved pixels, and pixels outside the sphere, take value \htmlref{{\tt
+!healpix.bad\_value}}{idl:init_healpix} ($=-1.6375\,10^{30}$).\\
+	\seealso \mylink{idl:mollview:fits}{Fits}}\\
+
+\end{tabular}
+\mollbacktotop
+%-----------------------------------------------------------
+\begin{tabular}{p{\sizeone} p{\sizetwo} p{\sizethr}}
+\hline  
+\textbf{name} & \textbf{routines} & \textbf{\ description} \\ \hline
+%                   &   &                            \\ %%% for presentation
+{MAX=}\mytarget{idl:mollview:max}  & all   & \parbox[t]{\hsize}{
+	Set the maximum value for the plotted signal \\ \default{is to use the actual signal
+	maximum}.}\\
+
+{MIN=}\mytarget{idl:mollview:min}  & all   & \parbox[t]{\hsize}{
+	Set the minimum value for the plotted signal \\\default{is to use the actual signal minimum}.}\\	
+
+
+{/NESTED}\mytarget{idl:mollview:nested}  & all   & \parbox[t]{\hsize}{
+	specify that the online data is ordered in the nested scheme}\\
+
+{/NO\_DIPOLE}\mytarget{idl:mollview:no_dipole}  & --MO   & \parbox[t]{\hsize}{
+		if set  (and Gal\_cut is not set) 
+                the best fit monopole *and* dipole over all valid pixels are
+                removed; \\
+                if Gal\_cut is set to $b>0$, the best monopole and dipole fit is performed on all valid
+                pixels with $|$galactic latitude$|>b$ (in deg) and is removed from
+                all valid pixels \\
+	     \default {0 (no monopole or dipole removal)}\\
+              can NOT be used together with No\_monopole \\ \seealso {\mylink{idl:mollview:gal_cut}{Gal\_cut}, \mylink{idl:mollview:no_monopole}{No\_monopole}}}\\
+
+{/NO\_MONOPOLE}\mytarget{idl:mollview:no_monopole}  & --MO   & \parbox[t]{\hsize}{
+		if set (and Gal\_cut is not set) 
+                the best fit monopole over all valid pixels is
+                removed; \\
+                if Gal\_cut is set to $b>0$, the best monopole fit is performed on all valid
+                pixels with $|$galactic latitude$|>b$ (in deg) and is removed from
+                all valid pixels \\
+	     \default {0 (no monopole removal)}\\
+              can NOT be used together with No\_dipole \\ \seealso {\mylink{idl:mollview:gal_cut}{Gal\_cut}, \mylink{idl:mollview:no_dipole}{No\_dipole}}}\\
+
+
+{/NOBAR}\mytarget{idl:mollview:nobar}  & all   & if set, color bar is not present \\
+
+{/NOLABELS}\mytarget{idl:mollview:nolabels}  & all   & if set, color bar labels (min and max) are not present, \default
+	{labels are present} \\
+
+{/NOPOSITION}\mytarget{idl:mollview:noposition} & -G-- & if set, the astronomical location of the map
+        central point is not indicated \\
+ 
+{OFFSET=}\mytarget{idl:mollview:offset} & all & \parbox[t]{\hsize}{scalar additive factor to be applied to the valid data \\
+	the data plotted is of the form Factor*(data + Offset) \\
+	This does not affect the flagged pixels \\
+	can be used together with ASINH or LOG \\
+	When used with TRUECOLORS, OFFSET can be a 3-element vector. \\
+        \seealso : \mylink{idl:mollview:asinh}{ASINH}, \mylink{idl:mollview:factor}{Factor}, \mylink{idl:mollview:log}{LOG}, \mylink{idl:mollview:truecolors}{TRUECOLORS} \\
+	\default {0.0} } \\
+	
+% {/ONLINE}  & all   & \parbox[t]{\hsize}{
+% 		if set, the argument File can be either an array containing a \healpix map,
+% 		or an IDL structure describing a \healpix map, instead of an external filename 
+% 		(useful when the data to be plotted are already
+%     		available in memory)
+% 		Note: in order to preserve the integrity of the input data, 
+% 		the content of File is replicated before being possibly altered by the map making process, 
+% 		therefore this option will requires more memory than reading the data from directly disc, and is not recommended
+% 		to visualize data sets of size comparable to that of the computer memory. \\ can not be used with /SAVE}\\
+
+\end{tabular}
+\mollbacktotop
+%-----------------------------------------------------------
+\begin{tabular}{p{\sizeone} p{\sizetwo} p{\sizethr}}
+\hline  
+\textbf{name} & \textbf{routines} & \textbf{\ description} \\ \hline
+%                   &   &                            \\ %%% for presentation
+
+{OUTLINE=}\mytarget{idl:mollview:outline} & all &  \parbox[t]{\hsize}{
+	IDL (meta-)structure, or array of structures, 
+       containing the description of one (or several) outline(s) to
+      be overplotted on the final map.\\
+           For each contour or point list, the corresponding (sub)structure should
+	contain the following fields :  \\
+            -- 'COORD' coordinate system (either, 'C', 'G', or 'E') of the contour\\
+            -- 'RA' RA/longitude coordinates of the contour vertices (array or scalar) \\
+            -- 'DEC' Dec/latitude coordinates of the contour vertices (array or scalar)\\
+	    -- 'LINE[STYLE]' (optional, scalar) {\bf +2}: black dashes, {\bf
++1}: black dots, {\bf 0}: black solid (default), {\bf -1}: black dots on white background, {\bf -2}: black dashes on
+	white background\\
+            -- 'PSY[M]' (optional, scalar) symbol used to represent vertices (same meaning as
+	    standard PSYM in IDL). If $\leq 0$, the vertices are represented with the chosen symbols, and
+                        connected, by arcs of geodesics;
+                    if $>0$, only the vertices are shown
+                    \default {0} \\
+            -- 'SYM[SIZE]' (optional, scalar) vertice symbol size (same meaning as SYMSIZE in IDL)
+
+	Notes: when applicable, the vertices are connected by segments of geodesics. To
+	obtain a better looking outline, increase the number of vertices
+	provided. The outline does not have to be closed. The procedure will NOT
+	attempt to close the outline.\\Several outlines can be overplotted at
+once by gathering the respective structures into one meta-structure or an array.\\ \seealso{\mylink{idl:mollview:coord}{Coord}, \mylink{idl:mollview:graticule}{Graticule}}} \\
+ 
+{PNG=}\mytarget{idl:mollview:png}  & all   & \parbox[t]{\hsize}{
+		string containing the name of a .PNG output \\
+	      if set to 1            : output the plot in plot\_[projection].png \\
+	      if set to a file name  : output the plot in that file \\
+	Please note that the resulting PNG image might not always look
+	      as expected. The reason for this is problems with
+	      'backing store' in the IDL-routine TVRD. Please read the IDL
+	      documentation for more information. \\
+	\default {no .PNG done} \\              
+\seealso 
+\mylink{idl:mollview:crop}{Crop}, 
+\mylink{idl:mollview:fits}{Fits}, 
+\mylink{idl:mollview:gif}{Gif}, 
+\mylink{idl:mollview:map_out}{Map\_out}, 
+\mylink{idl:mollview:preview}{Preview}
+\mylink{idl:mollview:ps}{Ps}, 
+and \mylink{idl:mollview:retain}{Retain}}\\
+
+
+\end{tabular}
+\mollbacktotop
+%-----------------------------------------------------------
+\begin{tabular}{p{\sizeone} p{\sizetwo} p{\sizethr}}
+\hline  
+\textbf{name} & \textbf{routines} & \textbf{\ description} \\ \hline
+%                   &   &                            \\ %%% for presentation
+
+{POLARIZATION=}\mytarget{idl:mollview:polarization} & all & \parbox[t]{\hsize}{
+	if set to
+	\begin{itemize}
+	 \setlength{\itemsep}{0pt}
+	 \setlength{\leftmargin}{.1cm}
+	 \setlength{\labelwidth}{.1cm}
+         \item[0] no polarization information is plotted. 
+%
+         \item[1]
+             the AMPLITUDE $P = \sqrt{\left(U^2 + Q^2\right)}$ of the polarisation is plotted 
+	(as long as the input data contains polarisation information
+             (ie, Stokes parameter Q and U for each pixel)) 
+%
+         \item[2]
+             the ANGLE $\phi = \tan^{-1}(U/Q) /2$ of the polarisation is plotted \\
+             Note: the angles are color coded with a fixed color table (independent of Colt)
+%
+         \item[3]
+             --the temperature is color coded (with a color table defined by Colt)\\
+             --and the polarisation is overplotted as headless VECTORS
+	\end{itemize}
+	\default{0} \\
+	\textbf{Note:} The representation of the polarization direction (options 2 and 3 above),
+        include the effects of the rotations and/or changes or astronomical coordinates
+      (controlled by ROT and COORD respectively) but do not include the effects
+      of the distortions induced by the projection from the sphere to the plan.
+      Because the polarization usually has more power at small scales, it must
+      generally be represented on maps of small patches of the sky to remain
+      legible, in which case the projection-induced distortions are small.
+	}   \\
+
+{/PREVIEW}\mytarget{idl:mollview:preview}  & all   & \parbox[t]{\hsize}{
+		if set, there is a 'ghostview' preview of the
+	        postscript file or a 'xv' preview of the gif file\\
+	 \seealso \mylink{idl:mollview:gif}{Gif}, \mylink{idl:mollview:png}{Png} and \mylink{idl:mollview:ps}{Ps}}\\
+
+
+{PS=}\mytarget{idl:mollview:ps}  & all   &  \parbox[t]{\hsize}{
+	      if set to 0            : no postscript output \\
+	      if set to 1            : output the plot in plot\_cartesian.ps, plot\_gnomic.ps,
+	      plot\_mollweide.ps or plot\_orthographic.ps respectively \\
+	      if set to a file name  : output the plot in that file \\
+		\default 0 \\
+               \seealso 
+\mylink{idl:mollview:preview}{Preview}, 
+\mylink{idl:mollview:gif}{Gif}, 
+\mylink{idl:mollview:png}{Png}}\\
+
+{PXSIZE=}\mytarget{idl:mollview:pxsize}  & all   & \parbox[t]{\hsize}{
+		set the number of horizontal screen\_pixels or postscript\_color\_dots of the plot
+    		(useful for high definition color printer) or elements of the
+output map\\
+    		\default {800 (Mollview and full sky Orthview), 600 (half sky
+		Orthview), 500 (Cartview and Gnomonic)} \\
+	\seealso
+\mylink{idl:mollview:fits}{FITS}, 
+\mylink{idl:mollview:gif}{GIF}, 
+\mylink{idl:mollview:map_out}{MAP\_OUT}, 
+\mylink{idl:mollview:png}{PNG}, 
+\mylink{idl:mollview:ps}{PS}.}\\
+
+\end{tabular}
+\mollbacktotop
+%-----------------------------------------------------------
+\begin{tabular}{p{\sizeone} p{\sizetwo} p{\sizethr}}
+\hline  
+\textbf{name} & \textbf{routines} & \textbf{\ description} \\ \hline
+%                   &   &                            \\ %%% for presentation
+{PYSIZE=}\mytarget{idl:mollview:pysize}  & CG--   & \parbox[t]{\hsize}{
+		set the number of vertical screen\_pixels or postscript\_color\_dots of the plot \\
+    		\default {\mylink{idl:mollview:pxsize}{Pxsize}}.}\\
+
+{RESO\_ARCMIN=}\mytarget{idl:mollview:reso_arcmin} & CG-- &  \parbox[t]{\hsize}{
+		size of screen\_pixels or postscript\_color\_dots in arcmin \\
+        		\default{1.5}\\
+	\seealso
+\mylink{idl:mollview:fits}{FITS}, 
+\mylink{idl:mollview:gif}{GIF}, 
+\mylink{idl:mollview:map_out}{MAP\_OUT}, 
+\mylink{idl:mollview:png}{PNG}, 
+\mylink{idl:mollview:ps}{PS}.}\\
+
+{RETAIN=}\mytarget{idl:mollview:retain} & all & \parbox[t]{\hsize}{specifies the type of
+backing store to use for direct graphics windows in \{0,1,2\}.
+\default{2}. See IDL documentation for details.} \\
+
+{ROT=}\mytarget{idl:mollview:rot}  & all & \parbox[t]{\hsize}{
+		vector with 1, 2 or 3 elements specifing the rotation angles in DEGREES
+               to apply to the map in the 'output' coordinate system (see \mylink{idl:mollview:coord}{Coord})
+             = ( lon0, [lat0, rat0])  \\
+               lon0 : longitude of the point to be put at the center of the plot
+		       the longitude increases Eastward, ie to the left of the plot
+ 		      \default 0 \\
+               lat0 : latitude of the point to be put at the center of the plot
+ 		      \default 0 \\
+               rot0 : anti clockwise rotation to apply to the sky around the
+                     center (lon0, lat0) before projecting
+                     \default 0 %\\
+			%%%\seealso \mylink{idl:mollview:fits}{FITS}%
+}\\
+
+
+{/SAVE}\mytarget{idl:mollview:save}  & all   & \parbox[t]{\hsize}{
+		if set, assumes that \mylink{idl:mollview:file}{File} is in IDL saveset format, 
+    		the variable saved should be DATA} \\
+                % can not be used with /ONLINE}\\
+
+{/SHADED}\mytarget{idl:mollview:shaded} & ---O & \parbox[t]{\hsize}{
+		if set, the orthographic sphere is shaded, using a Phong model, to emulate 3D viewing.
+              The sphere is illuminated by isotropic ambiant light plus a single light source.
+                 Can NOT be used with \mylink{idl:mollview:gif}{GIF}.} \\
+
+{/SILENT}\mytarget{idl:mollview:silent}  & all   & \parbox[t]{\hsize}{
+		if set, the program runs silently} \\
+
+{SUBTITLE=}\mytarget{idl:mollview:subtitle}  & all   & \parbox[t]{\hsize}{
+		String containing the subtitle to the plot\\ \seealso \mylink{idl:mollview:titleplot}{Titleplot}}\\
+
+{TITLEPLOT=}\mytarget{idl:mollview:titleplot}  & all   & \parbox[t]{\hsize}{
+		String containing the title of the plot, 
+     		if not set the title will be File\\ \seealso \mylink{idl:mollview:subtitle}{Subtitle}}\\
+
+{TRANSPARENT=}\mytarget{idl:mollview:transparent}  & all   & \parbox[t]{\hsize}{
+		If set to 1, the input data pixels with value \htmlref{{\tt
+!healpix.bad\_value}}{idl:init_healpix} ($=-1.6375\,10^{30}$) 
+will appear totally transparent on the output PNG file (instead of the usual
+grey).\\ 
+If set to 2, the background pixels will be transparent (instead of the usual white)\\
+If set to 3, both the grey and white pixels will look transparent.\\
+Active only in conjunction with \mylink{idl:mollview:png}{PNG}}\\
+
+\end{tabular}
+\mollbacktotop
+%-----------------------------------------------------------
+\begin{tabular}{p{\sizeone} p{\sizetwo} p{\sizethr}}
+\hline  
+\textbf{name} & \textbf{routines} & \textbf{\ description} \\ \hline
+%                   &   &                            \\ %%% for presentation
+
+{TRUECOLORS=}\mytarget{idl:mollview:truecolors} & all & \parbox[t]{\hsize}{
+if the input data is of the form [Npix,3], then the 3 fields
+            are respectively understood as {Red, Green, Blue} True-Color
+channels, and the \mylink{idl:mollview:colt}{color table} is ignored.\\
+-- If set to 1, the mapping field-intensity to color is done for the 3 channels at once. (\seealso \mylink{idl:mollview:factor}{Factor}, \mylink{idl:mollview:offset}{Offset})\\
+-- If set to 2, that mapping is done for each channel separately (in that case, \mylink{idl:mollview:min}{MIN}
+and \mylink{idl:mollview:max}{MAX} keywords are ignored). 
+}\\
+
+{UNITS=}\mytarget{idl:mollview:units}  & all   & \parbox[t]{\hsize}{
+		String containing the units, to be put on the right
+		hand side of the color bar, overrides the value read from the input file,
+		if any\\ \seealso \mylink{idl:mollview:nobar}{Nobar}, \mylink{idl:mollview:nolabels}{Nolabels}}\\
+
+{WINDOW=}\mytarget{idl:mollview:window}  & all   & \parbox[t]{\hsize}{
+                 IDL window index (integer)\\
+               -- if WINDOW $< 0$: virtual window: no visible window opened. Can
+                 be used with \mylink{idl:mollview:png}{PNG} or \mylink{idl:mollview:gif}{GIF}, in particular is those files are
+larger than the screen. {\bf Note:} The Z buffer will be used instead of the X server,
+allowing much faster production of the image over a slow network\\
+               -- if WINDOW in $[0,31]$: the specified IDL window with index WINDOW is used
+               (or reused). Can be used to have a sequence of images appear
+in the same window \\
+               -- if WINDOW $> 31$: a free ($=$unused) window with a random index $> 31$ will be
+               created and used. \\
+	       \default{32}		 
+                  }\\
+
+{XPOS=}\mytarget{idl:mollview:xpos}  & all   & \parbox[t]{\hsize}{
+		The X position on the screen of the lower left corner
+	        of the window, in device coordinate}\\
+
+{YPOS=}\mytarget{idl:mollview:ypos}  & all   & The Y position on the screen of the lower left corner 
+               of the window, in device coordinate
+
+%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% \end{tabular}
+%% %--------------------------------------------------------
+%% \begin{tabular}{p{\sizeone} p{\sizetwo} p{\sizethr}}
+%% \hline  
+%% \textbf{name} & \textbf{routines} & \textbf{\ description} \\ \hline
+
+
+
+%% \end{tabular}
+%% %--------------------------------------------------------
+%% \begin{tabular}{p{\sizeone} p{\sizetwo} p{\sizethr}}
+%% \hline  
+%% \textbf{name} & \textbf{routines} & \textbf{\ description} \\ \hline
+
+\end{tabular}
+\mollbacktotop
+\end{keywords_mollview}
+%***************************************************************
+
+\begin{codedescription}
+{\thedocid \ reads in a \healpix sky map in FITS format and generates a
+Mollweide projection of it, that can be visualized on the screen or
+exported in a PNG or Postscript file.\thedocid \  allows the selection of
+the coordinate system, map size, color table, color bar inclusion,
+linear or log scaling, histogram equalised
+color scaling, maximum and 
+minimum range for the plot, plot-title {\it etc}. It also allows the representation of the
+polarization field. }
+\end{codedescription}
+
+
+%\include{mollview_idl_related}
+% defines the field 'RELATED' for mollview, gnomview, orthview,
+% cartview
+
+\begin{related}
+  \begin{sulist}{} %%%% NOTE the ``extra'' brace here %%%%
+  \item[idl] version \idlversion or more is necessary to run \thedocid
+  \item[ghostview] ghostview or a similar facility is required to view
+	  the Postscript image generated by \thedocid.
+  \item[xv] xv or a similar facility is required to view the
+            GIF/PNG image generated by \thedocid \ (a browser can also 
+            be used).
+  \item[synfast, smoothing] These F90 \healpix facilities will generate the FITS format 
+            sky maps to be input to \thedocid.
+  \item[\htmlref{isynfast}{idl:isynfast}, \htmlref{ismoothing}{idl:ismoothing}] These IDL routines will generate the FITS format 
+            sky maps to be input to \thedocid.
+  \item[{\htmlref{cartview} {idl:cartview}}] 
+	IDL facility to generate a Cartesian projection of
+  	a \healpix map.
+  \item[{\htmlref{cartcursor} {idl:cartcursor}}] 
+	interactive cursor to be used with cartview
+  \item[{\htmlref{gnomview} {idl:gnomview}}] 
+	IDL facility to generate a gnomonic projection of
+  	a \healpix map.
+  \item[{\htmlref{gnomcursor}{idl:gnomcursor}}] 
+	interactive cursor to be used with gnomview
+  \item[{\htmlref{mollview}{idl:mollview}}] 
+	IDL facility to generate a Mollweide projection of
+  	a \healpix map.
+  \item[{\htmlref{mollcursor}{idl:mollcursor}}] interactive cursor to be used with mollview
+  \item[{\htmlref{orthview}{idl:orthview}}] 
+	IDL facility to generate an orthographic projection of
+  	a \healpix map.
+  \item[{\htmlref{orthcursor}{idl:orthcursor}}] 
+	interactive cursor to be used with orthview
+  \end{sulist}
+\end{related}
+
+
+
+%-------------------------------------------
+\begin{examples}
+{2}
+{
+\begin{tabular}{l} %%%% use this tabular format %%%%
+
+map  = findgen(48) \\
+triangle= create\_struct('coord','G','ra',[0,80,0],'dec',[40,45,65]) \\
+\htmlref{\thedocid}{idl:mollview},\mylink{idl:mollview:file}{map}, \mylink{idl:mollview:graticule}{graticule}=[45,30],\mylink{idl:mollview:rot}{rot}=[10,20,30],\$ \\
+$\quad\quad$	  \mylink{idl:mollview:titleplot}{title}='Mollweide projection',\mylink{idl:mollview:subtitle}{subtitle}='mollview', \$ \\
+$\quad\quad$          \mylink{idl:mollview:outline}{outline}=triangle \\
+\end{tabular}
+}
+{makes a Mollweide projection of a pixel index map (see Figure~\ref{fig:plot_visu}c on
+page~\pageref{page:plot_visu}) after an arbitrary \mylink{idl:mollview:graticule}{rotation}, with a \mylink{idl:mollview:graticule}{graticule} grid
+(with a 45$^o$ step in longitude and 30$^o$ in latitude) and an arbitrary
+(triangular) \mylink{idl:mollview:outline}{outline}}
+\end{examples}
+%--------
+\begin{figure}[h!]
+\latexhtml{%for latex
+\centerline{\includegraphics[bb=0pt 0pt 550pt 374pt, width=\textwidth,clip]{fig/merge_visu}}
+}{%for html
+%\centerline{\includegraphics[bb=1pt 1pt 600pt 800pt, width=5in]{fig/merge_visu}\myhtmlimage{}}
+%%%\centerline{\includegraphics[width=0.5\textwidth]{fig/merge_visu_large}{}}
+\centerline{\includegraphics[width=520pt]{fig/merge_visu_large}{}}%rescaled for JPL web site -> ~720
+}
+\caption{%
+\label{page:plot_visu}%
+\label{fig:plot_visu}%
+Figures produced by \htmlref{cartview}{idl:cartview},
+\htmlref{gnomview}{idl:gnomview}, \htmlref{mollview}{idl:mollview} and \htmlref{orthview}{idl:orthview}, see respective
+routine documentation for details.}
+\end{figure}
+%--------
+
+%-------------------------------------------
+\begin{examples}
+{3}
+{
+\begin{tabular}{l} %%%% use this tabular format %%%%
+
+map  = findgen(48) \\
+mycommand = 'x=findgen(64)/10. \& ' + \$ \\
+$\quad\quad$	'plot,x,sin(x),pos=[0.8,0.8,0.99,0.99],/noerase \&' +\$ \\
+$\quad\quad$	'xyouts,0.5,0.5,''Hello World !'',/normal,charsize=2,align=0.5'  \\
+\htmlref{\thedocid}{idl:mollview},map, \mylink{idl:mollview:execute}{execute}=mycommand, \mylink{idl:mollview:png}{png}='plot\_example\_execute.png',\mylink{idl:mollview:preview}{/preview},\$ \\
+$\quad\quad$	\mylink{idl:mollview:graticule}{/graticule},\mylink{idl:mollview:glsize}{/glsize} \\
+\end{tabular}
+}
+{produces a PNG file containing a Mollweide projection of a pixel index map
+with labeled graticules, a simple sine wave in the
+upper right corner, and some greetings, as shown on Figure~\ref{fig:plot_example_execute} on page~\pageref{page:plot_example_execute}
+}
+\end{examples}
+%-------
+\begin{figure}[h!]
+\latexhtml{%for latex
+\centerline{\includegraphics[bb=0pt 20pt 800pt 500pt, width=0.7\textwidth,clip]{fig/plot_example_execute}}
+}{%for html
+%%%\centerline{\includegraphics[width=0.5\textwidth]{fig/plot_example_execute}{}}
+\centerline{\includegraphics[width=520pt]{fig/plot_example_execute}{}}%rescaled for JPL web site -> ~720
+}
+\caption{%
+\label{page:plot_example_execute}%
+\label{fig:plot_example_execute}%
+Figure produced by example \#3.}
+\end{figure}
+%-------
+
+
+
+%-------------------------------------------
+\label{page:example_hires_cutsky}
+\begin{examples}
+{4}
+{
+\begin{tabular}{l} %%%% use this tabular format %%%%
+
+pixel  = l64indgen(400000) \\
+signal = pixel * 10.0 \\
+file = 'cutsky.fits' \\
+\htmlref{write\_fits\_cut4}{idl:write_fits_cut4}, file, pixel+100000, signal, nside=32768, /ring \\
+\htmlref{gnomview}{idl:gnomview}, \mylink{idl:mollview:file}{file}, \mylink{idl:mollview:graticule}{rot}=[0,90], \mylink{idl:mollview:graticule}{grat}=30, \mylink{idl:mollview:titleplot}{title}='high res. cut-sky map' \\
+\end{tabular}
+}
+{produces and plots a high resolution map (6.4 arcsec/pixel), in which only a very small subset of
+pixels is observed}
+\end{examples}
+%-------------------------------------------
+\begin{examples}
+{5}
+{
+\begin{tabular}{l} %%%% use this tabular format %%%%
+
+file = 'wmap\_band\_iqumap\_r9\_5yr\_K\_v3.fits' \\
+\htmlref{\thedocid}{idl:mollview}, \mylink{idl:mollview:file}{file}, \mylink{idl:mollview:titleplot}{title}='Linear Color Scale', \mylink{idl:mollview:silent}{/silent} \\
+\thedocid, file,\mylink{idl:mollview:asinh}{/asinh},title='Sinh!u-1!n Color Scale' , /silent \\
+\thedocid, file,\mylink{idl:mollview:hist_equal}{/hist}, title='Histogram Equalized Color Scale', /silent \\
+\thedocid, file,\mylink{idl:mollview:log}{/log},  title='Log Scale', /silent \\
+\end{tabular}
+}
+{produces Mollweide projections of the same map (here the WMAP-5yr K band) with
+various color scales: linear, Inverse
+Hyperbolic Sine, Histogram Equalized, and Log. See Figure~\ref{fig:merge_wmapKband} on page~\pageref{page:merge_wmapKband}
+}
+\end{examples}
+%
+\begin{figure}[h!]
+\latexhtml{%for latex
+%\centerline{\includegraphics[bb=0pt 0pt 842pt 595pt, width=0.99\textwidth,clip]{fig/merge_wmapKband}}
+\centerline{\includegraphics[bb=30pt 40pt 812pt 510pt, width=0.99\textwidth,clip]{fig/merge_wmapKband}}
+}{%for html
+%%%\centerline{\includegraphics[width=0.5\textwidth]{fig/merge_wmapKband}{}}
+\centerline{\includegraphics[width=520pt]{fig/merge_wmapKband}{}}%rescaled for JPL web site -> ~720
+}
+\caption{%
+\label{page:merge_wmapKband}%
+\label{fig:merge_wmapKband}%
+Illustration (generated by example~\#5) of the various color scales available.}
+\end{figure}
+
+%-------------------------------------------
+\begin{examples}
+{1}
+{
+\begin{tabular}{l} %%%% use this tabular format %%%%
+\htmlref{\thedocid}{idl:mollview},  \mylink{idl:mollview:file}{'planck100GHZ-LFI.fits'}, \mylink{idl:mollview:min}{min}=-100, \mylink{idl:mollview:max}{max}=100, \mylink{idl:mollview:graticule}{/graticule}, \$ \\
+$\quad$	 \mylink{idl:mollview:titleplot}{title}='Simulated Planck LFI Sky Map at 100GHz'\\
+\end{tabular}
+}
+{\thedocid \ reads in the map 'planck100GHZ-LFI.fits' and generates
+an output image in which
+the temperature scale has been set to lie between $\pm$ 100 ($\mu$K),
+a \mylink{idl:mollview:graticule}{graticule} with a 45 degree step in longitude and latitude is drawn,
+and the \mylink{idl:mollview:titleplot}{title} 'Simulated Planck LFI Sky Map at 100GHz' appended to the image.
+}
+\end{examples}
+

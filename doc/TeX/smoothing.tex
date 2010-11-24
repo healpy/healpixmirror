@@ -1,0 +1,182 @@
+
+\sloppy
+
+
+\title{\healpix Fortran Facility User Guidelines}
+\docid{smoothing} \section[smoothing]{\nosectionname}
+\label{fac:smoothing}
+\docrv{Version 1.1}
+\author{Frode K.~Hansen}
+\abstract{This document describes the \healpix facility SMOOTHING.}
+
+\begin{facility}
+{This program can be used to convolve a map with a gaussian beam. 
+The input map can be given in RING or NESTED scheme and the smoothed map 
+is written 
+to a FITS file in the RING scheme.
+
+NOTE: This automated facility is susceptible to problems with non-commutativity
+of discrete spherical harmonics transforms, described in the Recommendations
+for Users of the \htmlref{anafast}{fac:anafast} facility. 
+If very high accuracy of the results is
+required in the spectral regime of $\ell > 2\cdot nsmax$, it is recommended
+to choose an iterative computation of the $a_{\ell m}$ coefficients.
+} 
+{src/f90/smoothing/smoothing.f90}
+\end{facility}
+
+\begin{f90facility}
+{smoothing [options] [parameter\_file]}
+\end{f90facility}
+
+%% \begin{options}
+%%   \begin{optionlistwide}{} %%%% NOTE the ``extra'' brace here %%%%
+%%     \item[{\tt -d}]
+%%     \item[{\tt --double}] If present, all internal variables and arrays will be in double precision, and the output data will be written on disk at double precision (see Notes on I/O precision on page~\pageref{page:ioprec})
+%%     \item[{\tt -s}]
+%%     \item[{\tt --single}] If present, most internal variables and arrays will be in single precision, except for those involved in accuracy critical calculations such as spherical harmonics recursion, and the output data will be written on disk at single precision (default)
+%%   \end{optionlistwide}
+%% \end{options}
+
+\begin{options}
+  \begin{optionlistwide}{} %%%% NOTE the ``extra'' brace here %%%%
+    \item[{\tt -d}]
+    \item[{\tt -}{\tt -}{\tt double}] double precision mode (see Notes on double/single precision modes on page~\pageref{page:ioprec})
+    \item[{\tt -s}]
+    \item[{\tt -}{\tt -}{\tt single}] single precision mode (default)
+  \end{optionlistwide}
+\end{options}
+
+\begin{qualifiers}
+  \begin{qulist}{} %%%% NOTE the ``extra'' brace here %%%%
+     \item[{simul\_type = }] Defines which map(s) to analyse, 1=temperature only, 2=temperature AND polarisation.
+(default= 1)
+    \item[{infile = }] Defines the filename for the FITS file containing the map to be smoothed. 
+	(default= 'map.fits')
+    \item[{nlmax = }] Defines the $\ell_{max}$ value for the application.
+(default= 64)
+    \item[{iter\_order = }] Defines the maximum order of quadrature 
+      iteration to be used. (default=0, no iteration)
+ \item[{fwhm\_arcmin = }] Defines the FWHM in arcminutes of the gaussian 
+beam for the convolution. (default=10)
+    \item[{beam\_file = }] Defines the FITS file describing the
+    Legendre window
+    function of the circular beam to be used for the
+    simulation. If set to an existing file name, it will override the
+    {\tt fhwm\_arcmin} given above. default=`'
+\item[{outfile = }] Defines the filename for the file that will contain 
+the smoothed map. (default='map\_smoothed.fits')
+     \item[{plmfile = }] Defines the name for an input file
+    containing  precomputed Legendre polynomials $P_{lm}$.
+(default= no entry --- \htmlref{anafast}{fac:anafast} executes the recursive evaluation 
+of $P_{lm}$s)
+\item[{w8file = }] Defines name for an input file containing ring
+  weights in the improved quadrature mode (default= no entry ---
+the name is assumed to be 'weight\_ring\_n0xxxx.fits' where xxxx is nsmax)
+\item[{w8filedir = }] Gives the directory where the weight files are
+to be found (default= no entry --- smoothing searches in the default
+directories, see introduction)
+\item[{won = }] Set this to 1 if weight files are to be used,
+otherwise set it to 0 (or 2). (default= 0)
+  \end{qulist}
+\end{qualifiers}
+
+\begin{codedescription}
+{
+A FITS file containing a \healpix map in RING or NESTED scheme is read in.
+The map is analysed and smoothed in fourier space with a  gaussian beam 
+of a given FHWM. 
+A new map is then synthesized using the smoothed $a_{\ell m}$ coeffecients. 
+For a more accurate application, an iteration of arbitrary order can be applied. 
+The output map is stored in {\em the same scheme} as the input map.
+}
+\end{codedescription}
+
+\begin{datasets}
+{
+\begin{tabular}{p{0.3\hsize} p{0.35\hsize}} \hline  
+  \textbf{Dataset} & \textbf{Description} \\ \hline
+                   &                      \\ %%% for presentation
+  data/weight\_ring\_n0xxxx.fits & Files containing ring weights
+                   for the smoothing improved quadrature mode.\\ 
+                   &                      \\ \hline %%% for presentation
+\end{tabular}
+} 
+\end{datasets}
+
+\begin{support}
+  \begin{sulist}{} %%%% NOTE the ``extra'' brace here %%%%
+  \item[\htmlref{synfast}{fac:synfast}] This \healpix facility can generate a map and also do the smoothing.
+  \item[\htmlref{anafast}{fac:anafast}] This \healpix facility can analyse a smoothed map.		
+  \end{sulist}
+\end{support}
+
+\begin{examples}{1}
+{
+\begin{tabular}{ll} %%%% use this tabular format %%%%
+smoothing  \\
+\end{tabular}
+}
+{
+Smoothing runs in interactive mode, self-explanatory. 
+}
+\end{examples}
+
+\vfill\newpage
+
+\begin{examples}{2}
+{
+\begin{tabular}{ll} %%%% use this tabular format %%%%
+smoothing  filename \\
+\end{tabular}
+}
+{When `filename' is present, smoothing enters the non-interactive mode and parses
+its inputs from the file `filename'. This has the following
+structure: the first entry is a qualifier which announces to the parser
+which input immediately follows. If this input is omitted in the
+input file, the parser assumes the default value.
+If the equality sign is omitted, then the parser ignores the entry.
+In this way comments may also be included in the file.
+In this example, the file contains the following
+qualifiers:\hfill\newline
+\fileparam{simul\_type = 1}
+\fileparam{nlmax = 64}
+\fileparam{infile = map.fits}
+\fileparam{outfile = map\_smoothed.fits}
+\fileparam{fwhm\_arcmin = 10.}
+\fileparam{iter\_order = 1}
+}
+
+Smoothes the \healpix temperature map contained in `map.fits' with 
+a 10 arcmin FWHM beam. The resulting map is saved 
+in `map\_smoothed.fits'. The map analysis/synthesis was carried 
+out using fourier coeffecients up to an $\ell$ value of 64. A first
+order iteration of the quadrature was performed.
+
+\end{examples}
+
+\begin{release}
+  \begin{relist}
+    \item Initial release (\healpix 0.90)
+    \item Extension to polarization and arbitrary {\em circular} beams (\healpix 1.20)
+  \end{relist}
+\end{release}
+
+\newpage
+\begin{messages}
+{
+\begin{tabular}{p{0.25\hsize} p{0.1\hsize} p{0.35\hsize}} \hline  
+  \textbf{Message} & \textbf{Severity} & \textbf{Text} \\ \hline
+                   &                   &   \\ %%% for presentation
+can not allocate memory for array xxx &  Fatal & You do not have
+                   sufficient system resources to run this
+                   facility at the map resolution you required. 
+  Try a lower map resolution.  \\ 
+                   &                   &   \\ \hline %%% for presentation
+\end{tabular}
+} 
+\end{messages}
+
+\rule{\hsize}{2mm}
+
+\newpage

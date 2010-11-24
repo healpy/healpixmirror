@@ -1,0 +1,35 @@
+\documentclass[landscape]{report}
+\usepackage{graphicx}
+
+%
+% this merge 4 PS files produced by illustrate_colormap.pro into one
+% 
+% latex merge_wmapKband ; dvips -t a4 -t landscape -o merge_wmapKband.ps
+% merge_wmapKband.dvi ; convert -rotate -90 merge_wmapKband.ps merge_wmapKband.png
+% vlatex merge_wmapKband ; convert -rotate -90 merge_wmapKband.ps merge_wmapKband.png ; open merge_wmapKband.png
+%\textwidth =21cm
+% \textwidth =29cm
+% \textheight =19cm
+\textwidth =18cm
+\textheight =27cm
+\topmargin=-1.5cm
+\oddsidemargin=-1.5cm
+\evensidemargin=-1.5cm
+
+\begin{document}
+\thispagestyle{empty}
+\vbox{
+%\vskip -2cm
+\hbox{
+\includegraphics[width=0.45\textwidth]{wmap_Kband_hist.ps}
+\hspace {0.03\textwidth}
+\includegraphics[width=0.45\textwidth]{wmap_Kband_linear.ps}
+}
+\hbox{
+\includegraphics[width=0.45\textwidth]{wmap_Kband_log.ps}
+\hspace {0.03\textwidth}
+\includegraphics[width=0.45\textwidth]{wmap_Kband_asinh.ps}
+}
+}
+
+\end{document}

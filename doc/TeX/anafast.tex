@@ -1,0 +1,378 @@
+
+\sloppy
+
+
+\title{\healpix Fortran Facility User Guidelines}
+\docid{anafast} \section[anafast]{\nosectionname}
+\label{fac:anafast}
+\docrv{Version 1.2}
+\author{Frode K.~Hansen, Benjamin D.~Wandelt, K.M.~G\'orski, Eric Hivon}
+\abstract{This document describes the \healpix facility ANAFAST.}
+
+\begin{facility}
+{This program performs harmonic analysis of the \healpix maps 
+up to a user
+specified maximum spherical harmonic order $\ell_{max}$.
+The integrals are computed on the whole sphere, unless the user 
+chooses  a provided option 
+to excise from the input map(s) a simple, constant latitude, symmetric cut, and/or
+apply an arbitray cut read from an external file.
+Scalar, or scalar and tensor, spherical harmonic coefficients are evaluated
+from the map(s) if the input provides, respectively, only the temperature,
+or temperature and polarisation maps.
+The total operation count scales as 
+${\cal {O}}(N_{\rm pix}^{3/2} )$ with a prefactor
+depending on $\ell_{max}$. 
+
+Anafast reads one (two) file(s) containing the map(s) and produces 
+a file containing the temperature auto- (or cross-) power spectrum
+$C^T_l$ and, if requested, 
+also the polarisation power spectra $C^E_l$, $C^B_l$, $C^{T\times E}_l$,
+$C^{T\times B}_l$ and $C^{E\times B}_l$.
+The $a_{lm}$  coefficients computed during the execution also can be  
+written to a (two) file(s) if requested. 
+
+Anafast executes an approximate, discrete point-set quadrature on 
+a sphere
+sampled at the \healpix pixel centers.
+Spherical harmonic transforms are computed 
+using recurrence relations for Legendre polynomials on co-latitude, 
+$\theta$, 
+and  Fast Fourier Transforms on longitude, $\phi$. 
+
+Anafast is provided with an option to use precomputed Legendre Polynomials 
+to decrease the total execution time.
+
+Anafast permits two execution options 
+which allow a significant improvement of accuracy of 
+the approximate quadrature performed by this facility:
+
+$\bullet$ An improved analysis using the provided ring weights, 
+which correct the quadrature
+on latitude, and/or
+ 
+$\bullet$ An iterative scheme using in 
+succession several backward and forward harmonic transforms 
+of the maps.} 
+{src/f90/anafast/anafast.f90}
+\end{facility}
+
+\begin{recommend}
+{
+Execution of \thedocid\ requires a user to specify the maximum 
+spherical harmonic order $\ell_{max}$ up to which the harmonic 
+decomposition of the input maps will be performed.
+Since there are no formal limits on parameter
+$\ell_{max}$ enforced by \thedocid, the user should make his/her choices
+judiciously. 
+Hereafter it is convenient to specify $\ell_{max}$  
+in terms of the \healpix
+map resolution parameter $nsmax$.
+
+If the function to be analysed is strictly  band-width
+limited, or nearly band-width limited (as in the case of 
+a Gaussian beam smoothed signal discretized at a rate of a few pixels
+per beam area), it is  sufficient to run \thedocid\ with
+$\ell_{max} \approx 2\cdot nsmax$, with a very good $C_\ell$ 
+error performance 
+already in the raw (i.e. uncorrected quadrature) harmonic transform mode. 
+If quadrature 
+corrections are still desired in this case, it should be sufficient to use, at no
+extra cost in execution time, the ring-weighted quadrature scheme. 
+This is the recommended mode of operation of \thedocid\ for essentially
+error and worry free typical applications, e.g. CPU-intensive 
+Monte Carlo studies. 
+
+If more aggressive attempts are undertaken to extract from a map 
+the spectral coefficients at $\ell > 2\cdot nsmax$ (for example, as 
+in a possible case of an attempt to analyse an existing map, which was 
+irreversibly binned  at a suboptimal resolution) 
+the following should be kept in mind:
+
+$\bullet$ Spherical harmonics discretized using \healpix 
+(either sampled at
+pixel centers, or avaraged over pixel areas) form a linearly independent
+system up to $\ell_{max} = 3 \cdot nsmax -1$. Hence, the functions which are
+strictly band-width limited to $\ell_{max} = 3 \cdot nsmax - 1 $ 
+can be fully
+spectrally resolved with \thedocid, albeit with integration errors
+in the uncorrected quadrature mode, which grow up to 
+$\myhtmlimage{}\delta C_\ell \propto \epsilon \cdot C_\ell$, with $\epsilon <0.1$, 
+at the highest values of $\ell$. These integration  errors 
+can be efficiently 
+reduced
+using \thedocid\ in the iterative mode. Although this $\ell_{max}$ range
+--- $2 \cdot nsmax < \ell_{max} < 3 \cdot nsmax - 1$ --- is easily
+manageable with \thedocid\ used on strictly band-width limited functions,
+it should be used with caution in basic and automated applications, e.g.
+Monte Carlo simulations.
+
+$\bullet$ As with any discrete Fourier transform, \thedocid\ application to
+functions which are not band-width limited results with aliasing
+of power, which can not be remedied. If the particular case of interest
+may result in such a band-width violation (i.e. there is significant power
+in the function at $\ell > 3 \cdot nsmax -1$), the function should
+be smoothed before the application of \thedocid, or discretized and
+then analysed, on a refined \healpix grid (with larger $nsmax$).
+
+$\bullet$ REMEMBER: 
+A peculiar property of the sphere, which usually surprizes those 
+whose intuition is built on experience with FFTs on a segment, or 
+on a Euclidean multidimensional domains, is the lack of 
+a regular and uniform point-set at arbitrary resolution, 
+and the resulting non-commutativity of the forward and
+backward discrete Fourier transforms on nearly-uniform point-sets,
+e.g. {\healpix}. Hence,
+as in any case of attempting an extreme application of an off-the-shelf
+software, use caution and understand your problem well {\it before}
+executing \thedocid\ under such cicumstances!
+}
+\end{recommend}
+
+\begin{f90facility}
+{anafast [options] [parameter\_file]}
+\end{f90facility}
+
+%% \begin{options}
+%%   \begin{optionlistwide}{} %%%% NOTE the ``extra'' brace here %%%%
+%%     \item[{\tt -d}]
+%%     \item[{\tt --double}] If present, all internal variables and arrays will be in double precision, and the output data will be written on disk at double precision (see Notes on I/O precision on page~\pageref{page:ioprec})
+%%     \item[{\tt -s}]
+%%     \item[{\tt --single}] If present, most internal variables and arrays will be in single precision, except for those involved in accuracy critical calculations such as spherical harmonics recursion, and the output data will be written on disk at single precision (default)
+%%   \end{optionlistwide}
+%% \end{options}
+\begin{options}
+  \begin{optionlistwide}{} %%%% NOTE the ``extra'' brace here %%%%
+    \item[{\tt -d}]
+    \item[{\tt -}{\tt -}{\tt double}] double precision mode (see Notes on double/single precision modes on page~\pageref{page:ioprec})
+    \item[{\tt -s}]
+    \item[{\tt -}{\tt -}{\tt single}] single precision mode (default)
+  \end{optionlistwide}
+\end{options}
+
+\begin{qualifiers}
+  \begin{qulist}{} %%%% NOTE the ``extra'' brace here %%%%
+    \item[{infile = }] Defines the input map file. 
+	(default= map.fits)
+    \item[{infile2 = }] Defines the 2nd input map file, to be cross-correlated with
+	the first one. The 2 maps should match in resolution ($nsmax$) and coordinate.
+	(default= `', only the auto-correlation of the first map will be computed)
+    \item[{outfile = }] Defines the output file with the power spectrum. If only
+      one input map is provided, {\tt outfile} will contains its auto-spectra,
+      if 2 maps are provided, {\tt outfile} will contain their
+      cross-spectra. Note in particular that in the latter case, the $C^{T\times E}_l$ power
+      spectrum will be build from the $T$ field of the 1st (possibly polarized) map, and the $E$
+      field of the second polarized map.
+(default= cl\_out.fits)
+     \item[{simul\_type = }] Defines which map(s) to analyse, 1=temperature only, 2=temperature AND polarisation.
+(default= 1)
+     \item[{nlmax = }] Defines the maximum $\ell$ value 
+to be used. See the Recommendations for Users. 
+(default= 64)
+ \item[{maskfile =}] Defines the FITS file containing the pixel mask(s) or
+ weighting scheme(s) by which the map(s) read from {\tt infile} will be
+ multiplied before analysis. If the file contains several fields, the first
+one in which at least one pixel is non-zero will be used. This option can be
+ used to, for instance, apply
+the WMAP Kp intensity mask to the data (see
+\htmladdnormallink{http://lambda.gsfc.nasa.gov}{http://lambda.gsfc.nasa.gov}
+), but it will {\em not} handle the WMAP composite mask correctly.
+Can be used in conjonction with {\tt theta\_cut\_deg}. Masked or weighted pixels
+ will be correctly accounted when performing the monopole and dipole regression.
+(default= `': no mask, all valid pixels are used)
+ \item[{theta\_cut\_deg = }] Defines the latitude (in degrees) of 
+an optional, straight symmetric cut around the equator.  Pixels located within
+that cut ($|b|<${\tt theta\_cut\_deg} are ignored.
+(default= $0^\circ$: no cut)
+ \item[{iter\_order = }] Defines the maximum order of quadrature 
+iteration to be used. (default=0, no iteration)
+ \item[{outfile\_alms = }] Defines the name of the file 
+containing the $a_{lm}$  coefficients of the first map
+which can be written optionally.   (default= no entry ---
+$a_{lm}$s are not written to a file)
+ \item[{outfile\_alms2 = }] Defines the name of the file 
+containing the $a_{lm}$  coefficients of the second map, if any,
+which can be written optionally.   (default= no entry ---
+$a_{lm}$s are not written to a file)
+ \item[{plmfile = }] Defines the name for an input file
+    containing  precomputed Legendre polynomials $P_{lm}$.
+(default= no entry --- \thedocid\ executes the recursive evaluation 
+of $P_{lm}$s)
+\item[{w8file = }] Defines name for an input file containing ring
+  weights in the improved quadrature mode (default= no entry ---
+the name is assumed to be 'weight\_ring\_n0xxxx.fits' where xxxx is nsmax)
+\item[{w8filedir = }] Gives the directory where the ring weight files are
+to be found (default= no entry --- \thedocid\ searches the default
+directories, see introduction)
+\item[{won = }] Set this to 1 if ring weight files are to be used,
+otherwise set it to 0 (or 2). (default= 0)
+\item[{regression = }] {{Sets the degree of the regression made on the
+input map before doing the power spectrum analysis. 
+The regression is a minimal variance fit (assuming a uniform noise) 
+made on valid (unflagged and unmasked) pixels, out of the symmetric cut (if
+any). In case of cut sky analysis, such a regression reduces the monopole
+and dipole leakage to higher $\ell$'s.\\
+0 : no regression, does the a\_lm analysis on the raw map\\
+1 : removes the best fit monopole first\\
+2 : removes the best fit monopole and dipole first\\
+default = 0.}}
+ 
+  \end{qulist}
+\end{qualifiers}
+
+\begin{codedescription}
+{
+Anafast reads one of two binary FITS-files containing a \healpix map. These
+files can each contain
+a temperature map or both temperature and polarisation (Q,U) maps. Anafast analyses
+the map(s) and makes an output ascii-FITS file containing the angular auto or cross
+power spectra $C^T_l$s
+(and $C^E_l$, $C^B_l$, $C^{T\times E}_l$, $C^{T\times B}_l$ and $C^{E\times B}_l$ if specified). Anafast
+produces $C_l$s up to a specified maximum $\ell$-value
+(see Recommendations for Users). Note in particular that if 2 maps are provided,
+the $C^{T\times E}_l$ power
+      spectrum will be build from the $T$ field of the 1st (polarized) map, and the $E$
+      field of the second polarized map.
+If requested, the computed $a_{lm}$ coefficients 
+can  be written to a FITS file. This file can be used in the 
+constrained realisation mode  of  \htmlref{synfast}{fac:synfast}. 
+
+Anafast permits two execution modes that allow to improve 
+the quadrature accuracy: 
+(1) the  ring weight corrected quadrature, and
+(2)  the  iterative scheme. 
+Using the ring weights does not increase the execution time.  
+The precomputed ring weights to be used for each 
+\healpix resolution $nsmax$ are provided in
+the {\tt \$HEALPIX/data} directory. 
+The more sophisticated iterative scheme increases the
+accuracy more effectively than the weighted ring scheme,
+but its disadvantage is that the time for the analysis
+increases, 1 iteration takes 3 times as long, 2 iterations 5 times as
+long on so forth, since each order of iteration requires one more forward
+and backward transform. 
+
+The spherical harmonics evaluation uses  a
+recurrence on associated Legendre polynomials $P_{lm}(\theta)$. 
+This recurrence consumes most of the CPU time used by \thedocid. 
+We have therefore included an option to load precomputed values for the
+$P_{lm}(\theta)$ from a file generated by the \healpix facility
+\htmlref{plmgen}{fac:plmgen}. This represents a tradeoff between memory usage and execution 
+speed of \thedocid. 
+}
+\end{codedescription}
+
+\begin{datasets}
+{
+\begin{tabular}{p{0.3\hsize} p{0.35\hsize}} \hline  
+  \textbf{Dataset} & \textbf{Description} \\ \hline
+                   &                      \\ %%% for presentation
+  data/weight\_ring\_n0xxxx.fits & Files containing ring weights
+                   for the \thedocid\ improved quadrature mode.\\ 
+                   &                      \\ \hline %%% for presentation
+\end{tabular}
+} 
+\end{datasets}
+
+\begin{support}
+  \begin{sulist}{} %%%% NOTE the ``extra'' brace here %%%%
+  \item[\htmlref{synfast}{fac:synfast}] This \healpix facility can generate a map for analysis by \thedocid.
+  \item[\htmlref{alteralm}{fac:alteralm}] This \healpix Fortran facility can be
+  used to modify the $a_{lm}$ extracted by \thedocid\ before they are used as
+  constraints on a \htmlref{synfast}{fac:synfast} run.
+  \item[\htmlref{plmgen}{fac:plmgen}] This \healpix facility can be used to generate precomputed Legendre polynomials.
+		
+  \end{sulist}
+\end{support}
+
+\begin{examples}{1}
+{
+\begin{tabular}{ll} %%%% use this tabular format %%%%
+anafast  \\
+\end{tabular}
+}
+{
+Anafast runs in interactive mode --- self-explanatory.
+}
+\end{examples}
+
+\vfill\newpage
+
+\begin{examples}{2}
+{
+\begin{tabular}{ll} %%%% use this tabular format %%%%
+anafast  filename \\
+\end{tabular}
+}
+{When 'filename' is present, \thedocid\ enters the non-interactive mode and parses
+its inputs from the file 'filename'. This has the following
+structure: the first entry is a qualifier which announces to the parser
+which input immediately follows. If this input is omitted in the
+input file, the parser assumes the default value.
+If the equality sign is omitted, then the parser ignores the entry.
+In this way comments may also be included in the file.
+In this example, the file contains the following qualifiers:\hfill\newline
+\fileparam{simul\_type = 1}
+\fileparam{nlmax = 64}
+\fileparam{theta\_cut\_deg = 0}
+\fileparam{iter\_order = 0}
+\fileparam{infile = map.fits}
+\fileparam{outfile = cl\_out.fits}
+\fileparam{regression = 0}
+Anafast reads the map from {\em map.fits}, makes an analysis and produces $C^T_l$s up to l=64.
+This powerspectrum is saved in the file {\em cl\_out.fits}. 
+No galactic cut is excised and no iterations are performed.
+As regression is set to 0 (its default value) the map is analyzed as
+is, without prior best fit removal of the monopole nor the dipole.
+
+Since\hfill\newline
+\fileparam{infile2}
+\fileparam{outfile\_alms }
+\fileparam{outfile\_alms2 }
+\fileparam{w8file }
+\fileparam{w8filedir}
+\fileparam{plmfile}
+\fileparam{maskfile}
+were omitted, they take their default values (empty strings). 
+This means that no file for precomputed
+Legendre polynomials is read, no second map is read, no mask is applied, and \thedocid\ does not save the $a_{lm}$ values
+from the analysis.
+
+Also since\hfill\newline
+\fileparam{won}
+is not given, it takes it default value 2, which means that ring
+weights are not used.
+
+}
+\end{examples}
+
+\begin{release}
+  \begin{relist}
+    \item Initial release (\healpix 0.90)
+    \item Optional non-interactive operation. Proper FITS file
+    support. Improved reccurence algorithm for $P_{lm}(\theta)$ which can compute to higher $\ell$ values. New functionality: arbitrary order of iterations, precomputed
+    $P_{lm}$, dumping of $a_{lm}$. (\healpix 1.00)
+    \item New functionality: possibility of removing the best fit monopole
+    and dipole. New Parser. Can be linked to FFTW (\healpix 1.20)
+    \item New functionality: addition of {\tt{maskfile}} (\healpix 2.0)
+    \item Bug correction: correct interaction of iterative scheme with masked pixels (\healpix 2.01)
+    \item New functionality: cross-correlation of 2 maps; Correction of this documentation: the code expects {\tt maskfile} and
+not {\tt mask\_file}  (\healpix 2.1)
+  \end{relist}
+\end{release}
+
+\begin{messages}
+{
+\begin{tabular}{p{0.25\hsize} p{0.1\hsize} p{0.35\hsize}} \hline  
+  \textbf{Message} & \textbf{Severity} & \textbf{Text} \\ \hline
+                   &                   &   \\ %%% for presentation
+can not allocate memory for array xxx &  Fatal & You do not have
+                   sufficient system resources to run this
+                   facility at the map resolution you required. 
+  Try a lower map resolution.  \\ 
+                   &                   &   \\ \hline %%% for presentation
+\end{tabular}
+} 
+\end{messages}
+
+\newpage

@@ -1,0 +1,134 @@
+
+\sloppy
+
+\title{\healpix Fortran Subroutines Overview}
+\docid{write\_minimal\_header} \section[write\_minimal\_header]{ }
+\label{sub:write_minimal_header}
+\docrv{Version 1.2}
+\author{Eric Hivon}
+\abstract{This document describes the \healpix Fortran90 subroutine
+WRITE\_MINIMAL\_HEADER.}
+
+\begin{facility}
+{This routine writes the baseline FITS header 
+for the most common \healpix data sets: (cut sky or full sky) map, $C(l)$ power spectra and $a_{lm}$
+coefficients.}
+{src/f90/mod/head\_fits.F90}
+\end{facility}
+
+\begin{f90format}
+{header, dtype, \optional{[append, nside, order, ordering, coordsys, creator, version,
+randseed, beam\_leg, fwhm\_degree, units, nlmax, polar, nmmax, bcross, deriv]} }
+\end{f90format}
+\aboutoptional
+
+\begin{arguments}
+{
+\begin{tabular}{p{0.30\hsize} p{0.05\hsize} p{0.08\hsize} p{0.49\hsize}} \hline  
+\textbf{name~\&~dimensionality} & \textbf{kind} & \textbf{in/out} & \textbf{description} \\ \hline
+                   &   &   &                           \\ %%% for presentation
+header(LEN=80) \hskip 5cm DIMENSION(:) & CHR & INOUT & The FITS header to fill in. \\
+%
+dtype(LEN=*)     & CHR & IN    & data to be put in the FITS file, must be
+one of 'ALM', 'CL', 'MAP', 'CUTMAP' (case un-sensitive). \\
+%
+\optional{append} & LGT & IN &
+if set to TRUE, the keywords will be appended to the content of {\tt header}
+instead of written from scrath \\
+%
+\optional{nside} & I4B & IN & 
+map resolution parameter;
+required for dtype='MAP' and dtype='CUTMAP' \\
+%
+\optional{order  } & I4B & IN & 
+map ordering, either 1 (=ring) or 2
+(=nested); see {\tt ordering}\\
+%
+\optional{ordering(LEN=*)} & CHR & IN & 
+map ordering, either 'RING' or 
+'NESTED' (case un-sensitive); 
+either {\tt order} or {\tt ordering} is required for dtype='MAP' and dtype='CUTMAP'\\
+%
+\optional{coordsys(LEN=*)} & CHR & IN & 
+map coordinate system;
+Valid choices are 'G' = Galactic, 'E' = Ecliptic,  'C'/'Q' = Celestial =
+eQuatorial \\
+%
+\optional{creator(LEN=*)} & CHR & IN & 
+name of software generating the
+data set\\
+%
+\optional{version(LEN=*)} & CHR & IN & 
+version of {\tt creator} software\\
+%
+\optional{randseed} & I4B & IN & 
+random number generator seed used to generate the data\\
+%
+\optional{beam\_leg(LEN=*)} & CHR & IN & 
+File containing Legendre transform of symmetric beam\\
+%
+\optional{fwhm\_degree} & DP & IN & 
+FWHM in degrees of gaussian symmetric beam (FITS keyword: {\tt FWHM})\\
+%
+\optional{units(LEN=*)} & CHR & IN & 
+physical units of the data set (FITS keyword: {\tt TUNIT*}) \\
+%
+\optional{nlmax     } & I4B & IN & 
+maximum multipole order $l$ of the data set (FITS keyword: {\tt MAX-LPOL})\\
+%
+\optional{polar     } & LGT & IN &
+if set to {\tt .TRUE.}, the file to be written contains polarized data \\
+%
+\optional{nmmax     } & I4B & IN & 
+maximum degree $m$ of data set (FITS keyword: {\tt MAX-MPOL}) \\
+%
+\optional{bcross    } & LGT & IN &
+if set to {\tt .TRUE.}, the magnetic cross terms power spectra (TB and EB) are
+included;
+only applies to dtype='CL' \\
+%
+\optional{deriv     } & I4B & IN & 
+order of derivatives to included in FITS file (0, 1 or 2); 
+only applies to dtype='MAP'
+
+\end{tabular}
+}
+\end{arguments}
+
+\begin{example}
+{
+use head\_fits \\
+character(len=80), dimension(1:60) :: header \\
+call \thedocid(header, 'MAP', nside=256, ordering='Nested')  \\
+call add\_card(header, 'HISTORY', 'Dummy map')\\
+}
+{
+Writes in {\tt header} a \healpix compliant FITS header for a $\nside=256$ map with NESTED
+ordering. Further HISTORY information is added with \htmlref{add\_card}{sub:add_card}
+}
+\end{example}
+
+\begin{modules}
+  \begin{sulist}{} %%%% NOTE the ``extra'' brace here %%%%
+  \item[write\_hl] more general routine for adding a keyword to a header.
+  \item[\textbf{cfitsio}] library for FITS file handling.		
+  \end{sulist}
+\end{modules}
+
+\begin{related}
+  \begin{sulist}{} %%%% NOTE the ``extra'' brace here %%%%
+  \item[\htmlref{add\_card}{sub:add_card}] general purpose routine to write/edit an arbitrary
+keyword into a FITS file header.
+  \item[\htmlref{get\_card}{sub:get_card}] general purpose routine to read any keywords from a header in a FITS file.
+  \item[\htmlref{del\_card}{sub:del_card}] routine to discard a keyword from a FITS header
+  \item[\htmlref{read\_par}{sub:read_par}, \htmlref{number\_of\_alms}{sub:number_of_alms}] routines to read specific keywords from a
+  header in a FITS file.
+  \item[\htmlref{getsize\_fits}{sub:getsize_fits}] function returning the size of the data set in a fits
+  file and reading some other useful FITS keywords
+  \item[\htmlref{merge\_headers}{sub:merge_headers}] routine to merge two FITS headers
+  \end{sulist}
+\end{related}
+
+\rule{\hsize}{2mm}
+
+\newpage

@@ -1,0 +1,126 @@
+
+
+\sloppy
+
+\title{\healpix C Subroutines Overview}
+% \docid{pix2xxx,ang2xxx,vec2xxx, nest2ring,ring2nest} \section[pix2xxx,ang2xxx,vec2xxx, nest2ring,ring2nest]{ }
+\docid{pix2xxx,~ang2xxx,~vec2xxx, nest2ring,~ring2nest} \section[pix2xxx,~ang2xxx,~vec2xxx,~nest2ring,~ring2nest]{ }
+\label{csub:pix_tools}
+\docrv{Version 1.1}
+\author{Eric Hivon}
+% \abstract{This document describes the \healpix C subroutines in the subdirectory
+% pix\_tools.}
+
+\begin{facility}
+{These subroutines can be used to convert between pixel number in the
+\healpix map and $(\theta,\phi)$ coordinates on the sphere. This is only a
+subset of the routines equivalent in Fortran90 or in IDL. }
+{src/C/subs/*.c}
+\end{facility}
+
+Note: These routines are based on the translation of the original F77 routines
+to C++ and then to C, 
+by Reza Ansari (ansari@lal.in2p3.fr), Alex Kim (akim@lilys.lbl.gov), Guy
+Le Meur (lemeur@lal.in2p3.fr), Benoit Revenu (revenu@iap.fr) and Ken Ganga (kmg@ipac.caltech.edu).
+
+\begin{arguments}
+{
+\begin{tabular}{p{0.28\hsize} p{0.10\hsize} p{0.05\hsize} p{0.47\hsize}} \hline  
+\textbf{name~\&~dimensionality} & \textbf{type} & \textbf{in/out} & \textbf{description} \\ \hline
+                   &   &   &                           \\ %%% for presentation
+nside & long & IN & $N_{side}$ parameter for the \healpix map. \\
+ipnest & long & --- & pixel identification number in NESTED scheme over the range \{0,$N_{pix}-1$\}. \\
+ipring & long & --- & pixel identification number in RING scheme over the range \{0,$N_{pix}-1$\}. \\
+theta & double & --- & colatitude in radians measured southward from north pole in [0,$\pi$]. \\
+phi & double & --- & longitude in radians, measured eastward in [0,$2\pi$]. \\
+vector & double & --- & 3D cartesian position vector $(x,y,z)$. The north pole is $(0,0,1)$. An output vector is normalised to unity.
+\end{tabular}
+}
+\end{arguments}
+\newpage
+
+\rule{\hsize}{0.7mm}
+\textsc{\large{\textbf{ROUTINES: }}}\hfill\newline
+{\tt void  pix2ang\_ring(long nside, long ipring, double *theta, double *phi);} 
+
+ \begin{tabular}{@{}p{0.3\hsize}@{\hspace{1ex}}
+                        p{0.7\hsize}@{}}
+                                         & renders {\em theta} and {\em phi} coordinates of the nominal pixel center given the pixel number {\em ipring} and a map resolution parameter {\em nside}. \\
+     \end{tabular}\\\\
+{\tt void  pix2vec\_ring(long nside, long ipring, double *vector);} 
+
+  \begin{tabular}{@{}p{0.3\hsize}@{\hspace{1ex}}
+                         p{0.7\hsize}@{}}
+                                          & renders cartesian vector coordinates of the nominal pixel center given the pixel number {\em ipring} and a map resolution parameter {\em nside}. Optionally renders cartesian vector coordinates of the considered pixel four vertices.\\
+      \end{tabular}\\\\
+{\tt void  ang2pix\_ring(long nside, double theta, double phi, long *ipring);} 
+
+ \begin{tabular}{@{}p{0.3\hsize}@{\hspace{1ex}}
+                        p{0.7\hsize}@{}}
+                                         & renders the pixel number {\em ipring} for a pixel which, given the map resolution parameter {\em nside}, contains the point on the sphere at angular coordinates {\em theta} and {\em phi}. \\
+     \end{tabular}\\\\
+{\tt void  vec2pix\_ring(long nside, double *vector, long *ipring);} 
+
+ \begin{tabular}{@{}p{0.3\hsize}@{\hspace{1ex}}
+                        p{0.7\hsize}@{}}
+                                         & renders the pixel number {\em ipring} for a pixel which, given the map resolution parameter {\em nside}, contains the point on the sphere at cartesian coordinates {\em vector}. \\
+     \end{tabular}\\\\
+{\tt void  pix2ang\_nest(long nside, long ipnest, double *theta, double *phi);} 
+
+ \begin{tabular}{@{}p{0.3\hsize}@{\hspace{1ex}}
+                        p{0.7\hsize}@{}}
+                                         & renders {\em theta} and {\em phi} coordinates of the nominal pixel center given the pixel number {\em ipnest} and a map resolution parameter {\em nside}. \\
+     \end{tabular}\\\\
+{\tt void  pix2vec\_nest(long nside, long ipnest, double *vector);} 
+
+ \begin{tabular}{@{}p{0.3\hsize}@{\hspace{1ex}}
+                        p{0.7\hsize}@{}}
+                                         & renders cartesian vector coordinates of the nominal pixel center given the pixel number {\em ipnest} and a map resolution parameter {\em nside}. Optionally renders cartesian vector coordinates of the considered pixel four vertices.\\
+     \end{tabular}\\\\
+{\tt void  ang2pix\_nest(long nside, double theta, double phi, long *ipnest);} 
+
+ \begin{tabular}{@{}p{0.3\hsize}@{\hspace{1ex}}
+                        p{0.7\hsize}@{}}
+                                         & renders the pixel number {\em ipnest} for a pixel which, given the map resolution parameter {\em nside}, contains the point on the sphere at angular coordinates {\em theta} and {\em phi}. \\
+     \end{tabular}\\\\
+{\tt void  vec2pix\_nest(long nside, double *vector, long *ipnest)} 
+
+ \begin{tabular}{@{}p{0.3\hsize}@{\hspace{1ex}}
+                        p{0.7\hsize}@{}}
+                                         & renders the pixel number
+                        {\em ipnest} for a pixel which, given the map
+                        resolution parameter {\em nside}, contains the
+                        point on the sphere at cartesian coordinates
+                        {\em vector} . \\
+     \end{tabular}\\\\
+
+{\tt void  nest2ring(long nside, long ipnest, long *ipring);} 
+
+ \begin{tabular}{@{}p{0.3\hsize}@{\hspace{1ex}}
+                        p{0.7\hsize}@{}}
+                                         & performs conversion from NESTED to RING pixel number. \\
+     \end{tabular}\\\\
+{\tt void  ring2nest(long nside, long ipring, long *ipnest);} 
+
+ \begin{tabular}{@{}p{0.3\hsize}@{\hspace{1ex}}
+                        p{0.7\hsize}@{}}
+                                         & performs conversion from RING to NESTED pixel number. \\
+     \end{tabular}\\\\
+
+\begin{modules}
+  \begin{sulist}{} %%%% NOTE the ``extra'' brace here %%%%
+ \item[mk\_pix2xy, mk\_xy2pix] routines used in the conversion between pixel values and ``cartesian'' coordinates on the Healpix face.
+  \end{sulist}
+\end{modules}
+
+\begin{related}
+  \begin{sulist}{} %%%% NOTE the ``extra'' brace here %%%%
+%%   \item[\htmlref{neighbours\_nest}{sub:neighbours_nest}] find neighbouring pixels.
+  \item[\htmlref{ang2vec}{csub:ang2vec}] convert $(\theta,\phi)$ spherical coordinates into $(x,y,z)$ cartesian coordinates.
+  \item[\htmlref{vec2ang}{csub:vec2ang}] convert $(x,y,z)$ cartesian coordinates into $(\theta,\phi)$ spherical coordinates.
+  \end{sulist}
+\end{related}
+
+\rule{\hsize}{2mm}
+
+\newpage

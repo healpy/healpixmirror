@@ -1,0 +1,87 @@
+% -*- LaTeX -*-
+
+
+\renewcommand{\facname}{{query\_strip }}
+\renewcommand{\FACNAME}{{QUERY\_STRIP }}
+\sloppy
+
+
+
+\title{\healpix IDL Facility User Guidelines}
+\docid{\facname} \section[\facname]{ }
+\label{idl:query_strip}
+\docrv{Version 1.0}
+\author{Eric Hivon}
+\abstract{This document describes the \healpix IDL facility \facname.}
+
+
+
+
+\begin{facility}
+{This IDL facility provides a means to find the index of all pixels belonging to
+a latitude strip defined by its bounds
+}
+{src/idl/toolkit/query\_strip.pro}
+\end{facility}
+
+\begin{IDLformat}
+{\facname, Nside, Theta1, Theta2, Listpix, [Nlist, NESTED=, INCLUSIVE=, HELP=]}
+\end{IDLformat}
+
+\begin{qualifiers}
+  \begin{qulist}{} %%%% NOTE the ``extra'' brace here %%%%
+    \item[Nside] \healpix resolution parameter used to index the pixel list (scalar integer)
+    \item[Theta1] colatitude lower bound in radians measured from North Pole
+                   (between 0 and $\pi$).
+    \item[Theta2] colatitude upper bound in radians measured from North Pole (between 0 and $\pi$). If
+                   theta1$<$ theta2, the pixels lying in [theta1,theta2]
+                   are output, otherwise, the pixel lying in [0,
+                   theta2] and those lying in [theta1, $\pi$] are output.\\
+    \item[Listpix] on output: list of ordered index for the pixels found 
+    in the strip. The RING numbering scheme is used unless the keyword {\tt NESTED} is set.
+     (=-1 if the strip is too small and no pixel is found)
+    \item[Nlist] on output: number of pixels in Listpix (=0 if no pixel is found).
+  \end{qulist}
+\end{qualifiers}
+
+\begin{keywords}
+  \begin{kwlist}{} %%% extra brace
+    \item[NESTED =] if set, the output list uses the NESTED numbering scheme
+    instead of the default RING
+    \item[INCLUSIVE = ] if set, all the pixels overlapping (even partially)
+                   with the strip are listed, otherwise only those whose
+                   center lies within the strip are listed
+    \item[/HELP ] if set, the routine prints its documentation header and exits.
+  \end{kwlist}
+\end{keywords}  
+
+\begin{codedescription}
+{\facname finds the pixels within the given strip in a selective way WITHOUT
+scanning all the sky pixels. The numbering scheme of the output list and the
+inclusiveness of the strip can be changed}
+\end{codedescription}
+
+
+
+\begin{related}
+  \begin{sulist}{} %%%% NOTE the ``extra'' brace here %%%%
+    \item[idl] version \idlversion or more is necessary to run \facname.
+    \item[ang2pix, pix2ang] conversion between angles and pixel index
+    \item[vec2pix, pix2vec] conversion between vector and pixel index
+    \item[\htmlref{query\_disc}{idl:query_disc}, \htmlref{query\_polygon}{idl:query_polygon},]
+    \item[\htmlref{query\_triangle}{idl:query_triangle}] render the list of pixels enclosed
+  respectively in a given disc, polygon and triangle
+  \end{sulist}
+\end{related}
+
+\begin{example}
+{
+\facname,  256, 0.75*!PI, !PI/5, listpix, nlist, /nest  \\
+}
+{
+Returns the NESTED pixel index of all pixels with colatitude in
+[0,$\pi/5$] and those with colatitude in [$3\pi/4$,$\pi$]
+}
+\end{example}
+
+

@@ -1,0 +1,109 @@
+
+\sloppy
+
+
+\title{\healpix Fortran Subroutines Overview}
+\docid{remove\_dipole*} \section[remove\_dipole*]{ }
+\label{sub:remove_dipole}
+\docrv{Version 2.1}
+\author{Eric Hivon}
+\abstract{This document describes the \healpix Fortran90 subroutine
+REMOVE\_DIPOLE.}
+\newcommand{\vecf}{{\rm{ \bf f}}}
+\newcommand{\vecb}{{\rm{ \bf b}}}
+\newcommand{\matA}{{\rm{ \bf A}}}
+\newcommand{\calP}{\cal{P}}
+
+\begin{facility}
+{This routine provides a means to fit and remove the dipole and monopole
+from a \healpix map. The fit is obtained by solving the linear system
+\begin{equation}
+	\sum_{j=0}^{d^2-1}\ A_{ij}\ f_j = b_i
+\end{equation}
+ with, $d=1$ or 2, and
+\begin{equation}
+	b_i = \sum_{p \in \calP} s_i(p) w(p) m(p),
+\end{equation}
+\begin{equation}
+	A_{ij} = \sum_{p \in \calP} s_i(p) w(p) s_j(p),
+\end{equation}
+ where $\calP$ is the set of
+valid, unmasked pixels, $m$ is the input map, $w$ is pixel weighting, while
+$s_0(p) = 1$ and $s_1(p)=x,\ s_2(p)=y,\ s_3(p)=z$ are
+respectively the monopole and dipole templates. The output map is then
+\begin{equation}
+	m'(p) = m(p) - \sum_{i=0}^{d^2-1} f_i s_i(p).
+\end{equation}
+}
+{src/f90/mod/pix\_tools.f90}
+\end{facility}
+
+\begin{f90format}
+{nside, map, ordering, degree, multipoles, zbounds [, fmissval, mask, weights]}
+\end{f90format}
+
+\begin{arguments}
+{
+\begin{tabular}{p{0.32\hsize} p{0.05\hsize} p{0.08\hsize} p{0.45\hsize}} \hline  
+\textbf{name~\&~dimensionality} & \textbf{kind} & \textbf{in/out} & \textbf{description} \\ \hline
+                  &   &   &                           \\ %%% for presentation
+nside & I4B & IN & value of $\nside$ resolution parameter for input map\\
+map(0:12*nside*nside-1) & SP/ DP & INOUT & \healpix map from which the monopole and dipole will be
+                   removed. Those are removed from {\em all unflagged pixels},
+                   even those excluded by the cut {\tt zounds} or the {\tt mask}. \\
+ordering & I4B & IN & \healpix\ scheme 1:RING, 2: NESTED \\
+degree   & I4B & IN & multipoles to fit and remove. It is either 0 (nothing done),
+                   1 (monopole only) or 2 (monopole and dipole). \\
+multipoles(0:degree*degree-1) & DP & OUT & values of best fit monopole and
+                   dipole. The monopole is described as a scalar in the same
+                   units as the input map, the dipole as a 3D cartesian vector, in the same units. \\
+zbounds(1:2) & DP & IN & section of the map on which to perform the
+                   fit, expressed in terms of $z=\sin({\rm latitude}) =
+                   \cos(\theta)$. If zbounds(1)$<$zbounds(2), the fit is
+                   performed {\em on} the strip zbounds(1)$<z<$zbounds(2); if not, the
+                   fit is performed {\em outside} of the strip
+                   zbounds(2)$<z<$zbounds(1). \\
+fmissval  \hskip 4cm (OPTIONAL) & SP/ DP & IN & value used to flag bad pixel on input
+                   \default{-1.6375e30}. Pixels with that value are ignored
+                   during the fit, and left unchanged on output.\\
+mask(0:12*nside*nside-1)  \hskip 4cm (OPTIONAL)& SP/ DP & IN & mask of valid pixels. 
+                       Pixels with $|$mask$|<10^{-10}$ are not used for fit. Note:
+                   the map is {\em not} multiplied by the mask. \\
+weights(0:12*nside*nside-1)  \hskip 4cm (OPTIONAL)& SP/ DP & IN & weight to be
+given to each map pixel before doing the fit. By default pixels are given
+a uniform weight of 1. Note:
+                   the output map is {\em not} multiplied by the weights. \\
+
+\end{tabular}
+}
+\end{arguments}
+
+\newpage
+\begin{example}
+{
+s = sin(15.0\_dp * PI / 180.0\_dp) \\
+call \thedocid (128, map, 1, 2, multipoles, ($\backslash$ s, -s $\backslash$) )  \\
+}
+{
+Will compute and remove the best fit monopole and dipole from a map with
+$\nside=128$ in RING ordering scheme. The fit is performed on pixels with $|b|>15^o$.
+}
+\end{example}
+
+\begin{modules}
+  \begin{sulist}{} %%%% NOTE the ``extra'' brace here %%%%
+  \item[\textbf{pix\_tools}] module, containing:
+%  \item[\textbf{pix\_tools}] module, containing:
+  \end{sulist}
+\end{modules}
+
+\begin{related}
+  \begin{sulist}{} %%%% NOTE the ``extra'' brace here %%%%
+  \item[\htmlref{add\_dipole}{sub:add_dipole}] routine to add a dipole and
+  monopole to a map.
+  \end{sulist}
+\end{related}
+
+\rule{\hsize}{2mm}
+
+\newpage

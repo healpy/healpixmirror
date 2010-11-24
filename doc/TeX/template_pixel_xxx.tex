@@ -1,0 +1,90 @@
+
+\sloppy
+
+
+\title{\healpix Fortran Subroutines Overview}
+\docid{template\_pixel\_nest, template\_pixel\_ring} \section[template\_pixel\_nest, template\_pixel\_ring]{ }
+\label{sub:template_pixel_xxx}
+\docrv{Version 1.0}
+\author{E. Hivon}
+\abstract{This document describes the \healpix Fortran90 subroutines
+  TEMPLATE\_PIXEL\_RING and TEMPLATE\_PIXEL\_NEST.}
+
+\begin{facility}
+{Routines to provide the index of the template pixel associated with a given
+  \healpix pixel, for a resolution parameter $\nside$. 
+
+Any pixel can be {\em matched in shape}
+  to a single of these templates by a combination of  a rotation around the polar axis with 
+  reflexion(s) around a meridian and/or the equator. 
+
+The template pixels are all located in the Northern Hemisphere, or on the
+ Equator.
+They are chosen to have their center located at
+\begin{eqnarray}
+     z=\cos(\theta)\ge 2/3,  &\ &    0< \phi \leq \pi/2,   \nonumber\\            %[Nside*(Nside+2)/4]
+     2/3 > z \geq 0,  &\ & \phi=0, \quad{\rm or}\quad  \phi=\frac{\pi}{4\nside}.  \nonumber %[Nside]
+\myhtmlimage{}
+\end{eqnarray}
+ They are numbered continuously from 0, starting at the North Pole, with the index
+ increasing in $\phi$, and then increasing for decreasing $z$.
+}
+{src/f90/mod/pix\_tools.f90}
+\end{facility}
+
+\docid{template\_pixel\_nest}
+\begin{f90format}
+{nside, pixel\_nest, template, reflexion}
+\end{f90format}
+\docid{template\_pixel\_ring}
+\begin{f90format}
+{nside, pixel\_ring, template, reflexion}
+\end{f90format}
+
+\begin{arguments}
+{
+\begin{tabular}{p{0.3\hsize} p{0.05\hsize} p{0.1\hsize} p{0.45\hsize}} \hline  
+\textbf{name~\&~dimensionality} & \textbf{kind} & \textbf{in/out} & \textbf{description} \\ \hline
+                   &   &   &                           \\ %%% for presentation
+nside & I4B & IN & the \healpix $\nside$ parameter. \\
+pixel\_nest & I4B & IN & NESTED scheme pixel identification number over the range \{0,$12\nside^2-1$\}.\\
+pixel\_ring & I4B & IN & RING scheme pixel identification number over the
+                   range \{0,$12\nside^2-1$\}.\\
+template & I4B & OUT & identification number(s) of the
+                   template matching in shape the pixel(s) provided (the numbering
+                   scheme of the pixel templates is the same for both routines). \\
+reflexion & I4B & OUT & in \{0, 3\} encodes the transformation(s) to
+                   apply to each pixel provided to match exactly in
+                   shape and position its respective template. 0: rotation around the polar axis only,
+                   1: rotation + East-West swap (ie, reflexion around meridian),
+                   2: rotation + North-South swap (ie, reflexion around
+                   Equator), 3: rotation + East-West and North-South swaps
+\end{tabular}
+}
+\end{arguments}
+
+\begin{example}
+{
+call template\_pixel\_ring(256, 500000, template, reflexion)  \\
+}
+{
+Returns in {\tt template} the index of the template pixel (16663) whose shape matches
+that of the pixel \#500000 for $\nside=256$. Upon return {\tt reflexion} will
+contain 2, meaning that the template must be reflected around a meridian and
+around the equator (and then rotated around the polar axis) in order to match
+the pixel.
+}
+\end{example}
+\begin{related}
+  \begin{sulist}{} %%%% NOTE the ``extra'' brace here %%%%
+  \item[\htmlref{nside2templates}{sub:nside2ntemplates}] returns the
+  number of template pixel shapes available for a given $\nside$.
+  \item[\htmlref{same\_shape\_pixels\_ring}{sub:same_shape_pixels_xxx}] 
+  \item[\htmlref{same\_shape\_pixels\_nest}{sub:same_shape_pixels_xxx}] 
+  return
+  the ordered list of pixels having the same shape as a given pixel template
+  \end{sulist}
+\end{related}
+
+\rule{\hsize}{2mm}
+

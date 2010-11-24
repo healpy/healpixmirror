@@ -1,0 +1,76 @@
+
+\sloppy
+
+\title{\healpix Fortran Subroutines Overview}
+\docid{add\_card} \section[add\_card]{ }
+\label{sub:add_card}
+\docrv{Version 1.2}
+\author{Frode K.~Hansen, Eric Hivon}
+\abstract{This document describes the \healpix Fortran90 subroutine ADD\_CARD.}
+
+\begin{facility}
+{This routine writes a keyword of any kind into a FITS header. It is a wrapper to other routines that write keywords of different kinds.}
+{src/f90/mod/head\_fits.F90}
+\end{facility}
+
+\begin{f90format}
+{header, kwd, value \optional{[, comment, update]} }
+\end{f90format}
+\aboutoptional
+
+\begin{arguments}
+{
+\begin{tabular}{p{0.4\hsize} p{0.05\hsize} p{0.1\hsize} p{0.35\hsize}} \hline  
+\textbf{name~\&~dimensionality} & \textbf{kind} & \textbf{in/out} & \textbf{description} \\ \hline
+                   &   &   &                           \\ %%% for presentation
+header(LEN=80) DIMENSION(:) & CHR & INOUT & The header to write the keyword to. \\
+kwd(LEN=*) & CHR & IN & the FITS keyword to write. Should be shorter
+                   or equal to 8 characters.\\
+value & any & IN & the value to give to the keyword. \\
+\optional{comment(LEN=*)} & CHR & IN & comment to the keyword. \\ 
+\optional{update} & LGT & IN & if set to {\tt .true.}, the first occurence of the keyword {\tt
+kwd} in {\tt header} will be updated (and all other occurences removed); otherwise, the keyword will be appended at
+the end (and any previous occurence removed). If the keyword is either 'HISTORY'
+or 'COMMENT', {\tt update} is ignored and the keyword is peacefully appended at the end of the header.\\ 
+\end{tabular}
+}
+\end{arguments}
+
+\begin{example}
+{
+character(len=80), dimension(1:120) :: header \\
+header = '' ! very important \\
+call add\_card(header,'NSIDE',256,'the nside of the map')  \\
+}
+{
+Gives the keyword `NSIDE' the value 256 in the given header-string. It is
+important to make sure that the {\tt header} string array is empty before attempting
+to write
+anything in it.
+}
+\end{example}
+
+\begin{modules}
+  \begin{sulist}{} %%%% NOTE the ``extra'' brace here %%%%
+  \item[write\_hl] more general routine for adding a keyword to a header.
+  \item[\textbf{cfitsio}] library for FITS file handling.		
+  \end{sulist}
+\end{modules}
+
+\begin{related}
+  \begin{sulist}{} %%%% NOTE the ``extra'' brace here %%%%
+  \item[\htmlref{write\_minimal\_header}{sub:write_minimal_header}] routine to
+write \healpix compliant baseline FITS header
+  \item[\htmlref{get\_card}{sub:get_card}] general purpose routine to read any keywords from a header in a FITS file.
+  \item[\htmlref{del\_card}{sub:del_card}] routine to discard a keyword from a FITS header
+  \item[\htmlref{read\_par}{sub:read_par}, \htmlref{number\_of\_alms}{sub:number_of_alms}] routines to read specific keywords from a
+  header in a FITS file.
+  \item[\htmlref{getsize\_fits}{sub:getsize_fits}] function returning the size of the data set in a fits
+  file and reading some other useful FITS keywords
+  \item[\htmlref{merge\_headers}{sub:merge_headers}] routine to merge two FITS headers
+  \end{sulist}
+\end{related}
+
+\rule{\hsize}{2mm}
+
+\newpage

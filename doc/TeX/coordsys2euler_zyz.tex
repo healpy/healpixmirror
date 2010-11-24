@@ -1,0 +1,71 @@
+\sloppy
+
+
+\title{\healpix Fortran Subroutines Overview}
+\docid{coordsys2euler\_zyz} \section[coordsys2euler\_zyz]{ }
+\label{sub:coordsys2euler_zyz}
+\docrv{Version 2.0}
+\author{Eric Hivon}
+\abstract{This document describes the \healpix Fortran90 subroutine COORDSYS2EULER\_ZYZ.}
+
+\begin{facility}
+{This routine returns the three Euler angles $\psi, \theta, \varphi
+\myhtmlimage{}$, corresponding to a rotation between standard astronomical
+coordinate systems. This angles can then be used in rotate\_alm}
+{src/f90/mod/coord\_v\_convert.f90}
+\end{facility}
+
+\begin{f90format}
+{iepoch, oepoch, isys, osys, psi, theta, phi}
+\end{f90format}
+
+\begin{arguments}
+{
+\begin{tabular}{p{0.26\hsize} p{0.05\hsize} p{0.09\hsize} p{0.50\hsize}} \hline  
+\textbf{name~\&~dimensionality} & \textbf{kind} & \textbf{in/out} & \textbf{description} \\ \hline
+                   &   &   &                           \\ %%% for presentation
+iepoch & DP & IN & epoch of the input astronomical coordinate system.\\
+oepoch & DP & IN & epoch of the output astronomical coordinate system.\\
+isys(len=*) & CHR & IN & input coordinate system, should be one of 'E'=Ecliptic, 'G'=Galactic, 'C'/'Q'=Celestial/eQuatorial.\\
+osys(len=*) & CHR & IN & output coordinate system, same choice as above.\\
+psi	& DP & OUT & first Euler angle: rotation $\psi$ about the z-axis. \\
+theta	& DP & OUT & second Euler angle: rotation $\theta$ about the original
+(unrotated) y-axis; \\
+phi	& DP & OUT & third Euler angle: rotation $\varphi$ about the original (unrotated) z-axis;
+\end{tabular}
+}
+\end{arguments}
+
+\begin{example}
+{
+use coord\_v\_convert, only: coordsys2euler\_zyz \\
+use alm\_tools, only: rotate\_alm \\
+...\\
+call coordsys2euler\_zyz(2000.0\_dp, 2000.0\_dp, 'E', 'G', psi, theta, phi) \\
+call rotate\_alm(64, alm\_TGC, psi, theta, phi)  \\
+}
+{
+Rotate the $a_{lm}$ from Ecliptic to Galactic coordinates.
+}
+\end{example}
+
+% \begin{modules}
+%   \begin{sulist}{} %%%% NOTE the ``extra'' brace here %%%%
+%   \item[\textbf{alm\_tools}] module, containing:
+% 	\item[\htmlref{generate\_beam}{sub:generate_beam}] routine to generate beam window function
+% 	\item[\htmlref{pixel\_window}{sub:pixel_window}] routine to generate pixel window function
+%   \end{sulist}
+% \end{modules}
+
+\begin{related}
+  \begin{sulist}{} %%%% NOTE the ``extra'' brace here %%%%
+  \item[\htmlref{rotate\_alm}{sub:rotate_alm}] apply arbitrary sky rotation to a
+  set of $a_{lm}$ coefficients.
+  \item[\htmlref{xcc\_v\_convert}{sub:xcc_v_convert}] rotates a 3D coordinate
+vector from one astronomical coordinate system to another.
+  \end{sulist}
+\end{related}
+
+\rule{\hsize}{2mm}
+
+\newpage

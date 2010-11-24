@@ -1,0 +1,66 @@
+
+\sloppy
+
+
+\title{\healpix Fortran Subroutines Overview}
+\docid{rand\_init} \section[rand\_init]{ }
+\label{sub:rand_init}
+\docrv{Version 2.0}
+\author{Eric Hivon}
+\abstract{This document describes the \healpix Fortran90 subroutine RAND\_INIT.}
+
+\begin{facility}
+{This routine initializes, with up to 4 seeds, a randomn number sequence. 
+ The generator being primed is an F90 port of an xorshift generator described
+  in Marsaglia, Journal of Statistical Software 2003, vol 8.
+  It has a theoretical period of $2^{128} - 1 \approx 3.4 10^{38}$.
+Please refer to the ``Comment on Random Number Generator''
+  in the Fortran90 facilities guidelines.
+}
+{src/f90/mod/rngmod.f90}
+\end{facility}
+
+\begin{f90format}
+{rng\_handle, [seed1, seed2, seed3, seed4]}
+\end{f90format}
+
+\begin{arguments}
+{
+\begin{tabular}{p{0.3\hsize} p{0.15\hsize} p{0.1\hsize} p{0.35\hsize}} \hline  
+\textbf{name~\&~dimensionality} & \textbf{kind} & \textbf{in/out} & \textbf{description} \\ \hline
+                   &   &   &                           \\ %%% for presentation
+rng\_handle & planck\_rng & OUT & structure of type {\tt planck\_rng}
+                   containing on output all information necessary to continue same random sequence. \\ 
+seed1 (OPTIONAL)& I4B & IN & first seed of the random sequence. Can be of arbitray
+                   sign. If set to
+                   zero or not provided will be replaced internally by a non-zero hard coded value.   \\
+seed2 (OPTIONAL)& I4B & IN & second seed. Same properties as above  \\
+seed3 (OPTIONAL)& I4B & IN & third seed. Same as above.  \\
+seed4 (OPTIONAL)& I4B & IN & fourth seed. Same as above.  \\
+\end{tabular}
+}
+\end{arguments}
+
+\begin{example}
+{
+use rngmod \\
+type(planck\_rng) :: rng\_handle \\
+call rand\_init(rng\_handle, 12345, 6789012)  \\
+}
+{
+initiates a random sequence with the pair of seeds (12345, 6789012).
+}
+\end{example}
+
+\begin{related}
+  \begin{sulist}{} %%%% NOTE the ``extra'' brace here %%%%
+  \item[\htmlref{planck\_rng}{sub:planck_rng}] derived type describing RNG state
+  \item[\htmlref{rand\_gauss}{sub:rand_gauss}] function which returns a  random normal deviate.
+  \item[\htmlref{rand\_uni}{sub:rand_uni}] function which returns a random uniform deviate.
+%%   \item[\htmlref{rand\_init}{sub:rand_init}] subroutine to initiate a random number sequence. 
+  \end{sulist}
+\end{related}
+
+\rule{\hsize}{2mm}
+
+\newpage

@@ -1,0 +1,51 @@
+\sloppy
+
+\title{\healpix Fortran Subroutines Overview}
+\docid{real\_fft} \section[real\_fft]{ }
+\label{sub:real_fft}
+\docrv{Version 1.1}
+\author{Martin Reinecke}
+\abstract{This document describes the \healpix Fortran90 subroutine
+real\_fft.}
+
+\begin{facility}
+{This routine performs a forward or backward Fast Fourier Transformation
+on its argument {\tt data}.}
+{src/f90/mod/healpix\_fft.F90}
+\end{facility}
+
+\begin{f90format}
+{data, backward}
+\end{f90format}
+
+\begin{arguments}
+{
+\begin{tabular}{p{0.3\hsize} p{0.05\hsize} p{0.1\hsize} p{0.45\hsize}} \hline  
+\textbf{name~\&~dimensionality} & \textbf{kind} & \textbf{in/out} & \textbf{description} \\ \hline
+                   &   &   &                           \\ %%% for presentation
+data(:) & XXX & INOUT &
+  array containing the input and output data.
+  Can be of type real(sp) or real(dp) \\
+backward & LGT & IN & Optional argument. If present and true, perform backward transformation, else forward 
+\end{tabular}}
+\end{arguments}
+
+\begin{example}
+{
+use healpix\_fft \\
+call real\_fft (data, backward=.true.)
+}
+{
+Performs a backward FFT on data.
+}
+\end{example}
+
+\begin{related}
+  \begin{sulist}{} %%%% NOTE the ``extra'' brace here %%%%
+  \item[\htmlref{complex\_fft}{sub:complex_fft}] routine for FFT of complex data
+  \end{sulist}
+\end{related}
+
+\rule{\hsize}{2mm}
+
+\newpage

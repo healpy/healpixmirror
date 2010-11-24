@@ -1,0 +1,127 @@
+% -*- LaTeX -*-
+
+\sloppy
+
+\title{\healpix IDL Facility User Guidelines}
+\docid{isynfast} \section[isynfast]{ }
+\label{idl:isynfast}
+\docrv{Version 1.0}
+\author{Eric Hivon}
+\abstract{This document describes the \healpix IDL facility \thedocid.}
+
+\begin{facility}
+{This IDL facility provides an interface to F90 'synfast' facility. It can be
+used to generate sky maps and/or $a_{lm}$ from power spectra ($C(l)$), synthesize maps from
+$a_{lm}$ or simulate maps from $C(l)$ and constraining $a_{lm}$.}
+{src/idl/interfaces/isynfast.pro}
+\end{facility}
+
+\begin{IDLformat}
+{ISYNFAST, cl\_in [, map\_out,
+      alm\_in=,  alm\_out=, apply\_windows=, beam\_file=, binpath=, double=, fwhm\_arcmin=, help=,
+      iseed=, keep\_tmp\_files=, lmax=, nlmax=, nside=, nsmax=, plmfile=,
+      simul\_type=, silent=, tmpdir=, windowfile=, winfiledir=]}
+\end{IDLformat}
+
+\begin{qualifiers}
+  \begin{qulist}{} %%%% NOTE the ``extra'' brace here %%%%
+   \item[cl\_in] input power spectrum, can be a FITS file, or a memory array containing the
+        $C(l)$, used to generate a map or a set of gaussian alm \\
+   If empty quotes ('') or a zero (0) are provided, it will be interpreted as "No input C(l)", in
+   which case some input alm's (alm\_in) are required.
+    \item[map\_out] optional output: map synthetised from the power spectrum or from constraining alm
+  \end{qulist}
+\end{qualifiers}
+
+\begin{keywords}
+  \begin{kwlist}{} %%% extra brace
+ \item[alm\_in=]    optional input (constraining) alm           \default {no alm}
+
+ \item[alm\_out=]   contains on output the effective alm
+
+ \item[/apply\_windows] if set, beam and pixel windows are applied to input alm\_in
+(if any)
+
+ \item[beam\_file=] beam window function, either a FITS file or an array
+
+ \item[binpath=] full path to back-end routine \default {\$HEXE/synfast, then \$HEALPIX/bin/synfast}\\
+              -- a binpath starting with / (or $\backslash$), $~$ or \$ is interpreted as absolute\\
+              -- a binpath starting with ./ is interpreted as relative to current directory\\
+              -- all other binpathes are relative to \$HEALPIX
+
+ \item[/double]    if set, I/O is done in double precision \default {single precision I/O}
+
+ \item[fwhm\_arcmin=] gaussian beam FWHM in arcmin \default {0}
+
+ \item[/help]      if set, prints extended help
+
+ \item[iseed=] integer seed of radom sequence \default {0}
+
+ \item[/keep\_tmp\_files] if set, temporary files are not discarded at the end of the
+                   run
+
+ \item[lmax=, nlmax=]   maximum multipole simulation \default {2*$N_{\rm side}$}
+
+ \item[nside=, nsmax=]  Healpix resolution parameter $N_{\rm side}$
+
+ \item[plmfile=] FITS file containing precomputed Spherical Harmonics \default {no file}
+
+ \item[simul\_type=] 
+        1) Temperature only \\
+        2) Temperature + polarisation \\
+        3) Temperature + 1st derivatives \\
+        4) Temperature + 1st \& 2nd derivatives \\
+        5) T+P + 1st derivatives \\
+        6) T+P + 1st \& 2nd derivates
+	\default {2: T+P}
+
+ \item[/silent]    if set, works silently
+
+ \item[tmpdir=]      directory in which are written temporary files 
+ \default {IDL\_TMPDIR (see IDL documentation)}
+
+ \item[windowfile=]    FITS file containing pixel window 
+        \default {determined automatically by back-end routine}.
+      Do not set this keyword unless you really know what you are doing
+
+  \item[winfiledir=]     directory where the pixel windows are to be found 
+        \default {determined automatically by back-end routine}.
+      Do not set this keyword unless you really know what you are doing
+
+  \end{kwlist}
+\end{keywords}  
+
+\begin{codedescription}
+{\thedocid\ is an interface to F90 'synfast' F90 facility. It
+requires some disk space on which to write the parameter file and the other
+temporary files. Most data can be provided/generated as an external FITS
+file, or as a memory array.}
+\end{codedescription}
+
+
+
+\begin{related}
+  \begin{sulist}{} %%%% NOTE the ``extra'' brace here %%%%
+    \item[idl] version \idlversion or more is necessary to run \thedocid.
+    \item[synfast] F90 facility called by \thedocid.
+%    \item[\htmlref{isynfast}{idl:isynfast}] IDL Interface to F90 synfast
+    \item[\htmlref{ismoothing}{idl:ismoothing}] IDL Interface to F90 smoothing
+    \item[\htmlref{ianafast}{idl:ianafast}] IDL Interface to F90 anafast and C++ anafast\_cxx
+  \end{sulist}
+\end{related}
+
+\begin{example}
+{
+\begin{tabular}{l} %%%% use this tabular format %%%%
+\thedocid, '\$HEALPIX/test/cl.fits', map, fwhm=30, nside=256, /silent  \\
+\htmlref{mollview}{idl:mollview}, map, 1, title='I'  \\
+\htmlref{mollview}{idl:mollview}, map, 2, title='Q'  \\
+\end{tabular}
+}
+{
+will synthetize and plot I and Q  maps constistent with WMAP-1yr best fit power
+spectrum and observed with a circular gaussian 30 arcmin beam.
+}
+\end{example}
+
+

@@ -1,0 +1,197 @@
+% -*- LaTeX -*-
+
+% PLEASE USE THIS FILE AS A TEMPLATE FOR THE DOCUMENTATION OF YOUR OWN
+% FACILITIES: IN PARTICULAR, IT IS IMPORTANT TO NOTE COMMENTS MADE IN
+% THE TEXT AND TO FOLLOW THIS ORDERING. THE FORMAT FOLLOWS ONE USED BY
+% THE COBE-DMR PROJECT.	
+% A.J. Banday, April 1999.
+
+
+
+
+\renewcommand{\facname}{{write\_fits\_sb }}
+\renewcommand{\FACNAME}{{WRITE\_FITS\_SB }}
+\sloppy
+
+
+
+\title{\healpix IDL Facility User Guidelines}
+\docid{write\_fits\_sb} \section[write\_fits\_sb]{ }
+\label{idl:write_fits_sb}
+\docrv{Version 1.2}
+\author{Eric Hivon}
+\abstract{This document describes the \healpix facility \thedocid.}
+
+
+
+
+\begin{facility}
+{This IDL facility writes out a \healpix map into a FITS file according to
+the \healpix convention. It can also write an arbitray data set into a FITS
+binary table}
+{src/idl/fits/write\_fits\_sb.pro}
+\end{facility}
+
+\begin{IDLformat}
+{\FACNAME, File, Prim\_Stc [, Xten\_stc, Coordsys=, /Nested, /Ring,
+Ordering=, /Partial, Nside=, Extension=, /Nothealpix]
+}
+\end{IDLformat}
+
+\begin{qualifiers}
+  \begin{qulist}{} %%%% NOTE the ``extra'' brace here %%%%
+ 	\item[{File}] 
+          name of a FITS file in which the map is to be written
+
+ 	\item[{Prim\_stc}] 
+	IDL structure containing the following fields: \\
+		- primary header \\
+		- primary image \\
+	Set it to 0 to get an empty primary unit
+
+       \item[{Xten\_stc}]
+		  (optional), \\
+	IDL structure containing the following fields: \\
+		- extension header  \\
+		- data column 1  \\
+		- data column 2   \\
+		... \\
+	NB: because of some astron routines limitation, avoid using the single letters
+		  'T' or 'F' as tagnames in the structures Prim\_stc and Xten\_stc.
+
+  \end{qulist}
+\end{qualifiers}
+
+\begin{keywords}
+  \begin{kwlist}{} %%% extra brace
+       \item[{Coordsys=}]
+		  (optional), \\
+		if set to either 'C', 'E' or 'G',  specifies that the
+		Healpix coordinate system is respectively Celestial=equatorial,
+		  Ecliptic or Galactic.
+		(The relevant keyword is then added/updated in the extension
+		  header, but the map is NOT rotated)
+
+	\item[{Ordering=}]
+		  (optional), \\
+		if set to either 'ring' or 'nested' (case un-sensitive),
+		  specifies that the map is respectively in RING or NESTED
+		  ordering scheme\\
+		\seealso Nested and Ring
+
+	\item[{Nside=}] 
+		(optional), \\
+		scalar integer, \healpix resolution parameter of the
+		data set. Must be used when the data set does not
+		cover the whole sky
+
+	\item[{Extension=}]
+		(optional), \\
+		scalar integer, extension in which to write the data
+		(0 based).\\
+		\default 0
+
+	\item[{/Nested}] 
+	  (optional), \\ 
+	  if set, specifies that the map is in the NESTED ordering
+	scheme\\
+	\seealso Ordering and Ring 
+
+	\item[{/Ring}] 
+	  (optional), \\ 
+	  if set, specifies that the map is in the RING ordering
+	scheme\\
+	\seealso Ordering and Nested
+
+	\item[{/Partial}] 
+	  (optional), \\ 
+	  if set, the data set does not cover the whole sky. In
+	that case the information on the actual map resolution should be given by the
+	qualifier Nside (see above), or included in the FITS header enclosed in
+	the Xten\_stc.
+
+	\item[{/Nothealpix}] 
+	  (optional), \\ 
+	  if set, the data set can be arbitrary, and the
+	restriction on the number of pixels do not apply. The keywords {\tt
+	Ordering}, {\tt Nside}, {\tt Nested}, {\tt Ring} and {\tt Partial} are ignored.
+
+   \end{kwlist}
+\end{keywords}
+
+\begin{codedescription}
+%%%{\parbox[t]{\hsize}
+{\parbox[t]{\hsize}{\facname writes out the information contained in {\tt{Prim\_stc}} and {\tt{Exten\_stc}} in the primary unit and extension of the FITS file
+{\tt File} respectively . Coordinate systems can also be specified by {\tt Coordsys}. Specifying the
+ordering scheme is compulsary for \healpix data sets and can be done either in {\tt Header} or by setting {\tt
+Ordering} or {\tt Nested} or {\tt Ring} to the correct value. If {\tt
+Ordering} or {\tt Nested} or {\tt Ring} is set, its value overrides what is
+given in {\tt Header}. \\
+
+The data is assumed to represent a full sky data set with 
+the number of data points npix = 12*Nside*Nside
+unless   \hfill\newline
+Partial is set OR the input fits header contains OBJECT =
+               'PARTIAL' \hfill\newline
+       AND \hfill\newline
+         the Nside qualifier is given a valid value OR the FITS header contains
+                 a NSIDE}
+
+If {\tt Nothealpix} is set, the restrictions on Nside a void.}
+\end{codedescription}
+
+
+
+\begin{related}
+  \begin{sulist}{} %%%% NOTE the ``extra'' brace here %%%%
+  \item[idl] version \idlversion or more is necessary to run \thedocid
+  \item[\htmlref{read\_fits\_map}{idl:read_fits_map}] This \healpix IDL facility can be used to read in maps
+  written by \thedocid.
+  \item[\htmlref{read\_fits\_s}{idl:read_fits_s}] This \healpix IDL facility can be used to read
+  into an IDL structure maps written by \thedocid.
+  \item[sxaddpar] This IDL routine (included in \healpix package) can be used to update
+  or add FITS keywords to the header in {\tt Prim\_stc} and {\tt Exten\_stc}
+\input{item_write_fits_idl}
+  \item[\htmlref{write\_tqu}{idl:write_tqu}] This \healpix IDL facility based on \thedocid\ is designed to write
+  temperature+polarization (T,Q,U) maps
+  \end{sulist}
+\end{related}
+
+
+% \begin{example}
+% {
+% \begin{tabular}{ll} %%%% use this tabular format %%%%
+% npix =& \htmlref{nside2npix}{idl:nside2npix}(64) \\
+% t =& randomn(seed,npix) \\
+% q =& randomn(seed,npix) \\
+% u =& randomn(seed,npix) \\
+% map\_TQU =& create\_struct('HDR','[]','TEMPERATURE',t,'Q\_POL',q,'U\_POL',u) \\
+% write\_fits\_sb, & 'map\_polarization.fits', 0, map\_TQU, coord='G', /ring\\
+% \end{tabular}
+% }
+% {
+% The structure map\_TQU is defined to contain a fictitious polarisation map, with
+% the 3 Stokes parameters T, Q and U.
+% \thedocid writes out the contents of map\_TQU into the extension 
+% of the FITS file 'map\_polarization.fits'.
+% }
+% \end{example}
+
+\begin{example}
+{
+\begin{tabular}{l} %%%% use this tabular format %%%%
+npix =  \htmlref{nside2npix}{idl:nside2npix}(128) \\
+f=  randomn(seed,npix) \\
+n=  lindgen(npix)+3 \\
+map\_FN =  create\_struct('HDR',[' '],'FLUX',f,'NUMBER',n) \\
+\thedocid,  'map\_fluxnumber.fits', 0, map\_FN, coord='G', /ring\\
+\end{tabular}
+}
+{
+The structure map\_FN is defined to contain a fictitious Flux$+$number map, where
+one field is a float and the other an integer.
+\thedocid\ writes out the contents of map\_FN into the extension 
+of the FITS file 'map\_fluxnumber.fits'.
+}
+\end{example}
+

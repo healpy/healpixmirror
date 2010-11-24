@@ -1,0 +1,108 @@
+% -*- LaTeX -*-
+
+\renewcommand{\facname}{{median\_filter }}
+\renewcommand{\FACNAME}{{MEDIAN\_FILTER }}
+\sloppy
+
+\title{\healpix IDL Facility User Guidelines}
+\docid{\facname} \section[\facname]{ }
+\label{idl:median_filter}
+\docrv{Version 1.1}
+\author{Eric Hivon}
+\abstract{This document describes the \healpix facility \facname.}
+
+
+
+
+\begin{facility}
+{This IDL facility allows the median filtering of a Healpix map.}
+{src/idl/toolkit/median\_filter.pro}
+\end{facility}
+
+\begin{IDLformat}
+{\FACNAME(InputMap, Radius, MedianMap [,ORDERING=, /RING, /NESTED, /FILL\_HOLES, /DEGREES, /ARCMIN])}
+\end{IDLformat}
+
+\begin{qualifiers}
+  \begin{qulist}{} %%%% NOTE the ``extra'' brace here %%%%
+	\item[{InputMap}] (IN)
+	either an IDL array containing a full sky Healpix map to filter ('online' usage), 
+        or the name of an external FITS file containing a full sky or cut sky map
+
+ 	\item[{Radius}] (IN)
+	  radius of the disk on which the median is computed.
+            It is in Radians, unless {\tt /DEGREES} or {\tt /ARCMIN} are set
+
+ 	\item[{MedianMap}] (OUT)
+	   either an IDL variable containing on output the filtered map,
+        or the name of an external FITS file to contain the map. Should be of
+	   same type of {\tt InputMap}. Flagged pixels (ie, having the value
+	   {\tt !healpix.bad\_value}) are left unchanged, unless {\tt /FILL\_HOLES} is set.
+
+  \end{qulist}
+\end{qualifiers}
+
+\begin{keywords}
+  \begin{kwlist}{} %%% extra brace
+    \item[{/ARCMIN}] If set, {\tt Radius} is in arcmin rather than radians
+
+    \item[{/DEG}] If set, {\tt Radius} is in degrees rather than radians
+
+	\item[{/FILL\_HOLES}] If set, flagged pixels are replaced with the
+	median of the valid pixels found within a distance {\tt Radius}. If
+	there are any.
+
+ 	\item[{/NESTED}] Same as ORDERING='NESTED'
+
+ 	\item[{ORDERING=}] 
+	  Healpix map ordering, should be either 'RING' or 'NESTED'. Only
+	  applies to 'online' usage.
+
+ 	\item[{/RING}] Same as ORDERING='RING'
+
+   \end{kwlist}
+\end{keywords}
+
+\begin{codedescription}
+{\facname allows the median filtering of a Healpix map. Each pixel
+  of the output map is the median value of the input  map pixels found within a disc of given
+  radius centered on that pixel. Flagged
+  pixels can be either left unchanged or 'filled in' with that same scheme. \\
+If the map is polarized, each of the three Stokes components is filtered
+  separately. \\
+The input and output can either be arrays or FITS files, but they to be both
+  arrays or both FITS files.}
+\end{codedescription}
+
+
+
+\begin{related}
+  \begin{sulist}{} %%%% NOTE the ``extra'' brace here %%%%
+  \item[idl] version \idlversion or more is necessary to run \facname
+  \end{sulist}
+\end{related}
+
+
+\begin{example}
+{
+\begin{tabular}{l} %%%% use this tabular format %%%%
+median\_filter  ('map.fits', 10., /arcmin, 'med.fits') \\
+\end{tabular}
+}
+{Writes in 'med.fits' the median filtered map of 'map.fits' using a disc radius
+  of 10 arcmin}
+\end{example}
+
+
+\begin{example}
+{
+\begin{tabular}{l} %%%% use this tabular format %%%%
+map =  randomn(seed, nside2npix(256)) \\
+median\_filter  (map, 0.5, /deg, med) \\
+\end{tabular}
+}
+{Returns in {\tt med} the median filtered map of {\tt map} using a disc radius
+  of 0.5 degrees}
+\end{example}
+
+

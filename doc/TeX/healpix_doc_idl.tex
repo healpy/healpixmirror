@@ -1,0 +1,78 @@
+% -*- LaTeX -*-
+
+
+% \renewcommand{\facname}{{healpix\_doc }}
+% \renewcommand{\FACNAME}{{HEALPIX\_DOC }}
+
+\sloppy
+
+
+
+\title{\healpix IDL Facility User Guidelines}
+\docid{healpix\_doc} \section[healpix\_doc: PDF and HTML documentation]{ }
+\label{idl:healpix_doc}
+\docrv{Version 1.0}
+\author{Eric Hivon}
+\abstract{This document describes the \healpix IDL facility \thedocid.}
+
+
+
+
+\begin{facility}
+{This IDL facility displays HTML or PDF \healpix documentation}
+{src/idl/misc/healpix\_doc.pro}
+\end{facility}
+
+\begin{IDLformat}
+{\thedocid , [HTML={\tt |} PDF=] [, HELP=,  WHOLE=] }
+\end{IDLformat}
+
+\begin{keywords}
+  \begin{kwlist}{} %%% extra brace
+    \item[HELP=] if set, an extensive help on \thedocid\ is displayed.
+    \item[HTML=]  if set, the \healpix (IDL) HTML documentation is shown with a web browser.
+            If the browser is already in use, a new tab is open.
+    \item[PDF=]   if set, the \healpix (IDL) PDF documentation is shown with a pdf viewer.\\
+            Either HTML or PDF must be set.
+    \item[WHOLE=]  if set, the whole \healpix documentation is accessible,
+              not just the IDL related part.
+  \end{kwlist}
+\end{keywords}  
+
+\begin{codedescription}
+{\thedocid\  calls {\tt Online\_help} to open either the HTML or PDF \healpix
+documentation. The browser and viewer used are those found by the 
+{\tt \$IDL\_DIR/bin/online\_help\_html} and 
+{\tt \$IDL\_DIR/bin/online\_help\_pdf} scripts respectively.
+The content of the {\tt !healpix} system variable is used to
+determine the documentation path.}
+\end{codedescription}
+
+
+
+\begin{related}
+  \begin{sulist}{} %%%% NOTE the ``extra'' brace here %%%%
+    \item[idl] version \idlversion or more is necessary to run \thedocid.	
+    \item[!HEALPIX] IDL system variable defined by \thedocid.
+  \end{sulist}
+\end{related}
+
+\begin{examples}{1}
+{
+\begin{tabular}{ll} %%%% use this tabular format %%%%
+\thedocid, /html, /whole
+\end{tabular}
+}
+{will open the whole \healpix HTML documentation in a web browser.
+}
+\end{examples}
+\begin{examples}{2}
+{
+\begin{tabular}{ll} %%%% use this tabular format %%%%
+\thedocid, /pdf
+\end{tabular}
+}
+{will open the IDL related \healpix PDF documentation.
+}
+\end{examples}
+

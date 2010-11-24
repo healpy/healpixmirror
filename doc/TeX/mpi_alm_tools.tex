@@ -1,0 +1,61 @@
+
+\sloppy
+
+
+\title{\healpix Fortran Subroutines Overview}
+\docid{mpi\_alm\_tools*} \section[mpi\_alm\_tools*]{ }
+\label{sub:mpi_alm_tools}
+\docrv{Version 1.0}
+\author{Hans K. Eriksen}
+\abstract{This document describes the \healpix Fortran 90 module MPI\_ALM\_TOOLS*.}
+
+\begin{facility}
+{This module implements MPI parallelization of the alm2map and map2alm routines. 
+It is not compiled by default during installation, but rather intended for
+users who need massive parallelization in their own programming. Typical
+applications are Monte Carlo simulations and Markov chain type
+analyses.
+
+The routines can be called in two modes, either simple or
+advanced. The former mimics the interface of the standard routines,
+but with an additional MPI handle as a first argument, and is intended
+for applications which requires only one or a few transforms. The
+latter interface provides both more flexibility (in particular the
+option of pre-computation of the Legendre polynomials) and a simpler
+interface when multiple transforms are required. This interface is
+particularly well suited for Monte Carlo simulations and Markov chain
+type analyses.  } 
+{src/f90/mod/mpi\_alm\_tools.f90}
+\end{facility}
+
+\begin{example}
+{ 
+\begin{itemize}
+
+\item Simple one-line interfaces:
+\begin{itemize}
+\item mpi\_map2alm\_simple
+\item mpi\_alm2map\_simple
+\end{itemize}
+
+\item Three-step advanced interfaces:
+\begin{enumerate}
+   \item Initialization: \\mpi\_initialize\_alm\_tools
+   \item Execution of spherical harmonics transforms
+   \begin{itemize}
+	   \item mpi\_map2alm (root processor)
+	   \item mpi\_alm2map (root processor)
+	   \item mpi\_map2alm\_slave (slave processor)
+	   \item mpi\_alm2map\_slave (slave processor)
+    \end{itemize}
+    \item Finalizing: \\ mpi\_cleanup\_alm\_tools
+\end{enumerate}
+\end{itemize}
+}
+{
+}
+\end{example}
+
+\rule{\hsize}{2mm}
+
+\newpage

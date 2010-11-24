@@ -1,0 +1,149 @@
+% -*- LaTeX -*-
+
+\sloppy
+
+\title{\healpix IDL Facility User Guidelines}
+\docid{ianafast} \section[ianafast]{ }
+\label{idl:ianafast}
+\docrv{Version 1.0}
+\author{Eric Hivon}
+\abstract{This document describes the \healpix IDL facility \thedocid.}
+
+\begin{facility}
+{This IDL facility provides an interface to 'anafast' F90 and 'anafast\_cxx' C++ facilities}
+{src/idl/interfaces/ianafast.pro}
+\end{facility}
+
+\begin{IDLformat}
+{IANAFAST,  map1\_in [, cl\_out,
+       alm1\_out=, alm2\_out=, binpath=, cxx=, double=, help=, healpix\_data=, iter\_order=, keep\_tmp\_files=, 
+       map2\_in=, maskfile=, nested=, nlmax=, nmmax=, ordering=, plmfile=, polarisation=, 
+       regression=, ring=, show\_cl=, simul\_type=, silent=, theta\_cut\_deg=, tmpdir=, 
+       weighted=, won=, w8file=, w8dir=]}
+\end{IDLformat}
+
+\begin{qualifiers}
+  \begin{qulist}{} %%%% NOTE the ``extra'' brace here %%%%
+   \item[map1\_in] required input: 1st input map, can be a FITS file, or a memory array containing the
+        map to analyze
+    \item[cl\_out] optional output: auto or cross power spectrum $C(l)$, can be a FITS
+file or a memory array
+  \end{qulist}
+\end{qualifiers}
+
+\begin{keywords}
+  \begin{kwlist}{} %%% extra brace
+\item[alm1\_out=]   output alm of 1st map, must be a FITS file          \default {alm not kept}
+
+\item[alm2\_out=]   output alm of 2nd map (if any, must be a FITS file) \default {alm not kept}
+
+\item[binpath=] full path to back-end routine \default {\$HEXE/anafast, then \$HEALPIX/bin/anafast 
+                or \$HEALPIX/src/cxx/\$HEALPIX\_TARGET\-/bin/anafast\_cxx, then \$HEALPIX/src/cxx/generic\_gcc\-/bin/anafast\_cxx if cxx is set}\\
+              -- a binpath starting with / (or $\backslash$), $~$ or \$ is interpreted as absolute\\
+              -- a binpath starting with ./ is interpreted as relative to current directory\\
+              -- all other binpathes are relative to \$HEALPIX
+
+\item[/cxx] if set, the C++ back-end anafast\_cxx is invoked instead of F90 anafast,
+           AND the parameter file is written accordingly
+
+\item[/double]    if set, I/O is done in double precision \default {single precision I/O}
+
+\item[/help]      if set, prints extended help
+
+\item[healpix\_data=] directory with Healpix precomputed files (only for C++ back\_end when weighted=1)
+     \default {\$HEALPIX/data}
+
+\item[iter\_order=] order of iteration in the analysis \default {0}
+
+\item[/keep\_tmp\_files] if set, temporary files are not discarded at the end of the
+                  run
+
+\item[map2\_in=] 2nd input map (FITS file or array), if provided, Cl\_out will
+  contain the cross power spectra of the 2 maps \default {no 2nd map}
+
+\item[maskfile=] pixel mask (FITS file or array)   \default {no mask}
+
+\item[/nested=] if set, signals that *all* maps and mask read online are in
+   NESTED scheme (does not apply to FITS file), see also /ring and Ordering
+
+\item[nlmax=]   maximum multipole of analysis, *required* for C++ anafast\_cxx,
+      optional for F90 anafast
+
+\item[nmmax=]   maximum degree m, only valid for C++ anafast\_cxx \default {nlmax}
+
+\item[ordering=] either 'RING' or 'NESTED', ordering of online maps and masks,
+ see /ring and /ordering
+
+\item[plmfile=] FITS file containing precomputed Spherical Harmonics \default {no file}
+
+\item[/polarisation] if set analyze temperature + polarization (same as simul\_type = 2)
+
+\item[regression=] 0, 1 or 2, regress out best fit monopole and/or dipole before
+    alm analysis
+  \default {0, analyze raw map} 
+
+\item[/ring] see /nested and ordering above
+
+\item[/show\_cl] if set, and {\tt cl\_out} is defined, the produced $l (l+1) C(l)/2\pi$ will
+be plotted
+
+\item[simul\_type=] 1 or 2, analyze temperature only or temperature + polarization
+
+\item[/silent]    if set, works silently
+
+\item[theta\_cut\_deg=] cut around the equatorial plane 
+
+\item[tmpdir=]      directory in which are written temporary files 
+\default {IDL\_TMPDIR (see IDL documentation)}
+
+\item[/weighted]     same as won
+    \default {apply weighting}
+
+\item[/won]     if set, a weighting scheme is used to improve the quadrature
+    \default {apply weighting}
+
+\item[w8file=]    FITS file containing weights 
+     \default {determined automatically by back-end routine}.
+   Do not set this keyword unless you really know what you are doing
+
+\item[w8dir=]     directory where the weights are to be found 
+        \default {determined automatically by back-end routine}
+
+  \end{kwlist}
+\end{keywords}  
+
+\begin{codedescription}
+{\thedocid\ is an interface to 'anafast' F90 and 'anafast\_cxx' C++
+facilities. It
+requires some disk space on which to write the parameter file and the other
+temporary files. Most data can be provided/generated as an external FITS
+file, or as a memory array.}
+\end{codedescription}
+
+
+
+\begin{related}
+  \begin{sulist}{} %%%% NOTE the ``extra'' brace here %%%%
+    \item[idl] version \idlversion or more is necessary to run \thedocid.
+    \item[anafast] F90 facility called by \thedocid.
+    \item[anafast\_cxx] C++ called by \thedocid.
+    \item[\htmlref{isynfast}{idl:isynfast}] IDL Interface to F90 synfast
+    \item[\htmlref{ismoothing}{idl:ismoothing}] IDL Interface to F90 smoothing
+%    \item[\htmlref{ianafast}{idl:ianafast}] IDL Interface to F90 anafast and C++ anafast\_cxx
+  \end{sulist}
+\end{related}
+
+\begin{example}
+{
+\begin{tabular}{l} %%%% use this tabular format %%%%
+ whitenoise = randomn(seed, \htmlref{nside2npix}{idl:nside2npix}(256))  \\
+ \thedocid, whitenoise, cl, /ring, /silent  \\
+ plot, cl[*,0]  
+\end{tabular}
+}
+{
+ will plot the power spectrum of a white noise map
+}
+\end{example}
+
+

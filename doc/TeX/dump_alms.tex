@@ -1,0 +1,62 @@
+
+\sloppy
+
+
+\title{\healpix Fortran Subroutines Overview}
+\docid{dump\_alms*} \section[dump\_alms*]{ }
+\label{sub:dump_alms}
+\docrv{Version 2.1}
+\author{Frode K.~Hansen}
+\abstract{This document describes the \healpix Fortran90 subroutine DUMP\_ALMS.}
+
+\begin{facility}
+{This routine stores  $a_{lm}$  values in a binary FITS file. The FITS file created will contain one integer column with $index=\ell^2+\ell+m+1$ and 2 single precision columns with real/imaginary  $a_{lm}$  values. One can store temperature $a_{lm}$ or polarisation, $a^E_{lm}$ or $a^B_{lm}$. If temperature is specified, a FITS file is created. If polarisation is specified, an old FITS file is opened and extra extensions is created.}
+{src/f90/mod/fitstools.f90}
+\end{facility}
+
+\begin{f90format}
+{filename, alms, nlmax, header, nlheader, extno}
+\end{f90format}
+
+\begin{arguments}
+{
+\begin{tabular}{p{0.4\hsize} p{0.05\hsize} p{0.1\hsize} p{0.35\hsize}} \hline  
+\textbf{name~\&~dimensionality} & \textbf{kind} & \textbf{in/out} & \textbf{description} \\ \hline
+                   &   &   &                           \\ %%% for presentation
+filename(LEN=\filenamelen) & CHR & IN & filename for the FITS-file to store the $a_{lm}$ in. \\
+nlmax & I4B & IN & maximum $\ell$ value to store. \\
+alms(0:nlmax,0:nlmax) & SPC/ DPC & IN & array with $a_{lm}$. alms(l,m) corresponds to  $a_{lm}$  \\
+extno & I4B & IN & extension number. If 0 is specified, a FITS file is created and $a_{lm}$ is stored in the first FITS extension as temperature $a_{lm}$. If 1 or 2 is specified, an already existing file is opened and a 2nd or 3rd extension is created, treating $a_{lm}$ as $a_{lm}^E$ or $a_{lm}^B$. \\
+nlheader & I4B & IN & number of header lines to write to the file. \\
+header(LEN=80) (1:nlheader) & CHR & IN & the header to the FITS-file. \\ 
+\end{tabular}
+}
+\end{arguments}
+
+\begin{example}
+{
+call dump\_alms ('alms.fits', alms, 64, header, 80, 1)  \\
+}
+{
+Opens an already existing FITS file which contains temperature $a_{lm}$. An extra extension is added to the file where the $a_{lm}$ array are written in a three-column format as described above. 80 header lines are written to the file from the array header(1:80). 
+}
+\end{example}
+
+\begin{modules}
+  \begin{sulist}{} %%%% NOTE the ``extra'' brace here %%%%
+  \item[\textbf{fitstools}] module, containing:
+  \item[printerror] routine for printing FITS error messages.
+  \item[\textbf{cfitsio}] library for FITS file handling.		
+  \end{sulist}
+\end{modules}
+
+\begin{related}
+  \begin{sulist}{} %%%% NOTE the ``extra'' brace here %%%%
+  \item[\htmlref{fits2alms}{sub:fits2alms}, \htmlref{read\_conbintab}{sub:read_conbintab}] routines to read $a_{lm}$ from a FITS-file 
+  \item[\htmlref{alms2fits}{sub:alms2fits}] has the same function as \thedocid\ but is more general.
+  \end{sulist}
+\end{related}
+
+\rule{\hsize}{2mm}
+
+\newpage

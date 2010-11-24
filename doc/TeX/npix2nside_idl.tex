@@ -1,0 +1,87 @@
+% -*- LaTeX -*-
+
+
+\renewcommand{\facname}{{npix2nside }}
+\renewcommand{\FACNAME}{{NPIX2NSIDE }}
+
+\sloppy
+
+
+
+\title{\healpix IDL Facility User Guidelines}
+\docid{\facname} \section[\facname]{ }
+\label{idl:npix2nside}
+\docrv{Version 1.0}
+\author{Eric Hivon}
+\abstract{This document describes the \healpix IDL facility \facname.}
+
+
+
+
+\begin{facility}
+{This IDL facility provides the \healpix resolution parameter Nside corresponding to Npix
+pixels over the full sky.
+}
+{src/idl/toolkit/npix2nside.pro}
+\end{facility}
+
+\begin{IDLformat}
+{Nside=\FACNAME(Npix [,ERROR=])}
+\end{IDLformat}
+
+\begin{qualifiers}
+  \begin{qulist}{} %%%% NOTE the ``extra'' brace here %%%%
+    \item[Npix] number of pixels over the full sky (scalar integer),
+         should be a valid Npix 
+	($N_{\rm pix} = 12N_{\rm side}^2$ with $N_{\rm side}$ power of 2 in $\{1,\ldots,2^{29}\}$)
+    \item[Nside] on output: resolution parameter if Npix is valid, -1 otherwise
+  \end{qulist}
+\end{qualifiers}
+
+\begin{keywords}
+  \begin{kwlist}{} %%% extra brace
+    \item[ERROR =] error flag, set to 1 on output if Npix is NOT valid, or
+    stays to 0 otherwise.
+  \end{kwlist}
+\end{keywords}  
+
+\begin{codedescription}
+{\facname checks that the given Npix is valid 
+($N_{\rm pix} = 12N_{\rm side}^2$ with $N_{\rm side}$ a power of 2 in
+$\{1,\ldots,2^{29}\}$) and then computes the
+corresponding resolution parameter $N_{\rm side}$.}
+\end{codedescription}
+
+
+
+\begin{related}
+  \begin{sulist}{} %%%% NOTE the ``extra'' brace here %%%%
+    \item[idl] version \idlversion or more is necessary to run \facname.	
+    \item[\htmlref{nside2npix}{idl:nside2npix}] computes Npix corresponding to Nside 
+    \item[\htmlref{pix2xxx}{idl:pix_tools}, \htmlref{ang2xxx}{idl:pix_tools}, \htmlref{vec2xxx}{idl:pix_tools}, ... ] conversion between vector or angles and pixel index and vice-versa
+    \item[\htmlref{vec2pix}{idl:pix_tools}, \htmlref{pix2vec}{idl:pix_tools}] conversion between vector and pixel index
+    \item[\htmlref{nest2ring}{idl:pix_tools}, \htmlref{ring2nest}{idl:pix_tools}] conversion between NESTED and RING indices
+  \end{sulist}
+\end{related}
+
+\begin{example}
+{
+\begin{tabular}{ll} %%%% use this tabular format %%%%
+Nside = npix2nside(49152, ERROR=error)
+\end{tabular}
+}
+{
+Nside will be 64 because 49152 is a valid pixel number (=12*64$^2$ and 64 is a power of 2), and error will be 0}
+\end{example}
+\begin{example}
+{
+\begin{tabular}{ll} %%%% use this tabular format %%%%
+Nside = npix2nside(49151, ERROR=error)
+\end{tabular}
+}
+{
+Nside will be -1 and error: 1, because 49151 is not a valid number of \healpix
+pixels over the full sky.}
+\end{example}
+
+

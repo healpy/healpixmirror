@@ -1,0 +1,58 @@
+
+\sloppy
+
+
+\title{\healpix Fortran Subroutines Overview}
+\docid{number\_of\_alms} \section[number\_of\_alms]{ }
+\label{sub:number_of_alms}
+\docrv{Version 1.2}
+\author{Frode K.~Hansen, Eric Hivon}
+\abstract{This document describes the \healpix Fortran90 function NUMBER\_OF\_ALMS.}
+
+\begin{facility}
+{This function returns the number of $a_{lm}$ values stored in each FITS extension in a FITS file containing $a_{lm}$}
+{src/f90/mod/fitstools.f90}
+\end{facility}
+
+\begin{f90function}
+{filename[, extnum]}
+\end{f90function}
+
+\begin{arguments}
+{
+\begin{tabular}{p{0.4\hsize} p{0.05\hsize} p{0.1\hsize} p{0.35\hsize}} \hline  
+\textbf{name~\&~dimensionality} & \textbf{kind} & \textbf{in/out} & \textbf{description} \\ \hline
+                   &   &   &                           \\ %%% for presentation
+filename(LEN=\filenamelen) & CHR & IN & filename of the FITS-file containing
+                   $a_{\ell m}$. \\
+extnum & I4B & OUT & number of extensions in the file \\
+\end{tabular}
+}
+\end{arguments}
+
+\begin{example}
+{
+print*,number\_of\_alms('alms.fits')  \\
+}
+{
+Prints the number of $a_{lm}$ stored in each extension of the file 'alms.fits'
+}
+\end{example}
+
+\begin{modules}
+  \begin{sulist}{} %%%% NOTE the ``extra'' brace here %%%%
+  \item[\textbf{fitstools}] module, containing:
+  \item[printerror] routine for printing FITS error messages.
+  \item[\textbf{cfitsio}] library for FITS file handling.		
+  \end{sulist}
+\end{modules}
+\newpage
+\begin{related}
+  \begin{sulist}{} %%%% NOTE the ``extra'' brace here %%%%
+  \item[\htmlref{fits2alms}{sub:fits2alms}, \htmlref{read\_conbintab}{sub:read_conbintab}] routines that read $a_{lm}$ values from FITS files. 
+  \end{sulist}
+\end{related}
+
+\rule{\hsize}{2mm}
+
+\newpage

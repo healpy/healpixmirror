@@ -1,0 +1,111 @@
+
+\sloppy
+
+
+\title{\healpix Fortran Subroutines Overview}
+\docid{map2alm*} \section[map2alm*]{ }
+\label{sub:map2alm}
+\docrv{Version 2.1}
+\author{Frode K.~Hansen, Eric Hivon}
+\abstract{This document describes the \healpix Fortran90 subroutine MAP2ALM*.}
+
+\begin{facility}
+{This routine is a wrapper to 5 internal routines:map2alm\_sc,
+map2alm\_sc\_pre, map2alm\_pol, map2alm\_pol\_pre1,
+map2alm\_pol\_pre2. These routines analyse a \healpix {\em RING ordered} map and return
+$a_{lm}^T$ (and if specified $a_{lm}^E$ and $a_{lm}^B$) values up to
+the desired order in $\ell$ (maximum 3*$N_{side}$). The different
+routines are called depending on what parameters are passed. Some
+routines analyse with or without precomputed harmonics and some with
+or without polarisation. }
+{src/f90/mod/alm\_tools.f90}
+\end{facility}
+
+\begin{f90format}
+{nsmax, nlmax, nmmax, map\_TQU, alm\_TGC, zbounds, w8ring\_TQU [, plm]}
+\end{f90format}
+
+\begin{arguments}
+{
+\begin{tabular}{p{0.4\hsize} p{0.05\hsize} p{0.05\hsize} p{0.40\hsize}} \hline  
+\textbf{name~\&~dimensionality} & \textbf{kind} & \textbf{in/out} & \textbf{description} \\ \hline
+                   &   &   &                           \\ %%% for presentation
+nsmax & I4B & IN & the $N_{side}$ value of the map to analyse. \\
+nlmax & I4B & IN & the maximum $\ell$ value for the analysis. \\
+nmmax & I4B & IN & the maximum $m$ value for the analysis. \\
+map\_TQU(0:12*nsmax**2-1) & SP/ DP & IN & if only the temperature map is to be analyse, the map-array should be passed with this rank. \\ 
+map\_TQU(0:12*nsmax**2-1, 1:3) & SP/ DP & IN & if both temperature an polarisation maps are to be analysed, the map array should have this rank, where the second index is (1,2,3) corresponding to (T,Q,U). \\ 
+\end{tabular}
+\begin{tabular}{p{0.4\hsize} p{0.05\hsize} p{0.05\hsize} p{0.40\hsize}}   \hline  
+alm\_TGC(1:p, 0:nlmax, 0:nmmax) & SPC/ DPC & OUT & The $a_{lm}$ values output from the analysis. p is 1 or 3 dependent on wether polarisation is included or not. In the former case, the first index is (1,2,3) corresponding to (T,E,B). \\
+%% cos\_theta\_cut & DP & IN & the cosine of the cutting angle for a cut sky
+%%    analysis. {\bf Note}: in order to have no cut at all cos\_theta\_cut needs to be
+%%    set to a {\em negative} value, as cos\_theta\_cut=$\cos(90^\circ)=0$ still
+%%    removes the equatorial ring.\\
+zbounds(1:2) & DP & IN & section of the map on which to perform the $a_{lm}$
+                   analysis, expressed in terms of $z=\sin({\rm latitude}) =
+                   \cos(\theta).$ If zbounds(1)$<$zbounds(2), the analysis is
+                   performed {\em on} the strip zbounds(1)$<z<$zbounds(2); if not,
+                   it is performed {\em outside} of the strip
+                   zbounds(2)$<z<$zbounds(1). \\
+w8ring\_TQU(1:2*nsmax, 1:p) & DP & IN & ring weights for quadrature corrections. If ring weights are not used, this array should be 1 everywhere. p is 1 for a temperature analysis and 3 for (T,Q,U). \\
+{\small{plm(0:(nlmax+1)(nlmax+2)nsmax-1)}}, \hskip 6cm OPTIONAL & DP & IN & If this optional matrix is passed with this rank, precomputed $P_{lm}(\theta)$ are used instead of recursion. \\ 
+{\small{plm(0:(nlmax+1)(nlmax+2)nsmax-1,1:3)}}, \hskip 8cm OPTIONAL & DP & IN & If this optional matrix is passed with this rank, precomputed $P_{lm}(\theta)$ AND precomputed tensor harmonics are used instead of recursion. \\
+\end{tabular}
+}
+\end{arguments}
+%%\newpage
+
+\begin{example}
+{
+use \htmlref{healpix\_types}{sub:healpix_types}\\
+use alm\_tools\\
+use pix\_tools\\
+integer(\htmlref{i4b}{sub:healpix_types}) :: nside, lmax \\
+real(\htmlref{dp}{sub:healpix_types}), allocatable, dimension(:,:) :: dw8 \\
+real(dp), dimension(2) :: z \\
+real(\htmlref{sp}{sub:healpix_types}), allocatable, dimension(:,:) :: map \\
+complex(\htmlref{spc}{sub:healpix_types}), allocatable, dimension(:,:,:) :: alm \\
+\\
+nside = 256 \\
+lmax = 512 \\
+allocate(dw8(1:2*nside, 1:3)) \\
+allocate(map(0:nside2npix(nside)-1,1:3)) \\
+allocate(alm(1:3, 0:lmax, 0:lmax)\\
+dw8 = 1.0\_dp \\
+z = sin(10.0\_dp * \htmlref{DEG2RAD}{sub:healpix_types}) \\
+call map2alm(nside, lmax, lmax, map, alm, ($\backslash$ z, -z $\backslash$) , dw8, plm(0:(lmax+1)*(lmax+2)*nside-1))  \\
+}
+{
+Analyses temperature and polarisation maps passed in map. The map has
+an $N_{side}$ of 256, and the analysis is performed up
+to 512 in $\ell$ and m. The resulting $a_{lm}$ coefficients for
+temperature and polarisation are returned in alm. A $10^\circ$ cut on
+each side of the equator is applied. Uniform weights are used. Since
+the optional plm array is provided with rank one, precomputed scalar $P_{lm}(\theta)$ are
+used while tensor harmonics are computed with a recursion.
+}
+\end{example}
+
+\begin{modules}
+  \begin{sulist}{} %%%% NOTE the ``extra'' brace here %%%%
+  \item[ring\_analysis] Performs FFT for the ring analysis.
+  \item[\textbf{misc\_util}] module, containing:
+  \item[assert\_alloc] routine to print error message when an array is not
+  properly allocated		
+  \end{sulist}
+\end{modules}
+
+\begin{related}
+  \begin{sulist}{} %%%% NOTE the ``extra'' brace here %%%%
+  \item[anafast] executable using \thedocid to analyse maps.
+  \item[\htmlref{alm2map}{sub:alm2map}] routine performing the inverse transform
+of \thedocid.
+  \item[\htmlref{map2alm\_iterative}{sub:map2alm_iterative}] similar to
+\thedocid\ with iterative scheme.
+  \end{sulist}
+\end{related}
+
+\rule{\hsize}{2mm}
+
+\newpage

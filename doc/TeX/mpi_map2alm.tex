@@ -1,0 +1,81 @@
+
+\sloppy
+
+
+\title{\healpix Fortran Subroutines Overview}
+\docid{mpi\_map2alm*} \section[mpi\_map2alm*]{ }
+\label{sub:mpi_map2alm}
+\docrv{Version 1.0}
+\author{Hans K. Eriksen}
+\abstract{This document describes the \healpix Fortran 90 subroutine MPI\_MAP2ALM*.}
+
+\begin{facility}
+{This subroutine implements MPI parallelization of the serial map2alm
+routine. It supports both temperature and polarization inputs in both
+single and double precision. It must only be run by the root node of
+the MPI communicator.
+}
+{src/f90/mod/mpi\_alm\_tools.f90}
+\end{facility}
+
+\begin{f90format}
+{map, alms}
+\end{f90format}
+
+\begin{arguments}
+{
+\begin{tabular}{p{0.4\hsize} p{0.05\hsize} p{0.05\hsize} p{0.40\hsize}} \hline  
+\textbf{name~\&~dimensionality} & \textbf{kind} & \textbf{in/out} & \textbf{description} \\ \hline
+                   &   &   &                           \\ %%% for presentation
+map(0:npix,1:nmaps) & SP or DP & IN & map to analyse. If
+nmaps=1, only temperature information is included; if nmaps=3,
+polarization information is included \\
+alms(1:nmaps,0:lmax,0:nmax) & SPC or DPC & OUT & output alms. nmaps must
+equal that of the input map\\
+\end{tabular}
+}
+\end{arguments}
+%%\newpage
+
+\begin{example}
+{
+call mpi\_comm\_rank(comm, myid, ierr)\\
+if (myid == root) then\\
+\hspace*{1cm}call mpi\_initialize\_alm\_tools(comm, nsmax, nlmax, nmmax, \\
+\hspace*{3cm}zbounds,polarization, precompute\_plms)\\
+\hspace*{1cm}call mpi\_map2alm(map, alms)\\
+else \\
+\hspace*{1cm}call mpi\_initialize\_alm\_tools(comm)\\
+\hspace*{1cm}call mpi\_map2alm\_slave\\
+end\\
+call mpi\_cleanup\_alm\_tools\\
+}
+{
+This example 1) initializes the mpi\_alm\_tools module (i.e.,
+allocates internal arrays and defines required parameters), 2)
+executes a parallel map2alm operation, and 3) frees the previously
+allocated memory.
+}
+\end{example}
+
+\begin{modules}
+  \begin{sulist}{} %%%% NOTE the ``extra'' brace here %%%%
+  \item[\textbf{alm\_tools}] module
+  \end{sulist}
+\end{modules}
+
+\begin{related}
+  \begin{sulist}{} %%%% NOTE the ``extra'' brace here %%%%
+   \item[\htmlref{mpi\_cleanup\_alm\_tools}{sub:mpi_cleanup_alm_tools}] Frees memory that is allocated by the current routine. 
+   \item[\htmlref{mpi\_initialize\_alm\_tools}{sub:mpi_initialize_alm_tools}] Allocates memory and defines variables for the mpi\_alm\_tools module. 
+  \item[\htmlref{mpi\_alm2map}{sub:mpi_alm2map}] Routine for executing a parallel inverse spherical harmonics transform (root processor interface)
+  \item[\htmlref{mpi\_alm2map\_slave}{sub:mpi_alm2map_slave}] Routine for executing a parallel inverse spherical harmonics transform (slave processor interface)
+  \item[\htmlref{mpi\_map2alm\_slave}{sub:mpi_map2alm_slave}] Routine for executing a parallel spherical harmonics transform (slave processor interface)
+  \item[\htmlref{mpi\_alm2map\_simple}{sub:mpi_alm2map_simple}] One-line interface to the parallel inverse spherical harmonics transform 
+  \item[\htmlref{mpi\_map2alm\_simple}{sub:mpi_map2alm_simple}] One-line interface to the parallel spherical harmonics transform 
+  \end{sulist}
+\end{related}
+
+\rule{\hsize}{2mm}
+
+\newpage

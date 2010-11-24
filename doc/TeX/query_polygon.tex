@@ -1,0 +1,82 @@
+
+\sloppy
+
+
+\title{\healpix Fortran Subroutines Overview}
+\docid{query\_polygon} \section[query\_polygon]{ }
+\label{sub:query_polygon}
+\docrv{Version 1.2}
+\author{Eric Hivon}
+\abstract{This document describes the \healpix Fortran90 subroutine QUERY\_POLYGON.}
+
+\begin{facility}
+{Routine to find the index of all pixels enclosed in a polygon. The polygon should be convex, 
+or have only one concave vertex. The edges should not intersect each other. 
+The output indices can be either in the RING or NESTED scheme} 
+{src/f90/mod/pix\_tools.f90}
+\end{facility}
+
+\begin{f90format}
+{nside, vlist, nv, listpix, nlist [, nest, inclusive]}
+\end{f90format}
+
+\begin{arguments}
+{
+\begin{tabular}{p{0.25\hsize} p{0.05\hsize} p{0.1\hsize} p{0.5\hsize}} \hline  
+\textbf{name~\&~dimensionality} & \textbf{kind} & \textbf{in/out} & \textbf{description} \\ \hline
+                   &   &   &                           \\ %%% for presentation
+nside & I4B & IN & the $N_{side}$ parameter of the map. \\
+vlist(1:3,0:*) & DP & IN & cartesian vector pointing at polygon
+                   respective vertices. \\
+nv & I4B & IN & number of vertices, should be equal to 3 or larger. \\
+listpix(0:*) & I4B & OUT & the index for all pixels enclosed in the triangle. Make sure that the size of the array is big enough to contain all pixels. \\ 
+nlist & I4B & OUT & The number of pixels listed in $listpix$. \\
+nest\ \ (OPTIONAL) & I4B & IN &  The pixel indices are in the NESTED numbering scheme if nest=1, and in RING scheme otherwise. \\
+inclusive\ \ (OPTIONAL) & I4B & IN & If set to 1, all the pixels overlapping
+                   (even partially)
+                   with the polygon are listed, otherwise only those whose
+                   center lies within the polygon are listed. \\
+\end{tabular}
+}
+\end{arguments}
+
+\begin{example}
+{
+real(dp), dimension(1:3,0:9) :: vertices \\
+vertices(:,0) = (/0.,0.,1./)  ! +z \\
+vertices(:,1) = (/1.,0.,0./)  ! +x \\
+vertices(:,2) = (/1.,1.,-1./) ! x+y-z \\
+vertices(:,3) = (/0.,1.,0./)  ! +y \\
+ \\
+call query\_polygon(256,vertices,4,listpix,nlist,nest=0)  \\
+}
+{
+Returns the RING pixel index of all pixels in the polygon with vertices of
+cartesian coordinates (0,0,1), (1,0,0), (1,1,-1) and (0,1,0) in a $N_{side}=256$ map.
+}
+\end{example}
+%\newpage
+\begin{modules}
+  \begin{sulist}{} %%%% NOTE the ``extra'' brace here %%%%
+ \item[isort] routine to sort integer number
+ \item[\htmlref{query\_triangle}{sub:query_triangle}] render the list of pixels enclosed
+  in a given triangle
+ \item[\htmlref{surface\_triangle}{sub:surface_triangle}] computes the surface of a spherical triangle defined by 3 vertices
+ \item[\htmlref{vect\_prod}{sub:vect_prod}] routine to compute the vectorial product of two 3D vectors
+  \end{sulist}
+\end{modules}
+
+\begin{related}
+  \begin{sulist}{} %%%% NOTE the ``extra'' brace here %%%%
+  \item[\htmlref{pix2ang}{sub:pix_tools}, \htmlref{ang2pix}{sub:pix_tools}] convert between angle and pixel number.
+  \item[\htmlref{pix2vec}{sub:pix_tools}, \htmlref{vec2pix}{sub:pix_tools}] convert between a cartesian vector and pixel number.
+  \item[\htmlref{query\_disc}{sub:query_disc}, query\_polygon,]
+  \item[\htmlref{query\_strip}{sub:query_strip}, \htmlref{query\_triangle}{sub:query_triangle}] render the list of pixels enclosed
+  respectively in a given disc, polygon, latitude strip and triangle
+
+  \end{sulist}
+\end{related}
+
+\rule{\hsize}{2mm}
+
+\newpage

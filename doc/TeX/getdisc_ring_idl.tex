@@ -1,0 +1,83 @@
+% -*- LaTeX -*-
+
+
+\renewcommand{\facname}{{getdisc\_ring }}
+\renewcommand{\FACNAME}{{GETDISC\_RING }}
+\sloppy
+
+
+
+\title{\healpix IDL Facility User Guidelines}
+\docid{\facname} \section[\facname]{ }
+\label{idl:getdisc_ring}
+\docrv{Version 1.0}
+\author{Eric Hivon}
+\abstract{This document describes the \healpix IDL facility \facname.}
+
+
+
+
+\begin{facility}
+% {This IDL facility provides a means find the pixel indexs of all pixels within
+% an angular distance radius from a defined center.
+% }
+{This routine is obsolete. Use \htmlref{query\_disc}{idl:query_disc} instead.
+}
+{src/idl/toolkit/getdisc\_ring.pro}
+\end{facility}
+
+% \begin{IDLformat}
+% {\facname, Nside, Vector0, Radius, Listpix, [Nlist, DEG=]}
+% \end{IDLformat}
+
+% \begin{qualifiers}
+%   \begin{qulist}{} %%%% NOTE the ``extra'' brace here %%%%
+%     \item[Nside] \healpix resolution parameter used to index the pixel list (scalar integer)
+%     \item[Vector0] position vector of the disc center (3 elements vector)
+%           NB : the norm of Vector0 does not have to be one, what is
+%           consider is the intersection of the sphere with the line of
+%           direction Vector0.
+%     \item[Radius] radius of the disc (in radians, unless DEG is set), (scalar
+%     real)
+%     \item[Listpix] on output: list of RING-ordered index for the pixels found 
+%     within a radius Radius of the position defined by vector0.
+%      (=-1 if the radius is too small and no pixel is found)
+%     \item[Nlist] on output: number of pixels in Listpix (=0 if no pixel is found).
+%   \end{qulist}
+% \end{qualifiers}
+
+% \begin{keywords}
+%   \begin{kwlist}{} %%% extra brace
+%     \item[DEG =] if set Radius is in degrees instead of radians
+%   \end{kwlist}
+% \end{keywords}  
+
+% \begin{codedescription}
+% {\facname finds the pixels within the given disc in a selective way WITHOUT
+% scanning all the sky pixels.}
+% \end{codedescription}
+
+
+
+% \begin{related}
+%   \begin{sulist}{} %%%% NOTE the ``extra'' brace here %%%%
+%     \item[idl] version \idlversion or more is necessary to run \facname.
+%     \item[ang2pix, pix2ang] conversion between angles and pixel index
+%     \item[vec2pix, pix2vec] conversion between vector and pixel index
+%   \end{sulist}
+% \end{related}
+
+% \begin{example}
+% {
+% \begin{tabular}{ll} %%%% use this tabular format %%%%
+% \facname, & 256L, [.5,.5,0.], 10., listpix, nlist, /Deg
+% \end{tabular}
+% }
+% {
+% On return listpix contains the index of the (6096) pixels within 10 deg from
+% the point on the sphere having the direction [.5,.5,0.].
+% The pixel indices correspond to the RING scheme with resolution 256.
+% }
+% \end{example}
+
+

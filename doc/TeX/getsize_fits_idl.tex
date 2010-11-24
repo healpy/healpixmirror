@@ -1,0 +1,117 @@
+% -*- LaTeX -*-
+
+
+\renewcommand{\facname}{{getsize\_fits }}
+\renewcommand{\FACNAME}{{GETSIZE\_FITS }}
+\sloppy
+
+
+
+\title{\healpix IDL Facility User Guidelines}
+\docid{\facname} \section[\facname]{ }
+\label{idl:getsize_fits}
+\docrv{Version 1.2}
+\author{Eric Hivon}
+\abstract{This document describes the \healpix facility \facname.}
+
+%%\newcommand{\nside}{N_{\rm side}}
+
+\begin{facility}
+{This IDL function reads the number of maps and/or the pixel ordering of a FITS file containing a \healpix map.}
+{src/idl/fits/getsize\_fits.pro}
+\end{facility}
+
+\begin{IDLformat}
+{var = \FACNAME(File, [Nmaps =, Nside =, Mlpol =, Ordering =, Obs\_Npix =, Type =, Header =])
+}
+\end{IDLformat}
+
+\begin{qualifiers}
+  \begin{qulistwide}{} %%%% NOTE the ``extra'' brace here %%%%
+ 	\item[{File}] 
+          name of a FITS file containing the \healpix map(s).
+
+	\item[{var}] {contains on output the number of pixels stored in a map FITS file.
+     Each pixel is counted only once 
+     (even if several information is stored on each of them, see nmaps).
+     Depending on the data storage format, result may be : \\
+       -- equal or smaller to the number Npix of Healpix pixels available 
+          over the sky for the given resolution (Npix =
+     12*nside*nside) \\
+       -- equal or larger to the number of non blank pixels 
+         (obs\_npix)}
+
+	
+ 	\item[{Nmaps=}] contains on output the number of maps in the file
+	
+
+       \item[{Nside=}] contains on output the \healpix resolution parameter $\nside$
+		  
+
+       \item[{Mlpol=}] contains on output the maximum multipole used to generate the map 
+
+	\item[{Ordering=}] contains on output the pixel ordering
+	scheme: either 'RING' or 'NESTED'
+		  
+	\item[{Obs\_Npix=}] contains on output the number of non blanck pixels. It is set to -1 if it can not be determined from header
+		
+	\item[{Type=}] {Healpix/FITS file type\\
+             $<$0 : file not found, or not valid\\
+             0  : image only fits file, deprecated Healpix format
+                   (var $=12\nside^2$) \\
+             1  : ascii table, generally used for C(l) storage \\
+             2  : binary table : with implicit pixel indexing (full sky)
+                   (var $=12\nside^2$) \\
+             3  : binary table : with explicit pixel indexing (generally cut sky)
+                   (var $\le 12\nside^2$) \\
+           999  : unable to determine the type }
+
+	\item[{Header=}] contains on output the FITS extension header
+		
+  \end{qulistwide}
+\end{qualifiers}
+
+% \begin{keywords}
+%   \begin{kwlist}{} %%% extra brace
+%    \end{kwlist}
+% \end{keywords}
+
+\begin{codedescription}
+{\facname gets the number of pixels in a FITS file. If the file
+follows the \healpix standard, the routine can also get the resolution
+parameter Nside, the ordering scheme, ..., and can determine the type
+of data set contained in the file.}
+\end{codedescription}
+
+
+
+\begin{related}
+  \begin{sulist}{} %%%% NOTE the ``extra'' brace here %%%%
+  \item[idl] version \idlversion or more is necessary to run \facname
+  \item[\htmlref{read\_fits\_map}{idl:read_fits_map}] This \healpix IDL facility can be used to read in maps
+  written by \facname.
+  \item[sxaddpar] This IDL routine (included in \healpix package) can be used to update
+  or add FITS keywords to {\tt Header}
+  \item[\htmlref{reorder}{idl:reorder}] This \healpix IDL routine can be used to reorder a map from
+  NESTED scheme to RING scheme and vice-versa.
+  \item[\htmlref{write\_fits\_sb}{idl:write_fits_sb}] routine to write multi-column binary FITS table
+  \end{sulist}
+\end{related}
+
+
+\begin{example}
+{
+\begin{tabular}{l} %%%% use this tabular format %%%%
+ npix = getsize\_fits(!healpix.directory+'/test/map.fits', nside=nside, \$ \\
+$\quad$       mlpol=lmax, type=filetype)\\
+ print, npix, nside, lmax, filetype
+\end{tabular}
+}
+{\parbox[t]{\hsize}{ should produce something like \\
+   {\em 196608 \ \        128 \ \         256  \ \      2} \\
+meaning that the map contained in that file has 196608 pixels, the resolution parameter is
+nside=128, the maximum multipole was 256, and this a full sky map
+(type 2).
+}}
+\end{example}
+

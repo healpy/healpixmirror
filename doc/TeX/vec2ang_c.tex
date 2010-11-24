@@ -1,0 +1,54 @@
+
+
+\sloppy
+
+
+\title{\healpix C Subroutines Overview}
+\docid{vec2ang} \section[vec2ang]{ }
+\label{csub:vec2ang}
+\docrv{Version 2.0}
+\author{E. Hivon}
+\abstract{This document describes the \healpix C subroutine VEC2ANG.}
+
+\begin{facility}
+{Routine to convert the 3D position vector $(x,y,z)$ of point into its position
+  angles  $(\theta,\phi)\myhtmlimage{}$ on the sphere with
+$x = \sin\theta\cos\phi\myhtmlimage{}$, $y=\sin\theta\sin\phi\myhtmlimage{}$, $z=\cos\theta\myhtmlimage{}$.
+}
+{src/C/subs/vec2ang.c}
+\end{facility}
+
+\begin{Cfunction}
+{void vec2ang(double *vector, double *theta, double *phi);}
+\end{Cfunction}
+
+\begin{arguments}
+{
+\begin{tabular}{p{0.3\hsize} p{0.10\hsize} p{0.05\hsize} p{0.45\hsize}} \hline  
+\textbf{name~\&~dimensionality} & \textbf{kind} & \textbf{in/out} & \textbf{description} \\ \hline
+                   &   &   &                           \\ %%% for presentation
+vector(3) & double & IN & three dimensional cartesian position vector
+                   $(x,y,z)$. The north pole is $(0,0,1)$\\
+theta & double & OUT & colatitude in radians measured southward from north pole (in
+    [0,$\pi$]). \\
+phi   & double & OUT & longitude in radians measured eastward (in [0, $2\pi$]).\\
+\end{tabular}
+}
+\end{arguments}
+
+% \begin{example}
+% {
+% call vec2ang(vector,theta,phi) \\
+% }
+% {
+% }
+% \end{example}
+\begin{related}
+  \begin{sulist}{} %%%% NOTE the ``extra'' brace here %%%%
+  \item[\htmlref{ang2vec}{csub:ang2vec}] converts the position angles of a point on the sphere 
+into its 3D position vector.
+  \end{sulist}
+\end{related}
+
+\rule{\hsize}{2mm}
+

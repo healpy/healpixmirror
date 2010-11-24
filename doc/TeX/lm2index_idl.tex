@@ -1,0 +1,63 @@
+% -*- LaTeX -*-
+
+\sloppy
+
+\title{\healpix IDL Facility User Guidelines}
+\docid{lm2index} \section[lm2index]{ }
+\label{idl:lm2index}
+\docrv{Version 2.0}
+\author{Eric Hivon}
+\abstract{This document describes the \healpix facility lm2index.}
+
+\begin{facility}
+{This IDL routine provides a means to convert the $a_{\ell m}$ degree and order
+$(\ell, m)$ into the index $i=\ell^2 + \ell + m + 1$ (in order to be fed to
+alm2fits routine for instance)}
+{src/idl/misc/lm2index.pro}
+
+\end{facility}
+
+\begin{IDLformat}
+{LM2INDEX, l, m, index}
+\end{IDLformat}
+
+\begin{qualifiers}
+  \begin{qulist}{} %%%% NOTE the ``extra'' brace here %%%%
+    \item[l] Long array containing on INPUT the order $\ell$. 
+    \item[m] Long array containing on INPUT the degree $m$. 
+    \item[index] Long array containing on OUTPUT the index \hfill\newline
+                 $i$ = $\ell^2$ + $\ell$ + $m$ + 1.
+  \end{qulist}
+\end{qualifiers}
+
+\begin{codedescription}
+{\thedocid\ converts $(\ell, m)$ into $i=\ell^2 + \ell + m + 1$. Note that by
+definition $0 \le |m|\le \ell$ (the routine does not check for this).
+}
+\end{codedescription}
+
+
+
+\begin{related}
+  \begin{sulist}{} %%%% NOTE the ``extra'' brace here %%%%
+    \item[idl] version \idlversion or more is necessary to run \thedocid.
+    \item[\htmlref{fits2alm}{idl:fits2alm}] reads a FITS file containing
+    $a_{\ell m}$ values.
+    \item[\htmlref{alm2fits}{idl:alm2fits}] writes $a_{\ell m}$ values into a FITS file.
+    \item[\htmlref{index2lm}{idl:index2lm}] routine complementary to \thedocid:
+    converts $i$ = $\ell^2$ +
+    $\ell$ + $m$ + 1 into $(\ell, m)$.
+  \end{sulist}
+\end{related}
+
+\begin{example}
+{
+\begin{tabular}{l} %%%% use this tabular format %%%%
+\thedocid, l, m, index \\
+\end{tabular}
+}
+{
+will return in {\tt index} in value $\ell^2 + \ell + m + 1$
+}
+\end{example}
+

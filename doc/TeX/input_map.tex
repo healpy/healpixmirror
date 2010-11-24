@@ -1,0 +1,88 @@
+
+\sloppy
+
+
+\title{\healpix Fortran Subroutines Overview}
+\docid{input\_map*} \section[input\_map*]{ }
+\label{sub:input_map}
+\docrv{Version 1.2}
+\author{Eric Hivon \& Frode K.~Hansen}
+\abstract{This document describes the \healpix Fortran90 subroutine INPUT\_MAP.}
+
+\begin{facility}
+{This routine reads a \healpix map from a FITS file. This can deal with full sky
+as well as cut sky maps}
+{src/f90/mod/fitstools.f90}
+\end{facility}
+
+\begin{f90format}
+{filename, map, npixtot, nmaps [, fmissval, header, units, extno]}
+\end{f90format}
+
+\begin{arguments}
+{
+\begin{tabular}{p{0.3\hsize} p{0.05\hsize} p{0.05\hsize} p{0.5\hsize}} \hline  
+\textbf{name~\&~dimensionality} & \textbf{kind} & \textbf{in/out} & \textbf{description} \\ \hline
+                   &   &   &                           \\ %%% for presentation
+filename(len=\filenamelen) & CHR & IN & FITS file to be read from,
+                   containing a full sky or cut sky map \\
+map(0:npixtot-1,1:nmaps)    & SP/ DP & OUT & full sky map(s) constructed
+                   from the data present in the file, missing pixels are filled
+                   with fmissval \\
+npixtot                    & I4B & IN & number of pixels in the full sky map \\
+nmaps     & I4B & IN &  number of maps in the file  \\
+                   &   &   &                           \\ %%% for presentation
+fmissval \hskip 3cm (OPTIONAL) & SP/ DP & IN &  value to be given to missing pixels, its default
+                   value is 0 \\
+header(LEN=80)(1:) \hskip 3cm (OPTIONAL)    & CHR & OUT &   FITS extension header \\
+units(LEN=20)(1:nmaps) \hskip 3cm (OPTIONAL) & CHR & OUT &  maps units \\
+extno \hskip 4cm (OPTIONAL) & I4B & IN & extension number to read the data from
+                   (0 based).\default 0 (the first extension is read) 
+\end{tabular}
+}
+\end{arguments}
+
+\begin{example}
+{
+use pix\_tools, only: nside2npix \\
+use fitstools, only: getsize\_fits, input\_map \\
+\ldots \\
+npixtot = getsize\_fits('map.fits',nmaps=nmaps, nside=nside) \\
+npix = nside2npix(nside) \\
+allocate(map(0:npix-1,1:nmaps)) \\
+call input\_map('map.fits', map, npix, nmaps)  \\
+}
+{
+Reads into {\tt map} the content of the FITS file 'map.fits'
+}
+\end{example}
+%%\newpage
+\begin{modules}
+  \begin{sulist}{} %%%% NOTE the ``extra'' brace here %%%%
+  \item[\textbf{fitstools}] module, containing:
+  \item[printerror] routine for printing FITS error messages.
+  \item[\htmlref{read\_bintab}{sub:read_bintab}] routine to read a binary table
+  from a FITS file
+  \item[\htmlref{read\_fits\_cut4}{sub:read_fits_cut4}] routine to read cut sky
+  map from a FITS file
+  \item[\textbf{cfitsio}] library for FITS file handling.
+  \end{sulist}
+\end{modules}
+
+\begin{related}
+  \begin{sulist}{} %%%% NOTE the ``extra'' brace here %%%%
+  \item[anafast] executable that reads a \healpix map and analyses it. 
+  \item[synfast] executable that generate full sky \healpix maps
+  \item[\htmlref{getsize\_fits}{sub:getsize_fits}] subroutine to know the size of a FITS file.
+  \item[\htmlref{output\_map}{sub:output_map}] subroutine to write a FITS file
+  from a \healpix map
+  \item[\htmlref{write\_bintabh}{sub:write_bintabh}] subroutine to write a large
+  array into a FITS file piece by piece
+  \item[\htmlref{input\_tod*}{sub:input_tod}] subroutine to read an arbitrary subsection of
+  a large binary table
+  \end{sulist}
+\end{related}
+
+\rule{\hsize}{2mm}
+
+\newpage

@@ -1,0 +1,130 @@
+% -*- LaTeX -*-
+
+% PLEASE USE THIS FILE AS A TEMPLATE FOR THE DOCUMENTATION OF YOUR OWN
+% FACILITIES: IN PARTICULAR, IT IS IMPORTANT TO NOTE COMMENTS MADE IN
+% THE TEXT AND TO FOLLOW THIS ORDERING. THE FORMAT FOLLOWS ONE USED BY
+% THE COBE-DMR PROJECT.	
+% A.J. Banday, April 1999.
+
+
+
+
+\renewcommand{\facname}{{write\_fits\_map }}
+\renewcommand{\FACNAME}{{WRITE\_FITS\_MAP }}
+\sloppy
+
+
+
+\title{\healpix IDL Facility User Guidelines}
+\docid{\facname} \section[\facname]{ }
+\label{idl:write_fits_map}
+\docrv{Version 1.2}
+\author{Eric Hivon}
+\abstract{This document describes the \healpix facility \facname.}
+
+
+
+
+\begin{facility}
+{This IDL facility writes out a \healpix map into a FITS file according to
+the \healpix convention}
+{src/idl/fits/write\_fits\_map.pro}
+\end{facility}
+
+\begin{IDLformat}
+{\FACNAME, File, T\_sky, [Header, Coordsys=, Error=, Help=, Nested=, Ring=,
+Ordering=, Units=]
+}
+\end{IDLformat}
+
+\begin{qualifiers}
+  \begin{qulist}{} %%%% NOTE the ``extra'' brace here %%%%
+ 	\item[{File}] 
+          name of a FITS file in which the map is to be written
+
+ 	\item[{T\_sky}] 
+	variable containing the \healpix map
+
+       \item[{Header}]
+		  (optional), \\
+		string variable containing on input  the information to be added
+		  to the extension header. (If already present, FITS reserved
+		  keywords will be automatically updated).
+
+       \item[{Coordsys=}]
+		  (optional), \\
+		if set to either 'C', 'E' or 'G',  specifies that the
+		Healpix coordinate system is respectively Celestial=equatorial,
+		  Ecliptic or Galactic.
+		(The relevant keyword is then added/updated in the extension
+		  header, but the map is NOT rotated)
+
+	\item[{Error=}]
+		(optional output), \\
+		will take value 1 if file can not be written
+
+	\item[{Ordering=}]
+		  (optional), \\
+		if set to either 'ring' or 'nested' (case un-sensitive),
+		  specifies that the map is respectively in RING or NESTED
+		  ordering scheme\\
+		\seealso Nested and Ring
+
+	\item[{Units=}]
+		(optional), \\
+		string describing the physical units of the data set
+  \end{qulist}
+\end{qualifiers}
+
+\begin{keywords}
+  \begin{kwlist}{} %%% extra brace
+	\item[{Help}] if set, an extensive help is displayed and no
+	file is written
+	\item[{Nested}] if set, specifies that the map is in the NESTED ordering
+	scheme\\
+	\seealso Ordering and Ring 
+	\item[{Ring}] if set, specifies that the map is in the RING ordering
+	scheme\\
+	\seealso Ordering and Nested
+   \end{kwlist}
+\end{keywords}
+
+\begin{codedescription}
+{\facname writes out the full sky \healpix map {\tt T\_sky} into the FITS file
+{\tt File}. Extra information about the map can be given in {\tt
+Header} according to the FITS header conventions. Coordinate systems 
+can also be specified by {\tt Coordsys}. Specifying the
+ordering scheme is compulsary and can be done either in {\tt Header} 
+or by setting {\tt Ordering} or {\tt Nested} or {\tt Ring} to the 
+correct value. If {\tt Ordering} or {\tt Nested} or {\tt Ring} is set,
+its value overrides what is given in {\tt Header}.}
+\end{codedescription}
+
+
+
+\begin{related}
+  \begin{sulist}{} %%%% NOTE the ``extra'' brace here %%%%
+  \item[idl] version \idlversion or more is necessary to run \facname
+  \item[\htmlref{read\_fits\_map}{idl:read_fits_map}] This \healpix IDL facility can be used to read in maps
+  written by \facname.
+  \item[sxaddpar] This IDL routine (included in \healpix package) can be used to update
+  or add FITS keywords to {\tt Header}
+  \item[\htmlref{reorder}{idl:reorder}] This \healpix IDL routine can be used to reorder a map from
+  NESTED scheme to RING scheme and vice-versa.
+\input{item_write_fits_idl}
+  \item[\htmlref{write\_fits\_sb}{idl:write_fits_sb}] routine to write multi-column binary FITS table
+  \end{sulist}
+\end{related}
+
+
+\begin{example}
+{
+\begin{tabular}{l} %%%% use this tabular format %%%%
+write\_fits\_map, 'file.fits', map, coordsys='G', ordering='ring' \\
+\end{tabular}
+}
+{\facname writes out the RING ordered map {\tt map} in Galactic
+coordinates into the file {\tt file.fits}.
+}
+\end{example}
+

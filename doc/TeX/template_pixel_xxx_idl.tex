@@ -1,0 +1,106 @@
+
+\sloppy
+
+
+\title{\healpix IDL Facility User Guidelines}
+\docid{template\_pixel\_xxxx} \section[template\_pixel\_xxxx]{ }
+\label{idl:template_pixel_xxx}
+\docrv{Version 1.0}
+\author{E. Hivon}
+\abstract{This document describes the \healpix facilities
+  TEMPLATE\_PIXEL\_RING and TEMPLATE\_PIXEL\_NEST.}
+
+\begin{facility}
+{These IDL facilities provide the index of the template pixel associated with a given
+  \healpix pixel, for a resolution parameter $\nside$. 
+%Any pixel can be {\em matched in shape}
+%  to a single of these templates by a combination of  a rotation around the polar axis with 
+%  reflexion(s) around a meridian and/or the equator. 
+
+%The template pixels are all located in the Northern Hemisphere, or on the
+% Equator.
+%They are chosen to have their center located at
+%\begin{eqnarray}
+%     z=\cos(\theta)\ge 2/3,  &\ &    0< \phi \leq \pi/2,   \nonumber\\            %[Nside*(Nside+2)/4]
+%     2/3 > z \geq 0,  &\ & \phi=0, \quad{\rm or}\quad  \phi=\frac{\pi}{4\nside}.  \nonumber %[Nside]
+%\myhtmlimage{}
+%\end{eqnarray}
+% They are numbered continuously from 0, starting at the North Pole, with the index
+% increasing in $\phi$, and then increasing for decreasing $z$.
+}
+{src/idl/toolkit/template\_pixel\_nest.pro, src/idl/toolkit/template\_pixel\_ring.pro}
+\end{facility}
+
+\begin{IDLformat}
+{template\_pixel\_nest, Nside, Pixel\_Nest, Template, Reflexion}
+\end{IDLformat}
+\begin{IDLformat}
+{template\_pixel\_ring, Nside, Pixel\_Ring, Template, Reflexion}
+\end{IDLformat}
+
+\begin{qualifiers}
+  \begin{qulist}{} %%%% NOTE the ``extra'' brace here %%%%
+
+\item[{Nside}] (IN, scalar) the \healpix $\nside$ parameter. 
+\item[{Pixel\_Nest}] (IN, scalar or vector) NESTED scheme pixel identification number(s) over the range \{0,$12\nside^2-1$\}.
+\item[{Pixel\_Ring}] (IN, scalar or vector) RING scheme pixel identification number(s) over the
+                   range \{0,$12\nside^2-1$\}.
+\item[{Template}] (OUT, scalar or vector) identification number(s) of the
+                   template matching in shape the pixel(s) provided (the numbering
+                   scheme of the pixel templates is the same for both routines). 
+\item[{Reflexion}] (OUT, scalar or vector) in \{0, 3\} encodes the transformation(s) to
+                   apply to each pixel provided to match exactly in
+                   shape and position its respective template. 0: rotation around the polar axis only,
+                   1: rotation + East-West swap (ie, reflexion around meridian),
+                   2: rotation + North-South swap (ie, reflexion around
+                   Equator), 3: rotation + East-West and North-South swaps
+  \end{qulist}
+\end{qualifiers}
+
+\begin{codedescription}
+{\thedocid\ provide the index of the template pixel associated with a given
+  \healpix pixel, for a resolution parameter $\nside$. 
+
+Any pixel can be {\em matched in shape}
+  to a single of these templates by a combination of  a rotation around the polar axis with 
+  reflexion(s) around a meridian and/or the equator. 
+
+The template pixels are all located in the Northern Hemisphere, or on the
+ Equator.
+They are chosen to have their center located at
+\begin{eqnarray}
+     z=\cos(\theta)\ge 2/3,  &\ &    0< \phi \leq \pi/2,   \nonumber\\            %[Nside*(Nside+2)/4]
+     2/3 > z \geq 0,  &\ & \phi=0, \quad{\rm or}\quad  \phi=\frac{\pi}{4\nside}.  \nonumber %[Nside]
+\myhtmlimage{}
+\end{eqnarray}
+ They are numbered continuously from 0, starting at the North Pole, with the index
+ increasing in $\phi$, and then increasing for decreasing $z$.
+}
+\end{codedescription}
+
+
+\begin{example}
+{
+template\_pixel\_ring, 256, 500000, template, reflexion  \\
+}
+{
+Returns in {\tt template} the index of the template pixel (16663) whose shape matches
+that of the pixel \#500000 for $\nside=256$. Upon return {\tt reflexion} will
+contain 2, meaning that the template must be reflected around a meridian and
+around the equator (and then rotated around the polar axis) in order to match
+the pixel.
+}
+\end{example}
+\begin{related}
+  \begin{sulist}{} %%%% NOTE the ``extra'' brace here %%%%
+  \item[\htmlref{nside2templates}{idl:nside2ntemplates}] returns the
+  number of template pixel shapes available for a given $\nside$.
+  \item[\htmlref{same\_shape\_pixels\_ring}{idl:same_shape_pixels_xxx}] 
+  \item[\htmlref{same\_shape\_pixels\_nest}{idl:same_shape_pixels_xxx}] 
+  return
+  the ordered list of pixels having the same shape as a given pixel template
+  \end{sulist}
+\end{related}
+
+\rule{\hsize}{2mm}
+

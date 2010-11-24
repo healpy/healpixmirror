@@ -1,0 +1,76 @@
+
+\sloppy
+
+\title{\healpix Fortran Subroutines Overview}
+\docid{del\_card} \section[del\_card]{ }
+\label{sub:del_card}
+\docrv{Version 2.0}
+\author{Eric Hivon}
+\abstract{This document describes the \healpix Fortran90 subroutine DEL\_CARD.}
+
+\begin{facility}
+{This routine removes one or several keywords from a FITS header.}
+{src/f90/mod/head\_fits.F90}
+\end{facility}
+
+\begin{f90format}
+{header, kwds}
+\end{f90format}
+
+\begin{arguments}
+{
+\begin{tabular}{p{0.4\hsize} p{0.05\hsize} p{0.1\hsize} p{0.35\hsize}} \hline  
+\textbf{name~\&~dimensionality} & \textbf{kind} & \textbf{in/out} & \textbf{description} \\ \hline
+                   &   &   &                           \\ %%% for presentation
+header(LEN=80)(1:nlheader) & CHR & INOUT & The header to remove the keyword(s)
+                   from. The routines finds out the header size.\\
+kwds(LEN=20)(1:nkws) & CHR & IN & list of FITS keywords to
+                   remove. The routine accepts either a vector a keywords or a
+                   single one in a scalar variable\\
+kwds(LEN=20)  & CHR & IN & the one FITS keyword to
+                   remove.\\
+\end{tabular}
+}
+\end{arguments}
+
+\begin{examples}{1}
+{
+call del\_card(header,(/ 'NSIDE   ','COORD   ','ORDERING' /) ) \\
+}
+{
+Removes the keywords `NSIDE', 'COORD' and 'ORDERING' from Header
+}
+\end{examples}
+
+\begin{examples}{2}
+{
+call del\_card(header, 'ORDERING' ) \\
+}
+{
+Removes the keyword 'ORDERING' from Header
+}
+\end{examples}
+
+\begin{modules}
+  \begin{sulist}{} %%%% NOTE the ``extra'' brace here %%%%
+  \item[write\_hl] more general routine for adding a keyword to a header.
+  \item[\textbf{cfitsio}] library for FITS file handling.		
+  \end{sulist}
+\end{modules}
+
+\begin{related}
+  \begin{sulist}{} %%%% NOTE the ``extra'' brace here %%%%
+  \item[\htmlref{add\_card}{sub:add_card}] general purpose routine to write any keywords into a FITS
+  file header
+  \item[\htmlref{get\_card}{sub:get_card}] general purpose routine to read any keywords from a header in a FITS file.
+  \item[\htmlref{read\_par}{sub:read_par}, \htmlref{number\_of\_alms}{sub:number_of_alms}] routines to read specific keywords from a
+  header in a FITS file.
+  \item[\htmlref{getsize\_fits}{sub:getsize_fits}] function returning the size of the data set in a fits
+  file and reading some other useful FITS keywords
+  \item[\htmlref{merge\_headers}{sub:merge_headers}] routine to merge two FITS headers
+  \end{sulist}
+\end{related}
+
+\rule{\hsize}{2mm}
+
+\newpage

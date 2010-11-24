@@ -1,0 +1,57 @@
+
+\sloppy
+
+
+\title{\healpix Fortran Subroutines Overview}
+\docid{nside2ntemplates} \section[nside2ntemplates]{ }
+\label{sub:nside2ntemplates}
+\docrv{Version 1.0}
+\author{E. Hivon}
+\abstract{This document describes the \healpix Fortran90 subroutine NSIDE2NTEMPLATES.}
+
+\begin{facility}
+{Function to provide the number of template pixels $$\ntemplate=\frac{1+\nside(\nside+6)}{4}$$ corresponding
+to resolution parameter $\nside$. Each template pixel has a different shape that
+{\em can not} be matched (by rotation or reflexion) to that of any of the other templates.
+}
+{src/f90/mod/pix\_tools.f90}
+\end{facility}
+
+\begin{f90function}
+{nside}
+\end{f90function}
+
+\begin{arguments}
+{
+\begin{tabular}{p{0.3\hsize} p{0.05\hsize} p{0.1\hsize} p{0.45\hsize}} \hline  
+\textbf{name~\&~dimensionality} & \textbf{kind} & \textbf{in/out} & \textbf{description} \\ \hline
+                   &   &   &                           \\ %%% for presentation
+nside & I4B & IN & the $\nside$ parameter. \\
+var & I4B & OUT & the number of template pixels $\ntemplate$.\\
+\end{tabular}
+}
+\end{arguments}
+
+\begin{example}
+{
+ntpl= nside2ntemplates(256)  \\
+}
+{
+Returns in {\tt ntpl} the number of \healpix template pixels (16768) for the resolution
+parameter 256.
+}
+\end{example}
+\begin{related}
+  \begin{sulist}{} %%%% NOTE the ``extra'' brace here %%%%
+  \item[\htmlref{template\_pixel\_ring}{sub:template_pixel_xxx}]
+  \item[\htmlref{template\_pixel\_nest}{sub:template_pixel_xxx}] return the
+  template pixel associated with any \healpix pixel
+  \item[\htmlref{same\_shape\_pixels\_ring}{sub:same_shape_pixels_xxx}] 
+  \item[\htmlref{same\_shape\_pixels\_nest}{sub:same_shape_pixels_xxx}] 
+  return
+  the ordered list of pixels having the same shape as a given pixel template
+  \end{sulist}
+\end{related}
+
+\rule{\hsize}{2mm}
+

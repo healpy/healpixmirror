@@ -1,0 +1,171 @@
+% -*- LaTeX -*-
+
+% PLEASE USE THIS FILE AS A TEMPLATE FOR THE DOCUMENTATION OF YOUR OWN
+% FACILITIES: IN PARTICULAR, IT IS IMPORTANT TO NOTE COMMENTS MADE IN
+% THE TEXT AND TO FOLLOW THIS ORDERING. THE FORMAT FOLLOWS ONE USED BY
+% THE COBE-DMR PROJECT.	
+% A.J. Banday, April 1999.
+
+\documentclass[12pt,twoside]{article}
+\usepackage{healpix,html,graphicx,makeidx}
+\begin{htmlonly}
+\renewcommand{\ell}{l}
+%\renewcommand{\lq}{`}
+\renewcommand{\lq}{'}
+\input{hpxversion}
+\end{htmlonly}
+\newcommand{\nside}{{N_{\rm side}}}
+%% \renewcommand{\contentsname}{{TABLE OF CONTENTS\\
+%% \rule{\hsize}{0.7mm}\\}}
+%\newcommand{\myhtmlimage}[1]{\htmlimage{#1}}
+\newcommand{\myhtmlimage}[1]{ }
+\renewcommand{\contentsname}{{TABLE OF CONTENTS}}
+
+\sloppy
+\setcounter{secnumdepth}{0}
+\setcounter{tocdepth}{10}
+
+\begin{document}
+\title{\healpix Fortran Facility User Guidelines}
+\docrv{Version \hpxversion}
+\author{Eric Hivon, Frode K.~Hansen, Benjamin D.~Wandelt, Krzysztof M.~G\'orski,
+Anthony J.~Banday, Martin Reinecke}
+\abstract{This document describes the \healpix Fortran stand-alone facilities}
+\date{\today}
+
+\frontpage
+%\newpage
+\tableofcontents
+\newpage
+
+\section{Using the \healpix Fortran 90 facilities}
+\label{section:defdir}
+{\bf {Default File Names and Directories}}: for some applications, the \healpix facilities
+require some precalculated input files describing the pixel window
+function and quadrature ring weight (shipped as {\tt
+Healpix/data/pixel\_window\_n????.fits} and {\tt
+Healpix/data/weight\_ring\_n?????.fits} respectively). \label{page:defdir}
+
+By default, files with the very same name will be looked for into: the current directory (.), the parent directory (..),
+./data, ../data, \$HEALPIX and \$HEALPIX/data where \$HEALPIX is
+a system variable defined as the full path to the \healpix package
+(see the installation documentation).
+The user has the possibility to change both the name of those files
+and their location.
+
+%% \vskip 1cm
+%% {\bf {Input and Output Precision}}: several facilities offer the option of
+%% changing the input and output data arrays from single to double precision
+%% floating point reals. The following points should be noted: \label{page:ioprec}
+%% \begin{itemize}
+%% \item Double precision IO facilities can read indifferently single and double
+%%   precision data files (and the same is true for single precision facilities). On
+%%   the other hand, a double (resp. single) precision facility will only output double
+%%   (single) precision  files.
+%% \item Since the internal calculations sensitive to numerical round-off error
+%%   (like the spherical harmonics recurrence) are
+%%   {\em always} performed in double precision, switching to double precision IO
+%% \begin{itemize}
+%% \item   will have a limited impact on the output accuracy if the input file contains
+%%   single precision data,
+%% \item is recommended if the input file contains double precision data,
+%% \item will not alter the execution speed, but
+%%   it will almost double the memory consumption.
+%% \end{itemize}
+%% \end{itemize}
+\vskip 1cm
+{\bf {Double/Single Precision mode}}: several facilities offer the option of switching at run time 
+the precision of the internal variables and arrays and of the I/O data from single to double precision
+floating point reals. The following points should be noted: \label{page:ioprec}
+\begin{itemize}
+\item Facilities running in double precision mode can read indifferently single and double
+  precision data files (and the same is true for single precision facilities). On
+  the other hand, a double (resp. single) precision facility will only output double
+  (single) precision  files.
+\item Since the internal calculations sensitive to numerical round-off error
+  (like the spherical harmonics recurrence) are
+  {\em always} performed in double precision, switching to double precision mode
+\begin{itemize}
+\item   will have a limited impact on the output accuracy if the input file contains only
+  single precision data,
+\item is recommended if the input file contains double precision data, and the precision of the output is critical
+\item will not alter the execution speed, but
+  it will almost double the memory consumption of the facility,
+\item will obviously double the size of the output file(s).
+\end{itemize}
+\end{itemize}
+
+\newpage
+
+\section[Changes between release 2.13 and 2.14]{Changes between release 2.13 and
+2.14}
+\begin{itemize}
+\item In \htmlref{{\tt synfast}}{fac:synfast} facility, a numerical bug affecting the accuracy of the Stokes parameter derivatives 
+$\partial X/\partial\theta$, 
+$\partial^2 X/(\partial\theta\partial\phi\sin\theta)$, 
+$\partial^2 X/\partial \theta^2$, 
+for $X=Q,U$ has been corrected. See \htmlref{this appendix}{sec:bug_synder} for details.
+\end{itemize}
+
+\section[Changes between release 2.0 and 2.1]{Changes between release 2.0 and
+2.1}
+\begin{itemize}
+\item The \htmlref{{\tt anafast}}{fac:anafast} facility can now compute the cross-correlations of two different
+maps. 
+\item The \htmlref{{\tt sky\_ng\_sim}}{fac:sky_ng_sim} facility (Rocha et al, 2005), to produce non-Gaussian CMB temperature maps,
+has been added.
+\end{itemize}
+
+\section[Changes between release 1.2 and 2.0]{Changes between release 1.2 and 2.0}
+\begin{itemize}
+\item faster implementation of $a_{lm}$ related facilities, generalization of
+  OpenMP parallelization, and availability of MPI parallelized routines (see
+  mpi\_* routines in {\bf Fortran90 Subroutines Overview} document).
+\item introduction of \htmlref{{\tt alteralm}}{fac:alteralm} facility to modify and/or rotate the spherical
+  harmonics coefficients $a_{lm}$ and greater flexibility for constraining
+  $a_{lm}$ in {\tt synfast}
+\item single and double precision implementation of most facilities (see {\bf {Input and Output Precision}}
+  page~\pageref{page:ioprec})
+\end{itemize}
+
+\newpage
+
+\include{alteralm}
+\include{anafast}
+\include{hotspot}
+\include{map2gif}
+\include{median_filter}
+\include{plmgen}
+\include{smoothing}
+\include{sky_ng_sim}
+\include{synfast}
+\include{ud_grade}
+
+% \hspace{5cm}
+% \begin{minipage}{5cm}
+% \begin{itemize}
+% \item \textbf{ANAFAST}
+% \item \textbf{HOTSPOT}
+% \item \textbf{MAP2GIF}
+% \item \textbf{PLMGEN}
+% \item \textbf{SMOOTHING}
+% \item \textbf{SYNFAST}
+% \item \textbf{UD\_GRADE}
+
+% \end{itemize}
+% \end{minipage}
+
+% \clearpage
+
+% \input{anafast}
+% \input{hotspots}
+% \input{map2gif}
+% \input{plmgen}
+% \input{smoothing}
+% \input{synfast}
+% \input{ud_grade}
+
+\newpage
+\include{fac_appendix}
+
+\end{document}

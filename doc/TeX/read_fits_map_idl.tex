@@ -1,0 +1,133 @@
+% -*- LaTeX -*-
+
+% PLEASE USE THIS FILE AS A TEMPLATE FOR THE DOCUMENTATION OF YOUR OWN
+% FACILITIES: IN PARTICULAR, IT IS IMPORTANT TO NOTE COMMENTS MADE IN
+% THE TEXT AND TO FOLLOW THIS ORDERING. THE FORMAT FOLLOWS ONE USED BY
+% THE COBE-DMR PROJECT.	
+% A.J. Banday, April 1999.
+
+
+
+
+\renewcommand{\facname}{{read\_fits\_map }}
+\renewcommand{\FACNAME}{{READ\_FITS\_MAP }}
+\sloppy
+
+
+
+\title{\healpix IDL Facility User Guidelines}
+\docid{read\_fits\_map} \section[read\_fits\_map]{ }
+\label{idl:read_fits_map}
+\docrv{Version 1.1}
+\author{Eric Hivon}
+\abstract{This document describes the \healpix facility \thedocid.}
+
+
+
+
+\begin{facility}
+{This IDL facility reads in a \healpix map from a FITS file.}
+{src/idl/fits/read\_fits\_map.pro}
+\end{facility}
+
+\begin{IDLformat}
+{\FACNAME, File, T\_sky, [Hdr, Exthdr, PIXEL=, SILENT=, NSIDE=, ORDERING=, COORDSYS=]
+}
+\end{IDLformat}
+
+\begin{qualifiers}
+  \begin{qulist}{} %%%% NOTE the ``extra'' brace here %%%%
+ 	\item[{File}] 
+          name of a FITS file containing 
+               the \healpix map in an extension or in the image field 
+
+ 	\item[{T\_sky}] 
+	variable containing on output the \healpix map
+
+       \item[{Hdr}]
+		  (optional), \\
+		string variable containing on output
+		  the FITS primary header
+
+       \item[{Exthdr}]
+		  (optional), \\
+		string variable containing on output
+		  the FITS extension header
+
+  	\item[{PIXEL=}] 
+		(optional), \\
+               pixel number to read from or pixel range to read
+                 (in the order of appearance in the file), starting from 0. \\
+               if $\ge$ 0 scalar        : read from pixel to the end of the file \\
+               if two elements array : reads from pixel[0] to pixel[1]
+		(included) \\
+               if absent             : read the whole file
+
+	 \item[{NSIDE=}]
+		(optional), \\
+	        returns on output the \healpix resolution parameter, as read
+		from the FITS header. Set to -1 if not found
+
+	 \item[{ORDERING=}]
+	        (optional), \\
+	        returns on output the pixel ordering, as read from the FITS
+	        header. Either 'RING' or 'NESTED' or ' ' (if not found).
+
+	 \item[{COORDSYS=}]
+	        (optional), \\
+	        returns on output the astrophysical coordinate system used, 
+		as read from FITS header (value of keywords COORDSYS or SKYCOORD)
+
+ 
+
+% 		Either row number in the binary table to read data from,
+% 		  starting from row one, or a two element array containing a
+% 		  range of row numbers to read.  If not passed, then the entire
+% 		  file is read in.
+  \end{qulist}
+\end{qualifiers}
+
+\begin{keywords}
+  \begin{kwlist}{} %%% extra brace
+  \item[{SILENT=}] if set, no message is issued during normal execution
+   \end{kwlist}
+\end{keywords}
+
+\begin{codedescription}
+{\thedocid\ reads in a \healpix sky map from a FITS file, and outputs
+the variable {\tt T\_sky}, where the optional variables {\tt Hdr} 
+and {\tt Exthdr} contain
+respectively the primary and extension headers. According to \healpix
+convention, the map should be is stored as a FITS file binary table
+extension. Note:the routine \htmlref{read\_tqu}{idl:read_tqu} which requires less
+memory is recommended when reading {\em large polarized} maps.}
+\end{codedescription}
+
+
+
+\begin{related}
+  \begin{sulist}{} %%%% NOTE the ``extra'' brace here %%%%
+  \item[idl] version \idlversion or more is necessary to run \thedocid
+\input{item_read_fits_idl}
+    \item[sxpar] This IDL routine (included in \healpix package) can be
+  used to extract FITS keywords from the header(s) Hdr or Xhdr read with \thedocid.
+  \item[synfast] This \healpix facility will generate the FITS format 
+            sky map that can be read by \thedocid.
+  \item[\htmlref{write\_fits\_map}{idl:write_fits_map}] This \healpix IDL facility can be used to generate the FITS format 
+            sky maps complient with \healpix convention and readable by \thedocid.
+  \end{sulist}
+\end{related}
+
+
+\begin{example}
+{
+\begin{tabular}{l} %%%% use this tabular format %%%%
+\thedocid, 'planck100GHZ-LFI.fits', map, hdr, xhdr, /silent \\
+\end{tabular}
+}
+{\thedocid\ reads in the file 'planck100GHZ-LFI.fits' and outputs the
+\healpix map in {\tt map}, the primary header in {\tt hdr} and the extension
+header in {\tt xhdr}.
+}
+\end{example}
+

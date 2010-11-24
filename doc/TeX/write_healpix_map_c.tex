@@ -1,0 +1,72 @@
+
+\sloppy
+
+
+\title{\healpix Fortran Subroutines Overview}
+\docid{write\_healpix\_map} \section[write\_healpix\_map]{ }
+\label{csub:write_healpix_map}
+\docrv{Version 1.2}
+\author{Eric Hivon}
+\abstract{This document describes the \healpix C subroutine WRITE\_HEALPIX\_MAP.}
+
+\begin{facility}
+{This routine writes a full sky \healpix map into a FITS file}
+{src/C/subs/write\_healpix\_map.c}
+\end{facility}
+
+\begin{Cfunction}
+{int write\_healpix\_map( float *signal, long nside, char *filename, char nest, char *coordsys)}
+\end{Cfunction}
+
+\begin{arguments}
+{
+\begin{tabular}{p{0.3\hsize} p{0.05\hsize} p{0.05\hsize} p{0.5\hsize}} \hline  
+\textbf{name\&dimensionality} & \textbf{kind} & \textbf{in/out} & \textbf{description} \\ \hline
+                   &   &   &                           \\ %%% for presentation
+\thedocid & int & OUT & returns a non zero value in case of error \\
+signal    & float & IN & full sky map to be written \\
+nside     & long & IN & \healpix resolution parameter of the map (the map should
+                   have 12 * nside * nside pixels).\\
+filename  & char & IN & FITS file in which to write the full sky map \\
+nest      & char & IN & flag specifing the \healpix pixel ordering of the
+                   map. 0: 'RING' and 1: 'NESTED' \\
+coordsys  & char & IN & astronomical coordinate system of map
+	(must be either 'C', 'E' or 'G' standing respectively for Celestial=equatorial,
+		  Ecliptic or Galactic)
+\end{tabular}
+}
+\end{arguments}
+
+% \begin{example}
+% {
+% npix= write\_healpix\_map('map.fits', nmaps=nmaps, ordering=ordering,obs\_npix=obs\_npix, nside=nside, mlpol=mlpol, type=type, polarisation=polarisation)  \\
+% }
+% {
+% Returns 1 or 3 in nmaps, dependent on wether 'map.fits' contain only
+% temperature or both temperature and polarisation maps. The pixel ordering number is found by writeing the keyword ORDERING in the FITS file. If this keyword does not exist, 0 is returned.
+% }
+% \end{example}
+
+%\newpage
+
+% \begin{modules}
+%   \begin{sulist}{} %%%% NOTE the ``extra'' brace here %%%%
+%   \item[\textbf{fitstools}] module, containing:
+%   \item[printerror] routine for printing FITS error messages.
+%   \item[\textbf{cfitsio}] library for FITS file handling.		
+%   \end{sulist}
+% \end{modules}
+
+\begin{related}
+  \begin{sulist}{} %%%% NOTE the ``extra'' brace here %%%%
+  \item[anafast] executable that reads a \healpix map and analyses it. 
+  \item[synfast] executable that generate full sky \healpix maps
+  \item[\htmlref{read\_healpix\_map}{csub:read_healpix_map}] subroutine to read \healpix maps
+%   \item[\htmlref{write\_healpix\_map}{csub:write_healpix_map}] subroutine to write \healpix maps
+  \item[\htmlref{get\_fits\_size}{csub:get_fits_size}] subroutine to determine the size of a map
+  \end{sulist}
+\end{related}
+
+\rule{\hsize}{2mm}
+
+\newpage

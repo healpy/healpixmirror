@@ -1,0 +1,270 @@
+
+\sloppy
+
+
+\title{\healpix Fortran Facility User Guidelines}
+\docid{sky\_ng\_sim} \section[sky\_ng\_sim]{\nosectionname}
+\label{fac:sky_ng_sim}
+\docrv{Version 1.0}
+\author{Eric Hivon}
+\abstract{This document describes the \healpix facility SKY\_NG\_SIM.}
+
+\begin{facility}
+{This program can be used to create temperature \healpix maps computed as realisations 
+of random {\em Non-Gaussian} fields on a sphere (either even power of a Gaussian
+distribution, or Simple Harmonics Oscillator PDF, see Description section for
+details). \\
+It is directly adapted from the NGSIMS code described in Rocha
+et al, MNRAS, 357, 1 (2005)\\
+The operation count is dominated by a term scaling as
+ ${\cal {O}}(N_{\rm pix}^{1/2} \ell_{\rm max}^2)$. 
+The map angular power spectrum, resolution, Gaussian beam FWHM or arbitrary beam window  
+and random seed for the simulation can be selected by the user.
+}
+{src/f90/ngsims\_full\_sky/sky\_ng\_sim.F90}
+\end{facility}
+
+\begin{f90facility}
+{sky\_ng\_sim [parameter\_file]}
+\end{f90facility}
+
+
+\begin{qualifiers}
+  \begin{qulistwide}{} %%%% NOTE the ``extra'' brace here %%%%
+    \item[{infile = }] Defines the input power spectrum file,
+	(default= HEALPIX/test/cl.fits).
+%
+    \item[{outfile = }] Defines the output map file, (default= test.fits).
+%
+    \item[{nsmax = }] Defines the resolution of the map.
+(default= 32)
+%
+     \item[{nlmax = }] Defines the maximum $\ell$ value 
+to be used in the simulation. WARNING: $\ell_{max}$ can not exceed
+the value $4\cdot$ {\tt nsmax}, because the coefficients of the  average Fourier 
+pixel window functions
+are precomputed and provided up to this limit.
+(default= 2*{\tt nsmax})
+%
+    \item[{fwhm\_arcmin = }] Defines the FWHM size in arcminutes 
+of the simulated Gaussian beam.
+(default= 0.0)
+%
+    \item[{beam\_file = }] Defines the FITS file describing the
+    Legendre window
+    function of the circular beam to be used for the
+    simulation. If set to an existing file name, it will override the
+    {\tt fhwm\_arcmin} given above. (default=`')
+%
+     \item[{windowfile = }] Defines the input filename  for the pixel
+    smoothing windows 
+(default= pixel\_window\_n????.fits, see Notes on default files and directories
+on page~\pageref{page:defdir})
+%
+     \item[{winfiledir = }] Defines the directory in which windowfile
+    is located (default : see Notes on default files and directories on
+page~\pageref{page:defdir}).
+%
+      \item[{iseed = }] Defines the seed of the pseudo-random sequence to be used 
+for the generation of the non-gaussian white noise (default= 1)
+%
+     \item[{plot =}] If \thedocid was linked with the PGPLOT library during compilation, and
+if {\tt plot} is set to (case unsensitive) {\tt .true.}, {\tt t}, {\tt yes}, {\tt y}  or
+1, then the histogram of the simulated non-gaussian is produced, overplotted
+with the theoretical PDF; the histogram of the final map pixel values,
+overplotted with a PDF of a gaussian of same mean and variance is subsequently
+produced.
+(default=.false.)
+%
+     \item[{pdf\_choice=1}] Choice of non-Gaussian PDF to use: 1= Simple
+Harmonics oscillator (see Eq~\ref{eq:nongauss_sho} below)
+%
+    \begin{itemize}
+      \item[{sigma0= }] RMS of oscillator ground state
+%
+      \item[{na= }] Integer in \{0, 20\}. Number of $\alpha$ coefficients to be
+given (default=3).
+Note: analytical calculation of the PDF moments
+can only be done for {\tt na}$\le 3$. 
+%
+      \item[{alpha\_1=, alpha\_2=, ... }] Real values of $\alpha_i$ coefficients for
+$i$ in $[1, {\tt na}]$
+     \end{itemize}
+%
+     \item[{pdf\_choice=2}] Choice of non-Gaussian PDF to use: 2=Power of a
+Gaussian (see Eq~\ref{eq:nongauss_powgauss} below)
+      \begin{itemize}
+     \item[{npower = }] Positive integer in \{1,4\} (default=1). The gaussian
+will be set to the power 2*{\tt npower}.
+     \end{itemize}
+%
+  \end{qulistwide}
+\end{qualifiers}
+\newpage
+
+\begin{codedescription}
+{%
+A random non-Gaussian white noise map is generated, using either
+%-------
+\begin{itemize}
+%
+\item a simple linear harmonic oscillator, where the PDF of the pixel
+temperature $t$ is
+	\begin{equation}
+	\rho_{\rm SHO}(t) = \left| \psi_n\right|^2 = e^{-t^2/2\sigma_0^2} \left|\sum_{i=0}^{n} \alpha_i
+C_i H_i \left(\frac{t}{\sqrt{2}\sigma_0}\right)\right|^2 \label{eq:nongauss_sho}
+	\end{equation}
+where $H_i$ are the Hermite polynomials, $C_i$ their normalization constants,
+$\sigma_0^2$ the variance of the (Gaussian) ground state $\left|\psi_0\right|^2,$
+$\alpha_i$ for $i\ge 1$ are free parameters, while $\alpha_0 =
+\left(1 - \sum_i^n |\alpha_i|^2\right)^{1/2}$ is constrained;
+%
+\item or, an even power of a gaussian PDF, where the temperature of pixel $q$ is
+	\begin{equation}
+	t_q = g_q^{2 P} \label{eq:nongauss_powgauss}
+	\end{equation}
+where $g$ is a zero mean, unit variance Gaussian variable, and $P$ is
+a user-defined positive integer.
+\end{itemize}
+%--------
+The resulting map is analyzed into its $a_{lm}$ coefficients, which are then
+multiplied by the beam, pixel and spectrum window
+\begin{equation}
+	a_{lm} \longrightarrow a_{lm} \left[C(l)\right]^{1/2} B(l) w_{\rm pix}(l) \nonumber
+\end{equation}
+The resulting $a_{lm}$ coefficients are turned back into a map, which is
+therefore non-gaussian, with an effective angular power spectrum $C(l) B(l)^2
+w_{\rm pix}(l)^2$ (Rocha et al, 2005).
+\\
+Notes: the code has been modified from the original NGSIMS package in two
+respects:
+the seed parameter is named {\tt iseed} instead of {\tt idum}, to be consistent
+with other \healpix simulation codes; and the SHO generator has been
+dramatically sped up, without loss of accuracy.
+}
+\end{codedescription}
+
+
+\begin{datasets}
+{
+\begin{tabular}{p{0.3\hsize} p{0.35\hsize}} \hline  
+  \textbf{Dataset} & \textbf{Description} \\ \hline
+                   &                      \\ %%% for presentation
+  /data/pixel\_window\_nxxxx.fits & Files containing pixel windows for
+                   various nsmax.\\ 
+                   &                      \\ \hline %%% for presentation
+\end{tabular}
+} 
+\end{datasets}
+
+\begin{support}
+  \begin{sulist}{} %%%% NOTE the ``extra'' brace here %%%%
+  \item[\htmlref{map2gif}{fac:map2gif}] This \healpix Fortran facility can be used to visualise the
+  output map.
+  \item[mollview] This \healpix IDL facility can be used to visualise the
+  output map.
+  \item[\htmlref{anafast}{fac:anafast}] This \healpix Fortran facility can analyse a \healpix map and 
+     	       save the $a_{lm}$ and $C_l$s to be read by sky\_ng\_sim.
+		
+  \end{sulist}
+\end{support}
+
+\begin{examples}{1}
+{
+\begin{tabular}{ll} %%%% use this tabular format %%%%
+sky\_ng\_sim  \\
+\end{tabular}
+}
+{
+sky\_ng\_sim runs in interactive mode, self-explanatory.
+}
+\end{examples}
+
+\vfill\newpage
+
+\begin{examples}{2}
+{
+\begin{tabular}{ll} %%%% use this tabular format %%%%
+sky\_ng\_sim  filename \\
+\end{tabular}
+}
+{When 'filename' is present, sky\_ng\_sim enters the non-interactive mode and parses
+its inputs from the file 'filename'. This has the following
+structure: the first entry is a qualifier which announces to the parser
+which input immediately follows. If this input is omitted in the
+input file, the parser assumes the default value.
+If the equality sign is omitted, then the parser ignores the entry.
+In this way comments may also be included in the file.
+In this example, the file contains the following qualifiers:\hfill\newline
+\fileparam{nsmax = 128}
+\fileparam{nlmax = 256}
+\fileparam{fwhm\_arcmin = 30.0}
+\fileparam{infile = cl.fits}
+\fileparam{pdf\_choice = 1}
+\fileparam{iseed =  1}
+\fileparam{na = 3}
+\fileparam{sigma0 = 1.0}
+\fileparam{alpha\_1 = 0.0}
+\fileparam{alpha\_2 = 0.0}
+\fileparam{alpha\_3 = 0.2}
+\fileparam{outfile = !test\_ngfs.fits}
+
+sky\_ng\_sim reads in the $C_l$ power spectrum in 'cl.fits' up to $l256$, and produces the map
+'map.fits' which has $N_{\rm side}=128$. The non-gaussian white noise was generated
+assuming a SHO PDF (see Eq~\ref{eq:nongauss_sho} above) with $\sigma_0=1$ and
+$\alpha_i = (0, 0, 0.2)$.
+The map is convolved with a beam of FWHM 30.0 arcminutes. The $iseed=1$ sets
+the random seed for the realisation. A different $iseed$ would have given a different 
+realisation from the same power spectrum.
+
+Since \hfill\newline
+\fileparam{beam\_file }
+\fileparam{windowfile }
+were omitted, they take their default values (empty strings). 
+This means that no beam were read and sky\_ng\_sim attempts to find the pixel
+window files in the default directories (see page~\pageref{page:defdir}).
+}
+\end{examples}
+
+\begin{release}
+  \begin{relist}
+    \item Initial release (\healpix 2.10)
+  \end{relist}
+\end{release}
+
+\begin{messages}
+{
+\begin{tabular}{p{0.25\hsize} p{0.1\hsize} p{0.35\hsize}} \hline  
+  \textbf{Message} & \textbf{Severity} & \textbf{Text} \\ \hline
+                   &                   &   \\ %%% for presentation
+can not allocate memory for array xxx &  Fatal & You do not have
+                   sufficient system resources to run this
+                   facility at the map resolution you required. 
+  Try a lower map resolution.  \\ 
+                   &                   &   \\ \hline %%% for presentation
+
+this is not a binary table & & the fitsfile you have specified is not 
+of the proper format \\
+                   &                   &   \\ \hline %%% for presentation
+there are undefined values in the table! & & the fitsfile you have specified is not 
+of the proper format \\
+                  &                   &   \\ \hline %%% for presentation
+the header in xxx is too long & & the fitsfile you have specified is not 
+of the proper format \\
+                  &                   &   \\ \hline %%% for presentation
+XXX-keyword not found & & the fitsfile you have specified is not 
+of the proper format \\
+                  &                   &   \\ \hline %%% for presentation
+found xxx in the file, expected:yyyy & & the specified fitsfile does not
+contain the proper amount of data. \\
+                   &                   &   \\ \hline %%% for presentation
+
+
+
+\end{tabular}
+} 
+\end{messages}
+
+\rule{\hsize}{2mm}
+
+\newpage

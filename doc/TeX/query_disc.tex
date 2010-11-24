@@ -1,0 +1,72 @@
+
+\sloppy
+
+
+\title{\healpix Fortran Subroutines Overview}
+\docid{query\_disc} \section[query\_disc]{ }
+\label{sub:query_disc}
+\docrv{Version 1.2}
+\author{Eric Hivon}
+\abstract{This document describes the \healpix Fortran90 subroutine QUERY\_DISC.}
+
+\begin{facility}
+{Routine to find the index of all pixels within an angular distance radius from a defined
+center. The output indices can be either in the RING or NESTED scheme} 
+{src/f90/mod/pix\_tools.f90}
+\end{facility}
+
+\begin{f90format}
+{nside, vector0, radius, listpix, nlist [, nest, inclusive]}
+\end{f90format}
+
+\begin{arguments}
+{
+\begin{tabular}{p{0.28\hsize} p{0.05\hsize} p{0.1\hsize} p{0.47\hsize}} \hline 
+\textbf{name~\&~dimensionality} & \textbf{kind} & \textbf{in/out} & \textbf{description} \\ \hline
+                   &   &   &                           \\ %%% for presentation
+nside & I4B & IN & the $N_{side}$ parameter of the map. \\
+vector0(3) & DP & IN & cartesian vector pointing at the disc center. \\
+radius & DP & IN & disc radius in radians. \\
+listpix(0:*) & I4B & OUT & the index for all pixels within $radius$. Make sure that the size of the array is big enough to contain all pixels. \\ 
+nlist & I4B & OUT & The number of pixels listed in $listpix$. \\
+nest\ \ (OPTIONAL) & I4B & IN &  The pixel indices are in the NESTED numbering
+                   scheme if nest=1, and in RING scheme otherwise. \\
+inclusive\ \ (OPTIONAL) & I4B & IN & If set to 1, all the pixels overlapping
+                   (even partially)
+                   with the disc are listed, otherwise only those whose
+                   center lies within the disc are listed. \\
+
+\end{tabular}
+}
+\end{arguments}
+
+\begin{example}
+{
+call query\_disc(256,(/0,0,1/),pi/2,listpix,nlist,nest=1)  \\
+}
+{
+Returns the NESTED pixel index of all pixels north of the equatorial line in a $N_{side}=256$ map.
+}
+\end{example}
+% \newpage
+\begin{modules}
+  \begin{sulist}{} %%%% NOTE the ``extra'' brace here %%%%
+ \item[\htmlref{in\_ring}{sub:in_ring}] routine to find the pixels in a certain slice of a given ring.		
+ \item[\htmlref{ring\_num}{sub:ring_num}] function to return the ring number corresponding to the coordinate $z$
+  \end{sulist}
+\end{modules}
+
+\begin{related}
+  \begin{sulist}{} %%%% NOTE the ``extra'' brace here %%%%
+  \item[\htmlref{pix2ang}{sub:pix_tools}, \htmlref{ang2pix}{sub:pix_tools}] convert between angle and pixel number.
+  \item[\htmlref{pix2vec}{sub:pix_tools}, \htmlref{vec2pix}{sub:pix_tools}] convert between a cartesian vector and pixel number.
+  \item[query\_disc, \htmlref{query\_polygon}{sub:query_polygon},]
+  \item[\htmlref{query\_strip}{sub:query_strip}, \htmlref{query\_triangle}{sub:query_triangle}] render the list of pixels enclosed
+  respectively in a given disc, polygon, latitude strip and triangle
+
+  \end{sulist}
+\end{related}
+
+\rule{\hsize}{2mm}
+
+\newpage

@@ -1,0 +1,64 @@
+
+\sloppy
+
+
+\title{\healpix Fortran Subroutines Overview}
+\docid{write\_plm} \section[write\_plm]{ }
+\label{sub:write_plm}
+\docrv{Version 1.2}
+\author{Frode K.~Hansen, Eric Hivon}
+\abstract{This document describes the \healpix Fortran90 subroutine WRITE\_PLM.}
+
+\begin{facility}
+{This routine creates a double precision binary FITS-file from a given array. The routine is used by the \healpix facility plmgen to store precomputed $P_{lm}(\theta)$.}
+{src/f90/mod/fitstools.f90}
+\end{facility}
+
+\begin{f90format}
+{plm, nplm, nhar, header, nlheader, filename, nsmax, nlmax}
+\end{f90format}
+
+\begin{arguments}
+{
+\begin{tabular}{p{0.4\hsize} p{0.05\hsize} p{0.05\hsize} p{0.40\hsize}} \hline  
+\textbf{name\&dimensionality} & \textbf{kind} & \textbf{in/out} & \textbf{description} \\ \hline
+                   &   &   &                           \\ %%% for presentation
+plm(0:nplm-1,1:nhar) & DP & IN & the array with the precomputed $P_{lm}(\theta)$ values.\\
+nplm & I4B & IN & Number of $P_{lm}$ values to store.\\
+nhar & I4B & IN & 1 for scalar $P_{lm}$ only and 3 for tensor harmonics. \\
+header(LEN=80) (1:nlheader) & CHR & IN & The header for the FITS-file. \\
+nlheader & I4B & IN & number of header lines to write to the file. \\
+filename(LEN=\filenamelen) & CHR & IN & the precomputed $P_{lm}(\theta)$ values are written to this file. \\
+nsmax & I4B & IN & $N_{side}$ for the precomputed $P_{lm}\!\!$ s. \\
+nlmax & I4B & IN & maximum $\ell$  value for the precomputed $P_{lm}\!\!$ s. \\
+\end{tabular}
+}
+\end{arguments}
+\newpage
+\begin{example}
+{
+call write\_plm (plm, 65*66*32, 1, header, 120, `plm\_32.fits', 32, 64)  \\
+}
+{
+Makes a double precision binary FITS-file called `plm\_32.fits' from the precomputed $P_{lm}(\theta)$ in the array plm(0:65*66*32-1,1:1). The number 65*66*32 corresponds to the number of precomputed $P_{lm}\!\!$ s needed for a $N_{side}=32$ \healpix map synthesis/analysis. The header for the FITS-file is given in the string array header and the number of lines in the header is 120. 
+}
+\end{example}
+
+\begin{modules}
+  \begin{sulist}{} %%%% NOTE the ``extra'' brace here %%%%
+  \item[\textbf{fitstools}] module, containing:
+  \item[printerror] routine for printing FITS error messages.
+  \item[\textbf{cfitsio}] library for FITS file handling.		
+  \end{sulist}
+\end{modules}
+
+\begin{related}
+  \begin{sulist}{} %%%% NOTE the ``extra'' brace here %%%%
+  \item[\htmlref{read\_dbintab}{sub:read_dbintab}, \htmlref{read\_bintab}{sub:read_bintab}] routines which reads a file created by write\_plm. 
+  \item[\htmlref{map2alm}{sub:map2alm}, \htmlref{alm2map}{sub:alm2map}] routines using precomputed $P_{lm}(\theta)$.
+  \end{sulist}
+\end{related}
+
+\rule{\hsize}{2mm}
+
+\newpage

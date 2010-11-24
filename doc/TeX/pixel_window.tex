@@ -1,0 +1,90 @@
+
+\sloppy
+
+
+\title{\healpix Fortran Subroutines Overview}
+\docid{pixel\_window} \section[pixel\_window]{ }
+\label{sub:pixel_window}
+\docrv{Version 2.0}
+\author{Eric Hivon}
+\abstract{This document describes the \healpix Fortran90 subroutine
+PIXEL\_WINDOW.}
+
+\newcommand{\wpix}{w_{\rm pix}(\ell)}
+\newcommand{\alm}{a_{lm}}
+\newcommand{\almpix}{a_{lm}^{\rm (pix)}}
+
+\begin{facility}
+{This routine returns the {\em averaged} $\ell$-space window function $\wpix$ (for temperature and
+  polarisation) associated to \healpix\
+  pixels of resolution parameter $\nside$. Because of the integration of the
+signal over the
+pixel area, the $\almpix$ coefficients of a pixelized map
+are related to the unpixelized underlying $\alm$ by $\almpix = \alm \wpix$.\\
+Unless specified otherwise, the $\wpix$ are read from the files
+  \$HEALPIX/data/pixel\_window\_n????.fits.}
+{src/f90/mod/alm\_tools.f90}
+\end{facility}
+
+\begin{f90format}
+{pixlw, nside [, windowfile]}
+\end{f90format}
+
+\begin{arguments}
+{
+\begin{tabular}{p{0.30\hsize} p{0.05\hsize} p{0.05\hsize} p{0.50\hsize}} \hline  
+\textbf{name~\&~dimensionality} & \textbf{kind} & \textbf{in/out} & \textbf{description} \\ \hline
+                   &   &   &                           \\ %%% for presentation
+pixlw(0:lmax,1:p) & DP & OUT & pixel window function(s) $\wpix$ generated. The first index
+                   must be $\ell_{\rm max}\leq 4\nside$. The second index runs from 1:1 for
+                   temperature only, and 1:3 for polarisation. In the latter
+                   case, 1=T, 2=E, 3=B.\\
+nside & I4B & IN & \healpix\ $\nside$ resolution parameter. Unless {\tt
+                   windowfile} is set, the file associated
+                   with $\nside$ and shipped with the package is read by
+                   default. If {\tt nside} = 0, the pixel is assumed infinitely
+                   small and {\tt pixlw} is returned with value 1.\\
+windowfile \hskip 2cm
+(OPTIONAL) & CHR & IN & FITS file containing the pixel window to be read instead
+                   of the default.
+\end{tabular}
+}
+\end{arguments}
+
+\begin{example}
+{
+call pixel\_window(pixlw, 64)  \\
+}
+{
+returns in pixlw the pixel window function for $\nside = 64$.
+}
+\end{example}
+
+\begin{modules}
+  \begin{sulist}{} %%%% NOTE the ``extra'' brace here %%%%
+  \item[\textbf{misc\_utils}] module, containing:
+      \item[assert, fatal\_error] interrupt code in case of error
+  \item[\textbf{extension}] module, containing:
+     \item[\htmlref{getEnvironment}{sub:getenvironment}] read environment variable
+  \item[\textbf{fitstools}] module, containing:
+     \item[\htmlref{read\_dbintab}{sub:read_dbintab}] reads double precision binary table
+  \end{sulist}
+\end{modules}
+
+\begin{related}
+  \begin{sulist}{} %%%% NOTE the ``extra'' brace here %%%%
+  \item[\htmlref{gaussbeam}{sub:gaussbeam}] routine to generate a gaussian
+beam window function
+  \item[\htmlref{generate\_beam}{sub:generate_beam}] returns a beam window function
+  \item[\htmlref{alter\_alm}{sub:alter_alm}, \htmlref{rotate\_alm}{sub:rotate_alm}] modifies $a_{lm}$ to emulate effect
+of real space filtering and coordinate rotation respectively
+  \item[\htmlref{alm2map}{sub:alm2map}] synthetize a \healpix map from its $\alm$
+(or $\almpix$).
+  \item[\htmlref{alm2map\_der}{sub:alm2map_der}] synthetize a map and its
+derivatives from its $\alm$ (or $\almpix$).
+  \end{sulist}
+\end{related}
+
+\rule{\hsize}{2mm}
+
+\newpage

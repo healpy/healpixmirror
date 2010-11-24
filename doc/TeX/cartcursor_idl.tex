@@ -1,0 +1,65 @@
+% -*- LaTeX -*-
+
+% PLEASE USE THIS FILE AS A TEMPLATE FOR THE DOCUMENTATION OF YOUR OWN
+% FACILITIES: IN PARTICULAR, IT IS IMPORTANT TO NOTE COMMENTS MADE IN
+% THE TEXT AND TO FOLLOW THIS ORDERING. THE FORMAT FOLLOWS ONE USED BY
+% THE COBE-DMR PROJECT.	
+% A.J. Banday, April 1999.
+
+
+
+
+\sloppy
+
+
+
+\title{\healpix IDL Facility User Guidelines}
+\docid{cartcursor} \section[cartcursor]{ }
+\label{idl:\thedocid}
+\docrv{Version 1.2}
+\author{Eric Hivon}
+\abstract{This document describes the \healpix facility cartcursor.}
+
+
+\begin{facility}
+{This IDL facility provides a point-and-click interface for finding
+the astronomical location, value and pixel index of the pixels nearest 
+to the pointed position on a cartesian projection of a \healpix map.}
+{src/idl/visu/cartcursor.pro}
+\end{facility}
+
+\begin{IDLformat}
+{CARTCURSOR, [cursor\_type=, file\_out=]}
+\end{IDLformat}
+
+\begin{qualifiers}
+\hbox{\hspace{5cm}		see \htmlref{mollcursor}{idl:mollcursor}}
+\end{qualifiers}
+
+\begin{codedescription}
+{cartcursor should be called immediately after cartview. It gives the longitude,
+latitude, map value and pixel number
+corresponding to the cursor position in the window containing the map generated
+by orthview. For more details, or in case
+of problems under {\bf Mac OS X}, see \htmlref{mollcursor}{idl:mollcursor}.}
+\end{codedescription}
+
+
+
+\begin{related}
+\hbox{\hspace{5cm}	see \htmlref{mollcursor}{idl:mollcursor}}
+\end{related}
+
+
+\begin{example}
+{
+\begin{tabular}{ll} %%%% use this tabular format %%%%
+cartcursor & \ 
+\end{tabular}
+}
+{After cartview has read in a map and generated
+its cartesian projection, cartcursor is run to determine the
+position and flux of bright synchrotron sources, for example.}
+\end{example}
+
+

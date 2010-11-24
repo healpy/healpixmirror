@@ -1,0 +1,141 @@
+% -*- LaTeX -*-
+
+
+\renewcommand{\facname}{{remove\_dipole}}
+\renewcommand{\FACNAME}{{REMOVE\_DIPOLE}}
+
+\sloppy
+
+
+
+\title{\healpix IDL Facility User Guidelines}
+\docid{\facname} \section[\facname]{ }
+\label{idl:remove_dipole}
+\docrv{Version 1.0}
+\author{Eric Hivon}
+\abstract{This document describes the \healpix IDL facility \facname.}
+
+
+
+
+\begin{facility}
+{This IDL facility provides a means to fit and remove the dipole and monopole
+from a \healpix map.
+}
+{src/idl/misc/\facname.pro}
+\end{facility}
+
+\begin{IDLformat}
+{\FACNAME,
+\mylink{idl:remove_dipole:map}{ Map} [,
+\mylink{idl:remove_dipole:weight}{ Weight},
+\mylink{idl:remove_dipole:bad_data}{BAD\_DATA=},
+\mylink{idl:remove_dipole:gal_cut}{GAL\_CUT=},
+\mylink{idl:remove_dipole:coord_in}{COORD\_IN=},
+\mylink{idl:remove_dipole:coord_out}{COORD\_OUT=},
+\mylink{idl:remove_dipole:covariance_matrix}{Covariance\_Matrix=},
+\mylink{idl:remove_dipole:dipole}{Dipole=},
+\mylink{idl:remove_dipole:monopole}{Monopole=},
+\mylink{idl:remove_dipole:noremove}{/NOREMOVE},
+\mylink{idl:remove_dipole:nside}{NSIDE=},
+\mylink{idl:remove_dipole:onlymonopole}{/ONLYMONOPOLE},
+\mylink{idl:remove_dipole:ordering}{ORDERING=},
+\mylink{idl:remove_dipole:pixel}{PIXEL=},
+\mylink{idl:remove_dipole:silent}{/SILENT},
+\mylink{idl:remove_dipole:units}{UNITS=},
+\mylink{idl:remove_dipole:help}{/HELP}]}
+\end{IDLformat}
+
+\begin{qualifiers}
+  \begin{qulist}{} %%%% NOTE the ``extra'' brace here %%%%
+    \item[Map] \mytarget{idl:remove_dipole:map} input and output, vector\\
+	map from which monopole and dipole are to be removed
+      (also used for output).
+      Assumed to be a full sky data set, unless PIXEL is set and has the same
+      size as map
+    \item[Weight] \mytarget{idl:remove_dipole:weight} input, vector, optional\\
+	same size as map,
+     describe weighting scheme to apply to each pixel for the fit \\
+	\default{uniform weight}
+    \item[BAD\_DATA =] \mytarget{idl:remove_dipole:bad_data} 
+    scalar float, value given on input to bad pixels \\
+          \default{{\tt !healpix.bad\_value} $\equiv -1.6375\ 10^{30}$}.
+    \item[GAL\_CUT=] \mytarget{idl:remove_dipole:gal_cut} 
+    if set to a value larger than 0, the pixels with galactic
+    latitude $|b|<$gal\_cut degrees are not considered in the
+      fit. \\ {\bf NB:}
+      the cut is {\em really} done in Galactic coordinates. If the input
+      coordinates are different (see Coord\_In), the map is rotated into galactic
+      before applying the cut.
+    \item[COORD\_IN =] \mytarget{idl:remove_dipole:coord_in} 
+     string, map coordinate system (either 'Q' or 'C': equatorial,
+    'G': galactic or 'E': ecliptic; upper/lower case accepted)\\
+         \default{'G' (galactic)}
+    \item[COORD\_OUT =] \mytarget{idl:remove_dipole:coord_out} 
+    string, coordinate system (see above) in which
+    to output dipole vector in variable Dipole \\
+         \default{same as coord\_in}
+    \item[Covariance\_Matrix =] \mytarget{idl:remove_dipole:covariance_matrix} 
+    OUTPUT, scalar (or symmetric 4x4 matrix), \\ covariance
+     of the statistical errors made on monopole (and dipole) determination
+    \item[Dipole=] \mytarget{idl:remove_dipole:dipole} 
+	OUTPUT, 3d vector, \\
+        coordinates of best fit dipole (done simultaneously with monopole), same
+        units as input map
+    \item[Monopole=] \mytarget{idl:remove_dipole:monopole} 
+        OUTPUT, scalar float, \\
+        value found for the best fit monopole (done simultaneously with dipole),
+        same units as input map
+    \item[NSIDE=] \mytarget{idl:remove_dipole:nside} 
+    scalar integer, healpix resolution parameter
+    \item[ORDERING=] \mytarget{idl:remove_dipole:ordering} 
+    string, ordering scheme (either 'RING' or 'NESTED')
+    \item[PIXEL=] \mytarget{idl:remove_dipole:pixel} 
+    input, vector, gives the Healpix index of the pixels
+        whose temperature is actually given in map (for cut sky
+    maps). If present, must match Map in size. If absent, it is
+    assumed that the map covers the whole sky.
+    \item[UNITS=] \mytarget{idl:remove_dipole:units} 
+   string, units of the input map
+  \end{qulist}
+\end{qualifiers}
+
+\begin{keywords}
+  \begin{kwlist}{} %%% extra brace
+    \item[/NOREMOVE] \mytarget{idl:remove_dipole:noremove} 
+   if set, the best fit dipole and monopole are computed but not
+    removed (ie, Map is unchanged)
+    \item[/ONLYMONOPOLE] \mytarget{idl:remove_dipole:onlymonopole} 
+   if set, fit (and remove) only the monopole
+    \item[/HELP] \mytarget{idl:remove_dipole:help} 
+    if set, only display documentation header
+    \item[/SILENT] \mytarget{idl:remove_dipole:silent} 
+    if set, the routine works silently
+  \end{kwlist}
+\end{keywords}  
+
+\begin{codedescription}
+{\facname makes a simultaneous least square fit of the monopole and dipole on all the valid
+pixels of Map (those with a value different from BAD\_DATA) with a galactic
+latitude larger in magnitude than GAL\_CUT (in degrees). The position of the pixels
+on the sky is reconstructed from NSIDE and ORDERING.
+If Map does not cover the full sky, the actual indices of the concerned pixels should be given in PIXEL}
+\end{codedescription}
+
+
+
+\begin{related}
+  \begin{sulist}{} %%%% NOTE the ``extra'' brace here %%%%
+    \item[idl] version \idlversion or more is necessary to run \facname.
+  \end{sulist}
+\end{related}
+
+% \begin{example}
+% {
+% \begin{tabular}{ll} %%%% use this tabular format %%%%
+% \end{tabular}
+% }
+% {
+% }
+% \end{example}
+

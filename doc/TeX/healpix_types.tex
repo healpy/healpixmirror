@@ -1,0 +1,138 @@
+
+\sloppy
+
+
+\title{\healpix Fortran Subroutines Overview}
+\docid{healpix\_types} \section[healpix\_types module]{ }
+\label{sub:healpix_types}
+\docrv{Version 2.0}
+\author{Eric Hivon}
+\abstract{This document describes the \healpix Fortran90 module HEALPIX\_TYPES.}
+
+\begin{facility}
+{This module defines a set of parameters used by most other
+\healpix modules.}
+{src/f90/mod/healpix\_types.F90}
+\end{facility}
+
+
+%---------------------
+\newenvironment{mytable}[1]{%
+\begin{minipage}[b]{\linewidth}{%
+\renewcommand{\thefootnote}{\fnsymbol{footnote}}
+\renewcommand{\footnoterule}{}
+{#1}
+}%
+\end{minipage}
+}
+%---------------------
+
+The parameters defined in \thedocid\ include
+
+\begin{itemize}
+\item
+'kind' parameters, used when defining the type of a variable,
+
+\begin{mytable}{%
+\begin{tabularx}{\linewidth}{lcc X}
+name & type & value\footnote{actual value may depend on hardware or compiler} & definition \\
+\hline
+I1B & integer & 1 & number of bytes in the hardware-supported signed integers covering the range -99 to
+99 with the least margin\\
+I2B & integer & 2 & same as above for the range -9999 to 9999 (ie, 4 digits)\\
+I4B & integer & 4 & same as above for 9 digits \\
+I8B & integer & 8 & same as above for 16 digits\footnote{may not be supported by
+  some hardware or compiler; on those systems, the user should set the
+preprocessing variable {\tt NO64BITS} to 1 during compilation to demote
+automatically {\tt I8B} to {\tt I4B}} \\
+SP & integer & 4 & number of bytes in the hardware-supported floating-point
+numbers covering the range $10^{-30}$ to $10^{30}$ with the least margin
+(hereafter single precision)\\
+DP & integer & 8 & same as above for the range $10^{-200}$ to $10^{200}$
+(double precision)\\
+SPC & integer & 4 & number of bytes in real ({\em or} imaginary) part of single precision complex numbers\\
+DPC & integer & 8 & same as above for double precision complex numbers\\
+LGT & integer & 4 & number of bytes in logical variables \\
+\hline
+\end{tabularx}
+}%
+\end{mytable}
+
+
+\item
+largest accessible numbers,
+
+\begin{mytable}{%
+\begin{tabularx}{\linewidth}{lcc X}
+name & type or kind & value\footnote{actual value may depend on hardware or compiler} & definition \\
+\hline
+MAX\_I1B & integer & 127 & largest number accessible to integers of kind {\tt I1B}\\
+MAX\_I2B & integer & $32767$ &
+same as above for {\tt I2B} integers\\
+MAX\_I4B & integer & $2^{31}-1 \simeq 2.1\ 10^9$& same as above for {\tt I4B} integers \\
+MAX\_I8B & I8B & $2^{63}-1 \simeq 9.2\ 10^{18}$& same as above for {\tt I4B} integers \\
+MAX\_SP & SP & $\simeq 3.40\ 10^{38}$ & same as above for {\tt SP} floating-point\\
+MAX\_DP & DP & $\simeq 1.80\ 10^{308}$ & same as above for {\tt DP} floating-point\\
+\hline
+\end{tabularx}
+}
+\end{mytable}
+
+\item
+mathematical definitions, \\
+\begin{mytable}{%
+\begin{tabularx}{\linewidth}{lcc X}
+name & kind & value & definition \\
+\hline
+QUARTPI & DP & $\pi/4$ & \\
+HALFPI & DP & $\pi/2$ & \\
+PI & DP & $\pi$ & \\
+TWOPI & DP & $2\pi$ & \\
+FOURPI & DP & $4\pi$ & \\
+SQRT2 & DP & $\sqrt{2}$ & \\
+EULER & DP & $\gamma \simeq 0.577\ldots$ & Euler constant \\
+SQ4PI\_INV & DP & $1/\sqrt{4\pi}$ & \\
+TWOTHIRD & DP & $2/3$ & \\
+DEG2RAD & DP & $\pi/180$ & Degrees to Radians conversion factor\\
+RAD2DEG & DP & $180/\pi$ & Radians to Degrees conversion factor\\
+\hline
+\end{tabularx}
+}
+\end{mytable}
+
+\item
+and \healpix specific definitions, \\
+\begin{mytable}{%
+\begin{tabularx}{\linewidth}{lcc X}
+name & type or kind & value & definition \\
+\hline
+HPX\_SBADVAL & SP & $-1.6375\ 10^{30}$ & default sentinel value given to missing
+pixels in single precision data sets \\
+HPX\_DBADVAL & DP & $-1.6375\ 10^{30}$ & same as above for double precision data
+sets\\
+FILENAMELEN & integer & 1024 & default length in character of file names. \\
+%% HPX\_MXL0 & I4B & $40$ & parameter $m_0$ of $(l,m)$ range of spherical harmonics computed. \\
+%% HPX\_MXL1 & DP & $1.35$ & parameter $r$ in equation above\\
+\hline
+\end{tabularx}
+}
+\end{mytable}
+
+\end{itemize}
+
+\begin{example}
+{
+use healpix\_types \\
+real(kind=DP) :: dx \\
+print*,' pi = ',PI
+}
+{
+The value of {\tt PI}, as well as all other \thedocid\ parameters are made known
+to the code
+}
+\end{example}
+
+
+\rule{\hsize}{2mm}
+
+\newpage

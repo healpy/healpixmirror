@@ -1,0 +1,446 @@
+% -*- LaTeX -*-
+
+% PLEASE USE THIS FILE AS A TEMPLATE FOR THE DOCUMENTATION OF YOUR OWN
+% FACILITIES: IN PARTICULAR, IT IS IMPORTANT TO NOTE COMMENTS MADE IN
+% THE TEXT AND TO FOLLOW THIS ORDERING. THE FORMAT FOLLOWS ONE USED BY
+% THE COBE-DMR PROJECT.	
+% A.J. Banday, April 1999.
+
+\documentclass[12pt,twoside]{article}
+% \usepackage{healrut,psfig,html,makeidx}
+%\usepackage{healpix,psfig,html,makeidx}
+%\usepackage{healpix,graphicx,html,makeidx}
+\usepackage{healpix,graphicx,html,makeidx}
+%\usepackage{hyperref,healpix,graphicx,html,makeidx}%putting hyperref first
+%screws up references in html
+%%%%%% ----- HTML only commands -------
+\begin{htmlonly}
+\renewcommand{\ell}{l}
+\renewcommand{\lq}{'}
+\input{hpxversion}
+\input{idlversion}
+\end{htmlonly}
+
+\hypersetup{%
+	pdftitle={HEALPix IDL Overview},%
+	pdfauthor={E. Hivon et al},%
+	pdfkeywords={HEALPix, IDL},%
+	colorlinks=true}
+
+%%%%%% ----- commands for HTML and PDF -----
+\newcommand{\nside}{{N_{\rm side}}}
+\newcommand{\npix}{{N_{\rm pix}}}
+\newcommand{\ntemplate}{{N_{\rm template}}}
+%\newcommand{\myhtmlimage}[1]{\htmlimage{#1}}
+\newcommand{\myhtmlimage}[1]{ }
+\renewcommand{\contentsname}{{TABLE OF CONTENTS}}
+% command for external link
+\newcommand{\linklatexhtml}[3]{% \linklatexhtml{name}{latex_target}{html_target}
+\latexhtml{\htmladdnormallink{#1}{#2}}{\htmladdnormallink{#1}{#3}}}
+% commands for arbitrary link
+\newcommand{\mylink}[2]{% \mylink{link_id}{link_text}
+\latexhtml{\hyperlink{#1}{#2}}{\hyperref{#2}{}{}{#1}}}
+\newcommand{\mytarget}[1]{% \mytarget{link_id}
+\latexhtml{\hypertarget{#1}{}}{\label{#1}}}
+\newcommand{\mytargetb}[2]{% \mytargett{link_id}{target_txt}
+\latexhtml{\hbox{{#2}\hypertarget{#1}{}}}{\label{#1}{#2}}}
+
+\newcommand{\facname}{}
+\newcommand{\FACNAME}{}
+%\renewcommand{\contentsname}{{TABLE OF CONTENTS\\\rule{\hsize}{0.7mm}\\}}
+
+\sloppy
+\setcounter{secnumdepth}{0}
+\setcounter{tocdepth}{10}
+
+
+\begin{document}
+\title{\healpix IDL Facilities Overview}
+\label{idl:idlxxx}
+\docrv{Version \hpxversion}
+\author{Eric Hivon, Anthony J.~Banday, Benjamin D.~Wandelt, Frode
+K.~Hansen and Krzysztof M.~G\'orski}
+\abstract{This document is an overview of the \healpix IDL facilities.}
+\date{\today}
+
+\frontpage
+\tableofcontents
+\newpage
+
+\section{Using the \healpix IDL facilities}
+
+%Before the \healpix IDL facilities can be utilised, the user MUST 
+%install \hfill\newline
+
+%\noindent {\it The IDL Astronomy User's Library} \hfill\newline
+%\noindent (available for download at {\tt http://idlastro.gsfc.nasa.gov/homepage.html})\hfill\newline
+%\noindent the {\it COBE (IDL) Analysis Software} \hfill\newline
+%\noindent (available for download at {\tt http://space.gsfc.nasa.gov/astro/cobe/cgis.html}).\hfill\newline
+
+%The \healpix developers are in no way associated with the
+%contents of these packages, and any problems therewith should be
+%directed to the respective providers. Having downloaded these
+%packages, the user must update his environment variable {\tt
+%IDL\_PATH} to add these directories.
+
+%\vspace{5mm}
+The current version of the \healpix package provides
+an IDL startup file which defines various environment
+variables for your convenience, and adds the \healpix
+IDL directory tree to your {\tt IDL\_PATH}. In order to utilise
+this feature, the user should invoke IDL using the
+commands {\tt hidl} or {\tt hidlde} which are aliases defined in the
+\healpix profile created during the installation process 
+for the package.
+
+
+\section{Changes between release 2.0 and 2.15a}
+Several routines have been added or improved since version 2.0, as listed below.
+Note that thanks to the newer {\tt IDL-astron} library, FITS read/write routines
+in IDL-Healpix routines can now deal with {\bf FITS files larger than 2GB} (on architectures supporting 64bit
+addressing).\\
+Using 64 bit integers available since version 5.2 of IDL the maximum resolution parameter Nside supported has increased
+from $2^{13}=8192$ to $2^{29}=536870912$, corresponding to $3.46\ 10^{18}$
+pixels on the sphere.
+
+\begin{itemize}
+\item Recent editions (versions 2.15 and 2.15a)
+\begin{itemize}
+	\item \htmlref{{\tt cartview, gnomview, mollview, orthview}}{idl:mollview}:
+        \begin{itemize} 
+		\item export of projected map into a FITS file (\mylink{idl:mollview:fits}{{\tt FITS}} keyword), or an
+IDL array (\mylink{idl:mollview:fits}{{\tt MAP\_OUT}} option) now available with all viewing routines,
+		\item added \mylink{idl:mollview:charthick}{{\tt CHARTHICK}} support; accept array of \mylink{idl:mollview:outline}{{\tt
+OUTLINE}} structures (if they have the same fields),
+		\item correction of a bug (in {\tt loaddata\_healpix}) that was
+affecting the behavior of these viewing routines after consecutive calls with
+very partial cut-sky {\em and then} full-sky data sets [2.15a];
+	\end{itemize}
+	\item \htmlref{{\tt remove\_dipole}}{idl:remove_dipole} now outputs the monopole and dipole
+\mylink{idl:remove_dipole:covariance_matrix}{covariance matrix};
+	\item 
+\htmlref{{\tt write\_fits\_map}}{idl:write_fits_map}, 
+\htmlref{{\tt write\_tqu}}{idl:write_tqu}, 
+\htmlref{{\tt write\_fits\_sb}}{idl:write_fits_sb}: {\tt
+BAD\_DATA} keyword added to FITS header;
+        \item update of {\tt astron} library routines (24-May-2010) for improved WCS support.
+\end{itemize}
+
+
+\item Previous edition (version 2.14a)
+ \begin{itemize}
+	\item \htmlref{{\tt cartview, gnomview, mollview, orthview}}{idl:mollview}:
+        \begin{itemize}
+		\item {\tt OUTLINE=}, {\tt GRATICULE=}, {\tt IGRATICULE=} work
+again with virtual windows ({\tt WINDOW}$<0$)
+		\item {\tt YPOS=} and {\tt RETAIN=} keywords active again
+		\item {\tt PS=} keyword fixed % 2.14a
+	\end{itemize}
+	\item \htmlref{{\tt orthview}}{idl:mollview}:
+		fixed problems with {\tt /SHADE} keyword, which now
+outputs 8-byte (instead of 16-byte) PNG files
+	\item \htmlref{{\tt ianafast}}{idl:ianafast}, 
+		\htmlref{{\tt ismoothing}}{idl:ismoothing}: 
+	fixed problem with processing of
+polarized maps stored in memory.
+	\item \htmlref{{\tt ud\_grade}}{idl:ud_grade}: 
+	improved handling of flagged pixels on Double
+Precision input maps
+	\item \htmlref{{\tt remove\_dipole}}{idl:remove_dipole}: 
+{\tt COORD\_IN=} and {\tt COORD\_OUT=} now
+accept lower case values; {\tt /SILENT} keyword added.
+ \end{itemize}
+%
+%
+%
+%--------------------------------
+\end{itemize}
+{\footnotesize{%
+\begin{itemize}
+%--------------------------------
+\item Old edition (version 2.13)
+   \begin{itemize}
+	\item new \htmlref{{\tt healpix\_doc}}{idl:healpix_doc} routine to
+browse HTML and PDF documentations
+	\item \htmlref{{\tt cartview, gnomview, mollview, orthview}}{idl:mollview}:
+        \begin{itemize}
+		\item introduction of the {\tt TRUECOLORS=} keyword to generate
+color image from 3 channel map
+		\item extended capability of the {\tt TRANSPARENT=} keyword
+		\item addition of {\tt MAP\_OUT=} to {\tt gnomview}
+	\end{itemize}
+	\item improved compatibility with 
+\htmladdnormallink{GDL}{http://gnudatalanguage.sourceforge.net}
+ (free IDL clone). See \linklatexhtml{``\healpix Installation Document''}{install.pdf}{install.htm} for current GDL limitations.
+	\item update of the {\tt IDL-astron} library routines, which now require IDL 6.1 or more
+	\item \htmlref{{\tt fits2alm}}{idl:fits2alm}: new {\tt LMAX=} and {\tt LMIN=} keywords
+	\item \htmlref{{\tt fits2cl}}{idl:fits2cl}: new {\tt LLFACTOR=}  keyword
+	\item \htmlref{{\tt init\_healpix}}{idl:init_healpix} defines
+substructure with complete path to \healpix subdirectories (test, data, bin)
+	\item slightly faster \htmlref{{\tt write\_fits\_cut4}}{idl:write_fits_cut4}
+	and \htmlref{{\tt write\_fits\_sb}}{idl:write_fits_sb} routines.
+	%\item new alm\_i2t
+	\item \htmlref{{\tt ianafast}}{idl:ianafast}, 
+              \htmlref{{\tt ismoothing}}{idl:ismoothing}: solved problem with {\tt
+W8DIR=} keyword.
+   \end{itemize}
+
+\item Older editions (versions 2.11 and 2.12a)
+   \begin{itemize}
+	\item \htmlref{{\tt ianafast}}{idl:ianafast}, 
+              \htmlref{{\tt ismoothing}}{idl:ismoothing}, 
+              \htmlref{{\tt isynfast}}{idl:isynfast}: the {\tt
+TMPDIR} keyword now works properly, and {\tt \$IDL\_TMPDIR} is used as the
+default temporary directory ; more stable behaviour of these routines
+	\item \htmlref{{\tt ud\_grade}}{idl:ud_grade}: 
+	\begin{itemize} 
+		\item correctly flags bad output pixels with {\tt bad\_data}
+value when upgrading maps
+		\item cut sky map: improved, faster routine, now works for Nside $>$
+8192
+	\end{itemize}
+	\item \htmlref{{\tt cartview, gnomview, mollview, orthview}}{idl:mollview}:
+        \begin{itemize}
+		\item using a virtual window (ie, setting {\tt WINDOW} to a
+negative value) now allows faster generation of GIF and PNG files (especially useful over remote connections); 
+		\item addition of {\tt RETAIN=} keyword; 
+		\item deals correctly with user provided  {\tt MIN} and {\tt MAX} in
+{\tt LOG} and {\tt ASINH} modes
+		\item polarization norm map can be offset ({\tt POLARIZATION=1} mode)
+		\item original color table and plot settings are restored when
+leaving these routines
+	\end{itemize}
+	\item \htmlref{{\tt orthview}}{idl:mollview}: addition of 
+              %\htmlref{{\tt /SHADED}}{kw:mol_shaded} 
+              {\tt /SHADED}
+	keyword for 3D rendering
+	\item issues warning when non-integer pixel indexes are fed to \htmlref{{\tt nest2ring, ring2nest, pix2ang\_*, pix2vec\_*,}}{idl:pix_tools}   ...
+	\item {\tt ximview}:
+		\begin{itemize}
+		\item fixed problem with cut-sky FITS files
+		\item color scale bar added to PNG output
+		\item version 0.6.2, fixed bug in pixel coordinates
+		\end{itemize}
+	\item cosmetic editions to {\tt remove\_dipole}
+   \end{itemize}
+
+%
+\item New routines in version 2.10 include
+\begin{itemize}
+ \item {{\tt ximview}}: visualisation routine developed by J. P. Leahy intended for quick-look inspection of HEALPix images 
+(as well as ordinary 2-D images) at the level of individual pixels. Features
+include panning, zooming, blinking, image statistics and peak finding.
+ \item \htmlref{{\tt hpx2gs}}{idl:hpx2gs}: turns a healpix data set into a
+\htmladdnormallink{Google Earth}{http://earth.google.com/}%
+/%
+\htmladdnormallink{Google Sky}{http://earth.google.com/sky/skyedu.html}%
+-compatible image
+ \item \htmlref{{\tt ianafast}}{idl:ianafast}: interface to (F90) {\tt anafast}
+and (C++) {\tt anafast\_cxx} facilities 
+ \item \htmlref{{\tt isynfast}}{idl:isynfast}: interface to F90 {\tt synfast} facility
+ \item \htmlref{{\tt ismoothing}}{idl:ismoothing}: interface to F90 {\tt smoothing} facility
+ \item \htmlref{{\tt bin\_llcl}}{idl:bin_llcl}: $C(l)$ binning
+ \item \htmlref{{\tt bl2fits}}{idl:bl2fits}: writes $B(l)$ or $W(l)$ window into
+FITS file
+ \item \htmlref{{\tt neighbours\_nest}}{idl:neighbours_nest}, %
+       \htmlref{{\tt neighbours\_ring}}{idl:neighbours_ring}: %
+   find immediate neighbours of a given pixel
+ \item \htmlref{{\tt query\_strip}}{idl:query_strip}: %
+   find pixels lying within a colatitude strip
+\end{itemize}	
+%
+\item Routines with extended/improved user interface or new functionalities include
+\begin{itemize}
+\item \htmlref{{\tt mollview, gnomview, cartview, orthview}}{idl:mollview}: 
+\begin{itemize}
+\item {\tt ONLINE} keyword is now redundant, 
+\item introduction of {\tt GLSIZE} and {\tt IGLSIZE} to
+  	control automatic labeling of graticules,
+	see Fig.~\ref{fig:plot_example_execute} on page~\pageref{page:plot_example_execute}
+\item addition of {\tt SILENT} and {\tt EXECUTE} keywords,
+	see Fig.~\ref{fig:plot_example_execute} on
+	page~\pageref{page:plot_example_execute}
+\item addition of {\tt ASINH} keyword to allow better visualisation of highly
+contrasted maps; see Figure~\ref{fig:merge_wmapKband} on page~\pageref{page:merge_wmapKband},
+\item under certain circumstances, can process high resolution cut sky data sets
+	without creating full sky dummy maps,
+\item accept gzip compressed FITS files,
+\item accept polarized cut sky maps,
+\item accept multi-dimensional online arrays,
+\item more robust {\tt OUTLINE} option.
+\end{itemize}
+
+\item \htmlref{{\tt median\_filter}}{idl:median_filter}: bugs correction
+\item \htmlref{{\tt ud\_grade}}{idl:ud_grade}: more robust user interface
+\item \htmlref{{\tt change\_polcconv}}{idl:change_polcconv}: new {\tt /FORCE} keyword
+\item \htmlref{{\tt remove\_dipole}}{idl:remove_dipole}: more accurate
+\item \htmlref{{\tt query\_disc}}{idl:query_disc}: when the disc center is
+located at one of
+the poles, {\em only} the pixels overlapping with the disc are now returned.
+\end{itemize}
+%
+\item Miscellaneous
+\begin{itemize}
+\item \htmlref{{\tt mollcursor, gnomcursor...}}{idl:mollcursor}: an X11 patch is
+given so that these routines work under Mac OS X 10.4 and 10.5.
+\end{itemize}
+\end{itemize}
+
+\section{Changes between release 1.2 and 2.0}
+Some new routines have been introduced since version 1.2, as listed below.
+Most of the routines that already existed now have extended
+capabilities.
+Those of them with improved or extended user interface are listed
+below. They all remain backward compatible (ie, they can be used with codes written
+around version 1.1 and 1.2 without any edition).
+
+\begin{itemize}
+\item New routines in version 2.0 include
+\begin{itemize}
+ \item \htmlref{{\tt median\_filter}}{idl:median_filter}
+ \item \htmlref{{\tt nside2templates}}{idl:nside2ntemplates},
+  \htmlref{{\tt same\_shape\_pixels\_ring}}{idl:same_shape_pixels_xxx}, 
+  \htmlref{{\tt same\_shape\_pixels\_nest}}{idl:same_shape_pixels_xxx},
+  \htmlref{{\tt template\_pixel\_ring}}{idl:template_pixel_xxx}, 
+  \htmlref{{\tt template\_pixel\_nest}}{idl:template_pixel_xxx}
+ \item {\tt loaddata\_healpix}: replaces loaddata to avoid conflict with other
+  libraries
+ \item \ldots
+\end{itemize}
+
+\item Routines with extended/improved user interface or new functionalities include
+\begin{itemize}
+\item \htmlref{{\tt fits2cl}}{idl:fits2cl}: addition of /RSHOW, /SHOW keywords to plot
+  power spectra while they are read; possibility to read power spectra from a
+file containing $a_{lm}$ coefficients.
+\item \htmlref{{\tt gnomview}}{idl:mollview}, \htmlref{{\tt mollview}}{idl:mollview},
+  \htmlref{{\tt orthview}}{idl:mollview}, \htmlref{{\tt cartview}}{idl:mollview}
+  faster FITS file reading (by up to a factor 6);
+  can deal with WMAP polarized maps FITS format; extension
+  of the OUTLINE keyword to plot set of points; addition of the HBOUND keyword
+  to overplot pixel boundaries; ...
+\item \htmlref{{\tt read\_tqu}}{idl:read_tqu},
+  \htmlref{{\tt read\_fits\_cut4}}{idl:read_fits_cut4},
+  \htmlref{{\tt read\_fits\_map}}{idl:read_fits_map}: 
+   addition of output keywords   NSIDE, ORDERING, COORDSYS
+\item \htmlref{{\tt reorder}}{idl:reorder}: simpler interface to ordering
+  conversion with addition of /N2R and /R2N keywords
+\item \htmlref{{write\_tqu}}{idl:write_tqu},
+\htmlref{{write\_fits\_cut4}}{idl:write_fits_cut4},
+	\htmlref{{write\_fits\_sb}}{idl:write_fits_sb}: faster FITS file writing
+(by a factor 10 or more);
+\item \ldots
+\end{itemize}
+%--------------------------------
+\end{itemize}
+}} %% end of footnotesize
+%--------------------------------
+
+
+%% \section{Changes between release 1.1 and 1.2}
+%% Some new routines have been introduced since version 1.1, as listed below.
+%% Most of the routines that already existed now have extended
+%% capabilities.
+%% Those of them with improved or extended user interface are listed
+%% below. They all remain backward compatible (ie, they can be used with codes written
+%% around version 1.1 without any edition).
+
+%% \begin{itemize}
+%% \item New routines in version 1.2
+%% \begin{itemize}
+%% \item \htmlref{cartcursor}{idl:cartcursor}
+%% \item \htmlref{cartview}{idl:cartview}
+%% \item \htmlref{euler\_matrix\_new}{idl:euler_matrix_new} (replaces euler\_matrix)
+%% \item \htmlref{getsize\_fits}{idl:getsize_fits}
+%% \item \htmlref{init\_healpix}{idl:init_healpix}
+%% \item \htmlref{orthcursor}{idl:orthcursor}
+%% \item \htmlref{orthview}{idl:orthview}
+%% \item \htmlref{query\_disc}{idl:query_disc} (replaces \htmlref{getdisc\_ring}{idl:getdisc_ring})
+%% \item \htmlref{query\_polygon}{idl:query_polygon}
+%% %%% \item query\_strip
+%% \item \htmlref{query\_triangle}{idl:query_triangle}
+%% \item \htmlref{read\_fits\_cut4}{idl:read_fits_cut4}
+%% \item \htmlref{rotate\_coord}{idl:rotate_coord}
+%% \item \htmlref{write\_fits\_cut4}{idl:write_fits_cut4}
+%% \end{itemize}
+
+%% \item Routines with extended/improved user interface or new functionalities
+%% \begin{itemize}
+%% \item \htmlref{cl2fits}{idl:cl2fits}
+%% \item \htmlref{fits2cl}{idl:fits2cl}
+%% \item \htmlref{gaussbeam}{idl:gaussbeam}
+%% \item \htmlref{gnomview}{idl:gnomview}
+%% \item \htmlref{healpixwindow}{idl:healpixwindow}
+%% \item \htmlref{mollview}{idl:mollview}
+%% \item \htmlref{pix2vec\_nest}{idl:pix_tools}
+%% \item \htmlref{pix2vec\_ring}{idl:pix_tools}
+%% \item \htmlref{ud\_grade}{idl:ud_grade}
+%% \item \htmlref{write\_fits\_map}{idl:write_fits_map}
+%% \item \htmlref{write\_fits\_sb}{idl:write_fits_sb}
+%% \end{itemize}
+
+%% \item Routines with major bug correction
+%% \begin{itemize}
+%% \item \htmlref{write\_fits\_sb}{idl:write_fits_sb}
+%% \end{itemize}
+%% \end{itemize}
+
+\newpage
+\include{alm2fits_idl}
+\include{ang2vec_idl}
+\include{bin_llcl_idl}
+\include{bl2fits_idl}
+\include{cartcursor_idl}
+\include{cartview_idl}
+\include{change_polcconv_idl}
+\include{cl2fits_idl}
+\include{convert_oldhpx2cmbfast_idl}
+\include{euler_matrix_new_idl}
+\include{fits2alm_idl}
+\include{fits2cl_idl}
+\include{gaussbeam_idl}
+\include{getdisc_ring_idl}
+\include{getsize_fits_idl}
+\include{gnomcursor_idl}
+\include{gnomview_idl}
+\include{healpix_doc_idl}
+\include{healpixwindow_idl}
+\include{hpx2gs_idl}
+\include{ianafast_idl}
+\include{ismoothing_idl}
+\include{isynfast_idl}
+\include{index2lm_idl}
+\include{init_healpix_idl}
+\include{lm2index_idl}
+\include{median_filter_idl}
+\include{mollcursor_idl}
+\include{mollview_idl}
+\include{neighbours_nest_idl}
+\include{neighbours_ring_idl}
+\include{npix2nside_idl}
+\include{nside2npix_idl}
+\include{nside2ntemplates_idl}
+\include{orthcursor_idl}
+\include{orthview_idl}
+\include{pix_tools_idl}
+\include{query_disc_idl}
+\include{query_polygon_idl}
+\include{query_strip_idl}
+\include{query_triangle_idl}
+\include{read_fits_cut4_idl}
+\include{read_fits_map_idl}
+\include{read_fits_s_idl}
+\include{read_tqu_idl}
+\include{remove_dipole_idl}
+\include{reorder_idl}
+\include{rotate_coord_idl}
+\include{same_shape_pixels_xxx_idl}
+\include{template_pixel_xxx_idl}
+\include{ud_grade_idl}
+\include{vec2ang_idl}
+\include{write_fits_cut4_idl}
+\include{write_fits_map_idl}
+\include{write_fits_sb_idl}
+\include{write_tqu_idl}
+
+\end{document}

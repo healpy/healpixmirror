@@ -1,0 +1,89 @@
+
+\sloppy
+
+
+\title{\healpix Fortran Subroutines Overview}
+\docid{alter\_alm*} \section[alter\_alm*]{ }
+\label{sub:alter_alm}
+\docrv{Version 2.0}
+\author{Eric Hivon}
+\abstract{This document describes the \healpix Fortran90 subroutine ALTER\_ALM.}
+
+\begin{facility}
+{This routine modifies scalar (and tensor) $a_{\ell m}$ by multiplying them by a beam window
+  function described by a FWHM (in the case of a gaussian beam) or read from an external
+  file (in the more general case of a circular beam)  $a_{\ell m}
+  \longrightarrow a_{\ell m} b(\ell)\myhtmlimage{}$ . It can also be used to
+  multiply the  $a_{\ell m}$ by an arbitray function of $\ell$.}
+{src/f90/mod/alm\_tools.f90}
+\end{facility}
+
+\begin{f90format}
+{nsmax, nlmax, nmmax, fwhm\_arcmin, alm\_TGC [, beam\_file, window]}
+\end{f90format}
+
+\begin{arguments}
+{
+\begin{tabular}{p{0.36\hsize} p{0.05\hsize} p{0.09\hsize} p{0.40\hsize}} \hline  
+\textbf{name~\&~dimensionality} & \textbf{kind} & \textbf{in/out} & \textbf{description} \\ \hline
+                   &   &   &                           \\ %%% for presentation
+nsmax & I4B & IN & $\nside$ resolution parameter of the map associated with the $a_{lm}$
+                   considered. Currently has no effect on the routine. \\ 
+nlmax & I4B & IN & maximum $\ell$ value for the $a_{\ell m}$.   \\
+nmmax & I4B & IN & maximum $m$ value for the $a_{\ell m}$.   \\
+fwhm\_arcmin & SP/ DP & IN & fwhm size of the gaussian beam in arcminutes. \\
+alm\_TGC(1:p,0:nlmax,0:nmmax) & SPC/ DPC & INOUT & complex $a_{\ell m}$ values
+                   to be altered.  The first index here runs from 1:1 for
+                   temperature only, and 1:3 for polarisation. In the latter
+                   case,  1=T, 2=E, 3=B. \\
+\end{tabular}
+\begin{tabular}{p{0.36\hsize} p{0.05\hsize} p{0.09\hsize} p{0.40\hsize}} \hline  
+beam\_file(LEN=\filenamelen) \hskip 2cm (OPTIONAL)& CHR & IN & name of the file
+                   containing the (non necessarily gaussian) window function
+                   $B_\ell$  of a circular beam. If present, it will override
+                   the argument {\tt fwhm\_arcmin}.  \\
+window(0:nlw,1:d) \hskip 5cm (OPTIONAL)& SP/ DP & IN & arbitrary window by which to multiply the
+                   $a_{\ell m}$. If present, it overrides both {\tt fwhm\_arcmin}
+                   and {\tt beam\_file}. If nlw $<$ nlmax, the $a_{\ell m}$ with
+                   $\ell \in \{$nlw+1,nlmax$\}$ are set to 0, and a warning is issued. If $d<p$ the
+                   window for temperature is replicated for polarisation.
+\end{tabular}
+}
+\end{arguments}
+
+\begin{example}
+{
+call alter\_alm(64, 128, 128, 1, 5.0, alm\_TGC)  \\
+}
+{
+Alters scalar and tensor $a_{lm}$ of a map with $\nside=64$, $\ell_{\rm
+  max}=m_{\rm max} = 128$ by multiplying them by the beam window function of a
+gaussian beam with FWHM = 5 arcmin.
+}
+\end{example}
+
+\begin{modules}
+  \begin{sulist}{} %%%% NOTE the ``extra'' brace here %%%%
+  \item[\textbf{alm\_tools}] module, containing:
+	\item[\htmlref{generate\_beam}{sub:generate_beam}] routine to generate beam window function
+	\item[\htmlref{pixel\_window}{sub:pixel_window}] routine to generate pixel window function
+  \end{sulist}
+\end{modules}
+
+\begin{related}
+  \begin{sulist}{} %%%% NOTE the ``extra'' brace here %%%%
+  \item[\htmlref{create\_alm}{sub:create_alm}] Routine to create $a_{\ell m}$ coefficients.
+  \item[\htmlref{rotate\_alm}{sub:rotate_alm}] Routine to rotate $a_{\ell m}$
+  coefficients between 2 different arbitrary coordinate systems.
+  \item[\htmlref{map2alm}{sub:map2alm}]  Routines to analyze a \healpix sky map into its $a_{\ell m}$
+  coefficients.
+  \item[\htmlref{alm2map}{sub:alm2map}] Routines to synthetize a \healpix sky map from its $a_{\ell m}$
+  coefficients.
+  \item[\htmlref{alms2fits}{sub:alms2fits}, \htmlref{dump\_alms}{sub:dump_alms}]
+  Routines to save a set of $a_{lm}$ in a FITS file.  
+  \end{sulist}
+\end{related}
+
+\rule{\hsize}{2mm}
+
+\newpage

@@ -1,0 +1,63 @@
+
+\sloppy
+
+
+\title{\healpix Fortran Subroutines Overview}
+\docid{angdist} \section[angdist]{ }
+\label{sub:angdist}
+\docrv{Version 1.2}
+\author{Eric Hivon}
+\abstract{This document describes the \healpix Fortran90 subroutine ANGDIST.}
+
+\begin{facility}
+{Returns the angular distance in radians between two vectors. The input vectors
+do not have to be normalised. For almost colinear or anti-colinear vectors, renders
+numerically more accurate results than the $\cos^{-1}$ of the scalar product.} 
+{src/f90/mod/pix\_tools.f90}
+\end{facility}
+
+\begin{f90format}
+{v1, v2, dist}
+\end{f90format}
+
+\begin{arguments}
+{
+\begin{tabular}{p{0.25\hsize} p{0.05\hsize} p{0.1\hsize} p{0.5\hsize}} \hline 
+\textbf{name~\&~dimensionality} & \textbf{kind} & \textbf{in/out} & \textbf{description} \\ \hline
+                   &   &   &                           \\ %%% for presentation
+v1(3) & DP & IN & cartesian vector. \\
+v2(3) & DP & IN & cartesian vector. \\
+dist & DP & OUT & angular distance in radians between the 2 vectors.
+\end{tabular}
+}
+\end{arguments}
+
+\begin{example}
+{
+use healpix\_types \\
+use pix\_tools,    only : angdist \\
+real(DP) :: dist, one = 1.0\_dp \\
+call angdist((/1,2,3/)*one, (/1,2,4/)*one, dist)  \\
+print*, dist
+}
+{
+Returns the angular distance between 2 vectors.
+}
+\end{example}
+% \newpage
+% \begin{modules}
+%   \begin{sulist}{} %%%% NOTE the ``extra'' brace here %%%%
+%  \item[\htmlref{in\_ring}{sub:in_ring}] routine to find the pixels in a certain slice of a given ring.		
+%  \item[\htmlref{ring\_num}{sub:ring_num}] function to return the ring number corresponding to the coordinate $z$
+%   \end{sulist}
+% \end{modules}
+
+\begin{related}
+  \begin{sulist}{} %%%% NOTE the ``extra'' brace here %%%%
+  \item[\htmlref{vect\_prod}{sub:vect_prod}] computes the vector product between two 3D vectors
+  \end{sulist}
+\end{related}
+
+\rule{\hsize}{2mm}
+
+\newpage

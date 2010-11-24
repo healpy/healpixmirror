@@ -1,0 +1,70 @@
+
+\sloppy
+
+
+\title{\healpix Fortran Subroutines Overview}
+\docid{ring\_analysis} \section[ring\_analysis]{ }
+\label{sub:ring_analysis}
+\docrv{Version 1.1}
+\author{Benjamin D.~Wandelt, Frode K.~Hansen}
+\abstract{This document describes the \healpix Fortran90 subroutine RING\_ANALYSIS.}
+
+\begin{facility}
+{This subroutine computes the Fast Fourier Transform of a single ring
+ of pixels
+ and extends the computed coefficients up to the maximum
+ $m$ of the transform.}
+{src/f90/mod/alm\_tools.f90}
+\end{facility}
+
+\begin{f90format}
+{nsmax, nlmax, nmmax, datain, nph, dataout, kphi0}
+\end{f90format}
+
+\begin{arguments}
+{
+\begin{tabular}{p{0.4\hsize} p{0.05\hsize} p{0.1\hsize} p{0.35\hsize}} \hline  
+\textbf{name~\&~dimensionality} & \textbf{kind} & \textbf{in/out} & \textbf{description} \\ \hline
+                   &   &   &                           \\ %%% for presentation
+nsmax & I4B & IN & $\nside$ of the map. \\
+nlmax & I4B & IN & Maximum $\ell$ of the analysis.\\
+nmmax & I4B & IN & Maximum $m$ of the analysis.\\
+nph & I4B & IN & The number of points on the ring. \\ 
+datain(0:nph-1) & DP & IN & Function values on the ring. \\
+dataout(0:nmmax) & DPC & OUT & Fourier components, replicated to $Nmmax$.\\
+kphi0 & I4B & IN & 0 if the first pixel on the ring is  at
+                   $\phi=0$; 1 otherwise. \\
+\end{tabular}
+}
+\end{arguments}
+
+\begin{example}
+{
+call ring\_analysis(64,128,128,datain,8,dataout,0)  \\
+}
+{
+Returns the periodically extended complex 
+Fourier Transform of datain in
+dataout. They are returned in the following order: 0 1 2 3 4 5 6 7
+6 5 4 3 2 1 $0\dots$. The value $kphi0=0$ specifies that no phase
+factor needed to be applied, because the ring starts at $\phi=0$.
+}
+\end{example}
+
+\begin{modules}
+  \begin{sulist}{} %%%% NOTE the ``extra'' brace here %%%%
+  \item[\textbf{healpix\_fft}] module.
+  \end{sulist}
+\end{modules}
+
+\begin{related}
+  \begin{sulist}{} %%%% NOTE the ``extra'' brace here %%%%
+  \item[\htmlref{ring\_synthesis}{sub:ring_synthesis}] Inverse transform (complex-to-real), used in
+  \htmlref{alm2map}{sub:alm2map},
+  \htmlref{alm2map\_der}{sub:alm2map_der} and synfast
+  \end{sulist}
+\end{related}
+
+\rule{\hsize}{2mm}
+
+\newpage

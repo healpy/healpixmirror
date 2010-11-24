@@ -1,0 +1,94 @@
+% -*- LaTeX -*-
+
+
+\renewcommand{\facname}{{healpixwindow }}
+\renewcommand{\FACNAME}{{HEALPIXWINDOW }}
+\renewcommand{\l}{{$\ell$ }}
+
+\sloppy
+
+
+
+\title{\healpix IDL Facility User Guidelines}
+\docid{\facname} \section[\facname]{ }
+\label{idl:healpixwindow}
+\docrv{Version 1.1}
+\author{Eric Hivon}
+\abstract{This document describes the \healpix IDL facility \facname.}
+
+
+
+
+\begin{facility}
+{This IDL facility provides the window function in $\ell$ associated with the
+Healpix pixel of resolution Nside.}
+{src/idl/misc/healpixwindow.pro}
+\end{facility}
+
+\begin{IDLformat}
+{wpix=\FACNAME(Nside [, Dim, Directory])}
+\end{IDLformat}
+
+\begin{qualifiers}
+  \begin{qulist}{} %%%% NOTE the ``extra'' brace here %%%%
+    \item[Nside] resolution parameter
+    \item[Wpix] the pixel window function, computed for the multipoles $\ell$ in \{0,...,4Nside\}
+    \item[Dim] scalar integer, optional. \\
+     If absent or set to 0 or 1,
+          the output has size (4 Nside+1) and is the temperature
+    window function;\\
+     if set to $2 \le$ Dim $\le 4$ ,
+          the output has size (4 Nside+1,Dim)
+          and contains in that order : \\
+	  the TEMPERATURE window function,\\
+          the GRAD/ELECTRIC polarization one\\
+          the CURL/MAGNETIC polarization one\\
+          the TEMPERATURE*GRAD one.
+   \item[Directory] directory in which the precomputed pixel window file is looked for.\\
+          \default \$HEALPIX/data/ 
+  \end{qulist}
+\end{qualifiers}
+
+% \begin{keywords}
+%   \begin{kwlist}{} %%% extra brace
+%   \end{kwlist}
+% \end{keywords}  
+
+\begin{codedescription}
+{\thedocid\ computes the $\ell$ space window function due to the finite size of the
+\healpix pixels. The typical size of a pixel (square root of its uniform surface
+area) is $\myhtmlimage{}\sqrt{3/\pi}\ 3600/N_{\rm side}$ arcmin.
+If a unpixelised sky has a power spectrum $C(\ell)$, the same
+sky pixelised with a resolution parameter Nside 
+will have the power spectrum $C(\ell)_{\rm pix} = C(\ell)
+W(\ell)^2$ where $W(\ell)$ is given by \thedocid (Nside). The polarized
+pixel window function is also provided (when Dim $>$ 1).
+This routine reads some FITS files located in the subdirectory {\tt data/} of the
+\healpix distribution, unless the keyword {\tt Directory} is set otherwise.}
+\end{codedescription}
+
+
+
+\begin{related}
+  \begin{sulist}{} %%%% NOTE the ``extra'' brace here %%%%
+    \item[idl] version \idlversion or more is necessary to run \facname
+    \item[\htmlref{gaussbeam}{idl:gaussbeam}] computes the $\ell$ space window function associated with
+    a gaussian beam
+    \item[synfast] f90 code to generate CMB maps of given power spectrum at a
+    given resolution (=pixel size)
+    \item[anafast] f90 code to compute the power spectrum of a \healpix sky map
+  \end{sulist}
+\end{related}
+
+\begin{example}
+{
+\begin{tabular}{ll} %%%% use this tabular format %%%%
+wpix = \thedocid(256)
+\end{tabular}
+}
+{
+wpix contains the window function in \{0,...,1024\} of the \healpix pixel with resolution
+parameter 256 (pixel size of 13.7 arcmin)}
+\end{example}
+
+

@@ -1,0 +1,70 @@
+
+\sloppy
+
+
+\title{\healpix Fortran Subroutines Overview}
+\docid{read\_healpix\_map} \section[read\_healpix\_map]{ }
+\label{csub:read_healpix_map}
+\docrv{Version 1.2}
+\author{Eric Hivon}
+\abstract{This document describes the \healpix C subroutine READ\_HEALPIX\_MAP.}
+
+\begin{facility}
+{This routine reads a full sky \healpix map from a FITS file}
+{src/C/subs/read\_healpix\_map.c}
+\end{facility}
+
+\begin{Cfunction}
+{float *read\_healpix\_map(char *infile, long *nside, char *coordsys, char *ordering)}
+\end{Cfunction}
+
+\begin{arguments}
+{
+\begin{tabular}{p{0.3\hsize} p{0.05\hsize} p{0.05\hsize} p{0.5\hsize}} \hline  
+\textbf{name\&dimensionality} & \textbf{kind} & \textbf{in/out} & \textbf{description} \\ \hline
+                   &   &   &                           \\ %%% for presentation
+\thedocid & float & OUT & array containing the map read from the file \\
+infile   & char & IN & FITS file containing a full sky to be read \\
+nside    & long & OUT & \healpix resolution parameter of the map \\
+coordsys & char & OUT & astronomical coordinate system of pixelisation 
+	(either 'C', 'E' or 'G' standing respectively for Celestial=equatorial,
+		  Ecliptic or Galactic)\\
+ordering & char & OUT & \healpix pixel ordering (either 'RING' or 'NESTED')
+\end{tabular}
+}
+\end{arguments}
+
+% \begin{example}
+% {
+% npix= read\_healpix\_map('map.fits', nmaps=nmaps, ordering=ordering,obs\_npix=obs\_npix, nside=nside, mlpol=mlpol, type=type, polarisation=polarisation)  \\
+% }
+% {
+% Returns 1 or 3 in nmaps, dependent on wether 'map.fits' contain only
+% temperature or both temperature and polarisation maps. The pixel ordering number is found by reading the keyword ORDERING in the FITS file. If this keyword does not exist, 0 is returned.
+% }
+% \end{example}
+
+%\newpage
+
+% \begin{modules}
+%   \begin{sulist}{} %%%% NOTE the ``extra'' brace here %%%%
+%   \item[\textbf{fitstools}] module, containing:
+%   \item[printerror] routine for printing FITS error messages.
+%   \item[\textbf{cfitsio}] library for FITS file handling.		
+%   \end{sulist}
+% \end{modules}
+
+\begin{related}
+  \begin{sulist}{} %%%% NOTE the ``extra'' brace here %%%%
+  \item[anafast] executable that reads a \healpix map and analyses it. 
+  \item[synfast] executable that generate full sky \healpix maps
+%   \item[\htmlref{read\_healpix\_map}{csub:read_healpix_map}] subroutine to read \healpix maps
+  \item[\htmlref{write\_healpix\_map}{csub:write_healpix_map}] subroutine to write \healpix maps
+  \item[\htmlref{get\_fits\_size}{csub:get_fits_size}] subroutine to determine
+  the size of a map
+  \end{sulist}
+\end{related}
+
+\rule{\hsize}{2mm}
+
+\newpage

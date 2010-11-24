@@ -1,0 +1,74 @@
+
+\sloppy
+
+
+\title{\healpix Fortran Subroutines Overview}
+\docid{mpi\_alm2map\_simple*} \section[mpi\_alm2map\_simple*]{ }
+\label{sub:mpi_alm2map_simple}
+\docrv{Version 1.0}
+\author{Hans K. Eriksen}
+\abstract{This document describes the \healpix Fortran 90 subroutine MPI\_ALM2MAP\_SIMPLE*.}
+
+\begin{facility}
+{This subroutine provides a simplified (one-line) interface to the MPI version of
+alm2map. It supports both temperature and polarization inputs in both
+single and double precision. It must only be run by all nodes in
+the MPI communicator.  } 
+{src/f90/mod/mpi\_alm\_tools.f90}
+\end{facility}
+
+\begin{f90format}
+{comm, alms, map}
+\end{f90format}
+
+\begin{arguments}
+{
+\begin{tabular}{p{0.4\hsize} p{0.05\hsize} p{0.05\hsize} p{0.40\hsize}} \hline  
+\textbf{name~\&~dimensionality} & \textbf{kind} & \textbf{in/out} & \textbf{description} \\ \hline
+                   &   &   &                           \\ %%% for presentation
+comm & I4B & IN & MPI communicator. \\
+alms(1:nmaps,0:lmax,0:nmax) & SPC or DPC & IN & Input alms. If
+nmaps=1, only temperature information is included; if nmaps=3,
+polarization information is included \\ 
+map(0:npix,1:nmaps) & SP or DP & OUT & Output map. nmaps must match 
+that of the input alms array.\\
+\end{tabular}
+}
+\end{arguments}
+%%\newpage
+
+\begin{example}
+{
+\hspace*{1cm}call mpi\_alm2map\_simple(comm, map, alms)\\
+}
+{
+This example executes a parallel map2alm operation through the
+one-line interface. Although all processors must supply allocated
+arrays to the routine, only the root processor's information will be
+used as input, and only the root processor's alms will be complete
+after execution. 
+}
+\end{example}
+
+\begin{modules}
+  \begin{sulist}{} %%%% NOTE the ``extra'' brace here %%%%
+  \item[\textbf{alm\_tools}] module
+  \end{sulist}
+\end{modules}
+
+\begin{related}
+  \begin{sulist}{} %%%% NOTE the ``extra'' brace here %%%%
+   \item[\htmlref{mpi\_cleanup\_alm\_tools}{sub:mpi_cleanup_alm_tools}] Frees memory that is allocated by the current routine. 
+   \item[\htmlref{mpi\_initialize\_alm\_tools}{sub:mpi_initialize_alm_tools}] Allocates memory and defines variables for the mpi\_alm\_tools module. 
+  \item[\htmlref{mpi\_alm2map}{sub:mpi_alm2map}] Routine for executing a parallel inverse spherical harmonics transform (root processor interface)
+  \item[\htmlref{mpi\_alm2map\_slave}{sub:mpi_alm2map_slave}] Routine for executing a parallel inverse spherical harmonics transform (slave processor interface)
+  \item[\htmlref{mpi\_map2alm}{sub:mpi_map2alm}] Routine for executing a parallel spherical harmonics transform (root processor interface)
+  \item[\htmlref{mpi\_map2alm\_slave}{sub:mpi_map2alm_slave}] Routine for executing a parallel spherical harmonics transform (slave processor interface)
+  \item[\htmlref{mpi\_map2alm\_simple}{sub:mpi_map2alm_simple}] One-line interface to the parallel spherical harmonics transform 
+  \end{sulist}
+\end{related}
+
+
+\rule{\hsize}{2mm}
+
+\newpage

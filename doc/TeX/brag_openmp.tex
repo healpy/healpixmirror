@@ -1,0 +1,67 @@
+
+\sloppy
+
+
+\docid{brag\_openmp}\section[brag\_openmp]{ }
+\label{sub:brag_openmp}
+\docrv{Version 1.0}
+\author{Eric Hivon}
+\abstract{This document describes the \healpix Fortran90 subroutine BRAG_OPENMP.}
+
+\begin{facility}
+{If compiled with shared memory libraries (OpenMP), this routine prints out the number of
+CPUs used (controlled by the environment variable {\tt OMP\_NUM\_THREADS}) and the number of CPUs available.}
+{src/f90/mod/misc\_utils.F90}
+\end{facility}
+
+\begin{f90format}
+{}
+\end{f90format}
+
+% \begin{arguments}
+% {
+% \begin{tabular}{p{0.4\hsize} p{0.05\hsize} p{0.1\hsize} p{0.35\hsize}} \hline  
+% \textbf{name~\&~dimensionality} & \textbf{kind} & \textbf{in/out} & \textbf{description} \\ \hline
+%                    &   &   &                           \\ %%% for presentation
+% \end{tabular}
+% }
+% \end{arguments}
+
+\begin{example}
+{
+use misc\_utils \\
+call \thedocid() \\
+}
+{
+\parbox[t]{8.2cm}{
+Will~print~out: \hfill\\
+\parbox[t]{8cm}{\tt
+-------------------------------------- \\
+Number of OpenMP threads in use:    2 \\
+Number of CPUs available:           2 \\
+-------------------------------------- }
+on bi-pro (or dual core) computer}
+}
+\end{example}
+
+% \begin{modules}
+%   \begin{sulist}{} %%%% NOTE the ``extra'' brace here %%%%
+%   \item[\htmlref{ring\_synthesis}{sub:ring_synthesis}] Performs FFT over $m$ for synthesis of the rings.
+%   \item[compute\_lam\_mm, get\_pixel\_layout, ]
+%   \item[gen\_lamfac,gen\_mfac, gen\_normpol, ] 
+%   \item[gen\_recfac, init\_rescale, l\_min\_ylm] Ancillary routines used
+%   for $Y_{\ell m}$ recursion
+%   \item[\textbf{misc\_utils}] module, containing:
+%   \item[assert\_alloc] routine to print error message, when an array can not be
+%   allocated properly
+%   \end{sulist}
+% \end{modules}
+
+% \begin{related}
+%   \begin{sulist}{} %%%% NOTE the ``extra'' brace here %%%%
+%   \end{sulist}
+% \end{related}
+
+\rule{\hsize}{2mm}
+
+\newpage

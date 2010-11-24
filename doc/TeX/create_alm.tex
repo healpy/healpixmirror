@@ -1,0 +1,132 @@
+
+\sloppy
+
+
+\title{\healpix Fortran Subroutines Overview}
+\docid{create\_alm*} \section[create\_alm*]{ }
+\label{sub:create_alm}
+\docrv{Version 2.0}
+\author{Frode K.~Hansen, Eric Hivon}
+\abstract{This document describes the \healpix Fortran90 subroutine CREATE\_ALM.}
+
+\begin{facility}
+{This routine generates scalar (and tensor) $a_{lm}$ for a temperature (and
+  polarisation) power spectrum read from an input FITS
+file. The $a_{lm}$ are gaussian distributed with a zero mean, and their
+  amplitude is multiplied with the $\ell$-space window function of a gaussian
+  beam characterized by its FWHM or an arbitrary circular beam
+and a pixel window read from an external file.}
+{src/f90/mod/alm\_tools.f90}
+\end{facility}
+
+\begin{f90format}
+{nsmax, nlmax, nmmax, polar, filename, iseed, fwhm\_arcmin, alm\_TGC, header [,
+windowfile, units, beam\_file, rng\_handle]}
+\end{f90format}
+
+\begin{arguments}
+{
+\begin{tabular}{p{0.4\hsize} p{0.05\hsize} p{0.1\hsize} p{0.35\hsize}} \hline  
+\textbf{name~\&~dimensionality} & \textbf{kind} & \textbf{in/out} & \textbf{description} \\ \hline
+                   &   &   &                           \\ %%% for presentation
+nsmax & I4B & IN & $N_{side}$ of the map to be synthetized from the $a_{\ell m}$
+                   created by this routine. \\ 
+nlmax & I4B & IN & maximum $\ell$ value to be considered ($MAX=3\times N_{side}$).   \\
+nmmax & I4B & IN & maximum $m$ value for the $a_{\ell m}$.   \\
+polar & I4B & IN & equals 1 if polarisation is used, 0 otherwise. \\
+filename(LEN=\filenamelen) & CHR & IN & name of FITS file containing power spectrum. \\
+%% iseed & I4B & INOUT & seed for generation of gaussian distributed random numbers
+%%                    to the $a_{\ell m}$. 
+%%                    Set to a negative integer to (re-)initialise the
+%%                    random number generator. On exit iseed will be positive
+%%                    definite. If set to a positive value, the information contained in {\tt
+%%                    rng\_handle} will be used to carry on an existing random sequence.\\
+rng\_handle & planck\_rng & \hskip 2cm INOUT & structure containing
+information necessary to continue a random sequence
+initiated {\em previously} with the 
+subroutine {\tt rand\_init}. Consecutive calls to \thedocid can be made after a
+single invocation to {\tt rand\_init}.\\
+fwhm\_arcmin & SP/ DP & IN & FWHM size of the gaussian beam in arcminutes. \\
+\end{tabular}
+\begin{tabular}{p{0.4\hsize} p{0.05\hsize} p{0.1\hsize} p{0.35\hsize}} \hline  
+alm\_TGC(1:p,0:nlmax,0:nmmax) & SPC/ DPC & OUT & complex $a_{\ell m}$ values generated from the powerspectrum in the FITS-file. The first index here runs form 1:1 for temperature only, and 1:3 for polarisation. In the latter case, 1=T, 2=E, 3=B. \\
+header(LEN=80),dimension(60) & CHR & OUT & part of header  which
+will be included in the FITS-file containing the
+map  synthesised from the $a_{\ell m}$  which create\_alm generates. \\
+windowfile(LEN=\filenamelen) \hskip 2cm (OPTIONAL)& CHR & IN & full filename specification of the FITS file with the pixel window function. \\
+units(LEN=80),dimension(1:) \hskip 2cm (OPTIONAL)& CHR & OUT & physical units of the created
+$a_{\ell m}$ (square-root of the input power spectrum units). \\
+beam\_file(LEN=\filenamelen) \hskip 2cm (OPTIONAL)& CHR & IN & name of the file containing
+the (non necessarily gaussian) window function $B_\ell$ of a circular beam. If present, it will override
+the argument {\tt fwhm\_arcmin}. \\
+\end{tabular}
+}
+\end{arguments}
+
+\begin{example}
+{
+use alm\_tools, only: create\_alm \\
+use rngmod, only: rand\_init, planck\_rng \\
+type(planck\_rng) :: rng\_handle \\
+\\
+call rand\_init(rng\_handle, -1) \\
+call create\_alm(64, 128, 128, 1, 'cl.fits', rng\_handle, 5.0, alm\_TGC, header, 'data/pixel\_window\_n0064.fits')  \\
+}
+{
+Creates scalar and tensor $a_{lm}$ from the power spectrum given in the file
+`cl.fits'. The map to be created from these $a_{lm}$ is assumed to have
+$N_{side}=64$. $C_l$s from the power spectrum are used up to an $\ell$ value of
+128. 
+Corresponding $a_{lm}$ values up to l=128 and m=128 are created as gaussian distributed
+complex numbers. Their are drawn from a sequence of pseudo-random numbers
+initiated with a seed of -1. 
+The produced $a_{lm}$ are convolved with a gaussian beam of FWHM 5 arcminutes
+and a pixel window read from 'data/pixel\_window\_n0064.fits'. It is assumed that after the return
+from this routine, a map is generated from the created
+$a_{lm}$. For this purpose, {\tt header} is updated with FITS format information
+describing the origin and history of these $a_{lm}$.
+}
+\end{example}
+
+\begin{modules}
+  \begin{sulist}{} %%%% NOTE the ``extra'' brace here %%%%
+  \item[\textbf{alm\_tools}] \underline{module}, containing:
+	\item[pow2alm\_units] routine to convert from power spectrum units to
+  $a_{\ell m}$ units
+	\item[\htmlref{generate\_beam}{sub:generate_beam}] routine to generate beam window function
+	\item[\htmlref{pixel\_window}{sub:pixel_window}] routine to read in pixel window function
+  \item[\textbf{utilities}] \underline{module}, containing:
+        \item[die\_alloc] routine that prints an error message if there is not enough space for allocation of variables.
+  \item[\textbf{fitstools}] \underline{module}, containing:
+        \item[\htmlref{fits2cl}{sub:fits2cl}] routine to read a FITS
+  file containing a power spectrum.
+        \item[\htmlref{read\_dbintab}{sub:read_dbintab}] routine to read a FITS-binary file containing the pixel window functions.
+  \item[\textbf{head\_fits}] \underline{module}, containing:
+       \item[\htmlref{add\_card}{sub:add_card}] routine to add a keyword to a FITS header.
+       \item[\htmlref{get\_card}{sub:get_card}] routine to read a keyword value from
+  FITS header.
+       \item[\htmlref{merge\_headers}{sub:merge_headers}] routine to merge two FITS headers.
+%%   \item[\textbf{ran\_tools}] module, containing:
+%%   \item[randgauss\_boxmuller] function which returns a gaussian distributed random
+%%   number. Please refer to the ``Comment on Random Number Generator''
+%%   in the Fortran90 facilities guidelines.
+  \item[\textbf{rngmod}] \underline{module}, containing:
+       \item[\htmlref{rand\_gauss}{sub:rand_gauss}] function which returns a gaussian distributed random
+  number. 
+  \end{sulist}
+\end{modules}
+
+\begin{related}
+  \begin{sulist}{} %%%% NOTE the ``extra'' brace here %%%%
+  \item[\htmlref{rand\_init}{sub:rand_init}] subroutine to initiate a random number sequence. 
+  \item[synfast] executable using \thedocid\ to synthesize CMB maps from a given
+  power spectrum.
+  \item[\htmlref{alm2map}{sub:alm2map}] Routine to transform a set of $a_{lm}$ created by \thedocid\ to a \healpix map.
+  \item[\htmlref{alms2fits}{sub:alms2fits}, \htmlref{dump\_alms}{sub:dump_alms}]
+  Routines to save a set of $a_{lm}$ in a FITS file.  
+  \end{sulist}
+\end{related}
+
+\rule{\hsize}{2mm}
+
+\newpage

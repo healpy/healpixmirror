@@ -1,0 +1,151 @@
+
+\sloppy
+
+
+\title{\healpix Fortran Facility User Guidelines}
+\docid{plmgen} \section[plmgen]{\nosectionname}
+\label{fac:plmgen}
+\docrv{Version 1.1}
+\author{Frode K.~Hansen}
+\abstract{This document describes the \healpix facility PLMGEN.}
+
+\begin{facility}
+{This program can be used to create a file containing 
+the precomputed values of the associated Legendre polynomials
+$P_{lm}(\theta)$ (and, if requested, of the tensor spherical harmonics) 
+for faster execution of the \healpix map analysis/synthesis. 
+The  map resolution parameter, $nsmax$,
+and the maximum value of the spherical harmonic order $\ell_{max}$
+must be specified.}
+{src/f90/plmgen/plmgen.f90}
+\end{facility}
+
+\begin{f90facility}
+{plmgen}
+\end{f90facility}
+
+\begin{qualifiers}
+  \begin{qulist}{} %%%% NOTE the ``extra'' brace here %%%%
+    \item[{nsmax = }] Defines the resolution parameter for the map to 
+be analysed/synthesized with the precomputed harmonics. 
+	(default= 32)
+    \item[{nlmax = }] Defines the $\ell_{max}$ value for the execution.
+(default= 64)
+     \item[{simul\_type = }] Defines whether only scalar, or scalar and 
+tensor harmonics are to be precomputed, 1=scalar only, 2=scalar AND tensor.
+(default=1)
+\item[{outfile = }] Defines the name for the file that will 
+contain the precomputed harmonics.
+(default='plm.fits')
+  \end{qulist}
+\end{qualifiers}
+
+\begin{codedescription}
+{
+The recursion of Legendre polynomials 
+and tensor harmonics during the  analysis and synthesis 
+of \healpix maps can be time consuming. 
+Especially when repetitive applications are desired
+there is no need to compute the recursions every time. 
+For such applications the values of $P_{\ell m}(\theta)$  
+can be precomputed with \thedocid\ 
+and stored in a file. When using \htmlref{synfast}{fac:synfast} or \htmlref{anafast}{fac:anafast} 
+this file can be read in to 
+shorten  the analysis/synthesis execution time. 
+
+The memory (and disc) consumption of \thedocid\    is $8 N_\lambda N_p$ bytes, with
+$N_\lambda = {\tt nsmax} ({\tt nlmax}+1)({\tt nlmax}+2)$ and
+$N_p$ is either 1 or 3, depending whether tensor harmonics are computed. 
+
+Currently an extra limitation $N_\lambda < 2^{31} = 2147483648$ also applies,
+corresponding to, eg, {\tt lmax} $\le 1446$ for {\tt nsmax} $=1024$.}
+\end{codedescription}
+
+\begin{datasets}
+{
+\begin{tabular}{p{0.3\hsize} p{0.35\hsize}} \hline  
+  \textbf{Dataset} & \textbf{Description} \\ \hline
+                   &                      \\ %%% for presentation
+ None required & \\
+                   &                      \\ \hline %%% for presentation
+\end{tabular}
+} 
+\end{datasets}
+
+\begin{support}
+  \begin{sulist}{} %%%% NOTE the ``extra'' brace here %%%%
+  \item[\htmlref{synfast}{fac:synfast}] This \healpix facility can generate a map using precomputed harmonics made from plmgen.
+  \item[\htmlref{anafast}{fac:anafast}] This \healpix facility can analyse a map using precomputed harmonics.
+  \item[plm\_gen] Fortran subroutine used to generate the harmonics
+  \end{sulist}
+\end{support}
+
+\begin{examples}{1}
+{
+\begin{tabular}{ll} %%%% use this tabular format %%%%
+plmgen  \\
+\end{tabular}
+}
+{
+plmgen runs in interactive mode, self-explanatory.
+}
+\end{examples}
+
+\vfill\newpage
+
+\begin{examples}{2}
+{
+\begin{tabular}{ll} %%%% use this tabular format %%%%
+plmgen  filename \\
+\end{tabular}
+}
+{When `filename' is present, plmgen enters the non-interactive mode 
+and parses
+its inputs from the file `filename'. This has the following
+structure: the first entry is a qualifier which announces to the parser
+which input immediately follows. If this input is omitted in the
+input file, the parser assumes the default value.
+If the equality sign is omitted, then the parser ignores the entry.
+In this way comments may also be included in the file.
+In this example, the file contains the following qualifiers:\hfill\newline
+\fileparam{simul\_type = 1}
+\fileparam{nsmax = 32}
+\fileparam{nlmax = 86}
+\fileparam{outfile = plm.fits}
+}
+
+Creates a binary FITS file called 'plm.fits' containing Legendre polynomials 
+up to $\ell$ and $m$ values of 86 for a $nsmax=32$ map. 
+Legendre polynomials for all $\ell$ and $m$ 
+values for each angle $\theta$ corresponding to all of the \healpix
+pixel center rings will be 
+created.
+\end{examples}
+
+\begin{release}
+  \begin{relist}
+    \item Initial release \healpix 1.00
+  \end{relist}
+\end{release}
+
+\begin{messages}
+{
+\begin{tabular}{p{0.25\hsize} p{0.1\hsize} p{0.35\hsize}} \hline  
+  \textbf{Message} & \textbf{Severity} & \textbf{Text} \\ \hline
+                   &                   &   \\ %%% for presentation
+can not allocate memory for array xxx &  Fatal & You do not have
+                   sufficient system resources to run this
+                   facility at the map resolution you required. 
+  Try a lower map resolution.  \\ 
+                   &                   &   \\ %%% for presentation
+Error: these values of Nside and l\_max $\ldots$ are too large $\ldots$ &  Fatal & You are exceeding
+the limitation on Nside and l\_max. 
+  Try a lower l\_max.  \\ 
+                   &                   &   \\ \hline %%% for presentation
+\end{tabular}
+} 
+\end{messages}
+
+\rule{\hsize}{2mm}
+
+\newpage

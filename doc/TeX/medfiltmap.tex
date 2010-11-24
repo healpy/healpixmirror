@@ -1,0 +1,80 @@
+
+\sloppy
+
+
+\title{\healpix Fortran Subroutines Overview}
+\docid{medfiltmap*} \section[medfiltmap*]{ }
+\label{sub:medfiltmap}
+\docrv{Version 2.0}
+\author{Eric Hivon}
+\abstract{This document describes the \healpix Fortran90 subroutine MEDFILTMAP*.}
+
+\begin{facility}
+{This routine performs the median filtering of a \healpix full sky map for a
+  given neighborhood radius }
+{src/f90/mod/pix\_tools.f90}
+\end{facility}
+
+\begin{f90format}
+{in\_map, radius, med\_map \hfill [,~nest, fmissval, fill\_holes]}
+\end{f90format}
+
+\begin{arguments}
+{
+\begin{tabular}{p{0.30\hsize} p{0.05\hsize} p{0.05\hsize} p{0.50\hsize}} \hline  
+\textbf{name~\&~dimensionality} & \textbf{kind} & \textbf{in/out} & \textbf{description} \\ \hline
+                   &   &   &                           \\ %%% for presentation
+in\_map(0:npix-1) & SP/ DP & IN & Full sky \healpix map to filter. {\tt npix}
+                   should be valid \healpix pixel number. \\
+radius & DP & IN & Radius in RADIANS of the disk on which the median is
+                   computed. \\
+med\_map(0:npix-1) & SP/ DP & OUT & Median filtered map: each pixel is the
+                   median of the input map valid neighboring pixels contained
+                   within a distance {\tt radius} \\
+nest \hskip 1cm OPTIONAL & I4B & IN & set to 1 if the map ordering is NESTED, set to 0 if
+                   it is RING. \\
+fmissval \hskip 1cm OPTIONAL & SP/ DP & IN & sentinel value given to missing or
+                   non-valid pixels. Default: {\tt HPX\_SBADVAL} or {\tt
+                   HPX\_DBADVAL} $ = -1.6375\ 10^{30}$ \\
+fill\_holes \hskip 1cm OPTIONAL & LGT & IN & if set to {\tt .true.} will replace
+                   non-valid pixels by median of neighbors; if set to {\tt .false.}
+                   will leave non-valid pixels unchanged. Default: {\tt .false.}
+\end{tabular}
+}
+\end{arguments}
+%%\newpage
+
+\begin{example}
+{
+use healpix\_types \\
+use pix\_tools \\
+... \\
+call medfiltmap(map, 0.5*DEG2RAD, med)  \\
+}
+{
+Output in {\tt med} the median filter of {\tt map}, using a filter radius of 0.5 Deg
+}
+\end{example}
+
+\begin{modules}
+  \begin{sulist}{} %%%% NOTE the ``extra'' brace here %%%%
+  \item[\textbf{statistics}] module, containing:
+  \item[\htmlref{median}{sub:median}] routine to compute the median of a data set		
+  \item[\textbf{pix\_tools}] module, containing:
+  \item[\htmlref{pix2vec\_ring, pix2vec\_nest}{sub:pix_tools}] routines to find
+  the location of a pixel on the sky
+  \item[\htmlref{query\_disc}{sub:query_disc}] routine to find pixels lying
+  within a radius of a given point
+  \end{sulist}
+\end{modules}
+
+%% \begin{related}
+%%   \begin{sulist}{} %%%% NOTE the ``extra'' brace here %%%%
+%%   \item[anafast] executable using \thedocid to analyse maps.
+%%   \item[\htmlref{alm2map}{sub:alm2map}] routine performing the inverse transform of \thedocid.
+%%   \end{sulist}
+%% \end{related}
+
+\rule{\hsize}{2mm}
+
+\newpage

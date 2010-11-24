@@ -1,0 +1,97 @@
+
+WHAT IS IT
+==========
+This directory contains the software synfast and anafast,
+version 1.0.0 written and developed by Eric Hivon (hivon@tac.dk) and 
+Krzysztof Gorski (gorski@tac.dk), 
+which allows respectively :
+to simulate full sky maps of CMB fluctuations from their power spectrum,
+and to compute the power spectrum of a full sky fluctuation map, 
+in both cases for HEALPIX pixelisation,
+for Temperature and Polarisation.
+These codes are released specifically for the PLANCK project.
+
+
+RULES
+=====
+ The permission to use and copy this software and its documentation, 
+ without fee or royalty is limited to non-commercial purposes related to 
+ PLANCK Surveyor project and provided that you agree to comply with
+ the following copyright notice and statements,
+ and that the same appear on ALL copies of the software and documentation.
+
+ An appropriate acknowledgement has to be included in any
+ publications based on work where the package has been used.
+
+ Copyright 1997 by Eric Hivon and Krzysztof M. Gorski.
+  All rights reserved.
+
+RELATED LITTERATURE:
+     about HEALPIX   : Gorski, 1997, in preparation
+     about this code : Hivon & Gorski, 1997, in preparation
+
+CAUTION !
+========
+ This set of routines is aimed at implementing the HEALPIX
+ pixelisation of the sphere (Gorski, 1997) for simulations and analysis
+ of data related to the PLANCK project.
+ This version is released prior to the implementation of any
+ project-wide software standards and coding practices.
+ The I/O interface of this package is thus likely to undergo significant revisions 
+ in the future, which would result in releases of updated versions of this 
+ software.
+
+
+REQUIREMENTS
+===========
+ The library CFITSIO used in these packages can be found at
+ http://heasarc.gsfc.nasa.gov/docs/software/fitsio/
+
+
+CONTENTS :
+=========
+
+
+MAIN PROGRAMS
+-------------
+
+synfast.f90
+	synthesis code
+	generates Temperature and Polarisation maps for given power spectra
+
+anafast.f90
+	analysis code
+	computes the power spectra of Temperature and Polarisation maps
+
+smoothing.f90
+	smoothing code
+	apply a smoothing (gaussian window) to an existing Temperature map
+
+ud_grade.f90
+	code to degrade (reduce the number of pixels) 
+	or prograde (increase the number of pixels) of a map
+
+--------------------------------------------------------------
+
+SUBROUTINES 
+-----------
+  ***	(with explicit interface given in healfast.f90)
+
+
+alm2map.f90
+	simulate a map from its alm (=synthesis) for temperature only
+
+alm2map_pol.f90
+	simulates a map from its alm (=synthesis) 
+	for temperature + polarisation
+	
+map2alm.f90
+	computes the alm from a map (=analysis) for temperature only
+
+map2alm_pol.f90
+	computes the alm from a map (=analysis) 
+	for temperature + polarisation
+
+create_alm.f90
+	generates the a_lm coefficients (=Gaussian variables)
+	from the power spectrum

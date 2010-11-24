@@ -1,0 +1,203 @@
+% -*- LaTeX -*-
+
+
+\renewcommand{\facname}{{write\_fits\_cut4 }}
+\renewcommand{\FACNAME}{{WRITE\_FITS\_CUT4 }}
+\sloppy
+
+
+
+\title{\healpix IDL Facility User Guidelines}
+\docid{\facname} \section[\facname]{ }
+\label{idl:write_fits_cut4}
+\docrv{Version 1.2}
+\author{Eric Hivon}
+\abstract{This document describes the \healpix facility \facname.}
+
+
+
+
+\begin{facility}
+{This IDL facility writes out a cut sky \healpix map into a FITS file according to
+the \healpix convention. The format used for the
+FITS file follows the one used for Boomerang98 and is adapted from
+COBE/DMR. This routine can be used to store polarized maps, where the
+information relative to the Stokes parameters I, Q and U are placed in extension
+0, 1 and 2 respectively by successive invocation of the routine.}
+{src/idl/fits/write\_fits\_cut4.pro}
+\end{facility}
+
+\begin{IDLformat}
+{\FACNAME, File, Pixel, Signal [, N\_Obs, Serror, 
+COORDSYS=, 
+EXTENSION=, 
+HDR=,
+/NESTED, 
+NSIDE=, 
+ORDERING=, 
+/POLARISATION,
+/RING,
+UNITS=,
+XHDR=]
+}
+\end{IDLformat}
+
+\begin{qualifiers}
+  \begin{qulist}{} %%%% NOTE the ``extra'' brace here %%%%
+ 	\item[{File}] 
+          name of a FITS file in which the map is to be written
+
+ 	\item[{Pixel}] 
+	 (LONG or LONG64 vector), \\ index of observed (or valid) pixels
+
+ 	\item[{Signal}] 
+	 (FLOAT or DOUBLE vector, same size as Pixel), \\ value of signal in each observed pixel
+
+ 	\item[{N\_Obs}] 
+	 (LONG or INT or LONG64 vector, Optional, same size as Pixel), \\ number of
+	 observation per pixel. \\
+         If absent, the field {\tt N\_OBS} will take a value of 1 in the output file.
+         If set to a scalar constant, {\tt N\_OBS} will take this value in the
+	 output file
+
+ 	\item[{Serror}] 
+	 (FLOAT or DOUBLE vector, Optional, same size as Pixel)\\ {\em rms} of signal in pixel, for white noise,
+                   this is $\propto 1/\sqrt{{\rm n\_obs}}$ \\
+         If absent, the field {\tt SERROR} will take a value of 0.0 in the output file.
+         If set to a scalar constant, {\tt SERROR} will take this value in the
+	 output file
+
+  \end{qulist}
+\end{qualifiers}
+
+\begin{keywords}
+  \begin{kwlist}{} %%% extra brace
+       \item[{COORDSYS=}]
+		  (optional), \\
+		if set to either 'C', 'E' or 'G',  specifies that the
+		Healpix coordinate system is respectively Celestial=equatorial,
+		  Ecliptic or Galactic.
+		(The relevant keyword is then added/updated in the extension
+		  header, but the map is NOT rotated)
+
+	\item[{EXTENSION=}]
+		  (optional), \\
+	  (0 based) extension number in which to write data. \default{0}.
+	  If set to 0 (or not set) {\em a new file is written from scratch}.
+	  If set to a value
+		  larger than 1, the corresponding extension is added or
+		  updated, as long as all previous extensions already exist.
+		  All extensions of the same file should use the same ORDERING,
+		  NSIDE and COORDSYS.
+
+    	\item[HDR=] 	
+		(optional), \\
+		String array containing the information to be put in
+		the primary header. 
+
+	\item[{/NESTED}] if set, specifies that the map is in the NESTED ordering
+	scheme\\
+	\seealso Ordering and Ring 
+
+	\item[{NSIDE=}] 
+		(optional), \\
+		scalar integer, \healpix resolution parameter of the
+		data set. The resolution parameter should be made
+		available to the FITS file, either thru this
+		qualifier, or via the header (see XHDR).
+
+	\item[{ORDERING=}]
+		  (optional), \\
+		if set to either 'ring' or 'nested' (case un-sensitive),
+		  specifies that the map is respectively in RING or NESTED
+		  ordering scheme\\
+		\seealso Nested and Ring \\
+	The ordering information should be made
+		available to the FITS file, either thru a combination
+		  of Ordering/Ring/Nested, or via the header (see XHDR).
+
+	\item[{/POLARISATION}]
+	  specifies that file will contain the I, Q and U polarisation
+           Stokes parameter in extensions 0, 1 and 2 respectively, and sets the
+FITS header keywords accordingly
+
+	\item[{/RING}] if set, specifies that the map is in the RING ordering
+	scheme\\
+	\seealso Ordering and Nested
+
+	\item[{UNITS=}]
+		(optional), \\
+		string describing the physical units of the data set (only applies
+		to Signal and Serror)
+
+    	\item[XHDR=] 	
+		(optional), \\
+		String array containing the information to be put in
+		the extension header. 
+
+   \end{kwlist}
+\end{keywords}
+
+\begin{codedescription}
+% {\parbox[t]{\hsize}{\facname writes out the information contained in {\tt Prim\_stc} and {\tt
+% Exten\_stc} in the primary unit and extension of the FITS file
+% {\tt File} respectively . Coordinate systems can also be specified by {\tt Coordsys}. Specifying the
+% ordering scheme is compulsary and can be done either in {\tt Header} or by setting {\tt
+% Ordering} or {\tt Nested} or {\tt Ring} to the correct value. If {\tt
+% Ordering} or {\tt Nested} or {\tt Ring} is set, its value overrides what is
+% given in {\tt Header}. \\
+
+% The data is assumed to represent a full sky data set with 
+% the number of data points npix = 12*Nside*Nside
+% unless   
+% \\Partial is set OR the input fits header contains OBJECT =
+%                'PARTIAL' \\
+%        AND \\
+%          the Nside qualifier is given a valid value OR the FITS header contains
+%                  a NSIDE}}
+\end{codedescription}
+
+
+
+\begin{related}
+  \begin{sulist}{} %%%% NOTE the ``extra'' brace here %%%%
+  \item[idl] version \idlversion or more is necessary to run \thedocid
+  \item[\htmlref{read\_fits\_cut4}{idl:read_fits_cut4}] This \healpix IDL facility can be used to read in maps
+  written by \thedocid.
+\input{item_write_fits_idl}
+  \item[sxaddpar] This IDL routine (included in \healpix package) can be used to update
+  or add FITS keywords to the header in {\tt HDR} and {\tt XHDR}
+  \end{sulist}
+\end{related}
+
+
+\begin{examples}{1}
+{
+\begin{tabular}{ll} %%%% use this tabular format %%%%
+\thedocid, 'map\_cut.fits', pixel, temperature, /ring,
+nside=32, /pol \\
+\end{tabular}
+}
+{writes in 'map\_cut.fits' a FITS file containing the temperature measured in a
+  set of \healpix pixel.
+}
+\end{examples}
+\begin{examples}{2}
+{
+\begin{tabular}{l} %%%% use this tabular format %%%%
+\thedocid,  'tqu\_cut.fits', pixel, temperature, n\_t, s\_t, \$ \\
+$\quad$		    /ring, nside=32, /pol \\
+\thedocid,  'tqu\_cut.fits', pixel, qstokes, n\_q, s\_q, \$ \\
+$\quad$		    /ring, nside=32, /pol, ext=1\\
+\thedocid,  'tqu\_cut.fits', pixel, ustokes, n\_u, s\_u, \$ \\
+$\quad$		    /ring, nside=32, /pol, ext=2\\
+\end{tabular}
+}
+{writes in 'tqu\_cut.fits' a FITS file with three extensions, each of them containing
+information on the observed pixel, the measured signal, the number of
+observations and noise per pixel, for the three Stokes parameters I, Q and U
+respectively. The \healpix ring ordered scheme and the resolution $\nside=32$ is assumed.
+}
+\end{examples}
+
+

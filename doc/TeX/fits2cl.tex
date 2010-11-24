@@ -1,0 +1,65 @@
+
+\sloppy
+
+
+\title{\healpix Fortran Subroutines Overview}
+\docid{fits2cl*} \section[fits2cl*]{ }
+\label{sub:fits2cl}
+\docrv{Version 2.0}
+\author{Eric Hivon, Frode K.~Hansen}
+\abstract{This document describes the \healpix Fortran90 subroutine FITS2CL.}
+
+\begin{facility}
+{This routine reads a power spectrum from a FITS ASCII or binary table. The routine can read temperature coeffecients $C_l^T$ or both temperature and polarisation coeffecients $C_l^T$, $C_l^E$, $C_l^B$, $C_l^{T\times E}$. If the keyword PDMTYPE is found in the header, fits2cl assumes the table to be in the special format used by {\em Planck}
+and will ignore the first data column. }
+{src/f90/mod/fitstools.f90}
+\end{facility}
+
+\begin{f90format}
+{filename, clin, lmax, ncl, header, [units]}
+\end{f90format}
+
+\begin{arguments}
+{
+\begin{tabular}{p{0.4\hsize} p{0.05\hsize} p{0.1\hsize} p{0.35\hsize}} \hline  
+\textbf{name~\&~dimensionality} & \textbf{kind} & \textbf{in/out} & \textbf{description} \\ \hline
+                   &   &   &                           \\ %%% for presentation
+filename(LEN=\filenamelen) & CHR & IN & the FITS file containing the power spectrum. \\
+lmax & I4B & IN & Maximum $\ell$ value to be read. \\
+ncl & I4B & IN & 1 for temperature coeffecients only, 4 for polarisation. \\
+clin(0:lmax,1:ncl) & SP/ DP & OUT & the power spectrum read from the file.\\
+header(LEN=80) (1:) & CHR & OUT & the header read from the FITS-file. \\ 
+units(LEN=80) (1:) & CHR & OUT & the column units read from the FITS-file. \\ 
+\end{tabular}
+}
+\end{arguments}
+
+%\newpage
+\begin{example}
+{
+call fits2cl ('cl.fits',cl,64,4,header,units)  \\
+}
+{
+Reads a power spectrum from the FITS file `cl.fits' and stores the result in cl(0:64,1:4) which are the $C_l$ coeffecients up to $l=64$ for ($T$, $E$, $B$, $T\times E$). The FITS header is returned in header, the column units in units.
+}
+\end{example}
+\begin{modules}
+  \begin{sulist}{} %%%% NOTE the ``extra'' brace here %%%%
+  \item[\textbf{fitstools}] module, containing:
+  \item[printerror] routine for printing FITS error messages.
+  \item[\textbf{cfitsio}] library for FITS file handling.		
+  \end{sulist}
+\end{modules}
+
+\begin{related}
+  \begin{sulist}{} %%%% NOTE the ``extra'' brace here %%%%
+  \item[\htmlref{create\_alm}{sub:create_alm}] Routine to create $a_{\ell m}$ values
+  from an input power spectrum.
+  \item[\htmlref{write\_asctab}{sub:write_asctab}] Routine to create an ascii
+  FITS file containing a power spectrum.
+  \end{sulist}
+\end{related}
+
+\rule{\hsize}{2mm}
+
+\newpage

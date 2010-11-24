@@ -1,0 +1,71 @@
+
+\sloppy
+
+\title{\healpix Fortran Subroutines Overview}
+\docid{convert\_inplace*} \section[convert\_inplace*]{ }
+\label{sub:convert_inplace}
+\docrv{Version 2.0}
+\author{Eric Hivon}
+\abstract{This document describes the \healpix Fortran90 subroutine CONVERT\_INPLACE.}
+
+
+\begin{facility}
+{Routine to convert a \healpix map from NESTED to RING scheme or vice
+  versa. The conversion is done inplace, meaning that it doesn't require memory
+  for a temporary map, like the
+  $\htmlref{convert\_nest2ring}{sub:convert_nest2ring}$ or
+  $\htmlref{convert\_ring2nest}{sub:convert_ring2nest}$
+  routines. But for that reason, this routine is slower and not parallelized. The routine is a
+  wrapper for 6 different routines and can threfore process
+  integer, single precision and double precision maps as well as mono or bi
+  dimensional arrays.}
+{src/f90/mod/pix\_tools.f90}
+\end{facility}
+
+\begin{f90format}
+{subcall, map}
+\end{f90format}
+
+\begin{arguments}
+{
+\begin{tabular}{p{0.4\hsize} p{0.05\hsize} p{0.1\hsize} p{0.35\hsize}} \hline  
+\textbf{name~\&~dimensionality} & \textbf{kind} & \textbf{in/out} & \textbf{description} \\ \hline
+                   &   &   &                           \\ %%% for presentation
+subcall & --- & IN & routine to be called by convert\_inplace\_real. Set this to \htmlref{ring2nest}{sub:pix_tools} or \htmlref{nest2ring}{sub:pix_tools} dependent on wether the conversion is RING to NESTED or vice versa. \\
+map(0:npix-1) & I4B/ SP/ DP & INOUT & mono-dimensional full sky map to be converted, the routine finds the size itself. \\
+map(0:npix-1,1:nd) & I4B/ SP/ DP & INOUT & bi-dimensional (nd$>0$) full sky map to be
+                   converted, the routine finds both dimensions
+                   itself. Processing a bidimensional map with nd$>1$ should be
+                   faster than each of the nd 1D-maps consecutively.\\
+
+\end{tabular}
+}
+\end{arguments}
+
+\begin{example}
+{
+call convert\_inplace(\htmlref{ring2nest}{sub:pix_tools},map)  \\
+}
+{
+Converts an map from RING to NESTED scheme.
+}
+\end{example}
+%%\newpage
+\begin{modules}
+  \begin{sulist}{} %%%% NOTE the ``extra'' brace here %%%%
+ \item[\htmlref{nest2ring}{sub:pix_tools}] routine to convert a NESTED pixel index to RING pixel number.
+ \item[\htmlref{ring2nest}{sub:pix_tools}] routine to convert a RING pixel index to NESTED pixel number.	
+  \end{sulist}
+\end{modules}
+
+\begin{related}
+  \begin{sulist}{} %%%% NOTE the ``extra'' brace here %%%%
+  \item[\htmlref{convert\_nest2ring}{sub:convert_nest2ring}] convert from NESTED to RING scheme using a temporary array. Requires more space then convert\_inplace, but is faster.
+  \item[\htmlref{convert\_ring2nest}{sub:convert_ring2nest}]
+  convert from RING to NESTED scheme using a temporary array. Requires more space then convert\_inplace, but is faster.
+  \end{sulist}
+\end{related}
+
+\rule{\hsize}{2mm}
+
+\newpage

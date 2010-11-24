@@ -1,0 +1,133 @@
+
+
+\sloppy
+
+\title{\healpix Fortran Subroutines Overview}
+\docid{parse\_xxx} \section[parse\_xxx]{ }
+\label{sub:parse_xxx}
+\docrv{Version 1.1}
+\author{Martin Reinecke, Eric Hivon}
+\abstract{This document describes the \healpix Fortran90 subroutines in module paramfile\_io.}
+
+\begin{facility}
+{The Fortran90 module paramfile\_io contains functions to obtain
+parameters from parameter files or interactively}
+{src/f90/mod/paramfile\_io.F90}
+\end{facility}
+
+\begin{arguments}
+{
+\begin{tabular}{p{0.3\hsize} p{0.05\hsize} p{0.1\hsize} p{0.45\hsize}} \hline  
+\textbf{name\&dimensionality} & \textbf{kind} & \textbf{in/out} & \textbf{description} \\ \hline
+                   &   &   &                           \\ %%% for presentation
+fname & CHR & IN & file containing the simulation parameters.
+                   If empty, parameters are obtained interactively.\\
+handle & PMF & INOUT & Object of type (paramfile\_handle) used to store parameter information \\
+keyname & CHR & IN & name of the required parameter \\
+default & XXX & IN & optional argument containing the default value for
+                     a given simulation parameter; must be of
+                     appropriate type. \\
+vmin & XXX & IN & optional argument containing the minimum value for
+                     a given simulation parameter; must be of
+                     appropriate type. \\
+vmax & XXX & IN & optional argument containing the maximum value for
+                     a given simulation parameter; must be of
+                     appropriate type. \\
+descr & CHR & IN & optional argument containing a description of the
+                   required simulation parameter \\
+filestatus & CHR & IN & optional argument. If present, the parameter
+                   must be a valid filename. If filestatus=='new',
+                   the file must not exist; if filestatus=='old',
+                   the file must exist. \\
+code & CHR & IN & optional argument. Contains the name of the executable.\\
+silent & LGT & IN & optional argument. If set to {\tt .true.} the parsing
+routines will run silently in non-interactive mode (except for warning or error
+messages, which will always appear). This is mainly intended for MPI usage where
+many processors parse the same parameter file: {\tt silent} can be set to
+{\tt .true.} on all CPUs except one.
+\end{tabular}
+}
+\end{arguments}
+\newpage
+
+\rule{\hsize}{0.7mm}
+\textsc{\large{\textbf{ROUTINES: }}}\hfill\newline
+{\tt handle = parse\_init (fname [,silent])} 
+
+\quad initializes the parser to work on the file fname, or interactively, if fname is empty
+
+{\tt intval = parse\_int (handle, keyname [, default, vmin, vmax, descr])} 
+
+{\tt longval = parse\_long (handle, keyname [, default, vmin, vmax, descr])} 
+
+{\tt realval = parse\_real (handle, keyname [, default, vmin, vmax, descr])} 
+
+{\tt doubleval = parse\_double (handle, keyname [, default, vmin, vmax, descr])} 
+
+{\tt stringval = parse\_string (handle, keyname [, default, descr, filestatus])} 
+
+{\tt logicval = parse\_lgt (handle, keyname [, default, descr])} 
+
+\quad These routines obtain integer(i4b), integer(i8b), real(sp), real(dp), character(len=*) and logical values,
+respectively. \\
+Note: {\tt parse\_string} will expand all environment variables of
+the form \$\{XXX\} (eg: \$\{HOME\}). It will also replace a {\em leading} 
+\verb+~+$\!${\tt /}
+%%%{\tt \tilde{}/} 
+by the user's home directory.
+
+{\tt call parse\_summarize (handle [, code])}
+
+\quad if the parameters were set interactively, this routine will print out a 
+parameter file performing the same settings.
+
+{\tt call parse\_check\_unused (handle [, code])}
+
+\quad if a parameter file was read, this routine will print out all the parameters
+found in the file but not used by the code. Intended at detecting typos in
+parameter names.
+
+{\tt call parse\_finish (handle)}
+
+\quad frees the memory
+
+\begin{example}
+{
+program who\_r\_u \\
+use healpix\_types \\
+use paramfile\_io \\
+use extension \\
+\\
+implicit none \\
+type(paramfile\_handle) :: handle \\
+character(len=256) :: parafile, name \\
+real(DP) :: age \\
+\\
+parafile = ''  \\
+if (\htmlref{nArguments()}{sub:narguments} == 1) call \htmlref{getArgument}{sub:getargument}(1, parafile)  \\
+handle = parse\_init(parafile)  \\
+name  = parse\_string(handle, 'name',descr='Enter your last name: ')  \\
+age   = parse\_double(handle, 'age', descr='Enter your age in years: ', \&   \\
+   \& default=18.d0,vmin=0.d0)  \\
+call parse\_summarize(handle, 'who\_r\_u')  \\
+end program who\_r\_u 
+}
+{If a file is provided as command line argument when running the executable {\tt who\_r\_u}, that file
+  will be parsed in search of the lines starting with 'name =' and 'age =',
+  otherwise the same questions will be asked interactively.
+}
+\end{example}
+
+\begin{related}
+  \begin{sulist}{} %%%% NOTE the ``extra'' brace here %%%%
+  \item[\htmlref{concatnl}{sub:concatnl}] generates from a set of strings the
+  multi-line description
+  \item[\htmlref{nArguments}{sub:narguments}] returns the number of
+  command line arguments
+  \item[\htmlref{getArgument}{sub:getArgument}] returns the list of command line arguments
+  \end{sulist}
+\end{related}
+
+\rule{\hsize}{2mm}
+
+\newpage

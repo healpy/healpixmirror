@@ -1,0 +1,831 @@
+% -*- LaTeX -*-
+
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{healpix}
+\typeout{Package: healpix macros (A.J. Banday, M. Bartelmann)}
+\newif{\ifcol}
+\newif{\ifminutes}
+\newif{\ifletter}
+\newif{\ifdocument}
+\newif{\ifcc}
+\ccfalse
+\colfalse
+\minutesfalse
+\letterfalse
+\documenttrue
+\DeclareOption{color}{\coltrue}
+\DeclareOption{minutes}{\minutestrue\letterfalse\documentfalse}
+\DeclareOption{letter}{\minutesfalse\lettertrue\documentfalse}
+\ProcessOptions
+
+\ifdocument\typeout{Document format}\fi
+\ifletter\typeout{Letter format}\fi
+\ifminutes\typeout{Minutes format}\fi
+
+%\usepackage{a4wide,graphicx,mathptm,fancyheadings}
+\usepackage{a4wide,graphicx,fancyheadings}
+\ifcol\usepackage[dvips]{color}\fi
+
+%For table of contents. BDW May1999
+\renewcommand{\l@section}{\@dottedtocline{1}{1.5em}{2.3em}}
+
+\renewcommand{\textfraction}{0}
+\newcommand{\optional}[1]{\textsl{#1}}
+\newcommand{\fnopt}{\footnote{Arguments appearing in \optional{italic}
+are optional}}
+\newcommand{\healpix}{\textbf{HEALPix}\ }
+\newcommand{\healpixns}{\textbf{HEALPix}}
+\newcommand{\filenamelen}{{\tt{filenamelen}}}
+\newcommand{\warnhtml}{ }
+\newcommand{\nosectionname}{\vskip -1cm}
+\input{hpxversion}
+\input{idlversion}
+\input{gdlversion}
+
+\ifletter\else
+\renewcommand{\title}[1]{\gdef\thetitle{#1}}
+\renewcommand{\author}[1]{\gdef\theauthor{#1}}
+\newcommand{\docid}[1]{\gdef\thedocid{#1}}
+\fi
+\ifminutes
+  \newcommand{\meetingdate}[1]{\gdef\themeetingdate{#1}}
+  \newcommand{\minutesdate}[1]{\gdef\theminutesdate{#1}}
+  \newcommand{\group}[1]{\gdef\thegroup{#1}}
+  \newcommand{\attendees}[1]{\gdef\theattendees{#1}}
+  \newcommand{\distribution}[1]{\gdef\thedistribution{#1}}
+\fi
+\ifletter
+  \renewcommand{\to}[1]{\gdef\theto{#1}}
+  \newcommand{\from}[1]{\gdef\thefrom{#1}}
+  \newcommand{\place}[1]{\gdef\theplace{#1}}
+  \newcommand{\subject}[1]{\gdef\thesubject{#1}}
+  \newcommand{\group}[1]{\gdef\thegroup{#1}}
+  \newcommand{\cc}[1]{\gdef\thecc{#1}\cctrue}
+  \renewcommand{\date}[1]{\gdef\thedate{#1}}
+\fi
+\ifdocument
+  \renewcommand{\date}[1]{\gdef\thedate{#1}}
+  \newcommand{\docrv}[1]{\gdef\thedocrv{#1}}
+  \renewcommand{\abstract}[1]{\gdef\theabstract{#1}}
+  \newcommand{\default}[1]{(\textbf{default:} #1)}
+  \newcommand{\nodefault}{(\textbf{default:} none)}
+  \newcommand{\seealso}{{see also: }}
+  \newcommand{\fileparam}[1]{\noindent {\tt #1}\hfill\newline}
+  \newcommand{\mycode}[1]{\noindent\parbox[t]{5cm}{{\hskip 0.5cm {\tt{#1}} }} }
+\fi
+
+\newlength{\bigicon}
+\setlength{\bigicon}{2in}
+\newlength{\smallicon}
+\setlength{\smallicon}{0.25\bigicon}
+%\newcommand{\iconfile}{healpix.eps}
+\newcommand{\iconfile}{fig/healpix.pdf}
+%\newcommand{\iconfile}{healpix}
+
+
+\ifletter\else
+  \title{\em Some title should be given}
+  \author{\em Author name should be given}
+  \docid{\em Document ID should be given}
+\fi
+\ifminutes
+  \meetingdate{\em ??}
+  \minutesdate{\today}
+  \group{\em Group name should be given}
+  \attendees{\em List of attendees should be given}
+  \distribution{\em Distribution list should be given}
+\fi
+\ifletter
+  \to{??}
+  \from{??}
+  \place{Garching}
+  \group{HEALPix Collaboration}
+  \subject{??}
+  \date{\today}
+\fi
+\ifdocument
+%  \docrv{\em Document revision should be given}
+  \abstract{\em Abstract should be given}
+  \date{\today}
+\fi
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.75ex plus 0.2ex minus 0.1ex}
+
+\ifminutes
+  \newcounter{cact}
+  \newcounter{savecact}
+  \newenvironment{actions}[1]{\begin{list}
+    {\ifcol\color{red}\fi\bfseries\upshape Action~\thecact:\hfill}
+    {\usecounter{cact}%
+     \setcounter{cact}{\thesavecact}%
+     \setlength{\labelwidth}{5em}%
+     \setlength{\labelsep}{1ex}%
+     \setlength{\leftmargin}{\labelwidth}%
+     \addtolength{\leftmargin}{\labelsep}
+     \setlength{\parsep}{0.5ex plus 0.2ex minus 0.1ex}
+     \setlength{\itemsep}{0ex plus 0.2ex}}\bfseries}
+    {\setcounter{savecact}{\thecact}\end{list}}
+
+  \newcounter{catb}
+  \newcommand{\action}[3]{%
+    \stepcounter{catb}%
+    \thecatb&#1&#2&#3\\\hline}
+  \newenvironment{actiontable}
+  {\begin{center}\begin{tabular}{|r|p{0.6\hsize}|r|r|}%
+   \hline%
+   \textbf{Action}&\textbf{Description}&\textbf{Status}&\textbf{On}\\
+   \hline\hline\setcounter{catb}{0}}
+  {\end{tabular}\end{center}}
+\fi
+\ifdocument
+  \newlength{\blocksize}%
+  \newcommand{\inputs}{\item[\textsc{Inputs:}\hfill]}
+  \newcommand{\activities}{\item[\textsc{Activities:}\hfill]}
+  \newcommand{\outputs}{\item[\textsc{Outputs:}\hfill]}
+  \newcommand{\priority}{\item[\textsc{Priority:}\hfill]}
+
+
+%   \newenvironment{facility}[1]
+%     {\def\pdes{#1}%
+%      \begin{tabular}{@{}p{0.3\hsize}@{\hspace{1ex}}
+%                         p{0.7\hsize}@{}}
+%         \textsc{\Huge{\textbf{\thedocid}}} &   \\
+%      \end{tabular}
+%      \rule{\hsize}{2mm}
+%  \begin{tabular}{@{}p{0.3\hsize}@{\hspace{1ex}}
+%                         p{0.7\hsize}@{}}
+%                                           & \\
+%                                           &  {\pdes} \\
+%  \end{tabular}
+%      \vspace{\baselineskip}}
+
+%%   \newenvironment{facility}[2]
+%%     {\def\pdes{#1}%
+%%      \def\ploc{#2}%
+%%      \begin{tabular}{@{}p{0.3\hsize}@{\hspace{1ex}}
+%%                         p{0.7\hsize}@{}}
+%%         \textsc{\huge{\textbf{\thedocid}}} &   \\
+%%      \end{tabular}
+%%      \rule{\hsize}{2mm} 
+%% 	\textbf{Location in \healpix directory tree: \ploc} \\
+%%   \begin{tabular}{@{}p{0.3\hsize}@{\hspace{1ex}}
+%%                         p{0.7\hsize}@{}}
+%%                                         &   \\
+%%                                           &  {\pdes} \\
+%%      \end{tabular}
+%%      \vspace{\baselineskip}}
+
+   \newenvironment{facility}[2]
+     {\def\pdes{#1}%
+      \def\ploc{#2}%
+      \begin{tabular}{@{}p{0.5\hsize}@{\hspace{1ex}}
+                         p{0.5\hsize}@{}}
+         \textsc{\huge{\textbf{\thedocid}}} &   \\
+      \end{tabular}
+      \rule{\hsize}{2mm} 
+ 	\textbf{Location in \healpix directory tree: \ploc} \\
+ \hbox{\hskip 0.3\hsize \begin{minipage}[t]{0.7\hsize}{\setlength{\parindent}{0.5cm}{\noindent\pdes}}\end{minipage}} \\
+      \vspace{\baselineskip}}
+
+  \newenvironment{f90format}[1]
+    {\def\pdes{#1}%
+     \rule{\hsize}{0.7mm}
+     \vspace{\baselineskip}
+     \begin{tabular}{@{}p{0.3\hsize}@{\hspace{1ex}}
+                        p{0.7\hsize}@{}}
+        \textsc{\large{\textbf{FORMAT}}} &  \Large{call \thedocid({\pdes})} \\
+     \end{tabular}%
+%\renewcommand{\thefootnote}{\fnsymbol{footnote}}%
+%\renewcommand{\footnoterule}{}%
+}
+
+  \newenvironment{f90facility}[1]
+    {\def\pdes{#1}%
+     \rule{\hsize}{0.7mm}
+     \vspace{\baselineskip}
+     \begin{tabular}{@{}p{0.3\hsize}@{\hspace{1ex}}
+                        p{0.7\hsize}@{}}
+        \textsc{\Large{\textbf{FORMAT}}} &  \Large{$\%$ {\pdes}} \\
+     \end{tabular}}
+
+ \newenvironment{f90function}[1]
+    {\def\pdes{#1}%
+     \rule{\hsize}{0.7mm}
+     \vspace{\baselineskip}
+     \begin{tabular}{@{}p{0.3\hsize}@{\hspace{1ex}}
+                        p{0.7\hsize}@{}}
+        \textsc{\large{\textbf{FORMAT}}} &  \Large{var=\thedocid({\pdes})} \\
+     \end{tabular}}
+
+ \newenvironment{Cfacility}[1]
+    {\def\pdes{#1}%
+     \rule{\hsize}{0.7mm}
+     \vspace{\baselineskip}
+     \begin{tabular}{@{}p{0.3\hsize}@{\hspace{1ex}}
+                        p{0.7\hsize}@{}}
+        \textsc{\large{\textbf{FORMAT}}} &  \Large{{\pdes}} \\
+     \end{tabular}}
+
+ \newenvironment{Cfunction}[1]
+    {\def\pdes{#1}%
+     \rule{\hsize}{0.7mm}
+     \vspace{\baselineskip}
+     \begin{tabular}{@{}p{0.3\hsize}@{\hspace{1ex}}
+                        p{0.7\hsize}@{}}
+        \textsc{\large{\textbf{FORMAT}}} &  \Large{{\pdes}} \\
+     \end{tabular}}
+
+  \newenvironment{IDLformat}[1]
+    {\def\pdes{#1}%
+     \rule{\hsize}{2mm}
+     \vspace{\baselineskip}
+     \begin{tabular}{@{}p{0.3\hsize}@{\hspace{1ex}}
+                        p{0.7\hsize}@{}}
+        \textsc{\Large{\textbf{FORMAT}}} &  \Large{IDL$>$ {\pdes}} \\
+     \end{tabular}}
+
+%%   \newenvironment{codedescription}[1]
+%%     {\def\pdes{#1}%
+%%      \rule{\hsize}{0.7mm}
+%%      \begin{tabular}{@{}p{0.3\hsize}@{\hspace{1ex}}
+%%                         p{0.7\hsize}@{}}
+%%         \textsc{\Large{\textbf{DESCRIPTION}}} & {\pdes} \\
+%%      \end{tabular}
+%%      \vspace{\baselineskip}}
+
+  \newenvironment{codedescription}[1]
+         {\rule{\hsize}{0.7mm}
+         \textsc{\Large{\textbf{DESCRIPTION}}}\hfill%
+        \begin{minipage}[t]{0.7\hsize}{\setlength{\parindent}{0.5cm}{\noindent#1}}\end{minipage} \\
+     \vspace{\baselineskip}}
+
+  \newenvironment{cd_contd}[1]
+         {\ \hfill%
+        \begin{minipage}[t]{0.7\hsize}{\setlength{\parindent}{0.5cm}{\noindent#1}}\end{minipage} \\
+     \vspace{\baselineskip}}
+
+
+
+% replaced by that from healrut.sty
+%   \newenvironment{qualifiers}
+%     {\rule{\hsize}{0.7mm}
+%      \textsc{\Large{\textbf{QUALIFIERS}}}\hfill\newline
+%      \newenvironment{qulist}[1]{%
+%        \vspace{-3ex}
+%        \begin{list}{}{%
+%          \setlength{\labelwidth}{0.3\hsize}
+%          \setlength{\labelsep}{0.1\hsize}
+%          \setlength{\leftmargin}{\labelwidth}
+%          \addtolength{\leftmargin}{0.5\labelwidth}
+%          \setlength{\blocksize}{\hsize}
+%          \addtolength{\blocksize}{-\leftmargin}
+%          \def\hsep{\rule[2pt]{\blocksize}{0.5pt}}
+%          \setlength{\parsep}{0.5ex plus 0.2ex minus 0.1ex}
+%    	 \setlength{\itemsep}{0ex plus 0.2ex}
+%          \item[##1]}}
+%        {\end{list}
+%      \vspace{\baselineskip}}}
+
+  \newenvironment{qualifiers}
+    {\rule{\hsize}{0.7mm}
+     \textsc{\Large{\textbf{QUALIFIERS}}}\hfill\newline
+     \newenvironment{qulist}[1]{%
+       \vspace{-3ex}
+       \begin{list}{}{%
+         \setlength{\labelwidth}{0.3\hsize}
+         \setlength{\labelsep}{0.1\hsize}
+         \setlength{\leftmargin}{\labelwidth}
+         \addtolength{\leftmargin}{0.5\labelwidth}
+         \setlength{\blocksize}{\hsize}
+         \addtolength{\blocksize}{-\leftmargin}
+         \def\hsep{\rule[2pt]{\blocksize}{0.5pt}}
+         \setlength{\parsep}{0.5ex plus 0.2ex minus 0.1ex}
+   	 \setlength{\itemsep}{0ex plus 0.2ex}
+         \item[##1]}}
+       {\end{list}
+     \vspace{\baselineskip}}
+     \newenvironment{qulistwide}[1]{%
+       \vspace{-3ex}
+       \begin{list}{}{%
+         \setlength{\labelwidth}{0.15\hsize}
+         \setlength{\labelsep}{0.05\hsize}
+         \setlength{\leftmargin}{\labelwidth}
+         \addtolength{\leftmargin}{0.7\labelwidth}
+         \setlength{\blocksize}{\hsize}
+         \addtolength{\blocksize}{-\leftmargin}
+         \def\hsep{\rule[2pt]{\blocksize}{0.5pt}}
+         \setlength{\parsep}{0.5ex plus 0.2ex minus 0.1ex}
+   	 \setlength{\itemsep}{0ex plus 0.2ex}
+         \item[##1]}}
+       {\end{list}
+     \vspace{\baselineskip}}}
+
+  \newenvironment{options}
+    {\rule{\hsize}{0.7mm}
+     \textsc{\Large{\textbf{COMMAND LINE OPTIONS}}}\hfill\newline
+     \newenvironment{optionlist}[1]{%
+       \vspace{-3ex}
+       \begin{list}{}{%
+         \setlength{\labelwidth}{0.3\hsize}
+         \setlength{\labelsep}{0.1\hsize}
+         \setlength{\leftmargin}{\labelwidth}
+         \addtolength{\leftmargin}{0.5\labelwidth}
+         \setlength{\blocksize}{\hsize}
+         \addtolength{\blocksize}{-\leftmargin}
+         \def\hsep{\rule[2pt]{\blocksize}{0.5pt}}
+         \setlength{\parsep}{0.5ex plus 0.2ex minus 0.1ex}
+   	 \setlength{\itemsep}{0ex plus 0.2ex}
+         \item[##1]}}
+       {\end{list}
+     \vspace{\baselineskip}}
+     \newenvironment{optionlistwide}[1]{%
+       \vspace{-3ex}
+       \begin{list}{}{%
+         \setlength{\labelwidth}{0.15\hsize}
+         \setlength{\labelsep}{0.05\hsize}
+         \setlength{\leftmargin}{\labelwidth}
+         \addtolength{\leftmargin}{0.7\labelwidth}
+         \setlength{\blocksize}{\hsize}
+         \addtolength{\blocksize}{-\leftmargin}
+         \def\hsep{\rule[2pt]{\blocksize}{0.5pt}}
+         \setlength{\parsep}{0.5ex plus 0.2ex minus 0.1ex}
+   	 \setlength{\itemsep}{0ex plus 0.2ex}
+         \item[##1]}}
+       {\end{list}
+     \vspace{\baselineskip}}}
+
+  \newenvironment{recommend}[1]
+    {\def\pdes{#1}%
+     \rule{\hsize}{0.7mm}
+     \begin{tabular}{@{}p{0.05\hsize}@{\hspace{1ex}}
+                        p{0.95\hsize}@{}}
+        \textsc{\Large{\textbf{RECOMMENDATIONS}}}\hfill\newline 
+        \textsc{\Large{\textbf{FOR~USERS}}}\hfill\newline\\
+& {\pdes} \\
+     \end{tabular}
+     \vspace{\baselineskip}}
+
+  \newenvironment{release}
+    {\rule{\hsize}{0.7mm}
+     \textsc{\Large{\textbf{RELEASE}}}\hfill\newline
+     \textsc{\Large{\textbf{NOTES}}}\hfill\newline
+%     \newcounter{fig}
+     \newenvironment{relist}{
+     \vspace{-7ex}
+     \begin{list}{\bfseries\upshape Revision \arabic{fig}:}
+%       {--}%
+       {\usecounter{fig}
+        \setlength{\labelwidth}{0.3\hsize}%
+        \setlength{\labelsep}{1ex}%
+        \setlength{\leftmargin}{\labelwidth}%
+        \addtolength{\leftmargin}{0.5\labelwidth}%
+        \setlength{\blocksize}{\hsize}%
+        \addtolength{\blocksize}{-\leftmargin}%
+        \def\hsep{\rule[2pt]{\blocksize}{0.5pt}}%
+        \setlength{\parsep}{0.5ex plus 0.2ex minus 0.1ex}%
+   	\setlength{\itemsep}{0ex plus 0.2ex}}%
+%	\item[]\hsep
+                     }
+    {\end{list}
+     \vspace{\baselineskip}}}
+
+% one example
+% \begin{example}
+%   { example text }
+%   { example description }
+% \end{example}
+  \newenvironment{example}[2]
+    {\rule{\hsize}{0.7mm}
+     \def\pdeg{#1}% 
+     \def\pdes{#2}% 
+     \textsc{\large{\textbf{EXAMPLE: }}}\hfill\newline
+     \vspace{-3ex}
+ 
+       {\tt \pdeg}
+
+     \begin{tabular}{@{}p{0.3\hsize}@{\hspace{1ex}}
+                        p{0.7\hsize}@{}}
+                                         & {\pdes} \\
+     \end{tabular}
+     \vspace{\baselineskip}}
+
+% several examples
+% \begin{example}{1}
+%   { example text }
+%   { example description }
+% \end{example}
+% \begin{example}{2}
+%   { example text }
+%   { example description }
+% \end{example}
+  \newenvironment{examples}[3]
+    {\rule{\hsize}{0.7mm}
+     \def\pnum{#1}%
+     \def\pdeg{#2}% 
+     \def\pdes{#3}% 
+     \textsc{\Large{\textbf{EXAMPLES: \#{\pnum}}}}\hfill\newline
+     \vspace{-3ex}
+     \begin{quote}
+       {\tt \pdeg}
+     \end{quote}
+     \begin{tabular}{@{}p{0.3\hsize}@{\hspace{1ex}}
+                        p{0.7\hsize}@{}}
+                                         & {\pdes} \\
+     \end{tabular}
+     \vspace{\baselineskip}}
+
+% from healrut
+  \newenvironment{arguments}[1]
+    {\rule{\hsize}{0.7mm}
+     \def\dtab{#1}%
+     \begin{tabular}{@{}p{0.3\hsize}@{\hspace{1ex}}
+                        p{0.7\hsize}@{}}
+                    {\large{\textbf{ARGUMENTS}}} & \\
+     \end{tabular}
+\begin{flushleft}
+     \vspace{1ex}
+          \dtab  
+\end{flushleft}    
+     \vspace{\baselineskip}}
+
+  \newenvironment{keywords}     %%% for IDL write-up only
+    {\rule{\hsize}{0.7mm}
+     \textsc{\Large{\textbf{KEYWORDS}}}\hfill\newline
+     \newenvironment{kwlist}[1]{%
+       \vspace{-3ex}
+       \begin{list}{}{%
+         \setlength{\labelwidth}{0.3\hsize}
+         \setlength{\labelsep}{0.1\hsize}
+         \setlength{\leftmargin}{\labelwidth}
+         \addtolength{\leftmargin}{0.5\labelwidth}
+         \setlength{\blocksize}{\hsize}
+         \addtolength{\blocksize}{-\leftmargin}
+         \def\hsep{\rule[2pt]{\blocksize}{0.5pt}}
+         \setlength{\parsep}{0.5ex plus 0.2ex minus 0.1ex}
+   	 \setlength{\itemsep}{0ex plus 0.2ex}
+         \item[##1]}}
+       {\end{list}
+     \vspace{\baselineskip}}}
+
+  \newenvironment{modules}
+    {\rule{\hsize}{0.7mm}
+        \textsc{\large{\textbf{MODULES~\&~ROUTINES}}}  \\
+                   This section lists the modules and routines used by \textbf{\thedocid}. \\ 
+     \newenvironment{sulist}[1]{%
+       \vspace{1ex}
+       \begin{list}{}{%
+         \setlength{\labelwidth}{0.3\hsize}
+         \setlength{\labelsep}{0.1\hsize}
+         \setlength{\leftmargin}{\labelwidth}
+         \addtolength{\leftmargin}{0.5\labelwidth}
+         \setlength{\blocksize}{\hsize}
+         \addtolength{\blocksize}{-\leftmargin}
+         \def\hsep{\rule[2pt]{\blocksize}{0.5pt}}
+         \setlength{\parsep}{0.5ex plus 0.2ex minus 0.1ex}
+   	 \setlength{\itemsep}{0ex plus 0.2ex}
+         \item[\textsc{##1}]}}
+       {\end{list}
+     \vspace{\baselineskip}}}
+
+ \newenvironment{related}
+    {\rule{\hsize}{0.7mm}
+        \textsc{\large{\textbf{RELATED ROUTINES}}} \\
+ This section lists the routines related to \textbf{\thedocid}. \\
+     \newenvironment{sulist}[1]{%
+       \vspace{1ex}
+       \begin{list}{}{%
+         \setlength{\labelwidth}{0.3\hsize}
+         \setlength{\labelsep}{0.1\hsize}
+         \setlength{\leftmargin}{\labelwidth}
+         \addtolength{\leftmargin}{0.5\labelwidth}
+         \setlength{\blocksize}{\hsize}
+         \addtolength{\blocksize}{-\leftmargin}
+         \def\hsep{\rule[2pt]{\blocksize}{0.5pt}}
+         \setlength{\parsep}{0.5ex plus 0.2ex minus 0.1ex}
+   	 \setlength{\itemsep}{0ex plus 0.2ex}
+         \item[\textsc{##1}]}}
+       {\end{list}
+     \vspace{\baselineskip}}}
+
+  \newenvironment{support}
+    {\rule{\hsize}{0.7mm}
+     \begin{tabular}{@{}p{0.3\hsize}@{\hspace{1ex}}
+                        p{0.7\hsize}@{}}
+        \textsc{\Large{\textbf{SUPPORT}}} & This section lists those
+           routines and facilities (including those {\it external} 
+           to the HEALPix distribution) which can assist in the
+           utilisation of \textbf{\thedocid}. \\
+     \end{tabular}
+     \newenvironment{sulist}[1]{%
+       \vspace{1ex}
+       \begin{list}{}{%
+         \setlength{\labelwidth}{0.3\hsize}
+         \setlength{\labelsep}{0.1\hsize}
+         \setlength{\leftmargin}{\labelwidth}
+         \addtolength{\leftmargin}{0.5\labelwidth}
+         \setlength{\blocksize}{\hsize}
+         \addtolength{\blocksize}{-\leftmargin}
+         \def\hsep{\rule[2pt]{\blocksize}{0.5pt}}
+         \setlength{\parsep}{0.5ex plus 0.2ex minus 0.1ex}
+   	 \setlength{\itemsep}{0ex plus 0.2ex}
+         \item[\textsc{##1}]}}
+       {\end{list}
+     \vspace{\baselineskip}}
+     \newenvironment{sulistwide}[1]{%
+       \vspace{1ex}
+       \begin{list}{}{%
+         \setlength{\labelwidth}{0.15\hsize}
+         \setlength{\labelsep}{0.05\hsize}
+         \setlength{\leftmargin}{\labelwidth}
+         \addtolength{\leftmargin}{0.7\labelwidth}
+         \setlength{\blocksize}{\hsize}
+         \addtolength{\blocksize}{-\leftmargin}
+         \def\hsep{\rule[2pt]{\blocksize}{0.5pt}}
+         \setlength{\parsep}{0.5ex plus 0.2ex minus 0.1ex}
+   	 \setlength{\itemsep}{0ex plus 0.2ex}
+         \item[##1]}}
+       {\end{list}
+     \vspace{\baselineskip}}}
+
+
+  \newenvironment{datasets}[1]
+    {\rule{\hsize}{0.7mm}
+     \def\dtab{#1}%
+     \begin{tabular}{@{}p{0.3\hsize}@{\hspace{1ex}}
+                        p{0.7\hsize}@{}}
+        \textsc{\Large{\textbf{DATASETS}}} & The 
+           following datasets are involved in the \textbf{\thedocid} 
+           processing.\\
+     \end{tabular}
+
+     \vspace{2ex}
+        \begin{flushright} 
+          \dtab     
+        \end{flushright} 
+     \vspace{\baselineskip}}
+
+
+  \newenvironment{messages}[1]
+    {\rule{\hsize}{0.7mm}
+     \def\dtab{#1}%
+     \begin{tabular}{@{}p{0.3\hsize}@{\hspace{1ex}}
+                        p{0.7\hsize}@{}}
+                    {\Large{\textbf{Messages}}} & \\
+     \end{tabular}
+
+     \vspace{1ex}
+     \noindent This section describes error messages generated by 
+               \textbf{\thedocid}.
+
+     \vspace{2ex}
+        \begin{flushright} 
+          \dtab     
+        \end{flushright} 
+     \vspace{\baselineskip}}
+
+
+  \newenvironment{task}[8]
+    {\def\pnum{#1}%
+     \def\ptit{#2}%
+     \def\pcon{#3}%
+     \def\pman{#4}%
+     \def\stev{#5}%
+     \def\stpd{#6}%
+     \def\enev{#7}%
+     \def\enpd{#8}%
+     \if!\pnum!\def\pnum{??}\fi
+     \if!\ptit!\def\ptit{??}\fi
+     \if!\pcon!\def\pcon{\textit{TBD}}\fi
+     \if!\pman!\def\pman{\textit{TBD}}\fi
+     \if!\stev!\def\stev{---}\fi
+     \if!\stpd!\def\stpd{---}\fi
+     \if!\enev!\def\enev{---}\fi
+     \if!\enpd!\def\enpd{---}\fi
+     \hrule%
+     \begin{tabular}{@{}p{0.35\hsize}@{\hspace{1ex}}
+                        p{0.25\hsize}p{0.20\hsize}p{0.15\hsize}@{}}
+        \textsc{WP Ref:} &
+          \multicolumn{3}{@{}l}{\textbf{\pnum}} \\
+        \textsc{WP Title:} &
+          \multicolumn{3}{@{}l}{\ptit} \\
+        \textsc{Contractors/Institutes:} &
+          \multicolumn{3}{@{}l}{\pcon} \\
+        \textsc{WP Manager:} &
+          \multicolumn{3}{@{}l}{\pman} \\
+        \textsc{Start Event:} & \stev &
+          \textsc{Planned Date} & \stpd \\
+        \textsc{End Event:} & \enev &
+          \textsc{Planned Date} & \enpd \\
+     \end{tabular}
+     \begin{list}
+       {--}%
+       {\setlength{\labelwidth}{0.35\hsize}%
+        \setlength{\labelsep}{1ex}%
+        \setlength{\leftmargin}{\labelwidth}%
+        \addtolength{\leftmargin}{\labelsep}%
+        \setlength{\blocksize}{\hsize}%
+        \addtolength{\blocksize}{-\leftmargin}%
+        \def\hsep{\rule[2pt]{\blocksize}{0.5pt}}%
+        \setlength{\parsep}{0.5ex plus 0.2ex minus 0.1ex}%
+   	\setlength{\itemsep}{0ex plus 0.2ex}}%
+	\item[]\hsep}
+    {\end{list}\hrule}
+
+  \newcounter{creq}
+  \newcounter{savecreq}
+  \newcommand{\creset}{\setcounter{creq}{\thesavecreq}}
+  \newenvironment{requirements}[1]{\begin{list}
+    {\ifcol\color{red}\fi\bfseries\upshape%
+     #1-\thesubsection-\thecreq\hfill}
+    {\usecounter{creq}%
+     \setlength{\labelwidth}{6em}%
+     \setlength{\labelsep}{1ex}%
+     \setlength{\leftmargin}{\labelwidth}%
+     \addtolength{\leftmargin}{\labelsep}
+     \setlength{\parsep}{0.5ex plus 0.2ex minus 0.1ex}
+     \setlength{\itemsep}{0ex plus 0.2ex}}}
+    {\setcounter{savecreq}{\thecreq}\end{list}}
+\fi
+
+\ifminutes
+  \newcommand{\frontpage}{%
+  \newlength{\iconsep}
+  \setlength{\iconsep}{6em}
+  \addtolength{\iconsep}{1ex}
+  \addtolength{\iconsep}{-\bigicon}
+  \newlength{\headsize}
+  \setlength{\headsize}{\textwidth}
+  \addtolength{\headsize}{-\iconsep}
+  \addtolength{\headsize}{-\bigicon}
+  \thispagestyle{empty}
+  \pagestyle{myheadings}
+  \markboth{\underline{\sffamily minutes-of-meetings}}
+           {\underline{\sffamily minutes-of-meetings}}
+
+  \noindent\parbox{\bigicon}{%
+    \includegraphics[width=\hsize]{\iconfile}}
+  \underline{\parbox{\headsize}{%
+  \Large\thegroup\\%
+  \phantom{|}\hfill\sffamily minutes-of-meetings}}
+
+  \vspace{\baselineskip}
+
+  \noindent
+  \begin{tabular}{|p{0.70\hsize}|p{0.24\hsize}|}
+    \hline
+    \begin{tabular}{ll}
+      \textbf{\sffamily from:}    & \theauthor\\
+      \textbf{\sffamily subject:} & \thetitle\\
+      \textbf{\sffamily ref.:}    & \thedocid\\
+    \end{tabular} & \parbox{\hsize}{\vspace{1ex}
+      \textbf{\sffamily date of minutes:}\\ \theminutesdate\\
+      \textbf{\sffamily date of meeting:}\\ \themeetingdate\\}\\
+    \hline
+  \end{tabular}
+
+  \vspace{0.5\baselineskip}
+
+  \noindent
+  \begin{tabular}{|p{0.47\hsize}|p{0.47\hsize}|}
+    \hline & \\
+    {\sffamily\bfseries ATTENDEES:} &
+    {\sffamily\bfseries DISTRIBUTION:} \\[1ex]
+    \parbox{\hsize}{\theattendees}&%
+    \parbox{\hsize}{\thedistribution}\\&\\%
+    \hline
+  \end{tabular}}
+\fi
+\ifletter
+  \newcommand{\opening}[1]{%
+  \newlength{\iconsep}
+  \setlength{\iconsep}{6em}
+  \addtolength{\iconsep}{1ex}
+  \addtolength{\iconsep}{-\bigicon}
+  \newlength{\headsize}
+  \setlength{\headsize}{\textwidth}
+  \addtolength{\headsize}{-\iconsep}
+  \addtolength{\headsize}{-\bigicon}
+  \thispagestyle{empty}
+  \pagestyle{myheadings}
+  \markboth{\underline{\sffamily Letter: \thesubject}}
+  	   {\underline{\sffamily Letter: \thesubject}}
+  
+  \noindent\parbox{\bigicon}{%
+    \includegraphics[width=\hsize]{\iconfile}}
+    \underline{\parbox{\headsize}{%
+    \Large\thegroup\\%
+    \phantom{|}\hfill\sffamily Letter}}
+  
+  \vspace{\baselineskip}
+  
+  \noindent
+
+  \begin{minipage}[t]{0.6\hsize}
+    \begin{tabular}{@{}p{0.14\hsize}p{0.8\hsize}@{}}
+      \textbf{\sffamily To:} & \parbox[t]{\hsize}{\theto} \\ & \\
+      \textbf{\sffamily From:} & \parbox[t]{\hsize}{\thefrom} \\ & \\
+      \ifcc
+      \textbf{\sffamily CC:} & \parbox[t]{\hsize}{\thecc} \\ & \\
+      \fi
+      \textbf{\sffamily Subject:} & \parbox[t]{\hsize}{\thesubject} \\
+    \end{tabular}
+  \end{minipage}\hfill
+  \begin{minipage}{0.34\hsize}
+    \theplace, \today
+  \end{minipage}
+  
+  \vspace{\baselineskip}
+  
+  \hrule
+  
+  \vspace{2\baselineskip}
+
+  \noindent#1
+
+  \vspace{2em}}
+
+  \newcommand{\closing}[1]{%
+  \vspace{2em}
+
+  \noindent#1
+
+  \vspace{\baselineskip}
+
+  \noindent\thefrom
+
+  \ifcc
+  \vspace{2em}
+ 
+  \begin{itemize}
+ 
+  \item[cc:] \thecc
+ 
+  \end{itemize}\fi}
+\fi
+%% \ifdocument
+%%   \newcommand{\frontpage}{%
+%%   \addtolength{\headheight}{\smallicon}
+%%   \addtolength{\textheight}{-\smallicon}
+%%   \newlength{\iconsep}
+%%   \setlength{\iconsep}{6em}
+%%   \addtolength{\iconsep}{1ex}
+%%   \addtolength{\iconsep}{-\smallicon}
+%%   \newsavebox{\pbox}
+%%   \sbox{\pbox}{\underline{%
+%% %%     \includegraphics[width=\smallicon]{\iconfile}%
+%%     \hspace{\iconsep}%
+%%     \large\rm\thetitle}}
+%%   \pagestyle{myheadings}
+%%    \markboth{\usebox{\pbox}}{\usebox{\pbox}}
+%%   \thispagestyle{empty}
+%%   \begin{center}
+%%     \huge\textrm{\thetitle}\\
+%%     \vspace{3\baselineskip}
+%% %%     \includegraphics[width=\bigicon]{\iconfile}\\
+%%     \large
+%%     \vspace{3\baselineskip}
+%%     \renewcommand{\arraystretch}{2}
+%%     \begin{tabular}{@{}p{0.2\hsize}p{0.6\hsize}@{}}
+%%       Revision: & \thedocrv; \thedate \\
+%%       Prepared by: & \theauthor \\
+%%       Abstract: & \theabstract \\
+%%     \end{tabular}
+%%   \end{center}
+%%   \clearpage
+%%    \newcounter{fig}
+%%   }
+%% \fi
+\ifdocument
+	% standard page
+  \pagestyle{fancyplain}
+%%   \addtolength{\headheight}{\marginparsep}
+%%   \addtolength{\textheight}{\marginparwidth}
+  \renewcommand{\sectionmark}[1]{\markright{#1}}
+  \lhead[\thepage]{\rightmark}
+  \rhead[\thetitle]{\thepage}
+  \lfoot[{}]{\tiny{HEALPix \hpxversion}}
+  \rfoot[{\tiny{HEALPix \hpxversion}}]{}
+  \cfoot{}
+	% front page
+  \newcommand{\frontpage}{%
+  \thispagestyle{empty}
+  \begin{center}
+    \huge\textrm{\thetitle}\\
+    \vspace{3\baselineskip}
+     \includegraphics[width=\bigicon,bb=163pt 286pt 433pt 556pt,clip=]{\iconfile}\\
+    \large
+    \vspace{3\baselineskip}
+    \renewcommand{\arraystretch}{2}
+    \begin{tabular}{@{}p{0.2\hsize}p{0.7\hsize}@{}}
+      Revision: & \thedocrv; \thedate \\
+      Prepared by: & \theauthor \\
+      Abstract: & \theabstract \\
+    \end{tabular}
+  \end{center}
+  \clearpage
+   \newcounter{fig}
+   \newcounter{tab}
+  }
+\fi
+

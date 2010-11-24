@@ -1,0 +1,8 @@
+Sourceforge screenshots:
+<300kb
+
+
+wmapV.png (IDL)
+
+orthview,wmapv,shade=1,png='/tmp/wmapV.png',/pre,win=-1,/asinh,fact=100,px=550,coord=['g','c'],/nobar,title='WMAP-5yr V band in Celestial Coordinates'
+

@@ -1,0 +1,89 @@
+% -*- LaTeX -*-
+
+
+\renewcommand{\facname}{{query\_polygon }}
+\renewcommand{\FACNAME}{{QUERY\_POLYGON }}
+\sloppy
+
+
+
+\title{\healpix IDL Facility User Guidelines}
+\docid{\facname} \section[\facname]{ }
+\label{idl:query_polygon}
+\docrv{Version 1.1}
+\author{Eric Hivon}
+\abstract{This document describes the \healpix IDL facility \facname.}
+
+
+
+
+\begin{facility}
+{This IDL facility provides a means to find the index of all pixels belonging to
+a sperical polygon defined by its vertices
+}
+{src/idl/toolkit/query\_polygon.pro}
+\end{facility}
+
+\begin{IDLformat}
+{\facname, Nside, Vlist, Listpix, [Nlist, HELP=, NESTED=, INCLUSIVE=]}
+\end{IDLformat}
+
+\begin{qualifiers}
+  \begin{qulist}{} %%%% NOTE the ``extra'' brace here %%%%
+    \item[Nside] \healpix resolution parameter used to index the pixel list (scalar integer)
+    \item[Vlist] 3D cartesian position vector of the polygon vertices. Array of
+    dimension (n,3) where n is the number of vertices
+    \item[Listpix] on output: list of ordered index for the pixels found 
+    in the polygon. The RING numbering scheme is used unless the keyword {\tt NESTED} is set.
+     (=-1 if the polygon is too small and no pixel is found)
+    \item[Nlist] on output: number of pixels in Listpix (=0 if no pixel is found).
+  \end{qulist}
+\end{qualifiers}
+
+\begin{keywords}
+  \begin{kwlist}{} %%% extra brace
+    \item[HELP=] if set, the documentation header is printed out and the
+routine exits
+    \item[NESTED =] if set, the output list uses the NESTED numbering scheme
+    instead of the default RING
+    \item[INCLUSIVE = ] if set, all the pixels overlapping (even partially)
+                   with the polygon are listed, otherwise only those whose
+                   center lies within the polygon are listed
+  \end{kwlist}
+\end{keywords}  
+
+\begin{codedescription}
+{\facname finds the pixels within the given polygon in a selective way WITHOUT
+scanning all the sky pixels. The polygon should be convex, 
+or have only one concave vertex. The edges should not intersect each other. 
+The numbering scheme of the output list and the
+inclusiveness of the polygon can be changed}
+\end{codedescription}
+
+
+
+\begin{related}
+  \begin{sulist}{} %%%% NOTE the ``extra'' brace here %%%%
+    \item[idl] version \idlversion or more is necessary to run \facname.
+    \item[ang2pix, pix2ang] conversion between angles and pixel index
+    \item[vec2pix, pix2vec] conversion between vector and pixel index
+    \item[\htmlref{query\_disc}{idl:query_disc}, \htmlref{query\_polygon}{idl:query_polygon},]
+    \item[\htmlref{query\_strip}{idl:query_strip}, \htmlref{query\_triangle}{idl:query_triangle}] render the list of pixels enclosed
+  respectively in a given disc, polygon, latitude strip and triangle
+  \end{sulist}
+\end{related}
+
+\begin{example}
+{
+\begin{tabular}{l} %%%% use this tabular format %%%%
+\facname,  256L, [[0,1,1,0],[0,0,1,1],[1,0,-1,0]], listpix, nlist
+\end{tabular}
+}
+{
+On return listpix contains the index of the (131191) pixels contained in the
+polygon with vertices of cartesian coordinates (0,0,1), (1,0,0), (1,1,-1) and (0,1,0).
+The pixel indices correspond to the RING scheme with resolution 256.
+}
+\end{example}
+
+

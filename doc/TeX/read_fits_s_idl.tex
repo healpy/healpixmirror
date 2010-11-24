@@ -1,0 +1,107 @@
+% -*- LaTeX -*-
+
+% PLEASE USE THIS FILE AS A TEMPLATE FOR THE DOCUMENTATION OF YOUR OWN
+% FACILITIES: IN PARTICULAR, IT IS IMPORTANT TO NOTE COMMENTS MADE IN
+% THE TEXT AND TO FOLLOW THIS ORDERING. THE FORMAT FOLLOWS ONE USED BY
+% THE COBE-DMR PROJECT.	
+% A.J. Banday, April 1999.
+
+
+
+
+\renewcommand{\facname}{{read\_fits\_s }}
+\renewcommand{\FACNAME}{{READ\_FITS\_S }}
+\sloppy
+
+
+
+\title{\healpix IDL Facility User Guidelines}
+\docid{\facname} \section[\facname]{ }
+\label{idl:read_fits_s}
+\docrv{Version 1.1}
+\author{Eric Hivon}
+\abstract{This document describes the \healpix facility \facname.}
+
+
+
+
+\begin{facility}
+{This IDL facility reads a FITS file into an IDL structure.}
+{src/idl/fits/read\_fits\_s.pro}
+\end{facility}
+
+\begin{IDLformat}
+{\FACNAME, File, Prim\_stc, [Xten\_stc, MERGE=, EXTENSION=]
+}
+\end{IDLformat}
+
+\begin{qualifiers}
+  \begin{qulist}{} %%%% NOTE the ``extra'' brace here %%%%
+ 	\item[{File}] 
+          name of a FITS file containing 
+               the healpix map(s) in an extension or in the image field 
+
+ 	\item[{Prim\_stc}] 
+	variable containing on output an IDL structure with the following fields: \\
+		- primary header (tag : 0, tag name : HDR) \\
+		- primary image (if any, tag : 1, tag name : IMG)
+
+       \item[{Xten\_stc}]
+		  (optional), \\
+	variable containing on output an IDL structure with the following fields: \\
+		- extension header (tag : 0, tag name : HDR) \\
+		- data column 1 (if any, tag : 1, tag name given by TTYPE1 (with all
+                    spaces removed and only letters, digits and underscore) \\
+		- data column 2 (if any, tag : 2, tag name given by TTYPE2)  \\
+		...
+
+	\item[{EXTENSION=}]
+		(optional), \\
+	scalar integer containing on input the extension to be read (0 based)\\
+	\default 0
+  \end{qulist}
+\end{qualifiers}
+
+\begin{keywords}
+  \begin{kwlist}{} %%% extra brace
+	\item[{MERGE=}]
+	if set {\tt Prim\_stc} contains : \\
+		- the concatenated primary and extension header (tag name : HDR) \\
+		- primary image (if any, tag name : IMG) \\
+		- data column 1 ... \\
+	and {\tt Exten\_stc} is set to 0 \\
+	\default : not set (or set to 0)
+   \end{kwlist}
+\end{keywords}
+
+\begin{codedescription}
+{\thedocid reads in any type of FITS file (Image, Binary table or Ascii table) 
+and outputs the data in IDL structures}
+\end{codedescription}
+
+
+
+\begin{related}
+  \begin{sulist}{} %%%% NOTE the ``extra'' brace here %%%%
+  \item[idl] version \idlversion or more is necessary to run \thedocid
+  \item[synfast] This \healpix facility will generate the FITS format 
+            sky map that can be read by \thedocid.
+\input{item_read_fits_idl}
+  \item[\htmlref{write\_fits\_sb}{idl:write_fits_sb}] This \healpix IDL facility can be used to generate FITS format 
+            sky maps readable by \thedocid.
+  \end{sulist}
+\end{related}
+
+
+\begin{example}
+{
+\begin{tabular}{l} %%%% use this tabular format %%%%
+\thedocid,  'dmr\_skymap\_90a\_4yr.fits', pdata, xdata \\
+\end{tabular}
+}
+{\thedocid reads in the file 'dmr\_skymap\_90a\_4yr.fits'. On output, pdata
+contains the primary header and xdata is a structure whose first field is the
+extension header, and the other fields are vectors with respective tag names 
+PIXEL, SIGNAL, N\_OBS, SERROR, ... (see {\tt help,/struc,xdata})}
+\end{example}
+

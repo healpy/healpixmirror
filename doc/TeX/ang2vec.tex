@@ -1,0 +1,56 @@
+
+
+\sloppy
+
+
+\title{\healpix Fortran Subroutines Overview}
+\docid{ang2vec} \section[ang2vec]{ }
+\label{sub:ang2vec}
+\docrv{Version 1.0}
+\author{E. Hivon}
+\abstract{This document describes the \healpix Fortran90 subroutine ANG2VEC.}
+
+\begin{facility}
+{Routine to convert the position angles $(\theta,\phi)\myhtmlimage{}$ of a point on the sphere 
+into its 3D position vector $(x,y,z)$ with
+$x = \sin\theta\cos\phi\myhtmlimage{}$, $y=\sin\theta\sin\phi\myhtmlimage{}$, $z=\cos\theta\myhtmlimage{}$. 
+}
+{src/f90/mod/pix\_tools.f90}
+\end{facility}
+
+\begin{f90format}
+{theta, phi, vector}
+\end{f90format}
+
+
+\begin{arguments}
+{
+\begin{tabular}{p{0.4\hsize} p{0.05\hsize} p{0.1\hsize} p{0.35\hsize}} \hline  
+\textbf{name~\&~dimensionality} & \textbf{kind} & \textbf{in/out} & \textbf{description} \\ \hline
+                   &   &   &                           \\ %%% for presentation
+theta & DP & IN & colatitude in radians measured southward from north pole (in
+    $[0,\ \pi]\myhtmlimage{}$). \\
+phi   & DP & IN & longitude in radians measured eastward (in $[0,\ 2\pi]\myhtmlimage{}$).\\
+vector(3) & DP & OUT & three dimensional cartesian position vector
+                   $(x,y,z)$ normalised to unity. The north pole is $(0,0,1)$
+\end{tabular}
+}
+\end{arguments}
+
+% \begin{example}
+% {
+% call ang2vec(theta,phi,vector) \\
+% }
+% {
+% }
+% \end{example}
+
+\begin{related}
+  \begin{sulist}{} %%%% NOTE the ``extra'' brace here %%%%
+  \item[\htmlref{vec2ang}{sub:vec2ang}] converts the 3D position vector of point into its position
+  angles on the sphere.
+  \end{sulist}
+\end{related}
+
+\rule{\hsize}{2mm}
+
