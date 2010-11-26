@@ -1,13 +1,28 @@
-#!/bin/sh
+#! /bin/sh
+#
+#=============================
+#  script to pack a release
+#
+#  cd /tmp
+#  cvs get [-r BRANCH] -d Healpix_[VERSION] Healpix
+#  cd Healpix_[VERSION]
+#  ./pack
+#
+#=============================
 
 . hpxconfig_functions.sh
 
 updateVersion () {
-  current=`grep -v '#' ./Version`
-  reldate=`date +%Y-%m-%d`
-  tmpfile="./tmpfile"
-  version=${current}
+  # date string
+  reldate=`date +%Y-%m-%d`  # eg 2009-08-31
+  shortdate=`date +%Y%b%d`  # eg 2009Jul31
 
+  # temporary file
+  tmpfile="./tmpfile"
+
+  # versions number
+  current=`grep -v '#' ./Version`
+  version=${current}
   echoLn "Enter version number ($current) "
   read answer
   [ "x$answer" != "x" ] && version="$answer"
@@ -26,7 +41,7 @@ updateVersion () {
   infile='./INSTALL'
   echo "editing ${infile}"
   cat $infile |\
-      sed "s|$current|$version|g" >\
+      sed "s|_HPV_|$version|g" >\
       $tmpfile
   mv $tmpfile $infile
 
@@ -67,13 +82,20 @@ updateVersion () {
 
 #---------------
 
+setTopDefaults
 echo "This script will destroy several files and subdirectories"
-echo "Are you sure you want to proceed ? [NO/yes]"
+echoLn "Are you sure you want to proceed ? [NO/yes] "
 read answer
 if [ "$answer" != "yes" ]; then
     echo "Exiting."
     exit 0
 fi
+
+do_split=0
+# echo "Do you want to split the produced tar files (for HFI DPC)"
+# echoLn "[NO/yes]                       "
+# read answer
+# [ "$answer" == "yes" ] && do_split=1
 
 OS=`uname -s`
 updateVersion
@@ -85,8 +107,11 @@ mkdir -p doc/pdf
 echo "installing java Documentation"
 cd src/java/healpixjava
 ant docs
+\rm -r dist reports build # re-instated 2010-02-22
+\rm -r META-INF
 cd $here
 cp -pr src/java/healpixjava/healpixdocs doc/html/java
+\rm -r src/java/healpixjava/healpixdocs # re-instated 2010-02-22
 
 echo "cleaning up C++..."
 cd src/cxx
@@ -142,9 +167,70 @@ for p in quad_ring; do
 done
 rm -rf extra
 
+echo "appending GPL header to source files"
+tempfile='/tmp/tmp_edit.txt'
+# F90 ------------
+echo "   ... F90 ..."
+list=`find src/f90 -type f -name \*90 -print`
+for file in $list; do
+   cat gpl_header/gpl_header.f90 $file > $tempfile
+   mv $tempfile $file
+done
+# IDL (non ximview) -----------
+echo "   ... IDL ..."
+list=`find src/idl -type f -name \*pro -print | grep -v zzz | grep -v ximview`
+for file in $list; do
+   cat gpl_header/gpl_header.pro $file > $tempfile
+   mv $tempfile $file
+done
+# # IDL (ximview) ---------
+# echo "   ... ximview ..."
+# list=`find src/idl/ximview -type f -name \*pro -print | grep -v astrolib`
+# for file in $list; do
+#    cat gpl_header/gpl_header_leahy.pro $file > $tempfile
+#    mv $tempfile $file
+# done
+# C ---------
+echo "   ... C ..."
+list=`find src/C/subs -type f \( -name \*c -o -name \*h \) -print`
+for file in $list; do
+   cat gpl_header/gpl_header.c $file > $tempfile
+   mv $tempfile $file
+done
+rm -rf gpl_header
+
+echo "removing myself..."
+rm -f $0
+
 echo "--------------------"
 echo $version $reldate
 echo "--------------------"
 
-echo "removing myself..."
-rm -f $0
+relsuf="${version}_${shortdate}"
+package="Healpix_${relsuf}.tar.gz"
+echo "creating package ../${package}"
+cd ..
+tar -cvzpf ${package} `basename ${here}`
+cd ${here}
+
+if [ $do_split == 1 ] ; then
+    echo "splitting tar file"
+    tar -cvzpf "../Hpx_java.tar.gz" src/java
+    rm -rf src/java
+    tar -cvzpf "../Hpx_test.tar.gz" test
+    rm -rf test
+    tar -cvzpf "../Hpx_doc.tar.gz"  doc
+    rm -rf doc
+    tar -cvzpf "../Hpx_data.tar.gz" data
+    rm -rf data
+    
+    cd ..
+    tar -cvzpf "Healpix_src_${relsuf}.tar.gz" `basename ${here}`
+    cd ${here}
+fi
+
+cd ..
+allsums ${package}
+cd ${here}
+
+exit

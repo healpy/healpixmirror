@@ -1,7 +1,7 @@
-Healpix 2.11 Installation
+Healpix _HPV_ Installation
 =========================
 
-Healpix 2.11 contains 5 independent packages (Fortran90, IDL, C, C++ and java) 
+Healpix _HPV_ contains 5 independent packages (Fortran90, IDL, C, C++ and java) 
 whose installation procedure is summarized below.
 
 Every effort has been made to make the installation and usage of Healpix easy and straightforward.
@@ -47,7 +47,7 @@ or
 
 
 Configuring the IDL package
---------------------------
+---------------------------
 
 The 
    ./configure [-L]
@@ -59,9 +59,17 @@ Then the
   hidlde
 commands will give you access to IDL augmented of Healpix routines.
 
-For more information on the IDL package see
+For more information on the IDL package type
+  healpix_doc, /html
+or
+  healpix_doc, /pdf
+from within IDL
+
+or see
   doc/html/idl.htm
   doc/pdf/idl.pdf
+
+
 
 
 Installing the C package
