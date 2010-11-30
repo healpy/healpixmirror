@@ -108,6 +108,7 @@ f90-modules:
 # itemized list instead of loop to allow parallel compiling
 f90-library: f90-modules
 	@cd src/f90/lib; $(MAKE) $(F90_MKFLAGS)
+	@cd src/f90/psht; $(MAKE) $(F90_MKFLAGS)
 
 anafast: f90-modules f90-library
 	@cd src/f90/$@; $(MAKE) $(F90_MKFLAGS)
@@ -160,7 +161,7 @@ f90-test: f90-all
 	echo "success rate: `ls -1 test*fits | wc -l`/9"
 
 f90-clean:
-	for p in $(f90-prog) lib mod; do \
+	for p in $(f90-prog) lib mod psht; do \
 	$(RM) src/f90/$$p/*.o src/f90/$$p/*.$(F90_MOD) src/f90/$$p/lib*.a src/f90/$$p/*.pc src/f90/$$p/*.pcl src/f90/$$p/*.il ; \
 	done
 

@@ -77,6 +77,10 @@
     integer(I4B), intent(IN)                   :: nsmax, nlmax, nmmax
     complex(KALMC), intent(IN),  dimension(1:1,0:nlmax,0:nmmax) :: alm
     real(KMAP),   intent(OUT), dimension(0:(12_i8b*nsmax)*nsmax-1) :: map
+#define USE_PSHT
+#ifdef USE_PSHT
+    call psht_hp_alm2map_x_KLOAD(nsmax,nlmax,nmmax,alm,map)
+#else
 
     integer(I4B) :: l, m, ith                          ! alm related
     integer(I8B) :: istart_south, istart_north, npix   ! map related
@@ -261,6 +265,7 @@
     deallocate(mfac)
     deallocate(b_north, b_south)
     return
+#endif
   end subroutine alm2map_sc_KLOAD
 
   !=======================================================================
@@ -296,6 +301,14 @@
     character(LEN=*), parameter :: code = 'ALM2MAP_SPIN'
     integer(I4B) :: status
     logical(LGT) :: even_spin
+
+#ifdef USE_PSHT
+    if (spin<=2) then
+      call psht_hp_alm2map_spin_x_KLOAD(nsmax,nlmax,nmmax,spin, &
+        alm(1:2,0:nlmax,0:nmmax),map(0:12*nsmax*nsmax-1,1:2))
+      return
+    endif
+#endif
     !=======================================================================
 
     ! Healpix definitions
@@ -908,6 +921,10 @@
     complex(KALMC), intent(IN),  dimension(1:3,0:nlmax,0:nmmax) :: alm_TGC
     real(KMAP),   intent(OUT), dimension(0:(12_i8b*nsmax)*nsmax-1,1:3) :: map_TQU
 
+#ifdef USE_PSHT
+    call psht_hp_alm2map_pol_x_KLOAD(nsmax,nlmax,nmmax,alm_TGC,map_TQU)
+#else
+
     integer(I4B) :: l, m, ith                    ! alm related
     integer(I8B) :: istart_south, istart_north, npix   ! map related
     integer(I4B) :: nrings, nphmx
@@ -1120,6 +1137,7 @@
     deallocate(mfac, normal_l)
     deallocate(b_TQU)
     return
+#endif
   end subroutine alm2map_pol_KLOAD
 !   !=======================================================================
 !   subroutine alm2map_pol_KLOAD(nsmax, nlmax, nmmax, alm_TGC, map_TQU)
@@ -2958,6 +2976,16 @@
 
     real(DP), dimension(1:2)         :: zbounds_in
     real(DP), dimension(1:2*nsmax,1) :: w8ring_in
+
+#ifdef USE_PSHT
+    zbounds_in = (/-1.d0 , 1.d0/)
+    if (present(zbounds)) zbounds_in = zbounds
+    w8ring_in  = 1.d0
+    if (present(w8ring))  w8ring_in  = w8ring
+
+    call psht_hp_map2alm_x_KLOAD(nsmax,nlmax,nmmax,map,alm,zbounds_in,w8ring_in)
+#else
+
     integer(I4B) :: l, m, ith, scalem, scalel   ! alm related
     integer(I8B) :: istart_south, istart_north, npix  ! map related
     integer(I4B) :: nrings, nphmx
@@ -3180,6 +3208,7 @@
        deallocate (ring,recfac,dalm)
     endif
     RETURN
+#endif
   END subroutine map2alm_sc_KLOAD
   !=======================================================================
   subroutine map2alm_spin_KLOAD(nsmax, nlmax, nmmax, spin, map, alm, zbounds, w8ring)
@@ -3226,6 +3255,14 @@
     if (present(zbounds)) zbounds_in = zbounds
     w8ring_in  = 1.d0
     if (present(w8ring))  w8ring_in  = w8ring
+
+#ifdef USE_PSHT
+    if (spin<=2) then
+      call psht_hp_map2alm_spin_x_KLOAD(nsmax,nlmax,nmmax, &
+        map(0:12*nsmax*nsmax-1,1:2),alm(1:2,0:nlmax,0:nmmax),zbounds_in,w8ring_in)
+      return
+    endif
+#endif
 
     ! Healpix definitions
     nrings = 2*nsmax           ! number of isolatitude rings on N. hemisphere + equat
@@ -3878,6 +3915,15 @@
 
     real(DP), dimension(1:2)         :: zbounds_in
     real(DP), dimension(1:2*nsmax,3) :: w8ring_in
+#ifdef USE_PSHT
+    zbounds_in = (/-1.d0 , 1.d0/)
+    if (present(zbounds)) zbounds_in = zbounds
+    w8ring_in  = 1.d0
+    if (present(w8ring_TQU))  w8ring_in  = w8ring_TQU
+
+    call psht_hp_map2alm_pol_x_KLOAD(nsmax,nlmax,nmmax,map_TQU,alm_TGC,zbounds_in,w8ring_in)
+#else
+
     integer(I4B) :: l, m, ith, scalel, scalem, nrings, nphmx
     integer(I8B) :: istart_south, istart_north, npix
     real(DP)     :: omega_pix
@@ -4159,6 +4205,7 @@
     deallocate(mfac, normal_l)
     deallocate(phas_ns)
     return
+#endif
   end subroutine map2alm_pol_KLOAD
 
   !=======================================================================

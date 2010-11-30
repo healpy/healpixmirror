@@ -1103,10 +1103,10 @@ contains
   !**************************************************************************
 
   ! single precision routines
-  include 'alm_map_ss_inc.f90'
+#include "alm_map_ss_inc.F90"
 
   ! double precision routines
-  include 'alm_map_dd_inc.f90'
+#include "alm_map_dd_inc.F90"
   
 
   !**************************************************************************

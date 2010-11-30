@@ -3,9 +3,9 @@
 # EH, Dec 2004 -- Jan 2005
 
 SetDef(){
-template_file=alm_map_template.f90
-outfile_s=alm_map_ss_inc.f90
-outfile_d=alm_map_dd_inc.f90
+template_file=alm_map_template.F90
+outfile_s=alm_map_ss_inc.F90
+outfile_d=alm_map_dd_inc.F90
 }
 
 #--------

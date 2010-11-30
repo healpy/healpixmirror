@@ -661,7 +661,7 @@ setF90Defaults () {
     CC="cc"
     FFLAGS="-I\$(F90_INCDIR)"
     CFLAGS="-O"
-    LDFLAGS="-L\$(F90_LIBDIR) -L\$(FITSDIR) -lhealpix -lhpxgif -l\$(LIBFITS)"
+    LDFLAGS="-L\$(F90_LIBDIR) -L\$(FITSDIR) -lhealpix -lhpxgif -lpsht_healpix_f -l\$(LIBFITS)"
     F90_BINDIR="./bin"
     F90_INCDIR="./include"
     F90_LIBDIR="./lib"
