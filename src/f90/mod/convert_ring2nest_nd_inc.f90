@@ -41,7 +41,6 @@
     integer(kind=I4B),  dimension(:), allocatable :: mapping4
     integer(kind=I8B),  dimension(:), allocatable :: mapping8
     !=======================================================================
-
     npix = nside2npix(nside)
     call assert (npix>0,       code//": invalid Nside")
 

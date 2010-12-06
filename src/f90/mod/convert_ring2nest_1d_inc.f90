@@ -42,6 +42,7 @@
     npix = nside2npix(nside)
     call assert (npix>0,       code//": invalid Nside")
 
+    allocate(map_tmp(0:npix-1)) ! bug correction, 2010-12-06
 
     if (nside <= ns_max4) then
 !$OMP parallel default(none) &

@@ -6,7 +6,9 @@ incalm  = alm_map_ss_inc.F90 alm_map_dd_inc.F90
 incpix = convert_inplace_1d_inc.f90 \
 	convert_inplace_nd_inc.f90 \
 	convert_nest2ring_nd_inc.f90 \
+	convert_nest2ring_1d_inc.f90 \
 	convert_ring2nest_nd_inc.f90 \
+	convert_ring2nest_1d_inc.f90 \
 	remove_dipole_inc.f90 \
 	pixel_routines.F90
 
