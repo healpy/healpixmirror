@@ -86,6 +86,8 @@ pro oplot_healpix_bounds, nside, eul_mat, projection=projection, mollweide=mollw
 ;
 ; MODIFICATION HISTORY:
 ;         Nov 2004
+;   Dec 2010, EH: slight edition to avoid "Floating illegal operand" warning
+;                 increased number of points (np) from 200 to 300
 ;-
 
 identify_projection, projtype, projection=projection, mollweide=mollweide, gnomic=gnomic, cartesian=cartesian
@@ -105,12 +107,13 @@ if (projtype eq 4) then begin  ; orthographic : deal with boundaries
     endelse
 endif
 
-np = 200 > (2*nside)
+np = 300 > (2*nside)
 ramp = dindgen(np)/(np-1.d0)
 halfpi = !dpi/2.d0
 fn  = double(nside)
 fn2 = fn*fn
 const = halfpi / fn / sqrt(3.d0) 
+zero = replicate(0.d0, np)
 
 
 for regime=0,1 do begin
@@ -120,7 +123,7 @@ for regime=0,1 do begin
             phi = halfpi*(ramp - kk/fn)
         endif else begin            ; polar regime
             z = (2.d0/3.d0 + ramp * (1.d0-kk^2/fn2)/3.d0) 
-            phi = kk * const / sqrt(1.d0-z)
+            phi = (kk gt 0) ? kk * const / sqrt(1.d0-z) : zero ; avoid 0/0 at pole
         endelse
         for quad=0,3 do begin ; quadrant
             for j=0,regime do begin
