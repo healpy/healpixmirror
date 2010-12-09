@@ -25,6 +25,7 @@
 #               replaced ' == ' tests with ' = ' or ' -eq '
 #               got rid of arrays in pickCppCompilation
 # 2010-06-22: supports zsh (M. Tomasi)
+# 2010-12-09: added IdentifyCParallCompiler to compile C libpsht with OpenMP
 #=====================================
 #=========== General usage ===========
 #=====================================
@@ -809,16 +810,6 @@ GuessCompiler () {
     case $OS in
 	AIX)
 	    IdentifyCompiler;;
-# 	    FTYPE="xlf"
-#	    FFLAGS="$FFLAGS -qsuffix=f=f90:cpp=F90"
-#	    OFLAGS="-O"
-#	    CFLAGS="$CFLAGS $FPP""RS6000"
-#	    FPP="-WF,-D"
-#	    PRFLAGS="-qsmp=omp"
-#	    AR="ar -rsv" # archive with index table
-#	    FF64="-q64"
-#	    CF64="-q64"
-#	    AR64="-X64";;
 	SunOS)
 	    sun_modules
 	    FFLAGS=`echo $FFLAGS | ${SED} "s/-I/-M/g"`
@@ -908,6 +899,15 @@ askOpenMP () {
     read answer
     [ "x$answer" != "x" ] && OpenMP="$answer"
     if [ $OpenMP = 1 ] ; then
+	# deal with C flags
+	IdentifyCParallCompiler
+	if [ "x$PRCFLAGS" != "x" ] ; then
+	    CFLAGS="$CFLAGS $PRCFLAGS"
+	else
+	    echo "C routines won't be compiled with OpenMP"
+	fi
+
+	# deal with F90 flags
 	if [ "x$PRFLAGS" != "x" ] ; then
 	    # update FFLAGS
 	    FFLAGS="$FFLAGS $PRFLAGS"
@@ -975,6 +975,22 @@ EOF
    ${RM}  ${tmpfile}.*
 
 
+}
+# -----------------------------------------------------------------
+IdentifyCParallCompiler () {
+    nicc=`$CC -V 2>&1 | ${GREP} -i intel    | ${WC} -l`
+    ngcc=`$CC --version 2>&1 | ${GREP} 'GCC' | ${WC} -l`
+    PRCFLAGS=""
+    if [ $nicc != 0 ] ; then
+	PRCFLAGS='-openmp' # -openmp-report0
+    elif [ $ngcc != 0 ] ; then
+	PRCFLAGS='-fopenmp'
+    else
+	echo "$CC: Unknown C compiler"
+	echo "Enter flags for C compilation with OpenMP"
+	read answer
+	[ "x$answer" != "x" ] && PRCFLAGS="$answer"
+    fi
 }
 # -----------------------------------------------------------------
 

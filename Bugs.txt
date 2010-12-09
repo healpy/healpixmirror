@@ -643,46 +643,6 @@ Makefile.in			2009-07-30: add " " around variables
 
 				version 2.12 (2009-07-31)
 --------------------------------------------------------------
-**********************************************************
-NEW STUFF:
-
-src/f90/mod/alm_tools.f90
-src/f90/mod/alm_map_template.f90  2009-01-08: introduced sub_ring2map sub_map2ring
-src/f90/mod/healpix_types.F90     2009-02-??: introduced healpix_version
-
-src/f90/mod/pix_tools.F90          2009-03-25: heavy editions to support Nside>8192
-				2010-06-25: finished, except medfilt
-src/f90/mod/pixel_routines.F90                 new
-src/f90/mod/num_rec.F90        	2009-06-17 (.f90 -> F90) supports large npix and i8b in sort and isort
-src/f90/mod/source_gen_sort_inc.f90            new
-
-src/f90/mod/paramfile_io.F90 	2010-06-25: synch with 2_11_patches
-src/f90/mod/statistics.f90  	2010-06-25: support for i8b of tstats, compute_statistics, print_statistics 
-						(except median computation)
-
-src/f90/synfast/*          	2010-06-25: synch + I8B support
-src/f90/anafast/*          	2010-06-25: synch + I8B support
-src/f90/smoothing/*          	2010-06-25: synch + I8B support
-src/f90/median_filter/*
-src/f90/map2gif/*		2010-11-23: moll projection accepts -lat; uses euler_matrix_new
-src/f90/ud_grade
-
-
-src/f90/mod/fitstools.F90       2010-06-25: synch + I8B support
-src/f90/mod/fits_template.f90   2010-06-25: synch + I8B support
-src/f90/mod/udgrade_template.f90 2010-06-25: I8B support + some rewriting >>> TO BE TESTED
-
-src/f90/alteralm/		2010-11-23: nothing to be done, because of alm writing limitations
-src/f90/hotspot/*		2010-11-23: accepts Nside > 8192              TO BE TESTED
-
-src/f90/mod/long_intrisic.F90   2010-11-23: added long_count
-
-TODO
-----
-   fits2alm, alm2fits, read_alms, write_alms, dump_alms, ... are limited to l<46340
-ngsims_full_sky/sky_ng_sim*.F90 
-plmgen
-**********************************************************
 
 pack : 2009-08-03, make tar ball, TO BE TESTED
 
@@ -926,3 +886,52 @@ src/idl/visu/loaddata_healpix.pro	2010-06-17: force pixel_list to be undefined b
 
 hpxconfig_functions.sh			2010-06-22: supports zsh
 
+
+
+**********************************************************
+NEW STUFF:
+
+src/f90/mod/alm_tools.f90
+src/f90/mod/alm_map_template.f90  2009-01-08: introduced sub_ring2map sub_map2ring
+src/f90/mod/healpix_types.F90     2009-02-??: introduced healpix_version
+
+src/f90/mod/pix_tools.F90          2009-03-25: heavy editions to support Nside>8192
+				2010-06-25: finished, except medfilt
+src/f90/mod/pixel_routines.F90                 new
+src/f90/mod/num_rec.F90        	2009-06-17 (.f90 -> F90) supports large npix and i8b in sort and isort
+src/f90/mod/source_gen_sort_inc.f90            new
+
+src/f90/mod/paramfile_io.F90 	2010-06-25: synch with 2_11_patches
+src/f90/mod/statistics.f90  	2010-06-25: support for i8b of tstats, compute_statistics, print_statistics 
+						(except median computation)
+
+src/f90/synfast/*          	2010-06-25: synch + I8B support
+src/f90/anafast/*          	2010-06-25: synch + I8B support
+src/f90/smoothing/*          	2010-06-25: synch + I8B support
+src/f90/median_filter/*
+src/f90/map2gif/*		2010-11-23: moll projection accepts -lat; uses euler_matrix_new
+src/f90/ud_grade
+
+
+src/f90/mod/fitstools.F90       2010-06-25: synch + I8B support
+src/f90/mod/fits_template.f90   2010-06-25: synch + I8B support
+src/f90/mod/udgrade_template.f90 2010-06-25: I8B support + some rewriting >>> TO BE TESTED
+
+src/f90/alteralm/		2010-11-23: nothing to be done, because of alm writing limitations
+src/f90/hotspot/*		2010-11-23: accepts Nside > 8192              TO BE TESTED
+
+src/f90/mod/long_intrisic.F90   2010-11-23: added long_count
+
+TODO
+----
+   fits2alm, alm2fits, read_alms, write_alms, dump_alms, ... are limited to l<46340
+ngsims_full_sky/sky_ng_sim*.F90 
+plmgen
+**********************************************************
+
+src/f90/mod/alm_map_template.F90	2010-11-30, MR: linking with libpsht 
+					 alm2map, map2alm for scalar, polarization and spin<=2
+
+src/idl/visu/oplot_healpix_bounds.pro	2010-12-09:  removed "Floating Point Exception" message
+hpxconfig_functions.sh			2010-12-09: automatic identification of C compiler to allow
+						OpenMP compilation of libpsht
