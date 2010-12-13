@@ -8,21 +8,21 @@ static void psht_make_healpix_geom_info_2 (int nside, double *wgt,
   double z1, double z2, psht_geom_info **geom_info)
   {
   const double pi=3.141592653589793238462643383279502884197;
-  int npix=nside*nside*12;
-  int ncap=2*nside*(nside-1);
+  ptrdiff_t npix=(ptrdiff_t)nside*nside*12;
+  ptrdiff_t ncap=2*(ptrdiff_t)nside*(nside-1);
   int nrings=4*nside-1;
 
   double *theta=RALLOC(double,nrings);
   double *weight=RALLOC(double,nrings);
   int *nph=RALLOC(int,nrings);
   double *phi0=RALLOC(double,nrings);
-  int *ofs=RALLOC(int,nrings);
+  ptrdiff_t *ofs=RALLOC(ptrdiff_t,nrings);
   int *stride=RALLOC(int,nrings);
   int m=0,i;
   for (i=0; i<nrings; ++i)
     {
     int ring=i+1;
-    int northring = (ring>2*nside) ? 4*nside-ring : ring;
+    ptrdiff_t northring = (ring>2*nside) ? 4*nside-ring : ring;
     if (northring < nside)
       {
       theta[m] = 2*asin(northring/(sqrt(6.)*nside));

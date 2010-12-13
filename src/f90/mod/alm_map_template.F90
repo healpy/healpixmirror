@@ -303,7 +303,7 @@
     logical(LGT) :: even_spin
 
 #ifdef USE_PSHT
-    if (spin<=2) then
+    if (spin<=10) then
       call psht_hp_alm2map_spin_x_KLOAD(nsmax,nlmax,nmmax,spin, &
         alm(1:2,0:nlmax,0:nmmax),map(0:12*nsmax*nsmax-1,1:2))
       return
@@ -3257,7 +3257,7 @@
     if (present(w8ring))  w8ring_in  = w8ring
 
 #ifdef USE_PSHT
-    if (spin<=2) then
+    if (spin<=10) then
       call psht_hp_map2alm_spin_x_KLOAD(nsmax,nlmax,nmmax, &
         map(0:12*nsmax*nsmax-1,1:2),alm(1:2,0:nlmax,0:nmmax),zbounds_in,w8ring_in)
       return

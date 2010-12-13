@@ -247,7 +247,7 @@ static void X(dealloc_almtmp) (X(joblist) *jobs)
   }
 
 static void X(alm2almtmp) (X(joblist) *jobs, int lmax, int m,
-  const psht_alm_info *alm, double **normal_l)
+  const psht_alm_info *alm)
   {
   int ijob,i,l;
   for (ijob=0; ijob<jobs->njobs; ++ijob)
@@ -257,13 +257,13 @@ static void X(alm2almtmp) (X(joblist) *jobs, int lmax, int m,
       {
       case ALM2MAP:
         {
-        const double *norm_l = normal_l[curjob->spin];
+        const double *norm_l = curjob->norm_l;
         for (i=0; i<curjob->nalm; ++i)
           {
           X(cmplx) *curalm = curjob->alm[i];
           for (l=m; l<=lmax; ++l)
             {
-            int aidx = psht_alm_index(alm,l,m);
+            ptrdiff_t aidx = psht_alm_index(alm,l,m);
 #ifdef PLANCK_HAVE_SSE2
             curjob->alm_tmp[i][l].a = _mm_set1_pd(curalm[aidx].re*norm_l[l]);
             curjob->alm_tmp[i][l].b = _mm_set1_pd(curalm[aidx].im*norm_l[l]);
@@ -276,22 +276,26 @@ static void X(alm2almtmp) (X(joblist) *jobs, int lmax, int m,
         break;
         }
       case ALM2MAP_DERIV1:
+        {
+        const double *norm_l = curjob->norm_l;
         for (i=0; i<curjob->nalm; ++i)
           {
           X(cmplx) *curalm = curjob->alm[i];
           for (l=m; l<=lmax; ++l)
             {
-            int aidx = psht_alm_index(alm,l,m);
+            ptrdiff_t aidx = psht_alm_index(alm,l,m);
+            double fct = fabs(norm_l[l])*sqrt(l*(l+1.));
 #ifdef PLANCK_HAVE_SSE2
-            curjob->alm_tmp[i][l].a = _mm_set1_pd(-curalm[aidx].re);
-            curjob->alm_tmp[i][l].b = _mm_set1_pd(-curalm[aidx].im);
+            curjob->alm_tmp[i][l].a = _mm_set1_pd(-curalm[aidx].re*fct);
+            curjob->alm_tmp[i][l].b = _mm_set1_pd(-curalm[aidx].im*fct);
 #else
-            curjob->alm_tmp[i][l].re = -curalm[aidx].re;
-            curjob->alm_tmp[i][l].im = -curalm[aidx].im;
+            curjob->alm_tmp[i][l].re = -curalm[aidx].re*fct;
+            curjob->alm_tmp[i][l].im = -curalm[aidx].im*fct;
 #endif
             }
           }
         break;
+        }
       case MAP2ALM:
         for (i=0; i<curjob->nalm; ++i)
 #ifdef PLANCK_HAVE_SSE2
@@ -410,9 +414,9 @@ static void X(inner_loop) (X(joblist) *jobs, const psht_geom_info *ginfo,
                           *ph4 = rpair2 ? &curjob->phas2[0][phas_idx2] : &dum;
               *ph1 = *ph2 = *ph3 = *ph4 = pshtd_cmplx_null;
               Ylmgen_recalc_Ylm_sse2 (generator);
-              if (generator->firstl<=lmax)
+              if (generator->firstl[0]<=lmax)
                 {
-                int l = generator->firstl;
+                int l = generator->firstl[0];
                 v2df2 p1=v2df2_zero, p2=v2df2_zero;
                 const v2df *Ylm = generator->ylm_sse2;
                 const v2df2 *almtmp = curjob->alm_tmp[0];
@@ -445,9 +449,9 @@ static void X(inner_loop) (X(joblist) *jobs, const psht_geom_info *ginfo,
               *ph1Q = *ph2Q = *ph1U = *ph2U = *ph3Q = *ph4Q = *ph3U = *ph4U
                 = pshtd_cmplx_null;
               Ylmgen_recalc_lambda_wx_sse2 (generator,curjob->spin);
-              if (generator->firstl<=lmax)
+              if (generator->firstl[curjob->spin]<=lmax)
                 {
-                int l = generator->firstl;
+                int l = generator->firstl[curjob->spin];
                 v2df2 p1Q=v2df2_zero, p2Q=v2df2_zero,
                       p1U=v2df2_zero, p2U=v2df2_zero;
                 const v2df2 *lwx = generator->lambda_wx_sse2[curjob->spin];
@@ -485,9 +489,9 @@ static void X(inner_loop) (X(joblist) *jobs, const psht_geom_info *ginfo,
           *ph1Q = *ph2Q = *ph1U = *ph2U = *ph3Q = *ph4Q = *ph3U = *ph4U
             = pshtd_cmplx_null;
           Ylmgen_recalc_lambda_wx_sse2 (generator,1);
-          if (generator->firstl<=lmax)
+          if (generator->firstl[1]<=lmax)
             {
-            int l = generator->firstl;
+            int l = generator->firstl[1];
             v2df2 p1Q=v2df2_zero, p2Q=v2df2_zero,
                   p1U=v2df2_zero, p2U=v2df2_zero;
             const v2df2 *lwx = generator->lambda_wx_sse2[1];
@@ -515,9 +519,9 @@ static void X(inner_loop) (X(joblist) *jobs, const psht_geom_info *ginfo,
             case 0:
               {
               Ylmgen_recalc_Ylm_sse2 (generator);
-              if (generator->firstl<=lmax)
+              if (generator->firstl[0]<=lmax)
                 {
-                int l = generator->firstl;
+                int l = generator->firstl[0];
                 const v2df *Ylm = generator->ylm_sse2;
                 v2df2 *almtmp = curjob->alm_tmp[0];
                 pshtd_cmplx
@@ -544,9 +548,9 @@ static void X(inner_loop) (X(joblist) *jobs, const psht_geom_info *ginfo,
             default:
               {
               Ylmgen_recalc_lambda_wx_sse2 (generator,curjob->spin);
-              if (generator->firstl<=lmax)
+              if (generator->firstl[curjob->spin]<=lmax)
                 {
-                int l = generator->firstl;
+                int l = generator->firstl[curjob->spin];
                 const v2df2 *lwx = generator->lambda_wx_sse2[curjob->spin];
                 v2df2 *almtmpG = curjob->alm_tmp[0],
                       *almtmpC = curjob->alm_tmp[1];
@@ -649,9 +653,9 @@ static void X(inner_loop) (X(joblist) *jobs, const psht_geom_info *ginfo,
                           *ph2 = rpair ? &curjob->phas2[0][phas_idx] : &dum;
               *ph1 = *ph2 = pshtd_cmplx_null;
               Ylmgen_recalc_Ylm (generator);
-              if (generator->firstl<=lmax)
+              if (generator->firstl[0]<=lmax)
                 {
-                int l = generator->firstl;
+                int l = generator->firstl[0];
                 pshtd_cmplx p1=pshtd_cmplx_null,p2=pshtd_cmplx_null;
                 const double *Ylm = generator->ylm;
                 const pshtd_cmplx *almtmp = curjob->alm_tmp[0];
@@ -680,9 +684,9 @@ static void X(inner_loop) (X(joblist) *jobs, const psht_geom_info *ginfo,
                           *ph2U = rpair ? &curjob->phas2[1][phas_idx] : &dum;
               *ph1Q = *ph2Q = *ph1U = *ph2U = pshtd_cmplx_null;
               Ylmgen_recalc_lambda_wx (generator,curjob->spin);
-              if (generator->firstl<=lmax)
+              if (generator->firstl[curjob->spin]<=lmax)
                 {
-                int l = generator->firstl;
+                int l = generator->firstl[curjob->spin];
                 pshtd_cmplx p1Q=pshtd_cmplx_null,p2Q=pshtd_cmplx_null,
                             p1U=pshtd_cmplx_null,p2U=pshtd_cmplx_null;
                 ylmgen_dbl2 *lwx = generator->lambda_wx[curjob->spin];
@@ -717,9 +721,9 @@ static void X(inner_loop) (X(joblist) *jobs, const psht_geom_info *ginfo,
                       *ph2U = rpair ? &curjob->phas2[1][phas_idx] : &dum;
           *ph1Q = *ph2Q = *ph1U = *ph2U = pshtd_cmplx_null;
           Ylmgen_recalc_lambda_wx (generator,1);
-          if (generator->firstl<=lmax)
+          if (generator->firstl[1]<=lmax)
             {
-            int l = generator->firstl;
+            int l = generator->firstl[1];
             pshtd_cmplx p1Q=pshtd_cmplx_null,p2Q=pshtd_cmplx_null,
                         p1U=pshtd_cmplx_null,p2U=pshtd_cmplx_null;
             ylmgen_dbl2 *lwx = generator->lambda_wx[1];
@@ -749,9 +753,9 @@ static void X(inner_loop) (X(joblist) *jobs, const psht_geom_info *ginfo,
             case 0:
               {
               Ylmgen_recalc_Ylm (generator);
-              if (generator->firstl<=lmax)
+              if (generator->firstl[0]<=lmax)
                 {
-                int l = generator->firstl;
+                int l = generator->firstl[0];
                 const double *Ylm = generator->ylm;
                 pshtd_cmplx *almtmp = curjob->alm_tmp[0];
                 const pshtd_cmplx
@@ -777,9 +781,9 @@ static void X(inner_loop) (X(joblist) *jobs, const psht_geom_info *ginfo,
             default:
               {
               Ylmgen_recalc_lambda_wx (generator,curjob->spin);
-              if (generator->firstl<=lmax)
+              if (generator->firstl[curjob->spin]<=lmax)
                 {
-                int l = generator->firstl;
+                int l = generator->firstl[curjob->spin];
                 ylmgen_dbl2 *lwx = generator->lambda_wx[curjob->spin];
                 pshtd_cmplx *almtmpG = curjob->alm_tmp[0],
                             *almtmpC = curjob->alm_tmp[1];
@@ -817,7 +821,7 @@ static void X(inner_loop) (X(joblist) *jobs, const psht_geom_info *ginfo,
 #endif
 
 static void X(almtmp2alm) (X(joblist) *jobs, int lmax, int m,
-  const psht_alm_info *alm, double **normal_l)
+  const psht_alm_info *alm)
   {
   int ijob,i,l;
   for (ijob=0; ijob<jobs->njobs; ++ijob)
@@ -827,13 +831,13 @@ static void X(almtmp2alm) (X(joblist) *jobs, int lmax, int m,
       {
       case MAP2ALM:
         {
-        const double *norm_l = normal_l[curjob->spin];
+        const double *norm_l = curjob->norm_l;
         for (i=0;i<curjob->nalm;++i)
           {
           X(cmplx) *curalm = curjob->alm[i];
           for (l=m; l<=lmax; ++l)
             {
-            int aidx = psht_alm_index(alm,l,m);
+            ptrdiff_t aidx = psht_alm_index(alm,l,m);
 #ifdef PLANCK_HAVE_SSE2
             V2DF2 t = to_V2DF2(curjob->alm_tmp[i][l]);
             curalm[aidx].re += (FLT)((t.a.d[0]+t.a.d[1])*norm_l[l]);
@@ -889,8 +893,14 @@ void X(execute_jobs) (X(joblist) *joblist, const psht_geom_info *geom_info,
   const psht_alm_info *alm_info)
   {
   int lmax = alm_info->lmax, mmax = alm_info->mmax;
-  double **normal_l = init_normal_l (lmax);
-  int nchunks, chunksize, chunk;
+  int nchunks, chunksize, chunk, spinrec=0, ijob;
+
+  for (ijob=0; ijob<joblist->njobs; ++ijob)
+    if (joblist->job[ijob].spin<=1) { spinrec=1; break; }
+
+  for (ijob=0; ijob<joblist->njobs; ++ijob)
+    joblist->job[ijob].norm_l =
+      Ylmgen_get_norm (lmax, joblist->job[ijob].spin, spinrec);
 
 /* clear output arrays if requested */
   X(init_output) (joblist, geom_info, alm_info);
@@ -914,7 +924,7 @@ void X(execute_jobs) (X(joblist) *joblist, const psht_geom_info *geom_info,
     double *theta = RALLOC(double,ulim-llim);
     for (m=0; m<ulim-llim; ++m)
       theta[m] = geom_info->pair[m+llim].r1.theta;
-    Ylmgen_init (&generator,lmax,mmax,1e-30);
+    Ylmgen_init (&generator,lmax,mmax,spinrec,1e-30);
     Ylmgen_set_theta (&generator,theta,ulim-llim);
     DEALLOC(theta);
     X(alloc_almtmp)(&ljobs,lmax);
@@ -923,13 +933,13 @@ void X(execute_jobs) (X(joblist) *joblist, const psht_geom_info *geom_info,
     for (m=0; m<=mmax; ++m)
       {
 /* alm->alm_tmp where necessary */
-      X(alm2almtmp) (&ljobs, lmax, m, alm_info, normal_l);
+      X(alm2almtmp) (&ljobs, lmax, m, alm_info);
 
 /* inner conversion loop */
       X(inner_loop) (&ljobs, geom_info, lmax, mmax, llim, ulim, &generator, m);
 
 /* alm_tmp->alm where necessary */
-      X(almtmp2alm) (&ljobs, lmax, m, alm_info, normal_l);
+      X(almtmp2alm) (&ljobs, lmax, m, alm_info);
       }
 
     Ylmgen_destroy(&generator);
@@ -940,8 +950,9 @@ void X(execute_jobs) (X(joblist) *joblist, const psht_geom_info *geom_info,
     X(phase2map) (joblist, geom_info, mmax, llim, ulim);
     } /* end of chunk loop */
 
+  for (ijob=0; ijob<joblist->njobs; ++ijob)
+    DEALLOC(joblist->job[ijob].norm_l);
   X(dealloc_phase) (joblist);
-  DEALLOC2D(normal_l);
   }
 
 void X(make_joblist) (X(joblist) **joblist)
@@ -963,6 +974,7 @@ static void X(addjob) (X(joblist) *joblist, psht_jobtype type, int spin,
   assert_jobspace(joblist->njobs);
   joblist->job[joblist->njobs].type = type;
   joblist->job[joblist->njobs].spin = spin;
+  joblist->job[joblist->njobs].norm_l = NULL;
   joblist->job[joblist->njobs].alm[0] = alm0;
   joblist->job[joblist->njobs].alm[1] = alm1;
   joblist->job[joblist->njobs].alm[2] = alm2;
@@ -990,8 +1002,6 @@ void X(add_job_map2alm) (X(joblist) *joblist, const FLT *map, X(cmplx) *alm,
 void X(add_job_alm2map_spin) (X(joblist) *joblist, const X(cmplx) *alm1,
   const X(cmplx) *alm2, FLT *map1, FLT *map2, int spin, int add_output)
   {
-  UTIL_ASSERT((spin>0)&&(spin<=psht_max_spin),
-    "bad spin in add_job_alm2map_spin()");
   X(addjob) (joblist, ALM2MAP, spin, add_output, 2, 2,
     (X(cmplx) *)alm1, (X(cmplx) *)alm2, NULL, map1, map2, NULL);
   }
@@ -1005,8 +1015,6 @@ void X(add_job_alm2map_pol) (X(joblist) *joblist, const X(cmplx) *almT,
 void X(add_job_map2alm_spin) (X(joblist) *joblist, const FLT *map1,
   const FLT *map2, X(cmplx) *alm1, X(cmplx) *alm2, int spin, int add_output)
   {
-  UTIL_ASSERT((spin>0)&&(spin<=psht_max_spin),
-    "bad spin in add_job_map2alm_spin()");
   X(addjob) (joblist, MAP2ALM, spin, add_output, 2, 2,
     alm1, alm2, NULL, (FLT *)map1, (FLT *)map2, NULL);
   }

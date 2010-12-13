@@ -39,14 +39,41 @@ extern "C" {
 #endif
 
 typedef double ylmgen_dbl2[2];
+typedef double ylmgen_dbl3[3];
+
+typedef struct
+  {
+  /* members set in the sylmgen_init() and kept fixed afterwards */
+  double fsmall, fbig, eps;
+  size_t lmax, nth;
+  long double *logsum, *lc05, *ls05;
+  double *flm1, *flm2, *cf, *costh, *xl;
+double cth_crit;
+int m_crit;
+  /* members depending on m and m' */
+  int s, m, mlo, mhi, cosPow, sinPow;
+  long double prefactor;
+  ylmgen_dbl3 *fx;
+  int preMinus_p, preMinus_m;
+  } sylmgen_d;
+
+void sylmgen_init (sylmgen_d *gen, int spin, size_t lmax_, double epsilon);
+void sylmgen_set_theta (sylmgen_d *gen, const double *theta, size_t ntheta);
+void sylmgen_destroy (sylmgen_d *gen);
+void sylmgen_prepare (sylmgen_d *gen, int m_);
+void sylmgen_recalc (sylmgen_d *gen, int ith, ylmgen_dbl2 *res, int *firstl);
+#ifdef PLANCK_HAVE_SSE2
+void sylmgen_recalc_sse2 (sylmgen_d *gen, int ith1, int ith2, v2df2 *res,
+  int *firstl);
+#endif
 
 typedef struct
   {
   double fsmall, fbig, eps, cth_crit;
-  int lmax, mmax, m_cur, ith, m_crit;
+  int lmax, mmax, m_cur, ith, nth, m_crit, spinrec;
   /*! The index of the first non-negligible Y_lm value. */
-  int firstl;
-  double *cf, *mfac, *t1fac, *t2fac, *cth, *sth, *logsth;
+  int *firstl;
+  double *cf, *mfac, *t1fac, *t2fac, *th, *cth, *sth, *logsth;
   ylmgen_dbl2 *recfac;
   double *lamfact;
   /*! Points to an array of size [0..lmax] containing the Y_lm values. */
@@ -54,6 +81,9 @@ typedef struct
   /*! Points to an array of size [0..lmax] containing the lambda_w
       and lambda_x values for spin>0 transforms. */
   ylmgen_dbl2 **lambda_wx;
+
+  sylmgen_d **sylm;
+
   int *lwx_uptodate;
   int ylm_uptodate;
 
@@ -73,8 +103,11 @@ typedef struct
 
 /*! Creates a generator which will calculate Y_lm(theta,phi=0)
     up to \a l=l_max and \a m=m_max. It may regard Y_lm whose absolute
-    magnitude is smaller than \a epsilon as zero. */
-void Ylmgen_init (Ylmgen_C *gen, int l_max, int m_max, double epsilon);
+    magnitude is smaller than \a epsilon as zero. If \a spinrec is nonzero,
+    the spin-1 and spin-2 Y_lm will be calculated by recursion from the spin-0
+    ones, otherwise Wigner d matrix elements will be used. */
+void Ylmgen_init (Ylmgen_C *gen, int l_max, int m_max, int spinrec,
+   double epsilon);
 
 /*! Passes am array \a theta of \a nth colatitudes that will be used in
     subsequent calls. The individual angles will be referenced by their
@@ -104,6 +137,12 @@ void Ylmgen_recalc_Ylm_sse2 (Ylmgen_C *gen);
     transforms. */
 void Ylmgen_recalc_lambda_wx_sse2 (Ylmgen_C *gen, int spin);
 #endif
+
+/*! Returns a pointer to an array with lmax+1 entries containing normalisation
+    factors that must be applied to Y_lm values computed for \a spin with the
+    given \a spinrec flag. The array must be deallocated (using free()) by the
+    user. */
+double *Ylmgen_get_norm (int lmax, int spin, int spinrec);
 
 #ifdef __cplusplus
 }

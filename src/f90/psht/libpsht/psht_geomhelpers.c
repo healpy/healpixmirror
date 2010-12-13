@@ -46,21 +46,21 @@ void psht_make_weighted_healpix_geom_info (int nside, int stride,
   const double *weight, psht_geom_info **geom_info)
   {
   const double pi=3.141592653589793238462643383279502884197;
-  int npix=nside*nside*12;
-  int ncap=2*nside*(nside-1);
+  ptrdiff_t npix=(ptrdiff_t)nside*nside*12;
+  ptrdiff_t ncap=2*(ptrdiff_t)nside*(nside-1);
   int nrings=4*nside-1;
 
   double *theta=RALLOC(double,nrings);
   double *weight_=RALLOC(double,nrings);
   int *nph=RALLOC(int,nrings);
   double *phi0=RALLOC(double,nrings);
-  int *ofs=RALLOC(int,nrings);
+  ptrdiff_t *ofs=RALLOC(ptrdiff_t,nrings);
   int *stride_=RALLOC(int,nrings);
   int m;
   for (m=0; m<nrings; ++m)
     {
     int ring=m+1;
-    int northring = (ring>2*nside) ? 4*nside-ring : ring;
+    ptrdiff_t northring = (ring>2*nside) ? 4*nside-ring : ring;
     stride_[m] = stride;
     if (northring < nside)
       {
@@ -163,7 +163,7 @@ void psht_make_gauss_geom_info (int nrings, int nphi, int stride,
   double *weight=RALLOC(double,nrings);
   int *nph=RALLOC(int,nrings);
   double *phi0=RALLOC(double,nrings);
-  int *ofs=RALLOC(int,nrings);
+  ptrdiff_t *ofs=RALLOC(ptrdiff_t,nrings);
   int *stride_=RALLOC(int,nrings);
   int m;
 
@@ -174,7 +174,7 @@ void psht_make_gauss_geom_info (int nrings, int nphi, int stride,
     theta[m] = acos(theta[m]);
     nph[m]=nphi;
     phi0[m]=0;
-    ofs[m]=m*nphi;
+    ofs[m]=(ptrdiff_t)m*nphi;
     stride_[m]=stride;
     weight[m]*=2*pi/nphi;
     }
@@ -199,7 +199,7 @@ void psht_make_ecp_geom_info (int nrings, int nphi, double phi0, int stride,
   double *weight=RALLOC(double,nrings);
   int *nph=RALLOC(int,nrings);
   double *phi0_=RALLOC(double,nrings);
-  int *ofs=RALLOC(int,nrings);
+  ptrdiff_t *ofs=RALLOC(ptrdiff_t,nrings);
   int *stride_=RALLOC(int,nrings);
 
   int m;
@@ -212,7 +212,7 @@ void psht_make_ecp_geom_info (int nrings, int nphi, double phi0, int stride,
     theta[m] = (m+0.5)*pi/nrings;
     nph[m]=nphi;
     phi0_[m]=phi0;
-    ofs[m]=m*nphi;
+    ofs[m]=(ptrdiff_t)m*nphi;
     stride_[m]=stride;
     weight[m]*=2*pi/nphi;
     }
