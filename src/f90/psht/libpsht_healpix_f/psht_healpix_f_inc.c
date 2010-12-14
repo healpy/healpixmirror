@@ -25,7 +25,7 @@ static void X(hp_map2alm_pol) (int nside, int lmax, int mmax, FLT *xmap,
   {
   psht_geom_info *ginfo;
   psht_alm_info *ainfo;
-  long npix = 12*nside*nside;
+  ptrdiff_t npix = 12*(ptrdiff_t)nside*nside;
   X(joblist) *joblist;
   X(cmplx) *alm = (X(cmplx) *)xalm;
   FLT *map = xmap;
@@ -48,7 +48,7 @@ static void X(hp_map2alm_spin) (int nside, int lmax, int mmax, int spin,
   {
   psht_geom_info *ginfo;
   psht_alm_info *ainfo;
-  long npix = 12*nside*nside;
+  ptrdiff_t npix = 12*(ptrdiff_t)nside*nside;
   X(joblist) *joblist;
   X(cmplx) *alm = (X(cmplx) *)xalm;
   FLT *map = xmap;
@@ -93,7 +93,7 @@ static void X(hp_alm2map_pol) (int nside, int lmax, int mmax, FLT *xalm,
   {
   psht_geom_info *ginfo;
   psht_alm_info *ainfo;
-  long npix = 12*nside*nside;
+  ptrdiff_t npix = 12*(ptrdiff_t)nside*nside;
   X(joblist) *joblist;
   X(cmplx) *alm = (X(cmplx) *)xalm;
   FLT *map = xmap;
@@ -116,7 +116,7 @@ static void X(hp_alm2map_spin) (int nside, int lmax, int mmax, int spin,
   {
   psht_geom_info *ginfo;
   psht_alm_info *ainfo;
-  long npix = 12*nside*nside;
+  ptrdiff_t npix = 12*(ptrdiff_t)nside*nside;
   X(joblist) *joblist;
   X(cmplx) *alm = (X(cmplx) *)xalm;
   FLT *map = xmap;
