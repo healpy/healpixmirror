@@ -237,6 +237,9 @@ contains
     logical(LGT)        :: do_update, do_long_strn
     !=====================================================================
 
+    fullcard=''
+    oldline=''
+
     do_update = .false.
     if (present(update)) do_update = update
 
@@ -346,6 +349,7 @@ contains
     character (LEN=10)  :: pad10 = '    '
     logical(LGT)        :: do_long_strn
     !=====================================================================
+    tmpline=''
     do_long_strn = .false.
     if (present(long_strn)) do_long_strn = long_strn
 

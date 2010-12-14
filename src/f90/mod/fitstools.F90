@@ -862,7 +862,12 @@ contains
 
     !-----------------------------------------------------------------------
     status=0
-    anynull = .false. 
+    anynull = .false.
+    ttype=''
+    tform=''
+    tunit=''
+    extname=''
+    comment=''
 
     unit = 110
     naxes(1) = 1
@@ -1752,6 +1757,8 @@ contains
     !-----------------------------------------------------------------------
     status=0
     unit = 120
+    comment=''
+    ttype1=''
 
     readwrite=0
     call ftopen(unit,filename,readwrite,blocksize,status)
@@ -1979,6 +1986,11 @@ contains
     nfound = -1
     extno_in = 0
     polcconv_in = 0
+    comment=''
+    ttype=''
+    tform=''
+    tunit=''
+    extname=''
     if (present(extno)) extno_in = extno
 
     readwrite=0
@@ -2296,6 +2308,7 @@ contains
     !-----------------------------------------------------------------------
     status=0
     unit = 118
+    comment=''
 
     readwrite=0
     call ftopen(unit, filename, readwrite, blocksize, status)
@@ -2347,6 +2360,8 @@ contains
     !======================================================================
 
     status = 0
+    cardfits=''
+    record=''
     call ftgthd(card, cardfits, hdtype, status)
     kwd = cardfits(1:8)
     status = 0
@@ -2427,6 +2442,7 @@ contains
          & "PDMTYPE "/)
 
     error = 0
+    record=''
 
     if (present(xonly)) then 
        n_excl = size(xonly)

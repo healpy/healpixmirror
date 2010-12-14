@@ -185,6 +185,7 @@
   epoch_out = 2000.0_dp
   allocate(coord_options(1:9))
   coord_options = (/ 'C', 'E', 'Q', 'G', 'c', 'e', 'q', 'g', ' ' /)
+  coord_in=''
   if (.not. any(coord_options(1:8)==trim(adjustl(coord_in)))) then
      description = concatnl(&
        & "", &
@@ -208,6 +209,7 @@
   epoch_in = parse_double(handle, 'epoch_in',default=2000.0_dp,descr=description)
 
   !           ---------   OUT   ---------
+  coord_out=''
   if (trim(coord_in) /= '' .or. handle%interactive) then
      description = concatnl(&
           & "", &

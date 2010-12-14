@@ -271,6 +271,11 @@ subroutine input_map8_KLOAD(filename, map, npixtot, nmaps, fmissval, header, uni
     bzero = 0.0d0
     blank = -2.e25
     nullval = bscale*blank + bzero
+    comment=''
+    ttype=''
+    tform=''
+    tunit=''
+    extname=''
 
     nl_header = 0
     if (present(header)) then
@@ -512,6 +517,11 @@ subroutine input_map8_KLOAD(filename, map, npixtot, nmaps, fmissval, header, uni
     anynull = .false.
     alms=0.  ! set output to 0.
     readwrite=0
+    comment=''
+    ttype=''
+    tform=''
+    tunit=''
+    extname=''
     call ftopen(unit,filename,readwrite,blocksize,status)
     if (status > 0) call printerror(status)
     !     -----------------------------------------
@@ -980,6 +990,7 @@ subroutine input_map8_KLOAD(filename, map, npixtot, nmaps, fmissval, header, uni
 
     !     write the header literally, putting TFORM1 at the desired place
     comment = ''
+    card_tbcol=''
     do i=1,nlheader
        card = header(i)
        if (card(1:5) == 'TTYPE') then ! if TTYPE1 is explicitely given
@@ -1439,6 +1450,11 @@ subroutine input_map8_KLOAD(filename, map, npixtot, nmaps, fmissval, header, uni
     !-----------------------------------------------------------------------
     status=0
     header=''
+    comment=''
+    ttype=''
+    tform=''
+    tunit=''
+    extname=''
     unit = 139
     naxes(1) = 1
     naxes(2) = 1

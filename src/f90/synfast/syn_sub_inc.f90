@@ -373,6 +373,7 @@
 
   ALLOCATE(units_alm(1:n_pols),units_map(1:n_maps),stat = status)
   call assert_alloc(status,code,"units_alm & units_map")
+  units_alm(:)=''
 
   ALLOCATE(alm_TGC(1:n_pols, 0:nlmax, 0:nmmax),stat = status)
   call assert_alloc(status,code,"alm_TGC")
