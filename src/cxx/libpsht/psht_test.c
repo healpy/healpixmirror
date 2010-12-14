@@ -80,9 +80,10 @@ static void random_alm (pshtd_cmplx *alm, psht_alm_info *helper, int spin)
   }
 
 static void measure_errors (pshtd_cmplx **alm, pshtd_cmplx **alm2,
-  int nalms, int ncomp)
+  ptrdiff_t nalms, int ncomp)
   {
-  int i,m;
+  int i;
+  ptrdiff_t m;
 
   for (i=0; i<ncomp; ++i)
     {
@@ -108,7 +109,8 @@ static void map2alm_iter (psht_geom_info *tinfo, double **map,
   psht_alm_info *alms;
   pshtd_joblist *joblist;
   int ncomp = (spin==0) ? 1 : 2;
-  int iter,i,m;
+  int iter,i;
+  ptrdiff_t m;
   double timer;
 
   psht_make_triangular_alm_info(lmax,mmax,1,&alms);
