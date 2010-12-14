@@ -492,8 +492,13 @@
 
   PRINT *,"      "//code//"> Analyse map "
 
-  call map2alm_iterative(nsmax, nlmax, nmmax, iter_order, map_TQU, alm_TGC, &
-       &                 zbounds=zbounds, w8ring=w8ring_TQU, plm=plm)
+  if (n_plm/=0) then
+     call map2alm_iterative(nsmax, nlmax, nmmax, iter_order, map_TQU, alm_TGC, &
+          &                 zbounds=zbounds, w8ring=w8ring_TQU, plm=plm)
+  else
+     call map2alm_iterative(nsmax, nlmax, nmmax, iter_order, map_TQU, alm_TGC, &
+          &                 zbounds=zbounds, w8ring=w8ring_TQU)
+  endif
 
   !-----------------------------------------------------------------------
   !                    smoothing of the alm

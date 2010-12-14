@@ -625,14 +625,24 @@
   call assert_alloc(status,code,"alm_TGC")
 
   PRINT *,"      "//code//"> Analyse map "
-  call map2alm_iterative(nsmax, nlmax, nmmax, iter_order, map_TQU, alm_TGC, &
-       &                 zbounds=zbounds, w8ring=w8ring_TQU, plm=plm, mask=pmask)
+  if (n_plm/=0) then
+     call map2alm_iterative(nsmax, nlmax, nmmax, iter_order, map_TQU, alm_TGC, &
+          &                 zbounds=zbounds, w8ring=w8ring_TQU, plm=plm, mask=pmask)
+  else
+     call map2alm_iterative(nsmax, nlmax, nmmax, iter_order, map_TQU, alm_TGC, &
+          &                 zbounds=zbounds, w8ring=w8ring_TQU, mask=pmask)
+  endif
 
   if (twomaps) then
      allocate(alm_TGC2(1:n_pols, 0:nlmax, 0:nmmax),stat = status)
      call assert_alloc(status,code,"alm_TGC2")
-     call map2alm_iterative(nsmax, nlmax, nmmax, iter_order, map_TQU2, alm_TGC2, &
-       &                 zbounds=zbounds, w8ring=w8ring_TQU, plm=plm, mask=pmask)
+     if (n_plm/=0) then
+        call map2alm_iterative(nsmax, nlmax, nmmax, iter_order, map_TQU2, alm_TGC2, &
+          &                 zbounds=zbounds, w8ring=w8ring_TQU, plm=plm, mask=pmask)
+     else
+        call map2alm_iterative(nsmax, nlmax, nmmax, iter_order, map_TQU2, alm_TGC2, &
+          &                 zbounds=zbounds, w8ring=w8ring_TQU, mask=pmask)
+     endif
      deallocate( map_TQU2 )
   endif
 
