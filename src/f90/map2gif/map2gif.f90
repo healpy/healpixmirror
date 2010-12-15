@@ -110,6 +110,8 @@ PROGRAM MAP2GIF
    !    November 2004, Eric Hivon,      IPAC (upgraded for WMAP polarized maps)
    !    Jan 2005,      EH               IPAC (edited to reduce stack consomption)
    !
+  ! note: explicit loop on pixels instead of where structure because the latter requires large stack size
+  !   for large maps
    !-------------------------------------------------------------------
 
    USE healpix_types
@@ -139,7 +141,7 @@ PROGRAM MAP2GIF
 
    REAL(SP)     :: mindata, maxdata, Tmin, Tmax
 
-   INTEGER(I4B) :: status
+   INTEGER(I4B) :: status, chunk
 
    CHARACTER(LEN=7), PARAMETER :: code = 'MAP2GIF'
    character(len=*), parameter :: VERSION = HEALPIX_VERSION
@@ -163,8 +165,9 @@ PROGRAM MAP2GIF
    REAL(SP)           :: factor = 1.0
 
    integer(i4b)       :: n_ext, i_ext, nmaps_sum, icolumn
+!   real(sp) :: time0, time1, time2, time3, time4, time5, time6, time11, time12, time13
    !-------------------------------------------------------------------
-
+!   call wall_clock_time(time0)
    !--- acquire input parameters ---
    call parseOptions()
 
@@ -190,6 +193,8 @@ PROGRAM MAP2GIF
 !    call assert(npixtot == 12*nsmax*nsmax,'wrong number of pixels')
    nsmax = npix2nside(npixtot)
    call assert(nsmax > 1, 'wrong number of pixels')
+   chunk = 1024*512
+   if (nsmax <= 256) chunk = 2
 
    !--- allocate space for arrays ---
    ALLOCATE(map(0:npixtot-1),stat = status)
@@ -199,6 +204,8 @@ PROGRAM MAP2GIF
 
    !--- read in the FITS file ---
    call input_map(input_file, map_IQU, npixtot, nmaps, fmissval=HPX_SBADVAL, extno=i_ext)
+!    call wall_clock_time(time1)
+!    print*,'file read:', time1-time0
 
    !--- select correct signal to plot ---
    map(:) = map_IQU(:,icolumn)
@@ -208,12 +215,29 @@ PROGRAM MAP2GIF
    call assert_alloc(status,'map2gif','observed') 
 
    !--- Test for unobserved pixels ---
-   observed = map > HPX_SBADVAL
-   !!where (observed) map = (map+offset)*factor ! << requires large stack size for large maps
+!$OMP PARALLEL DEFAULT(NONE) SHARED(chunk,observed, map, npixtot) PRIVATE(i)
+!$OMP DO schedule(dynamic, chunk)
    do i = 0, npixtot-1
-      if (observed(i)) map(i) = (map(i)+offset)*factor
+      observed(i) = map(i) > HPX_SBADVAL
    enddo
+!$OMP END DO
+!$OMP END PARALLEL
+!    call wall_clock_time(time11)
+!    print*,'obs:', time11-time1
+
+   if (offset /= 0. .or. factor /= 1.0) then
+!$OMP PARALLEL DEFAULT(NONE) &
+!$OMP SHARED(chunk,observed, map, npixtot, offset, factor) PRIVATE(i)
+!$OMP DO schedule(dynamic, chunk)
+      do i = 0, npixtot-1
+         if (observed(i)) map(i) = (map(i)+offset)*factor
+      enddo
+!$OMP END DO
+!$OMP END PARALLEL
+   endif
    if (ashflag) then
+!$OMP PARALLEL DEFAULT(NONE) SHARED(chunk,observed, map, npixtot) PRIVATE(i)
+!$OMP DO schedule(dynamic, chunk)
       do i=0,npixtot-1
         if (observed(i)) then
           if (map(i)>=0) then
@@ -223,24 +247,35 @@ PROGRAM MAP2GIF
           endif
         endif
       end do
+!$OMP END DO
+!$OMP END PARALLEL
    endif
    IF( logflg )THEN
-      observed = map > 0.
-!       where(observed)
-!         map=log10(map)
-!       elsewhere
-!         map=-1.6375e30
-!       endwhere
+!$OMP PARALLEL DEFAULT(NONE) SHARED(chunk,observed, map, npixtot) PRIVATE(i)
+!$OMP DO schedule(dynamic, chunk)
       do i=0, npixtot - 1
+         observed(i) = (map(i) > 0.)
          if (observed(i)) then
             map(i) = log10(map(i))
          else
             map(i) = HPX_SBADVAL
          endif
       enddo
+!$OMP END DO
+!$OMP END PARALLEL
    END IF
+!    call wall_clock_time(time12)
+!    print*,'loops:', time12-time11
+!$OMP PARALLEL SHARED(chunk,mindata, maxdata, observed)
+!$OMP SECTIONS
+!$OMP SECTION
    mindata = minval(map, mask = observed)
+!$OMP SECTION
    maxdata = maxval(map, mask = observed)
+!$OMP END SECTIONS
+!$OMP END PARALLEL
+!    call wall_clock_time(time13)
+!    print*,'minmax:', time13-time12
 
    if (mindata==maxdata) then
      print *,"Warning: map contains completely uniform values!"
@@ -262,11 +297,18 @@ PROGRAM MAP2GIF
    if (usermin > -1.1e30) Tmin = usermin
 
    !--- adjust 'offscale' temperatures ---
-   !! WHERE(observed) map = max(min(map,Tmax),Tmin) ! << requires large stack size for large maps
+!$OMP PARALLEL DEFAULT(NONE) &
+!$OMP SHARED(chunk,observed, map, npixtot, Tmin, Tmax) &
+!$OMP PRIVATE(i)
+!$OMP DO schedule(dynamic, chunk)
    do i = 0, npixtot - 1
       if (observed(i)) map(i) = max(min(map(i), Tmax), Tmin)
    enddo
+!$OMP END DO
+!$OMP END PARALLEL
    deallocate(observed)
+!    call wall_clock_time(time2)
+!    print*,'cut:', time2-time13
 
    !--- create the projection ---
    select case (projection)
@@ -311,6 +353,8 @@ PROGRAM MAP2GIF
       print '(" unknown projection type: ",a3)', projection
       call fatal_error
    end select
+!    call wall_clock_time(time3)
+!    print*,'project:', time3-time2
 
    !--- load the color table ---
    call setcol( color_table )
@@ -358,6 +402,8 @@ PROGRAM MAP2GIF
    !--- deallocate memory for arrays ---
    DEALLOCATE(map,stat = status)
    DEALLOCATE(mask,stat = status)
+!    call wall_clock_time(time4)
+!    print*,'finish:', time4-time3
 
    !--- Exit, stage left ...
 

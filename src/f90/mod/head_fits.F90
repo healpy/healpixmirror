@@ -978,7 +978,7 @@ contains
        call add_card(header,"NSIDE"   ,nside,   "Resolution parameter for HEALPIX")
        if (do_full) then
           call add_card(header,"FIRSTPIX",0,"First pixel # (0 based)")
-          call add_card(header,"LASTPIX",12*nside*nside-1,"Last pixel # (0 based)")
+          call add_card(header,"LASTPIX",(12_i8b*nside)*nside-1,"Last pixel # (0 based)")
        endif
        call add_card(header,"COORDSYS",trim(my_coordsys),"Pixelisation coordinate system")
        call add_card(header,"COMMENT","G = Galactic, E = ecliptic, C = celestial = equatorial")

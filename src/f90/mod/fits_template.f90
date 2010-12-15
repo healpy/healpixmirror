@@ -241,7 +241,7 @@ subroutine input_map8_KLOAD(filename, map, npixtot, nmaps, fmissval, header, uni
 
     integer(I4B) :: nl_header, len_header, nl_units, len_units
     integer(I4B) :: status,unit,readwrite,blocksize,naxes(2),nfound, naxis
-    integer(I4B) :: group, firstpix, i, npix_old
+    integer(I4B) :: group, firstpix, i, npix32
     real(KMAP)   :: blank, testval
     real(DP)     :: bscale,bzero
     character(len=80) :: comment
@@ -252,13 +252,16 @@ subroutine input_map8_KLOAD(filename, map, npixtot, nmaps, fmissval, header, uni
     LOGICAL(LGT) ::  anynull_i
 
     integer(I4B),     parameter            :: maxdim = 40 !number of columns in the extension
-    integer(i4b), dimension(1:maxdim) :: npix, repeat
+    integer(i8b)                      :: npix_old
+    integer(i8b), dimension(1:maxdim) :: npix
     integer(i8b), dimension(1:maxdim) :: i0, i1
+    integer(i4b), dimension(1:maxdim) :: repeat
     integer(i4b)                      :: nrow2read, nelem
 
     integer(I4B)                           :: nrows, tfields, varidat
     character(len=20), dimension(1:maxdim) :: ttype, tform, tunit
     character(len=20)                      :: extname
+    character(len=*), parameter            :: code='read_bintab'
     !-----------------------------------------------------------------------
     status=0
 
@@ -356,7 +359,8 @@ subroutine input_map8_KLOAD(filename, map, npixtot, nmaps, fmissval, header, uni
 
        group=1
        firstpix = 1
-       call f90ftgpv_(unit, group, firstpix, npix(1), nullval, map(0:npix(1)-1,1), anynull, status)
+       npix32 = npix(1)
+       call f90ftgpv_(unit, group, firstpix, npix32, nullval, map(0:npix(1)-1,1), anynull, status)
        ! if there are any NaN pixels, (real data)
        ! or BLANK pixels (integer data) they will take nullval value
        ! and anynull will switch to .true.
@@ -389,12 +393,6 @@ subroutine input_map8_KLOAD(filename, map, npixtot, nmaps, fmissval, header, uni
        endif
 
        !        finds the bad data value
-!        if (KMAP == SP) then
-!           call ftgkye(unit, 'BAD_DATA', sdummy, comment, status) ; nullval = sdummy
-!        endif
-!        if (KMAP == DP) then
-!           call ftgkyd(unit, 'BAD_DATA', ddummy, comment, status) ; nullval = ddummy
-!        endif
        call f90ftgky_(unit, 'BAD_DATA', nullval, comment, status)
        if (status == 202) then ! bad_data not found
           if (KMAP == SP) nullval = s_bad_value ! default value
@@ -423,7 +421,7 @@ subroutine input_map8_KLOAD(filename, map, npixtot, nmaps, fmissval, header, uni
        do imap = 1, nmaps
           !parse TFORM keyword to find out the length of the column vector
           call ftbnfm(tform(imap), datacode, repeat(imap), width, status)
-          npix(imap) = nrows * repeat(imap)
+          npix(imap) = int(nrows,i8b) * repeat(imap)
           if (npix(imap) /= npixtot .and. npix_old /= npix(imap)) then
              print *,'WARNING: found ',npix(imap),' pixels in '//trim(filename)//', column ',imap
              print *,'         expected ',npixtot,' or ',npix_old
@@ -433,13 +431,14 @@ subroutine input_map8_KLOAD(filename, map, npixtot, nmaps, fmissval, header, uni
           endif
        enddo
 
+
        call ftgrsz(unit, nrow2read, status)
        nrow2read = max(nrow2read, 1)
        firstpix  = 1  ! starting position in FITS within row, 1 based
        i0(:) = 0_i8b  ! starting element in array, 0 based
        do frow = 1, nrows, nrow2read
           do imap = 1, nmaps
-             i1(imap) = min(i0(imap) + nrow2read * repeat(imap), int(npix(imap),i8b)) - 1_i8b
+             i1(imap) = min(i0(imap) + int(nrow2read,i8b) * repeat(imap), npix(imap)) - 1_i8b
              nelem = i1(imap) - i0(imap) + 1
              call f90ftgcv_(unit, imap, frow, firstpix, nelem, &
                   & nullval, map(i0(imap):i1(imap),imap), anynull_i, status)
