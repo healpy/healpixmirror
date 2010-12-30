@@ -140,6 +140,7 @@ PROGRAM MAP2GIF
    LOGICAL(LGT), DIMENSION(:),     ALLOCATABLE :: observed
 
    REAL(SP)     :: mindata, maxdata, Tmin, Tmax
+   REAL(SP)     :: fmissval
 
    INTEGER(I4B) :: status, chunk
 
@@ -160,9 +161,10 @@ PROGRAM MAP2GIF
    INTEGER(I4B)       :: xsize  = 800
    LOGICAL(LGT)       :: logflg = .false.
    LOGICAL(LGT)       :: bar = .false.
-   LOGICAL(LGT)       :: ashflag = .false.
+   LOGICAL(LGT)       :: ashflg = .false.
    REAL(SP)           :: offset = 0.0
    REAL(SP)           :: factor = 1.0
+   logical            :: anynull 
 
    integer(i4b)       :: n_ext, i_ext, nmaps_sum, icolumn
 !   real(sp) :: time0, time1, time2, time3, time4, time5, time6, time11, time12, time13
@@ -203,7 +205,8 @@ PROGRAM MAP2GIF
    call assert_alloc(status,'map2gif','map_IQU') 
 
    !--- read in the FITS file ---
-   call input_map(input_file, map_IQU, npixtot, nmaps, fmissval=HPX_SBADVAL, extno=i_ext)
+!   call input_map(input_file, map_IQU, npixtot, nmaps, fmissval=HPX_SBADVAL, extno=i_ext)
+   call read_bintab(input_file, map_IQU, npixtot, nmaps, fmissval, anynull, extno=i_ext) ! leave flagged pixels unchanged
 !    call wall_clock_time(time1)
 !    print*,'file read:', time1-time0
 
@@ -235,7 +238,7 @@ PROGRAM MAP2GIF
 !$OMP END DO
 !$OMP END PARALLEL
    endif
-   if (ashflag) then
+   if (ashflg) then
 !$OMP PARALLEL DEFAULT(NONE) SHARED(chunk,observed, map, npixtot) PRIVATE(i)
 !$OMP DO schedule(dynamic, chunk)
       do i=0,npixtot-1
@@ -360,7 +363,8 @@ PROGRAM MAP2GIF
    call setcol( color_table )
 
    !--- scale image ---
-   allocate(imgint(size(image,1),size(image,2)))
+   allocate(imgint(size(image,1),size(image,2)), stat = status)
+   call assert_alloc(status,'map2gif','imgint (image)') 
    call imgscl(&
         image,  &
         imgint, &
@@ -375,7 +379,8 @@ PROGRAM MAP2GIF
            imgbar  &
            )
       deallocate(imgint)
-      allocate(imgint(size(imgbar,1),size(imgbar,2)))
+      allocate(imgint(size(imgbar,1),size(imgbar,2)), stat = status)
+      call assert_alloc(status,'map2gif','imgint (bar)') 
       imgint = imgbar
       deallocate(imgbar)
    end if
@@ -388,7 +393,8 @@ PROGRAM MAP2GIF
            title   &
            )
       deallocate(imgint)
-      allocate(imgint(size(imgttl,1),size(imgttl,2)))
+      allocate(imgint(size(imgttl,1),size(imgttl,2)), stat = status)
+      call assert_alloc(status,'map2gif','imgint (title)') 
       imgint = imgttl
       deallocate(imgttl)
    end if
@@ -507,6 +513,10 @@ SUBROUTINE PROJ_MOLLW_New(&
    u =  2._dp*(u - real(xc,dp))/(real(dx,dp)/1.02_dp)   ! 1.02 : fudge factor in [-2,2]*1.02
    v =        (v - real(yc,dp))/(real(dy,dp)/1.02_dp)   ! in [-1,1] * 1.02
 
+!$OMP PARALLEL DEFAULT(NONE) &
+!$OMP SHARED(u,v,xsize,ysize,mask,matrix,nside,ordering,image,map) &
+!$OMP PRIVATE(i,j,uu,vv,s_tmp,z_tmp,sz_tmp,phi_tmp,vector,id_pix)
+!$OMP DO schedule(dynamic, 1000)
    DO J = 0,ysize-1
       DO I = 0,xsize-1
          uu = u(i,j)
@@ -535,6 +545,8 @@ SUBROUTINE PROJ_MOLLW_New(&
          endif
       enddo
    enddo
+!$OMP END DO
+!$OMP END PARALLEL
 
    !--- deallocate memory for arrays ---
    deallocate( u )
@@ -663,6 +675,10 @@ SUBROUTINE PROJ_GNOMIC(&
 
    !--- converts the position on the sphere into pixel number and project the
    !    corresponding data value on the map ---
+!$OMP PARALLEL DEFAULT(NONE) &
+!$OMP SHARED(xsize, matrix, nside, ordering, image, map, xg, yg, zg) &
+!$OMP PRIVATE(i, j, nvs, id_pix)
+!$OMP DO schedule(dynamic, 1000)
    DO I = 0,xsize-1
       DO J = 0,xsize-1
          !-- rotated positions --
@@ -677,6 +693,8 @@ SUBROUTINE PROJ_GNOMIC(&
          image(I,J) = map(id_pix)
       END DO
    END DO
+!$OMP END DO
+!$OMP END PARALLEL
 
    !--- deallocate memory for arrays ---
    deallocate( xg )
@@ -697,7 +715,7 @@ END SUBROUTINE PROJ_GNOMIC
       n = nArguments()
 
       if (n < 4) then
-         print *, 'usage: MAP2GIF [-inp input_file] [-out output_file]'
+         print *, 'usage: MAP2GIF -inp input_file -out output_file'
          print *, '               [-max usermax] [-min usermin]'
          print *, '               [-add offset] [-mul factor]'
          print *, '               [-pro projection] [-res gridresn]'
@@ -707,15 +725,15 @@ END SUBROUTINE PROJ_GNOMIC
          print *, '               [-ash ashflg]'
          print *, '               [-bar add color bar] [-ttl title]'
          print *, '               [-hlp]'
-         call fatal_error
       end if
 
 
       do i = 1,n,2
          call getArgument(i,opt)
          if (opt == '-hlp') then
-            print 1, input_file,output_file,color_table,usermax,usermin,&
-                 & signal,xsize,logflg,bar,title
+            print 1, trim(input_file),trim(output_file),color_table,usermax,usermin,&
+                 & offset, factor, trim(projection), lon0, lat0, gridresn, &
+                 & signal,xsize,logflg,ashflg,bar,trim(title)
             stop
          end if
          if (i == n) then
@@ -737,7 +755,7 @@ END SUBROUTINE PROJ_GNOMIC
          case ('-log')
             read (arg,*) logflg
          case ('-ash')
-            read (arg,*) ashflag
+            read (arg,*) ashflg
          case ('-bar')
             read (arg,*) bar
          case ('-ttl')
@@ -762,7 +780,9 @@ END SUBROUTINE PROJ_GNOMIC
             print '("unknown option ",a4," ignored")', opt
          end select
       end do
-
+      if (n < 4) then
+         call fatal_error('Not enough arguments')
+      endif
 
       call assert_present(input_file)
       if (output_file(1:1) /= '!') then
@@ -777,29 +797,29 @@ END SUBROUTINE PROJ_GNOMIC
          call fatal_error
       end if
 
-      if (ashflag .and. logflg) then
+      if (ashflg .and. logflg) then
          print *, '-log and -ash cannot both be true!'
          call fatal_error
       end if
 
 1     format(/,&
-           & " -inp [] ",A,/,&
-           & " -out [] ",A/,&
-           & " -col [] ",I1,/,&
-           & " -max [] ",e10.2,/,&
-           & " -min [] ",e10.2,/,&
-           & " -add [] ",e10.2,/,&
-           & " -mul [] ",e10.2,/,&
-           & " -pro [] ",A,/,&
-           & " -lon [] ",e10.2,/,&
-           & " -lat [] ",e10.2,/,&
-           & " -res [] ",e10.2,/,&
-           & " -sig [] ",I1,/,&
-           & " -xsz [] ",I6,/,&
-           & " -log [] ",L1,/,&
-           & " -ash [] ",L1,/,&
-           & " -bar [] ",L1,/,&
-           & " -ttl [] ",A,/)
+           & " -inp [Req] ",A,/,&
+           & " -out [Req] ",A/,&
+           & " -col [Opt] ",I1,/,&
+           & " -max [Opt] ",g10.2,/,&
+           & " -min [Opt] ",g10.2,/,&
+           & " -add [Opt] ",g10.2,/,&
+           & " -mul [Opt] ",g10.2,/,&
+           & " -pro [Opt] ",A,/,&
+           & " -lon [Opt] ",g10.2,/,&
+           & " -lat [Opt] ",g10.2,/,&
+           & " -res [Opt] ",g10.2,/,&
+           & " -sig [Opt] ",I1,/,&
+           & " -xsz [Opt] ",I6,/,&
+           & " -log [Opt] ",L1,/,&
+           & " -ash [Opt] ",L1,/,&
+           & " -bar [Opt] ",L1,/,&
+           & " -ttl [Opt] ",A,/)
 
    end subroutine parseOptions
 

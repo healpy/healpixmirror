@@ -84,6 +84,10 @@
 ! end interface
 !
 ! Matthias Bartelmann and Anthony J. Banday, Dec. 1998
+! Dec 2010, EH.
+!     redefined AS parameter
+!     replaced WHERE structure by loops in imgscl
+!     used loop to flip A array in gifmap
 ! ---------------------------------------------------------------------
 
 module gifmod
@@ -91,7 +95,8 @@ module gifmod
    use misc_utils
    implicit none
 
-   real(sp), parameter :: as = -1.6375e30, tiny = 1.0e-20
+!   real(sp), parameter :: as = -1.6375e30, tiny = 1.0e-20
+   real(sp), parameter :: as = hpx_sbadval, tiny = 1.0e-20
    real(sp) :: amin,amax
    integer(i4b) :: nc = 0
    integer(i4b), allocatable, dimension(:) :: r,g,b
@@ -265,9 +270,10 @@ contains
    subroutine gifmap(a,fn)
       use healpix_types
       implicit none
-      integer(i4b) :: nx,ny
+      integer(i4b) :: nx,ny,j
       integer(i4b), dimension(:,:), intent(in) :: a
       character(len=*), intent(in) :: fn
+      integer(i4b), dimension(:,:), allocatable :: arvs
 
       if (nc == 0) then
          print *, "error in gifmap: color table undefined"
@@ -276,8 +282,12 @@ contains
 
       nx = size(a,1)
       ny = size(a,2)
-
-      call gifout(a(:,ny:1:-1),nx,ny,r,g,b,nc,fn)
+      allocate(arvs(nx,ny))
+      do j=1, ny
+         arvs(:,ny-j+1) = a(:,j)
+      enddo
+      call gifout(arvs, nx, ny, r, g, b, nc, fn)
+      deallocate(arvs)
 
    end subroutine gifmap
 
@@ -295,26 +305,51 @@ contains
       integer(i4b) :: nx,ny
       integer(i4b), dimension(size(a,1),size(a,2)), intent(out) :: b
       logical(lgt), optional, dimension(size(a,1),size(a,2)), intent(in) :: m
-      logical(lgt), allocatable, dimension(:,:) :: n
+      !logical(lgt), allocatable, dimension(:,:) :: n
+      real(sp) :: threshold = 1.e-6 * as
+      integer(i4b) :: i,j
 
       if (present(m)) then
          nx = size(a,1)
          ny = size(a,2)
 
-         allocate(n(nx,ny))
-
-         n = m .and. a /= as
-
-         amax = maxval(a,mask = n)
-         amin = minval(a,mask = n)
+         amax = -max_sp
+         amin =  max_sp
+         do j=1, ny
+            do i=1, nx
+               if (m(i,j) .and. abs(a(i,j)-as) > threshold) then
+                  amax = max(a(i,j), amax)
+                  amin = min(a(i,j), amin)
+               endif
+            enddo
+         enddo
 
          dela = max(amax - amin,tiny)
 
-         where (n) b = int((a - amin) / dela * real(nc - 4)) + 3
-         where (.not. m) b = 1
-         where (m .and. a == as) b = 2
+!$OMP PARALLEL DEFAULT(NONE) &
+!$OMP SHARED(nx, ny, m, a, threshold, b, amin, amax, dela, nc)&
+!$OMP PRIVATE(i, j)
+!$OMP DO schedule(dynamic, 1000)
+         do j=1, ny
+            do i=1, nx
+               if (m(i,j)) then
+                  if (abs(a(i,j)-as) > threshold) then
+                     ! valid pixels
+                     b(i,j) = int((a(i,j) - amin) / dela * real(nc - 4)) + 3
+                  else
+                     ! in map, unobserved pixels
+                     b(i,j) = 2
+                  endif
+               else
+                  ! out of map pixels
+                  b(i,j) = 1
+               endif
+            enddo
+         enddo
+!$OMP END DO
+!$OMP END PARALLEL
+            
 
-         deallocate(n)
       else
          amax = maxval(a)
          amin = minval(a)
