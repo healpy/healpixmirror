@@ -25,7 +25,7 @@
 ;  For more information about HEALPix see http://healpix.jpl.nasa.gov
 ;
 ; -----------------------------------------------------------------------------
-function healpixwindow, nside, dim, directory = dir_usr
+function healpixwindow, nside, dim, directory = dir_usr, help=help
 ;+
 ; NAME:
 ;   healpixwindow
@@ -36,7 +36,7 @@ function healpixwindow, nside, dim, directory = dir_usr
 ; CATEGORY:
 ;
 ; CALLING SEQUENCE:
-;   result = healpixwindow(nside, [dim, DIRECTORY=])
+;   result = healpixwindow(nside, [dim, DIRECTORY=, HELP=])
 ;
 ; INPUTS:
 ;   nside : scalar integer, should be a power of 2 in {2,4,8,16,...,8192}
@@ -53,13 +53,15 @@ function healpixwindow, nside, dim, directory = dir_usr
 ;          the TEMPERATURE*GRAD window function
 ;
 ;   DIRECTORY : directory in which the pixel window file is looked for
-;       ( $HEALPIX/data/ by default)
+;       ( !healpix.path.data by default)
+;
+;   HELP: if set, this documentation header is printed out and the routine exits
 ;
 ; OUTPUTS:
 ;   result = Healpix pixel window corresponding to resolution parameter Nside
 ;
 ; PROCEDURE:
-;   reads the file $HEALPIX/data/pixel_window_n*.fits unless specified otherwise
+;   reads the file !healpix.path.data/pixel_window_n*.fits unless specified otherwise
 ;   by DIRECTORY
 ;
 ; EXAMPLE:
@@ -72,14 +74,27 @@ function healpixwindow, nside, dim, directory = dir_usr
 ;        deals with polarized pixel window function
 ;  2009-09-09: uses !healpix.path.data
 ;  2009-10-28: replaced findfile with file_test
+;  2010-12-09: added HELP keyword
 ;-
 
-syntax = 'Window = healpixwindow (nside [, dim, DIRECTORY=])'
+routine = 'HEALPIXWINDOW'
+syntax = 'Window = healpixwindow (nside [, dim, DIRECTORY=, HELP=])'
+
+if keyword_set(help) then begin
+    doc_library,routine
+    return,-1
+endif
+
+if n_params() eq 0 then begin
+    print,syntax
+    print,'with default directory= '+!healpix.path.data
+    return,-1
+endif
+
 defsysv, '!healpix', exists = exists
 if (exists ne 1) then init_healpix
 
 ns = long(nside)
-routine = 'HEALPIXWINDOW'
 
 ; check nside
 err = 0
