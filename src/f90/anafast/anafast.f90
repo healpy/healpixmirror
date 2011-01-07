@@ -35,7 +35,8 @@ module anamod
   USE pix_tools,  only: convert_nest2ring, convert_ring2nest, nside2npix, npix2nside, remove_dipole, vec2ang
   USE paramfile_io, only: paramfile_handle, parse_init, parse_int, &
          parse_string, parse_double, parse_summarize, parse_check_unused, &
-         parse_finish, concatnl, scan_directories, get_healpix_data_dir, get_healpix_test_dir
+         parse_finish, concatnl, scan_directories, get_healpix_data_dir, get_healpix_test_dir, &
+         get_healpix_ring_weight_file
   use udgrade_nr, only: udgrade_nest, udgrade_ring
   implicit none
 

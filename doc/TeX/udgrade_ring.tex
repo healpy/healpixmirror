@@ -53,7 +53,10 @@ nside\_out & I4B & IN & the $N_{side}$ resolution parameter of the output
                    map in degraded (ie, fewer larger pixels), with each pixel
                    being the average of its $($nside\_in/nside\_out$)^2$ components.\\
 fmissval \hskip 4cm (OPTIONAL) & SP/ DP & IN & sentinel value given to bad pixels in input and output
-                   maps. \default {$-1.6375\ 10^{30}$} \\
+                   maps.%
+\default{\htmlref{\tt HPX\_SBADVAL}{sub:healpix_types} or %
+\htmlref{\tt HPX\_DBADVAL}{sub:healpix_types}%
+} \\
 pessimistic  \hskip 4cm (OPTIONAL) & LGT & IN & if set to {\tt .true.}, during a degradation, a big pixel containing at least a small
                    bad pixel will be returned as bad as well, instead of taking
                    the average of the remaing valid pixels. \default{\tt .false.}
@@ -63,6 +66,7 @@ pessimistic  \hskip 4cm (OPTIONAL) & LGT & IN & if set to {\tt .true.}, during a
 
 \begin{example}
 {
+use udgrade\_nr \\
 call udgrade\_ring(map\_hi, 256, map\_low, 64)  \\
 }
 {

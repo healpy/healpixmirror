@@ -54,7 +54,7 @@ Program sky_ng_sim_bin
   USE extension, ONLY : getArgument, nArguments
   USE paramfile_io, ONLY : paramfile_handle, parse_int, parse_init, parse_string, &
        & parse_lgt, parse_double, concatnl, scan_directories, parse_summarize, &
-       & get_healpix_data_dir, get_healpix_test_dir
+       & get_healpix_data_dir, get_healpix_test_dir,get_healpix_pixel_window_file 
   Use sky_sub
   USE sub_ngpdf_sho
   USE sub_ngpdf_powergauss
@@ -98,7 +98,6 @@ Program sky_ng_sim_bin
   character(len=100)                  :: chline,chline1,chline2
   LOGICAL(LGT) :: ok, fitscl, polarisation = .FALSE.
   CHARACTER(LEN=80), DIMENSION(1:180) :: header, header_PS
-  Character(Len=4) :: sstr
   CHARACTER(LEN=*), PARAMETER :: code = "sky_ng_sim_bin"
   character(len=*), parameter :: VERSION = HEALPIX_VERSION
 
@@ -209,8 +208,7 @@ Program sky_ng_sim_bin
 
   ! including pixel window function, EH-2008-03-05
  !     --- check for pixel-window-files ---
-  write (sstr,"(I4.4)") nsmax
-  windowname="pixel_window_n"//trim(sstr)//".fits"
+  windowname = get_healpix_pixel_window_file(nsmax)
 
   def_file = trim(windowname)
   def_dir  = get_healpix_data_dir()

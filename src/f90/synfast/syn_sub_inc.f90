@@ -229,7 +229,7 @@
   fwhm_deg = fwhm_arcmin/60.
 
   !     --- check for pixel-window-files ---
-  windowname="pixel_window_n"//trim(string(nsmax,"(i4.4)"))//".fits"
+  windowname = get_healpix_pixel_window_file(nsmax)
 
   def_file = trim(windowname)
   def_dir  = get_healpix_data_dir()

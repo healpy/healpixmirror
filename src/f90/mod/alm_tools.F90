@@ -239,6 +239,7 @@ module alm_tools
   ! Nov 2008: correction of a crash bug in map2alm_iterative
   ! Jan 2009: correction of a PGF90 specific bug in create_alm
   ! Jan 2010: correction of a bug in alm2map_pol_der affecting Q and U derivatives
+  ! Jan 2011: use get_healpix_pixel_window_file in pixel_window()
   ! =====================================================
   ! about the F90 compilers 'features'
   ! - Intel compiler (ifc) (and maybe the other compilers as well)
@@ -1531,7 +1532,8 @@ contains
     use fitstools, only : getsize_fits, read_bintab
     use extension, only : getEnvironment
     use pix_tools, only : nside2npix
-    use paramfile_io, only: get_healpix_data_dir, scan_directories
+    use paramfile_io, only: get_healpix_data_dir, scan_directories, &
+         & get_healpix_pixel_window_file
 
     real(DP),     dimension(0:,1:), intent(OUT)          :: pixlw
     character(len=*),             intent(IN), optional :: windowfile
@@ -1567,18 +1569,8 @@ contains
           print*,code//'invalid Nside = ',nside
           call fatal_error
        endif
-       sstr = trim(string(nside,'(i4.4)'))
-!        wfile_def = "data/pixel_window_n"//trim(sstr)//".fits"
-!        call getEnvironment("HEALPIX",healpixdir)
-
-!        wfile = trim(healpixdir)//wfile_def
-!        inquire(file=wfile, exist = good)
-!        if (good) goto 10
-!        wfile = trim(healpixdir)//'/'//wfile_def
-!        inquire(file=wfile, exist = good)
-!        if (good) goto 10
        healpixdatadir = get_healpix_data_dir()
-       wfile_def = "pixel_window_n"//trim(sstr)//".fits"
+       wfile_def = get_healpix_pixel_window_file(nside)
        good = scan_directories(healpixdatadir, wfile_def, wfile)
     endif
     if (.not.good) then

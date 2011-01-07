@@ -115,7 +115,6 @@
   character(len=filenamelen)          :: description
   character(len=100)                  :: chline,chline1
   character(LEN=80), DIMENSION(1:180) :: header
-  character(LEN=5)                    :: sstr
   LOGICAL(kind=LGT) :: bad, ok, polarisation
 !   character(LEN=*), PARAMETER :: code = 'SMOOTHING'
   character(len=*), parameter :: VERSION = HEALPIX_VERSION
@@ -331,9 +330,7 @@
   if (won.eq.1) then
 
      ! default weight file name
-     write (sstr,"(I5.5)") nsmax
-     w8name="weight_ring_n"//trim(sstr)//".fits"
-
+     w8name = get_healpix_ring_weight_file(nsmax)
      def_file = trim(w8name)
      def_dir  = get_healpix_data_dir()
 

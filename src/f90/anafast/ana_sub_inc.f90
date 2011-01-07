@@ -337,7 +337,7 @@
   if (won.eq.1) then
 
      ! default weight file name
-     w8name="weight_ring_n"//trim(string(nsmax,"(i5.5)"))//".fits"
+     w8name = get_healpix_ring_weight_file(nsmax)
 
      def_file = trim(w8name)
      def_dir  = get_healpix_data_dir()

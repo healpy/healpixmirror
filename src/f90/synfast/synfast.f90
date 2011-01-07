@@ -36,7 +36,8 @@ module synmod
   USE misc_utils,only: assert_alloc, fatal_error, wall_clock_time, brag_openmp, string
   USE paramfile_io, only: paramfile_handle, parse_init, parse_int, &
          parse_string, parse_double, parse_lgt, parse_summarize, parse_check_unused, &
-         parse_finish, concatnl, scan_directories, get_healpix_data_dir, get_healpix_test_dir
+         parse_finish, concatnl, scan_directories, get_healpix_data_dir, get_healpix_test_dir, &
+         get_healpix_pixel_window_file
   implicit none
 
   character(len=*), parameter :: CODE = "SYNFAST"
