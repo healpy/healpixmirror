@@ -228,9 +228,12 @@ static void X(alloc_almtmp) (X(joblist) *jobs, int lmax)
     X(job) *curjob = &jobs->job[ijob];
     for (i=0; i<curjob->nalm; ++i)
 #ifdef PLANCK_HAVE_SSE2
-      curjob->alm_tmp[i]=RALLOC(v2df2,lmax+1);
+      if (curjob->spin==0)
+        curjob->alm_tmp.v[i]=RALLOC(v2df,lmax+1);
+      else
+        curjob->alm_tmp.v2[i]=RALLOC(v2df2,lmax+1);
 #else
-      curjob->alm_tmp[i]=RALLOC(pshtd_cmplx,lmax+1);
+      curjob->alm_tmp.c[i]=RALLOC(pshtd_cmplx,lmax+1);
 #endif
     }
   }
@@ -242,7 +245,14 @@ static void X(dealloc_almtmp) (X(joblist) *jobs)
     {
     X(job) *curjob = &jobs->job[ijob];
     for (i=0; i<curjob->nalm; ++i)
-      DEALLOC(curjob->alm_tmp[i]);
+#ifdef PLANCK_HAVE_SSE2
+      if (curjob->spin==0)
+        DEALLOC(curjob->alm_tmp.v[i]);
+      else
+        DEALLOC(curjob->alm_tmp.v2[i]);
+#else
+      DEALLOC(curjob->alm_tmp.c[i]);
+#endif
     }
   }
 
@@ -265,11 +275,17 @@ static void X(alm2almtmp) (X(joblist) *jobs, int lmax, int m,
             {
             ptrdiff_t aidx = psht_alm_index(alm,l,m);
 #ifdef PLANCK_HAVE_SSE2
-            curjob->alm_tmp[i][l].a = _mm_set1_pd(curalm[aidx].re*norm_l[l]);
-            curjob->alm_tmp[i][l].b = _mm_set1_pd(curalm[aidx].im*norm_l[l]);
+            if (curjob->spin==0)
+              curjob->alm_tmp.v[i][l] = build_v2df(curalm[aidx].re*norm_l[l],
+                                                   curalm[aidx].im*norm_l[l]);
+            else
+              {
+              curjob->alm_tmp.v2[i][l].a = _mm_set1_pd(curalm[aidx].re*norm_l[l]);
+              curjob->alm_tmp.v2[i][l].b = _mm_set1_pd(curalm[aidx].im*norm_l[l]);
+              }
 #else
-            curjob->alm_tmp[i][l].re = curalm[aidx].re*norm_l[l];
-            curjob->alm_tmp[i][l].im = curalm[aidx].im*norm_l[l];
+            curjob->alm_tmp.c[i][l].re = curalm[aidx].re*norm_l[l];
+            curjob->alm_tmp.c[i][l].im = curalm[aidx].im*norm_l[l];
 #endif
             }
           }
@@ -286,11 +302,11 @@ static void X(alm2almtmp) (X(joblist) *jobs, int lmax, int m,
             ptrdiff_t aidx = psht_alm_index(alm,l,m);
             double fct = fabs(norm_l[l])*sqrt(l*(l+1.));
 #ifdef PLANCK_HAVE_SSE2
-            curjob->alm_tmp[i][l].a = _mm_set1_pd(-curalm[aidx].re*fct);
-            curjob->alm_tmp[i][l].b = _mm_set1_pd(-curalm[aidx].im*fct);
+            curjob->alm_tmp.v2[i][l].a = _mm_set1_pd(-curalm[aidx].re*fct);
+            curjob->alm_tmp.v2[i][l].b = _mm_set1_pd(-curalm[aidx].im*fct);
 #else
-            curjob->alm_tmp[i][l].re = -curalm[aidx].re*fct;
-            curjob->alm_tmp[i][l].im = -curalm[aidx].im*fct;
+            curjob->alm_tmp.c[i][l].re = -curalm[aidx].re*fct;
+            curjob->alm_tmp.c[i][l].im = -curalm[aidx].im*fct;
 #endif
             }
           }
@@ -298,11 +314,16 @@ static void X(alm2almtmp) (X(joblist) *jobs, int lmax, int m,
         }
       case MAP2ALM:
         for (i=0; i<curjob->nalm; ++i)
+          {
 #ifdef PLANCK_HAVE_SSE2
-          SET_ARRAY(curjob->alm_tmp[i],m,lmax+1,zero_v2df2());
+          if (curjob->spin==0)
+            SET_ARRAY(curjob->alm_tmp.v[i],m,lmax+1,_mm_setzero_pd());
+          else
+            SET_ARRAY(curjob->alm_tmp.v2[i],m,lmax+1,zero_v2df2());
 #else
-          SET_ARRAY(curjob->alm_tmp[i],m,lmax+1,pshtd_cmplx_null);
+          SET_ARRAY(curjob->alm_tmp.c[i],m,lmax+1,pshtd_cmplx_null);
 #endif
+          }
         break;
       default:
         break;
@@ -315,8 +336,10 @@ static void X(alm2almtmp) (X(joblist) *jobs, int lmax, int m,
 
 #define ALM2MAP_MACRO(px) \
   { \
-  px.a=_mm_add_pd(px.a,_mm_mul_pd(almtmp[l].a,Ylm[l])); \
-  px.b=_mm_add_pd(px.b,_mm_mul_pd(almtmp[l].b,Ylm[l])); \
+  v2df ar=_mm_shuffle_pd(almtmp[l],almtmp[l],_MM_SHUFFLE2(0,0)), \
+       ai=_mm_shuffle_pd(almtmp[l],almtmp[l],_MM_SHUFFLE2(1,1)); \
+  px.a=_mm_add_pd(px.a,_mm_mul_pd(ar,Ylm[l])); \
+  px.b=_mm_add_pd(px.b,_mm_mul_pd(ai,Ylm[l])); \
   ++l; \
   }
 
@@ -344,13 +367,25 @@ static void X(alm2almtmp) (X(joblist) *jobs, int lmax, int m,
   ++l; \
   }
 
+#ifdef PLANCK_HAVE_SSE3
 #define MAP2ALM_MACRO(px) \
   { \
   const v2df t1_ = _mm_mul_pd(px.a,Ylm[l]), t2_ = _mm_mul_pd(px.b,Ylm[l]); \
-  almtmp[l].a = _mm_add_pd(almtmp[l].a,t1_); \
-  almtmp[l].b = _mm_add_pd(almtmp[l].b,t2_); \
+  const v2df t5_=_mm_hadd_pd(t1_,t2_);\
+  almtmp[l] = _mm_add_pd(almtmp[l],t5_); \
   ++l; \
   }
+#else
+#define MAP2ALM_MACRO(px) \
+  { \
+  const v2df t1_ = _mm_mul_pd(px.a,Ylm[l]), t2_ = _mm_mul_pd(px.b,Ylm[l]); \
+  const v2df t3_ = _mm_shuffle_pd(t1_,t2_,_MM_SHUFFLE2(0,0)), \
+             t4_ = _mm_shuffle_pd(t1_,t2_,_MM_SHUFFLE2(1,1)); \
+  const v2df t5_=_mm_add_pd(t3_,t4_);\
+  almtmp[l] = _mm_add_pd(almtmp[l],t5_); \
+  ++l; \
+  }
+#endif
 
 #define MAP2ALM_SPIN_MACRO(Qx,Qy,Ux,Uy) \
   { \
@@ -419,7 +454,7 @@ static void X(inner_loop) (X(joblist) *jobs, const psht_geom_info *ginfo,
                 int l = generator->firstl[0];
                 v2df2 p1=v2df2_zero, p2=v2df2_zero;
                 const v2df *Ylm = generator->ylm_sse2;
-                const v2df2 *almtmp = curjob->alm_tmp[0];
+                const v2df *almtmp = curjob->alm_tmp.v[0];
 
                 if ((l-m)&1)
                   ALM2MAP_MACRO(p2)
@@ -455,8 +490,8 @@ static void X(inner_loop) (X(joblist) *jobs, const psht_geom_info *ginfo,
                 v2df2 p1Q=v2df2_zero, p2Q=v2df2_zero,
                       p1U=v2df2_zero, p2U=v2df2_zero;
                 const v2df2 *lwx = generator->lambda_wx_sse2[curjob->spin];
-                const v2df2 *almtmpG = curjob->alm_tmp[0],
-                            *almtmpC = curjob->alm_tmp[1];
+                const v2df2 *almtmpG = curjob->alm_tmp.v2[0],
+                            *almtmpC = curjob->alm_tmp.v2[1];
 
                 if ((l-m+curjob->spin)&1)
                   ALM2MAP_SPIN_MACRO(p2Q,p1Q,p2U,p1U)
@@ -495,7 +530,7 @@ static void X(inner_loop) (X(joblist) *jobs, const psht_geom_info *ginfo,
             v2df2 p1Q=v2df2_zero, p2Q=v2df2_zero,
                   p1U=v2df2_zero, p2U=v2df2_zero;
             const v2df2 *lwx = generator->lambda_wx_sse2[1];
-            const v2df2 *almtmp = curjob->alm_tmp[0];
+            const v2df2 *almtmp = curjob->alm_tmp.v2[0];
 
             if ((l-m+1)&1)
               ALM2MAP_DERIV1_MACRO(p2Q,p1U)
@@ -523,7 +558,7 @@ static void X(inner_loop) (X(joblist) *jobs, const psht_geom_info *ginfo,
                 {
                 int l = generator->firstl[0];
                 const v2df *Ylm = generator->ylm_sse2;
-                v2df2 *almtmp = curjob->alm_tmp[0];
+                v2df *almtmp = curjob->alm_tmp.v[0];
                 pshtd_cmplx
                   ph1 =          curjob->phas1[0][phas_idx1],
                   ph2 = rpair1 ? curjob->phas2[0][phas_idx1] : pshtd_cmplx_null,
@@ -552,8 +587,8 @@ static void X(inner_loop) (X(joblist) *jobs, const psht_geom_info *ginfo,
                 {
                 int l = generator->firstl[curjob->spin];
                 const v2df2 *lwx = generator->lambda_wx_sse2[curjob->spin];
-                v2df2 *almtmpG = curjob->alm_tmp[0],
-                      *almtmpC = curjob->alm_tmp[1];
+                v2df2 *almtmpG = curjob->alm_tmp.v2[0],
+                      *almtmpC = curjob->alm_tmp.v2[1];
                 pshtd_cmplx
                   ph1Q =          curjob->phas1[0][phas_idx1],
                   ph1U =          curjob->phas1[1][phas_idx1],
@@ -658,7 +693,7 @@ static void X(inner_loop) (X(joblist) *jobs, const psht_geom_info *ginfo,
                 int l = generator->firstl[0];
                 pshtd_cmplx p1=pshtd_cmplx_null,p2=pshtd_cmplx_null;
                 const double *Ylm = generator->ylm;
-                const pshtd_cmplx *almtmp = curjob->alm_tmp[0];
+                const pshtd_cmplx *almtmp = curjob->alm_tmp.c[0];
 
                 if ((l-m)&1)
                   ALM2MAP_MACRO(p2)
@@ -690,8 +725,8 @@ static void X(inner_loop) (X(joblist) *jobs, const psht_geom_info *ginfo,
                 pshtd_cmplx p1Q=pshtd_cmplx_null,p2Q=pshtd_cmplx_null,
                             p1U=pshtd_cmplx_null,p2U=pshtd_cmplx_null;
                 ylmgen_dbl2 *lwx = generator->lambda_wx[curjob->spin];
-                const pshtd_cmplx *almtmpG = curjob->alm_tmp[0],
-                                  *almtmpC = curjob->alm_tmp[1];
+                const pshtd_cmplx *almtmpG = curjob->alm_tmp.c[0],
+                                  *almtmpC = curjob->alm_tmp.c[1];
 
                 if ((l-m+curjob->spin)&1)
                   ALM2MAP_SPIN_MACRO(p2Q,p1Q,p2U,p1U)
@@ -727,7 +762,7 @@ static void X(inner_loop) (X(joblist) *jobs, const psht_geom_info *ginfo,
             pshtd_cmplx p1Q=pshtd_cmplx_null,p2Q=pshtd_cmplx_null,
                         p1U=pshtd_cmplx_null,p2U=pshtd_cmplx_null;
             ylmgen_dbl2 *lwx = generator->lambda_wx[1];
-            const pshtd_cmplx *almtmp = curjob->alm_tmp[0];
+            const pshtd_cmplx *almtmp = curjob->alm_tmp.c[0];
 
             if ((l-m+1)&1)
               ALM2MAP_DERIV1_MACRO(p2Q,p1U)
@@ -757,7 +792,7 @@ static void X(inner_loop) (X(joblist) *jobs, const psht_geom_info *ginfo,
                 {
                 int l = generator->firstl[0];
                 const double *Ylm = generator->ylm;
-                pshtd_cmplx *almtmp = curjob->alm_tmp[0];
+                pshtd_cmplx *almtmp = curjob->alm_tmp.c[0];
                 const pshtd_cmplx
                   ph1 =         curjob->phas1[0][phas_idx],
                   ph2 = rpair ? curjob->phas2[0][phas_idx] : pshtd_cmplx_null;
@@ -785,8 +820,8 @@ static void X(inner_loop) (X(joblist) *jobs, const psht_geom_info *ginfo,
                 {
                 int l = generator->firstl[curjob->spin];
                 ylmgen_dbl2 *lwx = generator->lambda_wx[curjob->spin];
-                pshtd_cmplx *almtmpG = curjob->alm_tmp[0],
-                            *almtmpC = curjob->alm_tmp[1];
+                pshtd_cmplx *almtmpG = curjob->alm_tmp.c[0],
+                            *almtmpC = curjob->alm_tmp.c[1];
                 const pshtd_cmplx
                   ph1Q =         curjob->phas1[0][phas_idx],
                   ph1U =         curjob->phas1[1][phas_idx],
@@ -839,12 +874,21 @@ static void X(almtmp2alm) (X(joblist) *jobs, int lmax, int m,
             {
             ptrdiff_t aidx = psht_alm_index(alm,l,m);
 #ifdef PLANCK_HAVE_SSE2
-            V2DF2 t = to_V2DF2(curjob->alm_tmp[i][l]);
-            curalm[aidx].re += (FLT)((t.a.d[0]+t.a.d[1])*norm_l[l]);
-            curalm[aidx].im += (FLT)((t.b.d[0]+t.b.d[1])*norm_l[l]);
+            if (curjob->spin==0)
+              {
+              V2DF t; t.v = curjob->alm_tmp.v[i][l];
+              curalm[aidx].re += (FLT)(t.d[0]*norm_l[l]);
+              curalm[aidx].im += (FLT)(t.d[1]*norm_l[l]);
+              }
+            else
+              {
+              V2DF2 t = to_V2DF2(curjob->alm_tmp.v2[i][l]);
+              curalm[aidx].re += (FLT)((t.a.d[0]+t.a.d[1])*norm_l[l]);
+              curalm[aidx].im += (FLT)((t.b.d[0]+t.b.d[1])*norm_l[l]);
+              }
 #else
-            curalm[aidx].re += (FLT)(curjob->alm_tmp[i][l].re*norm_l[l]);
-            curalm[aidx].im += (FLT)(curjob->alm_tmp[i][l].im*norm_l[l]);
+            curalm[aidx].re += (FLT)(curjob->alm_tmp.c[i][l].re*norm_l[l]);
+            curalm[aidx].im += (FLT)(curjob->alm_tmp.c[i][l].im*norm_l[l]);
 #endif
             }
           }
@@ -1002,6 +1046,8 @@ void X(add_job_map2alm) (X(joblist) *joblist, const FLT *map, X(cmplx) *alm,
 void X(add_job_alm2map_spin) (X(joblist) *joblist, const X(cmplx) *alm1,
   const X(cmplx) *alm2, FLT *map1, FLT *map2, int spin, int add_output)
   {
+  UTIL_ASSERT((spin>0)&&(spin<=Ylmgen_maxspin()),
+    "bad spin in add_job_alm2map_spin()");
   X(addjob) (joblist, ALM2MAP, spin, add_output, 2, 2,
     (X(cmplx) *)alm1, (X(cmplx) *)alm2, NULL, map1, map2, NULL);
   }
@@ -1015,6 +1061,8 @@ void X(add_job_alm2map_pol) (X(joblist) *joblist, const X(cmplx) *almT,
 void X(add_job_map2alm_spin) (X(joblist) *joblist, const FLT *map1,
   const FLT *map2, X(cmplx) *alm1, X(cmplx) *alm2, int spin, int add_output)
   {
+  UTIL_ASSERT((spin>0)&&(spin<=Ylmgen_maxspin()),
+    "bad spin in add_job_map2alm_spin()");
   X(addjob) (joblist, MAP2ALM, spin, add_output, 2, 2,
     alm1, alm2, NULL, (FLT *)map1, (FLT *)map2, NULL);
   }

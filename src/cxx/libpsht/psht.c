@@ -39,8 +39,6 @@
 const pshts_cmplx pshts_cmplx_null={0,0};
 const pshtd_cmplx pshtd_cmplx_null={0,0};
 
-enum { max_spin=10 };
-
 static void get_chunk_info (int ndata, int *nchunks, int *chunksize)
   {
   static const int chunksize_min=100;

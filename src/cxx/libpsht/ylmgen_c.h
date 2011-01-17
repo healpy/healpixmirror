@@ -25,7 +25,7 @@
 /*! \file ylmgen_c.h
  *  Code for efficient calculation of Y_lm(phi=0,theta)
  *
- *  Copyright (C) 2005-2010 Max-Planck-Society
+ *  Copyright (C) 2005-2011 Max-Planck-Society
  *  \author Martin Reinecke
  */
 
@@ -43,29 +43,14 @@ typedef double ylmgen_dbl3[3];
 
 typedef struct
   {
-  /* members set in the sylmgen_init() and kept fixed afterwards */
-  double fsmall, fbig, eps;
-  size_t lmax, nth;
-  long double *logsum, *lc05, *ls05;
-  double *flm1, *flm2, *cf, *costh, *xl;
-double cth_crit;
-int m_crit;
+  double cth_crit;
+  int mdist_crit;
   /* members depending on m and m' */
   int s, m, mlo, mhi, cosPow, sinPow;
   long double prefactor;
   ylmgen_dbl3 *fx;
   int preMinus_p, preMinus_m;
   } sylmgen_d;
-
-void sylmgen_init (sylmgen_d *gen, int spin, size_t lmax_, double epsilon);
-void sylmgen_set_theta (sylmgen_d *gen, const double *theta, size_t ntheta);
-void sylmgen_destroy (sylmgen_d *gen);
-void sylmgen_prepare (sylmgen_d *gen, int m_);
-void sylmgen_recalc (sylmgen_d *gen, int ith, ylmgen_dbl2 *res, int *firstl);
-#ifdef PLANCK_HAVE_SSE2
-void sylmgen_recalc_sse2 (sylmgen_d *gen, int ith1, int ith2, v2df2 *res,
-  int *firstl);
-#endif
 
 typedef struct
   {
@@ -81,6 +66,8 @@ typedef struct
   /*! Points to an array of size [0..lmax] containing the lambda_w
       and lambda_x values for spin>0 transforms. */
   ylmgen_dbl2 **lambda_wx;
+  long double *logsum, *lc05, *ls05;
+  double *flm1, *flm2, *xl;
 
   sylmgen_d **sylm;
 
@@ -143,6 +130,9 @@ void Ylmgen_recalc_lambda_wx_sse2 (Ylmgen_C *gen, int spin);
     given \a spinrec flag. The array must be deallocated (using free()) by the
     user. */
 double *Ylmgen_get_norm (int lmax, int spin, int spinrec);
+
+/*! Returns the maximum spin quantum number supported by the Ylmgen code. */
+int Ylmgen_maxspin(void);
 
 #ifdef __cplusplus
 }

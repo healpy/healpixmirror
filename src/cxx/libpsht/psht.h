@@ -95,11 +95,14 @@ typedef struct
   pshtd_cmplx *alm[3];
   pshtd_cmplx *phas1[3], *phas2[3];
   double *norm_l;
+  union {
 #ifdef PLANCK_HAVE_SSE2
-  v2df2 *alm_tmp[3];
+    v2df *v[3];
+    v2df2 *v2[3];
 #else
-  pshtd_cmplx *alm_tmp[3];
+    pshtd_cmplx *c[3];
 #endif
+    } alm_tmp;
   } pshtd_job;
 
 enum { psht_maxjobs=10 };
@@ -124,11 +127,14 @@ typedef struct
   pshts_cmplx *alm[3];
   pshtd_cmplx *phas1[3], *phas2[3];
   double *norm_l;
+  union {
 #ifdef PLANCK_HAVE_SSE2
-  v2df2 *alm_tmp[3];
+    v2df *v[3];
+    v2df2 *v2[3];
 #else
-  pshtd_cmplx *alm_tmp[3];
+    pshtd_cmplx *c[3];
 #endif
+    } alm_tmp;
   } pshts_job;
 
 /*! Type holding a list of simultaneous single precision SHT jobs.
