@@ -580,8 +580,8 @@ endif
 
 ;  the color bar
 if (~(keyword_set(nobar) || do_poldirection || do_true)) then begin
-    color_bar = BYTE(CONGRID(color_bar,xsize*cbar_dx)) # REPLICATE(1.,(ysize*cbar_dy*w_dx_dy)>1)
-    back(xsize*cbar_xll,0) = color_bar
+    color_bar_out = BYTE(CONGRID(color_bar,xsize*cbar_dx)) # REPLICATE(1.,(ysize*cbar_dy*w_dx_dy)>1)
+    back(xsize*cbar_xll,0) = color_bar_out
     TV, back,0,cbar_yll,/normal,xsize = 1.
 endif
 

@@ -313,7 +313,9 @@ pro mollview, file_in, select_in, $
 ;                           -1 : black dots on white background
 ;                           -2 : black dashes on white background
 ;           - 'PSY[M]' symbol used to represent vertices of outline
-;                    (same meaning as standard PSYM in IDL)
+;                    (same meaning as standard PSYM in IDL,
+;                     if 9<=abs(psym)<=46, D. Fanning's SYMCAT symbols 
+;                     definition will be used, for example psym=9 is an open circle)
 ;                    if <=0, the vertices are represented with the chosen symbols, and
 ;                        connected, by arcs of geodesics.
 ;                    if >0, only the vertices are shown
