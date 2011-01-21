@@ -5,13 +5,13 @@
 \title{\healpix Fortran Subroutines Overview}
 \docid{pix2xxx,ang2xxx,vec2xxx, nest2ring,ring2nest} \section[pix2xxx,ang2xxx,vec2xxx, nest2ring,ring2nest]{ }
 \label{sub:pix_tools}
-\docrv{Version 1.1}
+\docrv{Version 1.2}
 \author{Frode K.~Hansen, Eric Hivon}
 \abstract{This document describes the \healpix Fortran90 subroutines in module PIX_TOOLS.}
 
 \begin{facility}
 {The Fortran90 module pix\_tools contains some subroutines to convert between pixel number in the \healpix map and $(\theta,\phi)$ or $(x,y,z)$ coordinates on the sphere. Some of these routines are listed here.}
-{src/f90/mod/pix\_tools.f90}
+{src/f90/mod/pix\_tools.F90}
 \end{facility}
 
 \begin{arguments}
@@ -20,8 +20,8 @@
 \textbf{name~\&~dimensionality} & \textbf{kind} & \textbf{in/out} & \textbf{description} \\ \hline
                    &   &   &                           \\ %%% for presentation
 nside & I4B & IN & $\nside$ parameter for the \healpix map. \\
-ipnest & I4B & --- & pixel identification number in NESTED scheme over the range \{0,$\npix-1$\}. \\
-ipring & I4B & --- & pixel identification number in RING scheme over the range \{0,$\npix-1$\}. \\
+ipnest & I4B/ I8B & --- & pixel identification number in NESTED scheme over the range \{0,$\npix-1$\}. \\
+ipring & I4B/ I8B & --- & pixel identification number in RING scheme over the range \{0,$\npix-1$\}. \\
 theta & DP & --- & colatitude in radians measured southward from north pole in \{0,$\pi$\}. \\
 phi & DP & --- & longitude in radians, measured eastward in $[0,2\pi]$. \\ 
 vector(3) & DP & --- & three dimensional cartesian position vector

@@ -5,13 +5,13 @@
 \title{\healpix Fortran Subroutines Overview}
 \docid{query\_strip} \section[query\_strip]{ }
 \label{sub:query_strip}
-\docrv{Version 1.2}
+\docrv{Version 1.3}
 \author{Eric Hivon}
 \abstract{This document describes the \healpix Fortran90 subroutine QUERY\_STRIP.}
 
 \begin{facility}
 {Routine to find the index of all pixels enclosed in a latitude strip. The output indices can be either in the RING or NESTED scheme} 
-{src/f90/mod/pix\_tools.f90}
+{src/f90/mod/pix\_tools.F90}
 \end{facility}
 
 \begin{f90format}
@@ -20,19 +20,19 @@
 
 \begin{arguments}
 {
-\begin{tabular}{p{0.25\hsize} p{0.05\hsize} p{0.1\hsize} p{0.5\hsize}} \hline  
+\begin{tabular}{p{0.28\hsize} p{0.05\hsize} p{0.1\hsize} p{0.47\hsize}} \hline  
 \textbf{name\&dimensionality} & \textbf{kind} & \textbf{in/out} & \textbf{description} \\ \hline
                    &   &   &                           \\ %%% for presentation
-nside & I4B & IN & the $N_{side}$ parameter of the map. \\
+nside & I4B & IN & the $\nside$ parameter of the map. \\
 theta1 & DP & IN & colatitude lower bound in radians measured from North Pole
                    (between 0 and $\pi$). \\
 theta2 & DP & IN & colatitude upper bound in radians measured from North Pole (between 0 and $\pi$). If
                    theta1$<$ theta2, the pixels lying in [theta1,theta2]
                    are output, otherwise, the pixel lying in [0,
                    theta2] and those lying in [theta1, $\pi$] are output.\\
-listpix(0:*) & I4B & OUT & the index for all pixels enclosed in the
+listpix(0:*) & I4B/ I8B & OUT & the index for all pixels enclosed in the
                    strip(s). Make sure that the size of the array is big enough to contain all pixels. \\ 
-nlist & I4B & OUT & The number of pixels listed in $listpix$. \\
+nlist & I4B/ I8B & OUT & The number of pixels listed in {\tt listpix}. \\
 nest\ \ (OPTIONAL) & I4B & IN &  The pixel indices are in the NESTED numbering scheme if nest=1, and in RING scheme otherwise. \\
 inclusive\ \ (OPTIONAL) & I4B & IN & If set to 1, all the pixels overlapping
                    (even partially)
@@ -68,7 +68,8 @@ Returns the NESTED pixel index of all pixels with colatitude in
   \item[\htmlref{query\_disc}{sub:query_disc}, \htmlref{query\_polygon}{sub:query_polygon},]
   \item[query\_strip, \htmlref{query\_triangle}{sub:query_triangle}] render the list of pixels enclosed
   respectively in a given disc, polygon, latitude strip and triangle
-  \item[\htmlref{surface\_triangle}{sub:surface_triangle}] computes the surface of a spherical triangle defined by 3 vertices
+  \item[\htmlref{surface\_triangle}{sub:surface_triangle}] computes the surface
+in steradians of a spherical triangle defined by 3 vertices
 
   \end{sulist}
 \end{related}

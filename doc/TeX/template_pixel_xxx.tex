@@ -29,7 +29,7 @@ They are chosen to have their center located at
  They are numbered continuously from 0, starting at the North Pole, with the index
  increasing in $\phi$, and then increasing for decreasing $z$.
 }
-{src/f90/mod/pix\_tools.f90}
+{src/f90/mod/pix\_tools.F90}
 \end{facility}
 
 \docid{template\_pixel\_nest}
@@ -47,11 +47,11 @@ They are chosen to have their center located at
 \textbf{name~\&~dimensionality} & \textbf{kind} & \textbf{in/out} & \textbf{description} \\ \hline
                    &   &   &                           \\ %%% for presentation
 nside & I4B & IN & the \healpix $\nside$ parameter. \\
-pixel\_nest & I4B & IN & NESTED scheme pixel identification number over the range \{0,$12\nside^2-1$\}.\\
-pixel\_ring & I4B & IN & RING scheme pixel identification number over the
+pixel\_nest & I4B/ I8B & IN & NESTED scheme pixel identification number over the range \{0,$12\nside^2-1$\}.\\
+pixel\_ring & I4B/ I8B & IN & RING scheme pixel identification number over the
                    range \{0,$12\nside^2-1$\}.\\
-template & I4B & OUT & identification number(s) of the
-                   template matching in shape the pixel(s) provided (the numbering
+template & I4B/ I8B & OUT & identification number of the
+                   template matching in shape the pixel provided (the numbering
                    scheme of the pixel templates is the same for both routines). \\
 reflexion & I4B & OUT & in \{0, 3\} encodes the transformation(s) to
                    apply to each pixel provided to match exactly in

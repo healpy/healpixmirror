@@ -5,7 +5,7 @@
 \title{\healpix Fortran Subroutines Overview}
 \docid{nside2npix} \section[nside2npix]{ }
 \label{sub:nside2npix}
-\docrv{Version 1.0}
+\docrv{Version 1.1}
 \author{E. Hivon}
 \abstract{This document describes the \healpix Fortran90 subroutine NSIDE2NPIX.}
 
@@ -13,7 +13,7 @@
 {Function to provide the number of pixels $\npix$ over the full sky corresponding
 to resolution parameter $\nside$. 
 }
-{src/f90/mod/pix\_tools.f90}
+{src/f90/mod/pix\_tools.F90}
 \end{facility}
 
 \begin{f90function}
@@ -26,8 +26,8 @@ to resolution parameter $\nside$.
 \textbf{name~\&~dimensionality} & \textbf{kind} & \textbf{in/out} & \textbf{description} \\ \hline
                    &   &   &                           \\ %%% for presentation
 nside & I4B & IN & the $\nside$ parameter of the map. \\
-var & I4B & OUT & the number of pixels $\npix$ of the map. If $\nside$ is valid (a power of 2 in
-$\{1,\ldots,8192\}$), $\npix=12\nside^2$ is returned; if not, an error message is
+var & I8B & OUT & the number of pixels $\npix$ of the map. If $\nside$ is valid (a power of 2 in
+$\{1,\ldots,2^{28}=268435456\}$), $\npix=12\nside^2$ is returned; if not, an error message is
 issued and -1 is returned.\\
 \end{tabular}
 }
@@ -35,6 +35,8 @@ issued and -1 is returned.\\
 
 \begin{example}
 {
+use \htmlref{healpix\_modules}{sub:healpix_modules} \\
+integer(\htmlref{I8B}{sub:healpix_types}) :: npix \\
 npix= nside2npix(256)  \\
 }
 {

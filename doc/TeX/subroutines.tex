@@ -77,6 +77,38 @@ $\mathbf{\phi}$ & The azimuthal angle on the sphere, $\phi\in[0,2\pi[$.\\
 %% (, pow2alm\_units)}}
 
 %--------------------------------------------
+\section[Changes between release 2.14 and 2.20]{Changes between release 2.14 and 2.20}
+\begin{itemize}
+\item Spherical Harmonics Transform routines now transparently call \htmladdnormallink{\tt
+libpsht}{http://libpsht.sourceforge.net} routines, leading to a significant (2 to 4) speed-up factor. This
+concerns temperature, polarized (\htmladdnormallink{alm2map}{sub:alm2map}, 
+\htmladdnormallink{map2alm}{sub:map2alm}) and spin ($|s| \le 10$)
+weighted (\htmladdnormallink{alm2map\_spin}{sub:alm2map_spin}, 
+\htmladdnormallink{map2alm\_spin}{sub:map2alm_spin}) transforms,
+but {\em not} the generation of spatial derivatives
+(\htmladdnormallink{alm2map\_der}{sub:alm2map_der}).
+The compilation and linking to {\tt libpsht}, now shipped with \healpix, is done
+automatically, without any extra download or installation for the user.
+
+\item All routines for Spherical Harmonics Transforms and most routines for
+pixel manipulations (
+ang2pix,
+nside2npix, 
+npix2nside, 
+nside2ntemplates,  
+$\ldots$)
+pixel queries (
+query\_*,  $\ldots$) 
+and FITS I/O of sky maps
+now support resolution parameters $\nside > 8192$. This means that the number of
+pixels and the pixel indexes can now be stored in either
+{\tt integer(\htmladdnormallink{I4B}{sub:healpix_types})} or
+{\tt integer(\htmladdnormallink{I8B}{sub:healpix_types})} variables.\\
+The reading and writing of
+$a_{lm}$ containing files remains limited to $l < 46340 $ though. This
+restriction does not apply to $C(l)$ containing files.
+\end{itemize}
+
 \section[Changes between release 2.13 and 2.14]{Changes between release 2.13 and 2.14}
 \begin{itemize}
 \item In \htmlref{alm2map\_der}{sub:alm2map_der} routine, a numerical bug affecting the accuracy of the Stokes parameter derivatives 

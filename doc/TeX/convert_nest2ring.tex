@@ -17,7 +17,7 @@ The routine is a
   integer, single precision and double precision maps as well as mono or bi
   dimensional arrays. \newline This routine is fast, and is parallelized for shared memory
 architecture, but requires extra memory to store a temporary map in. }
-{src/f90/mod/pix\_tools.f90}
+{src/f90/mod/pix\_tools.F90}
 \end{facility}
 
 \begin{f90format}
@@ -29,12 +29,13 @@ architecture, but requires extra memory to store a temporary map in. }
 \begin{tabular}{p{0.4\hsize} p{0.05\hsize} p{0.1\hsize} p{0.35\hsize}} \hline  
 \textbf{name~\&~dimensionality} & \textbf{kind} & \textbf{in/out} & \textbf{description} \\ \hline
                    &   &   &                           \\ %%% for presentation
-nside & I4B & IN & the $N_{side}$ parameter of the map to be converted. \\
+nside & I4B & IN & the $\nside$ parameter of the map to be converted. \\
 map(0:12*nside**2-1) & I4B/ SP/ DP & INOUT & mono-dimensional full sky map to be converted to RING scheme. \\
 map(0:12*nside**2-1,1:nd) & I4B/ SP/ DP & INOUT & bi-dimensional full sky map to
                    be converted to RING scheme. The routine finds the second
-                   dimension (nd) by itself. Processing a bidimensional map with nd$>1$ should be
-                   faster than each of the nd 1D-maps consecutively.
+                   dimension (nd) by itself. Processing a bidimensional map with
+{\tt nd}$>1$ should be
+                   faster than each of the {\tt nd} 1D-maps consecutively.
 \end{tabular}
 }
 \end{arguments}
@@ -44,7 +45,7 @@ map(0:12*nside**2-1,1:nd) & I4B/ SP/ DP & INOUT & bi-dimensional full sky map to
 call convert\_nest2ring(256,map)  \\
 }
 {
-Converts an $N_{side}=256$ map given in array $map$ from NESTED to RING scheme.
+Converts an $\nside=256$ map given in array {\tt map} from NESTED to RING scheme.
 }
 \end{example}
 

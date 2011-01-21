@@ -15,7 +15,7 @@ are ordered in a clockwise sense about the central pixel with the
 southernmost pixel in first element. For the 4 pixels in the southern corners of the
 equatorial faces which have two equally southern neighbours the
 routine returns the southwestern pixel first and proceeds clockwise.}
-{src/f90/mod/pix\_tools.f90}
+{src/f90/mod/pix\_tools.F90}
 \end{facility}
 
 \begin{f90format}
@@ -27,10 +27,10 @@ routine returns the southwestern pixel first and proceeds clockwise.}
 \begin{tabular}{p{0.4\hsize} p{0.05\hsize} p{0.1\hsize} p{0.35\hsize}} \hline  
 \textbf{name~\&~dimensionality} & \textbf{kind} & \textbf{in/out} & \textbf{description} \\ \hline
                    &   &   &                           \\ %%% for presentation
-nside & I4B & IN & The $N_{side}$ parameter of the map. \\
-ipix & I4B & IN & The pixel number of the central pixel. \\
-list(8) & I4B & OUT & On exit, the vector of neighbouring pixels. This
-                   contains $nneigh$ relevant elements.\\
+nside & I4B & IN & The $\nside$ parameter of the map. \\
+ipix & I4B/ I8B & IN & The NESTED pixel index of the central pixel. \\
+list(8) & I4B/ I8B & OUT & On exit, the vector of neighbouring pixels. This
+                   contains {\tt nneigh} relevant elements.\\
 nneigh & I4B & OUT & The number of neighbours (mostly 8, except at
                    8 sites, where there are only 7 neighbours).\\
 \end{tabular}
@@ -40,7 +40,7 @@ nneigh & I4B & OUT & The number of neighbours (mostly 8, except at
 \begin{example}
 {
 use pix\_tools \\
-integer :: n, list(1:8) \\
+integer :: nneigh, list(1:8) \\
 call neighbours\_nest(4, 1, list, nneigh)  \\
 print*,nneigh \\
 print*,list(1:nneigh)

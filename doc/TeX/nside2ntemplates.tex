@@ -5,7 +5,7 @@
 \title{\healpix Fortran Subroutines Overview}
 \docid{nside2ntemplates} \section[nside2ntemplates]{ }
 \label{sub:nside2ntemplates}
-\docrv{Version 1.0}
+\docrv{Version 1.1}
 \author{E. Hivon}
 \abstract{This document describes the \healpix Fortran90 subroutine NSIDE2NTEMPLATES.}
 
@@ -14,7 +14,7 @@
 to resolution parameter $\nside$. Each template pixel has a different shape that
 {\em can not} be matched (by rotation or reflexion) to that of any of the other templates.
 }
-{src/f90/mod/pix\_tools.f90}
+{src/f90/mod/pix\_tools.F90}
 \end{facility}
 
 \begin{f90function}
@@ -27,13 +27,15 @@ to resolution parameter $\nside$. Each template pixel has a different shape that
 \textbf{name~\&~dimensionality} & \textbf{kind} & \textbf{in/out} & \textbf{description} \\ \hline
                    &   &   &                           \\ %%% for presentation
 nside & I4B & IN & the $\nside$ parameter. \\
-var & I4B & OUT & the number of template pixels $\ntemplate$.\\
+var & I8B & OUT & the number of template pixels $\ntemplate$.\\
 \end{tabular}
 }
 \end{arguments}
 
 \begin{example}
 {
+use \htmlref{healpix\_modules}{sub:healpix_modules} \\
+integer(\htmlref{I8B}{sub:healpix_types}) :: ntpl \\
 ntpl= nside2ntemplates(256)  \\
 }
 {

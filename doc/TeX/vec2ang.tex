@@ -15,7 +15,7 @@
   angles  $(\theta,\phi)\myhtmlimage{}$ on the sphere with
 $x = \sin\theta\cos\phi\myhtmlimage{}$, $y=\sin\theta\sin\phi\myhtmlimage{}$, $z=\cos\theta\myhtmlimage{}$.
 }
-{src/f90/mod/pix\_tools.f90}
+{src/f90/mod/pix\_tools.F90}
 \end{facility}
 
 \begin{f90format}
@@ -25,7 +25,7 @@ $x = \sin\theta\cos\phi\myhtmlimage{}$, $y=\sin\theta\sin\phi\myhtmlimage{}$, $z
 
 \begin{arguments}
 {
-\begin{tabular}{p{0.4\hsize} p{0.05\hsize} p{0.1\hsize} p{0.35\hsize}} \hline  
+\begin{tabular}{p{0.3\hsize} p{0.05\hsize} p{0.1\hsize} p{0.45\hsize}} \hline  
 \textbf{name\&dimensionality} & \textbf{kind} & \textbf{in/out} & \textbf{description} \\ \hline
                    &   &   &                           \\ %%% for presentation
 vector(3) & DP & IN & three dimensional cartesian position vector
@@ -48,6 +48,10 @@ phi   & DP & OUT & longitude in radians measured eastward (in [0, $2\pi$]).\\
   \begin{sulist}{} %%%% NOTE the ``extra'' brace here %%%%
   \item[\htmlref{ang2vec}{sub:ang2vec}] converts the position angles of a point on the sphere 
 into its 3D position vector.
+  \item[\htmlref{angdist}{sub:angdist}] computes the angular distance between 2 vectors
+  %\item[\htmlref{vec2ang}{sub:vec2ang}] converts the 3D position vector of
+  %point into its position angles on the sphere.
+  \item[\htmlref{vect\_prod}{sub:vect_prod}] computes the vector product between two 3D vectors
   \end{sulist}
 \end{related}
 

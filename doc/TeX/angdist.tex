@@ -5,7 +5,7 @@
 \title{\healpix Fortran Subroutines Overview}
 \docid{angdist} \section[angdist]{ }
 \label{sub:angdist}
-\docrv{Version 1.2}
+\docrv{Version 1.3}
 \author{Eric Hivon}
 \abstract{This document describes the \healpix Fortran90 subroutine ANGDIST.}
 
@@ -13,7 +13,7 @@
 {Returns the angular distance in radians between two vectors. The input vectors
 do not have to be normalised. For almost colinear or anti-colinear vectors, renders
 numerically more accurate results than the $\cos^{-1}$ of the scalar product.} 
-{src/f90/mod/pix\_tools.f90}
+{src/f90/mod/pix\_tools.F90}
 \end{facility}
 
 \begin{f90format}
@@ -22,7 +22,7 @@ numerically more accurate results than the $\cos^{-1}$ of the scalar product.}
 
 \begin{arguments}
 {
-\begin{tabular}{p{0.25\hsize} p{0.05\hsize} p{0.1\hsize} p{0.5\hsize}} \hline 
+\begin{tabular}{p{0.3\hsize} p{0.05\hsize} p{0.1\hsize} p{0.45\hsize}} \hline 
 \textbf{name~\&~dimensionality} & \textbf{kind} & \textbf{in/out} & \textbf{description} \\ \hline
                    &   &   &                           \\ %%% for presentation
 v1(3) & DP & IN & cartesian vector. \\
@@ -54,6 +54,11 @@ Returns the angular distance between 2 vectors.
 
 \begin{related}
   \begin{sulist}{} %%%% NOTE the ``extra'' brace here %%%%
+  \item[\htmlref{ang2vec}{sub:ang2vec}] converts the position angles of a point on the sphere 
+into its 3D position vector.
+  %\item[\htmlref{angdist}{sub:angdist}] computes the angular distance between 2 vectors
+  \item[\htmlref{vec2ang}{sub:vec2ang}] converts the 3D position vector of point into its position
+  angles on the sphere.
   \item[\htmlref{vect\_prod}{sub:vect_prod}] computes the vector product between two 3D vectors
   \end{sulist}
 \end{related}

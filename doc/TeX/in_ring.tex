@@ -5,7 +5,7 @@
 \title{\healpix Fortran Subroutines Overview}
 \docid{in\_ring} \section[in\_ring]{ }
 \label{sub:in_ring}
-\docrv{Version 1.2}
+\docrv{Version 1.3}
 % \author{Frode K.~Hansen}
 \author{Eric Hivon}
 \abstract{This document describes the \healpix Fortran90 subroutine IN\_RING.}
@@ -14,7 +14,7 @@
 {Routine to find the pixel index of all pixels on a slice of a given
 ring. The output indices can be either in the RING or NESTED scheme,
 depending on the {\tt nest} keyword.}
-{src/f90/mod/pix\_tools.f90}
+{src/f90/mod/pix\_tools.F90}
 \end{facility}
 
 \begin{f90format}
@@ -30,9 +30,10 @@ nside & I4B & IN & the $N_{side}$ parameter of the map. \\
 iz & I4B & IN & ring number, counted southwards from the north pole. \\
 phi0 & DP & IN & central $\phi$ position in the slice. \\
 dphi & DP & IN & defines the size of the slice. The slice has length $2\times dphi$ along the ring with center at $phi0$. \\ 
-listir(0:4*nside-1) & I4B & OUT & The pixel indexes in the slice. \\
-nir & I4B & OUT & the number of pixels in the slice. \\
-nest\ \ (OPTIONAL) & I4B & IN &  The pixel indexes are in the NESTED numbering scheme if nest=1, and in RING scheme otherwise. \\
+listir(0:4*nside-1) & I4B/ I8B & OUT & The pixel indexes in the slice. \\
+nir & I4B & OUT & the number of pixels in the slice. {\tt nir}$\le 4\nside$\\
+nest\ \ (OPTIONAL) & I4B & IN &  The pixel indexes are in the NESTED numbering
+scheme if {\tt nest}=1, and in RING scheme otherwise. \\
 \end{tabular}
 }
 \end{arguments}

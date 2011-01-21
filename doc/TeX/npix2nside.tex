@@ -6,7 +6,7 @@
 \title{\healpix Fortran Subroutines Overview}
 \docid{npix2nside} \section[npix2nside]{ }
 \label{sub:npix2nside}
-\docrv{Version 1.0}
+\docrv{Version 1.1}
 \author{E. Hivon}
 \abstract{This document describes the \healpix Fortran90 subroutine NPIX2NSIDE.}
 
@@ -14,7 +14,7 @@
 {Function to provide the resolution parameter $\nside$ correspoonding to $\npix$
 pixels over the full sky. 
 }
-{src/f90/mod/pix\_tools.f90}
+{src/f90/mod/pix\_tools.F90}
 \end{facility}
 
 \begin{f90function}
@@ -26,9 +26,9 @@ pixels over the full sky.
 \begin{tabular}{p{0.3\hsize} p{0.05\hsize} p{0.1\hsize} p{0.45\hsize}} \hline  
 \textbf{name~\&~dimensionality} & \textbf{kind} & \textbf{in/out} & \textbf{description} \\ \hline
                    &   &   &                           \\ %%% for presentation
-npix & I4B & IN & the number $\npix$ of pixels over the whole sky. \\
+npix & I4B/ I8B & IN & the number $\npix$ of pixels over the whole sky. \\
 var & I4B & OUT & the parameter $\nside$. If $\npix$ is valid (12 times a power of 2 in
-$\{1,\ldots,8192\}$), $\nside=\sqrt{\npix/12}$ is returned; if not, an error message is
+$\{1,\ldots,2^{28}\}$), $\nside=\sqrt{\npix/12}$ is returned; if not, an error message is
 issued and -1 is returned.\\
 \end{tabular}
 }
@@ -36,6 +36,8 @@ issued and -1 is returned.\\
 
 \begin{example}
 {
+use \htmlref{healpix\_modules}{sub:healpix_modules} \\
+integer(\htmlref{I4B}{sub:healpix_types}) :: nside \\
 nside= npix2nside(786432)  \\
 }
 {

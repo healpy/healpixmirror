@@ -444,7 +444,8 @@ Unobserved pixels, and pixels outside the sphere, take value \htmlref{{\tt
 +1}: black dots, {\bf 0}: black solid (default), {\bf -1}: black dots on white background, {\bf -2}: black dashes on
 	white background\\
             -- 'PSY[M]' (optional, scalar) symbol used to represent vertices (same meaning as
-	    standard PSYM in IDL). If $\leq 0$, the vertices are represented with the chosen symbols, and
+	    standard PSYM in IDL, if $9\leq|\rm{psym}|\leq 46$, D. Fanning's SYMCAT symbols 
+                     definition will be used, for example psym=9 is an open circle). If $\leq 0$, the vertices are represented with the chosen symbols, and
                         connected, by arcs of geodesics;
                     if $>0$, only the vertices are shown
                     \default {0} \\

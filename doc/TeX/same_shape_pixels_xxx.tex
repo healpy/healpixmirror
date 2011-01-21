@@ -31,7 +31,7 @@ They are chosen to have their center located at
  They are numbered continuously from 0, starting at the North Pole, with the index
  increasing in $\phi$, and then increasing for decreasing $z$.
 }
-{src/f90/mod/pix\_tools.f90}
+{src/f90/mod/pix\_tools.F90}
 \end{facility}
 
 \docid{same\_shape\_pixels\_nest}
@@ -49,10 +49,10 @@ They are chosen to have their center located at
 \textbf{name~\&~dimensionality} & \textbf{kind} & \textbf{in/out} & \textbf{description} \\ \hline
                    &   &   &                           \\ %%% for presentation
 nside & I4B & IN & the \healpix $\nside$ parameter. \\
-template & I4B & OUT & identification number(s) of the
-                   template matching in shape the pixel(s) provided (the numbering
+template & I4B/ I8B & IN & identification number of the
+                   template pixel (the numbering
                    scheme of the pixel templates is the same for both routines). \\
-list(0:nrep-1) \hskip 3cm OPTIONAL & I4B & OUT & pointer containing the ordered list of NESTED/RING scheme
+list(0:nrep-1) \hskip 3cm OPTIONAL & I4B/ I8B & OUT & pointer containing the ordered list of NESTED/RING scheme
                    identification numbers (in \{0,$12\nside^2-1$\})
   of all pixels having the same shape as the template provided. The routines
                    will allocate the {\tt list} array if it is not allocated
@@ -66,7 +66,7 @@ reflexion(0:nrep-1) \hskip 3cm OPTIONAL & I4B & OUT & pointer containing the tra
                    Equator), 3: rotation + East-West and North-South swaps. The routines
                    will allocate the {\tt list} array if it is not allocated
                    upon calling. \\
-nrep \hskip 4cm OPTIONAL & I4B  & OUT & number of pixels having the same template (either 8, 16, 4$\nside$ or
+nrep \hskip 4cm OPTIONAL & I4B/ I8B  & OUT & number of pixels having the same template (either 8, 16, 4$\nside$ or
   8$\nside$).
 \end{tabular}
 }
