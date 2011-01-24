@@ -10,9 +10,9 @@
 %%\usepackage{healrut}
 \usepackage{healpix,html,makeidx,tabularx}
 \begin{htmlonly}
-\renewcommand{\ell}{l}
-\renewcommand{\lq}{'}
-\input{hpxversion}
+ \renewcommand{\ell}{l}
+ \renewcommand{\lq}{'}
+ \input{hpxversion}
 \end{htmlonly}
 \newcommand{\nside}{{N_{\rm side}}}
 \newcommand{\npix}{{N_{\rm pix}}}
@@ -27,8 +27,24 @@ optional.}
 % replace &=& with &\myequal& hereafter
 \newcommand{\myequal}{=}
 \begin{htmlonly}
-\renewcommand{\myequal}{$=$}
+ \renewcommand{\myequal}{$=$}
 \end{htmlonly}
+%path to F90 modules
+\newcommand{\modAlmTools}{src/f90/mod/alm\_tools.F90}
+\newcommand{\modCoordVConvert}{src/f90/mod/coord\_v\_convert.f90}
+\newcommand{\modExtension}{src/f90/mod/extension.F90}
+\newcommand{\modFitstools}{src/f90/mod/fitstools.F90}
+\newcommand{\modHeadFits}{src/f90/mod/head\_fits.F90}
+\newcommand{\modHealpixModules}{src/f90/mod/healpix\_modules.f90}
+\newcommand{\modHealpixTypes}{src/f90/mod/healpix\_types.F90}
+\newcommand{\modHealpixFft}{src/f90/mod/healpix\_fft.F90}
+\newcommand{\modMiscUtils}{src/f90/mod/misc\_utils.F90}
+\newcommand{\modMpiAlmTools}{src/f90/mod/mpi\_alm\_tools.f90}
+\newcommand{\modParamfileIo}{src/f90/mod/paramfile\_io.F90}
+\newcommand{\modPixTools}{src/f90/mod/pix\_tools.F90}
+\newcommand{\modRngmod}{src/f90/mod/rngmod.f90}
+\newcommand{\modStatistics}{src/f90/mod/statistics.f90}
+\newcommand{\modUdgradeNr}{src/f90/mod/udgrade\_nr.f90}
 
 %\includeonly{}
 \sloppy

@@ -13,32 +13,33 @@
 
 \begin{facility}
 {This routine computes the min, max, absolute deviation and first four order moment of a data set}
-{src/f90/mod/statistics.f90}
+{\modStatistics}
 \end{facility}
 
 \begin{f90format}
-{data ,stats [,~badval]}
+{data ,stats \optional{[,~badval]}}
 \end{f90format}
+\aboutoptional
 
 \begin{arguments}
 {
 \begin{tabular}{p{0.30\hsize} p{0.05\hsize} p{0.05\hsize} p{0.50\hsize}} \hline  
 \textbf{name~\&~dimensionality} & \textbf{kind} & \textbf{in/out} & \textbf{description} \\ \hline
                    &   &   &                           \\ %%% for presentation
-data(:) & SP/ DP & IN & data set \\
+data(:) & SP/ DP & IN & data set $\{x_i\}$\\
 stats   & tstats & OUT & structure containing the statistics of the
                    data. The respective fields (stats\%{\em field}) are:\\
-\myskip ntot & I4B & -- & total number of data points \\
-\myskip nvalid & I4B & -- & number $n$ of valid data points \\
+\myskip ntot & I8B & -- & total number of data points \\
+\myskip nvalid & I8B & -- & number $n$ of valid data points \\
 \myskip mind, maxd & DP & -- & minimum and maximum valid data \\
-\myskip average & DP & -- & average of valid points $m= \sum x / n$\\
-\myskip absdev & DP & -- & absolute deviation $a= \sum|x-m|/n$\\
-\myskip var & DP & -- & variance $\sigma^2 = \sum(x-m)^2/ (n-1)$\\
+\myskip average & DP & -- & average of valid points $m= \sum_i x_i / n$\\
+\myskip absdev & DP & -- & absolute deviation $a= \sum_i|x_i-m|/n$\\
+\myskip var & DP & -- & variance $\sigma^2 = \sum(x_i-m)^2/ (n-1)$\\
 \myskip rms & DP & -- & standard deviation $\sigma$ \\
-\myskip skew & DP & -- & skewness factor $s = \sum(x-m)^3 / (n\sigma^3)$\\
-\myskip kurt & DP & -- & kurtosis factor $k = \sum(x-m)^4 / (n\sigma^4) - 3$\\
+\myskip skew & DP & -- & skewness factor $s = \sum(x_i-m)^3 / (n\sigma^3)$\\
+\myskip kurt & DP & -- & kurtosis factor $k = \sum(x_i-m)^4 / (n\sigma^4) - 3$\\
 \ & \ & \ & \\
-badval \hskip 3cm (OPTIONAL) & SP/ DP & IN & sentinel value given to bad data points. Data points with this
+\optional{badval} \hskip 3cm (OPTIONAL) & SP/ DP & IN & sentinel value given to bad data points. Data points with this
                    value will be ignored during calculation of the statistics. If
                    not set, all points will be considered. {\bf Do not set to 0!}.
 \end{tabular}
