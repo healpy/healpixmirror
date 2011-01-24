@@ -1,6 +1,6 @@
-Healpix_cxx requires the file cfitsio3250.tar.gz to be present in
+Healpix_cxx requires the file cfitsio3260.tar.gz to be present in
 the subdirectory libcfitsio/. It can be obtained from
-http://heasarc.gsfc.nasa.gov/docs/software/fitsio/fitsio.html
+http://heasarc.gsfc.nasa.gov/FTP/software/fitsio/c/cfitsio3260.tar.gz
 Please simply put the .tar.gz file into the libcfitsio/ directory; it will
 be unpacked and compiled automatically.
 
