@@ -10,6 +10,7 @@
 \newif{\ifcc}
 \ccfalse
 \colfalse
+%\coltrue
 \minutesfalse
 \letterfalse
 \documenttrue
@@ -24,13 +25,21 @@
 
 %\usepackage{a4wide,graphicx,mathptm,fancyheadings}
 \usepackage{a4wide,graphicx,fancyheadings}
-\ifcol\usepackage[dvips]{color}\fi
+%\ifcol\usepackage[dvips]{color}\fi
+\ifcol\usepackage[pdftex]{color}\fi
 
 %For table of contents. BDW May1999
 \renewcommand{\l@section}{\@dottedtocline{1}{1.5em}{2.3em}}
 
 \renewcommand{\textfraction}{0}
-\newcommand{\optional}[1]{\textsl{#1}}
+\ifcol
+ \definecolor{mygrn}{rgb}{0,0.5,0}
+ %\newcommand{\optional}[1]{\textcolor{mygrn}\textsl{#1}}
+ \newcommand{\optional}[1]{\textcolor{mygrn}{\textsl{#1}}}
+\fi
+\ifcol\else
+ \newcommand{\optional}[1]{\textsl{#1}}
+\fi
 \newcommand{\fnopt}{\footnote{Arguments appearing in \optional{italic}
 are optional}}
 \newcommand{\healpix}{\textbf{HEALPix}\ }

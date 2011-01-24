@@ -5,7 +5,7 @@
 \title{\healpix Fortran Subroutines Overview}
 \docid{write\_fits\_cut4} \section[write\_fits\_cut4]{ }
 \label{sub:write_fits_cut4}
-\docrv{Version 1.2}
+\docrv{Version 1.3}
 \author{Eric Hivon \& Frode K.~Hansen}
 \abstract{This document describes the \healpix Fortran90 subroutine WRITE\_FITS\_CUT4.}
 
@@ -15,13 +15,14 @@ FITS file follows the one used for Boomerang98 and is adapted from COBE/DMR.
 This routine can be used to store polarized maps, where the
 information relative to the Stokes parameters I, Q and U are placed in extension
 0, 1 and 2 respectively by successive invocation of the routine.}
-{src/f90/mod/fitstools.f90}
+{src/f90/mod/fitstools.F90}
 \end{facility}
 
 \begin{f90format}
-{filename, np, pixel, signal, n\_obs, serror[, header, coord, nside, order,
-units, extno, polarisation]}
+{filename, np, pixel, signal, n\_obs, serror \optional{[, header, coord, nside, order,
+units, extno, polarisation]}}
 \end{f90format}
+\aboutoptional
 
 \begin{arguments}
 {
@@ -37,22 +38,22 @@ n\_obs(0:np-1)   & I4B & IN & number of observation per pixel \\
 serror(0:np-1)   & SP  & IN & {\em rms} of signal in pixel, for white noise,
                    this is $\propto 1/\sqrt{{\rm n\_obs}}$. \\
 %%%%%If Serror is present N\_Obs should also be present \\
-header(LEN=80)(1:) \ (OPTIONAL)    & CHR & IN &   FITS extension header \\
-coord(LEN=1) \hskip 2cm (OPTIONAL)      & CHR & IN &   astrophysical coordinates ('C' or 'Q'
+\optional{header}(LEN=80)(1:) \ (OPTIONAL)    & CHR & IN &   FITS extension header \\
+\optional{coord}(LEN=1)       & CHR & IN &   astrophysical coordinates ('C' or 'Q'
                    Celestial/eQuatorial, 'G' for Galactic, 'E' for Ecliptic)\\
-nside \ (OPTIONAL)    & I4B & IN &   \healpix resolution parameter of data set \\
-order \ (OPTIONAL)    & I4B & IN &   \healpix ordering scheme, 1: RING, 2: NESTED \\
-header(LEN=80) \hskip 2cm (OPTIONAL)    & CHR & IN &   FITS header to be included in the FITS file\\
-units(LEN=20)\hskip 2cm (OPTIONAL) & CHR & IN &  maps units (applies only to Signal and
+\optional{nside}    & I4B & IN &   \healpix resolution parameter of data set \\
+\optional{order}     & I4B & IN &   \healpix ordering scheme, 1: RING, 2: NESTED \\
+\optional{header}(LEN=80)    & CHR & IN &   FITS header to be included in the FITS file\\
+\optional{units}(LEN=20) & CHR & IN &  maps units (applies only to Signal and
                    Serror)\\
-extension \ (OPTIONAL)    & I4B & IN & (0 based) extension number in which to write data. \default{0}.
+\optional{extension}     & I4B & IN & (0 based) extension number in which to write data. \default{0}.
 	  If set to 0 (or not set) {\em a new file is written from scratch}.
 	  If set to a value
 		  larger than 1, the corresponding extension is added or
 		  updated, as long as all previous extensions already exist.
 		  All extensions of the same file should use the same Nside,
 Order and Coord \\
-polarisaton \ (OPTIONAL) & I4B & IN & if set to a non zero value, specifies that file will contain the I, Q and U polarisation
+\optional{polarisaton} & I4B & IN & if set to a non zero value, specifies that file will contain the I, Q and U polarisation
            Stokes parameter in extensions 0, 1 and 2 respectively, and sets the
 FITS header keywords accordingly. If not set, the keywords found in {\tt
 header} will prevail.\\

@@ -5,13 +5,13 @@
 \title{\healpix Fortran Subroutines Overview}
 \docid{write\_bintab*} \section[write\_bintab*]{ }
 \label{sub:write_bintab}
-\docrv{Version 1.1}
+\docrv{Version 1.2}
 \author{Frode K.~Hansen, Eric Hivon}
 \abstract{This document describes the \healpix Fortran90 subroutine WRITE\_BINTAB.}
 
 \begin{facility}
 {This routine creates a binary FITS-file from a \healpix map. The routine can save a temperature map or both temperature and polarisation maps (T,Q,U) to the file.}
-{src/f90/mod/fitstools.f90}
+{src/f90/mod/fitstools.F90}
 \end{facility}
 
 \begin{f90format}
@@ -25,11 +25,11 @@
 \textbf{name~\&~dimensionality} & \textbf{kind} & \textbf{in/out} & \textbf{description} \\ \hline
                    &   &   &                           \\ %%% for presentation
 map(0:npix-1,1:nmap) & SP/ DP & IN & the map to write to the FITS-file.\\
-npix & I4B & IN & Number of pixels in the map.\\
+npix & I4B/ I8B & IN & Number of pixels in the map.\\
 nmap & I4B & IN & number of maps to be written, 1 for temperature only, and 3 for (T,Q,U). \\
 header(LEN=80) (1:nlheader) & CHR & IN & The header for the FITS-file. \\
 nlheader & I4B & IN & number of header lines to write to the file. \\
-filename(LEN=8) & CHR & IN & the map(s) is (are) written to a FITS-file with this filename. \\
+filename(LEN=*) & CHR & IN & the map(s) is (are) written to a FITS-file with this filename. \\
 \optional{extno}	& I4B & IN & extension number in which to write the data (0
                    based). \default {0}
 \end{tabular}

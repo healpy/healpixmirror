@@ -11,13 +11,14 @@
 
 \begin{facility}
 {This routine reads the number of maps and/or the pixel ordering of a FITS file containing a \healpix map.}
-{src/f90/mod/fitstools.f90}
+{src/f90/mod/fitstools.F90}
 \end{facility}
 
 \begin{f90function}
-{filename [, nmaps, ordering, obs\_npix, nside, mlpol, type, polarisation,
-    fwhm\_arcmin, beam\_leg, coordsys, polcconv, extno]}
+{filename \optional{[, nmaps, ordering, obs\_npix, nside, mlpol, type, polarisation,
+    fwhm\_arcmin, beam\_leg, coordsys, polcconv, extno]}}
 \end{f90function}
+\aboutoptional
 
 \begin{arguments}
 {
@@ -26,15 +27,15 @@
                    &   &   &                           \\ %%% for presentation
 var & I8B & OUT & number of pixels or time samples in the chosen extension of
                    the FITS file \\
-filename(LEN=\filenamelen) & CHR & IN & filename of the FITS-file containing \healpix map(s). \\
-nmaps (OPTIONAL) & I4B & OUT & number of maps in the extension. \\
-ordering (OPTIONAL) & I4B & OUT & pixel ordering, 0=unknown, 1=RING, 2=NESTED \\
-obs\_npix (OPTIONAL) & I4B & OUT & number of non blanck pixels. It is set to -1 if it can not be determined from header
+filename(LEN=*) & CHR & IN & filename of the FITS-file containing \healpix map(s). \\
+\optional{nmaps} (OPTIONAL) & I4B & OUT & number of maps in the extension. \\
+\optional{ordering} (OPTIONAL) & I4B & OUT & pixel ordering, 0=unknown, 1=RING, 2=NESTED \\
+\optional{obs\_npix} (OPTIONAL) & I4B & OUT & number of non blanck pixels. It is set to -1 if it can not be determined from header
 information alone\\
-nside (OPTIONAL)  & I4B & OUT & Healpix resolution parameter Nside. Returns a negative value if not found.  \\
-mlpol (OPTIONAL)  & I4B & OUT & maximum multipole used to generate the map
+\optional{nside} (OPTIONAL)  & I4B & OUT & Healpix resolution parameter Nside. Returns a negative value if not found.  \\
+\optional{mlpol} (OPTIONAL)  & I4B & OUT & maximum multipole used to generate the map
                    (for simulated map). Returns a negative value if not found.\\
-type (OPTIONAL)  & I4B & OUT & 
+\optional{type} (OPTIONAL)  & I4B & OUT & 
              \parbox[t]{\hsize}{Healpix/FITS file type\\
              $<$0 : file not found, or not valid\\
              0  : image only fits file, deprecated Healpix format
@@ -45,24 +46,24 @@ type (OPTIONAL)  & I4B & OUT &
              3  : binary table : with explicit pixel indexing (generally cut sky)
                    (var $\le$ 12 * nside * nside) \\
            999  : unable to determine the type }\\
-polarisation (OPTIONAL)  & I4B & OUT & 
+\optional{polarisation} (OPTIONAL)  & I4B & OUT & 
 		\parbox[t]{\hsize}{presence of polarisation data in the file\\
              $<$0 : can not find out\\
               0 : no polarisation\\
               1 : contains polarisation (Q,U or G,C)} \\
-fwhm\_arcmin (OPTIONAL) & DP & OUT & returns the beam FWHM read from FITS header, 
+\optional{fwhm\_arcmin} (OPTIONAL) & DP & OUT & returns the beam FWHM read from FITS header, 
                             translated from Deg (hopefully) to arcmin.
                          Returns a negative value if not found. \\
-beam\_leg(LEN=\filenamelen) (OPTIONAL) & CHR & OUT & filename of beam or
+\optional{beam\_leg}(LEN=*) (OPTIONAL) & CHR & OUT & filename of beam or
              filtering window function applied to data
 	     (FITS keyword BEAM\_LEG). Returns a empty string if not found. \\
-coordsys(LEN=20) (OPTIONAL) & CHR & OUT & string describing the pixelisation
+\optional{coordsys}(LEN=20) (OPTIONAL) & CHR & OUT & string describing the pixelisation
                    astrophysical coordinates. 
 		'G' = Galactic, 'E' = ecliptic, 'C' = celestial = equatorial. 
 		Returns a empty string if not found. \\
-polcconv (OPTIONAL) & I4B & OUT & polarisation coordinate convention (see
+\optional{polcconv} (OPTIONAL) & I4B & OUT & polarisation coordinate convention (see
              Healpix primer for details) 0=unknown, 1=COSMO, 2=IAU \\
-extno (OPTIONAL)  & I4B & IN & extension number (0 based) for which information
+\optional{extno} (OPTIONAL)  & I4B & IN & extension number (0 based) for which information
              is provided. Default = 0 (first extension). 
 \end{tabular}
 }

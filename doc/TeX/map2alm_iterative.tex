@@ -16,7 +16,7 @@ its $a_{lm}$ coefficients for temperature (and polarisation) up to a specified
 multipole, and use precomputed harmonics if those
 are provided, but it also can also perform an iterative (Jacobi) determination of the $a_{lm}$, and
 apply a pixel mask if one is provided.}
-{src/f90/mod/alm\_tools.f90}
+{src/f90/mod/alm\_tools.F90}
 \end{facility}
 
 \begin{f90format}
@@ -109,7 +109,7 @@ determined by {\tt mask}). The map has
 an $N_{side}$ of 256, and the analysis is supposed to be performed up
 to 512 in $\ell$ and m. The resulting $a_{lm}$ coefficients for
 temperature and polarisation are returned in {\tt alm}. Uniform weights are
-assumed. In order to improve the $al{lm}$ accuracy, 2 Jacobi iterations are performed.
+assumed. In order to improve the $a_{lm}$ accuracy, 2 Jacobi iterations are performed.
 }
 \end{example}
 
@@ -127,7 +127,10 @@ assumed. In order to improve the $al{lm}$ accuracy, 2 Jacobi iterations are perf
   \begin{sulist}{} %%%% NOTE the ``extra'' brace here %%%%
   \item[anafast] executable using \thedocid \ to analyse maps.
   \item[\htmlref{alm2map}{sub:alm2map}] routine performing the inverse transform of \thedocid.
-  \item[\htmlref{alm2map\_spin}{sub:alm2map_spin}] synthesize spin weighted maps.
+  \item[\htmlref{alm2map\_spin}{sub:alm2map_spin}] synthesize spin weighted
+maps.
+  \item[\htmlref{dump\_alms}{sub:dump_alms}] write $a_{lm}$ coefficients
+computed by \thedocid into a FITS file
   \item[\htmlref{map2alm\_spin}{sub:map2alm_spin}] analyze spin weighted maps.
   \end{sulist}
 \end{related}

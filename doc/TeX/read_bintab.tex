@@ -5,18 +5,19 @@
 \title{\healpix Fortran Subroutines Overview}
 \docid{read\_bintab*} \section[read\_bintab*]{ }
 \label{sub:read_bintab}
-\docrv{Version 2.0}
+\docrv{Version 2.1}
 \author{Frode K.~Hansen, Eric Hivon}
 \abstract{This document describes the \healpix Fortran90 subroutine READ\_BINTAB.}
 
 \begin{facility}
 {This routine reads a \healpix map from a binary FITS-file. The routine can read a temperature map or both temperature and polarisation maps (T,Q,U)}
-{src/f90/mod/fitstools.f90}
+{src/f90/mod/fitstools.F90}
 \end{facility}
 
 \begin{f90format}
-{filename, map, npixtot, nmaps, nullval, anynull [,header, units, extno]}
+{filename, map, npixtot, nmaps, nullval, anynull \optional{[,header, units, extno]}}
 \end{f90format}
+\aboutoptional
 
 \begin{arguments}
 {
@@ -30,13 +31,13 @@ map(0:npixtot-1,1:nmap) & SP/ DP & OUT & the map read from the FITS-file.\\
 nullval & SP/ DP & OUT & value of missing pixels in the map. \\
 anynull & LGT & OUT & TRUE, if there are missing pixels, and FALSE
                    otherwise. \\
-header(LEN=80)(1:) (OPTIONAL) & CHR & OUT & character string array
+\optional{header}(LEN=80)(1:) (OPTIONAL) & CHR & OUT & character string array
                    containing the FITS header read from the file. Its
                    dimension has to be defined prior to calling the
                    routine \\
-units(LEN=*)(1:nmaps) \hskip 2cm (OPTIONAL) & CHR & OUT & character string array
+\optional{units}(LEN=*)(1:nmaps) & CHR & OUT & character string array
                    containing the physical units of each map read \\
-extno (OPTIONAL) & I4B & IN & extension number to read the data from
+\optional{extno} & I4B & IN & extension number to read the data from
                    (0 based).\default 0 (the first extension is read) 
 \end{tabular}
 }

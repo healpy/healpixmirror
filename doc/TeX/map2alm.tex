@@ -18,7 +18,7 @@ the desired order in $\ell$ (maximum 3*$N_{side}$). The different
 routines are called depending on what parameters are passed. Some
 routines analyse with or without precomputed harmonics and some with
 or without polarisation. }
-{src/f90/mod/alm\_tools.f90}
+{src/f90/mod/alm\_tools.F90}
 \end{facility}
 
 \begin{f90format}
@@ -101,6 +101,8 @@ used while tensor harmonics are computed with a recursion.
   \item[anafast] executable using \thedocid to analyse maps.
   \item[\htmlref{alm2map}{sub:alm2map}] routine performing the inverse transform
 of \thedocid.
+  \item[\htmlref{dump\_alms}{sub:dump_alms}] write $a_{lm}$ coefficients
+computed by \thedocid into a FITS file
   \item[\htmlref{map2alm\_iterative}{sub:map2alm_iterative}] similar to
 \thedocid\ with iterative scheme.
   \end{sulist}

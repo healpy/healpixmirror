@@ -15,11 +15,11 @@
   datasets (maps) and maximum multipole $\ell$ (order) and $m$ (degree) value
   for the file. If a keyword is not found in the FITS file, a value of -1 is
   returned instead. The file could eg. be a \healpix map, or a set of $a_{lm}$  or precomputed $P_{lm}(\theta)$}
-{src/f90/mod/fitstools.f90}
+{src/f90/mod/fitstools.F90}
 \end{facility}
 
 \begin{f90format}
-{ filename, nside, lmax, tfields [, mmax] }
+{ filename, nside, lmax, tfields \optional{[, mmax]} }
 \end{f90format}
 
 \begin{arguments}
@@ -31,7 +31,7 @@ filename(LEN=\filenamelen) & CHR & IN & filename of the FITS file. \\
 nside & I4B & OUT & `NSIDE' keyword value from the FITS header.\\
 lmax & I4B & OUT & `MAX-LPOL' keyword value from the FITS header. \\
 tfields & I4B & OUT & `TFIELDS' keyword value from the FITS header. \\ 
-mmax (OPTIONAL) & I4B & OUT & `MAX-MPOL' keyword value from the FITS header. \\
+\optional{mmax} (OPTIONAL) & I4B & OUT & `MAX-MPOL' keyword value from the FITS header. \\
 \end{tabular}
 }
 \end{arguments}

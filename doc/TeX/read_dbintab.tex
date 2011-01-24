@@ -11,7 +11,7 @@
 
 \begin{facility}
 {This routine reads a double precision binary array from a FITS-file. It is used by \healpix to read precomputed $P_{lm}(\theta)$ values and pixel window functions.}
-{src/f90/mod/fitstools.f90}
+{src/f90/mod/fitstools.F90}
 \end{facility}
 
 \begin{f90format}
@@ -55,7 +55,7 @@ Reads precomputed scalar $P_{lm}(\theta)$ from the file `plm\_32.fits'. The valu
 \begin{related}
   \begin{sulist}{} %%%% NOTE the ``extra'' brace here %%%%
   \item[plmgen] Executable to create files with precomputed $P_{lm}(\theta)$.
-  \item[\htmlref{write\_dbintab}{sub:write_dbintab}] Routine to create a file to be read by read\_dbintab.
+  \item[\htmlref{write\_plm}{sub:write_plm}] Routine to create a file to be read by read\_dbintab.
   \end{sulist}
 \end{related}
 

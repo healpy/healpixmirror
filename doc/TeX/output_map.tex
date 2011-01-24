@@ -12,11 +12,11 @@
 \begin{facility}
 {This routine writes a full sky \healpix map into a FITS file. The map can be
   either single or double precision real. It {\em has} to be 2-dimensional.}
-{src/f90/mod/fitstools.f90}
+{src/f90/mod/fitstools.F90}
 \end{facility}
 
 \begin{f90format}
-{map, header, filename [,extno]}
+{map, header, filename \optional{[,extno]}}
 \end{f90format}
 
 \begin{arguments}
@@ -29,7 +29,7 @@ header(LEN=80)(1:) 	& CHR 	& IN & string array containing the
                    FITS header to be included in the file \\
 filename(LEN=*) & CHR & IN & filename of the FITS-file to
                    contain \healpix map(s). \\
-extno \hskip 4cm & I4B & IN & extension number in which to write the data (0
+\optional{extno} \hskip 4cm & I4B & IN & extension number in which to write the data (0
                    based). \default 0
 \end{tabular}
 }
@@ -45,7 +45,7 @@ header(:) = '' \\
 map(:,:) = 1. \\
 call output\_map(map, header, 'map.fits')
 }
-{generates a simple map (made of 1s) and output in the FITS file map.fits
+{generates a simple map (made of 1s) and outputs it into the FITS file {\tt map.fits}
 }
 \end{example}
 \newpage

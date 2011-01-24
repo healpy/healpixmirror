@@ -5,19 +5,20 @@
 \title{\healpix Fortran Subroutines Overview}
 \docid{read\_fits\_cut4} \section[read\_fits\_cut4]{ }
 \label{sub:read_fits_cut4}
-\docrv{Version 1.2}
+\docrv{Version 1.3}
 \author{Eric Hivon \& Frode K.~Hansen}
 \abstract{This document describes the \healpix Fortran90 subroutine READ\_FITS\_CUT4.}
 
 \begin{facility}
 {This routine reads a cut sky \healpix map from a FITS file. The format used for the
 FITS file follows the one used for Boomerang98 and is adapted from COBE/DMR}
-{src/f90/mod/fitstools.f90}
+{src/f90/mod/fitstools.F90}
 \end{facility}
 
 \begin{f90format}
-{filename, np, pixel, [signal, n\_obs, serror, header, units, extno]}
+{filename, np, pixel, \optional{[signal, n\_obs, serror, header, units, extno]}}
 \end{f90format}
+\aboutoptional
 
 \begin{arguments}
 {
@@ -28,14 +29,14 @@ filename(LEN=\filenamelen) & CHR & IN & FITS file to be read from,
                    containing a cut sky map \\
 np               & I4B & IN & number of pixels to be read from the file \\
 pixel(0:np-1)    & I4B & OUT & index of observed (or valid) pixels \\
-signal(0:np-1)\hskip 2cm  (OPTIONAL)     & SP & OUT & value of signal in each observed pixel\\
-n\_obs(0:np-1)\hskip 2cm  (OPTIONAL)     & I4B & OUT & number of observation per pixel \\
-serror(0:np-1)\hskip 2cm  (OPTIONAL)     & SP  & OUT & {\em rms} of signal in pixel. (For white noise,
+\optional{signal}(0:np-1)\hskip 2cm  (OPTIONAL)     & SP & OUT & value of signal in each observed pixel\\
+\optional{n\_obs}(0:np-1)     & I4B & OUT & number of observation per pixel \\
+\optional{serror}(0:np-1)     & SP  & OUT & {\em rms} of signal in pixel. (For white noise,
                    this would be $\myhtmlimage{}\propto 1/\sqrt{{\rm n\_obs}}$) \\
-header(LEN=80)(1:) \ (OPTIONAL)    & CHR & OUT &   FITS extension header \\
-units(LEN=20)\hskip 2cm  (OPTIONAL)       & CHR & OUT &  maps units (applies only to
+\optional{header}(LEN=80)(1:)    & CHR & OUT &   FITS extension header \\
+\optional{units}(LEN=20)       & CHR & OUT &  maps units (applies only to
                    Signal and Serror, which are assumed to have the same units) \\
-extno\ \ \ \  (OPTIONAL)  & I4B & IN & extension number (0 based) for which map
+\optional{extno}  & I4B & IN & extension number (0 based) for which map
              is read. Default = 0 (first extension). 
 \end{tabular}
 }

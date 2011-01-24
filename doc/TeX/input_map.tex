@@ -5,19 +5,20 @@
 \title{\healpix Fortran Subroutines Overview}
 \docid{input\_map*} \section[input\_map*]{ }
 \label{sub:input_map}
-\docrv{Version 1.2}
+\docrv{Version 1.3}
 \author{Eric Hivon \& Frode K.~Hansen}
 \abstract{This document describes the \healpix Fortran90 subroutine INPUT\_MAP.}
 
 \begin{facility}
 {This routine reads a \healpix map from a FITS file. This can deal with full sky
 as well as cut sky maps}
-{src/f90/mod/fitstools.f90}
+{src/f90/mod/fitstools.F90}
 \end{facility}
 
 \begin{f90format}
-{filename, map, npixtot, nmaps [, fmissval, header, units, extno]}
+{filename, map, npixtot, nmaps \optional{[, fmissval, header, units, extno]}}
 \end{f90format}
+\aboutoptional
 
 \begin{arguments}
 {
@@ -29,14 +30,14 @@ filename(len=\filenamelen) & CHR & IN & FITS file to be read from,
 map(0:npixtot-1,1:nmaps)    & SP/ DP & OUT & full sky map(s) constructed
                    from the data present in the file, missing pixels are filled
                    with fmissval \\
-npixtot                    & I4B & IN & number of pixels in the full sky map \\
+npixtot                    & I4B/ I8B & IN & number of pixels in the full sky map \\
 nmaps     & I4B & IN &  number of maps in the file  \\
                    &   &   &                           \\ %%% for presentation
-fmissval \hskip 3cm (OPTIONAL) & SP/ DP & IN &  value to be given to missing pixels, its default
+\optional{fmissval}  & SP/ DP & IN &  value to be given to missing pixels, its default
                    value is 0 \\
-header(LEN=80)(1:) \hskip 3cm (OPTIONAL)    & CHR & OUT &   FITS extension header \\
-units(LEN=20)(1:nmaps) \hskip 3cm (OPTIONAL) & CHR & OUT &  maps units \\
-extno \hskip 4cm (OPTIONAL) & I4B & IN & extension number to read the data from
+\optional{header}(LEN=80)(1:)     & CHR & OUT &   FITS extension header \\
+\optional{units}(LEN=20)(1:nmaps)  & CHR & OUT &  maps units \\
+\optional{extno}  & I4B & IN & extension number to read the data from
                    (0 based).\default 0 (the first extension is read) 
 \end{tabular}
 }

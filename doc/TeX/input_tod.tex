@@ -14,11 +14,11 @@
  set) from a FITS file. The user can choose to read only a section of the table,
  starting from an arbitrary position. 
 The data can be read into a single or double precision array.}
-{src/f90/mod/fitstools.f90}
+{src/f90/mod/fitstools.F90}
 \end{facility}
 
 \begin{f90format}
-{filename, tod, npix, ntods [, header, firstpix, fmissval]}
+{filename, tod, npix, ntods \optional{[, header, firstpix, fmissval]}}
 \end{f90format}
 
 \begin{arguments}
@@ -33,10 +33,10 @@ tod(0:npix-1,1:ntods)    & SP/ DP & OUT & array constructed
                    samples are filled with {\tt fmissval}. \\
 npix      & I8B & IN & number of pixels or samples to be read. See Note below. \\
 ntods     & I4B & IN &  number of columns to read  \\
-header(LEN=80)(1:) \ (OPTIONAL)    & CHR & OUT &   FITS extension header \\
-firstpix \ \ (OPTIONAL) & I8B & IN & first pixel (or time sample) to read from
+\optional{header}(LEN=80)(1:) \ (OPTIONAL)    & CHR & OUT &   FITS extension header \\
+\optional{firstpix}  & I8B & IN & first pixel (or time sample) to read from
                    (0 based). \default 0. See Note below. \\
-fmissval \ \ (OPTIONAL) & SP/ DP & IN &  value to be given to missing pixels, its default
+\optional{fmissval}  & SP/ DP & IN &  value to be given to missing pixels, its default
                    value is 0. Should be of the same type as {\tt tod}.
 \end{tabular}
 {\bf Note :} Indices and number of data elements larger than
