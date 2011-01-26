@@ -34,6 +34,7 @@ module healpix_modules
   use misc_utils
   use utilities
   use paramfile_io
+  use long_intrinsic
 
   use healpix_fft
   use num_rec

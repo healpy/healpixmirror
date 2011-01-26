@@ -55,6 +55,13 @@
   !   subroutine alm2cl
   !
   !   subroutine rotate_alm
+  ! ===========================
+! manage preprocessing variables:
+! libpsht is used, unless DONT_USE_PSHT is set
+#ifndef DONT_USE_PSHT
+#define USE_PSHT
+#endif
+  ! ===========================
   !**************************************************************************
   !
   !             ALM2MAP
@@ -77,7 +84,6 @@
     integer(I4B), intent(IN)                   :: nsmax, nlmax, nmmax
     complex(KALMC), intent(IN),  dimension(1:1,0:nlmax,0:nmmax) :: alm
     real(KMAP),   intent(OUT), dimension(0:(12_i8b*nsmax)*nsmax-1) :: map
-#define USE_PSHT
 #ifdef USE_PSHT
     call psht_hp_alm2map_x_KLOAD(nsmax,nlmax,nmmax,alm,map)
 #else
