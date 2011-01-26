@@ -3258,7 +3258,7 @@
 
 #ifdef USE_PSHT
     if (spin<=100) then
-      call psht_hp_map2alm_spin_x_KLOAD(nsmax,nlmax,nmmax, &
+      call psht_hp_map2alm_spin_x_KLOAD(nsmax,nlmax,nmmax,spin, &
         map(0:12*nsmax*nsmax-1,1:2),alm(1:2,0:nlmax,0:nmmax),zbounds_in,w8ring_in)
       return
     endif
