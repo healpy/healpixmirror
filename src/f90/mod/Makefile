@@ -18,15 +18,6 @@ incudgrade = udgrade_s_inc.f90 udgrade_d_inc.f90
 
 incnumrec = source_gen_sort_inc.f90
 
-# obj	= cgetEnvironment.o healpix_types.o indmed.o utilities.o \
-# 	bit_manipulation.o extension.o long_intrinsic.o obsolete.o ran_tools_dist.o rngmod.o \
-# 	healpix_fft.o misc_utils.o \
-# 	head_fits.o num_rec.o statistics.o paramfile_io.o \
-# 	pix_tools.o  \
-# 	coord_v_convert.o fitstools.o udgrade_nr.o \
-# 	alm_tools.o \
-# 	healpix_modules.o
-
 obj0  = healpix_types.o cgetEnvironment.o indmed.o utilities.o 
 obj1  = bit_manipulation.o extension.o long_intrinsic.o obsolete.o ran_tools_dist.o rngmod.o
 obj2  = healpix_fft.o misc_utils.o
@@ -37,6 +28,7 @@ obj6  = alm_tools.o
 obj7  = healpix_modules.o
 
 obj   = $(obj0) $(obj1) $(obj2) $(obj3) $(obj4) $(obj5) $(obj6) $(obj7)
+objpsht = ../psht/libpsht_all.o
 
 default: libhealpix.a 
 
@@ -75,8 +67,8 @@ long_intrinsic.o: long_intrinsic.F90
 	esac
 
 
-libhealpix.a: $(obj) $(incpix) $(incalm) $(incfits) $(incudgrade)
-	$(AR) libhealpix.a $(obj)
+libhealpix.a: $(obj) $(objpsht) $(incpix) $(incalm) $(incfits) $(incudgrade)
+	$(AR) libhealpix.a $(obj) $(objpsht)
 	@cp -p libhealpix.a $(LIBDIR)/
 	@for p in *.$(MOD); do \
 	cp $$p $(INCDIR)/; \
