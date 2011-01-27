@@ -432,7 +432,7 @@ Unobserved pixels, and pixels outside the sphere, take value \htmlref{{\tt
 %                   &   &                            \\ %%% for presentation
 
 {OUTLINE=}\mytarget{idl:mollview:outline} & all &  \parbox[t]{\hsize}{
-	IDL (meta-)structure, or array of structures, 
+	IDL structure, structure of structures, or array of structures, 
        containing the description of one (or several) outline(s) to
       be overplotted on the final map.\\
            For each contour or point list, the corresponding (sub)structure should
@@ -444,9 +444,10 @@ Unobserved pixels, and pixels outside the sphere, take value \htmlref{{\tt
 +1}: black dots, {\bf 0}: black solid (default), {\bf -1}: black dots on white background, {\bf -2}: black dashes on
 	white background\\
             -- 'PSY[M]' (optional, scalar) symbol used to represent vertices (same meaning as
-	    standard PSYM in IDL, if $9\leq|\rm{psym}|\leq 46$, D. Fanning's SYMCAT symbols 
-                     definition will be used, for example psym=9 is an open circle). If $\leq 0$, the vertices are represented with the chosen symbols, and
-                        connected, by arcs of geodesics;
+	    standard PSYM in IDL. If $9\leq|\rm{psym}|\leq 46$, D. Fanning's 
+\htmladdnormallink{\tt SYMCAT.PRO}{http://www.dfanning.com/programs/symcat.pro} symbols 
+                     definition will be used; for example, psym=9 is an open circle). If $\leq 0$, the vertices are represented with the chosen symbols, and
+                        connected by arcs of geodesics;
                     if $>0$, only the vertices are shown
                     \default {0} \\
             -- 'SYM[SIZE]' (optional, scalar) vertice symbol size (same meaning as SYMSIZE in IDL)

@@ -16,6 +16,9 @@
 	pdfauthor={E. Hivon et al},%
 	pdfkeywords={HEALPix, Installation},%
 	colorlinks=true}
+
+\newcommand{\nside}{{N_{\rm side}}}
+\newcommand{\npix}{{N_{\rm pix}}}
 \newcommand{\healpixwebpage}{http://healpix.jpl.nasa.gov}
 \renewcommand{\contentsname}{{TABLE OF CONTENTS}}
 
@@ -797,6 +800,27 @@ transparent in the output PNG file.
 \section{Appendix I: Recent Changes and New Features}
 \label{sec:newfeatures}
 
+\subsection{Bug corrections and Improvements in Versions 2.20} % 2011-01-27
+
+\subsubsection[C++]{C++}
+
+\subsubsection[Fortran90]{\linklatexhtml{Fortran 90}{subroutines.pdf}{subroutines.htm}}
+\begin{itemize}
+	\item Faster Spherical Harmonics Transforms thanks to {\tt libpsht} routines
+	\item $\nside > 8192$ now supported by most routines
+	\item improved map2gif
+\end{itemize}
+
+
+\subsubsection[IDL]{\linklatexhtml{IDL}{idl.pdf}{idl.htm}}
+\begin{itemize}
+	\item  {\tt cartview, gnomview, mollview, orthview}:
+	larger choice of supported symbols in OUTLINE option
+\end{itemize}
+
+\subsubsection[Java]{Java}
+
+%%%
 \subsection{Bug corrections and Improvements in Versions 2.15 and 2.15a} % 2010-06-16
 
 \subsubsection[Fortran90]{\linklatexhtml{Fortran 90}{subroutines.pdf}{subroutines.htm}}
@@ -875,7 +899,7 @@ accept lower case values; {\tt /SILENT} keyword added.
 %
 \subsubsection[Java]{Java}
 \begin{itemize}
-	\item 64 bit java-\healpix, supports Nside up to $ = 2^{29}$ = 536870912
+	\item 64 bit java-\healpix, supports $\nside$ up to $ = 2^{29}$ = 536870912
 	\begin{itemize}
 		\item now fully implemented
 		\item much faster pixel queries (eg {\tt query\_disc})
@@ -966,7 +990,7 @@ TMPDIR} keyword now works properly, and {\tt \$IDL\_TMPDIR} is used as the
 default temporary directory.
 	\item {\tt ud\_grade}: correctly flags bad output pixels with {\tt bad\_data}
 value when upgrading maps; now works for
-Nside $>$ 8192 on cut sky data
+$\nside >  8192$ on cut sky data
 	\item {\tt cartview}, {\tt gnomview}, {\tt mollview}, {\tt orthview}:
 using a virtual window (ie, {\tt WINDOW}$<0$) now allows faster generation 
 of GIF and PNG files (especially useful over remote connections); 
@@ -1107,7 +1131,7 @@ leaving these routines
 \subsubsection[New Features: C++]{C++}
   \begin{itemize}
     \item new {\tt alice} visualization facility for polarized maps
-    \item new class Healpix\_Base2 supporting Nside up to $2^{29}$
+    \item new class Healpix\_Base2 supporting $\nside$ up to $2^{29}$
     \item minor bug fixes
   \end{itemize}
 %---------------------
@@ -1169,7 +1193,7 @@ pixel weights.
   \begin{itemize}
     \item New features
   \begin{itemize}
-	\item Using 64 bit integers available since version 5.2 of IDL the maximum resolution parameter Nside supported has increased
+	\item Using 64 bit integers available since version 5.2 of IDL the maximum resolution parameter $\nside$ supported has increased
 from $2^{13}=8192$ to $2^{29}=536870912$, corresponding to $3.46\ 10^{18}$
 pixels on the sphere.
 	\item FITS files larger than 2GB can now be read/written on systems

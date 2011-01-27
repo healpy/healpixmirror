@@ -34,9 +34,9 @@ ang2xxx, vec2xxx, nest2ring,ring2nest]{ }
 \begin{tabular}{p{0.15\hsize} p{0.15\hsize} p{0.1\hsize} p{0.50\hsize}} \hline  
 \textbf{name (dim.)} & \textbf{type} & \textbf{in/out} & \textbf{description} \\ \hline
                    &   &   &                           \\ %%% for presentation
-nside & scalar integer & IN & $N_{side}$ parameter for the \healpix map. \\
-ipnest(n) & vector integer & --- & pixel identification number in NESTED scheme over the range \{0,$N_{pix}-1$\}. \\
-ipring(n) & vector integer & --- & pixel identification number in RING scheme over the range \{0,$N_{pix}-1$\}. \\
+nside & scalar integer & IN & $\nside$ parameter for the \healpix map. \\
+ipnest(n) & vector integer & --- & pixel identification number in NESTED scheme over the range \{0,$\npix-1$\}. \\
+ipring(n) & vector integer & --- & pixel identification number in RING scheme over the range \{0,$\npix-1$\}. \\
 theta(n) & vector double & --- & colatitude in radians measured southward from
                    north pole in \{0,$\pi$\}\\
 phi(n) & vector double & --- & longitude in radians, measured eastward in \{0,$2\pi$\}. \\ 
@@ -146,9 +146,9 @@ vertex(n,3,4) & array double & optional OUT & three dimensional cartesian positi
 \begin{related}
   \begin{sulist}{} %%%% NOTE the ``extra'' brace here %%%%
     \item[idl] version \idlversion or more is necessary to run \facname.	
-    \item[\htmlref{npix2nside}{idl:npix2nside}] computes Nside (resolution) corresponding to Npix (total
+    \item[\htmlref{npix2nside}{idl:npix2nside}] computes $\nside$ (resolution) corresponding to Npix (total
     pixel number)
-    \item[\htmlref{nside2npix}{idl:nside2npix}] computes Npix corresponding to Nside
+    \item[\htmlref{nside2npix}{idl:nside2npix}] computes $\npix$ corresponding to Nside
     \item[\htmlref{ang2vec}{idl:ang2vec}, \htmlref{vec2ang}{idl:vec2ang}] geometrical conversion between position angles and position vector
   \end{sulist}
 \end{related}
