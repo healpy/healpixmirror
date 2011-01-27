@@ -61,7 +61,7 @@ typedef struct setup_struct
 void usage()
 {
 #include "alice_usage.h"
-  planck_fail("");
+  planck_fail_quietly("");
 }
 
 // ----------------------------------------------------------------------
