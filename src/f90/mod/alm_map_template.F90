@@ -307,10 +307,12 @@
     character(LEN=*), parameter :: code = 'ALM2MAP_SPIN'
     integer(I4B) :: status
     logical(LGT) :: even_spin
+    integer(I4B) :: aspin
 
 #ifdef USE_PSHT
-    if ((spin>0).and.(spin<=100)) then
-      call psht_hp_alm2map_spin_x_KLOAD(nsmax,nlmax,nmmax,spin, &
+    aspin = abs(spin)
+    if ((aspin>0).and.(aspin<=100)) then
+      call psht_hp_alm2map_spin_x_KLOAD(nsmax,nlmax,nmmax,aspin, &
         alm(1:2,0:nlmax,0:nmmax),map(0:12*nsmax*nsmax-1,1:2))
       return
     endif
@@ -3255,6 +3257,7 @@
     character(LEN=*), PARAMETER :: code = 'MAP2ALM_SPIN'
     integer(I4B) :: status
     logical(LGT) :: even_spin
+    integer(I4B) :: aspin
     !=======================================================================
 
     zbounds_in = (/-1.d0 , 1.d0/)
@@ -3263,8 +3266,9 @@
     if (present(w8ring))  w8ring_in  = w8ring
 
 #ifdef USE_PSHT
-    if ((spin>0).and.(spin<=100)) then
-      call psht_hp_map2alm_spin_x_KLOAD(nsmax,nlmax,nmmax,spin, &
+    aspin = abs(spin)
+    if ((aspin>0).and.(aspin<=100)) then
+      call psht_hp_map2alm_spin_x_KLOAD(nsmax,nlmax,nmmax,aspin, &
         map(0:12*nsmax*nsmax-1,1:2),alm(1:2,0:nlmax,0:nmmax),zbounds_in,w8ring_in)
       return
     endif

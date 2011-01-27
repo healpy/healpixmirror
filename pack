@@ -4,7 +4,7 @@
 #  script to pack a release
 #
 #  cd /tmp
-#  cvs get [-r BRANCH] -d Healpix_[VERSION] Healpix
+#  svn co  [-r BRANCH] https://healpix.svn.sourceforge.net/svnroot/healpix/trunk Healpix_[VERSION]
 #  cd Healpix_[VERSION]
 #  ./pack
 #

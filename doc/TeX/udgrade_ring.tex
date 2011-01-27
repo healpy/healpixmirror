@@ -24,8 +24,9 @@ The routine accepts both mono and bi-dimensional maps.
 \end{facility}
 
 \begin{f90format}
-{map\_in, nside\_in, map\_out, nside\_out [, fmissval, pessimistic]}
+{map\_in, nside\_in, map\_out, nside\_out \optional{[, fmissval, pessimistic]}}
 \end{f90format}
+\aboutoptional
 
 \begin{arguments}
 {
@@ -34,30 +35,30 @@ The routine accepts both mono and bi-dimensional maps.
                    &   &   &                           \\ %%% for presentation
 map\_in(0:12*nside\_in**2-1) & SP/ DP & INOUT & mono-dimensional full sky map to be
                    prograded or degraded. The routine finds the second
-                   dimension (nd) by itself. Note that the map is modified on
-                   output (reordered into NESTED scheme).\\
+                   dimension (nd) by itself. \textbf{Note that the map is modified on
+                   output (reordered into NESTED scheme).}\\
 map\_in(0:12*nside\_in**2-1,1:nd) & SP/ DP & INOUT & bi-dimensional full sky map to be
-                   prograded or degraded. Note that the map is modified on
-                   output (reordered into NESTED scheme).\\
-nside\_in & I4B & IN & the $N_{side}$ resolution parameter of the input
+                   prograded or degraded. \textbf{Note that the map is modified on
+                   output (reordered into NESTED scheme).}\\
+nside\_in & I4B & IN & the $\nside$ resolution parameter of the input
                    map. Must be a power of 2.\\
 map\_out(0:12*nside\_out**2-1) & SP/ DP & OUT & mono-dimensional full sky map after
                    degradation or progradation. \\
 map\_out(0:12*nside\_out**2-1,1:nd) & SP/ DP & OUT & bi-dimensional full sky map after
                    degradation or progradation. The second dimension
                    (nd) should match that of the input map.\\
-nside\_out & I4B & IN & the $N_{side}$ resolution parameter of the output
+nside\_out & I4B & IN & the $\nside$ resolution parameter of the output
                    map. Must be a power of 2. If nside\_out $>$ nside\_in, the
                    map is prograded (ie, more and smaller pixels) with each
                    pixel having the same value as its parent; otherwise, the
                    map in degraded (ie, fewer larger pixels), with each pixel
                    being the average of its $($nside\_in/nside\_out$)^2$ components.\\
-fmissval \hskip 4cm (OPTIONAL) & SP/ DP & IN & sentinel value given to bad pixels in input and output
+\optional{fmissval}  & SP/ DP & IN & sentinel value given to bad pixels in input and output
                    maps.%
 \default{\htmlref{\tt HPX\_SBADVAL}{sub:healpix_types} or %
 \htmlref{\tt HPX\_DBADVAL}{sub:healpix_types}%
 } \\
-pessimistic  \hskip 4cm (OPTIONAL) & LGT & IN & if set to {\tt .true.}, during a degradation, a big pixel containing at least a small
+\optional{pessimistic}  & LGT & IN & if set to {\tt .true.}, during a degradation, a big pixel containing at least a small
                    bad pixel will be returned as bad as well, instead of taking
                    the average of the remaing valid pixels. \default{\tt .false.}
 \end{tabular}
@@ -70,7 +71,7 @@ use udgrade\_nr \\
 call udgrade\_ring(map\_hi, 256, map\_low, 64)  \\
 }
 {
-Degrades a RING ordered map with $N_{side}=256$ into a RING map with $N_{side}=64$
+Degrades a RING ordered map with $\nside=256$ into a RING map with $\nside=64$
 }
 \end{example}
 

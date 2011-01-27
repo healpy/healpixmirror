@@ -9,8 +9,8 @@
 \newif{\ifdocument}
 \newif{\ifcc}
 \ccfalse
-\colfalse
-%\coltrue
+%\colfalse
+\coltrue % enables pdftex.color (used for optional arguments)
 \minutesfalse
 \letterfalse
 \documenttrue
@@ -33,7 +33,7 @@
 
 \renewcommand{\textfraction}{0}
 \ifcol
- \definecolor{mygrn}{rgb}{0,0.5,0}
+ \definecolor{mygrn}{rgb}{0.1,0.5,0.1}
  %\newcommand{\optional}[1]{\textcolor{mygrn}\textsl{#1}}
  \newcommand{\optional}[1]{\textcolor{mygrn}{\textsl{#1}}}
 \fi

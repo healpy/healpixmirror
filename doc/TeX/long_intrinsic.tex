@@ -1,0 +1,98 @@
+
+
+\sloppy
+
+\title{\healpix Fortran Subroutines Overview}
+\docid{long\_count,~long\_size} \section[long\_count,~long\_size]{ }
+\label{sub:long_intrinsic}
+\docrv{Version 2.0}
+\author{Eric Hivon}
+\abstract{This document describes the \healpix Fortran90 functions in module LONG\_INTRINSIC.}
+
+\begin{facility}
+{The Fortran90 module {\tt long\_intrinsic} contains a subset of  
+intrinsic functions (currently {\tt count} and {\tt size}) compiled so that they return \htmlref{I8B}{sub:healpix_types} variables
+instead of the default integer (generally \htmlref{I4B}{sub:healpix_types}),
+therefore allowing the handling of arrays with more than $2^{31}-1$
+elements.}
+{\modLongIntrinsic}
+\end{facility}
+
+%-------------------------------
+
+\rule{\hsize}{0.7mm}
+\textsc{\large{\textbf{FUNCTIONS: }}}\hfill\newline
+{\tt cnt = long\_count(mask1)} 
+
+ \begin{tabular}{@{}p{0.3\hsize}@{\hspace{1ex}}
+                        p{0.7\hsize}@{}} & returns the I8B integer value that is
+the number of elements of the logical array {\tt mask1} that have the value {\tt
+true}. 
+     \end{tabular}\\
+
+{\tt sz = long\_size(array1 [,dim])} \\
+{\tt sz = long\_size(array2 [,dim])} 
+
+ \begin{tabular}{@{}p{0.3\hsize}@{\hspace{1ex}}
+                        p{0.7\hsize}@{}} & returns the I8B integer value that is
+the size of the 1D array {\tt array1} or 2D array {\tt array2} or their
+extent along the dimension {\tt dim} if the scalar integer {\tt dim} is provided.
+     \end{tabular}\\
+
+%\vskip 0.1cm
+%-------------------------------
+
+\begin{arguments}
+{
+\begin{tabular}{p{0.30\hsize} p{0.05\hsize} p{0.08\hsize} p{0.47\hsize}} \hline  
+\textbf{name~\&~dimensionality} & \textbf{kind} & \textbf{in/out} & \textbf{description} \\ \hline
+                   &   &   &                           \\ %%% for presentation
+cnt & I8B & OUT & number of elements with value {\tt true} \\
+sz & I8B & OUT & size or extent of array \\
+mask1(:) & LGT & IN & 1D logical array \\
+array1(:) & I4B/ I8B/ SP/ DP & IN & 1D integer or real array \\
+array2(:,:) & I4B/ I8B/ SP/ DP & IN & 2D integer or real array \\
+dim\ \ \ (OPTIONAL) & I4B & IN & dimension (starting at 1) along which the array
+extent is measured.
+\end{tabular}
+}
+\end{arguments}
+
+%-------------------------------
+
+\begin{example}
+{
+ use \htmlref{healpix\_modules}{sub:healpix_modules} \\
+ real(SP), dimension(:,:), allocatable :: bigarray \\
+ allocate(bigarray(2\_i8b**31+5, 3)) \\
+ print*,       size(bigarray),       size(bigarray,1),       size(bigarray,dim=2) \\
+ print*, long\_size(bigarray), long\_size(bigarray,1), long\_size(bigarray,dim=2) \\
+ deallocate(bigarray)
+}
+{Will return (with default compilation options)
+\begin{tabbing}
+     -2147483633 \= -2147483643  \= 3 \\
+     6442450959  \> 2147483653   \> 3
+\end{tabbing}
+meaning that {\tt long\_size} handles correctly this large array while by default
+{\tt size} does not.}
+\end{example}
+
+
+%% \begin{modules}
+%%   \begin{sulist}{} %%%% NOTE the ``extra'' brace here %%%%
+%%  \item[mk\_pix2xy, mk\_xy2pix] routines used in the conversion between pixel values and ``cartesian'' coordinates on the Healpix face.
+%%   \end{sulist}
+%% \end{modules}
+
+%% \begin{related}
+%%   \begin{sulist}{} %%%% NOTE the ``extra'' brace here %%%%
+%%   \item[\htmlref{neighbours\_nest}{sub:neighbours_nest}] find neighbouring pixels.
+%%   \item[\htmlref{ang2vec}{sub:ang2vec}] convert $(\theta,\phi)$ spherical coordinates into $(x,y,z)$ cartesian coordinates.
+%%   \item[\htmlref{vec2ang}{sub:vec2ang}] convert $(x,y,z)$ cartesian coordinates into $(\theta,\phi)$ spherical coordinates.
+%%   \end{sulist}
+%% \end{related}
+
+\rule{\hsize}{2mm}
+
+\newpage

@@ -930,8 +930,45 @@ plmgen
 **********************************************************
 
 src/f90/mod/alm_map_template.F90	2010-11-30, MR: linking with libpsht 
-					 alm2map, map2alm for scalar, polarization and spin<=2
+					 alm2map, map2alm for scalar, polarization and spin<=10
 
 src/idl/visu/oplot_healpix_bounds.pro	2010-12-09:  removed "Floating Point Exception" message
 hpxconfig_functions.sh			2010-12-09: automatic identification of C compiler to allow
 						OpenMP compilation of libpsht
+
+
+src/idl/visu/outline_coord2uv.pro	2011-01-12: uses SYMCAT for psym in [9,46]
+src/idl/visu/mollview.pro
+doc/Tex/mollview_idl.tex
+src/idl/zzz_external/astron/symcat.pro	2011-01-12: new
+
+./add_dipole.tex			2011-01-21: edited (I4B/I8B and/or pix_tools.F90)
+./ang2vec.tex
+./angdist.tex
+./convert_inplace.tex
+./convert_nest2ring.tex
+./convert_ring2nest.tex
+./getdisc_ring.tex
+./in_ring.tex
+./medfiltmap.tex
+./neighbours_nest.tex
+./npix2nside.tex
+./nside2npix.tex
+./nside2ntemplates.tex
+./pix_tools.tex
+./query_disc.tex
+./query_polygon.tex
+./query_strip.tex
+./query_triangle.tex
+./remove_dipole.tex
+./ring_num.tex
+./same_shape_pixels_xxx.tex
+./subroutines.tex
+./surface_triangle.tex
+./template_pixel_xxx.tex
+./vec2ang.tex
+./vect_prod.tex
+
+2011-01-24: introduced mod* definition in subroutines.tex
+doc/TeX/long_intrinsic.tex		2011-01-25: new
+

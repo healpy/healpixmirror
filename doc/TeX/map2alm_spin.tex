@@ -26,8 +26,8 @@ The two (real) input maps for \thedocid\ are defined respectively as
 \end{eqnarray}
 %
 \thedocid\ outputs the alm coefficients defined as
-\begin{eqnarray}
 	%typo correction on spin sign of second term of RHS, 2009-09-03
+\begin{eqnarray}
 	{_{|s|}}a^{+}_{lm} &\myequal& - ( {_{|s|}}a_{lm} + (-1)^s {_{-|s|}}a_{lm} )/2 \\
 	{_{|s|}}a^{-}_{lm} &\myequal& - ( {_{|s|}}a_{lm} - (-1)^s {_{-|s|}}a_{lm} )/(2i)
 \end{eqnarray}
@@ -40,7 +40,8 @@ coefficients for $m<0$ are given by
 %
 With these definitions, ${_2}a^{+}$, ${_2}a^{-}$, ${_2}S^+$ and ${_2}S^-$
 match \healpix  polarization $a^E, a^B, Q$ and $U$ respectively. However, for
-$s=0$, $\ _{0}a^+_{lm} = -a^T_{lm}$, $\ _{0}a^-_{lm} = 0$, $\ {_0}S^+ = T$, $\ {_0}S^- = 0.$
+$s=0$, $\ _{0}a^+_{lm} = -a^T_{lm}$, $\ _{0}a^-_{lm} = 0$, $\ {_0}S^+ = T$, $\
+{_0}S^- = 0.$
 }
 {\modAlmTools}
 \end{facility}
@@ -116,6 +117,7 @@ are returned in alm.
   \item[assert\_alloc] routine to print error message when an array is not
   properly allocated		
   \end{sulist}
+Note: Starting with \htmlref{version 2.20}{sub:new2p20}, {\tt libpsht} routines will be called if $0<|s|\le100$.
 \end{modules}
 
 \begin{related}

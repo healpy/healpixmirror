@@ -20,9 +20,10 @@ and a pixel window read from an external file.}
 \end{facility}
 
 \begin{f90format}
-{nsmax, nlmax, nmmax, polar, filename, iseed, fwhm\_arcmin, alm\_TGC, header [,
-windowfile, units, beam\_file, rng\_handle]}
+{nsmax, nlmax, nmmax, polar, filename, iseed, fwhm\_arcmin, alm\_TGC, header \optional{[,
+windowfile, units, beam\_file, rng\_handle]}}
 \end{f90format}
+\aboutoptional
 
 \begin{arguments}
 {
@@ -41,22 +42,24 @@ filename(LEN=\filenamelen) & CHR & IN & name of FITS file containing power spect
 %%                    random number generator. On exit iseed will be positive
 %%                    definite. If set to a positive value, the information contained in {\tt
 %%                    rng\_handle} will be used to carry on an existing random sequence.\\
+%--------------------------------
+\end{tabular} 
+\begin{tabular}{p{0.4\hsize} p{0.05\hsize} p{0.1\hsize} p{0.35\hsize}} \hline  
+%--------------------------------
 rng\_handle & planck\_rng & \hskip 2cm INOUT & structure containing
 information necessary to continue a random sequence
 initiated {\em previously} with the 
 subroutine {\tt rand\_init}. Consecutive calls to \thedocid can be made after a
 single invocation to {\tt rand\_init}.\\
 fwhm\_arcmin & SP/ DP & IN & FWHM size of the gaussian beam in arcminutes. \\
-\end{tabular}
-\begin{tabular}{p{0.4\hsize} p{0.05\hsize} p{0.1\hsize} p{0.35\hsize}} \hline  
 alm\_TGC(1:p,0:nlmax,0:nmmax) & SPC/ DPC & OUT & complex $a_{\ell m}$ values generated from the powerspectrum in the FITS-file. The first index here runs form 1:1 for temperature only, and 1:3 for polarisation. In the latter case, 1=T, 2=E, 3=B. \\
 header(LEN=80),dimension(60) & CHR & OUT & part of header  which
 will be included in the FITS-file containing the
 map  synthesised from the $a_{\ell m}$  which create\_alm generates. \\
-windowfile(LEN=\filenamelen) \hskip 2cm (OPTIONAL)& CHR & IN & full filename specification of the FITS file with the pixel window function. \\
-units(LEN=80),dimension(1:) \hskip 2cm (OPTIONAL)& CHR & OUT & physical units of the created
+\optional{windowfile}(LEN=\filenamelen) & CHR & IN & full filename specification of the FITS file with the pixel window function. \\
+\optional{units}(LEN=80),dimension(1:) & CHR & OUT & physical units of the created
 $a_{\ell m}$ (square-root of the input power spectrum units). \\
-beam\_file(LEN=\filenamelen) \hskip 2cm (OPTIONAL)& CHR & IN & name of the file containing
+\optional{beam\_file}(LEN=\filenamelen) & CHR & IN & name of the file containing
 the (non necessarily gaussian) window function $B_\ell$ of a circular beam. If present, it will override
 the argument {\tt fwhm\_arcmin}. \\
 \end{tabular}

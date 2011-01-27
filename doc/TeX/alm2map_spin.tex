@@ -13,12 +13,15 @@ A (complex) map $S$ of spin $s$ is a linear combination of the spin weighted har
 \begin{equation}
 	{_s}S(p) = \sum_{lm} {_s}a_{lm}\ \ {_s}Y_{lm}(p)
 \end{equation}
+% \begin{eqnarray}
+% 	{_s}S(p) = \sum_{lm} {_s}a_{lm}\ \ {_s}Y_{lm}(p) \myhtmlimage{} \label{spinmap}
+% \end{eqnarray}
 for $l \ge |m|, l \ge |s|$,
 and is such that ${_s}S^* = {_{-s}}S$.\\
 %
 \thedocid\ expects the alm coefficients to be provided as
-\begin{eqnarray}
 	%typo correction on spin sign of second term of RHS, 2009-09-03
+\begin{eqnarray}
 	{_{|s|}}a^{+}_{lm} &\myequal& - ( {_{|s|}}a_{lm} + (-1)^s {_{-|s|}}a_{lm} )/2 \\
 	{_{|s|}}a^{-}_{lm} &\myequal& - ( {_{|s|}}a_{lm} - (-1)^s {_{-|s|}}a_{lm} )/(2i)
 \end{eqnarray}
@@ -94,6 +97,7 @@ Make spin-4 maps from the $a_{lm}$ passed in alm. The maps have $N_{side}$ of 25
   \item[assert\_alloc] routine to print error message, when an array can not be
   allocated properly
   \end{sulist}
+Note: Starting with \htmlref{version 2.20}{sub:new2p20}, {\tt libpsht} routines will be called if $0<|s|\le100$.
 \end{modules}
 
 \begin{related}

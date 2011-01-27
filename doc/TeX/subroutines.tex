@@ -14,6 +14,13 @@
  \renewcommand{\lq}{'}
  \input{hpxversion}
 \end{htmlonly}
+
+\hypersetup{%
+	pdftitle={HEALPix F90 subroutines Overview},%
+	pdfauthor={E. Hivon et al},%
+	pdfkeywords={HEALPix, F90, subroutines},%
+	colorlinks=true}
+
 \newcommand{\nside}{{N_{\rm side}}}
 \newcommand{\npix}{{N_{\rm pix}}}
 \newcommand{\ntemplate}{{N_{\rm templates}}}
@@ -35,9 +42,10 @@ optional.}
 \newcommand{\modExtension}{src/f90/mod/extension.F90}
 \newcommand{\modFitstools}{src/f90/mod/fitstools.F90}
 \newcommand{\modHeadFits}{src/f90/mod/head\_fits.F90}
+\newcommand{\modHealpixFft}{src/f90/mod/healpix\_fft.F90}
 \newcommand{\modHealpixModules}{src/f90/mod/healpix\_modules.f90}
 \newcommand{\modHealpixTypes}{src/f90/mod/healpix\_types.F90}
-\newcommand{\modHealpixFft}{src/f90/mod/healpix\_fft.F90}
+\newcommand{\modLongIntrinsic}{src/f90/mod/long\_intrinsic.F90}
 \newcommand{\modMiscUtils}{src/f90/mod/misc\_utils.F90}
 \newcommand{\modMpiAlmTools}{src/f90/mod/mpi\_alm\_tools.f90}
 \newcommand{\modParamfileIo}{src/f90/mod/paramfile\_io.F90}
@@ -46,6 +54,8 @@ optional.}
 \newcommand{\modStatistics}{src/f90/mod/statistics.f90}
 \newcommand{\modUdgradeNr}{src/f90/mod/udgrade\_nr.f90}
 
+\newcommand{\mysmaller}{% small in LaTeX, normal in html
+\latexhtml{\scriptsize}{\normalsize}}
 %\includeonly{}
 \sloppy
 \setcounter{secnumdepth}{0}
@@ -93,18 +103,26 @@ $\mathbf{\phi}$ & The azimuthal angle on the sphere, $\phi\in[0,2\pi[$.\\
 %% (, pow2alm\_units)}}
 
 %--------------------------------------------
-\section[Changes between release 2.14 and 2.20]{Changes between release 2.14 and 2.20}
+%--------------------------------------------
+%--------------------------------------------
+%--------------------------------------------
+\section[Changes between releases 2.14 and 2.20]{Changes between releases 2.14 and
+2.20}
+\label{sub:new2p20}
 \begin{itemize}
 \item Spherical Harmonics Transform routines now transparently call \htmladdnormallink{\tt
 libpsht}{http://libpsht.sourceforge.net} routines, leading to a significant (2 to 4) speed-up factor. This
-concerns temperature, polarized (\htmladdnormallink{alm2map}{sub:alm2map}, 
-\htmladdnormallink{map2alm}{sub:map2alm}) and spin ($|s| \le 10$)
-weighted (\htmladdnormallink{alm2map\_spin}{sub:alm2map_spin}, 
-\htmladdnormallink{map2alm\_spin}{sub:map2alm_spin}) transforms,
+concerns temperature and polarized transforms (\htmlref{alm2map}{sub:alm2map}, 
+\htmlref{map2alm}{sub:map2alm}) {\em without precomputation} of the $P_{lm}$ as
+well as spin 
+weighted (\htmlref{alm2map\_spin}{sub:alm2map_spin}, 
+\htmlref{map2alm\_spin}{sub:map2alm_spin}) transforms for $0 < |s| \le 100$,
 but {\em not} the generation of spatial derivatives
-(\htmladdnormallink{alm2map\_der}{sub:alm2map_der}).
+(\htmlref{alm2map\_der}{sub:alm2map_der}) which still uses the original F90 code.
 The compilation and linking to {\tt libpsht}, now shipped with \healpix, is done
-automatically, without any extra download or installation for the user.
+automatically, without any extra download or installation for the user\footnote{
+To {\em revert} to the old F90 implementation of all these routines, the preprocessing
+variable {\tt DONT\_USE\_PSHT} must be set during compilation.}.
 
 \item All routines for Spherical Harmonics Transforms and most routines for
 pixel manipulations (
@@ -115,17 +133,29 @@ nside2ntemplates,
 $\ldots$)
 pixel queries (
 query\_*,  $\ldots$) 
-and FITS I/O of sky maps
-now support resolution parameters $\nside > 8192$. This means that the number of
+and FITS I/O (%
+\htmlref{input\_map}{sub:input_map}, 
+\htmlref{output\_map}{sub:output_map}, 
+\htmlref{read\_bintab}{sub:read_bintab}, 
+\htmlref{write\_bintab}{sub:write_bintab},
+$\ldots$)
+of sky maps
+now support resolution parameters $\nside > 8192$. 
+This means that the number of
 pixels and the pixel indexes can now be stored in either
-{\tt integer(\htmladdnormallink{I4B}{sub:healpix_types})} or
-{\tt integer(\htmladdnormallink{I8B}{sub:healpix_types})} variables.\\
+{\tt integer(\htmlref{I4B}{sub:healpix_types})} or
+{\tt integer(\htmlref{I8B}{sub:healpix_types})} variables (on systems
+supporting 64 bit variables).\\
 The reading and writing of
-$a_{lm}$ containing files remains limited to $l < 46340 $ though. This
+$a_{lm}$ containing files remains limited to $l < 46340 $, though. This
 restriction does not apply to $C(l)$ containing files.
+\item Introduction of 
+\htmlref{\tt long\_count}{sub:long_intrinsic} and
+\htmlref{\tt long\_size}{sub:long_intrinsic} functions.
 \end{itemize}
 
-\section[Changes between release 2.13 and 2.14]{Changes between release 2.13 and 2.14}
+%--------------------------------------------
+\section[Changes between releases 2.13 and 2.14]{Changes between releases 2.13 and 2.14}
 \begin{itemize}
 \item In \htmlref{alm2map\_der}{sub:alm2map_der} routine, a numerical bug affecting the accuracy of the Stokes parameter derivatives 
 $\partial X/\partial\theta$, 
@@ -135,8 +165,11 @@ for $X=Q,U$ has been corrected. See \linklatexhtml{''Fortran
 Facilities''}{facilities.pdf}{facilities.htm} Appendix for details.
 \end{itemize}
 
+%{\footnotesize{
+{\mysmaller%
+%%{{
 %--------------------------------------------
-\section[Changes between release 2.0 and 2.13]{Changes between release 2.0 and 2.13}
+\section[Changes between releases 2.0 and 2.13]{Changes between releases 2.0 and 2.13}
 \begin{itemize}
 \item New functions in version 2.13: 
 \begin{itemize}
@@ -176,7 +209,7 @@ pixel weights.
 \end{itemize}
 
 %--------------------------------------------
-\section[Changes between release 1.2 and 2.0]{Changes between release 1.2 and 2.0}
+\section[Changes between releases 1.2 and 2.0]{Changes between releases 1.2 and 2.0}
 Some new features have been added
 \begin{itemize}
 \item Most routines dealing with maps and $a_{\ell m}$ (eg, create\_alm, map2alm, alm2map,
@@ -226,7 +259,7 @@ Some new routines have been introduced since version 1.2, as listed below.
 \end{itemize}
 
 %--------------------------------------------
-\section{Changes between release 1.1 and 1.2}
+\section{Changes between releases 1.1 and 1.2}
 Some new routines have been introduced since version 1.1, as listed below.
 % Most of the routines that already existed now have extended
 % capabilities.
@@ -281,7 +314,7 @@ smoothing\_getpar (initially in {\tt utilities} module).
 \end{itemize}
 
 \end{itemize}
-
+} % end of mysmaller
 
 
 
@@ -324,6 +357,7 @@ smoothing\_getpar (initially in {\tt utilities} module).
 \include{in_ring}
 \include{input_map}
 \include{input_tod}
+\include{long_intrinsic}
 \include{map2alm}
 \include{map2alm_iterative}
 \include{map2alm_spin}

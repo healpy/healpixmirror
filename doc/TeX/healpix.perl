@@ -181,6 +181,11 @@ sub do_env_facility {
     local($descr) = &get_next_argument;
     "<b><font size=+6>$t_docid</font></b><hr><H2>$descr</H2><br>Location in HEALPix directory tree: <b>$_</b>";
 }
+# sub do_env_facility {
+#     local($_) = @_;
+#     local($descr) = &get_next_argument;
+#     "<b><font size=+6>$t_docid</font></b><hr>$descr<br>Location in HEALPix directory tree: <b>$_</b>";
+#}
 
 sub do_env_f90format {
     local($_) = @_;
