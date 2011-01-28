@@ -5,8 +5,7 @@ using namespace std;
 void MollweideSkyMap::set_size(int x)
   {
   planck_assert(x>=2,"bad map size");
-  int y = x / 2;
-  RectSkyMap::set_size(x, y);
+  RectSkyMap::set_size(x, x/2);
   d_halfx = double(d_x) / 2.0;
   d_halfy = double(d_y) / 2.0;
   roottwo = sqrt(2.0);
@@ -44,7 +43,7 @@ int MollweideSkyMap::project(pointing p) const
   double diff = 1.0;
   double psi = lat;
   // Newton's method: numerically solving for psi.
-  while(abs(diff) > 1.0e-13)
+  while(abs(diff) > 1e-13)
     {
     diff = 2 * psi + sin(2 * psi) - pisinlat;
     double slope = 2 * (1.0 + cos(2 * psi));
@@ -53,9 +52,8 @@ int MollweideSkyMap::project(pointing p) const
     psi -= diff / slope;
     }
 
-  double xp, yp;
-  xp = -2 * roottwo * cos(psi) * lon / pi;
-  yp = roottwo * sin(psi);
+  double xp = -2 * roottwo * cos(psi) * lon / pi;
+  double yp = roottwo * sin(psi);
 
   int i, x, y;
   xpyp2xy(xp, yp, x, y);
