@@ -20,8 +20,8 @@ and a pixel window read from an external file.}
 \end{facility}
 
 \begin{f90format}
-{nsmax, nlmax, nmmax, polar, filename, iseed, fwhm\_arcmin, alm\_TGC, header \optional{[,
-windowfile, units, beam\_file, rng\_handle]}}
+{nsmax, nlmax, nmmax, polar, filename, rng\_handle, fwhm\_arcmin, alm\_TGC, header \optional{[,
+windowfile, units, beam\_file]}}
 \end{f90format}
 \aboutoptional
 
@@ -30,9 +30,9 @@ windowfile, units, beam\_file, rng\_handle]}}
 \begin{tabular}{p{0.4\hsize} p{0.05\hsize} p{0.1\hsize} p{0.35\hsize}} \hline  
 \textbf{name~\&~dimensionality} & \textbf{kind} & \textbf{in/out} & \textbf{description} \\ \hline
                    &   &   &                           \\ %%% for presentation
-nsmax & I4B & IN & $N_{side}$ of the map to be synthetized from the $a_{\ell m}$
+nsmax & I4B & IN & $\nside$ of the map to be synthetized from the $a_{\ell m}$
                    created by this routine. \\ 
-nlmax & I4B & IN & maximum $\ell$ value to be considered ($MAX=3\times N_{side}$).   \\
+nlmax & I4B & IN & maximum $\ell$ value to be considered ($MAX=3\times \nside$).   \\
 nmmax & I4B & IN & maximum $m$ value for the $a_{\ell m}$.   \\
 polar & I4B & IN & equals 1 if polarisation is used, 0 otherwise. \\
 filename(LEN=\filenamelen) & CHR & IN & name of FITS file containing power spectrum. \\

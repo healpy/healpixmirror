@@ -9,8 +9,8 @@
 \newif{\ifdocument}
 \newif{\ifcc}
 \ccfalse
-%\colfalse
-\coltrue % enables pdftex.color (used for optional arguments)
+\colfalse
+%\coltrue % enables pdftex.color (used for optional arguments)
 \minutesfalse
 \letterfalse
 \documenttrue
@@ -18,6 +18,8 @@
 \DeclareOption{minutes}{\minutestrue\letterfalse\documentfalse}
 \DeclareOption{letter}{\minutesfalse\lettertrue\documentfalse}
 \ProcessOptions
+% define ifpdf. EH Jan2011
+%\newif\ifpdf\ifx\pdfoutput\undefined\pdffalse\else\pdfoutput=1\pdftrue\fi
 
 \ifdocument\typeout{Document format}\fi
 \ifletter\typeout{Letter format}\fi
@@ -26,20 +28,21 @@
 %\usepackage{a4wide,graphicx,mathptm,fancyheadings}
 \usepackage{a4wide,graphicx,fancyheadings}
 %\ifcol\usepackage[dvips]{color}\fi
-\ifcol\usepackage[pdftex]{color}\fi
+%\ifcol\ifpdf\usepackage[pdftex]{color}\fi\fi % pdftex not compatible with latex2html
 
 %For table of contents. BDW May1999
 \renewcommand{\l@section}{\@dottedtocline{1}{1.5em}{2.3em}}
 
 \renewcommand{\textfraction}{0}
-\ifcol
- \definecolor{mygrn}{rgb}{0.1,0.5,0.1}
- %\newcommand{\optional}[1]{\textcolor{mygrn}\textsl{#1}}
- \newcommand{\optional}[1]{\textcolor{mygrn}{\textsl{#1}}}
-\fi
-\ifcol\else
- \newcommand{\optional}[1]{\textsl{#1}}
-\fi
+% \ifcol
+%  \definecolor{mygrn}{rgb}{0.1,0.5,0.1}
+%  %\newcommand{\optional}[1]{\textcolor{mygrn}\textsl{#1}}
+%  \newcommand{\optional}[1]{\textcolor{mygrn}{\textsl{#1}}}
+% \fi
+% \ifcol\else
+%  \newcommand{\optional}[1]{\textsl{#1}}
+% \fi
+\newcommand{\optional}[1]{\textsl{#1}}
 \newcommand{\fnopt}{\footnote{Arguments appearing in \optional{italic}
 are optional}}
 \newcommand{\healpix}{\textbf{HEALPix}\ }

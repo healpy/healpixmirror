@@ -21,7 +21,7 @@ EOF
 fi
 
 # Fix each PNG image
-for file in $1*.png
+for file in `ls -1 $1*.png`
 do
 #  echo Fixing $file...
   pngtopnm $file | \

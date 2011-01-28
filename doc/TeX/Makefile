@@ -10,6 +10,7 @@ LATEX2HTML := latex2html
 # LATEX2HTML := ~/bin/latex2html
 HTMLDIR := ../../healpix-dynamicPages/html/
 L2HFLAGS := -dir $(HTMLDIR) -up_url main.htm -up_title "Main Page" -math -html_version 4.0 -bottom_navigation -short_extn -white -local_icons -noexternal_images -toc_depth 8 # -debug -verbosity 2  -show_section_numbers 
+#L2HFLAGS := -dir $(HTMLDIR) -up_url main.htm -up_title "Main Page" -math -html_version 4.1 -bottom_navigation -short_extn -white -local_icons -noexternal_images -toc_depth 8 -debug -verbosity 2 # -show_section_numbers 
 EQNFIX := ./eqnfix.sh
 
 docs := install.tex intro.tex facilities.tex subroutines.tex idl.tex csub.tex
@@ -48,6 +49,10 @@ $(ps): %.ps : %.dvi
 
 .PHONY: main.html
 main.html: 
+	@echo '=================================='
+	@echo '        MAIN.HTM                  '
+	@echo '=================================='
+	mkdir -p $(HTMLDIR)
 	cp main.html $(HTMLDIR)/main.htm
 	rm -f $(HTMLDIR)/index.htm
 	cp main.html $(HTMLDIR)/index.htm

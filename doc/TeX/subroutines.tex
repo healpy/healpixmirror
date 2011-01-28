@@ -14,12 +14,17 @@
  \renewcommand{\lq}{'}
  \input{hpxversion}
 \end{htmlonly}
-
+%\ifpdf
 \hypersetup{%
 	pdftitle={HEALPix F90 subroutines Overview},%
 	pdfauthor={E. Hivon et al},%
 	pdfkeywords={HEALPix, F90, subroutines},%
-	colorlinks=true}
+	colorlinks=true}%
+% \usepackage[pdftex]{color}%
+% \definecolor{mygrn}{rgb}{0.1,0.5,0.1}%
+% \newcommand{\optional}[1]{\textcolor{mygrn}{\textsl{#1}}}
+%\fi
+
 
 \newcommand{\nside}{{N_{\rm side}}}
 \newcommand{\npix}{{N_{\rm pix}}}
