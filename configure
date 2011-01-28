@@ -20,7 +20,7 @@
 #
 
 # version number
-HPXVERSION=2.11
+HPXVERSION=2.20
 
 #-------------
 welcome () {

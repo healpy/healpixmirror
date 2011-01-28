@@ -296,62 +296,14 @@ C_config () {
 
 
 #=====================================
-#=========== C++ pakage ===========
+#=========== C++ package ===========
 #=====================================
 #   setCppDefaults: defaults variables for C++
-#   getFitsTarFile: find .tar.gz cfitsio file
 #-------------
 setCppDefaults () {
 
     CXXDIR=${HEALPIX}/src/cxx
     CXXCONFDIR=${CXXDIR}/config
-    CXXFITSDIR=${CXXDIR}/libcfitsio
-}
-#-------------
-getFitsTarFile () {
-
-    #echo $CXXFITSDIR
-	# if no cfitsio package found, ask for one
-    check=`${LS} $CXXFITSDIR | ${GREP} cfitsio | ${GREP} tar.gz | ${WC} -l`
-    if [ $check -eq 0 ]; then
-        echoLn "enter the name of the cfitsio .tar.gz package (with full path): "
-	read answer
-	FULLTARFITS=`${DIRNAME} $answer`
-	fullPath FULLTARFITS
-	FULLTARFITS=${FULLTARFITS}/`${BASENAME} $answer`
-	while [ ! -r $FULLTARFITS ]  ; do
-	    echo "$FULLTARFITS was not found, or can not be read"
-            echoLn "enter the name of the cfitsio .tar.gz package (with full path): "
-	    read answer
-	    FULLTARFITS=`${DIRNAME} $answer`
-	    fullPath FULLTARFITS
-	    FULLTARFITS=${FULLTARFITS}/`${BASENAME} $answer`
-	done
-	${CP} $FULLTARFITS $CXXFITSDIR
-	TARFITS=`${BASENAME} $FULLTARFITS`
-    else
-	cd $CXXFITSDIR
-#	list=`${LS} -r | ${GREP} cfitsio | ${GREP} tar.gz`   # modified 2008-11-21
-#	TARFITS=`${BASENAME} ${list[0]}`
-	list=`${LS} -r | ${GREP} cfitsio | ${GREP} tar.gz | ${HEAD} -1`
-	TARFITS=`${BASENAME} ${list}`
-	cd $HEALPIX 
-    fi
-}
-#-------------
-updateCppFitsMake () {
-    
-    cd $CXXFITSDIR
-    #echo $TARFITS
-# if package does not match the one expected by planck.make, edit planck.make
-    check=`${GREP} ${TARFITS} planck.make | ${WC} -l`
-    if [ $check -eq 0 ]; then
-	echo "editing $CXXFITSDIR/planck.make to use correct CFITSIO package"
-	newpack="PACKAGE = \$(SRCROOT)/libcfitsio/${TARFITS}"
-	mv planck.make planck.make-bk
-	${CAT} planck.make-bk | ${SED} "s|PACKAGE =.*$|$newpack|" > planck.make
-    fi
-    cd $HEALPIX
 }
 #-------------
 pickCppCompilation() {
@@ -404,6 +356,8 @@ editCppMakefile () {
     mv -f Makefile Makefile_tmp
     ${CAT} Makefile_tmp |\
 	${SED} "s|^HEALPIX_TARGET\(.*\)|HEALPIX_TARGET = ${HEALPIX_TARGET}|" |\
+	${SED} "s|^CFITSIO_EXT_LIB\(.*\)|CFITSIO_EXT_LIB = ${FITSDIR}/lib${LIBFITS}.a|" |\
+	${SED} "s|^CFITSIO_EXT_INC\(.*\)|CFITSIO_EXT_INC = ${FITSINC}|" |\
 	${SED} "s|^ALL\(.*\) cpp-void \(.*\)|ALL\1 cpp-all \2|" |\
 	${SED} "s|^TESTS\(.*\) cpp-void \(.*\)|TESTS\1 cpp-test \2|" |\
 	${SED} "s|^CLEAN\(.*\) cpp-void \(.*\)|CLEAN\1 cpp-clean \2|" |\
@@ -446,8 +400,33 @@ Cpp_config () {
 
     HPX_CONF_CPP=$1
     setCppDefaults
-    getFitsTarFile
-    updateCppFitsMake
+
+    echoLn "enter full name of cfitsio library (lib${LIBFITS}.a): "
+    read answer
+    [ "x$answer" != "x" ] && LIBFITS=`${BASENAME} $answer ".a" | ${SED} "s/^lib//"`
+
+    findFITSLib $LIBDIR
+    echoLn "enter location of cfitsio library ($FITSDIR): "
+    read answer
+    [ "x$answer" != "x" ] && FITSDIR=$answer
+
+    fullPath FITSDIR
+    guess1=${FITSDIR}
+    guess2=`${DIRNAME} ${guess1}`
+    guess3="${guess2}/include"
+
+    findFITSInclude $INCDIR ${guess1} ${guess2} ${guess3}
+    echoLn "enter location of cfitsio header fitsio.h ($FITSINC): "
+    read answer
+    [ "x$answer" != "x" ] && FITSINC=$answer
+    fullPath FITSINC
+
+    inc="${FITSINC}/fitsio.h"
+    if [ ! -r $inc ]; then
+	echo "error: cfitsio include file $inc not found"
+	crashAndBurn
+    fi
+
     pickCppCompilation
     if  [ ${target_chosen} = 1 ];    then
 	generateConfCppFile

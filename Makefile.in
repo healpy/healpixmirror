@@ -74,8 +74,10 @@ C_MKFLAGS = CC="$(C_CC)" PIC="$(C_PIC)" OPT="$(C_OPT)" LIBDIR="$(C_LIBDIR)" INCD
 # ------------------------------ variables for C++ --------------------------
 
 HEALPIX_TARGET =
-export HEALPIX_TARGET
-
+EXTERNAL_CFITSIO=yes
+CFITSIO_EXT_LIB=
+CFITSIO_EXT_INC=
+export HEALPIX_TARGET EXTERNAL_CFITSIO CFITSIO_EXT_LIB CFITSIO_EXT_INC
 # ------------------------------- global rules -------------------------
 
 all: $(ALL)
@@ -250,7 +252,7 @@ cpp-test: cpp-all
 
 cpp-clean:
 	@cd src/cxx ; \
-	$(MAKE) clean; \
+	$(MAKE) distclean; \
 	cd ../..
 
 cpp-tidy:
