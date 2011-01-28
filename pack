@@ -129,8 +129,8 @@ cd src/cxx
 \rm -rf build.${HEALPIX_TARGET}
 cd $here
 
-echo "removing CVS directories..."
-find . -type d -name CVS -exec rm -rf {} \;
+echo "removing SVN directories..."
+find . -type d -name .svn -exec rm -rf {} \;
 
 echo "removing change logs..."
 find . -name ChangeLog -exec rm -f {} \;
