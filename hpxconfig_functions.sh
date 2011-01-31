@@ -28,6 +28,7 @@
 # 2010-12-09: added IdentifyCParallCompiler to compile C libpsht with OpenMP
 # 2011-01-28: C++ configuration ask for preinstalled cfitsio library
 # 2011-01-31: keep track of previous choice of FITSDIR and FITSINC (within same session)
+#           : propose OpenMP by default
 #=====================================
 #=========== General usage ===========
 #=====================================
@@ -643,7 +644,8 @@ setF90Defaults () {
     CC="cc"
     FFLAGS="-I\$(F90_INCDIR)"
     CFLAGS="-O"
-    LDFLAGS="-L\$(F90_LIBDIR) -L\$(FITSDIR) -lhealpix -lhpxgif -lpsht_healpix_f -l\$(LIBFITS)"
+    #LDFLAGS="-L\$(F90_LIBDIR) -L\$(FITSDIR) -lhealpix -lhpxgif -lpsht_healpix_f -l\$(LIBFITS)"
+    LDFLAGS="-L\$(F90_LIBDIR) -L\$(FITSDIR) -lhealpix -lhpxgif -l\$(LIBFITS)"
     F90_BINDIR="./bin"
     F90_INCDIR="./include"
     F90_LIBDIR="./lib"
@@ -868,14 +870,16 @@ GuessCompiler () {
 # -----------------------------------------------------------------
 
 askOpenMP () {
-    OpenMP="0"
-    echo " The Spherical Harmonics Transform routines used by synfast/anafast/smoothing/plmgen"
+    OpenMP="1"
+    echo " The Spherical Harmonics Transform (C and F90) routines used by "
+    echo "synfast/anafast/smoothing/plmgen"
     echo "and some routines used by ud_grade and alteralm respectively"
     echo "have a parallel implementation (based on OpenMP)."
-    echo " It has currently been tested on IBM/xlf, Linux/ifort & Linux/gcc systems/compilers"
+#     echo " It has been successfully tested on xlf (IBM), "
+#     echo "gcc and ifort (Linux and/or MacOSX) compilers (systems)"
     echo "Do you want to use :"
     echo " 0) the standard serial implementation ?"
-    echo " 1) the parallel implementation (slightly slower in single CPU usage with some compilers)"
+    echo " 1) the parallel implementation "
     echoLn "Enter choice                                      ($OpenMP): "
     read answer
     [ "x$answer" != "x" ] && OpenMP="$answer"
@@ -895,7 +899,7 @@ askOpenMP () {
 ##	    PARALL="_omp" # no need for a different source file
 	else
 	    echo "Healpix+OpenMP not tested for  \"$FCNAME\" under \"$OS\" "
-	    echo "Contact healpix@jpl.nasa.gov if you already used OpenMP in this configuration."
+	    echo "Contact healpix at jpl.nasa.gov if you already used OpenMP in this configuration."
 	    echo "Will perform serial implementation instead"
 	    #crashAndBurn
 	fi 
