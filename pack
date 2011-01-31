@@ -127,6 +127,7 @@ cd src/cxx
 [ -r Makefile ] && make tidy
 \rm -rf ${HEALPIX_TARGET}
 \rm -rf build.${HEALPIX_TARGET}
+\rm -rf config/config.healpy # remove config.healpy (2011-01-31)
 cd $here
 
 oldwebsite="public_html_healpix"

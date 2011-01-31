@@ -324,7 +324,7 @@ in {\tt \$\{HEALPIX\}/lib/chealpix.*}\ .
 \subsubsection{C++ configuration}
 
 The {\tt ./configure} script will 
-ask for the full path to a {\bf cftisio tar ball}, and then provide a choice a
+ask for the full path to an installed {\tt cfitsio} library to link to, and then provide a choice of
 predefined targets corresponding to different combinations of C++ compilers and
 options. Each of those targets is defined in a configuration file located in
 {\tt Healpix\_\hpxversion/src/cxx/config/config.}{\em target}.
@@ -332,8 +332,13 @@ The user can therefore add new targets or edit existing ones, and the
 {\tt ./configure} script will update its menu accordingly.
 If a fairly recent version
 (4.2 or higher) of gcc and g++ is installed on the system, the target
-"generic\_gcc" should always work. The environment variable HEALPIX\_TARGET will
-be set to the value of the chosen target.
+"generic\_gcc" should always work, except under MacOSX, where ``osx'' target is
+required.  \\
+The environment variables EXTERNAL\_CFITSIO, 
+CFITSIO\_EXT\_LIB, 
+CFITSIO\_EXT\_INC and 
+HEALPIX\_TARGET 
+will be set according to the choices made above.
 \\
 If the HEALPIX configuration file is sourced as described in \S~\ref{subsub:conf}, the full path to the C++
 executables will be added to the environment PATH variable.
