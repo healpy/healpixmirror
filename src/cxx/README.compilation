@@ -1,4 +1,5 @@
-Starting with HEALPix 2.20, Healpix_cxx supports compilation using a pre-installed libcfitsio. In order to use this feature, simply set
+Starting with HEALPix 2.20, Healpix_cxx supports compilation using a
+pre-installed libcfitsio. In order to use this feature, simply set
 the following environment variables before running "make":
 
 EXTERNAL_CFITSIO=yes
