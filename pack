@@ -129,14 +129,29 @@ cd src/cxx
 \rm -rf build.${HEALPIX_TARGET}
 cd $here
 
+oldwebsite="public_html_healpix"
+newwebsite="healpix-dynamicPages"
+docautodir=${newwebsite}
+
+echo "removing CVS directories..."
+find . -type d -name CVS -exec rm -rf {} \;
+
 echo "removing SVN directories..."
 find . -type d -name .svn -exec rm -rf {} \;
+
+echo "remove old and new web sites"
+[ -d ${oldwebsite} ]  && rm -rf ${oldwebsite}
+[ -d  ${newwebsite} ] && rm -rf ${newwebsite}
 
 echo "removing change logs..."
 find . -name ChangeLog -exec rm -f {} \;
 
 echo "generating documentations"
-rm -f healpix-dynamicPages/pdf/*.pdf
+# recreate directory receiving doc from doc/TeX/Makefile
+mkdir -p ${docautodir}/pdf
+mkdir -p ${docautodir}/html
+rm -f ${docautodir}/pdf/*
+rm -f ${docautodir}/html/*
 cd doc/TeX
 make pdf
 make html
@@ -146,15 +161,13 @@ echo "dealing with Ximview doc"
 mkdir -p doc/html/ximview
 cp -p src/idl/ximview/docs/* doc/html/ximview/
 
+
 echo "removing doc/TeX and doc/*.txt..."
 rm -rf doc/TeX
-#rm -rf test/ben
 rm -f doc/*.txt
-#mv public_html_healpix/content/HEALPix_Documentation_html doc/html
-rm -rf public_html_healpix
-mv healpix-dynamicPages/html/* doc/html
-mv healpix-dynamicPages/pdf/*  doc/pdf
-rm -rf healpix-dynamicPages/
+mv ${docautodir}/html/* doc/html
+mv ${docautodir}/pdf/*  doc/pdf
+rm -rf ${docautodir}/
 rm -rf DONE.txt TODO Bugs.txt
 rm -rf include bin lib
 
@@ -165,39 +178,39 @@ for p in quad_ring; do
     sed 's/'$p' *//' Makefile.in > Makefile.save
     mv Makefile.save Makefile.in
 done
-rm -rf extra
+[ -d extra ] && rm -rf extra
 
-echo "appending GPL header to source files"
-tempfile='/tmp/tmp_edit.txt'
-# F90 ------------
-echo "   ... F90 ..."
-list=`find src/f90 -type f -name \*90 -print`
-for file in $list; do
-   cat gpl_header/gpl_header.f90 $file > $tempfile
-   mv $tempfile $file
-done
-# IDL (non ximview) -----------
-echo "   ... IDL ..."
-list=`find src/idl -type f -name \*pro -print | grep -v zzz | grep -v ximview`
-for file in $list; do
-   cat gpl_header/gpl_header.pro $file > $tempfile
-   mv $tempfile $file
-done
-# # IDL (ximview) ---------
-# echo "   ... ximview ..."
-# list=`find src/idl/ximview -type f -name \*pro -print | grep -v astrolib`
+# echo "appending GPL header to source files"
+# tempfile='/tmp/tmp_edit.txt'
+# # F90 ------------
+# echo "   ... F90 ..."
+# list=`find src/f90 -type f -name \*90 -print`
 # for file in $list; do
-#    cat gpl_header/gpl_header_leahy.pro $file > $tempfile
+#    cat gpl_header/gpl_header.f90 $file > $tempfile
 #    mv $tempfile $file
 # done
-# C ---------
-echo "   ... C ..."
-list=`find src/C/subs -type f \( -name \*c -o -name \*h \) -print`
-for file in $list; do
-   cat gpl_header/gpl_header.c $file > $tempfile
-   mv $tempfile $file
-done
-rm -rf gpl_header
+# # IDL (non ximview) -----------
+# echo "   ... IDL ..."
+# list=`find src/idl -type f -name \*pro -print | grep -v zzz | grep -v ximview`
+# for file in $list; do
+#    cat gpl_header/gpl_header.pro $file > $tempfile
+#    mv $tempfile $file
+# done
+# # # IDL (ximview) ---------
+# # echo "   ... ximview ..."
+# # list=`find src/idl/ximview -type f -name \*pro -print | grep -v astrolib`
+# # for file in $list; do
+# #    cat gpl_header/gpl_header_leahy.pro $file > $tempfile
+# #    mv $tempfile $file
+# # done
+# # C ---------
+# echo "   ... C ..."
+# list=`find src/C/subs -type f \( -name \*c -o -name \*h \) -print`
+# for file in $list; do
+#    cat gpl_header/gpl_header.c $file > $tempfile
+#    mv $tempfile $file
+# done
+[ -d gpl_header ] && rm -rf gpl_header
 
 echo "removing myself..."
 rm -f $0
@@ -208,6 +221,7 @@ echo "--------------------"
 
 relsuf="${version}_${shortdate}"
 package="Healpix_${relsuf}.tar.gz"
+rnfile="Healpix_${relsuf}.ReleaseNotes.txt"
 echo "creating package ../${package}"
 cd ..
 tar -cvzpf ${package} `basename ${here}`
@@ -230,7 +244,9 @@ if [ $do_split == 1 ] ; then
 fi
 
 cd ..
-allsums ${package}
+\rm ${rnfile}
+allsums ${package} > ${rnfile}
+cat $rnfile
 cd ${here}
 
 exit

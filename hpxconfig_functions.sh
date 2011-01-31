@@ -26,6 +26,8 @@
 #               got rid of arrays in pickCppCompilation
 # 2010-06-22: supports zsh (M. Tomasi)
 # 2010-12-09: added IdentifyCParallCompiler to compile C libpsht with OpenMP
+# 2011-01-28: C++ configuration ask for preinstalled cfitsio library
+# 2011-01-31: keep track of previous choice of FITSDIR and FITSINC (within same session)
 #=====================================
 #=========== General usage ===========
 #=====================================
@@ -75,7 +77,7 @@ echoLn () {
 }
 #-------------
 findFITSLib () {
-    for dir in $1 /usr/lib /usr/lib64 /usr/local/lib /usr/local/lib64 /usr/local/lib/cfitsio /usr/local/lib64/cftisio /usr/local/src/cfitsio ${HOME}/lib ${HOME}/lib64 ./src/cxx/${HEALPIX_TARGET}/lib/ ; do
+    for dir in $* /usr/lib /usr/lib64 /usr/local/lib /usr/local/lib64 /usr/local/lib/cfitsio /usr/local/lib64/cftisio /usr/local/src/cfitsio ${HOME}/lib ${HOME}/lib64 ./src/cxx/${HEALPIX_TARGET}/lib/ ; do
 	if [ -r "${dir}/lib${LIBFITS}.a" ] ; then
 	    FITSDIR=$dir
 	    break
@@ -204,7 +206,7 @@ askCUserMisc () {
     read answer
     [ "x$answer" != "x" ] && LIBFITS=`${BASENAME} $answer ".a" | ${SED} "s/^lib//"`
 
-    findFITSLib $LIBDIR
+    findFITSLib $LIBDIR $FITSDIR
     echoLn "enter location of cfitsio library ($FITSDIR): "
     read answer
     [ "x$answer" != "x" ] && FITSDIR=$answer
@@ -221,7 +223,7 @@ askCUserMisc () {
     guess2=`${DIRNAME} ${guess1}`
     guess3="${guess2}/include"
 
-    findFITSInclude $INCDIR ${guess1} ${guess2} ${guess3}
+    findFITSInclude $INCDIR ${guess1} ${guess2} ${guess3} $FITSINC
     echoLn "enter location of cfitsio header fitsio.h ($FITSINC): "
     read answer
     [ "x$answer" != "x" ] && FITSINC=$answer
@@ -405,7 +407,7 @@ Cpp_config () {
     read answer
     [ "x$answer" != "x" ] && LIBFITS=`${BASENAME} $answer ".a" | ${SED} "s/^lib//"`
 
-    findFITSLib $LIBDIR
+    findFITSLib $LIBDIR $FITSDIR
     echoLn "enter location of cfitsio library ($FITSDIR): "
     read answer
     [ "x$answer" != "x" ] && FITSDIR=$answer
@@ -415,7 +417,7 @@ Cpp_config () {
     guess2=`${DIRNAME} ${guess1}`
     guess3="${guess2}/include"
 
-    findFITSInclude $INCDIR ${guess1} ${guess2} ${guess3}
+    findFITSInclude $INCDIR ${guess1} ${guess2} ${guess3} $FITSINC
     echoLn "enter location of cfitsio header fitsio.h ($FITSINC): "
     read answer
     [ "x$answer" != "x" ] && FITSINC=$answer
@@ -1304,7 +1306,7 @@ askUserMisc () {
     read answer
     [ "x$answer" != "x" ] && LIBFITS=`${BASENAME} $answer ".a" | ${SED} "s/^lib//"`
 
-    findFITSLib $LIBDIR
+    findFITSLib $LIBDIR $FITSDIR
     echoLn "enter location of cfitsio library ($FITSDIR): "
     read answer
     [ "x$answer" != "x" ] && FITSDIR=$answer
@@ -1690,6 +1692,7 @@ setTopDefaults() {
 
     LIBFITS="cfitsio"
     FITSDIR="/usr/local/lib"
+    FITSINC="/usr/local/include"
 
     edited_makefile=0
 
