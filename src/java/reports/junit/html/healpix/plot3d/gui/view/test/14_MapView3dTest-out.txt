@@ -1,0 +1,29 @@
+*** Order/depthStatic creation=0
+Name[0]:DATA1
+Nside:1
+Npixels:12
+Map min/max: 0.0/1.0
+MapCanvas Imap:0
+MapCanvas Nside:1
+MapCanvas Min/Max:0.0/1.0
+*** Order/depthStatic creation=0
+Name[0]:DATA1
+Nside:1
+Npixels:12
+Setting the map:healpix.core.dm.HealpixMapImp@20807c
+MapCanvas Imap:0
+MapCanvas Nside:1
+MapCanvas Min/Max:0.0/1.0
+Map min/max: 0.0/1.0
+Data:net.ivoa.fits.data.ImageData@116318b
+Data:net.ivoa.fits.data.BinaryTable@ec436
+Ncols, Nrows:3, 48
+[D@98bbf6
+NSIDE read from fits:2
+Scheme found:NEST
+Name:NSLCOVEQU
+Name:NSLCOVECL
+Name:NSLCOVGAL
+data/test/test_2.ds is read!
+Map min/max: 0.0/26847.0
+

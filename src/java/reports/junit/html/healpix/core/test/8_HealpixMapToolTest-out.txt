@@ -1,0 +1,25 @@
+*** Order/depthStatic creation=2
+Name[0]:DATA1
+Nside:4
+Npixels:192
+Map max:1.0
+Npix in:192.0
+Npix out:48.0
+npix_out/npix_in=4.0
+********** Returned Map Nside=2
+********** Returned Map N pixels=48
+Map degraded max:0.25
+*** Order/depthStatic creation=0
+Name[0]:DATA1
+Nside:1
+Npixels:12
+Map max:1.0
+Npix in:12.0
+Npix out:48.0
+npix_out/npix_in=4.0
+********** Returned Map Nside=2
+********** Returned Map N pixels=48
+********** Returned Map Nside=2
+********** Returned Map N pixels=48
+Map upgraded max:1.0
+

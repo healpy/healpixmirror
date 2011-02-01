@@ -1,0 +1,7 @@
+Scheme found:NEST
+Ncols, Nrows:3, 48
+Name:NSLCOVEQU
+Name:NSLCOVECL
+Name:NSLCOVGAL
+48.0
+

@@ -1,0 +1,10 @@
+ Test starts... 
+[alpha,delta] input: [30.0, 80.0 ]
+[theta,phi] healpix input: [10.0, 30.0 ]
+Ipix_nest=16377825
+** ipix1 (from angular spatial vector)=16377825
+** Theta,phi from ipix1:9.994919275820052,30.01716247139588
+** @ ipix=16377825 [theta,phi]: [9.994919275820052,30.01716247139588 ]
+ Nside =4096 Ra=30,dec=10(90-delta) pix=16377825
+vec RA:29.999999999999776, DEC:80.00000000000003
+

@@ -1,0 +1,4 @@
+Doing NSIDE=128 npix=196608
+Doing NSIDE=64 npix=49152
+Doing NSIDE=128 npix=196608
+

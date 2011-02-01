@@ -1,0 +1,21 @@
+Data:net.ivoa.fits.data.ImageData@16df84b
+Data:net.ivoa.fits.data.BinaryTable@c832d2
+Ncols, Nrows:3, 48
+[D@a46701
+NSIDE read from fits:2
+Scheme found:NEST
+Name:NSLCOVEQU
+Name:NSLCOVECL
+Name:NSLCOVGAL
+MapCanvas Imap:0
+MapCanvas Nside:2
+MapCanvas Min/Max:0.0/26847.0
+*** Order/depthStatic creation=1
+Name[0]:DATA1
+Nside:2
+Npixels:48
+*** Order/depthStatic creation=6
+Name[0]:DATA1
+Nside:64
+Npixels:49152
+

@@ -1,0 +1,3 @@
+- Select several map (layer) and plot them one by one (using 3d sphere radius)
+- Threshold selector to display only values (checkboxes) above or below a certain value...
+-

@@ -1,0 +1,589 @@
+ test MODULO is done
+res1 = 1.5707963267948966 res2=1.5707963267948966
+ test of AngDist is done
+Triangle surface is=0.5 steredians
+ test of SurfaceTriangle is done
+ns_max=536870912  npixmax=3458764513820540928
+ Theta=0.5 Phi=0.5
+ test Vect2Ang is done
+ Test ang2pix_ring ___________________
+theta=1.4033482475752073 phi=1.5707963267948966
+ test Ang2Pix is done
+ Start test Ang2Vect----------------
+Vector x=6.123233995736766E-17 y=1.0 z=6.123233995736766E-17
+ test Ang2Vect is done
+Start test ringNum !!!!!!!!!!!!!!!!!!!!
+z=0.25 ring number =2
+ test ringNum is done
+End test ringNum
+ test Nest2Ring is done
+ start test Ring2Nest !!!!!!!!!!!!!!!!!!!!!!
+ test Ring2Nest is done
+ ipnest (64,0)=4095
+ ipnest (1048576,0)=-1
+ test next_in_line_nest is done
+ Start test inRing !!!!!!!!!!!!!!!!!!!!!!!!!
+ test inRing is done
+ Start test inRing !!!!!!!!!!!!!!!!!!!!!!!!!
+ test inRing is done
+ test intrs_intrv !!!!!!!!!!!!!!!!!!!!!!!!!!!
+ test intrs_intrv is done
+Start test pix2vec_ring !!!!!!!!!!!!!!!!!!!
+------------------------------------------
+ test pix2vec_ring is done
+ Start test pix2vec_nest !!!!!!!!!!!!!!
+ test pix2vec_nest is done
+-------------------------------------------
+Start test Vect2Pix_ring !!!!!!!!!!!!!!!!!!!
+------------------------------------------
+ test vec2pix_ring is done
+Start test Vect2Pix_nest !!!!!!!!!!!!!!!!!!!
+------------------------------------------
+ test vec2pix_nest is done
+ Start test query Strip !!!!!!!!!!!!!!!!
+ test query_strip is done
+ Start test query_disk HiRes!!!!!!!!!!!!!!!!!!!!!!!!
+nside=1048576 sresolution=0.2012980319424261
+radius=4.879601993305628E-7
+!!!!!!!!!!!!! NESTED !!!!!!!!!!!
+!!!!!!!!!!!!! RING !!!!!!!!!!!
+ End test of query_disc2____________________________
+ Start test query_disc !!!!!!!!!!!!!!!!!!!!!
+Doing disc radius=0.39269908169872414  at healpix.tools.SpatialVector[-0.555570233019602, 0.8314696123025453, 6.123233995736766E-17]
+ i=0 pixel=45
+ i=1 pixel=46
+ i=2 pixel=60
+ i=3 pixel=61
+ i=4 pixel=62
+ i=5 pixel=77
+ i=6 pixel=78
+ i=7 pixel=92
+ i=8 pixel=93
+ i=9 pixel=94
+ i=10 pixel=109
+ i=11 pixel=110
+ i=12 pixel=124
+ i=13 pixel=125
+ i=14 pixel=126
+ i=15 pixel=141
+ i=16 pixel=142
+Doing disc radius=0.39269908169872414  at healpix.tools.SpatialVector[0.9807852804032303, -0.19509032201612872, 6.123233995736766E-17]
+ i=0 pixel=40
+ i=1 pixel=55
+ i=2 pixel=56
+ i=3 pixel=70
+ i=4 pixel=71
+ i=5 pixel=72
+ i=6 pixel=87
+ i=7 pixel=88
+ i=8 pixel=102
+ i=9 pixel=103
+ i=10 pixel=104
+ i=11 pixel=119
+ i=12 pixel=120
+ i=13 pixel=134
+ i=14 pixel=135
+ i=15 pixel=136
+ i=16 pixel=151
+Doing disc radius=0.39269908169872414  at healpix.tools.SpatialVector[-0.555570233019602, 0.8314696123025453, 6.123233995736766E-17]
+ i=0 pixel=16
+ i=1 pixel=17
+ i=2 pixel=18
+ i=3 pixel=19
+ i=4 pixel=24
+ i=5 pixel=81
+ i=6 pixel=84
+ i=7 pixel=85
+ i=8 pixel=86
+ i=9 pixel=87
+ i=10 pixel=93
+ i=11 pixel=106
+ i=12 pixel=155
+ i=13 pixel=156
+ i=14 pixel=157
+ i=15 pixel=158
+ i=16 pixel=159
+ test query_disc is done
+Doing disc radius=4.84813681109536E-6  at healpix.tools.SpatialVector[0.7087285513075632, 0.7054745050867292, 0.0030924479166666817]
+ i=0 pixel=174
+ i=1 pixel=175
+ i=2 pixel=517
+Doing disc radius=4.84813681109536E-6  at healpix.tools.SpatialVector[-0.6972166887783965, -0.6972166887783963, -0.16666666666666657]
+ i=0 pixel=101
+ i=1 pixel=122
+ i=2 pixel=173
+ i=3 pixel=174
+ i=4 pixel=175
+Doing disc radius=4.84813681109536E-6  at healpix.tools.SpatialVector[-0.6972166887783965, -0.6972166887783963, -0.16666666666666657]
+ i=0 pixel=278327
+ i=1 pixel=278333
+ i=2 pixel=278335
+0>278326
+1>278327
+2>278332
+3>278334
+4>278335
+5>278370
+6>278376
+7>278378
+res=26384.535642757673  pixSize=0.12791583849331106 rad
+NEST 191 - theta=0.10210642238260438 phi=3.9269908169872414 from v2a 0.07178199843875818 3.8384858978391305
+RING 2- theta=0.10210642238260438 phi=3.9269908169872414
+ra=219.92904166666668 dec=85.88719444444445 radius=0.06836428161061193 Nside=8
+ => npixlist:5
+*** Order/depthStatic creation=3
+Name[0]:DATA1
+Nside:8
+Npixels:768
+ Pixels:  127 Neighbours: 126 61 63 255 191 190 125 124
+ 189 Neighbours: 188 190 191 255 254 251 183 182
+ 190 Neighbours: 187 119 125 127 191 189 188 185
+ 191 Neighbours: 190 125 127 63 255 254 189 188
+ 255 Neighbours: 254 189 191 127 63 62 253 252
+
+4.49208 -6.62294 rad=0.05017821599483697 nest:269 ring:432 => 
+*** Order/depthStatic creation=3
+Name[0]:DATA1
+Nside:8
+Npixels:768
+ i=0 pixel=268  dist:0.15723714314412282 maxdist=0.24652775684419903
+ i=1 pixel=269  dist:0.05542698554856359 maxdist=0.24652775684419903
+ i=2 pixel=271  dist:0.08437988733299347 maxdist=0.24652775684419903
+ i=3 pixel=280  dist:0.1216857780121993 maxdist=0.24652775684419903
+ i=4 pixel=282  dist:0.11726368387059034 maxdist=0.24652775684419903
+pix:764 pos 315.0 -14.47751218592993 rad=0.03197895962332776[rad] => 
+ i=0 pixel=758  dist:0.1280833194389129 maxdist=0.22832850047268982
+ i=1 pixel=761  dist:0.1280833194389129 maxdist=0.22832850047268982
+ i=2 pixel=764  dist:1.0471975511965979 maxdist=0.22832850047268982
+ i=3 pixel=765  dist:0.12836297558938156 maxdist=0.22832850047268982
+ i=4 pixel=766  dist:0.12836297558938328 maxdist=0.22832850047268982
+currentPix: 0
+Center theta,phi: 1.4033482475752073, 0.7853981633974483
+currentPix: 1
+Center theta,phi: 1.2309594173407747, 0.9817477042468103
+currentPix: 2
+Center theta,phi: 1.2309594173407747, 0.5890486225480862
+currentPix: 3
+Center theta,phi: 1.0471975511965979, 0.7853981633974483
+currentPix: 4
+Center theta,phi: 1.0471975511965979, 1.1780972450961724
+currentPix: 5
+Center theta,phi: 0.8410686705679303, 1.3744467859455345
+currentPix: 6
+Center theta,phi: 0.8410686705679303, 0.9817477042468103
+currentPix: 7
+Center theta,phi: 0.6223684885550206, 1.308996938995747
+currentPix: 8
+Center theta,phi: 1.0471975511965979, 0.39269908169872414
+currentPix: 9
+Center theta,phi: 0.8410686705679303, 0.5890486225480862
+currentPix: 10
+Center theta,phi: 0.8410686705679303, 0.19634954084936207
+currentPix: 11
+Center theta,phi: 0.6223684885550206, 0.2617993877991494
+currentPix: 12
+Center theta,phi: 0.6223684885550206, 0.7853981633974483
+currentPix: 13
+Center theta,phi: 0.4111378623223478, 1.1780972450961724
+currentPix: 14
+Center theta,phi: 0.4111378623223478, 0.39269908169872414
+currentPix: 15
+Center theta,phi: 0.20448019896853498, 0.7853981633974483
+currentPix: 16
+Center theta,phi: 1.4033482475752073, 2.356194490192345
+currentPix: 17
+Center theta,phi: 1.2309594173407747, 2.552544031041707
+currentPix: 18
+Center theta,phi: 1.2309594173407747, 2.1598449493429825
+currentPix: 19
+Center theta,phi: 1.0471975511965979, 2.356194490192345
+currentPix: 20
+Center theta,phi: 1.0471975511965979, 2.748893571891069
+currentPix: 21
+Center theta,phi: 0.8410686705679303, 2.945243112740431
+currentPix: 22
+Center theta,phi: 0.8410686705679303, 2.552544031041707
+currentPix: 23
+Center theta,phi: 0.6223684885550206, 2.8797932657906435
+currentPix: 24
+Center theta,phi: 1.0471975511965979, 1.9634954084936207
+currentPix: 25
+Center theta,phi: 0.8410686705679303, 2.1598449493429825
+currentPix: 26
+Center theta,phi: 0.8410686705679303, 1.7671458676442586
+currentPix: 27
+Center theta,phi: 0.6223684885550206, 1.832595714594046
+currentPix: 28
+Center theta,phi: 0.6223684885550206, 2.356194490192345
+currentPix: 29
+Center theta,phi: 0.4111378623223478, 2.748893571891069
+currentPix: 30
+Center theta,phi: 0.4111378623223478, 1.9634954084936207
+currentPix: 31
+Center theta,phi: 0.20448019896853498, 2.356194490192345
+currentPix: 32
+Center theta,phi: 1.4033482475752073, 3.9269908169872414
+currentPix: 33
+Center theta,phi: 1.2309594173407747, 4.123340357836604
+currentPix: 34
+Center theta,phi: 1.2309594173407747, 3.730641276137879
+currentPix: 35
+Center theta,phi: 1.0471975511965979, 3.9269908169872414
+currentPix: 36
+Center theta,phi: 1.0471975511965979, 4.319689898685965
+currentPix: 37
+Center theta,phi: 0.8410686705679303, 4.516039439535327
+currentPix: 38
+Center theta,phi: 0.8410686705679303, 4.123340357836604
+currentPix: 39
+Center theta,phi: 0.6223684885550206, 4.45058959258554
+currentPix: 40
+Center theta,phi: 1.0471975511965979, 3.5342917352885173
+currentPix: 41
+Center theta,phi: 0.8410686705679303, 3.730641276137879
+currentPix: 42
+Center theta,phi: 0.8410686705679303, 3.3379421944391554
+currentPix: 43
+Center theta,phi: 0.6223684885550206, 3.4033920413889422
+currentPix: 44
+Center theta,phi: 0.6223684885550206, 3.926990816987241
+currentPix: 45
+Center theta,phi: 0.4111378623223478, 4.319689898685965
+currentPix: 46
+Center theta,phi: 0.4111378623223478, 3.5342917352885173
+currentPix: 47
+Center theta,phi: 0.20448019896853498, 3.9269908169872414
+currentPix: 48
+Center theta,phi: 1.4033482475752073, 5.497787143782138
+currentPix: 49
+Center theta,phi: 1.2309594173407747, 5.6941366846315
+currentPix: 50
+Center theta,phi: 1.2309594173407747, 5.301437602932776
+currentPix: 51
+Center theta,phi: 1.0471975511965979, 5.497787143782138
+currentPix: 52
+Center theta,phi: 1.0471975511965979, 5.890486225480862
+currentPix: 53
+Center theta,phi: 0.8410686705679303, 6.086835766330224
+currentPix: 54
+Center theta,phi: 0.8410686705679303, 5.6941366846315
+currentPix: 55
+Center theta,phi: 0.6223684885550206, 6.021385919380436
+currentPix: 56
+Center theta,phi: 1.0471975511965979, 5.105088062083414
+currentPix: 57
+Center theta,phi: 0.8410686705679303, 5.301437602932776
+currentPix: 58
+Center theta,phi: 0.8410686705679303, 4.908738521234052
+currentPix: 59
+Center theta,phi: 0.6223684885550206, 4.974188368183839
+currentPix: 60
+Center theta,phi: 0.6223684885550206, 5.497787143782138
+currentPix: 61
+Center theta,phi: 0.4111378623223478, 5.890486225480862
+currentPix: 62
+Center theta,phi: 0.4111378623223478, 5.105088062083414
+currentPix: 63
+Center theta,phi: 0.20448019896853498, 5.497787143782138
+currentPix: 64
+Center theta,phi: 2.0943951023931957, 0.0
+currentPix: 65
+Center theta,phi: 1.9106332362490186, 0.19634954084936207
+currentPix: 66
+Center theta,phi: 1.9106332362490186, 6.086835766330224
+currentPix: 67
+Center theta,phi: 1.7382444060145859, 0.0
+currentPix: 68
+Center theta,phi: 1.7382444060145859, 0.39269908169872414
+currentPix: 69
+Center theta,phi: 1.5707963267948966, 0.5890486225480862
+currentPix: 70
+Center theta,phi: 1.5707963267948966, 0.19634954084936207
+currentPix: 71
+Center theta,phi: 1.4033482475752073, 0.39269908169872414
+currentPix: 72
+Center theta,phi: 1.7382444060145859, 5.890486225480862
+currentPix: 73
+Center theta,phi: 1.5707963267948966, 6.086835766330224
+currentPix: 74
+Center theta,phi: 1.5707963267948966, 5.6941366846315
+currentPix: 75
+Center theta,phi: 1.4033482475752073, 5.890486225480862
+currentPix: 76
+Center theta,phi: 1.4033482475752073, 0.0
+currentPix: 77
+Center theta,phi: 1.2309594173407747, 0.19634954084936207
+currentPix: 78
+Center theta,phi: 1.2309594173407747, 6.086835766330224
+currentPix: 79
+Center theta,phi: 1.0471975511965979, 0.0
+currentPix: 80
+Center theta,phi: 2.0943951023931957, 1.5707963267948966
+currentPix: 81
+Center theta,phi: 1.9106332362490186, 1.7671458676442586
+currentPix: 82
+Center theta,phi: 1.9106332362490186, 1.3744467859455345
+currentPix: 83
+Center theta,phi: 1.7382444060145859, 1.5707963267948966
+currentPix: 84
+Center theta,phi: 1.7382444060145859, 1.9634954084936207
+currentPix: 85
+Center theta,phi: 1.5707963267948966, 2.1598449493429825
+currentPix: 86
+Center theta,phi: 1.5707963267948966, 1.7671458676442586
+currentPix: 87
+Center theta,phi: 1.4033482475752073, 1.9634954084936207
+currentPix: 88
+Center theta,phi: 1.7382444060145859, 1.1780972450961724
+currentPix: 89
+Center theta,phi: 1.5707963267948966, 1.3744467859455345
+currentPix: 90
+Center theta,phi: 1.5707963267948966, 0.9817477042468103
+currentPix: 91
+Center theta,phi: 1.4033482475752073, 1.1780972450961724
+currentPix: 92
+Center theta,phi: 1.4033482475752073, 1.5707963267948966
+currentPix: 93
+Center theta,phi: 1.2309594173407747, 1.7671458676442586
+currentPix: 94
+Center theta,phi: 1.2309594173407747, 1.3744467859455345
+currentPix: 95
+Center theta,phi: 1.0471975511965979, 1.5707963267948966
+currentPix: 96
+Center theta,phi: 2.0943951023931957, 3.141592653589793
+currentPix: 97
+Center theta,phi: 1.9106332362490186, 3.3379421944391554
+currentPix: 98
+Center theta,phi: 1.9106332362490186, 2.945243112740431
+currentPix: 99
+Center theta,phi: 1.7382444060145859, 3.141592653589793
+currentPix: 100
+Center theta,phi: 1.7382444060145859, 3.5342917352885173
+currentPix: 101
+Center theta,phi: 1.5707963267948966, 3.730641276137879
+currentPix: 102
+Center theta,phi: 1.5707963267948966, 3.3379421944391554
+currentPix: 103
+Center theta,phi: 1.4033482475752073, 3.5342917352885173
+currentPix: 104
+Center theta,phi: 1.7382444060145859, 2.748893571891069
+currentPix: 105
+Center theta,phi: 1.5707963267948966, 2.945243112740431
+currentPix: 106
+Center theta,phi: 1.5707963267948966, 2.552544031041707
+currentPix: 107
+Center theta,phi: 1.4033482475752073, 2.748893571891069
+currentPix: 108
+Center theta,phi: 1.4033482475752073, 3.141592653589793
+currentPix: 109
+Center theta,phi: 1.2309594173407747, 3.3379421944391554
+currentPix: 110
+Center theta,phi: 1.2309594173407747, 2.945243112740431
+currentPix: 111
+Center theta,phi: 1.0471975511965979, 3.141592653589793
+currentPix: 112
+Center theta,phi: 2.0943951023931957, 4.71238898038469
+currentPix: 113
+Center theta,phi: 1.9106332362490186, 4.908738521234052
+currentPix: 114
+Center theta,phi: 1.9106332362490186, 4.516039439535327
+currentPix: 115
+Center theta,phi: 1.7382444060145859, 4.71238898038469
+currentPix: 116
+Center theta,phi: 1.7382444060145859, 5.105088062083414
+currentPix: 117
+Center theta,phi: 1.5707963267948966, 5.301437602932776
+currentPix: 118
+Center theta,phi: 1.5707963267948966, 4.908738521234052
+currentPix: 119
+Center theta,phi: 1.4033482475752073, 5.105088062083414
+currentPix: 120
+Center theta,phi: 1.7382444060145859, 4.319689898685965
+currentPix: 121
+Center theta,phi: 1.5707963267948966, 4.516039439535327
+currentPix: 122
+Center theta,phi: 1.5707963267948966, 4.123340357836604
+currentPix: 123
+Center theta,phi: 1.4033482475752073, 4.319689898685965
+currentPix: 124
+Center theta,phi: 1.4033482475752073, 4.71238898038469
+currentPix: 125
+Center theta,phi: 1.2309594173407747, 4.908738521234052
+currentPix: 126
+Center theta,phi: 1.2309594173407747, 4.516039439535327
+currentPix: 127
+Center theta,phi: 1.0471975511965979, 4.71238898038469
+currentPix: 128
+Center theta,phi: 2.9371124546212584, 0.7853981633974483
+currentPix: 129
+Center theta,phi: 2.7304547912674453, 1.1780972450961724
+currentPix: 130
+Center theta,phi: 2.7304547912674453, 0.39269908169872414
+currentPix: 131
+Center theta,phi: 2.519224165034773, 0.7853981633974483
+currentPix: 132
+Center theta,phi: 2.519224165034773, 1.308996938995747
+currentPix: 133
+Center theta,phi: 2.300523983021863, 1.3744467859455345
+currentPix: 134
+Center theta,phi: 2.300523983021863, 0.9817477042468103
+currentPix: 135
+Center theta,phi: 2.0943951023931957, 1.1780972450961724
+currentPix: 136
+Center theta,phi: 2.519224165034773, 0.2617993877991494
+currentPix: 137
+Center theta,phi: 2.300523983021863, 0.5890486225480862
+currentPix: 138
+Center theta,phi: 2.300523983021863, 0.19634954084936207
+currentPix: 139
+Center theta,phi: 2.0943951023931957, 0.39269908169872414
+currentPix: 140
+Center theta,phi: 2.0943951023931957, 0.7853981633974483
+currentPix: 141
+Center theta,phi: 1.9106332362490186, 0.9817477042468103
+currentPix: 142
+Center theta,phi: 1.9106332362490186, 0.5890486225480862
+currentPix: 143
+Center theta,phi: 1.7382444060145859, 0.7853981633974483
+currentPix: 144
+Center theta,phi: 2.9371124546212584, 2.356194490192345
+currentPix: 145
+Center theta,phi: 2.7304547912674453, 2.748893571891069
+currentPix: 146
+Center theta,phi: 2.7304547912674453, 1.9634954084936207
+currentPix: 147
+Center theta,phi: 2.519224165034773, 2.356194490192345
+currentPix: 148
+Center theta,phi: 2.519224165034773, 2.8797932657906435
+currentPix: 149
+Center theta,phi: 2.300523983021863, 2.945243112740431
+currentPix: 150
+Center theta,phi: 2.300523983021863, 2.552544031041707
+currentPix: 151
+Center theta,phi: 2.0943951023931957, 2.748893571891069
+currentPix: 152
+Center theta,phi: 2.519224165034773, 1.832595714594046
+currentPix: 153
+Center theta,phi: 2.300523983021863, 2.1598449493429825
+currentPix: 154
+Center theta,phi: 2.300523983021863, 1.7671458676442586
+currentPix: 155
+Center theta,phi: 2.0943951023931957, 1.9634954084936207
+currentPix: 156
+Center theta,phi: 2.0943951023931957, 2.356194490192345
+currentPix: 157
+Center theta,phi: 1.9106332362490186, 2.552544031041707
+currentPix: 158
+Center theta,phi: 1.9106332362490186, 2.1598449493429825
+currentPix: 159
+Center theta,phi: 1.7382444060145859, 2.356194490192345
+currentPix: 160
+Center theta,phi: 2.9371124546212584, 3.9269908169872414
+currentPix: 161
+Center theta,phi: 2.7304547912674453, 4.319689898685965
+currentPix: 162
+Center theta,phi: 2.7304547912674453, 3.5342917352885173
+currentPix: 163
+Center theta,phi: 2.519224165034773, 3.926990816987241
+currentPix: 164
+Center theta,phi: 2.519224165034773, 4.45058959258554
+currentPix: 165
+Center theta,phi: 2.300523983021863, 4.516039439535327
+currentPix: 166
+Center theta,phi: 2.300523983021863, 4.123340357836604
+currentPix: 167
+Center theta,phi: 2.0943951023931957, 4.319689898685965
+currentPix: 168
+Center theta,phi: 2.519224165034773, 3.4033920413889422
+currentPix: 169
+Center theta,phi: 2.300523983021863, 3.730641276137879
+currentPix: 170
+Center theta,phi: 2.300523983021863, 3.3379421944391554
+currentPix: 171
+Center theta,phi: 2.0943951023931957, 3.5342917352885173
+currentPix: 172
+Center theta,phi: 2.0943951023931957, 3.9269908169872414
+currentPix: 173
+Center theta,phi: 1.9106332362490186, 4.123340357836604
+currentPix: 174
+Center theta,phi: 1.9106332362490186, 3.730641276137879
+currentPix: 175
+Center theta,phi: 1.7382444060145859, 3.9269908169872414
+currentPix: 176
+Center theta,phi: 2.9371124546212584, 5.497787143782138
+currentPix: 177
+Center theta,phi: 2.7304547912674453, 5.890486225480862
+currentPix: 178
+Center theta,phi: 2.7304547912674453, 5.105088062083414
+currentPix: 179
+Center theta,phi: 2.519224165034773, 5.497787143782138
+currentPix: 180
+Center theta,phi: 2.519224165034773, 6.021385919380436
+currentPix: 181
+Center theta,phi: 2.300523983021863, 6.086835766330224
+currentPix: 182
+Center theta,phi: 2.300523983021863, 5.6941366846315
+currentPix: 183
+Center theta,phi: 2.0943951023931957, 5.890486225480862
+currentPix: 184
+Center theta,phi: 2.519224165034773, 4.974188368183839
+currentPix: 185
+Center theta,phi: 2.300523983021863, 5.301437602932776
+currentPix: 186
+Center theta,phi: 2.300523983021863, 4.908738521234052
+currentPix: 187
+Center theta,phi: 2.0943951023931957, 5.105088062083414
+currentPix: 188
+Center theta,phi: 2.0943951023931957, 5.497787143782138
+currentPix: 189
+Center theta,phi: 1.9106332362490186, 5.6941366846315
+currentPix: 190
+Center theta,phi: 1.9106332362490186, 5.301437602932776
+currentPix: 191
+Center theta,phi: 1.7382444060145859, 5.497787143782138
+Start test Query Triangle
+0
+12
+16
+17
+18
+19
+Done 12,0,16
+66
+67
+68
+70
+72
+73
+75
+76
+78
+ test query_triangle is done
+Start test Query Triangle
+12
+13
+19
+20
+27
+28
+Start test Query Triangle
+ test query_triangle is done
+Start test Query Triangle
+ test query_triangle is done
+Start test Query Triangle
+ test query_triangle is done
+Start test query_polygon !!!!!!!!!!!!!!!!!!!!!!
+ test query_polygon is done
+ Start test MaxRes !!!!!!!!!!!!!!!!!!!!!
+Minimum size of the pixel side is 25.76614808863054 arcsec.
+ End of MaxRes test _______________________
+nside=262144 sresolution=0.8051921277697044
+radius=1.9518407973222513E-6
+HiRes transformation tests: nside=4096
+ Start test GetNside !!!!!!!!!!!!!!!!!!!!!
+Required nside is 8192
+ End of GetNSide test _______________________
+[-0.835953044111822 -0.42377616820918035 -0.835953044111822 ]
+ Start test Neighbours_Nest !!!!!!!!!!!!!!!!!
+4
+

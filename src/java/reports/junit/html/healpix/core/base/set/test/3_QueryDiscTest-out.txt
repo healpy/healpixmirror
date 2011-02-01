@@ -1,0 +1,11 @@
+res=6596.133910689418  pixSize=0.031978959623327766 rad
+ Vector is (ra,dec)(0.0, 90.0) and angle is (theta,phi)(0.0,0.0)
+ Vector is (ra,dec)(0.0, -90.0) and angle is (theta,phi)(3.141592653589793,0.0)
+
+*** Order/depthStatic creation=5
+Name[0]:DATA1
+Nside:32
+Npixels:12288
+full size=12288 half size=12288
+full size=12288 half size=12288
+

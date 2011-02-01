@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuite errors="0" failures="0" hostname="gaiawl03.net4.lan" name="healpix.core.test.Ang2PixAllTest" tests="5" time="3.618" timestamp="2011-02-01T11:02:44">
+  <properties>
+    <property name="java.runtime.name" value="Java(TM) SE Runtime Environment" />
+    <property name="sun.boot.library.path" value="/home/ejoliet/tools/jdk1.6.0_21/jre/lib/i386" />
+    <property name="java.vm.version" value="17.0-b16" />
+    <property name="ant.library.dir" value="/home/ejoliet/common/apache-ant-1.7.0/lib" />
+    <property name="ant.version" value="Apache Ant version 1.7.0 compiled on December 13 2006" />
+    <property name="ant.java.version" value="1.6" />
+    <property name="java.vm.vendor" value="Sun Microsystems Inc." />
+    <property name="java.vendor.url" value="http://java.sun.com/" />
+    <property name="path.separator" value=":" />
+    <property name="dist" value="/home/ejoliet/tools/healpix_srcforgeNet/trunk/src/java/dist" />
+    <property name="java.vm.name" value="Java HotSpot(TM) Server VM" />
+    <property name="file.encoding.pkg" value="sun.io" />
+    <property name="classes" value="/home/ejoliet/tools/healpix_srcforgeNet/trunk/src/java/classes" />
+    <property name="user.country" value="US" />
+    <property name="sun.java.launcher" value="SUN_STANDARD" />
+    <property name="sun.os.patch.level" value="unknown" />
+    <property name="java.vm.specification.name" value="Java Virtual Machine Specification" />
+    <property name="user.dir" value="/home/ejoliet/tools/healpix_srcforgeNet/trunk/src/java" />
+    <property name="lib" value="/home/ejoliet/tools/healpix_srcforgeNet/trunk/src/java/lib" />
+    <property name="author" value="$Author: womullan $" />
+    <property name="java.runtime.version" value="1.6.0_21-b06" />
+    <property name="java.awt.graphicsenv" value="sun.awt.X11GraphicsEnvironment" />
+    <property name="basedir" value="/home/ejoliet/tools/healpix_srcforgeNet/trunk/src/java" />
+    <property name="java.endorsed.dirs" value="/home/ejoliet/tools/jdk1.6.0_21/jre/lib/endorsed" />
+    <property name="os.arch" value="i386" />
+    <property name="junit.reports" value="/home/ejoliet/tools/healpix_srcforgeNet/trunk/src/java/reports/junit" />
+    <property name="java.io.tmpdir" value="/tmp" />
+    <property name="ant.core.lib" value="/home/ejoliet/common/apache-ant-1.7.0/lib/ant.jar" />
+    <property name="line.separator" value="
+" />
+    <property name="java.vm.specification.vendor" value="Sun Microsystems Inc." />
+    <property name="ant.file.healpix build file" value="/home/ejoliet/tools/healpix_srcforgeNet/trunk/src/java/build.xml" />
+    <property name="os.name" value="Linux" />
+    <property name="ant.home" value="/home/ejoliet/common/apache-ant-1.7.0" />
+    <property name="ant.project.name" value="healpix build file" />
+    <property name="sun.jnu.encoding" value="UTF-8" />
+    <property name="java.library.path" value="/home/ejoliet/tools/jdk1.6.0_21/jre/lib/i386/server:/home/ejoliet/tools/jdk1.6.0_21/jre/lib/i386:/home/ejoliet/tools/jdk1.6.0_21/jre/../lib/i386:/usr/lib/jni:/usr/lib/mozilla:/usr/java/packages/lib/i386:/lib:/usr/lib" />
+    <property name="src" value="/home/ejoliet/tools/healpix_srcforgeNet/trunk/src/java/src" />
+    <property name="java.specification.name" value="Java Platform API Specification" />
+    <property name="java.class.version" value="50.0" />
+    <property name="sun.management.compiler" value="HotSpot Tiered Compilers" />
+    <property name="os.version" value="2.6.32-27-generic" />
+    <property name="ant.file" value="/home/ejoliet/tools/healpix_srcforgeNet/trunk/src/java/build.xml" />
+    <property name="user.home" value="/home/ejoliet" />
+    <property name="user.timezone" value="" />
+    <property name="java.awt.printerjob" value="sun.print.PSPrinterJob" />
+    <property name="java.specification.version" value="1.6" />
+    <property name="logdir" value="logs" />
+    <property name="file.encoding" value="UTF-8" />
+    <property name="user.name" value="ejoliet" />
+    <property name="java.class.path" value="/home/ejoliet/tools/healpix_srcforgeNet/trunk/src/java/classes:/home/ejoliet/tools/healpix_srcforgeNet/trunk/src/java/lib/j3dcore.jar:/home/ejoliet/tools/healpix_srcforgeNet/trunk/src/java/lib/j3dutils.jar:/home/ejoliet/tools/healpix_srcforgeNet/trunk/src/java/lib/junit.jar:/home/ejoliet/tools/healpix_srcforgeNet/trunk/src/java/lib/net-ivoa-fits.jar:/home/ejoliet/tools/healpix_srcforgeNet/trunk/src/java/lib/vecmath-1.0.jar:/home/ejoliet/tools/healpix_srcforgeNet/trunk/src/java/lib/vecmath.jar:/home/ejoliet/common/apache-ant-1.7.0/lib/findbugs-ant.jar:/home/ejoliet/common/apache-ant-1.7.0/lib/ant-launcher.jar:/home/ejoliet/common/apache-ant-1.7.0/lib/ant.jar:/home/ejoliet/common/apache-ant-1.7.0/lib/ant-junit.jar" />
+    <property name="docs" value="/home/ejoliet/tools/healpix_srcforgeNet/trunk/src/java/healpixdocs" />
+    <property name="java.vm.specification.version" value="1.0" />
+    <property name="java.home" value="/home/ejoliet/tools/jdk1.6.0_21/jre" />
+    <property name="sun.arch.data.model" value="32" />
+    <property name="java.specification.vendor" value="Sun Microsystems Inc." />
+    <property name="user.language" value="en" />
+    <property name="project-description" value="Java Healpix Library" />
+    <property name="java.vm.info" value="mixed mode" />
+    <property name="java.version" value="1.6.0_21" />
+    <property name="java.ext.dirs" value="/home/ejoliet/tools/jdk1.6.0_21/jre/lib/ext:/usr/java/packages/lib/ext" />
+    <property name="conf" value="/home/ejoliet/tools/healpix_srcforgeNet/trunk/src/java/conf" />
+    <property name="sun.boot.class.path" value="/home/ejoliet/tools/jdk1.6.0_21/jre/lib/resources.jar:/home/ejoliet/tools/jdk1.6.0_21/jre/lib/rt.jar:/home/ejoliet/tools/jdk1.6.0_21/jre/lib/sunrsasign.jar:/home/ejoliet/tools/jdk1.6.0_21/jre/lib/jsse.jar:/home/ejoliet/tools/jdk1.6.0_21/jre/lib/jce.jar:/home/ejoliet/tools/jdk1.6.0_21/jre/lib/charsets.jar:/home/ejoliet/tools/jdk1.6.0_21/jre/classes" />
+    <property name="java.vendor" value="Sun Microsystems Inc." />
+    <property name="file.separator" value="/" />
+    <property name="java.vendor.url.bug" value="http://java.sun.com/cgi-bin/bugreport.cgi" />
+    <property name="version" value="$Id: build.xml 131498 2010-04-15 13:56:00Z womullan $" />
+    <property name="sun.cpu.endian" value="little" />
+    <property name="sun.io.unicode.encoding" value="UnicodeLittle" />
+    <property name="sun.desktop" value="gnome" />
+    <property name="sun.cpu.isalist" value="" />
+  </properties>
+  <testcase classname="healpix.core.test.Ang2PixAllTest" name="testAllRing128" time="1.714" />
+  <testcase classname="healpix.core.test.Ang2PixAllTest" name="testAllRing64" time="0.354" />
+  <testcase classname="healpix.core.test.Ang2PixAllTest" name="testAllNest128" time="1.518" />
+  <testcase classname="healpix.core.test.Ang2PixAllTest" name="test8063" time="0.0020" />
+  <testcase classname="healpix.core.test.Ang2PixAllTest" name="test41087" time="0.0" />
+  <system-out><![CDATA[8062 -> theta: 0.827 phi: 6.246 HealpixIndex -> 0.8271149013958664 ,6.245785394636851
+8063 -> theta: 0.827 phi: 6.271 HealpixIndex -> 0.8271149013958664 ,6.2707186696653405
+8064 -> theta: 0.841 phi: 0.012 HealpixIndex -> 0.8410686705679303 ,0.01227184630308513
+41086 -> theta: 2.301 phi: 6.246
+41087 -> theta: 2.301 phi: 6.271
+41088 -> theta: 2.314 phi: 0.012
+]]></system-out>
+  <system-err><![CDATA[Doing NSIDE=128 npix=196608
+Doing NSIDE=64 npix=49152
+Doing NSIDE=128 npix=196608
+]]></system-err>
+</testsuite>
