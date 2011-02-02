@@ -97,6 +97,12 @@ do_split=0
 # read answer
 # [ "$answer" == "yes" ] && do_split=1
 
+echo "removing CVS directories..."
+find . -type d -name CVS -exec \rm -rf {} \;
+
+echo "removing SVN directories..."
+find . -type d -name .svn -exec \rm -rf {} \;
+
 OS=`uname -s`
 updateVersion
 
@@ -136,25 +142,19 @@ oldwebsite="public_html_healpix"
 newwebsite="healpix-dynamicPages"
 docautodir=${newwebsite}
 
-echo "removing CVS directories..."
-find . -type d -name CVS -exec rm -rf {} \;
-
-echo "removing SVN directories..."
-find . -type d -name .svn -exec rm -rf {} \;
-
 echo "remove old and new web sites"
-[ -d ${oldwebsite} ]  && rm -rf ${oldwebsite}
-[ -d  ${newwebsite} ] && rm -rf ${newwebsite}
+[ -d ${oldwebsite} ]  && \rm -rf ${oldwebsite}
+[ -d  ${newwebsite} ] && \rm -rf ${newwebsite}
 
 echo "removing change logs..."
-find . -name ChangeLog -exec rm -f {} \;
+find . -name ChangeLog -exec \rm -f {} \;
 
 echo "generating documentations"
 # recreate directory receiving doc from doc/TeX/Makefile
 mkdir -p ${docautodir}/pdf
 mkdir -p ${docautodir}/html
-rm -f ${docautodir}/pdf/*
-rm -f ${docautodir}/html/*
+\rm -f ${docautodir}/pdf/*
+\rm -f ${docautodir}/html/*
 cd doc/TeX
 make pdf
 make html
@@ -166,22 +166,22 @@ cp -p src/idl/ximview/docs/* doc/html/ximview/
 
 
 echo "removing doc/TeX and doc/*.txt..."
-rm -rf doc/TeX
-rm -f doc/*.txt
+\rm -rf doc/TeX
+\rm -f doc/*.txt
 mv ${docautodir}/html/* doc/html
 mv ${docautodir}/pdf/*  doc/pdf
-rm -rf ${docautodir}/
-rm -rf DONE.txt TODO Bugs.txt
-rm -rf include bin lib
+\rm -rf ${docautodir}/
+\rm -rf DONE.txt TODO Bugs.txt
+\rm -rf include bin lib
 
 echo "removing non-releasable programs..."
 for p in quad_ring; do
     echo "  $p..."
-    rm -rf src/f90/$p
+    \rm -rf src/f90/$p
     sed 's/'$p' *//' Makefile.in > Makefile.save
     mv Makefile.save Makefile.in
 done
-[ -d extra ] && rm -rf extra
+[ -d extra ] && \rm -rf extra
 
 # echo "appending GPL header to source files"
 # tempfile='/tmp/tmp_edit.txt'
@@ -213,10 +213,10 @@ done
 #    cat gpl_header/gpl_header.c $file > $tempfile
 #    mv $tempfile $file
 # done
-[ -d gpl_header ] && rm -rf gpl_header
+[ -d gpl_header ] && \rm -rf gpl_header
 
 echo "removing myself..."
-rm -f $0
+\rm -f $0
 
 echo "--------------------"
 echo $version $reldate
@@ -233,13 +233,13 @@ cd ${here}
 if [ $do_split == 1 ] ; then
     echo "splitting tar file"
     tar -cvzpf "../Hpx_java.tar.gz" src/java
-    rm -rf src/java
+    \rm -rf src/java
     tar -cvzpf "../Hpx_test.tar.gz" test
-    rm -rf test
+    \rm -rf test
     tar -cvzpf "../Hpx_doc.tar.gz"  doc
-    rm -rf doc
+    \rm -rf doc
     tar -cvzpf "../Hpx_data.tar.gz" data
-    rm -rf data
+    \rm -rf data
     
     cd ..
     tar -cvzpf "Healpix_src_${relsuf}.tar.gz" `basename ${here}`
