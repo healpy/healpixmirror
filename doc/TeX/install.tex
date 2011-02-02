@@ -811,6 +811,17 @@ transparent in the output PNG file.
 \subsection{Bug corrections and Improvements in Versions 2.20} % 2011-01-27
 
 \subsubsection[C++]{C++}
+\begin{itemize}
+	\item Faster Spherical Harmonic Transforms thanks to {\tt libpsht} routines
+	\item Support for spin-weighted Spherical Harmonic Transforms at the library level
+	\item Support for 6-component power spectra in {\tt anafast\_cxx}
+	\item The {\tt smoothing\_cxx} module allows ``unsmoothing'' a map by specifying
+              a negative FWHM value
+	\item Module {\tt median\_filter} renamed to {\tt median\_filter\_cxx} to avoid
+              name clashes with Fortran
+	\item bug fix in the nested {\tt ang2pix} functions (provided by Craig J Copi)
+	\item FITS I/O performance improvements
+\end{itemize}
 
 \subsubsection[Fortran90]{\linklatexhtml{Fortran 90}{subroutines.pdf}{subroutines.htm}}
 \begin{itemize}
