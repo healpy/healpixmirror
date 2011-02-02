@@ -113,7 +113,7 @@ mkdir -p doc/pdf
 echo "installing java Documentation"
 cd src/java
 ant docs
-cp -pr healpixdocs ${here}/doc/java
+cp -pr healpixdocs ${here}/doc/html/java
 \rm -r dist reports build # re-instated 2010-02-22
 \rm -r META-INF
 ant clean
@@ -247,7 +247,7 @@ if [ $do_split == 1 ] ; then
 fi
 
 cd ..
-\rm ${rnfile}
+\rm -f ${rnfile}
 allsums ${package} > ${rnfile}
 cat $rnfile
 cd ${here}
