@@ -116,7 +116,7 @@ $\mathbf{\phi}$ & The azimuthal angle on the sphere, $\phi\in[0,2\pi[$.\\
 \label{sub:new2p20}
 \begin{itemize}
 \item Spherical Harmonics Transform routines now transparently call \htmladdnormallink{\tt
-libpsht}{http://libpsht.sourceforge.net} routines, leading to a significant (2 to 4) speed-up factor. This
+libpsht}{http://libpsht.sourceforge.net} C routines, leading to a significant (2 to 4) speed-up factor. This
 concerns temperature and polarized transforms (\htmlref{alm2map}{sub:alm2map}, 
 \htmlref{map2alm}{sub:map2alm}) {\em without precomputation} of the $P_{lm}$ as
 well as spin 
@@ -126,18 +126,18 @@ but {\em not} the generation of spatial derivatives
 (\htmlref{alm2map\_der}{sub:alm2map_der}) which still uses the original F90 code.
 The compilation and linking to {\tt libpsht}, now shipped with \healpix, is done
 automatically, without any extra download or installation for the user\footnote{
-To {\em revert} to the old F90 implementation of all these routines, the preprocessing
+To {\em revert} to the original F90 implementation of all these routines, the preprocessing
 variable {\tt DONT\_USE\_PSHT} must be set during compilation.}.
 
 \item All routines for Spherical Harmonics Transforms and most routines for
 pixel manipulations (
-ang2pix,
-nside2npix, 
-npix2nside, 
-nside2ntemplates,  
+\htmlref{ang2xxx, pix2xxx, vec2xxx, $\ldots$}{sub:pix_tools},
+\htmlref{nside2npix}{sub:nside2npix}, 
+\htmlref{npix2nside}{sub:npix2nside}, 
+\htmlref{nside2ntemplates}{sub:nside2ntemplates},  
 $\ldots$)
 pixel queries (
-query\_*,  $\ldots$) 
+\htmlref{query\_*}{sub:query_disc},  $\ldots$) 
 and FITS I/O (%
 \htmlref{input\_map}{sub:input_map}, 
 \htmlref{output\_map}{sub:output_map}, 
@@ -154,9 +154,15 @@ supporting 64 bit variables).\\
 The reading and writing of
 $a_{lm}$ containing files remains limited to $l < 46340 $, though. This
 restriction does not apply to $C(l)$ containing files.
+
+\item As a positive side effect of their upgrade, the F90
+\htmlref{pixel/coordinate conversion
+routines}{sub:pix_tools} are now up to 20\% faster.
+
 \item Introduction of 
 \htmlref{\tt long\_count}{sub:long_intrinsic} and
 \htmlref{\tt long\_size}{sub:long_intrinsic} functions.
+
 \end{itemize}
 
 %--------------------------------------------
