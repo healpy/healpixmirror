@@ -1,0 +1,60 @@
+
+
+Healpix java package written by William O'Mullane (womullan AT sciops.esa.int)
+and Emmanuel Joliet (ejoliet AT sciops.esa.int)
+
+
+installation of Healpix java
+----------------------------
+requires a Java Development Kit and a build tools such as Ant
+(see below Notes on installing java, and on junit)
+% ant 
+
+for information on the build targets available:
+% ant -p
+
+
+documentation
+-------------
+<HEALPIX>/src/java/healpixdocs/index.html
+
+built with
+% ant docs
+
+-----------------------------------------------------------------
+
+
+installing java
+===============
+
+see
+home.bredband.no/gaulyk/java/tutorial/javaredhat.html
+or
+www2.educ.umu.se/~bjorn/linux/howto/Java-HOWTO.html
+
+Java Development Kit (JDK aka SDK): required to compile any java code
+---------------------------------
+http://java.sun.com/j2se
+
+Java based build tool: Ant (equivalent to make)
+--------------------------
+http://apache.org
+http://ant.apache.org/bindownload.cgi
+It is also available thru fink for MacOS
+
+
+about junit
+===========
+junit.jar is required for java Healpix library installation.
+It is shipped with Healpix and available in 
+<HEALPIX>/src/java/lib ;
+just make sure that this path (or a path to any other junit.jar)
+is included in your CLASSPATH environment variable.
+
+
+-----------------------------------------------------------------
+
+README updated Feb 2011 by EH.
+Please contact healpix AT jpl.nasa.gov for any question on the code or its installation.
+
+

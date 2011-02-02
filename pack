@@ -100,18 +100,20 @@ do_split=0
 OS=`uname -s`
 updateVersion
 
-here=`pwd`
+here=`\pwd`
 mkdir -p doc/html
 mkdir -p doc/pdf
 
 echo "installing java Documentation"
-cd src/java/healpixjava
+cd src/java
 ant docs
+cp -pr healpixdocs ${here}/doc/java
 \rm -r dist reports build # re-instated 2010-02-22
 \rm -r META-INF
+ant clean
 cd $here
-cp -pr src/java/healpixjava/healpixdocs doc/html/java
-\rm -r src/java/healpixjava/healpixdocs # re-instated 2010-02-22
+#cp -pr src/java/healpixdocs doc/html/java
+#\rm -r src/java/healpixdocs/* # re-instated 2010-02-22
 
 echo "cleaning up C++..."
 cd src/cxx
