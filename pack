@@ -82,6 +82,8 @@ updateVersion () {
 
 #---------------
 
+revision=`svnversion .`
+echo "Revison=${revision}"
 setTopDefaults
 echo "This script will destroy several files and subdirectories"
 echoLn "Are you sure you want to proceed ? [NO/yes] "
@@ -249,6 +251,7 @@ fi
 cd ..
 \rm -f ${rnfile}
 allsums ${package} > ${rnfile}
+echo "SVN revision: ${revision}" >> ${rnfile}
 cat $rnfile
 cd ${here}
 
