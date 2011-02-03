@@ -16,10 +16,12 @@ for information on the build targets available:
 
 documentation
 -------------
-<HEALPIX>/src/java/healpixdocs/index.html
+preinstalled in <HEALPIX>/doc/html/java/index.html
 
-built with
 % ant docs
+will generate
+<HEALPIX>/src/java/healpixdocs/index.html
+from the source files
 
 -----------------------------------------------------------------
 
