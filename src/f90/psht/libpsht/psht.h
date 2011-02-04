@@ -266,12 +266,12 @@ void pshts_add_job_alm2map_deriv1 (pshts_joblist *joblist,
   const pshts_cmplx *alm, float *mapdtheta, float *mapdphi, int add_output);
 
 /*! Executes the jobs in \a joblist, using \a geom_info as map geometry
-    and \a lmax and \a mmax as maximum a_lm coefficients.
-  \note The map geometry, \a lmax and \a mmax have to be supplied to this
+    and \a alm_info as structure of the a_lm coefficients.
+    \note The map geometry and the a_lm structure have to be supplied to this
     function only, since this information is not needed by PSHT anywhere else.
     However, it is the user's responsibility to ensure that the input arrays
     (specified by calls to the job-adding functions) are consistent with the
-    specified geometry, \a lmax and \a mmax, and that the output arrays are
+    specified geometry and a_lm structure, and that the output arrays are
     large enough to hold the produced results.
  */
 void pshts_execute_jobs (pshts_joblist *joblist,
@@ -343,12 +343,12 @@ void pshtd_add_job_alm2map_deriv1 (pshtd_joblist *joblist,
   const pshtd_cmplx *alm, double *mapdtheta, double *mapdphi, int add_output);
 
 /*! Executes the jobs in \a joblist, using \a geom_info as map geometry
-    and \a lmax and \a mmax as maximum a_lm coefficients.
-  \note The map geometry, \a lmax and \a mmax have to be supplied to this
+    and \a alm_info as structure of the a_lm coefficients.
+    \note The map geometry and the a_lm structure have to be supplied to this
     function only, since this information is not needed by PSHT anywhere else.
     However, it is the user's responsibility to ensure that the input arrays
     (specified by calls to the job-adding functions) are consistent with the
-    specified geometry, \a lmax and \a mmax, and that the output arrays are
+    specified geometry and a_lm structure, and that the output arrays are
     large enough to hold the produced results.
  */
 void pshtd_execute_jobs (pshtd_joblist *joblist,
