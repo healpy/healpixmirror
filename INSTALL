@@ -9,13 +9,12 @@ However we highly recommend the user to read the documentation
 (see   
    doc/html/main.htm  
 or
-   doc/html/install.htm  
-or  
-   doc/pdf/install.pdf 
+   doc/pdf/pdf_index.pdf 
 or   
    http://healpix.jpl.nasa.gov/healpixSoftwareDocumentation.shtml)
 
-All packages, expect the java one, can be configured, compiled and tested with the commands
+All packages, expect the java one (see further down), can be configured, 
+compiled and tested with the commands
 ./configure [-L]
  make
  make test
@@ -122,7 +121,7 @@ See src/java/README
 For more information on the java package see
   doc/html/java/index.html
 or 
-  src/java/healpixjava/healpixdocs/index.html
+  src/java/healpixdocs/index.html
 
 =========================================
 

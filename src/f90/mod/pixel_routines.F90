@@ -590,12 +590,12 @@
        do i=0, ismax
           ip_low = iand(ipf,1023)
           ix = ix + scale * pix2x(ip_low)
-          ix = iy + scale * pix2y(ip_low)
+          iy = iy + scale * pix2y(ip_low)
           scale = scale * 32
           ipf   = ipf/1024
        enddo
        ix = ix + scale * pix2x(ipf)
-       ix = iy + scale * pix2y(ipf)
+       iy = iy + scale * pix2y(ipf)
     endif
 
     !     transforms this in (horizontal, vertical) coordinates
@@ -730,12 +730,12 @@
        do i=0, ismax
           ip_low = iand(ipf,1023)
           ix = ix + scale * pix2x(ip_low)
-          ix = iy + scale * pix2y(ip_low)
+          iy = iy + scale * pix2y(ip_low)
           scale = scale * 32
           ipf   = ipf/1024
        enddo
        ix = ix + scale * pix2x(ipf)
-       ix = iy + scale * pix2y(ipf)
+       iy = iy + scale * pix2y(ipf)
     endif
 
     !     transforms this in (horizontal, vertical) coordinates
@@ -1173,12 +1173,12 @@
        do i=0, ismax
           ip_low = iand(ipf,1023)
           ix = ix + scale * pix2x(ip_low)
-          ix = iy + scale * pix2y(ip_low)
+          iy = iy + scale * pix2y(ip_low)
           scale = scale * 32
           ipf   = ipf/1024
        enddo
        ix = ix + scale * pix2x(ipf)
-       ix = iy + scale * pix2y(ipf)
+       iy = iy + scale * pix2y(ipf)
     endif
 
     !     transforms this in (horizontal, vertical) coordinates
