@@ -54,6 +54,12 @@ just make sure that this path (or a path to any other junit.jar)
 is included in your CLASSPATH environment variable.
 
 
+Java3d
+=======
+There is a 3D viewer based on Java3d. This viewer and related tests require
+Java3d to be installed.  you can get Java 3d from 
+https://java3d.dev.java.net/binary-builds.html
+
 -----------------------------------------------------------------
 
 README updated Feb 2011 by EH.
