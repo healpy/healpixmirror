@@ -964,7 +964,7 @@ EOF
 # -----------------------------------------------------------------
 IdentifyCParallCompiler () {
     nicc=`$CC -V 2>&1 | ${GREP} -i intel    | ${WC} -l`
-    ngcc=`$CC --version 2>&1 | ${GREP} 'GCC' | ${WC} -l`
+    ngcc=`$CC --version 2>&1 | ${GREP} -i 'GCC' | ${WC} -l`
     PRCFLAGS=""
     if [ $nicc != 0 ] ; then
 	PRCFLAGS='-openmp' # -openmp-report0
