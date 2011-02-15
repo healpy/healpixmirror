@@ -1,9 +1,9 @@
 /* -----------------------------------------------------------------------------
  *
  *  Copyright (C) 1997-2010 Krzysztof M. Gorski, Eric Hivon,
- *                          Benjamin D. Wandelt, Anthony J. Banday, 
- *                          Matthias Bartelmann, 
- *                          Reza Ansari & Kenneth M. Ganga 
+ *                          Benjamin D. Wandelt, Anthony J. Banday,
+ *                          Matthias Bartelmann,
+ *                          Reza Ansari & Kenneth M. Ganga
  *
  *
  *  This file is part of HEALPix.
@@ -56,6 +56,7 @@ int main (void) {
   sprintf(fileforce, "!%s",file); // leading ! to allow overwrite
   write_healpix_map( map, nside, fileforce, 1, "C");
   fprintf(stdout,"file written\n");
+  free(map);
 
   np = get_fits_size(file, &ns, order1);
   fprintf(stdout,"%s %ld %ld %s\n", file, ns, np, order1);

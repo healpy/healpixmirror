@@ -58,7 +58,7 @@
 # You should not have to edit below this line ################################
 #
 #
-PIC = 
+PIC =
 #
 SHLIB_LD =      $(CC) $(OPT) $(PIC) -shared
 SHLIB_SUFFIX =  .so
@@ -67,11 +67,7 @@ DYLIB_LD =      $(CC) $(OPT) $(PIC) -dynamiclib
 DYLIB_SUFFIX =  .dylib
 
 # The sources in the package
-MODS = ang2pix_nest ang2pix_ring \
-	pix2ang_nest pix2ang_ring nest2ring ring2nest \
-	mk_pix2xy mk_xy2pix nside2npix  npix2nside \
-	ang2vec vec2ang pix2vec_nest pix2vec_ring vec2pix_nest vec2pix_ring \
-	printerror get_fits_size write_healpix_map read_healpix_map
+MODS = chealpix
 
 # static objects
 OBJS = ${MODS:%=%.s.o}

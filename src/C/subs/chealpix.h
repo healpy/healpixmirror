@@ -1,9 +1,9 @@
 /* -----------------------------------------------------------------------------
  *
- *  Copyright (C) 1997-2010 Krzysztof M. Gorski, Eric Hivon,
- *                          Benjamin D. Wandelt, Anthony J. Banday, 
- *                          Matthias Bartelmann, 
- *                          Reza Ansari & Kenneth M. Ganga 
+ *  Copyright (C) 1997-2011 Krzysztof M. Gorski, Eric Hivon, Martin Reinecke
+ *                          Benjamin D. Wandelt, Anthony J. Banday,
+ *                          Matthias Bartelmann,
+ *                          Reza Ansari & Kenneth M. Ganga
  *
  *
  *  This file is part of HEALPix.
@@ -24,13 +24,13 @@
  *
  *  For more information about HEALPix see http://healpix.jpl.nasa.gov
  *
- *----------------------------------------------------------------------------- */
-/* chealpix.h
- *
+ *----------------------------------------------------------------------------*/
+/*
+ * chealpix.h
  */
 
-#ifndef __CHEALPIX_H__
-#define __CHEALPIX_H__
+#ifndef CHEALPIX_H
+#define CHEALPIX_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -44,14 +44,10 @@ extern "C" {
 #define HEALPIX_NULLVAL (-1.6375e30)
 #endif /* HEALPIX_NULLVAL */
 
-/* --------------------- */
-/* Function Declarations */
-/* --------------------- */
-
 /* pixel operations */
 /* ---------------- */
-void ang2pix_nest(const long nside, double theta, double phi, long *ipix);
-void ang2pix_ring(const long nside, double theta, double phi, long *ipix);
+void ang2pix_nest(long nside, double theta, double phi, long *ipix);
+void ang2pix_ring(long nside, double theta, double phi, long *ipix);
 
 void pix2ang_nest(long nside, long ipix, double *theta, double *phi);
 void pix2ang_ring(long nside, long ipix, double *theta, double *phi);
@@ -59,17 +55,14 @@ void pix2ang_ring(long nside, long ipix, double *theta, double *phi);
 void nest2ring(long nside, long ipnest, long *ipring);
 void ring2nest(long nside, long ipring, long *ipnest);
 
-void mk_pix2xy(int *pix2x, int *pix2y);
-void mk_xy2pix(int *x2pix, int *y2pix);
-
-long nside2npix(const long nside);
-long npix2nside(const long pix  );
+long nside2npix(long nside);
+long npix2nside(long npix);
 
 void ang2vec(double theta, double phi,   double *vec);
-void vec2ang(double *vec, double *theta, double *phi);
+void vec2ang(const double *vec, double *theta, double *phi);
 
-void vec2pix_nest(const long nside, double *vec, long *ipix);
-void vec2pix_ring(const long nside, double *vec, long *ipix);
+void vec2pix_nest(long nside, const double *vec, long *ipix);
+void vec2pix_ring(long nside, const double *vec, long *ipix);
 
 void pix2vec_nest(long nside, long ipix, double *vec);
 void pix2vec_ring(long nside, long ipix, double *vec);
@@ -78,22 +71,16 @@ void pix2vec_ring(long nside, long ipix, double *vec);
 /* FITS operations */
 /* --------------- */
 
-void printerror (int) ;
+float *read_healpix_map (const char *infile, long *nside, char *coordsys,
+  char *ordering);
 
-float *read_healpix_map (const char *, long *, char *, char *) ;
+void write_healpix_map (const float *signal, long nside, const char *filename,
+  char nest, const char *coordsys);
 
-int write_healpix_map( float *, long , const char *, char ,char *) ;
-
-long get_fits_size(char *, long *, char * ) ;
-
-
-/* ------------------ */
-/* end of header file */
-/* ------------------ */
+long get_fits_size(const char *filename, long *nside, char *ordering);
 
 #ifdef __cplusplus
-} /* closing brace for extern "C" */
+} /* extern "C" */
 #endif
 
-#endif /* __CHEALPIX_H__ */
-
+#endif /* CHEALPIX_H */
