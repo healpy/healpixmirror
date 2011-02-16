@@ -138,7 +138,7 @@ static int xyf2nest (int nside, int ix, int iy, int face_num)
       (utab[ix&0xff] | (utab[ix>>8]<<16)
     | (utab[iy&0xff]<<1) | (utab[iy>>8]<<17));
   }
-void nest2xyf (int nside, int pix, int *ix, int *iy, int *face_num)
+static void nest2xyf (int nside, int pix, int *ix, int *iy, int *face_num)
   {
   int npface_=nside*nside, raw;
   *face_num = pix/npface_;
@@ -149,7 +149,7 @@ void nest2xyf (int nside, int pix, int *ix, int *iy, int *face_num)
   raw = (pix&0x5555) | ((pix&0x55550000)>>15);
   *iy = ctab[raw&0xff] | (ctab[raw>>8]<<4);
   }
-int xyf2ring (int nside_, int ix, int iy, int face_num)
+static int xyf2ring (int nside_, int ix, int iy, int face_num)
   {
   int nl4 = 4*nside_;
   int jr = (jrll[face_num]*nside_) - ix - iy  - 1, jp;
@@ -183,7 +183,7 @@ int xyf2ring (int nside_, int ix, int iy, int face_num)
 
   return n_before + jp - 1;
   }
-void ring2xyf (int nside_, int pix, int *ix, int *iy, int *face_num)
+static void ring2xyf (int nside_, int pix, int *ix, int *iy, int *face_num)
   {
   int iring, iphi, kshift, nr, tmp, irt, ipt;
   int ncap_=2*nside_*(nside_-1);
