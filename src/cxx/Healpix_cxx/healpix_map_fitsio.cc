@@ -25,7 +25,7 @@
  */
 
 /*
- *  Copyright (C) 2003-2010 Max-Planck-Society
+ *  Copyright (C) 2003-2011 Max-Planck-Society
  *  Author: Martin Reinecke
  */
 
@@ -82,6 +82,51 @@ template void read_Healpix_map_from_fits (const string &filename,
 template void read_Healpix_map_from_fits (const string &filename,
   Healpix_Map<int> &map, int colnum, int hdunum);
 
+template<typename T> void read_Healpix_map_from_fits
+  (fitshandle &inp, Healpix_Map<T> &mapT, Healpix_Map<T> &mapQ,
+  Healpix_Map<T> &mapU)
+  {
+  int64 nside = inp.get_key<int>("NSIDE");
+  Healpix_Ordering_Scheme scheme
+    = string2HealpixScheme(inp.get_key<string>("ORDERING"));
+  mapT.SetNside(nside,scheme);
+  mapQ.SetNside(nside,scheme);
+  mapU.SetNside(nside,scheme);
+  planck_assert (multiequal(int64(mapT.Npix()),inp.nelems(1),inp.nelems(2),
+    inp.nelems(3)), "mismatch between number of map pixels and Nside");
+  chunkMaker cm(mapT.Npix(),inp.efficientChunkSize(1));
+  uint64 offset,ppix;
+  while(cm.getNext(offset,ppix))
+    {
+    inp.read_column_raw(1,&mapT[offset],ppix,offset);
+    inp.read_column_raw(2,&mapQ[offset],ppix,offset);
+    inp.read_column_raw(3,&mapU[offset],ppix,offset);
+    }
+  }
+
+template void read_Healpix_map_from_fits (fitshandle &inp,
+  Healpix_Map<float> &mapT, Healpix_Map<float> &mapQ,
+  Healpix_Map<float> &mapU);
+template void read_Healpix_map_from_fits (fitshandle &inp,
+  Healpix_Map<double> &mapT, Healpix_Map<double> &mapQ,
+  Healpix_Map<double> &mapU);
+
+template<typename T> void read_Healpix_map_from_fits
+  (const string &filename, Healpix_Map<T> &mapT, Healpix_Map<T> &mapQ,
+  Healpix_Map<T> &mapU, int hdunum)
+  {
+  fitshandle inp;
+  inp.open(filename);
+  inp.goto_hdu(hdunum);
+  read_Healpix_map_from_fits (inp,mapT,mapQ,mapU);
+  }
+
+template void read_Healpix_map_from_fits (const string &filename,
+  Healpix_Map<float> &mapT, Healpix_Map<float> &mapQ,
+  Healpix_Map<float> &mapU, int hdunum);
+template void read_Healpix_map_from_fits (const string &filename,
+  Healpix_Map<double> &mapT, Healpix_Map<double> &mapQ,
+  Healpix_Map<double> &mapU, int hdunum);
 
 void prepare_Healpix_fitsmap
   (fitshandle &out, const Healpix_Base &base, PDT datatype,
@@ -129,9 +174,14 @@ template<typename T> void write_Healpix_map_to_fits
   colname[1] = "Q-pol";
   colname[2] = "U-pol";
   prepare_Healpix_fitsmap (out, mapT, datatype, colname);
-  out.write_column(1,mapT.Map());
-  out.write_column(2,mapQ.Map());
-  out.write_column(3,mapU.Map());
+  chunkMaker cm(mapT.Npix(),out.efficientChunkSize(1));
+  uint64 offset,ppix;
+  while(cm.getNext(offset,ppix))
+    {
+    out.write_column_raw(1,&mapT[offset],ppix,offset);
+    out.write_column_raw(2,&mapQ[offset],ppix,offset);
+    out.write_column_raw(3,&mapU[offset],ppix,offset);
+    }
   }
 
 template void write_Healpix_map_to_fits

@@ -25,7 +25,7 @@
  */
 
 /*! \file healpix_map_fitsio.h
- *  Copyright (C) 2003-2010 Max-Planck-Society
+ *  Copyright (C) 2003-2011 Max-Planck-Society
  *  \author Martin Reinecke
  */
 
@@ -54,17 +54,12 @@ template<typename T> void read_Healpix_map_from_fits
   (const std::string &filename, Healpix_Map<T> &map, int colnum=1,
   int hdunum=2);
 
-template<typename T> inline void read_Healpix_map_from_fits
+template<typename T> void read_Healpix_map_from_fits
+  (fitshandle &inp, Healpix_Map<T> &mapT, Healpix_Map<T> &mapQ,
+  Healpix_Map<T> &mapU);
+template<typename T> void read_Healpix_map_from_fits
   (const std::string &filename, Healpix_Map<T> &mapT, Healpix_Map<T> &mapQ,
-  Healpix_Map<T> &mapU, int hdunum=2)
-  {
-  fitshandle inp;
-  inp.open(filename);
-  inp.goto_hdu(hdunum);
-  read_Healpix_map_from_fits(inp,mapT,1);
-  read_Healpix_map_from_fits(inp,mapQ,2);
-  read_Healpix_map_from_fits(inp,mapU,3);
-  }
+  Healpix_Map<T> &mapU, int hdunum=2);
 
 /*! Inserts a new binary table into \a out, which contains one column
     of Planck type \a datatype with the name \a name, and writes all HEALPix

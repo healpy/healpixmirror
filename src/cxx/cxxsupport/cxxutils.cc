@@ -211,7 +211,7 @@ void module_startup (const string &name, int argc, const char **,
   {
   if (verbose) announce (name);
   if (argc==argc_expected) return;
-  cerr << "Usage: " << name << " " << argv_expected << endl;
+  if (verbose) cerr << "Usage: " << name << " " << argv_expected << endl;
   planck_fail_quietly ("Incorrect usage");
   }
 
