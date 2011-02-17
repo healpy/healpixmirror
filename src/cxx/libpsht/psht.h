@@ -25,7 +25,7 @@
 /*! \file psht.h
  *  Interface for the spherical transform library.
  *
- *  Copyright (C) 2006-2010 Max-Planck-Society
+ *  Copyright (C) 2006-2011 Max-Planck-Society
  *  \author Martin Reinecke
  */
 
@@ -153,11 +153,13 @@ typedef struct
   {
   /*! Maximum \a l index of the array */
   int lmax;
-  /*! Maximum \a m index of the array */
-  int mmax;
-  /*! Array containing the (hypothetical) indices of the coefficient
-      with quantum numbers 0,\a m */
-  ptrdiff_t *mstart;
+  /*! Number of different \a m values in this object */
+  int nm;
+  /*! Array with \a nm entries containing the individual m values */
+  int *mval;
+  /*! Array with \a nm entries containing the (hypothetical) indices of
+      the coefficients with quantum numbers 0,\a mval[i] */
+  ptrdiff_t *mvstart;
   /*! Stride between a_lm and a_(l+1),m */
   ptrdiff_t stride;
   } psht_alm_info;
@@ -172,8 +174,20 @@ typedef struct
  */
 void psht_make_alm_info (int lmax, int mmax, int stride,
   const ptrdiff_t *mstart, psht_alm_info **alm_info);
-/*! Returns the index of the coefficient with quantum numbers \a l,\a m. */
-ptrdiff_t psht_alm_index (const psht_alm_info *self, int l, int m);
+/*! Creates an Alm data structure information from the following parameters:
+    \param lmax maximum \a l quantum number (>=0)
+    \param nm number of different \a m (<=\a lmax+1)
+    \param stride the stride between consecutive a_lm entries
+    \param mval array with \a nm entries containing the individual m values
+    \param mvstart array with \a nm entries containing the (hypothetical)
+      indices of the coefficients with the quantum numbers 0,\a mval[i]
+    \param alm_info will hold a pointer to the newly created data structure
+ */
+void psht_make_general_alm_info (int lmax, int nm, int stride, const int *mval,
+  const ptrdiff_t *mvstart, psht_alm_info **alm_info);
+/*! Returns the index of the coefficient with quantum numbers \a l,
+    \a mval[mi]. */
+ptrdiff_t psht_alm_index (const psht_alm_info *self, int l, int mi);
 /*! Deallocates the a_lm info object. */
 void psht_destroy_alm_info (psht_alm_info *info);
 

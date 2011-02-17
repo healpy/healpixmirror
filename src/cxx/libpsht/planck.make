@@ -7,9 +7,9 @@ FULL_INCLUDE+= -I$(SD)
 
 HDR_$(PKG):=$(SD)/*.h
 LIB_$(PKG):=$(LIBDIR)/libpsht.a
-BIN:=psht_test psht_perftest
+BIN:=psht_test psht_perftest psht_test_mpi
 LIBOBJ:=ylmgen_c.o psht.o psht_geomhelpers.o psht_almhelpers.o
-ALLOBJ:=$(LIBOBJ) psht_test.o psht_perftest.o
+ALLOBJ:=$(LIBOBJ) psht_test.o psht_perftest.o psht_test_mpi.o
 LIBOBJ:=$(LIBOBJ:%=$(OD)/%)
 ALLOBJ:=$(ALLOBJ:%=$(OD)/%)
 

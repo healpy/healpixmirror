@@ -84,6 +84,7 @@ int main(int argc, char **argv)
   int ofs_m, ofs_a, m;
   double wtimer;
 
+  announce_c("psht_perftest");
   UTIL_ASSERT (argc>=5,
     "usage: psht_perftest <healpix|ecp|gauss> <lmax> <nside|nphi> <type>+\n"
     "  where <type> can be 'alm2map', 'map2alm', 'alm2map_pol',\n"
