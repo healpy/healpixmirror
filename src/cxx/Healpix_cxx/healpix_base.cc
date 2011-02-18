@@ -25,7 +25,7 @@
  */
 
 /*
- *  Copyright (C) 2003, 2004, 2005, 2006, 2007, 2008 Max-Planck-Society
+ *  Copyright (C) 2003-2011 Max-Planck-Society
  *  Author: Martin Reinecke
  */
 
@@ -38,8 +38,7 @@
 
 using namespace std;
 
-short Healpix_Base::ctab[];
-short Healpix_Base::utab[];
+short Healpix_Base::ctab[], Healpix_Base::utab[];
 
 const nside_dummy SET_NSIDE=nside_dummy();
 
@@ -118,7 +117,7 @@ void Healpix_Base::in_ring(int iz, double phi0, double dphi,
   int ipix2 = ipix1 + nr - 1;       //    highest pixel number in the ring
 
    // ----------- constructs the pixel list --------------
-  if (dphi > (pi-1e-7))
+  if (dphi > (pi-1e-12))
     for (int i=ipix1; i<=ipix2; ++i) listir.push_back(i);
   else
     {
@@ -160,18 +159,11 @@ void Healpix_Base::ring2xyf (int pix, int &ix, int &iy, int &face_num) const
 
   if (pix<ncap_) // North Polar cap
     {
-    iring = int(0.5*(1+isqrt(1+2*pix))); //counted from North pole
+    iring = (1+isqrt(1+2*pix))>>1; //counted from North pole
     iphi  = (pix+1) - 2*iring*(iring-1);
     kshift = 0;
     nr = iring;
-    face_num=0;
-    int tmp = iphi-1;
-    if (tmp>=(2*iring))
-      {
-      face_num=2;
-      tmp-=2*iring;
-      }
-    if (tmp>=iring) ++face_num;
+    face_num=(iphi-1)/nr;
     }
   else if (pix<(npix_-ncap_)) // Equatorial region
     {
@@ -188,21 +180,16 @@ void Healpix_Base::ring2xyf (int pix, int &ix, int &iy, int &face_num) const
       }
     kshift = (iring+nside_)&1;
     nr = nside_;
-    unsigned int ire = iring-nside_+1;
-    unsigned int irm = nl2+2-ire;
-    int ifm, ifp;
+    unsigned int ire = iring-nside_+1,
+                 irm = nl2+2-ire;
+    int ifm = iphi - ire/2 + nside_ -1,
+        ifp = iphi - irm/2 + nside_ -1;
     if (order_>=0)
-      {
-      ifm = (iphi - ire/2 + nside_ -1) >> order_;
-      ifp = (iphi - irm/2 + nside_ -1) >> order_;
-      }
+      { ifm >>= order_; ifp >>= order_; }
     else
-      {
-      ifm = (iphi - ire/2 + nside_ -1) / nside_;
-      ifp = (iphi - irm/2 + nside_ -1) / nside_;
-      }
+      { ifm /= nside_; ifp /= nside_; }
     if (ifp == ifm) // faces 4 to 7
-      face_num = (ifp==4) ? 4 : ifp+4;
+      face_num = (ifp&3)+4;
     else if (ifp<ifm) // (half-)faces 0 to 3
       face_num = ifp;
     else // (half-)faces 8 to 11
@@ -211,19 +198,12 @@ void Healpix_Base::ring2xyf (int pix, int &ix, int &iy, int &face_num) const
   else // South Polar cap
     {
     int ip = npix_ - pix;
-    iring = int(0.5*(1+isqrt(2*ip-1))); //counted from South pole
+    iring = (1+isqrt(2*ip-1))>>1; //counted from South pole
     iphi  = 4*iring + 1 - (ip - 2*iring*(iring-1));
     kshift = 0;
     nr = iring;
     iring = 2*nl2-iring;
-    face_num=8;
-    int tmp = iphi-1;
-    if (tmp>=(2*nr))
-      {
-      face_num=10;
-      tmp-=2*nr;
-      }
-    if (tmp>=nr) ++face_num;
+    face_num = 8 + (iphi-1)/nr;
     }
 
   int irt = iring - (jrll[face_num]*nside_) + 1;
@@ -231,7 +211,7 @@ void Healpix_Base::ring2xyf (int pix, int &ix, int &iy, int &face_num) const
   if (ipt>=nl2) ipt-=8*nside_;
 
   ix =  (ipt-irt) >>1;
-  iy =(-(ipt+irt))>>1;
+  iy = (-ipt-irt) >>1;
   }
 
 int Healpix_Base::xyf2ring (int ix, int iy, int face_num) const
@@ -283,7 +263,7 @@ int Healpix_Base::pix2ring (int pix) const
   if (scheme_==RING)
     {
     if (pix<ncap_) // North Polar cap
-      return int(0.5*(1+isqrt(1+2*pix))); //counted from North pole
+      return (1+isqrt(1+2*pix))>>1; //counted from North pole
     else if (pix<(npix_-ncap_)) // Equatorial region
       {
       int ip  = pix - ncap_;
@@ -292,7 +272,7 @@ int Healpix_Base::pix2ring (int pix) const
     else // South Polar cap
       {
       int ip = npix_ - pix;
-      return 4*nside_ - int(0.5*(1+isqrt(2*ip-1))); //counted from South pole
+      return 4*nside_ - ((1+isqrt(2*ip-1))>>1); //counted from South pole
       }
     }
   else
@@ -473,7 +453,7 @@ void Healpix_Base::pix2ang_z_phi (int pix, double &z, double &phi) const
     {
     if (pix<ncap_) // North Polar cap
       {
-      int iring = int(0.5*(1+isqrt(1+2*pix))); //counted from North pole
+      int iring = (1+isqrt(1+2*pix))>>1; //counted from North pole
       int iphi  = (pix+1) - 2*iring*(iring-1);
 
       z = 1.0 - (iring*iring)*fact2_;
@@ -494,7 +474,7 @@ void Healpix_Base::pix2ang_z_phi (int pix, double &z, double &phi) const
     else // South Polar cap
       {
       int ip = npix_ - pix;
-      int iring = int(0.5*(1+isqrt(2*ip-1))); //counted from South pole
+      int iring = (1+isqrt(2*ip-1))>>1; //counted from South pole
       int iphi  = 4*iring + 1 - (ip - 2*iring*(iring-1));
 
       z = -1.0 + (iring*iring)*fact2_;
@@ -510,31 +490,27 @@ void Healpix_Base::pix2ang_z_phi (int pix, double &z, double &phi) const
 
     int jr = (jrll[face_num]<<order_) - ix - iy - 1;
 
-    int nr, kshift;
+    int nr;
     if (jr<nside_)
       {
       nr = jr;
       z = 1 - nr*nr*fact2_;
-      kshift = 0;
       }
     else if (jr > 3*nside_)
       {
       nr = nl4-jr;
       z = nr*nr*fact2_ - 1;
-      kshift = 0;
       }
     else
       {
       nr = nside_;
       z = (2*nside_-jr)*fact1_;
-      kshift = (jr-nside_)&1;
       }
 
-    int jp = (jpll[face_num]*nr + ix -iy + 1 + kshift) / 2;
-    if (jp>nl4) jp-=nl4;
-    if (jp<1) jp+=nl4;
-
-    phi = (jp-(kshift+1)*0.5)*(halfpi/nr);
+    int tmp=jpll[face_num]*nr+ix-iy;
+    if (tmp<0) tmp+=8*nr;
+    else if (tmp>=8*nr) tmp -=8*nr;
+    phi=(0.5*halfpi*tmp)/nr;
     }
   }
 
@@ -637,16 +613,16 @@ void Healpix_Base::neighbors (int pix, fix_arr<int,8> &result) const
           { -1,-1,-1,-1, 7, 4, 5, 6,-1,-1,-1,-1 },   // W
           {  3, 0, 1, 2, 3, 0, 1, 2, 4, 5, 6, 7 },   // NW
           {  2, 3, 0, 1,-1,-1,-1,-1, 0, 1, 2, 3 } }; // N
-  static const int swaparray[][12] =
-        { {  0,0,0,0,0,0,0,0,3,3,3,3 },   // S
-          {  0,0,0,0,0,0,0,0,6,6,6,6 },   // SE
-          {  0,0,0,0,0,0,0,0,0,0,0,0 },   // E
-          {  0,0,0,0,0,0,0,0,5,5,5,5 },   // SW
-          {  0,0,0,0,0,0,0,0,0,0,0,0 },   // center
-          {  5,5,5,5,0,0,0,0,0,0,0,0 },   // NE
-          {  0,0,0,0,0,0,0,0,0,0,0,0 },   // W
-          {  6,6,6,6,0,0,0,0,0,0,0,0 },   // NW
-          {  3,3,3,3,0,0,0,0,0,0,0,0 } }; // N
+  static const int swaparray[][3] =
+        { {  0,0,3 },   // S
+          {  0,0,6 },   // SE
+          {  0,0,0 },   // E
+          {  0,0,5 },   // SW
+          {  0,0,0 },   // center
+          {  5,0,0 },   // NE
+          {  0,0,0 },   // W
+          {  6,0,0 },   // NW
+          {  3,0,0 } }; // N
 
   int ix, iy, face_num;
   (scheme_==RING) ?
@@ -681,9 +657,10 @@ void Healpix_Base::neighbors (int pix, fix_arr<int,8> &result) const
       int f = facearray[nbnum][face_num];
       if (f>=0)
         {
-        if (swaparray[nbnum][face_num]&1) x=nside_-x-1;
-        if (swaparray[nbnum][face_num]&2) y=nside_-y-1;
-        if (swaparray[nbnum][face_num]&4) std::swap(x,y);
+        int bits = swaparray[nbnum][face_num>>2];
+        if (bits&1) x=nside_-x-1;
+        if (bits&2) y=nside_-y-1;
+        if (bits&4) std::swap(x,y);
         result[i] = (scheme_==RING) ? xyf2ring(x,y,f) : xyf2nest(x,y,f);
         }
       else
