@@ -26,7 +26,7 @@
  *  This file contains the implementation of various convenience functions
  *  used by the Planck LevelS package.
  *
- *  Copyright (C) 2002 - 2010 Max-Planck-Society
+ *  Copyright (C) 2002 - 2011 Max-Planck-Society
  *  Authors: Martin Reinecke, Reinhard Hell
  */
 
@@ -192,7 +192,7 @@ void SSE_status()
 
 void announce (const string &name)
   {
-  string version = "v2.20";
+  string version = "v2.21pre";
   string name2 = name+" "+version;
   cout << endl << "+-";
   for (tsize m=0; m<name2.length(); ++m) cout << "-";

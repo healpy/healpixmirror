@@ -66,8 +66,8 @@ Healpix_Base::Tablefiller::Tablefiller()
 
 Healpix_Base::Tablefiller Healpix_Base::Filler;
 
-const int Healpix_Base::jrll[] = { 2,2,2,2,3,3,3,3,4,4,4,4 };
-const int Healpix_Base::jpll[] = { 1,3,5,7,0,2,4,6,1,3,5,7 };
+const int Healpix_Base::jrll[] = { 2,2,2,2,3,3,3,3,4,4,4,4 },
+          Healpix_Base::jpll[] = { 1,3,5,7,0,2,4,6,1,3,5,7 };
 
 int Healpix_Base::npix2nside (int npix)
   {
@@ -79,17 +79,14 @@ int Healpix_Base::npix2nside (int npix)
 int Healpix_Base::ring_above (double z) const
   {
   double az=abs(z);
-  if (az>twothird) // polar caps
-    {
-    int iring = int(nside_*sqrt(3*(1-az)));
-    return (z>0) ? iring : 4*nside_-iring-1;
-    }
-  else // ----- equatorial region ---------
+  if (az<=twothird) // equatorial region
     return int(nside_*(2-1.5*z));
+  int iring = int(nside_*sqrt(3*(1-az)));
+  return (z>0) ? iring : 4*nside_-iring-1;
   }
 
 void Healpix_Base::in_ring(int iz, double phi0, double dphi,
-  vector<int> &listir) const
+  rangeset<int> &pixset) const
   {
   int nr, ir, ipix1;
   double shift=0.5;
@@ -98,7 +95,7 @@ void Healpix_Base::in_ring(int iz, double phi0, double dphi,
     {
     ir = iz;
     nr = ir*4;
-    ipix1 = 2*ir*(ir-1);        //    lowest pixel number in the ring
+    ipix1 = 2*ir*(ir-1);        // lowest pixel number in the ring
     }
   else if (iz>(3*nside_)) // south pole
     {
@@ -108,28 +105,80 @@ void Healpix_Base::in_ring(int iz, double phi0, double dphi,
     }
   else // equatorial region
     {
-    ir = iz - nside_ + 1;           //    within {1, 2*nside + 1}
+    ir = iz - nside_ + 1;           // within {1, 2*nside + 1}
     nr = nside_*4;
     if ((ir&1)==0) shift = 0;
     ipix1 = ncap_ + (ir-1)*nr; // lowest pixel number in the ring
     }
 
-  int ipix2 = ipix1 + nr - 1;       //    highest pixel number in the ring
+  int ipix2 = ipix1 + nr - 1;       // highest pixel number in the ring
 
-   // ----------- constructs the pixel list --------------
   if (dphi > (pi-1e-12))
-    for (int i=ipix1; i<=ipix2; ++i) listir.push_back(i);
+    pixset.add(ipix1,ipix2+1);
   else
     {
     int ip_lo = ifloor<int>(nr*inv_twopi*(phi0-dphi) - shift)+1;
     int ip_hi = ifloor<int>(nr*inv_twopi*(phi0+dphi) - shift);
-    int pixnum = ip_lo+ipix1;
-    if (pixnum<ipix1) pixnum += nr;
-    for (int i=ip_lo; i<=ip_hi; ++i, ++pixnum)
+    if (ip_lo<0)
       {
-      if (pixnum>ipix2) pixnum -= nr;
-      listir.push_back(pixnum);
+      pixset.add(ipix1,ipix1+ip_hi+1);
+      pixset.add(ipix1+ip_lo+nr,ipix2+1);
       }
+    else if (ip_hi>=nr)
+      {
+      pixset.add(ipix1,ipix1+ip_hi-nr+1);
+      pixset.add(ipix1+ip_lo,ipix2+1);
+      }
+    else
+      pixset.add(ipix1+ip_lo,ipix1+ip_hi+1);
+    }
+  }
+
+void Healpix_Base::query_disc_ring (const pointing &ptg, double radius,
+  rangeset<int> &pixset) const
+  {
+  pixset.clear();
+  if (radius>=pi)
+    { pixset.add(0,npix_); return; }
+
+  double cosang = cos(radius);
+
+  double z0 = cos(ptg.theta);
+  double xa = 1./sqrt((1-z0)*(1+z0));
+
+  double rlat1  = ptg.theta - radius;
+  double zmax = cos(rlat1);
+  int irmin = ring_above (zmax)+1;
+
+  if ((rlat1<=0) && (irmin>1)) // north pole in the disc
+    {
+    int sp,rp;
+    get_ring_info_small(irmin-1,sp,rp);
+    pixset.add(0,sp+rp);
+    }
+
+  double rlat2  = ptg.theta + radius;
+  double zmin = cos(rlat2);
+  int irmax = ring_above (zmin);
+
+// ------------- loop on ring number ---------------------
+  for (int iz=irmin; iz<=irmax; ++iz) // rings partially in the disc
+    {
+    double z=ring2z(iz);
+
+// --------- phi range in the disc for each z ---------
+    double x = (cosang-z*z0)*xa;
+    double ysq = 1-z*z-x*x;
+    planck_assert(ysq>=0, "error in query_disc()");
+    double dphi=atan2(sqrt(ysq),x);
+    in_ring (iz, ptg.phi, dphi, pixset);
+    }
+
+  if ((rlat2>=pi) && (irmax+1<4*nside_)) // south pole in the disc
+    {
+    int sp,rp;
+    get_ring_info_small(irmax+1,sp,rp);
+    pixset.add(sp,npix_);
     }
   }
 
@@ -168,16 +217,9 @@ void Healpix_Base::ring2xyf (int pix, int &ix, int &iy, int &face_num) const
   else if (pix<(npix_-ncap_)) // Equatorial region
     {
     int ip = pix - ncap_;
-    if (order_>=0)
-      {
-      iring = (ip>>(order_+2)) + nside_; // counted from North pole
-      iphi  = (ip&(4*nside_-1)) + 1;
-      }
-    else
-      {
-      iring = (ip/(4*nside_)) + nside_; // counted from North pole
-      iphi  = (ip%(4*nside_)) + 1;
-      }
+    int tmp = (order_>=0) ? ip>>(order_+2) : ip/(4*nside_);
+    iring = tmp+nside_;
+    iphi = ip-tmp*4*nside_ + 1;
     kshift = (iring+nside_)&1;
     nr = nside_;
     unsigned int ire = iring-nside_+1,
@@ -265,15 +307,9 @@ int Healpix_Base::pix2ring (int pix) const
     if (pix<ncap_) // North Polar cap
       return (1+isqrt(1+2*pix))>>1; //counted from North pole
     else if (pix<(npix_-ncap_)) // Equatorial region
-      {
-      int ip  = pix - ncap_;
-      return ip/(4*nside_) + nside_; // counted from North pole
-      }
+      return (pix-ncap_)/(4*nside_) + nside_; // counted from North pole
     else // South Polar cap
-      {
-      int ip = npix_ - pix;
-      return 4*nside_ - ((1+isqrt(2*ip-1))>>1); //counted from South pole
-      }
+      return 4*nside_ - ((1+isqrt(2*(npix_-pix)-1))>>1); //counted from South pole
     }
   else
     {
@@ -358,12 +394,13 @@ int Healpix_Base::peano2nest (int pix) const
 int Healpix_Base::ang2pix_z_phi (double z, double phi) const
   {
   double za = abs(z);
-  double tt = fmodulo(phi,twopi) * inv_halfpi; // in [0,4)
+  double tt = fmodulo(phi*inv_halfpi,4.0); // in [0,4)
 
   if (scheme_==RING)
     {
     if (za<=twothird) // Equatorial region
       {
+      unsigned int nl4 = 4*nside_;
       double temp1 = nside_*(0.5+tt);
       double temp2 = nside_*z*0.75;
       int jp = int(temp1-temp2); // index of  ascending edge line
@@ -373,10 +410,11 @@ int Healpix_Base::ang2pix_z_phi (double z, double phi) const
       int ir = nside_ + 1 + jp - jm; // in {1,2n+1}
       int kshift = 1-(ir&1); // kshift=1 if ir even, 0 otherwise
 
-      int ip = (jp+jm-nside_+kshift+1)/2; // in {0,4n-1}
-      ip = imodulo(ip,4*nside_);
+      unsigned int t1 = jp+jm-nside_+kshift+1+nl4+nl4;
+      int ip = (order_>0) ?
+        (t1>>1)&(nl4-1) : ((t1>>1)%nl4); // in {0,4n-1}
 
-      return ncap_ + (ir-1)*4*nside_ + ip;
+      return ncap_ + (ir-1)*nl4 + ip;
       }
     else  // North & South polar caps
       {
@@ -388,20 +426,16 @@ int Healpix_Base::ang2pix_z_phi (double z, double phi) const
 
       int ir = jp+jm+1; // ring number counted from the closest pole
       int ip = int(tt*ir); // in {0,4*ir-1}
-      ip = imodulo(ip,4*ir);
+      ip %= 4*ir;
 
-      if (z>0)
-        return 2*ir*(ir-1) + ip;
-      else
-        return npix_ - 2*ir*(ir+1) + ip;
+      return (z>0)  ?  2*ir*(ir-1) + ip  :  npix_ - 2*ir*(ir+1) + ip;
       }
     }
   else // scheme_ == NEST
     {
-    int face_num, ix, iy;
-
     if (za<=twothird) // Equatorial region
       {
+      int face_num, ix, iy;
       double temp1 = nside_*(0.5+tt);
       double temp2 = nside_*(z*0.75);
       int jp = int(temp1-temp2); // index of  ascending edge line
@@ -409,7 +443,7 @@ int Healpix_Base::ang2pix_z_phi (double z, double phi) const
       int ifp = jp >> order_;  // in {0,4}
       int ifm = jm >> order_;
       if (ifp == ifm)           // faces 4 to 7
-        face_num = (ifp==4) ? 4: ifp+4;
+        face_num = (ifp&3)+4;
       else if (ifp < ifm)       // (half-)faces 0 to 3
         face_num = ifp;
       else                      // (half-)faces 8 to 11
@@ -417,11 +451,11 @@ int Healpix_Base::ang2pix_z_phi (double z, double phi) const
 
       ix = jm & (nside_-1);
       iy = nside_ - (jp & (nside_-1)) - 1;
+      return xyf2nest(ix,iy,face_num);
       }
     else // polar region, za > 2/3
       {
-      int ntt = int(tt);
-      if (ntt>=4) ntt=3;
+      int ntt = min(3,int(tt));
       double tp = tt-ntt;
       double tmp = nside_*sqrt(3*(1-za));
 
@@ -429,21 +463,10 @@ int Healpix_Base::ang2pix_z_phi (double z, double phi) const
       int jm = int((1.0-tp)*tmp); // decreasing edge line index
       if (jp>=nside_) jp = nside_-1; // for points too close to the boundary
       if (jm>=nside_) jm = nside_-1;
-      if (z >= 0)
-        {
-        face_num = ntt;  // in {0,3}
-        ix = nside_ - jm - 1;
-        iy = nside_ - jp - 1;
-        }
-      else
-        {
-        face_num = ntt + 8; // in {8,11}
-        ix =  jp;
-        iy =  jm;
-        }
+      return (z>=0) ?
+        xyf2nest(nside_-jm -1,nside_-jp-1,ntt) :
+        xyf2nest(jp,jm,ntt+8);
       }
-
-    return xyf2nest(ix,iy,face_num);
     }
   }
 
@@ -461,15 +484,16 @@ void Healpix_Base::pix2ang_z_phi (int pix, double &z, double &phi) const
       }
     else if (pix<(npix_-ncap_)) // Equatorial region
       {
+      int nl4 = 4*nside_;
       int ip  = pix - ncap_;
-      int iring = ip/(4*nside_) + nside_; // counted from North pole
-      int iphi  = ip%(4*nside_) + 1;
+      int tmp = (order_>=0) ? ip>>(order_+2) : ip/nl4;
+      int iring = tmp + nside_,
+          iphi = ip-nl4*tmp+1;;
       // 1 if iring+nside is odd, 1/2 otherwise
       double fodd = ((iring+nside_)&1) ? 1 : 0.5;
 
-      int nl2 = 2*nside_;
-      z = (nl2-iring)*fact1_;
-      phi = (iphi-fodd) * pi/nl2;
+      z = (2*nside_-iring)*fact1_;
+      phi = (iphi-fodd) * pi*0.75*fact1_;
       }
     else // South Polar cap
       {
@@ -483,8 +507,6 @@ void Healpix_Base::pix2ang_z_phi (int pix, double &z, double &phi) const
     }
   else
     {
-    int nl4 = nside_*4;
-
     int face_num, ix, iy;
     nest2xyf(pix,ix,iy,face_num);
 
@@ -498,7 +520,7 @@ void Healpix_Base::pix2ang_z_phi (int pix, double &z, double &phi) const
       }
     else if (jr > 3*nside_)
       {
-      nr = nl4-jr;
+      nr = nside_*4-jr;
       z = nr*nr*fact2_ - 1;
       }
     else
@@ -510,7 +532,23 @@ void Healpix_Base::pix2ang_z_phi (int pix, double &z, double &phi) const
     int tmp=jpll[face_num]*nr+ix-iy;
     if (tmp<0) tmp+=8*nr;
     else if (tmp>=8*nr) tmp -=8*nr;
-    phi=(0.5*halfpi*tmp)/nr;
+    phi = (nr==nside_) ? 0.75*halfpi*tmp*fact1_ :
+                         (0.5*halfpi*tmp)/nr;
+    }
+  }
+
+void Healpix_Base::query_disc (const pointing &ptg, double radius,
+  rangeset<int>& pixset) const
+  {
+  pixset.clear();
+  query_disc_ring (ptg, radius, pixset);
+  if (scheme_==NEST)
+    {
+    rangeset<int> pixset2;
+    for (rangeset<int>::const_iterator it=pixset.begin();it!=pixset.end();++it)
+      for (int m=it->first; m<it->second; ++m)
+        pixset2.add(ring2nest(m));
+    pixset2.swap(pixset);
     }
   }
 
@@ -518,58 +556,49 @@ void Healpix_Base::query_disc (const pointing &ptg, double radius,
   vector<int>& listpix) const
   {
   listpix.clear();
-
-  double dth1 = fact2_;
-  double dth2 = fact1_;
-  double cosang = cos(radius);
-
-  double z0 = cos(ptg.theta);
-  double xa = 1./sqrt((1-z0)*(1+z0));
-
-  double rlat1  = ptg.theta - radius;
-  double zmax = cos(rlat1);
-  int irmin = ring_above (zmax)+1;
-
-  if (rlat1<=0) // north pole in the disc
-    for (int m=1; m<irmin; ++m) // rings completely in the disc
-      in_ring (m, 0, pi, listpix);
-
-  double rlat2  = ptg.theta + radius;
-  double zmin = cos(rlat2);
-  int irmax = ring_above (zmin);
-
-// ------------- loop on ring number ---------------------
-  for (int iz=irmin; iz<=irmax; ++iz) // rings partially in the disc
-    {
-    double z;
-    if (iz<nside_) // north polar cap
-      z = 1.0 - iz*iz*dth1;
-    else if (iz <= (3*nside_)) // tropical band + equat.
-      z = (2*nside_-iz) * dth2;
-    else
-      z = -1.0 + (4*nside_-iz)*(4*nside_-iz)*dth1;
-
-// --------- phi range in the disc for each z ---------
-    double x = (cosang-z*z0)*xa;
-    double ysq = 1-z*z-x*x;
-    planck_assert(ysq>=0, "error in query_disc()");
-    double dphi=atan2(sqrt(ysq),x);
-    in_ring (iz, ptg.phi, dphi, listpix);
-    }
-
-  if (rlat2>=pi) // south pole in the disc
-    for (int m=irmax+1; m<(4*nside_); ++m)  // rings completely in the disc
-      in_ring (m, 0, pi, listpix);
-
-  if (scheme_==NEST)
-    for (tsize m=0; m<listpix.size(); ++m)
-      listpix[m] = ring2nest(listpix[m]);
+  rangeset<int> pixset;
+  query_disc_ring (ptg, radius, pixset);
+  tsize pixcnt=0;
+  for (rangeset<int>::const_iterator it=pixset.begin(); it!=pixset.end(); ++it)
+    pixcnt+=it->second-it->first;
+  listpix.reserve(pixcnt);
+  if (scheme_==RING)
+    for (rangeset<int>::const_iterator it=pixset.begin();it!=pixset.end();++it)
+      for (int m=it->first; m<it->second; ++m)
+        listpix.push_back(m);
+  else
+    for (rangeset<int>::const_iterator it=pixset.begin();it!=pixset.end();++it)
+      for (int m=it->first; m<it->second; ++m)
+        listpix.push_back(ring2nest(m));
   }
 
+void Healpix_Base::query_disc_inclusive (const pointing &dir, double radius,
+  vector<int> &listpix) const
+    { query_disc (dir,radius+1.362*pi/(4*nside_),listpix); }
+void Healpix_Base::query_disc_inclusive (const pointing &dir, double radius,
+  rangeset<int>& pixset) const
+    { query_disc (dir,radius+1.362*pi/(4*nside_),pixset); }
+
+void Healpix_Base::get_ring_info_small (int ring, int &startpix, int &ringpix)
+  const
+  {
+  int northring = (ring>2*nside_) ? 4*nside_-ring : ring;
+  if (northring < nside_)
+    {
+    ringpix = 4*northring;
+    startpix = 2*northring*(northring-1);
+    }
+  else
+    {
+    ringpix = 4*nside_;
+    startpix = ncap_ + (northring-nside_)*ringpix;
+    }
+  if (northring != ring) // southern hemisphere
+    startpix = npix_ - startpix - ringpix;
+  }
 void Healpix_Base::get_ring_info (int ring, int &startpix, int &ringpix,
   double &costheta, double &sintheta, bool &shifted) const
   {
-  planck_assert(scheme_==RING,"map must be in RING scheme");
   int northring = (ring>2*nside_) ? 4*nside_-ring : ring;
   if (northring < nside_)
     {
@@ -594,10 +623,6 @@ void Healpix_Base::get_ring_info (int ring, int &startpix, int &ringpix,
     startpix = npix_ - startpix - ringpix;
     }
   }
-
-void Healpix_Base::query_disc_inclusive (const pointing &dir, double radius,
-  vector<int> &listpix) const
-    { query_disc (dir,radius+1.362*pi/(4*nside_),listpix); }
 
 void Healpix_Base::neighbors (int pix, fix_arr<int,8> &result) const
   {
@@ -642,8 +667,7 @@ void Healpix_Base::neighbors (int pix, fix_arr<int,8> &result) const
     {
     for (int i=0; i<8; ++i)
       {
-      int x=ix+xoffset[i];
-      int y=iy+yoffset[i];
+      int x=ix+xoffset[i], y=iy+yoffset[i];
       int nbnum=4;
       if (x<0)
         { x+=nside_; nbnum-=1; }

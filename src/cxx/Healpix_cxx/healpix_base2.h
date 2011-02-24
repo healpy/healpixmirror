@@ -25,7 +25,7 @@
  */
 
 /*! \file healpix_base2.h
- *  Copyright (C) 2003, 2004, 2005, 2006, 2007, 2008, 2009 Max-Planck-Society
+ *  Copyright (C) 2003-2011 Max-Planck-Society
  *  \author Martin Reinecke
  */
 
@@ -181,6 +181,7 @@ class Healpix_Base2
     /*! Returns useful information about a given ring of the map.
         \param ring the ring number (the number of the first ring is 1)
         \param startpix the number of the first pixel in the ring
+               (NOTE: this is always given in the RING numbering scheme!)
         \param ringpix the number of pixels in the ring
         \param costheta the cosine of the colatitude of the ring
         \param sintheta the sine of the colatitude of the ring
@@ -191,6 +192,7 @@ class Healpix_Base2
     /*! Returns useful information about a given ring of the map.
         \param ring the ring number (the number of the first ring is 1)
         \param startpix the number of the first pixel in the ring
+               (NOTE: this is always given in the RING numbering scheme!)
         \param ringpix the number of pixels in the ring
         \param theta the colatitude (in radians) of the ring
         \param shifted if \a true, the center of the first pixel is not at

@@ -25,7 +25,7 @@
  */
 
 /*
- *  Copyright (C) 2004, 2005, 2006, 2007, 2008 Max-Planck-Society
+ *  Copyright (C) 2004-2011 Max-Planck-Society
  *  Author: Martin Reinecke
  */
 
@@ -470,12 +470,45 @@ void check_query_disc()
         map[list[i]] = true;
       for (int i=0; i<map.Npix(); ++i)
         {
-        bool inside = dotprod(vec3(map.pix2ang(i)),vptg)>cosrad;
+        bool inside = dotprod(map.pix2vec(i),vptg)>cosrad;
         if (inside^map[i])
           cout << "  PROBLEM: order = " << order << ", ptg = " << ptg << endl;
         }
       for (tsize i=0; i<list.size(); ++i)
         map[list[i]] = false;
+      }
+    }
+  }
+void check_query_disc_rangeset()
+  {
+  cout << "testing whether all pixels found by query_disc() using" << endl
+       << "range sets really lie inside the disk (and vice versa)" << endl;
+  for (int order=0; order<=5; ++order)
+    {
+    cout << "order = " << order << endl;
+    Healpix_Map <bool> map (order,RING);
+    map.fill(false);
+    rangeset<int> pixset;
+    for (int m=0; m<100000; ++m)
+      {
+      pointing ptg;
+      random_dir (ptg);
+      double rad = pi/1 * rng.rand_uni();
+      map.query_disc(ptg,rad,pixset);
+      vec3 vptg=ptg;
+      double cosrad=cos(rad);
+      for (rangeset<int>::iterator it=pixset.begin(); it!=pixset.end(); ++it)
+        for (int i=it->first; i<it->second; ++i)
+          map[i] = true;
+      for (int i=0; i<map.Npix(); ++i)
+        {
+        bool inside = dotprod(map.pix2vec(i),vptg)>cosrad;
+        if (inside^map[i])
+          cout << "  PROBLEM: order = " << order << ", ptg = " << ptg << endl;
+        }
+      for (rangeset<int>::iterator it=pixset.begin(); it!=pixset.end();++it)
+        for (int i=it->first; i<it->second; ++i)
+          map[i] = false;
       }
     }
   }
@@ -704,6 +737,7 @@ int main(int argc, const char **argv)
   check_ringnestring2();
   check_nestpeanonest();
   check_nestpeanonest2();
-  check_query_disc();
   check_swap_scheme();
+  check_query_disc();
+  check_query_disc_rangeset();
   }
