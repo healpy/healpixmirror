@@ -303,7 +303,7 @@ int64 Healpix_Base2::peano2nest (int64 pix) const
   return result + (int64(peanoface2face[face])<<(2*order_));
   }
 
-int64 Healpix_Base2::ang2pix_z_phi (double z, double phi) const
+int64 Healpix_Base2::zphi2pix (double z, double phi) const
   {
   double za = abs(z);
   double tt = fmodulo(phi*inv_halfpi,4.0); // in [0,4)
@@ -382,7 +382,7 @@ int64 Healpix_Base2::ang2pix_z_phi (double z, double phi) const
     }
   }
 
-void Healpix_Base2::pix2ang_z_phi (int64 pix, double &z, double &phi) const
+void Healpix_Base2::pix2zphi (int64 pix, double &z, double &phi) const
   {
   if (scheme_==RING)
     {

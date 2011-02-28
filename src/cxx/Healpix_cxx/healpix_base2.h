@@ -147,32 +147,32 @@ class Healpix_Base2
     /*! Translates a pixel number from its Peano index to NEST. */
     int64 peano2nest (int64 pix) const;
 
-    int64 ang2pix_z_phi (double z, double phi) const;
+    int64 zphi2pix (double z, double phi) const;
 
     /*! Returns the number of the pixel which contains the angular coordinates
         \a ang. */
     int64 ang2pix (const pointing &ang) const
-      { return ang2pix_z_phi (cos(ang.theta), ang.phi); }
+      { return zphi2pix (cos(ang.theta), ang.phi); }
     /*! Returns the number of the pixel which contains the vector \a vec
         (\a vec is normalized if necessary). */
     int64 vec2pix (const vec3 &vec) const
-      { return ang2pix_z_phi (vec.z/vec.Length(), safe_atan2(vec.y,vec.x)); }
+      { return zphi2pix (vec.z/vec.Length(), safe_atan2(vec.y,vec.x)); }
 
-    void pix2ang_z_phi (int64 pix, double &z, double &phi) const;
+    void pix2zphi (int64 pix, double &z, double &phi) const;
 
     /*! Returns the angular coordinates of the center of the pixel with
         number \a pix. */
     pointing pix2ang (int64 pix) const
       {
       double z, phi;
-      pix2ang_z_phi (pix,z,phi);
+      pix2zphi (pix,z,phi);
       return pointing(acos(z),phi);
       }
     /*! Returns the vector to the center of the pixel with number \a pix. */
     vec3 pix2vec (int64 pix) const
       {
       double z, phi;
-      pix2ang_z_phi (pix,z,phi);
+      pix2zphi (pix,z,phi);
       vec3 res;
       res.set_z_phi (z, phi);
       return res;

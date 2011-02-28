@@ -162,32 +162,32 @@ class Healpix_Base
     /*! Translates a pixel number from its Peano index to NEST. */
     int peano2nest (int pix) const;
 
-    int ang2pix_z_phi (double z, double phi) const;
+    int zphi2pix (double z, double phi) const;
 
     /*! Returns the number of the pixel which contains the angular coordinates
         \a ang. */
     int ang2pix (const pointing &ang) const
-      { return ang2pix_z_phi (cos(ang.theta), ang.phi); }
+      { return zphi2pix (cos(ang.theta), ang.phi); }
     /*! Returns the number of the pixel which contains the vector \a vec
         (\a vec is normalized if necessary). */
     int vec2pix (const vec3 &vec) const
-      { return ang2pix_z_phi (vec.z/vec.Length(), safe_atan2(vec.y,vec.x)); }
+      { return zphi2pix (vec.z/vec.Length(), safe_atan2(vec.y,vec.x)); }
 
-    void pix2ang_z_phi (int pix, double &z, double &phi) const;
+    void pix2zphi (int pix, double &z, double &phi) const;
 
     /*! Returns the angular coordinates of the center of the pixel with
         number \a pix. */
     pointing pix2ang (int pix) const
       {
       double z, phi;
-      pix2ang_z_phi (pix,z,phi);
+      pix2zphi (pix,z,phi);
       return pointing(acos(z),phi);
       }
     /*! Returns the vector to the center of the pixel with number \a pix. */
     vec3 pix2vec (int pix) const
       {
       double z, phi;
-      pix2ang_z_phi (pix,z,phi);
+      pix2zphi (pix,z,phi);
       vec3 res;
       res.set_z_phi (z, phi);
       return res;
@@ -202,13 +202,6 @@ class Healpix_Base
         \note This method is more efficient in the RING scheme. */
     void query_disc (const pointing &dir, double radius,
       rangeset<int> &pixset) const;
-    /*! Returns the numbers of all pixels whose centers lie within \a radius
-        of \a dir in \a listpix.
-        \param dir the angular coordinates of the disc center
-        \param radius the radius (in radians) of the disc
-        \param listpix a vector containing the numbers of all pixels within
-               the disc
-        \note This method is more efficient in the RING scheme. */
     /*! Returns a set of pixel ranges that lie at least partially within
         \a radius of \a dir in \a pixset. It may also return a few pixels
         which do not lie in the disk at all.
@@ -219,6 +212,13 @@ class Healpix_Base
         \note This method is more efficient in the RING scheme. */
     void query_disc_inclusive (const pointing &dir, double radius,
       rangeset<int> &pixset) const;
+    /*! Returns the numbers of all pixels whose centers lie within \a radius
+        of \a dir in \a listpix.
+        \param dir the angular coordinates of the disc center
+        \param radius the radius (in radians) of the disc
+        \param listpix a vector containing the numbers of all pixels within
+               the disc
+        \note This method is more efficient in the RING scheme. */
     void query_disc (const pointing &dir, double radius,
       std::vector<int> &listpix) const;
     /*! Returns the numbers of all pixels that lie at least partially within

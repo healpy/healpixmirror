@@ -23,7 +23,7 @@
  */
 
 /*! \file rangeset.h
- *  Class for storing ranges of numbers
+ *  Class for storing sets of ranges of inteeger numbers
  *
  *  Copyright (C) 2011 Max-Planck-Society
  *  \author Martin Reinecke
@@ -34,9 +34,12 @@
 
 #include <map>
 
+/*! Class for storing sets of ranges of integer numbers */
 template<typename T> class rangeset: public std::map<T,T>
   {
   public:
+    /*! Add the interval [\a vbegin; \a vend[.
+        \note \a vend is not included in the interval. */
     void add(T vbegin, T vend)
       {
       if (vend<=vbegin) return;
@@ -61,6 +64,7 @@ template<typename T> class rangeset: public std::map<T,T>
         this->insert(std::pair<T,T>(vbegin,vend));
         }
       }
+    /*! Add the one-number interval containing \a value. */
     void add(T value)
       { add (value, value+1); }
   };

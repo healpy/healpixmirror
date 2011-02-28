@@ -58,6 +58,7 @@ Candidates for testing the validity of the Healpix routines:
 #include "alm_healpix_tools.h"
 #include "alm_powspec_tools.h"
 #include "geom_utils.h"
+#include "walltimer.h"
 
 using namespace std;
 
@@ -713,12 +714,188 @@ void check_rot_alm ()
   check_alm (oalm, alm, epsilon);
   }
 
+#define PERF_TEMPLATE1(name,scheme,type,func) \
+  { \
+  tsize cnt=0; \
+  wallTimers.start("timer"); \
+  for (int order=0; order<=12; ++order) \
+    { \
+    Healpix_Base base (order,scheme); \
+    for (int pix=0; pix<base.Npix(); ++pix) \
+      blub[pix&1023] = base.func(pix); \
+    cnt+=base.Npix(); \
+    } \
+  wallTimers.stop("timer"); \
+  cout << name << ": " << cnt/wallTimers.acc("timer")*1e-6 << "MOps/s" << endl;\
+  wallTimers.reset("timer"); \
+  }
+
+void perftest()
+  {
+  double dummy=0;
+  cout << "Measuring performance of Healpix_Base methods." << endl;
+  {
+  pointing blub[1024];
+  PERF_TEMPLATE1("pix2ang(RING)",RING,pointing,pix2ang)
+  PERF_TEMPLATE1("pix2ang(NEST)",NEST,pointing,pix2ang)
+  dummy+=blub[234].theta+blub[234].phi;
+  }
+  {
+  vec3 blub[1024];
+  PERF_TEMPLATE1("pix2vec(RING)",RING,vec3,pix2vec)
+  PERF_TEMPLATE1("pix2vec(NEST",NEST,vec3,pix2vec)
+  dummy+=blub[234].x+blub[234].y+blub[234].z;
+  }
+  tsize cnt=0;
+  wallTimers.start("pix2zphi(RING)");
+  for (int order=0; order<=12; ++order)
+    {
+    Healpix_Base base (order,RING);
+    for (int pix=0; pix<base.Npix(); ++pix)
+      {
+      double z,phi;
+      base.pix2zphi(pix,z,phi);
+      dummy+=z+phi;
+      ++cnt;
+      }
+    }
+  wallTimers.stop("pix2zphi(RING)");
+  cout << "pix2zphi(RING): "
+       << cnt/wallTimers.acc("pix2zphi(RING)")*1e-6 << "MOps/s" << endl;
+
+  cnt=0;
+  wallTimers.start("pix2zphi(NEST)");
+  for (int order=0; order<=12; ++order)
+    {
+    Healpix_Base base (order,NEST);
+    for (int pix=0; pix<base.Npix(); ++pix)
+      {
+      double z,phi;
+      base.pix2zphi(pix,z,phi);
+      dummy+=z+phi;
+      ++cnt;
+      }
+    }
+  wallTimers.stop("pix2zphi(NEST)");
+  cout << "pix2zphi(NEST): "
+       << cnt/wallTimers.acc("pix2zphi(NEST)")*1e-6 << "MOps/s" << endl;
+
+  cnt=0;
+  wallTimers.start("zphi2pix(RING)");
+  for (int order=0; order<=12; ++order)
+    {
+    Healpix_Base base (order,RING);
+    for (double z=-1; z<1; z+=0.001)
+      for (double phi=0; phi<twopi; phi+=0.001)
+        {
+        base.zphi2pix(z,phi);
+        ++cnt;
+        dummy+=z+phi;
+        }
+    }
+  wallTimers.stop("zphi2pix(RING)");
+  cout << "zphi2pix(RING): "
+       << cnt/wallTimers.acc("zphi2pix(RING)")*1e-6 << "MOps/s" << endl;
+
+  cnt=0;
+  wallTimers.start("zphi2pix(NEST)");
+  for (int order=0; order<=12; ++order)
+    {
+    Healpix_Base base (order,NEST);
+    for (double z=-1; z<1; z+=0.001)
+      for (double phi=0; phi<twopi; phi+=0.001)
+        {
+        base.zphi2pix(z,phi);
+        ++cnt;
+        dummy+=z+phi;
+        }
+    }
+  wallTimers.stop("zphi2pix(NEST)");
+  cout << "zphi2pix(NEST): "
+       << cnt/wallTimers.acc("zphi2pix(NEST)")*1e-6 << "MOps/s" << endl;
+
+  cnt=0;
+  wallTimers.start("ang2pix_ring");
+  for (int order=0; order<=12; ++order)
+    {
+    Healpix_Base base (order,RING);
+    for (double theta=0; theta<pi; theta+=0.001)
+      for (double phi=0; phi<twopi; phi+=0.001)
+        {
+        dummy+=base.ang2pix(pointing(theta,phi));
+        ++cnt;
+        }
+    }
+  wallTimers.stop("ang2pix_ring");
+  cout << "ang2pix(RING): "
+       << cnt/wallTimers.acc("ang2pix_ring")*1e-6 << "MOps/s" << endl;
+
+  cnt=0;
+  wallTimers.start("ang2pix_nest");
+  for (int order=0; order<=12; ++order)
+    {
+    Healpix_Base base (order,NEST);
+    for (double theta=0; theta<pi; theta+=0.001)
+      for (double phi=0; phi<twopi; phi+=0.001)
+        {
+        dummy+=base.ang2pix(pointing(theta,phi));
+        ++cnt;
+        }
+    }
+  wallTimers.stop("ang2pix_nest");
+  cout << "ang2pix(NEST): "
+       << cnt/wallTimers.acc("ang2pix_nest")*1e-6 << "MOps/s" << endl;
+
+  cnt=0;
+  wallTimers.start("ring2nest");
+  for (int order=0; order<=12; ++order)
+    {
+    Healpix_Base base (order,RING);
+    for (int pix=0; pix<base.Npix(); ++pix)
+      dummy+=base.ring2nest(pix);
+    cnt+=base.Npix();
+    }
+  wallTimers.stop("ring2nest");
+  cout << "ring2nest: "
+       << cnt/wallTimers.acc("ring2nest")*1e-6 << "MOps/s" << endl;
+
+  cnt=0;
+  wallTimers.start("nest2ring");
+  for (int order=0; order<=12; ++order)
+    {
+    Healpix_Base base (order,RING);
+    for (int pix=0; pix<base.Npix(); ++pix)
+      dummy+=base.nest2ring(pix);
+    cnt+=base.Npix();
+    }
+  wallTimers.stop("nest2ring");
+  cout << "nest2ring: "
+       << cnt/wallTimers.acc("nest2ring")*1e-6 << "MOps/s" << endl;
+
+  {
+  wallTimers.start("query_disc");
+  Healpix_Base base(4096,RING,SET_NSIDE);
+  for (int m=0; m<1000; ++m)
+    {
+    rangeset<int> pix;
+    base.query_disc(pointing(halfpi,0),halfpi/9,pix);
+    dummy+=pix.size();
+    }
+  wallTimers.stop("query_disc");
+  cout << "query_disc_rangeset(nside=4096,radius=10deg): "
+       << 1000/wallTimers.acc("query_disc")*1e-6 << "MOps/s" << endl;
+  }
+
+  if (dummy<0) cout << dummy << endl;
+  }
+
 } // unnamed namespace
 
 int main(int argc, const char **argv)
   {
   module_startup ("hpxtest",argc,argv,1,"");
 
+  perftest();
   check_smooth_alm();
   check_rot_alm();
   check_alm2map2alm(620,620,256);
