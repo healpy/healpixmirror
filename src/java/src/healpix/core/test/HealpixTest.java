@@ -1785,4 +1785,52 @@ public class HealpixTest extends TestCase {
 		}
 	
 	}
+	
+	
+	public void testDroegeBigSmall() throws Exception {
+		LongRangeSet listpixSmall, listpixLarge, difference;
+		HealpixIndex hpi2 = null;
+		SpatialVector sv3 = null;
+		hpi2 = new HealpixIndex(1024);
+
+		for (long pix = 12582115; pix < 12582912; pix++) {
+		sv3 = hpi2.pix2vec_ring(pix);
+
+		listpixSmall = hpi2.queryDisc( sv3,
+		((Math.toRadians(0.9))), 0, 0);
+		listpixLarge = hpi2.queryDisc( sv3,
+		((Math.toRadians(1.0))), 0, 0);
+		difference = listpixLarge.substract(listpixSmall);
+
+		if (listpixLarge.size() - listpixSmall.size() != difference.size()) {
+			System.out
+			.println("found a discrepancy at pixel number " + pix);
+			double[] other = null;
+			other = hpi2.pix2ang_ring(pix);
+			
+	
+			double latitude = 90.0 - (Math.toDegrees(other[0]));
+			double longitude = Math.toDegrees(other[1]);
+			System.out.println("the latitude is " + latitude);
+			System.out.println("the longitude is " + longitude);
+		}
+
+		// Iterate through listpixSmall
+		LongIterator listpixSmallIterator = listpixSmall.longIterator();
+		int counter = 0;
+		while (listpixSmallIterator.hasNext()) {
+			long next = listpixSmallIterator.next();
+		// check if next is not part of listpixLarge which it always
+		// should be
+			if (!listpixLarge.contains(next)) {
+				System.out.println("found pixel number " + next
+					+ " in Small that is not in Large");
+				counter++;
+			}
+		}
+		assertEquals("Pixels foudn in small not in large ", counter,0);
+
+	}
+
+	}
 }
