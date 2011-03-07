@@ -79,7 +79,7 @@ echoLn () {
 #-------------
 findFITSLib () {
     for dir in $* /usr/lib /usr/lib64 /usr/local/lib /usr/local/lib64 /usr/local/lib/cfitsio /usr/local/lib64/cftisio /usr/local/src/cfitsio ${HOME}/lib ${HOME}/lib64 ./src/cxx/${HEALPIX_TARGET}/lib/ ; do
-	if [ -r "${dir}/lib${LIBFITS}.a" ] ; then
+	if [ -r "${dir}/lib${LIBFITS}.a" -o -r "${dir}/lib${LIBFITS}.so" ] ; then
 	    FITSDIR=$dir
 	    break
 	fi	    
@@ -359,8 +359,8 @@ editCppMakefile () {
     mv -f Makefile Makefile_tmp
     ${CAT} Makefile_tmp |\
 	${SED} "s|^HEALPIX_TARGET\(.*\)|HEALPIX_TARGET = ${HEALPIX_TARGET}|" |\
-	${SED} "s|^CFITSIO_EXT_LIB\(.*\)|CFITSIO_EXT_LIB = ${FITSDIR}/lib${LIBFITS}.a|" |\
-	${SED} "s|^CFITSIO_EXT_INC\(.*\)|CFITSIO_EXT_INC = ${FITSINC}|" |\
+	${SED} "s|^CFITSIO_EXT_LIB\(.*\)|CFITSIO_EXT_LIB = -L${FITSDIR} -l${LIBFITS}|" |\
+	${SED} "s|^CFITSIO_EXT_INC\(.*\)|CFITSIO_EXT_INC = -I${FITSINC}|" |\
 	${SED} "s|^ALL\(.*\) cpp-void \(.*\)|ALL\1 cpp-all \2|" |\
 	${SED} "s|^TESTS\(.*\) cpp-void \(.*\)|TESTS\1 cpp-test \2|" |\
 	${SED} "s|^CLEAN\(.*\) cpp-void \(.*\)|CLEAN\1 cpp-clean \2|" |\
@@ -404,9 +404,7 @@ Cpp_config () {
     HPX_CONF_CPP=$1
     setCppDefaults
 
-    echoLn "enter full name of cfitsio library (lib${LIBFITS}.a): "
-    read answer
-    [ "x$answer" != "x" ] && LIBFITS=`${BASENAME} $answer ".a" | ${SED} "s/^lib//"`
+    LIBFITS=cfitsio
 
     findFITSLib $LIBDIR $FITSDIR
     echoLn "enter location of cfitsio library ($FITSDIR): "
