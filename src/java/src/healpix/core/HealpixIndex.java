@@ -31,6 +31,7 @@ import healpix.tools.Constants;
 import healpix.tools.SpatialVector;
 
 import java.io.Serializable;
+import java.text.Format;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -50,6 +51,8 @@ import java.util.List;
  */
 
 public class HealpixIndex implements Serializable {
+	static boolean DEBUG=true;
+
 	/**
 	 * Default serial version
 	 */
@@ -69,6 +72,7 @@ public class HealpixIndex implements Serializable {
 
 	static short ctab[], utab[];
 
+	
 	/** Available nsides ..always poer of 2 ..**/
 	public static int[] nsidelist = { 1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048,
 			4096, 8192, 16384, 32768, 65536, 131072, 262144, 524288,
@@ -158,10 +162,7 @@ public class HealpixIndex implements Serializable {
 	    if ( ((nside)&(nside-1)) > 0 ) {
 	    	return -1;
 	    }
-	    // ok c++ uses a a log - lookup should be better and
-	    // we do not have iog2 in java 
-	    // the posiiton in the array of nsides is the order !
-		ord = Arrays.binarySearch(nsidelist,nside);
+	    // according to Pierre this is the best 
 		ord = (int) log2(nside);
 		return ord;
 	}
@@ -1387,6 +1388,9 @@ public class HealpixIndex implements Serializable {
 			dphi = Math.atan2(Math.sqrt(ysq),x);
 			if (Double.isNaN(dphi) ) {
 				dphi = radius_eff;
+			}
+			if (DEBUG) {
+				System.err.println(iz +" , " + phi +" , " +dphi +" , " +res.size());
 			}
 			inRing( iz, phi, dphi, res);				
 			
