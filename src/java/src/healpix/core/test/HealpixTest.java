@@ -779,14 +779,14 @@ public class HealpixTest extends TestCase {
     	LongRangeSet diskQ = pt.queryDisc(
     			v1,
     			radius, 1,1);  // inclusive query at vector point
-    	assertEquals("npixels = " + diskQ.size(), 4L, diskQ.size() );
+    	assertEquals("npixels = " + diskQ.size(), 7L, diskQ.size() );
     	long pix1 = pt.vec2pix_nest(v1);
     	SpatialVector v2 = pt.pix2vec_nest(pix1);  // vector to pix center
     	//
     	LongRangeSet diskQ2 = pt.queryDisc(
     			v2,
     			radius, 1,1);  // inclusive with point at pixel center
-    	assertEquals("npixels = " + diskQ2.size(), 5, diskQ2.size() , 1e-1);
+    	assertEquals("npixels = " + diskQ2.size(), 9, diskQ2.size() , 1e-1);
     	
     	//
     	LongRangeSet diskQ3 = pt.queryDisc(
@@ -799,13 +799,13 @@ public class HealpixTest extends TestCase {
     	LongRangeSet diskQ4 = pt.queryDisc(
     			v1,
     			radius, 0,1);   // inclusiv at vector point 
-    	assertEquals("npixels = " + diskQ4.size(), 4, diskQ4.size() , 1e-1);
+    	assertEquals("npixels = " + diskQ4.size(), 7, diskQ4.size() , 1e-1);
     	//
   
     	LongRangeSet diskQ5 = pt.queryDisc(
     			v2,
     			radius,  0,1);  // inclusive at pixel center
-    	assertEquals("npixels = " + diskQ5.size(), 5, diskQ5.size() , 1e-1);
+    	assertEquals("npixels = " + diskQ5.size(), 9, diskQ5.size() , 1e-1);
     	
 //    	System.out.println("n pixels in disk5 ="+diskQ5.size());
     	LongRangeSet diskQ6 = pt.queryDisc(
@@ -828,11 +828,11 @@ public class HealpixTest extends TestCase {
 		HealpixIndex pt = new HealpixIndex(nside);
 		int nest = 0;
 		long ipix = 0;
-		long[] pixel1 = { 45, 46, 60, 61, 62, 77, 78, 92, 93, 94, 109, 110, 124, 125, 126, 141, 142 };// ring
-//		int[] pixel1 = {45, 46, 60, 61, 62, 76,77, 78, 79,92, 93, 94, 108,109, 110,111, 124, 125, 126, 141, 142,83};
+		//long[] pixel1 = { 45, 46, 60, 61, 62, 77, 78, 92, 93, 94, 109, 110, 124, 125, 126, 141, 142 };// ring
+		long[] pixel1 = {45, 46, 60, 61, 62, 76,77, 78, 79,92, 93, 94, 108,109, 110,111, 124, 125, 126, 141, 142};
 		Arrays.sort(pixel1);
-//		int[] pixel11 = { 16,17,18,19,20,85,98,104,105,106,107,110,151,156,157,158,159 };//nest
-		long[] pixel2 ={24, 19, 93, 18, 17, 87, 16, 86, 85, 106, 84, 159, 81, 158, 157, 155, 156};
+		long[] pixel2 = { 16,17,18,19,24,81,83,84,85,86,87,92,93,104,106,107,155,156,157,158,159 };//nest
+//		long[] pixel2 ={24, 19, 93, 18, 17, 87, 16, 86, 85, 106, 84, 159, 81, 158, 157, 155, 156};
 		Arrays.sort(pixel2);
 		int inclusive = 1;
 		double radius = Math.PI / 8.0;
@@ -975,7 +975,9 @@ public class HealpixTest extends TestCase {
 	    double pixSize = Math.toRadians(res/3600.0); // pixel size in radians
 	    System.out.println("res="+res+"  pixSize="+pixSize+" rad");
 		
-		long[] expected = {127, 189, 190, 191, 255};
+// no longer with magic .. get more pix		long[] expected = {127, 189, 190, 191, 255};
+		long[] expected = {63,125,127, 189, 190, 191, 254,255};
+		
 		long onePix = hi.vec2pix_nest(vector);
 
 		double[] ang = hi.pix2ang_nest(onePix);
@@ -1786,7 +1788,48 @@ public class HealpixTest extends TestCase {
 	
 	}
 	
+	public void testSpecificSmallLarge () throws Exception {
+		LongRangeSet listpixSmall, listpixLarge, difference;
+
+		double lat = -89.08628312878739;
+		double lon= 200.25;
+		HealpixIndex hpi2 = null;
+		SpatialVector sv3 = null;
+		int nside =512;
+		
+		sv3 = new SpatialVector(lon, lat);
+		
+		hpi2 = new HealpixIndex(nside);
+		
+		listpixSmall = hpi2.queryDisc( sv3,
+		((Math.toRadians(0.9))), 0, 0);
+		listpixLarge = hpi2.queryDisc( sv3,
+		((Math.toRadians(1))), 0, 0);
+		difference = listpixLarge.substract(listpixSmall);
+
+		if (listpixLarge.size() - listpixSmall.size() != difference.size()) {
+			System.out
+			.println("found a discrepancy at  " + lon+ ", "+ lat +" for nside:"+nside);
+		}	
+		//assertEquals(difference.size(), listpixLarge.size() - listpixSmall.size());
+		
+		// Iterate through listpixSmall
+		LongIterator listpixSmallIterator = listpixSmall.longIterator();
+		int counter = 0;
+		while (listpixSmallIterator.hasNext()) {
+			long next = listpixSmallIterator.next();
+		// check if next is not part of listpixLarge which it always
+		// should be
+			if (!listpixLarge.contains(next)) {
+				System.out.println("found pixel number " + next
+					+ " in Small that is not in Large");
+				counter++;
+			}
+		}
+		
+		assertEquals("Pixels foudn in small not in large ", 0,counter);
 	
+	}
 	public void testDroegeBigSmall() throws Exception {
 		LongRangeSet listpixSmall, listpixLarge, difference;
 		HealpixIndex hpi2 = null;
@@ -1828,7 +1871,8 @@ public class HealpixTest extends TestCase {
 				counter++;
 			}
 		}
-		assertEquals("Pixels foudn in small not in large ", counter,0);
+		
+		assertEquals("Pixels found in small not in large ", counter,0);
 
 	}
 

@@ -1279,7 +1279,7 @@ public final class Healpix {
 		radius_eff = radius;
 		if (inclusive) {
 			// increase radius by half pixel size;
-			radius_eff = radius + Constants.PI / (4.0 * nside);
+			radius_eff = radius + Constants.magic* Constants.PI / (4.0 * nside);
 		}
 		cosang = Math.cos(radius_eff);
 

@@ -1327,7 +1327,7 @@ public class HealpixIndex implements Serializable {
 
 		radius_eff = radius;
 		if ( do_inclusive )
-			radius_eff += Constants.PI / (double)( nl4 ); // increase radius by
+			radius_eff += Constants.magic* Constants.PI / (double)( nl4 ); // increase radius by
 		// half pixel: different in C++ version where a 'magic' number is used.
 
 		// this pix back abnf fourth is ok until you put in  precise vector like a pole .
