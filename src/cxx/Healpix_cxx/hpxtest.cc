@@ -449,15 +449,19 @@ void check_swap_scheme()
     }
   }
 
-void check_query_disc()
+void check_query_disc (Healpix_Ordering_Scheme scheme)
   {
   cout << "testing whether all pixels found by query_disc() really" << endl
        << "lie inside the disk (and vice versa)" << endl;
+  cout << "Ordering scheme: " << (scheme==RING ? "RING" : "NEST") << endl;
   for (int order=0; order<=5; ++order)
     {
     cout << "order = " << order << endl;
-    Healpix_Map <bool> map (order,RING);
+    Healpix_Map <bool> map (order,scheme);
     map.fill(false);
+    Healpix_Map<vec3> vmap(order,scheme);
+    for (int m=0; m<vmap.Npix(); ++m)
+      vmap[m]=vmap.pix2vec(m);
     vector<int> list;
     for (int m=0; m<100000; ++m)
       {
@@ -471,7 +475,7 @@ void check_query_disc()
         map[list[i]] = true;
       for (int i=0; i<map.Npix(); ++i)
         {
-        bool inside = dotprod(map.pix2vec(i),vptg)>cosrad;
+        bool inside = dotprod(vmap[i],vptg)>cosrad;
         if (inside^map[i])
           cout << "  PROBLEM: order = " << order << ", ptg = " << ptg << endl;
         }
@@ -480,15 +484,19 @@ void check_query_disc()
       }
     }
   }
-void check_query_disc_rangeset()
+void check_query_disc_rangeset (Healpix_Ordering_Scheme scheme)
   {
   cout << "testing whether all pixels found by query_disc() using" << endl
        << "range sets really lie inside the disk (and vice versa)" << endl;
+  cout << "Ordering scheme: " << (scheme==RING ? "RING" : "NEST") << endl;
   for (int order=0; order<=5; ++order)
     {
     cout << "order = " << order << endl;
-    Healpix_Map <bool> map (order,RING);
+    Healpix_Map<bool> map (order,scheme);
     map.fill(false);
+    Healpix_Map<vec3> vmap(order,scheme);
+    for (int m=0; m<vmap.Npix(); ++m)
+      vmap[m]=vmap.pix2vec(m);
     rangeset<int> pixset;
     for (int m=0; m<100000; ++m)
       {
@@ -503,7 +511,7 @@ void check_query_disc_rangeset()
           map[i] = true;
       for (int i=0; i<map.Npix(); ++i)
         {
-        bool inside = dotprod(map.pix2vec(i),vptg)>cosrad;
+        bool inside = dotprod(vmap[i],vptg)>cosrad;
         if (inside^map[i])
           cout << "  PROBLEM: order = " << order << ", ptg = " << ptg << endl;
         }
@@ -743,7 +751,7 @@ void perftest()
   {
   vec3 blub[1024];
   PERF_TEMPLATE1("pix2vec(RING)",RING,vec3,pix2vec)
-  PERF_TEMPLATE1("pix2vec(NEST",NEST,vec3,pix2vec)
+  PERF_TEMPLATE1("pix2vec(NEST)",NEST,vec3,pix2vec)
   dummy+=blub[234].x+blub[234].y+blub[234].z;
   }
   tsize cnt=0;
@@ -788,14 +796,29 @@ void perftest()
     for (double z=-1; z<1; z+=0.001)
       for (double phi=0; phi<twopi; phi+=0.001)
         {
-        base.zphi2pix(z,phi);
+        dummy+=base.zphi2pix(z,phi);
         ++cnt;
-        dummy+=z+phi;
         }
     }
   wallTimers.stop("zphi2pix(RING)");
   cout << "zphi2pix(RING): "
        << cnt/wallTimers.acc("zphi2pix(RING)")*1e-6 << "MOps/s" << endl;
+
+  cnt=0;
+  wallTimers.start("zphi2pix_ring2");
+  for (int order=0; order<=12; ++order)
+    {
+    Healpix_Base2 base (order,RING);
+    for (double z=-1; z<1; z+=0.001)
+      for (double phi=0; phi<twopi; phi+=0.001)
+        {
+        dummy+=base.zphi2pix(z,phi);
+        ++cnt;
+        }
+    }
+  wallTimers.stop("zphi2pix_ring2");
+  cout << "zphi2pix2(RING): "
+       << cnt/wallTimers.acc("zphi2pix_ring2")*1e-6 << "MOps/s" << endl;
 
   cnt=0;
   wallTimers.start("zphi2pix(NEST)");
@@ -805,9 +828,8 @@ void perftest()
     for (double z=-1; z<1; z+=0.001)
       for (double phi=0; phi<twopi; phi+=0.001)
         {
-        base.zphi2pix(z,phi);
+        dummy+=base.zphi2pix(z,phi);
         ++cnt;
-        dummy+=z+phi;
         }
     }
   wallTimers.stop("zphi2pix(NEST)");
@@ -822,13 +844,29 @@ void perftest()
     for (double theta=0; theta<pi; theta+=0.001)
       for (double phi=0; phi<twopi; phi+=0.001)
         {
-        dummy+=base.ang2pix(pointing(theta,phi));
+        dummy+=base.ang2pix(pointing(theta+1e-15*phi,phi));
         ++cnt;
         }
     }
   wallTimers.stop("ang2pix_ring");
   cout << "ang2pix(RING): "
        << cnt/wallTimers.acc("ang2pix_ring")*1e-6 << "MOps/s" << endl;
+
+  cnt=0;
+  wallTimers.start("ang2pix_ring2");
+  for (int order=0; order<=12; ++order)
+    {
+    Healpix_Base2 base (order,RING);
+    for (double theta=0; theta<pi; theta+=0.001)
+      for (double phi=0; phi<twopi; phi+=0.001)
+        {
+        dummy+=base.ang2pix(pointing(theta+1e-15*phi,phi));
+        ++cnt;
+        }
+    }
+  wallTimers.stop("ang2pix_ring2");
+  cout << "ang2pix2(RING): "
+       << cnt/wallTimers.acc("ang2pix_ring2")*1e-6 << "MOps/s" << endl;
 
   cnt=0;
   wallTimers.start("ang2pix_nest");
@@ -838,7 +876,7 @@ void perftest()
     for (double theta=0; theta<pi; theta+=0.001)
       for (double phi=0; phi<twopi; phi+=0.001)
         {
-        dummy+=base.ang2pix(pointing(theta,phi));
+        dummy+=base.ang2pix(pointing(theta+1e-15*phi,phi));
         ++cnt;
         }
     }
@@ -894,7 +932,6 @@ void perftest()
 int main(int argc, const char **argv)
   {
   module_startup ("hpxtest",argc,argv,1,"");
-
   perftest();
   check_smooth_alm();
   check_rot_alm();
@@ -915,6 +952,8 @@ int main(int argc, const char **argv)
   check_nestpeanonest();
   check_nestpeanonest2();
   check_swap_scheme();
-  check_query_disc();
-  check_query_disc_rangeset();
+  check_query_disc(RING);
+  check_query_disc(NEST);
+  check_query_disc_rangeset(RING);
+  check_query_disc_rangeset(NEST);
   }

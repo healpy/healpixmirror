@@ -42,7 +42,7 @@ extern "C" {
     <li> \a omp_get_wtime(), if OpenMP is available
     <li> \a MPI_Wtime(), if MPI is available
     <li> \a gettimeofday() otherwise
-    </li>
+    </ul>
     \note Only useful for measuring time differences. */
 double wallTime(void);
 

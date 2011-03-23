@@ -25,7 +25,7 @@
 /*
  *  Functionality for reading wall clock time
  *
- *  Copyright (C) 2010 Max-Planck-Society
+ *  Copyright (C) 2010, 2011 Max-Planck-Society
  *  Author: Martin Reinecke
  */
 
@@ -68,7 +68,10 @@ int wTimer_num(void)
 void wTimer_reset(int n)
   { wT[n].ts=wT[n].ta=wT[n].on=0; }
 void wTimer_start(int n)
-  { wT[n].ts=wallTime(); wT[n].on=1; }
+  {
+  if (!wT[n].on)
+    { wT[n].ts=wallTime(); wT[n].on=1; }
+  }
 void wTimer_stop(int n)
   {
   if (wT[n].on)

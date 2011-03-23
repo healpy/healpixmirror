@@ -58,6 +58,12 @@ Healpix_Base2::Tablefiller Healpix_Base2::Filler;
 const int Healpix_Base2::jrll[] = { 2,2,2,2,3,3,3,3,4,4,4,4 },
           Healpix_Base2::jpll[] = { 1,3,5,7,0,2,4,6,1,3,5,7 };
 
+int Healpix_Base2::nside2order (int64 nside)
+  {
+  planck_assert (nside>0, "invalid value for Nside");
+  if ((nside)&(nside-1)) return -1;
+  return ilog2(nside);
+  }
 int64 Healpix_Base2::npix2nside (int64 npix)
   {
   int64 res=isqrt(npix/12);
@@ -202,6 +208,36 @@ int64 Healpix_Base2::xyf2ring (int ix, int iy, int face_num) const
   return n_before + jp - 1;
   }
 
+Healpix_Base2::Healpix_Base2 ()
+  : order_(-1), nside_(0), npface_(0), ncap_(0), npix_(0),
+    fact1_(0), fact2_(0), scheme_(RING) {}
+
+void Healpix_Base2::Set (int order, Healpix_Ordering_Scheme scheme)
+  {
+  planck_assert ((order>=0)&&(order<=order_max), "bad order");
+  order_  = order;
+  nside_  = int64(1)<<order;
+  npface_ = nside_<<order_;
+  ncap_   = (npface_-nside_)<<1;
+  npix_   = 12*npface_;
+  fact2_  = 4./npix_;
+  fact1_  = (nside_<<1)*fact2_;
+  scheme_ = scheme;
+  }
+void Healpix_Base2::SetNside (int64 nside, Healpix_Ordering_Scheme scheme)
+  {
+  order_  = nside2order(nside);
+  planck_assert ((scheme!=NEST) || (order_>=0),
+    "SetNside: nside must be power of 2 for nested maps");
+  nside_  = nside;
+  npface_ = nside_*nside_;
+  ncap_   = (npface_-nside_)<<1;
+  npix_   = 12*npface_;
+  fact2_  = 4./npix_;
+  fact1_  = (nside_<<1)*fact2_;
+  scheme_ = scheme;
+  }
+
 double Healpix_Base2::ring2z (int64 ring) const
   {
   if (ring<nside_)
@@ -221,7 +257,7 @@ int64 Healpix_Base2::pix2ring (int64 pix) const
     else if (pix<(npix_-ncap_)) // Equatorial region
       return (pix-ncap_)/(4*nside_) + nside_; // counted from North pole
     else // South Polar cap
-      return 4*nside_ - ((1+isqrt(2*(npix_-pix)-1))>>1); //counted from South pole
+      return 4*nside_-((1+isqrt(2*(npix_-pix)-1))>>1); //counted from South pole
     }
   else
     {
@@ -638,6 +674,18 @@ void Healpix_Base2::get_interpol (const pointing &ptg, fix_arr<int64,4> &pix,
   if (scheme_==NEST)
     for (tsize m=0; m<pix.size(); ++m)
       pix[m] = ring2nest(pix[m]);
+  }
+
+void Healpix_Base2::swap (Healpix_Base2 &other)
+  {
+  std::swap(order_,other.order_);
+  std::swap(nside_,other.nside_);
+  std::swap(npface_,other.npface_);
+  std::swap(ncap_,other.ncap_);
+  std::swap(npix_,other.npix_);
+  std::swap(fact1_,other.fact1_);
+  std::swap(fact2_,other.fact2_);
+  std::swap(scheme_,other.scheme_);
   }
 
 double Healpix_Base2::max_pixrad() const
