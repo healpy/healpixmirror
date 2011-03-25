@@ -76,13 +76,15 @@ class Healpix_Base
     /*! The map's ordering scheme. */
     Healpix_Ordering_Scheme scheme_;
 
+    /*! Returns the number of the next ring to the north of \a z=cos(theta).
+        It may return 0; in this case \a z lies north of all rings. */
     inline int ring_above (double z) const;
     void in_ring (int iz, double phi0, double dphi, rangeset<int> &pixset)
       const;
-    void query_disc_ring (const pointing &dir, double radius,
+    void query_disc (pointing ptg, double radius, bool inclusive,
       rangeset<int> &pixset) const;
-    void query_disc_nest (const pointing &ptg, double radius,
-      rangeset<int> &pixset) const;
+    void query_disc (const pointing &ptg, double radius, bool inclusive,
+      std::vector<int> &listpix) const;
 
     int xyf2nest(int ix, int iy, int face_num) const;
     void nest2xyf(int pix, int &ix, int &iy, int &face_num) const;

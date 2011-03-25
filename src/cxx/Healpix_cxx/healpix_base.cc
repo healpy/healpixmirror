@@ -140,105 +140,175 @@ void Healpix_Base::in_ring(int iz, double phi0, double dphi,
     }
   }
 
-void Healpix_Base::query_disc_ring (const pointing &ptg, double radius,
+void Healpix_Base::query_disc (pointing ptg, double radius, bool inclusive,
   rangeset<int> &pixset) const
   {
   pixset.clear();
-  if (radius>=pi)
-    { pixset.append(0,npix_); return; }
+  ptg.normalize();
 
-  double cosang = cos(radius);
-
-  double z0 = cos(ptg.theta);
-  double xa = 1./sqrt((1-z0)*(1+z0));
-
-  double rlat1  = ptg.theta - radius;
-  double zmax = cos(rlat1);
-  int irmin = ring_above (zmax)+1;
-
-  if ((rlat1<=0) && (irmin>1)) // north pole in the disc
+  if (scheme_==RING)
     {
-    int sp,rp;
-    get_ring_info_small(irmin-1,sp,rp);
-    pixset.append(0,sp+rp);
+    if (inclusive) radius+=max_pixrad();
+    if (radius>=pi)
+      { pixset.append(0,npix_); return; }
+
+    double cosang = cos(radius);
+
+    double z0 = cos(ptg.theta);
+    double xa = 1./sqrt((1-z0)*(1+z0));
+
+    double rlat1  = ptg.theta - radius;
+    double zmax = cos(rlat1);
+    int irmin = ring_above (zmax)+1;
+
+    if ((rlat1<=0) && (irmin>1)) // north pole in the disc
+      {
+      int sp,rp;
+      get_ring_info_small(irmin-1,sp,rp);
+      pixset.append(0,sp+rp);
+      }
+
+    double rlat2  = ptg.theta + radius;
+    double zmin = cos(rlat2);
+    int irmax = ring_above (zmin);
+
+    // ------------- loop on ring number ---------------------
+    for (int iz=irmin; iz<=irmax; ++iz) // rings partially in the disc
+      {
+      double z=ring2z(iz);
+
+      // --------- phi range in the disc for each z ---------
+      double x = (cosang-z*z0)*xa;
+      double ysq = 1-z*z-x*x;
+      planck_assert(ysq>=0, "error in query_disc()");
+      double dphi=atan2(sqrt(ysq),x);
+      in_ring (iz, ptg.phi, dphi, pixset);
+      }
+
+    if ((rlat2>=pi) && (irmax+1<4*nside_)) // south pole in the disc
+      {
+      int sp,rp;
+      get_ring_info_small(irmax+1,sp,rp);
+      pixset.append(sp,npix_);
+      }
     }
-
-  double rlat2  = ptg.theta + radius;
-  double zmin = cos(rlat2);
-  int irmax = ring_above (zmin);
-
-// ------------- loop on ring number ---------------------
-  for (int iz=irmin; iz<=irmax; ++iz) // rings partially in the disc
+  else // scheme_==NEST
     {
-    double z=ring2z(iz);
+    int oplus=inclusive ? 2 : 0;
+    int omax=min(int(order_max),order_+oplus); // the order up to which we test
 
-// --------- phi range in the disc for each z ---------
-    double x = (cosang-z*z0)*xa;
-    double ysq = 1-z*z-x*x;
-    planck_assert(ysq>=0, "error in query_disc()");
-    double dphi=atan2(sqrt(ysq),x);
-    in_ring (iz, ptg.phi, dphi, pixset);
-    }
+    if (radius>=pi) // disc covers the whole sphere
+      { pixset.append(0,npix_); return; }
 
-  if ((rlat2>=pi) && (irmax+1<4*nside_)) // south pole in the disc
-    {
-    int sp,rp;
-    get_ring_info_small(irmax+1,sp,rp);
-    pixset.append(sp,npix_);
+    vec3 vptg(ptg);
+    arr<Healpix_Base> base(omax+1);
+    arr<double> crpdr(omax+1), crmdr(omax+1);
+    double cosrad=cos(radius);
+    for (int o=0; o<=omax; ++o) // prepare data at the required orders
+      {
+      base[o].Set(o,NEST);
+      double dr=base[o].max_pixrad(); // safety distance
+      crpdr[o] = (radius+dr>pi) ? -1. : cos(radius+dr);
+      crmdr[o] = (radius-dr<0.) ?  1. : cos(radius-dr);
+      }
+    vector<pair<int,int> > stk; // stacks for pixel numbers and their orders
+    stk.reserve(12+4*omax); // reserve maximum size to avoid reallocation
+    for (int i=0; i<12; ++i) // insert the 12 base pixels in reverse order
+      stk.push_back(make_pair(11-i,0));
+
+    int stacktop=0; // a place to save a stack position
+    int pixtop=0; // the map pixel currently being investigated
+
+    while (!stk.empty()) // as long as there are pixels on the stack
+      {
+      // pop current pixel number and order from the stack
+      int pix=stk.back().first,
+          o  =stk.back().second;
+      stk.pop_back();
+
+      int sdist=2*(order_-o); // the "bit-shift distance" between map orders
+      double z,phi;
+      base[o].pix2zphi(pix,z,phi);
+      // cosine of angular distance between pixel center and disc center
+      double cangdist=cosdist_zphi(vptg.z,ptg.phi,z,phi);
+
+      if (!inclusive)
+        {
+        if (o==order_)
+          { if (cangdist>=cosrad) pixset.append(pix); }
+        else // (o<order_)
+          {
+          if (cangdist>crmdr[o])
+            pixset.append(pix<<sdist,(pix+1)<<sdist);
+          else if (cangdist>crpdr[o])
+            for (int i=0; i<4; ++i)
+              stk.push_back(make_pair(4*pix+3-i,o+1));
+          }
+        }
+      else // inclusive
+        {
+        if (o==order_)
+          {
+          if (cangdist>=cosrad) // pixel center in disc
+            pixset.append(pix); // output the pixel
+          else if (cangdist>crpdr[o]) // pixel center in safety range
+            {
+            if (o<omax) // check sublevels
+              {
+              stacktop=stk.size(); // remember current stack position
+              pixtop=pix; // remember current pixel
+              for (int i=0; i<4; ++i) // add children in reverse order
+                stk.push_back(make_pair(4*pix+3-i,o+1));
+              }
+            else // at resolution limit
+              pixset.append(pix); // output the pixel
+            }
+          }
+        else if (o>order_)
+          {
+          if (cangdist>=cosrad) // pixel center in disc
+            {
+            pixset.append(pixtop); // output the remembered pixel
+            stk.resize(stacktop); // unwind the stack
+            }
+          else if (cangdist>crpdr[o]) // pixel center in safety range
+            {
+            if (o<omax) // check sublevels
+              for (int i=0; i<4; ++i) // add children in reverse order
+                stk.push_back(make_pair(4*pix+3-i,o+1));
+            else // at resolution limit
+              {
+              pixset.append(pixtop); // output the remembered pixel
+              stk.resize(stacktop); // unwind the stack
+              }
+            }
+          }
+        else // (o<order_)
+          {
+          if (cangdist>crmdr[o]) // pixel completely inside disc
+            pixset.append(pix<<sdist,(pix+1)<<sdist); // output all subpixels
+          else if (cangdist>crpdr[o]) // pixel center in safety range
+            for (int i=0; i<4; ++i) // add children in reverse order
+              stk.push_back(make_pair(4*pix+3-i,o+1));
+          }
+        }
+      }
     }
   }
 
-void Healpix_Base::query_disc_nest (const pointing &ptg, double radius,
-  rangeset<int> &pixset) const
+void Healpix_Base::query_disc (const pointing &ptg, double radius,
+  bool inclusive, vector<int> &listpix) const
   {
-  pixset.clear();
-  if (radius>=pi)
-    { pixset.append(0,npix_); return; }
-
-  vec3 vptg(ptg);
-  arr<Healpix_Base> base(order_+1);
-  arr<double> crpdr(order_+1), crmdr(order_+1);
-  double cosrad=cos(radius);
-  for (int o=0; o<=order_; ++o)
-    {
-    base[o].Set(o,NEST);
-    double dr=base[o].max_pixrad();
-    crpdr[o] = (radius+dr>pi) ? -1. : cos(radius+dr);
-    crmdr[o] = (radius-dr<0.) ?  1. : cos(radius-dr);
-    }
-  vector<int> jpix, jord;
-  for (int i=0; i<12; ++i)
-    { jpix.push_back(11-i); jord.push_back(0); }
-  while (!jpix.empty())
-    {
-    int o=jord.back();
-    int pix=jpix.back();
-    jord.pop_back(); jpix.pop_back();
-    int sdist=2*(order_-o);
-    const Healpix_Base &b2(base[o]);
-    double z,phi;
-    b2.pix2zphi(pix,z,phi);
-    double cangdist=cosdist_zphi(vptg.z,ptg.phi,z,phi);
-    if (o==order_)
-      {
-      if (cangdist>=cosrad)
-        pixset.append(pix);
-      }
-    else
-      {
-      if (cangdist>crmdr[o])
-        pixset.append(pix<<sdist,(pix+1)<<sdist);
-      else
-        if (cangdist>crpdr[o])
-          {
-          for (tsize i=0; i<4; ++i)
-            {
-            jord.push_back(o+1);
-            jpix.push_back(4*pix+3-i);
-            }
-          }
-        }
-    }
+  listpix.clear();
+  rangeset<int> pixset;
+  query_disc (ptg, radius, inclusive, pixset);
+  tsize pixcnt=0;
+  for (rangeset<int>::const_iterator it=pixset.begin(); it!=pixset.end(); ++it)
+    pixcnt+=it->second-it->first;
+  listpix.reserve(pixcnt);
+  for (rangeset<int>::const_iterator it=pixset.begin();it!=pixset.end();++it)
+    for (int m=it->first; m<it->second; ++m)
+      listpix.push_back(m);
   }
 
 void Healpix_Base::nest2xyf (int pix, int &ix, int &iy, int &face_num) const
@@ -628,35 +698,17 @@ void Healpix_Base::pix2zphi (int pix, double &z, double &phi) const
 
 void Healpix_Base::query_disc (const pointing &ptg, double radius,
   rangeset<int>& pixset) const
-  {
-  pixset.clear();
-  pointing ptg2(ptg);
-  ptg2.normalize();
-  (scheme_==RING) ? query_disc_ring (ptg2, radius, pixset)
-                  : query_disc_nest (ptg2, radius, pixset);
-  }
-
+  { query_disc(ptg,radius,false,pixset); }
 void Healpix_Base::query_disc (const pointing &ptg, double radius,
   vector<int> &listpix) const
-  {
-  listpix.clear();
-  rangeset<int> pixset;
-  query_disc (ptg, radius, pixset);
-  tsize pixcnt=0;
-  for (rangeset<int>::const_iterator it=pixset.begin(); it!=pixset.end(); ++it)
-    pixcnt+=it->second-it->first;
-  listpix.reserve(pixcnt);
-  for (rangeset<int>::const_iterator it=pixset.begin();it!=pixset.end();++it)
-    for (int m=it->first; m<it->second; ++m)
-      listpix.push_back(m);
-  }
+  { query_disc(ptg,radius,false,listpix); }
 
 void Healpix_Base::query_disc_inclusive (const pointing &dir, double radius,
-  vector<int> &listpix) const
-    { query_disc (dir,radius+1.362*pi/(4*nside_),listpix); }
-void Healpix_Base::query_disc_inclusive (const pointing &dir, double radius,
   rangeset<int>& pixset) const
-    { query_disc (dir,radius+1.362*pi/(4*nside_),pixset); }
+    { query_disc (dir,radius,true,pixset); }
+void Healpix_Base::query_disc_inclusive (const pointing &dir, double radius,
+  vector<int> &listpix) const
+    { query_disc (dir,radius,true,listpix); }
 
 void Healpix_Base::get_ring_info_small (int ring, int &startpix, int &ringpix)
   const
@@ -881,6 +933,7 @@ void Healpix_Base::swap (Healpix_Base &other)
 
 double Healpix_Base::max_pixrad() const
   {
+return 1.362*pi/(4*nside_);
   vec3 va,vb;
   va.set_z_phi (2./3., pi/(4*nside_));
   double t1 = 1.-1./nside_;

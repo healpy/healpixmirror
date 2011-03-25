@@ -169,22 +169,26 @@ namespace {
 
 void openmp_status()
   {
+#ifndef _OPENMP
+  cout << "OpenMP: not supported by this binary" << endl;
+#else
   int threads = openmp_max_threads();
   if (threads>1)
-    cout << "OpenMP active: max. " << threads << " threads. " << endl;
+    cout << "OpenMP active: max. " << threads << " threads." << endl;
+  else
+    cout << "OpenMP active, but running with 1 thread only." << endl;
+#endif
   }
 
 void SSE_status()
   {
-#if(defined(PLANCK_HAVE_SSE)||defined(PLANCK_HAVE_SSE2))
-  cout << "Processor features detected: ";
+  cout << "Vector math: ";
 #if(defined(PLANCK_HAVE_SSE)&&defined(PLANCK_HAVE_SSE2))
   cout << "SSE, SSE2" << endl;
 #elif(defined(PLANCK_HAVE_SSE))
   cout << "SSE" << endl;
 #else
-  cout << "SSE2" << endl;
-#endif
+  cout << "not supported by this binary" << endl;
 #endif
   }
 

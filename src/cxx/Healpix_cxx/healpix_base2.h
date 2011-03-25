@@ -64,6 +64,8 @@ class Healpix_Base2
     /*! The map's ordering scheme. */
     Healpix_Ordering_Scheme scheme_;
 
+    /*! Returns the number of the next ring to the north of \a z=cos(theta).
+        It may return 0; in this case \a z lies north of all rings. */
     inline int64 ring_above (double z) const;
 
     int64 xyf2nest(int ix, int iy, int face_num) const;
