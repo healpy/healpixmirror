@@ -26,7 +26,7 @@
  *  This file contains the implementation of various convenience functions
  *  used by the Planck LevelS package.
  *
- *  Copyright (C) 2002 - 2011 Max-Planck-Society
+ *  Copyright (C) 2002-2011 Max-Planck-Society
  *  Authors: Martin Reinecke, Reinhard Hell
  */
 
@@ -79,6 +79,12 @@ template<> string dataToString (const double &x)
   {
   ostringstream strstrm;
   strstrm << setprecision(16) << x;
+  return trim(strstrm.str());
+  }
+template<> string dataToString (const long double &x)
+  {
+  ostringstream strstrm;
+  strstrm << setprecision(25) << x;
   return trim(strstrm.str());
   }
 
@@ -148,6 +154,7 @@ template void stringToData (const string &x, long long &value);
 template void stringToData (const string &x, unsigned long long &value);
 template void stringToData (const string &x, float &value);
 template void stringToData (const string &x, double &value);
+template void stringToData (const string &x, long double &value);
 
 bool equal_nocase (const string &a, const string &b)
   {

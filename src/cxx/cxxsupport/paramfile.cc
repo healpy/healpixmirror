@@ -102,8 +102,9 @@ template string paramfile::find (const string &key) const;
 template<typename T> T paramfile::find (const string &key, const T &deflt)
   {
   if (param_present(key)) return find<T>(key);
-  findhelper (key, dataToString(deflt), nativeType<T>(), true);
-  params[key]=dataToString(deflt);
+  string sdeflt=dataToString(deflt);
+  findhelper (key, sdeflt, nativeType<T>(), true);
+  params[key]=sdeflt;
   return deflt;
   }
 

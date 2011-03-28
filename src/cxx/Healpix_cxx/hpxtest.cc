@@ -457,41 +457,6 @@ void check_query_disc (Healpix_Ordering_Scheme scheme)
   for (int order=0; order<=5; ++order)
     {
     cout << "order = " << order << endl;
-    Healpix_Map <bool> map (order,scheme);
-    map.fill(false);
-    Healpix_Map<vec3> vmap(order,scheme);
-    for (int m=0; m<vmap.Npix(); ++m)
-      vmap[m]=vmap.pix2vec(m);
-    vector<int> list;
-    for (int m=0; m<100000; ++m)
-      {
-      pointing ptg;
-      random_dir (ptg);
-      double rad = pi/1 * rng.rand_uni();
-      map.query_disc(ptg,rad,list);
-      vec3 vptg=ptg;
-      double cosrad=cos(rad);
-      for (tsize i=0; i<list.size(); ++i)
-        map[list[i]] = true;
-      for (int i=0; i<map.Npix(); ++i)
-        {
-        bool inside = dotprod(vmap[i],vptg)>cosrad;
-        if (inside^map[i])
-          cout << "  PROBLEM: order = " << order << ", ptg = " << ptg << endl;
-        }
-      for (tsize i=0; i<list.size(); ++i)
-        map[list[i]] = false;
-      }
-    }
-  }
-void check_query_disc_rangeset (Healpix_Ordering_Scheme scheme)
-  {
-  cout << "testing whether all pixels found by query_disc() using" << endl
-       << "range sets really lie inside the disk (and vice versa)" << endl;
-  cout << "Ordering scheme: " << (scheme==RING ? "RING" : "NEST") << endl;
-  for (int order=0; order<=5; ++order)
-    {
-    cout << "order = " << order << endl;
     Healpix_Map<bool> map (order,scheme);
     map.fill(false);
     Healpix_Map<vec3> vmap(order,scheme);
@@ -503,7 +468,7 @@ void check_query_disc_rangeset (Healpix_Ordering_Scheme scheme)
       pointing ptg;
       random_dir (ptg);
       double rad = pi/1 * rng.rand_uni();
-      map.query_disc(ptg,rad,pixset);
+      map.query_disc(ptg,rad,false,pixset);
       vec3 vptg=ptg;
       double cosrad=cos(rad);
       for (rangeset<int>::iterator it=pixset.begin(); it!=pixset.end(); ++it)
@@ -916,7 +881,7 @@ void perftest()
   for (int m=0; m<1000; ++m)
     {
     rangeset<int> pix;
-    base.query_disc(pointing(halfpi,0),halfpi/9,pix);
+    base.query_disc(pointing(halfpi,0),halfpi/9,false,pix);
     dummy+=pix.size();
     }
   wallTimers.stop("query_disc");
@@ -954,6 +919,4 @@ int main(int argc, const char **argv)
   check_swap_scheme();
   check_query_disc(RING);
   check_query_disc(NEST);
-  check_query_disc_rangeset(RING);
-  check_query_disc_rangeset(NEST);
   }

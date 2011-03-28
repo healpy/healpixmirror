@@ -65,6 +65,16 @@ template<typename T> class rangeset: public std::vector<std::pair<T,T> >
         result+=it->second-it->first;
       return result;
       }
+
+    void toVector (std::vector<T> &res)
+      {
+      res.clear();
+      res.reserve(nval());
+      typename rangeset::const_iterator it;
+      for (it=this->begin(); it!=this->end(); ++it)
+        for (T m=it->first; m<it->second; ++m)
+          res.push_back(m);
+      }
   };
 
 #endif

@@ -242,7 +242,6 @@ c-void:
 cpp-all:
 	@cd src/cxx; \
 	$(MAKE) ; \
-	$(MAKE) doc ; \
 	cd ../..
 
 cpp-test: cpp-all

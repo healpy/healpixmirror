@@ -63,15 +63,18 @@ int median_filter_cxx_module (int argc, const char **argv)
   read_Healpix_map_from_fits(argv[1],inmap,1,2);
   Healpix_Map<float> outmap (inmap.Nside(), inmap.Scheme(), SET_NSIDE);
 
-  vector<int> list;
-  vector<float> list2;
+  rangeset<int> pixset;
+  vector<float> list;
   for (int m=0; m<inmap.Npix(); ++m)
     {
-    inmap.query_disc(inmap.pix2ang(m),radius,list);
-    list2.resize(list.size());
-    for (tsize i=0; i<list.size(); ++i)
-      list2[i] = inmap[list[i]];
-    outmap[m]=median(list2.begin(),list2.end());
+    inmap.query_disc(inmap.pix2ang(m),radius,false,pixset);
+    list.resize(pixset.nval());
+    tsize cnt=0;
+    rangeset<int>::const_iterator it;
+    for (it=pixset.begin(); it!=pixset.end(); ++it)
+      for (int i=it->first; i<it->second; ++i)
+        list[cnt++] = inmap[i];
+    outmap[m]=median(list.begin(),list.end());
     }
 
   write_Healpix_map_to_fits (argv[2],outmap,PLANCK_FLOAT32);
