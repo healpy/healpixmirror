@@ -211,7 +211,7 @@ class Healpix_Base
            pixels centers lie within the polygon; if \a true, return all pixels
            that overlap with the polygon, and maybe a few more.
         \note This method is currently only implemented in the NEST scheme. */
-    void query_polygon (const std::vector<pointing> &vertex,
+    void query_polygon (const std::vector<pointing> &vertex, bool inclusive,
       rangeset<int> &pixset) const;
 
     /*! Returns useful information about a given ring of the map.

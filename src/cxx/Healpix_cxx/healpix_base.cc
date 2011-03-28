@@ -332,7 +332,7 @@ void Healpix_Base::query_multidisc (const arr<vec3> &norm,
     }
   else // scheme_ == NEST
     {
-    int oplus=inclusive ? 5 : 0;
+    int oplus=inclusive ? 2 : 0;
     int omax=min(int(order_max),order_+oplus); // the order up to which we test
 
     // TODO: ignore all discs with radius>=pi
@@ -776,7 +776,7 @@ void Healpix_Base::pix2zphi (int pix, double &z, double &phi) const
   }
 
 void Healpix_Base::query_polygon (const vector<pointing> &vertex,
-  rangeset<int> &pixset) const
+  bool inclusive, rangeset<int> &pixset) const
   {
   tsize nv=vertex.size();
   planck_assert(nv>=3,"not enough vertices in polygon");
@@ -796,7 +796,7 @@ void Healpix_Base::query_polygon (const vector<pointing> &vertex,
       planck_assert(flip*hnd>0,"polygon is not convex");
     normal[i]*=flip/normal[i].Length();
     }
-  query_multidisc(normal,arr<double>(nv,halfpi),false,pixset);
+  query_multidisc(normal,arr<double>(nv,halfpi),inclusive,pixset);
   }
 
 void Healpix_Base::get_ring_info_small (int ring, int &startpix, int &ringpix)
