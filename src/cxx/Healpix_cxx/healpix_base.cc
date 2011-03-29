@@ -148,65 +148,51 @@ inline void check_pixel (int o, int order_, int omax, int zone,
   {
   if (zone==0) return;
 
-  int sdist=2*(order_-o); // the "bit-shift distance" between map orders
-  if (!inclusive)
+  if (o<order_)
     {
-    if (o==order_)
-      { if (zone>=2) pixset.append(pix); }
-    else // (o<order_)
+    if (zone>=3)
       {
-      if (zone>=3)
-        pixset.append(pix<<sdist,(pix+1)<<sdist);
-      else // (zone>=1)
-        for (int i=0; i<4; ++i)
-          stk.push_back(make_pair(4*pix+3-i,o+1));
+      int sdist=2*(order_-o); // the "bit-shift distance" between map orders
+      pixset.append(pix<<sdist,(pix+1)<<sdist); // output all subpixels
       }
+    else // (zone>=1)
+      for (int i=0; i<4; ++i)
+        stk.push_back(make_pair(4*pix+3-i,o+1)); // add children
     }
-  else // inclusive
+  else if (o>order_) // this implies that inclusive==true
     {
-    if (o==order_)
+    if (zone>=2) // pixel center in shape
       {
-      if (zone>=2) // pixel center in shape
-        pixset.append(pix); // output the pixel
-      else // (zone>=1): pixel center in safety range
-        {
-        if (o<omax) // check sublevels
-          {
-          stacktop=stk.size(); // remember current stack position
-          pixtop=pix; // remember current pixel
-          for (int i=0; i<4; ++i) // add children in reverse order
-            stk.push_back(make_pair(4*pix+3-i,o+1));
-          }
-        else // at resolution limit
-          pixset.append(pix); // output the pixel
-        }
+      pixset.append(pixtop); // output the remembered pixel
+      stk.resize(stacktop); // unwind the stack
       }
-    else if (o>order_)
+    else // (zone>=1): pixel center in safety range
       {
-      if (zone>=2) // pixel center in shape
+      if (o<omax) // check sublevels
+        for (int i=0; i<4; ++i) // add children in reverse order
+          stk.push_back(make_pair(4*pix+3-i,o+1));
+      else // at resolution limit
         {
         pixset.append(pixtop); // output the remembered pixel
         stk.resize(stacktop); // unwind the stack
         }
-      else // (zone>=1): pixel center in safety range
-        {
-        if (o<omax) // check sublevels
-          for (int i=0; i<4; ++i) // add children in reverse order
-            stk.push_back(make_pair(4*pix+3-i,o+1));
-        else // at resolution limit
-          {
-          pixset.append(pixtop); // output the remembered pixel
-          stk.resize(stacktop); // unwind the stack
-          }
-        }
       }
-    else // (o<order_)
+    }
+  else // o==order_
+    {
+    if (zone>=2)
+      pixset.append(pix);
+    else if (inclusive) // and (zone>=1)
       {
-      if (zone>=3) // pixel completely inside shape
-        pixset.append(pix<<sdist,(pix+1)<<sdist); // output all subpixels
-      else // (zone>=1): pixel center in safety range
+      if (order_<omax) // check sublevels
+        {
+        stacktop=stk.size(); // remember current stack position
+        pixtop=pix; // remember current pixel
         for (int i=0; i<4; ++i) // add children in reverse order
           stk.push_back(make_pair(4*pix+3-i,o+1));
+        }
+      else // at resolution limit
+        pixset.append(pix); // output the pixel
       }
     }
   }
@@ -779,11 +765,12 @@ void Healpix_Base::query_polygon (const vector<pointing> &vertex,
   bool inclusive, rangeset<int> &pixset) const
   {
   tsize nv=vertex.size();
+  tsize ncirc = inclusive ? nv+1 : nv;
   planck_assert(nv>=3,"not enough vertices in polygon");
   arr<vec3> vv(nv);
   for (tsize i=0; i<nv; ++i)
     vv[i]=vertex[i].to_vec3();
-  arr<vec3> normal(nv);
+  arr<vec3> normal(ncirc);
   int flip=0;
   for (tsize i=0; i<nv; ++i)
     {
@@ -796,7 +783,23 @@ void Healpix_Base::query_polygon (const vector<pointing> &vertex,
       planck_assert(flip*hnd>0,"polygon is not convex");
     normal[i]*=flip/normal[i].Length();
     }
-  query_multidisc(normal,arr<double>(nv,halfpi),inclusive,pixset);
+  arr<double> rad(ncirc,halfpi);
+  if (inclusive)
+    {
+    vec3 cgrav(vv[0]);
+    for (tsize i=1; i<nv; ++i)
+      cgrav+=vv[i];
+    cgrav.Normalize();
+    double crmax=1;
+    for (tsize i=0; i<nv; ++i)
+      {
+      double cr=dotprod(cgrav,vv[i]);
+      if (cr<crmax) crmax=cr;
+      }
+    // cout << "additional disk: " << cgrav << acos(crmax) << endl;
+    rad[nv]=acos(crmax); normal[nv]=cgrav;
+    }
+  query_multidisc(normal,rad,inclusive,pixset);
   }
 
 void Healpix_Base::get_ring_info_small (int ring, int &startpix, int &ringpix)
@@ -1022,7 +1025,6 @@ void Healpix_Base::swap (Healpix_Base &other)
 
 double Healpix_Base::max_pixrad() const
   {
-return 1.362*pi/(4*nside_);
   vec3 va,vb;
   va.set_z_phi (2./3., pi/(4*nside_));
   double t1 = 1.-1./nside_;
