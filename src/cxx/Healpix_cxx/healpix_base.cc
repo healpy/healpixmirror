@@ -197,6 +197,44 @@ inline void check_pixel (int o, int order_, int omax, int zone,
     }
   }
 
+/* The following three functions implement the algorithm for finding the
+   smallest enclosing cone for a point set on the sphere according to
+   Barequet&Elber: Information Processing Letters 93(2005), p.83.
+   All points are expected to be passed as unit vectors.
+   The enclosing cone must have an opening angle <pi/2. */
+
+void get_circle (const arr<vec3> &point, tsize q1, tsize q2, vec3 &center,
+  double &cosrad)
+  {
+  center = (point[q1]+point[q2]).Norm();
+  cosrad = dotprod(point[q1],center);
+  for (tsize i=0; i<q1; ++i)
+    if (dotprod(point[i],center)<cosrad) // point outside the current circle
+      {
+      center=crossprod(point[q1]-point[i],point[q2]-point[i]).Norm();
+      cosrad=dotprod(point[i],center);
+      }
+  }
+void get_circle (const arr<vec3> &point, tsize q, vec3 &center,
+  double &cosrad)
+  {
+  center = (point[0]+point[q]).Norm();
+  cosrad = dotprod(point[0],center);
+  for (tsize i=1; i<q; ++i)
+    if (dotprod(point[i],center)<cosrad) // point outside the current circle
+      get_circle(point,i,q,center,cosrad);
+  }
+void find_enclosing_circle (const arr<vec3> &point, vec3 &center,
+  double &cosrad)
+  {
+  tsize np=point.size();
+  planck_assert(np>=3,"too few points");
+  center = (point[0]+point[1]).Norm();
+  cosrad = dotprod(point[0],center);
+  for (tsize i=2; i<np; ++i)
+    if (dotprod(point[i],center)<cosrad) // point outside the current circle
+      get_circle(point,i,center,cosrad);
+  }
 } // unnamed namespace
 
 void Healpix_Base::query_disc (pointing ptg, double radius, bool inclusive,
@@ -786,18 +824,9 @@ void Healpix_Base::query_polygon (const vector<pointing> &vertex,
   arr<double> rad(ncirc,halfpi);
   if (inclusive)
     {
-    vec3 cgrav(vv[0]);
-    for (tsize i=1; i<nv; ++i)
-      cgrav+=vv[i];
-    cgrav.Normalize();
-    double crmax=1;
-    for (tsize i=0; i<nv; ++i)
-      {
-      double cr=dotprod(cgrav,vv[i]);
-      if (cr<crmax) crmax=cr;
-      }
-    // cout << "additional disk: " << cgrav << acos(crmax) << endl;
-    rad[nv]=acos(crmax); normal[nv]=cgrav;
+    double cosrad;
+    find_enclosing_circle (vv, normal[nv], cosrad);
+    rad[nv]=acos(cosrad);
     }
   query_multidisc(normal,rad,inclusive,pixset);
   }
