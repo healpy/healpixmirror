@@ -1,0 +1,40 @@
+
+
+ID|RES|SUM|STAT|LAST
+1704|not fixable|Add unit method to healpix data model.|resolved|Mar, 24 2011
+Add method getUnit() to HealpixMap interface.
+-- Report by Emmanuel Joliet [ejoliet@sciops.esa.int]
+-- Resolved by Emmanuel Joliet [ejoliet@sciops.esa.int]
+****
+ID|RES|SUM|STAT|LAST
+1937|not fixable|library should not print to standard output|resolved|Mar, 24 2011
+In many places things are written to standard output, for instance in HealpixMapCreator:
+
+	private void generateMap(int depth) throws Exception {
+		HealpixMapImp map = new HealpixMapImp((short) depth,
+				new String[] { "DATA1", "DATA2" });
+		System.out.println("Name[0]:" + map.getName()[0]);
+		System.out.println("Nside:" + map.getNside());
+		System.out.println("Npixels:" + map.nPixel());
+		map.setValueCell(0, 0, 1);
+		map.setValueCell(1, 1, 1);
+		setMap(map);
+	}
+
+This should be avoided.
+
+-- Report by Mark Ter Linden [mtlinden@sciops.esa.int]
+-- Resolved by Emmanuel Joliet [ejoliet@sciops.esa.int]
+****
+ID|RES|SUM|STAT|LAST
+1703|won't fix|Add threshold selector.|resolved|Mar, 24 2011
+Add a range value selector to dipslay area within a range of value.
+-- Report by Emmanuel Joliet [ejoliet@sciops.esa.int]
+-- Resolved by Emmanuel Joliet [ejoliet@sciops.esa.int]
+****
+ID|RES|SUM|STAT|LAST
+1702|won't fix|Display unit map.|resolved|Mar, 24 2011
+Display unit map in toolbar, colorbar and/or drop down list menu in healpix 3d viewer.
+-- Report by Emmanuel Joliet [ejoliet@sciops.esa.int]
+-- Resolved by Emmanuel Joliet [ejoliet@sciops.esa.int]
+****
