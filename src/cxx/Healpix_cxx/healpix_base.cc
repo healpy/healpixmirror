@@ -142,9 +142,15 @@ void Healpix_Base::in_ring(int iz, double phi0, double dphi,
 
 namespace {
 
+/* Short note on the "zone":
+   zone = 0: pixel lies completely outside the queried shape
+          1: pixel may overlap with the shape, pixel center is outside
+          2: pixel center is inside the shape, but maybe not the complete pixel
+          3: pixel lies completely inside the shape */
+
 inline void check_pixel (int o, int order_, int omax, int zone,
   rangeset<int> &pixset, int pix, vector<pair<int,int> > &stk, bool inclusive,
-  int &stacktop, int &pixtop)
+  int &stacktop)
   {
   if (zone==0) return;
 
@@ -163,7 +169,7 @@ inline void check_pixel (int o, int order_, int omax, int zone,
     {
     if (zone>=2) // pixel center in shape
       {
-      pixset.append(pixtop); // output the remembered pixel
+      pixset.append(pix>>(2*(o-order_))); // output the parent pixel at order_
       stk.resize(stacktop); // unwind the stack
       }
     else // (zone>=1): pixel center in safety range
@@ -173,7 +179,7 @@ inline void check_pixel (int o, int order_, int omax, int zone,
           stk.push_back(make_pair(4*pix+3-i,o+1));
       else // at resolution limit
         {
-        pixset.append(pixtop); // output the remembered pixel
+        pixset.append(pix>>(2*(o-order_))); // output the parent pixel at order_
         stk.resize(stacktop); // unwind the stack
         }
       }
@@ -187,7 +193,6 @@ inline void check_pixel (int o, int order_, int omax, int zone,
       if (order_<omax) // check sublevels
         {
         stacktop=stk.size(); // remember current stack position
-        pixtop=pix; // remember current pixel
         for (int i=0; i<4; ++i) // add children in reverse order
           stk.push_back(make_pair(4*pix+3-i,o+1));
         }
@@ -291,11 +296,11 @@ void Healpix_Base::query_disc (pointing ptg, double radius, bool inclusive,
     }
   else // scheme_==NEST
     {
-    int oplus=inclusive ? 2 : 0;
-    int omax=min(int(order_max),order_+oplus); // the order up to which we test
-
     if (radius>=pi) // disc covers the whole sphere
       { pixset.append(0,npix_); return; }
+
+    int oplus=inclusive ? 2 : 0;
+    int omax=min(int(order_max),order_+oplus); // the order up to which we test
 
     vec3 vptg(ptg);
     arr<Healpix_Base> base(omax+1);
@@ -309,12 +314,11 @@ void Healpix_Base::query_disc (pointing ptg, double radius, bool inclusive,
       crmdr[o] = (radius-dr<0.) ?  1. : cos(radius-dr);
       }
     vector<pair<int,int> > stk; // stack for pixel numbers and their orders
-    stk.reserve(12+4*omax); // reserve maximum size to avoid reallocation
+    stk.reserve(12+3*omax); // reserve maximum size to avoid reallocation
     for (int i=0; i<12; ++i) // insert the 12 base pixels in reverse order
       stk.push_back(make_pair(11-i,0));
 
     int stacktop=0; // a place to save a stack position
-    int pixtop=0; // the map pixel currently being investigated
 
     while (!stk.empty()) // as long as there are pixels on the stack
       {
@@ -337,7 +341,7 @@ void Healpix_Base::query_disc (pointing ptg, double radius, bool inclusive,
           zone=2;
 
         check_pixel (o, order_, omax, zone, pixset, pix, stk, inclusive,
-          stacktop, pixtop);
+          stacktop);
         }
       }
     }
@@ -379,12 +383,11 @@ void Healpix_Base::query_multidisc (const arr<vec3> &norm,
       }
 
     vector<pair<int,int> > stk; // stack for pixel numbers and their orders
-    stk.reserve(12+4*omax); // reserve maximum size to avoid reallocation
+    stk.reserve(12+3*omax); // reserve maximum size to avoid reallocation
     for (int i=0; i<12; ++i) // insert the 12 base pixels in reverse order
       stk.push_back(make_pair(11-i,0));
 
     int stacktop=0; // a place to save a stack position
-    int pixtop=0; // the map pixel currently being investigated
 
     while (!stk.empty()) // as long as there are pixels on the stack
       {
@@ -401,14 +404,11 @@ void Healpix_Base::query_multidisc (const arr<vec3> &norm,
         double crad=dotprod(pv,norm[i]);
         for (tsize iz=0; iz<zone; ++iz)
           if (crad<crlimit(o,i,iz))
-            {
-            zone=iz;
-            if (zone==0) goto bailout;
-            }
+            if ((zone=iz)==0) goto bailout;
         }
 
       check_pixel (o, order_, omax, zone, pixset, pix, stk, inclusive,
-        stacktop, pixtop);
+        stacktop);
       bailout:;
       }
     }
@@ -813,10 +813,10 @@ void Healpix_Base::query_polygon (const vector<pointing> &vertex,
   for (tsize i=0; i<nv; ++i)
     {
     normal[i]=crossprod(vv[i],vv[(i+1)%nv]);
-    double hnd=dotprod(normal[i],vv[(i+2)%nv]);
+    double hnd=-dotprod(normal[i],vv[(i+2)%nv]);
     planck_assert(abs(hnd)>1e-10,"degenerate corner");
     if (i==0)
-      flip = (hnd>0.) ? 1 : -1;
+      flip = (hnd>0.) ? -1 : 1;
     else
       planck_assert(flip*hnd>0,"polygon is not convex");
     normal[i]*=flip/normal[i].Length();
