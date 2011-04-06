@@ -297,9 +297,20 @@ and \mylink{idl:mollview:retain}{Retain}}\\
 {/HALF\_SKY}\mytarget{idl:mollview:half_sky} & ---O & if set, only shows only one half of the sky 
    (centered on (0,0) or on the location parametrized by \mylink{idl:mollview:rot}{Rot}) instead of the full sky \\
  
-{HBOUND=}\mytarget{idl:mollview:hbound} & all & if set to a valid $\nside$, will overplot the \healpix\ pixel
+{HBOUND=}\mytarget{idl:mollview:hbound} & all & scalar or vector of up to 3
+elements.
+If Hbound[i] is set to a valid $\nside$, the routine will overplot the \healpix\ pixel
 boundaries corresponding to that $\nside$
-on top of the map. \\
+on top of the map. 
+The first $\nside$ will be plotted with solid lines, 
+the second one (if any) with dashes and
+the third one (if any) with dots. Obviously, better results are
+obtained for Hbounds elements in growing order.
+Since 0-valued boundaries are not plotted, but used for linestyle
+assignment, providing Hbound=[0,4] (or [0,0,4]) will
+plot $\nside=4$ boundaries with dashes (resp. dots), while Hbound=4 would plot the same
+boundaries with solid lines.
+\\
 
 {/HELP}\mytarget{idl:mollview:help} & all & if set, the routine header is printed (by doc\_library)
       and nothing else is done \\
@@ -343,6 +354,13 @@ on top of the map. \\
 	emission templates; for arbitrary maps, use /ASINH instead.	 \\
 	\seealso \mylink{idl:mollview:asinh}{Asinh}, \mylink{idl:mollview:factor}{Factor}, \mylink{idl:mollview:hist_equal}{Hist\_Equal}, \mylink{idl:mollview:offset}{Offset}}\\
 
+\end{tabular}
+\mollbacktotop
+%-----------------------------------------------------------
+\begin{tabular}{p{\sizeone} p{\sizetwo} p{\sizethr}}
+\hline  
+\textbf{name} & \textbf{routines} & \textbf{\ description} \\ \hline
+%                   &   &                            \\ %%% for presentation
 {MAP\_OUT=}\mytarget{idl:mollview:map_out} & all & \parbox[t]{\hsize}{
 	variable that will contain the projected map on output.\\
 %
@@ -358,13 +376,6 @@ Unobserved pixels, and pixels outside the sphere, take value \htmlref{{\tt
 !healpix.bad\_value}}{idl:init_healpix} ($=-1.6375\,10^{30}$).\\
 	\seealso \mylink{idl:mollview:fits}{Fits}}\\
 
-\end{tabular}
-\mollbacktotop
-%-----------------------------------------------------------
-\begin{tabular}{p{\sizeone} p{\sizetwo} p{\sizethr}}
-\hline  
-\textbf{name} & \textbf{routines} & \textbf{\ description} \\ \hline
-%                   &   &                            \\ %%% for presentation
 {MAX=}\mytarget{idl:mollview:max}  & all   & \parbox[t]{\hsize}{
 	Set the maximum value for the plotted signal \\ \default{is to use the actual signal
 	maximum}.}\\
@@ -405,6 +416,14 @@ Unobserved pixels, and pixels outside the sphere, take value \htmlref{{\tt
 {/NOPOSITION}\mytarget{idl:mollview:noposition} & -G-- & if set, the astronomical location of the map
         central point is not indicated \\
  
+\end{tabular}
+\mollbacktotop
+%-----------------------------------------------------------
+\begin{tabular}{p{\sizeone} p{\sizetwo} p{\sizethr}}
+\hline  
+\textbf{name} & \textbf{routines} & \textbf{\ description} \\ \hline
+%                   &   &                            \\ %%% for presentation
+
 {OFFSET=}\mytarget{idl:mollview:offset} & all & \parbox[t]{\hsize}{scalar additive factor to be applied to the valid data \\
 	the data plotted is of the form Factor*(data + Offset) \\
 	This does not affect the flagged pixels \\
@@ -423,13 +442,6 @@ Unobserved pixels, and pixels outside the sphere, take value \htmlref{{\tt
 % 		therefore this option will requires more memory than reading the data from directly disc, and is not recommended
 % 		to visualize data sets of size comparable to that of the computer memory. \\ can not be used with /SAVE}\\
 
-\end{tabular}
-\mollbacktotop
-%-----------------------------------------------------------
-\begin{tabular}{p{\sizeone} p{\sizetwo} p{\sizethr}}
-\hline  
-\textbf{name} & \textbf{routines} & \textbf{\ description} \\ \hline
-%                   &   &                            \\ %%% for presentation
 
 {OUTLINE=}\mytarget{idl:mollview:outline} & all &  \parbox[t]{\hsize}{
 	IDL structure, structure of structures, or array of structures, 
@@ -458,6 +470,14 @@ Unobserved pixels, and pixels outside the sphere, take value \htmlref{{\tt
 	attempt to close the outline.\\Several outlines can be overplotted at
 once by gathering the respective structures into one meta-structure or an array.\\ \seealso{\mylink{idl:mollview:coord}{Coord}, \mylink{idl:mollview:graticule}{Graticule}}} \\
  
+\end{tabular}
+\mollbacktotop
+%-----------------------------------------------------------
+\begin{tabular}{p{\sizeone} p{\sizetwo} p{\sizethr}}
+\hline  
+\textbf{name} & \textbf{routines} & \textbf{\ description} \\ \hline
+%                   &   &                            \\ %%% for presentation
+
 {PNG=}\mytarget{idl:mollview:png}  & all   & \parbox[t]{\hsize}{
 		string containing the name of a .PNG output \\
 	      if set to 1            : output the plot in plot\_[projection].png \\
@@ -475,15 +495,6 @@ once by gathering the respective structures into one meta-structure or an array.
 \mylink{idl:mollview:preview}{Preview}
 \mylink{idl:mollview:ps}{Ps}, 
 and \mylink{idl:mollview:retain}{Retain}}\\
-
-
-\end{tabular}
-\mollbacktotop
-%-----------------------------------------------------------
-\begin{tabular}{p{\sizeone} p{\sizetwo} p{\sizethr}}
-\hline  
-\textbf{name} & \textbf{routines} & \textbf{\ description} \\ \hline
-%                   &   &                            \\ %%% for presentation
 
 {POLARIZATION=}\mytarget{idl:mollview:polarization} & all & \parbox[t]{\hsize}{
 	if set to
@@ -516,6 +527,14 @@ and \mylink{idl:mollview:retain}{Retain}}\\
       legible, in which case the projection-induced distortions are small.
 	}   \\
 
+\end{tabular}
+\mollbacktotop
+%-----------------------------------------------------------
+\begin{tabular}{p{\sizeone} p{\sizetwo} p{\sizethr}}
+\hline  
+\textbf{name} & \textbf{routines} & \textbf{\ description} \\ \hline
+%                   &   &                            \\ %%% for presentation
+
 {/PREVIEW}\mytarget{idl:mollview:preview}  & all   & \parbox[t]{\hsize}{
 		if set, there is a 'ghostview' preview of the
 	        postscript file or a 'xv' preview of the gif file\\
@@ -533,6 +552,7 @@ and \mylink{idl:mollview:retain}{Retain}}\\
 \mylink{idl:mollview:gif}{Gif}, 
 \mylink{idl:mollview:png}{Png}}\\
 
+
 {PXSIZE=}\mytarget{idl:mollview:pxsize}  & all   & \parbox[t]{\hsize}{
 		set the number of horizontal screen\_pixels or postscript\_color\_dots of the plot
     		(useful for high definition color printer) or elements of the
@@ -546,6 +566,10 @@ output map\\
 \mylink{idl:mollview:png}{PNG}, 
 \mylink{idl:mollview:ps}{PS}.}\\
 
+{PYSIZE=}\mytarget{idl:mollview:pysize}  & CG--   & \parbox[t]{\hsize}{
+		set the number of vertical screen\_pixels or postscript\_color\_dots of the plot \\
+    		\default {\mylink{idl:mollview:pxsize}{Pxsize}}.}\\
+
 \end{tabular}
 \mollbacktotop
 %-----------------------------------------------------------
@@ -553,9 +577,6 @@ output map\\
 \hline  
 \textbf{name} & \textbf{routines} & \textbf{\ description} \\ \hline
 %                   &   &                            \\ %%% for presentation
-{PYSIZE=}\mytarget{idl:mollview:pysize}  & CG--   & \parbox[t]{\hsize}{
-		set the number of vertical screen\_pixels or postscript\_color\_dots of the plot \\
-    		\default {\mylink{idl:mollview:pxsize}{Pxsize}}.}\\
 
 {RESO\_ARCMIN=}\mytarget{idl:mollview:reso_arcmin} & CG-- &  \parbox[t]{\hsize}{
 		size of screen\_pixels or postscript\_color\_dots in arcmin \\

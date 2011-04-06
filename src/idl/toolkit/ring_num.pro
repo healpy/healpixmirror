@@ -31,7 +31,7 @@ function ring_num, nside, z, shift=ishift
 ;
 ; usually returns the ring closest to the z provided
 ; if shift < 0, returns the ring immediatly north (of smaller index) of z
-; if shift > 0, returns the ring immediatly south (of smaller index) of z
+; if shift > 0, returns the ring immediatly south (of larger index) of z
 ;
 ; 2008-03-28: accepts scalar and vector z
 ;             added shift

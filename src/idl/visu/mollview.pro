@@ -215,8 +215,17 @@ pro mollview, file_in, select_in, $
 ;          (centered on (0,0) or on the location parametrized by Rot) instead of the full sky
 ;             ** orthview only **
 ;        
-;       HBOUND: if set to hbound>0, overplot the boundaries of Healpix pixels
-;          for the resolution parameter Nside=hbound
+;       HBOUND: scalar or vector of up to 3 elements.
+;          For Hbound[i]>0, overplot the boundaries of Healpix pixels
+;           for the resolution parameter Nside=hbound[i].
+;           The first Nside will be plotted with solid lines, 
+;           the second one (if any) with dashes, 
+;           the third one (if any) with dots. Obviously, better results are
+;           obtained for Hbounds elements in growing order.
+;           Since 0-valued boundaries are not plotted, but used for linestyle
+;           assignment, providing Hbound=[0,4] (or [0,0,4]) will
+;           plot Nside=4 boundaries with dashes (resp. dots), while Hbound=4 would plot the same
+;           boundaries with solid lines.
 ;
 ;       HELP : if set, the routine header is printed (by doc_library)
 ;             and nothing else is done

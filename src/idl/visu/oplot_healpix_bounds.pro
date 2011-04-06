@@ -122,7 +122,9 @@ for regime=0,1 do begin
             z = 2.d0/3.d0 - ramp * (4.d0/3.d0)
             phi = halfpi*(ramp - kk/fn)
         endif else begin            ; polar regime
-            z = (2.d0/3.d0 + ramp * (1.d0-kk^2/fn2)/3.d0) 
+            ;z = (2.d0/3.d0 + ramp * (1.d0-kk^2/fn2)/3.d0) 
+            r2 = (kk le (nside/2 +1)) ? ramp * (2.d0-ramp) : ramp; denser sampling in z close to poles, just like Healpix
+            z = (2.d0/3.d0 + r2 * (1.d0-kk^2/fn2)/3.d0)
             phi = (kk gt 0) ? kk * const / sqrt(1.d0-z) : zero ; avoid 0/0 at pole
         endelse
         for quad=0,3 do begin ; quadrant

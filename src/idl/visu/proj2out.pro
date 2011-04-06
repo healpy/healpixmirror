@@ -665,7 +665,12 @@ endif
 
 ; overplot pixel boundaries
 if keyword_set(hbound) then begin
-    if (hbound gt 0) then oplot_healpix_bounds, hbound, eul_mat, projection=proj_small, flip = flip, thick = 1.*thick_dev, color = !p.color, half_sky=half_sky, linestyle=0, coordsys=[coord_in,coord_out]
+    nhbd = n_elements(hbound)
+    if (nhbd gt 3) then message,/info,level=-1,'Hbound must have 3 elements at most'
+    lnst = [0,2,1] ; solid (smallest Nside), dashes (median Nside), dots (largest Nside)
+    for i=0, (nhbd<3)-1 do begin
+        if (hbound[i] gt 0) then oplot_healpix_bounds, hbound[i], eul_mat, projection=proj_small, flip = flip, thick = 1.*thick_dev, color = !p.color, half_sky=half_sky, linestyle=lnst[i], coordsys=[coord_in,coord_out]
+    endfor
 endif
 
 ; overplot user defined commands
