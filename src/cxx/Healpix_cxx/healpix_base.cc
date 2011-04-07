@@ -201,6 +201,8 @@ void get_circle (const arr<vec3> &point, tsize q1, tsize q2, vec3 &center,
       {
       center=crossprod(point[q1]-point[i],point[q2]-point[i]).Norm();
       cosrad=dotprod(point[i],center);
+      if (cosrad<0)
+        { center=-center; cosrad=-cosrad; }
       }
   }
 void get_circle (const arr<vec3> &point, tsize q, vec3 &center,
