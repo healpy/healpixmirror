@@ -239,8 +239,11 @@ class Healpix_Base
         \param ring the ring number (the number of the first ring is 1)
         \param startpix the number of the first pixel in the ring
                (NOTE: this is always given in the RING numbering scheme!)
-        \param ringpix the number of pixels in the ring */
-    void get_ring_info_small (int ring, int &startpix, int &ringpix) const;
+        \param ringpix the number of pixels in the ring
+        \param shifted if \a true, the center of the first pixel is not at
+               \a phi=0 */
+    void get_ring_info_small (int ring, int &startpix, int &ringpix,
+        bool &shifted) const;
     /*! Returns the neighboring pixels of \a pix in \a result.
         On exit, \a result contains (in this order)
         the pixel numbers of the SW, W, NW, N, NE, E, SE and S neighbor

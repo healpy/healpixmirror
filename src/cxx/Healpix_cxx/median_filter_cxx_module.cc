@@ -70,9 +70,8 @@ int median_filter_cxx_module (int argc, const char **argv)
     inmap.query_disc(inmap.pix2ang(m),radius,false,pixset);
     list.resize(pixset.nval());
     tsize cnt=0;
-    rangeset<int>::const_iterator it;
-    for (it=pixset.begin(); it!=pixset.end(); ++it)
-      for (int i=it->first; i<it->second; ++i)
+    for (tsize j=0; j<pixset.size(); ++j)
+      for (int i=pixset[j].a; i<pixset[j].b; ++i)
         list[cnt++] = inmap[i];
     outmap[m]=median(list.begin(),list.end());
     }

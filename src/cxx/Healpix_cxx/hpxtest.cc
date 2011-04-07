@@ -471,8 +471,8 @@ void check_query_disc (Healpix_Ordering_Scheme scheme)
       map.query_disc(ptg,rad,false,pixset);
       vec3 vptg=ptg;
       double cosrad=cos(rad);
-      for (rangeset<int>::iterator it=pixset.begin(); it!=pixset.end(); ++it)
-        for (int i=it->first; i<it->second; ++i)
+      for (tsize j=0; j<pixset.size(); ++j)
+        for (int i=pixset[j].a; i<pixset[j].b; ++i)
           map[i] = true;
       for (int i=0; i<map.Npix(); ++i)
         {
@@ -480,8 +480,8 @@ void check_query_disc (Healpix_Ordering_Scheme scheme)
         if (inside^map[i])
           cout << "  PROBLEM: order = " << order << ", ptg = " << ptg << endl;
         }
-      for (rangeset<int>::iterator it=pixset.begin(); it!=pixset.end();++it)
-        for (int i=it->first; i<it->second; ++i)
+      for (tsize j=0; j<pixset.size(); ++j)
+        for (int i=pixset[j].a; i<pixset[j].b; ++i)
           map[i] = false;
       }
     }

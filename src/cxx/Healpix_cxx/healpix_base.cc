@@ -94,28 +94,11 @@ int Healpix_Base::ring_above (double z) const
 void Healpix_Base::in_ring(int iz, double phi0, double dphi,
   rangeset<int> &pixset) const
   {
-  int nr, ir, ipix1;
-  double shift=0.5;
+  int nr, ipix1;
+  bool shifted;
 
-  if (iz<nside_) // north pole
-    {
-    ir = iz;
-    nr = ir*4;
-    ipix1 = 2*ir*(ir-1);        // lowest pixel number in the ring
-    }
-  else if (iz>(3*nside_)) // south pole
-    {
-    ir = 4*nside_ - iz;
-    nr = ir*4;
-    ipix1 = npix_ - 2*ir*(ir+1); // lowest pixel number in the ring
-    }
-  else // equatorial region
-    {
-    ir = iz - nside_ + 1;           // within {1, 2*nside + 1}
-    nr = nside_*4;
-    if ((ir&1)==0) shift = 0;
-    ipix1 = ncap_ + (ir-1)*nr; // lowest pixel number in the ring
-    }
+  get_ring_info_small(iz,ipix1,nr,shifted);
+  double shift = shifted ? 0.5: 0.;
 
   int ipix2 = ipix1 + nr - 1;       // highest pixel number in the ring
 
@@ -265,8 +248,8 @@ void Healpix_Base::query_disc (pointing ptg, double radius, bool inclusive,
 
     if ((rlat1<=0) && (irmin>1)) // north pole in the disc
       {
-      int sp,rp;
-      get_ring_info_small(irmin-1,sp,rp);
+      int sp,rp; bool dummy;
+      get_ring_info_small(irmin-1,sp,rp,dummy);
       pixset.append(0,sp+rp);
       }
 
@@ -289,8 +272,8 @@ void Healpix_Base::query_disc (pointing ptg, double radius, bool inclusive,
 
     if ((rlat2>=pi) && (irmax+1<4*nside_)) // south pole in the disc
       {
-      int sp,rp;
-      get_ring_info_small(irmax+1,sp,rp);
+      int sp,rp; bool dummy;
+      get_ring_info_small(irmax+1,sp,rp,dummy);
       pixset.append(sp,npix_);
       }
     }
@@ -356,7 +339,80 @@ void Healpix_Base::query_multidisc (const arr<vec3> &norm,
 
   if (scheme_==RING)
     {
-    planck_fail ("query_multidisc in RING scheme not (yet) supported");
+    double rplus = inclusive ? max_pixrad() : 0;
+    int irmin=1, irmax=4*nside_-1;
+    double thmin=0, thmax=pi;
+    vector<double> z0,xa,cosrad;
+    z0.reserve(nv);
+    xa.reserve(nv);
+    cosrad.reserve(nv);
+    vector<pointing> ptg;
+    ptg.reserve(nv);
+    for (tsize i=0; i<nv; ++i)
+      {
+      double r=rad[i]+rplus;
+      if (r<pi)
+        {
+        pointing pnt=pointing(norm[i]);
+        cosrad.push_back(cos(r));
+        double cth=cos(pnt.theta);
+        z0.push_back(cth);
+        xa.push_back(1./sqrt((1-cth)*(1+cth)));
+        ptg.push_back(pnt);
+        double tmp = min(pnt.theta+r,pi);
+        if (tmp < thmax)
+          {
+          thmax=tmp;
+          irmax=ring_above(cos(thmax));
+          }
+        tmp = max(0.,pnt.theta-r);
+        if (tmp > thmin)
+          {
+          thmin=tmp;
+          irmin=ring_above(cos(thmin))+1;
+          }
+        }
+      }
+
+    // ------------- loop on ring number ---------------------
+    for (int iz=irmin; iz<=irmax; ++iz)
+      {
+      double z=ring2z(iz);
+      int ipix1,nr;
+      bool shifted;
+      get_ring_info_small(iz,ipix1,nr,shifted);
+      double shift = shifted ? 0.5: 0.;
+      int ipix2 = ipix1 + nr - 1;       // highest pixel number in the ring
+      rangeset<int> tr;
+      tr.append(ipix1,ipix1+nr);
+      for (tsize j=0; j<z0.size(); ++j)
+        {
+        // --------- phi range in the disc for each z ---------
+        double x = (cosrad[j]-z*z0[j])*xa[j];
+        double ysq = 1.-z*z-x*x;
+        if (ysq>=0.)
+          {
+          double dphi=atan2(sqrt(ysq),x);
+
+          if (dphi < (pi-1e-12))
+            {
+            int ip_lo = ifloor<int>(nr*inv_twopi*(ptg[j].phi-dphi) - shift)+1;
+            int ip_hi = ifloor<int>(nr*inv_twopi*(ptg[j].phi+dphi) - shift);
+            if (ip_lo<0)
+              tr.remove(ipix1+ip_hi+1,ipix1+ip_lo+nr);
+            else if (ip_hi>=nr)
+              tr.remove(ipix1+ip_hi-nr+1,ipix1+ip_lo);
+            else
+              {
+              tr.remove(ipix1,ipix1+ip_lo);
+              tr.remove(ipix1+ip_hi+1,ipix2+1);
+              }
+            }
+          }
+        }
+      for (tsize j=0; j<tr.size(); ++j)
+        pixset.append(tr[j]);
+      }
     }
   else // scheme_ == NEST
     {
@@ -813,10 +869,10 @@ void Healpix_Base::query_polygon (const vector<pointing> &vertex,
   for (tsize i=0; i<nv; ++i)
     {
     normal[i]=crossprod(vv[i],vv[(i+1)%nv]);
-    double hnd=-dotprod(normal[i],vv[(i+2)%nv]);
+    double hnd=dotprod(normal[i],vv[(i+2)%nv]);
     planck_assert(abs(hnd)>1e-10,"degenerate corner");
     if (i==0)
-      flip = (hnd>0.) ? -1 : 1;
+      flip = (hnd<0.) ? -1 : 1;
     else
       planck_assert(flip*hnd>0,"polygon is not convex");
     normal[i]*=flip/normal[i].Length();
@@ -831,17 +887,19 @@ void Healpix_Base::query_polygon (const vector<pointing> &vertex,
   query_multidisc(normal,rad,inclusive,pixset);
   }
 
-void Healpix_Base::get_ring_info_small (int ring, int &startpix, int &ringpix)
-  const
+void Healpix_Base::get_ring_info_small (int ring, int &startpix, int &ringpix,
+  bool &shifted) const
   {
   int northring = (ring>2*nside_) ? 4*nside_-ring : ring;
   if (northring < nside_)
     {
+    shifted = true;
     ringpix = 4*northring;
     startpix = 2*northring*(northring-1);
     }
   else
     {
+    shifted = ((northring-nside_) & 1) == 0;
     ringpix = 4*nside_;
     startpix = ncap_ + (northring-nside_)*ringpix;
     }
