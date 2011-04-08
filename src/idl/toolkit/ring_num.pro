@@ -27,6 +27,8 @@
 ; -----------------------------------------------------------------------------
 function ring_num, nside, z, shift=ishift
 ;+
+; ring=ring_num(nside, z [, shift=, withpoles=])
+;
 ; gives the ring number corresponding to z for the resolution nside
 ;
 ; usually returns the ring closest to the z provided
@@ -37,6 +39,7 @@ function ring_num, nside, z, shift=ishift
 ;             added shift
 ;
 ; 2009-04-30: returns long integers (32 bits) instead of 16-bit integers
+; 2011-03-10: added withpoles= to return rings in [0,4Nside] instead of [1, 4Nside-1]
 ;-
 twothird = 2.d0 /3.d0
 long = 1
@@ -46,6 +49,8 @@ if (keyword_set(ishift)) then begin
     if (ishift lt 0) then shift = -0.5d0 ; Northward shift
     if (ishift gt 0) then shift =  0.5d0 ; Southward shift
 endif
+lower = 1
+if keyword_set(withpoles) then lower = 0
 
 ;     ----- equatorial regime ---------
 iring = NINT( nside*(2.d0-1.500d0*z) + shift, long=long)
@@ -54,7 +59,7 @@ iring = NINT( nside*(2.d0-1.500d0*z) + shift, long=long)
 kn = where(z gt twothird, nkn)
 if (nkn gt 0) then begin
     my_iring = NINT( nside* SQRT(3.d0*(1.d0-z[kn]))  + shift, long=long )
-    iring[kn] = my_iring > 1
+    iring[kn] = my_iring > lower
 endif
 
 ;     ----- south cap -----
@@ -62,7 +67,7 @@ ks = where (z lt -twothird, nks)
 if (nks gt 0) then begin
     ; beware that we do a -shift in the south cap
     my_iring = NINT( nside* SQRT(3.d0*(1.d0+z[ks]))  - shift, long=long)
-    my_iring = my_iring > 1
+    my_iring = my_iring > lower
     iring[ks] = 4L*nside - my_iring
 endif
 

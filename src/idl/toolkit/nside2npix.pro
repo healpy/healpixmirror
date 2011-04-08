@@ -40,12 +40,21 @@ function nside2npix, nside, error=error
 ;     v1.0, EH, Caltech, 2000-02-11
 ;     v1.1, EH, Caltech, 2002-08-16 : uses !Healpix structure
 ;     v2.1, EH, IAP,     2006-10-16 : enabled nside > 8192
+;     v2.2, EH, IAP,     2011-04-07: returns syntax in case of improper use
 ;-
+
+routine = 'nside2npix'
+syntax = 'Npix = '+routine+' (Nside [,error=])'
+
+error = 1
+if N_params() ne 1 then begin
+    print,syntax
+    return,-1
+endif
 
 defsysv, '!healpix', exists = exists
 if (exists ne 1) then init_healpix
 
-error = 1
 junk = where(nside eq !healpix.nside, count)
 if count ne 1 then return,-1
 
