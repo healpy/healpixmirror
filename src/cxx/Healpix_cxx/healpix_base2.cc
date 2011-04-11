@@ -80,41 +80,39 @@ int64 Healpix_Base2::ring_above (double z) const
   return (z>0) ? iring : 4*nside_-iring-1;
   }
 
+int64 Healpix_Base2::spread_bits (int v) const
+  {
+  return (int64(utab[ v     &0xff]))
+       | (int64(utab[(v>> 8)&0xff])<<16)
+       | (int64(utab[(v>>16)&0xff])<<32)
+       | (int64(utab[(v>>24)&0xff])<<48);
+  }
+
+int Healpix_Base2::compress_bits (int64 v) const
+  {
+  int32 raw = ((v&0x555500000000ull)>>16)
+             | ((v&0x5555000000000000ull)>>31)
+             | (v&0x5555)
+             | ((v&0x55550000)>>15);
+  return ctab[raw&0xff]
+      | (ctab[(raw>>8)&0xff]<<4)
+      | (ctab[(raw>>16)&0xff]<<16)
+      | (ctab[(raw>>24)&0xff]<<20);
+  }
+
 void Healpix_Base2::nest2xyf (int64 pix, int &ix, int &iy, int &face_num)
   const
   {
   face_num = int(pix>>(2*order_));
   pix &= (npface_-1);
-  int32 raw = ((pix&0x555500000000ull)>>16)
-             | ((pix&0x5555000000000000ull)>>31)
-             | (pix&0x5555)
-             | ((pix&0x55550000)>>15);
-  ix =  ctab[raw&0xff]
-     | (ctab[(raw>>8)&0xff]<<4)
-     | (ctab[(raw>>16)&0xff]<<16)
-     | (ctab[(raw>>24)&0xff]<<20);
-  pix >>= 1;
-  raw = ((pix&0x555500000000ull)>>16) 
-             | ((pix&0x5555000000000000ull)>>31)
-             | (pix&0x5555)
-             | ((pix&0x55550000)>>15);
-  iy =  ctab[raw&0xff]
-     | (ctab[(raw>>8)&0xff]<<4)
-     | (ctab[(raw>>16)&0xff]<<16)
-     | (ctab[(raw>>24)&0xff]<<20);
+  ix = compress_bits(pix);
+  iy = compress_bits(pix>>1);
   }
 
 int64 Healpix_Base2::xyf2nest (int ix, int iy, int face_num) const
   {
   return (int64(face_num)<<(2*order_)) +
-    (   (int64(utab[ ix     &0xff]))
-      | (int64(utab[(ix>> 8)&0xff])<<16)
-      | (int64(utab[(ix>>16)&0xff])<<32)
-      | (int64(utab[(ix>>24)&0xff])<<48)
-      | (int64(utab[ iy     &0xff])<<1)
-      | (int64(utab[(iy>> 8)&0xff])<<17)
-      | (int64(utab[(iy>>16)&0xff])<<33)
-      | (int64(utab[(iy>>24)&0xff])<<49) );
+    spread_bits(ix) + (spread_bits(iy)<<1);
   }
 
 void Healpix_Base2::ring2xyf (int64 pix, int &ix, int &iy, int &face_num)
@@ -555,15 +553,15 @@ void Healpix_Base2::neighbors (int64 pix, fix_arr<int64,8> &result) const
           {  3, 0, 1, 2, 3, 0, 1, 2, 4, 5, 6, 7 },   // NW
           {  2, 3, 0, 1,-1,-1,-1,-1, 0, 1, 2, 3 } }; // N
   static const int swaparray[][3] =
-        { {  0,0,3 },   // S
-          {  0,0,6 },   // SE
-          {  0,0,0 },   // E
-          {  0,0,5 },   // SW
-          {  0,0,0 },   // center
-          {  5,0,0 },   // NE
-          {  0,0,0 },   // W
-          {  6,0,0 },   // NW
-          {  3,0,0 } }; // N
+        { { 0,0,3 },   // S
+          { 0,0,6 },   // SE
+          { 0,0,0 },   // E
+          { 0,0,5 },   // SW
+          { 0,0,0 },   // center
+          { 5,0,0 },   // NE
+          { 0,0,0 },   // W
+          { 6,0,0 },   // NW
+          { 3,0,0 } }; // N
 
   int ix, iy, face_num;
   (scheme_==RING) ?
@@ -576,8 +574,17 @@ void Healpix_Base2::neighbors (int64 pix, fix_arr<int64,8> &result) const
       for (int m=0; m<8; ++m)
         result[m] = xyf2ring(ix+xoffset[m],iy+yoffset[m],face_num);
     else
-      for (int m=0; m<8; ++m)
-        result[m] = xyf2nest(ix+xoffset[m],iy+yoffset[m],face_num);
+      {
+      int64 fpix = int64(face_num)<<(2*order_),
+            px0=spread_bits(ix  ), py0=spread_bits(iy  )<<1,
+            pxp=spread_bits(ix+1), pyp=spread_bits(iy+1)<<1,
+            pxm=spread_bits(ix-1), pym=spread_bits(iy-1)<<1;
+
+      result[0] = fpix+pxm+py0; result[1] = fpix+pxm+pyp;
+      result[2] = fpix+px0+pyp; result[3] = fpix+pxp+pyp;
+      result[4] = fpix+pxp+py0; result[5] = fpix+pxp+pym;
+      result[6] = fpix+px0+pym; result[7] = fpix+pxm+pym;
+      }
     }
   else
     {

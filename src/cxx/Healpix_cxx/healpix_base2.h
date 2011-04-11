@@ -68,6 +68,9 @@ class Healpix_Base2
         It may return 0; in this case \a z lies north of all rings. */
     inline int64 ring_above (double z) const;
 
+    inline int64 spread_bits (int v) const;
+    inline int compress_bits (int64 v) const;
+
     int64 xyf2nest(int ix, int iy, int face_num) const;
     void nest2xyf(int64 pix, int &ix, int &iy, int &face_num) const;
     int64 xyf2ring(int ix, int iy, int face_num) const;

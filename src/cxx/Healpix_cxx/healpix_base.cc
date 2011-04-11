@@ -202,7 +202,7 @@ void get_circle (const arr<vec3> &point, tsize q1, tsize q2, vec3 &center,
       center=crossprod(point[q1]-point[i],point[q2]-point[i]).Norm();
       cosrad=dotprod(point[i],center);
       if (cosrad<0)
-        { center=-center; cosrad=-cosrad; }
+        { center.Flip(); cosrad=-cosrad; }
       }
   }
 void get_circle (const arr<vec3> &point, tsize q, vec3 &center,
@@ -472,23 +472,25 @@ void Healpix_Base::query_multidisc (const arr<vec3> &norm,
     }
   }
 
+int Healpix_Base::spread_bits (int v) const
+  { return utab[v&0xff] | (utab[v>>8]<<16); }
+
+int Healpix_Base::compress_bits (int v) const
+  {
+  int raw = (v&0x5555) | ((v&0x55550000)>>15);
+  return ctab[raw&0xff] | (ctab[raw>>8]<<4);
+  }
+
 void Healpix_Base::nest2xyf (int pix, int &ix, int &iy, int &face_num) const
   {
   face_num = pix>>(2*order_);
   pix &= (npface_-1);
-  int raw = (pix&0x5555) | ((pix&0x55550000)>>15);
-  ix = ctab[raw&0xff] | (ctab[raw>>8]<<4);
-  pix >>= 1;
-  raw = (pix&0x5555) | ((pix&0x55550000)>>15);
-  iy = ctab[raw&0xff] | (ctab[raw>>8]<<4);
+  ix = compress_bits(pix);
+  iy = compress_bits(pix>>1);
   }
 
 int Healpix_Base::xyf2nest (int ix, int iy, int face_num) const
-  {
-  return (face_num<<(2*order_)) +
-      (utab[ix&0xff] | (utab[ix>>8]<<16)
-    | (utab[iy&0xff]<<1) | (utab[iy>>8]<<17));
-  }
+  { return (face_num<<(2*order_)) + spread_bits(ix) + (spread_bits(iy)<<1); }
 
 void Healpix_Base::ring2xyf (int pix, int &ix, int &iy, int &face_num) const
   {
@@ -951,15 +953,15 @@ void Healpix_Base::neighbors (int pix, fix_arr<int,8> &result) const
           {  3, 0, 1, 2, 3, 0, 1, 2, 4, 5, 6, 7 },   // NW
           {  2, 3, 0, 1,-1,-1,-1,-1, 0, 1, 2, 3 } }; // N
   static const int swaparray[][3] =
-        { {  0,0,3 },   // S
-          {  0,0,6 },   // SE
-          {  0,0,0 },   // E
-          {  0,0,5 },   // SW
-          {  0,0,0 },   // center
-          {  5,0,0 },   // NE
-          {  0,0,0 },   // W
-          {  6,0,0 },   // NW
-          {  3,0,0 } }; // N
+        { { 0,0,3 },   // S
+          { 0,0,6 },   // SE
+          { 0,0,0 },   // E
+          { 0,0,5 },   // SW
+          { 0,0,0 },   // center
+          { 5,0,0 },   // NE
+          { 0,0,0 },   // W
+          { 6,0,0 },   // NW
+          { 3,0,0 } }; // N
 
   int ix, iy, face_num;
   (scheme_==RING) ?
@@ -972,8 +974,17 @@ void Healpix_Base::neighbors (int pix, fix_arr<int,8> &result) const
       for (int m=0; m<8; ++m)
         result[m] = xyf2ring(ix+xoffset[m],iy+yoffset[m],face_num);
     else
-      for (int m=0; m<8; ++m)
-        result[m] = xyf2nest(ix+xoffset[m],iy+yoffset[m],face_num);
+      {
+      int fpix = face_num<<(2*order_),
+          px0=spread_bits(ix  ), py0=spread_bits(iy  )<<1,
+          pxp=spread_bits(ix+1), pyp=spread_bits(iy+1)<<1,
+          pxm=spread_bits(ix-1), pym=spread_bits(iy-1)<<1;
+
+      result[0] = fpix+pxm+py0; result[1] = fpix+pxm+pyp;
+      result[2] = fpix+px0+pyp; result[3] = fpix+pxp+pyp;
+      result[4] = fpix+pxp+py0; result[5] = fpix+pxp+pym;
+      result[6] = fpix+px0+pym; result[7] = fpix+pxm+pym;
+      }
     }
   else
     {

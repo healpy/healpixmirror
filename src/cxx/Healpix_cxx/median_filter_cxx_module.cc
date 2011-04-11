@@ -72,8 +72,10 @@ int median_filter_cxx_module (int argc, const char **argv)
     tsize cnt=0;
     for (tsize j=0; j<pixset.size(); ++j)
       for (int i=pixset[j].a; i<pixset[j].b; ++i)
-        list[cnt++] = inmap[i];
-    outmap[m]=median(list.begin(),list.end());
+        if (!approx(inmap[i],float(Healpix_undef)))
+          list[cnt++] = inmap[i];
+    outmap[m] = (cnt>0) ? median(list.begin(),list.begin()+cnt)
+                        : Healpix_undef;
     }
 
   write_Healpix_map_to_fits (argv[2],outmap,PLANCK_FLOAT32);

@@ -85,6 +85,9 @@ class Healpix_Base
     void query_multidisc (const arr<vec3> &norm, const arr<double> &rad,
       bool inclusive, rangeset<int> &pixset) const;
 
+    inline int spread_bits (int v) const;
+    inline int compress_bits (int v) const;
+
     int xyf2nest(int ix, int iy, int face_num) const;
     void nest2xyf(int pix, int &ix, int &iy, int &face_num) const;
     int xyf2ring(int ix, int iy, int face_num) const;

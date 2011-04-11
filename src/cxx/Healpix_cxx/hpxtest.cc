@@ -332,31 +332,30 @@ void check_neighbors()
     for (int m=0; m<nsamples/10; ++m)
       {
       int pix = int(rng.rand_uni()*base.Npix());
-      fix_arr<int,8> nb;
-      vec3 pixpt = base.pix2ang(pix);
+      fix_arr<int,8> nb,nb2;
+      vec3 pixpt = base.pix2vec(pix);
       base.neighbors(pix,nb);
+      base2.neighbors(base.nest2ring(pix),nb2);
+      for (int n=0; n<8; ++n)
+        if (nb[n]<0)
+          planck_assert(nb2[n]<0,"neighbor inconsistency");
+        else
+          planck_assert(base.nest2ring(nb[n])==nb2[n],"neighbor inconsistency");
       sort(&nb[0],&nb[0]+8);
       int check=0;
       for (int n=0; n<8; ++n)
         {
         if (nb[n]<0)
-          {
           ++check;
-          }
         else
           {
-          if (v_angle(base.pix2ang(nb[n]),pixpt)>maxang)
+          if (v_angle(base.pix2vec(nb[n]),pixpt)>maxang)
             cout << " PROBLEM: order = " << order << ", pix = " << pix << endl;
           if ((n>0) && (nb[n]==nb[n-1]))
             cout << " PROBLEM: order = " << order << ", pix = " << pix << endl;
           }
         }
       planck_assert((check<=1)||((order==0)&&(check<=2)),"too few neighbors");
-      pixpt = base2.pix2ang(pix);
-      base2.neighbors(pix,nb);
-      for (int n=0; n<8; ++n)
-        if ((nb[n]>=0) && (v_angle(base2.pix2ang(nb[n]),pixpt)>maxang))
-          cout << "  PROBLEM2: order = " << order << ", pix = " << pix << endl;
       }
     }
   for (int nside=3; nside<(1<<13); nside+=nside/2+1)
@@ -368,10 +367,10 @@ void check_neighbors()
       {
       int pix = int(rng.rand_uni()*base.Npix());
       fix_arr<int,8> nb;
-      vec3 pixpt = base.pix2ang(pix);
+      vec3 pixpt = base.pix2vec(pix);
       base.neighbors(pix,nb);
       for (int n=0; n<8; ++n)
-        if ((nb[n]>=0) && (v_angle(base.pix2ang(nb[n]),pixpt)>maxang))
+        if ((nb[n]>=0) && (v_angle(base.pix2vec(nb[n]),pixpt)>maxang))
           cout << "  PROBLEM: nside = " << nside << ", pix = " << pix << endl;
       }
     }
@@ -387,31 +386,30 @@ void check_neighbors2()
     for (int m=0; m<nsamples/10; ++m)
       {
       int64 pix = int64(rng.rand_uni()*base.Npix());
-      fix_arr<int64,8> nb;
-      vec3 pixpt = base.pix2ang(pix);
+      fix_arr<int64,8> nb,nb2;
+      vec3 pixpt = base.pix2vec(pix);
       base.neighbors(pix,nb);
+      base2.neighbors(base.nest2ring(pix),nb2);
+      for (int n=0; n<8; ++n)
+        if (nb[n]<0)
+          planck_assert(nb2[n]<0,"neighbor inconsistency");
+        else
+          planck_assert(base.nest2ring(nb[n])==nb2[n],"neighbor inconsistency");
       sort(&nb[0],&nb[0]+8);
       int check=0;
       for (int n=0; n<8; ++n)
         {
         if (nb[n]<0)
-          {
           ++check;
-          }
         else
           {
-          if (v_angle(base.pix2ang(nb[n]),pixpt)>maxang)
+          if (v_angle(base.pix2vec(nb[n]),pixpt)>maxang)
             cout << " PROBLEM: order = " << order << ", pix = " << pix << endl;
           if ((n>0) && (nb[n]==nb[n-1]))
             cout << " PROBLEM: order = " << order << ", pix = " << pix << endl;
           }
         }
       planck_assert((check<=1)||((order==0)&&(check<=2)),"too few neighbors");
-      pixpt = base2.pix2ang(pix);
-      base2.neighbors(pix,nb);
-      for (int n=0; n<8; ++n)
-        if ((nb[n]>=0) && (v_angle(base2.pix2ang(nb[n]),pixpt)>maxang))
-          cout << "  PROBLEM2: order = " << order << ", pix = " << pix << endl;
       }
     }
   for (int nside=3; nside<(1<<29); nside+=nside/2+1)
@@ -423,10 +421,10 @@ void check_neighbors2()
       {
       int64 pix = int64(rng.rand_uni()*base.Npix());
       fix_arr<int64,8> nb;
-      vec3 pixpt = base.pix2ang(pix);
+      vec3 pixpt = base.pix2vec(pix);
       base.neighbors(pix,nb);
       for (int n=0; n<8; ++n)
-        if ((nb[n]>=0) && (v_angle(base.pix2ang(nb[n]),pixpt)>maxang))
+        if ((nb[n]>=0) && (v_angle(base.pix2vec(nb[n]),pixpt)>maxang))
           cout << "  PROBLEM: nside = " << nside << ", pix = " << pix << endl;
       }
     }
@@ -751,6 +749,66 @@ void perftest()
   dummy+=blub[234].x+blub[234].y+blub[234].z;
   }
   tsize cnt=0;
+  wallTimers.start("neighbors(NEST)");
+  for (int order=0; order<=12; ++order)
+    {
+    Healpix_Base base (order,NEST);
+    fix_arr<int,8> nres;
+    for (int pix=0; pix<base.Npix(); ++pix)
+      {
+      base.neighbors(pix,nres);
+      ++cnt;
+      }
+    }
+  wallTimers.stop("neighbors(NEST)");
+  cout << "neighbors(NEST): "
+       << cnt/wallTimers.acc("neighbors(NEST)")*1e-6 << "MOps/s" << endl;
+  cnt=0;
+  wallTimers.start("neighbors(RING)");
+  for (int order=0; order<=12; ++order)
+    {
+    Healpix_Base base (order,RING);
+    fix_arr<int,8> nres;
+    for (int pix=0; pix<base.Npix(); ++pix)
+      {
+      base.neighbors(pix,nres);
+      ++cnt;
+      }
+    }
+  wallTimers.stop("neighbors(RING)");
+  cout << "neighbors(RING): "
+       << cnt/wallTimers.acc("neighbors(RING)")*1e-6 << "MOps/s" << endl;
+  cnt=0;
+  wallTimers.start("neighbors2(NEST)");
+  for (int order=0; order<=12; ++order)
+    {
+    Healpix_Base2 base (order,NEST);
+    fix_arr<int64,8> nres;
+    for (int pix=0; pix<base.Npix(); ++pix)
+      {
+      base.neighbors(pix,nres);
+      ++cnt;
+      }
+    }
+  wallTimers.stop("neighbors2(NEST)");
+  cout << "neighbors2(NEST): "
+       << cnt/wallTimers.acc("neighbors2(NEST)")*1e-6 << "MOps/s" << endl;
+  cnt=0;
+  wallTimers.start("neighbors2(RING)");
+  for (int order=0; order<=12; ++order)
+    {
+    Healpix_Base2 base (order,RING);
+    fix_arr<int64,8> nres;
+    for (int pix=0; pix<base.Npix(); ++pix)
+      {
+      base.neighbors(pix,nres);
+      ++cnt;
+      }
+    }
+  wallTimers.stop("neighbors2(RING)");
+  cout << "neighbors2(RING): "
+       << cnt/wallTimers.acc("neighbors2(RING)")*1e-6 << "MOps/s" << endl;
+  cnt=0;
   wallTimers.start("pix2zphi(RING)");
   for (int order=0; order<=12; ++order)
     {
@@ -907,7 +965,7 @@ void perftest()
        << cnt/wallTimers.acc("nest2ring")*1e-6 << "MOps/s" << endl;
 
   {
-  wallTimers.start("query_disc");
+  wallTimers.start("query_disc(RING)");
   Healpix_Base base(4096,RING,SET_NSIDE);
   for (int m=0; m<1000; ++m)
     {
@@ -915,9 +973,9 @@ void perftest()
     base.query_disc(pointing(halfpi,0),halfpi/9,false,pix);
     dummy+=pix.size();
     }
-  wallTimers.stop("query_disc");
-  cout << "query_disc_rangeset(nside=4096,radius=10deg): "
-       << 1000/wallTimers.acc("query_disc")*1e-6 << "MOps/s" << endl;
+  wallTimers.stop("query_disc(RING)");
+  cout << "query_disc_rangeset(RING)(nside=4096,radius=10deg): "
+       << 1000/wallTimers.acc("query_disc(RING)")*1e-6 << "MOps/s" << endl;
   }
 
   if (dummy<0) cout << dummy << endl;
