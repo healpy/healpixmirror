@@ -487,6 +487,37 @@ void check_query_disc (Healpix_Ordering_Scheme scheme)
     }
   }
 
+void check_query_polygon ()
+  {
+  cout << "checking query_polygon()" << endl;
+  for (int order=0; order<=12; ++order)
+    {
+    cout << "order = " << order << endl;
+    Healpix_Base rbase (order,RING);
+    Healpix_Base nbase (order,NEST);
+    rangeset<int> pixset1, pixset2;
+    for (int m=0; m<1000; ++m)
+      {
+      vector<pointing> corner(3);
+      random_dir(corner[0]); random_dir(corner[1]); random_dir(corner[2]);
+      rbase.query_polygon(corner,false,pixset1);
+      nbase.query_polygon(corner,false,pixset2);
+      if (pixset1.nval()!=pixset2.nval())
+        cout << "  PROBLEM: number of pixels different: "
+             << pixset1.nval() << " vs. " << pixset2.nval() << endl;
+      int nval=pixset1.nval();
+      rbase.query_polygon(corner,true,pixset1);
+      nbase.query_polygon(corner,true,pixset2);
+      if (pixset1.nval()<pixset2.nval())
+        cout << "  PROBLEM: inclusive(RING)<inclusive(NEST): "
+             << pixset1.nval() << " vs. " << pixset2.nval() << endl;
+      if (pixset2.nval()<nval)
+        cout << "  PROBLEM: inclusive(NEST)<non-inclusive: "
+             << pixset2.nval() << " vs. " << nval << endl;
+      }
+    }
+  }
+
 void helper_oop (int order)
   {
   Healpix_Map<double> map (order,RING), map2 (order,NEST), map3 (order,RING);
@@ -919,4 +950,5 @@ int main(int argc, const char **argv)
   check_swap_scheme();
   check_query_disc(RING);
   check_query_disc(NEST);
+  check_query_polygon();
   }
