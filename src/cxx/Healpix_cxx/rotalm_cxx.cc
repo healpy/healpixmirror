@@ -34,6 +34,7 @@
 #include "fitshandle.h"
 #include "alm_powspec_tools.h"
 #include "trafos.h"
+#include "announce.h"
 
 using namespace std;
 

@@ -59,6 +59,7 @@ Candidates for testing the validity of the Healpix routines:
 #include "alm_powspec_tools.h"
 #include "geom_utils.h"
 #include "walltimer.h"
+#include "announce.h"
 
 using namespace std;
 
@@ -965,7 +966,7 @@ void perftest()
        << cnt/wallTimers.acc("nest2ring")*1e-6 << "MOps/s" << endl;
 
   {
-  wallTimers.start("query_disc(RING)");
+  wallTimers.start("query_disc");
   Healpix_Base base(4096,RING,SET_NSIDE);
   for (int m=0; m<1000; ++m)
     {
@@ -973,9 +974,9 @@ void perftest()
     base.query_disc(pointing(halfpi,0),halfpi/9,false,pix);
     dummy+=pix.size();
     }
-  wallTimers.stop("query_disc(RING)");
-  cout << "query_disc_rangeset(RING)(nside=4096,radius=10deg): "
-       << 1000/wallTimers.acc("query_disc(RING)")*1e-6 << "MOps/s" << endl;
+  wallTimers.stop("query_disc");
+  cout << "query_disc_rangeset(nside=4096,radius=10deg): "
+       << 1000/wallTimers.acc("query_disc")*1e-6 << "MOps/s" << endl;
   }
 
   if (dummy<0) cout << dummy << endl;

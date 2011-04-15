@@ -32,6 +32,7 @@
 #include "healpix_map_fitsio.h"
 #include "healpix_map.h"
 #include "fitshandle.h"
+#include "share_utils.h"
 
 using namespace std;
 

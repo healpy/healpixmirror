@@ -25,7 +25,7 @@
  */
 
 /*
- *  Copyright (C) 2003-2010 Max-Planck-Society
+ *  Copyright (C) 2003-2011 Max-Planck-Society
  *  Author: Martin Reinecke
  */
 
@@ -40,6 +40,7 @@
 #include "paramfile.h"
 #include "levels_facilities.h"
 #include "lsconstants.h"
+#include "announce.h"
 
 using namespace std;
 
@@ -303,19 +304,11 @@ int map2tga_module (int argc, const char **argv)
       {
       map[m] = (map[m]+offset)*factor;
       if (logflag)
-        {
-        if (map[m]<=0)
-          map[m] = Healpix_undef;
-        else
-          map[m] = float(log(double(map[m]))/ln10);
-        }
+        map[m] = (map[m]<=0) ? Healpix_undef : float(log(double(map[m]))/ln10);
       if (asinhflag)
-        {
-        if (map[m]>=0)
-          map[m] = float(log(double(map[m]+sqrt(map[m]*map[m]+1))));
-        else
-          map[m] = float(-log(double(-map[m]+sqrt(map[m]*map[m]+1))));
-        }
+        map[m] = (map[m]>=0) ?
+          float( log(double( map[m]+sqrt(map[m]*map[m]+1)))) :
+          float(-log(double(-map[m]+sqrt(map[m]*map[m]+1))));
       if (min_supplied) if (map[m] < usermin) map[m] = usermin;
       if (max_supplied) if (map[m] > usermax) map[m] = usermax;
       }
@@ -323,10 +316,8 @@ int map2tga_module (int argc, const char **argv)
 
   arr2<float> imgarr;
   float minv, maxv;
-  if (mollpro)
-    pro_mollw (map,lon0,lat0,xres,imgarr,minv,maxv,interpol);
-  else
-    pro_gno (map,lon0,lat0,xres,res,imgarr,minv,maxv,interpol);
+  mollpro ? pro_mollw (map,lon0,lat0,xres,imgarr,minv,maxv,interpol) :
+            pro_gno (map,lon0,lat0,xres,res,imgarr,minv,maxv,interpol);
 
   arr<double> newpos;
   if (eqflag) histo_eq(imgarr,minv,maxv,newpos);

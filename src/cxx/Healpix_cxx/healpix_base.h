@@ -33,39 +33,16 @@
 #define HEALPIX_BASE_H
 
 #include <vector>
-#include "cxxutils.h"
+#include "healpix_tables.h"
 #include "pointing.h"
 #include "arr.h"
 #include "rangeset.h"
 
-/*! The two possible ordering schemes of a HEALPix map. */
-enum Healpix_Ordering_Scheme { RING, /*!< RING scheme */
-                               NEST  /*!< NESTED scheme */
-                             };
-
-Healpix_Ordering_Scheme string2HealpixScheme (const std::string &inp);
-
-class nside_dummy {};
-extern const nside_dummy SET_NSIDE;
-
 /*! Functionality related to the HEALPix pixelisation. */
-class Healpix_Base
+class Healpix_Base: public Healpix_Tables
   {
   protected:
     enum { order_max=13 };
-
-    class Tablefiller
-      {
-      public:
-        Tablefiller();
-      };
-    static Tablefiller Filler;
-    friend class Tablefiller;
-
-    static short ctab[0x100], utab[0x100];
-
-    static const int jrll[];
-    static const int jpll[];
 
     /*! The order of the map; -1 for nonhierarchical map. */
     int order_;
@@ -92,6 +69,8 @@ class Healpix_Base
     void nest2xyf(int pix, int &ix, int &iy, int &face_num) const;
     int xyf2ring(int ix, int iy, int face_num) const;
     void ring2xyf(int pix, int &ix, int &iy, int &face_num) const;
+
+    int nest_peano_helper (int pix, int dir) const;
 
     typedef int (Healpix_Base::*swapfunc)(int pix) const;
     typedef void (Healpix_Base::*pix2xyf)

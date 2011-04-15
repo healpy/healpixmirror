@@ -25,7 +25,7 @@
  */
 
 /*
- *  Copyright (C) 2004-2010 Max-Planck-Society
+ *  Copyright (C) 2004-2011 Max-Planck-Society
  *  Author: Martin Reinecke
  */
 
@@ -36,6 +36,7 @@
 #include "powspec_fitsio.h"
 #include "alm_powspec_tools.h"
 #include "levels_facilities.h"
+#include "announce.h"
 
 using namespace std;
 

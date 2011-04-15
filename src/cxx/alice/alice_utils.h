@@ -2,7 +2,7 @@
 #define ALICE_UTILS_H
 
 #include "vec3.h"
-#include "cxxutils.h"
+#include "announce.h"
 #include "rotmatrix.h"
 #include "PolarizationHolder.h"
 #include "TextureHolder.h"

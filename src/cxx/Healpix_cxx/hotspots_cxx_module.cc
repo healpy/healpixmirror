@@ -30,12 +30,12 @@
  */
 
 #include <fstream>
-#include "cxxutils.h"
 #include "paramfile.h"
 #include "healpix_map.h"
 #include "healpix_map_fitsio.h"
 #include "fitshandle.h"
 #include "levels_facilities.h"
+#include "announce.h"
 
 using namespace std;
 

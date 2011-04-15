@@ -25,7 +25,7 @@
 /*
  *  Classes for creation and output of image files
  *
- *  Copyright (C) 2003 Max-Planck-Society
+ *  Copyright (C) 2003-2011 Max-Planck-Society
  *  Author: Martin Reinecke
  */
 
@@ -34,6 +34,8 @@
 #include "ls_image.h"
 #include "bstream.h"
 #include "font_data.inc"
+#include "string_utils.h"
+#include "share_utils.h"
 
 using namespace std;
 

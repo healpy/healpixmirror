@@ -30,33 +30,10 @@
  */
 
 #include "healpix_base2.h"
-#include "cxxutils.h"
-#include "pointing.h"
-#include "arr.h"
 #include "geom_utils.h"
 #include "lsconstants.h"
 
 using namespace std;
-
-short Healpix_Base2::ctab[], Healpix_Base2::utab[];
-
-Healpix_Base2::Tablefiller::Tablefiller()
-  {
-  for (int m=0; m<0x100; ++m)
-    {
-    ctab[m] = short(
-         (m&0x1 )       | ((m&0x2 ) << 7) | ((m&0x4 ) >> 1) | ((m&0x8 ) << 6)
-      | ((m&0x10) >> 2) | ((m&0x20) << 5) | ((m&0x40) >> 3) | ((m&0x80) << 4));
-    utab[m] = short(
-         (m&0x1 )       | ((m&0x2 ) << 1) | ((m&0x4 ) << 2) | ((m&0x8 ) << 3)
-      | ((m&0x10) << 4) | ((m&0x20) << 5) | ((m&0x40) << 6) | ((m&0x80) << 7));
-    }
-  }
-
-Healpix_Base2::Tablefiller Healpix_Base2::Filler;
-
-const int Healpix_Base2::jrll[] = { 2,2,2,2,3,3,3,3,4,4,4,4 },
-          Healpix_Base2::jpll[] = { 1,3,5,7,0,2,4,6,1,3,5,7 };
 
 int Healpix_Base2::nside2order (int64 nside)
   {
@@ -281,61 +258,28 @@ int64 Healpix_Base2::ring2nest (int64 pix) const
   return xyf2nest (ix, iy, face_num);
   }
 
-int64 Healpix_Base2::nest2peano (int64 pix) const
+int64 Healpix_Base2::nest_peano_helper (int64 pix, int dir) const
   {
-  static const uint8 subpix[8][4] = {
-    { 0, 1, 3, 2 }, { 3, 0, 2, 1 }, { 2, 3, 1, 0 }, { 1, 2, 0, 3 },
-    { 0, 3, 1, 2 }, { 1, 0, 2, 3 }, { 2, 1, 3, 0 }, { 3, 2, 0, 1 } };
-  static const uint8 subpath[8][4] = {
-    { 4, 0, 6, 0 }, { 7, 5, 1, 1 }, { 2, 4, 2, 6 }, { 3, 3, 7, 5 },
-    { 0, 2, 4, 4 }, { 5, 1, 5, 3 }, { 6, 6, 0, 2 }, { 1, 7, 3, 7 } };
-  static const uint8 face2path[12] = {
-    2, 5, 2, 5, 3, 6, 3, 6, 2, 3, 2, 3 };
-  static const uint8 face2peanoface[12] = {
-    0, 5, 6, 11, 10, 1, 4, 7, 2, 3, 8, 9 };
-
   int face = pix>>(2*order_);
-  uint8 path = face2path[face];
-  int64 result = 0;
+  uint8 path = peano_face2path[dir][face];
+  int64 result=0;
 
   for (int shift=2*order_-2; shift>=0; shift-=2)
     {
     uint8 spix = uint8((pix>>shift) & 0x3);
     result <<= 2;
-    result |= subpix[path][spix];
-    path=subpath[path][spix];
+    result |= peano_subpix[dir][path][spix];
+    path=peano_subpath[dir][path][spix];
     }
 
-  return result + (int64(face2peanoface[face])<<(2*order_));
+  return result + (int64(peano_face2face[dir][face])<<(2*order_));
   }
+
+int64 Healpix_Base2::nest2peano (int64 pix) const
+  { return nest_peano_helper (pix,0); }
 
 int64 Healpix_Base2::peano2nest (int64 pix) const
-  {
-  static const uint8 subpix[8][4] = {
-    { 0, 1, 3, 2 }, { 1, 3, 2, 0 }, { 3, 2, 0, 1 }, { 2, 0, 1, 3 },
-    { 0, 2, 3, 1 }, { 1, 0, 2, 3 }, { 3, 1, 0, 2 }, { 2, 3, 1, 0 } };
-  static const uint8 subpath[8][4] = {
-    { 4, 0, 0, 6 }, { 5, 1, 1, 7 }, { 6, 2, 2, 4 }, { 7, 3, 3, 5 },
-    { 0, 4, 4, 2 }, { 1, 5, 5, 3 }, { 2, 6, 6, 0 }, { 3, 7, 7, 1 } };
-  static const uint8 face2path[12] = {
-    2, 6, 2, 3, 3, 5, 2, 6, 2, 3, 3, 5 };
-  static const uint8 peanoface2face[12] = {
-    0, 5, 8, 9, 6, 1, 2, 7, 10, 11, 4, 3 };
-
-  int face = pix>>(2*order_);
-  uint8 path = face2path[face];
-  int64 result = 0;
-
-  for (int shift=2*order_-2; shift>=0; shift-=2)
-    {
-    uint8 spix = uint8((pix>>shift) & 0x3);
-    result <<= 2;
-    result |= subpix[path][spix];
-    path=subpath[path][spix];
-    }
-
-  return result + (int64(peanoface2face[face])<<(2*order_));
-  }
+  { return nest_peano_helper (pix,1); }
 
 int64 Healpix_Base2::zphi2pix (double z, double phi) const
   {
@@ -540,29 +484,6 @@ void Healpix_Base2::get_ring_info2 (int64 ring, int64 &startpix, int64 &ringpix,
 
 void Healpix_Base2::neighbors (int64 pix, fix_arr<int64,8> &result) const
   {
-  static const int xoffset[] = { -1,-1, 0, 1, 1, 1, 0,-1 };
-  static const int yoffset[] = {  0, 1, 1, 1, 0,-1,-1,-1 };
-  static const int facearray[][12] =
-        { {  8, 9,10,11,-1,-1,-1,-1,10,11, 8, 9 },   // S
-          {  5, 6, 7, 4, 8, 9,10,11, 9,10,11, 8 },   // SE
-          { -1,-1,-1,-1, 5, 6, 7, 4,-1,-1,-1,-1 },   // E
-          {  4, 5, 6, 7,11, 8, 9,10,11, 8, 9,10 },   // SW
-          {  0, 1, 2, 3, 4, 5, 6, 7, 8, 9,10,11 },   // center
-          {  1, 2, 3, 0, 0, 1, 2, 3, 5, 6, 7, 4 },   // NE
-          { -1,-1,-1,-1, 7, 4, 5, 6,-1,-1,-1,-1 },   // W
-          {  3, 0, 1, 2, 3, 0, 1, 2, 4, 5, 6, 7 },   // NW
-          {  2, 3, 0, 1,-1,-1,-1,-1, 0, 1, 2, 3 } }; // N
-  static const int swaparray[][3] =
-        { { 0,0,3 },   // S
-          { 0,0,6 },   // SE
-          { 0,0,0 },   // E
-          { 0,0,5 },   // SW
-          { 0,0,0 },   // center
-          { 5,0,0 },   // NE
-          { 0,0,0 },   // W
-          { 6,0,0 },   // NW
-          { 3,0,0 } }; // N
-
   int ix, iy, face_num;
   (scheme_==RING) ?
     ring2xyf(pix,ix,iy,face_num) : nest2xyf(pix,ix,iy,face_num);
@@ -572,7 +493,7 @@ void Healpix_Base2::neighbors (int64 pix, fix_arr<int64,8> &result) const
     {
     if (scheme_==RING)
       for (int m=0; m<8; ++m)
-        result[m] = xyf2ring(ix+xoffset[m],iy+yoffset[m],face_num);
+        result[m] = xyf2ring(ix+nb_xoffset[m],iy+nb_yoffset[m],face_num);
     else
       {
       int64 fpix = int64(face_num)<<(2*order_),
@@ -590,7 +511,7 @@ void Healpix_Base2::neighbors (int64 pix, fix_arr<int64,8> &result) const
     {
     for (int i=0; i<8; ++i)
       {
-      int x=ix+xoffset[i], y=iy+yoffset[i];
+      int x=ix+nb_xoffset[i], y=iy+nb_yoffset[i];
       int nbnum=4;
       if (x<0)
         { x+=nside_; nbnum-=1; }
@@ -601,10 +522,10 @@ void Healpix_Base2::neighbors (int64 pix, fix_arr<int64,8> &result) const
       else if (y>=nside_)
         { y-=nside_; nbnum+=3; }
 
-      int f = facearray[nbnum][face_num];
+      int f = nb_facearray[nbnum][face_num];
       if (f>=0)
         {
-        int bits = swaparray[nbnum][face_num>>2];
+        int bits = nb_swaparray[nbnum][face_num>>2];
         if (bits&1) x=nside_-x-1;
         if (bits&2) y=nside_-y-1;
         if (bits&4) std::swap(x,y);

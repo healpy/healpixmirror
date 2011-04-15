@@ -13,4 +13,6 @@ time $BINPATH/map2tga test3.fits test3.tga -bar -title "Downgraded Map" && \
 time $BINPATH/map2tga test3.fits test4.tga -bar -interpol -title "Downgraded, Interpolated Map" && \
 time $BINPATH/alm2map_cxx alm2map3.par && \
 time $BINPATH/map2tga test4.fits test5.tga -bar -title "Synthesized Map (Nside=317)" && \
-xv test.tga test2.tga test3.tga test4.tga test5.tga
+time $BINPATH/median_filter_cxx test.fits '!test5.fits' 60 && \
+time $BINPATH/map2tga test5.fits test6.tga -bar -title "Median-filtered map (1 degree)" && \
+xv test.tga test2.tga test3.tga test4.tga test5.tga test6.tga

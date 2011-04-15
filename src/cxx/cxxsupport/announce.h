@@ -22,43 +22,25 @@
  *  (DLR).
  */
 
-/*! \file pointing.cc
- *  Class representing a direction in 3D space
+/*! \file announce.h
+ *  Functions for printing information at startup.
  *
- *  Copyright (C) 2003-2011 Max-Planck-Society
+ *  Copyright (C) 2002-2011 Max-Planck-Society
  *  \author Martin Reinecke
  */
 
-#include "pointing.h"
-#include "lsconstants.h"
-#include "math_utils.h"
+#ifndef PLANCK_ANNOUNCE_H
+#define PLANCK_ANNOUNCE_H
 
-using namespace std;
+#include <string>
 
-vec3 pointing::to_vec3() const
-  {
-  double st=sin(theta);
-  return vec3 (st*cos(phi), st*sin(phi), cos(theta));
-  }
-void pointing::from_vec3 (const vec3 &inp)
-  {
-  theta = atan2(sqrt(inp.x*inp.x+inp.y*inp.y),inp.z);
-  phi = safe_atan2 (inp.y,inp.x);
-  if (phi<0.) phi += twopi;
-  }
-void pointing::normalize()
-  {
-  theta=fmodulo(theta,twopi);
-  if (theta>pi)
-    {
-    phi+=pi;
-    theta=twopi-theta;
-    }
-  phi=fmodulo(phi,twopi);
-  }
+/*! Prints a banner containing \a name, as well as some information about the
+    source code and the parallelisation techniques enabled. */
+void announce (const std::string &name);
 
-ostream &operator<< (ostream &os, const pointing &p)
-  {
-  os << p.theta << ", " << p.phi << std::endl;
-  return os;
-  }
+/*! Prints a banner containing \a name and checks if \a argc==argc_expected.
+    If not, a usage description is given and the program is terminated. */
+void module_startup (const std::string &name, int argc, const char **argv,
+  int argc_expected, const std::string &argv_expected, bool verbose=true);
+
+#endif

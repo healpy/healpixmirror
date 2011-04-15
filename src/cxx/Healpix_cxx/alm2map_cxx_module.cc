@@ -30,7 +30,6 @@
  */
 
 #include "xcomplex.h"
-#include "cxxutils.h"
 #include "paramfile.h"
 #include "healpix_data_io.h"
 #include "alm.h"
@@ -42,6 +41,7 @@
 #include "fitshandle.h"
 #include "levels_facilities.h"
 #include "lsconstants.h"
+#include "announce.h"
 
 using namespace std;
 

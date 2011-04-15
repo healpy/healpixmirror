@@ -25,12 +25,11 @@
  */
 
 /*
- *  Copyright (C) 2003-2010 Max-Planck-Society
+ *  Copyright (C) 2003-2011 Max-Planck-Society
  *  Author: Martin Reinecke
  */
 
 #include "xcomplex.h"
-#include "cxxutils.h"
 #include "paramfile.h"
 #include "healpix_data_io.h"
 #include "alm.h"
@@ -39,6 +38,7 @@
 #include "fitshandle.h"
 #include "levels_facilities.h"
 #include "lsconstants.h"
+#include "announce.h"
 
 using namespace std;
 

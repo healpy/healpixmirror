@@ -32,28 +32,16 @@
 #ifndef HEALPIX_BASE2_H
 #define HEALPIX_BASE2_H
 
-#include "healpix_base.h"
-#include "datatypes.h"
+#include "healpix_tables.h"
+#include "pointing.h"
+#include "arr.h"
 
 /*! Functionality related to the HEALPix pixelisation. Supports resolutions up to
     N_side = 2^29. */
-class Healpix_Base2
+class Healpix_Base2: public Healpix_Tables
   {
   protected:
     enum { order_max=29 };
-
-    class Tablefiller
-      {
-      public:
-        Tablefiller();
-      };
-    static Tablefiller Filler;
-    friend class Tablefiller;
-
-    static short ctab[0x100], utab[0x100];
-
-    static const int jrll[];
-    static const int jpll[];
 
     /*! The order of the map; -1 for nonhierarchical map. */
     int order_;
@@ -75,6 +63,8 @@ class Healpix_Base2
     void nest2xyf(int64 pix, int &ix, int &iy, int &face_num) const;
     int64 xyf2ring(int ix, int iy, int face_num) const;
     void ring2xyf(int64 pix, int &ix, int &iy, int &face_num) const;
+
+    int64 nest_peano_helper (int64 pix, int dir) const;
 
     typedef int64 (Healpix_Base2::*swapfunc)(int64 pix) const;
     typedef void (Healpix_Base2::*pix2xyf)

@@ -25,7 +25,7 @@
  */
 
 /*
- *  Copyright (C) 2003-2010 Max-Planck-Society
+ *  Copyright (C) 2003-2011 Max-Planck-Society
  *  Author: Martin Reinecke
  */
 
@@ -35,6 +35,7 @@
 #include "fitshandle.h"
 #include "xcomplex.h"
 #include "safe_cast.h"
+#include "share_utils.h"
 
 using namespace std;
 
