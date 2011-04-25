@@ -46,17 +46,8 @@ extern const nside_dummy SET_NSIDE;
 
 class Healpix_Tables
   {
-  private:
-    class Tablefiller
-      {
-      public:
-        Tablefiller();
-      };
-    static Tablefiller Filler;
-    friend class Tablefiller;
-
   protected:
-    static uint16 ctab[0x100], utab[0x100];
+    static const uint16 ctab[], utab[];
 
     static const int jrll[], jpll[];
 

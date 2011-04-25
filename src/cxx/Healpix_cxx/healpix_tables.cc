@@ -45,22 +45,25 @@ Healpix_Ordering_Scheme string2HealpixScheme (const string &inp)
                "': expected 'RING' or 'NESTED'");
   }
 
-uint16 Healpix_Tables::ctab[], Healpix_Tables::utab[];
+const uint16 Healpix_Tables::utab[] = {
+#define Z(a) 0x##a##0, 0x##a##1, 0x##a##4, 0x##a##5
+#define Y(a) Z(a##0), Z(a##1), Z(a##4), Z(a##5)
+#define X(a) Y(a##0), Y(a##1), Y(a##4), Y(a##5)
+X(0),X(1),X(4),X(5)
+#undef X
+#undef Y
+#undef Z
+};
 
-Healpix_Tables::Tablefiller::Tablefiller()
-  {
-  for (unsigned int m=0; m<0x100; ++m)
-    {
-    ctab[m] = uint16(
-         (m&0x1 )       | ((m&0x2 ) << 7) | ((m&0x4 ) >> 1) | ((m&0x8 ) << 6)
-      | ((m&0x10) >> 2) | ((m&0x20) << 5) | ((m&0x40) >> 3) | ((m&0x80) << 4));
-    utab[m] = uint16(
-         (m&0x1 )       | ((m&0x2 ) << 1) | ((m&0x4 ) << 2) | ((m&0x8 ) << 3)
-      | ((m&0x10) << 4) | ((m&0x20) << 5) | ((m&0x40) << 6) | ((m&0x80) << 7));
-    }
-  }
-
-Healpix_Tables::Tablefiller Healpix_Tables::Filler;
+const uint16 Healpix_Tables::ctab[] = {
+#define Z(a) a,a+1,a+256,a+257
+#define Y(a) Z(a),Z(a+2),Z(a+512),Z(a+514)
+#define X(a) Y(a),Y(a+4),Y(a+1024),Y(a+1028)
+X(0),X(8),X(2048),X(2056)
+#undef X
+#undef Y
+#undef Z
+};
 
 const int Healpix_Tables::jrll[] = { 2,2,2,2,3,3,3,3,4,4,4,4 },
           Healpix_Tables::jpll[] = { 1,3,5,7,0,2,4,6,1,3,5,7 };
