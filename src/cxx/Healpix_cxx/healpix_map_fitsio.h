@@ -35,8 +35,7 @@
 #include <string>
 #include "datatypes.h"
 #include "fitshandle.h"
-
-class Healpix_Base;
+#include "healpix_base.h"
 
 template<typename T> class arr;
 template<typename T> class Healpix_Map;

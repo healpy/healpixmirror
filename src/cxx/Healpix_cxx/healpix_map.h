@@ -212,7 +212,7 @@ template<typename T> class Healpix_Map: public Healpix_Base
         {
         T val=map[pix[i]];
         if (!approx<double>(val,Healpix_undef))
-          { res+=val*wgt[i]; wtot+=wgt[i]; }
+          { res+=T(val*wgt[i]); wtot+=wgt[i]; }
         }
       return (wtot==0.) ? T(Healpix_undef) : T(res/wtot);
       }
