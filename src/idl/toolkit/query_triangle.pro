@@ -165,7 +165,6 @@ pro query_triangle, nside, v1, v2, v3, listpix, nlist, $
 ;     Nlist       = number of pixels in the list
 ;
 ;
-;
 ; OPTIONAL OUTPUTS:
 ;     WALLTIME=  contains on output the wall clock time used by the routine [s]   
 ;
@@ -173,8 +172,8 @@ pro query_triangle, nside, v1, v2, v3, listpix, nlist, $
 ; SIDE EFFECTS:
 ; RESTRICTIONS:
 ; PROCEDURE:
-;    calls angulardistance, ring_num, ring2z, discphirange_at_z, in_ring
-;    (and process_intervals, intrs_intrv)
+;    calls angulardistance, ring_num, ring2z, discphirange_at_z, in_ring, ring2nest
+;       and process_intervals, intrs_intrv (included in this file).
 ;
 ; EXAMPLE:
 ;   query_triangle, 128, [1,0,0], [0,1,0], [0,0,1], listpix, nlist
