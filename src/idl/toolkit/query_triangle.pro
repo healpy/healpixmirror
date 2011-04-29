@@ -37,13 +37,13 @@ pro intrs_intrv, d1, d2, di, ni
 ;=======================================================================
 
 tr12 = (d1[0] lt d1[1])
-tr21 = 1 - tr12
+tr21 = ~tr12
 tr34 = (d2[0] lt d2[1])
-tr43 = 1 - tr34
+tr43 = ~tr34
 tr13 = (d1[0] lt d2[0])
-tr31 = 1 - tr13
+tr31 = ~tr13
 tr24 = (d1[1] lt d2[1])
-tr42 = 1 - tr24
+tr42 = ~tr24
 tr14 = (d1[0] lt d2[1])
 tr32 = (d2[0] lt d1[1])
 
@@ -51,22 +51,23 @@ ik = -1
 dk = replicate(-1.0d9,4)
 
 
-if ((tr34 and tr31 and tr14)  or  (tr43 and (tr31 or tr14))) then begin
-   ik = ik + 1
+if ((tr34 && tr31 && tr14)  ||  (tr43 && (tr31 || tr14))) then begin
+   ik ++
    dk[ik] = d1[0]  ; a1
 endif
-if ((tr12 and tr13 and tr32)  or  (tr21 and (tr13 or tr32))) then begin
-   ik = ik + 1
+if ((tr12 && tr13 && tr32)  ||  (tr21 && (tr13 || tr32))) then begin
+   ik ++
    dk[ik] = d2[0]  ; a2
 endif
-if ((tr34 and tr32 and tr24)  or  (tr43 and (tr32 or tr24))) then begin
-   ik = ik + 1
+if ((tr34 && tr32 && tr24)  ||  (tr43 && (tr32 || tr24))) then begin
+   ik ++
    dk[ik] = d1[1]  ; b1
 endif
-if ((tr12 and tr14 and tr42)  or  (tr21 and (tr14 or tr42))) then begin
-   ik = ik + 1
+if ((tr12 && tr14 && tr42)  ||  (tr21 && (tr14 || tr42))) then begin
+   ik ++
    dk[ik] =  d2[1]  ; b2
 endif
+
 
 di = replicate(0.0d0,4)
 nk = ik+1
@@ -93,33 +94,107 @@ endcase
 return
 end
 
+
+;===========================================================================
+pro process_intervals, interval1, interval_list, interval_out, n_out
+
+interval_out = 0.0d0
+n_out = 0
+
+n_in = n_elements(interval_list)/2
+if (n_in gt 0) then begin
+    interval_out = dblarr(2*n_in+2)
+    for i_in =0, n_in-1 do begin
+        intrs_intrv, interval1, interval_list[2*i_in:2*i_in+1], tmp_list_out, n_tmp_out ; 0, 1 or 2 intervals
+        if (n_tmp_out gt 0) then begin
+            interval_out[2*n_out] = tmp_list_out[0:2*n_tmp_out-1]
+            n_out += n_tmp_out
+        endif
+    endfor
+    interval_out = (n_out gt 0) ? interval_out[0:2*n_out-1] : 0.0d0
+endif 
+
+return
+end
+
 ;===========================================================================
 
-pro query_triangle, nside, v1, v2, v3, listpix, nlist, help=help, nested=nested, inclusive=inclusive
+pro query_triangle, nside, v1, v2, v3, listpix, nlist, $
+             help=help, $
+             nested=nested, $
+             inclusive=inclusive, $
+             walltime=walltime  ;, circle=circle
 ;+
-;=======================================================================
+; NAME:
+;    QUERY_TRIANGLE
 ;
-;    query_triangle, Nside, V1, V2, V3, Listpix, Nlist, HELP=, NESTED=, INCLUSIVE=
-;    --------------
-;     nside       = resolution parameter (a power of 2)
-;     v1, v2, v3  = 3D vector location of the 3 triangle vertices
-;     list_pix    = list of pixel lying in the triangle
-;     nlist       = number of pixels in the list
-;     nested  (OPT), :0 by default, the output list is in RING scheme
-;                  if set to 1, the output list is in NESTED scheme
-;     inclusive (OPT) , :0 by default, only the pixels whose center 
+; PURPOSE:
+;     Returns the list of Healpix pixels enclose in a spherical triangles
+;     defined by its 3 vertices
+;
+; CATEGORY:
+;
+;
+;
+; CALLING SEQUENCE:
+;    query_triangle, Nside, V1, V2, V3, Listpix, Nlist [, /HELP, /NESTED, /INCLUSIVE, WALLTIME=]
+;
+;
+; INPUTS:
+;
+;     Nside       = Healpix resolution parameter (a power of 2)
+;
+;     V1, V2, V3  = 3D vector location of the 3 triangle vertices
+;        They do not need to be normalised to unity
+;
+; KEYWORD PARAMETERS:
+;
+;     /HELP:   prints this documentation header and exits
+;
+;     /INCLUSIVE :0 by default, only the pixels whose center 
 ;                       lie in the triangle are listed on output
 ;                  if set to 1, all pixels overlapping the triangle are output
-;     help (OPT):   prints this documentation header and exits
 ;
+;     /NESTED  :0 by default, the output list is in RING scheme
+;                  if set to 1, the output list is in NESTED scheme
+;
+; OUTPUTS:
+;
+;     List_pix    = list of pixel lying in the triangle
+;
+;     Nlist       = number of pixels in the list
+;
+;
+;
+; OPTIONAL OUTPUTS:
+;     WALLTIME=  contains on output the wall clock time used by the routine [s]   
+;
+; COMMON BLOCKS:
+; SIDE EFFECTS:
+; RESTRICTIONS:
+; PROCEDURE:
+;    calls angulardistance, ring_num, ring2z, discphirange_at_z, in_ring
+;    (and process_intervals, intrs_intrv)
+;
+; EXAMPLE:
+;   query_triangle, 128, [1,0,0], [0,1,0], [0,0,1], listpix, nlist
+;    will return the pixels contained in the octant (x,y,z)>0 
+; 
+;
+; MODIFICATION HISTORY:
 ;
 ;
 ; v1.0, EH, Caltech, Aug-Sep-2002 : adapted from F90 code
+; v1.1, EH, IAP, Mar-2011: added walltime
+; v1.2, EH, IAP, Apr-2011: fewer spurious false positive pixels 
+;  (for squeezed triangles in inclusive mode) by requiring
+;   pixels to be within a disc enclosing the triangle
 ;=======================================================================
 ;-
 
+tstart = systime(1)
 routine = 'query_triangle'
-syntax = routine+', Nside, V1, V2, V3, Listpix [, Nlist, HELP=, NESTED=, INCLUSIVE=]'
+syntax = routine+', Nside, V1, V2, V3, Listpix [, Nlist, HELP=, NESTED=, INCLUSIVE=, WALLTIME=]'
 
 if keyword_set(help) then begin
     doc_library,routine
@@ -146,11 +221,6 @@ vv[*,0] = v1 / sqrt(total(v1*v1, /double))
 vv[*,1] = v2 / sqrt(total(v2*v2, /double))
 vv[*,2] = v3 / sqrt(total(v3*v3, /double))
 
-;;listir=lonarr(4*nside)
-
-dth1 = 1.0d0 / (3.0d0*double(nside)^2)
-dth2 = 2.0d0 / (3.0d0*double(nside))
-
 
 ; determ = (vect1 X vect2) . vect3
 ; determines the left(<0)/right(>0) handedness of the triangle
@@ -163,14 +233,14 @@ if (abs(determ) lt 1.d-20) then begin
     message,/info,' The query can not be performed '
     message,      ' ************************************************************'
 endif
-sdet = 1.d0
-if (determ lt 0.d0) then sdet = -1.d0 ; = +1 or -1, the sign of determ
+sdet = (determ lt 0.d0) ? -1.d0 : 1.d0 ; = +1 or -1, the sign of determ
 
 ; scalar product of vertices vectors
 sprod = dblarr(3)
 sprod[0] = total(vv[*,1]*vv[*,2])
 sprod[1] = total(vv[*,2]*vv[*,0])
 sprod[2] = total(vv[*,0]*vv[*,1])
+
 
 ; vector orthogonal to the great circle containing the vertex doublet
 vo = dblarr(3,3)
@@ -179,9 +249,7 @@ vo[*,1] = vect_prod( vv[*,2], vv[*,0])
 vo[*,2] = vect_prod( vv[*,0], vv[*,1]) 
 
 ; normalize the orthogonal vector
-vo[*,0] = vo[*,0] /  SQRT(total(vo[*,0]^2))
-vo[*,1] = vo[*,1] /  SQRT(total(vo[*,1]^2))
-vo[*,2] = vo[*,2] /  SQRT(total(vo[*,2]^2))
+for i=0,2 do vo[*,i] = vo[*,i] /  SQRT(total(vo[*,i]^2))
 
 ; test presence of poles in the triangle
 zmax = -1.0d0
@@ -215,7 +283,7 @@ z1max = vv[2,1]
 z1min = vv[2,2]
 if ( test1a EQ test1b ) then begin
    zz = sto[0]
-   if ((vv[2,1]+vv[2,2]) ge 0.0d0) then z1max =  zz else z1min = -zz
+   if ((z1min+z1max) ge 0.0d0) then z1max =  zz else z1min = -zz
 endif
 
 ; segment 1-3
@@ -223,7 +291,7 @@ z2max = vv[2,2]
 z2min = vv[2,0]
 if ( test2a EQ test2b ) then begin
    zz = sto[1]
-   if ((vv[2,0]+vv[2,2]) ge 0.0d0) then z2max =  zz else z2min = -zz
+   if ((z2min+z2max) ge 0.0d0) then z2max =  zz else z2min = -zz
 endif
 
 ; segment 1-2
@@ -231,7 +299,7 @@ z3max = vv[2,0]
 z3min = vv[2,1]
 if ( test3a EQ test3b ) then begin
    zz = sto[2]
-   if ((vv[2,0]+vv[2,1]) ge 0.0d0) then z3max =  zz else z3min = -zz
+   if ((z3min+z3max) ge 0.0d0) then z3max =  zz else z3min = -zz
 endif
 
 zmax = MAX([z1max, z2max, z3max, zmax])
@@ -241,18 +309,35 @@ zmin = MIN([z1min, z2min, z3min, zmin])
 offset = 0.0d0
 sin_off = 0.0d0
 if (do_inclusive) then begin
-   offset = !DPI / (4.0d0*nside) ; half pixel size
+   offset = 1.36d0 * !DPI / (4.0d0*nside)
    sin_off = sin(offset)
    zmax = cos( acos(zmax) - offset) < 1.d0
    zmin = cos( acos(zmin) + offset) > (-1.d0)
 endif
 
-; northernest and sourthernest ring number
+; find one small circle containing all points, 
+; increased by fudge offset in inclusive case
+junk = min(sprod, longside)
+lsp1 = (longside+1) mod 3
+lsp2 = (longside+2) mod 3
+vcenter = 0.5d0*(vv[*,lsp1] + vv[*,lsp2]) ; mid point of longest side
+vcenter /= sqrt(total(vcenter^2))
+dd = angulardistance(vcenter, transpose(vv))
+radius_eff = max(dd) + offset
+; print,'Disc:'
+; print,vcenter, radius_eff*!radeg
+; vec2ang,/astro, vcenter, dec0, ra0
+; circle = generate_circle(ra0, dec0, radius_eff*!radeg, npoints=40, coord='G')
+
+; northernmost and sourthernmost ring number
 irmin = ring_num(lnside, zmax)
 irmax = ring_num(lnside, zmin)
 
-nlist = 0
-;    print*,"irmin, irmax ",irmin,irmax
+; build list of phi range for disc containing triangle
+nz = irmax - irmin + 1
+izlist = irmin + lindgen(nz)    ; list of rings
+zlist  = ring2z(lnside, izlist) ; list of z
+if (do_inclusive) then dphilist = discphirange_at_z (vcenter, radius_eff, zlist, phi0=phi0disc) ; phi range in each ring
 
 ; -------- loop on the rings -------------------------
 
@@ -269,48 +354,43 @@ endif
 ; by sin(offset)
 twopi = 2.0d0 * !DPI
 
-dom    = dblarr(2,3)
-dom12  = dblarr(4) & dom123a = dom12 & dom123b = dom12
-alldom = dblarr(6)
+dom    = dblarr(2,4)
 
+nlist = 0
 for iz = irmin, irmax do begin
-    z = ring2z(lnside, iz)
+    iz0 = iz - irmin
+    z = zlist[iz0]
+
     ; computes the 3 intervals described by the 3 great circles
     st = SQRT(1.0d0 - z*z)
     tgth = z / st               ; cotan(theta_ring)
-;     dc  = tgthi * tgth - sdet * sin_off / (sto * st)
     dc  = tgthi * tgth - sdet * sin_off / ((sto+1.d-30) * st) ; !!! sto is slightly offset to avoid division by 0
-
     for j=0,2 do begin
         if (dc[j]*sdet le -1.0d0) then begin ; the whole iso-latitude ring is on the right side of the great circle
             dom[0:1, j] = [ 0.0d0, twopi ]
         endif else if (dc[j]*sdet ge 1.0d0) then begin ; all on the wrong side
-            dom[0:1, j] = [ -1.000001d0, -1.0d0 ] * (j+1) 
+            dom[0:1, j] = [ -1.000001d0, -1.0d0 ] * (j+1) *0.5d0
         endif else begin        ; some is good, some is bad
             dom[0:1, j] = (phi0i[j] + ACOS(dc[j]) * sdet * [-1.0d0, 1.0d0] + twopi) MOD twopi
         endelse
     endfor
-    ; identify the intersections (0,1,2 or 3) of the 3 intervals
-    intrs_intrv, dom[0:1,0], dom[0:1,1], dom12, n12
+    dom[0:1,3] = [ -1.000001d0, -1.0d0 ] * 2.d0
+    if (do_inclusive && dphilist[iz0] ge 0.d0) then dom[0:1,3] = (phi0disc + dphilist[iz0]*[-1.d0,1.d0] + twopi) mod twopi
 
-    if (n12 eq 0) then goto, empty
-    if (n12 eq 1) then begin
-        intrs_intrv, dom[0:1,2], dom12, dom123a, n123a
-        if (n123a eq 0) then goto, empty
-        alldom[0:2*n123a-1] = dom123a[0:2*n123a-1]
-        ndom = n123a            ; 1 or 2
+    ; identify the intersections (0,1,2 or 3) of the 3 intervals
+    ; -------------------------------------------------------
+    ; start with the first 2 intervals
+    process_intervals, dom[0:1,1], dom[0:1,0], alldom, ndom ; ndom = 0, 1 or 2
+    if (ndom eq 0) then goto, empty
+    ; add the third interval
+    process_intervals, dom[0:1,2], alldom[0:2*ndom-1], alldom, ndom ; ndom = 0, 1, 2 or 3
+    if (ndom eq 0) then goto, empty
+    ; add the fourth interval in inclusive mode
+    if (do_inclusive) then begin
+        process_intervals, dom[0:1,3], alldom[0:2*ndom-1], alldom, ndom ; ndom = 0, 1, 2, 3 or 4
+        if (ndom eq 0) then goto, empty
     endif
-    if (n12 eq 2) then begin
-        intrs_intrv, dom[0:1,2], dom12[0:1], dom123a, n123a
-        intrs_intrv, dom[0:1,2], dom12[2:3], dom123b, n123b
-        ndom = n123a + n123b    ; 0, 1, 2 or 3
-        if (ndom eq 0)  then goto, empty
-        if (n123a ne 0) then alldom[0:     2*n123a-1]  = dom123a[0:2*n123a-1]
-        if (n123b ne 0) then alldom[2*n123a:2*ndom-1]  = dom123b[0:2*n123b-1]
-        if (ndom gt 3)  then begin
-            print,code+"> too many intervals found"
-        endif
-    endif
+
     for idom=0,ndom-1 do begin
         a_i = alldom[2*idom]
         b_i = alldom[2*idom+1]
@@ -338,6 +418,7 @@ for iz = irmin, irmax do begin
 empty:
 endfor ;-----------------------------------------
 
+walltime = systime(1) - tstart
 return
 end
 

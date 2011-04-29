@@ -62,6 +62,7 @@ PRO ang2pix_ring, nside, theta, phi, ipring
 ;    June 2003,  EH, replaced STOPs by MESSAGEs
 ;    Aug  2004,  EH, use !PI as theta upper-bound instead of !DPI
 ;    Dec 2007, EH,  IAP, enabled nside > 8192
+;    Apr 2011, EH, IAP, correction of a bug affecting phi out of [-2Pi, 2Pi] 
 ;-
 ;*********************************************************************************
   routine = 'ANG2PIX_RING'
@@ -99,7 +100,7 @@ PRO ang2pix_ring, nside, theta, phi, ipring
 
   cth_in = COS(DOUBLE(theta))
   phi_in = phi MOD twopi
-  phi_in = phi + (phi LE 0.d0)*twopi
+  phi_in += (phi LE 0.d0)*twopi ; bug correction 2011-04-28
 
   pix_eqt = WHERE((cth_in LE  cth0) AND (cth_in GT -cth0), n_eqt) ; equatorial strip
   IF (n_eqt GT 0) THEN BEGIN    ; equatorial strip ----------------

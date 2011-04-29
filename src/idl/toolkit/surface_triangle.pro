@@ -36,6 +36,10 @@ function surface_triangle, vec1, vec2, vec3
 ; algorithm : finds triangle sides and uses l'Huilier formula to compute
 ; "spherical excess" = surface area of triangle on a sphere of radius one
 ; see, eg Bronshtein, Semendyayev Eq 2.86
+;
+;
+;  Original code:?
+;  2011-04-12: replace angdist with angulardistance
 ;=======================================================================
 ;-
 
@@ -49,14 +53,21 @@ function surface_triangle, vec1, vec2, vec3
 ;   x3 = tan((hp - side3) * 0.5_dp)
 
 ; find triangle sides
-call angdist(vec2, vec3, side1)
-call angdist(vec3, vec1, side2)
-call angdist(vec1, vec2, side3)
+; call angdist(vec2, vec3, side1)
+; call angdist(vec3, vec1, side2)
+; call angdist(vec1, vec2, side3)
+side1 = angulardistance(vec2, vec3)
+side2 = angulardistance(vec3, vec1)
+side3 = angulardistance(vec1, vec2)
+
 
 ; divide by 4
-side1 = side1/ 4.d0
-side2 = side2/ 4.d0
-side3 = side3/ 4.d0
+; side1 = side1/ 4.d0
+; side2 = side2/ 4.d0
+; side3 = side3/ 4.d0
+side1 *= 0.25d0
+side2 *= 0.25d0
+side3 *= 0.25d0
 
 ; l'Huilier formula
 x0 = tan( side1 + side2 + side3 )
