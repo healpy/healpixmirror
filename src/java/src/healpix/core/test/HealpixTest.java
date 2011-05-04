@@ -1315,7 +1315,7 @@ public class HealpixTest extends TestCase {
 	public void testQuery_TriangleNotCrossing360Ring() throws Exception {
 		int nside = 4;
 		int triang[] = { 44, 46, 77 }; //not crossing 360
-		int pixels[] = { 44,45,46,60,77, };//120 is missing because center outside the triangle (inclusive=0)
+		int pixels[] = { 44,45,46,77, };//60,120 is missing because center outside the triangle (inclusive=0)
 		
 //		nside = 2;
 //		int triang[] = { 14, 16, 31 }; // not crossing 360
@@ -1345,7 +1345,7 @@ public class HealpixTest extends TestCase {
 		int i=0;
 		while (it.hasNext()) {
 			ipix =  it.next();
-//			System.out.println(ipix);
+			System.out.println(ipix);
 			assertEquals("pixel = " + ipix + " wrong.", (long) pixels[i], ipix);
 			i++;
 		}
@@ -1363,8 +1363,8 @@ public class HealpixTest extends TestCase {
 		int inclusive = 0;
 		
 		int triang[] = { 95, 20, 85 }; // not crossing 360
-		int pixels[] = { 18,19,20,24,85,87,95};//{95, 24, 19, 20, 18, 87, 85};//120 is missing because center outside the triangle (inclusive=0)
-//		nside = 2;
+		int pixels[] = { 18,19,20,24,85,95};//{95, 24, 19, 20, 18, 87, 85};//120 is missing because center outside the triangle (inclusive=0)
+//		took out 87 ..;
 //		nest = 1;
 //		inclusive = 0;
 //		 int triang[] = {23,27,39} ; // not crossing 360

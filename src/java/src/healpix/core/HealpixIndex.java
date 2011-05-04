@@ -1602,132 +1602,58 @@ public class HealpixIndex implements Serializable {
 	 * @param res result
 	 */
 	public void inRing( long iz, double phi0, double dphi,LongRangeSetBuilder res, boolean conservative)  {
-		boolean take_all = false;
-		boolean to_top = false;
+		long nr, ir, ipix1;
+		double shift=0.5;
 
-//		String SID = "InRing:";
-		double epsilon = 1e-12;//Double.MIN_VALUE; // the constant to eliminate
-		// java calculation jitter
-		double shift = 0.;
-		long ir = 0;
-		long kshift, nr, ipix1, ipix2;//nir1, nir2,
-		long ip_low = 0, ip_hi = 0; //,in, nir;
-//		long inext;
-		
-		double phi_low = bm.MODULO(phi0 - dphi, Constants.twopi) - epsilon; // phi min,															  // excluding
-																  // 2pi period
-//		double phi_low = phi0 - dphi - epsilon; // phi min, 
-		// excluding
-		double phi_hi = phi0 + dphi + epsilon;
-	
-		// this was being moduloed but why ?? around the 2pi that casues a problem
-		double phi_hi_mod = bm.MODULO(phi0 + dphi, Constants.twopi) + epsilon;
-
-//
-		if (Math.abs(dphi - Constants.PI) < epsilon)  take_all = true;
-		// what happens when phi_hi wraps round ??
-
-		/* identifies ring number */
-		if ((iz >= nside) && (iz <= nl3)) { // equatorial region
-			ir = iz - nside + 1; // in [1, 2*nside + 1]
-			ipix1 = ncap + nl4 * (ir - 1); // lowest pixel number in the
-											     // ring
-			ipix2 = ipix1 + nl4 - 1; // highest pixel number in the ring
-			kshift = (long) bm.MODULO(ir, 2.);
-
-			nr = nl4;
-		} else {
-			if (iz < nside) { // north pole
-				ir = iz;
-				ipix1 = 2 * ir * (ir - 1); // lowest pixel number
-				ipix2 = ipix1 + (4 * ir) - 1; // highest pixel number
-			} else { // south pole
-				ir = 4 * nside - iz;
-
-				ipix1 = npix - 2 * ir * (ir + 1); // lowest pixel number
-				ipix2 = ipix1 + 4 * ir - 1;       // highest pixel number
-			}
-			nr = ir * 4;
-			kshift = 1;
+		if (iz<nside) // north pole
+		{
+		ir = iz;
+		nr = ir*4;
+		ipix1 = 2*ir*(ir-1); // lowest pixel number in the ring
+		}
+		else if (iz>(3*nside)) // south pole
+		{
+		ir = 4*nside - iz;
+		nr = ir*4;
+		ipix1 = npix - 2*ir*(ir+1); // lowest pixel number in the ring
+		}
+		else // equatorial region
+		{
+		ir = iz - nside + 1; // within {1, 2*nside + 1}
+		nr = nside*4;
+		if ((ir&1)==0) shift = 0;
+		ipix1 = ncap + (ir-1)*nr; // lowest pixel number in the ring
 		}
 
-		// Construct the pixel list
-		if (take_all) {
-             res.appendRange(ipix1,ipix2);
-			return;
+		long ipix2 = ipix1 + nr - 1; // highest pixel number in the ring
+
+		if (dphi > (Constants.PI-1e-12)) {
+			res.appendRange(ipix1,ipix2);
+		} else{
+			long ip_lo = (long) Math.floor(nr/Constants.twopi*(phi0-dphi) -
+			shift)+1;
+			long ip_hi = (long) Math.floor(nr/Constants.twopi*(phi0+dphi) -
+			shift);
+
+	        if (ip_hi < ip_lo ){
+	            //nothing to do - no pixel here;
+	        	//res.append(ipix1+ip_lo);
+
+	            return;
+	        } 
+	        
+		    if (ip_hi>=nr) { 
+		    	ip_lo-=nr; ip_hi-=nr; 
+		    }
+		    
+		    if (ip_lo<0){
+		      res.appendRange(ipix1,ipix1+ip_hi);
+		      res.appendRange(ipix1+ip_lo+nr,ipix2);
+		    } else {
+		    	res.appendRange(ipix1+ip_lo,ipix1+ip_hi);
+			}
 		}
-
-		shift = kshift / 2.0;
-
-		// conservative : include every intersected pixel, even if the
-		// pixel center is out of the [phi_low, phi_hi] region
-		if (conservative) {
-			ip_low = (long) Math.round((nr * phi_low) / Constants.twopi - shift);
-			ip_hi = (long) Math.round((nr * phi_hi) / Constants.twopi - shift);
-
-			ip_low = (long) bm.MODULO(ip_low, nr); // in [0, nr - 1]
-			if (ip_hi > nr) { // ifit is =nr then this sets it to zero - not good
-				ip_hi = (long) bm.MODULO(ip_hi, nr); // in [0, nr - 1]
-			}
-//			System.out.println("ip_low="+ip_low+" ip_hi="+ip_hi);
-		} else { // strict: includes only pixels whose center is in
-			//                                                    [phi_low,phi_hi]
-
-			ip_low = (long) Math.ceil(((double)nr * phi_low) / Constants.twopi - shift);
-			ip_hi = (long)(((double)nr * phi_hi_mod) / Constants.twopi - shift);
-			if (ip_hi < ip_low && iz==1){//this is not good - problem on pole with direction.
-			   ip_hi = (long)(((double)nr * phi_hi) / Constants.twopi - shift);				
-			}
-			if (ip_low == ip_hi + 1)
-				ip_low = ip_hi;
-
-			if ((ip_low - ip_hi == 1) && (dphi * (double)nr < Constants.PI)) {
-				// the interval is too small ( and away from pixel center)
-				// so no pixels is included in the list
-				
-				System.err.println("the interval is too small and avay from center");
-	
-				return; // return empty list 
-			}
-
-			ip_low = Math.min(ip_low, nr - 1);
-			ip_hi = Math.max(ip_hi, 0);
-		}
-
-		//
-		if (ip_low > ip_hi)
-			to_top = true;
-
-		if (to_top) {
-			ip_low += ipix1;
-			ip_hi += ipix1;
-			//nir1 = ipix2 - ip_low + 1;
-
-			//nir2 = ip_hi + 1;
-
-            res.appendRange(ipix1,ip_hi);
-            res.appendRange(ip_low,ipix2);    
-//            res.addAll(ipix1,ip_hi);
-//            res.addAll(ip_low,ipix2);        
-		} else {
-			if (ip_low < 0 ){
-				ip_low = Math.abs(ip_low) ;
-				//nir1 = ip_low;
-				//nir2 = ip_hi + 1;
-
-                res.appendRange(ipix1, ipix1+ip_hi);
-                res.appendRange(ipix2-ip_low +1, ipix2);
-//                res.addAll(ipix1, ipix1+ip_hi);
-//                res.addAll(ipix2-ip_low +1, ipix2);
-				return ;
-
-			}
-			ip_low += ipix1;
-			ip_hi += ipix1;
-
-            res.appendRange(ip_low,ip_hi);
-//            res.addAll(ip_low,ip_hi);
-		}
+	    
 	}
 
 	/**

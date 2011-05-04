@@ -89,7 +89,7 @@ public class TestSixFourBit extends TestCase {
 			}
 			
 			assertEquals("Healpix and HealpixIndex disagree on theta for " + i,
-					pos.theta(), posHi[0],0.0001); 
+					pos.theta(), posHi[0],0.001); 
 			// guess could use precisson of pix to figure this accuracy out  
 			
 			assertEquals("pix32 incorrect for  theta "
