@@ -27,15 +27,23 @@ import healpix.core.base.set.LongRangeIterator;
 import healpix.core.base.set.LongRangeSet;
 import healpix.core.base.set.LongRangeSetBuilder;
 import healpix.core.base.set.LongSet;
+import healpix.core.dm.AbstractHealpixMap.Scheme;
 import healpix.tools.Constants;
 import healpix.tools.SpatialVector;
 
 import java.io.Serializable;
 import java.text.Format;
+import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Stack;
+
+import javax.management.RuntimeErrorException;
+
+import com.sun.org.apache.bcel.internal.classfile.StackMap;
 
 /**
  * Generic healpix routines but tied to a given NSIDE in the constructor Java
@@ -51,6 +59,12 @@ import java.util.List;
  */
 
 public class HealpixIndex implements Serializable {
+	
+	protected class RingInfoSmall {
+		long startpix, ringpix;
+		boolean shifted;
+	}
+
 	static boolean DEBUG=true;
 
 	/**
@@ -64,7 +78,7 @@ public class HealpixIndex implements Serializable {
         "$Id: HealpixIndex.java 164005 2011-01-10 11:10:33Z ejoliet $";
 	/** The Constant ns_max. */
 	public static final int ns_max = 536870912;// 1048576;
-	/** Max order 
+	/** Max order **/
 	public static final int order_max=29;
 	
     /*! The order of the map; -1 for nonhierarchical map. */
@@ -116,6 +130,8 @@ public class HealpixIndex implements Serializable {
 
 	/** The fact2. */
 	protected double fact1, fact2;
+	
+	protected Scheme scheme= Scheme.NESTED;// default will be nest
 
 	/** The bm. */
 	transient private BitManipulation bm = new BitManipulation();
@@ -195,6 +211,15 @@ public class HealpixIndex implements Serializable {
 			throw new Exception("nsides must be between 1 and " + ns_max);
 		}
 		this.nside = nSIDE2;
+		init();
+	}
+
+	public HealpixIndex(int nside2, Scheme sch) throws Exception{
+		if ( nside2 > ns_max || nside2 < 1 ) {
+			throw new Exception("nsides must be between 1 and " + ns_max);
+		}
+		this.nside = nside2;
+		this.scheme=sch;
 		init();
 	}
 
@@ -1096,6 +1121,13 @@ public class HealpixIndex implements Serializable {
 		return v;
 	}
 
+	
+	public static AngularPosition vec2AngularPosition(SpatialVector v) {
+		double[] angs= vec2Ang(v);
+		AngularPosition ang = new AngularPosition(angs[0], angs[1]);
+		return ang;
+	}
+
 	/**
 	 * converts a SpatialVector in a tuple of angles tup[0] = theta co-latitude
 	 * measured from North pole, in [0,PI] radians, tup[1] = phi longitude
@@ -1210,6 +1242,14 @@ public class HealpixIndex implements Serializable {
 		return res;
 	}
 
+	public Scheme getScheme() {
+		return scheme;
+	}
+
+	public void setScheme(Scheme scheme) {
+		this.scheme = scheme;
+	}
+
 	/**
 	 * calculates angular distance (in radians) between 2 Vectors v1 and v2 In
 	 * general dist = acos(v1.v2) except if the vectors are almost aligned
@@ -1281,6 +1321,46 @@ public class HealpixIndex implements Serializable {
 		return v1.cross(v2);
 	}
 	
+	
+	/**
+	 * now using the C++ one this is here for compatibility
+	 * @param ptg
+	 * @param radius
+	 * @param nest
+	 * @param inclusive
+	 * @return
+	 * @deprecated use oen without nest - scheme now in map
+	 */
+	public LongRangeSet queryDisc(SpatialVector vec,
+			double radius, int nest, int inclusive) {
+		
+		AngularPosition ptg = vec2AngularPosition(vec);
+		LongRangeSetBuilder pixset = new LongRangeSetBuilder();
+		if (nest != scheme.ordinal()) {
+			System.err.println("in queryDiscc - Requested nest="+
+					nest +" but scheme ="+scheme);
+			scheme=Scheme.values()[nest];
+		}
+		queryDisc(ptg,radius,inclusive==1,pixset);
+		return pixset.build();
+	}
+	/**
+	 * now using the C++ one this is here for convenience to consruct the LongRangeSet.
+	 * It somply calls the queryDisc passing in a LongRangeSetBuilder.
+	 * @param ptg
+	 * @param radius
+	 * @param inclusive
+	 * @return
+	 */
+	public LongRangeSet queryDisc(SpatialVector vec,
+			double radius, boolean inclusive) {
+		AngularPosition ptg = vec2AngularPosition(vec);
+		LongRangeSetBuilder pixset = new LongRangeSetBuilder();
+		
+		queryDisc(ptg,radius,inclusive,pixset);
+		return pixset.build();
+	}	
+	
 	/**
 	 * generates in the RING or NESTED scheme all pixels that lies within an
 	 * angular distance Radius of the center.
@@ -1291,144 +1371,123 @@ public class HealpixIndex implements Serializable {
 	 *            Vector3d pointing to the disc center
 	 * @param radius
 	 *            double angular radius of the disk (in RADIAN )
-	 * @param nest
-	 *            int 0 (default) if output is in RING scheme, if set to 1
-	 *            output is in NESTED
 	 * @param inclusive
 	 *            int 0 (default) only pixsels whose center lie in the triangle
 	 *            are listed, if set to 1, all pixels overlapping the triangle
 	 *            are listed
 	 * @return ArrayList of pixel numbers calls: RingNum(nside, ir)
 	 *         InRing(nside, iz, phi0, dphi,nest)
+	 *         
+	 *         now from the C++ portd by wil
 	 */
-	public LongRangeSet queryDisc(SpatialVector vector,
-			double radius, int nest, int inclusive) {
+	public void queryDisc(AngularPosition ptg,
+			double radius, boolean inclusive, LongRangeSetBuilder pixset) {
 
-		String SID = "QUERY_DISC";
-		if ( radius < 0.0 || radius > Constants.PI ) {
-			throw new IllegalArgumentException(SID
-					+ ": angular radius is in RADIAN and should be in [0,pi]");
-		}
-
-		LongRangeSetBuilder res = new LongRangeSetBuilder();
-		long irmin, irmax, iz;
-		double[] ang=null;
-		double  z0, radius_eff,theta,phi, cosang, x, ysq;
-		double dth1, dth2, dphi;
-		double rlat1, rlat2, zmin, zmax, z, xa;
-		boolean do_inclusive = false;
-		boolean do_nest = false;
-
-		if ( inclusive == 1 )
-			do_inclusive = true;
-		if ( nest == 1 ) {
-			do_nest = true;
-		} 
-
-		radius_eff = radius;
-		if ( do_inclusive )
-			radius_eff += Constants.magic* Constants.PI / (double)( nl4 ); // increase radius by
-		// half pixel: different in C++ version where a 'magic' number is used.
-
-		// this pix back abnf fourth is ok until you put in  precise vector like a pole .
-		// then it shifts the whole elipse...
-		ang=vec2Ang(vector);
-		
-	/**	try {
-		   long pix = this.vec2pix_nest(vector);
-		   ang=this.pix2ang_nest(pix);
-		} catch (Exception e) {
-			ang=vec2Ang(vector);
-		}**/
-		theta=ang[0];
-		phi=ang[1];
-		dth1 = this.fact2;
-		dth2 = this.fact1;
-        z0 = Math.cos(theta);
-        xa = 1./Math.sqrt((1.0-z0)*(1.0+z0));
-        		
-		/* coordinate z of highest and lowest points in the disc */
-	
-		rlat1 = theta - radius_eff;				
-		rlat2 = theta + radius_eff;
-	
-
-		cosang=Math.cos(radius_eff);
-		zmax = Math.cos(rlat1);
-		irmin = ringAbove(zmax) +1;
-	    zmin = Math.cos(rlat2);	
-		irmax = ringAbove(zmin);
-		
-    	if (irmax < irmin) {// in this case no pixels are returned - need irmax=irmin to loop
-			if (irmax==0) {
-				irmax=irmin;
-			}
-		}
-
-		if (rlat1<=0) {// north pole in the disc
-		    for (int m=1; m<irmin; ++m) {// rings completely in the disc
-		      inRing(m, 0, Math.PI, res);
-		    }
-		}
-	
-		/* loop on ring number */
-		for ( iz = irmin; iz <= irmax; ++iz ) {
-			if ( iz < nside  ) { // north polar cap
-				z = 1.0 - (double)iz* (double)iz * dth1;
-			} else if ( iz <= (nl3) ) { // tropical band + equator
-				z = (double)(nl2 - iz ) * dth2;
-			} else {
-				z = -1.0 + (double)( nl4 - iz ) * (double)( nl4 - iz ) * dth1;
-			}
-			/* find phi range in the disc for each z */
-			x = (cosang - z * z0)*xa;
-			ysq  = 1.0 - z * z - x * x;
-			// up north (and south ?) this atan does not work
-			// dphi becomes NaN.
-			dphi = Math.atan2(Math.sqrt(ysq),x);
-			if (Double.isNaN(dphi) ) {
-				dphi = radius_eff;
-			}
-			if (DEBUG) {
-				System.err.println(iz +" , " + phi +" , " +dphi +" , " +res.size());
-			}
-			inRing( iz, phi, dphi, res);				
-			
-		}
-		 if (rlat2>=Math.PI) {// south pole in the disc
-		    for (int m=(int)irmax+1; m<(nl4); ++m)  {
-		    	// rings completely in the disc
-		      inRing(m, 0, Math.PI, res);
-		    }
-		 }
 		 
-         LongRangeSet ret= res.build();
+		  if (scheme==Scheme.RING)
+		    {
+		    if (inclusive) radius+=maxPixrad();
+		    if (radius>=Constants.PI)
+		      { pixset.appendRange(0,npix-1); return ; }
 
-	     if (do_nest) {
-	         long r=0; 
-	         long n=0;
-	         int i=0;
-		     long[] sorted = new long[(int)ret.size()];
-	    	 for (Iterator<Long> iterator = ret.iterator(); iterator.hasNext();) {
-	    		 try {
-	    			 
-	    			 r=iterator.next();
-	    			 n=ring2nest(r);
-	    		     sorted[i++]=n;
-	    		 } catch (Exception e){
-	    			 System.err.println(" Failed to convert to nest "+e);
-	    		 }
-			}
-	    	 
-	    	Arrays.sort(sorted);
-	    	LongRangeSetBuilder lrsb = new LongRangeSetBuilder();
-	    	for (int p=0; p < sorted.length; p++){
-	    		lrsb.append(sorted[p]);
-	    	}
-	    	ret = lrsb.build();
-	     }
+		    double cosang = Math.cos(radius);
+
+		    double z0 = Math.cos(ptg.theta());
+		    double xa = 1./Math.sqrt((1-z0)*(1+z0));
+
+		    double rlat1  = ptg.theta - radius;
+		    double zmax = Math.cos(rlat1);
+		    long irmin = ringAbove (zmax)+1;
+
+		    if ((rlat1<=0) && (irmin>1)) // north pole in the disk
+		      {
+		      //get_ring_info_small(irmin-1,sp,rp,dummy);
+		      RingInfoSmall info =get_ring_info_small(irmin-1);
+		      pixset.appendRange(0,info.startpix+info.ringpix-1);
+		      }
+
+		    double rlat2  = ptg.theta + radius;
+		    double zmin = Math.cos(rlat2);
+		    long irmax = ringAbove (zmin);
+
+		    for (long iz=irmin; iz<=irmax; ++iz) // rings partially in the disk
+		      {
+		      double z=ring2z(iz);
+
+		      double x = (cosang-z*z0)*xa;
+		      double ysq = 1-z*z-x*x;
+		      assert(ysq>=0);
+		      double dphi=Math.atan2(Math.sqrt(ysq),x);
+		      inRing (iz, ptg.phi, dphi, pixset);
+		      }
+
+		    if ((rlat2>=Constants.PI) && (irmax+1<4*nside)) // south pole in the disk
+		      {
+		     // get_ring_info_small(irmax+1,sp,rp,dummy);
+		      RingInfoSmall info =get_ring_info_small(irmax+1);
+		      pixset.appendRange(info.startpix,npix-1);
+		      }
+		    }
+		  else // scheme_==NEST
+		    {
+		    if (radius>=Constants.PI) // disk covers the whole sphere
+		      { pixset.appendRange(0,npix-1); return; }
+
+		    int oplus=inclusive ? 2 : 0;
+		    int omax=Math.min((int)(order_max),order+oplus); // the order up to which we test
+
+		    SpatialVector vptg =  ptg.getAsVector();
+		    
+		    //arr<T_Healpix_Base<I> > base(omax+1);
+		    HealpixIndex[] base = new HealpixIndex[omax+1];
+		    
+		    //arr<double> crpdr(omax+1), crmdr(omax+1);
+		    double[] crpdr = new double[omax+1];
+		    double[] crmdr = new double[omax+1];
+		    
+		    double cosrad=Math.cos(radius);
+		    for (int o=0; o<=omax; o++){ // prepare data at the required orders
+		    	try {
+		    		base[o]=new HealpixIndex();
+		    	}catch (Exception e) {
+		    		throw new RuntimeException("Failed to make HelapiIndex",e);
+		    	}
+		    	base[o].setOrder(o,Scheme.NESTED);
+			    double dr=base[o].maxPixrad(); // safety distance
+			    crpdr[o] = (radius+dr>Constants.PI) ? -1. : Math.cos(radius+dr);
+			    crmdr[o] = (radius-dr<0.) ?  1. : Math.cos(radius-dr);
+		      }
+		    
+		    //vector<pair<I,int> > stk; // stack for pixel numbers and their orders
+		    Stack<Map.Entry<Long, Integer>> stk = new Stack<Map.Entry<Long,Integer>>();
+		    stk.ensureCapacity(12+3*omax); // reserve maximum size to avoid reallocation
+		    for (int i=0; i<12; i++) {// insert the 12 base pixels in reverse order
+		      stk.push(new AbstractMap.SimpleEntry<Long,Integer>((long)(11-i),0));
+		    }
+		    
+		    int stacktop=0; // a place to save a stack position
+
+		    while (!stk.empty()) {// as long as there are pixels on the stack
+		      // pop current pixel number and order from the stack
+		      Map.Entry<Long, Integer> p = stk.pop();
+		      long pix=p.getKey();
+		      int o=p.getValue();
+		      
+		      AngularPosition pos=base[o].pix2zphi(pix);
+		      // cosine of angular distance between pixel center and disk center
+		    //  double cangdist=cosdist_zphi(vptg.z,ptg.phi,z,phi);
+		      double cangdist=cosdist_zphi(vptg.z(),ptg.phi,pos.theta,pos.phi);
+
+		      if (cangdist>crpdr[o])
+		        {
+		        int zone = (cangdist<cosrad) ? 1 : ((cangdist<=crmdr[o]) ? 2 : 3);
+
+		        stacktop=check_pixel (o, order, omax, zone, pixset, pix, stk, inclusive,
+		          stacktop);
+		        }
+		      }
+		    }
 			
-		return ret;
 
 	}
 
@@ -1573,14 +1632,14 @@ public class HealpixIndex implements Serializable {
 	}
 
 	/**
-	 * default in ring with conservative false. Sometimes near poles 
-	 * conservitave true is better.
+	 *
 	 * @param iz
 	 * @param phi0
 	 * @param dphi
 	 * @param res
+	 * @deprecated conservative no longer used.
 	 */
-	public void inRing( long iz, double phi0, double dphi,LongRangeSetBuilder res)  {
+	public void inRing( long iz, double phi0, double dphi,LongRangeSetBuilder res,boolean conservative)  {
 		inRing(iz, phi0, dphi, res, false);
 	}
 
@@ -1589,8 +1648,7 @@ public class HealpixIndex implements Serializable {
 	 * dpi, phi0 + dphi] on the ring iz in [1, 4*nside -1 ] The pixel id numbers
 	 * are in [0, 12*nside^2 - 1] the indexing is in RING, unless nest is set to
 	 * 1
-	 * NOTE: this is the f90 code 'in_ring' method ported to java with 'conservative' flag to false
-	 * 
+	 * NOTE: this is the C++ code 'inRing' method ported to java by Martin  
 	 * @param nside
 	 *            long the map resolution
 	 * @param iz
@@ -1601,7 +1659,7 @@ public class HealpixIndex implements Serializable {
 	 *            double
 	 * @param res result
 	 */
-	public void inRing( long iz, double phi0, double dphi,LongRangeSetBuilder res, boolean conservative)  {
+	public void inRing( long iz, double phi0, double dphi,LongRangeSetBuilder res)  {
 		long nr, ir, ipix1;
 		double shift=0.5;
 
@@ -2691,12 +2749,28 @@ public class HealpixIndex implements Serializable {
 
 	/**
 	 * Sets the order
-	 * 
+	 *  but just the number no nside etc - use the one with schem for that
 	 * @param order
 	 */
-	public void setOrder(int order) {
-		this.order = order;
+	public void setOrder(int o) {
+		  order  = o;
 	}
+
+	/**
+	 * setthe the order and schem and recalculate nside , fact 1 etc ...
+	 * @param o
+	 * @param s
+	 */
+	public void setOrder(int o, Scheme s) {
+		  assert ((o>=0)&&(o<=order_max));
+		  order  = o;
+		  nside  = 1 << order;
+		  scheme = s;
+		  init();
+
+	}
+	
+	
 
 	/**
 	 * returns the list of pixels in RING or NEST scheme with latitude in [phi0 -
@@ -2786,28 +2860,190 @@ public class HealpixIndex implements Serializable {
 
 	}
 
-//	/**
-//	 * Integer square root
-//	 * 
-//	 * @param arg
-//	 *            value
-//	 * @return long square root
-//	 */
-//	private static long isqrt(double arg) {
-//		double d = Math.sqrt(arg + 0.5);
-//		return (long) d;
-//
-//	}
+	public double maxPixrad() {
+	  SpatialVector va= new SpatialVector(),vb= new SpatialVector() ;
+	  va.set_z_phi (2./3., Constants.PI/(4*nside));
+	  double t1 = 1.-1./nside;
+	  t1*=t1;
+	  vb.set_z_phi (1-t1/3, 0);
+	  return va.angle(vb);
+	}
 
-//	//! Returns the largest integer \a n that fulfills \a 2^n<=arg.
-//	template<typename I> inline unsigned int ilog2 (I arg)
-//	  {
-//	  unsigned int res=0;
-//	  while (arg > 0x0000FFFF) { res+=16; arg>>=16; }
-//	  if (arg > 0x000000FF) { res|=8; arg>>=8; }
-//	  if (arg > 0x0000000F) { res|=4; arg>>=4; }
-//	  if (arg > 0x00000003) { res|=2; arg>>=2; }
-//	  if (arg > 0x00000001) { res|=1; }
-//	  return res;
-//	  }
+
+
+
+	public double ring2z (long ring) {
+	  if (ring<nside)
+	    return 1 - ring*ring*fact2;
+	  if (ring <=3*nside)
+	    return (2*nside-ring)*fact1;
+	  ring=4*nside - ring;
+	  return ring*ring*fact2 - 1;
+	}
+
+	protected RingInfoSmall get_ring_info_small (long ring) {
+		  long northring = (ring>nl2) ? nl4-ring : ring;
+		  RingInfoSmall ret = new RingInfoSmall();
+		  if (northring < nside)
+		    {
+		    ret.shifted = true;
+		    ret.ringpix = 4*northring;
+		    ret.startpix = 2*northring*(northring-1);
+		    }
+		  else
+		    {
+		    ret.shifted = ((northring-nside) & 1) == 0;
+		    ret.ringpix = nl4;
+		    ret.startpix = ncap + (northring-nside)*ret.ringpix;
+		    }
+		  if (northring != ring) {// southern hemisphere
+		    ret.startpix = npix - ret.startpix - ret.ringpix;
+		  }
+		  return ret;
+	}
+	
+	public AngularPosition pix2zphi (long pix)   {
+		double z,phi;
+		  if (scheme==Scheme.RING){
+		    if (pix<ncap) // North Polar cap
+		      {
+		      long iring = (1+(long)(isqrt(1+2*pix)))>>1; //counted from North pole
+		      long iphi  = (pix+1) - 2*iring*(iring-1);
+	
+		      z = 1.0 - (iring*iring)*fact2;
+		      phi = ((double)iphi-0.5) * Constants.piover2/(double)iring;
+		      }
+		    else if (pix<(npix-ncap)) // Equatorial region
+		      {
+		      long ip  = pix - ncap;
+		      long tmp = (order>=0) ? ip>>(order+2) : ip/nl4;
+		      long iring = tmp + nside,
+		        iphi = ip-nl4*tmp+1;;
+		      // 1 if iring+nside is odd, 1/2 otherwise
+		      double fodd = ((iring+nside)&1)>0 ? 1 : 0.5;
+	
+		      z = ((double)(nl2-iring))*fact1;
+		      phi = ((double)(iphi-fodd)) * Math.PI*0.75*fact1;
+		      }
+		    else // South Polar cap
+		      {
+		      long ip = npix - pix;
+		      long iring = (1+isqrt(2*ip-1))>>1; //counted from South pole
+		      long iphi  = 4*iring + 1 - (ip - 2*iring*(iring-1));
+	
+		      z = -1.0 + (double)(iring*iring)*fact2;
+		      phi = ((double)iphi-0.5) * Constants.piover2/(double)iring;
+		      }
+		    }
+		  else
+		    {
+		    Xyf xyf= nest2xyf(pix);
+	
+
+		    long jr = ((long)(jrll[xyf.face_num])<<order) -xyf.ix - xyf.iy - 1;
+	
+		    long nr;
+		    if (jr<nside)
+		      {
+		      nr = jr;
+		      z = 1 - nr*nr*fact2;
+		      }
+		    else if (jr > nl3)
+		      {
+		      nr = nl4-jr;
+		      z = nr*nr*fact2 - 1;
+		      }
+		    else
+		      {
+		      nr = nside;
+		      z = (double)(nl2-jr)*fact1;
+		      }
+	
+		    long tmp=(long)(jpll[xyf.face_num])*nr+xyf.ix-xyf.iy;
+		    assert(tmp<8*nr);//,"must not happen");
+		    if (tmp<0) tmp+=8*nr;
+		    phi = (nr==nside) ? 0.75*Constants.piover2*(double)tmp*fact1 :
+		                         (0.5*Constants.piover2*(double)tmp)/(double)nr;
+		    }
+			AngularPosition ret = new AngularPosition(z,phi);
+			return ret;
+		  }
+	
+	/**
+	 * should tidy this up with somethign faster ..
+	 * @param x
+	 * @return
+	 */
+	static public long isqrt ( long x){
+		return (long)Math.sqrt(((double)x) +0.5);
+	}
+	
+	protected double cosdist_zphi (double z1, double phi1, double z2, double phi2){
+	  return z1*z2+ Math.cos(phi1-phi2)* Math.sqrt((1.0-z1*z1)*(1.0-z2*z2));
+	 }
+	
+	/* Short note on the "zone":
+	   zone = 0: pixel lies completely outside the queried shape
+	          1: pixel may overlap with the shape, pixel center is outside
+	          2: pixel center is inside the shape, but maybe not the complete pixel
+	          3: pixel lies completely inside the shape */
+
+	 protected int check_pixel (int o, int order_, int omax,
+	  int zone, LongRangeSetBuilder pixset, long pix, Stack<Map.Entry<Long,Integer> > stk,
+	  boolean inclusive, int stacktopin)
+	  {
+	  int stacktop=stacktopin;
+	  if (zone==0) return stacktop;
+
+	  if (o<order_)
+	    {
+	    if (zone>=3)
+	      {
+	      int sdist=2*(order_-o); // the "bit-shift distance" between map orders
+	      pixset.appendRange(pix<<sdist,((pix+1)<<sdist)-1); // output all subpixels
+	      }
+	    else // (zone>=1)
+	      for (int i=0; i<4; ++i)
+	        stk.push(new AbstractMap.SimpleEntry(new Long(4*pix+3-i),new Integer(o+1))); // add children
+	    }
+	  else if (o>order_) // this implies that inclusive==true
+	    {
+	    if (zone>=2) // pixel center in shape
+	      {
+	      pixset.append(pix>>(2*(o-order_))); // output the parent pixel at order_
+	      stk.setSize(stacktop); // unwind the stack
+	      }
+	    else // (zone>=1): pixel center in safety range
+	      {
+	      if (o<omax) // check sublevels
+	        for (int i=0; i<4; ++i) // add children in reverse order
+	          stk.push(new AbstractMap.SimpleEntry(new Long(4*pix+3-i),new Integer(o+1)));
+	      else // at resolution limit
+	        {
+	        pixset.append(pix>>(2*(o-order_))); // output the parent pixel at order_
+	        stk.setSize(stacktop); // unwind the stack
+	        }
+	      }
+	    }
+	  else // o==order_
+	    {
+	    if (zone>=2)
+	      pixset.append(pix);
+	    else if (inclusive) // and (zone>=1)
+	      {
+	      if (order_<omax) // check sublevels
+	        {
+	        stacktop=stk.size(); // remember current stack position
+	        for (int i=0; i<4; ++i) // add children in reverse order
+	          stk.add(new AbstractMap.SimpleEntry(new Long(4*pix+3-i),new Integer(o+1)));
+	        }
+	      else // at resolution limit
+	        pixset.append(pix); // output the pixel
+	      }
+	    }
+	  	return stacktop;
+	  }
+
+	 
+	
 }

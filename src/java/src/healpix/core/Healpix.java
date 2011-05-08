@@ -33,6 +33,9 @@ import java.util.ArrayList;
  * 
  * THIS IS 32 BIT - if you want 64 use HealpixIndex
  * 
+ * @deprecated Use HealpixIndex - this class will be deleted and is no longer compatible
+ * with the 64bit version.
+ * 
  * @version $Id: Healpix.java 112179 2009-11-18 10:29:01Z womullan $
  * @author womullan
  * 

@@ -408,4 +408,17 @@ public class SpatialVector {
 		double theta = Math.acos(z2);
 		return Math.PI / 2 - theta;
 	}
+	
+	/**
+	 * convenience function - added as it is in C++ version
+	 * @param zin
+	 * @param phi
+	 */
+    public void set_z_phi (double zin, double phi)
+    {
+	    double sintheta = Math.sqrt((1.0-zin)*(1.0+zin));
+	    x = sintheta*Math.cos(phi);
+	    y = sintheta*Math.sin(phi);
+	    z = zin;
+    }
 };

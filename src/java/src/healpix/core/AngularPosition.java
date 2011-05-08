@@ -19,6 +19,8 @@
  */
 package healpix.core;
 
+import healpix.tools.SpatialVector;
+
 import java.text.DecimalFormat;
 
 /**
@@ -102,5 +104,19 @@ public class AngularPosition {
 	 * @param phi the phi
 	 */
 	public void init(double t, double phi) {
+		this.theta=t;
+		this.phi=phi;
+	}
+	
+	/**
+	 * convenience conversion.
+	 * @return
+	 */
+	public SpatialVector getAsVector() {
+		double x, y, z;
+		x = 1 * Math.sin(theta) * Math.cos(phi);
+		y = 1 * Math.sin(theta) * Math.sin(phi);
+		z = 1 * Math.cos(theta);
+		return new SpatialVector(x, y, z);
 	}
 }
