@@ -1026,6 +1026,13 @@ contains
        call add_card(header,"COMMENT","GRAIN>1 : 1 pixel index -> data of GRAIN consecutive pixels (EXPLICIT)")
        call add_card(header) ! blank line
        call add_card(header,"POLAR",do_polar," Polarisation included (True/False)")
+       if (do_cut) then
+          if (present(units)) then
+             my_units = units
+             call add_card(header,"TUNIT2", my_units(1),"physical unit of signal map")
+             call add_card(header,"TUNIT4", my_units(1),"physical unit of error map")
+          endif
+       endif
        if (do_full) then
           call add_card(header,"DERIV",my_deriv," Derivative included (0, 1 or 2)")
 

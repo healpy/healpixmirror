@@ -693,37 +693,38 @@ contains
           continue
        else if (card(1:5) == 'TUNIT') then 
           if ((card(6:6) == '2' .or. card(6:6) == '4') .and. trim(units_usr) == '') then
-             call ftucrd(unit,'TUNIT'//card(6:6),header(i), status)
+             call ftucrd(unit,'TUNIT'//card(6:6),card, status) !update TUNIT2 and TUNIT4
           endif
        else if (card(1:5) == 'NSIDE') then
-          call ftpsvc(header(i), svalue, comment, status)
+          call ftpsvc(card, svalue, comment, status)
           read(svalue,*) nside_hd
           npix_hd = nside2npix(nside_hd)
           if (.not. done_nside .and. npix_hd > 0) then
-             call ftucrd(unit,'NSIDE',header(i), status) !update NSIDE
+             call ftucrd(unit,'NSIDE',card, status) !update NSIDE
              done_nside = .true.
              nside_final = nside_hd
           endif
        else if (card(1:8) == 'ORDERING') then
-          call ftpsvc(header(i), svalue, comment, status)
+          call ftpsvc(card, svalue, comment, status)
           svalue = adjustl(svalue)
+          svalue = svalue(2:8) ! remove leading quote
           call ftupch(svalue)
           if (.not. done_order .and. (svalue(1:4)=='RING' .or. svalue(1:6) == 'NESTED')) then
-             call ftucrd(unit,'ORDERING',header(i), status)
+             call ftucrd(unit,'ORDERING',card, status) !update ORDERING
              done_order = .true.
           endif
        else if (card(1:8) == 'COORDSYS') then
-          if (.not. done_coord) call putrec(unit,header(i), status)
+          if (.not. done_coord) call putrec(unit,card, status)
           done_coord = .true.
        else if (card(1:5) == 'POLAR') then
           if (.not. done_polar) then
-             call ftucrd(unit,'POLAR', header(i), status) ! update POLAR
+             call ftucrd(unit,'POLAR', card, status) ! update POLAR
              done_polar = .true.
           endif
        else if (card(1:7) == 'EXTNAME') then
-          call ftucrd(unit, 'EXTNAME', header(i), status)
+          call ftucrd(unit, 'EXTNAME', card, status)
        else if (card(1:1) /= ' ') then ! if none of the above, copy to FITS file
-          call putrec(unit, header(i), status)
+          call putrec(unit, card, status)
        endif
 10     continue
     enddo
