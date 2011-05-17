@@ -1,3 +1,4 @@
+#include <iostream>
 #include "alm.h"
 #include "alm_healpix_tools.h"
 #include "xcomplex.h"
@@ -6,7 +7,7 @@
 #include "healpix_map.h"
 #include "planck_rng.h"
 #include "lsconstants.h"
-#include <iostream>
+#include "string_utils.h"
 
 using namespace std;
 

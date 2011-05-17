@@ -6,6 +6,8 @@
 // Using default emacs indentation.
 
 
+#include <iostream>
+#include <cassert>
 #include "paramfile.h"
 #include "ls_image.h"
 #include "healpix_map_fitsio.h"
@@ -20,8 +22,7 @@
 #include "color.h"
 #include "alice_utils.h"
 #include "vec3.h"
-#include <iostream>
-#include <assert.h>
+#include "string_utils.h"
 
 using namespace std;
 

@@ -35,7 +35,7 @@
 
 using namespace std;
 
-template<> const int T_Healpix_Base<int>::order_max=13;
+template<> const int T_Healpix_Base<int  >::order_max=13;
 template<> const int T_Healpix_Base<int64>::order_max=29;
 
 template<typename I> int T_Healpix_Base<I>::nside2order (I nside)
@@ -66,9 +66,9 @@ template<typename I> void T_Healpix_Base<I>::in_ring(I iz, double phi0,
   bool shifted;
 
   get_ring_info_small(iz,ipix1,nr,shifted);
-  double shift = shifted ? 0.5: 0.;
+  double shift = shifted ? 0.5 : 0.;
 
-  I ipix2 = ipix1 + nr - 1;       // highest pixel number in the ring
+  I ipix2 = ipix1 + nr - 1; // highest pixel number in the ring
 
   if (dphi > (pi-1e-12))
     pixset.append(ipix1,ipix2+1);
@@ -76,18 +76,18 @@ template<typename I> void T_Healpix_Base<I>::in_ring(I iz, double phi0,
     {
     I ip_lo = ifloor<I>(nr*inv_twopi*(phi0-dphi) - shift)+1;
     I ip_hi = ifloor<I>(nr*inv_twopi*(phi0+dphi) - shift);
-    if (ip_lo<0)
+    if (ip_lo<=ip_hi)
       {
-      pixset.append(ipix1,ipix1+ip_hi+1);
-      pixset.append(ipix1+ip_lo+nr,ipix2+1);
+      if (ip_hi>=nr)
+        { ip_lo-=nr; ip_hi-=nr; }
+      if (ip_lo<0)
+        {
+        pixset.append(ipix1,ipix1+ip_hi+1);
+        pixset.append(ipix1+ip_lo+nr,ipix2+1);
+        }
+      else
+        pixset.append(ipix1+ip_lo,ipix1+ip_hi+1);
       }
-    else if (ip_hi>=nr)
-      {
-      pixset.append(ipix1,ipix1+ip_hi-nr+1);
-      pixset.append(ipix1+ip_lo,ipix2+1);
-      }
-    else
-      pixset.append(ipix1+ip_lo,ipix1+ip_hi+1);
     }
   }
 
@@ -172,7 +172,7 @@ template<typename I> void T_Healpix_Base<I>::query_disc (pointing ptg,
     double z0 = cos(ptg.theta);
     double xa = 1./sqrt((1-z0)*(1+z0));
 
-    double rlat1  = ptg.theta - radius;
+    double rlat1 = ptg.theta - radius;
     double zmax = cos(rlat1);
     I irmin = ring_above (zmax)+1;
 
@@ -183,7 +183,7 @@ template<typename I> void T_Healpix_Base<I>::query_disc (pointing ptg,
       pixset.append(0,sp+rp);
       }
 
-    double rlat2  = ptg.theta + radius;
+    double rlat2 = ptg.theta + radius;
     double zmin = cos(rlat2);
     I irmax = ring_above (zmin);
 
@@ -296,8 +296,8 @@ template<typename I> void T_Healpix_Base<I>::query_multidisc
       I ipix1,nr;
       bool shifted;
       get_ring_info_small(iz,ipix1,nr,shifted);
-      double shift = shifted ? 0.5: 0.;
-      I ipix2 = ipix1 + nr - 1;       // highest pixel number in the ring
+      double shift = shifted ? 0.5 : 0.;
+      I ipix2 = ipix1 + nr - 1; // highest pixel number in the ring
       rangeset<I> tr;
       tr.append(ipix1,ipix1+nr);
       for (tsize j=0; j<z0.size(); ++j)
@@ -312,10 +312,10 @@ template<typename I> void T_Healpix_Base<I>::query_multidisc
             {
             I ip_lo = ifloor<I>(nr*inv_twopi*(ptg[j].phi-dphi) - shift)+1;
             I ip_hi = ifloor<I>(nr*inv_twopi*(ptg[j].phi+dphi) - shift);
+            if (ip_hi>=nr)
+              { ip_lo-=nr; ip_hi-=nr;}
             if (ip_lo<0)
               tr.remove(ipix1+ip_hi+1,ipix1+ip_lo+nr);
-            else if (ip_hi>=nr)
-              tr.remove(ipix1+ip_hi-nr+1,ipix1+ip_lo);
             else
               {
               tr.remove(ipix1,ipix1+ip_lo);
@@ -385,7 +385,7 @@ template<> int T_Healpix_Base<int>::spread_bits (int v) const
   { return utab[v&0xff] | (utab[(v>>8)&0xff]<<16); }
 template<> int64 T_Healpix_Base<int64>::spread_bits (int v) const
   {
-  return (int64(utab[ v     &0xff]))
+  return  int64(utab[ v     &0xff])
        | (int64(utab[(v>> 8)&0xff])<<16)
        | (int64(utab[(v>>16)&0xff])<<32)
        | (int64(utab[(v>>24)&0xff])<<48);
@@ -398,12 +398,12 @@ template<> int T_Healpix_Base<int>::compress_bits (int v) const
   }
 template<> int T_Healpix_Base<int64>::compress_bits (int64 v) const
   {
-  int32 raw = ((v&0x555500000000ull)>>16)
-             | ((v&0x5555000000000000ull)>>31)
-             | (v&0x5555)
-             | ((v&0x55550000)>>15);
-  return ctab[raw&0xff]
-      | (ctab[(raw>>8)&0xff]<<4)
+  int32 raw = ((v&0x0000555500000000ull)>>16)
+            | ((v&0x5555000000000000ull)>>31)
+            |  (v&0x00005555)
+            | ((v&0x55550000)>>15);
+  return ctab[ raw     &0xff]
+      | (ctab[(raw>> 8)&0xff]<< 4)
       | (ctab[(raw>>16)&0xff]<<16)
       | (ctab[(raw>>24)&0xff]<<20);
   }
@@ -425,7 +425,6 @@ template<typename I> void T_Healpix_Base<I>::ring2xyf (I pix, int &ix, int &iy,
   int &face_num) const
   {
   I iring, iphi, kshift, nr;
-
   I nl2 = 2*nside_;
 
   if (pix<ncap_) // North Polar cap
@@ -553,7 +552,7 @@ template<typename I> I T_Healpix_Base<I>::pix2ring (I pix) const
   if (scheme_==RING)
     {
     if (pix<ncap_) // North Polar cap
-      return (1+I(isqrt(1+2*pix)))>>1; //counted from North pole
+      return (1+I(isqrt(1+2*pix)))>>1; // counted from North pole
     else if (pix<(npix_-ncap_)) // Equatorial region
       return (pix-ncap_)/(4*nside_) + nside_; // counted from North pole
     else // South Polar cap
@@ -687,7 +686,7 @@ template<typename I> void T_Healpix_Base<I>::pix2zphi (I pix, double &z,
     {
     if (pix<ncap_) // North Polar cap
       {
-      I iring = (1+I(isqrt(1+2*pix)))>>1; //counted from North pole
+      I iring = (1+I(isqrt(1+2*pix)))>>1; // counted from North pole
       I iphi  = (pix+1) - 2*iring*(iring-1);
 
       z = 1.0 - (iring*iring)*fact2_;
@@ -699,7 +698,7 @@ template<typename I> void T_Healpix_Base<I>::pix2zphi (I pix, double &z,
       I ip  = pix - ncap_;
       I tmp = (order_>=0) ? ip>>(order_+2) : ip/nl4;
       I iring = tmp + nside_,
-        iphi = ip-nl4*tmp+1;;
+        iphi = ip-nl4*tmp+1;
       // 1 if iring+nside is odd, 1/2 otherwise
       double fodd = ((iring+nside_)&1) ? 1 : 0.5;
 
@@ -709,7 +708,7 @@ template<typename I> void T_Healpix_Base<I>::pix2zphi (I pix, double &z,
     else // South Polar cap
       {
       I ip = npix_ - pix;
-      I iring = (1+isqrt(2*ip-1))>>1; //counted from South pole
+      I iring = (1+I(isqrt(2*ip-1)))>>1; // counted from South pole
       I iphi  = 4*iring + 1 - (ip - 2*iring*(iring-1));
 
       z = -1.0 + (iring*iring)*fact2_;

@@ -32,9 +32,12 @@
 #ifndef PLANCK_RANGESET_H
 #define PLANCK_RANGESET_H
 
+#include <algorithm>
 #include <vector>
 #include <utility>
 #include <iostream>
+#include "datatypes.h"
+#include "error_handling.h"
 
 template<typename T> class interval
   {

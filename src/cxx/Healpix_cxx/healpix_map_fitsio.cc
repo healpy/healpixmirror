@@ -33,6 +33,7 @@
 #include "healpix_map.h"
 #include "fitshandle.h"
 #include "share_utils.h"
+#include "string_utils.h"
 
 using namespace std;
 

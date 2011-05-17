@@ -79,7 +79,7 @@ void random_zphi (double &z, double &phi)
   phi = rng.rand_uni()*twopi;
   }
 
-template<typename I>string bname()
+template<typename I> string bname()
   { return string("(basetype: ")+type2typename<I>()+")"; }
 
 template<typename I> void check_ringnestring()
@@ -118,8 +118,7 @@ template<typename I> void check_pixzphipix()
   int omax=T_Healpix_Base<I>::order_max;
   for (int order=0; order<=omax; ++order)
     {
-    T_Healpix_Base<I> base1 (order,RING);
-    T_Healpix_Base<I> base2 (order,NEST);
+    T_Healpix_Base<I> base1 (order,RING), base2 (order,NEST);
     for (int m=0; m<nsamples; ++m)
       {
       double z,phi;
@@ -152,8 +151,7 @@ template<typename I> void check_zphipixzphi()
   int omax=T_Healpix_Base<I>::order_max;
   for (int order=0; order<=omax; ++order)
     {
-    T_Healpix_Base<I> base1 (order,NEST);
-    T_Healpix_Base<I> base2 (order,RING);
+    T_Healpix_Base<I> base1 (order,NEST), base2 (order,RING);
     double mincos = min (cos(base1.max_pixrad()),0.999999999999999);
     for (int m=0; m<nsamples; ++m)
       {
@@ -255,7 +253,7 @@ void check_swap_scheme()
     }
   }
 
-void check_query_disc (Healpix_Ordering_Scheme scheme)
+void check_query_disc_strict (Healpix_Ordering_Scheme scheme)
   {
   cout << "testing whether all pixels found by query_disc() really" << endl
        << "lie inside the disk (and vice versa)" << endl;
@@ -292,32 +290,68 @@ void check_query_disc (Healpix_Ordering_Scheme scheme)
     }
   }
 
-void check_query_polygon ()
+template<typename I>void check_query_disc()
   {
-  cout << "checking query_polygon()" << endl;
-  for (int order=0; order<=12; ++order)
+  cout << "checking query_disc() " << bname<I>() << endl;
+  int omax=min(20,T_Healpix_Base<I>::order_max);
+  for (int order=0; order<=omax; ++order)
     {
-    Healpix_Base rbase (order,RING);
-    Healpix_Base nbase (order,NEST);
-    rangeset<int> pixset1, pixset2;
-    for (int m=0; m<1000; ++m)
+    T_Healpix_Base<I> rbase (order,RING), nbase (order,NEST);
+    rangeset<I> pixset;
+    int niter=max(1,min(1000,100000>>order));
+    for (int m=0; m<niter; ++m)
+      {
+      pointing ptg;
+      random_dir (ptg);
+      double rad = pi/1 * rng.rand_uni();
+      rbase.query_disc(ptg,rad,false,pixset);
+      I nval = pixset.nval();
+      nbase.query_disc(ptg,rad,false,pixset);
+      if (nval!=pixset.nval())
+        cout << "  PROBLEM: number of pixels different: "
+             << nval << " vs. " << pixset.nval() << endl;
+      rbase.query_disc(ptg,rad,true,pixset);
+      I nv1 = pixset.nval();
+      nbase.query_disc(ptg,rad,true,pixset);
+      I nv2 = pixset.nval();
+      if (nv1<nv2)
+        cout << "  PROBLEM: inclusive(RING)<inclusive(NEST): "
+             << nv1 << " vs. " << nv2 << endl;
+      if (nv2<nval)
+        cout << "  PROBLEM: inclusive(NEST)<non-inclusive: "
+             << nv2 << " vs. " << nval << endl;
+      }
+    }
+  }
+template<typename I>void check_query_polygon()
+  {
+  cout << "checking query_polygon() " << bname<I>() << endl;
+  int omax=min(20,T_Healpix_Base<I>::order_max);
+  for (int order=0; order<=omax; ++order)
+    {
+    T_Healpix_Base<I> rbase (order,RING), nbase (order,NEST);
+    rangeset<I> pixset;
+    int niter=max(1,min(1000,100000>>order));
+    for (int m=0; m<niter; ++m)
       {
       vector<pointing> corner(3);
       random_dir(corner[0]); random_dir(corner[1]); random_dir(corner[2]);
-      rbase.query_polygon(corner,false,pixset1);
-      nbase.query_polygon(corner,false,pixset2);
-      if (pixset1.nval()!=pixset2.nval())
+      rbase.query_polygon(corner,false,pixset);
+      I nval = pixset.nval();
+      nbase.query_polygon(corner,false,pixset);
+      if (nval!=pixset.nval())
         cout << "  PROBLEM: number of pixels different: "
-             << pixset1.nval() << " vs. " << pixset2.nval() << endl;
-      int nval=pixset1.nval();
-      rbase.query_polygon(corner,true,pixset1);
-      nbase.query_polygon(corner,true,pixset2);
-      if (pixset1.nval()<pixset2.nval())
+             << nval << " vs. " << pixset.nval() << endl;
+      rbase.query_polygon(corner,true,pixset);
+      I nv1=pixset.nval();
+      nbase.query_polygon(corner,true,pixset);
+      I nv2=pixset.nval();
+      if (nv1<nv2)
         cout << "  PROBLEM: inclusive(RING)<inclusive(NEST): "
-             << pixset1.nval() << " vs. " << pixset2.nval() << endl;
-      if (pixset2.nval()<nval)
+             << nv1 << " vs. " << nv2 << endl;
+      if (nv2<nval)
         cout << "  PROBLEM: inclusive(NEST)<non-inclusive: "
-             << pixset2.nval() << " vs. " << nval << endl;
+             << nv2 << " vs. " << nval << endl;
       }
     }
   }
@@ -798,7 +832,10 @@ int main(int argc, const char **argv)
   check_neighbors<int>();
   check_neighbors<int64>();
   check_swap_scheme();
-  check_query_disc(RING);
-  check_query_disc(NEST);
-  check_query_polygon();
+  check_query_disc_strict(RING);
+  check_query_disc_strict(NEST);
+  check_query_disc<int>();
+  check_query_disc<int64>();
+  check_query_polygon<int>();
+  check_query_polygon<int64>();
   }

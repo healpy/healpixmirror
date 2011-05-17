@@ -41,6 +41,7 @@
 #include "levels_facilities.h"
 #include "lsconstants.h"
 #include "announce.h"
+#include "string_utils.h"
 
 using namespace std;
 

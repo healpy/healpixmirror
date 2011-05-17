@@ -36,7 +36,6 @@
 #include <cstdlib>
 #include "datatypes.h"
 #include "math_utils.h"
-#include "string_utils.h"
 
 /*! \defgroup arraygroup Array classes */
 /*! \{ */
@@ -167,7 +166,7 @@ template <typename T> class arr_ref
       {
       for (tsize m=0; m<s; ++m)
         if (d[m]==val) return m;
-      planck_fail ("entry '"+dataToString(val)+"' not found in array");
+      planck_fail ("entry not found in array");
       }
   };
 

@@ -35,6 +35,7 @@
 #include "alm_powspec_tools.h"
 #include "trafos.h"
 #include "announce.h"
+#include "string_utils.h"
 
 using namespace std;
 
