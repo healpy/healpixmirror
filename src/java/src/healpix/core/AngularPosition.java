@@ -114,9 +114,10 @@ public class AngularPosition {
 	 */
 	public SpatialVector getAsVector() {
 		double x, y, z;
-		x = 1 * Math.sin(theta) * Math.cos(phi);
-		y = 1 * Math.sin(theta) * Math.sin(phi);
-		z = 1 * Math.cos(theta);
+		double sth = Math.sin(theta);
+		x = sth * Math.cos(phi);
+		y = sth * Math.sin(phi);
+		z = Math.cos(theta);
 		return new SpatialVector(x, y, z);
 	}
 }

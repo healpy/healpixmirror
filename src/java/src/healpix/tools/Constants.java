@@ -24,7 +24,7 @@ package healpix.tools;
  */
 public class Constants {
 	
-	/** Magic number from Martin Reinicke for fudging search radius**/
+	/** Magic number from Martin Reinecke for fudging search radius**/
 	public static final double magic = 1.362;
 
 	/** The Constant PI. */
