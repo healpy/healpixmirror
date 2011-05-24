@@ -36,6 +36,7 @@ output from the \healpix facility \textbf{anafast}.
 \mylink{idl:fits2cl_idl:silent}{/SILENT=}, 
 \mylink{idl:fits2cl_idl:wmap1}{/WMAP1=}, 
 \mylink{idl:fits2cl_idl:wmap5}{/WMAP5=}, 
+\mylink{idl:fits2cl_idl:wmap7}{/WMAP7=}, 
 \mylink{idl:fits2cl_idl:xhdr}{XHDR=}%
 ]}
 \end{IDLformat}
@@ -55,8 +56,10 @@ output from the \healpix facility \textbf{anafast}.
     String containing the name of the FITS file to be read. The
     file contains either $C(l)$ power spectra or $a_{l m}$ coefficients. In either
     cases, $C(l)$ is returned. If {\tt fitsfile} is not set, then
-\mylink{idl:fits2cl_idl:wmap1}{\tt /WMAP1} or
-\mylink{idl:fits2cl_idl:wmap5}{\tt /WMAP5} must be set.
+\mylink{idl:fits2cl_idl:wmap1}{\tt /WMAP1},
+\mylink{idl:fits2cl_idl:wmap5}{\tt /WMAP5} or
+\mylink{idl:fits2cl_idl:wmap7}{\tt /WMAP7} 
+must be set.
   \end{qulist}
 \end{qualifiers}
 
@@ -88,20 +91,33 @@ output from the \healpix facility \textbf{anafast}.
 	If set, the rescaled power spectra $l(l+1)C(l)/2\pi$ are plotted
     \item[/SILENT] \mytarget{idl:fits2cl_idl:silent}%
 	If set, no message is issued during normal execution
+%
     \item[/WMAP1] \mytarget{idl:fits2cl_idl:wmap1}%
            If set, and \mylink{idl:fits2cl_idl:fitsfile}{\tt fitsfile} 
            is not provided, then one WMAP-1yr best fit
           model
 (\htmlref{!healpix}{idl:init_healpix}.path.test+\-'wmap\_lcdm\_pl\_model\_yr1\_v1.fits'
 which currently matches !healpix.path.test+'cl.fits') 
-          defined up to l=3000, is read.\\
+          defined up to lmax=3000, is read.\\
           See !healpix.path.test+'README' for details
+%
     \item[/WMAP5] \mytarget{idl:fits2cl_idl:wmap5}%
            If set, and \mylink{idl:fits2cl_idl:fitsfile}{\tt fitsfile}
            is not provided, then one WMAP-5yr best fit
           model (\htmlref{!healpix}{idl:init_healpix}.path.test+\-'wmap\_lcdm\_sz\_lens\_wmap5\_cl\_v3.fits') 
-          defined up to l=2000, is read.\\
+          defined up to lmax=2000, is read.\\
           See !healpix.path.test+'README' for details
+%
+    \item[/WMAP7] \mytarget{idl:fits2cl_idl:wmap7}%
+           If set, and \mylink{idl:fits2cl_idl:fitsfile}{\tt fitsfile}
+           is not provided, then one WMAP-7yr best fit
+          model (\htmlref{!healpix}{idl:init_healpix}.path.test+\-'wmap\_lcdm\_sz\_lens\_wmap7\_cl\_v4.fits') 
+          defined up to lmax=3726, is read.\\
+          {\bf Note:} As opposed to the other WMAP spectra mentionned above, it includes
+             a non-vanishing B (or CURL) power spectrum 
+             induced by lensing of E (or GRAD) polarization.\\
+          See !healpix.path.test+'README' for details
+%
     \item[XHDR =] \mytarget{idl:fits2cl_idl:xhdr}%
 	String array containing on output the extension header
       read from the FITS file. 

@@ -39,7 +39,7 @@
 ; CALLING SEQUENCE:
 ;       FITS2CL, cl_array, [fitsfile, HELP=, SILENT =, SHOW=, RSHOW= $
 ;                                     HDR =, MULTIPOLES=, LLFACTOR=, XHDR =, 
-;                                     INTERACTIVE=, WMAP1=, WMAP5= ]
+;                                     INTERACTIVE=, WMAP1=, WMAP5=, WMAP7= ]
 ; 
 ; INPUTS:
 ;       fitsfile = String containing the name of the file to be read  
@@ -68,6 +68,14 @@
 ;       WMAP5 = if set, and fitsfile is not provided, then one WMAP-5yr best fit
 ;          model (!healpix.path.test+'wmap_lcdm_sz_lens_wmap5_cl_v3.fits') 
 ;          defined up to l=2000, is read
+;          See !healpix.path.test+'README' for details
+;
+;       WMAP7 = if set, and fitsfile is not provided, then one WMAP-7yr best fit
+;          model (!healpix.path.test+'wmap_lcdm_sz_lens_wmap7_cl_v4.fits') 
+;          defined up to l=3726, is read.
+;          ** As opposed to the other WMAP spectra mentionned above, it includes
+;             a non-vanishing B (or CURL) power spectrum 
+;             induced by lensing of E (or GRAD) polarization. **
 ;          See !healpix.path.test+'README' for details
 ;
 ; OUTPUTS:
@@ -121,6 +129,7 @@
 ;       Jan 2009: calls init_astrolib
 ;       Nov 2009: EH, added LLFACTOR keyword
 ;       Sep 2010: EH, added WMAP1 and WMAP5 keywords
+;       May 2011L EH, added WMAP7 keyword
 ;
 ; requires the THE IDL ASTRONOMY USER'S LIBRARY 
 ; that can be found at http://idlastro.gsfc.nasa.gov/homepage.html
@@ -164,12 +173,12 @@ end
 
 PRO FITS2CL, cl_array, fitsfile, HDR = hdr, HELP = help, MULTIPOLES=multipoles, SILENT=silent, $
              SHOW=show, RSHOW=rshow, XHDR = xhdr, INTERACTIVE=interactive, LLFACTOR=llfactor, $
-             WMAP1=wmap1, WMAP5=wmap5
+             WMAP1=wmap1, WMAP5=wmap5, WMAP7=wmap7
 
 code = 'FITS2CL'
 syntax = ['Syntax : '+code+', cl_array, fitsfile, [/HELP, /SILENT, /SHOW, /RSHOW, ',$
           '                                       HDR=, LLFACTOR=, MULTIPOLES=, XHDR=, /INTERACTIVE,', $
-          '                                       /WMAP1, /WMAP5]' ]
+          '                                       /WMAP1, /WMAP5, /WMAP7]' ]
 
 if keyword_set(help) then begin
       doc_library,code
@@ -178,11 +187,13 @@ endif
 
 read_wmap1 = keyword_set(wmap1)
 read_wmap5 = keyword_set(wmap5)
-read_internal = (read_wmap1 || read_wmap5)
+read_wmap7 = keyword_set(wmap7)
+read_internal = (read_wmap1 || read_wmap5 || read_wmap7)
+multi_internal = (read_wmap1 + read_wmap5 + read_wmap7 gt 1)
 
-if ((defined(fitsfile) && read_internal) || (read_wmap1 && read_wmap5)) then begin
+if ((defined(fitsfile) && read_internal) || multi_internal) then begin
     print,syntax,form='(a)'
-    print,'  choose either an external FITSfile *or* /WMAP1 *or* /WMAP5'
+    print,'  choose either an external FITSfile *or* /WMAP1 *or* /WMAP5 *or* /WMAP7'
     print,'   file NOT read '
     goto, Exit
 endif
@@ -198,6 +209,7 @@ init_healpix ; define !healpix
 myfitsfile = ''
 if (read_wmap1) then myfitsfile = !healpix.path.test+'wmap_lcdm_pl_model_yr1_v1.fits'
 if (read_wmap5) then myfitsfile = !healpix.path.test+'wmap_lcdm_sz_lens_wmap5_cl_v3.fits'
+if (read_wmap7) then myfitsfile = !healpix.path.test+'wmap_lcdm_sz_lens_wmap7_cl_v4.fits'
 if (myfitsfile eq '') then myfitsfile = fitsfile
 
 if (datatype(cl_array) eq 'STR' or datatype(myfitsfile) ne 'STR') then begin

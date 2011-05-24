@@ -972,3 +972,17 @@ src/idl/zzz_external/astron/symcat.pro	2011-01-12: new
 2011-01-24: introduced mod* definition in subroutines.tex
 doc/TeX/long_intrinsic.tex		2011-01-25: new
 
+src/idl/toolkit/angdist.pro		2011-04-* : deprecated
+                angulardistance.pro		   new
+                surface_triangle.pro               updated
+                nside2npix.pro                     returns syntax in case of improper use
+	        ring_num.pro			   added with poles
+                discphirange_at_z.pro	 	   adapted from phi_range_at_z
+                ring2z.pro      		   accepts vector iz
+
+
+src/idl/fits/add_bad_data_fits.pro	2011-02-22: was missing
+src/idl/toolkit/ang2pix_ring.pro 	2011-04-28: correction of a bug affecting phi out of [-2Pi, 2Pi] 
+src/idl/toolkit/query_triangle.pro 	2011-04-29: no spurious pixels in inclusive mode 
+
+src/idl/fits/fits2cl.pro		2011-05-24: added WMAP7 keyword

@@ -33,6 +33,9 @@ Notes:
   http://lambda.gsfc.nasa.gov/data/map/powspec/wmap_lcdm_pl_model_yr1_v1.fits
   except for cosmetic editions of the FITS header
 
+  It is defined up to l=3000.
+
+
      2) The file wmap_lcdm_sz_lens_wmap5_cl_v3.fits 
  has been added in this directory for convenience, even though
  it is currently *NOT* used in any of the simulations included here.
@@ -42,3 +45,18 @@ Notes:
  For the list of parameters, see 
  http://lambda.gsfc.nasa.gov/product/map/dr3/params/lcdm_sz_lens_wmap5.cfm
 
+ It is defined up to l=2000.
+
+
+     3) The file wmap_lcdm_sz_lens_wmap7_cl_v4.fits 
+ has been added in this directory for convenience, even though
+ it is currently *NOT* used in any of the simulations included here.
+
+ It is adapted from WMAP 7yr best fit model for l-CDM + SZ + lensing with 
+ lensed B mode > 0
+ For the list of parameters, see 
+ http://lambda.gsfc.nasa.gov/product/map/dr4/params/lcdm_sz_lens_wmap7.cfm
+ It was produced with CAMB (Feb2009; recfast 1.4.2) run with l_max_scalar=4000, 
+ which should improve the lensed BB spectrum compared to lower l runs.   
+
+ It is defined up to l=3726.
