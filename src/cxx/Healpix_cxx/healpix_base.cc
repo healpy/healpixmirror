@@ -385,10 +385,8 @@ template<> int T_Healpix_Base<int>::spread_bits (int v) const
   { return utab[v&0xff] | (utab[(v>>8)&0xff]<<16); }
 template<> int64 T_Healpix_Base<int64>::spread_bits (int v) const
   {
-  return  int64(utab[ v     &0xff])
-       | (int64(utab[(v>> 8)&0xff])<<16)
-       | (int64(utab[(v>>16)&0xff])<<32)
-       | (int64(utab[(v>>24)&0xff])<<48);
+  return  int64(utab[ v     &0xff])      | (int64(utab[(v>> 8)&0xff])<<16)
+       | (int64(utab[(v>>16)&0xff])<<32) | (int64(utab[(v>>24)&0xff])<<48);
   }
 
 template<> int T_Healpix_Base<int>::compress_bits (int v) const
@@ -398,14 +396,10 @@ template<> int T_Healpix_Base<int>::compress_bits (int v) const
   }
 template<> int T_Healpix_Base<int64>::compress_bits (int64 v) const
   {
-  int32 raw = ((v&0x0000555500000000ull)>>16)
-            | ((v&0x5555000000000000ull)>>31)
-            |  (v&0x00005555)
-            | ((v&0x55550000)>>15);
-  return ctab[ raw     &0xff]
-      | (ctab[(raw>> 8)&0xff]<< 4)
-      | (ctab[(raw>>16)&0xff]<<16)
-      | (ctab[(raw>>24)&0xff]<<20);
+  int64 raw = v&0x5555555555555555ull;
+  raw|=raw>>15;
+  return ctab[ raw     &0xff]      | (ctab[(raw>> 8)&0xff]<< 4)
+      | (ctab[(raw>>32)&0xff]<<16) | (ctab[(raw>>40)&0xff]<<20);
   }
 
 template<typename I> void T_Healpix_Base<I>::nest2xyf (I pix, int &ix, int &iy,

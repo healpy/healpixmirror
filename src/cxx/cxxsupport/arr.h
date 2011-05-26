@@ -55,8 +55,17 @@ template <typename T, int align> class alignAlloc__
       using namespace std;
       if (sz==0) return 0;
       void *res;
+/* OSX up to version 10.5 does not define posix_memalign(), but fortunately
+   the normal malloc() returns 16 byte aligned storage */
+#ifdef __APPLE__
+      planck_assert((align<=16)&&((align&(align-1))==0),
+        "bad alignment requested");
+      res=malloc(sz*sizeof(T));
+      planck_assert(res!=0,"error in malloc()");
+#else
       planck_assert(posix_memalign(&res,align,sz*sizeof(T))==0,
         "error in posix_memalign()");
+#endif
       return static_cast<T *>(res);
       }
     void dealloc(T *ptr) const
@@ -206,7 +215,7 @@ template <typename T, typename storageManager> class arrT: public arr_ref<T>
     /*! Creates an array with \a sz entries, and initializes them with
         \a inival. */
     arrT(tsize sz, const T &inival) : arr_ref<T>(stm.alloc(sz),sz), own(true)
-      { fill(inival); }
+      { this->fill(inival); }
     /*! Creates an array with \a sz entries, which uses the memory pointed
         to by \a ptr.
         \note \a ptr will <i>not</i> be deallocated by the destructor.
