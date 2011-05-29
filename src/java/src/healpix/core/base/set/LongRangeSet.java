@@ -1,7 +1,7 @@
 /*
  * HEALPix Java code supported by the Gaia project.
  * Copyright (C) 2006-2011 Gaia Data Processing and Analysis Consortium
- * 
+ *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
@@ -20,7 +20,10 @@
 
 package healpix.core.base.set;
 
-import java.io.Serializable;
+import java.io.Externalizable;
+import java.io.IOException;
+import java.io.ObjectInput;
+import java.io.ObjectOutput;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
@@ -40,12 +43,17 @@ import java.util.NoSuchElementException;
  * Inspired by Justin F. Chapweske and Soren Bak
  * @author Jan Kotek
  */
-public class LongRangeSet implements Serializable, Iterable<Long>{
+public class LongRangeSet implements Externalizable, Iterable<Long>{
 
     private static final long serialVersionUID = -7543399451387806240L;
 
     /** sorted ranges, even is first, odd is last */
-    protected final long[] ranges;
+    protected long[] ranges;
+    
+    /** empty constructor for serialization*/
+    public LongRangeSet() {
+    
+	}
 
     /** 
      * Construct new LongRangeSet from given values
@@ -231,19 +239,37 @@ public class LongRangeSet implements Serializable, Iterable<Long>{
     }
     
     public boolean containsAll(long first, long last){
-    	//TODO optimize this
-    	for(long i=first;i<=last; i++)
-    		if(!contains(i))
-    			return false;
-    	return true;
+    	if(first>last)
+    		throw new IllegalArgumentException("First is bigger then last");
+    	if(isEmpty() || last < first() || first>last())
+    		return false;
+
+    	int firstIndex = Arrays.binarySearch(ranges, first);
+    	int lastIndex = Arrays.binarySearch(ranges, last);
+    	
+    	if(firstIndex>=0 && lastIndex>=0)
+    		return lastIndex - firstIndex <2;
+    	return false;
     }
 
     public boolean containsAny(long first, long last){
-    	//TODO optimize this
-    	for(long i=first;i<=last; i++)
-    		if(contains(i))
-    			return true;
-    	return false;    	
+    	if(first>last)
+    		throw new IllegalArgumentException("First is bigger then last");
+    	if(isEmpty() || last < first() || first>last())
+    		return false;
+
+    	int firstIndex = Arrays.binarySearch(ranges, first);    	
+    	int lastIndex = Arrays.binarySearch(ranges, last);
+
+    	
+    	//System.out.println(firstIndex + " - "+lastIndex);
+    	
+    	
+    	if(firstIndex <0 && lastIndex<0 && firstIndex%2==-1 && firstIndex == lastIndex)
+    		return false;
+
+
+    	return true;
     }
     
 
@@ -557,5 +583,13 @@ public class LongRangeSet implements Serializable, Iterable<Long>{
      */
 	public boolean isEmpty() { 
 		return  ranges.length==0;
+	}
+
+	public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
+		ranges = LongRangeSetBuilder.readFrom(in).ranges;
+	}
+
+	public void writeExternal(ObjectOutput out) throws IOException {
+		LongRangeSetBuilder.writeTo(out, this);
 	}
 }
