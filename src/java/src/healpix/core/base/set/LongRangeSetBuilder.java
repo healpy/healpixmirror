@@ -88,21 +88,20 @@ public class LongRangeSetBuilder {
     public void appendRange(long first, long last){
         if(first>last)
             throw new IllegalArgumentException("first > last");
-        if(pos>0){        
-        	if(first<lastFirst())
-        		throw new IllegalArgumentException("first already added, ranges must be added sorted! oldFirst:"+lastFirst()+", newFirst:"+first);
-        	if(first<last())
-        		first= last();
-        	if( last<last())
-        		throw new IllegalArgumentException("last already added, ranges must be added sorted! oldLast:"+last()+", newLast:"+last);
-            //special case, maybe just need to extend last bound
-            if(last() == first||last() +1 == first){
-            	ranges[pos-1] = last;
-            	return;
+        if(pos>0){
+            if(twoOrBigger() && first<=lastLast())
+                throw new IllegalArgumentException("Could not merge, ranges must be added sorted! lastLast:"+lastLast()+", newFirst:"+first);
+            //Check if new range overlaps with last one.
+            //In this case update last range, instead of adding new one
+            if(first <=last()+1){
+                ranges[pos-2] = Math.min(first,lastFirst());
+                ranges[pos-1] = Math.max(last,last());
+                return;
             }
         }
-            
-       
+
+
+
         //make sure there is space
         if(pos + 2>ranges.length)
             ensureSize(ranges.length * 2);
@@ -113,14 +112,25 @@ public class LongRangeSetBuilder {
         pos+=2;
     }
 
-	public long last() {
-		return ranges[pos-1];
-	}
-	
-	public long lastFirst() {
-		return ranges[pos-2];
-	}
+    protected long last() {
+        return ranges[pos-1];
+    }
 
+
+        protected boolean twoOrBigger() {
+            return pos > 3;
+        }
+
+        protected long lastLast() {
+            return ranges[pos-3];
+        }
+
+
+
+
+    protected long lastFirst() {
+        return ranges[pos-2];
+    }
 
     /**
      * appends all ranges from iterator
