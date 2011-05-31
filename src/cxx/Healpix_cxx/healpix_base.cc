@@ -381,20 +381,20 @@ template<typename I> void T_Healpix_Base<I>::query_multidisc
     }
   }
 
-template<> int T_Healpix_Base<int>::spread_bits (int v) const
+template<> inline int T_Healpix_Base<int>::spread_bits (int v) const
   { return utab[v&0xff] | (utab[(v>>8)&0xff]<<16); }
-template<> int64 T_Healpix_Base<int64>::spread_bits (int v) const
+template<> inline int64 T_Healpix_Base<int64>::spread_bits (int v) const
   {
   return  int64(utab[ v     &0xff])      | (int64(utab[(v>> 8)&0xff])<<16)
        | (int64(utab[(v>>16)&0xff])<<32) | (int64(utab[(v>>24)&0xff])<<48);
   }
 
-template<> int T_Healpix_Base<int>::compress_bits (int v) const
+template<> inline int T_Healpix_Base<int>::compress_bits (int v) const
   {
   int raw = (v&0x5555) | ((v&0x55550000)>>15);
   return ctab[raw&0xff] | (ctab[raw>>8]<<4);
   }
-template<> int T_Healpix_Base<int64>::compress_bits (int64 v) const
+template<> inline int T_Healpix_Base<int64>::compress_bits (int64 v) const
   {
   int64 raw = v&0x5555555555555555ull;
   raw|=raw>>15;
@@ -402,8 +402,8 @@ template<> int T_Healpix_Base<int64>::compress_bits (int64 v) const
       | (ctab[(raw>>32)&0xff]<<16) | (ctab[(raw>>40)&0xff]<<20);
   }
 
-template<typename I> void T_Healpix_Base<I>::nest2xyf (I pix, int &ix, int &iy,
-  int &face_num) const
+template<typename I> inline void T_Healpix_Base<I>::nest2xyf (I pix, int &ix,
+  int &iy, int &face_num) const
   {
   face_num = pix>>(2*order_);
   pix &= (npface_-1);
@@ -411,7 +411,7 @@ template<typename I> void T_Healpix_Base<I>::nest2xyf (I pix, int &ix, int &iy,
   iy = compress_bits(pix>>1);
   }
 
-template<typename I> I T_Healpix_Base<I>::xyf2nest (int ix, int iy,
+template<typename I> inline I T_Healpix_Base<I>::xyf2nest (int ix, int iy,
   int face_num) const
   { return (I(face_num)<<(2*order_)) + spread_bits(ix) + (spread_bits(iy)<<1); }
 
@@ -473,25 +473,11 @@ template<typename I> I T_Healpix_Base<I>::xyf2ring (int ix, int iy,
   I jr = (jrll[face_num]*nside_) - ix - iy  - 1;
 
   I nr, kshift, n_before;
-  if (jr<nside_)
-    {
-    nr = jr;
-    n_before = 2*nr*(nr-1);
-    kshift = 0;
-    }
-  else if (jr > 3*nside_)
-    {
-    nr = nl4-jr;
-    n_before = npix_ - 2*(nr+1)*nr;
-    kshift = 0;
-    }
-  else
-    {
-    nr = nside_;
-    n_before = ncap_ + (jr-nside_)*nl4;
-    kshift = (jr-nside_)&1;
-    }
 
+  bool shifted;
+  get_ring_info_small(jr,n_before,nr,shifted);
+  nr>>=2;
+  kshift=1-shifted;
   I jp = (jpll[face_num]*nr + ix - iy + 1 + kshift) / 2;
   planck_assert(jp<=4*nr,"must not happen");
   if (jp<1) jp+=nl4; // assumption: if this triggers, then nl4==4*nr
@@ -576,8 +562,8 @@ template<typename I> I T_Healpix_Base<I>::ring2nest (I pix) const
   return xyf2nest (ix, iy, face_num);
   }
 
-template<typename I> I T_Healpix_Base<I>::nest_peano_helper (I pix, int dir)
-  const
+template<typename I> inline I T_Healpix_Base<I>::nest_peano_helper
+  (I pix, int dir) const
   {
   int face = pix>>(2*order_);
   I result = 0;
@@ -773,25 +759,30 @@ template<typename I> void T_Healpix_Base<I>::query_polygon
   query_multidisc(normal,rad,inclusive,pixset);
   }
 
-template<typename I> void T_Healpix_Base<I>::get_ring_info_small (I ring,
+template<typename I> inline void T_Healpix_Base<I>::get_ring_info_small (I ring,
   I &startpix, I &ringpix, bool &shifted) const
   {
-  I northring = (ring>2*nside_) ? 4*nside_-ring : ring;
-  if (northring < nside_)
+  if (ring < nside_)
     {
     shifted = true;
-    ringpix = 4*northring;
-    startpix = 2*northring*(northring-1);
+    ringpix = 4*ring;
+    startpix = 2*ring*(ring-1);
+    }
+  else if (ring < 3*nside_)
+    {
+    shifted = ((ring-nside_) & 1) == 0;
+    ringpix = 4*nside_;
+    startpix = ncap_ + (ring-nside_)*ringpix;
     }
   else
     {
-    shifted = ((northring-nside_) & 1) == 0;
-    ringpix = 4*nside_;
-    startpix = ncap_ + (northring-nside_)*ringpix;
+    shifted = true;
+    I nr=(4*nside_-ring);
+    ringpix = 4*nr;
+    startpix = npix_-2*nr*(nr+1);
     }
-  if (northring != ring) // southern hemisphere
-    startpix = npix_ - startpix - ringpix;
   }
+
 template<typename I> void T_Healpix_Base<I>::get_ring_info (I ring, I &startpix,
   I &ringpix, double &costheta, double &sintheta, bool &shifted) const
   {

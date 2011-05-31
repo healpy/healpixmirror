@@ -718,7 +718,7 @@ template<typename I>void perf_query_disc(const string &name,
     ++cnt;
     }
   wallTimers.stop(name);
-  cout << name << ": " << cnt/wallTimers.acc(name)*1e-6 << "MOps/s" << endl;
+  cout << name << ": " << cnt/wallTimers.acc(name)*1e-3 << "kOps/s" << endl;
   }
 template<typename I>void perf_query_triangle(const string &name,
   Healpix_Ordering_Scheme scheme, double &dummy)
@@ -738,7 +738,7 @@ template<typename I>void perf_query_triangle(const string &name,
     ++cnt;
     }
   wallTimers.stop(name);
-  cout << name << ": " << cnt/wallTimers.acc(name)*1e-6 << "MOps/s" << endl;
+  cout << name << ": " << cnt/wallTimers.acc(name)*1e-3 << "kOps/s" << endl;
   }
 template<typename I>void perf_query_polygon(const string &name,
   Healpix_Ordering_Scheme scheme, double &dummy)
@@ -759,7 +759,7 @@ template<typename I>void perf_query_polygon(const string &name,
     ++cnt;
     }
   wallTimers.stop(name);
-  cout << name << ": " << cnt/wallTimers.acc(name)*1e-6 << "MOps/s" << endl;
+  cout << name << ": " << cnt/wallTimers.acc(name)*1e-3 << "kOps/s" << endl;
   }
 
 void perftest()
