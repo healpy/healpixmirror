@@ -38,7 +38,7 @@ public class QueryDiscTest extends TestCase {
 	public void testQueryDisc () throws Exception {
 	int nside = 32;
 	
-	int inclusive = 0;//false;
+	boolean inclusive = false;
 	double radius = Math.PI;
 	double radius1 = Math.PI/2.;
     HealpixIndex pt = new HealpixIndex(nside);
@@ -55,15 +55,15 @@ public class QueryDiscTest extends TestCase {
     double[] dang = HealpixIndex.vec2Ang(dvec);
     System.out.println(" Vector is (ra,dec)("+dvec.ra()+", "+dvec.dec()+") and angle is (theta,phi)("+dang[0]+","+dang[1]+")");
 
-    LongList fullSky = new LongList(pt.queryDisc(vec, radius,  0, inclusive));
+    LongList fullSky = new LongList(pt.queryDisc(vec, radius,  inclusive));
     assertEquals(npix, fullSky.size());
 
-    LongList firstHalfSky = new LongList(pt.queryDisc( vec, radius1, 0,  inclusive));
+    LongList firstHalfSky = new LongList(pt.queryDisc( vec, radius1, inclusive));
 //    dump(firstHalfSky);
 
     // you get exactly nside*2 more pixels from the equator which is included in north 
     assertEquals(npix/2 + (nside*2), firstHalfSky.size());
-    LongList secondHalfSky = new LongList(pt.queryDisc( dvec, radius1, 0, inclusive));
+    LongList secondHalfSky = new LongList(pt.queryDisc( dvec, radius1, inclusive));
    // dump(secondHalfSky);
     System.out.println();
 
@@ -114,8 +114,8 @@ public class QueryDiscTest extends TestCase {
     
 
 
-   firstHalfSky = new LongList(pt.queryDisc( new SpatialVector(1., 0., 0.), radius1, 0,inclusive));
-   secondHalfSky = new LongList(pt.queryDisc( new SpatialVector(-1., 0., 0.),radius1, 0, inclusive));
+   firstHalfSky = new LongList(pt.queryDisc( new SpatialVector(1., 0., 0.), radius1, inclusive));
+   secondHalfSky = new LongList(pt.queryDisc( new SpatialVector(-1., 0., 0.),radius1,  inclusive));
     firstHalfSky.addAll(secondHalfSky);
     pixHalfsUnique = new LongSet(firstHalfSky);
     pixHalfsList = new LongList(pixHalfsUnique);
@@ -131,8 +131,8 @@ public class QueryDiscTest extends TestCase {
         }
 
 
-    firstHalfSky = new LongList(pt.queryDisc( new SpatialVector(0., 1., 0.), radius1,  0,inclusive));
-    secondHalfSky = new LongList(pt.queryDisc( new SpatialVector(0., -1., 0.), radius1, 0, inclusive));
+    firstHalfSky = new LongList(pt.queryDisc( new SpatialVector(0., 1., 0.), radius1,  inclusive));
+    secondHalfSky = new LongList(pt.queryDisc( new SpatialVector(0., -1., 0.), radius1,  inclusive));
     firstHalfSky.addAll(secondHalfSky);
     pixHalfsUnique = new LongSet(firstHalfSky);
     pixHalfsList = new LongList(pixHalfsUnique);
