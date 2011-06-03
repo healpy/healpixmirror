@@ -418,5 +418,6 @@ public class SpatialVector {
 	    x = sintheta*Math.cos(phi);
 	    y = sintheta*Math.sin(phi);
 	    z = zin;
+	    okRaDec_=false;
     }
 };

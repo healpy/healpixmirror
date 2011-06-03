@@ -1,20 +1,21 @@
 /*
- * HEALPix Java code supported by the Gaia project.
- * Copyright (C) 2006-2011 Gaia Data Processing and Analysis Consortium
- * 
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation; either
- * version 2.1 of the License, or (at your option) any later version.
+ *  HEALPix Java code original port for Gaia by wil.
+ *  This code is free software; you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation; either version 2 of the License, or
+ *  (at your option) any later version.
  *
- * This library is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details.
+ *  This code is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+ *  You should have received a copy of the GNU General Public License
+ *  along with this code; if not, write to the Free Software
+ *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+ *
+ *  For more information about HEALPix, see http://healpix.jpl.nasa.gov
+
  *
  */
 package healpix.core;
@@ -32,22 +33,15 @@ import healpix.tools.Constants;
 import healpix.tools.SpatialVector;
 
 import java.io.Serializable;
-import java.text.Format;
 import java.util.AbstractMap;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Stack;
 
-import javax.management.RuntimeErrorException;
-
-import com.sun.org.apache.bcel.internal.classfile.StackMap;
-
 /**
  * Generic healpix routines but tied to a given NSIDE in the constructor Java
- * version of some healpix routines from DSRI in java everthing must be in a
+ * version of some healpix routines from DSRI in java everything must be in a
  * class - no functions floating about. Original algorithms Eric Hivon and
  * Krzysztof M. Gorski. This code written by William O'Mullane extended by
  * Emmanuel Joliet with some methods added from pix_tools F90 code port to Java.
