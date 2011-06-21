@@ -445,7 +445,7 @@ template<typename I> void T_Healpix_Base<I>::ring2xyf (I pix, int &ix, int &iy,
       { ifm >>= order_; ifp >>= order_; }
     else
       { ifm /= nside_; ifp /= nside_; }
-    face_num = (ifp==ifm) ? ((ifp&3)+4) : ((ifp<ifm) ? ifp : (ifm+8));
+    face_num = (ifp==ifm) ? (ifp|4) : ((ifp<ifm) ? ifp : (ifm+8));
     }
   else // South Polar cap
     {
@@ -637,7 +637,7 @@ template<typename I> I T_Healpix_Base<I>::zphi2pix (double z, double phi) const
       I jm = I(temp1+temp2); // index of descending edge line
       I ifp = jp >> order_;  // in {0,4}
       I ifm = jm >> order_;
-      int face_num = (ifp==ifm) ? ((ifp&3)+4) : ((ifp<ifm) ? ifp : (ifm+8));
+      int face_num = (ifp==ifm) ? (ifp|4) : ((ifp<ifm) ? ifp : (ifm+8));
 
       int ix = jm & (nside_-1),
           iy = nside_ - (jp & (nside_-1)) - 1;
@@ -651,8 +651,8 @@ template<typename I> I T_Healpix_Base<I>::zphi2pix (double z, double phi) const
 
       I jp = I(tp*tmp); // increasing edge line index
       I jm = I((1.0-tp)*tmp); // decreasing edge line index
-      if (jp>=nside_) jp = nside_-1; // for points too close to the boundary
-      if (jm>=nside_) jm = nside_-1;
+      jp=min(jp,nside_-1); // for points too close to the boundary
+      jm=min(jm,nside_-1);
       return (z>=0) ?
         xyf2nest(nside_-jm -1,nside_-jp-1,ntt) : xyf2nest(jp,jm,ntt+8);
       }
@@ -759,8 +759,8 @@ template<typename I> void T_Healpix_Base<I>::query_polygon
   query_multidisc(normal,rad,inclusive,pixset);
   }
 
-template<typename I> inline void T_Healpix_Base<I>::get_ring_info_small (I ring,
-  I &startpix, I &ringpix, bool &shifted) const
+template<typename I> inline void T_Healpix_Base<I>::get_ring_info_small
+  (I ring, I &startpix, I &ringpix, bool &shifted) const
   {
   if (ring < nside_)
     {
@@ -777,7 +777,7 @@ template<typename I> inline void T_Healpix_Base<I>::get_ring_info_small (I ring,
   else
     {
     shifted = true;
-    I nr=(4*nside_-ring);
+    I nr= 4*nside_-ring;
     ringpix = 4*nr;
     startpix = npix_-2*nr*(nr+1);
     }

@@ -151,6 +151,16 @@ void tstack_pop(const string &name)
   stackTimers.stop(tstack.back().fullname);
   tstack.pop_back();
   }
+void tstack_pop()
+  {
+  planck_assert(!tstack.empty(), "incorrect tstack operation");
+  stackTimers.stop(tstack.back().fullname);
+  tstack.pop_back();
+  }
+void tstack_replace(const string &name1, const string &name2)
+  { tstack_pop(name1); tstack_push(name2); }
+void tstack_replace(const string &name)
+  { tstack_pop(); tstack_push(name); }
 void tstack_report(const string &stem)
   {
   double total=stackTimers.acc(string("$")+stem);

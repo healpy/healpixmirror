@@ -219,6 +219,22 @@ template <typename T, typename storageManager> class arrT: public arr_ref<T>
     /*! Deallocates the memory held by the array, and sets the array size
         to 0. */
     void dealloc() {if (own) stm.dealloc(this->d); reset();}
+    /*! Resizes the array to hold \a sz elements. The existing content of the
+        array is copied over to the new array to the extent possible.
+        \a sz can be 0. If \a sz is the same as the current size, no
+        reallocation is performed. */
+    void resize (tsize sz)
+      {
+      using namespace std;
+      if (sz==this->s) return;
+      T *tmp = stm.alloc(sz);
+      for (tsize m=0; m<min(sz,this->s); ++m)
+        tmp[m]=this->d[m];
+      if (own) stm.dealloc(this->d);
+      this->s = sz;
+      this->d = tmp;
+      own = true;
+      }
 
     /*! Changes the array to be a copy of \a orig. */
     arrT &operator= (const arrT &orig)

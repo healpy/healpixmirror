@@ -89,11 +89,18 @@ void announce (const string &name)
   cout << endl;
   }
 
+void module_startup (const string &name, bool argc_valid, const string &usage,
+  bool verbose)
+  {
+  if (verbose) announce (name);
+  if (argc_valid) return;
+  if (verbose) cerr << usage << endl;
+  planck_fail_quietly ("Incorrect usage");
+  }
+
 void module_startup (const string &name, int argc, const char **,
   int argc_expected, const string &argv_expected, bool verbose)
   {
-  if (verbose) announce (name);
-  if (argc==argc_expected) return;
-  if (verbose) cerr << "Usage: " << name << " " << argv_expected << endl;
-  planck_fail_quietly ("Incorrect usage");
+  module_startup (name,argc==argc_expected,
+    string("Usage: ")+name+" "+argv_expected, verbose);
   }

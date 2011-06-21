@@ -84,6 +84,9 @@ extern wallTimerSet wallTimers;
 
 void tstack_push(const std::string &name);
 void tstack_pop(const std::string &name);
+void tstack_pop();
+void tstack_replace(const std::string &name1, const std::string &name2);
+void tstack_replace(const std::string &name);
 void tstack_report(const std::string &stem);
 
 #endif

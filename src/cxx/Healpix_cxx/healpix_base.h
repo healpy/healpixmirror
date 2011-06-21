@@ -191,7 +191,9 @@ template<typename I> class T_Healpix_Base: public Healpix_Tables
         \param inclusive if \a false, return the exact set of pixels whose
            pixel centers lie within the polygon; if \a true, return all pixels
            that overlap with the polygon, and maybe a few more.
-        \note This method is currently only implemented in the NEST scheme. */
+        \note This method is more efficient in the RING scheme, but the
+           algorithm used for \a inclusive==true returns fewer false positives
+           in the NEST scheme. */
     void query_polygon (const std::vector<pointing> &vertex, bool inclusive,
       rangeset<I> &pixset) const;
 
