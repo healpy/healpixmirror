@@ -63,7 +63,6 @@ case $CCTYPE in
   gcc)
     CCFLAGS="-O2 -ffast-math -fomit-frame-pointer"
     GCCVERSION="`$CC -dumpversion 2>&1`"
-GCCVERSION=4.0.2
     echo "Using gcc version $GCCVERSION"
     AC_SUBST(GCCVERSION)
     case $system in
