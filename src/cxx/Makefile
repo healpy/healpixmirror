@@ -1,3 +1,4 @@
+HEALPIX_TARGET?=auto
 ifndef HEALPIX_TARGET
   HEALPIX_TARGET:=$(error HEALPIX_TARGET undefined. Please see README.compilation for help)UNDEFINED
 endif
@@ -6,8 +7,6 @@ default: compile_all
 SRCROOT:=$(shell pwd)
 include $(SRCROOT)/config/config.$(HEALPIX_TARGET)
 include $(SRCROOT)/config/rules.common
-
-.SILENT:
 
 .PHONY: test
 
