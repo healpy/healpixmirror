@@ -18,7 +18,8 @@
  *
  */
 package healpix.tools;
-
+import healpix.core.Pointing;
+import healpix.core.Vec3;
 
 /**
  * The SpatialVector contains standard 3D vector with the addition that each
@@ -39,22 +40,12 @@ package healpix.tools;
  * time at JHU.
  */
 
-public class SpatialVector {
+public class SpatialVector extends Vec3 {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	double x, y, z;
-
-	/** The ra_. */
-	double ra_;
-
-	/** The dec_. */
-	double dec_;
-
-	/** The ok ra dec_. */
-	boolean okRaDec_;
 
 	/**
 	 * Default constructor constructs (1,0,0), ra=0, dec=0.
@@ -63,9 +54,6 @@ public class SpatialVector {
 		x = 1;
 		y = 0;
 		z = 0;
-		ra_ = 0;
-		dec_ = 0;
-		okRaDec_ = true;
 	}
 
 	/**
@@ -79,24 +67,25 @@ public class SpatialVector {
 		x = x1;
 		y = y1;
 		z = z1;
-		ra_ = 0;
-		dec_ = 0;
-		okRaDec_ = false;
+	}
+
+	public SpatialVector(Vec3 v) {
+		super(v);
 	}
 
 	/**
 	 * Construct from ra/dec in degrees
-	 * 
+	 *
 	 * @param ra
 	 *            RA in degrees
 	 * @param dec
 	 *            DEC in degrees
 	 */
 	public SpatialVector(double ra, double dec) {
-		ra_ = ra;
-		dec_ = dec;
-		okRaDec_ = true;
-		updateXYZ();
+		double cd = Math.cos(dec * Constants.cPr);
+		x = Math.cos(ra * Constants.cPr) * cd;
+		y = Math.sin(ra * Constants.cPr) * cd;
+		z = Math.sin(dec * Constants.cPr);
 	}
 
 	/**
@@ -108,25 +97,6 @@ public class SpatialVector {
 	public SpatialVector(SpatialVector copy) {
 		this(copy.x(), copy.y(), copy.z());
 		normalized();
-		updateRaDec();
-	}
-
-	/**
-	 * Returns the length of this vector.
-	 * 
-	 * @return the length of this vector
-	 */
-	public final double length() {
-		return Math.sqrt(lengthSquared());
-	}
-
-	/**
-	 * Returns the squared length of this vector.
-	 * 
-	 * @return the squared length of this vector
-	 */
-	public final double lengthSquared() {
-		return x * x + y * y + z * z;
 	}
 
 	/**
@@ -150,10 +120,10 @@ public class SpatialVector {
 	 * 
 	 */
 	public void set(double ra, double dec) {
-		ra_ = ra;
-		dec_ = dec;
-		okRaDec_ = true;
-		updateXYZ();
+		double cd = Math.cos(dec * Constants.cPr);
+		x = Math.cos(ra * Constants.cPr) * cd;
+		y = Math.sin(ra * Constants.cPr) * cd;
+		z = Math.sin(dec * Constants.cPr);
 	}
 
 	/**
@@ -332,11 +302,8 @@ public class SpatialVector {
 	 * @return declination angle
 	 */
 	public double dec() {
-		if (!okRaDec_) {
-			normalized();
-			updateRaDec();
-		}
-		return dec_;
+		Pointing ptg = new Pointing(this);
+		return (Math.PI*0.5 - ptg.theta) / Constants.cPr;
 	}
 
 	/**
@@ -345,68 +312,10 @@ public class SpatialVector {
 	 * @return right ascension
 	 */
 	public double ra() {
-		if (!okRaDec_) {
-			normalized();
-			updateRaDec();
-		}
-		return ra_;
+		Pointing ptg = new Pointing(this);
+		return ptg.phi / Constants.cPr;
 	}
 
-	/**
-	 * Update x_ y_ z_ from ra_ and dec_ variables
-	 */
-	protected void updateXYZ() {
-		double cd = Math.cos(dec_ * Constants.cPr);
-		x = Math.cos(ra_ * Constants.cPr) * cd;
-		y = Math.sin(ra_ * Constants.cPr) * cd;
-		z = Math.sin(dec_ * Constants.cPr);
-	}
-
-	/**
-	 * Update ra_ and dec_ from x_ y_ z_ variables
-	 */
-	protected void updateRaDec() {
-		dec_ = Math.asin(z()) / Constants.cPr; // easy.
-		double cd = Math.cos(dec_ * Constants.cPr);
-		if (cd > Constants.EPS || cd < -Constants.EPS)
-			if (y() > Constants.EPS || y() < -Constants.EPS) {
-				if (y() < 0.0)
-					ra_ = 360 - Math.acos(x() / cd) / Constants.cPr;
-				else
-					ra_ = Math.acos(x() / cd) / Constants.cPr;
-			} else {
-				ra_ = (x() < 0.0 ? 180 : 0.0);
-				// ra_ = (x_ < 0.0 ? -1.0 : 1.0) *
-				// Math.asin(y_/cd)/Constants.cPr;
-			}
-		else
-			ra_ = 0.0;
-		okRaDec_ = true;
-	}
-
-	/**
-	 * @return Right Ascencion of this vector in radians
-	 */
-	public double toRa() {
-		double phi = 0.;
-		if ((x != 0.) || (y != 0))
-			phi = Math.atan2(y, x); // phi in [-pi,pi]
-
-		if (phi < 0)
-			phi += 2.0 * Math.PI; // phi in [0, 2pi]
-
-		return phi;
-	}
-
-	/**
-	 * @return Declination of this vector in radians
-	 */
-	public double toDe() {
-		double z2 = z / length();
-		double theta = Math.acos(z2);
-		return Math.PI / 2 - theta;
-	}
-	
 	/**
 	 * convenience function - added as it is in C++ version
 	 * @param zin
@@ -418,6 +327,5 @@ public class SpatialVector {
 	    x = sintheta*Math.cos(phi);
 	    y = sintheta*Math.sin(phi);
 	    z = zin;
-	    okRaDec_=false;
     }
 };

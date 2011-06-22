@@ -29,7 +29,7 @@ import healpix.tools.SpatialVector;
  */
 public class HighResolution {
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws Exception {
 		HealpixIndex t = new HealpixIndex();
 		
 		/** 

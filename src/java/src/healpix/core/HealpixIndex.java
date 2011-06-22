@@ -52,15 +52,8 @@ import java.util.Stack;
  * @version $Id: HealpixIndex.java 164005 2011-01-10 11:10:33Z ejoliet $
  */
 
-public class HealpixIndex implements Serializable {
+public class HealpixIndex extends HealpixBase implements Serializable {
 	
-	protected class RingInfoSmall {
-		long startpix, ringpix;
-		boolean shifted;
-	}
-
-	static boolean DEBUG=true;
-
 	/**
 	 * Default serial version
 	 */
@@ -70,141 +63,15 @@ public class HealpixIndex implements Serializable {
      */
     public static final String REVISION =
         "$Id: HealpixIndex.java 164005 2011-01-10 11:10:33Z ejoliet $";
-	/** The Constant ns_max. */
-	public static final int ns_max = 536870912;// 1048576;
-	/** Max order **/
-	public static final int order_max=29;
-	
-    /*! The order of the map; -1 for nonhierarchical map. */
-    protected int order;
-
-static private final short ctab[]={
-  0,1,256,257,2,3,258,259,512,513,768,769,514,515,770,771,4,5,260,261,6,7,262,
-  263,516,517,772,773,518,519,774,775,1024,1025,1280,1281,1026,1027,1282,1283,
-  1536,1537,1792,1793,1538,1539,1794,1795,1028,1029,1284,1285,1030,1031,1286,
-  1287,1540,1541,1796,1797,1542,1543,1798,1799,8,9,264,265,10,11,266,267,520,
-  521,776,777,522,523,778,779,12,13,268,269,14,15,270,271,524,525,780,781,526,
-  527,782,783,1032,1033,1288,1289,1034,1035,1290,1291,1544,1545,1800,1801,1546,
-  1547,1802,1803,1036,1037,1292,1293,1038,1039,1294,1295,1548,1549,1804,1805,
-  1550,1551,1806,1807,2048,2049,2304,2305,2050,2051,2306,2307,2560,2561,2816,
-  2817,2562,2563,2818,2819,2052,2053,2308,2309,2054,2055,2310,2311,2564,2565,
-  2820,2821,2566,2567,2822,2823,3072,3073,3328,3329,3074,3075,3330,3331,3584,
-  3585,3840,3841,3586,3587,3842,3843,3076,3077,3332,3333,3078,3079,3334,3335,
-  3588,3589,3844,3845,3590,3591,3846,3847,2056,2057,2312,2313,2058,2059,2314,
-  2315,2568,2569,2824,2825,2570,2571,2826,2827,2060,2061,2316,2317,2062,2063,
-  2318,2319,2572,2573,2828,2829,2574,2575,2830,2831,3080,3081,3336,3337,3082,
-  3083,3338,3339,3592,3593,3848,3849,3594,3595,3850,3851,3084,3085,3340,3341,
-  3086,3087,3342,3343,3596,3597,3852,3853,3598,3599,3854,3855 };
-static private final short utab[]={
-  0,1,4,5,16,17,20,21,64,65,68,69,80,81,84,85,256,257,260,261,272,273,276,277,
-  320,321,324,325,336,337,340,341,1024,1025,1028,1029,1040,1041,1044,1045,1088,
-  1089,1092,1093,1104,1105,1108,1109,1280,1281,1284,1285,1296,1297,1300,1301,
-  1344,1345,1348,1349,1360,1361,1364,1365,4096,4097,4100,4101,4112,4113,4116,
-  4117,4160,4161,4164,4165,4176,4177,4180,4181,4352,4353,4356,4357,4368,4369,
-  4372,4373,4416,4417,4420,4421,4432,4433,4436,4437,5120,5121,5124,5125,5136,
-  5137,5140,5141,5184,5185,5188,5189,5200,5201,5204,5205,5376,5377,5380,5381,
-  5392,5393,5396,5397,5440,5441,5444,5445,5456,5457,5460,5461,16384,16385,16388,
-  16389,16400,16401,16404,16405,16448,16449,16452,16453,16464,16465,16468,16469,
-  16640,16641,16644,16645,16656,16657,16660,16661,16704,16705,16708,16709,16720,
-  16721,16724,16725,17408,17409,17412,17413,17424,17425,17428,17429,17472,17473,
-  17476,17477,17488,17489,17492,17493,17664,17665,17668,17669,17680,17681,17684,
-  17685,17728,17729,17732,17733,17744,17745,17748,17749,20480,20481,20484,20485,
-  20496,20497,20500,20501,20544,20545,20548,20549,20560,20561,20564,20565,20736,
-  20737,20740,20741,20752,20753,20756,20757,20800,20801,20804,20805,20816,20817,
-  20820,20821,21504,21505,21508,21509,21520,21521,21524,21525,21568,21569,21572,
-  21573,21584,21585,21588,21589,21760,21761,21764,21765,21776,21777,21780,21781,
-  21824,21825,21828,21829,21840,21841,21844,21845 };
-
-	// coordinate of the lowest corner of each face
-	static private final int jrll[] = {  2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4 };
-	static private final int jpll[] = {  1, 3, 5, 7, 0, 2, 4, 6, 1, 3, 5, 7 };
-
-	 static private final int xoffset[] = { -1,-1, 0, 1, 1, 1, 0,-1 };
-	 static private final int yoffset[] = {  0, 1, 1, 1, 0,-1,-1,-1 };
-	 static private final int facearray[][] =
-	        { {  8, 9,10,11,-1,-1,-1,-1,10,11, 8, 9 },   // S
-	          {  5, 6, 7, 4, 8, 9,10,11, 9,10,11, 8 },   // SE
-	          { -1,-1,-1,-1, 5, 6, 7, 4,-1,-1,-1,-1 },   // E
-	          {  4, 5, 6, 7,11, 8, 9,10,11, 8, 9,10 },   // SW
-	          {  0, 1, 2, 3, 4, 5, 6, 7, 8, 9,10,11 },   // center
-	          {  1, 2, 3, 0, 0, 1, 2, 3, 5, 6, 7, 4 },   // NE
-	          { -1,-1,-1,-1, 7, 4, 5, 6,-1,-1,-1,-1 },   // W
-	          {  3, 0, 1, 2, 3, 0, 1, 2, 4, 5, 6, 7 },   // NW
-	          {  2, 3, 0, 1,-1,-1,-1,-1, 0, 1, 2, 3 } }; // N
-	 static private final int swaparray[][] =
-	        { {  0,0,3 },   // S
-	          {  0,0,6 },   // SE
-	          {  0,0,0 },   // E
-	          {  0,0,5 },   // SW
-	          {  0,0,0 },   // center
-	          {  5,0,0 },   // NE
-	          {  0,0,0 },   // W
-	          {  6,0,0 },   // NW
-	          {  3,0,0 } }; // N
-	/** The Constant z0. */
-	public static final double z0 = Constants.twothird; // 2/3
-
-	/** The nside. */
-	public int nside = 1024;
-
-	/** The ncap. */
-	protected long  nl2, nl3, nl4, npface, npix, ncap;
-
-	/** The fact2. */
-	protected double fact1, fact2;
-	
-	protected Scheme scheme= Scheme.NESTED;// default will be nest
-
-	/** The bm. */
-	transient private BitManipulation bm = new BitManipulation();
-
-	/**
-	 * Inits the.
-	 */
-	protected void init() {
-		nl2 = 2 * nside;
-		nl3 = 3 * nside;
-		nl4 = 4 * nside;
-		npface = (long)nside * (long)nside;
-		ncap = 2 * (long)nside * ( (long)nside - 1 );// points in each polar cap, =0 for
-		// nside =1
-		npix =  12 * npface ;
-		fact2 = 4.0 / npix;
-		fact1 = (nside << 1) * fact2;
-		
-		order = nside2order(nside);
-	}
-
-	/**
-	 * Gets the order from the nside
-	 * @param nside
-	 * @return order
-	 */
-	public static int nside2order(int nside) {
-		int ord=0;
-		assert (nside > 0);
-	    if ( ((nside)&(nside-1)) > 0 ) {
-	    	return -1;
-	    }
-	    // according to Pierre this is the best 
-		ord = (int) log2(nside);
-		return ord;
-	}
-
-	/**
-	 * Log base two
-	 * @param num
-	 * @return log2
-	 */
-	private static double log2(double num) {
-		return (Math.log(num) / Math.log(2));
-	}
 
 	/**
 	 * Default constructor nside = 1024.
 	 */
 	public HealpixIndex() {
-		init();
+		try {
+		setNsideAndScheme(1024,Scheme.NESTED);
+                }
+		catch (Exception Ex) { /* cannot happen */ }
 	}
 
 	/**
@@ -215,20 +82,11 @@ static private final short utab[]={
 	 * @throws Exception
 	 */
 	public HealpixIndex(int nSIDE2) throws Exception {
-		if ( nSIDE2 > ns_max || nSIDE2 < 1 ) {
-			throw new Exception("nsides must be between 1 and " + ns_max);
-		}
-		this.nside = nSIDE2;
-		init();
+		super (nSIDE2, Scheme.NESTED);
 	}
 
 	public HealpixIndex(int nside2, Scheme sch) throws Exception{
-		if ( nside2 > ns_max || nside2 < 1 ) {
-			throw new Exception("nsides must be between 1 and " + ns_max);
-		}
-		this.nside = nside2;
-		this.scheme=sch;
-		init();
+		super (nside2, sch);
 	}
 
 	/**
@@ -245,92 +103,11 @@ static private final short utab[]={
 	 * @throws Exception
 	 */
 	public long ang2pix_nest(double theta, double phi) throws Exception {
-		long ipix;
-		double z, za, tt, tp;
-		long ifp, ifm;
-		long jp, jm;
-		int  ntt, face_num, ix, iy;
-
-		if ( phi >= Constants.twopi )
-			phi = phi - Constants.twopi;
-		if ( phi < 0. )
-			phi = phi + Constants.twopi;
-		if ( theta > Constants.PI || theta < 0 ) {
-			throw new Exception("theta must be between 0 and " + Constants.PI);
-		}
-		if ( phi > Constants.twopi || phi < 0 ) {
-			throw new Exception("phi must be between 0 and " + Constants.twopi);
-		}
-		// Note exception thrown means method does not get further.
-
-		z = Math.cos(theta);
-		za = Math.abs(z);
-		tt = phi / Constants.piover2;// in [0,4]
-
-		
-		// System.out.println("Za:"+za +" z0:"+z0+" tt:"+tt+" z:"+z+"
-		// theta:"+theta+" phi:"+phi);
-		if ( za <= z0 ) { // Equatorial region
-			// System.out.println("Equatorial !");
-			// (the index of edge lines increase when the longitude=phi goes up)
-		    double temp1 = nside*(0.5+tt);
-		    double temp2 = nside*(z*0.75);
-
-			jp = (long) (temp1 - temp2);
-			// ascending edge line index
-			jm = (long) (temp1 + temp2);
-			// descending edge line index
-
-			// finds the face
-			ifp = jp >> order; // in {0,4}
-			ifm = jm >> order;
-			if ( ifp == ifm ) { // faces 4 to 7
-				face_num = (int)( ifp == 4 ?  4 : ifp+4);
-			} else {
-				if ( ifp < ifm ) { // (half-)faces 0 to 3
-					face_num = (int)ifp ;
-				} else { // (half-)faces 8 to 11
-					face_num = (int) ifm   + 8;
-				};
-			};
-
-			ix = (int)( jm & (nside -1));
-			iy = (int) (nside - ( jp &  (nside -1 )) - 1);
-		} else { // polar region, za > 2/3
-
-			ntt = (int) ( tt );
-			if ( ntt >= 4 )
-				ntt = 3;
-			tp = tt - ntt;
-			double tmp = nside * Math.sqrt(3.0 * ( 1.0 - za )); 
-
-			// (the index of edge lines increase when distance from the closest
-			// pole goes up)
-			jp = (long) ( tp * tmp);// line going toward the
-			// pole as phi increases
-			jm = (long) (( 1.0 - tp ) * tmp); // that one goes
-			// away of the closest pole
-			jp = Math.min(ns_max - 1, jp); 
-			// for points too close to the boundary
-			jm = Math.min(ns_max - 1, jm);
-
-			// finds the face and pixel's (x,y)
-			if ( z >= 0 ) { // North Pole
-				// System.out.println("Polar z>=0 ntt:"+ntt+" tt:"+tt);
-				face_num = ntt; // in {0,3}
-				ix = (int) (nside - jm - 1);
-				iy = (int) (nside - jp - 1);
-			} else {
-				// System.out.println("Polar z<0 ntt:"+ntt+" tt:"+tt);
-				face_num = ntt + 8;// in {8,11}
-				ix = (int)jp;
-				iy = (int)jm;
-			};
-		};
-
-		ipix = xyf2nest(ix,iy,face_num);
-	
-		return ipix;
+		Scheme sbak=scheme;
+		setScheme(Scheme.NESTED);
+		long result=ang2pix(new Pointing(theta,phi));
+		setScheme(sbak);
+		return result;
 	}
 
 	/**
@@ -345,43 +122,11 @@ static private final short utab[]={
 	 */
 	public double[] pix2ang_nest(long ipix) throws Exception {
                 Scheme sbak=scheme;
-                scheme=Scheme.NESTED;
-                AngularPosition res = pix2zphi(ipix);
-                scheme=sbak;
-		double[] ret = { Math.acos(res.theta), res.phi };
+		setScheme(Scheme.NESTED);
+                Pointing res = pix2ang(ipix);
+		setScheme(sbak);
+		double[] ret = { res.theta, res.phi };
 		return ret;
-	}
-
-        private long spread_bits (int v)
-          {
-          return  (long) (utab[ v     &0xff])
-                 |((long)(utab[(v>> 8)&0xff])<<16)
-                 |((long)(utab[(v>>16)&0xff])<<32)
-                 |((long)(utab[(v>>24)&0xff])<<48);
-          }
-        private int compress_bits (long v)
-          {
-          int raw = (int)(((v&0x0000555500000000L)>>16)
-                        | ((v&0x5555000000000000L)>>31)
-                        |  (v&0x00005555L)
-                        | ((v&0x55550000L)>>15));
-          return ctab[ raw     &0xff]
-              | (ctab[(raw>> 8)&0xff]<< 4)
-              | (ctab[(raw>>16)&0xff]<<16)
-              | (ctab[(raw>>24)&0xff]<<20);
-          }
-	private Xyf nest2xyf(long ipix) {
-		Xyf ret = new Xyf();
-		ret.face_num =(int)(ipix>>(2*order));
-		long pix = ipix& (npface-1);
-                ret.ix = compress_bits(pix);
-                ret.iy = compress_bits(pix>>1);
-		return ret;
-	}
-
-	private long xyf2nest(int ix, int iy, int face_num) {
-		  return ((long)(face_num)<<(2*order)) +
-                         spread_bits(ix) + (spread_bits(iy)<<1);
 	}
 
 	/**
@@ -396,17 +141,17 @@ static private final short utab[]={
 	 */
 	public double[] pix2ang_ring(long ipix) throws Exception {
                 Scheme sbak=scheme;
-                scheme=Scheme.RING;
-                AngularPosition res = pix2zphi(ipix);
-                scheme=sbak;
-		double[] ret = { Math.acos(res.theta), res.phi };
+		setScheme(Scheme.RING);
+                Pointing res = pix2ang(ipix);
+		setScheme(sbak);
+		double[] ret = { res.theta, res.phi };
 		return ret;
 	}
 
 	/**
 	 * renders the pixel number ipix (RING scheme) for a pixel which contains a
 	 * point on a sphere at coordinates theta and phi, given the map resolution
-	 * parametr nside the computation is made to the highest resolution
+	 * parameter nside the computation is made to the highest resolution
 	 * available (nside=8192) and then degraded to that required (by integer
 	 * division) this doesn't cost more, and it makes sure that the treatement
 	 * of round-off will be consistent for every resolution
@@ -419,203 +164,12 @@ static private final short utab[]={
 	 * @throws Exception
 	 */
 	public long ang2pix_ring(double theta, double phi) throws Exception {
-
-		if ( nside < 1 || nside > ns_max )
-			throw new Exception("nside out of range");
-		if ( theta < 0.0 || theta > Constants.PI )
-			throw new Exception("theta out of range");
-
-		long ipix;
-		long jp, jm, ir, ip;
-		double z, za, tt, tp, tmp, temp1, temp2;
-		int  kshift;
-
-		// -----------------------------------------------------------------------
-		z = Math.cos(theta);
-		za = Math.abs(z);
-		if ( phi >= Constants.twopi )
-			phi = phi - Constants.twopi;
-		if ( phi < 0. )
-			phi = phi + Constants.twopi;
-		tt = phi / Constants.piover2;// in [0,4)
-
-		if ( za <= z0 ) {
-		    temp1 = nside*(0.5+tt);
-		    temp2 = nside*z*0.75;
-		    jp = (long)(temp1-temp2); // index of  ascending edge line
-		    jm = (long)(temp1+temp2); // index of descending edge line
-
-			ir = nside + 1 + jp - jm;// in {1,2n+1} (ring number counted from
-			// z=2/3)
-			kshift = 1 - (int)(ir&1);
-	
-			ip = (long) ( (jp+jm-(long)nside+(long)kshift+1L)/2L);// in {1,4n}
-			ip = ip % nl4;
-
-			ipix = ncap + ( ir - 1 )* nl4 + ip;
-			return ipix;
-
-		} 
-		tp = tt - (int)( tt );// MOD(tt,1.0)
-		tmp = (long)nside * Math.sqrt(3.0 * ( 1.0 - za ));
-
-		jp = (long) (  tp * tmp );// increasing edge line index
-		jm = (long) ( ( 1.0 - tp ) * tmp );// decreasing edge line index
-
-		ir = jp + jm + 1L;// ring number counted from the closest pole
-		ip = (long) ( tt * ir );// in {1,4*ir})
-		ip = ip % (4L * ir);
-		if ( z > 0.0 ) {
-			ipix = 2L * ir * ( ir - 1L ) + ip;			
-		} else {
-			ipix = npix - 2L * ir * ( ir + 1L ) + ip;
-		}
-		return ipix;
+		Scheme sbak=scheme;
+		setScheme(Scheme.RING);
+		long result=ang2pix(new Pointing(theta,phi));
+		setScheme(sbak);
+		return result;
 	}
-
-	/**
-	 * performs conversion from NESTED to RING pixel number
-	 * 
-	 * @param ipnest
-	 *            pixel NEST index number
-	 * @return RING pixel index number
-	 * @throws Exception
-	 */
-	public long nest2ring(long ipnest) throws Exception {
-		Xyf xyf = nest2xyf(ipnest);
-		long ipring = xyf2ring(xyf.ix,xyf.iy,xyf.face_num);
-		return ipring;
-	}
-
-	private long xyf2ring(int ix, int iy, int face_num) {
-		  long jr = ((long)jrll[face_num]*(long)nside) - (long)ix - (long)iy  - 1L;
-
-		  long nr, kshift, n_before;
-		  if (jr<(long)nside)
-		    {
-		    nr = jr;
-		    n_before = 2*nr*(nr-1);
-		    kshift = 0;
-		    }
-		  else if (jr > 3*(long)nside)
-		    {
-		    nr = nl4-jr;
-		    n_before = npix - 2*(nr+1)*nr;
-		    kshift = 0;
-		    }
-		  else
-		    {
-		    nr = (long)nside;
-		    n_before = ncap + (jr-(long)nside)*nl4;
-		    kshift = (jr-(long)nside)&1;
-		    }
-
-		  long jp = ((long)jpll[face_num]*nr + (long)ix - (long)iy + 1L + (long)kshift) / 2L;
-		  if (jp>nl4)
-		    jp-=nl4;
-		  else
-		    if (jp<1) jp+=nl4;
-
-		  return n_before + jp - 1L;
-		
-	}
-
-	/**
-	 * performs conversion from RING to NESTED pixel number
-	 * 
-	 * @param ipring
-	 *            pixel RING index number
-	 * @return NEST pixel index number
-	 * @throws Exception
-	 */
-	public long ring2nest(long ipring) throws Exception {
-		  Xyf xyf=ring2xyf(ipring);
-		  return xyf2nest (xyf.ix, xyf.iy, xyf.face_num);
-	}
-
-	private Xyf ring2xyf(long pix) {
-		Xyf ret = new Xyf();
-		long iring, iphi, kshift, nr;
-
-
-		  if (pix<ncap) // North Polar cap
-		    {
-		    iring = (long)(0.5*(1+Math.sqrt(1L+2L*pix))); //counted from North pole
-		    iphi  = (pix+1) - 2*iring*(iring-1);
-		    kshift = 0;
-		    nr = iring;
-		    ret.face_num=0;
-		    long tmp = iphi-1;
-		    if (tmp>=(2L*iring))
-		      {
-		      ret.face_num=2;
-		      tmp-=2L*iring;
-		      }
-		    if (tmp>=iring) ++ret.face_num;
-		    }
-		  else if (pix<(npix-ncap)) // Equatorial region
-		    {
-		    long ip = pix - ncap;
-		    if (order>=0)
-		      {
-		      iring = (ip>>(order+2)) + (long)nside; // counted from North pole
-		      iphi  = (ip&(nl4-1)) + 1;
-		      }
-		    else
-		      {
-		      iring = (ip/(nl4)) + (long)nside; // counted from North pole
-		      iphi  = (ip%(nl4)) + 1L;
-		      }
-		    kshift = (iring+(long)nside)&1;
-		    nr = (long)nside;
-		    long ire = iring-(long)nside+1;
-		    long irm = nl2+2-ire;
-		    long ifm, ifp;
-		    if (order>=0)
-		      {
-		      ifm = (iphi - ire/2 + (long)nside -1) >> order;
-		      ifp = (iphi - irm/2 + (long)nside -1) >> order;
-		      }
-		    else
-		      {
-		      ifm = (iphi - ire/2 + (long)nside -1) / (long)nside;
-		      ifp = (iphi - irm/2 + (long)nside -1) / (long)nside;
-		      }
-		    if (ifp == ifm) // faces 4 to 7
-		      ret.face_num = (ifp==4) ? 4 : (int)ifp+4;
-		    else if (ifp<ifm) // (half-)faces 0 to 3
-		      ret.face_num = (int)ifp;
-		    else // (half-)faces 8 to 11
-		      ret.face_num = (int)ifm + 8;
-		    }
-		  else // South Polar cap
-		    {
-		    long ip = npix - pix;
-		    iring = (long)(0.5*(1+Math.sqrt(2L*ip-1L))); //counted from South pole
-		    iphi  = 4L*iring + 1 - (ip - 2L*iring*(iring-1L));
-		    kshift = 0;
-		    nr = iring;
-		    iring = 2L*nl2-iring;
-		    ret.face_num=8;
-		    long tmp = iphi-1L;
-		    if (tmp>=(2L*nr))
-		      {
-		      ret.face_num=10;
-		      tmp-=2L*nr;
-		      }
-		    if (tmp>=nr) ++ret.face_num;
-		    }
-
-		  long irt = iring - ((long)jrll[ret.face_num]*(long)nside) + 1L;
-		  long ipt = 2L*iphi- (long)jpll[ret.face_num]*nr - kshift -1L;
-		  if (ipt>=nl2) ipt-=8L*(long)nside;
-
-		  ret.ix = (int)( (ipt-irt) >>1);
-		  ret.iy =(int) ((-(ipt+irt))>>1);
-		
-		return ret;
-	}
-
 
 	/**
 	 * integration limits in cos(theta) for a given ring i_th, i_th > 0
@@ -827,9 +381,11 @@ static private final short utab[]={
 	 * @throws Exception
 	 */
 	public long vec2pix_nest(SpatialVector vec) throws Exception {
-		double[] angs = vec2Ang(vec);//ang(vec);
-		return ang2pix_nest(angs[0], angs[1]);
-//		return ring2nest(vec2pix_ring(vec));
+		Scheme sbak=scheme;
+		setScheme(Scheme.NESTED);
+		long result=vec2pix(vec);
+		setScheme(sbak);
+		return result;
 	}
 	/**
 	 * Converts the unit vector to pix number in RING scheme
@@ -840,8 +396,11 @@ static private final short utab[]={
 	 * @throws Exception
 	 */
 	public long vec2pix_ring(SpatialVector vec) throws Exception {
-		double[] angs = vec2Ang(vec);
-		return ang2pix_ring(angs[0], angs[1]);
+		Scheme sbak=scheme;
+		setScheme(Scheme.RING);
+		long result=vec2pix(vec);
+		setScheme(sbak);
+		return result;
 	}
 
 	/**
@@ -854,12 +413,10 @@ static private final short utab[]={
 	 */
 	public SpatialVector pix2vec_nest(long pix) throws Exception {
 		Scheme sbak=scheme;
-		scheme=Scheme.NESTED;
-		AngularPosition res = pix2zphi(pix);
-		scheme=sbak;
-		SpatialVector ret = new SpatialVector();
-		ret.set_z_phi(res.theta,res.phi);
-		return ret;
+		setScheme(Scheme.NESTED);
+		Vec3 res1=pix2vec(pix);
+		setScheme(sbak);
+		return new SpatialVector(res1);
 	}
 
 	/**
@@ -872,12 +429,10 @@ static private final short utab[]={
 	 */
 	public SpatialVector pix2vec_ring(long pix) throws Exception {
 		Scheme sbak=scheme;
-		scheme=Scheme.RING;
-		AngularPosition res = pix2zphi(pix);
-		scheme=sbak;
-		SpatialVector ret = new SpatialVector();
-		ret.set_z_phi(res.theta,res.phi);
-		return ret;
+		setScheme(Scheme.RING);
+		Vec3 res1=pix2vec(pix);
+		setScheme(sbak);
+		return new SpatialVector(res1);
 	}
 
 	/**
@@ -999,7 +554,7 @@ static private final short utab[]={
 		double skyArea = 4. * Constants.PI * degrad * degrad * 3600. * 3600.;
 		long npixels = (long) ( skyArea / pixelArea );
 		long nsidesq = npixels / 12;
-		long order_req = (long)Math.rint(0.5*log2(nsidesq));
+		long order_req = (long)Math.rint(0.5*(Math.log(nsidesq) / Math.log(2)));
                 if (order_req<0) order_req=0;
                 if (order_req>order_max) {
 				System.out.println("nside cannot be bigger than " + ns_max);
@@ -1021,26 +576,12 @@ static private final short utab[]={
 	 * @throws IllegalArgumentException
 	 */
 	public static SpatialVector ang2Vec(double theta, double phi) {
-		double PI = Math.PI;
-		String SID = "Ang2Vec:";
-		SpatialVector v;
-		if ( ( theta < 0.0 ) || ( theta > PI ) ) {
-			throw new IllegalArgumentException(SID
-					+ " theta out of range [0.,PI]");
-		}
-		double stheta = Math.sin(theta);
-		double x = stheta * Math.cos(phi);
-		double y = stheta * Math.sin(phi);
-		double z = Math.cos(theta);
-		v = new SpatialVector(x, y, z);
-		return v;
+		return new SpatialVector(new Vec3 (new Pointing(theta,phi)));
 	}
 
 	
 	public static AngularPosition vec2AngularPosition(SpatialVector v) {
-		double[] angs= vec2Ang(v);
-		AngularPosition ang = new AngularPosition(angs[0], angs[1]);
-		return ang;
+		return new AngularPosition(new Pointing (v));
 	}
 
 	/**
@@ -1053,66 +594,9 @@ static private final short utab[]={
 	 * @return double[] out_tup out_tup[0] = theta out_tup[1] = phi
 	 */
 	public static double[] vec2Ang(SpatialVector v) {
-		double[] out_tup = new double[2];
-		double norm = v.length();
-		double z = v.z() / norm;
-		double theta = Math.acos(z);
-		double phi = 0.;
-		if ( ( v.x() != 0. ) || ( v.y() != 0 ) ) {
-			phi = Math.atan2(v.y(), v.x()); // phi in [-pi,pi]
-		}
-		if ( phi < 0 )
-			phi += 2.0 * Math.PI; // phi in [0, 2pi]
-		out_tup[0] = theta;
-		out_tup[1] = phi;
+		Pointing ptg = new Pointing(v);
+		double[] out_tup = {ptg.theta,ptg.phi};
 		return out_tup;
-	}
-
-	/**
-	 * returns nside such that npix = 12*nside^2 nside should by power of 2 and
-	 * smaller than ns_max if not return -1
-	 * 
-	 * @param npix
-	 *            long the number of pixels in the map
-	 * @return nside long the map resolution parameter
-	 */
-	public static long npix2Nside(long npix) {
-		long nside = (long)Math.sqrt(npix/12);
-		String SID = "Npix2Nside:";
-		if (12*nside*nside!=npix){
-			throw new IllegalArgumentException(SID
-					+ " npix is not 12*nside*nside");
-		}
-		if ((nside&(nside-1))!=0){
-			throw new IllegalArgumentException(SID
-					+ " nside is not a power of 2");
-		}
-		if (nside>ns_max){
-			throw new IllegalArgumentException(SID
-					+ " nside is too large");
-		}
-		return nside;
-	}
-
-	/**
-	 * calculates npix such that npix = 12*nside^2 nside should be a power of 2,
-	 * and smaller than ns_max otherwise return -1
-	 * 
-	 * @param nside
-	 *            long the map resolution
-	 * @return npix long the number of pixels in the map
-	 */
-	public static long nside2Npix(int nside) {
-
-		long res = 0;
-		String SID = "Nside2Npix:";
-
-		if ((nside&(nside-1))!=0) {
-			throw new IllegalArgumentException(SID
-					+ " nside should be >0, power of 2, <" + ns_max);
-		}
-		res = 12 * nside * nside;
-		return res;
 	}
 
 	/**
@@ -1148,14 +632,6 @@ static private final short utab[]={
 		return res;
 	}
 
-	public Scheme getScheme() {
-		return scheme;
-	}
-
-	public void setScheme(Scheme scheme) {
-		this.scheme = scheme;
-	}
-
 	/**
 	 * calculates angular distance (in radians) between 2 Vectors v1 and v2.
 
@@ -1171,35 +647,6 @@ static private final short utab[]={
 		return v1.angle(v2);
         }
 
-	/**
-	 * calculates a dot product (inner product) of two 3D vectors the result is
-	 * double
-	 * 
-	 * @param v1
-	 *            3d Vector of Number Objects (Double, long .. )
-	 * @param v2
-	 *            3d Vector
-	 * @return double
-	 * @throws Exception
-	 */
-	public double dotProduct(SpatialVector v1, SpatialVector v2)
-			throws Exception {
-		return v1.dot(v2);
-	}
-
-	/**
-	 * calculate cross product of two vectors
-	 * 
-	 * @param v1
-	 *            SpatialVector
-	 * @param v2
-	 *            SpatialVector
-	 * @return SpatialVector result of the product
-	 */
-	public SpatialVector crossProduct(SpatialVector v1, SpatialVector v2) {
-		return v1.cross(v2);
-	}
-	
 	
 	/**
 	 * now using the C++ one this is here for compatibility
@@ -1211,17 +658,13 @@ static private final short utab[]={
 	 * @deprecated use oen without nest - scheme now in map
 	 */
 	public LongRangeSet queryDisc(SpatialVector vec,
-			double radius, int nest, int inclusive) {
+			double radius, int nest, int inclusive) throws Exception {
 		
-		AngularPosition ptg = vec2AngularPosition(vec);
-		LongRangeSetBuilder pixset = new LongRangeSetBuilder();
-		if (nest != scheme.ordinal()) {
-			System.err.println("in queryDiscc - Requested nest="+
-					nest +" but scheme ="+scheme);
-			scheme=Scheme.values()[nest];
-		}
-		queryDisc(ptg,radius,inclusive==1,pixset);
-		return pixset.build();
+		Scheme sbak=scheme;
+		setScheme ((nest==0) ? Scheme.RING : Scheme.NESTED);
+		LongRangeSet res = queryDisc(new Pointing(vec),radius,(inclusive!=0));
+		setScheme (sbak);
+		return res;
 	}
 	/**
 	 * now using the C++ one this is here for convenience to consruct the LongRangeSet.
@@ -1232,159 +675,10 @@ static private final short utab[]={
 	 * @return
 	 */
 	public LongRangeSet queryDisc(SpatialVector vec,
-			double radius, boolean inclusive) {
-		AngularPosition ptg = vec2AngularPosition(vec);
-		LongRangeSetBuilder pixset = new LongRangeSetBuilder();
-		
-		queryDisc(ptg,radius,inclusive,pixset);
-		return pixset.build();
-	}	
-	
-	/**
-	 * generates in the RING or NESTED scheme all pixels that lies within an
-	 * angular distance Radius of the center.
-	 * 
-	 * @param nside
-	 *            long map resolution
-	 * @param vector
-	 *            Vector3d pointing to the disc center
-	 * @param radius
-	 *            double angular radius of the disk (in RADIAN )
-	 * @param inclusive
-	 *            int 0 (default) only pixsels whose center lie in the triangle
-	 *            are listed, if set to 1, all pixels overlapping the triangle
-	 *            are listed
-	 * @return ArrayList of pixel numbers calls: RingNum(nside, ir)
-	 *         InRing(nside, iz, phi0, dphi,nest)
-	 *         
-	 *         now from the C++ portd by wil
-	 */
-	public void queryDisc(AngularPosition ptg,
-			double radius, boolean inclusive, LongRangeSetBuilder pixset) {
-
-		 
-		  if (scheme==Scheme.RING)
-		    {
-		    if (inclusive) radius+=maxPixrad();
-		    if (radius>=Constants.PI)
-		      { pixset.appendRange(0,npix-1); return ; }
-
-		    double cosang = Math.cos(radius);
-
-		    double z0 = Math.cos(ptg.theta());
-		    double xa = 1./Math.sqrt((1-z0)*(1+z0));
-
-		    double rlat1  = ptg.theta - radius;
-		    double zmax = Math.cos(rlat1);
-		    long irmin = ringAbove (zmax)+1;
-
-		    if ((rlat1<=0) && (irmin>1)) // north pole in the disk
-		      {
-		      //get_ring_info_small(irmin-1,sp,rp,dummy);
-		      RingInfoSmall info =get_ring_info_small(irmin-1);
-		      pixset.appendRange(0,info.startpix+info.ringpix-1);
-		      }
-
-		    double rlat2  = ptg.theta + radius;
-		    double zmin = Math.cos(rlat2);
-		    long irmax = ringAbove (zmin);
-
-		    for (long iz=irmin; iz<=irmax; ++iz) // rings partially in the disk
-		      {
-		      double z=ring2z(iz);
-
-		      double x = (cosang-z*z0)*xa;
-		      double ysq = 1-z*z-x*x;
-		      assert(ysq>=0);
-		      double dphi=Math.atan2(Math.sqrt(ysq),x);
-		      inRing (iz, ptg.phi, dphi, pixset);
-		      }
-
-		    if ((rlat2>=Constants.PI) && (irmax+1<4*nside)) // south pole in the disk
-		      {
-		     // get_ring_info_small(irmax+1,sp,rp,dummy);
-		      RingInfoSmall info =get_ring_info_small(irmax+1);
-		      pixset.appendRange(info.startpix,npix-1);
-		      }
-		    }
-		  else // scheme_==NEST
-		    {
-		    if (radius>=Constants.PI) // disk covers the whole sphere
-		      { pixset.appendRange(0,npix-1); return; }
-
-		    int oplus=inclusive ? 2 : 0;
-		    int omax=Math.min((int)(order_max),order+oplus); // the order up to which we test
-
-		    SpatialVector vptg =  ptg.getAsVector();
-		    
-		    //arr<T_Healpix_Base<I> > base(omax+1);
-		    HealpixIndex[] base = new HealpixIndex[omax+1];
-		    
-		    //arr<double> crpdr(omax+1), crmdr(omax+1);
-		    double[] crpdr = new double[omax+1];
-		    double[] crmdr = new double[omax+1];
-		    
-		    double cosrad=Math.cos(radius);
-		    for (int o=0; o<=omax; o++){ // prepare data at the required orders
-		    	try {
-		    		base[o]=new HealpixIndex();
-		    	}catch (Exception e) {
-		    		throw new RuntimeException("Failed to make HelapiIndex",e);
-		    	}
-		    	base[o].setOrder(o,Scheme.NESTED);
-			    double dr=base[o].maxPixrad(); // safety distance
-			    crpdr[o] = (radius+dr>Constants.PI) ? -1. : Math.cos(radius+dr);
-			    crmdr[o] = (radius-dr<0.) ?  1. : Math.cos(radius-dr);
-		      }
-		    
-		    //vector<pair<I,int> > stk; // stack for pixel numbers and their orders
-		    Stack<Map.Entry<Long, Integer>> stk = new Stack<Map.Entry<Long,Integer>>();
-		    stk.ensureCapacity(12+3*omax); // reserve maximum size to avoid reallocation
-		    for (int i=0; i<12; i++) {// insert the 12 base pixels in reverse order
-		      stk.push(new AbstractMap.SimpleEntry<Long,Integer>((long)(11-i),0));
-		    }
-		    
-		    int stacktop=0; // a place to save a stack position
-
-		    while (!stk.empty()) {// as long as there are pixels on the stack
-		      // pop current pixel number and order from the stack
-		      Map.Entry<Long, Integer> p = stk.pop();
-		      long pix=p.getKey();
-		      int o=p.getValue();
-		      
-		      AngularPosition pos=base[o].pix2zphi(pix);
-		      // cosine of angular distance between pixel center and disk center
-		    //  double cangdist=cosdist_zphi(vptg.z,ptg.phi,z,phi);
-		      double cangdist=cosdist_zphi(vptg.z(),ptg.phi,pos.theta,pos.phi);
-
-		      if (cangdist>crpdr[o])
-		        {
-		        int zone = (cangdist<cosrad) ? 1 : ((cangdist<=crmdr[o]) ? 2 : 3);
-
-		        stacktop=check_pixel (o, order, omax, zone, pixset, pix, stk, inclusive,
-		          stacktop);
-		        }
-		      }
-		    }
-			
-
+			double radius, boolean inclusive) throws Exception {
+		return queryDisc(new Pointing(vec),radius,inclusive);
 	}
-
-	/**
-	 * return ring above z value I think - no docs in C++ version..
-	 * @param z
-	 * @return
-	 */
-	protected int ringAbove (double z) {
-	  double az=Math.abs(z);
-	  if (az> Constants.twothird) // polar caps
-	    {
-	    int iring = (int)(nside*Math.sqrt(3*(1-az)));
-	    return (z>0) ? iring : 4*nside-iring-1;
-	    }
-	  else // ----- equatorial region ---------
-	    return (int)((double)nside*(2.0-1.5*z));
-	  }
+	
 
 	/**
 	 * returns the ring number in {1, 4*nside - 1} calculated from z coordinate
@@ -1395,7 +689,7 @@ static private final short utab[]={
 	 *            double z coordinate
 	 * @return long ring number
 	 */
-	public long ringNum(int nside, double z) {
+	public static long ringNum(int nside, double z) {
 		long iring = 0;
 		/* equatorial region */
 
@@ -1426,10 +720,9 @@ static private final short utab[]={
 	 * @throws Exception
 	 */
 	@SuppressWarnings("unused")
-	private LongRangeSet ringIterator2nested_longset(int nside, LongRangeIterator iter)
+	private LongRangeSet ringIterator2nested_longset(LongRangeIterator iter)
 			throws Exception {
 		LongSet s = new LongSet();
-		setOrder(nside2order(nside));
 		long inext = 0L;
 		while (iter.moveToNext()) {
 			long nestIpix = ring2nest(iter.first());
@@ -1463,7 +756,7 @@ static private final short utab[]={
 	public LongRangeSet inRing_nested_longset(long iz, double phi0,
 			double dphi) throws Exception {
 		LongRangeIterator iter = inRingLongSet( iz, phi0, dphi).rangeIterator();
-		return ringIterator2nested_longset(nside, iter);
+		return ringIterator2nested_longset(iter);
 	}
 	
 	/**
@@ -1487,285 +780,24 @@ static private final short utab[]={
 		inRing(iz, phi0, dphi, b);
 		return b.build();
 	}
-
 	/**
-	 *
-	 * @param iz
-	 * @param phi0
-	 * @param dphi
-	 * @param res
-	 * @deprecated conservative no longer used.
-	 */
-	public void inRing( long iz, double phi0, double dphi,LongRangeSetBuilder res,boolean conservative)  {
-		inRing(iz, phi0, dphi, res, false);
-	}
-
-	/**
-	 * returns the list of pixels in RING scheme with latitude in [phi0 -
-	 * dpi, phi0 + dphi] on the ring iz in [1, 4*nside -1 ] The pixel id numbers
-	 * are in [0, 12*nside^2 - 1] the indexing is in RING, unless nest is set to
-	 * 1
-	 * NOTE: this is the C++ code 'inRing' method ported to java by Martin  
-	 * @param nside
-	 *            long the map resolution
-	 * @param iz
-	 *            long ring number
-	 * @param phi0
-	 *            double
-	 * @param dphi
-	 *            double
-	 * @param res result
-	 */
-	public void inRing( long iz, double phi0, double dphi,LongRangeSetBuilder res)  {
-		long nr, ir, ipix1;
-		double shift=0.5;
-
-		if (iz<nside) // north pole
-		{
-		ir = iz;
-		nr = ir*4;
-		ipix1 = 2*ir*(ir-1); // lowest pixel number in the ring
-		}
-		else if (iz>(3*nside)) // south pole
-		{
-		ir = 4*nside - iz;
-		nr = ir*4;
-		ipix1 = npix - 2*ir*(ir+1); // lowest pixel number in the ring
-		}
-		else // equatorial region
-		{
-		ir = iz - nside + 1; // within {1, 2*nside + 1}
-		nr = nside*4;
-		if ((ir&1)==0) shift = 0;
-		ipix1 = ncap + (ir-1)*nr; // lowest pixel number in the ring
-		}
-
-		long ipix2 = ipix1 + nr - 1; // highest pixel number in the ring
-
-		if (dphi > (Constants.PI-1e-12)) {
-			res.appendRange(ipix1,ipix2);
-		} else{
-			long ip_lo = (long) Math.floor(nr/Constants.twopi*(phi0-dphi) -
-			shift)+1;
-			long ip_hi = (long) Math.floor(nr/Constants.twopi*(phi0+dphi) -
-			shift);
-
-	        if (ip_hi < ip_lo ){
-	            //nothing to do - no pixel here;
-	        	//res.append(ipix1+ip_lo);
-
-	            return;
-	        } 
-	        
-		    if (ip_hi>=nr) { 
-		    	ip_lo-=nr; ip_hi-=nr; 
-		    }
-		    
-		    if (ip_lo<0){
-		      res.appendRange(ipix1,ipix1+ip_hi);
-		      res.appendRange(ipix1+ip_lo+nr,ipix2);
-		    } else {
-		    	res.appendRange(ipix1+ip_lo,ipix1+ip_hi);
-			}
-		}
-	    
-	}
-
-	/**
-	 * calculates the pixel that lies on the East side (and the same latitude)
-	 * as the given NESTED pixel number - ipix
+	 * finds pixels having a colatitude (measured from North pole) : theta1 <
+	 * colatitude < theta2 with o <= theta1 < theta2 <= Pi if theta2 < theta1
+	 * then pixels with 0 <= colatitude < theta2 or theta1 < colatitude < Pi are
+	 * returned
 	 * 
 	 * @param nside
-	 *            long resolution
-	 * @param ipix
-	 *            long pixel number
-	 * @return long next pixel in line
+	 *            long the map resolution parameter
+	 * @param theta1
+	 *            lower edge of the colatitude
+	 * @param theta2
+	 *            upper edge of the colatitude
+	 * @param nest
+	 *            long if = 1 result is in NESTED scheme
+	 * @return ArrayList of pixel numbers (long)
 	 * @throws Exception
-	 * @throws IllegalArgumentException
 	 */
-	public long next_in_line_nest(long nside, long ipix) throws Exception {
-		long npix, ipf, ipo, ix, ixp, iy, iym, ixo, iyo, face_num, other_face;
-		@SuppressWarnings("unused")
-		long ia, ib, ibp, ibm, ib2, nsidesq;
-		int icase;
-		long local_magic1, local_magic2;
-		long[] ixiy = new long[2];
-		long inext = 0; // next in line pixel in Nest scheme
-		String SID = "next_in_line:";
-		if ( ( nside < 1 ) || ( nside > ns_max ) ) {
-			throw new IllegalArgumentException(SID
-					+ " nside should be power of 2 >0 and < " + ns_max);
-		}
-		nsidesq = (long)nside * (long)nside;
-		npix = 12 * nsidesq; // total number of pixels
-		if ( ( ipix < 0 ) || ( ipix > npix - 1 ) ) {
-			throw new IllegalArgumentException(SID
-					+ " ipix out of range defined by nside");
-		}
-		// initiates array for (x,y) -> pixel number -> (x,y) mapping
 
-		local_magic1 = ( nsidesq - 1 ) / 3;
-		local_magic2 = 2 * local_magic1;
-		ipf = (long) bm.MODULO(ipix, nsidesq); // Pixel number in face
-		Xyf xyf = nest2xyf(ipix);
-		ixiy[0] = xyf.ix;
-		ixiy[1] = xyf.iy;
-		face_num = xyf.face_num;
-		ix = ixiy[0];
-		iy = ixiy[1];
-		ixp = ix + 1;
-		iym = iy - 1;
-		boolean sel = false;
-		icase = -1; // iside the nest flag
-		// Exclude corners
-		if ( ipf == local_magic2 ) { // west corner
-			inext = ipix - 1;
-			return inext;
-		}
-		if ( ( ipf == nsidesq - 1 ) && !sel ) { // North corner
-			icase = 6;
-			sel = true;
-		}
-		if ( ( ipf == 0 ) && !sel ) { // Siuth corner
-			icase = 7;
-			sel = true;
-		}
-		if ( ( ipf == local_magic1 ) && !sel ) { // East corner
-			icase = 8;
-			sel = true;
-		}
-		// Detect edges
-		if ( ( ( ipf & local_magic1 ) == local_magic1 ) && !sel ) { // North-East
-			icase = 1;
-			sel = true;
-		}
-		if ( ( ( ipf & local_magic2 ) == 0 ) && !sel ) { // South-East
-			icase = 4;
-			sel = true;
-		}
-		if ( !sel ) { // iside a face
-			inext = xyf2nest((int) ixp, (int) iym, (int) face_num);
-			return inext;
-		}
-		//
-		ia = face_num / 4; // in [0,2]
-		ib = (long) bm.MODULO(face_num, 4); // in [0,3]
-		ibp = (long) bm.MODULO(ib + 1, 4);
-		ibm = (long) bm.MODULO(ib + 4 - 1, 4);
-		ib2 = (long) bm.MODULO(ib + 2, 4);
-
-		if ( ia == 0 ) { // North pole region
-			switch ( icase ) {
-				case 1:
-					other_face = 0 + ibp;
-					ipo = (long) bm.MODULO(bm.swapLSBMSB(ipf), nsidesq);
-					inext = other_face * nsidesq + ipo;
-					break;
-				case 4:
-					other_face = 4 + ibp;
-					ipo = (long) bm.MODULO(bm.invMSB(ipf), nsidesq); // SE-NW
-					// flip
-					xyf = nest2xyf(ipo);
-					ixiy[0] = xyf.ix;
-					ixiy[1] = xyf.iy;
-					ixo = ixiy[0];
-					iyo = ixiy[1];
-
-					inext = xyf2nest((int) ixo + 1, (int) iyo,
-							(int) other_face);
-
-					break;
-				case 6: // North corner
-					other_face = 0 + ibp;
-					inext = other_face * nsidesq + nsidesq - 1;
-					break;
-				case 7:
-					other_face = 4 + ibp;
-					inext = other_face * nsidesq + local_magic2 + 1;
-					break;
-				case 8:
-					other_face = 0 + ibp;
-					inext = other_face * nsidesq + local_magic2;
-					break;
-			}
-
-		} else if ( ia == 1 ) { // Equatorial region
-			switch ( icase ) {
-				case 1: // NorthEast edge
-					other_face = 0 + ib;
-					// System.out.println("ipf="+ipf+" nsidesq="+nsidesq+"
-					// invLSB="+bm.invLSB(ipf));
-					ipo = (long) bm.MODULO((double) bm.invLSB(ipf),
-							(double) nsidesq); // NE-SW flip
-					// System.out.println(" ipo="+ipo);
-
-					xyf = nest2xyf (ipo);
-					ixiy[0] = xyf.ix;
-					ixiy[1] = xyf.iy;
-
-					ixo = ixiy[0];
-					iyo = ixiy[1];
-					inext = xyf2nest((int) ixo, (int) iyo - 1,
-							(int) other_face);
-					break;
-				case 4: // SouthEast edge
-					other_face = 8 + ib;
-					ipo = (long) bm.MODULO(bm.invMSB(ipf), nsidesq);
-					xyf=nest2xyf(ipo);
-					ixiy[0] = xyf.ix;
-					ixiy[1] = xyf.iy;
-
-					inext = xyf2nest((int) ixiy[0] + 1, (int) ixiy[1],
-							(int) other_face);
-					break;
-				case 6: // Northy corner
-					other_face = 0 + ib;
-					inext = other_face * nsidesq + local_magic2 - 2;
-					break;
-				case 7: // South corner
-					other_face = 8 + ib;
-					inext = other_face * nsidesq + local_magic2 + 1;
-					break;
-				case 8: // East corner
-					other_face = 4 + ibp;
-					inext = other_face * nsidesq + local_magic2;
-					break;
-
-			}
-		} else { // South pole region
-			switch ( icase ) {
-				case 1: // NorthEast edge
-					other_face = 4 + ibp;
-					ipo = (long) bm.MODULO(bm.invLSB(ipf), nsidesq); // NE-SW
-					// flip
-					xyf=nest2xyf(ipo);
-					ixiy[0] = xyf.ix;
-					ixiy[1] = xyf.iy;
-					inext = xyf2nest((int) ixiy[0], (int) ixiy[1] - 1,
-							(int) other_face);
-					break;
-				case 4: // SouthEast edge
-					other_face = 8 + ibp;
-					ipo = (long) bm.MODULO(bm.swapLSBMSB(ipf), nsidesq); // E-W
-					// flip
-					inext = other_face * nsidesq + ipo; // (8)
-					break;
-				case 6: // North corner
-					other_face = 4 + ibp;
-					inext = other_face * nsidesq + local_magic2 - 2;
-					break;
-				case 7: // South corner
-					other_face = 8 + ibp;
-					inext = other_face * nsidesq;
-					break;
-				case 8: // East corner
-					other_face = 8 + ibp;
-					inext = other_face * nsidesq + local_magic2;
-					break;
-			}
-		}
-		return inext;
-	}
 
 	/**
 	 * finds pixels that lie within a CONVEX polygon defined by its vertex on
@@ -1785,129 +817,14 @@ static private final short utab[]={
 	 */
 	public LongRangeSet query_polygon(int nside, ArrayList<Object> vlist,
 			long nest, long inclusive) throws Exception {
-//		ArrayList<Long> res = new ArrayList<Long>();
-		LongSet res = new LongSet();
-		int nv = vlist.size();
-		healpix.tools.SpatialVector vp0, vp1, vp2;
-		healpix.tools.SpatialVector vo;
-		LongList vvlist = new LongList();
-//		LongRangeSetBuilder vvlist = new LongRangeSetBuilder();
-		double hand;
-		double[] ss = new double[nv];
-		@SuppressWarnings("unused")
-		long npix;
-		int ix = 0;
-
-		int n_remain, np, nm, nlow;
-		String SID = "QUERY_POLYGON";
-
-		// Start polygon
-		for ( int k = 0; k < nv; k++ )
-			ss[k] = 0.;
-		/* -------------------------------------- */
-		n_remain = nv;
-		if ( n_remain < 3 ) {
-			throw new IllegalArgumentException(SID
-					+ " Number of vertices should be >= 3");
-		}
-		/*---------------------------------------------------------------- */
-		/* Check that the poligon is convex or has only one concave vertex */
-		/*---------------------------------------------------------------- */
-		int i0 = 0;
-		int i2 = 0;
-		if ( n_remain > 3 ) { // a triangle is always convex
-			for ( int i1 = 1; i1 <= n_remain - 1; i1++ ) { // in [0,n_remain-1]
-				i0 = (int) bm.MODULO(i1 - 1, n_remain);
-				i2 = (int) bm.MODULO(i1 + 1, n_remain);
-				vp0 = (SpatialVector) vlist.get(i0); // select vertices by 3
-				// neighbour
-				vp1 = (SpatialVector) vlist.get(i1);
-				vp2 = (SpatialVector) vlist.get(i2);
-				// computes handedness (v0 x v2) . v1 for each vertex v1
-				vo = vp0.cross(vp2);
-				hand = dotProduct(vo, vp1);
-				if ( hand >= 0. ) {
-					ss[i1] = 1.0;
-				} else {
-					ss[i1] = -1.0;
-				}
-
-			}
-			np = 0; // number of vert. with positive handedness
-			for ( int i = 0; i < nv; i++ ) {
-				if ( ss[i] > 0. )
-					np++;
-			}
-			nm = n_remain - np;
-
-			nlow = Math.min(np, nm);
-
-			if ( nlow != 0 ) {
-				if ( nlow == 1 ) { // only one concave vertex
-					if ( np == 1 ) { // ix index of the vertex in the list
-						for ( int k = 0; k < nv - 1; k++ ) {
-							if ( Math.abs(ss[k] - 1.0) <= 1.e-12 ) {
-								ix = k;
-								break;
-							}
-						}
-					} else {
-						for ( int k = 0; k < nv - 1; k++ ) {
-							if ( Math.abs(ss[k] + 1.0) <= 1.e-12 ) {
-								ix = k;
-								break;
-							}
-						}
-					}
-
-					// rotate pixel list to put that vertex in #0
-					int n_rot = vlist.size() - ix;
-					int ilast = vlist.size() - 1;
-					for ( int k = 0; k < n_rot; k++ ) {
-						SpatialVector temp = (SpatialVector) vlist.get(ilast);
-						vlist.remove(ilast);
-						vlist.add(0, (Object) temp);
-					}
-				}
-				if ( nlow > 1 ) { // more than 1concave vertex
-					System.out
-							.println(" The polygon has more than one concave vertex");
-					System.out.println(" The result is unpredictable");
-				}
-			}
-		}
-		/* fill the poligon, one triangle at a time */
-		npix = (long) nside2Npix(nside);
-		while ( n_remain >= 3 ) {
-			vp0 = (SpatialVector) vlist.get(0);
-			vp1 = (SpatialVector) vlist.get(n_remain - 2);
-			vp2 = (SpatialVector) vlist.get(n_remain - 1);
-
-			/* find pixels within the triangle */
-			LongRangeSet templist = query_triangle(nside, vp0, vp1, vp2, nest, inclusive);
-
-			vvlist.addAll(templist.longIterator());
-			n_remain--;
-		}
-		/* make final pixel list */
-//		npix = vvlist.size();
-//		long[] pixels = new long[(int) npix];
-//		for ( int i = 0; i < npix; i++ ) {
-//			pixels[i] = vvlist.get(i).longValue();
-//		}
-//		Arrays.sort(pixels);
-//		int k = 0;
-//		res.add(k, new Long(pixels[0]));
-//		for ( int i = 1; i < pixels.length; i++ ) {
-//			if ( pixels[i] > pixels[i - 1] ) {
-//				k++;
-//				res.add(k, new Long(pixels[i]));
-//			}
-//		}
-
-//		return res;
-		res.addAll(vvlist);
-		return res.toLongRangeSet();
+		Scheme sbak=scheme;
+		setScheme ((nest==0) ? Scheme.RING : Scheme.NESTED);
+		Pointing[] vertex = new Pointing[vlist.size()];
+		for (int i=0; i<vlist.size(); ++i)
+			vertex[i]=new Pointing((Vec3)vlist.get(i));
+		LongRangeSet res = queryPolygon(vertex,(inclusive!=0));
+		setScheme (sbak);
+		return res;
 	}
 	
 	/**
@@ -1948,423 +865,14 @@ static private final short utab[]={
 	public LongRangeSet query_triangle(int nside, SpatialVector v1,
 			SpatialVector v2, SpatialVector v3, long nest, long inclusive)
 			throws Exception {
-//		ArrayList<Long> res;
-//		res = new ArrayList<Long>();
-//		LongRangeSet res = new LongRangeSet();
-		LongSet res = new LongSet();
-		@SuppressWarnings("unused")
-		ArrayList<Long> listir;
-		long npix, iz, irmin, irmax, n12, n123a, n123b, ndom = 0;
-		boolean test1, test2, test3;
-		double dth1, dth2, determ, sdet;
-		double zmax, zmin, z1max, z1min, z2max, z2min, z3max, z3min;
-		double z, tgth, st, offset, sin_off;
-		double phi_pos, phi_neg;
-		SpatialVector[] vv = new SpatialVector[3];
-		SpatialVector[] vo = new SpatialVector[3];
-		double[] sprod = new double[3];
-		double[] sto = new double[3];
-		double[] phi0i = new double[3];
-		double[] tgthi = new double[3];
-		double[] dc = new double[3];
-		double[][] dom = new double[3][2];
-		double[] dom12 = new double[4];
-		double[] dom123a = new double[4];
-		double[] dom123b = new double[4];
-		double[] alldom = new double[6];
-		double a_i, b_i, phi0, dphiring;
-		long idom;
-		boolean do_inclusive = false;
-		boolean do_nest = false;
-		String SID = "QUERY_TRIANGLE";
-		long nsidesq = nside * nside;
-		/*                                       */
-
-		// System.out.println("in query_triangle");
-		npix = nside2Npix(nside);
-		if ( npix < 0 ) {
-			throw new IllegalArgumentException(SID
-					+ " Nside should be power of 2 >0 and < " + ns_max);
-		}
-		if ( inclusive == 1 )
-			do_inclusive = true;
-		if ( nest == 1 )
-			do_nest = true;
-		vv[0] = new SpatialVector(v1);
-//		vv[0].normalize();
-		vv[1] = new SpatialVector(v2);
-//		vv[1].normalize();
-		vv[2] = new SpatialVector(v3);
-//		vv[2].normalize();
-//		printVec(vv[0].get());
-//		printVec(vv[1].get());
-//		printVec(vv[2].get());
-		/*                                  */
-		dth1 = 1.0 / ( 3.0 * nsidesq );
-		dth2 = 2.0 / ( 3.0 * nside );
-		/*
-		 * determ = (v1 X v2) . v3 determines the left ( <0) or right (>0)
-		 * handedness of the triangle
-		 */
-		SpatialVector vt = new SpatialVector(0., 0., 0.);
-		vt = crossProduct(vv[0], vv[1]);
-		determ = dotProduct(vt, vv[2]);
-
-		if ( Math.abs(determ) < 1.0e-20 ) {
-			throw new HealpixException(
-					SID
-							+ ": the triangle is degenerated - query cannot be performed");
-		}
-		if ( determ >= 0. ) { // The sign of determ
-			sdet = 1.0;
-		} else {
-			sdet = -1.0;
-		}
-
-		sprod[0] = dotProduct(vv[1], vv[2]);
-		sprod[1] = dotProduct(vv[2], vv[0]);
-		sprod[2] = dotProduct(vv[0], vv[1]);
-		/* vector ortogonal to the great circle containing the vertex doublet */
-
-		vo[0] = crossProduct(vv[1], vv[2]);
-		vo[1] = crossProduct(vv[2], vv[0]);
-		vo[2] = crossProduct(vv[0], vv[1]);
-		vo[0].normalized();
-		vo[1].normalized();
-		vo[2].normalized();
-//		System.out.println("Orthogonal vectors:");
-		
-//		printVec(vo[0].get());
-//		printVec(vo[1].get());
-//		printVec(vo[2].get());
-		/* test presence of poles in the triangle */
-		zmax = -1.0;
-		zmin = 1.0;
-		test1 = ( vo[0].z() * sdet >= 0.0 ); // north pole in hemisphere
-		// defined
-		// by
-		// 2-3
-		test2 = ( vo[1].z() * sdet >= 0.0 ); // north pole in the hemisphere
-		// defined
-		// by 1-2
-		test3 = ( vo[2].z() * sdet >= 0.0 ); // north pole in hemisphere
-		// defined
-		// by
-		// 1-3
-		if ( test1 && test2 && test3 )
-			zmax = 1.0; // north pole in the triangle
-		if ( ( !test1 ) && ( !test2 ) && ( !test3 ) )
-			zmin = -1.0; // south pole in the triangle
-		/* look for northenest and southernest points in the triangle */
-		// ! look for northernest and southernest points in the triangle
-		// ! node(1,2) = vector of norm=1, in the plane defined by (1,2) and
-		// with z=0
-		
-		 boolean test1a = ((vv[2].z() - sprod[0] * vv[1].z()) >= 0.0); //
-		 boolean test1b = ((vv[1].z() - sprod[0] * vv[2].z()) >= 0.0);
-		 boolean test2a = ((vv[2].z() - sprod[1] * vv[0].z()) >= 0.0); //
-		 boolean test2b = ((vv[0].z() - sprod[1] * vv[2].z()) >= 0.0);
-		 boolean test3a = ((vv[1].z() - sprod[2] * vv[0].z()) >= 0.0); //
-		 boolean test3b = ((vv[0].z() - sprod[2] * vv[1].z()) >= 0.0);
-		/* sin of theta for orthogonal vector */
-		for ( int i = 0; i < 3; i++ ) {
-			sto[i] = Math.sqrt(( 1.0 - vo[i].z() ) * ( 1.0 + vo[i].z() ));
-		}
-		/*
-		 * for each segment ( side of the triangle ) the extrema are either -
-		 * -the 2 vertices 
-		 * - one of the vertices and a point within the segment
-		 */
-		z1max = vv[1].z();
-		z1min = vv[2].z();
-		double zz;
-//		segment 2-3
-		if ( test1a == test1b ) {
-			zz = sto[0];
-			if ( ( vv[1].z() + vv[2].z() ) >= 0.0 ) {
-				z1max = zz;
-			} else {
-				z1min = -zz;
-			}
-		}
-		// segment 1-3
-		z2max = vv[2].z();
-		z2min = vv[0].z();
-		if ( test2a == test2b ) {
-			zz = sto[1];
-			if ( ( vv[0].z() + vv[2].z() ) >= 0.0 ) {
-				z2max = zz;
-			} else {
-				z2min = -zz;
-			}
-		}
-		// segment 1-2
-		z3max = vv[0].z();
-		z3min = vv[1].z();
-		if ( test3a == test3b ) {
-			zz = sto[2];
-			if ( ( vv[0].z() + vv[1].z() ) >= 0.0 ) {
-				z3max = zz;
-			} else {
-				z3min = -zz;
-			}
-		}
-
-		zmax = Math.max(Math.max(z1max, z2max), Math.max(z3max, zmax));
-		zmin = Math.min(Math.min(z1min, z2min), Math.min(z3min, zmin));
-		/*
-		 * if we are inclusive, move upper point up, and lower point down, by a
-		 * half pixel size
-		 */
-		offset = 0.0;
-		sin_off = 0.0;
-		if ( do_inclusive ) {
-			offset = Constants.PI / ( this.nl4 ); // half pixel size
-			sin_off = Math.sin(offset);
-			zmax = Math.min(1.0, Math.cos(Math.acos(zmax) - offset));
-			zmin = Math.max(-1.0, Math.cos(Math.acos(zmin) + offset));
-		}
-
-		irmin = ringNum(nside, zmax);
-		irmax = ringNum(nside, zmin);
-
-//		System.out.println("irmin = " + irmin + " irmax =" + irmax);
-
-		/* loop on the rings */
-		for ( int i = 0; i < 3; i++ ) {
-			tgthi[i] = -1.0e30 * vo[i].z();
-			phi0i[i] = 0.0;
-		}
-		for ( int j = 0; j < 3; j++ ) {
-			if ( sto[j] > 1.0e-10 ) {
-				tgthi[j] = -vo[j].z() / sto[j]; // - cotan(theta_orth)
-
-				phi0i[j] = Math.atan2(vo[j].y(), vo[j].x()); // Should make
-				// it
-				// 0-2pi
-				// ?
-				/* Bring the phi0i to the [0,2pi] domain if need */
-
-				 if ( phi0i[j] < 0.) {
-					phi0i[j] = bm
-							.MODULO(
-									( Math.atan2(vo[j].y(), vo[j].x()) + Constants.twopi ),
-									Constants.twopi); // [0-2pi]
-				}
-//				System.out.println("phi0i = " + phi0i[j] + " tgthi = "
-//						+ tgthi[j]);
-			}
-		}
-		//MOD(ATAN2(X,Y) + TWOPI, TWOPI) : ATAN2 in 0-2pi
-		/*
-		 * the triangle boundaries are geodesics: intersection of the sphere
-		 * with plans going through (0,0,0) if we are inclusive, the boundaries
-		 * are the intersection of the sphere with plains pushed outward by
-		 * sin(offset)
-		 */
-		boolean found = false;
-		for ( iz = irmin; iz <= irmax; iz++ ) {
-			found = false;
-			if ( iz <= nside - 1 ) { // North polar cap
-				z = 1.0 - iz * iz * dth1;
-			} else if ( iz <= 3 * nside ) { // tropical band + equator
-				z = ( 2.0 * nside - iz ) * dth2;
-			} else {
-				z = -1.0 + ( 4.0 * nside - iz ) * ( 4.0 * nside - iz ) * dth1;
-			}
-
-			/* computes the 3 intervals described by the 3 great circles */
-			st = Math.sqrt(( 1.0 - z ) * ( 1.0 + z ));
-			tgth = z / st; // cotan(theta_ring)
-			for ( int j = 0; j < 3; j++ ) {
-				dc[j] = tgthi[j] * tgth - sdet * sin_off
-						/ ( ( sto[j] + 1.0e-30 ) * st ) ;
-
-			}
-			for ( int k = 0; k < 3; k++ ) {
-				if ( dc[k] * sdet <= -1.0 ) { // the whole iso-latitude ring
-					// is on
-					// right side of the great circle
-					dom[k][0] = 0.0;
-					dom[k][1] = Constants.twopi;
-				} else if ( dc[k] * sdet >= 1.0 ) { // all on the wrong side
-					dom[k][0] = -1.000001 * ( k + 1 );
-					dom[k][1] = -1.0 * ( k + 1 );
-				} else { // some is good some is bad
-					phi_neg = phi0i[k] - ( Math.acos(dc[k]) * sdet );
-					phi_pos = phi0i[k] + ( Math.acos(dc[k]) * sdet );
-					//					
-					 if ( phi_pos < 0. )
-						phi_pos += Constants.twopi;
-					if ( phi_neg < 0. )
-						phi_neg += Constants.twopi;
-					//
-					dom[k][0] = bm.MODULO(phi_neg, Constants.twopi);
-					dom[k][1] = bm.MODULO(phi_pos, Constants.twopi);
-//					double domk0 = (phi0i[k] - ( Math.acos(dc[k]) * sdet )) % Constants.twopi;
-//					double domk1 = (phi0i[k] + ( Math.acos(dc[k]) * sdet )) %  Constants.twopi;
-				}
-//				System.out.println("dom["+k+"][0] = " + dom[k][0] + " [1]= "
-//						+ dom[k][1]);
-				//
-
-			}
-			/* identify the intersections (0,1,2 or 3) of the 3 intervals */
-
-			dom12 = intrs_intrv(dom[0], dom[1]);
-			n12 = dom12.length / 2;
-			if ( n12 != 0 ) {
-				if ( n12 == 1 ) {
-					dom123a = intrs_intrv(dom[2], dom12);
-					n123a = dom123a.length / 2;
-
-					if ( n123a == 0 )
-						found = true;
-					if ( !found ) {
-						for ( int l = 0; l < dom123a.length; l++ ) {
-							alldom[l] = dom123a[l];
-						}
-
-						ndom = n123a; // 1 or 2
-					}
-				}
-				if ( !found ) {
-					if ( n12 == 2 ) {
-						double[] tmp = { dom12[0], dom12[1] };
-						dom123a = intrs_intrv(dom[2], tmp);
-						double[] tmp1 = { dom12[2], dom12[3] };
-						dom123b = intrs_intrv(dom[2], tmp1);
-						n123a = dom123a.length / 2;
-						n123b = dom123b.length / 2;
-						ndom = n123a + n123b; // 0, 1, 2 or 3
-
-						if ( ndom == 0 )
-							found = true;
-						if ( !found ) {
-							if ( n123a != 0 ) {
-								for ( int l = 0; l < 2 * n123a; l++ ) {
-									alldom[l] = dom123a[l];
-								}
-							}
-							if ( n123b != 0 ) {
-								for ( int l = 0; l < 2 * n123b; l++ ) {
-									alldom[(int) ( l + 2 * n123a )] = dom123b[l];
-								}
-							}
-							if ( ndom > 3 ) {
-								throw new HealpixException(SID
-										+ ": too many intervals found");
-							}
-						}
-					}
-				}
-				if ( !found ) {
-					for ( idom = 0; idom < ndom; idom++ ) {
-						a_i = alldom[(int) ( 2 * idom )];
-						b_i = alldom[(int) ( 2 * idom + 1 )];
-						phi0 = ( a_i + b_i ) * 0.5;
-						dphiring = (b_i - a_i) * 0.5;
-						if ( dphiring < 0.0 ) {
-							phi0 += Constants.PI;
-							dphiring += Constants.PI;
-						}
-						/* finds pixels in the triangle on that ring */
-//						listir = inRing( iz, phi0, dphiring, do_nest);
-//						ArrayList<Long> listir2 = InRing(nside, iz, phi0, dphiring, do_nest);						
-//						res.addAll(listir);
-						LongRangeSet listir2;
-						if(do_nest){
-							listir2 = inRing_nested_longset( iz, phi0, dphiring);
-						}else{
-							listir2 = inRingLongSet( iz, phi0, dphiring);
-						}				
-						res.addAll(listir2.longIterator());
-					}
-				}
-			}
-		}		
-		return res.toLongRangeSet();
-	}
-
-	/**
-	 * computes the intersection di of 2 intervals d1 (= [a1,b1]) and d2 (=
-	 * [a2,b2]) on the periodic domain (=[A,B] where A and B arbitrary) ni is
-	 * the resulting number of intervals (0,1, or 2) if a1 <b1 then d1 = {x |a1 <=
-	 * x <= b1} if a1>b1 then d1 = {x | a1 <=x <= B U A <=x <=b1}
-	 * 
-	 * @param d1
-	 *            double[] first interval
-	 * @param d2
-	 *            double[] second interval
-	 * @return double[] one or two intervals intersections
-	 */
-	public double[] intrs_intrv(double[] d1, double[] d2) {
-		double[] res;
-		double epsilon = 1.0e-10;
-		double[] dk;
-		double[] di = { 0. };
-		int ik = 0;
-		boolean tr12, tr21, tr34, tr43, tr13, tr31, tr24, tr42, tr14, tr32;
-		/*                                             */
-
-		tr12 = ( d1[0] < d1[1] + epsilon );
-		tr21 = !tr12; // d1[0] >= d1[1]
-		tr34 = ( d2[0] < d2[1] + epsilon );
-		tr43 = !tr34; // d2[0]>d2[1]
-		tr13 = ( d1[0] < d2[0] + epsilon ); // d2[0] can be in interval
-		tr31 = !tr13; // d1[0] in longerval
-		tr24 = ( d1[1] < d2[1] + epsilon ); // d1[1] upper limit
-		tr42 = !tr24; // d2[1] upper limit
-		tr14 = ( d1[0] < d2[1] + epsilon ); // d1[0] in interval
-		tr32 = ( d2[0] < d1[1] + epsilon ); // d2[0] in interval
-
-		ik = 0;
-		dk = new double[] { -1.0e9, -1.0e9, -1.0e9, -1.0e9 };
-		/* d1[0] lower limit case 1 */
-		if ( ( tr34 && tr31 && tr14 ) || ( tr43 && ( tr31 || tr14 ) ) ) {
-			ik++; // ik = 1;
-			dk[ik - 1] = d1[0]; // a1
-
-		}
-		/* d2[0] lower limit case 1 */
-		if ( ( tr12 && tr13 && tr32 ) || ( tr21 && ( tr13 || tr32 ) ) ) {
-			ik++; // ik = 1
-			dk[ik - 1] = d2[0]; // a2
-
-		}
-		/* d1[1] upper limit case 2 */
-		if ( ( tr34 && tr32 && tr24 ) || ( tr43 && ( tr32 || tr24 ) ) ) {
-			ik++; // ik = 2
-			dk[ik - 1] = d1[1]; // b1
-
-		}
-		/* d2[1] upper limit case 2 */
-		if ( ( tr12 && tr14 && tr42 ) || ( tr21 && ( tr14 || tr42 ) ) ) {
-			ik++; // ik = 2
-			dk[ik - 1] = d2[1]; // b2
-
-		}
-		di = new double[1];
-		di[0] = 0.;
-		switch ( ik ) {
-
-			case 2:
-				di = new double[2];
-
-				di[0] = dk[0] - epsilon;
-				di[1] = dk[1] + epsilon;
-				break;
-			case 4:
-
-				di = new double[4];
-				di[0] = dk[0] - epsilon;
-				di[1] = dk[3] + epsilon;
-				di[2] = dk[1] - epsilon;
-				di[3] = dk[2] + epsilon;
-				break;
-		}
-		res = di;
-
+		Scheme sbak=scheme;
+		setScheme ((nest==0) ? Scheme.RING : Scheme.NESTED);
+		Pointing[] vertex = new Pointing[3];
+		vertex[0] = new Pointing(v1);
+		vertex[1] = new Pointing(v2);
+		vertex[2] = new Pointing(v3);
+		LongRangeSet res = queryPolygon(vertex,(inclusive!=0));
+		setScheme (sbak);
 		return res;
 	}
 
@@ -2455,56 +963,14 @@ static private final short utab[]={
 	 * @throws IllegalArgumentException
 	 */
 	public List<Long> neighbours_nest( long ipix) throws Exception  {
-		
-		ArrayList<Long> result = new ArrayList<Long>(8);
-		Xyf xyf = nest2xyf(ipix);
-		int ix, iy, face_num;
-		ix = xyf.ix;
-		iy=xyf.iy;
-		face_num=xyf.face_num;
-		
-
-		long nsm1 = (long)nside-1;
-		long tmp=0;
-		  if ((ix>0)&&(ix<nsm1)&&(iy>0)&&(iy<nsm1)){
-		      for (int m=0; m<8; ++m){
-		        tmp = xyf2nest(ix+xoffset[m],iy+yoffset[m],face_num);
-		        result.add(m, tmp);
-		      }
-		  }else {
-		    for (int i=0; i<8; ++i)
-		      {
-		      int x=ix+xoffset[i];
-		      int y=iy+yoffset[i];
-		      int nbnum=4;
-		      if (x<0)
-		        { x+=nside; nbnum-=1; }
-		      else if (x>=nside)
-		        { x-=nside; nbnum+=1; }
-		      if (y<0)
-		        { y+=nside; nbnum-=3; }
-		      else if (y>=nside)
-		        { y-=nside; nbnum+=3; }
-
-		      int f = facearray[nbnum][face_num];
-		      
-		      if (f>=0)
-		        {
-	                int bits = swaparray[nbnum][face_num>>2];
-		        if ((bits&1)>0) x=(int)((long)nside-(long)x-1L);
-		        if ((bits&2)>0) y=(int)((long)nside-(long)y-1L);
-		        if ((bits&4)>0) {
-		        	int tint = x;
-		        	x=y; y=tint;
-		        }
-		        tmp =  xyf2nest(x,y,f);
-		        result.add(i,tmp);
-		        }
-		      else
-		        result.add(i, -1L);
-		      }
-		    }
-		return result;
+		Scheme sbak=scheme;
+		setScheme (Scheme.NESTED);
+		long[] nb=neighbours(ipix);
+		setScheme (sbak);
+		ArrayList<Long> ret = new ArrayList<Long>();
+		for (int i=0; i<nb.length; ++i)
+			ret.add(nb[i]);
+		return ret;
 	}
 
 	/**
@@ -2596,312 +1062,4 @@ static private final short utab[]={
 		return pixlist;
 	}
 
-	/**
-	 * Gets the order value
-	 * 
-	 * @return order
-	 */
-	public int getOrder() {
-		return order;
-	}
-
-	/**
-	 * Sets the order
-	 *  but just the number no nside etc - use the one with schem for that
-	 * @param order
-	 */
-	public void setOrder(int o) {
-		  order  = o;
-	}
-
-	/**
-	 * setthe the order and schem and recalculate nside , fact 1 etc ...
-	 * @param o
-	 * @param s
-	 */
-	public void setOrder(int o, Scheme s) {
-		  assert ((o>=0)&&(o<=order_max));
-		  order  = o;
-		  nside  = 1 << order;
-		  scheme = s;
-		  init();
-
-	}
-	
-	
-
-	/**
-	 * returns the list of pixels in RING or NEST scheme with latitude in [phi0 -
-	 * dpi, phi0 + dphi] on the ring iz in [1, 4*nside -1 ] The pixel id numbers
-	 * are in [0, 12*nside^2 - 1] the indexing is in RING, unless nest is set to
-	 * 1
-	 * NOTE: this is the f90 code 'in_ring' method ported to java with 'conservative' flag to false
-	 * 
-	 * @param nside
-	 *            long the map resolution
-	 * @param iz
-	 *            long ring number
-	 * @param phi0
-	 *            double
-	 * @param dphi
-	 *            double
-	 * @param nest
-	 *            boolean format flag
-	 * @return ArrayList of pixels
-	 * @throws IllegalArgumentException
-	 * @deprecated Don't use anymore, was only for 
-	 */
-	public ArrayList<Long> inRingCxx(long nside, long iz, double phi0,
-			double dphi, boolean nest) {
-		long nr, ir, ipix1;
-
-		double shift = 0.5;
-
-		if ( iz < nside ) // north pole
-		{
-			ir = iz;
-			nr = ir * 4;
-			ipix1 = 2 * ir * ( ir - 1 ); // lowest pixel number in the ring
-		} else if ( iz > ( 3 * nside ) ) // south pole
-		{
-			ir = 4 * nside - iz;
-			nr = ir * 4;
-			ipix1 = npix - 2 * ir * ( ir + 1 ); // lowest pixel number in the
-			// ring
-		} else // equatorial region
-		{
-			ir = iz - nside + 1; // within {1, 2*nside + 1}
-			nr = nside * 4;
-			if ( ( ir & 1 ) == 0 )
-				shift = 0.;
-			ipix1 = ncap + ( ir - 1 ) * nr; // lowest pixel number in the ring
-		}
-
-		long ipix2 = ipix1 + nr - 1; // highest pixel number in the ring
-		ArrayList<Long> listir = new ArrayList<Long>();
-		// ----------- constructs the pixel list --------------
-		if ( dphi > ( Constants.PI - 1e-7 ) )
-			for ( Long i = ipix1; i <= ipix2; ++i )
-				listir.add(i);
-		else {
-			int ip_lo = (int) ( Math.floor(nr * ( 1 / Constants.twopi )
-					* ( phi0 - dphi ) - shift) + 1 );
-			int ip_hi = (int) ( Math.floor(nr * 1 / Constants.twopi
-					* ( phi0 + dphi ) - shift) );
-			long pixnum = (int) ( ip_lo + ipix1 );
-			if ( pixnum < ipix1 )
-				pixnum += nr;
-			for ( int i = ip_lo; i <= ip_hi; ++i, ++pixnum ) {
-				if ( pixnum > ipix2 )
-					pixnum -= nr;
-				listir.add(pixnum);
-			}
-		}
-		 ArrayList<Long> listirnest = new ArrayList<Long>();
-		listir.trimToSize();
-		if ( nest ) {
-			int i = 0;
-			while ( i < listir.size() ) {
-				long ipring = listir.get(i);
-				try {
-					long ipnest = ring2nest((int) ipring);
-					listirnest.add(ipnest);
-					i++;
-				} catch ( Exception ex ) {
-					ex.printStackTrace();
-					break;// Very bad!
-				}
-			}
-			return listirnest;
-		}
-		return listir;
-
-	}
-
-	public double maxPixrad() {
-	  SpatialVector va= new SpatialVector(),vb= new SpatialVector() ;
-	  va.set_z_phi (2./3., Constants.PI/(4*nside));
-	  double t1 = 1.-1./nside;
-	  t1*=t1;
-	  vb.set_z_phi (1-t1/3, 0);
-	  return va.angle(vb);
-	}
-
-
-
-
-	public double ring2z (long ring) {
-	  if (ring<nside)
-	    return 1 - ring*ring*fact2;
-	  if (ring <=3*nside)
-	    return (2*nside-ring)*fact1;
-	  ring=4*nside - ring;
-	  return ring*ring*fact2 - 1;
-	}
-
-	protected RingInfoSmall get_ring_info_small (long ring) {
-		  long northring = (ring>nl2) ? nl4-ring : ring;
-		  RingInfoSmall ret = new RingInfoSmall();
-		  if (northring < nside)
-		    {
-		    ret.shifted = true;
-		    ret.ringpix = 4*northring;
-		    ret.startpix = 2*northring*(northring-1);
-		    }
-		  else
-		    {
-		    ret.shifted = ((northring-nside) & 1) == 0;
-		    ret.ringpix = nl4;
-		    ret.startpix = ncap + (northring-nside)*ret.ringpix;
-		    }
-		  if (northring != ring) {// southern hemisphere
-		    ret.startpix = npix - ret.startpix - ret.ringpix;
-		  }
-		  return ret;
-	}
-	
-	public AngularPosition pix2zphi (long pix)   {
-		double z,phi;
-		  if (scheme==Scheme.RING){
-		    if (pix<ncap) // North Polar cap
-		      {
-		      long iring = (1+(long)(isqrt(1+2*pix)))>>1; //counted from North pole
-		      long iphi  = (pix+1) - 2*iring*(iring-1);
-	
-		      z = 1.0 - (iring*iring)*fact2;
-		      phi = ((double)iphi-0.5) * Constants.piover2/(double)iring;
-		      }
-		    else if (pix<(npix-ncap)) // Equatorial region
-		      {
-		      long ip  = pix - ncap;
-		      long tmp = (order>=0) ? ip>>(order+2) : ip/nl4;
-		      long iring = tmp + nside,
-		        iphi = ip-nl4*tmp+1;;
-		      // 1 if iring+nside is odd, 1/2 otherwise
-		      double fodd = ((iring+nside)&1)>0 ? 1 : 0.5;
-	
-		      z = ((double)(nl2-iring))*fact1;
-		      phi = ((double)(iphi-fodd)) * Math.PI*0.75*fact1;
-		      }
-		    else // South Polar cap
-		      {
-		      long ip = npix - pix;
-		      long iring = (1+isqrt(2*ip-1))>>1; //counted from South pole
-		      long iphi  = 4*iring + 1 - (ip - 2*iring*(iring-1));
-	
-		      z = -1.0 + (double)(iring*iring)*fact2;
-		      phi = ((double)iphi-0.5) * Constants.piover2/(double)iring;
-		      }
-		    }
-		  else
-		    {
-		    Xyf xyf= nest2xyf(pix);
-	
-
-		    long jr = ((long)(jrll[xyf.face_num])<<order) -xyf.ix - xyf.iy - 1;
-	
-		    long nr;
-		    if (jr<nside)
-		      {
-		      nr = jr;
-		      z = 1 - nr*nr*fact2;
-		      }
-		    else if (jr > nl3)
-		      {
-		      nr = nl4-jr;
-		      z = nr*nr*fact2 - 1;
-		      }
-		    else
-		      {
-		      nr = nside;
-		      z = (double)(nl2-jr)*fact1;
-		      }
-	
-		    long tmp=(long)(jpll[xyf.face_num])*nr+xyf.ix-xyf.iy;
-		    assert(tmp<8*nr);//,"must not happen");
-		    if (tmp<0) tmp+=8*nr;
-		    phi = (nr==nside) ? 0.75*Constants.piover2*(double)tmp*fact1 :
-		                         (0.5*Constants.piover2*(double)tmp)/(double)nr;
-		    }
-			AngularPosition ret = new AngularPosition(z,phi);
-			return ret;
-		  }
-	
-	/**
-	 * should tidy this up with something faster ..
-	 * @param x
-	 * @return
-	 */
-	static public long isqrt ( long x){
-		return (long)Math.sqrt(((double)x) +0.5);
-	}
-	
-	protected double cosdist_zphi (double z1, double phi1, double z2, double phi2){
-	  return z1*z2+ Math.cos(phi1-phi2)* Math.sqrt((1.0-z1*z1)*(1.0-z2*z2));
-	 }
-	
-	/* Short note on the "zone":
-	   zone = 0: pixel lies completely outside the queried shape
-	          1: pixel may overlap with the shape, pixel center is outside
-	          2: pixel center is inside the shape, but maybe not the complete pixel
-	          3: pixel lies completely inside the shape */
-
-	 protected int check_pixel (int o, int order_, int omax,
-	  int zone, LongRangeSetBuilder pixset, long pix, Stack<Map.Entry<Long,Integer> > stk,
-	  boolean inclusive, int stacktopin)
-	  {
-	  int stacktop=stacktopin;
-	  if (zone==0) return stacktop;
-
-	  if (o<order_)
-	    {
-	    if (zone>=3)
-	      {
-	      int sdist=2*(order_-o); // the "bit-shift distance" between map orders
-	      pixset.appendRange(pix<<sdist,((pix+1)<<sdist)-1); // output all subpixels
-	      }
-	    else // (zone>=1)
-	      for (int i=0; i<4; ++i)
-	        stk.push(new AbstractMap.SimpleEntry(new Long(4*pix+3-i),new Integer(o+1))); // add children
-	    }
-	  else if (o>order_) // this implies that inclusive==true
-	    {
-	    if (zone>=2) // pixel center in shape
-	      {
-	      pixset.append(pix>>(2*(o-order_))); // output the parent pixel at order_
-	      stk.setSize(stacktop); // unwind the stack
-	      }
-	    else // (zone>=1): pixel center in safety range
-	      {
-	      if (o<omax) // check sublevels
-	        for (int i=0; i<4; ++i) // add children in reverse order
-	          stk.push(new AbstractMap.SimpleEntry(new Long(4*pix+3-i),new Integer(o+1)));
-	      else // at resolution limit
-	        {
-	        pixset.append(pix>>(2*(o-order_))); // output the parent pixel at order_
-	        stk.setSize(stacktop); // unwind the stack
-	        }
-	      }
-	    }
-	  else // o==order_
-	    {
-	    if (zone>=2)
-	      pixset.append(pix);
-	    else if (inclusive) // and (zone>=1)
-	      {
-	      if (order_<omax) // check sublevels
-	        {
-	        stacktop=stk.size(); // remember current stack position
-	        for (int i=0; i<4; ++i) // add children in reverse order
-	          stk.add(new AbstractMap.SimpleEntry(new Long(4*pix+3-i),new Integer(o+1)));
-	        }
-	      else // at resolution limit
-	        pixset.append(pix); // output the pixel
-	      }
-	    }
-	  	return stacktop;
-	  }
-
-	 
-	
 }

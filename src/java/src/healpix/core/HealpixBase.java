@@ -24,6 +24,7 @@ package healpix.core;
 import java.util.Arrays;
 
 import healpix.core.base.set.*;
+import healpix.core.dm.AbstractHealpixMap.Scheme;
 
 /** Functionality related to the HEALPix pixelisation.
     This class is conceptually very similar the the Healpix_Base class
@@ -32,9 +33,6 @@ import healpix.core.base.set.*;
     @author Martin Reinecke */
 public class HealpixBase extends HealpixTables
   {
-  /** The two possible ordering schemes of a HEALPix map. */
-  public enum Scheme {RING, NESTED};
-
   protected static class Xyf
     {
     public int ix, iy, face;
@@ -224,8 +222,16 @@ public class HealpixBase extends HealpixTables
     }
 
   /** Initializes the object to Nside=1024 and scheme=NESTED. */
-  public HealpixBase() throws Exception
-    { nside=-1; setNsideAndScheme(1024,Scheme.NESTED); }
+  public HealpixBase()
+    {
+    try
+      {
+      nside=-1;
+      setNsideAndScheme(1024,Scheme.NESTED);
+      }
+    catch (Exception Ex) { /* cannot happen */ }
+    }
+
 
   /** Initializes the object to a user-supplied Nside and ordering scheme.
       @param nside_in the Nside parameter
@@ -237,6 +243,11 @@ public class HealpixBase extends HealpixTables
       @return the current ordering scheme */
   public Scheme getScheme()
     { return scheme; }
+
+  /** Returns the current Nside parameter.
+      @return the current Nside parameter */
+  public int getNside()
+    { return (int)nside; }
 
   /** Returns the total number of pixels in the pixelisation.
       @return the current total number of pixels */
@@ -553,7 +564,7 @@ public class HealpixBase extends HealpixTables
     return ret;
     }
 
-  private void inRing(long iz, double phi0, double dphi,
+  protected void inRing(long iz, double phi0, double dphi,
     LongRangeSetBuilder res)
     {
     RingInfoSmall ris = get_ring_info_small(iz);

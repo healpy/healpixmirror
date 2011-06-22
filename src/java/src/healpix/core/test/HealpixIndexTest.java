@@ -1,6 +1,7 @@
 package healpix.core.test;
 
-import healpix.core.AngularPosition;
+import healpix.core.Zphi;
+import healpix.core.HealpixUtils;
 import healpix.core.HealpixIndex;
 import healpix.tools.SpatialVector;
 import junit.framework.TestCase;
@@ -40,16 +41,16 @@ public class HealpixIndexTest extends TestCase {
 		v.set_z_phi(z, phi);
 		
 		long pix = hi.vec2pix_nest(v);
-		AngularPosition p= hi.pix2zphi(pix);
+		Zphi p= hi.pix2zphi(pix);
 		
-		assertEquals ("Z wrong ",z,p.theta(),0.001);
+		assertEquals ("Z wrong ",z,p.z,0.001);
 		
 		
 	}
 
 	public void testIsqrt() {
 		for (int r=2; r < 1000; r++)
-		assertEquals(r,HealpixIndex.isqrt(r*r));
+		assertEquals(r,HealpixUtils.isqrt(r*r));
 	}
 
 

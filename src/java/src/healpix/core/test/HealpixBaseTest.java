@@ -26,6 +26,7 @@ import java.text.DecimalFormat;
 
 import healpix.core.*;
 import healpix.core.base.set.*;
+import healpix.core.dm.AbstractHealpixMap.Scheme;
 
 public class HealpixBaseTest extends TestCase {
 
@@ -89,7 +90,7 @@ public class HealpixBaseTest extends TestCase {
     System.out.println("IEEEremainder: " + form.format(cnt/time*1e-6) + "MOps/s");
     }
 
-  private double subtest_perf_neighbours(String name, HealpixBase.Scheme scheme)
+  private double subtest_perf_neighbours(String name, Scheme scheme)
     throws Exception
     {
     long cnt=0;
@@ -112,7 +113,7 @@ public class HealpixBaseTest extends TestCase {
     return dummy;
     }
 
-  private double subtest_perf_pix2ang(String name, HealpixBase.Scheme scheme)
+  private double subtest_perf_pix2ang(String name, Scheme scheme)
     throws Exception
     {
     long cnt=0;
@@ -135,7 +136,7 @@ public class HealpixBaseTest extends TestCase {
     return dummy;
     }
 
-  private double subtest_perf_pix2vec(String name, HealpixBase.Scheme scheme)
+  private double subtest_perf_pix2vec(String name, Scheme scheme)
     throws Exception
     {
     long cnt=0;
@@ -158,7 +159,7 @@ public class HealpixBaseTest extends TestCase {
     return dummy;
     }
 
-  private double subtest_perf_pix2zphi(String name, HealpixBase.Scheme scheme)
+  private double subtest_perf_pix2zphi(String name, Scheme scheme)
     throws Exception
     {
     long cnt=0;
@@ -189,7 +190,7 @@ public class HealpixBaseTest extends TestCase {
     int omax=HealpixBase.order_max;
     for (int order=0; order<=omax; ++order)
       {
-      HealpixBase base = new HealpixBase (1L<<order,HealpixBase.Scheme.RING);
+      HealpixBase base = new HealpixBase (1L<<order,Scheme.RING);
       long dpix=Math.max(base.getNpix()/nsteps,1L);
       for (long pix=0; pix<base.getNpix(); pix+=dpix)
         {
@@ -211,7 +212,7 @@ public class HealpixBaseTest extends TestCase {
     int omax=HealpixBase.order_max;
     for (int order=0; order<=omax; ++order)
       {
-      HealpixBase base = new HealpixBase (1L<<order,HealpixBase.Scheme.RING);
+      HealpixBase base = new HealpixBase (1L<<order,Scheme.RING);
       long dpix=Math.max(base.getNpix()/nsteps,1L);
       for (long pix=0; pix<base.getNpix(); pix+=dpix)
         {
@@ -224,7 +225,7 @@ public class HealpixBaseTest extends TestCase {
     return dummy;
     }
 
-  private double subtest_perf_ang2pix(String name, HealpixBase.Scheme scheme)
+  private double subtest_perf_ang2pix(String name, Scheme scheme)
     throws Exception
     {
     long cnt=0;
@@ -248,7 +249,7 @@ public class HealpixBaseTest extends TestCase {
     return dummy;
     }
 
-  private double subtest_perf_zphi2pix(String name, HealpixBase.Scheme scheme)
+  private double subtest_perf_zphi2pix(String name, Scheme scheme)
     throws Exception
     {
     long cnt=0;
@@ -273,7 +274,7 @@ public class HealpixBaseTest extends TestCase {
     }
 
   private double subtest_perf_query_disc(String name,
-    HealpixBase.Scheme scheme) throws Exception
+    Scheme scheme) throws Exception
     {
     long cnt=0;
     double dummy=0;
@@ -290,7 +291,7 @@ public class HealpixBaseTest extends TestCase {
     }
 
   private double subtest_perf_query_polygon(String name,
-    HealpixBase.Scheme scheme) throws Exception
+    Scheme scheme) throws Exception
     {
     long cnt=0;
     double dummy=0;
@@ -315,24 +316,24 @@ public class HealpixBaseTest extends TestCase {
     {
     System.out.println("\nPerformance tests of HealpixBase methods\n");
     double d=0;
-    d+=subtest_perf_neighbours("neighbours(NEST)",HealpixBase.Scheme.NESTED);
-    d+=subtest_perf_neighbours("neighbours(RING)",HealpixBase.Scheme.RING);
-    d+=subtest_perf_pix2ang   ("pix2ang   (NEST)",HealpixBase.Scheme.NESTED);
-    d+=subtest_perf_pix2ang   ("pix2ang   (RING)",HealpixBase.Scheme.RING);
-    d+=subtest_perf_ang2pix   ("ang2pix   (NEST)",HealpixBase.Scheme.NESTED);
-    d+=subtest_perf_ang2pix   ("ang2pix   (RING)",HealpixBase.Scheme.RING);
-    d+=subtest_perf_pix2vec   ("pix2vec   (NEST)",HealpixBase.Scheme.NESTED);
-    d+=subtest_perf_pix2vec   ("pix2vec   (RING)",HealpixBase.Scheme.RING);
-    d+=subtest_perf_pix2zphi  ("pix2zphi  (NEST)",HealpixBase.Scheme.NESTED);
-    d+=subtest_perf_pix2zphi  ("pix2zphi  (RING)",HealpixBase.Scheme.RING);
-    d+=subtest_perf_zphi2pix  ("zphi2pix  (NEST)",HealpixBase.Scheme.NESTED);
-    d+=subtest_perf_zphi2pix  ("zphi2pix  (RING)",HealpixBase.Scheme.RING);
+    d+=subtest_perf_neighbours("neighbours(NEST)",Scheme.NESTED);
+    d+=subtest_perf_neighbours("neighbours(RING)",Scheme.RING);
+    d+=subtest_perf_pix2ang   ("pix2ang   (NEST)",Scheme.NESTED);
+    d+=subtest_perf_pix2ang   ("pix2ang   (RING)",Scheme.RING);
+    d+=subtest_perf_ang2pix   ("ang2pix   (NEST)",Scheme.NESTED);
+    d+=subtest_perf_ang2pix   ("ang2pix   (RING)",Scheme.RING);
+    d+=subtest_perf_pix2vec   ("pix2vec   (NEST)",Scheme.NESTED);
+    d+=subtest_perf_pix2vec   ("pix2vec   (RING)",Scheme.RING);
+    d+=subtest_perf_pix2zphi  ("pix2zphi  (NEST)",Scheme.NESTED);
+    d+=subtest_perf_pix2zphi  ("pix2zphi  (RING)",Scheme.RING);
+    d+=subtest_perf_zphi2pix  ("zphi2pix  (NEST)",Scheme.NESTED);
+    d+=subtest_perf_zphi2pix  ("zphi2pix  (RING)",Scheme.RING);
     d+=subtest_perf_ring2nest();
     d+=subtest_perf_nest2ring();
-    d+=subtest_perf_query_disc("disc      (NEST)",HealpixBase.Scheme.NESTED);
-    d+=subtest_perf_query_disc("disc      (RING)",HealpixBase.Scheme.RING);
-    d+=subtest_perf_query_polygon("polygon   (NEST)",HealpixBase.Scheme.NESTED);
-    d+=subtest_perf_query_polygon("polygon   (RING)",HealpixBase.Scheme.RING);
+    d+=subtest_perf_query_disc("disc      (NEST)",Scheme.NESTED);
+    d+=subtest_perf_query_disc("disc      (RING)",Scheme.RING);
+    d+=subtest_perf_query_polygon("polygon   (NEST)",Scheme.NESTED);
+    d+=subtest_perf_query_polygon("polygon   (RING)",Scheme.RING);
     }
 
   public void test_ringnestring()throws Exception
@@ -342,7 +343,7 @@ public class HealpixBaseTest extends TestCase {
 
     for (int order=0; order<=HealpixBase.order_max; ++order)
       {
-      HealpixBase base = new HealpixBase (1L<<order,HealpixBase.Scheme.RING);
+      HealpixBase base = new HealpixBase (1L<<order,Scheme.RING);
       for (int m=0; m<nsamples; ++m)
         {
         long pix = (long)(rng.nextDouble()*base.getNpix());
@@ -359,8 +360,8 @@ public class HealpixBaseTest extends TestCase {
     Random rng = new Random();
     for (int order=0; order<=omax; ++order)
       {
-      HealpixBase base1 = new HealpixBase (1L<<order,HealpixBase.Scheme.RING),
-                  base2 = new HealpixBase (1L<<order,HealpixBase.Scheme.NESTED);
+      HealpixBase base1 = new HealpixBase (1L<<order,Scheme.RING),
+                  base2 = new HealpixBase (1L<<order,Scheme.NESTED);
       for (int m=0; m<nsamples; ++m)
         {
         long pix = (long)(rng.nextDouble()*base1.getNpix());
@@ -372,7 +373,7 @@ public class HealpixBaseTest extends TestCase {
       }
     for (long nside=3; nside<(1L<<omax); nside+=nside/2+1)
       {
-      HealpixBase base = new HealpixBase (nside,HealpixBase.Scheme.RING);
+      HealpixBase base = new HealpixBase (nside,Scheme.RING);
       for (int m=0; m<nsamples; ++m)
         {
         long pix = (long)(rng.nextDouble()*base.getNpix());
@@ -390,8 +391,8 @@ public class HealpixBaseTest extends TestCase {
     Random rng = new Random();
     for (int order=0; order<=omax; ++order)
       {
-      HealpixBase base1 = new HealpixBase (1L<<order,HealpixBase.Scheme.RING),
-                  base2 = new HealpixBase (1L<<order,HealpixBase.Scheme.NESTED);
+      HealpixBase base1 = new HealpixBase (1L<<order,Scheme.RING),
+                  base2 = new HealpixBase (1L<<order,Scheme.NESTED);
       double mincos = Math.min (Math.cos(base1.maxPixrad()),0.999999999999999);
       for (int m=0; m<nsamples; ++m)
         {
@@ -406,7 +407,7 @@ public class HealpixBaseTest extends TestCase {
       }
     for (long nside=3; nside<(1L<<omax); nside+=nside/2+1)
       {
-      HealpixBase base = new HealpixBase (nside,HealpixBase.Scheme.RING);
+      HealpixBase base = new HealpixBase (nside,Scheme.RING);
       double mincos = Math.min (Math.cos(base.maxPixrad()),0.999999999999999);
       for (int m=0; m<nsamples; ++m)
         {
@@ -425,8 +426,8 @@ public class HealpixBaseTest extends TestCase {
     Random rng = new Random();
     for (int order=0; order<=omax; ++order)
       {
-      HealpixBase base1 = new HealpixBase (1L<<order,HealpixBase.Scheme.RING),
-                  base2 = new HealpixBase (1L<<order,HealpixBase.Scheme.NESTED);
+      HealpixBase base1 = new HealpixBase (1L<<order,Scheme.RING),
+                  base2 = new HealpixBase (1L<<order,Scheme.NESTED);
       double maxang = 2.01*base1.maxPixrad();
       for (int m=0; m<nsamples; ++m)
         {
@@ -451,7 +452,7 @@ public class HealpixBaseTest extends TestCase {
       }
     for (long nside=3; nside<(1L<<omax); nside+=nside/2+1)
       {
-      HealpixBase base = new HealpixBase (nside,HealpixBase.Scheme.RING);
+      HealpixBase base = new HealpixBase (nside,Scheme.RING);
       double maxang = 2.01*base.maxPixrad();
       for (int m=0; m<nsamples; ++m)
         {
@@ -475,7 +476,7 @@ public class HealpixBaseTest extends TestCase {
     Random rng = new Random();
     for (int order=0; order<=5; ++order)
       {
-      HealpixBase base = new HealpixBase (1L<<order,HealpixBase.Scheme.NESTED);
+      HealpixBase base = new HealpixBase (1L<<order,Scheme.NESTED);
       boolean[] map = new boolean[(int)base.getNpix()];
       Vec3[] vmap = new Vec3[(int)base.getNpix()];
       for (int m=0; m<base.getNpix(); ++m)
@@ -514,8 +515,8 @@ public class HealpixBaseTest extends TestCase {
     Random rng = new Random();
     for (int order=0; order<=omax; ++order)
       {
-      HealpixBase rbase = new HealpixBase (1L<<order,HealpixBase.Scheme.RING),
-                  nbase = new HealpixBase (1L<<order,HealpixBase.Scheme.NESTED);
+      HealpixBase rbase = new HealpixBase (1L<<order,Scheme.RING),
+                  nbase = new HealpixBase (1L<<order,Scheme.NESTED);
       int niter=Math.max(1,Math.min(nsamples/1000,100000>>order));
       for (int m=0; m<niter; ++m)
         {
@@ -538,7 +539,7 @@ public class HealpixBaseTest extends TestCase {
   public void testQueryPolygon() throws Exception
     {
     System.out.println("\nTesting queryPolygon()\n");
-    HealpixBase base = new HealpixBase(1024,HealpixBase.Scheme.NESTED);
+    HealpixBase base = new HealpixBase(1024,Scheme.NESTED);
     Pointing[] corner = new Pointing[4];
     corner[0]=new Pointing(new Vec3(1,0.01,0.01));
     corner[1]=new Pointing(new Vec3(1,1,-0.3));
@@ -548,7 +549,7 @@ public class HealpixBaseTest extends TestCase {
     assertEquals("QueryPolygon problem",lrs.size(),1696714);
     lrs=base.queryPolygon(corner,true);
     assertEquals("QueryPolygon problem",lrs.size(),1700206);
-    base = new HealpixBase(1024,HealpixBase.Scheme.RING);
+    base = new HealpixBase(1024,Scheme.RING);
     lrs=base.queryPolygon(corner,false);
     assertEquals("QueryPolygon problem",lrs.size(),1696714);
     lrs=base.queryPolygon(corner,true);
@@ -562,8 +563,8 @@ public class HealpixBaseTest extends TestCase {
     Random rng = new Random();
     for (int order=0; order<=omax; ++order)
       {
-      HealpixBase rbase = new HealpixBase (1L<<order,HealpixBase.Scheme.RING),
-                  nbase = new HealpixBase (1L<<order,HealpixBase.Scheme.NESTED);
+      HealpixBase rbase = new HealpixBase (1L<<order,Scheme.RING),
+                  nbase = new HealpixBase (1L<<order,Scheme.NESTED);
       int niter=Math.max(1,Math.min(nsamples/1000,100000>>order));
       for (int m=0; m<niter; ++m)
         {
@@ -589,8 +590,8 @@ public class HealpixBaseTest extends TestCase {
   public void test() throws Exception
     {
     int nside=256;
-    HealpixBase base  = new HealpixBase(nside,HealpixBase.Scheme.NESTED);
-    HealpixBase base2 = new HealpixBase(nside,HealpixBase.Scheme.RING);
+    HealpixBase base  = new HealpixBase(nside,Scheme.NESTED);
+    HealpixBase base2 = new HealpixBase(nside,Scheme.RING);
     for (int i=0; i<12*nside*nside; ++i)
       {
       assertEquals ("pixel mismatch_nest",i,base.ang2pix(base.pix2ang(i)));

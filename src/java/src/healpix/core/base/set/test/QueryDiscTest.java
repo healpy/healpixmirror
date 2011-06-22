@@ -58,12 +58,12 @@ public class QueryDiscTest extends TestCase {
     LongList fullSky = new LongList(pt.queryDisc(vec, radius,  inclusive));
     assertEquals(npix, fullSky.size());
 
-    LongList firstHalfSky = new LongList(pt.queryDisc( vec, radius1, inclusive));
+    LongList firstHalfSky = new LongList(pt.queryDisc( vec, radius1+1e-12, inclusive));
 //    dump(firstHalfSky);
 
-    // you get exactly nside*2 more pixels from the equator which is included in north 
+    // you get exactly nside*2 more pixels from the equator which is included in north
     assertEquals(npix/2 + (nside*2), firstHalfSky.size());
-    LongList secondHalfSky = new LongList(pt.queryDisc( dvec, radius1, inclusive));
+    LongList secondHalfSky = new LongList(pt.queryDisc( dvec, radius1-1e-12, inclusive));
    // dump(secondHalfSky);
     System.out.println();
 
@@ -114,8 +114,8 @@ public class QueryDiscTest extends TestCase {
     
 
 
-   firstHalfSky = new LongList(pt.queryDisc( new SpatialVector(1., 0., 0.), radius1, inclusive));
-   secondHalfSky = new LongList(pt.queryDisc( new SpatialVector(-1., 0., 0.),radius1,  inclusive));
+   firstHalfSky = new LongList(pt.queryDisc( new SpatialVector(1., 0., 0.), radius1+1e-12, inclusive));
+   secondHalfSky = new LongList(pt.queryDisc( new SpatialVector(-1., 0., 0.),radius1-1e-12,  inclusive));
     firstHalfSky.addAll(secondHalfSky);
     pixHalfsUnique = new LongSet(firstHalfSky);
     pixHalfsList = new LongList(pixHalfsUnique);
@@ -131,8 +131,8 @@ public class QueryDiscTest extends TestCase {
         }
 
 
-    firstHalfSky = new LongList(pt.queryDisc( new SpatialVector(0., 1., 0.), radius1,  inclusive));
-    secondHalfSky = new LongList(pt.queryDisc( new SpatialVector(0., -1., 0.), radius1,  inclusive));
+    firstHalfSky = new LongList(pt.queryDisc( new SpatialVector(0., 1., 0.), radius1+1e-12,  inclusive));
+    secondHalfSky = new LongList(pt.queryDisc( new SpatialVector(0., -1., 0.), radius1-1e-12,  inclusive));
     firstHalfSky.addAll(secondHalfSky);
     pixHalfsUnique = new LongSet(firstHalfSky);
     pixHalfsList = new LongList(pixHalfsUnique);

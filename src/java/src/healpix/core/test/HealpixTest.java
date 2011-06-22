@@ -393,184 +393,6 @@ public class HealpixTest extends TestCase {
 		ipnest = (int) pt.ring2nest(0);
 		System.out.println(" ipnest (1048576,0)=" + ipnest);
 	}
-	/**
-	 * Test next_ in_ line_ nest.
-	 * 
-	 * @throws Exception the exception
-	 */
-	public void testNext_In_Line_Nest() throws Exception {
-		int ipix = 0;
-		int nside = 2;
-		HealpixIndex pt = new HealpixIndex(nside);
-		int ipnext = (int) pt.next_in_line_nest(nside, ipix);
-		assertEquals("ipnext=" + ipnext, 23, ipnext, 1e-10);
-		ipix = 1;
-		nside = 2;
-		ipnext = (int) pt.next_in_line_nest(nside, ipix);
-		assertEquals("ipnext=" + ipnext, 6, ipnext, 1e-10);
-		ipix = 4;
-		nside = 2;
-		ipnext = (int) pt.next_in_line_nest(nside, ipix);
-		assertEquals("ipnext=" + ipnext, 27, ipnext, 1e-10);
-		ipix = 27;
-		nside = 2;
-		ipnext = (int) pt.next_in_line_nest(nside, ipix);
-		assertEquals("ipnext=" + ipnext, 8, ipnext, 1e-10);
-		ipix = 12;
-		nside = 2;
-		ipnext = (int) pt.next_in_line_nest(nside, ipix);
-		assertEquals("ipnext=" + ipnext, 19, ipnext, 1e-10);
-		ipix = 118;
-		nside = 4;
-		pt = new HealpixIndex(nside);
-		ipnext = (int) pt.next_in_line_nest(nside, ipix);
-		assertEquals("ipnext = " + ipnext, 117, ipnext, 1e-10);
-		System.out.println(" test next_in_line_nest is done");
-	}
-	
-	/**
-	 * Test in ring cxx.
-	 * 
-	 * @throws Exception the exception
-	 */
-	public void testinRingCxx() throws Exception {
-		System.out.println(" Start test inRing !!!!!!!!!!!!!!!!!!!!!!!!!");
-		int[] nestComp = { 19, 0, 23, 4, 27, 8, 31, 12 };
-		double PI = Math.PI;
-		long nside = 2;
-		HealpixIndex pt = new HealpixIndex((int) nside);
-		boolean nest = false;
-		int iz = 3;
-		double phi = PI;
-		double dphi = PI;
-		ArrayList ring = pt.inRingCxx(nside, iz, phi, dphi, nest);
-		for ( int i = 0; i < ring.size(); i++ ) {
-			assertEquals("ipnext = " + ( (Long) ring.get(i) ).longValue(),
-					i + 12, ( (Long) ring.get(i) ).longValue(), 1e-10);
-		}
-		nest = true;
-		ring = pt.inRingCxx(nside, iz, phi, dphi, nest);
-		for ( int i = 0; i < ring.size(); i++ ) {
-			assertEquals("ipnext = " + ( (Long) ring.get(i) ).longValue(),
-					nestComp[i], ( (Long) ring.get(i) ).longValue(), 1e-10);
-		}
-		nest = false;
-		nside = 4;
-		pt = new HealpixIndex((int) nside);
-		phi = 2.1598449493429825;
-		iz = 8;
-		dphi = 0.5890486225480867;
-		// System.out.println(" iz="+iz+" phi="+phi+" dphi="+dphi);
-		ring = pt.inRingCxx(nside, iz, phi, dphi, nest);
-		// for (int i = 0; i<ring.size(); i++) {
-		// System.out.println("ipnext = "+ ((Integer)ring.get(i)).intValue());
-		// }
-		nest = false;
-		dphi = 0. * PI;
-		iz = 8;
-		phi = 2.1598449493429825;
-		// System.out.println(" iz="+iz+" phi="+phi+" dphi="+dphi);
-		ring = pt.inRingCxx(nside, iz, phi, dphi, nest);
-		// for (int i = 0; i<ring.size(); i++) {
-		// System.out.println("ipnext = "+ ((Integer)ring.get(i)).intValue());
-		// }
-		System.out.println(" test inRing is done");
-	}
-	
-	/**
-	 * Test in ring.
-	 * 
-	 * @throws Exception the exception
-	 */
-	public void testinRing() throws Exception {
-		System.out.println(" Start test inRing !!!!!!!!!!!!!!!!!!!!!!!!!");
-		int[] nestComp = { 19, 0, 23, 4, 27, 8, 31, 12 };
-		double PI = Math.PI;
-		long nside = 2;
-		HealpixIndex pt = new HealpixIndex((int) nside);
-		int iz = 3;
-		double phi = PI;
-		double dphi = PI;
-		LongRangeSet ring = pt.inRingLongSet(iz, phi, dphi);
-		Iterator< Long> it = ring.iterator();
-		int i=0;
-		long val=0;
-		while ( it.hasNext() ) {
-			val=it.next();
-			assertEquals("ipnext = " +  val,i + 12, val);
-			i++;
-
-		}
-		ring = pt.inRing_nested_longset(iz, phi, dphi);
-		i=0;
-		val=0;
-		while ( it.hasNext() ) {
-			val=it.next();
-			i++;
-			assertEquals("ipnext = " +  val,nestComp[i], val);
-		}
-		nside = 4;
-		pt = new HealpixIndex((int) nside);
-		phi = 2.1598449493429825;
-		iz = 8;
-		dphi = 0.5890486225480867;
-		// System.out.println(" iz="+iz+" phi="+phi+" dphi="+dphi);
-		//ring = pt.inRing( iz, phi, dphi, nest);
-		// for (int i = 0; i<ring.size(); i++) {
-		// System.out.println("ipnext = "+ ((Integer)ring.get(i)).intValue());
-		// }
-
-		dphi = 0. * PI;
-		iz = 8;
-		phi = 2.1598449493429825;
-		// System.out.println(" iz="+iz+" phi="+phi+" dphi="+dphi);
-		//ring = pt.inRing( iz, phi, dphi, nest);
-		// for (int i = 0; i<ring.size(); i++) {
-		// System.out.println("ipnext = "+ ((Integer)ring.get(i)).intValue());
-		// }
-		System.out.println(" test inRing is done");
-	}
-
-	/**
-	 * Test intrs_ intrv.
-	 * 
-	 * @throws Exception the exception
-	 */
-	public void testIntrs_Intrv() throws Exception {
-		System.out.println(" test intrs_intrv !!!!!!!!!!!!!!!!!!!!!!!!!!!");
-		HealpixIndex pt = new HealpixIndex();
-		double[] d1 = { 1.0, 9.0 };
-		double[] d2 = { 3.0, 16.0 };
-		double[] di;
-		// System.out.println("Case "+d1[0]+" "+d1[1]+" | "+d2[0]+" "+d2[1]);
-		di = pt.intrs_intrv(d1, d2);
-		// System.out.println("Result "+di[0]+" - "+di[1]);
-		int n12 = di.length / 2;
-		assertEquals("n12 = " + n12, 1, n12, 1e-6);
-		assertEquals("di[0] = " + di[0], 3.0, di[0], 1e-6);
-		assertEquals("di[1] = " + di[1], 9.0, di[1], 1e-6);
-		d1 = new double[] { 0.537, 4.356 };
-		d2 = new double[] { 3.356, 0.8 };
-		// System.out.println("Case "+d1[0]+" "+d1[1]+" | "+d2[0]+" "+d2[1]);
-		di = pt.intrs_intrv(d1, d2);
-		n12 = di.length / 2;
-		assertEquals("n12 = " + n12, 2, n12, 1e-6);
-		assertEquals("di[0] = " + di[0], 0.537, di[0], 1e-6);
-		assertEquals("di[1] = " + di[1], 0.8, di[1], 1e-6);
-		assertEquals("di[2] = " + di[2], 3.356, di[2], 1e-6);
-		assertEquals("di[1] = " + di[3], 4.356, di[3], 1e-6);
-
-		d1 = new double[] { 2.356194490092345, 2.356194490292345 };
-		d2 = new double[] { 1.251567, 4.17 };
-		// System.out.println("Case "+d1[0]+" "+d1[1]+" | "+d2[0]+" "+d2[1]);
-		di = pt.intrs_intrv(d1, d2);
-		n12 = di.length / 2;
-		assertEquals("n12 = " + n12, 1, n12, 1e-6);
-		assertEquals("di[0] = " + di[0], 2.35619449009, di[0], 1e-6);
-		assertEquals("di[1] = " + di[1], 2.35619449029, di[1], 1e-6);
-
-		System.out.println(" test intrs_intrv is done");
-	}
 
 	/**
 	 * Test pix2 vect_ring.
@@ -1057,7 +879,7 @@ public class HealpixTest extends TestCase {
 		Arrays.sort(pixel1);
 		int inclusive = 1;
 		double radius = 2.875 / 180.0 * Constants.PI;
-		double expectedDist = radius +  Constants.PI / (double)( pt.nside *2);
+		double expectedDist = radius +  Constants.PI / (double)( pt.getNside() *2);
 		
 		SpatialVector v = new SpatialVector(4.49208,-6.62294);
 		long onePix = pt.vec2pix_nest(v);
@@ -1100,7 +922,7 @@ public class HealpixTest extends TestCase {
 	
 		long spix=764;
 		radius = (HealpixIndex.getPixRes(nside) * Constants.ARCSECOND_RADIAN)/4;
-		expectedDist = radius +  Constants.PI / (double)( pt.nside *2);
+		expectedDist = radius +  Constants.PI / (double)( pt.getNside() *2);
 
 		double[] pos = pt.pix2ang_nest(spix);
 		SpatialVector v2 = HealpixIndex.ang2Vec(pos[0], pos[1]);
@@ -1145,7 +967,7 @@ public class HealpixTest extends TestCase {
             throw new Exception("! Error using HealpixIndex! "+e);
         }
         int nHpPix = (int) hpIndex.nside2Npix((int) Math.pow(2,hpDepth));
-        int hpNside = hpIndex.nside;
+        int hpNside = hpIndex.getNside();
         
         double[] pixCenterThetaPhi;
         LongRangeSet hpPixInRadius;
@@ -1637,7 +1459,7 @@ public class HealpixTest extends TestCase {
 	/**
 	 * Test get nside.
 	 */
-	public void testGetNside() {
+	public void testGetNside() throws Exception {
 		System.out.println(" Start test GetNside !!!!!!!!!!!!!!!!!!!!!");
 
 		double pixsize = 25;

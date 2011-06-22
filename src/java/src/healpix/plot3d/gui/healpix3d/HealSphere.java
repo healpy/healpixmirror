@@ -98,7 +98,7 @@ public abstract class HealSphere extends Shape3D {
 				e.printStackTrace();
 			}
 		}
-		this.nside = ind.nside;
+		this.nside = ind.getNside();
 		if (nside >= 8)
 			step = 11;
 		if (nside >= 16)

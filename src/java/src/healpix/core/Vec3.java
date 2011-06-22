@@ -29,6 +29,8 @@ public class Vec3
   /** Default constructor. */
   public Vec3() {}
 
+  public Vec3 (Vec3 v)
+    { x=v.x; y=v.y; z=v.z; }
   /** Creation from individual components */
   public Vec3 (double x1, double y1, double z1)
     { x=x1; y=y1; z=z1; }

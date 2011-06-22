@@ -36,7 +36,7 @@ public class Performance {
 	public static void main(String[] args) throws Exception {
 		centre.normalized();
 		t= new HealpixIndex(HealpixIndex.calculateNSide(60)); //1' nside resolution
-		nside = t.nside;
+		nside = t.getNside();
 		radius = Math.toRadians(0.5);
 		sw.start();
 		result = t.queryDisc(centre, radius, 0,1);
@@ -48,7 +48,7 @@ public class Performance {
 		sw.printTime("10 degrees at NSIDE="+nside+"  have "+result.size()+" pixels and took");
 
 		t= new HealpixIndex(HealpixIndex.calculateNSide(1));
-		nside = t.nside;
+		nside = t.getNside();
 		radius = Math.toRadians(0.5);
 		sw.start();
 		result = t.queryDisc(centre, radius, 0,1);
@@ -60,7 +60,7 @@ public class Performance {
 		sw.printTime("10 degrees at NSIDE="+nside+"  have "+result.size()+" pixels and took");
 
 		t= new HealpixIndex(1048576);
-		nside = t.nside;
+		nside = t.getNside();
 		radius = Math.toRadians(0.5);
 		sw.start();
 		result = t.queryDisc(centre, radius, 0,1);

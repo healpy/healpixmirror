@@ -28,13 +28,7 @@ import java.text.DecimalFormat;
  * An angular position theta phi
  * @author womullan
  */
-public class AngularPosition {
-	
-	/** The theta. */
-	protected double theta = 0;
-
-	/** The phi. */
-	protected double phi = 0;
+public class AngularPosition extends Pointing {
 
 	/**
 	 * Default constructor
@@ -51,6 +45,10 @@ public class AngularPosition {
 
 		this.theta = theta;
 		this.phi = phi;
+	}
+
+	public AngularPosition(Pointing ptg) {
+		super(ptg);
 	}
 
 	/**

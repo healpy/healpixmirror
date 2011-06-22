@@ -33,6 +33,9 @@ public class Pointing
   /** Default constructor */
   public Pointing() {}
 
+  public Pointing(Pointing ptg)
+    { this.theta = ptg.theta; this.phi = ptg.phi; }
+
   /** Simple constructor initializing both values.
       @param theta in radians [0,Pi]
       @param phi in radians [0,2*Pi] */
