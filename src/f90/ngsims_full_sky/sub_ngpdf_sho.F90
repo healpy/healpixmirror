@@ -61,10 +61,10 @@ contains
     integer(I4B), parameter :: KMAP = SP
     type(paramfile_handle), Intent(InOut)       :: handle
     Integer(I4B), Intent(In) :: ns
-    Real(DP), Intent(Out) :: sigma0
+    Real(DP),   Intent(Out) :: sigma0
     Real(KMAP), Intent(Out), dimension(0:ns-1) :: x
-    Real(DP), Intent(Out) :: nu(1:3)
-    Integer, Intent(In), Optional :: bins
+    Real(DP),   Intent(Out) :: nu(1:3)
+    Integer,    Intent(In), Optional :: bins
 
     integer                           ::  namax,nsmax 
     integer                           ::  i,j,iseed,na,status

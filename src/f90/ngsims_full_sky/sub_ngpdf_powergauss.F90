@@ -49,9 +49,9 @@ contains
     integer(I4B), parameter :: KMAP = SP
     type(paramfile_handle), Intent(InOut)    :: handle
     integer(I4B), Intent(In)           :: ns !,npixmax 
-    Real(DP), Intent(Out)                  :: sigma0
+    Real(DP),   Intent(Out)                  :: sigma0
     Real(KMAP), Intent(Out), dimension(0:ns-1) :: x
-    real(DP),Intent(Out), dimension(1:3)   :: mu
+    real(DP),   Intent(Out), dimension(1:3)   :: mu
     Integer(I4B), Intent(In), Optional :: bins
 
     integer(I4B)                      ::  i,iseed,npower

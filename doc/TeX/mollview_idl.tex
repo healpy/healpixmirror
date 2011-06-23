@@ -505,22 +505,28 @@ and \mylink{idl:mollview:retain}{Retain}}\\
          \item[0] no polarization information is plotted. 
 %
          \item[1]
-             the AMPLITUDE $P = \sqrt{\left(U^2 + Q^2\right)}$ of the polarisation is plotted 
-	(as long as the input data contains polarisation information
+             the AMPLITUDE $P = \sqrt{\left(U^2 + Q^2\right)}$ of the polarization is plotted 
+	(as long as the input data contains polarization information
              (ie, Stokes parameter Q and U for each pixel)) 
 %
          \item[2]
-             the ANGLE $\phi = \tan^{-1}(U/Q) /2$ of the polarisation is plotted \\
-             Note: the angles are color coded with a fixed color table (independent of Colt)
+             the ANGLE $\phi = \tan^{-1}(U/Q) /2$ of the polarization is plotted \\
+             Note: the angles are color coded with a fixed color table (independent of \mylink{idl:mollview:colt}{Colt})
 %
          \item[3]
-             --the temperature is color coded (with a color table defined by Colt)\\
-             --and the polarisation is overplotted as headless VECTORS
+             --the temperature is color coded (with a color table defined by \mylink{idl:mollview:colt}{Colt})\\
+             --and the polarization is overplotted as headless VECTORS\\
+             Polarization can then be a 3-element vector (the first element being 3).
+             The second element controls the average length of vectors
+             \default{1}, while the third one controls the distance between
+             vectors \default{1}. Non-positive values are replaced by 1.
+
 	\end{itemize}
 	\default{0} \\
 	\textbf{Note:} The representation of the polarization direction (options 2 and 3 above),
         include the effects of the rotations and/or changes or astronomical coordinates
-      (controlled by ROT and COORD respectively) but do not include the effects
+      (controlled by \mylink{idl:mollview:rot}{ROT} and 
+	\mylink{idl:mollview:coord}{COORD} respectively) but do not include the effects
       of the distortions induced by the projection from the sphere to the plan.
       Because the polarization usually has more power at small scales, it must
       generally be represented on maps of small patches of the sky to remain

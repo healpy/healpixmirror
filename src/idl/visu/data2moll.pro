@@ -70,9 +70,9 @@ du_dv = 2.    ; aspect ratio
 fudge = 1.02  ; spare some space around the Mollweide egg
 if keyword_set(flip) then flipconv=1 else flipconv = -1  ; longitude increase leftward by default (astro convention)
 if undefined(polarization) then polarization=0
-do_polamplitude = (polarization eq 1)
-do_poldirection = (polarization eq 2)
-do_polvector    = (polarization eq 3)
+do_polamplitude = (polarization[0] eq 1)
+do_poldirection = (polarization[0] eq 2)
+do_polvector    = (polarization[0] eq 3)
 do_map_out      = arg_present(map_out)
 do_fits         = keyword_set(fits)
 

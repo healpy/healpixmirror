@@ -14,8 +14,10 @@
 of random {\em Non-Gaussian} fields on a sphere (either even power of a Gaussian
 distribution, or Simple Harmonics Oscillator PDF, see Description section for
 details). \\
-It is directly adapted from the NGSIMS code described in Rocha
-et al, MNRAS, 357, 1 (2005)\\
+It is directly adapted from the NGSIMS code described in 
+\htmladdnormallink{Rocha et al, MNRAS, 357, 1 (2005)}%
+{http://cdsads.u-strasbg.fr/abs/2005MNRAS.357....1R}%
+\\
 The operation count is dominated by a term scaling as
  ${\cal {O}}(N_{\rm pix}^{1/2} \ell_{\rm max}^2)$. 
 The map angular power spectrum, resolution, Gaussian beam FWHM or arbitrary beam window  
@@ -31,8 +33,15 @@ and random seed for the simulation can be selected by the user.
 
 \begin{qualifiers}
   \begin{qulistwide}{} %%%% NOTE the ``extra'' brace here %%%%
+     \item[{simul\_type = }] Defines the simulation type, 1=temperature map only,
+       3=temperature and its first spatial derivatives,
+       4=temperature and its first and second spatial derivatives.
+(default= 1).
     \item[{infile = }] Defines the input power spectrum file,
 	(default= HEALPIX/test/cl.fits).
+%
+    \item[{outfile\_alms = }] Defines the FITS file in which to output $a_{lm}$ used
+      for the simulation (default= `')
 %
     \item[{outfile = }] Defines the output map file, (default= test.fits).
 %
@@ -136,11 +145,14 @@ The resulting $a_{lm}$ coefficients are turned back into a map, which is
 therefore non-gaussian, with an effective angular power spectrum $C(l) B(l)^2
 w_{\rm pix}(l)^2$ (Rocha et al, 2005).
 \\
-Notes: the code has been modified from the original NGSIMS package in two
+Notes: the code has been modified from the original NGSIMS package in several
 respects:
 the seed parameter is named {\tt iseed} instead of {\tt idum}, to be consistent
 with other \healpix simulation codes; and the SHO generator has been
-dramatically sped up, without loss of accuracy.
+dramatically sped up, without loss of accuracy. Moreover, just like in \htmlref{{\tt synfast}}{fac:synfast} facility,
+it is now possible to output the $a_{lm}$ coefficients being used ({\tt
+outfile\_alms} option), and the spatial derivatives of the final map can also be
+output ({\tt simul\_type} option).
 }
 \end{codedescription}
 
@@ -180,7 +192,7 @@ sky\_ng\_sim runs in interactive mode, self-explanatory.
 }
 \end{examples}
 
-\vfill\newpage
+%\vfill\newpage
 
 \begin{examples}{2}
 {
@@ -188,7 +200,7 @@ sky\_ng\_sim runs in interactive mode, self-explanatory.
 sky\_ng\_sim  filename \\
 \end{tabular}
 }
-{When 'filename' is present, sky\_ng\_sim enters the non-interactive mode and parses
+{When 'filename' is present, {\tt sky\_ng\_sim} enters the non-interactive mode and parses
 its inputs from the file 'filename'. This has the following
 structure: the first entry is a qualifier which announces to the parser
 which input immediately follows. If this input is omitted in the
@@ -196,6 +208,7 @@ input file, the parser assumes the default value.
 If the equality sign is omitted, then the parser ignores the entry.
 In this way comments may also be included in the file.
 In this example, the file contains the following qualifiers:\hfill\newline
+\fileparam{simul\_type = 1}
 \fileparam{nsmax = 128}
 \fileparam{nlmax = 256}
 \fileparam{fwhm\_arcmin = 30.0}
@@ -208,21 +221,23 @@ In this example, the file contains the following qualifiers:\hfill\newline
 \fileparam{alpha\_2 = 0.0}
 \fileparam{alpha\_3 = 0.2}
 \fileparam{outfile = !test\_ngfs.fits}
-
-sky\_ng\_sim reads in the $C_l$ power spectrum in 'cl.fits' up to $l256$, and produces the map
+{\tt sky\_ng\_sim} reads in the $C_l$ power spectrum in 'cl.fits' up to $l=256$, and produces the map
 'map.fits' which has $N_{\rm side}=128$. The non-gaussian white noise was generated
 assuming a SHO PDF (see Eq~\ref{eq:nongauss_sho} above) with $\sigma_0=1$ and
 $\alpha_i = (0, 0, 0.2)$.
 The map is convolved with a beam of FWHM 30.0 arcminutes. The $iseed=1$ sets
 the random seed for the realisation. A different $iseed$ would have given a different 
-realisation from the same power spectrum.
+realisation from the same power spectrum. And finally, since {\tt simul\_type =
+1} only the map (and not its spatial derivatives) will be output.
 
 Since \hfill\newline
 \fileparam{beam\_file }
 \fileparam{windowfile }
+\fileparam{outfile\_alms }
 were omitted, they take their default values (empty strings). 
-This means that no beam were read and sky\_ng\_sim attempts to find the pixel
-window files in the default directories (see page~\pageref{page:defdir}).
+This means respectively that no beam were read, that {\tt sky\_ng\_sim} attempts to find the pixel
+window files in the default directories (see page~\pageref{page:defdir}), and
+that the $a_{lm}$ generated and used to produce the map were not output.
 }
 \end{examples}
 

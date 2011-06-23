@@ -71,7 +71,7 @@ contains
 
 !=====================================================================
 subroutine notify_user (keyname, rdef, rmin, rmax, ddef, dmin, dmax, &
-  idef, imin, imax, ldef, lmin, lmax, logdef, chdef, descr)
+  idef, imin, imax, ldef, lmin, lmax, logdef, chdef, descr, ivalid)
   !=====================================================================
   ! prompts user for next parameter when in interactive mode
   !=====================================================================
@@ -82,6 +82,7 @@ subroutine notify_user (keyname, rdef, rmin, rmax, ddef, dmin, dmax, &
   integer(i8b), intent(in), optional :: ldef, lmin, lmax
   logical, intent(in), optional :: logdef
   character(len=*), intent(in), optional :: chdef, descr
+  integer(i4b), intent(in), optional, dimension(1:) :: ivalid
 
   if (present(descr)) then
      write(*,'(a)') trim(descr)
@@ -105,6 +106,9 @@ subroutine notify_user (keyname, rdef, rmin, rmax, ddef, dmin, dmax, &
   else
      if (present(imin)) print *, "min value: ", imin
      if (present(imax)) print *, "max value: ", imax
+  endif
+  if (present(ivalid)) then
+     print *, "allowed values: ",ivalid(1:)
   endif
   if (present(lmin) .and. present(lmax)) then
      print *, "allowed range: ", lmin, lmax
@@ -313,7 +317,8 @@ end subroutine parse_finish
 
 !===================================================================
 subroutine find_param (handle,keyname,result,found,rdef,rmin,rmax, &
-    ddef,dmin,dmax,idef,imin,imax,ldef,lmin,lmax,logdef,chdef,descr)
+    ddef,dmin,dmax,idef,imin,imax,ldef,lmin,lmax,logdef,chdef,descr, &
+    ivalid)
   !===================================================================
   ! extract parameter from file or read from standard input
   !===================================================================
@@ -327,6 +332,7 @@ subroutine find_param (handle,keyname,result,found,rdef,rmin,rmax, &
   integer(i8b), intent(in), optional :: ldef, lmin, lmax
   logical, intent(in), optional :: logdef
   character(len=*), intent(in), optional :: chdef, descr
+  integer(i4b), intent(in), optional, dimension(1:) :: ivalid
 
   character(len=filenamelen) :: line, name, value
   integer i
@@ -336,7 +342,8 @@ subroutine find_param (handle,keyname,result,found,rdef,rmin,rmax, &
 
   if (handle%interactive) then
      call notify_user (keyname,rdef,rmin,rmax,ddef,dmin,dmax, &
-          &            idef,imin,imax,ldef,lmin,lmax,logdef,chdef,descr)
+          &            idef,imin,imax,ldef,lmin,lmax,logdef,chdef,descr, &
+          &            ivalid)
      read (*,'(a)',err=5) result
      found = (trim(result)/='')
      do i=1,size(handle%keylist)
@@ -480,25 +487,27 @@ function parse_double (handle, keyname, default, vmin, vmax, descr)
 end function parse_double
 
 !==================================================================
-function parse_int (handle, keyname, default, vmin, vmax, descr)
+function parse_int (handle, keyname, default, vmin, vmax, descr, valid)
   !==================================================================
   ! parse 4 byte integer parameter
   !==================================================================
   type(paramfile_handle), intent(inout) :: handle
   character(len=*), intent(in) :: keyname
   integer(i4b), intent(in), optional :: default, vmin, vmax
+  integer(i4b), intent(in), optional, dimension(1:) :: valid
   character(len=*), intent(in), optional :: descr
   integer(i4b) :: parse_int
 
   character(len=filenamelen) :: result
   character(len=30)          :: about_def
   logical :: found
+  integer(i4b) :: i
   !==================================================================
 
 10 continue
   about_def = ''
   call find_param (handle, trim(keyname), result, found, idef=default, &
-       &           imin=vmin, imax=vmax, descr=descr)
+       &           imin=vmin, imax=vmax, descr=descr, ivalid=valid)
   if (found) then
     read (result,*,err=5) parse_int
   else
@@ -523,6 +532,16 @@ function parse_int (handle, keyname, default, vmin, vmax, descr)
       print *,'Parser: error: value for ', trim(keyname),' too large.'
       goto 2
     endif
+  endif
+  if (present(valid)) then
+     found = .false.
+     do i=1, size(valid)
+        if (parse_int == valid(i)) found=.true.
+     enddo
+     if (.not.found) then
+        print *,'Parser: error: invalid value for '//trim(keyname)
+        goto 2
+     endif
   endif
 
   return ! normal exit

@@ -303,7 +303,7 @@ if (online_array) then begin
                 bad_pixels = where(file_in le (!healpix.bad_value*0.9), nbad)
                 if (nbad gt 0) then file_in[bad_pixels] =  !values.f_nan
             endif
-            case polarization of
+            case polarization[0] of
                 1: begin
                     select_name = 'Polarisation Amplitude'
                     data = SQRT(file_in[*,1]^2 + file_in[*,2]^2)*factor[0] ; amplitude = sqrt(U^2+Q^2)
@@ -397,7 +397,7 @@ if (from_file) then begin ; fits file
     junk = getsize_fits(file_in, type = fits_type)
     if (fits_type eq 3) then begin ; cut sky -> do structure
         file_keep = file_in
-        if (polarization ge 1 && polarization le 3) then begin ; polarised data
+        if (polarization[0] ge 1 && polarization[0] le 3) then begin ; polarised data
             read_fits_s, file_keep, st_t, /merge, ext = 0
             read_fits_s, file_keep, st_q, /merge, ext = 1
             read_fits_s, file_keep, st_u, /merge, ext = 2
@@ -422,10 +422,10 @@ if (from_file) then begin ; fits file
         data = total(data_tc,2)/3.
         select_name = 'RGB'
     endif else begin
-        selectread, file_in, data, pol_data, header=header, extension = ext2read, pol = polarization, tonan=tonan, factor=factor, offset=offset, columns=select
+        selectread, file_in, data, pol_data, header=header, extension = ext2read, pol = polarization[0], tonan=tonan, factor=factor, offset=offset, columns=select
     ;
         pol_err_mess = 'can not find POLARISATION in file '+file_in
-        case polarization of
+        case polarization[0] of
             1: select_name =  'Polarisation Amplitude'
             2: select_name =  'Polarisation Direction'
             3: select_name =  'Temperature + Polarisation'
@@ -443,7 +443,7 @@ if (online_structure) then begin ; structure
     header = file_in.(0)
     title_display = ' on line processing '
     pol_err_mess = 'can not find POLARISATION in selected online data set'
-    case polarization of
+    case polarization[0] of
         1: begin
             data_q = extract_map_from_stc(file_in, q_keys, select=select, value=select_name, error=error, /tonan)
             data   = extract_map_from_stc(file_in, u_keys, select=select, value=select_name, error=error, /tonan)

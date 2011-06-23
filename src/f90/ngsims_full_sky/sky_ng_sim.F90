@@ -46,15 +46,16 @@ Program sky_ng_sim
   ! Some of the program is based on the Healpix synfast program
 
   USE healpix_types
-  USE alm_tools, ONLY : map2alm_iterative, alm2map, pow2alm_units
-  USE fitstools, ONLY : read_asctab, write_bintab
+  USE alm_tools, ONLY : map2alm_iterative, alm2map, alm2map_der, pow2alm_units
+  USE fitstools, ONLY : read_asctab, write_bintab, dump_alms
   USE pix_tools, ONLY : nside2npix
   USE head_fits, ONLY : add_card, merge_headers, get_card, write_minimal_header, del_card
 !  USE utilities, ONLY : die_alloc
-  use misc_utils, only : wall_clock_time, assert_alloc
+  use misc_utils, only : wall_clock_time, assert_alloc, brag_openmp, fatal_error
   USE extension, ONLY : getArgument, nArguments
   USE paramfile_io, ONLY : paramfile_handle, parse_int, parse_init, &
-       & parse_string, parse_lgt, parse_double, concatnl, scan_directories, parse_summarize, &
+       & parse_string, parse_lgt, parse_double, parse_check_unused, &
+       & concatnl, scan_directories, parse_summarize, parse_finish, &
        & get_healpix_data_dir, get_healpix_test_dir,get_healpix_pixel_window_file 
 
   USE sub_ngpdf_sho
@@ -81,6 +82,7 @@ Program sky_ng_sim
   INTEGER(I4B) npixtot !The total number of pixels
   CHARACTER(LEN=filenamelen)          :: parafile = ''
   CHARACTER(LEN=filenamelen)          :: infile
+  character(len=FILENAMELEN)          :: outfile_alms
   CHARACTER(LEN=filenamelen)          :: outfile
   CHARACTER(LEN=filenamelen)          :: windowfile
   CHARACTER(LEN=filenamelen)          :: windowname
@@ -92,6 +94,7 @@ Program sky_ng_sim
   character(len=filenamelen)          :: description
   character(len=100)                  :: chline
   LOGICAL(LGT) :: ok, fitscl, polarisation = .FALSE.
+  logical(LGT) :: do_map, output_alms
   CHARACTER(LEN=80), DIMENSION(1:180) :: header, header_PS !, header_file
   CHARACTER(LEN=*), PARAMETER :: code = "sky_ng_sim"
   character(len=*), parameter :: VERSION = HEALPIX_VERSION
@@ -101,7 +104,7 @@ Program sky_ng_sim
 !  REAL(SP) ::  quadrupole
 !  INTEGER(I4B) :: count_tt
   INTEGER(I4B) nlheader
-  Integer :: i,m
+  Integer :: i,m, n_pols, n_maps, simul_type, deriv
   Real(DP) :: sigma0, factor
   Real(DP),dimension(1:3) :: nu !Added to match with f90 version of shodev_driver
   !nu(i) is the ith moment of the distribution. 
@@ -132,7 +135,7 @@ Program sky_ng_sim
   else
      if (nArguments() /= 1) then
         print *, " Usage: "//code//" [parameter file name]"
-        stop 1
+        call fatal_error()
      end if
      call getArgument(1,parafile)
   end if
@@ -141,6 +144,20 @@ Program sky_ng_sim
   PRINT *, " "
   PRINT *,"                    "//code//" "//version
   Write(*, '(a)')  "*** Simulation of a non-Gaussian full-sky temperature map ***"
+
+  !     --- choose temp. only or  temp. + deriv. ---
+  description = concatnl( &
+       & " Do you want to simulate", &
+       & " 1) Temperature only", &
+       !& " 2) Temperature + polarisation", &
+       & " 3) Temperature + 1st derivatives", &
+       & " 4) Temperature + 1st & 2nd derivatives")
+  simul_type = parse_int(handle, 'simul_type', default=1, valid=(/1,3,4/), descr=description)
+  deriv = 0 ! no derivatives
+  if (simul_type == 3) deriv = 1
+  if (simul_type == 4) deriv = 2
+  n_pols = 1
+  n_maps = max(1, 3*deriv)
 
   !     --- gets the effective resolution of the sky map ---
 3 continue
@@ -152,7 +169,7 @@ Program sky_ng_sim
   if (nside2npix(nsmax) < 0) then
      print *, " Error: nsmax is not a power of two."
      if (handle%interactive) goto 3
-     stop 1
+     call fatal_error(code)
   endif
 
   !     --- gets the L range for the simulation ---
@@ -182,6 +199,17 @@ Program sky_ng_sim
        & "  (or !test.fits to overwrite an existing file)" )
   outfile = parse_string(handle, "outfile", &
        default="!test.fits", descr=description, filestatus="new")
+  do_map = (trim(outfile) /= '')
+
+  !     --- gets the output alm-filename ---
+  description = concatnl(&
+       & "", &
+       & " Enter file name in which to write a_lm used to synthesize the map : ", &
+       & " (eg alm.fits or !alms.fits to overwrite an existing file): ", &
+       & " (If '', the alms are not written to a file) ")
+  outfile_alms = parse_string(handle, 'outfile_alms', &
+       & default="''", descr=description, filestatus='new')
+  output_alms = (trim(outfile_alms) /= '')
 
   !     --- gets the fwhm of beam ---
   description = concatnl(&
@@ -232,7 +260,7 @@ Program sky_ng_sim
      if (.not. ok) then
         print*,' File not found'
         if (handle%interactive) goto 22
-        stop 1
+        call fatal_error(code)
      endif
   endif
   windowfile = final_file
@@ -254,7 +282,7 @@ Program sky_ng_sim
   ALLOCATE(alm_T(1:1,0:nlmax, 0:nmmax),stat = status)
   call assert_alloc(status, code,"alm_T")
 
-  ALLOCATE(map_T(0:npixtot-1, 1:1),stat = status)
+  ALLOCATE(map_T(0:npixtot-1, 1:n_maps),stat = status)
   call assert_alloc(status, code,"map_T")
 
   ALLOCATE(w8ring_T(1:2*nsmax,1:1),stat = status)
@@ -301,7 +329,7 @@ Program sky_ng_sim
      !     call powergauss_driver(npixtot, npixtot, sigma0, map_T, nu)
      call powergauss_driver(handle, npixtot, sigma0, map_T(:,1), nu)
   End If
-  print*,'NG map MIN and MAX:',minval(map_T),maxval(map_T)
+  print*,'NG map MIN and MAX:',minval(map_T(:,1)),maxval(map_T(:,1))
   !Normalise the map
   If (nu(1) .ge. 0) Then !nu (1) is set to -1 if highest non-zero alpha > 3
      ! ie if we can't calculate moments analytically
@@ -319,9 +347,9 @@ Program sky_ng_sim
      Write (*,*) "Normalising using rms pixel value instead"
      Write (*,*) "note - this method may change the statistical properties of the map"
      !Compute the mean value of the pixels
-     mean = SUM(map_T*1.d0)/npixtot
+     mean = SUM(map_T(:,1)*1.d0)/npixtot
      Write (*,*) 'Mean pixel value is ',mean,' - adjusting to zero'
-     map_T = map_T - mean
+     map_T(:,1) = map_T(:,1) - mean
      !Compute the rms value of the pixels
      power = 0
      Do i = 0, npixtot-1
@@ -329,7 +357,7 @@ Program sky_ng_sim
      End Do
      power = Sqrt(power/npixtot)
      Write (*,*) "rms value of the pixels is ", power ," - setting to 1.0"
-     map_T = map_T / power    
+     map_T(:,1) = map_T(:,1) / power    
      !Check
      power = 0
      Do i = 0, npixtot-1
@@ -345,7 +373,7 @@ Program sky_ng_sim
   Write (*,*) "Computing the values of the a_{lm}"
 !  call map2alm(nsmax, nlmax, nmmax, map_T, alm_T, -1000.d0, w8ring_T)
 !  call map2alm(nsmax, nlmax, nmmax, map_T, alm_T, (/ 0.d0, 0.d0 /), w8ring_T)
-  call map2alm_iterative(nsmax, nlmax, nmmax, iter_order, map_T, alm_T, w8ring=w8ring_T)
+  call map2alm_iterative(nsmax, nlmax, nmmax, iter_order, map_T(:,1:1), alm_T, w8ring=w8ring_T)
 
 
   !Compute the rms value of the a_{lm}
@@ -377,7 +405,18 @@ Program sky_ng_sim
   ! Now transform back to a real space map
   !------------------------------------------------------------------------
 
-  call alm2map(nsmax,nlmax,nmmax,alm_T,map_T(:,1))
+  select case (deriv)
+  case(0) ! temperature only
+     call alm2map(    nsmax,nlmax,nmmax,alm_T,map_T(:,1))
+  case(1)
+     call alm2map_der(nsmax,nlmax,nmmax,alm_T,map_T(:,1),map_T(:,2:3))
+  case(2)
+     call alm2map_der(nsmax,nlmax,nmmax,alm_T,map_T(:,1),map_T(:,2:3),map_T(:,4:6))
+  case default
+     print*,'Not valid case'
+     print*,'Derivatives: ', deriv
+     call fatal_error(code)
+  end select
 
   !------------------------------------------------------------------------
   ! Plot histogram of pixel distribution (if required)
@@ -437,8 +476,57 @@ Program sky_ng_sim
   End If   
 #endif
 
+  call parse_check_unused(handle, code=code)
   call parse_summarize(handle, code=code)
+  call parse_finish(handle)
+  call brag_openmp()
 
+  !-----------------------------------------------------------------------
+  !                      write the alm to FITS file
+  !-----------------------------------------------------------------------
+  if (output_alms) then
+
+     PRINT *,"      "//code//"> outputting alms "
+
+     do i = 1, n_pols
+        header = ""
+        ! put inherited information immediatly, so that keyword values can be updated later on
+        ! by current code values
+        call add_card(header,"COMMENT","****************************************************************")
+        call merge_headers(header_PS, header) ! insert header_PS in header at this point
+        call add_card(header,"COMMENT","****************************************************************")
+
+        ! start putting information relative to this code and run
+        call write_minimal_header(header, 'alm', append=.true., &
+             creator = CODE, version = VERSION, &
+             nlmax = nlmax, nmmax = nmmax, &
+             !randseed = ioriginseed, &
+             units = units_map(i), polar = polarisation)
+        if (i == 1) then
+           call add_card(header,"EXTNAME","'SIMULATED a_lms (TEMPERATURE)'", update = .true.)
+        elseif (i == 2) then
+           call add_card(header,"EXTNAME","'SIMULATED a_lms (GRAD / ELECTRIC component)'", update = .true.)
+        elseif (i == 3) then
+           call add_card(header,"EXTNAME","'SIMULATED a_lms (CURL / MAGNETIC component)'", update = .true.)
+        endif
+        !if (input_cl) then
+           call add_card(header,"HISTORY","File with input C(l):")
+           call add_card(header,"HISTORY",trim(infile))
+           call add_card(header,"HISTORY","These alms are multiplied by pixel and beam window functions")
+           call add_card(header,"NSIDE"   ,nsmax,   "Resolution parameter for HEALPIX")
+           if (trim(beam_file) == '') then
+              call add_card(header,"FWHM"    ,fwhm_deg   ," [deg] FWHM of gaussian symmetric beam")
+           else
+              call add_card(header,"BEAM_LEG",trim(beam_file), &
+                   & "File containing Legendre transform of symmetric beam")
+           endif
+           call add_card(header,"PDF_TYPE",pdf_choice,"1: Harmon. Oscill. ;2: Power of Gauss.")
+        !endif
+        call add_card(header,"HISTORY")
+        nlheader = SIZE(header)
+        call dump_alms (outfile_alms,alm_T(i,0:nlmax,0:nmmax),nlmax,header,nlheader,i-1_i4b)
+     enddo
+  endif
   !-----------------------------------------------------------------------
   !                      write the map to FITS file
   !-----------------------------------------------------------------------
@@ -457,7 +545,7 @@ Program sky_ng_sim
        fwhm_degree = fwhm_arcmin / 60.d0, &
        beam_leg = trim(beam_file), &
        polar = polarisation, &
-       !deriv = deriv, &
+       deriv = deriv, &
        creator = CODE, version = VERSION, &
        nlmax = lmax, &
        !randseed = ioriginseed, &
@@ -473,7 +561,7 @@ Program sky_ng_sim
 !   tmp_2d(:,1) = map_T
 !   call write_bintab(tmp_2d, npixtot, 1, header, nlheader, outfile)
 !   deallocate(tmp_2d)
-  call write_bintab(map_T, npixtot, 1, header, nlheader, outfile)
+  call write_bintab(map_T, npixtot, n_maps, header, nlheader, outfile)
 !!$  endif
 
   !-----------------------------------------------------------------------

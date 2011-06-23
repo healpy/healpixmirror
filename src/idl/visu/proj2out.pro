@@ -104,9 +104,9 @@ do_true = keyword_set(truecolors)
 do_crop = keyword_set(crop)
 
 if undefined(polarization) then polarization=0
-do_polamplitude = (polarization eq 1)
-do_poldirection = (polarization eq 2)
-do_polvector    = (polarization eq 3)
+do_polamplitude = (polarization[0] eq 1)
+do_poldirection = (polarization[0] eq 2)
+do_polvector    = (polarization[0] eq 3)
 ;-------------------------------------------------
 in_gdl = is_gdl()
 in_idl = ~in_gdl
@@ -558,9 +558,13 @@ if (do_poldirection) then begin
 endif
 
 ; polarisation vector field
+pgparam=[1.,1.]; [scale, grid_step] of grid of headless vector
 if (do_polvector) then begin
-    dyg = 10. & dxg = dyg
-    pol_rescale = float(dyg)/ysize
+    pgparam = ([polarization[*], 1., 1.])[1:2] ; 2nd and 3rd elements of polarization (default:[1,1])
+    pgparam = pgparam*(pgparam gt 0) + (pgparam le 0) ; replace non-positive values by 1.
+    dyg = 10.
+    pol_rescale = float(dyg)/ysize * pgparam[0]
+    dyg *= pgparam[1] & dxg = dyg
     xg = (lindgen(xsize/dxg)+.5) #  replicate(dxg, ysize/dyg)
     yg = (lindgen(ysize/dyg)+.5) ## replicate(dyg, xsize/dxg)
     u = umin + xg * (umax-umin) / xsize
@@ -576,6 +580,7 @@ if (do_polvector) then begin
             if (norm gt 0) then plots, u[i]-norm*sin(angle)*[-.5,.5], v[i]+norm*cos(angle)*[-.5,.5]
         endelse
     endfor
+    xg = 0 & yg = 0 & u = 0 & v = 0
 endif
 
 ;  the color bar
@@ -600,11 +605,13 @@ endif
 
 ; the polarisation vector scale
 if (~keyword_set(nobar)  && do_polvector) then begin
-    plots, vscal_x*[1,1], vscal_y+[0, 5*pol_rescale]*w_dy, /normal
+    vp_plot = 5*pol_rescale[0] /pgparam[0]; length of ruler on plot
+    vp_phys = 5*vector_scale[0]/pgparam[0] ; 'physical' length of ruler
+    plots, vscal_x*[1,1], vscal_y+[0, vp_plot]*w_dy, /normal
     format = '(g10.2)'
-    if ((5*vector_scale) lt 1.e3 and (5*vector_scale) ge 10) then format = '(f5.1)'
-    if ((5*vector_scale) lt 10 and (5*vector_scale) gt 1.e-1) then format = '(f4.2)'
-    xyouts, vscal_x, vscal_y + .5*(5*pol_rescale)*w_dy, '!6  '+strtrim(string(5*vector_scale,form=format),2)+' '+sunits,ALIGN=0.,/normal, chars=1.1*charsfactor, charthick=mycharthick
+    if (vp_phys lt 1.e3 && vp_phys ge 10)    then format = '(f5.1)'
+    if (vp_phys lt 10   && vp_phys gt 1.e-1) then format = '(f4.2)'
+    xyouts, vscal_x, vscal_y + .5*(vp_plot)*w_dy, '!6  '+strtrim(string(vp_phys,form=format),2)+' '+sunits,ALIGN=0.,/normal, chars=1.1*charsfactor, charthick=mycharthick
 endif
 
 ;  the title
