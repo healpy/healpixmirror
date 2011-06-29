@@ -541,8 +541,7 @@ public class HealpixTest extends TestCase {
 		System.out.println(" Start test query Strip !!!!!!!!!!!!!!!!");
 		int[] pixel1 = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15,
 				16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31,
-				32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47,
-				48, 49, 50, 51, 52, 53, 54, 55 };
+				32, 33, 34, 35, 36, 37, 38, 39 };
 		int nside = 4;
 		HealpixIndex pt = new HealpixIndex(nside);
 		int nest = 0;
@@ -551,6 +550,7 @@ public class HealpixTest extends TestCase {
 		LongRangeSet pixlist;
 		pixlist = pt.query_strip(nside, theta1, theta2, nest);
 		long nlist = pixlist.size();
+		assertEquals("different result lengths", pixel1.length, nlist);
 		LongIterator it = pixlist.longIterator();
 		long ipix; 
 		int i=0;
@@ -1003,6 +1003,23 @@ public class HealpixTest extends TestCase {
             }
         }
   	}
+
+	/* grow polygon a tiny bit */
+	static void growPolygon(SpatialVector []v)
+          {
+          SpatialVector avg =new SpatialVector (v[0]);
+          for (int i=1;i<v.length; ++i)
+            avg=avg.add(v[i]);
+          avg.normalize();
+          for (int i=0;i<v.length; ++i)
+            {
+            SpatialVector diff = v[i].sub(avg);
+            diff.scale(1e-5);
+            v[i] = v[i].add(diff);
+            v[i].normalize();
+            }
+          }
+
 	/**
 	 * Test query_ triangle360 nest.
 	 * 
@@ -1026,6 +1043,7 @@ public class HealpixTest extends TestCase {
 //			System.out.println("ipnest = "+triang[vi]+" ipring = "+pt.nest2ring(triang[vi]));
 //			printVec(v[vi].get());
 		}
+		growPolygon(v);
 
 //		ArrayList pixlist;
 		LongRangeSet pixlist;
@@ -1056,6 +1074,7 @@ public class HealpixTest extends TestCase {
 //			System.out.println("ipnest = "+triang4[vi]+" ipring = "+pt.nest2ring(triang4[vi]));
 //			printVec(v[vi].get());
 		}
+		growPolygon(v);
 
 		pixlist = pt.query_triangle(nside, v[0], v[1], v[2], nest, inclusive);
 
@@ -1096,6 +1115,7 @@ public class HealpixTest extends TestCase {
 //			printVec(v[vi].get());
 		}
 //		ArrayList pixlist;
+		growPolygon(v);
 		LongRangeSet pixlist;
 		pixlist = pt.query_triangle(nside, v[0], v[1], v[2], nest, inclusive);
 
@@ -1170,6 +1190,7 @@ public class HealpixTest extends TestCase {
 			v[vi] = pt.pix2vec_ring(triang[vi]);
 
 		}
+		growPolygon(v);
 
 //		ArrayList pixlist;
 		LongRangeSet pixlist;
@@ -1215,6 +1236,7 @@ public class HealpixTest extends TestCase {
 			v[vi] = pt.pix2vec_nest(triang[vi]);
 
 		}
+		growPolygon(v);
 
 //		ArrayList pixlist;
 		LongRangeSet pixlist;
@@ -1254,19 +1276,17 @@ public class HealpixTest extends TestCase {
 				138, 139, 140, 141, 154, 156 };
 
 		System.out.println("Start test query_polygon !!!!!!!!!!!!!!!!!!!!!!");
+		SpatialVector[] vv=new SpatialVector[6];
+		vv[0]=pt.pix2vec_ring(53);
+		vv[1]=pt.pix2vec_ring(51);
+		vv[2]=pt.pix2vec_ring(82);
+		vv[3]=pt.pix2vec_ring(115);
+		vv[4]=pt.pix2vec_ring(117);
+		vv[5]=pt.pix2vec_ring(86);
+		growPolygon(vv);
 		ArrayList vlist = new ArrayList();
-		SpatialVector v = pt.pix2vec_ring(53);
-		vlist.add((Object) v);
-		v = pt.pix2vec_ring(51);
-		vlist.add((Object) v);
-		v = pt.pix2vec_ring(82);
-		vlist.add((Object) v);
-		v = pt.pix2vec_ring(115);
-		vlist.add((Object) v);
-		v = pt.pix2vec_ring(117);
-		vlist.add((Object) v);
-		v = pt.pix2vec_ring(86);
-		vlist.add((Object) v);
+		for (int j=0; j<vv.length; ++j)
+			vlist.add((Object) vv[j]);
 
 //		ArrayList pixlist;
 		LongRangeSet pixlist;
@@ -1285,15 +1305,15 @@ public class HealpixTest extends TestCase {
 
 		/* Yet another test */
 
+		SpatialVector[] vv1=new SpatialVector[4];
+		vv1[0]=pt.pix2vec_ring(71);
+		vv1[1]=pt.pix2vec_ring(55);
+		vv1[2]=pt.pix2vec_ring(70);
+		vv1[3]=pt.pix2vec_ring(87);
+		growPolygon(vv1);
 		ArrayList vlist1 = new ArrayList();
-		v = pt.pix2vec_ring(71);
-		vlist1.add((Object) v);
-		v = pt.pix2vec_ring(55);
-		vlist1.add((Object) v);
-		v = pt.pix2vec_ring(70);
-		vlist1.add((Object) v);
-		v = pt.pix2vec_ring(87);
-		vlist1.add((Object) v);
+		for (int j=0; j<vv1.length; ++j)
+			vlist1.add((Object) vv1[j]);
 		pixlist = pt.query_polygon(nside, vlist1, nest, inclusive);
 
 		nlist = pixlist.size();
@@ -1308,15 +1328,15 @@ public class HealpixTest extends TestCase {
 		}
 
 		/* Yet another test */
+		SpatialVector[] vv2=new SpatialVector[4];
+		vv2[0]=pt.pix2vec_ring(153);
+		vv2[1]=pt.pix2vec_ring(137);
+		vv2[2]=pt.pix2vec_ring(152);
+		vv2[3]=pt.pix2vec_ring(168);
+		growPolygon(vv2);
 		ArrayList vlist2 = new ArrayList();
-		v = pt.pix2vec_ring(153);
-		vlist2.add((Object) v);
-		v = pt.pix2vec_ring(137);
-		vlist2.add((Object) v);
-		v = pt.pix2vec_ring(152);
-		vlist2.add((Object) v);
-		v = pt.pix2vec_ring(168);
-		vlist2.add((Object) v);
+		for (int j=0; j<vv2.length; ++j)
+			vlist2.add((Object) vv2[j]);
 		pixlist = pt.query_polygon(nside, vlist2, nest, inclusive);
 
 		nlist = pixlist.size();
@@ -1330,20 +1350,18 @@ public class HealpixTest extends TestCase {
 			i++;
 		}
 		/* Yet another test */
-
+/* MR: Skipping for now - polygon is not convex
+		SpatialVector[] vv3=new SpatialVector[6];
+		vv3[0]=pt.pix2vec_ring(110);
+		vv3[1]=pt.pix2vec_ring(27);
+		vv3[2]=pt.pix2vec_ring(105);
+		vv3[3]=pt.pix2vec_ring(154);
+		vv3[4]=pt.pix2vec_ring(123);
+		vv3[5]=pt.pix2vec_ring(156);
 		ArrayList vlist3 = new ArrayList();
-		v = pt.pix2vec_ring(110);
-		vlist3.add((Object) v);
-		v = pt.pix2vec_ring(27);
-		vlist3.add((Object) v);
-		v = pt.pix2vec_ring(105);
-		vlist3.add((Object) v);
-		v = pt.pix2vec_ring(154);
-		vlist3.add((Object) v);
-		v = pt.pix2vec_ring(123);
-		vlist3.add((Object) v);
-		v = pt.pix2vec_ring(156);
-		vlist3.add((Object) v);
+		growPolygon(vv3);
+		for (int j=0; j<vv3.length; ++j)
+			vlist3.add((Object) vv3[j]);
 		pixlist = pt.query_polygon(nside, vlist3, nest, inclusive);
 
 		nlist = pixlist.size();
@@ -1355,6 +1373,7 @@ public class HealpixTest extends TestCase {
 			// System.out.println("i="+i+" pixel # "+ipix);
 			i++;
 		}
+*/
 		System.out.println(" test query_polygon is done");
 
 	}

@@ -45,7 +45,7 @@
 		<delete dir="${junit.reports}"/>
 		<mkdir dir="${junit.reports}"/>
 		<junit errorProperty="junit.failed"
-		failureProperty="junit.failed" fork="yes" maxmemory="1g" printsummary="withOutAndErr" showoutput="yes">
+		failureProperty="junit.failed" fork="yes" maxmemory="1g" printsummary="withOutAndErr" showoutput="no">
 			<classpath refid="classpath" />
 			<formatter type="xml" usefile="true" />
 			<batchtest todir="${junit.reports}">

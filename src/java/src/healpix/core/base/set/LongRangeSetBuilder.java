@@ -37,7 +37,7 @@ public class LongRangeSetBuilder {
 
     /**
      * construct new builder with given array size
-     * @param size 
+     * @param arraySize
      */
     public LongRangeSetBuilder(int arraySize) {
     	if(arraySize%2!=0) throw new IllegalArgumentException("not divide by 2");
@@ -169,7 +169,7 @@ public class LongRangeSetBuilder {
     /**
      * Read LongRangeSet from an input stream
      * @param in
-     * @return
+     * @return the new LongRangeSet
      * @throws IOException
      */
     public static LongRangeSet readFrom(DataInput in) throws IOException{

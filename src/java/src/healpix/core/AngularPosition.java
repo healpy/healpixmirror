@@ -110,7 +110,7 @@ public class AngularPosition extends Pointing {
 	
 	/**
 	 * convenience conversion.
-	 * @return
+	 * @return a normalized 3D vector pointing in the same direction
 	 */
 	public SpatialVector getAsVector() {
 		double x, y, z;

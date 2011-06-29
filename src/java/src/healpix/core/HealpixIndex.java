@@ -20,24 +20,17 @@
  */
 package healpix.core;
 
-import healpix.core.base.BitManipulation;
 import healpix.core.base.HealpixException;
 import healpix.core.base.Xyf;
-import healpix.core.base.set.LongList;
-import healpix.core.base.set.LongRangeIterator;
 import healpix.core.base.set.LongRangeSet;
 import healpix.core.base.set.LongRangeSetBuilder;
-import healpix.core.base.set.LongSet;
 import healpix.core.dm.AbstractHealpixMap.Scheme;
 import healpix.tools.Constants;
 import healpix.tools.SpatialVector;
 
 import java.io.Serializable;
-import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.Stack;
 
 /**
  * Generic healpix routines but tied to a given NSIDE in the constructor Java
@@ -325,34 +318,12 @@ public class HealpixIndex extends HealpixBase implements Serializable {
 	 * @throws Exception
 	 */
 	public int ring(long ipix) throws Exception {
-		int iring = 0;
-		long ipix1 = ipix + 1;// in {1, npix}
-		int ip;
-		double hip, fihip = 0;
-		if ( ipix1 <= ncap ) { // North Polar cap -------------
-			hip = ipix1 / 2.0;
-			fihip = (int) ( hip );
-			iring = (int) ( Math.sqrt(hip - Math.sqrt(fihip)) ) + 1;// counted
-			// from
-			// North
-			// pole
-		} else {
-			if ( ipix1 <= nl2 * ( 5 * (long)nside + 1 ) ) { // Equatorial region
-				// ------
-				ip = (int)(ipix1 - ncap - 1);
-				iring = (int) (( ip / nl4 ) + (long)nside);// counted from North pole
-			} else { // South Polar cap -----------------------------------
-				ip = (int)(npix - ipix1 + 1L);
-				hip = ip / 2.0;
-				fihip = (int) ( hip );
-				iring = (int) ( Math.sqrt(hip - Math.sqrt(fihip)) ) + 1;// counted
-				// from
-				// South
-				// pole
-				iring = (int)(nl4 - iring);
-			}
-		};
-		return iring;
+          if (ipix<ncap) // North Polar cap
+            return (int)((1+HealpixUtils.isqrt(1+2*ipix))>>>1); // counted from North pole
+          else if (ipix<(npix-ncap)) // Equatorial region
+            return (int)((ipix-ncap)/nl4 + nside); // counted from North pole
+          else // South Polar cap
+            return (int)(nl4-((1+HealpixUtils.isqrt(2*(npix-ipix)-1))>>>1));
 	}
 
 	/**
@@ -650,11 +621,11 @@ public class HealpixIndex extends HealpixBase implements Serializable {
 	
 	/**
 	 * now using the C++ one this is here for compatibility
-	 * @param ptg
+	 * @param vec
 	 * @param radius
 	 * @param nest
 	 * @param inclusive
-	 * @return
+	 * @return a LongRangeSet containing all relevant pixels
 	 * @deprecated use oen without nest - scheme now in map
 	 */
 	public LongRangeSet queryDisc(SpatialVector vec,
@@ -669,10 +640,10 @@ public class HealpixIndex extends HealpixBase implements Serializable {
 	/**
 	 * now using the C++ one this is here for convenience to consruct the LongRangeSet.
 	 * It somply calls the queryDisc passing in a LongRangeSetBuilder.
-	 * @param ptg
+	 * @param vec
 	 * @param radius
 	 * @param inclusive
-	 * @return
+	 * @return a LongRangeSet containing all relevant pixels
 	 */
 	public LongRangeSet queryDisc(SpatialVector vec,
 			double radius, boolean inclusive) throws Exception {
@@ -709,95 +680,6 @@ public class HealpixIndex extends HealpixBase implements Serializable {
 		}
 		return iring;
 	}
-	
-	/**
-	 * Method called whenever a nested scheme is needed. This is not as fast as
-	 * ring method performance
-	 * 
-	 * @param nside
-	 * @param iter
-	 * @return
-	 * @throws Exception
-	 */
-	@SuppressWarnings("unused")
-	private LongRangeSet ringIterator2nested_longset(LongRangeIterator iter)
-			throws Exception {
-		LongSet s = new LongSet();
-		long inext = 0L;
-		while (iter.moveToNext()) {
-			long nestIpix = ring2nest(iter.first());
-			for (long ipix = iter.first(); ipix <= iter.last(); ipix++) {
-				s.add(ring2nest(ipix));
-				// inext = next_in_line_nest(nside, nestIpix);
-				// nestIpix = inext;
-				// s.add(nestIpix);
-				// TODO this can be optimized with next_in_line, but it seems to
-				// be failing
-			}
-
-		}
-		return s.toLongRangeSet();
-	}
-	/**
-	 * returns the list of pixels in NEST scheme with latitude in [phi0 -
-	 * dpi, phi0 + dphi] on the ring iz in [1, 4*nside -1 ] The pixel id numbers
-	 * are in [0, 12*nside^2 - 1] the indexing is in Nest,
-	 * @param nside
-	 *            long the map resolution
-	 * @param iz
-	 *            long ring number
-	 * @param phi0
-	 *            double
-	 * @param dphi
-	 *            double
-	 * @return Long range set
-	 * @throws Exception
-	 */
-	public LongRangeSet inRing_nested_longset(long iz, double phi0,
-			double dphi) throws Exception {
-		LongRangeIterator iter = inRingLongSet( iz, phi0, dphi).rangeIterator();
-		return ringIterator2nested_longset(iter);
-	}
-	
-	/**
-	 * returns the list of pixels in RING scheme with latitude in [phi0 -
-	 * dpi, phi0 + dphi] on the ring iz in [1, 4*nside -1 ] The pixel id numbers
-	 * are in [0, 12*nside^2 - 1] the indexing is in RING
-	 * NOTE: this is the f90 code 'in_ring' method ported to java with 'conservative' flag to false
-	 * 
-	 * @param nside
-	 *            long the map resolution
-	 * @param iz
-	 *            long ring number
-	 * @param phi0
-	 *            double
-	 * @param dphi
-	 *            double
-	 * @return set result
-	 */
-	public LongRangeSet inRingLongSet(long iz, double phi0, double dphi) {
-		LongRangeSetBuilder b = new LongRangeSetBuilder();
-		inRing(iz, phi0, dphi, b);
-		return b.build();
-	}
-	/**
-	 * finds pixels having a colatitude (measured from North pole) : theta1 <
-	 * colatitude < theta2 with o <= theta1 < theta2 <= Pi if theta2 < theta1
-	 * then pixels with 0 <= colatitude < theta2 or theta1 < colatitude < Pi are
-	 * returned
-	 * 
-	 * @param nside
-	 *            long the map resolution parameter
-	 * @param theta1
-	 *            lower edge of the colatitude
-	 * @param theta2
-	 *            upper edge of the colatitude
-	 * @param nest
-	 *            long if = 1 result is in NESTED scheme
-	 * @return ArrayList of pixel numbers (long)
-	 * @throws Exception
-	 */
-
 
 	/**
 	 * finds pixels that lie within a CONVEX polygon defined by its vertex on
@@ -895,59 +777,8 @@ public class HealpixIndex extends HealpixBase implements Serializable {
 	 */
 	public LongRangeSet query_strip(int nside, double theta1,
 			double theta2, long nest) throws Exception {
-//		LongRangeSet res = new LongRangeSet();
-		
-		LongRangeSetBuilder res = new LongRangeSetBuilder();
-		long npix, nstrip;
-		long iz, irmin, irmax;
-		int is;
-		double phi0, dphi;
-		double[] colrange = new double[4];
-		boolean nest_flag = false;
-		String SID = " QUERY_STRIP";
-		/* ---------------------------------------- */
-		npix = nside2Npix(nside);
-		if ( nest == 1 )
-			nest_flag = true;
-		if ( npix < 0 ) {
-			throw new IllegalArgumentException(SID
-					+ " Nside should be power of 2");
-		}
-		if ( ( theta1 < 0.0 || theta1 > Constants.PI )
-				|| ( theta2 < 0.0 || theta2 > Constants.PI ) ) {
-			throw new IllegalArgumentException(SID
-					+ " Illegal value of theta1, theta2");
-		}
-		if ( theta1 <= theta2 ) {
-			nstrip = 1;
-			colrange[0] = theta1;
-			colrange[1] = theta2;
-		} else {
-			nstrip = 2;
-			colrange[0] = 0.0;
-			colrange[1] = theta2;
-			colrange[2] = theta1;
-			colrange[3] = Constants.PI;
-		}
-		/* loops on strips */
-		for ( is = 0; is < nstrip; is++ ) {
-			irmin = ringNum(nside, Math.cos(colrange[2 * is]));
-			irmax = ringNum(nside, Math.cos(colrange[2 * is + 1]));
-			/* loop on ring number */
-			for ( iz = irmin; iz <= irmax; iz++ ) {
-				phi0 = 0.;
-				dphi = Constants.PI;
-				LongRangeSet listir;
-				if(nest_flag) {
-					listir = inRing_nested_longset( iz, phi0, dphi);//InRing(nside, iz, phi0, dphi, nest_flag);
-				}else {
-					listir = inRingLongSet( iz, phi0, dphi);//InRing(nside, iz, phi0, dphi, nest_flag);
-				}
-				res.appendRanges(listir.rangeIterator());
-				//if res is LongRangeSet, then res.addAll(listir.longIterator());
-			}
-		}
-		return res.build();
+		HealpixBase base= new HealpixBase(nside,(nest!=0)? Scheme.NESTED : Scheme.RING);
+		return base.queryStrip(theta1,theta2,false);
 	}
 
 	/**

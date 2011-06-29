@@ -649,6 +649,52 @@ public class HealpixBase extends HealpixTables
       { return p[s-1]; }
     }
 
+  private LongRangeSet queryStripInternal(double theta1, double theta2,
+    boolean inclusive) throws Exception
+    {
+    LongRangeSetBuilder pixset = new LongRangeSetBuilder();
+    if (scheme==Scheme.RING)
+      {
+      long ring1 = Math.max(1,1+ringAbove(Math.cos(theta1))),
+           ring2 = Math.min(4*nside-1,ringAbove(Math.cos(theta2)));
+      if (inclusive)
+        {
+        ring1 = Math.max(1,ring1-1);
+        ring2 = Math.min(4*nside-1,ring2+1);
+        }
+
+      RingInfoSmall ris1 = get_ring_info_small(ring1),
+                    ris2 = get_ring_info_small(ring2);
+      long pix1 = ris1.startpix,
+           pix2 = ris2.startpix+ris2.ringpix-1;
+      if (pix1<=pix2) pixset.appendRange(pix1,pix2);
+      }
+    else
+      HealpixUtils.check(false,"queryStrip not yet implemented for NESTED");
+
+    return pixset.build();
+    }
+
+  /** Returns a range set of pixels whose centers lie within a given latitude
+      range (if {@code inclusive==false}), or which overlap with this range
+      (if {@code inclusive==true}).<p>
+      The latitude range is defined as follows:
+      <ul>
+      <li>if {@code theta1<theta2}, it is the range between {@code theta1}
+          and {@code theta2}</li>
+      <li>otherwise it is the range between 0 and {@code theta2}, and between
+          {@code theta1} and pi.</li>
+      <ul>
+      This method currently only works in the RING scheme. */
+  public LongRangeSet queryStrip(double theta1, double theta2,
+    boolean inclusive) throws Exception
+    {
+    if (theta1<theta2)
+      return queryStripInternal(theta1,theta2,inclusive);
+    LongRangeSet res = queryStripInternal(0.,theta2,inclusive);
+    return res.union(queryStripInternal(theta1,Constants.pi,inclusive));
+    }
+
   /** Returns a range set of pixels whose centers lie within a given disk on the
       sphere (if {@code inclusive==false}), or which overlap with this disk
       (if {@code inclusive==true}).<p>
@@ -1055,7 +1101,7 @@ public class HealpixBase extends HealpixTables
     // adjust for zone offset
     i_phi -= i_zone*i_phi_count;
     int spoint = nPoints/2;
-    // get north south middle - middle should match theta !
+    // get north south middle - middle should match theta!
     double[] nms = { ring2z(ringno-1), cos_theta, ring2z(ringno+1) };
     double ntheta = Math.acos(nms[0]);
     double stheta = Math.acos(nms[2]);

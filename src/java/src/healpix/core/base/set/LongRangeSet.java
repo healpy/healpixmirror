@@ -541,7 +541,7 @@ public class LongRangeSet implements Externalizable, Iterable<Long>{
  	 * <p>
 	 * This operation does not modify original collection.
  
-     * @ p substract this set from original
+     * <p> substract this set from original
      * @return result of substraction
      */
     public LongRangeSet substract(LongRangeSet rs){
