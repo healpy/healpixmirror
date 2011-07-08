@@ -28,8 +28,8 @@ import healpix.core.dm.AbstractHealpixMap.Scheme;
 
 /** Functionality related to the HEALPix pixelisation.
     This class is conceptually very similar the the Healpix_Base class
-    of Healpix_cxx. It supports NESTED and RING scheme for nside parameters
-    which are powers of 2, and RING scheme for all other nside parameters.
+    of Healpix_cxx. It supports NESTED for nside parameters which are powers
+    of 2, and RING scheme for arbitrary nside parameters.
     @author Martin Reinecke */
 public class HealpixBase extends HealpixTables
   {
@@ -52,7 +52,7 @@ public class HealpixBase extends HealpixTables
   /** Maximum Nside parameter; equivalent to 2^{@code order_max}. */
   public static final long ns_max=1L<<order_max;
 
-  /** The order of the map; -1 for nonhierarchical map. */
+  /** The order of the map; -1 when {@code nside} is not a power of 2. */
   protected int order;
 
   /** The Nside parameter. */
@@ -60,6 +60,8 @@ public class HealpixBase extends HealpixTables
 
   protected long nl2, nl3, nl4, npface, npix, ncap;
   protected double fact1, fact2;
+
+  /** The ordering scheme. */
   protected Scheme scheme;
 
   private static long spread_bits (int v)
