@@ -36,11 +36,13 @@
 
 template<typename T, int sz> class svec;
 
-#if (defined(__SSE__))
+#if (defined(__SSE2__))
 
 #include <xmmintrin.h>
+#include <emmintrin.h>
 
 #define PLANCK_HAVE_SSE
+#define PLANCK_HAVE_SSE2
 
 template<> class svec<int, 4>
   {
@@ -70,7 +72,6 @@ template<> class svec<int, 4>
       { v=_mm_add_epi32(v,b.v); return *this; }
     const svec &operator-= (const svec &b)
       { v=_mm_sub_epi32(v,b.v); return *this; }
-
     svec operator+ (const svec &b) const
       { return svec(_mm_add_epi32(v,b.v)); }
     svec operator- (const svec &b) const
@@ -80,27 +81,39 @@ template<> class svec<int, 4>
       { v=_mm_and_si128(v,b.v); return *this; }
     const svec &operator|= (const svec &b)
       { v=_mm_or_si128(v,b.v); return *this; }
+    const svec &operator^= (const svec &b)
+      { v=_mm_xor_si128(v,b.v); return *this; }
     svec operator& (const svec &b) const
       { return svec(_mm_and_si128(v,b.v)); }
     svec operator| (const svec &b) const
       { return svec(_mm_or_si128(v,b.v)); }
+    svec operator^ (const svec &b) const
+      { return svec(_mm_xor_si128(v,b.v)); }
+    svec andnot (const svec &b) const
+      { return svec(_mm_andnot_si128(v,b.v)); }
 
+    const svec &operator<<= (int b)
+      { v=_mm_slli_epi32(v,b); return *this; }
     svec operator<< (int b) const
       { return svec(_mm_slli_epi32(v,b)); }
+    const svec &operator>>= (int b)
+      { v=_mm_srai_epi32(v,b); return *this; }
+    svec operator>> (int b) const
+      { return svec(_mm_srai_epi32(v,b)); }
 
     svec eq (const svec &b) const
       { return svec(_mm_cmpeq_epi32(v,b.v)); }
+    svec gt (const svec &b) const
+      { return svec(_mm_cmpgt_epi32(v,b.v)); }
+    svec lt (const svec &b) const
+      { return svec(_mm_cmplt_epi32(v,b.v)); }
   };
 
 typedef svec<int,4> V4si;
 
 inline V4si shuffle(const V4si &a, const V4si &b, int sh)
-  { return V4si(reinterpret_cast<__m128i>(_mm_shuffle_ps
-    (reinterpret_cast<__m128>(a.v), reinterpret_cast<__m128>(b.v), sh))); }
-
-template<typename T> inline T vcast(const V4si &a)
-  { return reinterpret_cast<const T &>(a); }
-
+  { return V4si(_mm_castps_si128(_mm_shuffle_ps
+    (_mm_castsi128_ps(a.v), _mm_castsi128_ps(b.v), sh))); }
 
 template<> class svec<float, 4>
   {
@@ -115,6 +128,10 @@ template<> class svec<float, 4>
     svec (const float &val) : v(_mm_set1_ps(val)) {}
     svec (float val1, float val2, float val3, float val4)
       : v(_mm_set_ps(val4,val3,val2,val1)) {}
+    explicit svec (const svec<int,4> &b) : v(_mm_cvtepi32_ps(b.v)) {}
+
+    operator svec<int,4>() const
+      { return svec<int,4> (_mm_cvtps_epi32(v)); }
     const svec &operator= (const float &val)
       { v=_mm_set1_ps(val); return *this; }
     const svec &operator= (const svec &b)
@@ -151,6 +168,8 @@ template<> class svec<float, 4>
       { v=_mm_xor_ps(v,b.v); return *this; }
     svec operator& (const svec &b) const
       { return svec(_mm_and_ps(v,b.v)); }
+    svec andnot (const svec &b) const
+      { return svec(_mm_andnot_ps(v,b.v)); }
     svec operator| (const svec &b) const
       { return svec(_mm_or_ps(v,b.v)); }
     svec operator^ (const svec &b) const
@@ -189,22 +208,17 @@ inline V4sf sqrt(const V4sf &v)
 inline V4sf abs(const V4sf &v)
   { return V4sf(_mm_andnot_ps(_mm_set1_ps(-0.),v.v)); }
 inline V4sf blend(const V4sf &mask, const V4sf &a, const V4sf &b)
-  { return V4sf(_mm_or_ps(_mm_and_ps(a.v,mask.v),_mm_andnot_ps(mask.v,b.v))); }
+  { return (mask&a)|(mask.andnot(b)); }
 inline bool any (const V4sf &a)
   { return _mm_movemask_ps(a.v)!=0; }
 inline bool all (const V4sf &a)
   { return _mm_movemask_ps(a.v)==15; }
 inline bool none (const V4sf &a)
   { return _mm_movemask_ps(a.v)==0; }
-
-template<typename T> inline T vcast(const V4sf &a)
-  { return reinterpret_cast<const T &>(a); }
-
-#if (defined(__SSE2__))
-
-#include <emmintrin.h>
-
-#define PLANCK_HAVE_SSE2
+inline V4sf min (const V4sf &a, const V4sf &b)
+  { return _mm_min_ps(a.v,b.v); }
+inline V4sf max (const V4sf &a, const V4sf &b)
+  { return _mm_max_ps(a.v,b.v); }
 
 template<> class svec<double, 2>
   {
@@ -305,10 +319,16 @@ inline bool all (const V2df &a)
 inline bool none (const V2df &a)
   { return _mm_movemask_pd(a.v)==0; }
 
-template<typename T> inline T vcast(const V2df &a)
-  { return reinterpret_cast<const T &>(a); }
+template<typename T> inline T vcast(const V4si &a);
+template<typename T> inline T vcast(const V4sf &a);
+template<typename T> inline T vcast(const V2df &a);
 
-#endif
+template<> inline V4si vcast (const V4sf &a)
+  { return V4si (_mm_castps_si128(a.v)); }
+template<> inline V4sf vcast (const V4si &a)
+  { return V4sf (_mm_castsi128_ps(a.v)); }
+template<> inline V2df vcast (const V4si &a)
+  { return V2df (_mm_castsi128_pd(a.v)); }
 
 #endif
 

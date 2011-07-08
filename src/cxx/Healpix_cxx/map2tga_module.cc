@@ -32,6 +32,7 @@
 #include <sstream>
 #include <iomanip>
 #include <cstdlib>
+#include "safe_ptr.h"
 #include "healpix_map.h"
 #include "healpix_map_fitsio.h"
 #include "rotmatrix.h"
@@ -185,117 +186,61 @@ string conv (double val)
   return trim(os.str());
   }
 
-void usage()
+} // unnamed namespace
+
+int map2tga_module (int argc, const char **argv)
   {
-  cout <<
+  module_startup ("map2tga",argc>=2,
     "\nUsage:\n"
-    "  map2tga <parameter file>\n\n"
+    "  map2tga <init object>\n\n"
     "or:\n"
     "  map2tga <input file> <output file> [-sig <int>] [-pal <int>]\n"
     "    [-xsz <int>] [-bar] [-log] [-asinh] [-lon <float>] [-lat <float>]\n"
     "    [-mul <float>] [-add <float>] [-min <float>] [-max <float>]\n"
     "    [-res <float>] [-title <string>] [-flippal] [-gnomonic]\n"
-    "    [-interpol] [-equalize] [-viewer <viewer>]\n\n";
-  planck_fail_quietly("Incorrect usage");
-  }
+    "    [-interpol] [-equalize] [-viewer <viewer>]\n\n");
 
-} // unnamed namespace
-
-int map2tga_module (int argc, const char **argv)
-  {
-  announce ("map2tga");
-  if (argc<2) usage();
-
-  string infile = "";
-  string outfile = "";
-  string title = "";
-  int xres = 1024;
-  bool bar = false, mollpro=true;
-  double lat0=0, lon0=0, res=1*arcmin2rad;
-  float usermin=-1e30, usermax=1e30, offset=0, factor=1;
-  bool min_supplied=false, max_supplied=false;
-  bool logflag=false, asinhflag=false, eqflag=false;
-  int palnr = 4;
-  int colnum=1;
-  bool flippal = false;
-  bool interpol = false;
-  string viewer = "";
-
+  safe_ptr<paramfile> params;
   if (argc>2)
     {
-    infile = argv[1];
-    outfile = argv[2];
-    int m=3;
-    while (m<argc)
+    vector<string> leading;
+    map<string,string> dict;
+    leading.push_back("infile");
+    leading.push_back("outfile");
+    parse_cmdline_classic (argc,argv,leading,dict);
+    if (dict.find("gnomonic")!=dict.end())
       {
-      int mstart = m;
-      string arg = argv[m];
-      if (arg == "-sig") { stringToData(argv[m+1],colnum); m+=2; }
-      if (arg == "-pal") { stringToData(argv[m+1],palnr); m+=2; }
-      if (arg == "-xsz") { stringToData(argv[m+1],xres); m+=2; }
-      if (arg == "-bar") { bar=true; ++m; }
-      if (arg == "-log") { logflag=true; ++m; }
-      if (arg == "-equalize") { eqflag=true; ++m; }
-      if (arg == "-asinh") { asinhflag=true; ++m; }
-      if (arg == "-lon") { stringToData(argv[m+1],lon0); lon0*=degr2rad; m+=2; }
-      if (arg == "-lat") { stringToData(argv[m+1],lat0); lat0*=degr2rad; m+=2; }
-      if (arg == "-mul") { stringToData(argv[m+1],factor); m+=2; }
-      if (arg == "-add") { stringToData(argv[m+1],offset); m+=2; }
-      if (arg == "-min")
-        {
-        stringToData(argv[m+1],usermin);
-        min_supplied=true;
-        m+=2;
-        }
-      if (arg == "-max")
-        {
-        stringToData(argv[m+1],usermax);
-        max_supplied=true;
-        m+=2;
-        }
-      if (arg == "-res")
-        { stringToData(argv[m+1],res); res*=arcmin2rad; m+=2; }
-      if (arg == "-title") { title = argv[m+1]; m+=2; }
-      if (arg == "-viewer") { viewer = argv[m+1]; m+=2; }
-      if (arg == "-flippal") { flippal=true; ++m; }
-      if (arg == "-gnomonic") { mollpro=false; ++m; }
-      if (arg == "-interpol") { interpol=true; ++m; }
-
-      if (mstart==m)
-        {
-        cout << "unrecognized option: " + arg << endl;
-        usage();
-        }
+      dict["pro"]="gno";
+      dict.erase("gnomonic");
       }
+    params = new paramfile(dict,false);
     }
   else
-    {
-    paramfile params (argv[1]);
-    infile = params.find<string>("infile");
-    outfile = params.find<string>("outfile");
-    colnum = params.find<int>("sig",colnum);
-    palnr = params.find<int>("pal",palnr);
-    flippal = params.find<bool>("flippal",flippal);
-    xres = params.find<int>("xsz",xres);
-    bar = params.find<bool>("bar",bar);
-    logflag = params.find<bool>("log",logflag);
-    eqflag = params.find<bool>("equalize",eqflag);
-    asinhflag = params.find<bool>("asinh",asinhflag);
-    lon0 = degr2rad*params.find<double>("lon",lon0);
-    lat0 = degr2rad*params.find<double>("lat",lat0);
-    factor = params.find<float>("mul",factor);
-    offset = params.find<float>("add",offset);
-    usermin = params.find<float>("min", usermin);
-    if (usermin>-1e29) min_supplied = true;
-    usermax = params.find<float>("max", usermax);
-    if (usermax<1e29) max_supplied = true;
-    res = arcmin2rad*params.find<double>("res",res);
-    title = params.find<string>("title","");
-    viewer = params.find<string>("viewer","");
-    string tmp = params.find<string>("pro","");
-    if (tmp == "gno") mollpro=false;
-    interpol = params.find<bool>("interpol",interpol);
-    }
+    params = new paramfile(argv[1]);
+
+  string infile = params->find<string>("infile");
+  string outfile = params->find<string>("outfile");
+  int colnum = params->find<int>("sig",1);
+  int palnr = params->find<int>("pal",4);
+  bool flippal = params->find<bool>("flippal",false);
+  int xres = params->find<int>("xsz",1024);
+  bool bar = params->find<bool>("bar",false);
+  bool logflag = params->find<bool>("log",false);
+  bool eqflag = params->find<bool>("equalize",false);
+  bool asinhflag = params->find<bool>("asinh",false);
+  double lon0 = degr2rad*params->find<double>("lon",0);
+  double lat0 = degr2rad*params->find<double>("lat",0);
+  double factor = params->find<float>("mul",1);
+  double offset = params->find<float>("add",0);
+  float usermin = params->find<float>("min", -1e30);
+  bool min_supplied = (usermin>-1e29);
+  float usermax = params->find<float>("max", 1e30);
+  bool max_supplied = (usermax<1e29);
+  double res = arcmin2rad*params->find<double>("res",1);
+  string title = params->find<string>("title","");
+  string viewer = params->find<string>("viewer","");
+  bool mollpro = (params->find<string>("pro","")!="gno");
+  bool interpol = params->find<bool>("interpol",false);
 
   Healpix_Map<float> map(0,RING);
   read_Healpix_map_from_fits(infile,map,colnum,2);
@@ -303,9 +248,10 @@ int map2tga_module (int argc, const char **argv)
     {
     if (!approx<double>(map[m],Healpix_undef))
       {
-      map[m] = (map[m]+offset)*factor;
+      map[m] = float((map[m]+offset)*factor);
       if (logflag)
-        map[m] = (map[m]<=0) ? Healpix_undef : float(log(double(map[m]))/ln10);
+        map[m] = (map[m]<=0) ? float(Healpix_undef)
+                             : float(log(double(map[m]))/ln10);
       if (asinhflag)
         map[m] = (map[m]>=0) ?
           float( log(double( map[m]+sqrt(map[m]*map[m]+1)))) :

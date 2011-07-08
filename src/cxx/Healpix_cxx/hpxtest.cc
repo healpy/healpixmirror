@@ -275,7 +275,7 @@ void check_query_disc_strict (Healpix_Ordering_Scheme scheme)
       vec3 vptg=ptg;
       double cosrad=cos(rad);
       for (tsize j=0; j<pixset.size(); ++j)
-        for (int i=pixset[j].a; i<pixset[j].b; ++i)
+        for (int i=pixset[j].a(); i<pixset[j].b(); ++i)
           map[i] = true;
       for (int i=0; i<map.Npix(); ++i)
         {
@@ -284,7 +284,7 @@ void check_query_disc_strict (Healpix_Ordering_Scheme scheme)
           cout << "  PROBLEM: order = " << order << ", ptg = " << ptg << endl;
         }
       for (tsize j=0; j<pixset.size(); ++j)
-        for (int i=pixset[j].a; i<pixset[j].b; ++i)
+        for (int i=pixset[j].a(); i<pixset[j].b(); ++i)
           map[i] = false;
       }
     }
@@ -704,6 +704,42 @@ template<typename I>void perf_nest2ring(const string &name,double &dummy)
   wallTimers.stop(name);
   cout << name << ": " << cnt/wallTimers.acc(name)*1e-6 << "MOps/s" << endl;
   }
+template<typename I>void perf_peano2nest(const string &name,double &dummy)
+  {
+  tsize cnt=0;
+  wallTimers.start(name);
+  int omax=T_Healpix_Base<I>::order_max;
+  for (int order=0; order<=omax; ++order)
+    {
+    T_Healpix_Base<I> base (order,NEST);
+    I dpix=max(base.Npix()/nsteps,I(1));
+    for (I pix=0; pix<base.Npix(); pix+=dpix)
+      {
+      dummy+=base.peano2nest(pix);
+      ++cnt;
+      }
+    }
+  wallTimers.stop(name);
+  cout << name << ": " << cnt/wallTimers.acc(name)*1e-6 << "MOps/s" << endl;
+  }
+template<typename I>void perf_nest2peano(const string &name,double &dummy)
+  {
+  tsize cnt=0;
+  wallTimers.start(name);
+  int omax=T_Healpix_Base<I>::order_max;
+  for (int order=0; order<=omax; ++order)
+    {
+    T_Healpix_Base<I> base (order,NEST);
+    I dpix=max(base.Npix()/nsteps,I(1));
+    for (I pix=0; pix<base.Npix(); pix+=dpix)
+      {
+      dummy+=base.nest2peano(pix);
+      ++cnt;
+      }
+    }
+  wallTimers.stop(name);
+  cout << name << ": " << cnt/wallTimers.acc(name)*1e-6 << "MOps/s" << endl;
+  }
 template<typename I>void perf_query_disc(const string &name,
   Healpix_Ordering_Scheme scheme, double &dummy)
   {
@@ -794,6 +830,10 @@ void perftest()
   perf_ring2nest<int64>("ring2nest      :int64",dummy);
   perf_nest2ring<int>  ("nest2ring      :int  ",dummy);
   perf_nest2ring<int64>("nest2ring      :int64",dummy);
+  perf_peano2nest<int>  ("peano2nest     :int  ",dummy);
+  perf_peano2nest<int64>("peano2nest     :int64",dummy);
+  perf_nest2peano<int>  ("nest2peano     :int  ",dummy);
+  perf_nest2peano<int64>("nest2peano     :int64",dummy);
   perf_query_disc<int>      ("query_disc    (RING):int  ",RING,dummy);
   perf_query_disc<int>      ("query_disc    (NEST):int  ",NEST,dummy);
   perf_query_disc<int64>    ("query_disc    (RING):int64",RING,dummy);
