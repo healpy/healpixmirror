@@ -50,4 +50,4 @@ $(notdir $(all_cbin) $(all_cxxbin)) : % : $(BINDIR)/%
 $(notdir $(all_lib)) libcfitsio.a : % : $(LIBDIR)/%
 
 test: compile_all
-	cd test; ./runtest.sh
+	cd test; HEALPIX_TARGET=$(HEALPIX_TARGET) ./runtest.sh

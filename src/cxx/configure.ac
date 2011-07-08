@@ -59,6 +59,13 @@ AC_ARG_ENABLE(debug,
      ENABLE_DEBUG=yes
    fi])
 
+ENABLE_SSE=yes
+AC_ARG_ENABLE(sse,
+  [  --disable-sse           disable generation of SSE instructions],
+  [if test "$enableval" = no; then
+     ENABLE_SSE=no
+   fi])
+
 case $CCTYPE in
   gcc)
     CCFLAGS="-O2 -ffast-math -fomit-frame-pointer"
@@ -132,6 +139,11 @@ CXXCFLAGS="$CXXCFLAGS $OPENMP_CXXFLAGS"
 if test $ENABLE_DEBUG = yes; then
   CCFLAGS="$CCFLAGS -g"
   CXXCFLAGS="$CXXCFLAGS -g"
+fi
+
+if test $ENABLE_SSE = no; then
+  CCFLAGS="$CCFLAGS -DPLANCK_DISABLE_SSE"
+  CXXCFLAGS="$CXXCFLAGS -DPLANCK_DISABLE_SSE"
 fi
 
 CCFLAGS_NO_C="$CCFLAGS $CPPFLAGS"
