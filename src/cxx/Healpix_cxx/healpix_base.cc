@@ -381,6 +381,93 @@ template<typename I> void T_Healpix_Base<I>::query_multidisc
     }
   }
 
+template<typename I> void T_Healpix_Base<I>::query_multidisc_general
+  (const arr<vec3> &norm, const arr<double> &rad, bool inclusive,
+  const vector<int> &cmds, rangeset<I> &pixset) const
+  {
+  tsize nv=norm.size();
+  planck_assert(nv==rad.size(),"inconsistent input arrays");
+  pixset.clear();
+
+  if (scheme_==RING)
+    {
+    planck_fail ("not yet implemented");
+    }
+  else // scheme_ == NEST
+    {
+    int oplus=inclusive ? 2 : 0;
+    int omax=min(order_max,order_+oplus); // the order up to which we test
+
+    // TODO: ignore all disks with radius>=pi
+
+    arr<T_Healpix_Base<I> > base(omax+1);
+    arr3<double> crlimit(omax+1,nv,3);
+    for (int o=0; o<=omax; ++o) // prepare data at the required orders
+      {
+      base[o].Set(o,NEST);
+      double dr=base[o].max_pixrad(); // safety distance
+      for (tsize i=0; i<nv; ++i)
+        {
+        crlimit(o,i,0) = (rad[i]+dr>pi) ? -1. : cos(rad[i]+dr);
+        crlimit(o,i,1) = (o==0) ? cos(rad[i]) : crlimit(0,i,1);
+        crlimit(o,i,2) = (rad[i]-dr<0.) ?  1. : cos(rad[i]-dr);
+        }
+      }
+
+    vector<pair<I,int> > stk; // stack for pixel numbers and their orders
+    stk.reserve(12+3*omax); // reserve maximum size to avoid reallocation
+    for (int i=0; i<12; ++i) // insert the 12 base pixels in reverse order
+      stk.push_back(make_pair(I(11-i),0));
+
+    int stacktop=0; // a place to save a stack position
+    arr<tsize> zone(nv);
+
+    vector<tsize> zstk; zstk.reserve(cmds.size());
+
+    while (!stk.empty()) // as long as there are pixels on the stack
+      {
+      // pop current pixel number and order from the stack
+      I pix=stk.back().first;
+      int o=stk.back().second;
+      stk.pop_back();
+
+      vec3 pv(base[o].pix2vec(pix));
+
+      for (tsize i=0; i<nv; ++i)
+        {
+        zone[i]=3;
+        double crad=dotprod(pv,norm[i]);
+        for (tsize iz=0; iz<zone[i]; ++iz)
+          if (crad<crlimit(o,i,iz))
+            zone[i]=iz;
+        }
+
+      for (tsize i=0; i<cmds.size(); ++i)
+        {
+        tsize tmp;
+        switch (cmds[i])
+          {
+          case -1: // union
+            tmp=zstk.back(); zstk.pop_back();
+            zstk.back() = max(zstk.back(),tmp);
+            break;
+          case -2: // intersection
+            tmp=zstk.back(); zstk.pop_back();
+            zstk.back() = min(zstk.back(),tmp);
+            break;
+          default: // add value
+            zstk.push_back(zone[cmds[i]]);
+          }
+        }
+      planck_assert(zstk.size()==1,"inconsistent commands");
+      tsize zn=zstk[0]; zstk.pop_back();
+
+      check_pixel (o, order_, omax, zn, pixset, pix, stk, inclusive,
+        stacktop);
+      }
+    }
+  }
+
 template<> inline int T_Healpix_Base<int>::spread_bits (int v) const
   { return utab[v&0xff] | (utab[(v>>8)&0xff]<<16); }
 template<> inline int64 T_Healpix_Base<int64>::spread_bits (int v) const
@@ -757,6 +844,48 @@ template<typename I> void T_Healpix_Base<I>::query_polygon
     rad[nv]=acos(cosrad);
     }
   query_multidisc(normal,rad,inclusive,pixset);
+  }
+
+template<typename I> void T_Healpix_Base<I>::query_strip_internal
+  (double theta1, double theta2, bool inclusive, rangeset<I> &pixset) const
+  {
+  if (scheme_==RING)
+    {
+    I ring1 = max(I(1),1+ring_above(cos(theta1))),
+      ring2 = min(4*nside_-1,ring_above(cos(theta2)));
+    if (inclusive)
+      {
+      ring1 = max(I(1),ring1-1);
+      ring2 = min(4*nside_-1,ring2+1);
+      }
+
+    I sp1,rp1,sp2,rp2;
+    bool dummy;
+    get_ring_info_small(ring1,sp1,rp1,dummy);
+    get_ring_info_small(ring2,sp2,rp2,dummy);
+    I pix1 = sp1,
+      pix2 = sp2+rp2;
+    if (pix1<=pix2) pixset.append(pix1,pix2);
+    }
+  else
+    planck_fail("query_strip not yet implemented for NESTED");
+  }
+
+template<typename I> void T_Healpix_Base<I>::query_strip (double theta1,
+  double theta2, bool inclusive, rangeset<I> &pixset) const
+  {
+  pixset.clear();
+
+  if (theta1<theta2)
+    query_strip_internal(theta1,theta2,inclusive,pixset);
+  else
+    {
+    query_strip_internal(0.,theta2,inclusive,pixset);
+    rangeset<I> ps2;
+    query_strip_internal(theta1,pi,inclusive,ps2);
+    for (tsize i=0; i<ps2.size(); ++i)
+      pixset.appendRelaxed(ps2[i]);
+    }
   }
 
 template<typename I> inline void T_Healpix_Base<I>::get_ring_info_small

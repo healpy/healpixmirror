@@ -109,8 +109,8 @@ template<typename T> class xcomplex
     /*! Multiplies \a *this by \a b. */
     xcomplex &operator*= (const xcomplex &b)
       {
-      T tmp=re;
-      re=tmp*b.re-im*b.im; im=tmp*b.im+im*b.re;
+      T tr=re*b.re-im*b.im, ti=re*b.im+im*b.re;
+      re=tr; im=ti;
       return *this;
       }
     /*! Divides \a *this by \a b. */

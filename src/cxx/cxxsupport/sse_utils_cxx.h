@@ -47,25 +47,26 @@ template<typename T, int sz> class svec;
 template<> class svec<int, 4>
   {
   public:
+    typedef int Ts;
     typedef __m128i Tv;
-    typedef union { Tv v; int d[4]; } Tu;
+    typedef union { Tv v; Ts d[4]; } Tu;
     Tv v;
 
     svec () {}
     svec (const svec &b) : v(b.v) {}
     svec (const Tv &b) : v(b) {}
-    svec (const int &val) : v(_mm_set1_epi32(val)) {}
-    svec (const int &val1, const int &val2, const int &val3, const int &val4)
+    svec (const Ts &val) : v(_mm_set1_epi32(val)) {}
+    svec (const Ts &val1, const Ts &val2, const Ts &val3, const Ts &val4)
       : v(_mm_set_epi32(val4,val3,val2,val1)) {}
 
-    const svec &operator= (const int &val)
+    const svec &operator= (const Ts &val)
       { v=_mm_set1_epi32(val); return *this; }
     const svec &operator= (const svec &b)
       { v=b.v; return *this; }
 
-    int operator[] (int p) const
+    Ts operator[] (int p) const
       { Tu u; u.v=v; return u.d[p]; }
-    void set (int p, int val)
+    void set (int p, Ts val)
       { Tu u; u.v=v; u.d[p]=val; v=u.v; }
 
     const svec &operator+= (const svec &b)
@@ -115,31 +116,89 @@ inline V4si shuffle(const V4si &a, const V4si &b, int sh)
   { return V4si(_mm_castps_si128(_mm_shuffle_ps
     (_mm_castsi128_ps(a.v), _mm_castsi128_ps(b.v), sh))); }
 
-template<> class svec<float, 4>
+template<> class svec<long long , 2>
   {
   public:
-    typedef __m128 Tv;
-    typedef union { Tv v; float d[4]; } Tu;
+    typedef long long Ts;
+    typedef __m128i Tv;
+    typedef union { Tv v; Ts d[2]; } Tu;
     Tv v;
 
     svec () {}
     svec (const svec &b) : v(b.v) {}
     svec (const Tv &b) : v(b) {}
-    svec (const float &val) : v(_mm_set1_ps(val)) {}
-    svec (float val1, float val2, float val3, float val4)
+    svec (const Ts &val) : v(_mm_set1_epi64x(val)) {}
+    svec (const Ts &val1, const Ts &val2)
+      : v(_mm_set_epi64x(val2,val1)) {}
+
+    const svec &operator= (const Ts &val)
+      { v=_mm_set1_epi64x(val); return *this; }
+    const svec &operator= (const svec &b)
+      { v=b.v; return *this; }
+
+    int operator[] (int p) const
+      { Tu u; u.v=v; return u.d[p]; }
+    void set (int p, int val)
+      { Tu u; u.v=v; u.d[p]=val; v=u.v; }
+
+    const svec &operator+= (const svec &b)
+      { v=_mm_add_epi64(v,b.v); return *this; }
+    const svec &operator-= (const svec &b)
+      { v=_mm_sub_epi64(v,b.v); return *this; }
+    svec operator+ (const svec &b) const
+      { return svec(_mm_add_epi64(v,b.v)); }
+    svec operator- (const svec &b) const
+      { return svec(_mm_sub_epi64(v,b.v)); }
+
+    const svec &operator&= (const svec &b)
+      { v=_mm_and_si128(v,b.v); return *this; }
+    const svec &operator|= (const svec &b)
+      { v=_mm_or_si128(v,b.v); return *this; }
+    const svec &operator^= (const svec &b)
+      { v=_mm_xor_si128(v,b.v); return *this; }
+    svec operator& (const svec &b) const
+      { return svec(_mm_and_si128(v,b.v)); }
+    svec operator| (const svec &b) const
+      { return svec(_mm_or_si128(v,b.v)); }
+    svec operator^ (const svec &b) const
+      { return svec(_mm_xor_si128(v,b.v)); }
+    svec andnot (const svec &b) const
+      { return svec(_mm_andnot_si128(v,b.v)); }
+
+    const svec &operator<<= (int b)
+      { v=_mm_slli_epi64(v,b); return *this; }
+    svec operator<< (int b) const
+      { return svec(_mm_slli_epi64(v,b)); }
+  };
+
+typedef svec<long long,2> V2di;
+
+template<> class svec<float, 4>
+  {
+  public:
+    typedef float Ts;
+    typedef __m128 Tv;
+    typedef union { Tv v; Ts d[4]; } Tu;
+    Tv v;
+
+    svec () {}
+    svec (const svec &b) : v(b.v) {}
+    svec (const Tv &b) : v(b) {}
+    svec (const Ts &val) : v(_mm_set1_ps(val)) {}
+    svec (Ts val1, Ts val2, Ts val3, Ts val4)
       : v(_mm_set_ps(val4,val3,val2,val1)) {}
     explicit svec (const svec<int,4> &b) : v(_mm_cvtepi32_ps(b.v)) {}
 
     operator svec<int,4>() const
       { return svec<int,4> (_mm_cvtps_epi32(v)); }
-    const svec &operator= (const float &val)
+    const svec &operator= (const Ts &val)
       { v=_mm_set1_ps(val); return *this; }
     const svec &operator= (const svec &b)
       { v=b.v; return *this; }
 
-    float operator[] (int p) const
+    Ts operator[] (int p) const
       { Tu u; u.v=v; return u.d[p]; }
-    void set (int p, float val)
+    void set (int p, Ts val)
       { Tu u; u.v=v; u.d[p]=val; v=u.v; }
 
     const svec &operator+= (const svec &b)
@@ -191,13 +250,13 @@ template<> class svec<float, 4>
     svec ge (const svec &b) const
       { return svec(_mm_cmpge_ps(v,b.v)); }
 
-    void writeTo (float *val) const
+    void writeTo (Ts *val) const
       { _mm_storeu_ps (val, v); }
-    void writeTo (float &a, float &b, float &c, float &d) const
+    void writeTo (Ts &a, Ts &b, Ts &c, Ts &d) const
       { Tu u; u.v=v; a=u.d[0]; b=u.d[1]; c=u.d[2]; d=u.d[3]; }
-    void readFrom (const float *val)
+    void readFrom (const Ts *val)
       { v=_mm_loadu_ps(val); }
-    void readFrom (float a, float b, float c, float d)
+    void readFrom (Ts a, Ts b, Ts c, Ts d)
       { v=_mm_set_ps(d,c,b,a); }
   };
 
@@ -223,28 +282,29 @@ inline V4sf max (const V4sf &a, const V4sf &b)
 template<> class svec<double, 2>
   {
   public:
+    typedef double Ts;
     typedef __m128d Tv;
-    typedef union { Tv v; double d[2]; } Tu;
+    typedef union { Tv v; Ts d[2]; } Tu;
     Tv v;
 
     svec () {}
     svec (const svec &b) : v(b.v) {}
     svec (const Tv &b) : v(b) {}
-    svec (const double &val) : v(_mm_set1_pd(val)) {}
-    svec (const double &val1, const double &val2)
+    svec (const Ts &val) : v(_mm_set1_pd(val)) {}
+    svec (const Ts &val1, const Ts &val2)
       : v(_mm_set_pd(val2,val1)) {}
     explicit svec (const svec<int,4> &b) : v(_mm_cvtepi32_pd(b.v)) {}
 
     operator svec<int,4>() const
       { return svec<int,4> (_mm_cvtpd_epi32(v)); }
-    const svec &operator= (const double &val)
+    const svec &operator= (const Ts &val)
       { v=_mm_set1_pd(val); return *this; }
     const svec &operator= (const svec &b)
       { v=b.v; return *this; }
 
-    double operator[] (int p) const
+    Ts operator[] (int p) const
       { Tu u; u.v=v; return u.d[p]; }
-    void set (int p, double val)
+    void set (int p, Ts val)
       { Tu u; u.v=v; u.d[p]=val; v=u.v; }
 
     const svec &operator+= (const svec &b)
@@ -294,13 +354,13 @@ template<> class svec<double, 2>
     svec ge (const svec &b) const
       { return svec(_mm_cmpge_pd(v,b.v)); }
 
-    void writeTo (double *val) const
+    void writeTo (Ts *val) const
       { _mm_storeu_pd (val, v); }
-    void writeTo (double &a, double &b) const
+    void writeTo (Ts &a, Ts &b) const
       { _mm_store_sd(&a,v); _mm_storeh_pd(&b,v); }
-    void readFrom (const double *val)
+    void readFrom (const Ts *val)
       { v=_mm_loadu_pd(val); }
-    void readFrom (const double &a, const double &b)
+    void readFrom (const Ts &a, const Ts &b)
       { v=_mm_set_pd(b,a); }
   };
 

@@ -59,6 +59,12 @@ template<typename I> class T_Healpix_Base: public Healpix_Tables
     void query_multidisc (const arr<vec3> &norm, const arr<double> &rad,
       bool inclusive, rangeset<I> &pixset) const;
 
+    void query_multidisc_general (const arr<vec3> &norm, const arr<double> &rad,
+      bool inclusive, const std::vector<int> &cmds, rangeset<I> &pixset) const;
+
+    void query_strip_internal (double theta1, double theta2, bool inclusive,
+      rangeset<I> &pixset) const;
+
     inline I spread_bits (int v) const;
     inline int compress_bits (I v) const;
 
@@ -195,6 +201,19 @@ template<typename I> class T_Healpix_Base: public Healpix_Tables
            algorithm used for \a inclusive==true returns fewer false positives
            in the NEST scheme. */
     void query_polygon (const std::vector<pointing> &vertex, bool inclusive,
+      rangeset<I> &pixset) const;
+
+    /*! Returns a range set of pixels whose centers lie within the colatitude
+        range defined by \a theta1 and \a theta2 (if \a inclusive==false), or
+        which overlap with this region (if \a inclusive==true). If
+        \a theta1<theta2, the region between both angles is considered,
+        otherwise the regions \a 0<theta<theta2 and \a theta1<theta<pi.
+        \param theta1 first colatitude
+        \param theta2 second colatitude
+        \param inclusive if \a false, return the exact set of pixels whose
+           pixels centers lie within the region; if \a true, return all pixels
+           that overlap with the region. */
+    void query_strip (double theta1, double theta2, bool inclusive,
       rangeset<I> &pixset) const;
 
     /*! Returns useful information about a given ring of the map.

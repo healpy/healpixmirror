@@ -92,6 +92,7 @@ template<typename T> class rangeset
   private:
     typedef std::vector<interval<T> > rtype;
     typedef typename rtype::iterator iterator;
+    typedef typename rtype::const_iterator c_iterator;
     rtype r;
 
   public:
@@ -113,7 +114,23 @@ template<typename T> class rangeset
         r.push_back(iv);
       }
     void append(const T &v1, const T &v2) { append(interval<T>(v1,v2)); }
-    void append(const T &v) { append (interval<T>(v)); }
+    void append(const T &v) { append(interval<T>(v)); }
+
+    void appendRelaxed(const interval<T> &iv)
+      {
+      if (iv.empty()) return;
+      if ((!r.empty()) && (iv.a()<=r.back().b()))
+        {
+        planck_assert (iv.a()>=r.back().a(),"bad append operation");
+        if (iv.b()>r.back().b()) r.back().setB(iv.b());
+        }
+      else
+        r.push_back(iv);
+      }
+    void appendRelaxed(const T &v1, const T &v2)
+      { appendRelaxed(interval<T>(v1,v2)); }
+    void appendRelaxed(const T &v)
+      { appendRelaxed(interval<T>(v)); }
 
     void add(const interval<T> &iv)
       {
@@ -181,6 +198,49 @@ template<typename T> class rangeset
       for (tsize i=0; i<r.size(); ++i)
         for (T m(r[i].a()); m<r[i].b(); ++m)
           res.push_back(m);
+      }
+
+    void setToUnion (const rangeset &r1, const rangeset &r2)
+      {
+      c_iterator i1 = r1.r.begin(), e1 = r1.r.end(),
+                 i2 = r2.r.begin(), e2 = r2.r.end();
+
+      clear();
+
+      bool run1 = i1!=e1, run2 = i2!=e2;
+
+      while(run1 || run2)
+        {
+        if (run1 && (!run2 || i1->b()<i2->a()))
+          {
+          appendRelaxed(*i1);
+          run1 = (++i1)!=e1;
+          }
+        else if (run2 && (!run1 || i2->b()<i1->a()))
+          {
+          appendRelaxed(*i2);
+          run2 = (++i2)!=e2;
+          }
+        else if(run1 && run2)
+          {
+          appendRelaxed(min(i1->a(),i2->a()),max(i1->b(),i2->b()));
+          run1 = (++i1)!=e1;
+          run2 = (++i2)!=e2;
+          }
+        else
+          {
+          planck_fail("internal error");
+          }
+        }
+      }
+
+    tdiff findInterval (const T &v) const
+      {
+      interval<T> iv(v);
+      c_iterator i=std::lower_bound (r.begin(),r.end(),iv);
+      if (i==r.end() || !i->contains(v))
+        return -1;
+      return i-r.begin();
       }
   };
 
