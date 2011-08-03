@@ -98,7 +98,7 @@ public class HealpixIndex extends HealpixBase implements Serializable {
 	public long ang2pix_nest(double theta, double phi) throws Exception {
 		Scheme sbak=scheme;
 		setScheme(Scheme.NESTED);
-		long result=ang2pix(new Pointing(theta,phi));
+		long result=super.ang2pix(new Pointing(theta,phi));
 		setScheme(sbak);
 		return result;
 	}
@@ -116,7 +116,7 @@ public class HealpixIndex extends HealpixBase implements Serializable {
 	public double[] pix2ang_nest(long ipix) throws Exception {
                 Scheme sbak=scheme;
 		setScheme(Scheme.NESTED);
-                Pointing res = pix2ang(ipix);
+                Pointing res = super.pix2ang(ipix);
 		setScheme(sbak);
 		double[] ret = { res.theta, res.phi };
 		return ret;
@@ -135,7 +135,7 @@ public class HealpixIndex extends HealpixBase implements Serializable {
 	public double[] pix2ang_ring(long ipix) throws Exception {
                 Scheme sbak=scheme;
 		setScheme(Scheme.RING);
-                Pointing res = pix2ang(ipix);
+                Pointing res = super.pix2ang(ipix);
 		setScheme(sbak);
 		double[] ret = { res.theta, res.phi };
 		return ret;
@@ -159,7 +159,7 @@ public class HealpixIndex extends HealpixBase implements Serializable {
 	public long ang2pix_ring(double theta, double phi) throws Exception {
 		Scheme sbak=scheme;
 		setScheme(Scheme.RING);
-		long result=ang2pix(new Pointing(theta,phi));
+		long result=super.ang2pix(new Pointing(theta,phi));
 		setScheme(sbak);
 		return result;
 	}
@@ -354,7 +354,7 @@ public class HealpixIndex extends HealpixBase implements Serializable {
 	public long vec2pix_nest(SpatialVector vec) throws Exception {
 		Scheme sbak=scheme;
 		setScheme(Scheme.NESTED);
-		long result=vec2pix(vec);
+		long result=super.vec2pix(vec);
 		setScheme(sbak);
 		return result;
 	}
@@ -369,7 +369,7 @@ public class HealpixIndex extends HealpixBase implements Serializable {
 	public long vec2pix_ring(SpatialVector vec) throws Exception {
 		Scheme sbak=scheme;
 		setScheme(Scheme.RING);
-		long result=vec2pix(vec);
+		long result=super.vec2pix(vec);
 		setScheme(sbak);
 		return result;
 	}
@@ -385,7 +385,7 @@ public class HealpixIndex extends HealpixBase implements Serializable {
 	public SpatialVector pix2vec_nest(long pix) throws Exception {
 		Scheme sbak=scheme;
 		setScheme(Scheme.NESTED);
-		Vec3 res1=pix2vec(pix);
+		Vec3 res1=super.pix2vec(pix);
 		setScheme(sbak);
 		return new SpatialVector(res1);
 	}
@@ -401,7 +401,7 @@ public class HealpixIndex extends HealpixBase implements Serializable {
 	public SpatialVector pix2vec_ring(long pix) throws Exception {
 		Scheme sbak=scheme;
 		setScheme(Scheme.RING);
-		Vec3 res1=pix2vec(pix);
+		Vec3 res1=super.pix2vec(pix);
 		setScheme(sbak);
 		return new SpatialVector(res1);
 	}
@@ -633,7 +633,7 @@ public class HealpixIndex extends HealpixBase implements Serializable {
 		
 		Scheme sbak=scheme;
 		setScheme ((nest==0) ? Scheme.RING : Scheme.NESTED);
-		LongRangeSet res = queryDisc(new Pointing(vec),radius,(inclusive!=0));
+		LongRangeSet res = super.queryDisc(new Pointing(vec),radius,(inclusive!=0));
 		setScheme (sbak);
 		return res;
 	}
@@ -704,7 +704,7 @@ public class HealpixIndex extends HealpixBase implements Serializable {
 		Pointing[] vertex = new Pointing[vlist.size()];
 		for (int i=0; i<vlist.size(); ++i)
 			vertex[i]=new Pointing((Vec3)vlist.get(i));
-		LongRangeSet res = queryPolygon(vertex,(inclusive!=0));
+		LongRangeSet res = super.queryPolygon(vertex,(inclusive!=0));
 		setScheme (sbak);
 		return res;
 	}
@@ -753,7 +753,7 @@ public class HealpixIndex extends HealpixBase implements Serializable {
 		vertex[0] = new Pointing(v1);
 		vertex[1] = new Pointing(v2);
 		vertex[2] = new Pointing(v3);
-		LongRangeSet res = queryPolygon(vertex,(inclusive!=0));
+		LongRangeSet res = super.queryPolygon(vertex,(inclusive!=0));
 		setScheme (sbak);
 		return res;
 	}
