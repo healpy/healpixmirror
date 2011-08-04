@@ -23,7 +23,6 @@ import healpix.core.AngularPosition;
 import healpix.core.dm.HealpixMap;
 
 import javax.media.j3d.QuadArray;
-import javax.vecmath.Color3f;
 
 /**
  * Quadrilatere Array with tooltip fonctionality ready to be used by
@@ -56,7 +55,6 @@ public class QuadArrayExt extends QuadArray {
 	/** The pixel ids */
 	int dataIpix[];
 
-	private HealpixMap map;
 	/**
 	 * Instantiates a new quad array ext.
 	 * 
@@ -78,7 +76,6 @@ public class QuadArrayExt extends QuadArray {
 	 */
 	QuadArrayExt(HealpixMap ch, int nPoints, int color) {
 		super(nPoints, color);
-		this.map=ch;
 		data = new double[nPoints];
 		dataAngle = new AngularPosition[nPoints];
 		dataIpix = new int[nPoints];

@@ -282,6 +282,7 @@ public class HealpixBaseTest extends TestCase {
     for (int m=0; m<1000; ++m)
       {
       LongRangeSet lrs=base.queryDisc(new Pointing(new Vec3(1,0,0)),Constants.halfpi/9.,false);
+      dummy+=lrs.rangeCount();
       ++cnt;
       }
     double time = 1e-9*(System.nanoTime()-tstart);
@@ -304,6 +305,7 @@ public class HealpixBaseTest extends TestCase {
     for (int m=0; m<1000; ++m)
       {
       LongRangeSet lrs=base.queryPolygon(corner,false);
+      dummy+=lrs.rangeCount();
       ++cnt;
       }
     double time = 1e-9*(System.nanoTime()-tstart);

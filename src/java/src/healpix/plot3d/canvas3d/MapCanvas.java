@@ -20,7 +20,6 @@
 package healpix.plot3d.canvas3d;
 
 import healpix.core.dm.HealpixMap;
-import healpix.core.Scheme;
 import healpix.plot3d.gui.healpix3d.DataSphere;
 import healpix.plot3d.gui.healpix3d.HealSphere;
 import healpix.plot3d.gui.healpix3d.RotateAble;
@@ -189,7 +188,6 @@ public class MapCanvas extends Canvas3D implements RotateAble {
 	 * 
 	 * @return the branch group
 	 */
-	@SuppressWarnings("deprecation")
 	public BranchGroup createSceneGraph() {
 		// Create the root of the branch graph
 		BranchGroup objRoot = new BranchGroup();

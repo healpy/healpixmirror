@@ -19,7 +19,6 @@
  */
 package healpix.plot3d.gui.healpix3d;
 
-import healpix.core.HealpixBase;
 import healpix.core.Scheme;
 import healpix.tools.Constants;
 import healpix.core.Vec3;

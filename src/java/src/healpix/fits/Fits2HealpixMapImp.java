@@ -111,7 +111,6 @@ public class Fits2HealpixMapImp implements Fits2HealpixMap {
 		}
 		System.out.println(objData.getColumn(0).toString());
 		head = thdu.getHeader();
-		int ncard = head.getNumberOfCards();
 		Iterator hci = head.iterator();
 		while ( hci.hasNext() ) {
 			HeaderCard hc = (HeaderCard) hci.next();

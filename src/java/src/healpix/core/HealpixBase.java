@@ -634,8 +634,6 @@ public class HealpixBase extends HealpixTables
       { p=new long[sz]; o=new int[sz]; s=m=0; }
     public void push (long p_, int o_)
       { p[s]=p_; o[s]=o_; ++s; }
-    public void resize (int s_)
-      { s=s_; }
     public void pop ()
       { --s; }
     public void popToMark ()

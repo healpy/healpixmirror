@@ -18,7 +18,6 @@ public interface Fits2HealpixMap {
 	 * @return double[][] Array of doubles containing the values
 	 * @throws Exception
 	 */
-	@SuppressWarnings("deprecation")
 	public abstract double[][] readFitsBinaryTable(String filename)
 			throws Exception;
 

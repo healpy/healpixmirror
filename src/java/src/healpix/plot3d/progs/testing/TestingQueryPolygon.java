@@ -140,13 +140,10 @@ public class TestingQueryPolygon {
 		HealpixMap map = cr.getMap();
 		map.setScheme(Scheme.NESTED);
 
-		ArrayList vlist1 = new ArrayList();
 		HealpixIndex pt = new HealpixIndex(nside);
 		int nest = 0;
-		long ipix = 0;
 		int inclusive = 1;
 		int triang[] = { 71, 135, 105 }; // crossing 360
-		int pixels[] = { 71, 72, 88, 103, 104, 135, };// 120 is missing
 		// because center
 		// outside the triangle
 		// (inclusive=0)
@@ -188,7 +185,6 @@ public class TestingQueryPolygon {
 		map.setScheme(Scheme.NESTED);
 		// int[] ipringtest = {19,13,28};//crossing
 		int[] ipringtest = { 71, 135, 105 };// crossing (nside = 4)
-		ArrayList vlist1 = new ArrayList();
 		HealpixIndex pt = new HealpixIndex(nside);
 		System.out.println("Start test Query Triangle");
 		SpatialVector v[] = new SpatialVector[3];
@@ -357,19 +353,6 @@ public class TestingQueryPolygon {
 	}
 
 	/**
-	 * @param vec1
-	 * @param vec2
-	 * @return
-	 */
-	private static double[] diffVec(SpatialVector vec1, SpatialVector vec2) {
-		double x, y, z;
-		x = -vec1.x() + vec2.x();
-		y = -vec1.y() + vec2.y();
-		z = -vec1.z() + vec2.z();
-		return new double[] { x, y, z };
-	}
-
-	/**
 	 * Adds the vec.
 	 * 
 	 * @param vec
@@ -385,11 +368,7 @@ public class TestingQueryPolygon {
 	public static void addVec(SpatialVector vec, HealpixMap map,
 			double v) throws Exception {
 
-		int nside = 4;
-		HealpixIndex hi = new HealpixIndex(nside);
-
-		// double angs[] = HealpixIndex.ang(vec);
-		double angs[] = hi.vec2Ang(vec);
+		double angs[] = HealpixIndex.vec2Ang(vec);
 
 		AngularPosition ang2 = new AngularPosition(angs[0], angs[1]);
 
@@ -400,10 +379,7 @@ public class TestingQueryPolygon {
 	public static void addVec(int nside, SpatialVector vec, HealpixMap map,
 			double v) throws Exception {
 
-		HealpixIndex hi = new HealpixIndex(nside);
-
-		// double angs[] = HealpixIndex.ang(vec);
-		double angs[] = hi.vec2Ang(vec);
+		double angs[] = HealpixIndex.vec2Ang(vec);
 
 		AngularPosition ang2 = new AngularPosition(angs[0], angs[1]);
 
