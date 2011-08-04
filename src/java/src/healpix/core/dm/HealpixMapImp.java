@@ -20,7 +20,8 @@
 package healpix.core.dm;
 
 import healpix.core.AngularPosition;
-import healpix.core.HealpixIndex;
+import healpix.core.HealpixBase;
+import healpix.core.Pointing;
 import healpix.core.dm.HealpixMap.CoordSys;
 import healpix.core.dm.util.HealpixTool;
 import healpix.tools.Constants;
@@ -43,7 +44,7 @@ import net.ivoa.util.BufferedDataOutputStream;
  * @author ejoliet
  * @version $Id: HealpixMapImp.java 140496 2010-06-23 12:52:12Z womullan $
  */
-public class HealpixMapImp extends HealpixIndex implements HealpixMap,
+public class HealpixMapImp extends HealpixBase implements HealpixMap,
 		Serializable, Cloneable {
 
 	/**
@@ -129,11 +130,6 @@ public class HealpixMapImp extends HealpixIndex implements HealpixMap,
 		}
 	}
 
-	// HEALPix encoding scheme
-
-	/** The scheme. */
-	private Scheme scheme;
-
 	/* Number of maps. */
 	/** The n maps. */
 	private short nMaps = 0;
@@ -164,7 +160,7 @@ public class HealpixMapImp extends HealpixIndex implements HealpixMap,
 	/** The imap. */
 	private int imap = 0;
 
-	private final HealpixMap map_orig;
+	private final HealpixMapImp map_orig;
 
 	private CoordSys coordSys;
 
@@ -179,10 +175,7 @@ public class HealpixMapImp extends HealpixIndex implements HealpixMap,
 	 * @throws Exception
 	 */
 	public HealpixMapImp(String maps[], double[][] mapIt) throws Exception {
-		super((int) Math.round(Math.sqrt((double) mapIt[0].length / 12.)));
-		// The default scheme is RING.
-		// But we use nest for plotting 3d.
-		this.scheme = Scheme.RING;
+		super((int) Math.round(Math.sqrt(mapIt[0].length/12.)),Scheme.RING);
 
 		this.mapNames = maps;
 		setName(maps);
@@ -222,11 +215,7 @@ public class HealpixMapImp extends HealpixIndex implements HealpixMap,
 	 * @throws Exception
 	 */
 	public HealpixMapImp(short nsideIndex, String maps[]) throws Exception {
-		super((int) Math.round((Math.pow(2., (double) nsideIndex))));
-
-		// The default scheme is RING.
-		// But we use nest for plotting 3d.
-		this.scheme = Scheme.RING;
+		super(1L<<nsideIndex,Scheme.RING);
 
 		this.mapNames = maps;
 		setName(maps);
@@ -273,28 +262,10 @@ public class HealpixMapImp extends HealpixIndex implements HealpixMap,
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see healpix.core.dm.AbstractHealpixMap#getScheme()
-	 */
-	public Scheme getScheme() {
-		return this.scheme;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see healpix.core.dm.AbstractHealpixMap#setScheme(healpix.core.dm.AbstractHealpixMap.Scheme)
-	 */
-	public void setScheme(Scheme scheme) {
-		this.scheme = scheme;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
 	 * @see healpix.core.dm.AbstractHealpixMap#nPixel()
 	 */
 	public long nPixel() {
-		return this.npix;
+		return super.getNpix();
 	}
 
 	/*
@@ -323,9 +294,7 @@ public class HealpixMapImp extends HealpixIndex implements HealpixMap,
 	public double get(AngularPosition pos) {
 
 		try {
-			int index = (int) ((this.scheme == Scheme.RING) ? this
-					.ang2pix_ring(pos.theta(), pos.phi()) : this.ang2pix_nest(
-					pos.theta(), pos.phi()));
+			int index = this.ang2pix(pos);
 
 			return map[0][index].getValue();
 		} catch (Exception e) {
@@ -363,7 +332,7 @@ public class HealpixMapImp extends HealpixIndex implements HealpixMap,
 	 * @throws Exception
 	 */
 	public int getPosCount(int i, AngularPosition pos) throws Exception {
-		int pixId = this.ang2pix(pos.theta(), pos.phi());
+		int pixId = this.ang2pix(pos);
 		return map[i][pixId].getN();
 	}
 
@@ -419,10 +388,7 @@ public class HealpixMapImp extends HealpixIndex implements HealpixMap,
 		}
 
 		try {
-			// If extends from HealpixIndex:
-			int index = (int) ((this.scheme == Scheme.RING) ? this
-					.ang2pix_ring(pos.theta(), pos.phi()) : this.ang2pix_nest(
-					pos.theta(), pos.phi()));
+			int index = (int) (this.ang2pix(pos));
 			MapItem item = this.map[i][index];
 			if (item == null) {
 				item = this.map[i][index] = new MapItem();
@@ -722,15 +688,7 @@ public class HealpixMapImp extends HealpixIndex implements HealpixMap,
 
 	
 	public int ang2pix(double theta, double phi) throws Exception {
-		int pix = 0;
-		if (this.scheme.equals(Scheme.NESTED)) {
-			// pix = (int) super.ang2pix_nest(this.getNside(), theta, phi);
-			pix = (int) super.ang2pix_nest(theta, phi);
-		} else {
-			// pix = (int) super.ang2pix_ring(this.getNside(), theta, phi);
-			pix = (int) super.ang2pix_ring(theta, phi);
-		}
-		return pix;
+		return (int) super.ang2pix(new Pointing(theta,phi));
 	}
 
 	/**
@@ -742,15 +700,7 @@ public class HealpixMapImp extends HealpixIndex implements HealpixMap,
 	 * @throws Exception
 	 */
 	public int ang2pix(AngularPosition pos) throws Exception {
-		int pix = 0;
-		if (this.scheme.equals(Scheme.NESTED)) {
-			// pix = (int) super.ang2pix_nest(this.getNside(), theta, phi);
-			pix = (int) super.ang2pix_nest(pos.theta(), pos.phi());
-		} else {
-			// pix = (int) super.ang2pix_ring(this.getNside(), theta, phi);
-			pix = (int) super.ang2pix_ring(pos.theta(), pos.phi());
-		}
-		return pix;
+		return (int) super.ang2pix(pos);
 	}
 
 	/*
@@ -759,15 +709,7 @@ public class HealpixMapImp extends HealpixIndex implements HealpixMap,
 	 * @see healpix.core.dm.HealpixMap#pix2ang(long)
 	 */
 	public AngularPosition pix2ang(long ipix) throws Exception {
-		double[] ang = null;
-		if (this.scheme.equals(Scheme.NESTED)) {
-			// ang = super.pix2ang_nest(this.getNside(), ipix);
-			ang = super.pix2ang_nest((int) ipix);
-		} else {
-			// ang = super.pix2ang_ring(this.getNside(), ipix);
-			ang = super.pix2ang_ring((int) ipix);
-		}
-		return new AngularPosition(ang[0], ang[1]);
+		return new AngularPosition(super.pix2ang(ipix));
 	}
 
 	/**

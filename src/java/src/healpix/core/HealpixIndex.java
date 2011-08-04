@@ -21,7 +21,6 @@
 package healpix.core;
 
 import healpix.core.base.HealpixException;
-import healpix.core.base.Xyf;
 import healpix.core.base.set.LongRangeSet;
 import healpix.core.base.set.LongRangeSetBuilder;
 import healpix.core.dm.AbstractHealpixMap.Scheme;

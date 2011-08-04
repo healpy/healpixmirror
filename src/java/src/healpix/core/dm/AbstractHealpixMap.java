@@ -59,7 +59,7 @@ public interface AbstractHealpixMap extends Serializable {
 	 * @param scheme
 	 *            Scheme to set.
 	 */
-	public void setScheme(Scheme scheme);
+	public void setScheme(Scheme scheme) throws Exception;
 
 	/**
 	 * Return the number of pixels/cells of the sphere tesselisation.
