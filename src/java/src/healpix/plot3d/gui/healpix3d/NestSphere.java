@@ -18,7 +18,8 @@
  *
  */
 package healpix.plot3d.gui.healpix3d;
-import healpix.tools.SpatialVector;
+import healpix.core.Vec3;
+import healpix.core.Scheme;
 
 import javax.media.j3d.Geometry;
 import javax.media.j3d.GeometryArray;
@@ -33,18 +34,6 @@ public class NestSphere extends HealSphere{
     /** The face. */
     protected int face = 0;
 
-    ////////////////////////////////////////////
-    //
-    // create sphere visual object
-    //
-    /**
-     * Instantiates a new nest sphere.
-     */
-    public NestSphere() {
-		super();
-
-    }
-    
     /**
      * Instantiates a new nest sphere.
      * 
@@ -52,7 +41,7 @@ public class NestSphere extends HealSphere{
      * @param face the face
      */
     public NestSphere(int nside,int face) {
-		super(nside);
+		super(nside,Scheme.NESTED);
 		this.face=face;	
 		this.step=1;
 		this.setGeometry(createGeometry());
@@ -74,7 +63,7 @@ protected Geometry createGeometry(){
 	try {
 		int offset;
 		for (int q=0; q< nQuads; q++) {
-			SpatialVector[] points = index.corners_nest(faceoff+q,step);
+			Vec3[] points = index.corners(faceoff+q,step);
 			offset = q*ppq;
 			addPix(points,offset,quads);
 		}

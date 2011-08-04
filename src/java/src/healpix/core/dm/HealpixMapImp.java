@@ -21,6 +21,7 @@ package healpix.core.dm;
 
 import healpix.core.AngularPosition;
 import healpix.core.HealpixBase;
+import healpix.core.Scheme;
 import healpix.core.Pointing;
 import healpix.core.dm.HealpixMap.CoordSys;
 import healpix.core.dm.util.HealpixTool;

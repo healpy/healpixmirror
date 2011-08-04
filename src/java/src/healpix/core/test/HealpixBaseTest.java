@@ -26,7 +26,6 @@ import java.text.DecimalFormat;
 
 import healpix.core.*;
 import healpix.core.base.set.*;
-import healpix.core.dm.AbstractHealpixMap.Scheme;
 
 public class HealpixBaseTest extends TestCase {
 

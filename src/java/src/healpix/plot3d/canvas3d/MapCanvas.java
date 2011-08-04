@@ -20,7 +20,7 @@
 package healpix.plot3d.canvas3d;
 
 import healpix.core.dm.HealpixMap;
-import healpix.core.dm.AbstractHealpixMap.Scheme;
+import healpix.core.Scheme;
 import healpix.plot3d.gui.healpix3d.DataSphere;
 import healpix.plot3d.gui.healpix3d.HealSphere;
 import healpix.plot3d.gui.healpix3d.RotateAble;

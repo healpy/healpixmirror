@@ -19,7 +19,8 @@
  */
 package healpix.plot3d.demo;
 
-import healpix.core.HealpixIndex;
+import healpix.core.HealpixBase;
+import healpix.core.Scheme;
 import healpix.core.dm.HealpixMap;
 import healpix.plot3d.canvas3d.Group3DAxis;
 import healpix.plot3d.canvas3d.Group3DCircle;
@@ -463,9 +464,9 @@ public class MapCanvas3D extends Canvas3D implements RotateAble {
 		double max = theMap.getMax();
 		System.out.println("********** #Min(0)=" + min);
 		System.out.println("********** #Max(0)=" + max);
-		HealpixIndex index = null;
+		HealpixBase index = null;
 		try {
-			index = new HealpixIndex(theMap.nside());
+			index = new HealpixBase(theMap.nside(),Scheme.NESTED);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

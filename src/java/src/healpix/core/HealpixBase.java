@@ -24,7 +24,6 @@ package healpix.core;
 import java.util.Arrays;
 
 import healpix.core.base.set.*;
-import healpix.core.dm.AbstractHealpixMap.Scheme;
 
 /** Functionality related to the HEALPix pixelisation.
     This class is conceptually very similar the the Healpix_Base class
@@ -1081,7 +1080,7 @@ public class HealpixBase extends HealpixTables
     return ret;
   }
   /** Experimental; Do not use (yet) */
-  private Vec3[] corners(long pix, int step) throws Exception
+  public Vec3[] corners(long pix, int step) throws Exception
     {
     int nPoints = step * 2 + 2;
     Vec3[] points = new Vec3[nPoints];

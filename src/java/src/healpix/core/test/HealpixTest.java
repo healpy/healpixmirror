@@ -21,12 +21,12 @@ package healpix.core.test;
 
 import healpix.core.AngularPosition;
 import healpix.core.HealpixIndex;
+import healpix.core.Scheme;
 import healpix.core.base.BitManipulation;
 import healpix.core.base.set.LongIterator;
 import healpix.core.base.set.LongList;
 import healpix.core.base.set.LongRangeSet;
 import healpix.core.dm.HealpixMap;
-import healpix.core.dm.AbstractHealpixMap.Scheme;
 import healpix.plot3d.gui.view.MapView3d;
 import healpix.tools.Constants;
 import healpix.tools.HealpixMapCreator;

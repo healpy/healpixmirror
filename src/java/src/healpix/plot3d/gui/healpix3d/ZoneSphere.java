@@ -19,9 +19,11 @@
  */
 package healpix.plot3d.gui.healpix3d;
 
-import healpix.core.Healpix;
+import healpix.core.HealpixBase;
+import healpix.core.Scheme;
+import healpix.core.Pointing;
 import healpix.tools.Constants;
-import healpix.tools.SpatialVector;
+import healpix.core.Vec3;
 
 import javax.media.j3d.Appearance;
 import javax.media.j3d.ColoringAttributes;
@@ -41,22 +43,13 @@ public class ZoneSphere extends HealSphere {
 	protected int i_zone = 0;
 
 	/**
-	 * create sphere visual object
-	 */
-	public ZoneSphere() {
-		super();
-		this.setGeometry(createGeometry());
-		this.setAppearance(createAppearance());
-	}
-
-	/**
 	 * Instantiates a new zone sphere.
 	 * 
 	 * @param nside the nside
 	 * @param zone the zone
 	 */
 	public ZoneSphere(int nside, int zone) {
-		super(nside);
+		super(nside,Scheme.RING);
 		this.i_zone = zone;
 
 		this.setGeometry(createGeometry());
@@ -67,7 +60,7 @@ public class ZoneSphere extends HealSphere {
 	 * @see healpix.plot3d.gui.healpix3d.HealSphere#createGeometry()
 	 */
 	protected Geometry createGeometry() {
-		double nms[], theta_center, phi_center;
+		double theta_center, phi_center;
 		// double thn, ths;
 		// double philr[];
 		int ppq = (step * 2 + 2) * 2; // points per quad
@@ -84,8 +77,7 @@ public class ZoneSphere extends HealSphere {
 		// - Zone");
 
 		for (int i_th = 1; i_th < ns4; i_th++) {
-			nms = Healpix.integration_limits_in_costh(nside, i_th);
-			theta_center = Math.acos(nms[1]);
+			theta_center = Math.acos(index.ring2z(i_th));
 			// thn = Math.acos(nms[0]);
 			// ths = Math.acos(nms[2]);
 			i_phi_count = Math.min(i_th, Math.min(nside, ns4 - i_th));
@@ -101,8 +93,7 @@ public class ZoneSphere extends HealSphere {
 							* Constants.PI / 2.0 / (double) i_phi_count;
 				}
 				try {
-					rpix = Healpix
-							.ang2pix_ring(nside, theta_center, phi_center);
+					rpix = (int)index.ang2pix(new Pointing(theta_center, phi_center));
 					// int npix =
 					// Healpix.ang2pix_nest(nside,theta_center,phi_center);
 					// philr = Healpix.pixel_boundaries(nside, i_th, i_phi,
@@ -110,7 +101,7 @@ public class ZoneSphere extends HealSphere {
 
 					int offset = q * ppq;
 					q++;
-					SpatialVector[] corners = index.corners_ring(rpix, step);
+					Vec3[] corners = index.corners(rpix, step);
 					addPix(corners, offset, quads);
 				} catch (Exception e) {
 					e.printStackTrace();

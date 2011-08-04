@@ -23,7 +23,6 @@ package healpix.core;
 import healpix.core.base.HealpixException;
 import healpix.core.base.set.LongRangeSet;
 import healpix.core.base.set.LongRangeSetBuilder;
-import healpix.core.dm.AbstractHealpixMap.Scheme;
 import healpix.tools.Constants;
 import healpix.tools.SpatialVector;
 

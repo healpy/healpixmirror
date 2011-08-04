@@ -22,7 +22,7 @@ package healpix.fits;
 import healpix.core.AngularPosition;
 import healpix.core.dm.HealpixMap;
 import healpix.core.dm.HealpixMapImp;
-import healpix.core.dm.AbstractHealpixMap.Scheme;
+import healpix.core.Scheme;
 
 import java.util.Iterator;
 

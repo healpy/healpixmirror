@@ -19,10 +19,10 @@
  */
 package healpix.plot3d.gui.healpix3d;
 
-import healpix.core.HealpixIndex;
+import healpix.core.HealpixBase;
 import healpix.core.dm.HealpixMap;
 import healpix.plot3d.canvas3d.SineColorTransform;
-import healpix.tools.SpatialVector;
+import healpix.core.Vec3;
 
 import javax.media.j3d.Geometry;
 import javax.media.j3d.GeometryArray;
@@ -53,12 +53,6 @@ public class DataSphere extends HealSphere {
 	/** The trans. */
 	SineColorTransform trans;
 
-	/** Default constructor. */
-	public DataSphere() {
-		super();
-
-	}
-
 	/**
 	 * Most detailed constructor.
 	 * 
@@ -74,7 +68,7 @@ public class DataSphere extends HealSphere {
 	 *            maximum value against which color should be scaled.
 	 */
 	public DataSphere(int nside, int face, HealpixMap ch, double min, double max) {
-		super(nside);
+		super(nside,ch.getScheme());
 		this.face = face;
 		this.ch = ch;
 		this.min = min;
@@ -90,7 +84,7 @@ public class DataSphere extends HealSphere {
 	 * @param ch the ch
 	 */
 	public DataSphere(int face, HealpixMap ch) {
-		super(ch.nside());
+		super(ch.nside(),ch.getScheme());
 		System.out.println("********** Face#=" + face);
 		this.face = face;
 		this.ch = ch;
@@ -108,7 +102,7 @@ public class DataSphere extends HealSphere {
 	 * @param imap
 	 */
 	public DataSphere(int face, HealpixMap ch, int imap) {
-		super(ch.nside());
+		super(ch.nside(),ch.getScheme());
 		this.imap = imap;
 		this.face = face;
 		this.ch = ch;
@@ -128,7 +122,7 @@ public class DataSphere extends HealSphere {
 	 * @param max the max
 	 */
 	public DataSphere(int face, HealpixMap ch, int imap, double min, double max) {
-		super(ch.nside());
+		super(ch.nside(),ch.getScheme());
 		this.imap = imap;
 		this.face = face;
 		this.ch = ch;
@@ -149,7 +143,7 @@ public class DataSphere extends HealSphere {
 	 * @param index the index
 	 */
 	public DataSphere(int face, HealpixMap ch, int imap, double min, double max,
-			HealpixIndex index) {
+			HealpixBase index) {
 		super(index);
 		this.imap = imap;
 		this.face = face;
@@ -181,7 +175,7 @@ public class DataSphere extends HealSphere {
 				// quads2[q] = new QuadArrayExt(4,GeometryArray.COORDINATES
 				// | GeometryArray.COLOR_3);
 				int pixindex = faceoff + q;
-				SpatialVector[] points = index.corners_nest(pixindex, 1);
+				Vec3[] points = index.corners(pixindex, 1);
 				double val = (double) ch.get(imap, pixindex);// ch.getPixAsFloat(pixindex);
 //				if(val==0)
 //					continue;
@@ -193,8 +187,8 @@ public class DataSphere extends HealSphere {
 				offset = q * ppq;
 
 				for (int v = 0; v < points.length; v++) {
-					quads.setCoordinate(offset + v, new Point3d(points[v].x(),
-							points[v].y(), points[v].z()));
+					quads.setCoordinate(offset + v, new Point3d(points[v].x,
+							points[v].y, points[v].z));
 					quads.setColor(offset + v, c);
 					quads.setAngle(offset + v, ch.pix2ang(pixindex));
 					quads.setIpix(offset + v, pixindex);

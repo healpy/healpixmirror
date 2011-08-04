@@ -19,8 +19,9 @@
  */
 package healpix.plot3d.gui.healpix3d;
 
-import healpix.core.HealpixIndex;
-import healpix.tools.SpatialVector;
+import healpix.core.HealpixBase;
+import healpix.core.Scheme;
+import healpix.core.Vec3;
 
 import javax.media.j3d.Appearance;
 import javax.media.j3d.ColoringAttributes;
@@ -47,18 +48,7 @@ public abstract class HealSphere extends Shape3D {
 	protected int step = 60;
 
 	/** Descriptor object for a healpix sphere of a specific nside. */
-	protected HealpixIndex index;
-
-	// --------------------------------------------------------------------------
-	/** Constructor for default nside. */
-	public HealSphere() {
-		this.setGeometry(createGeometry());
-		try {
-			index = new HealpixIndex(nside);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
+	protected HealpixBase index;
 
 	/**
 	 * Constructor for specified nside.
@@ -66,7 +56,7 @@ public abstract class HealSphere extends Shape3D {
 	 * @param nside
 	 *            the healpix resolution parameter.
 	 */
-	public HealSphere(int nside) {
+	public HealSphere(int nside, Scheme scheme) {
 		this.nside = nside;
 		if (nside >= 8)
 			step = 11;
@@ -77,7 +67,7 @@ public abstract class HealSphere extends Shape3D {
 		if (nside >= 64)
 			step = 1;
 		try {
-			index = new HealpixIndex(nside);
+			index = new HealpixBase(nside,scheme);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -88,12 +78,12 @@ public abstract class HealSphere extends Shape3D {
 	 * 
 	 * @param ind the ind
 	 */
-	public HealSphere(HealpixIndex ind) {
+	public HealSphere(HealpixBase ind) {
 		if (ind != null) {
 			this.index = ind;
 		} else {
 			try {
-				index = new HealpixIndex(nside);
+				index = new HealpixBase(nside,Scheme.NESTED);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -129,19 +119,19 @@ public abstract class HealSphere extends Shape3D {
 	 * @param quads
 	 *            structure into which to insert lines.
 	 */
-	protected void addPix(SpatialVector[] points, int offset, LineArray quads) {
+	protected void addPix(Vec3[] points, int offset, LineArray quads) {
 		int point = 0;
 		for (int c = 0; c < points.length; c++) {
 			// System.out.println("point:"+(offset+point)+" "+corners[c]);
-			quads.setCoordinate((offset + point++), new Point3d(points[c].x(),
-					points[c].y(), points[c].z()));
+			quads.setCoordinate((offset + point++), new Point3d(points[c].x,
+					points[c].y, points[c].z));
 			if (c > 0) { // add it again
 				quads.setCoordinate((offset + point++), new Point3d(points[c]
-						.x(), points[c].y(), points[c].z()));
+						.x, points[c].y, points[c].z));
 			}
 		}
-		quads.setCoordinate((offset + point++), new Point3d(points[0].x(),
-				points[0].y(), points[0].z()));
+		quads.setCoordinate((offset + point++), new Point3d(points[0].x,
+				points[0].y, points[0].z));
 	}
 
 	/**

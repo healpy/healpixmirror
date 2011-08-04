@@ -20,7 +20,7 @@
 package healpix.plot3d.gui.healpix3d;
 
 import healpix.core.AngularPosition;
-import healpix.core.HealpixIndex;
+import healpix.core.HealpixBase;
 
 /**
  * This class is used to construct the quad geometry for the 3d sphere.
@@ -29,7 +29,7 @@ import healpix.core.HealpixIndex;
  * @author ejoliet
  * @version $Id: HealpixDataIndex.java 49444 2008-05-07 10:23:02Z ejoliet $
  */
-public class HealpixDataIndex extends HealpixIndex {
+public class HealpixDataIndex extends HealpixBase {
 	/**
 	 * Default serial version
 	 */

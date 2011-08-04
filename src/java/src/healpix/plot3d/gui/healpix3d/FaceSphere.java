@@ -19,14 +19,15 @@
  */
 package healpix.plot3d.gui.healpix3d;
 
-import healpix.tools.SpatialVector;
+import healpix.core.Vec3;
+import healpix.core.Scheme;
 
 import javax.media.j3d.Geometry;
 import javax.media.j3d.GeometryArray;
 import javax.media.j3d.QuadArray;
 import javax.vecmath.Point3d;
 /**
- * Creates a Healpix Face tesselasition
+ * Creates a Healpix Face tesselation
  * 
  * @author ejoliet
  * @version $Id: FaceSphere.java 49444 2008-05-07 10:23:02Z ejoliet $
@@ -37,21 +38,13 @@ public class FaceSphere extends HealSphere {
 	protected int face = 0;
 
 	/**
-	 * create sphere visual object
-	 */
-	public FaceSphere() {
-		super();
-
-	}
-
-	/**
 	 * Instantiates a new face sphere.
 	 * 
 	 * @param nside the nside
 	 * @param face the face
 	 */
 	public FaceSphere(int nside, int face) {
-		super(nside);
+		super(nside,Scheme.NESTED);
 		this.face = face;
 		this.setGeometry(createGeometry());
 		this.setAppearance(createAppearance());
@@ -71,13 +64,13 @@ public class FaceSphere extends HealSphere {
 		try {
 			int offset;
 			for (int q = 0; q < nQuads; q++) {
-				SpatialVector[] points = index.corners_nest(faceoff + q, 1);
+				Vec3[] points = index.corners(faceoff + q, 1);
 				offset = q * ppq;
 				// need to add pixel
 
 				for (int v = 0; v < points.length; v++) {
-					quads.setCoordinate(offset + v, new Point3d(points[v].x(),
-							points[v].y(), points[v].z()));
+					quads.setCoordinate(offset + v, new Point3d(points[v].x,
+							points[v].y, points[v].z));
 				}
 			}
 		} catch (Exception e) {

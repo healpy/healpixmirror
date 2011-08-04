@@ -20,7 +20,7 @@
 package healpix.plot3d.gui.healpix3d;
 
 import healpix.core.dm.HealpixMap;
-import healpix.tools.SpatialVector;
+import healpix.core.Vec3;
 
 import javax.media.j3d.Geometry;
 import javax.media.j3d.GeometryArray;
@@ -69,13 +69,6 @@ public class HealpixPixelDataSphere extends HealSphere {
 	/** The max. */
 	protected double min, max;
 
-	// --------------------------------------------------------------------------
-	/** Default constructor. */
-	public HealpixPixelDataSphere() {
-		super();
-
-	}
-
 	/**
 	 * Used to get the data sphere from a ith map
 	 * 
@@ -87,7 +80,7 @@ public class HealpixPixelDataSphere extends HealSphere {
 	 *            ith quad array
 	 */
 	public HealpixPixelDataSphere(HealpixMap ch, int imap, int iQuads) {
-		super(ch.nside());
+		super(ch.nside(),ch.getScheme());
 		this.imap = imap;
 		this.ch = ch;
 		this.q = iQuads;
@@ -123,7 +116,7 @@ public class HealpixPixelDataSphere extends HealSphere {
 			// quads2[q] = new QuadArrayExt(4,GeometryArray.COORDINATES
 			// | GeometryArray.COLOR_3);
 			int pixindex = q;
-			SpatialVector[] points = index.corners_nest(pixindex, 1);
+			Vec3[] points = index.corners(pixindex, 1);
 			double val = (double) ch.get(imap, pixindex);// ch.getPixAsFloat(pixindex);
 			// System.out.println("********** val(ipix=" +
 			// pixindex+"):"+val);
@@ -150,8 +143,8 @@ public class HealpixPixelDataSphere extends HealSphere {
 			offset = q * ppq;
 			// System.out.println("Points length:"+points.length);
 			for (int v = 0; v < points.length; v++) {
-				Point3d p3d = new Point3d(points[v].x(), points[v].y(),
-						points[v].z());
+				Point3d p3d = new Point3d(points[v].x, points[v].y,
+						points[v].z);
 				System.out.println(q + ".- point=" + v + "offset=" + offset);
 				System.out.println("point setCoord(offset+v,...)="
 						+ (offset + v));

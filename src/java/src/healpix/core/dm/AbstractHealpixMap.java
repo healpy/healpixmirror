@@ -19,6 +19,7 @@
  */
 package healpix.core.dm;
 
+import healpix.core.Scheme;
 import java.io.Serializable;
 
 /**
@@ -28,17 +29,6 @@ import java.io.Serializable;
  */
 public interface AbstractHealpixMap extends Serializable {
 	
-	/**
-	 * The Enum Scheme.
-	 */
-	public enum Scheme {
-		
-		/** The RING. */
-		RING, 
-       /** The NEST. */
-       NESTED
-	};
-
 	/**
 	 * Return the value of the HEALPix NSIDE parameter.
 	 * 
