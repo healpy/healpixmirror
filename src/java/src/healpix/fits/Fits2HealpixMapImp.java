@@ -126,7 +126,7 @@ public class Fits2HealpixMapImp implements Fits2HealpixMap {
 						+ hc.getValue());
 			}
 			if (key.equals("ORDERING") ) {
-				schemeFits = hc.getValue();
+				schemeFits = hc.getValue().trim();
 				System.out.println("Scheme found:" + schemeFits);
 			}
 			if (key.contains("UNIT")) {
