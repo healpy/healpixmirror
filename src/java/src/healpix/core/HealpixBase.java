@@ -1050,14 +1050,21 @@ public class HealpixBase extends HealpixTables
     if (((i_th==1)||(i_th==nl4-1))&&(Math.abs(cos_theta)>=1-1/(3.0*npface))) {
       phi_l = 0;
       phi_r = 1;
-    } else if (cos_theta >= Constants.twothird) {
+    } else if ((i_th<nside) || (cos_theta>=Constants.twothird)) {
       double sq3th = Math.sqrt(3*(1-cos_theta));
       double factor = 1/(nside*sq3th);
       double jd = i_phi;
       double ku = i_th - i_phi;
       phi_l = Math.max((jd-1)*factor, 1- (ku+1)*factor);
       phi_r = Math.min(1 - ku*factor, jd*factor);
-    } else if (cos_theta >= -Constants.twothird) {
+    } else if ((i_th>3*nside) || (cos_theta<=-Constants.twothird)) {
+      double sq3th = Math.sqrt(3*(1+cos_theta));
+      double factor = 1/(nside*sq3th);
+      double jd = i_th - nl2 + i_phi;
+      double ku = nl2 - i_phi;
+      phi_l = Math.max(1 - (nl2-jd+1)*factor, (nl2-ku-1)*factor);
+      phi_r = Math.min(1 - (nl2-jd)  *factor, (nl2-ku  )*factor);
+    } else {
       double cth34 = 0.5 - 0.75*cos_theta;
       double cth34_1 = cth34 + 1.0;
       int modfactor = (int) (nside + ((i_th-nside)&1));
@@ -1065,13 +1072,6 @@ public class HealpixBase extends HealpixTables
       double ku = 0.5*(modfactor+i_th) - i_phi;
       phi_l = Math.max( cth34_1 - (ku+1)/nside, -cth34 + (jd-1)/nside);
       phi_r = Math.min( cth34_1 - ku/nside, -cth34 + jd/nside);
-    } else {
-      double sq3th = Math.sqrt(3*(1+cos_theta));
-      double factor = 1/(nside*sq3th);
-      double jd = i_th - nl2 + i_phi;
-      double ku = nl2 - i_phi;
-      phi_l = Math.max(1 - (nl2-jd+1)*factor, (nl2-ku-1)*factor);
-      phi_r = Math.min(1 - (nl2-jd)  *factor, (nl2-ku  )*factor);
     }
     double[] ret = { Constants.halfpi*(phi_l+i_zone),
                      Constants.halfpi*(phi_r+i_zone) };
@@ -1089,7 +1089,7 @@ public class HealpixBase extends HealpixTables
 
     int i_zone = (int)(phi/Constants.halfpi);
     long ringno = pix2ring(pix);
-    long i_phi_count = Math.min(ringno, Math.min(nside, nl4-ringno));
+    long i_phi_count = Math.min(nside, Math.min(ringno, nl4-ringno));
     long i_phi = 0;
     double phifac = Constants.halfpi / i_phi_count;
     if ( ringno>=nside && ringno<=nl3 ) {
