@@ -477,6 +477,7 @@ public class HealpixMapImp extends HealpixBase implements HealpixMap,
 
 		// Creating a binary Fits table
 		FitsFactory.setUseAsciiTables(false);
+		FitsFactory.setUseHierarch(true);
 		Fits f = new Fits();
 		f.addHDU(Fits.makeHDU(table));
 		BinaryTableHDU bhdu = (BinaryTableHDU) f.getHDU(1);

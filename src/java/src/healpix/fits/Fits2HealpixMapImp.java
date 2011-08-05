@@ -27,6 +27,7 @@ import healpix.core.Scheme;
 import java.util.Iterator;
 
 import net.ivoa.fits.Fits;
+import net.ivoa.fits.FitsFactory;
 import net.ivoa.fits.Header;
 import net.ivoa.fits.HeaderCard;
 import net.ivoa.fits.data.AsciiTable;
@@ -78,6 +79,7 @@ public class Fits2HealpixMapImp implements Fits2HealpixMap {
 	 * @see healpix.fits.Fits2HealpixMap#readFitsBinaryTable(java.lang.String)
 	 */
 	public double[][] readFitsBinaryTable(String filename) throws Exception {
+		FitsFactory.setUseHierarch(true);
 		Fits fits = new Fits(filename);
 		BasicHDU[] bhdu = fits.read();
 		TableHDU thdu = null;
@@ -114,17 +116,20 @@ public class Fits2HealpixMapImp implements Fits2HealpixMap {
 		Iterator hci = head.iterator();
 		while ( hci.hasNext() ) {
 			HeaderCard hc = (HeaderCard) hci.next();
-			// System.out.println("Key card read from fits:" + head.getKey(n));
-			// System.out.println("-> " + head.getValue(head.getKey(n)));
-			if (hc.getKey().equals("NSIDE") ) {
+			// System.out.println("Key card read from fits:" + hc.getKey());
+			// System.out.println("-> " + hc.getValue());
+			String key = hc.getKey();
+			if (key.startsWith("HIERARCH."))
+				key=key.substring(9).toUpperCase();
+			if (key.equals("NSIDE") ) {
 				System.out.println("NSIDE read from fits:"
 						+ hc.getValue());
 			}
-			if ( hc.getKey().equals("ORDERING") ) {
+			if (key.equals("ORDERING") ) {
 				schemeFits = hc.getValue();
 				System.out.println("Scheme found:" + schemeFits);
 			}
-			if (hc.getKey().contains("UNIT")) {
+			if (key.contains("UNIT")) {
 				System.out.println("UNIT read from fits:"
 						+ hc.getValue());
 			}
