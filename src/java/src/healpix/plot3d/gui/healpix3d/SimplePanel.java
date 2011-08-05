@@ -98,6 +98,7 @@ public class SimplePanel extends JPanel implements ItemListener {
 		add(jlTitle);
 		nside = new JComboBox();// new Choice();
 		nside.setForeground(Color.blue);
+		nside.addItem("1");
 		nside.addItem("2");
 		nside.addItem("4");
 		nside.addItem("8");

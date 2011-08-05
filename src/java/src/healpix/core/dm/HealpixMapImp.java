@@ -233,8 +233,8 @@ public class HealpixMapImp extends HealpixBase implements HealpixMap,
 			for (int m = 0; m < M; ++m) {
 				this.map[n][m] = new MapItem();
 			}
-			this.minVal[n] = 0.;
-			this.maxVal[n] = 0.;
+			this.minVal[n] = Double.MAX_VALUE;
+			this.maxVal[n] = -Double.MAX_VALUE;
 			this.N[n] = 0;
 		}
 		map_orig = this;
@@ -583,7 +583,7 @@ public class HealpixMapImp extends HealpixBase implements HealpixMap,
 	 * @return the max map item
 	 */
 	public double getMaxMapItem(int i) {
-		double max = Double.MIN_VALUE;
+		double max = -Double.MAX_VALUE;
 		double min = Double.MAX_VALUE;
 		long npix = 12 * nside * nside;
 		for (int u = 0; u < npix; u++) {
@@ -626,7 +626,7 @@ public class HealpixMapImp extends HealpixBase implements HealpixMap,
 	 * @return the min map item
 	 */
 	public double getMinMapItem(int i) {
-		double max = Double.MIN_VALUE;
+		double max = -Double.MAX_VALUE;
 		double min = Double.MAX_VALUE;
 		long npix = 12 * nside * nside;
 		for (int u = 0; u < npix; u++) {
@@ -875,6 +875,7 @@ public class HealpixMapImp extends HealpixBase implements HealpixMap,
 	 */
 	public void convert_nest2ring() throws Exception {
 		int ipn = 0;
+		setScheme(Scheme.RING);
 		for (int imap = 0; imap < this.getName().length; imap++) {
 			for (int ipr = 0; ipr < nPixel(); ipr++) {
 				ipn = (int)this.nest2ring(ipr);
@@ -895,6 +896,7 @@ public class HealpixMapImp extends HealpixBase implements HealpixMap,
 	 */
 	public void convert_ring2nest() throws Exception {
 		int ipn = 0;
+		setScheme(Scheme.NESTED);
 		for (int imap = 0; imap < this.getName().length; imap++) {
 			for (int ipr = 0; ipr < nPixel(); ipr++) {
 				ipn = (int) this.ring2nest(ipr);

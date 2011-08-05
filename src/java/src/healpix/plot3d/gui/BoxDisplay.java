@@ -68,7 +68,7 @@ public class BoxDisplay extends Canvas implements ExtBoxDisplayer {
 		theImage = new BufferedImage(pix[0].length, pix.length,
 				BufferedImage.TYPE_INT_RGB);
 		// finding max and min pixel value for color scale
-		double max = Double.MIN_VALUE;
+		double max = -Double.MAX_VALUE;
 		double min = Double.MAX_VALUE;
 		for (int y = 0; y < pix.length; y++) {
 			for (int x = 0; x < pix[0].length; x++) {

@@ -87,6 +87,7 @@ public class HealpixTool {
 	private void upgrade_ring(int nside_out) throws Exception {
 		map_out = new HealpixMapImp(12 * nside_out * nside_out, map_in
 				.getName());
+		map_out.setScheme(map_in.getScheme());
 		map_in.convert_ring2nest();
 		// ***Upgrade as NEST healpix map.
 		upgrade_nest(nside_out);
@@ -105,6 +106,7 @@ public class HealpixTool {
 	private void upgrade_nest(int nside_out) throws Exception {
 		map_out = new HealpixMapImp(12 * nside_out * nside_out, map_in
 				.getName());
+		map_out.setScheme(map_in.getScheme());
 		double npix_out = map_out.nPixel();
 		double npix_in = map_in.nPixel();
 		double npratio = npix_out / npix_in;
@@ -113,7 +115,7 @@ public class HealpixTool {
 		System.out.println("npix_out/npix_in=" + npratio);
 		int ip = 0;
 		for (int nmap = 0; nmap < map_in.getName().length; nmap++) {
-			for (int iu = 0; iu < npix_out - 1; iu++) {
+			for (int iu = 0; iu < npix_out; iu++) {
 				ip = (int) (iu / npratio);
 				map_out.setValueCell(nmap, iu, map_in.get(nmap, ip));
 			}
@@ -133,6 +135,7 @@ public class HealpixTool {
 	public HealpixMap degrade(int nside_out) throws Exception {
 		map_out = new HealpixMapImp(12 * nside_out * nside_out, map_in
 				.getName());
+		map_out.setScheme(map_in.getScheme());
 		double npix_out = map_out.nPixel();
 		double npix_in = map_in.nPixel();
 		double npratio = npix_in / npix_out;
