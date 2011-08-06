@@ -164,9 +164,8 @@ public class ViewMaps extends JApplet implements ActionListener, TextListener,
 		// view3d = new planck.gui.healpix3d.MapView3d();
 		// checking if can make MapView3d (ie java 3d library is available)
 		try {
-			// how to make a class at run time - rathar than at compile time:
-			Class cls = Class.forName("healpix.plot3d.gui.view.MapView3d");
-			view3d = (MapTaker) cls.newInstance();
+			// how to make a class at run time - rather than at compile time:
+			view3d = (MapTaker)Class.forName("healpix.plot3d.gui.view.MapView3d").newInstance();
 		} catch (Exception ex) {
 			show3d.setEnabled(false);
 			view3dfailed = true;

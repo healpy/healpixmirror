@@ -43,7 +43,6 @@ import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.ToolTipManager;
-import javax.vecmath.Color3f;
 import javax.vecmath.Point3d;
 
 import com.sun.j3d.utils.picking.PickCanvas;
@@ -295,22 +294,4 @@ public class ToolTipBehavior extends PickMouseBehavior {
 		DialogToolTip.showToolTip(s, htmlText);
 	}
 
-	private void updateColor(final QuadArrayExt pixel, final int[] indices) {
-		new Thread(new Runnable() {
-			
-			@Override
-			public void run() {
-//				Color3f[] clr = pixel.getColorRef3f();
-				pixel.setColor(indices[0], new Color3f(128,128,128));
-				try {
-					wait(3000);
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-//				pixel.setColor(indices[0], new Color3f(clr[0].x,clr[1].y,clr[2].z));
-				
-			}
-		}).start();		
-	}
 }

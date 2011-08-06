@@ -27,14 +27,12 @@ import healpix.core.base.set.LongIterator;
 import healpix.core.base.set.LongList;
 import healpix.core.base.set.LongRangeSet;
 import healpix.core.dm.HealpixMap;
-import healpix.plot3d.gui.view.MapView3d;
 import healpix.tools.Constants;
 import healpix.tools.HealpixMapCreator;
 import healpix.tools.SpatialVector;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Iterator;
 import java.util.List;
 
 import junit.framework.TestCase;
@@ -42,7 +40,7 @@ import junit.framework.TestCase;
 
 /**
  * Test suite for Healpix
- * 
+ * @deprecated
  * @author ejoliet
  */
 
@@ -148,8 +146,7 @@ public class HealpixTest extends TestCase {
 	public void testNpix2Nside() throws Exception {
 		int npix = 48;
 		int nside = 2;
-		HealpixIndex pt = new HealpixIndex(nside);
-		int nside1 = (int) pt.npix2Nside(npix);
+		int nside1 = (int) HealpixIndex.npix2Nside(npix);
 		assertEquals("Nside=" + nside1, nside, nside1, 1e-10);
 
 	}
@@ -215,8 +212,7 @@ public class HealpixTest extends TestCase {
 		double PI = Math.PI;
 		double theta = PI / 2.;
 		double phi = PI / 2;
-		HealpixIndex pt = new HealpixIndex();
-		SpatialVector v = (SpatialVector) pt.ang2Vec(theta, phi);
+		SpatialVector v = (SpatialVector) HealpixIndex.ang2Vec(theta, phi);
 		System.out.println("Vector x=" + v.x() + " y=" + v.y() + " z=" + v.z());
 		assertEquals("x=" + v.x(), 0., v.x(), 1e-10);
 		assertEquals("y=" + v.y(), 1., v.y(), 1e-10);
@@ -234,17 +230,17 @@ public class HealpixTest extends TestCase {
 		int nside = 1;
 		System.out.println("Start test ringNum !!!!!!!!!!!!!!!!!!!!");
 		HealpixIndex pt = new HealpixIndex(nside);
-		int nring = (int) pt.ringNum(nside, z);
+		int nring = (int) HealpixIndex.ringNum(nside, z);
 		System.out.println("z=" + z + " ring number =" + nring);
 		assertEquals("z=" + z, 2, nring, 1e-10);
 		z = -0.25;
-		nring = (int) pt.ringNum(nside, z);
+		nring = (int) HealpixIndex.ringNum(nside, z);
 		assertEquals("z=" + z, 2, nring, 1e-10);
 		z = 0.8;
-		nring = (int) pt.ringNum(nside, z);
+		nring = (int) HealpixIndex.ringNum(nside, z);
 		assertEquals("z=" + z, 1, nring, 1e-10);
 		z = -0.8;
-		nring = (int) pt.ringNum(nside, z);
+		nring = (int) HealpixIndex.ringNum(nside, z);
 		assertEquals("z=" + z, 3, nring, 1e-10);
 		System.out.println(" test ringNum is done");
 		nside = 4;
@@ -252,72 +248,72 @@ public class HealpixTest extends TestCase {
 		int pix = 3;
 		SpatialVector v = pt.pix2vec_ring(pix);
 		z = v.z();
-		nring = (int) pt.ringNum(nside, z);
+		nring = (int) HealpixIndex.ringNum(nside, z);
 		assertEquals("z=" + z, 1, nring, 1e-10);
 		pix = 11;
 		v = pt.pix2vec_ring(pix);
 		z = v.z();
-		nring = (int) pt.ringNum(nside, z);
+		nring = (int) HealpixIndex.ringNum(nside, z);
 		assertEquals("z=" + z, 2, nring, 1e-10);
 		pix = 23;
 		v = pt.pix2vec_ring(pix);
 		z = v.z();
-		nring = (int) pt.ringNum(nside, z);
+		nring = (int) HealpixIndex.ringNum(nside, z);
 		assertEquals("z=" + z, 3, nring, 1e-10);
 		pix = 39;
 		v = pt.pix2vec_ring(pix);
 		z = v.z();
-		nring = (int) pt.ringNum(nside, z);
+		nring = (int) HealpixIndex.ringNum(nside, z);
 		assertEquals("z=" + z, 4, nring, 1e-10);
 		pix = 55;
 		v = pt.pix2vec_ring(pix);
 		z = v.z();
-		nring = (int) pt.ringNum(nside, z);
+		nring = (int) HealpixIndex.ringNum(nside, z);
 		assertEquals("z=" + z, 5, nring, 1e-10);
 		pix = 71;
 		v = pt.pix2vec_ring(pix);
 		z = v.z();
-		nring = (int) pt.ringNum(nside, z);
+		nring = (int) HealpixIndex.ringNum(nside, z);
 		assertEquals("z=" + z, 6, nring, 1e-10);
 		pix = 87;
 		v = pt.pix2vec_ring(pix);
 		z = v.z();
-		nring = (int) pt.ringNum(nside, z);
+		nring = (int) HealpixIndex.ringNum(nside, z);
 		assertEquals("z=" + z, 7, nring, 1e-10);
 		pix = 103;
 		v = pt.pix2vec_ring(pix);
 		z = v.z();
-		nring = (int) pt.ringNum(nside, z);
+		nring = (int) HealpixIndex.ringNum(nside, z);
 		assertEquals("z=" + z, 8, nring, 1e-10);
 		pix = 119;
 		v = pt.pix2vec_ring(pix);
 		z = v.z();
-		nring = (int) pt.ringNum(nside, z);
+		nring = (int) HealpixIndex.ringNum(nside, z);
 		assertEquals("z=" + z, 9, nring, 1e-10);
 		pix = 135;
 		v = pt.pix2vec_ring(pix);
 		z = v.z();
-		nring = (int) pt.ringNum(nside, z);
+		nring = (int) HealpixIndex.ringNum(nside, z);
 		assertEquals("z=" + z, 10, nring, 1e-10);
 		pix = 151;
 		v = pt.pix2vec_ring(pix);
 		z = v.z();
-		nring = (int) pt.ringNum(nside, z);
+		nring = (int) HealpixIndex.ringNum(nside, z);
 		assertEquals("z=" + z, 11, nring, 1e-10);
 		pix = 167;
 		v = pt.pix2vec_ring(pix);
 		z = v.z();
-		nring = (int) pt.ringNum(nside, z);
+		nring = (int) HealpixIndex.ringNum(nside, z);
 		assertEquals("z=" + z, 12, nring, 1e-10);
 		pix = 169;
 		v = pt.pix2vec_ring(pix);
 		z = v.z();
-		nring = (int) pt.ringNum(nside, z);
+		nring = (int) HealpixIndex.ringNum(nside, z);
 		assertEquals("z=" + z, 13, nring, 1e-10);
 		pix = 180;
 		v = pt.pix2vec_ring(pix);
 		z = v.z();
-		nring = (int) pt.ringNum(nside, z);
+		nring = (int) HealpixIndex.ringNum(nside, z);
 		assertEquals("z=" + z, 14, nring, 1e-10);
 		System.out.println("End test ringNum");
 	}
@@ -966,8 +962,7 @@ public class HealpixTest extends TestCase {
         } catch (Exception e ){
             throw new Exception("! Error using HealpixIndex! "+e);
         }
-        int nHpPix = (int) hpIndex.nside2Npix((int) Math.pow(2,hpDepth));
-        int hpNside = hpIndex.getNside();
+        int nHpPix = (int) HealpixIndex.nside2Npix((int) Math.pow(2,hpDepth));
         
         double[] pixCenterThetaPhi;
         LongRangeSet hpPixInRadius;
@@ -1065,7 +1060,6 @@ public class HealpixTest extends TestCase {
 		nside=4;
 		pt = new HealpixIndex(nside);
 		int triang4[] = { 78, 66, 68 }; // crossing 360
-		int pixels4[] = { 66,67,68,70,72,73,75,76,78 };
 		v = new SpatialVector[3];
 
 		for ( int vi = 0; vi < v.length; vi++ ) {
@@ -1119,7 +1113,6 @@ public class HealpixTest extends TestCase {
 		LongRangeSet pixlist;
 		pixlist = pt.query_triangle(nside, v[0], v[1], v[2], nest, inclusive);
 
-		long nlist = pixlist.size();
 
 		LongIterator it = pixlist.longIterator();
 		int i=0;
@@ -1135,7 +1128,6 @@ public class HealpixTest extends TestCase {
 		inclusive = 1;
 		pt = new HealpixIndex(nside);
 		int triang4[] = { 71, 135, 105 }; // crossing 360
-		int pixels4[] = { 71, 87, 72, 103, 88, 119, 104, 105, 135, };//120 is missing because center outside the triangle (inclusive=0)
 		System.out.println("Start test Query Triangle");
 		v = new SpatialVector[3];
 
@@ -1146,11 +1138,6 @@ public class HealpixTest extends TestCase {
 		}
 
 		pixlist = pt.query_triangle(nside, v[0], v[1], v[2], nest, inclusive);
-
-		nlist = pixlist.size();
-		if ( inclusive == 1 )
-			pixels4 = new int[] { 55, 71, 87, 72, 103, 88, 119, 104, 105, 135,
-					120, 151 };
 
 		it = pixlist.longIterator();
 		i=0;
@@ -1196,8 +1183,6 @@ public class HealpixTest extends TestCase {
 		LongRangeSet pixlist;
 		pixlist = pt.query_triangle(nside, v[0], v[1], v[2], nest, inclusive);
 
-		long nlist = pixlist.size();
-
 		LongIterator it = pixlist.longIterator();
 		int i=0;
 		while (it.hasNext()) {
@@ -1242,8 +1227,6 @@ public class HealpixTest extends TestCase {
 		LongRangeSet pixlist;
 		pixlist = pt.query_triangle(nside, v[0], v[1], v[2], nest, inclusive);
 
-		long nlist = pixlist.size();
-
 		LongIterator it = pixlist.longIterator();
 		int i=0;
 		while (it.hasNext()) {
@@ -1271,9 +1254,6 @@ public class HealpixTest extends TestCase {
 				99, 100, 101, 115, 116, 117 };
 		int[] result1 = { 55, 70, 71, 87 };
 		int[] result2 = { 137, 152, 153, 168 };
-		int[] result3 = { 27, 43, 44, 58, 59, 60, 74, 75, 76, 77, 89, 90, 91,
-				92, 93, 105, 106, 107, 108, 109, 110, 121, 122, 123, 124, 125,
-				138, 139, 140, 141, 154, 156 };
 
 		System.out.println("Start test query_polygon !!!!!!!!!!!!!!!!!!!!!!");
 		SpatialVector[] vv=new SpatialVector[6];
@@ -1292,7 +1272,6 @@ public class HealpixTest extends TestCase {
 		LongRangeSet pixlist;
 		pixlist = pt.query_polygon(nside, vlist, nest, inclusive);
 		// System.out.println(" List size="+pixlist.size());
-		long nlist = pixlist.size();
 		// System.out.println(" Pixel list:");
 		LongIterator it = pixlist.longIterator();
 		int i=0;
@@ -1316,8 +1295,6 @@ public class HealpixTest extends TestCase {
 			vlist1.add((Object) vv1[j]);
 		pixlist = pt.query_polygon(nside, vlist1, nest, inclusive);
 
-		nlist = pixlist.size();
-
 		it = pixlist.longIterator();
 		i=0;
 		while (it.hasNext()) {
@@ -1338,8 +1315,6 @@ public class HealpixTest extends TestCase {
 		for (int j=0; j<vv2.length; ++j)
 			vlist2.add((Object) vv2[j]);
 		pixlist = pt.query_polygon(nside, vlist2, nest, inclusive);
-
-		nlist = pixlist.size();
 
 		it = pixlist.longIterator();
 		i=0;
@@ -1388,8 +1363,7 @@ public class HealpixTest extends TestCase {
 
 		// long nside = 1048576;
 		long nside = 8192;
-		HealpixIndex pt = new HealpixIndex((int) nside);
-		double res = pt.getPixRes(nside);
+		double res = HealpixIndex.getPixRes(nside);
 		System.out.println("Minimum size of the pixel side is " + res
 				+ " arcsec.");
 		assertEquals("res = " + res, 25.76, res, 1e-1);
@@ -1482,7 +1456,6 @@ public class HealpixTest extends TestCase {
 		System.out.println(" Start test GetNside !!!!!!!!!!!!!!!!!!!!!");
 
 		double pixsize = 25;
-		HealpixIndex pt = new HealpixIndex();
 		pixsize = HealpixIndex.getPixRes(8192);
 		pixsize+=0.1*pixsize;
 		long nside = HealpixIndex.calculateNSide(pixsize);
@@ -1519,7 +1492,7 @@ public class HealpixTest extends TestCase {
 		System.err.println(galUnitVec);
 		final HealpixIndex healpixIndex = new HealpixIndex(262144);
 
-		double[] pos1a = healpixIndex.vec2Ang(galUnitVec);
+		double[] pos1a = HealpixIndex.vec2Ang(galUnitVec);
 		AngularPosition pos1 = new AngularPosition(pos1a[0], pos1a[1]);
 
 		long pixelIdxSel = healpixIndex.vec2pix_nest(galUnitVec);
@@ -1536,8 +1509,6 @@ public class HealpixTest extends TestCase {
 		assertEquals("Angular pos theta incorrect ", pos1.theta(), pos.theta(),
 				0.01);
 		assertEquals("Angular pos phi incorrect ", pos1.phi(), pos.phi(), 0.01);
-
-		SpatialVector svec = new SpatialVector(vec[0], vec[1], vec[2]);
 
 		printVec(vec);
 		for ( int i = 0; i < vec.length; i++ ) {

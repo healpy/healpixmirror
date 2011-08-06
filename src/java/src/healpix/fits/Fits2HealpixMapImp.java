@@ -113,9 +113,9 @@ public class Fits2HealpixMapImp implements Fits2HealpixMap {
 		}
 		System.out.println(objData.getColumn(0).toString());
 		head = thdu.getHeader();
-		Iterator hci = head.iterator();
+		Iterator<HeaderCard> hci = head.iterator();
 		while ( hci.hasNext() ) {
-			HeaderCard hc = (HeaderCard) hci.next();
+			HeaderCard hc = hci.next();
 			// System.out.println("Key card read from fits:" + hc.getKey());
 			// System.out.println("-> " + hc.getValue());
 			String key = hc.getKey();

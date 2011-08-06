@@ -26,6 +26,7 @@ import healpix.tools.SpatialVector;
 import junit.framework.TestCase;
 
 //test on high resolution
+/** @deprecated */
 public class HiResTest extends TestCase{
 	final int NSIDE = 4096;//262144;//1048576; //highest res available with long ranges
 	final double D2R = Math.PI/180d;

@@ -42,7 +42,7 @@ import java.util.List;
 public class TestingQueryPolygon {
 
 	/** The vlist. */
-	private static ArrayList<Object> vlist;
+	private static ArrayList<SpatialVector> vlist;
 
 	/**
 	 * The main method.
@@ -56,7 +56,7 @@ public class TestingQueryPolygon {
 	public static void main(String[] args) throws Exception {
 		try {
 			MapView3d mview = new MapView3d(false);
-			vlist = new ArrayList<Object>();
+			vlist = new ArrayList<SpatialVector>();
 //			 HealpixMap map = getMapWithPixRingTriangle();
 			HealpixMap map = getMapWithPixNest();
 //			 HealpixMap map = getMap3PixelsRing();
@@ -223,27 +223,27 @@ public class TestingQueryPolygon {
 		HealpixMap map = cr.getMap();
 		map.setScheme(Scheme.RING);
 
-		ArrayList vlist1 = new ArrayList();
+		ArrayList<SpatialVector> vlist1 = new ArrayList<SpatialVector>();
 		SpatialVector v = null;
 		HealpixIndex pt = new HealpixIndex(nside);
 
 		double pv = 3;
 		v = pt.pix2vec_ring(1);
-		vlist1.add((Object) v);
+		vlist1.add(v);
 		map.setValueCell((int) 1, 9);
 
 		addVec(v, map, pv++);
 		v = pt.pix2vec_ring(48);
-		vlist1.add((Object) v);
+		vlist1.add(v);
 		addVec(v, map, pv++);
 		v = pt.pix2vec_ring(94);
-		vlist1.add((Object) v);
+		vlist1.add(v);
 		addVec(v, map, pv++);
 		v = pt.pix2vec_ring(112);
-		vlist1.add((Object) v);
+		vlist1.add(v);
 		addVec(v, map, pv++);
 		v = pt.pix2vec_ring(81);
-		vlist1.add((Object) v);
+		vlist1.add(v);
 		addVec(v, map, pv++);
 
 		LongRangeSet pixlist = pt.query_polygon(nside, vlist1, 0, 0);
@@ -317,26 +317,26 @@ public class TestingQueryPolygon {
 		HealpixMap map = cr.getMap();
 		map.setScheme(Scheme.NESTED);
 
-		ArrayList vlist1 = new ArrayList();
+		ArrayList<SpatialVector> vlist1 = new ArrayList<SpatialVector>();
 		SpatialVector v = null;
 		HealpixIndex pt = new HealpixIndex(nside);
 
 		double pv = 3;
 		v = pt.pix2vec_nest(21);
-		vlist1.add((Object) v);
+		vlist1.add(v);
 		map.setValueCell((int) 21, pv);
 		addVec(v, map, pv++);
 		v = pt.pix2vec_nest(16);
-		vlist1.add((Object) v);
+		vlist1.add(v);
 		map.setValueCell(16, pv);
 		addVec(v, map, pv++);
 		v = pt.pix2vec_nest(104);
-		vlist1.add((Object) v);
+		vlist1.add(v);
 		map.setValueCell(104, pv);
 		addVec(v, map, pv++);
 		v = pt.pix2vec_nest(109);
 		map.setValueCell(109, pv);
-		vlist1.add((Object) v);
+		vlist1.add(v);
 		addVec(v, map, pv++);
 
 		addVec(v, map, pv++);

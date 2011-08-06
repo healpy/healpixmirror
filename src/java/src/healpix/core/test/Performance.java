@@ -7,6 +7,7 @@ import healpix.tools.SpatialVector;
 
 /**  
  * measures performance
+ * @deprecated
  */
 public class Performance {
 

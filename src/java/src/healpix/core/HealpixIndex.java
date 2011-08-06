@@ -683,7 +683,7 @@ public class HealpixIndex extends HealpixBase implements Serializable {
 	 * 
 	 * @param nside
 	 *            the map resolution
-	 * @param vlist
+	 * @param vlist1
 	 *            ArrayList of vectors defining the polygon vertices
 	 * @param nest
 	 *            if set to 1 use NESTED scheme
@@ -693,13 +693,13 @@ public class HealpixIndex extends HealpixBase implements Serializable {
 	 *         triangles vertex 0 belongs to all triangles
 	 * @throws Exception
 	 */
-	public LongRangeSet query_polygon(int nside, ArrayList<Object> vlist,
+	public LongRangeSet query_polygon(int nside, ArrayList<SpatialVector> vlist1,
 			long nest, long inclusive) throws Exception {
 		Scheme sbak=scheme;
 		setScheme ((nest==0) ? Scheme.RING : Scheme.NESTED);
-		Pointing[] vertex = new Pointing[vlist.size()];
-		for (int i=0; i<vlist.size(); ++i)
-			vertex[i]=new Pointing((Vec3)vlist.get(i));
+		Pointing[] vertex = new Pointing[vlist1.size()];
+		for (int i=0; i<vlist1.size(); ++i)
+			vertex[i]=new Pointing((Vec3)vlist1.get(i));
 		LongRangeSet res = super.queryPolygon(vertex,(inclusive!=0));
 		setScheme (sbak);
 		return res;

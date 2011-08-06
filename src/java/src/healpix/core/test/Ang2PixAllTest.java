@@ -32,6 +32,7 @@ import junit.framework.TestCase;
 /**
  * Test the healpix pixel and angle related methods.
  * 
+ * @deprecated
  * @author ejoliet
  * @version $Id: Ang2PixAllTest.java 140506 2010-06-23 13:28:14Z womullan $
  */

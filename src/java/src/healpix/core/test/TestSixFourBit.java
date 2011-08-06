@@ -9,6 +9,7 @@ import java.text.DecimalFormat;
 
 import junit.framework.TestCase;
 
+/** @deprecated */
 public class TestSixFourBit extends TestCase {
 
 	protected void setUp() throws Exception {

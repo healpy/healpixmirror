@@ -41,7 +41,7 @@ public class Pix2Ang4096Test extends TestCase {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		SpatialVector v = (SpatialVector) pt.ang2Vec(theta, phi);
+		SpatialVector v = (SpatialVector) HealpixIndex.ang2Vec(theta, phi);
 		long pix1 = pt.vec2pix_nest(v);
 		System.out.println("** ipix1 (from angular spatial vector)=" + pix1);
 		double[] radec2 = pt.pix2ang_nest(pix1);
@@ -82,12 +82,12 @@ public class Pix2Ang4096Test extends TestCase {
 		double ang2[]={90*deg2rad, -1*deg2rad};
 		double ang3[]={95*deg2rad, 1*deg2rad};
 		double ang4[]={85*deg2rad, 1*deg2rad};
-		SpatialVector v1 = pt.ang2Vec(ang1[0],ang1[1]);
-		SpatialVector v2 = pt.ang2Vec(ang2[0],ang2[1]);
+		SpatialVector v1 = HealpixIndex.ang2Vec(ang1[0],ang1[1]);
+		SpatialVector v2 = HealpixIndex.ang2Vec(ang2[0],ang2[1]);
 		long ipix1 = pt.ang2pix_nest(ang1[0],ang1[1]);
 		long ipix2 = pt.ang2pix_nest(ang2[0],ang2[1]);
-		SpatialVector v3 = pt.ang2Vec(ang3[0],ang3[1]);
-		SpatialVector v4 = pt.ang2Vec(ang4[0],ang4[1]);
+		SpatialVector v3 = HealpixIndex.ang2Vec(ang3[0],ang3[1]);
+		SpatialVector v4 = HealpixIndex.ang2Vec(ang4[0],ang4[1]);
 		long ipix3 = pt.ang2pix_nest(ang3[0],ang3[1]);
 		long ipix4 = pt.ang2pix_nest(ang4[0],ang4[1]);
 		System.out.println("Ipx1:"+ipix1);
