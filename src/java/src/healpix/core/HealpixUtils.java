@@ -66,4 +66,9 @@ public class HealpixUtils
     return (v1>=0) ? ((v1<v2) ? v1 : Math.IEEEremainder(v1,v2)) :
                                     (Math.IEEEremainder(v1,v2)+v2);
     }
+
+  static public boolean approx (float a, float b, float epsilon)
+    { return Math.abs(a-b) < (epsilon*Math.abs(b)); }
+  static public boolean approx (double a, double b, double epsilon)
+    { return Math.abs(a-b) < (epsilon*Math.abs(b)); }
   }

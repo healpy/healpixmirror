@@ -158,6 +158,15 @@ public class HealpixBase extends HealpixTables
     return ret;
     }
 
+  public Xyf pix2xyf (long pix)
+    { return (scheme==Scheme.RING) ? ring2xyf(pix) : nest2xyf(pix); }
+
+  public long xyf2pix (int ix, int iy, int face_num)
+    {
+    return (scheme==Scheme.RING) ?
+      xyf2ring(ix,iy,face_num) : xyf2nest(ix,iy,face_num);
+    }
+
   /** Calculates the map order from its Nside parameter.
       @param nside the Nside parameter
       @return the map order corresponding to {@code nside}; -1 if
