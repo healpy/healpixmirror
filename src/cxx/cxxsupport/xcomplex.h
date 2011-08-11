@@ -186,6 +186,13 @@ template <typename T> inline T abs (const xcomplex<T> &num)
   using namespace std;
   return abs(complex<T>(num));
   }
+/*! Returns the exponential of \a num.
+    \relates xcomplex */
+template <typename T> inline xcomplex<T> exp (const xcomplex<T> &num)
+  {
+  using namespace std;
+  return xcomplex<T>(exp(complex<T>(num)));
+  }
 /*! Returns \a f1*f2.
     \relates xcomplex */
 template <typename T> inline xcomplex<T> operator*

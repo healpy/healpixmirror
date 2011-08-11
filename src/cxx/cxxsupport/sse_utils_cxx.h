@@ -116,6 +116,7 @@ inline V4si shuffle(const V4si &a, const V4si &b, int sh)
   { return V4si(_mm_castps_si128(_mm_shuffle_ps
     (_mm_castsi128_ps(a.v), _mm_castsi128_ps(b.v), sh))); }
 
+#if 0
 template<> class svec<long long , 2>
   {
   public:
@@ -172,6 +173,7 @@ template<> class svec<long long , 2>
   };
 
 typedef svec<long long,2> V2di;
+#endif
 
 template<> class svec<float, 4>
   {

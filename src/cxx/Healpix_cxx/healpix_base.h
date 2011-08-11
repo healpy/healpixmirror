@@ -76,9 +76,6 @@ template<typename I> class T_Healpix_Base: public Healpix_Tables
     I nest_peano_helper (I pix, int dir) const;
 
     typedef I (T_Healpix_Base::*swapfunc)(I pix) const;
-    typedef void (T_Healpix_Base::*pix2xyf)
-                 (I pix, int &x, int &y, int &f) const;
-    typedef I (T_Healpix_Base::*xyf2pix) (int x, int y, int f) const;
 
   public:
     static const int order_max;
@@ -112,6 +109,17 @@ template<typename I> class T_Healpix_Base: public Healpix_Tables
     double ring2z (I ring) const;
     /*! Returns the number of the ring in which \a pix lies. */
     I pix2ring (I pix) const;
+
+    I xyf2pix(int ix, int iy, int face_num) const
+      {
+      return (scheme_==RING) ?
+        xyf2ring(ix,iy,face_num) : xyf2nest(ix,iy,face_num);
+      }
+    void pix2xyf(I pix, int &ix, int &iy, int &face_num) const
+      {
+      (scheme_==RING) ?
+        ring2xyf(pix,ix,iy,face_num) : nest2xyf(pix,ix,iy,face_num);
+      }
 
     /*! Translates a pixel number from NEST to RING. */
     I nest2ring (I pix) const;

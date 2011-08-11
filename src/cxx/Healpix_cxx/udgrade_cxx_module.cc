@@ -64,6 +64,8 @@ template<typename T> void udgrade_cxx (paramfile &params)
     Healpix_Map<T> outmapT (order, inmap.Scheme()),
                    outmapQ (order, inmap.Scheme()),
                    outmapU (order, inmap.Scheme());
+    planck_assert(inmap.Nside()<=outmapT.Nside(),
+      "degrading not supported for polarised maps");
 
     outmapT.Import(inmap,pessimistic);
     read_Healpix_map_from_fits(infile,inmap,2,2);

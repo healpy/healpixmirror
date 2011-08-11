@@ -111,9 +111,9 @@ template<typename I> inline uint32 isqrt (I arg)
   { return isqrt_helper__<I,(sizeof(I)>4)>::isqrt(arg); }
 
 /*! Returns the largest integer \a n that fulfills \a 2^n<=arg. */
-template<typename I> inline unsigned int ilog2 (I arg)
+template<typename I> inline int ilog2 (I arg)
   {
-  unsigned int res=0;
+  int res=0;
   while (arg > 0x0000FFFF) { res+=16; arg>>=16; }
   if (arg > 0x000000FF) { res|=8; arg>>=8; }
   if (arg > 0x0000000F) { res|=4; arg>>=4; }

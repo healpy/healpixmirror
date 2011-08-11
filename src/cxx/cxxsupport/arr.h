@@ -142,6 +142,14 @@ template <typename T> class arr_ref
         if (d[m]==val) return m;
       planck_fail ("entry not found in array");
       }
+
+    bool contentsEqual(const arr_ref &other)
+      {
+      if (s!=other.s) return false;
+      for (tsize i=0; i<s; ++i)
+        if (d[i]!=other.d[i]) return false;
+      return true;
+      }
   };
 
 /*! An array whose size is known at compile time. Very useful for storing
