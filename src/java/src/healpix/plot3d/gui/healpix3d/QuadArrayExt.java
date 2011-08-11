@@ -19,7 +19,7 @@
  */
 package healpix.plot3d.gui.healpix3d;
 
-import healpix.core.AngularPosition;
+import healpix.core.Pointing;
 import healpix.core.dm.HealpixMap;
 
 import javax.media.j3d.QuadArray;
@@ -40,7 +40,7 @@ public class QuadArrayExt extends QuadArray {
 	int ipix;
 
 	/** The angle. */
-	AngularPosition angle;
+	Pointing angle;
 
 	/** The value. */
 	double value;
@@ -51,7 +51,7 @@ public class QuadArrayExt extends QuadArray {
 	/** The data. */
 	double data[];
 	/** The angular data */
-	AngularPosition dataAngle[];
+	Pointing dataAngle[];
 	/** The pixel ids */
 	int dataIpix[];
 
@@ -64,7 +64,7 @@ public class QuadArrayExt extends QuadArray {
 	QuadArrayExt(int nPoints, int color) {
 		super(nPoints, color);
 		data = new double[nPoints];
-		dataAngle = new AngularPosition[nPoints];
+		dataAngle = new Pointing[nPoints];
 		dataIpix = new int[nPoints];
 		init();
 	}
@@ -77,7 +77,7 @@ public class QuadArrayExt extends QuadArray {
 	QuadArrayExt(HealpixMap ch, int nPoints, int color) {
 		super(nPoints, color);
 		data = new double[nPoints];
-		dataAngle = new AngularPosition[nPoints];
+		dataAngle = new Pointing[nPoints];
 		dataIpix = new int[nPoints];
 		init();
 	}
@@ -149,40 +149,40 @@ public class QuadArrayExt extends QuadArray {
 
 	/**
 	 * Sets the angle.
-	 * 
+	 *
 	 * @param ind the ind
 	 * @param ang the ang
 	 */
-	public void setAngle(int ind, AngularPosition ang) {
+	public void setAngle(int ind, Pointing ang) {
 		dataAngle[ind] = ang;
 	}
 
 	/**
 	 * Sets the angle.
-	 * 
+	 *
 	 * @param ang the new angle
 	 */
-	public void setAngle(AngularPosition ang) {
+	public void setAngle(Pointing ang) {
 		this.angle = ang;
 	}
 
 	/**
 	 * Gets the angle.
-	 * 
+	 *
 	 * @param ind the ind
-	 * 
+	 *
 	 * @return the angle
 	 */
-	public AngularPosition getAngle(int ind) {
+	public Pointing getAngle(int ind) {
 		return dataAngle[ind];
 	}
 
 	/**
 	 * Gets the angle.
-	 * 
+	 *
 	 * @return the angle
 	 */
-	public AngularPosition getAngle() {
+	public Pointing getAngle() {
 		return angle;
 	}
 

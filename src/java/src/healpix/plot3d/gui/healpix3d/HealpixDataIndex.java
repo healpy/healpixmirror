@@ -19,7 +19,7 @@
  */
 package healpix.plot3d.gui.healpix3d;
 
-import healpix.core.AngularPosition;
+import healpix.core.Pointing;
 import healpix.core.HealpixBase;
 
 /**
@@ -36,7 +36,7 @@ public class HealpixDataIndex extends HealpixBase {
 	private static final long serialVersionUID = 1L;
 
 	/** The angle. */
-	AngularPosition angle;
+	Pointing angle;
 
 	/** The ipix. */
 	int ipix;
@@ -50,7 +50,7 @@ public class HealpixDataIndex extends HealpixBase {
 	public HealpixDataIndex() {
 		ipix = 0;
 		value = 0.0;
-		angle = new AngularPosition();
+		angle = new Pointing();
 	}
 
 }
