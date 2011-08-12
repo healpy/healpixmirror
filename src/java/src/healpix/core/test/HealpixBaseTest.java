@@ -554,7 +554,7 @@ public class HealpixBaseTest extends TestCase {
     lrs=base.queryPolygon(corner,false);
     assertEquals("QueryPolygon problem",lrs.size(),1696714);
     lrs=base.queryPolygon(corner,true);
-    assertEquals("QueryPolygon problem",lrs.size(),1701632);
+    assertEquals("QueryPolygon problem",lrs.size(),1700206);
     }
 
   public void testQueryPolygon2() throws Exception

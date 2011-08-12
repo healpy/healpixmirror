@@ -55,6 +55,10 @@ public class HealpixUtils
     {
     return z1*z2+ Math.cos(phi1-phi2)* Math.sqrt((1.0-z1*z1)*(1.0-z2*z2));
     }
+  /** Computes the cosine of the angular distance between two z, phi positions
+      on the unit sphere. */
+  static public double cosdist_zphi (Zphi zp1, Zphi zp2)
+    { return cosdist_zphi(zp1.z,zp1.phi,zp2.z,zp2.phi); }
 
   /** Returns the remainder of the division {@code v1/v2}.
       The result is non-negative.

@@ -32,6 +32,8 @@ import healpix.core.base.set.*;
     @author Martin Reinecke */
 public class HealpixBase extends HealpixTables
   {
+  private int FACT=4, OPLUS=2;
+
   protected static class Xyf
     {
     public int ix, iy, face;
@@ -165,6 +167,11 @@ public class HealpixBase extends HealpixTables
     {
     return (scheme==Scheme.RING) ?
       xyf2ring(ix,iy,face_num) : xyf2nest(ix,iy,face_num);
+    }
+  public long xyf2pix (Xyf xyf)
+    {
+    return (scheme==Scheme.RING) ?
+      xyf2ring(xyf.ix,xyf.iy,xyf.face) : xyf2nest(xyf.ix,xyf.iy,xyf.face);
     }
 
   /** Calculates the map order from its Nside parameter.
@@ -574,36 +581,6 @@ public class HealpixBase extends HealpixTables
     return ret;
     }
 
-  protected void inRing(long iz, double phi0, double dphi,
-    LongRangeSetBuilder res)
-    {
-    RingInfoSmall ris = get_ring_info_small(iz);
-    double shift = ris.shifted ? 0.5 : 0.;
-    long nr = ris.ringpix, ipix1=ris.startpix;
-    long ipix2 = ipix1 + nr - 1; // highest pixel number in the ring
-
-    if (dphi > (Constants.pi-1e-12))
-      res.appendRange(ipix1,ipix2);
-    else
-      {
-      long ip_lo = (long) Math.floor(nr/Constants.twopi*(phi0-dphi) - shift)+1;
-      long ip_hi = (long) Math.floor(nr/Constants.twopi*(phi0+dphi) - shift);
-
-      if (ip_hi < ip_lo ) return;
-
-      if (ip_hi>=nr)
-        { ip_lo-=nr; ip_hi-=nr; }
-
-      if (ip_lo<0)
-        {
-        res.appendRange(ipix1,ipix1+ip_hi);
-        res.appendRange(ipix1+ip_lo+nr,ipix2);
-        }
-      else
-        res.appendRange(ipix1+ip_lo,ipix1+ip_hi);
-      }
-    }
-
   private long ringAbove (double z)
     {
     double az=Math.abs(z);
@@ -703,6 +680,35 @@ public class HealpixBase extends HealpixTables
     return res.union(queryStripInternal(theta1,Constants.pi,inclusive));
     }
 
+  private boolean checkPixelRing (HealpixBase b2, long pix, long nr,
+    long ipix1, int fct, Zphi czphi, double cosrp2, long cpix)
+    {
+    if (pix>=nr) pix-=nr;
+    if (pix<0) pix+=nr;
+    pix+=ipix1;
+    if (pix==cpix) return false; // disk center in pixel => overlap
+    Xyf xyf=pix2xyf(pix);
+    for (int i=0; i<fct-1; ++i) // go along the 4 edges
+      {
+      int ox=fct*xyf.ix, oy=fct*xyf.iy;
+      Xyf xyf2 = new Xyf (ox,oy,xyf.face);
+      double pz,pphi;
+      xyf2.ix=ox+i; xyf2.iy=oy;
+      if (HealpixUtils.cosdist_zphi(czphi,b2.pix2zphi(b2.xyf2pix(xyf2)))>cosrp2) // overlap
+        return false;
+      xyf2.ix=ox+fct-1; xyf2.iy=oy+i;
+      if (HealpixUtils.cosdist_zphi(czphi,b2.pix2zphi(b2.xyf2pix(xyf2)))>cosrp2) // overlap
+        return false;
+      xyf2.ix=ox+fct-1-i; xyf2.iy=oy+fct-1;
+      if (HealpixUtils.cosdist_zphi(czphi,b2.pix2zphi(b2.xyf2pix(xyf2)))>cosrp2) // overlap
+        return false;
+      xyf2.ix=ox; xyf2.iy=oy+fct-1-i;
+      if (HealpixUtils.cosdist_zphi(czphi,b2.pix2zphi(b2.xyf2pix(xyf2)))>cosrp2) // overlap
+        return false;
+      }
+    return true;
+    }
+
   /** Returns a range set of pixels whose centers lie within a given disk on the
       sphere (if {@code inclusive==false}), or which overlap with this disk
       (if {@code inclusive==true}).<p>
@@ -721,44 +727,93 @@ public class HealpixBase extends HealpixTables
     LongRangeSetBuilder pixset = new LongRangeSetBuilder();
     if (scheme==Scheme.RING)
       {
-      if (inclusive) radius+=maxPixrad();
-      if (radius>=Constants.pi)
+      int fct = inclusive ? (int)Math.min((long)FACT,(1L<<order_max)/nside) : 1;
+      HealpixBase b2=null;
+      double rsmall,rbig;
+      if (fct>1)
+        {
+        b2=new HealpixBase(fct*nside,Scheme.RING);
+        rsmall = radius+b2.maxPixrad();
+        rbig = radius+maxPixrad();
+        }
+      else
+        rsmall = rbig = inclusive ? radius+maxPixrad() : radius;
+
+      if (rsmall>=Constants.pi)
         { pixset.appendRange(0,npix-1); return pixset.build(); }
 
-      double cosang = Math.cos(radius);
+      rbig = Math.min (Constants.pi,rbig);
+
+      double cosrsmall = Math.cos(rsmall);
+      double cosrbig = Math.cos(rbig);
 
       double z0 = Math.cos(ptg.theta);
       double xa = 1./Math.sqrt((1-z0)*(1+z0));
 
-      double rlat1  = ptg.theta - radius;
+      Zphi czphi = new Zphi(z0,ptg.phi);
+      long cpix = zphi2pix(czphi);
+
+      double rlat1  = ptg.theta - rsmall;
       double zmax = Math.cos(rlat1);
       long irmin = ringAbove (zmax)+1;
 
       if ((rlat1<=0) && (irmin>1)) // north pole in the disk
         {
-        //get_ring_info_small(irmin-1,sp,rp,dummy);
         RingInfoSmall info =get_ring_info_small(irmin-1);
         pixset.appendRange(0,info.startpix+info.ringpix-1);
         }
 
-      double rlat2  = ptg.theta + radius;
+      if ((fct>1) && (rlat1>0)) irmin=Math.max(1L,irmin-1);
+
+      double rlat2  = ptg.theta + rsmall;
       double zmin = Math.cos(rlat2);
       long irmax = ringAbove (zmin);
+
+      if ((fct>1) && (rlat2<Constants.pi)) irmax=Math.min(nl4-1,irmax+1);
 
       for (long iz=irmin; iz<=irmax; ++iz) // rings partially in the disk
         {
         double z=ring2z(iz);
 
-        double x = (cosang-z*z0)*xa;
+        double x = (cosrbig-z*z0)*xa;
         double ysq = 1-z*z-x*x;
-        assert(ysq>=0);
-        double dphi=Math.atan2(Math.sqrt(ysq),x);
-        inRing (iz, ptg.phi, dphi, pixset);
+        double dphi = (ysq<=0) ? Constants.pi-1e-15 :
+                                 Math.atan2(Math.sqrt(ysq),x);
+        RingInfoSmall info =get_ring_info_small(iz);
+        long ipix1 = info.startpix, nr=info.ringpix, ipix2=ipix1+nr-1;
+        double shift = info.shifted ? 0.5 : 0.;
+
+        long ip_lo = (long)Math.floor
+          (nr*Constants.inv_twopi*(ptg.phi-dphi) - shift)+1;
+        long ip_hi = (long)Math.floor
+          (nr*Constants.inv_twopi*(ptg.phi+dphi) - shift);
+
+        if (fct>1)
+          {
+          while ((ip_lo<=ip_hi) && checkPixelRing
+                (b2,ip_lo,nr,ipix1,fct,czphi,cosrsmall,cpix))
+            ++ip_lo;
+          while ((ip_hi>ip_lo) && checkPixelRing
+                (b2,ip_hi,nr,ipix1,fct,czphi,cosrsmall,cpix))
+            --ip_hi;
+          }
+
+        if (ip_lo<=ip_hi)
+          {
+          if (ip_hi>=nr)
+            { ip_lo-=nr; ip_hi-=nr; }
+          if (ip_lo<0)
+            {
+            pixset.appendRange(ipix1,ipix1+ip_hi);
+            pixset.appendRange(ipix1+ip_lo+nr,ipix2);
+            }
+          else
+            pixset.appendRange(ipix1+ip_lo,ipix1+ip_hi);
+          }
         }
 
       if ((rlat2>=Constants.pi) && (irmax+1<nl4)) // south pole in the disk
         {
-        // get_ring_info_small(irmax+1,sp,rp,dummy);
         RingInfoSmall info =get_ring_info_small(irmax+1);
         pixset.appendRange(info.startpix,npix-1);
         }
@@ -768,15 +823,13 @@ public class HealpixBase extends HealpixTables
       if (radius>=Constants.pi) // disk covers the whole sphere
         { pixset.appendRange(0,npix-1); return pixset.build(); }
 
-      int oplus=inclusive ? 2 : 0;
+      int oplus=inclusive ? OPLUS : 0;
       int omax=Math.min(order_max,order+oplus); // the order up to which we test
 
       Vec3 vptg = new Vec3(ptg);
 
-      //arr<T_Healpix_Base<I> > base(omax+1);
       HealpixBase[] base = new HealpixBase[omax+1];
 
-      //arr<double> crpdr(omax+1), crmdr(omax+1);
       double[] crpdr = new double[omax+1];
       double[] crmdr = new double[omax+1];
 
@@ -789,7 +842,6 @@ public class HealpixBase extends HealpixTables
         crmdr[o] = (radius-dr<0.) ?  1. : Math.cos(radius-dr);
         }
 
-      //vector<pair<I,int> > stk; // stack for pixel numbers and their orders
       pstack stk=new pstack(12+3*omax);
       for (int i=0; i<12; i++) { // insert the 12 base pixels in reverse order
         stk.push(11-i,0);
@@ -803,7 +855,6 @@ public class HealpixBase extends HealpixTables
 
         Zphi pos=base[o].pix2zphi(pix);
         // cosine of angular distance between pixel center and disk center
-        // double cangdist=cosdist_zphi(vptg.z,ptg.phi,z,phi);
         double cangdist=HealpixUtils.cosdist_zphi(vptg.z,ptg.phi,pos.z,pos.phi);
 
         if (cangdist>crpdr[o])
@@ -826,31 +877,58 @@ public class HealpixBase extends HealpixTables
 
     if (scheme==Scheme.RING)
       {
-      double rplus = inclusive ? maxPixrad() : 0;
+      int fct = inclusive ? (int)Math.min((long)FACT,(1L<<order_max)/nside) : 1;
+      HealpixBase b2=null;
+      double rpsmall,rpbig;
+      if (fct>1)
+        {
+        b2=new HealpixBase(fct*nside,Scheme.RING);
+        rpsmall = b2.maxPixrad();
+        rpbig = maxPixrad();
+        }
+      else
+        rpsmall = rpbig = inclusive ? maxPixrad() : 0;
+
       long irmin=1, irmax=nl4-1;
-      double thmin=0, thmax=Constants.pi;
       int nd=0;
       double[] z0=new double[nv];
       double[] xa=new double[nv];
-      double[] cosrad=new double[nv];
+      double[] cosrsmall=new double[nv];
+      double[] cosrbig=new double[nv];
       Pointing[] ptg=new Pointing[nv];
+      long[] cpix=new long[nv];
+      Zphi[] czphi=new Zphi[nv];
       for (int i=0; i<nv; ++i)
         {
-        double r=rad[i]+rplus;
-        if (r<Constants.pi)
+        double rsmall=rad[i]+rpsmall;
+        if (rsmall<Constants.pi)
           {
+          double rbig = Math.min(Constants.pi,rad[i]+rpbig);
           Pointing pnt= new Pointing(norm[i]);
-          cosrad[i]=Math.cos(r);
+          cosrsmall[nd]=Math.cos(rsmall);
+          cosrbig[nd]=Math.cos(rbig);
           double cth=Math.cos(pnt.theta);
           z0[nd]=cth;
+          if (fct>1) cpix[nd]=zphi2pix(new Zphi(cth,pnt.phi));
+          if (fct>1) czphi[nd]=new Zphi(cth,pnt.phi);
           xa[nd]=1./Math.sqrt((1-cth)*(1+cth));
           ptg[nd]=pnt;
-          double tmp = Math.min(pnt.theta+r,Constants.pi);
-          if (tmp < thmax)
-            { thmax=tmp; irmax=ringAbove(Math.cos(thmax)); }
-          tmp = Math.max(0.,pnt.theta-r);
-          if (tmp > thmin)
-            { thmin=tmp; irmin=ringAbove(Math.cos(thmin))+1; }
+
+          double rlat1 = pnt.theta - rsmall;
+          double zmax = Math.cos(rlat1);
+          long irmin_t = (rlat1<=0) ? 1 : ringAbove (zmax)+1;
+
+          if ((fct>1) && (rlat1>0)) irmin_t=Math.max(1L,irmin_t-1);
+
+          double rlat2 = pnt.theta + rsmall;
+          double zmin = Math.cos(rlat2);
+          long irmax_t = (rlat2>=Constants.pi) ? nl4-1 : ringAbove (zmin);
+
+          if ((fct>1) && (rlat2<Constants.pi))
+            irmax_t=Math.min(nl4-1,irmax_t+1);
+          if (irmax_t < irmax) irmax=irmax_t;
+          if (irmin_t > irmin) irmin=irmin_t;
+
           ++nd;
           }
         }
@@ -868,46 +946,52 @@ public class HealpixBase extends HealpixTables
 
         for (int j=0; (j<nd)&&(rstmp.size()>0); ++j)
           {
-          double x = (cosrad[j]-z*z0[j])*xa[j];
+          double x = (cosrbig[j]-z*z0[j])*xa[j];
           double ysq = 1.-z*z-x*x;
-          if (ysq>=0.)
-            {
-            double dphi=Math.atan2(Math.sqrt(ysq),x);
+          double dphi = (ysq<=0) ? Constants.pi-1e-15 :
+                                   Math.atan2(Math.sqrt(ysq),x);
 
-            if (dphi < (Constants.pi-1e-12))
-              {
-              long ip_lo = (long)Math.floor
-                (nr*Constants.inv_twopi*(ptg[j].phi-dphi)-shift)+1;
-              long ip_hi = (long)Math.floor
-                (nr*Constants.inv_twopi*(ptg[j].phi+dphi)-shift);
-              if (ip_hi>=nr)
-                { ip_lo-=nr; ip_hi-=nr;}
+          long ip_lo = (long)Math.floor
+            (nr*Constants.inv_twopi*(ptg[j].phi-dphi)-shift)+1;
+          long ip_hi = (long)Math.floor
+            (nr*Constants.inv_twopi*(ptg[j].phi+dphi)-shift);
+
+          if (fct>1)
+            {
+            while ((ip_lo<=ip_hi) && checkPixelRing
+                  (b2,ip_lo,nr,ipix1,fct,czphi[j],cosrsmall[j],cpix[j]))
+              ++ip_lo;
+            while ((ip_hi>ip_lo) && checkPixelRing
+                  (b2,ip_hi,nr,ipix1,fct,czphi[j],cosrsmall[j],cpix[j]))
+              --ip_hi;
+            }
+
+          if (ip_hi>=nr)
+            { ip_lo-=nr; ip_hi-=nr;}
 
 //FIXME: should be replaced by clear() method once it's available.
-              tr = new LongRangeSetBuilder();
-              if (ip_lo<0)
-                {
-                if (ip_hi+1<=ip_lo+nr-1)
-                  tr.appendRange(ipix1+ip_hi+1,ipix1+ip_lo+nr-1);
-                }
-              else
-                {
-                if (ip_lo>0)
-                  tr.appendRange(ipix1,ipix1+ip_lo-1);
-                if (ipix1+ip_hi+1<=ipix2)
-                  tr.appendRange(ipix1+ip_hi+1,ipix2);
-                }
-              if (tr.size()>0)
-                rstmp=rstmp.substract(tr.build());
-              }
+          tr = new LongRangeSetBuilder();
+          if (ip_lo<0)
+            {
+            if (ip_hi+1<=ip_lo+nr-1)
+              tr.appendRange(ipix1+ip_hi+1,ipix1+ip_lo+nr-1);
             }
+          else
+            {
+            if (ip_lo>0)
+              tr.appendRange(ipix1,ipix1+ip_lo-1);
+            if (ipix1+ip_hi+1<=ipix2)
+              tr.appendRange(ipix1+ip_hi+1,ipix2);
+            }
+          if (tr.size()>0)
+            rstmp=rstmp.substract(tr.build());
           }
         res.appendRangeSet(rstmp);
         }
       }
-    else // scheme_ == NEST
+    else // scheme == NEST
       {
-      int oplus=inclusive ? 2 : 0;
+      int oplus=inclusive ? OPLUS : 0;
       int omax=Math.min(order_max,order+oplus); // the order up to which we test
 
       // TODO: ignore all disks with radius>=pi
