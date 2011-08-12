@@ -19,9 +19,8 @@
  */
 package healpix.plot3d.canvas3d;
 
-import com.sun.image.codec.jpeg.JPEGCodec;
-import com.sun.image.codec.jpeg.JPEGEncodeParam;
-import com.sun.image.codec.jpeg.JPEGImageEncoder;
+import java.io.File;
+import javax.imageio.ImageIO;
 
 import java.awt.GraphicsConfiguration;
 import java.awt.image.BufferedImage;
@@ -98,15 +97,8 @@ public class Group3DCapturingCanvas3D extends Canvas3D {
 
 			// write that to disk....
 			try {
-				FileOutputStream out = new FileOutputStream("Group3DCapture"
-						+ postSwapCount + ".jpg");
-				JPEGImageEncoder encoder = JPEGCodec.createJPEGEncoder(out);
-				JPEGEncodeParam param = encoder.getDefaultJPEGEncodeParam(img);
-				param.setQuality(0.9f, false);
-				encoder.setJPEGEncodeParam(param);
-				encoder.encode(img);
-				writeJPEG = false;
-				out.close();
+                                ImageIO.write(img, "jpeg", new File("Group3DCapture"
+						+ postSwapCount + ".jpg"));
 			} catch (IOException e) {
 				System.out.println("I/O exception: " + e.getMessage());
 			}

@@ -366,7 +366,7 @@ public class MainFrame extends JFrame implements Runnable, AppletStub,
 		// I suspect that in a future release, JavaSoft will add an
 		// audio content handler which encapsulates this, and then
 		// we can just do a getContent just like for images.
-		return new sun.applet.AppletAudioClip(url);
+		return null;
 	}
 
 	/* (non-Javadoc)
