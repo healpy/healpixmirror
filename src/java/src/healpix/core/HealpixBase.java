@@ -1135,8 +1135,15 @@ public class HealpixBase extends HealpixTables
       }
     }
 
-  /** Experimental; Do not use (yet) */
-  private double[] pixel_boundaries(long i_th, long i_phi, int i_zone,
+  /** calculate the points of crossing for a given theata on the boundaries of
+      the pixel - returns the left and right phi crossings
+      @param i_th ring number
+      @param i_phi pixel index in the ring
+      @param i_zone ith zone (0..3), a quarter of sphere
+      @param cos_theta cosine of theta
+      @return the left and right phi crossings
+    */
+  protected double[] pixel_boundaries(long i_th, long i_phi, int i_zone,
     double cos_theta)
     {
     double phi_l,phi_r;
@@ -1170,7 +1177,16 @@ public class HealpixBase extends HealpixTables
                      Constants.halfpi*(phi_r+i_zone) };
     return ret;
   }
-  /** Experimental; Do not use (yet) */
+
+  /** Returns set of points along the boundary of the given pixel.
+    * Step 1 gives 4 points on the corners.
+    * Mainly for graphics = you may not want to use LARGE NSIDEs..
+    *
+    * @param pix pixel index number
+    * @param step the number of returned points is 2+2*step
+    * @return {@link Vec3} for each point
+    * @throws Exception
+    */
   public Vec3[] corners(long pix, int step) throws Exception
     {
     int nPoints = step * 2 + 2;
