@@ -43,7 +43,6 @@ public class NestSphere extends HealSphere{
     public NestSphere(int nside,int face) {
 		super(nside,Scheme.NESTED);
 		this.face=face;	
-		this.step=1;
 		this.setGeometry(createGeometry());
        	this.setAppearance(createAppearance());
 	}

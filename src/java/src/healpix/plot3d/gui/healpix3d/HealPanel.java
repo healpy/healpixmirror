@@ -72,7 +72,8 @@ public class HealPanel extends Panel implements ItemListener, KeyListener {
 		add(new Label("Healpix"));
 		nside = new Choice();
 		nside.setForeground(Color.blue);
-		nside.addItem("2");
+		nside.addItem("1");
+                nside.addItem("2");
 		nside.addItem("4");
 		nside.addItem("8");
 		nside.addItem("16");

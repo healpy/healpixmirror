@@ -68,6 +68,8 @@ public class RingSphere extends HealSphere {
 		int i_th = this.ring;
 		if (i_th <= 0)
 			i_th = 1;
+                if (i_th >= 4*nside)
+                        i_th = 4*nside-1;
 		i_phi_count = Math.min(i_th, Math.min(nside, ns4 - i_th));
 		int nPoints = i_phi_count * ppq * 4;
 		LineArray quads = new LineArray(nPoints, GeometryArray.COORDINATES);
