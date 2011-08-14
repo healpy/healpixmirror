@@ -1180,7 +1180,7 @@ public class HealpixBase extends HealpixTables
 
   /** Returns set of points along the boundary of the given pixel.
     * Step 1 gives 4 points on the corners.
-    * Mainly for graphics = you may not want to use LARGE NSIDEs..
+    * Mainly for graphics = you may not want to use LARGE NSIDEs.
     *
     * @param pix pixel index number
     * @param step the number of returned points is 2+2*step
@@ -1192,8 +1192,6 @@ public class HealpixBase extends HealpixTables
     int nPoints = step * 2 + 2;
     Vec3[] points = new Vec3[nPoints];
     Zphi p0 = pix2zphi(pix);
-    double cos_theta = p0.z;
-    double theta = Math.acos(p0.z);
     double phi = p0.phi;
 
     int i_zone = (int)(phi/Constants.halfpi);
@@ -1210,34 +1208,31 @@ public class HealpixBase extends HealpixTables
     i_phi -= i_zone*i_phi_count;
     int spoint = nPoints/2;
     // get north south middle - middle should match theta!
-    double[] nms = { ring2z(ringno-1), cos_theta, ring2z(ringno+1) };
-    double ntheta = Math.acos(nms[0]);
-    double stheta = Math.acos(nms[2]);
+    double[] nms = { ring2z(ringno-1), p0.z, ring2z(ringno+1) };
     double[] philr = pixel_boundaries(ringno, i_phi, i_zone, nms[0]);
     if (i_phi > (i_phi_count/2)) {
-      points[0] = new Vec3(new Pointing(ntheta, philr[1]));
+      points[0] = new Vec3(new Zphi(nms[0], philr[1]));
     } else {
-      points[0] = new Vec3(new Pointing(ntheta, philr[0]));
+      points[0] = new Vec3(new Zphi(nms[0], philr[0]));
     }
     philr = pixel_boundaries(ringno, i_phi, i_zone, nms[2]);
     if ( i_phi > (i_phi_count/2) ) {
-      points[spoint] = new Vec3(new Pointing(stheta, philr[1]));
+      points[spoint] = new Vec3(new Zphi(nms[2], philr[1]));
     } else {
-      points[spoint] = new Vec3(new Pointing(stheta, philr[0]));
+      points[spoint] = new Vec3(new Zphi(nms[2], philr[0]));
     }
     if ( step == 1 ) {
       philr = pixel_boundaries(ringno, i_phi, i_zone, nms[1]);
-      points[1] = new Vec3(new Pointing(theta, philr[0]));
-      points[3] = new Vec3(new Pointing(theta, philr[1]));
+      points[1] = new Vec3(new Zphi(p0.z, philr[0]));
+      points[3] = new Vec3(new Zphi(p0.z, philr[1]));
     } else {
       double cosThetaLen = nms[2] - nms[0];
       double cosThetaStep = ( cosThetaLen / ( step + 1 ) );
       for ( int p = 1; p <= step; p++ ) {
-        cos_theta = nms[0] + ( cosThetaStep * p );
-        theta = Math.acos(cos_theta);
+        double cos_theta = nms[0] + ( cosThetaStep * p );
         philr = pixel_boundaries(ringno, i_phi, i_zone, cos_theta);
-        points[p] = new Vec3(new Pointing(theta, philr[0]));
-        points[nPoints-p] = new Vec3(new Pointing(theta, philr[1]));
+        points[p] = new Vec3(new Zphi(cos_theta, philr[0]));
+        points[nPoints-p] = new Vec3(new Zphi(cos_theta, philr[1]));
       }
     }
     return points;

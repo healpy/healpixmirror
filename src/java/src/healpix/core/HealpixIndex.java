@@ -316,8 +316,12 @@ public class HealpixIndex extends HealpixBase implements Serializable {
 	 * @throws Exception
 	 */
 	public SpatialVector[] corners_nest(int pix, int step) throws Exception {
-		long pixr = nest2ring(pix);
-		return corners_ring(pixr, step);
+		long tpix = (scheme==Scheme.NESTED) ? pix : nest2ring(pix);
+		Vec3[] tvec = corners(tpix,step);
+		SpatialVector[] res=new SpatialVector[tvec.length];
+		for (int i=0; i<tvec.length; ++i)
+		  res[i]=new SpatialVector(tvec[i]);
+		return res;
 	}
 
 	/**
@@ -332,64 +336,12 @@ public class HealpixIndex extends HealpixBase implements Serializable {
 	 * @throws Exception
 	 */
 	public SpatialVector[] corners_ring(long pix, int step) throws Exception {
-		int nPoints = step * 2 + 2;
-		SpatialVector[] points = new SpatialVector[nPoints];
-		double[] p0 = pix2ang_ring(pix);
-		double cos_theta = Math.cos(p0[0]);
-		double theta = p0[0];
-		double phi = p0[1];
-
-		int i_zone = (int) ( phi / Constants.piover2 );
-		int ringno = ring(pix);
-		int i_phi_count = Math.min(ringno, (int)Math.min((long)nside, ( nl4 ) - ringno));
-		int i_phi = 0;
-		double phifac = Constants.piover2 / i_phi_count;
-		if ( ringno >= (long)nside && ringno <= nl3 ) {
-			// adjust by 0.5 for odd numbered rings in equatorial since
-			// they start out of phase by half phifac.
-			i_phi = (int) ( phi / phifac + ( ( ringno % 2 ) / 2.0 ) ) + 1;
-		} else {
-			i_phi = (int) ( phi / phifac ) + 1;
-		}
-		// adjust for zone offset
-		i_phi = i_phi - ( i_zone * i_phi_count );
-		int spoint = (int) ( nPoints / 2 );
-		// get north south middle - middle should match theta !
-		double[] nms = integration_limits_in_costh(ringno);
-		double ntheta = Math.acos(nms[0]);
-		double stheta = Math.acos(nms[2]);
-		double[] philr = pixel_boundaries(ringno, i_phi, i_zone, nms[0]);
-		if ( i_phi > ( i_phi_count / 2 ) ) {
-			points[0] = vector(ntheta, philr[1]);
-		} else {
-			points[0] = vector(ntheta, philr[0]);
-		}
-		philr = pixel_boundaries(ringno, i_phi, i_zone, nms[2]);
-		if ( i_phi > ( i_phi_count / 2 ) ) {
-			points[spoint] = vector(stheta, philr[1]);
-		} else {
-			points[spoint] = vector(stheta, philr[0]);
-		}
-		if ( step == 1 ) {
-			double mtheta = Math.acos(nms[1]);
-			philr = pixel_boundaries(ringno, i_phi, i_zone, nms[1]);
-			points[1] = vector(mtheta, philr[0]);
-			points[3] = vector(mtheta, philr[1]);
-		} else {
-			double cosThetaLen = nms[2] - nms[0];
-			double cosThetaStep = ( cosThetaLen / ( step + 1 ) ); // skip
-			// North
-			// and south
-			for ( int p = 1; p <= step; p++ ) {
-				/* Integrate points along the sides */
-				cos_theta = nms[0] + ( cosThetaStep * p );
-				theta = Math.acos(cos_theta);
-				philr = pixel_boundaries(ringno, i_phi, i_zone, cos_theta);
-				points[p] = vector(theta, philr[0]);
-				points[nPoints - p] = vector(theta, philr[1]);
-			}
-		}
-		return points;
+		long tpix = (scheme==Scheme.RING) ? pix : ring2nest(pix);
+		Vec3[] tvec = corners(tpix,step);
+		SpatialVector[] res=new SpatialVector[tvec.length];
+		for (int i=0; i<tvec.length; ++i)
+		  res[i]=new SpatialVector(tvec[i]);
+		return res;
 	}
 
 	/**
