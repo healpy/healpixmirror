@@ -46,7 +46,15 @@ public class HealpixUtils
       @param arg
       @return the integer {@code n} which fulfills {@code n^2<=arg<(n+1)^2} */
   static public int isqrt(long arg)
-    { return (int)Math.sqrt(((double)arg)+0.5); }
+    {
+    long res = (long)Math.sqrt(((double)arg)+0.5);
+    if (arg<(1L<<50)) return (int)res;
+    if (res*res>arg)
+      --res;
+    else if ((res+1)*(res+1)<=arg)
+      ++res;
+    return (int)res;
+    }
 
   /** Computes the cosine of the angular distance between two z, phi positions
       on the unit sphere. */
