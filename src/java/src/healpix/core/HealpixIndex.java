@@ -168,43 +168,7 @@ public class HealpixIndex extends HealpixBase implements Serializable {
 	 * @return limits
 	 */
 	public double[] integration_limits_in_costh(int i_th) {
-
-		double a, ab, b, r_n_side;
-
-		// integration limits in cos(theta) for a given ring i_th
-		// i > 0 !!!
-
-		r_n_side = 1.0 * (long)nside;
-		if ( i_th <= (long)nside ) {
-			ab = 1.0 - ( Math.pow(i_th, 2.0) / 3.0 ) / (double) npface;
-			b = 1.0 - ( Math.pow(( i_th - 1 ), 2.0) / 3.0 ) / (double) npface;
-			if ( i_th == (long)nside ) {
-				a = 2.0 * ( (long)nside - 1.0 ) / 3.0 / r_n_side;
-			} else {
-				a = 1.0 - Math.pow(( i_th + 1 ), 2) / 3.0 / (double) npface;
-			};
-
-		} else {
-			if ( i_th < nl3 ) {
-				ab = 2.0 * ( 2 * (long)nside - i_th ) / 3.0 / r_n_side;
-				b = 2.0 * ( 2 * (long)nside - i_th + 1 ) / 3.0 / r_n_side;
-				a = 2.0 * ( 2 * (long)nside - i_th - 1 ) / 3.0 / r_n_side;
-			} else {
-				if ( i_th == nl3 ) {
-					b = 2.0 * ( -(long)nside + 1 ) / 3.0 / r_n_side;
-				} else {
-					b = -1.0 + Math.pow(( 4 * (long)nside - i_th + 1 ), 2) / 3.0
-							/ (double) npface;
-				}
-
-				a = -1.0 + Math.pow(( nl4 - i_th - 1 ), 2) / 3.0
-						/ (double) npface;
-				ab = -1.0 + Math.pow(( nl4 - i_th ), 2) / 3.0 / (double) npface;
-			}
-
-		}
-		// END integration limits in cos(theta)
-		double[] ret = { b, ab, a };
+		double[] ret = { ring2z(i_th-1), ring2z(i_th), ring2z(i_th+1) };
 		return ret;
 	}
 
@@ -351,16 +315,8 @@ public class HealpixIndex extends HealpixBase implements Serializable {
 	 * @return double resolution in arcsec
 	 */
 	static public double getPixRes(long nside) {
-		double res = 0.;
-		double degrad = Math.toDegrees(1.0);
-		double skyArea = 4. * Constants.PI * degrad * degrad; // 4PI steredian
-		// in deg^2
-		double arcSecArea = skyArea * 3600. * 3600.; // 4PI steredian in
-		// (arcSec^2)
-		long npixels = 12 * (long)nside * (long)nside;
-		res = arcSecArea / npixels; // area per pixel
-		res = Math.sqrt(res); // angular size of the pixel arcsec
-		return res;
+		double rad2arcsec=180.*60.*60./Constants.PI;
+		return rad2arcsec*Math.sqrt(4*Constants.PI/(12*nside*nside));
 	}
 
 	/**
@@ -371,17 +327,9 @@ public class HealpixIndex extends HealpixBase implements Serializable {
 	 * @return long nside parameter
 	 */
 	static public int calculateNSide(double pixsize) {
-		double pixelArea = pixsize * pixsize;
-		double degrad = Math.toDegrees(1.);
-		double skyArea = 4. * Constants.PI * degrad * degrad * 3600. * 3600.;
-		long npixels = (long) ( skyArea / pixelArea );
-		long nsidesq = npixels / 12;
-		long order_req = (long)Math.rint(0.5*(Math.log(nsidesq) / Math.log(2)));
-                if (order_req<0) order_req=0;
-                if (order_req>order_max) {
-				System.out.println("nside cannot be bigger than " + ns_max);
-				order_req=order_max;
-			}
+		double arcsec2rad=Constants.PI/(180.*60.*60.);
+		double nsd = Math.sqrt(4*Constants.PI/12.)/(arcsec2rad*pixsize);
+		int order_req=Math.max(0,Math.min(order_max,1+HealpixUtils.ilog2((long)(nsd))));
 		return 1<<order_req;
 	}
 
@@ -672,18 +620,10 @@ public class HealpixIndex extends HealpixBase implements Serializable {
 	 * @throws Exception 
  	 */
 	static public long parentAt(long child, int childnside, int requirednside) throws Exception{
-	    // nside is the number of bits .. 
-		if (childnside < requirednside) {
-			throw new Exception ("Parent ("+requirednside+
-					") should have smaller NSIDE than Child("+childnside+")");
-		}
-		long ppix =0;
-		
-		// number of bits in aid depdens on the depth of the nside
-
-		int bitdiff = bitdiff(requirednside, childnside); 
-	    ppix = child >> bitdiff;
-    	return ppix;	 		
+          HealpixUtils.check(childnside >= requirednside,
+            "Parent ("+requirednside+") should have smaller NSIDE than Child("
+            +childnside+");
+    	return child >> bitdiff(requirednside, childnside);
 	}
 
 	/**
@@ -693,26 +633,7 @@ public class HealpixIndex extends HealpixBase implements Serializable {
 	 * @return  number of bits difference between the pixel ids.
 	 */
 	public static int bitdiff(long nside1, long nside2){
-		int pbits = 2;
-		long childnside=nside2;
-		long parentnside=nside1;
-		if (nside1>=nside2){
-			childnside=nside1;
-			parentnside=nside2;
-		}
-		int tnside = 2;
-		while (tnside < parentnside) {
-			pbits+=2;
-			tnside=tnside<<1 ;// next power of 2
-		}
-		// child is deeper 
-		int cbits = pbits;
-		while (tnside < childnside) {
-			cbits+=2;
-			tnside=tnside<<1 ;// next power of 2
-		}
-		return (cbits- pbits);//  
-		
+		return 2*Math.abs(HealpixUtils.ilog2(nside1)-HealpixUtils.ilog2(nside2));
 	}
 	/**
 	 * for a given pixel list all children pixels for it. 
@@ -729,15 +650,13 @@ public class HealpixIndex extends HealpixBase implements Serializable {
 	 * @throws Exception 
 	 */
 	public static long[] getChildrenAt(long nside, long pix, int requiredNside) throws Exception{
-	 
-		if (nside >= requiredNside){
-			throw new Exception("The requirend NSIDE should be greater than the pix NSIDE");
-		}
+	 	HealpixUtils.check(nside<requiredNside,
+		  "The requirend NSIDE should be greater than the pix NSIDE");
 		int bitdiff=bitdiff(nside,requiredNside);
-		int numpix = bitdiff<<1;// square num bits is count of pix
+		int numpix = 1<<bitdiff;
 		long[] pixlist= new long[numpix];
 		long ppix=pix<<bitdiff; // shift the current pix over
-		// nopw just keep adding to it ..
+		// now just keep adding to it ..
 		for (int i=0;i < numpix; i++){
 			pixlist[i]=ppix+i;
 		}
