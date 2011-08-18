@@ -343,17 +343,17 @@ template<typename I> void T_Healpix_Base<I>::query_multidisc
         xa.push_back(1./sqrt((1-cth)*(1+cth)));
         ptg.push_back(pnt);
 
-    double rlat1 = pnt.theta - rsmall;
-    double zmax = cos(rlat1);
-    I irmin_t = (rlat1<=0) ? 1 : ring_above (zmax)+1;
+        double rlat1 = pnt.theta - rsmall;
+        double zmax = cos(rlat1);
+        I irmin_t = (rlat1<=0) ? 1 : ring_above (zmax)+1;
 
-    if ((fct>1) && (rlat1>0)) irmin_t=max(I(1),irmin_t-1);
+        if ((fct>1) && (rlat1>0)) irmin_t=max(I(1),irmin_t-1);
 
-    double rlat2 = pnt.theta + rsmall;
-    double zmin = cos(rlat2);
-    I irmax_t = (rlat2>=pi) ? 4*nside_-1 : ring_above (zmin);
+        double rlat2 = pnt.theta + rsmall;
+        double zmin = cos(rlat2);
+        I irmax_t = (rlat2>=pi) ? 4*nside_-1 : ring_above (zmin);
 
-    if ((fct>1) && (rlat2<pi)) irmax_t=min(4*nside_-1,irmax_t+1);
+        if ((fct>1) && (rlat2<pi)) irmax_t=min(4*nside_-1,irmax_t+1);
 
         if (irmax_t < irmax) irmax=irmax_t;
         if (irmin_t > irmin) irmin=irmin_t;
@@ -745,7 +745,8 @@ template<typename I> I T_Healpix_Base<I>::nest2peano (I pix) const
 template<typename I> I T_Healpix_Base<I>::peano2nest (I pix) const
   { return nest_peano_helper(pix,1); }
 
-template<typename I> I T_Healpix_Base<I>::zphi2pix (double z, double phi) const
+template<typename I> I T_Healpix_Base<I>::loc2pix (double z, double phi,
+  double sth, bool have_sth) const
   {
   double za = abs(z);
   double tt = fmodulo(phi*inv_halfpi,4.0); // in [0,4)
@@ -773,7 +774,9 @@ template<typename I> I T_Healpix_Base<I>::zphi2pix (double z, double phi) const
     else  // North & South polar caps
       {
       double tp = tt-I(tt);
-      double tmp = nside_*sqrt(3*(1-za));
+      double tmp = ((za<0.99)||(!have_sth)) ?
+                   nside_*sqrt(3*(1-za)) :
+                   nside_*sth/sqrt((1.+za)/3.);
 
       I jp = I(tp*tmp); // increasing edge line index
       I jm = I((1.0-tp)*tmp); // decreasing edge line index
@@ -806,7 +809,9 @@ template<typename I> I T_Healpix_Base<I>::zphi2pix (double z, double phi) const
       {
       int ntt = min(3,int(tt));
       double tp = tt-ntt;
-      double tmp = nside_*sqrt(3*(1-za));
+      double tmp = ((za<0.99)||(!have_sth)) ?
+                   nside_*sqrt(3*(1-za)) :
+                   nside_*sth/sqrt((1.+za)/3.);
 
       I jp = I(tp*tmp); // increasing edge line index
       I jm = I((1.0-tp)*tmp); // decreasing edge line index
@@ -818,9 +823,10 @@ template<typename I> I T_Healpix_Base<I>::zphi2pix (double z, double phi) const
     }
   }
 
-template<typename I> void T_Healpix_Base<I>::pix2zphi (I pix, double &z,
-  double &phi) const
+template<typename I> void T_Healpix_Base<I>::pix2loc (I pix, double &z,
+  double &phi, double &sth, bool &have_sth) const
   {
+  have_sth=false;
   if (scheme_==RING)
     {
     if (pix<ncap_) // North Polar cap
@@ -828,7 +834,9 @@ template<typename I> void T_Healpix_Base<I>::pix2zphi (I pix, double &z,
       I iring = (1+I(isqrt(1+2*pix)))>>1; // counted from North pole
       I iphi  = (pix+1) - 2*iring*(iring-1);
 
-      z = 1.0 - (iring*iring)*fact2_;
+      double tmp=(iring*iring)*fact2_;
+      z = 1.0 - tmp;
+      if (z>0.99) { sth=sqrt(tmp*(2.-tmp)); have_sth=true; }
       phi = (iphi-0.5) * halfpi/iring;
       }
     else if (pix<(npix_-ncap_)) // Equatorial region
@@ -850,7 +858,9 @@ template<typename I> void T_Healpix_Base<I>::pix2zphi (I pix, double &z,
       I iring = (1+I(isqrt(2*ip-1)))>>1; // counted from South pole
       I iphi  = 4*iring + 1 - (ip - 2*iring*(iring-1));
 
-      z = -1.0 + (iring*iring)*fact2_;
+      double tmp=(iring*iring)*fact2_;
+      z = tmp - 1.0;
+      if (z<-0.99) { sth=sqrt(tmp*(2.-tmp)); have_sth=true; }
       phi = (iphi-0.5) * halfpi/iring;
       }
     }
@@ -865,12 +875,16 @@ template<typename I> void T_Healpix_Base<I>::pix2zphi (I pix, double &z,
     if (jr<nside_)
       {
       nr = jr;
-      z = 1 - nr*nr*fact2_;
+      double tmp=(nr*nr)*fact2_;
+      z = 1 - tmp;
+      if (z>0.99) { sth=sqrt(tmp*(2.-tmp)); have_sth=true; }
       }
     else if (jr > 3*nside_)
       {
       nr = nside_*4-jr;
-      z = nr*nr*fact2_ - 1;
+      double tmp=(nr*nr)*fact2_;
+      z = tmp - 1;
+      if (z<-0.99) { sth=sqrt(tmp*(2.-tmp)); have_sth=true; }
       }
     else
       {

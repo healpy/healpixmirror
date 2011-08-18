@@ -183,6 +183,34 @@ template<typename I> void check_zphipixzphi()
     }
   }
 
+template<typename I> void check_pixangpix()
+  {
+  cout << "testing ang2pix(pix2ang(m))==m " << bname<I>() << endl;
+  int omax=T_Healpix_Base<I>::order_max;
+  for (int order=0; order<=omax; ++order)
+    {
+    T_Healpix_Base<I> base1 (order,RING), base2 (order,NEST);
+    for (int m=0; m<nsamples; ++m)
+      {
+      I pix = I(rng.rand_uni()*base1.Npix());
+      if (base1.ang2pix(base1.pix2ang(pix))!=pix)
+        cout << "  PROBLEM: order = " << order << ", pixel = " << pix << endl;
+      if (base2.ang2pix(base2.pix2ang(pix))!=pix)
+        cout << "  PROBLEM: order = " << order << ", pixel = " << pix << endl;
+      }
+    }
+  for (I nside=3; nside<(I(1)<<omax); nside+=nside/2+1)
+    {
+    T_Healpix_Base<I> base (nside,RING,SET_NSIDE);
+    for (int m=0; m<nsamples; ++m)
+      {
+      I pix = I(rng.rand_uni()*base.Npix());
+      if (base.ang2pix(base.pix2ang(pix))!=pix)
+        cout << "  PROBLEM: nside = " << nside << ", pixel = " << pix << endl;
+      }
+    }
+  }
+
 template<typename I> void check_neighbors()
   {
   cout << "testing neighbor function " << bname<I>() << endl;
@@ -543,6 +571,25 @@ void check_rot_alm ()
   check_alm (oalm, alm, epsilon);
   }
 
+void check_isqrt()
+  {
+  cout << "testing whether isqrt() works reliably" << endl;
+  uint64 val=uint64(0xF234)<<16, valsq=val*val;
+  if (isqrt(valsq)!=val) cout << "PROBLEM1" << endl;
+  if (isqrt(valsq-1)!=val-1) cout << "PROBLEM2" << endl;
+  }
+
+void check_pix2ang_acc()
+  {
+  cout << "testing accuracy of pix2ang at the poles" << endl;
+  for (int m=0; m<=29;++m)
+    {
+    Healpix_Base2 base(m,RING);
+    if (base.pix2ang(1).theta==0.)
+      cout << "PROBLEM: order " << m << endl;
+    }
+  }
+
 const int nsteps=1000000;
 
 template<typename I>void perf_neighbors(const string &name,
@@ -855,6 +902,8 @@ int main(int argc, const char **argv)
   {
   module_startup ("hpxtest",argc,argv,1,"");
   perftest();
+  check_isqrt();
+  check_pix2ang_acc();
   check_smooth_alm();
   check_rot_alm();
   check_alm2map2alm(620,620,256);
@@ -869,6 +918,8 @@ int main(int argc, const char **argv)
   check_pixzphipix<int64>();
   check_zphipixzphi<int>();
   check_zphipixzphi<int64>();
+  check_pixangpix<int>();
+  check_pixangpix<int64>();
   check_neighbors<int>();
   check_neighbors<int64>();
   check_swap_scheme();

@@ -73,6 +73,10 @@ template<typename I> class T_Healpix_Base: public Healpix_Tables
     I xyf2ring(int ix, int iy, int face_num) const;
     void ring2xyf(I pix, int &ix, int &iy, int &face_num) const;
 
+    I loc2pix (double z, double phi, double sth, bool have_sth) const;
+    void pix2loc (I pix, double &z, double &phi, double &sth, bool &have_sth)
+      const;
+
     I nest_peano_helper (I pix, int dir) const;
 
     typedef I (T_Healpix_Base::*swapfunc)(I pix) const;
@@ -131,38 +135,65 @@ template<typename I> class T_Healpix_Base: public Healpix_Tables
     I peano2nest (I pix) const;
 
     /*! Returns the number of the pixel which contains the angular coordinates
-        (\a z:=cos(theta), \a phi). */
-    I zphi2pix (double z, double phi) const;
+        (\a z:=cos(theta), \a phi).
+        \note This method is inaccurate near the poles at high resolutions. */
+    I zphi2pix (double z, double phi) const
+      { return loc2pix(z,phi,0.,false); }
 
     /*! Returns the number of the pixel which contains the angular coordinates
         \a ang. */
     I ang2pix (const pointing &ang) const
-      { return zphi2pix (cos(ang.theta), ang.phi); }
+      {
+      return ((ang.theta<0.01) || (ang.theta > 3.14159-0.01)) ?
+        loc2pix(cos(ang.theta),ang.phi,sin(ang.theta),true) :
+        loc2pix(cos(ang.theta),ang.phi,0.,false);
+      }
     /*! Returns the number of the pixel which contains the vector \a vec
         (\a vec is normalized if necessary). */
     I vec2pix (const vec3 &vec) const
-      { return zphi2pix (vec.z/vec.Length(), safe_atan2(vec.y,vec.x)); }
+      {
+      double xl = 1./vec.Length();
+      double phi = safe_atan2(vec.y,vec.x);
+      double nz = vec.z*xl;
+      if (std::abs(nz)>0.99)
+        return loc2pix (nz,phi,sqrt(vec.x*vec.x+vec.y*vec.y)*xl,true);
+      else
+        return loc2pix (nz,phi,0,false);
+      }
 
     /*! Returns the angular coordinates (\a z:=cos(theta), \a phi) of the center
-        of the pixel with number \a pix. */
-    void pix2zphi (I pix, double &z, double &phi) const;
+        of the pixel with number \a pix.
+        \note This method is inaccurate near the poles at high resolutions. */
+    void pix2zphi (I pix, double &z, double &phi) const
+      {
+      bool dum_b;
+      double dum_d;
+      pix2loc(pix,z,phi,dum_d,dum_b);
+      }
 
     /*! Returns the angular coordinates of the center of the pixel with
         number \a pix. */
     pointing pix2ang (I pix) const
       {
-      double z, phi;
-      pix2zphi (pix,z,phi);
-      return pointing(acos(z),phi);
+      double z, phi, sth;
+      bool have_sth;
+      pix2loc (pix,z,phi,sth,have_sth);
+      return have_sth ? pointing(atan2(sth,z),phi) : pointing(acos(z),phi);
       }
     /*! Returns the vector to the center of the pixel with number \a pix. */
     vec3 pix2vec (I pix) const
       {
-      double z, phi;
-      pix2zphi (pix,z,phi);
-      vec3 res;
-      res.set_z_phi (z, phi);
-      return res;
+      double z, phi, sth;
+      bool have_sth;
+      pix2loc (pix,z,phi,sth,have_sth);
+      if (have_sth)
+        return vec3(sth*cos(phi),sth*sin(phi),z);
+      else
+        {
+        vec3 res;
+        res.set_z_phi (z, phi);
+        return res;
+        }
       }
 
     /*! Returns a range set of pixels whose centers lie within the disk

@@ -143,7 +143,9 @@ template <typename T> class arr_ref
       planck_fail ("entry not found in array");
       }
 
-    bool contentsEqual(const arr_ref &other)
+    /*! Returns \a true if the array has the same size as \a other and all
+        elements of both arrays are equal, else \a false. */
+    bool contentsEqual(const arr_ref &other) const
       {
       if (s!=other.s) return false;
       for (tsize i=0; i<s; ++i)

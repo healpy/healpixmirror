@@ -101,8 +101,13 @@ template<typename I> struct isqrt_helper__ <I, true>
   static uint32 isqrt (I arg)
     {
     using namespace std;
-    long double arg2 = static_cast<long double>(arg)+0.5;
-    return uint32 (sqrt(arg2));
+    I res = sqrt(double(arg)+0.5);
+    if (arg<(int64(1)<<50)) return uint32(res);
+    if (res*res>arg)
+      --res;
+    else if ((res+1)*(res+1)<=arg)
+      ++res;
+    return uint32(res);
     }
   };
 
