@@ -622,7 +622,7 @@ public class HealpixIndex extends HealpixBase implements Serializable {
 	static public long parentAt(long child, int childnside, int requirednside) throws Exception{
           HealpixUtils.check(childnside >= requirednside,
             "Parent ("+requirednside+") should have smaller NSIDE than Child("
-            +childnside+");
+            +childnside+")");
     	return child >> bitdiff(requirednside, childnside);
 	}
 
