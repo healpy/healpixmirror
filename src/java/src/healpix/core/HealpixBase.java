@@ -289,26 +289,26 @@ public class HealpixBase extends HealpixTables
       @param ptg the requested location on the sphere.
       @return the pixel number containing the location. */
   public long ang2pix(Pointing ptg) throws Exception
-    { return zphi2pix(new Zphi(ptg)); }
+    { return loc2pix(new Hploc(ptg)); }
 
   /** Returns the Pointing corresponding to the center of the supplied pixel.
       @param pix the requested pixel number.
       @return the pixel's center coordinates. */
   public Pointing pix2ang(long pix) throws Exception
-    { return new Pointing(pix2zphi(pix)); }
+    { return pix2loc(pix).toPointing(); }
 
   /** Returns the pixel which contains the supplied Vec3.
       @param vec the requested location on the sphere (need not be normalized).
       @return the pixel number containing the location. */
   public long vec2pix(Vec3 vec) throws Exception
-    { return zphi2pix(new Zphi(vec)); }
+    { return loc2pix(new Hploc(vec)); }
 
   /** Returns the normalized 3-vector corresponding to the center of the
       supplied pixel.
       @param pix the requested pixel number.
       @return the pixel's center coordinates. */
   public Vec3 pix2vec(long pix) throws Exception
-    { return new Vec3(pix2zphi(pix)); }
+    { return pix2loc(pix).toVec3(); }
 
   /** Returns nested pixel number for the supplied ring pixel number.
       @param ipring the requested pixel number in RING scheme.
@@ -328,12 +328,9 @@ public class HealpixBase extends HealpixTables
     return xyf2ring (xyf.ix,xyf.iy, xyf.face);
     }
 
-  /** Returns the pixel which contains the supplied Zphi.
-      @param zphi the requested location on the sphere.
-      @return the pixel number containing the location. */
-  public long zphi2pix (Zphi zphi)
+  public long loc2pix (Hploc loc)
     {
-    double z=zphi.z, phi=zphi.phi;
+    double z=loc.z, phi=loc.phi;
 
     double za = Math.abs(z);
     double tt = HealpixUtils.fmodulo((phi*Constants.inv_halfpi),4.0);// in [0,4)
@@ -360,7 +357,9 @@ public class HealpixBase extends HealpixTables
       else  // North & South polar caps
         {
         double tp = tt-(long)(tt);
-        double tmp = nside*Math.sqrt(3*(1-za));
+        double tmp = ((za<0.99)||(!loc.have_sth)) ?
+                     nside*Math.sqrt(3*(1-za)) :
+                     nside*loc.sth/Math.sqrt((1.+za)/3.);
 
         long jp = (long)(tp*tmp); // increasing edge line index
         long jm = (long)((1.0-tp)*tmp); // decreasing edge line index
@@ -392,7 +391,9 @@ public class HealpixBase extends HealpixTables
         {
         int ntt = Math.min(3,(int)tt);
         double tp = tt-ntt;
-        double tmp = nside*Math.sqrt(3*(1-za));
+        double tmp = ((za<0.99)||(!loc.have_sth)) ?
+                     nside*Math.sqrt(3*(1-za)) :
+                     nside*loc.sth/Math.sqrt((1.+za)/3.);
 
         long jp = (long)(tp*tmp); // increasing edge line index
         long jm = (long)((1.0-tp)*tmp); // decreasing edge line index
@@ -405,12 +406,15 @@ public class HealpixBase extends HealpixTables
       }
     }
 
-  /** Returns the Zphi corresponding to the center of the supplied pixel.
-      @param pix the requested pixel number.
-      @return the pixel's center coordinates. */
-  public Zphi pix2zphi (long pix)
+  /** Returns the pixel which contains the supplied Zphi.
+      @param zphi the requested location on the sphere.
+      @return the pixel number containing the location. */
+  public long zphi2pix (Zphi zphi)
+    { return loc2pix (new Hploc(zphi)); }
+
+  protected Hploc pix2loc (long pix)
     {
-    double z,phi;
+    Hploc loc = new Hploc();
     if (scheme==Scheme.RING)
       {
       if (pix<ncap) // North Polar cap
@@ -418,8 +422,10 @@ public class HealpixBase extends HealpixTables
         long iring = (1+(HealpixUtils.isqrt(1+2*pix)))>>>1; //counted from North pole
         long iphi  = (pix+1) - 2*iring*(iring-1);
 
-        z = 1.0 - (iring*iring)*fact2;
-        phi = (iphi-0.5) * Constants.halfpi/iring;
+        double tmp = (iring*iring)*fact2;
+        loc.z = 1.0 - tmp;
+        if (loc.z>0.99) { loc.sth=Math.sqrt(tmp*(2.-tmp)); loc.have_sth=true; }
+        loc.phi = (iphi-0.5) * Constants.halfpi/iring;
         }
       else if (pix<(npix-ncap)) // Equatorial region
         {
@@ -430,8 +436,8 @@ public class HealpixBase extends HealpixTables
         // 1 if iring+nside is odd, 1/2 otherwise
         double fodd = ((iring+nside)&1)!=0 ? 1 : 0.5;
 
-        z = (nl2-iring)*fact1;
-        phi = (iphi-fodd) * Math.PI*0.75*fact1;
+        loc.z = (nl2-iring)*fact1;
+        loc.phi = (iphi-fodd) * Math.PI*0.75*fact1;
         }
       else // South Polar cap
         {
@@ -439,8 +445,10 @@ public class HealpixBase extends HealpixTables
         long iring = (1+HealpixUtils.isqrt(2*ip-1))>>>1; //counted from South pole
         long iphi  = 4*iring + 1 - (ip - 2*iring*(iring-1));
 
-        z = -1.0 + iring*iring*fact2;
-        phi = (iphi-0.5) * Constants.halfpi/iring;
+        double tmp = (iring*iring)*fact2;
+        loc.z = tmp-1.0;
+        if (loc.z<-0.99) { loc.sth=Math.sqrt(tmp*(2.-tmp)); loc.have_sth=true; }
+        loc.phi = (iphi-0.5) * Constants.halfpi/iring;
         }
       }
     else
@@ -453,27 +461,37 @@ public class HealpixBase extends HealpixTables
       if (jr<nside)
         {
         nr = jr;
-        z = 1 - nr*nr*fact2;
+        double tmp = (nr*nr)*fact2;
+        loc.z = 1 - tmp;
+        if (loc.z>0.99) { loc.sth=Math.sqrt(tmp*(2.-tmp)); loc.have_sth=true; }
         }
       else if (jr>nl3)
         {
         nr = nl4-jr;
-        z = nr*nr*fact2 - 1;
+        double tmp = (nr*nr)*fact2;
+        loc.z = tmp - 1;
+        if (loc.z<-0.99) { loc.sth=Math.sqrt(tmp*(2.-tmp)); loc.have_sth=true; }
         }
       else
         {
         nr = nside;
-        z = (nl2-jr)*fact1;
+        loc.z = (nl2-jr)*fact1;
         }
 
       long tmp=(long)(jpll[xyf.face])*nr+xyf.ix-xyf.iy;
       assert(tmp<8*nr);//,"must not happen");
       if (tmp<0) tmp+=8*nr;
-      phi = (nr==nside) ? 0.75*Constants.halfpi*tmp*fact1 :
-                          (0.5*Constants.halfpi*tmp)/nr;
+      loc.phi = (nr==nside) ? 0.75*Constants.halfpi*tmp*fact1 :
+                             (0.5*Constants.halfpi*tmp)/nr;
       }
-    return new Zphi(z,phi);
+    return loc;
     }
+
+  /** Returns the Zphi corresponding to the center of the supplied pixel.
+      @param pix the requested pixel number.
+      @return the pixel's center coordinates. */
+  public Zphi pix2zphi (long pix)
+    { return pix2loc(pix).toZphi(); }
 
   /** Returns the neighboring pixels of ipix.
       This method works in both RING and NEST schemes, but is

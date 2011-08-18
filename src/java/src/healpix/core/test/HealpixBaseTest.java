@@ -126,7 +126,7 @@ public class HealpixBaseTest extends TestCase {
       for (long pix=0; pix<base.getNpix(); pix+=dpix)
         {
         Pointing p=base.pix2ang(pix);
-        dummy+=p.theta;
+        dummy+=p.theta+p.phi;
         ++cnt;
         }
       }
@@ -149,7 +149,7 @@ public class HealpixBaseTest extends TestCase {
       for (long pix=0; pix<base.getNpix(); pix+=dpix)
         {
         Vec3 v=base.pix2vec(pix);
-        dummy+=v.x;
+        dummy+=v.x+v.y+v.z;
         ++cnt;
         }
       }
@@ -335,6 +335,17 @@ public class HealpixBaseTest extends TestCase {
     d+=subtest_perf_query_disc("disc      (RING)",Scheme.RING);
     d+=subtest_perf_query_polygon("polygon   (NEST)",Scheme.NESTED);
     d+=subtest_perf_query_polygon("polygon   (RING)",Scheme.RING);
+    }
+
+  public void test_accuracy()throws Exception
+    {
+    System.out.println("\nTesting accuracy near the poles\n");
+
+    for (int order=0; order<=HealpixBase.order_max; ++order)
+      {
+      HealpixBase base = new HealpixBase (1L<<order,Scheme.RING);
+      assertTrue("incorrect pix2ang",base.pix2ang(1).theta>0.0);
+      }
     }
 
   public void test_ringnestring()throws Exception
