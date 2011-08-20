@@ -1278,4 +1278,50 @@ public class HealpixBase extends HealpixTables
       }
     }
 
+  public static void computeArc (Pointing p1, Pointing p2, boolean equatorial, Pointing[] res)
+    throws Exception
+    {
+    int nsteps = res.length-1;
+    HealpixUtils.check(nsteps>=2,"too few points");
+    res[0]=new Pointing(p1); res[nsteps]=new Pointing(p2);
+    if (equatorial)
+      {
+      double z1=Math.cos(p1.theta), z2=Math.cos(p2.theta);
+      double c1 = (p1.phi-p2.phi)/(z1-z2);
+      double c2 = p1.phi -c1*z1;
+      for (int i=1; i<nsteps; ++i)
+        {
+        double th = p1.theta+i*((p2.theta-p1.theta)/nsteps);
+        double z = Math.cos(th);
+        res[i] = new Pointing(th,c1*z+c2);
+        }
+      }
+    else
+      {
+      boolean fliptheta= (p1.theta>0.5*Math.PI);
+      double shift_phi = Math.max(0., 0.1-Math.min(p1.phi,p2.phi));
+      Pointing pa = new Pointing(fliptheta ? Math.PI-p1.theta : p1.theta,
+                                 p1.phi + shift_phi);
+      Pointing pb = new Pointing(fliptheta ? Math.PI-p2.theta : p2.theta,
+                                 p2.phi + shift_phi);
+      double xpa = 1./(pa.phi*pa.phi),
+             xpb = 1./(pb.phi*pb.phi);
+      double sa = Math.sin(pa.theta), sb=Math.sin(pb.theta),
+             za = Math.cos(pa.theta), zb=Math.cos(pb.theta);
+      double omza = sa*sa/(1.+za),
+             omzb = sb*sb/(1.+zb);
+      double c1 = (xpa-xpb)/(omza-omzb);
+      double c2 = xpa - c1*omza;
+      for (int i=1; i<nsteps; ++i)
+        {
+        double th = pa.theta+i*((pb.theta-pa.theta)/nsteps);
+        double sth = Math.sin(th), cth = Math.cos(th);
+        double omz = sth*sth/(1.+cth);
+        double xphi = c1*omz + c2;
+        double phi = Math.sqrt(1./xphi) - shift_phi;
+        res [i] = new Pointing(fliptheta ? Math.PI-th : th, phi);
+        }
+      }
+    }
+
   }
