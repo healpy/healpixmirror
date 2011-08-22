@@ -60,7 +60,7 @@ public class RingSphere extends HealSphere {
 	protected Geometry createGeometry() {
 		double theta_center, phi_center;
 		// double thn, ths;
-		int ppq = (step * 2 + 2) * 2; // points per quad
+		int ppq = step*8; // points per quad
 		int i_phi_count, rpix;
 		int ns4 = 4 * nside;
 		int ns3 = 3 * nside;

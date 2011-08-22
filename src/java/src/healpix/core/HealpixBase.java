@@ -612,7 +612,7 @@ public class HealpixBase extends HealpixTables
     }
 
   /** Returns the z-coordinate (equivalent to the cosine of the colatitude)
-      for a requested ring.
+      for the requested ring.
       This method also accepts the not-really-existing ring indices 0 and
       4*Nside, which correspond to North and South Poles, respectively.
       @param ring ring index: the northernmost ring in the map has index 1;
@@ -626,6 +626,28 @@ public class HealpixBase extends HealpixTables
       return (nl2-ring)*fact1;
     ring=nl4 - ring;
     return ring*ring*fact2 - 1;
+    }
+  /** Returns the colatitude for the requested ring.
+      This method also accepts the not-really-existing ring indices 0 and
+      4*Nside, which correspond to North and South Poles, respectively.
+      @param ring ring index: the northernmost ring in the map has index 1;
+        ring indices are increasing towards the South pole.
+      @return z-coordinate of the ring. */
+  public double ring2theta (long ring)
+    {
+    if (ring<nside)
+      {
+      double tmp=ring*ring*fact2;
+      return Math.atan2 (Math.sqrt(tmp*(2.-tmp)),1-tmp);
+      }
+    if (ring <=nl3)
+      {
+      double cth=(nl2-ring)*fact1;
+      return Math.atan2 (Math.sqrt(1.-cth*cth),cth);
+      }
+    ring=nl4 - ring;
+    double tmp=ring*ring*fact2;
+    return Math.atan2 (Math.sqrt(tmp*(2.-tmp)),tmp-1);
     }
 
   private static class pstack
@@ -1153,109 +1175,6 @@ public class HealpixBase extends HealpixTables
       }
     }
 
-  /** calculate the points of crossing for a given theata on the boundaries of
-      the pixel - returns the left and right phi crossings
-      @param i_th ring number
-      @param i_phi pixel index in the ring
-      @param i_zone ith zone (0..3), a quarter of sphere
-      @param cos_theta cosine of theta
-      @return the left and right phi crossings
-    */
-  protected double[] pixel_boundaries(long i_th, long i_phi, int i_zone,
-    double cos_theta)
-    {
-    double phi_l,phi_r;
-    if (((i_th==1)||(i_th==nl4-1))&&(Math.abs(cos_theta)>=1-1/(3.0*npface))) {
-      phi_l = 0;
-      phi_r = 1;
-    } else if ((i_th<nside) || (cos_theta>=Constants.twothird)) {
-      double sq3th = Math.sqrt(3*(1-cos_theta));
-      double factor = 1/(nside*sq3th);
-      double jd = i_phi;
-      double ku = i_th - i_phi;
-      phi_l = Math.max((jd-1)*factor, 1- (ku+1)*factor);
-      phi_r = Math.min(1 - ku*factor, jd*factor);
-    } else if ((i_th>3*nside) || (cos_theta<=-Constants.twothird)) {
-      double sq3th = Math.sqrt(3*(1+cos_theta));
-      double factor = 1/(nside*sq3th);
-      double jd = i_th - nl2 + i_phi;
-      double ku = nl2 - i_phi;
-      phi_l = Math.max(1 - (nl2-jd+1)*factor, (nl2-ku-1)*factor);
-      phi_r = Math.min(1 - (nl2-jd)  *factor, (nl2-ku  )*factor);
-    } else {
-      double cth34 = 0.5 - 0.75*cos_theta;
-      double cth34_1 = cth34 + 1.0;
-      int modfactor = (int) (nside + ((i_th-nside)&1));
-      double jd = i_phi - 0.5*(modfactor-i_th);
-      double ku = 0.5*(modfactor+i_th) - i_phi;
-      phi_l = Math.max( cth34_1 - (ku+1)/nside, -cth34 + (jd-1)/nside);
-      phi_r = Math.min( cth34_1 - ku/nside, -cth34 + jd/nside);
-    }
-    double[] ret = { Constants.halfpi*(phi_l+i_zone),
-                     Constants.halfpi*(phi_r+i_zone) };
-    return ret;
-  }
-
-  /** Returns set of points along the boundary of the given pixel.
-    * Step 1 gives 4 points on the corners.
-    * Mainly for graphics = you may not want to use LARGE NSIDEs.
-    *
-    * @param pix pixel index number
-    * @param step the number of returned points is 2+2*step
-    * @return {@link Vec3} for each point
-    * @throws Exception
-    */
-  public Vec3[] corners(long pix, int step) throws Exception
-    {
-    int nPoints = step * 2 + 2;
-    Vec3[] points = new Vec3[nPoints];
-    Zphi p0 = pix2zphi(pix);
-    double phi = p0.phi;
-
-    int i_zone = (int)(phi/Constants.halfpi);
-    long ringno = pix2ring(pix);
-    long i_phi_count = Math.min(nside, Math.min(ringno, nl4-ringno));
-    long i_phi = 0;
-    double phifac = Constants.halfpi / i_phi_count;
-    if ( ringno>=nside && ringno<=nl3 ) {
-      i_phi = (long)(phi/phifac + 0.5*((ringno-nside)&1)) + 1;
-    } else {
-      i_phi = (long)(phi/phifac) + 1;
-    }
-    // adjust for zone offset
-    i_phi -= i_zone*i_phi_count;
-    int spoint = nPoints/2;
-    // get north south middle - middle should match theta!
-    double[] nms = { ring2z(ringno-1), p0.z, ring2z(ringno+1) };
-    double[] philr = pixel_boundaries(ringno, i_phi, i_zone, nms[0]);
-    if (i_phi > (i_phi_count/2)) {
-      points[0] = new Vec3(new Zphi(nms[0], philr[1]));
-    } else {
-      points[0] = new Vec3(new Zphi(nms[0], philr[0]));
-    }
-    philr = pixel_boundaries(ringno, i_phi, i_zone, nms[2]);
-    if ( i_phi > (i_phi_count/2) ) {
-      points[spoint] = new Vec3(new Zphi(nms[2], philr[1]));
-    } else {
-      points[spoint] = new Vec3(new Zphi(nms[2], philr[0]));
-    }
-    if ( step == 1 ) {
-      philr = pixel_boundaries(ringno, i_phi, i_zone, nms[1]);
-      points[1] = new Vec3(new Zphi(p0.z, philr[0]));
-      points[3] = new Vec3(new Zphi(p0.z, philr[1]));
-    } else {
-      double cosThetaLen = nms[2] - nms[0];
-      double cosThetaStep = ( cosThetaLen / ( step + 1 ) );
-      for ( int p = 1; p <= step; p++ ) {
-        double cos_theta = nms[0] + ( cosThetaStep * p );
-        philr = pixel_boundaries(ringno, i_phi, i_zone, cos_theta);
-        points[p] = new Vec3(new Zphi(cos_theta, philr[0]));
-        points[nPoints-p] = new Vec3(new Zphi(cos_theta, philr[1]));
-      }
-    }
-    return points;
-  }
-
   /** Compute ring index from pixel number.
       Works in both RING and NESTED schemes
       @param pix pixel number
@@ -1278,50 +1197,63 @@ public class HealpixBase extends HealpixTables
       }
     }
 
-  public static void computeArc (Pointing p1, Pointing p2, boolean equatorial, Pointing[] res)
-    throws Exception
+  /** Returns a set of points along the boundary of the given pixel.
+    * Step 1 gives 4 points on the corners.
+    *
+    * @param pix pixel index number
+    * @param step the number of returned points is 4*step
+    * @return {@link Vec3} for each point
+    * @throws Exception
+    */
+  public Vec3[] corners(long pix, int step) throws Exception
     {
-    int nsteps = res.length-1;
-    HealpixUtils.check(nsteps>=2,"too few points");
-    res[0]=new Pointing(p1); res[nsteps]=new Pointing(p2);
-    if (equatorial)
+    HealpixUtils.check(step>0,"step must be positive");
+    Vec3[] points = new Vec3[4*step];
+    Xyf xyf = pix2xyf(pix);
+    double d = 1./step;
+    for (int i=0; i<step; ++i)
       {
-      double z1=Math.cos(p1.theta), z2=Math.cos(p2.theta);
-      double c1 = (p1.phi-p2.phi)/(z1-z2);
-      double c2 = p1.phi -c1*z1;
-      for (int i=1; i<nsteps; ++i)
-        {
-        double th = p1.theta+i*((p2.theta-p1.theta)/nsteps);
-        double z = Math.cos(th);
-        res[i] = new Pointing(th,c1*z+c2);
-        }
+      points[i       ]=fxyf2loc(xyf.ix+0.5-i*d, xyf.iy+0.5, xyf.face).toVec3();
+      points[i+  step]=fxyf2loc(xyf.ix-0.5, xyf.iy+0.5-i*d, xyf.face).toVec3();
+      points[i+2*step]=fxyf2loc(xyf.ix-0.5+i*d, xyf.iy-0.5, xyf.face).toVec3();
+      points[i+3*step]=fxyf2loc(xyf.ix+0.5, xyf.iy-0.5+i*d, xyf.face).toVec3();
+      }
+    return points;
+    }
+
+  private Hploc fxyf2loc(double fx, double fy, int face)
+    {
+    Hploc loc = new Hploc();
+    double jr = ((long)(jrll[face])<<order) - fx - fy - 1;
+
+    double nr;
+    if (jr<nside)
+      {
+      nr = jr;
+      double tmp = (nr*nr)*fact2;
+      loc.z = 1 - tmp;
+      if (loc.z>0.99) { loc.sth=Math.sqrt(tmp*(2.-tmp)); loc.have_sth=true; }
+      }
+    else if (jr>nl3)
+      {
+      nr = nl4-jr;
+      double tmp = (nr*nr)*fact2;
+      loc.z = tmp - 1;
+      if (loc.z<-0.99) { loc.sth=Math.sqrt(tmp*(2.-tmp)); loc.have_sth=true; }
       }
     else
       {
-      boolean fliptheta= (p1.theta>0.5*Math.PI);
-      double shift_phi = Math.max(0., 0.1-Math.min(p1.phi,p2.phi));
-      Pointing pa = new Pointing(fliptheta ? Math.PI-p1.theta : p1.theta,
-                                 p1.phi + shift_phi);
-      Pointing pb = new Pointing(fliptheta ? Math.PI-p2.theta : p2.theta,
-                                 p2.phi + shift_phi);
-      double xpa = 1./(pa.phi*pa.phi),
-             xpb = 1./(pb.phi*pb.phi);
-      double sa = Math.sin(pa.theta), sb=Math.sin(pb.theta),
-             za = Math.cos(pa.theta), zb=Math.cos(pb.theta);
-      double omza = sa*sa/(1.+za),
-             omzb = sb*sb/(1.+zb);
-      double c1 = (xpa-xpb)/(omza-omzb);
-      double c2 = xpa - c1*omza;
-      for (int i=1; i<nsteps; ++i)
-        {
-        double th = pa.theta+i*((pb.theta-pa.theta)/nsteps);
-        double sth = Math.sin(th), cth = Math.cos(th);
-        double omz = sth*sth/(1.+cth);
-        double xphi = c1*omz + c2;
-        double phi = Math.sqrt(1./xphi) - shift_phi;
-        res [i] = new Pointing(fliptheta ? Math.PI-th : th, phi);
-        }
+      nr = nside;
+      loc.z = (nl2-jr)*fact1;
       }
-    }
 
+    double tmp=(long)(jpll[face])*nr+fx-fy;
+    assert(tmp<8*nr);//,"must not happen");
+    if (tmp<0) tmp+=8*nr;
+    if (nr<1e-15)
+      loc.phi=0;
+    else
+      loc.phi = (0.5*Constants.halfpi*tmp)/nr;
+    return loc;
+    }
   }
