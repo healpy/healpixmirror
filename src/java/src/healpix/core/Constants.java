@@ -24,17 +24,14 @@ package healpix.core;
 /** The Class Constants. */
 public class Constants
   {
-  /** The Constant pi */
-  public static final double pi = Math.PI;
-
   /** The Constant halfpi */
-  public static final double halfpi = 0.5*pi;
+  public static final double halfpi = 0.5*Math.PI;
 
-  public static final double inv_halfpi = 2./pi;
+  public static final double inv_halfpi = 2./Math.PI;
 
   /** The Constant twopi. */
-  public static final double twopi = 2*pi;
-  public static final double inv_twopi = 1./(2*pi);
+  public static final double twopi = 2*Math.PI;
+  public static final double inv_twopi = 1./(2*Math.PI);
 
   /** The Constant twothird. */
   public static final double twothird = 2./3.;

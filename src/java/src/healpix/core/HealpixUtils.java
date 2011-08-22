@@ -21,7 +21,8 @@
 
 package healpix.core;
 
-/** Collection of utility functions. */
+/** Collection of utility functions.
+    @author Martin Reinecke */
 public class HealpixUtils
   {
   /** Evaluates cond; if it is false, throws an Exception containing errtxt. */

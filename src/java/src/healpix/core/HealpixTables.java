@@ -21,7 +21,8 @@
 
 package healpix.core;
 
-/** Various data tables needed by the {@link HealpixBase} class. */
+/** Various data tables needed by the {@link HealpixBase} class.
+    @author Martin Reinecke */
 public class HealpixTables
   {
   static final short[] ctab={

@@ -178,9 +178,9 @@ public class HealpixBase extends HealpixTables
       @param nside the Nside parameter
       @return the map order corresponding to {@code nside}; -1 if
                {@code nside} is not a power of 2. */
-  public static int nside2order(long nside)
+  public static int nside2order(long nside) throws Exception
     {
-    assert (nside>0);
+    HealpixUtils.check (nside>0,"nside must be positive");
     return ((nside&(nside-1))!=0) ? -1 : HealpixUtils.ilog2(nside);
     }
 
@@ -479,7 +479,7 @@ public class HealpixBase extends HealpixTables
         }
 
       long tmp=(long)(jpll[xyf.face])*nr+xyf.ix-xyf.iy;
-      assert(tmp<8*nr);//,"must not happen");
+      assert(tmp<8*nr); // must not happen
       if (tmp<0) tmp+=8*nr;
       loc.phi = (nr==nside) ? 0.75*Constants.halfpi*tmp*fact1 :
                              (0.5*Constants.halfpi*tmp)/nr;
@@ -717,7 +717,7 @@ public class HealpixBase extends HealpixTables
     if (theta1<theta2)
       return queryStripInternal(theta1,theta2,inclusive);
     LongRangeSet res = queryStripInternal(0.,theta2,inclusive);
-    return res.union(queryStripInternal(theta1,Constants.pi,inclusive));
+    return res.union(queryStripInternal(theta1,Math.PI,inclusive));
     }
 
   private boolean checkPixelRing (HealpixBase b2, long pix, long nr,
@@ -779,10 +779,10 @@ public class HealpixBase extends HealpixTables
       else
         rsmall = rbig = inclusive ? radius+maxPixrad() : radius;
 
-      if (rsmall>=Constants.pi)
+      if (rsmall>=Math.PI)
         { pixset.appendRange(0,npix-1); return pixset.build(); }
 
-      rbig = Math.min (Constants.pi,rbig);
+      rbig = Math.min (Math.PI,rbig);
 
       double cosrsmall = Math.cos(rsmall);
       double cosrbig = Math.cos(rbig);
@@ -809,7 +809,7 @@ public class HealpixBase extends HealpixTables
       double zmin = Math.cos(rlat2);
       long irmax = ringAbove (zmin);
 
-      if ((fct>1) && (rlat2<Constants.pi)) irmax=Math.min(nl4-1,irmax+1);
+      if ((fct>1) && (rlat2<Math.PI)) irmax=Math.min(nl4-1,irmax+1);
 
       for (long iz=irmin; iz<=irmax; ++iz) // rings partially in the disk
         {
@@ -817,7 +817,7 @@ public class HealpixBase extends HealpixTables
 
         double x = (cosrbig-z*z0)*xa;
         double ysq = 1-z*z-x*x;
-        double dphi = (ysq<=0) ? Constants.pi-1e-15 :
+        double dphi = (ysq<=0) ? Math.PI-1e-15 :
                                  Math.atan2(Math.sqrt(ysq),x);
         RingInfoSmall info =get_ring_info_small(iz);
         long ipix1 = info.startpix, nr=info.ringpix, ipix2=ipix1+nr-1;
@@ -852,7 +852,7 @@ public class HealpixBase extends HealpixTables
           }
         }
 
-      if ((rlat2>=Constants.pi) && (irmax+1<nl4)) // south pole in the disk
+      if ((rlat2>=Math.PI) && (irmax+1<nl4)) // south pole in the disk
         {
         RingInfoSmall info =get_ring_info_small(irmax+1);
         pixset.appendRange(info.startpix,npix-1);
@@ -860,7 +860,7 @@ public class HealpixBase extends HealpixTables
       }
     else // scheme_==NEST
       {
-      if (radius>=Constants.pi) // disk covers the whole sphere
+      if (radius>=Math.PI) // disk covers the whole sphere
         { pixset.appendRange(0,npix-1); return pixset.build(); }
 
       int oplus=inclusive ? OPLUS : 0;
@@ -878,7 +878,7 @@ public class HealpixBase extends HealpixTables
         {
         base[o]=new HealpixBase(1L<<o,Scheme.NESTED);
         double dr=base[o].maxPixrad(); // safety distance
-        crpdr[o] = (radius+dr>Constants.pi) ? -1. : Math.cos(radius+dr);
+        crpdr[o] = (radius+dr>Math.PI) ? -1. : Math.cos(radius+dr);
         crmdr[o] = (radius-dr<0.) ?  1. : Math.cos(radius-dr);
         }
 
@@ -941,9 +941,9 @@ public class HealpixBase extends HealpixTables
       for (int i=0; i<nv; ++i)
         {
         double rsmall=rad[i]+rpsmall;
-        if (rsmall<Constants.pi)
+        if (rsmall<Math.PI)
           {
-          double rbig = Math.min(Constants.pi,rad[i]+rpbig);
+          double rbig = Math.min(Math.PI,rad[i]+rpbig);
           Pointing pnt= new Pointing(norm[i]);
           cosrsmall[nd]=Math.cos(rsmall);
           cosrbig[nd]=Math.cos(rbig);
@@ -962,9 +962,9 @@ public class HealpixBase extends HealpixTables
 
           double rlat2 = pnt.theta + rsmall;
           double zmin = Math.cos(rlat2);
-          long irmax_t = (rlat2>=Constants.pi) ? nl4-1 : ringAbove (zmin);
+          long irmax_t = (rlat2>=Math.PI) ? nl4-1 : ringAbove (zmin);
 
-          if ((fct>1) && (rlat2<Constants.pi))
+          if ((fct>1) && (rlat2<Math.PI))
             irmax_t=Math.min(nl4-1,irmax_t+1);
           if (irmax_t < irmax) irmax=irmax_t;
           if (irmin_t > irmin) irmin=irmin_t;
@@ -988,7 +988,7 @@ public class HealpixBase extends HealpixTables
           {
           double x = (cosrbig[j]-z*z0[j])*xa[j];
           double ysq = 1.-z*z-x*x;
-          double dphi = (ysq<=0) ? Constants.pi-1e-15 :
+          double dphi = (ysq<=0) ? Math.PI-1e-15 :
                                    Math.atan2(Math.sqrt(ysq),x);
 
           long ip_lo = (long)Math.floor
@@ -1044,7 +1044,7 @@ public class HealpixBase extends HealpixTables
         double dr=base[o].maxPixrad(); // safety distance
         for (int i=0; i<nv; ++i)
           {
-          crlimit[o][i][0] = (rad[i]+dr>Constants.pi) ? -1: Math.cos(rad[i]+dr);
+          crlimit[o][i][0] = (rad[i]+dr>Math.PI) ? -1: Math.cos(rad[i]+dr);
           crlimit[o][i][1] = (o==0) ? Math.cos(rad[i]) : crlimit[0][i][1];
           crlimit[o][i][2] = (rad[i]-dr<0.) ?  1. : Math.cos(rad[i]-dr);
           }
@@ -1248,7 +1248,7 @@ public class HealpixBase extends HealpixTables
       }
 
     double tmp=(long)(jpll[face])*nr+fx-fy;
-    assert(tmp<8*nr);//,"must not happen");
+    assert(tmp<8*nr); // must not happen
     if (tmp<0) tmp+=8*nr;
     if (nr<1e-15)
       loc.phi=0;

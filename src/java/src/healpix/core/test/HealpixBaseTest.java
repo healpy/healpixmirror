@@ -27,6 +27,7 @@ import java.text.DecimalFormat;
 import healpix.core.*;
 import healpix.core.base.set.*;
 
+/** @author Martin Reinecke */
 public class HealpixBaseTest extends TestCase {
 
   static private final int nsamples=10000; // influences number of correctness tests
@@ -231,13 +232,13 @@ public class HealpixBaseTest extends TestCase {
     double dummy=0;
     long tstart = System.nanoTime();
     int omax=HealpixBase.order_max;
-    double dth=Constants.pi/Math.sqrt(nsteps);
+    double dth=Math.PI/Math.sqrt(nsteps);
     double dph=Constants.twopi/Math.sqrt(nsteps);
     for (int order=0; order<=omax; ++order)
       {
       HealpixBase base = new HealpixBase (1L<<order,scheme);
-      for (double theta=0; theta<Constants.pi; theta+=dth)
-        for (double phi=0; phi<Constants.twopi; phi+=dph)
+      for (double theta=0; theta<Math.PI; theta+=dth)
+        for (double phi=0; phi<2*Math.PI; phi+=dph)
           {
           dummy+=base.ang2pix(new Pointing(theta+1e-15*phi,phi));
           ++cnt;
@@ -499,7 +500,7 @@ public class HealpixBaseTest extends TestCase {
       for (int m=0; m<nsamples; ++m)
         {
         Pointing ptg = random_dir (rng);
-        double rad = Constants.pi * rng.nextDouble();
+        double rad = Math.PI * rng.nextDouble();
         LongRangeSet rs = base.queryDisc(ptg,rad,false);
         Vec3 vptg = new Vec3(ptg);
         double cosrad=Math.cos(rad);
@@ -533,7 +534,7 @@ public class HealpixBaseTest extends TestCase {
       for (int m=0; m<niter; ++m)
         {
         Pointing ptg = random_dir (rng);
-        double rad = Constants.pi * rng.nextDouble();
+        double rad = Math.PI * rng.nextDouble();
         LongRangeSet rs = rbase.queryDisc(ptg,rad,false);
         long nval = rs.size();
         rs = nbase.queryDisc(ptg,rad,false);
