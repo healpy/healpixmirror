@@ -63,12 +63,12 @@ public class HealpixTables
   21824,21825,21828,21829,21840,21841,21844,21845 };
 
   // coordinate of the lowest corner of each face
-  static final int[] jrll = {  2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4 };
-  static final int[] jpll = {  1, 3, 5, 7, 0, 2, 4, 6, 1, 3, 5, 7 };
+  static final byte[] jrll = {  2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4 };
+  static final byte[] jpll = {  1, 3, 5, 7, 0, 2, 4, 6, 1, 3, 5, 7 };
 
-  static final int[] xoffset = { -1,-1, 0, 1, 1, 1, 0,-1 };
-  static final int[] yoffset = {  0, 1, 1, 1, 0,-1,-1,-1 };
-  static final int[][] facearray =
+  static final short[] xoffset = { -1,-1, 0, 1, 1, 1, 0,-1 };
+  static final short[] yoffset = {  0, 1, 1, 1, 0,-1,-1,-1 };
+  static final short[][] facearray =
         { {  8, 9,10,11,-1,-1,-1,-1,10,11, 8, 9 },   // S
           {  5, 6, 7, 4, 8, 9,10,11, 9,10,11, 8 },   // SE
           { -1,-1,-1,-1, 5, 6, 7, 4,-1,-1,-1,-1 },   // E
@@ -78,7 +78,7 @@ public class HealpixTables
           { -1,-1,-1,-1, 7, 4, 5, 6,-1,-1,-1,-1 },   // W
           {  3, 0, 1, 2, 3, 0, 1, 2, 4, 5, 6, 7 },   // NW
           {  2, 3, 0, 1,-1,-1,-1,-1, 0, 1, 2, 3 } }; // N
-  static final int[][] swaparray =
+  static final byte[][] swaparray =
         { {  0,0,3 },   // S
           {  0,0,6 },   // SE
           {  0,0,0 },   // E

@@ -189,6 +189,7 @@ public class HealpixBase extends HealpixTables
       @return the computed Nside parameter */
   public static long npix2Nside(long npix) throws Exception
     {
+    HealpixUtils.check (npix>0,"npix must be positive");
     long nside = HealpixUtils.isqrt(npix/12);
     HealpixUtils.check(12*nside*nside==npix,"npix is not 12*nside*nside");
     HealpixUtils.check(nside<=ns_max,"nside is too large");
@@ -199,6 +200,7 @@ public class HealpixBase extends HealpixTables
       @return the computed number of pixels */
   public static long nside2Npix(long nside) throws Exception
     {
+    HealpixUtils.check (nside>0,"nside must be positive");
     HealpixUtils.check(nside<=ns_max,"nside is too large");
     return 12*nside*nside;
     }
@@ -734,17 +736,17 @@ public class HealpixBase extends HealpixTables
       Xyf xyf2 = new Xyf (ox,oy,xyf.face);
       double pz,pphi;
       xyf2.ix=ox+i; xyf2.iy=oy;
-      if (HealpixUtils.cosdist_zphi(czphi,b2.pix2zphi(b2.xyf2pix(xyf2)))>cosrp2) // overlap
-        return false;
+      if (HealpixUtils.cosdist_zphi(czphi,b2.pix2zphi(b2.xyf2pix(xyf2)))>cosrp2)
+        return false; // overlap
       xyf2.ix=ox+fct-1; xyf2.iy=oy+i;
-      if (HealpixUtils.cosdist_zphi(czphi,b2.pix2zphi(b2.xyf2pix(xyf2)))>cosrp2) // overlap
-        return false;
+      if (HealpixUtils.cosdist_zphi(czphi,b2.pix2zphi(b2.xyf2pix(xyf2)))>cosrp2)
+        return false; // overlap
       xyf2.ix=ox+fct-1-i; xyf2.iy=oy+fct-1;
-      if (HealpixUtils.cosdist_zphi(czphi,b2.pix2zphi(b2.xyf2pix(xyf2)))>cosrp2) // overlap
-        return false;
+      if (HealpixUtils.cosdist_zphi(czphi,b2.pix2zphi(b2.xyf2pix(xyf2)))>cosrp2)
+        return false; // overlap
       xyf2.ix=ox; xyf2.iy=oy+fct-1-i;
-      if (HealpixUtils.cosdist_zphi(czphi,b2.pix2zphi(b2.xyf2pix(xyf2)))>cosrp2) // overlap
-        return false;
+      if (HealpixUtils.cosdist_zphi(czphi,b2.pix2zphi(b2.xyf2pix(xyf2)))>cosrp2)
+        return false; // overlap
       }
     return true;
     }
@@ -1250,10 +1252,7 @@ public class HealpixBase extends HealpixTables
     double tmp=(long)(jpll[face])*nr+fx-fy;
     assert(tmp<8*nr); // must not happen
     if (tmp<0) tmp+=8*nr;
-    if (nr<1e-15)
-      loc.phi=0;
-    else
-      loc.phi = (0.5*Constants.halfpi*tmp)/nr;
+    loc.phi = (nr<1e-15) ? 0 : (0.5*Constants.halfpi*tmp)/nr;
     return loc;
     }
   }
