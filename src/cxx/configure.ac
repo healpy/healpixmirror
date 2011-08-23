@@ -80,9 +80,9 @@ case $CCTYPE in
         ;;
     esac
     changequote(,)
-    gcc42=`echo $GCCVERSION | grep -c '4\.[23456789]'`
+    gcc43=`echo $GCCVERSION | grep -c '4\.[3456789]'`
     changequote([,])
-    if test $gcc42 -gt 0; then
+    if test $gcc43 -gt 0; then
       CCFLAGS="$CCFLAGS -march=native"
     fi
     ;;
@@ -110,9 +110,9 @@ case $CXXTYPE in
         ;;
     esac
     changequote(,)
-    gxx42=`echo $GXXVERSION | grep -c '4\.[23456789]'`
+    gxx43=`echo $GXXVERSION | grep -c '4\.[3456789]'`
     changequote([,])
-    if test $gxx42 -gt 0; then
+    if test $gxx43 -gt 0; then
       CXXCFLAGS="$CXXCFLAGS -march=native"
     fi
     ;;
@@ -126,7 +126,7 @@ esac
 
 case $system in
   Darwin-*)
-    ARCREATE="libtool -static"
+    ARCREATE="libtool -static -o"
     ;;
   *)
     ARCREATE="ar cr"
