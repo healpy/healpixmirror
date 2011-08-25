@@ -56,6 +56,8 @@ PRO pix2ang_nest, nside, ipix, theta, phi
 ;    June 2003,  EH, replaced STOPs by MESSAGEs
 ;    Oct 2006, EH, IAP, enabled nside > 8192
 ;    Aug 2008, EH, IAP: issues warning if ipix is not of integer type
+;    Aug 2011, EH, IAP: more precise theta determination close to pole;
+;        sligtly faster by not using kshift
 ;
 ;-
 ;*****************************************************************************
@@ -92,6 +94,7 @@ PRO pix2ang_nest, nside, ipix, theta, phi
       nl4 = 4LL*nl1
       npface = nl1 * long64(nl1)
       l64 = 1
+      if (nl1 ge 2LL^28) then jpll=long64(jpll) ; necessary to accomodate 8*Nside
   endif else begin
       nl4 = 4L*nl1
       npface = nl1 * nl1
@@ -99,9 +102,10 @@ PRO pix2ang_nest, nside, ipix, theta, phi
   endelse
   np = N_ELEMENTS(ipix)
   fn = DOUBLE(nl1)
-  fact1 = 1.d0/(3.d0*fn*fn)
+;  fact1 = 1.d0/(3.d0*fn*fn)
+  sfact = 1.d0 / (sqrt(6.d0) * fn)
   fact2 = 2.d0/(3.d0*fn)
-  piover2 = !DPI / 2.d0
+  piover4 = !DPI / 4.d0
 
 ;     initiates the array for the pixel number -> (x,y) mapping
   common pix2xy, pix2x, pix2y
@@ -138,43 +142,38 @@ PRO pix2ang_nest, nside, ipix, theta, phi
   jrt = 0                       ; free memory
 
   nr     = LONARR(np, /NOZERO)
-  kshift = BYTARR(np, /NOZERO)
   theta  = DBLARR(np, /NOZERO)
 
   pix_eqt = WHERE( jr GE nl1 AND jr Le nl3, n_eqt) ; equatorial region
   IF (n_eqt GT 0) THEN BEGIN
-      nr(pix_eqt)     = nl1   ; equatorial region 
-      theta(pix_eqt)  = ACOS(  (2*nl1-jr(pix_eqt))*fact2  )
-      kshift(pix_eqt) = (jr(pix_eqt) - nl1) MOD 2
+      nr[pix_eqt]     = nl1   ; equatorial region 
+      theta[pix_eqt]  = ACOS(  (2*nl1-jr[pix_eqt])*fact2  )
       pix_eqt = 0  ; free memory
   ENDIF
 
   pix_npl = WHERE( jr LT nl1, n_npl) ; north pole
   IF (n_npl GT 0) THEN BEGIN
-      nr(pix_npl)     = jr(pix_npl)
-      theta(pix_npl)  = ACOS(  1.d0 - double(nr(pix_npl))^2 * fact1  )
-      kshift(pix_npl) = 0
-      pix_npl = 0  ; free memory
+      nr[pix_npl]     = jr[pix_npl]
+      theta[pix_npl] = 2.d0 * ASIN( nr[pix_npl] * sfact )
+      pix_npl = 0; free memory
   ENDIF
 
   pix_spl = WHERE( jr GT nl3,   n_spl) ; south pole
   if (n_npl + n_spl + n_eqt) NE np THEN message,'error in '+routine
   IF (n_spl GT 0) THEN BEGIN
-      nr(pix_spl)     = nl4 - jr(pix_spl)
-      theta(pix_spl)  = ACOS(  -1.d0 + double(nr(pix_spl))^2 * fact1  )
-      kshift(pix_spl) = 0
-      pix_spl = 0 ; free memory
+      nr[pix_spl]     = nl4 - jr[pix_spl]
+      theta[pix_spl] = !DPI - 2.d0 * ASIN( nr[pix_spl] * sfact )
+      pix_spl = 0; free memory
   ENDIF
 
-;     computes the phi coordinate on the sphere, in [0,2Pi]
-  jp = (jpll(face_num)*nr + jpt + 1 + kshift)/2 ; 'phi' number in the ring in {1,4*nr}
+; ;     computes the phi coordinate on the sphere, in [0,2Pi]
+  jp = jpll[face_num]*nr + jpt
   jpt = 0  & face_num = 0         ; free memory
-  jp = jp - nl4 * (jp GT nl4)
-  jp = jp + nl4 * (jp LT 1)
+  jp += (2*nl4) * (jp LT 0)    ; in [0,8Nside-1] because of 1/2 step stagger
+  phi = jp * (piover4 / nr)
 
-;;  phi   = DBLARR(np, /NOZERO)
-  phi = (jp - (kshift+1)*0.5d0) * (piover2 / nr)
-  jp = 0 & kshift = 0 & nr = 0
+  jp = 0
+  nr = 0
   
   return
 end ; pix2ang_nest

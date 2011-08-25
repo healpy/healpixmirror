@@ -62,6 +62,7 @@ pro ang2vec, theta, phi, vector, astro = astro
 ; MODIFICATION HISTORY:
 ;       March 6, 1999    Eric Hivon, Caltech, Version 1.0
 ;       March 22, 2002     use Message
+;       Aug 2011, IAP: more precise (x,y) determination close to pole
 ;
 ;-
 ;*****************************************************************************
@@ -100,7 +101,8 @@ if (np gt 1) then theta_rad = REFORM(theta_rad,np,/OVER)
 if (np gt 1) then phi_rad   = REFORM(phi_rad,np,/OVER)
 
 cos_theta = COS(theta_rad)
-sin_theta = SQRT( (1.-cos_theta)*(1.+cos_theta) )
+;sin_theta = SQRT( (1.-cos_theta)*(1.+cos_theta) )
+sin_theta = SIN(theta_rad)
 theta_rad = 0
 
 Vector = [ [sin_theta * COS(phi_rad)], [sin_theta*SIN(phi_rad)], [cos_theta] ]

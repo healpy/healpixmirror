@@ -56,6 +56,8 @@ PRO vec2pix_nest, nside, vec_in, ipnest
 ;           free memory by discarding unused variables
 ;    June 2003,  EH, replaced STOPs by MESSAGEs
 ;    Dec 2007, EH, enabled Nside > 8192
+;    Aug 2011, EH, IAP: more accurate calculations close to pole
+;
 ;
 ;-
 ;*****************************************************************************
@@ -82,10 +84,12 @@ PRO vec2pix_nest, nside, vec_in, ipnest
 
   nl1 = LONG(nside)
   ns_max = nl1
+  l64 = 0
   if (nl1 gt 8192) then begin
       ix = LONARR(np, /NoZero) 
       iy = LONARR(np, /Nozero)
       npface = nl1 * long64(nl1)
+      l64 = (nl1 ge ishft(1L,29)) ; for Nside >= 2^29
   endif else begin
       ix = INTARR(np, /NoZero)
       iy = INTARR(np, /Nozero)
@@ -99,18 +103,23 @@ PRO vec2pix_nest, nside, vec_in, ipnest
   twopi  = 2.d0 * !DPI
   piover2 = !DPI / 2.d0
   z0 = 2.d0 /3.d0
-  z = DOUBLE(vec_in(*,2)/SQRT( TOTAL(vec_in^2,2) ) )
+  norm = SQRT( TOTAL(vec_in^2, 2, /double) )
+  z    = vec_in[*,2] / norm
+  sz   = SQRT( vec_in[*,0]^2 + vec_in[*,1]^2 ) / norm
+  norm = 0
   phi_in = ATAN(vec_in(*,1), vec_in(*,0))
   phi_in += (phi_in lt 0.0  )*twopi
   tt  = phi_in / piover2        ; in [0,4[
   phi_in = 0
 
-  pix_eqt = WHERE(z LE z0 AND z GT -z0, n_eqt) ; equatorial strip
+  pix_eqt = WHERE(z LE z0 AND z GT -z0, n_eqt, complement=pix_pol, ncomplement=n_pol) ; equatorial strip
   IF (n_eqt GT 0) THEN BEGIN
 
 ;     (the index of edge lines increase when the longitude=phi goes up)
-      jp = LONG(ns_max*(0.5d0 + tt(pix_eqt) - z(pix_eqt)*0.75d0)) ;  ascend edge line index
-      jm = LONG(ns_max*(0.5d0 + tt(pix_eqt) + z(pix_eqt)*0.75d0)) ; descend edge line index
+;       jp = LONG(ns_max*(0.5d0 + tt(pix_eqt) - z(pix_eqt)*0.75d0)) ;  ascend edge line index
+;       jm = LONG(ns_max*(0.5d0 + tt(pix_eqt) + z(pix_eqt)*0.75d0)) ; descend edge line index
+      jp = floor(ns_max*(0.5d0 + tt(pix_eqt) - z(pix_eqt)*0.75d0), L64=l64) ;  ascend edge line index
+      jm = floor(ns_max*(0.5d0 + tt(pix_eqt) + z(pix_eqt)*0.75d0), L64=l64) ; descend edge line index
 
 ;     finds the face
       face_n = BYTARR(n_eqt)
@@ -131,13 +140,14 @@ PRO vec2pix_nest, nside, vec_in, ipnest
       pix_eqt = 0
   ENDIF
 
-  pix_pol = WHERE(z GT z0 OR z LE -z0, n_pol) ; polar caps
+;;;;;;  pix_pol = WHERE(z GT z0 OR z LE -z0, n_pol) ; polar caps
   IF (n_pol GT 0) THEN BEGIN
 
       zz = z(pix_pol)
       ntt = FIX(tt(pix_pol)) < 3
       tp = tt(pix_pol) - ntt
-      tmp = SQRT( 3.d0*(1.d0 - ABS(z(pix_pol))) ) ; in ]0,1]
+;       tmp = SQRT( 3.d0*(1.d0 - ABS(z(pix_pol))) ) ; in ]0,1]
+      tmp = sz[pix_pol] * SQRT(3.d0 / (1.d0 + abs(z[pix_pol]))) ; more accurate
 
 ;     (the index of edge lines increase when distance from the closest pole goes up)
       jp = LONG( ns_max * tp          * tmp ) ; line going toward the pole as phi increases
@@ -162,6 +172,8 @@ PRO vec2pix_nest, nside, vec_in, ipnest
       ntt=0 & tp=0 & tmp=0 & jp=0 & jm=0 & p_np=0 & p_sp=0
       pix_pol = 0
   ENDIF
+
+  z = 0 & sz = 0
 
   if (nl1 gt 8192) then begin
       smax = 4

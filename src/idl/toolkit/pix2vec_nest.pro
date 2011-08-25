@@ -71,6 +71,8 @@ PRO pix2vec_nest, nside, ipix, vec_out, vertex
 ;    June 2003,  EH, replaced STOPs by MESSAGEs
 ;    Oct 2006, EH, IAP, enabled nside > 8192
 ;    Aug 2008, EH, IAP: issues warning if ipix is not of integer type
+;    Aug 2011, EH, IAP: more precise (x,y) determination close to pole 
+;       (for center only, not vertex)
 ;
 ;-
 ;*****************************************************************************
@@ -220,8 +222,9 @@ PRO pix2vec_nest, nside, ipix, vec_out, vertex
 
   if (n_npl GT 0) then begin
       phi = (jp[pix_npl] - (kshift[pix_npl]+1)*0.5d0) * (piover2 / nr[pix_npl])
-      z           = 1.d0 - double(nr(pix_npl))^2 * fact1
-      sz          = SQRT(1.d0 - z^2)
+      z           = 1.d0 - double(nr[pix_npl])^2 * fact1
+      ;sz          = SQRT(1.d0 - z^2)
+      sz          = nr[pix_npl] * sqrt( fact1 * (1.d0+z) ) 
       vec_out(pix_npl,0) = sz*cos(phi) & vec_out(pix_npl,1) = sz*sin(phi) & vec_out(pix_npl,2) = z
       if (do_vertex) then begin
           z_nv = 1.0d0 - (nr[pix_npl]-1.d0)^2*fact1
@@ -234,8 +237,9 @@ PRO pix2vec_nest, nside, ipix, vec_out, vertex
 
   if (n_spl GT 0) then begin
       phi = (jp[pix_spl] - (kshift[pix_spl]+1)*0.5d0) * (piover2 / nr[pix_spl])
-      z           = -1.d0 + double(nr(pix_spl))^2 * fact1
-      sz          = SQRT(1.d0 - z^2)
+      z           = -1.d0 + double(nr[pix_spl])^2 * fact1
+      ; sz          = SQRT(1.d0 - z^2)
+      sz          = nr[pix_spl] * sqrt( fact1 * (1.d0-z) ) 
       vec_out(pix_spl,0) = sz*cos(phi) & vec_out(pix_spl,1) = sz*sin(phi) & vec_out(pix_spl,2) = z
       if (do_vertex) then begin
           z_nv = - 1.0d0 + (nr[pix_spl]+1.d0)^2*fact1

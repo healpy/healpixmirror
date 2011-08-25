@@ -61,6 +61,7 @@ PRO ang2pix_nest, nside, theta, phi, ipnest
 ;    June 2003,  EH, replaced STOPs by MESSAGEs
 ;    Aug  2004,  EH, use !PI as theta upper-bound instead of !DPI
 ;    Dec 2007, EH, enabled Nside > 8192
+;    Aug 2011, EH, IAP: more accurate calculations close to pole
 ;
 ;-
 ;*****************************************************************************
@@ -84,10 +85,12 @@ PRO ang2pix_nest, nside, theta, phi, ipnest
 
   nl1 = LONG(nside)
   ns_max = nl1
+  l64 = 0 ; all in 32 bit
   if (nl1 gt 8192) then begin
       ix = LONARR(np, /NoZero) 
       iy = LONARR(np, /Nozero)
       npface = nl1 * long64(nl1)
+      l64 = (nl1 ge ishft(1L,29)) ; for Nside >= 2^29
   endif else begin
       ix = INTARR(np, /NoZero)
       iy = INTARR(np, /Nozero)
@@ -111,8 +114,10 @@ PRO ang2pix_nest, nside, theta, phi, ipnest
   IF (n_eqt GT 0) THEN BEGIN
 
 ;     (the index of edge lines increase when the longitude=phi goes up)
-      jp = LONG(ns_max*(0.5d0 + tt(pix_eqt) - z(pix_eqt)*0.75d0)) ;  ascend edge line index
-      jm = LONG(ns_max*(0.5d0 + tt(pix_eqt) + z(pix_eqt)*0.75d0)) ; descend edge line index
+;       jp = LONG(ns_max*(0.5d0 + tt(pix_eqt) - z(pix_eqt)*0.75d0)) ;  ascend edge line index
+;       jm = LONG(ns_max*(0.5d0 + tt(pix_eqt) + z(pix_eqt)*0.75d0)) ; descend edge line index
+      jp = floor(ns_max*(0.5d0 + tt(pix_eqt) - z(pix_eqt)*0.75d0), L64=l64) ;  ascend edge line index
+      jm = floor(ns_max*(0.5d0 + tt(pix_eqt) + z(pix_eqt)*0.75d0), L64=l64) ; descend edge line index
 
 ;     finds the face
       face_n = BYTARR(n_eqt)
@@ -136,10 +141,15 @@ PRO ang2pix_nest, nside, theta, phi, ipnest
   pix_pol = WHERE(z GT z0 OR z LE -z0, n_pol) ; polar caps
   IF (n_pol GT 0) THEN BEGIN
 
-      zz = z(pix_pol)
+
+      ;tmp = SQRT( 3.d0*(1.d0 - ABS(z(pix_pol))) ) ; in ]0,1]
+      angle = double(theta[pix_pol])
+      angle <= !DPI - angle ; either theta or Pi-theta, whichever is smaller
+      tmp = sqrt(6.d0) * SIN(angle * 0.5d0) ; more accurate close to pole
+      angle = 0
+
       ntt = FIX(tt(pix_pol)) < 3
       tp = tt(pix_pol) - ntt
-      tmp = SQRT( 3.d0*(1.d0 - ABS(z(pix_pol))) ) ; in ]0,1]
 
 ;     (the index of edge lines increase when distance from the closest pole goes up)
       jp = LONG( ns_max * tp          * tmp ) ; line going toward the pole as phi increases
@@ -148,8 +158,7 @@ PRO ang2pix_nest, nside, theta, phi, ipnest
       jm = jm < (ns_max-1)
 
 ;     finds the face and pixel's (x,y)
-      p_np = WHERE(zz gt 0., n_np)
-      p_sp = WHERE(zz lt 0., n_sp)
+      p_sp = WHERE(z[pix_pol] lt 0., n_sp, complement=p_np, ncomplement=n_np)
       if (n_np GT 0) then begin
           face_num(pix_pol(p_np)) = ntt(p_np)
           ix(pix_pol(p_np)) = ns_max - jm(p_np) - 1

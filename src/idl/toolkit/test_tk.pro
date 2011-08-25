@@ -29,6 +29,8 @@ pro test_tk, nside, upix, random=random
 ;+
 ; test_tk [,nside ,upix, random= ]
 ;
+;  tests the consistency of Healpix toolkit routines (pix2*, ang2*, vec2*, ang2vec, vec2ang)
+;
 ;  by default, all pixels in 0, Npix-1 are tested (Npix=12*nside*nside)
 ;  unless upix or random are defined
 ;
@@ -37,17 +39,25 @@ pro test_tk, nside, upix, random=random
 ;   upix , integer scalar or vector, list of hand-picked pixels
 ;
 ;  KEYWORD
-;   random : float scalar, some pixels (Npix * random + 1) are picked randomly in [0, Npix-1]
+;   random : float scalar, some pixels (Npix * random + 1) are picked randomly
+;   in [0, Npix-1]
+;
+;  EXAMPLES:
+;   test_tk
+;   test_tk, 1024
+;   test_tk, 8192,  random=1.d-3
+;   test_tk, 2L^29, random=1.d-12
 ;
 ;  2008-03-17: enabled Nside > 8192
+;  2011-08: cosmetic editions
 ;-
 
 if undefined(nside) then nside = 32
 lnside = long(nside)
 
 npix = nside2npix(lnside,err=err_nside)
-snpix = strtrim(string(npix,form='(i18)'),2)
-snpix1 = strtrim(string(npix-1,form='(i18)'),2)
+snpix = strtrim(string(npix,form='(i20)'),2)
+snpix1 = strtrim(string(npix-1,form='(i20)'),2)
 snside = strtrim(string(nside,form='(i9)'),2)
 
 if (err_nside ne 0) then begin
@@ -101,14 +111,14 @@ endif
 ;---------------------
 
 pix2vec_ring, nside, pixel, vec
-vec2pix_ring, nside, vec, pixel2
+vec2pix_ring, nside, vec*!DPI, pixel2
 if total(abs(pixel2-pixel)) ne 0 then begin
     print,'error pix <-> vec ring', nside
     error = error + 1
 endif
 
 pix2vec_nest, nside, pixel, vec
-vec2pix_nest, nside, vec, pixel2
+vec2pix_nest, nside, vec*5.d0, pixel2
 if total(abs(pixel2-pixel)) ne 0 then begin
     print,'error pix <-> vec nest', nside
     error = error + 1
@@ -129,7 +139,7 @@ ang2vec,             theta, phi, vec
 vec2pix_nest, nside, vec, pixel1
 nest2ring,    nside, pixel1, pixel2
 if total(abs(pixel2-pixel)) ne 0 then begin
-    print,'error loop1', nside
+    print,'error R -> A -> V -> N -> R', nside
     error = error + 1
 endif
 ;---------------------
@@ -139,7 +149,7 @@ vec2ang,             vec, theta, phi
 ang2pix_nest, nside, theta, phi, pixel1
 nest2ring,    nside, pixel1, pixel2
 if total(abs(pixel2-pixel)) ne 0 then begin
-    print,'error loop2', nside
+    print,'error R -> V -> A -> N -> R', nside
     error = error + 1
 endif
 ;---------------------

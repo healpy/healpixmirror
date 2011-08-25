@@ -60,6 +60,10 @@ PRO pix2ang_ring, nside, ipix, theta, phi
 ;    June 2003,  EH, replaced STOPs by MESSAGEs
 ;    Dec 2007, EH,  IAP, enabled nside > 8192
 ;    Aug 2008, EH, IAP: issues warning if ipix is not of integer type
+;    Aug 2011, EH, IAP: uses CHEAP_ISQRT to compute ring index out of pixel
+;      index ;  
+;     more precise theta determination close to pole
+;
 ;
 ;-
 ;****************************************************************************************
@@ -103,7 +107,8 @@ PRO pix2ang_ring, nside, ipix, theta, phi
       l64 = 0
   endelse
   fact1 = 1.5d0*nl1
-  fact2 = (3.d0*nl1)*nl1
+  ;fact2 = (3.d0*nl1)*nl1
+  sfact = 1.d0 / (nl1 * sqrt(6.d0))
   np = N_ELEMENTS(ipix)
   theta = DBLARR(np, /NoZero)
   phi   = DBLARR(np, /NoZero)
@@ -112,11 +117,11 @@ PRO pix2ang_ring, nside, ipix, theta, phi
   pix_np = WHERE(ipix LT ncap,   n_np) ; north polar cap
   IF (n_np GT 0) THEN BEGIN     ; north polar cap ; ---------------------------------
 
-      ip = ROUND(ipix[pix_np], L64=l64) + one
-      iring = LONG( SQRT( ip/2.d0 - SQRT(ip/2) ) ) + 1L ; counted from NORTH pole, starting at 1
+      ip    = ROUND(ipix[pix_np], L64=l64) + one ; ipix+1
+      iring = (cheap_isqrt(2*ip) + 1)/2L ; counted from NORTH pole, starting at 1
       iphi  = ip - 2L*iring*(iring-one)
 
-      theta[pix_np] = ACOS( 1.d0 - double(iring)^2 / fact2 )
+      theta[pix_np] = 2.d0 * ASIN( iring * sfact)
       phi[pix_np]   = (iphi - 0.5d0) * !DPI/(2.d0*iring)
       ip = 0 & iring =0 & iphi = 0 ; free memory
       pix_np = 0                ; free memory
@@ -134,23 +139,25 @@ PRO pix2ang_ring, nside, ipix, theta, phi
 
       theta[pix_eq] = ACOS( (nl2 - iring) / fact1 )
       phi[pix_eq]   = (iphi - fodd) * !DPI/(2.d0*nl1)
+      ;;print, ip, iring, iphi, fodd
       ip = 0 & iring =0 & iphi = 0 & fodd = 0; free memory
       pix_eq = 0                ; free memory
-
+      
   ENDIF                         ; ------------------------------------------------------------------------
 
   pix_sp = WHERE(ipix GE nsup,   n_sp) ; south polar cap
   IF (n_np + n_sp + n_eq) NE np THEN message,'error in '+routine
   IF (n_sp GT 0) THEN BEGIN     ; south polar cap ; ---------------------------------
 
-      ip =  npix - ROUND(ipix[pix_sp], L64=l64)
-      iring = LONG( SQRT( ip/2.d0 - SQRT(ip/2) ) ) + 1L ; counted from SOUTH pole, starting at 1
-      iphi  = one + four*iring - (ip - 2L*iring*(iring-one))
+      ip    = npix - ROUND(ipix[pix_sp], L64=l64)            ; Npix - ipix
+      iring = (cheap_isqrt(2*ip) + 1)/2L                           ; counted from SOUTH pole, starting at 1
+      iphi  = one  - ip + 2L*iring*(iring+one) ; in [1, 4*iring]
       
-      theta[pix_sp] = ACOS( - 1.d0 + double(iring)^2 / fact2 )
+      theta[pix_sp] = !DPI - 2.d0 * ASIN( iring * sfact)
       phi[pix_sp]   = (iphi - 0.5d0) * !DPI/(2.d0*iring)
       ip = 0 & iring =0 & iphi = 0 ; free memory
       pix_sp = 0                ; free memory
+
 
   ENDIF                         ; ------------------------------------------------------------------------
 

@@ -37,17 +37,27 @@ pro test_tk2, nside, upix, random=random
 ;   upix , integer scalar or vector, list of hand-picked pixels
 ;
 ;  KEYWORD
-;   random : float scalar, some pixels (random*1.e6) are picked randomly in [0, Npix-1]
+;   random : float scalar, some pixels (random*Npix +1) are picked randomly in [0, Npix-1]
 ;
+;  EXAMPLES:
+;   test_tk2
+;   test_tk2, 1024
+;   test_tk2, 8192,  random=1.d-3
+;   test_tk2, 2L^29, random=1.d-12
+;
+;  
+;  2011-08: cosmetic editions
 ;-
 
 if undefined(nside) then nside = 32
 ;lnside = long(nside)
 
+trigger = (machar(/double)).eps * 8 ; 1.77e-15
+
 ;npix = nside2npix(lnside,err=err_nside)
 npix = nside2npix(nside,err=err_nside)
-snpix = strtrim(string(npix,form='(i18)'),2)
-snpix1 = strtrim(string(npix-1,form='(i18)'),2)
+snpix = strtrim(string(npix,form='(i20)'),2)
+snpix1 = strtrim(string(npix-1,form='(i20)'),2)
 snside = strtrim(string(nside,form='(i9)'),2)
 
 if (err_nside ne 0) then begin
@@ -56,7 +66,7 @@ if (err_nside ne 0) then begin
 endif
 
 if defined(random) then begin
-    nr = min([npix, long(random*1.e6)+1])
+    nr = min([npix, long(random*npix)+1])
     print,'Nside = '+snside
     print,nr,' pixels are picked randomly in [0, '+snpix1+']'
     if (nside gt 8192) then begin
@@ -81,6 +91,7 @@ if undefined(pixel) then begin
     print,'Nside = '+snside
     print,'test all pixels in [0, '+snpix1+']'
 endif
+np = n_elements(pixel)
 
 error = 0
 
@@ -110,9 +121,9 @@ if total(abs(pixel2-pixel)) ne 0 then begin
     help,pixel, pixel2
     bad = where( (pixel2-pixel) ne 0, nbad)
     print,'#bad:',nbad
-;     print,'in:',pixel[bad]
-;     print,'out:',pixel2[bad]
-;     print,'diff:',(pixel2-pixel)[bad]
+    print,'in:',pixel[bad]
+    print,'out:',pixel2[bad]
+    print,'diff:',(pixel2-pixel)[bad]
 endif
 
 pix2vec_nest, nside, pixel, vec
@@ -160,20 +171,20 @@ endif
 pix2vec_ring, nside, pixel, vec, vv
 ring2nest, nside, pixel, pixnest
 pix2vec_nest, nside, pixnest, vec2, vv2
-t1 = total(abs(vec-vec2))
+t1 = total(abs(vec-vec2))/np
 m1 = max(abs(vec-vec2))
-if  t1 ne 0 then begin
+if  (t1 gt trigger || m1 gt trigger) then begin
     print,'error loop3 vector', nside
     print,t1,m1,n_elements(vec)
-    print,total(vec,1)/n_elements(pixel)
+    print,total(vec,1)/np
     error = error + 1
 endif
-t2 = total(abs(vv-vv2))
+t2 = total(abs(vv-vv2))/np
 m2 = max(abs(vv-vv2))
-if t2 ne 0 then begin
+if (t2 gt trigger || m2 gt trigger) then begin
     print,'error loop3 vertex', nside
     print,t2,m2,n_elements(vv)
-    print,total(total(vv,1),2)/n_elements(pixel)
+    print,total(total(vv,1),2)/np
     error = error + 1
 endif
 

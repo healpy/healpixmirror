@@ -69,6 +69,8 @@ PRO pix2vec_ring, nside, ipix, vec_out, vertex
 ;    June 2003,  EH, replaced STOPs by MESSAGEs
 ;    Dec 2007, EH,  IAP, enabled nside > 8192
 ;    Aug 2008, EH, IAP: issues warning if ipix is not of integer type
+;    Aug 2011, EH, IAP: uses CHEAP_ISQRT to compute ring index out of pixel index
+;     more precise (x,y) determination close to pole (for center only, not vertex)
 ;
 ;-
 ;*******************************************************************************
@@ -116,6 +118,7 @@ PRO pix2vec_ring, nside, ipix, vec_out, vertex
   endelse
   fact1 = 1.5d0*nl1
   fact2 = (3.d0*nl1)*nl1
+  ifact2 = 1.d0 / ((3.d0*nl1)*nl1)
   np = N_ELEMENTS(ipix)
   vec_out = DBLARR(np,3, /NoZero)
   if (do_vertex) then vertex = dblarr(np,3,4, /NoZero)
@@ -125,20 +128,22 @@ PRO pix2vec_ring, nside, ipix, vec_out, vertex
   IF (n_np GT 0) THEN BEGIN     ; north polar cap ; ---------------------------------
 
       ip = ROUND(ipix[pix_np], L64=l64) + one
-      iring = LONG( SQRT( ip/2.d0 - SQRT(ip/2) ) ) + 1L ; counted from NORTH pole
+      ;;iring = LONG( SQRT( ip/2.d0 - SQRT(ip/2) ) ) + 1L ; counted from NORTH pole
+      iring = (cheap_isqrt(2*ip) + 1)/2L ; counted from NORTH pole, starting at 1
       iphi  = ip - 2L*iring*(iring-one)
 
       phi   = (iphi - 0.5d0) * !DPI/(2.d0*iring)
-      z = 1.d0 - double(iring)^2 / fact2 
-      sz = SQRT(1.d0 - z*z)
+      z = 1.d0 - double(iring)^2 * ifact2 
+      ;sz = SQRT(1.d0 - z*z) ; gets bad close to pole
+      sz = iring * sqrt( ifact2 * (1.d0+z) ) ; more accurate
       vec_out[pix_np,2] = z
       vec_out[pix_np,1] = sz * SIN( phi )
       vec_out[pix_np,0] = sz * COS( phi )
 
       if (do_vertex) then begin
           hdelta_phi = !DPI/(4.0d0*iring) ; half pixel width
-          z_nv = 1.0d0 - (iring-1.d0)^2 / fact2 
-          z_sv = 1.0d0 - (iring+1.d0)^2 / fact2 
+          z_nv = 1.0d0 - (iring-1.d0)^2 * ifact2 
+          z_sv = 1.0d0 - (iring+1.d0)^2 * ifact2 
           iphi_mod = (iphi-1) MOD iring ; in {0,1,... iring-1}
           iphi_rat = (iphi-1)  /  iring ; in {0,1,2,3}
           phi_nv = replicate(0.0d0, n_np)
@@ -183,13 +188,13 @@ PRO pix2vec_ring, nside, ipix, vec_out, vertex
           k1 = where(iring eq   nl1, nk1) ; northern transition
           k3 = where(iring eq 3*nl1, nk3) ; southern transition
           if (nk1 gt 0) then begin 
-              z_nv[k1] = 1.0d0 - (nl1-1.d0)^2 / fact2 
+              z_nv[k1] = 1.0d0 - (nl1-1.d0)^2 * ifact2 
               iphi_mod = (iphi[k1]-1) MOD nl1 ; in {0,1,... nside-1}
               iphi_rat = (iphi[k1]-1)  /  nl1 ; in {0,1,2,3}
               if (nl1 gt 1) then phi_nv[k1] = HALFPI * (iphi_rat +  iphi_mod   /double(nl1-1))
           endif
           if (nk3 gt 0) then begin
-              z_sv[k3] = -1.0d0 + (nl1-1.d0)^2 / fact2 
+              z_sv[k3] = -1.0d0 + (nl1-1.d0)^2 * ifact2 
               iphi_mod = (iphi[k3]-1) MOD nl1 ; in {0,1,... iring-1}
               iphi_rat = (iphi[k3]-1)   / nl1 ; in {0,1,2,3}
               if (nl1 gt 1) then phi_sv[k3] = HALFPI * (iphi_rat +  iphi_mod   /double(nl1-1))
@@ -209,20 +214,23 @@ PRO pix2vec_ring, nside, ipix, vec_out, vertex
   IF (n_sp GT 0) THEN BEGIN     ; south polar cap ; ---------------------------------
 
       ip =  npix - ROUND(ipix[pix_sp], L64=l64)
-      iring = LONG( SQRT( ip/2.d0 - SQRT(ip/2) ) ) + 1L ; counted from SOUTH pole
-      iphi  = one + four*iring  - (ip - 2L*iring*(iring-one))
+;       iring = LONG( SQRT( ip/2.d0 - SQRT(ip/2) ) ) + 1L ; counted from SOUTH pole
+;       iphi  = one + four*iring  - (ip - 2L*iring*(iring-one))
+      iring = (cheap_isqrt(2*ip) + 1)/2L                           ; counted from SOUTH pole, starting at 1
+      iphi  = one  - ip + 2L*iring*(iring+one) ; in [1, 4*iring]
       
       phi   = (iphi - 0.5d0) * !DPI/(2.d0*iring)
-      z = - 1.d0 + double(iring)^2 / fact2 
-      sz = SQRT(1.d0 - z*z)
+      z = - 1.d0 + double(iring)^2 * ifact2 
+      ;sz = SQRT(1.d0 - z*z) ; gets bad close to pole
+      sz = iring * sqrt( ifact2 * (1.d0-z) ) ; more accurate
       vec_out[pix_sp,2] = z
       vec_out[pix_sp,1] = sz * SIN( phi )
       vec_out[pix_sp,0] = sz * COS( phi )
 
       if (do_vertex) then begin
           hdelta_phi = !DPI/(4.0d0*iring) ; half pixel width
-          z_nv = -1.0d0 + (iring+1.d0)^2 / fact2 
-          z_sv = -1.0d0 + (iring-1.d0)^2 / fact2 
+          z_nv = -1.0d0 + (iring+1.d0)^2 * ifact2 
+          z_sv = -1.0d0 + (iring-1.d0)^2 * ifact2 
           iphi_mod = (iphi-1) MOD iring ; in {0,1,... iring-1}
           iphi_rat = (iphi-1)  /  iring ; in {0,1,2,3}
           phi_sv = replicate(0.0d0, n_sp)

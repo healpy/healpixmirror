@@ -65,6 +65,7 @@ pro vec2ang, vector, theta, phi, astro = astro
 ;       March 6, 1999    Eric Hivon, Caltech, Version 1.0
 ;       March 22, 2002     use Message
 ;       Oct 4, 2007      Check dimensions of Vector
+;       Aug 2011, IAP: more precise theta determination close to pole
 ;-
 ;*****************************************************************************
 
@@ -109,8 +110,9 @@ endif
 ;---------------
 
 Vector = REFORM(vector, np, 3, /OVER) ; condition the input vector
-theta_rad = ACOS( vector(*,2)  /  SQRT(  TOTAL(vector^2, 2) ) )
-phi_rad = ATAN( vector(*,1), vector(*,0) )  ; in [-Pi,Pi]
+;theta_rad = ACOS( vector(*,2)  /  SQRT(  TOTAL(vector^2, 2) ) )
+theta_rad = ATAN( SQRT(vector[*,0]^2+vector[*,1]^2)  , vector[*,2]) ; in [0,Pi]
+phi_rad   = ATAN( vector[*,1], vector[*,0] )  ; in [-Pi,Pi]
 vector = reform(vector,sz[1:ndim], /over) ; revert to original shape
 
 phi_rad = phi_rad + twopi * (phi_rad LT zero)

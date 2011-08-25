@@ -58,6 +58,7 @@ PRO vec2pix_ring, nside, vec_in, ipring
 ;           free memory by discarding unused variables
 ;    June 2003,  EH, replaced STOPs by MESSAGEs
 ;    Dec 2007, EH,  IAP, enabled nside > 8192
+;    Aug 2011, EH, IAP: more accurate calculations close to pole
 ;
 ;-
 ;*****************************************************************************
@@ -81,11 +82,13 @@ PRO vec2pix_ring, nside, vec_in, ipring
 ;------------------------------------------------------------
   nl1  = LONG(nside)
   nl2   = 2*nl1
+  l64 = 0
   if (nl1 gt 8192) then begin
       nl4   = 4LL*nl1
       ncap  = nl2*(nl1-1LL)
       ipring = LON64ARR(np, /NoZero)
       one = 1LL
+      l64 = (nl1 eq ishft(1L, 29)) ; for Nside >= 2^29
   endif else begin
       nl4   = 4L*nl1
       ncap  = nl2*(nl1-1L)
@@ -96,21 +99,27 @@ PRO vec2pix_ring, nside, vec_in, ipring
   twopi = !DPI * 2.d0
   cth0 = 2.d0/3.d0
 
-  cth_in = vec_in(*,2)/SQRT(vec_in(*,0)^2 + vec_in(*,1)^2 + vec_in(*,2)^2)
-  phi_in = ATAN(vec_in(*,1),vec_in(*,0))
+  norm = SQRT( TOTAL(vec_in^2, 2, /double) )
+  cth_in = vec_in[*,2]/ norm
+  sth_in = SQRT( vec_in[*,0]^2 + vec_in[*,1]^2 ) / norm
+  norm = 0
+  phi_in = ATAN(vec_in[*,1],vec_in[*,0])
   phi_in += (phi_in LE 0.d0)*twopi
 
   pix_eqt = WHERE(cth_in LE cth0 AND cth_in GT -cth0, n_eqt) ; equatorial strip
   IF (n_eqt GT 0) THEN BEGIN    ; equatorial strip ----------------
       tt = phi_in(pix_eqt) / pion2
 
-      jp = LONG(nl1*(0.5d0 + tt - cth_in(pix_eqt)*0.75d0)) ; increasing edge line index
-      jm = LONG(nl1*(0.5d0 + tt + cth_in(pix_eqt)*0.75d0)) ; decreasing edge line index
+;       jp = LONG(nl1*(0.5d0 + tt - cth_in(pix_eqt)*0.75d0)) ; increasing edge line index
+;       jm = LONG(nl1*(0.5d0 + tt + cth_in(pix_eqt)*0.75d0)) ; decreasing edge line index
+      jp = floor(nl1*(0.5d0 + tt - cth_in(pix_eqt)*0.75d0), L64=l64) ; increasing edge line index
+      jm = floor(nl1*(0.5d0 + tt + cth_in(pix_eqt)*0.75d0), L64=l64) ; decreasing edge line index
 
       ir = (nl1 + 1) + jp - jm ; in {1,2n+1} (ring number counted from z=2/3)
       k =  ( (ir MOD 2) EQ 0)   ; k=1 if ir even, and 0 otherwise
 
-      ip = LONG( ( jp+jm+k + (1-nl1) ) / 2 ) + 1 ; in {1,4n}
+      ;ip = LONG( ( jp+jm+k + (1-nl1) ) / 2 ) + 1 ; in {1,4n}
+      ip = LONG( ( one-nl1 + jp+jm+k  ) / 2 ) + 1 ; in {1,4n}
       ip = ip - nl4*(ip GT nl4)
 
       ipring(pix_eqt) = ncap + nl4*(ir-one) + ip - one
@@ -123,7 +132,8 @@ PRO vec2pix_ring, nside, vec_in, ipring
 
       tt = phi_in(pix_np) / pion2
       tp = tt MOD 1.d0
-      tmp = SQRT( 3.d0*(1.d0 - ABS(cth_in(pix_np))) )
+;       tmp = SQRT( 3.d0*(1.d0 - ABS(cth_in(pix_np))) )
+      tmp = sth_in[pix_np] * SQRT(3.d0 / (1.d0 + cth_in[pix_np])) ; more accurate
 
       jp = LONG( nl1 * tp          * tmp ) ; increasing edge line index
       jm = LONG( nl1 * (1.d0 - tp) * tmp ) ; decreasing edge line index
@@ -144,7 +154,8 @@ PRO vec2pix_ring, nside, vec_in, ipring
 
       tt = phi_in(pix_sp) / pion2
       tp = tt MOD 1.d0
-      tmp = SQRT( 3.d0*(1.d0 - ABS(cth_in(pix_sp))) )
+;      tmp = SQRT( 3.d0*(1.d0 - ABS(cth_in(pix_sp))) )
+      tmp = sth_in[pix_sp] * SQRT(3.d0 / (1.d0 - cth_in[pix_sp])) ; more accurate
 
       jp = LONG( nl1 * tp          * tmp ) ; increasing edge line index
       jm = LONG( nl1 * (1.d0 - tp) * tmp ) ; decreasing edge line index
