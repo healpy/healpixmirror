@@ -85,6 +85,7 @@
     real(kind=dp), parameter :: one  = 1.000000000000000_dp
     real(kind=dp), parameter :: three = 3.00000000000000_dp
     real(kind=dp), parameter :: threehalf = 1.50000000000000_dp
+    character(len=*), parameter :: code = "pix2ang_ring"
     !-----------------------------------------------------------------------
 #ifdef DOI8B
     if (nside <= ns_max4) then ! use faster 32-bit routine whenever possible
@@ -92,10 +93,10 @@
        return
     endif
 #else
-    if (nside > ns_max4) call fatal_error("nside out of range")
+    if (nside > ns_max4) call fatal_error(code//"> nside out of range")
 #endif
     npix = nside2npix(nside)       ! total number of points
-    if (ipix <0 .or. ipix>npix-1) call fatal_error ("ipix out of range")
+    if (ipix <0 .or. ipix>npix-1) call fatal_error (code//"> ipix out of range")
 
     nl2  = 2*nside
     ncap = nl2*(nside-1_MKD) ! points in each polar cap, =0 for nside =1
@@ -103,14 +104,16 @@
 
     if (ipix < ncap) then ! North Polar cap -------------
 
-       iring = nint( sqrt( (ipix+1) * half ), kind=MKD) ! counted from North pole
+!       iring = nint( sqrt( (ipix+1) * half ), kind=MKD) ! counted from North pole
+       iring = (cheap_isqrt(2*ipix+2) + 1)/2
        iphi  = ipix - 2*iring*(iring - 1_MKD)
-#ifdef DOI8B
-       ! fix round-off error appearing at large Nside
-       call correct_ring_phi(1, iring, iphi)
-#endif
+! #ifdef DOI8B
+!        ! fix round-off error appearing at large Nside
+!        call correct_ring_phi(1, iring, iphi)
+! #endif
 
-       theta = ACOS( one - (iring/dnside)**2 / three )
+!       theta = ACOS( one - (iring/dnside)**2 / three )
+       theta = 2.0_dp * asin(iring / (sqrt(6.0_dp)*dnside))
        phi   = (real(iphi,kind=dp) + half) * HALFPI/iring
 
     elseif (ipix < npix-ncap) then ! Equatorial region ------
@@ -127,14 +130,16 @@
     else ! South Polar cap -----------------------------------
 
        ip    = npix - ipix
-       iring = nint( sqrt( ip * half ), kind=MKD)     ! counted from South pole
+!       iring = nint( sqrt( ip * half ), kind=MKD)     ! counted from South pole
+       iring = (cheap_isqrt(2*ip) + 1) / 2
        iphi  = 2*iring*(iring + 1_MKD) - ip
-#ifdef DOI8B
-       ! fix round-off error appearing at large Nside
-       call correct_ring_phi(-1, iring, iphi)
-#endif
+! #ifdef DOI8B
+!        ! fix round-off error appearing at large Nside
+!        call correct_ring_phi(-1, iring, iphi)
+! #endif
 
-       theta = ACOS( (iring/dnside)**2 / three  - one)
+!       theta = ACOS( (iring/dnside)**2 / three  - one)
+       theta = PI - 2.d0 * asin(iring / (sqrt(6.0_dp)*dnside))
        phi   = (real(iphi,kind=dp) + half) * HALFPI/iring
 
     endif
@@ -179,6 +184,7 @@
     integer(kind=I4B) :: iphi_mod, iphi_rat
     logical(kind=LGT) :: do_vertex
     integer(kind=i4b) :: diff_phi
+    character(len=*), parameter :: code = "pix2vec_ring"
     !-----------------------------------------------------------------------
 #ifdef DOI8B
     if (nside <= ns_max4) then ! use faster 32-bit routine whenever possible
@@ -190,10 +196,10 @@
        return
     endif
 #else
-    if (nside > ns_max4) call fatal_error("nside out of range")
+    if (nside > ns_max4) call fatal_error(code//"> nside out of range")
 #endif
     npix = nside2npix(nside)       ! total number of points
-    if (ipix <0 .or. ipix>npix-1) call fatal_error("ipix out of range")
+    if (ipix <0 .or. ipix>npix-1) call fatal_error(code//"> ipix out of range")
 
     nl2   = 2*nside
     ncap  = nl2*(nside-1_MKD) ! points in each polar cap, =0 for nside =1
@@ -203,21 +209,23 @@
        if (size(vertex,dim=1) >= 3 .and. size(vertex,dim=2) >= 4) then
           do_vertex = .true.
        else
-          call fatal_error(" pix2vec_ring : vertex array has wrong size ")
+          call fatal_error(code//">  vertex array has wrong size ")
        endif
     endif
 
     if (ipix < ncap) then ! North Polar cap -------------
 
-       iring = nint( sqrt( (ipix+1) * half ), kind=MKD) ! counted from North pole
+!        iring = nint( sqrt( (ipix+1) * half ), kind=MKD) ! counted from North pole
+       iring = (cheap_isqrt(2*ipix+2) + 1) / 2
        iphi  = ipix - 2*iring*(iring - 1_MKD)
-#ifdef DOI8B
-       ! fix round-off error appearing at large Nside
-       call correct_ring_phi(1, iring, iphi)
-#endif
+! #ifdef DOI8B
+!        ! fix round-off error appearing at large Nside
+!        call correct_ring_phi(1, iring, iphi)
+! #endif
 
        fact2 = (3.00000_dp*nside)*nside
        z =  1.0_dp - (iring / fact2) * iring
+       sth = iring * sqrt( (1.d0+z)/fact2 )
        phi   = (real(iphi,kind=dp) + half) * HALFPI/iring
 
        if (do_vertex) then
@@ -243,6 +251,7 @@
        fact1 =  1.50000_dp*nside
        fodd  = half * ( iand(iring+nside+1,1) )  ! 0 if iring+nside is odd, 1/2 otherwise
        z = (nl2 - iring) / fact1
+       sth = SQRT((1.0_dp-z)*(1.0_dp+z))
        phi   = (real(iphi,kind=dp) + fodd) * HALFPI / nside
 
        if (do_vertex) then
@@ -275,15 +284,17 @@
     else ! South Polar cap -----------------------------------
 
        ip    = npix - ipix
-       iring = nint( sqrt( ip * half ), kind=MKD)     ! counted from South pole
+!        iring = nint( sqrt( ip * half ), kind=MKD)     ! counted from South pole
+       iring = (cheap_isqrt(2*ip) + 1)/2
        iphi  = 2*iring*(iring + 1_MKD) - ip
-#ifdef DOI8B
-       ! fix round-off error appearing at large Nside
-       call correct_ring_phi(-1, iring, iphi)
-#endif
+! #ifdef DOI8B
+!        ! fix round-off error appearing at large Nside
+!        call correct_ring_phi(-1, iring, iphi)
+! #endif
 
        fact2 = (3.00000_dp*nside)*nside
        z = -1.0_dp + (iring / fact2) * iring
+       sth = iring * sqrt( (1.0_dp - z)/fact2 )
        phi   = (real(iphi,kind=dp) + half) * HALFPI/iring
 
        if (do_vertex) then
@@ -301,7 +312,7 @@
     endif
 
     ! pixel center
-    sth = SQRT((1.0_dp-z)*(1.0_dp+z))
+    !!!!sth = SQRT((1.0_dp-z)*(1.0_dp+z))
     cos_phi = cos(phi)
     sin_phi = sin(phi)
     vector(1) = sth * cos_phi
@@ -369,6 +380,7 @@
     INTEGER(mykind)   ::  nl4, jp, jm, ir, ip
     REAL(KIND=DP)     ::  z, za, tt, tp, tmp, temp1, temp2
     INTEGER(KIND=I4B) ::  kshift, ipix4
+    character(len=*), parameter :: code = "ang2pix_ring"
 
     !-----------------------------------------------------------------------
 #ifdef DOI8B
@@ -377,12 +389,12 @@
        ipix = int(ipix4, kind=MKD)
        return
     endif
-    if (nside <1 .or. nside > ns_max ) call fatal_error("nside out of range")
+    if (nside <1 .or. nside > ns_max ) call fatal_error(code//"> nside out of range")
 #else
-    if (nside <1 .or. nside > ns_max4) call fatal_error("nside out of range")
+    if (nside <1 .or. nside > ns_max4) call fatal_error(code//"> nside out of range")
 #endif
     if (theta<0.0_dp .or. theta>pi)  then
-       print*,"ANG2PIX_RING: theta : ",theta," is out of range [0, Pi]"
+       print*,code//"> theta : ",theta," is out of range [0, Pi]"
        call fatal_error
     endif
 
@@ -408,7 +420,12 @@
     else ! North & South polar caps -----------------------------
 
        tp = tt - INT(tt)      !MODULO(tt,1.0_dp)
-       tmp = nside * SQRT( 3.0_dp*(1.0_dp - za) )
+       !tmp = nside * SQRT( 3.0_dp*(1.0_dp - za) )
+       if (z > 0.0_dp) then
+          tmp = sqrt(6.0_dp) * sin( theta * 0.5_dp) * nside
+       else
+          tmp = sqrt(6.0_dp) * cos( theta * 0.5_dp) * nside
+       endif
 
        jp = INT(  tp          * tmp, kind=mykind) ! increasing edge line index
        jm = INT((1.0_dp - tp) * tmp, kind=mykind) ! decreasing edge line index
@@ -454,6 +471,7 @@
     INTEGER(mykind)   :: nl4, jp, jm, ir, ip
     REAL(KIND=DP)     :: z, za, tt, tp, tmp, dnorm, phi,temp1,temp2
     INTEGER(KIND=I4B) :: kshift, ipix4
+    character(len=*), parameter :: code = "vec2pix_ring"
 
     !-----------------------------------------------------------------------
 #ifdef DOI8B
@@ -462,12 +480,12 @@
        ipix = int(ipix4, kind=MKD)
        return
     endif
-    if (nside<1 .or. nside>ns_max ) call fatal_error("nside out of range")
+    if (nside<1 .or. nside>ns_max ) call fatal_error(code//"> nside out of range")
 #else
-    if (nside<1 .or. nside>ns_max4) call fatal_error("nside out of range")
+    if (nside<1 .or. nside>ns_max4) call fatal_error(code//"> nside out of range")
 #endif
     dnorm = SQRT(vector(1)**2+vector(2)**2+vector(3)**2)
-    z = vector(3) / dnorm
+    z  = vector(3) / dnorm  ! cos(theta)
     phi = 0.0_dp
     if (vector(1) /= 0.0_dp .or. vector(2) /= 0.0_dp) &
          &     phi = ATAN2(vector(2),vector(1)) ! phi in ]-pi,pi]
@@ -496,7 +514,9 @@
     else ! North & South polar caps -----------------------------
 
        tp = tt - INT(tt)      !MODULO(tt,1.0_dp)
-       tmp = nside * SQRT( 3.0_dp*(1.0_dp - za) )
+       !tmp = nside * SQRT( 3.0_dp*(1.0_dp - za) )
+       tmp = SQRT(vector(1)**2+vector(2)**2) / dnorm ! sin(theta)
+       tmp = nside * tmp * SQRT( 3.0_dp / (1.0_dp + za) ) !more accurate
 
        jp = INT(  tp          * tmp, kind=mykind) ! increasing edge line index
        jm = INT((1.0_dp - tp) * tmp, kind=mykind) ! decreasing edge line index
@@ -546,6 +566,7 @@
     ! coordinate of the lowest corner of each face
     INTEGER(KIND=I4B), dimension(1:12) :: jrll = (/ 2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4 /) ! in unit of nside
     INTEGER(KIND=I4B), dimension(1:12) :: jpll = (/ 1, 3, 5, 7, 0, 2, 4, 6, 1, 3, 5, 7 /) ! in unit of nside/2
+    character(len=*), parameter :: code = "pix2ang_nest"
     !-----------------------------------------------------------------------
 #ifdef DOI8B
     if (nside <= ns_max4) then ! use faster 32-bit routine whenever possible
@@ -553,7 +574,7 @@
        return
     endif
 #else
-    if (nside > ns_max4) call fatal_error("nside out of range")
+    if (nside > ns_max4) call fatal_error(code//"> nside out of range")
 #endif
     npix = nside2npix(nside)       ! total number of points
     if (ipix <0 .or. ipix>npix-1) call fatal_error ("ipix out of range")
@@ -562,15 +583,14 @@
     if (pix2x(1023) <= 0) call mk_pix2xy()
 
     npface = nside * int(nside, kind=MKD)
-    nl4    = 4*nside
+    nl4    = 4_MKD*nside
 
     !     finds the face, and the number in the face
     face_num = ipix/npface  ! face number in {0,11}
     ipf = MODULO(ipix,npface)  ! pixel number in the face {0,npface-1}
 
     fn = real(nside, kind=dp)
-    fact1 = 1.0_dp/(3.0_dp*fn*fn)
-    fact2 = 2.0_dp/(3.0_dp*fn)
+    !fact1 = 1.0_dp/(3.0_dp*fn*fn)
 
     !     finds the x,y on the face (starting from the lowest corner)
     !     from the pixel number
@@ -607,28 +627,35 @@
 
     if (jr < nside) then     ! north pole region
        nr = jr
-       z = 1.0_dp - nr * fact1 * nr
-       kshift = 0
+       !z = 1.0_dp - nr * fact1 * nr
+       theta = 2.0_dp * asin( nr / (sqrt(6.0_dp) * fn) )
+       !kshift = 0
 
     else if (jr <= 3*nside) then ! equatorial region
+       !fact2 = 2.0_dp/(3.0_dp*fn)
        nr = nside
-       z  = (2*nside-jr)*fact2
-       kshift = iand(jr - nside, 1)
+       theta = ACOS((2*nside-jr)* 2.0_dp/(3.0_dp*fn) )
+       !kshift = iand(jr - nside, 1)
 
     else if (jr > 3*nside) then ! south pole region
        nr = nl4 - jr
-       z = - 1.0_dp + nr * fact1 * nr
-       kshift = 0
+       !z = - 1.0_dp + nr * fact1 * nr
+       theta = PI - 2.0_dp * asin( nr / (sqrt(6.0_dp) * fn) )
+       !kshift = 0
     endif
 
-    theta = ACOS(z)
 
+!     !     computes the phi coordinate on the sphere, in [0,2Pi]
+!     jp = (jpll(face_num+1)*nr + jpt + 1_MKD + kshift)/2  ! 'phi' number in the ring in {1,4*nr}
+!     if (jp > nl4) jp = jp - nl4
+!     if (jp < 1)   jp = jp + nl4
+
+!     phi = (jp - (kshift+1)*0.5_dp) * (halfpi / nr)
     !     computes the phi coordinate on the sphere, in [0,2Pi]
-    jp = (jpll(face_num+1)*nr + jpt + 1_MKD + kshift)/2  ! 'phi' number in the ring in {1,4*nr}
-    if (jp > nl4) jp = jp - nl4
-    if (jp < 1)   jp = jp + nl4
+    jp = jpll(face_num+1)*nr + jpt  ! 'phi' number in the ring in {0,8*nr-1}
+    if (jp < 0)   jp = jp + 2_MKD*nl4
 
-    phi = (jp - (kshift+1)*0.5_dp) * (halfpi / nr)
+    phi = jp  * (quartpi / nr)
 
     return
 
@@ -674,6 +701,8 @@
     integer(kind=I4B) :: iphi_mod, iphi_rat
     logical(kind=LGT) :: do_vertex
     integer(kind=i4b) :: diff_phi
+    character(len=*), parameter :: code = "pix2vec_nest"
+
     !-----------------------------------------------------------------------
 #ifdef DOI8B
     if (nside <= ns_max4) then ! use faster 32-bit routine whenever possible
@@ -685,10 +714,10 @@
        return
     endif
 #else
-    if (nside > ns_max4) call fatal_error("nside out of range")
+    if (nside > ns_max4) call fatal_error(code//"> nside out of range")
 #endif
     npix = nside2npix(nside)       ! total number of points
-    if (ipix <0 .or. ipix>npix-1) call fatal_error("ipix out of range")
+    if (ipix <0 .or. ipix>npix-1) call fatal_error(code//"> ipix out of range")
 
     !     initiates the array for the pixel number -> (x,y) mapping
     if (pix2x(1023) <= 0) call mk_pix2xy()
@@ -705,7 +734,7 @@
        if (size(vertex,dim=1) >= 3 .and. size(vertex,dim=2) >= 4) then
           do_vertex = .true.
        else
-          call fatal_error(" pix2vec_ring : vertex array has wrong size ")
+          call fatal_error(code//">  vertex array has wrong size ")
        endif
     endif
     fn = real(nside, kind=dp)
@@ -749,6 +778,7 @@
     if (jr < nside) then     ! north pole region
        nr = jr
        z = 1.0_dp - nr*fact1*nr
+       sth = nr * sqrt(fact1 * (1.d0 + z) ) ! more accurate close to pole
        kshift = 0
        if (do_vertex) then
           z_nv = 1.0_dp - (nr-1)*fact1*(nr-1)
@@ -758,6 +788,7 @@
     else if (jr <= 3*nside) then ! equatorial region
        nr = nside
        z  = (2*nside-jr)*fact2
+       sth = SQRT((1.0_dp-z)*(1.0_dp+z)) ! good enough on Equator
        kshift = iand(jr - nside, 1)
        if (do_vertex) then
           z_nv = (2*nside-jr+1)*fact2
@@ -771,7 +802,8 @@
 
     else if (jr > 3*nside) then ! south pole region
        nr = nl4 - jr
-       z = - 1.0_dp + nr*fact1*nr
+       z   = - 1.0_dp + nr*fact1*nr
+       sth = nr * sqrt(fact1 * (1.d0 - z) )
        kshift = 0
        if (do_vertex) then
           z_nv = - 1.0_dp + (nr+1)*fact1*(nr+1)
@@ -787,7 +819,7 @@
     phi = (jp - (kshift+1)*0.5_dp) * (halfpi / nr)
 
     ! pixel center
-    sth = SQRT((1.0_dp-z)*(1.0_dp+z))
+    !
     cos_phi = cos(phi)
     sin_phi = sin(phi)
     vector(1) = sth * cos_phi
@@ -886,6 +918,7 @@
     REAL(KIND=DP)     ::  z, za, tt, tp, tmp
     INTEGER(KIND=I4B) :: jp, jm, ifp, ifm, face_num, &
          &     ix, iy, ix_low, iy_low, ntt, i, ismax, ipix4
+    character(len=*), parameter :: code = "ang2pix_nest"
     !-----------------------------------------------------------------------
 #ifdef DOI8B
     if (nside <= ns_max4) then ! use faster 32-bit routine whenever possible
@@ -893,12 +926,12 @@
        ipix = int(ipix4, kind=MKD)
        return
     endif
-    if (nside <1 .or. nside > ns_max ) call fatal_error("nside out of range")
+    if (nside <1 .or. nside > ns_max ) call fatal_error(code//"> nside out of range")
 #else
-    if (nside <1 .or. nside > ns_max4) call fatal_error("nside out of range")
+    if (nside <1 .or. nside > ns_max4) call fatal_error(code//"> nside out of range")
 #endif
     if (theta<0.0_dp .or. theta>pi)  then
-       print*,"ANG2PIX_NEST: theta : ",theta," is out of range [0,Pi]"
+       print*,code//"> theta : ",theta," is out of range [0,Pi]"
        call fatal_error
     endif
     if (x2pix1(127) <= 0) call mk_xy2pix1()
@@ -932,7 +965,12 @@
        ntt = INT(tt)
        if (ntt >= 4) ntt = 3
        tp = tt - ntt
-       tmp = SQRT( 3.0_dp*(1.0_dp - za) )  ! in ]0,1]
+!        tmp = SQRT( 3.0_dp*(1.0_dp - za) )  ! in ]0,1]
+       if (z > 0.0_dp) then
+          tmp = sqrt(6.0_dp) * sin( theta * 0.5_dp)
+       else
+          tmp = sqrt(6.0_dp) * cos( theta * 0.5_dp)
+       endif
 
        !        (the index of edge lines increase when distance from the closest pole goes up)
        jp = INT( nside * tp          * tmp ) ! line going toward the pole as phi increases
@@ -1010,6 +1048,7 @@
     REAL(KIND=DP)     ::  z, za, tt, tp, tmp, dnorm, phi
     INTEGER(KIND=I4B) ::  jp, jm, ifp, ifm, face_num, &
          &     ix, iy, ix_low, iy_low, ntt, i, ismax, ipix4
+    character(len=*), parameter :: code = "vec2pix_nest"
 
     !-----------------------------------------------------------------------
 #ifdef DOI8B
@@ -1018,9 +1057,9 @@
        ipix = int(ipix4, kind=MKD)
        return
     endif
-    if (nside<1 .or. nside>ns_max ) call fatal_error("nside out of range")
+    if (nside<1 .or. nside>ns_max ) call fatal_error(code//"> nside out of range")
 #else
-    if (nside<1 .or. nside>ns_max4) call fatal_error("nside out of range")
+    if (nside<1 .or. nside>ns_max4) call fatal_error(code//"> nside out of range")
 #endif
     dnorm = SQRT(vector(1)**2+vector(2)**2+vector(3)**2)
     z = vector(3) / dnorm
@@ -1058,7 +1097,9 @@
        ntt = INT(tt)
        if (ntt >= 4) ntt = 3
        tp = tt - ntt
-       tmp = SQRT( 3.0_dp*(1.0_dp - za) )  ! in ]0,1]
+       !tmp = SQRT( 3.0_dp*(1.0_dp - za) )  ! in ]0,1]
+       tmp = SQRT(vector(1)**2+vector(2)**2) / dnorm ! sin(theta)
+       tmp = tmp * SQRT( 3.0_dp / (1.0_dp + za) ) !more accurate
 
        !        (the index of edge lines increase when distance from the closest pole goes up)
        jp = INT( nside * tp          * tmp ) ! line going toward the pole as phi increases
@@ -1130,6 +1171,7 @@
     INTEGER(KIND=I4B) :: face_num, ix, iy, kshift, scale, i, ismax
     INTEGER(KIND=I4B) :: jrt, jr, nr, jpt, jp, nl4
     integer(kind=i4b) :: ipring4, ipnest4
+    character(len=*), parameter :: code = "nest2ring"
 
     !-----------------------------------------------------------------------
 #ifdef DOI8B
@@ -1140,10 +1182,10 @@
        return
     endif
 #else
-    if (nside>ns_max4) call fatal_error("nside out of range")
+    if (nside>ns_max4) call fatal_error(code//"> nside out of range")
 #endif
     npix = nside2npix(nside)
-    if (ipnest<0 .or. ipnest>npix-1) call fatal_error("ipnest out of range")
+    if (ipnest<0 .or. ipnest>npix-1) call fatal_error(code//"> ipnest out of range")
 
     !     initiates the array for the pixel number -> (x,y) mapping
     if (pix2x(1023) <= 0) call mk_pix2xy()
@@ -1243,6 +1285,7 @@
          &     irn, ire, irm, irs, irt, ifm , ifp, &
          &     ix, iy, ix_low, iy_low, ipf, i, ismax
     integer(kind=i4b) :: ipring4, ipnest4
+    character(len=*), parameter :: code = "ring2nest"
 
     !-----------------------------------------------------------------------
 #ifdef DOI8B
@@ -1253,10 +1296,10 @@
        return
     endif
 #else
-    if (nside>ns_max4) call fatal_error("nside out of range")
+    if (nside>ns_max4) call fatal_error(code//"> nside out of range")
 #endif
     npix = nside2npix(nside)
-    if (ipring <0 .or. ipring>npix-1) call fatal_error("ipring out of range")
+    if (ipring <0 .or. ipring>npix-1) call fatal_error(code//"> ipring out of range")
 
     if (x2pix1(127) <= 0) call mk_xy2pix1()
 
@@ -1269,7 +1312,10 @@
 
        irn   = nint( sqrt( (ipring+1) * 0.50000_dp)) ! counted from North pole
        iphi  = ipring - 2*irn*(irn - 1_MKD)
+#ifdef DOI8B
+       ! fix round-off error appearing at large Nside
        call correct_ring_phi(1, irn, iphi)
+#endif
 
        kshift = 0
        nr = irn                  ! 1/4 of the number of points on the current ring
@@ -1300,7 +1346,10 @@
        ip    = npix - ipring
        irs   = nint( sqrt( ip * 0.500000_dp) )  ! counted from South pole
        iphi  = 2*irs*(irs + 1_MKD) - ip
-       call correct_ring_phi(1, irs, iphi)
+#ifdef DOI8B
+       ! fix round-off error appearing at large Nside
+       call correct_ring_phi(-1, irs, iphi)
+#endif
 
        kshift = 0
        nr = irs
@@ -1631,6 +1680,7 @@
 ! v1.1, EH, Caltech, Dec-2001
 ! v1.2, EH, IAP, 2008-03-30: fixed bug appearing when disc centered on either pole
 ! 2009-06-17: deals with Nside > 8192
+! 2011-06-09: uses ring2z
 !=======================================================================
 #ifdef DOI8B
   subroutine query_disc_8( nside, vector0, radius, listpix, nlist, nest, inclusive)
@@ -1743,13 +1793,7 @@
     !     ------------- loop on ring number ---------------------
     do iz = irmin, irmax
 
-       if (iz <= nside-1) then      ! north polar cap
-          z = 1.0_dp  - real(iz,kind=dp)**2 * dth1
-       else if (iz <= 3*nside) then    ! tropical band + equat.
-          z = real(2*nside-iz,kind=dp) * dth2
-       else
-          z = - 1.0_dp + real(4*nside-iz,kind=dp)**2 * dth1
-       endif
+       z = ring2z(nside, iz) 
 
        !        --------- phi range in the disc for each z ---------
        b = cosang - z*z0
@@ -2184,7 +2228,8 @@
     integer(kind=I4B), dimension(:),   allocatable  :: listir
     logical(kind=LGT) :: test1, test2, test3
     logical(kind=LGT) :: test1a, test1b, test2a, test2b, test3a, test3b
-    real(kind=DP) :: dth1, dth2, determ, sdet
+!!!    real(kind=DP) :: dth1, dth2
+    real(kind=DP) :: determ, sdet
     real(kind=DP) :: zmax, zmin, z1max, z1min, z2max, z2min, z3max, z3min
     real(kind=DP) :: z, zz
     real(kind=DP) :: tgth, st
@@ -2233,24 +2278,6 @@
        call fatal_error
     endif
 
-    !   ! sort pixels by number
-    !   ip1 = MIN(ipix1, ipix2, ipix3)
-    !   ip3 = MAX(ipix1, ipix2, ipix3)
-    !   ip2 = ipix1 + ipix2 + ipix3 - ip1 - ip3
-
-    !   !     ---------- check inputs ----------------
-    !   if (ip1 < 0 .or. ip3 > npix-1) then
-    !      write(unit=*,fmt="(a)") " > Non valid choice for pixel number :"
-    !      write(unit=*,fmt="(a)") " > ",ipix1,ipix2,ipix3
-    !      write(unit=*,fmt="(a,i2,i10)") " > valid range : ",0,npix-1
-    !      nlist = 0
-    !      listpix(0) = -1
-    !   endif
-
-    !   call pix2vec_ring( nside, ip1, vv(1:3,1))
-    !   call pix2vec_ring( nside, ip2, vv(1:3,2))
-    !   call pix2vec_ring( nside, ip3, vv(1:3,3))
-
     vv(1:3,1) = v1(1:3) / sqrt(dot_product(v1,v1))
     vv(1:3,2) = v2(1:3) / sqrt(dot_product(v2,v2))
     vv(1:3,3) = v3(1:3) / sqrt(dot_product(v3,v3))
@@ -2262,8 +2289,8 @@
        call fatal_error(" > program abort ")
     endif
 
-    dth1 = 1.0_dp / (3.0_dp*REAL(nside,kind=dp)**2)
-    dth2 = 2.0_dp / (3.0_dp*REAL(nside,kind=dp))
+!     dth1 = 1.0_dp / (3.0_dp*REAL(nside,kind=dp)**2)
+!     dth2 = 2.0_dp / (3.0_dp*REAL(nside,kind=dp))
 
 
     ! determ = (vect1 X vect2) . vect3
@@ -2371,7 +2398,8 @@
     offset = 0.0_dp
     sin_off = 0.0_dp
     if (do_inclusive) then
-       offset = PI / (4.0_dp*nside) ! half pixel size
+!       offset = PI / (4.0_dp*nside) ! half pixel size
+       offset = 1.36d0 * PI / (4.0_dp*nside) ! increased 2011-06-09
        sin_off = sin(offset)
        zmax = min( 1.0_dp, cos( acos(zmax) - offset) )
        zmin = max(-1.0_dp, cos( acos(zmin) + offset) )
@@ -2379,11 +2407,9 @@
 
     !   print*,"zmin, zmax ",zmin,zmax
 
-    ! northernest and sourthernest ring number
+    ! northernmost and sourthernmost ring number
     irmin = ring_num(nside, zmax)
-!!!  irmin = MAX(1, irmin - 1) ! start from a higher point, to be safe
     irmax = ring_num(nside, zmin)
-!!!  irmax = MIN(4*nside-1, irmax + 1) ! go down to a lower point
 
     ilist = -1
     !    print*,"irmin, irmax ",irmin,irmax
@@ -2404,13 +2430,8 @@
     ! if we are inclusive, the boundaries are the intersecion of the sphere with plans pushed outward
     ! by sin(offset)
     do iz = irmin, irmax
-       if (iz <= nside-1) then      ! north polar cap
-          z = 1.0_dp  - REAL(iz,kind=dp)**2 * dth1
-       else if (iz <= 3*nside) then    ! tropical band + equat.
-          z = REAL(2*nside-iz,kind=dp) * dth2
-       else
-          z = - 1.0_dp + REAL(4*nside-iz,kind=dp)**2 * dth1
-       endif
+       z = ring2z(nside, iz) ! z of ring being considered
+
        ! computes the 3 intervals described by the 3 great circles
        st = SQRT((1.0_dp - z)*(1.0_dp + z))
        tgth = z / st ! cotan(theta_ring)
@@ -2509,11 +2530,12 @@
     INTEGER(KIND=MKD), INTENT(OUT) :: ipix
     INTEGER(KIND=I4B) ::  ix, iy, ix_low, ix_hi, iy_low, iy_hi, i, ismax
     integer(kind=MKD) :: ipf, scale, scale_factor
+    character(len=*), parameter :: code = "xy2pix_nest"
 
     !-----------------------------------------------------------------------
-    if (nside<1 .or. nside>ns_max) call fatal_error("nside out of range")
-    if (ix<0 .or. ix>(nside-1)) call fatal_error("ix out of range")
-    if (iy<0 .or. iy>(nside-1)) call fatal_error("iy out of range")
+    if (nside<1 .or. nside>ns_max) call fatal_error(code//"> nside out of range")
+    if (ix<0 .or. ix>(nside-1)) call fatal_error(code//"> ix out of range")
+    if (iy<0 .or. iy>(nside-1)) call fatal_error(code//"> iy out of range")
     if (x2pix1(127) <= 0) call mk_xy2pix1()
 
     ix = ix_in
@@ -2568,11 +2590,12 @@
     INTEGER(KIND=I4B), INTENT(OUT) :: ix, iy
 
     INTEGER(KIND=I4B) ::  ip_low, ip_trunc, ip_med, ip_hi, scale, ipf, i, ismax
+    character(len=*), parameter :: code = "pix2xy_nest"
 
     !-----------------------------------------------------------------------
-    if (nside<1 .or. nside>ns_max) call fatal_error("nside out of range")
+    if (nside<1 .or. nside>ns_max) call fatal_error(code//"> nside out of range")
     if (ipf <0 .or. ipf>nside*nside-1) &
-         &     call fatal_error("ipix out of range")
+         &     call fatal_error(code//"> ipix out of range")
     if (pix2x(1023) <= 0) call mk_pix2xy()
 
     ipf = ipf_in
@@ -2653,6 +2676,7 @@
     integer(kind=MKD) :: npix,ipf,ipo
     integer(kind=MKD) :: local_magic1,local_magic2,nsidesq
     integer(kind=i4b), dimension(1:8) :: n4
+    character(len=*), parameter :: code = "neighbours_nest"
 
 !     integer(kind=i4b), intrinsic :: IAND
 
@@ -2664,13 +2688,13 @@
        n(1:nneigh) = int(n4(1:nneigh), kind=MKD)
        return
     endif
-    if (nside <1 .or. nside > ns_max ) call fatal_error("nside out of range")
+    if (nside <1 .or. nside > ns_max ) call fatal_error(code//"> nside out of range")
 #else
-    if (nside <1 .or. nside > ns_max4) call fatal_error("nside out of range")
+    if (nside <1 .or. nside > ns_max4) call fatal_error(code//"> nside out of range")
 #endif
     npix = nside2npix(nside) ! total number of points
     nsidesq = npix / 12
-    if (ipix <0 .or. ipix>npix-1) call fatal_error("ipix out of range")
+    if (ipix <0 .or. ipix>npix-1) call fatal_error(code//"> ipix out of range")
 
     ! quick and dirty hack for Nside=1
 
@@ -3093,6 +3117,7 @@
     integer(kind=i4b) :: ipix4, inext4
     integer(kind=MKD) :: npix,ipf,ipo
     integer(kind=MKD) :: local_magic1,local_magic2,nsidesq
+    character(len=*), parameter :: code = "next_in_line_nest"
 
     !--------------------------------------------------------------------
 #ifdef DOI8B
@@ -3102,13 +3127,13 @@
        inext = int(inext4, kind=MKD)
        return
     endif
-    if (nside <1 .or. nside > ns_max ) call fatal_error("nside out of range")
+    if (nside <1 .or. nside > ns_max ) call fatal_error(code//"> nside out of range")
 #else
-    if (nside <1 .or. nside > ns_max4) call fatal_error("nside out of range")
+    if (nside <1 .or. nside > ns_max4) call fatal_error(code//"> nside out of range")
 #endif
     npix = nside2npix(nside) ! total number of points
     nsidesq = npix / 12
-    if (ipix <0 .or. ipix>npix-1) call fatal_error("ipix out of range")
+    if (ipix <0 .or. ipix>npix-1) call fatal_error(code//"> ipix out of range")
 
     ! quick and dirty hack for Nside=1
     if (nside == 1) then

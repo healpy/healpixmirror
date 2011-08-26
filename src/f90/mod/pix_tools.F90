@@ -61,6 +61,7 @@ module pix_tools
   ! function ring2z                                 Done  
   ! subroutine in_ring                              Done (To be Tested) depends in next_in_line_nest
   ! subroutine intrs_intrv                                OK
+  ! subroutine process_intervals               ok
   ! subroutine correct_ring_phi                           OK
   !                                         
   ! subroutine pix2ang_ring                          Done  
@@ -126,7 +127,21 @@ module pix_tools
   ! subroutine template_pixel_ring                  Done (to be tested)               
   ! subroutine same_shape_pixels_ring               Done (to be tested)               
   ! subroutine template_pixel_nest                  Done (to be tested)               
-  ! subroutine same_shape_pixels_nest               Done (to be tested)               
+  ! subroutine same_shape_pixels_nest               Done (to be tested)
+! 
+! 2011-08-25 : 2011-??: improves accuracy close to Poles
+! ang2pix_nest  small
+! ang2pix_ring  small
+! ang2vec     OK      
+! angdist     Done  
+! pix2ang_nest  small, kshift
+! pix2ang_ring  isqrt, small 
+! pix2vec_nest  small,  [kshift TODO]
+! pix2vec_ring  isqrt, small
+! cheap_isqrt Added     
+! vec2ang     Done
+! vec2pix_nest  small
+! vec2pix_ring  small
 
   USE healpix_types
   USE misc_utils
@@ -282,6 +297,9 @@ module pix_tools
   interface same_shape_pixels_nest
      module procedure same_shape_pixels_nest
   end interface
+  interface cheap_isqrt
+     module procedure cheap_isqrt_4
+  end interface
 #else
   interface npix2nside
      module procedure npix2nside, npix2nside_8
@@ -358,6 +376,9 @@ module pix_tools
   interface same_shape_pixels_nest
      module procedure same_shape_pixels_nest, same_shape_pixels_nest_8
   end interface
+  interface cheap_isqrt
+     module procedure cheap_isqrt_4, cheap_isqrt_8
+  end interface
 #endif
 
   private
@@ -394,6 +415,7 @@ module pix_tools
   public :: medfiltmap
 
   public :: intrs_intrv, in_ring, ring_num, ring2z ! arcane usage
+  public :: process_intervals
 
   public :: getdisc_ring  ! obsolete
 
@@ -401,7 +423,49 @@ module pix_tools
 contains
 
 
+  !=======================================================================
+  function discphirange_at_z (vcenter, radius, z, phi0) result(dphi)
+    !=======================================================================
+    !  for a disc centered on  vcenter and given radius,
+    !  and for location z=cos(theta)
+    !  returns dphi such that the disc has   abs(phi-phi0) <= dphi
+    !
+    ! solving disc equation on sphere:
+    !  sin(theta) sin(theta0) cos(phi-phi0) + cos(theta) cos(theta0) >= cos(radius)
+    !
+    ! 2011-06-21: adapted from IDL routine of same name
+    !=======================================================================
+    real(DP), dimension(1:), intent(in)      :: vcenter
+    real(DP),                intent(in)      :: radius, z
+    real(DP),                intent(out)     :: phi0
+    real(DP) :: dphi 
+    !
+    real(DP) :: cosang, cosdphi, norm, x0, y0, z0, st0, diff, st
+    real(DP), parameter :: zero=0.0_dp, one=1.0_dp
 
+    cosang = cos(radius)
+    norm = sqrt(sum(vcenter(1:3)**2))
+    x0 = vcenter(1) / norm
+    y0 = vcenter(2) / norm
+    z0 = vcenter(3) / norm
+
+    phi0 = zero
+    if ((x0 /= zero) .or. (y0 /= zero)) phi0 = atan2(y0, x0)
+
+    st0 = x0*x0 + y0*y0 ! sin(theta0)^2
+    diff = cosang - z*z0 ! cos(rad) - cos(theta)cos(theta0)
+    
+    dphi = -1000.0_dp ! out of disc
+    if (st0 == zero) then ! polar cap
+       if (diff <= zero) dphi = PI ! fully in cap
+    else
+       st = max(one - z*z, 1.0e-12_dp)! sin(theta)^2
+       cosdphi = diff/sqrt(st0*st)
+       if (cosdphi < -one) dphi = PI ! fully in disc
+       if (abs(cosdphi) <= one) dphi = acos(cosdphi)
+    endif
+
+  end function discphirange_at_z
   !=======================================================================
   function ring_num (nside, z, shift) result(ring_num_result)
     !=======================================================================
@@ -546,24 +610,105 @@ contains
   end subroutine intrs_intrv
 
   !=======================================================================
+  subroutine process_intervals(interval1, interval_list, interval_out, n_out)
+  !=======================================================================
+    ! intersection of 1 interval (defined by its 2 boundaries)
+    ! with an arbitrary list of intervals (defined as n*2 boundaries)
+    !=======================================================================
+    real(dp), dimension(1:), intent(in) :: interval1
+    real(dp), dimension(1:), intent(in) :: interval_list
+    real(dp), dimension(1:), intent(out):: interval_out
+    integer(i4b),          intent(out) :: n_out
+    !
+    integer(i4b) :: n_in, i_in, n_tmp_out
+!     real(dp), dimension(1:4) :: tmp_list_out
+!     real(dp), dimension(1:30) :: work
+    !=======================================================================
+
+    n_out = 0
+    interval_out = 0.d0
+    n_in = size(interval_list)/2
+    if (n_in > 0) then
+       do i_in=0, n_in
+          ! intersection of 2 intervals -> 0,1,2 intervals
+          call intrs_intrv(interval1, interval_list(1+2*i_in:2+2*i_in), &
+               & interval_out(2*n_out+1:2*n_out+4), n_tmp_out)
+          n_out = n_out + n_tmp_out
+       enddo
+       
+!        work = 0.0
+!        do i_in=0, n_in
+!           ! intersection of 2 intervals -> 0,1,2 intervals
+!           call intrs_intrv(interval1, interval_list(1+2*i_in:2+2*i_in), &
+!                & tmp_list_out, n_tmp_out)
+!           if (n_tmp_out > 0) then
+!              work(          2*n_out+1:2*(n_out+n_tmp_out)) = &
+!                   & tmp_list_out(   1:2*n_tmp_out)
+!              n_out = n_out + n_tmp_out
+!           endif
+!        enddo
+!        allocate(interval_out(1:2*n_out))
+!        interval_out(1:2*n_out) = work(1:2*n_out)
+    endif
+    
+    return
+  end subroutine process_intervals
+  !=======================================================================
   subroutine correct_ring_phi(location, iring, iphi)
     !=======================================================================
+    ! returns ring and phi indexes corrected from round-off errors
+    ! appearing at large Nside
+    ! if phi <0 :      move 1 ring North
+    ! if phi >4*iring: move 1 ring South
+    ! rings are counted from the closest pole starting at 1.
     integer(i4b), intent(in)    :: location !+1:North, -1:South
     integer(i4b), intent(inout) :: iring, iphi
     integer(i4b) :: delta
     !-----------------------------------------------------------------------
     delta = 0
-    if (iphi < 0)        delta =  +1
-    if (iphi >= 4*iring) delta =  -1
+    if (iphi < 0)        delta =  -1
+    if (iphi >= 4*iring) delta =  +1
     if (delta /= 0) then
        if (abs(location) /= 1) then 
           stop 'wrong location'
        endif
-       iring = iring - location * delta
-       iphi  = iphi  +            delta * (4*iring)
+       if (delta > 0) then ! too large iphi
+          iphi  = iphi  - 4*iring  ! use old iring
+          iring = iring + location ! move south
+       else ! too small iphi
+          iring = iring - location ! move north
+          iphi  = iphi  +  4*iring ! use new iring
+       endif
     endif
     return
   end subroutine correct_ring_phi
+  !=======================================================================
+  ! CHEAP_ISQRT
+  !       Returns exact Floor(sqrt(x)) where x is a (64 bit) integer.
+  !             y^2 <= x < (y+1)^2         (1)
+  !       The double precision floating point operation is not accurate enough
+  !       when dealing with 64 bit integers, especially in the vicinity of 
+  !       perfect squares. 
+  !=======================================================================
+#ifndef NO64BITS
+  function cheap_isqrt_8(lin) result (lout)
+    integer(i8b), intent(in) :: lin
+    integer(i8b) :: lout, diff
+    real(DP) :: dout, din
+    lout = floor(sqrt(dble(lin)), kind=I8B) ! round-off error may offset result
+    diff = lin - lout*lout ! test Eq (1)
+    if (diff <0)      lout = lout - 1
+    if (diff >2*lout) lout = lout + 1
+    return
+  end function cheap_isqrt_8
+#endif
+  function cheap_isqrt_4(lin) result (lout)
+    integer(i4b), intent(in) :: lin
+    integer(i4b) :: lout
+    lout = floor(sqrt(dble(lin)), kind=I4B)
+    return
+  end function cheap_isqrt_4
+  !=======================================================================
 
   ! perform 2 compilations of the same source file
 #undef DOI8Bi
@@ -1465,17 +1610,14 @@ contains
     !     and phi (longitude measured eastward, in [0,2Pi[ radians)
     !     North pole is (x,y,z)=(0,0,1)
     !     added by EH, Feb 2000
+    ! 2011-08: replaced ACOS(z) by more accurate ATAN2(r,z)
     !=======================================================================
     REAL(KIND=DP), INTENT(IN), dimension(1:) :: vector
     REAL(KIND=DP), INTENT(OUT) :: theta, phi
 
-    REAL(KIND=DP) :: dnorm, z
     !=======================================================================
 
-    dnorm = SQRT(vector(1)**2+vector(2)**2+vector(3)**2)
-
-    z = vector(3) / dnorm
-    theta = ACOS(z)
+    theta = atan2(sqrt(vector(1)**2 + vector(2)**2), vector(3))
 
     phi = 0.0_dp
     if (vector(1) /= 0.0_dp .or. vector(2) /= 0.0_dp) &
@@ -1558,39 +1700,24 @@ contains
     !=======================================================================
     ! call angdist(v1, v2, dist)
     ! computes the angular distance dist (in rad) between 2 vectors v1 and v2
-    ! in general dist = acos ( v1 . v2 )
-    ! except if the 2 vectors are almost aligned.
+    ! dist = atan2 ( |v1 x v2| / (v1 . v2) )
+    ! (more accurate than acos(v1. v2) when dist close to 0 or Pi.
+    ! 2011-08-25: replaced ACOS with ATAN2
     !=======================================================================
     real(kind=DP), intent(IN), dimension(1:) :: v1, v2
     real(kind=DP), intent(OUT) :: dist
 
-    real(kind=DP), dimension(1:3) :: r1, r2, vdiff
-    real(kind=DP) :: diff, sprod
+    real(kind=DP), dimension(1:3) :: v3
+    real(kind=DP) :: sprod, vprod
     !=======================================================================
 
-    ! normalize both vectors
-    r1(1:3) = v1(1:3) / sqrt(dot_product(v1,v1))
-    r2(1:3) = v2(1:3) / sqrt(dot_product(v2,v2))
-
-    sprod = DOT_PRODUCT(r1, r2)
-
-    if (sprod > 0.999_dp) then
-       ! almost colinear vectors
-       vdiff(1:3) = r1(1:3) - r2(1:3)
-       diff = sqrt(dot_product(vdiff,vdiff)) ! norm of difference
-       dist = 2.0_dp * asin(diff * 0.5_dp)
-
-    else if (sprod < -0.999_dp) then
-       ! almost anti-colinear vectors
-       vdiff(1:3) = r1(1:3) + r2(1:3)
-       diff = sqrt(dot_product(vdiff,vdiff)) ! norm of sum
-       dist = PI - 2.0_dp * asin(diff * 0.5_dp)
-
-    else
-       ! other cases
-       dist = acos( sprod )
-    endif
-
+    ! scalar product     s = A. cos(theta)
+    sprod = dot_product(v1, v2)
+    ! vectorial product  v = A. sin(theta)
+    call vect_prod(v1, v2, v3)
+    vprod = sqrt(dot_product(v3,v3))
+    ! theta = atan( |v|/s) in [0,Pi]
+    dist = atan2( vprod, sprod)
 
     return
   end subroutine angdist
