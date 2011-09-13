@@ -113,7 +113,7 @@ template<typename T> void read_Alm_from_fits
 
     for (tsize i=0; i<ppix; ++i)
       {
-      if (index[i]>max_index) return;
+      if (index[i]>max_index) continue;
 
       int l = isqrt(index[i]-1);
       int m = index[i] - l*l - l - 1;

@@ -64,6 +64,7 @@ template <typename T> class safe_ptr
       }
 
     operator T*() { return p; }
+    operator const T*() const { return p; }
     T *operator->() { return p; }
     const T *operator->() const { return p; }
   };

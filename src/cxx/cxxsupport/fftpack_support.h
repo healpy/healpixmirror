@@ -23,7 +23,7 @@
  */
 
 /*
- *  Copyright (C) 2004-2010 Max-Planck-Society
+ *  Copyright (C) 2004-2011 Max-Planck-Society
  *  \author Martin Reinecke
  */
 
@@ -48,6 +48,7 @@ class cfft
       { if (plan!=0) kill_complex_plan (plan); }
     void Set (tsize size_)
       {
+      if (n==size_) return;
       if (plan!=0) kill_complex_plan (plan);
       n=size_;
       plan=make_complex_plan(size_);
@@ -84,6 +85,7 @@ class rfft
       { if (plan!=0) kill_real_plan (plan); }
     void Set (tsize size_)
       {
+      if (n==size_) return;
       if (plan!=0) kill_real_plan (plan);
       n=size_;
       plan=make_real_plan(size_);
