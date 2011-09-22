@@ -279,7 +279,7 @@ public class HealpixIndex extends HealpixBase implements Serializable {
 	 * @return {@link SpatialVector} for each points
 	 * @throws Exception
 	 */
-	public SpatialVector[] corners_nest(int pix, int step) throws Exception {
+	public SpatialVector[] corners_nest(long pix, int step) throws Exception {
 		long tpix = (scheme==Scheme.NESTED) ? pix : nest2ring(pix);
 		Vec3[] tvec = corners(tpix,step);
 		SpatialVector[] res=new SpatialVector[tvec.length];
