@@ -167,7 +167,7 @@ void LS_Image::write_TGA_rle(const string &file) const
 
   bostream bo(out);
   const uint8 header[18] = { 0, 0, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    xres%256, xres/256, yres%256, yres/256, 24, 32 };
+    uint8(xres%256), uint8(xres/256), uint8(yres%256), uint8(yres/256), 24, 32};
 
   bo.put(header,18);
   for (tsize y=0; y<yres; ++y)

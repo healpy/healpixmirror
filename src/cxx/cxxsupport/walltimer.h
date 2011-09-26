@@ -58,8 +58,11 @@ class wallTimer
 
 class wallTimerSet
   {
+  public:
+    typedef std::map<std::string,int> maptype;
+
   private:
-    std::map<std::string,int> lut;
+    maptype lut;
     std::vector<wallTimer> timer;
 
   public:
@@ -77,7 +80,7 @@ class wallTimerSet
 
     void report() const;
 
-    const std::map<std::string,int> &table() const { return lut; }
+    const maptype &table() const { return lut; }
   };
 
 extern wallTimerSet wallTimers;
