@@ -1,3 +1,19 @@
+pro detect_tk_error, nside, pixel, pixel2, error, legend=legend
+
+if total(abs(pixel2-pixel)) ne 0 then begin
+    np = n_elements(pixel)
+    bad = where(pixel2 ne pixel, nbad)
+    print, 'Nside = ',nside
+    if (defined(legend)) then print, legend
+    print, nbad,' / ',np,' pixels : '
+    nbad <= 5
+    print, 'In:   ',pixel[bad[0:nbad-1]]
+    print, 'Out:  ',pixel2[bad[0:nbad-1]]
+    print, 'Diff: ',pixel2[bad[0:nbad-1]]-pixel[bad[0:nbad-1]]
+    error = error + 1
+endif
+return
+end
 ; -----------------------------------------------------------------------------
 ;
 ;  Copyright (C) 1997-2010  Krzysztof M. Gorski, Eric Hivon, Anthony J. Banday
@@ -25,9 +41,9 @@
 ;  For more information about HEALPix see http://healpix.jpl.nasa.gov
 ;
 ; -----------------------------------------------------------------------------
-pro test_tk, nside, upix, random=random
+pro test_tk, nside, upix, help=help, random=random
 ;+
-; test_tk [,nside ,upix, random= ]
+; test_tk [,nside ,upix, help=, random= ]
 ;
 ;  tests the consistency of Healpix toolkit routines (pix2*, ang2*, vec2*, ang2vec, vec2ang)
 ;
@@ -39,8 +55,11 @@ pro test_tk, nside, upix, random=random
 ;   upix , integer scalar or vector, list of hand-picked pixels
 ;
 ;  KEYWORD
-;   random : float scalar, some pixels (Npix * random + 1) are picked randomly
+;   HELP=   : if set, this information header is printed
+; 
+;   RANDOM= : float scalar, some pixels (Npix * random + 1) are picked randomly
 ;   in [0, Npix-1]
+;
 ;
 ;  EXAMPLES:
 ;   test_tk
@@ -49,8 +68,17 @@ pro test_tk, nside, upix, random=random
 ;   test_tk, 2L^29, random=1.d-12
 ;
 ;  2008-03-17: enabled Nside > 8192
-;  2011-08: cosmetic editions
+;  2011-08:    use detect_tk_error
 ;-
+
+t0 = systime(1)
+routine = 'test_tk'
+syntax = routine+' [nside, upix, HELP=, RANDOM=]'
+
+if keyword_set(help) then begin
+    doc_library,routine
+    return
+endif
 
 if undefined(nside) then nside = 32
 lnside = long(nside)
@@ -61,6 +89,7 @@ snpix1 = strtrim(string(npix-1,form='(i20)'),2)
 snside = strtrim(string(nside,form='(i9)'),2)
 
 if (err_nside ne 0) then begin
+    print, syntax
     print,'Invalid Nside'
     return
 endif
@@ -97,40 +126,26 @@ error = 0
 ;--------------------------
 pix2ang_ring, nside, pixel, theta, phi
 ang2pix_ring, nside, theta, phi, pixel2
-if total(abs(pixel2-pixel)) ne 0 then begin
-    print,'error pix <-> ang ring', nside
-    error = error + 1
-endif
+detect_tk_error, nside, pixel, pixel2, error, legend='ERROR: pix <-> ang RING'
+
 
 pix2ang_nest, nside, pixel, theta, phi
 ang2pix_nest, nside, theta, phi, pixel2
-if total(abs(pixel2-pixel)) ne 0 then begin
-    print,'error pix <-> ang nest', nside
-    error = error + 1
-endif
+detect_tk_error, nside, pixel, pixel2, error, legend='ERROR: pix <-> ang NEST'
 ;---------------------
 
 pix2vec_ring, nside, pixel, vec
 vec2pix_ring, nside, vec*!DPI, pixel2
-if total(abs(pixel2-pixel)) ne 0 then begin
-    print,'error pix <-> vec ring', nside
-    error = error + 1
-endif
+detect_tk_error, nside, pixel, pixel2, error, legend='ERROR: pix <-> vec RING'
 
 pix2vec_nest, nside, pixel, vec
 vec2pix_nest, nside, vec*5.d0, pixel2
-if total(abs(pixel2-pixel)) ne 0 then begin
-    print,'error pix <-> vec nest', nside
-    error = error + 1
-endif
+detect_tk_error, nside, pixel, pixel2, error, legend='ERROR: pix <-> vec NEST'
 ;---------------------
 
 ring2nest, nside, pixel, pix_n
 nest2ring, nside, pix_n, pixel2
-if total(abs(pixel2-pixel)) ne 0 then begin
-    print,'error nest <-> ring', nside
-    error = error + 1
-endif
+detect_tk_error, nside, pixel, pixel2, error, legend='ERROR:   NEST <-> RING'
 ;---------------------
 
 
@@ -138,26 +153,22 @@ pix2ang_ring, nside, pixel, theta, phi
 ang2vec,             theta, phi, vec
 vec2pix_nest, nside, vec, pixel1
 nest2ring,    nside, pixel1, pixel2
-if total(abs(pixel2-pixel)) ne 0 then begin
-    print,'error R -> A -> V -> N -> R', nside
-    error = error + 1
-endif
+detect_tk_error, nside, pixel, pixel2, error, legend='ERROR:   R -> A -> V -> N -> R'
 ;---------------------
 
 pix2vec_ring, nside, pixel, vec
 vec2ang,             vec, theta, phi
 ang2pix_nest, nside, theta, phi, pixel1
 nest2ring,    nside, pixel1, pixel2
-if total(abs(pixel2-pixel)) ne 0 then begin
-    print,'error R -> V -> A -> N -> R', nside
-    error = error + 1
-endif
+detect_tk_error, nside, pixel, pixel2, error, legend='ERROR:   R -> V -> A -> N -> R'
 ;---------------------
+t1 = systime(1)
 
 if (error eq 0) then begin
     print, ' -----------------'
     print, '   TEST PASSED'
     print, ' -----------------'
+    print, 'Time [s]: ', t1-t0
 endif
 
 return

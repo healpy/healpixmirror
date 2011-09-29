@@ -24,6 +24,20 @@
 ;
 ;  For more information about HEALPix see http://healpix.jpl.nasa.gov
 ;
+
+;===============================================================
+function fudge_query_radius, nside, radius_in, quadratic=quadratic
+    
+fudge = 1.362d0 * !DPI / (4.0d0 * nside) ; increase effective radius
+if (keyword_set(quadratic)) then begin
+    radius_out = sqrt(radius_in^2 + fudge^2)
+endif else begin
+    radius_out = radius_in + fudge
+endelse
+radius_out <= !DPI
+
+return, radius_out
+end
 ;===============================================================
 function modulo, arg1, arg2
 
@@ -35,20 +49,36 @@ if (nneg gt 0) then out[neg] += arg2[neg < (n2-1)]
 return, out
 end
 
-
 ;===============================================================
-pro pixels_in_phi_range2, nside_in, nside_out, irlist, phi0, dphi, pir, npir
-
-nl3 = 3L*nside_in
-nl4 = 4L*nside_in
-iring  = (nside_in le 8192) ? lindgen(nl4+1) : l64indgen(nl4+1)
+pro pixels_per_ring, nside, npr, kshift, npc
+;-
+; nside: input
+; npr: number of pixel per ring
+; kshift: shift in phi
+; npc: number of pixels between North pole and current ring
+;-
+nl3 = 3L*nside
+nl4 = 4L*nside
+iring  = (nside le 8192) ? lindgen(nl4+1) : l64indgen(nl4+1)
 npr = iring < (nl4 - iring)
-npr <= nside_in
+npr <= nside
 npr *= 4
 kshift = ~(iring and 1)
-if (nside_in eq 1) then kshift = ~kshift
-kshift[0:nside_in] = 1
+if (nside eq 1) then kshift = ~kshift
+kshift[0:nside] = 1
 kshift[nl3:nl4] = 1
+if (arg_present(npc)) then begin
+    npc = total(npr, /cumul, /integer)
+endif
+
+return
+end
+
+;===============================================================
+pro pixels_on_edge, nside_in, irlist, phi0, dphi, ringphi, ngr
+
+pixels_per_ring, nside_in, npr, kshift, npc
+nl4 = 4L*nside_in
 
 
 count = histogram(dphi/(!dpi-1.0d-8)>(-1)<1, rev=rev, min=-1, max=1)
@@ -80,70 +110,61 @@ if (n_normal gt 0) then begin
     shift = (kshift[ir]) * .5d0
     phi_low = phi0[normal] - dphi[normal] ; in [-Pi,2Pi]
     phi_hi  = phi0[normal] + dphi[normal] ; in [0,3Pi]
-    iphi_low = CEIL  (nr * phi_low / twopi - shift)
-    iphi_hi  = FLOOR (nr * phi_hi  / twopi - shift)
-    ;iphi_low <= iphi_hi
+;     iphi_low = CEIL  (nr * phi_low / twopi - shift)
+;     iphi_hi  = FLOOR (nr * phi_hi  / twopi - shift)
+    iphi_low = nint  (nr * phi_low / twopi - shift)
+    iphi_hi  = nint  (nr * phi_hi  / twopi - shift)
     ip_low[normal] = modulo (iphi_low, nr)     ; in {0,nr-1}
     ip_hi [normal] = modulo (iphi_hi,  nr)
-    ;print, phi_low, phi_low*nr / twopi
 endif 
 
+
 if (n_non_empty eq 0) then begin
+    ngr = 0
+    ringphi = [-1L,-1L,-1L]
+endif else begin
+    good = non_empty[sort(non_empty)] ; sort non-empty rings in North to South order
+    ngr  = n_elements(good)
+    ringphi = lonarr(ngr, 3)
+
+    ringphi[0,0] = irlist[good]
+    ringphi[0,1] = ip_low[good]
+    ringphi[0,2] = ip_hi [good]
+endelse
+return
+
+end
+
+
+;===============================================================
+
+pro discedge2fulldisc, nside, ringphi, ngr, pir, npir
+
+npir = 0
+if (ngr eq 0) then begin
     pir[0] = -1
-    npir = 0
     return
 endif
 
-; degrade indices
-degrade_ring, nside_in, irlist[non_empty], ip_low[non_empty], nside_out, jr_out1, jp_low
-degrade_ring, nside_in, irlist[non_empty], ip_hi [non_empty], nside_out, jr_out2, jp_hi
-
-;print,irlist, (irlist-1)/(nside_in/nside_out)+1, ip_low, ip_hi
-
-;;print,minmax(jr_out1-jr_out2)
-; work at low (final) resolution
-nl4 = 4L*nside_out
-iring  = (nside_out le 8192) ? lindgen(nl4+1) : l64indgen(nl4+1)
-npr = iring < (nl4 - iring)
-npr <= nside_out
-npr *= 4
-npc = total(npr, /cumul, /integer)
-
-npir = 0
+pixels_per_ring, nside, npr, kshift, npc
+nl4 = 4L*nside
 ramp = lindgen(nl4)
 
-jr_min = min([jr_out1,jr_out2], max=jr_max)
+jr_min = min(ringphi[*,0], max=jr_max)
 nj = jr_max - jr_min + 1L
-h1 = histogram(jr_out1, rev=rev1, min=jr_min, max=jr_max)
-h2 = histogram(jr_out2, rev=rev2, min=jr_min, max=jr_max)
 for j=0L, nj-1 do begin
-    if (h1[j] gt 0 || h2[j] gt 0) then begin
-        ir = jr_min + j         ; current ring, in [1, nl4-1]
-        nr = npr[ir] ; number of pixels available on this ring
+    ir = jr_min + j             ; current ring, in [1, nl4-1]
+    nr = npr[ir]                ; number of pixels available on this ring
+    my_low = ringphi[j,1]
+    my_hi  = ringphi[j,2]
+    ;check_edge_pixels(nside_in, npc[ir-1] + my_low, wnside)
 
-        if (h1[j] gt 0) then begin
-            xx = jp_low [rev1[rev1[j]:rev1[j+1]-1]]
-            my_low = min(xx,max=junk)
-            if (junk-my_low ge (3*nr/4)) then my_low = min(xx - nr * (xx gt nr/2))
-        endif
-        if (h2[j] gt 0) then begin
-            xx = jp_hi  [rev2[rev2[j]:rev2[j+1]-1]]
-            my_hi  = max(xx,min=junk)
-            if (my_hi-junk ge (3*nr/4))  then my_hi  = max(xx - nr * (xx gt nr/2))
-        endif
-        if (h1[j] eq 0) then my_low = my_hi
-        if (h2[j] eq 0) then my_hi  = my_low
-
-        np = my_hi - my_low ; in [-nr+1, nr-1]
-        np = (np ge 0) ? np + 1 : nr + np + 1 ; deal with periodic BC
-        np <= nr
-        ip = modulo(my_low + ramp[0:np-1], nr)
-        ; print, ir, jr_min, jr_max, nr, my_low, my_hi
-        pir[npir] = npc[ir-1] + ip ; fill final list
-;         np = 2
-;         pir[npir] = npc[ir-1] + [my_low, my_hi]
-        npir += np
-    endif
+    np = my_hi - my_low         ; in [-nr+1, nr-1]
+    np = (np ge 0) ? np + 1 : nr + np + 1 ; deal with periodic BC
+    np <= nr
+    ip = modulo(my_low + ramp[0:np-1], nr)
+    pir[npir] = npc[ir-1] + ip  ; fill final list
+    npir += np
 endfor
 
 if npir eq 0 then pir[0] = -1
@@ -152,10 +173,105 @@ if npir eq 0 then pir[0] = -1
 return
 end
 
+;===============================================================
+pro find_pixel_bounds, nside, nsboost, iring, iphi, phiw, phie
+
+common pixbounds, ns_old, nsb_old, npr, kshift, f
+if undefined(ns_old)  then ns_old  = -1
+if undefined(nsb_old) then nsb_old = -1
+if (nside ne ns_old || nsboost ne nsb_old) then begin
+    ;;;;;print,'Init variables',ns_old,nsb_old
+    pixels_per_ring, nside, npr, kshift
+    f = (dindgen(2*nsboost+1) - nsboost)/nsboost ; in [-ns, ns]/(ns)
+    ns_old = nside
+    nsb_old = nsboost
+endif
+
+halfpi = !dpi * .5d0
+nq = npr[iring]/4 ; number of pixels on current ring in [0,Pi/2] (quadrant)
+transition = (iring eq nside || iring eq nside*3)
+
+if (nq eq nside || transition) then begin ; equatorial region (and transition rings)
+    k0 = kshift[iring]*.5d0
+
+    ff = (1.d0-abs(f))*0.5d0    ; triangle of height 1/2
+    c0 = halfpi * (iphi + k0) / nq
+    f1 = halfpi * ff / nq
+    phiw = c0 - f1
+    phie = c0 + f1
+    if (transition) then begin ; store for future use
+        phiw_e = phiw
+        phie_e = phie
+    endif
+endif
+if (nq lt nside || transition) then begin ; polar regions and transition rings
+    ip = iphi mod nq ; in [0,nq-1]
+    quad = iphi / nq ; quadrant in [0,3]
+    curve = (iring le nside*2) ? halfpi / (nq + f) : halfpi / (nq - f); swap sign for South pole
+    phiw1 = curve * ip     < halfpi
+    phie1 = curve *(ip+1)  < halfpi
+    phiw2 = curve *(nq-ip-1) < halfpi
+    phie2 = curve *(nq-ip)  < halfpi
+    
+    phiw = phiw1 > (halfpi - phie2)
+    phie = phie1 < (halfpi - phiw2)
+    phiw += quad * halfpi
+    phie += quad * halfpi
+endif
+
+if (transition) then begin
+    if (iring eq nside) then begin ; transition in N hemisphere
+        phiw = [phiw[0:nsboost],phiw_e[nsboost+1:2*nsboost]]
+        phie = [phie[0:nsboost],phie_e[nsboost+1:2*nsboost]]
+    endif else begin ; transition in S hemisphere
+        phiw = [phiw_e[0:nsboost],phiw[nsboost+1:2*nsboost]]
+        phie = [phie_e[0:nsboost],phie[nsboost+1:2*nsboost]]
+    endelse
+endif
+
+return
+end
+;===============================================================
+pro check_edge_pixels, nside, wnside, izlist, phi0list, dphilist, ringphi, ngr
+
+nsboost = wnside/nside
+if (nsboost le 1) then return
+
+; print, ringphi
+sub0 = lindgen(2*nsboost-1) - (nsboost-1) - izlist[0]
+for i=0, ngr-1 do begin ; loop on low-res rings
+    subrings = ringphi[i,0]* nsboost + sub0
+    for k=-1,1,2 do begin ; West and East side of disc
+        kk = (k+3)/2 ; 1 or 2
+        find_pixel_bounds, nside, nsboost, ringphi[i,0], ringphi[i,kk], phiw, phie
+        phic = (phie+phiw)*.5d0
+        dphi = (phie-phiw)*.5d0
+        dd = abs(phi0list[subrings]-phic) ; distance from disc center to sub-pixel center
+        dd <= (2.d0 * !dpi - dd) ; in [0,Pi]
+        success = max(dd le (dphilist[subrings]+dphi)) ; 0:out or 1:in
+        if (~success) then ringphi[i,kk] -= k ; move edge pixel inwards
+    endfor
+endfor
+; print,' ***'
+; print, ringphi
+
+; remove empty rings
+diff = ringphi[*,2] - ringphi[*,1]
+valid = where(diff ne -2 and diff ne -1 and ringphi[*,1] ge 0 and ringphi[*,2] ge 0, ngr)
+if (ngr gt 0) then begin
+    ringphi = ringphi[valid,*]
+endif else begin
+    ringphi = -1L
+endelse
+
+return
+end
+
 
 ;===============================================================
 
-pro query_disc, nside, vector0, radius_in, listpix, nlist, deg = deg, inclusive=inclusive, help=help, nested=nested, walltime=walltime
+
+pro query_disc, nside, vector0, radius_in, listpix, nlist, deg = deg, inclusive=inclusive, help=help, nested=nested, walltime=walltime, boost=boost
 ; -----------------------------------------------------------------------------
 ;+
 ; NAME:
@@ -234,8 +350,8 @@ pro query_disc, nside, vector0, radius_in, listpix, nlist, deg = deg, inclusive=
 ;     2008-03-30: fixed bug appearing when disc centered on either pole
 ;                 use 'work' array instead of expanding output array piece by piece
 ;     2009-04-08: actually returns -1 if nlist = 0
-;     2011-04-* : improved performance (less false positive) in /INCLUSIVE mode
-;          by working at larger Nside.
+;     2011-09-22: improved performance (fewer false positive) in /INCLUSIVE mode
+;          by testing border of edge pixels (sampled at larger Nside)
 ;-
 
 tstart = systime(1)
@@ -289,16 +405,8 @@ radius = keyword_set(deg) ? radius_in*!DPI/180.d0 : radius_in
 halfpi = !DPI*.5d0
 lnside = long(nside)
 
-radius_eff = radius
-wnside = lnside              ; Nside used internally
-if (do_inclusive) then begin
-    wnside = lnside * 8 ; larger internal Nside, used to remove false positives
-    wnside <= max(!healpix.nside)
-    wnside1 = wnside/2 > lnside ; used to compute effective radius
-    fudge = 1.362d0 * !DPI / (4.0d0 * wnside1) ; increase effective radius
-    radius_eff = (radius + fudge)  < !DPI
-endif
-cosang = cos(radius_eff)
+radius_eff = do_inclusive ? fudge_query_radius(lnside, radius) : radius
+cosang     = cos(radius_eff)
 
 ; create work array used to store valid pixels
 ; (faster than expanding final array)
@@ -323,19 +431,37 @@ zmax = (rlat1 ge halfpi)  ? 1.d0  : sin(rlat1)
 zmin = (rlat2 le -halfpi) ? -1.d0 : sin(rlat2)
 
 ; fills list of rings and dphi
-irmin = ring_num(wnside, zmax, shift=+1)
-irmax = ring_num(wnside, zmin, shift=-1)
+irmin = ring_num(lnside, zmax, shift=+1)
+irmax = ring_num(lnside, zmin, shift=-1)
 nz = irmax-irmin+1
-
 izlist = irmin + lindgen(nz)    ; list of rings
-zlist  = ring2z(wnside, izlist) ; list of z
+zlist  = ring2z(lnside, izlist) ; list of z
 dphilist = discphirange_at_z (vector0, radius_eff, zlist, phi0=phi0) ; phi range in each ring
 phi0list = replicate(phi0, nz)
 
 ; build list of pixels
 nlist = 0LL
-pixels_in_phi_range2, wnside, lnside, izlist, phi0list, dphilist, work, nlist
+pixels_on_edge, lnside, izlist, phi0list, dphilist, ringphi, ngr
+if do_inclusive then begin
+    nsboost = defined(boost) ? boost : 16
+    wnside = lnside * nsboost 
+    wnside <= max(!healpix.nside)
+    radius2 = fudge_query_radius(wnside, radius, /quadratic)
+    ;print, nsboost, lnside, wnside, radius, radius2, radius_eff
 
+    irmin = ring_num(wnside, zmax, shift=+1)
+    irmax = ring_num(wnside, zmin, shift=-1)
+    nz = irmax-irmin+1
+    izlist = irmin + lindgen(nz) ; list of active rings
+    zlist  = ring2z(wnside, izlist) ; list of z
+    dphilist = discphirange_at_z (vector0, radius2, zlist, phi0=phi0) ; phi range in each ring
+    phi0list = replicate(phi0, nz)
+    ;print,izlist,dphilist
+
+    check_edge_pixels, lnside, wnside, izlist, phi0list, dphilist, ringphi, ngr
+endif
+;print,ringphi
+discedge2fulldisc, lnside, ringphi, ngr, work, nlist
 
 if (nlist gt 0) then begin
     if keyword_set(nested) then ring2nest, lnside, work[0:nlist-1], listpix else listpix=work[0:nlist-1]

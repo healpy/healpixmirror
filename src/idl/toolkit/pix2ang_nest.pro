@@ -58,6 +58,7 @@ PRO pix2ang_nest, nside, ipix, theta, phi
 ;    Aug 2008, EH, IAP: issues warning if ipix is not of integer type
 ;    Aug 2011, EH, IAP: more precise theta determination close to pole;
 ;        sligtly faster by not using kshift
+;    Sep 2011, EH, IAP: use HISTOGRAM instead of multiple WHEREs
 ;
 ;-
 ;*****************************************************************************
@@ -144,27 +145,33 @@ PRO pix2ang_nest, nside, ipix, theta, phi
   nr     = LONARR(np, /NOZERO)
   theta  = DBLARR(np, /NOZERO)
 
-  pix_eqt = WHERE( jr GE nl1 AND jr Le nl3, n_eqt) ; equatorial region
-  IF (n_eqt GT 0) THEN BEGIN
+  hist = HISTOGRAM(jr, min=-nl1, max=nl4, binsize=2L*nl1, reverse=rev)
+  if (hist[0]+hist[1]+hist[2]) NE np THEN message,'error in '+routine
+
+  kc = 1 ; equatorial region: [nl1,nl3]
+  IF (hist[kc] GT 0) THEN BEGIN
+      pix_eqt = rev[rev[kc]:rev[kc+1]-1]
       nr[pix_eqt]     = nl1   ; equatorial region 
       theta[pix_eqt]  = ACOS(  (2*nl1-jr[pix_eqt])*fact2  )
       pix_eqt = 0  ; free memory
   ENDIF
 
-  pix_npl = WHERE( jr LT nl1, n_npl) ; north pole
-  IF (n_npl GT 0) THEN BEGIN
+  kc = 0 ; north pole: [1,nl1]
+  IF (hist[kc] GT 0) THEN BEGIN
+      pix_npl = rev[rev[kc]:rev[kc+1]-1]
       nr[pix_npl]     = jr[pix_npl]
       theta[pix_npl] = 2.d0 * ASIN( nr[pix_npl] * sfact )
       pix_npl = 0; free memory
   ENDIF
 
-  pix_spl = WHERE( jr GT nl3,   n_spl) ; south pole
-  if (n_npl + n_spl + n_eqt) NE np THEN message,'error in '+routine
-  IF (n_spl GT 0) THEN BEGIN
+  kc = 2 ; south pole: [nl3,nl4-1]
+  IF (hist[kc] GT 0) THEN BEGIN
+      pix_spl = rev[rev[kc]:rev[kc+1]-1]
       nr[pix_spl]     = nl4 - jr[pix_spl]
       theta[pix_spl] = !DPI - 2.d0 * ASIN( nr[pix_spl] * sfact )
       pix_spl = 0; free memory
   ENDIF
+  rev = 0 & hist=0
 
 ; ;     computes the phi coordinate on the sphere, in [0,2Pi]
   jp = jpll[face_num]*nr + jpt

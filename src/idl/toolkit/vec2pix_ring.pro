@@ -88,7 +88,7 @@ PRO vec2pix_ring, nside, vec_in, ipring
       ncap  = nl2*(nl1-1LL)
       ipring = LON64ARR(np, /NoZero)
       one = 1LL
-      l64 = (nl1 eq ishft(1L, 29)) ; for Nside >= 2^29
+      l64 = (nl1 ge ishft(1L, 29)) ; for Nside >= 2^29
   endif else begin
       nl4   = 4L*nl1
       ncap  = nl2*(nl1-1L)
@@ -105,7 +105,6 @@ PRO vec2pix_ring, nside, vec_in, ipring
   norm = 0
   phi_in = ATAN(vec_in[*,1],vec_in[*,0])
   phi_in += (phi_in LE 0.d0)*twopi
-
   pix_eqt = WHERE(cth_in LE cth0 AND cth_in GT -cth0, n_eqt) ; equatorial strip
   IF (n_eqt GT 0) THEN BEGIN    ; equatorial strip ----------------
       tt = phi_in(pix_eqt) / pion2
@@ -119,7 +118,7 @@ PRO vec2pix_ring, nside, vec_in, ipring
       k =  ( (ir MOD 2) EQ 0)   ; k=1 if ir even, and 0 otherwise
 
       ;ip = LONG( ( jp+jm+k + (1-nl1) ) / 2 ) + 1 ; in {1,4n}
-      ip = LONG( ( one-nl1 + jp+jm+k  ) / 2 ) + 1 ; in {1,4n}
+      ip = floor( ( one-nl1 + jp+jm+k  ) / 2 , L64=l64) + 1 ; in {1,4n}
       ip = ip - nl4*(ip GT nl4)
 
       ipring(pix_eqt) = ncap + nl4*(ir-one) + ip - one

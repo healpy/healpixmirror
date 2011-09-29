@@ -58,9 +58,9 @@ function discphirange_at_z, vcenter, radius, z, phi0=phi0
 ;
 ;-
 
-cosang = cos(radius[0])
+cosang = cos(radius[0]*1.d0)
 
-norm = sqrt(total(vcenter[0:2]^2))
+norm = sqrt(total(vcenter[0:2]^2, /double))
 x0 = vcenter[0] / norm
 y0 = vcenter[1] / norm
 z0 = vcenter[2] / norm
