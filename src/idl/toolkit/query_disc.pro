@@ -79,6 +79,7 @@ pro pixels_on_edge, nside_in, irlist, phi0, dphi, ringphi, ngr
 
 pixels_per_ring, nside_in, npr, kshift, npc
 nl4 = 4L*nside_in
+badvalue = -9999 ; NEGATIVE value given to phi index on empty rings
 
 
 count = histogram(dphi/(!dpi-1.0d-8)>(-1)<1, rev=rev, min=-1, max=1)
@@ -93,8 +94,8 @@ ip_low = lonarr(nrings) ; pixel range on each ring
 ip_hi = ip_low
 
 if (n_empty gt 0) then begin
-    ip_low[empty] = -9999
-    ip_hi[empty] = ip_low[empty]
+    ip_low[empty] = badvalue
+    ip_hi[empty]  = badvalue
 endif
 
 twopi = 2.d0*!DPI
@@ -110,12 +111,17 @@ if (n_normal gt 0) then begin
     shift = (kshift[ir]) * .5d0
     phi_low = phi0[normal] - dphi[normal] ; in [-Pi,2Pi]
     phi_hi  = phi0[normal] + dphi[normal] ; in [0,3Pi]
-;     iphi_low = CEIL  (nr * phi_low / twopi - shift)
-;     iphi_hi  = FLOOR (nr * phi_hi  / twopi - shift)
-    iphi_low = nint  (nr * phi_low / twopi - shift)
-    iphi_hi  = nint  (nr * phi_hi  / twopi - shift)
-    ip_low[normal] = modulo (iphi_low, nr)     ; in {0,nr-1}
-    ip_hi [normal] = modulo (iphi_hi,  nr)
+    iphi_low = CEIL  (nr * phi_low / twopi - shift)
+    iphi_hi  = FLOOR (nr * phi_hi  / twopi - shift)
+    miss = where(iphi_low gt iphi_hi, nmiss) ; phi range is >0 but does not contain any pixel center
+    iphi_low = modulo (iphi_low, nr)     ; in {0,nr-1}
+    iphi_hi  = modulo (iphi_hi,  nr)
+    if (nmiss gt 0) then begin
+        iphi_low[miss] = badvalue
+        iphi_hi[miss]  = badvalue
+    endif
+    ip_low[normal] = iphi_low
+    ip_hi [normal] = iphi_hi
 endif 
 
 
@@ -156,15 +162,15 @@ for j=0L, nj-1 do begin
     ir = jr_min + j             ; current ring, in [1, nl4-1]
     nr = npr[ir]                ; number of pixels available on this ring
     my_low = ringphi[j,1]
-    my_hi  = ringphi[j,2]
-    ;check_edge_pixels(nside_in, npc[ir-1] + my_low, wnside)
-
-    np = my_hi - my_low         ; in [-nr+1, nr-1]
-    np = (np ge 0) ? np + 1 : nr + np + 1 ; deal with periodic BC
-    np <= nr
-    ip = modulo(my_low + ramp[0:np-1], nr)
-    pir[npir] = npc[ir-1] + ip  ; fill final list
-    npir += np
+    if (my_low ge 0) then begin
+        my_hi  = ringphi[j,2]
+        np = my_hi - my_low     ; in [-nr+1, nr-1]
+        np = (np ge 0) ? np + 1 : nr + np + 1 ; deal with periodic BC
+        np <= nr
+        ip = modulo(my_low + ramp[0:np-1], nr)
+        pir[npir] = npc[ir-1] + ip ; fill final list
+        npir += np
+    endif
 endfor
 
 if npir eq 0 then pir[0] = -1
@@ -244,12 +250,14 @@ for i=0, ngr-1 do begin ; loop on low-res rings
     for k=-1,1,2 do begin ; West and East side of disc
         kk = (k+3)/2 ; 1 or 2
         find_pixel_bounds, nside, nsboost, ringphi[i,0], ringphi[i,kk], phiw, phie
-        phic = (phie+phiw)*.5d0
-        dphi = (phie-phiw)*.5d0
-        dd = abs(phi0list[subrings]-phic) ; distance from disc center to sub-pixel center
-        dd <= (2.d0 * !dpi - dd) ; in [0,Pi]
-        success = max(dd le (dphilist[subrings]+dphi)) ; 0:out or 1:in
-        if (~success) then ringphi[i,kk] -= k ; move edge pixel inwards
+        if (ringphi[i,kk] ge 0) then begin
+            phic = (phie+phiw)*.5d0
+            dphi = (phie-phiw)*.5d0
+            dd = abs(phi0list[subrings]-phic) ; distance from disc center to sub-pixel center
+            dd <= (2.d0 * !dpi - dd) ; in [0,Pi]
+            success = max(dd le (dphilist[subrings]+dphi)) ; 0:out or 1:in
+            if (~success) then ringphi[i,kk] -= k ; move edge pixel inwards
+        endif
     endfor
 endfor
 ; print,' ***'
