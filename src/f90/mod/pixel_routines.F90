@@ -2233,20 +2233,23 @@
     real(kind=DP) :: zmax, zmin, z1max, z1min, z2max, z2min, z3max, z3min
     real(kind=DP) :: z, zz
     real(kind=DP) :: tgth, st
-    real(kind=DP) :: offset, sin_off
+    real(kind=DP) :: offset, sin_off, cos_off
     real(kind=DP), dimension(1:3,1:3) :: vv, vo
     real(kind=DP), dimension(1:3) :: sprod, sto, phi0i, tgthi
     real(kind=DP), dimension(1:3) :: dc
-    real(kind=DP), dimension(1:2,1:3) :: dom
-    real(kind=DP), dimension(1:4) :: dom12, dom123a, dom123b
-    real(kind=DP), dimension(1:6) :: alldom
-    real(kind=DP) :: a_i, b_i, phi0, dphiring
+    real(kind=DP), dimension(1:2,1:4) :: dom
+    !real(kind=DP), dimension(1:4) :: dom12, dom123a, dom123b
+    real(kind=DP), dimension(1:8) :: alldom, adtmp
+    real(kind=DP) :: a_i, b_i, phi0, dphiring, dphi, phi0disc, radius_eff, tmp
     integer(kind=I4B) :: idom, nir, ip
     integer(kind=I4B) :: status
     integer(kind=I4B) :: j
     character(len=*), parameter :: code = "QUERY_TRIANGLE"
     logical(LGT)      :: do_inclusive
     integer(kind=I4B)       :: my_nest
+    integer(i4b), dimension(1:1) :: longside
+    integer(i4b) :: lsp1, lsp2, i
+    real(dp), dimension(1:3) :: vcenter, dd
 
     !=======================================================================
 
@@ -2358,7 +2361,7 @@
     z1min = vv(3,3)
     if ( test1a .EQV. test1b ) then
        zz = sto(1)
-       if ((vv(3,2)+vv(3,3)) >= 0.0_dp) then
+       if (z1min+z1max >= 0.0_dp) then
           z1max =  zz
        else
           z1min = -zz
@@ -2366,13 +2369,11 @@
     endif
 
     ! segment 1-3
-!     z2max = vv(3,1)
-!     z2min = vv(3,3)
     z2max = vv(3,3)
     z2min = vv(3,1)
     if ( test2a .EQV. test2b ) then
        zz = sto(2)
-       if ((vv(3,1)+vv(3,3)) >= 0.0_dp) then
+       if (z2min+z2max >= 0.0_dp) then
           z2max =  zz
        else
           z2min = -zz
@@ -2384,7 +2385,7 @@
     z3min = vv(3,2)
     if ( test3a .EQV. test3b ) then
        zz = sto(3)
-       if ((vv(3,1)+vv(3,2)) >= 0.0_dp) then
+       if (z3min+z3max >= 0.0_dp) then
           z3max =  zz
        else
           z3min = -zz
@@ -2401,18 +2402,33 @@
 !       offset = PI / (4.0_dp*nside) ! half pixel size
        offset = 1.36d0 * PI / (4.0_dp*nside) ! increased 2011-06-09
        sin_off = sin(offset)
-       zmax = min( 1.0_dp, cos( acos(zmax) - offset) )
-       zmin = max(-1.0_dp, cos( acos(zmin) + offset) )
+       cos_off = cos(offset)
+!        zmax = min( 1.0_dp, cos( acos(zmax) - offset) )
+!        zmin = max(-1.0_dp, cos( acos(zmin) + offset) )
+       zmax = min( 1.0_dp, cos_off * zmax + sin_off * sqrt(1.0_dp - zmax**2))  !cos(theta_zmax-offset)
+       zmin = max(-1.0_dp, cos_off * zmin - sin_off * sqrt(1.0_dp - zmin**2))  !cos(theta_zmin+offset)
     endif
 
-    !   print*,"zmin, zmax ",zmin,zmax
+    if (do_inclusive) then
+       ! find one small circle containing all points, 
+       ! increased by fudge offset in inclusive case
+       longside = minloc(sprod)      ! l   in {1,2,3}: longest leg
+       lsp1 = mod(longside(1)  , 3) + 1 ! l+1 in {2,3,1}
+       lsp2 = mod(longside(1)+1, 3) + 1 ! l+2 in {3,1,2}
+       vcenter = 0.5_dp*(vv(1:3,lsp1) + vv(1:3,lsp2)) ! mid point of longest side
+       vcenter = vcenter/sqrt(sum(vcenter**2))
+       do i=1,3 
+          call angdist(vcenter, vv(1:3,i), dd(i))
+       enddo
+       radius_eff = maxval(dd) + offset
+    endif
+
 
     ! northernmost and sourthernmost ring number
     irmin = ring_num(nside, zmax)
     irmax = ring_num(nside, zmin)
 
     ilist = -1
-    !    print*,"irmin, irmax ",irmin,irmax
 
     ! -------- loop on the rings -------------------------
 
@@ -2440,41 +2456,43 @@
 
        do j=1,3
           if (dc(j)*sdet <= -1.0_dp) then  ! the whole iso-latitude ring is on the right side of the great circle
-             dom(1:2, j) = (/ 0.0_dp, twopi /)
+             dom(1, j) = 0.0_dp
+             dom(2, j) = twopi
           else if (dc(j)*sdet >= 1.0_dp) then ! all on the wrong side
-             dom(1:2, j) = (/ -1.000001_dp, -1.0_dp /) * j
+             dom(1, j) = -1.000001_dp * j
+             dom(2, j) = -1.0_dp * j
           else ! some is good, some is bad
-             dom(1:2, j) = MODULO( phi0i(j) + (ACOS(dc(j)) * sdet) * (/-1.0_dp, 1.0_dp /), twopi)
+             tmp = acos(dc(j)) * sdet
+             dom(1, j) = modulo( phi0i(j) - tmp , twopi)
+             dom(2, j) = modulo( phi0i(j) + tmp , twopi)
           endif
        enddo
-
-       ! identify the intersections (0,1,2 or 3) of the 3 intervals
-       call intrs_intrv( dom(1:2,1), dom(1:2,2), dom12, n12)
-       if (n12 == 0) goto 20
-       if (n12 == 1) then
-          call intrs_intrv( dom(1:2,3), dom12, dom123a, n123a)
-          if (n123a == 0) goto 20
-          alldom(1:2*n123a) = dom123a(1:2*n123a)
-          ndom = n123a ! 1 or 2
-       endif
-       if (n12 == 2) then
-          call intrs_intrv( dom(1:2,3), dom12(1:2), dom123a, n123a)
-          call intrs_intrv( dom(1:2,3), dom12(3:4), dom123b, n123b)
-          ndom = n123a + n123b ! 0, 1, 2 or 3
-          if (ndom == 0) goto 20
-          if (n123a /= 0) alldom(1:2*n123a) = dom123a(1:2*n123a)
-          if (n123b /= 0) alldom(2*n123a+1:2*ndom)  = dom123b(1:2*n123b)
-          if (ndom > 3) then
-             print*,code//"> too many intervals found"
+       dom(1:2,4) = (/ -2.000002_dp, -2.0_dp /)
+       if (do_inclusive) then
+          dphi = discphirange_at_z(vcenter, radius_eff, z, phi0disc)
+          if (dphi >= 0.0_dp) then
+             dom(1,4) =  modulo (phi0disc - dphi + twopi, twopi)
+             dom(2,4) =  modulo (phi0disc + dphi + twopi, twopi)
           endif
+       endif
+
+       call process_intervals(dom(1:2,2),dom(1:2,1), alldom, ndom)
+       if (ndom == 0) goto 20
+       adtmp(1:2*ndom) = alldom(1:2*ndom) ! to avoid using same variable in input and output
+       call process_intervals(dom(1:2,3), adtmp(1:2*ndom), alldom, ndom)
+       if (ndom == 0) goto 20
+       if (do_inclusive) then
+          adtmp(1:2*ndom) = alldom(1:2*ndom)
+          call process_intervals(dom(1:2,4), adtmp(1:2*ndom), alldom, ndom)
+          if (ndom == 0) goto 20
        endif
        do idom=0,ndom-1
           a_i = alldom(2*idom+1)
           b_i = alldom(2*idom+2)
-          phi0 = (a_i + b_i) * 0.5_dp
+          phi0     = (a_i + b_i) * 0.5_dp
           dphiring = (b_i - a_i) * 0.5_dp
           if (dphiring < 0.0_dp) then
-             phi0 = phi0 + pi
+             phi0     = phi0 + pi
              dphiring = dphiring + pi
           endif
 

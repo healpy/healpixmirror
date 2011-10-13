@@ -26,19 +26,6 @@
 ;
 
 ;===============================================================
-function fudge_query_radius, nside, radius_in, quadratic=quadratic
-    
-fudge = 1.362d0 * !DPI / (4.0d0 * nside) ; increase effective radius
-if (keyword_set(quadratic)) then begin
-    radius_out = sqrt(radius_in^2 + fudge^2)
-endif else begin
-    radius_out = radius_in + fudge
-endelse
-radius_out <= !DPI
-
-return, radius_out
-end
-;===============================================================
 function modulo, arg1, arg2
 
 n2 = n_elements(arg2)
@@ -125,18 +112,30 @@ if (n_normal gt 0) then begin
 endif 
 
 
-if (n_non_empty eq 0) then begin
-    ngr = 0
-    ringphi = [-1L,-1L,-1L]
+good = where(ip_low ge 0, ngr)
+if (ngr eq 0) then begin
+    ringphi = [-1L, -1L, -1L]
 endif else begin
-    good = non_empty[sort(non_empty)] ; sort non-empty rings in North to South order
-    ngr  = n_elements(good)
     ringphi = lonarr(ngr, 3)
-
     ringphi[0,0] = irlist[good]
     ringphi[0,1] = ip_low[good]
     ringphi[0,2] = ip_hi [good]
 endelse
+
+; if (n_non_empty eq 0) then begin
+;     ngr = 0
+;     ringphi = [-1L,-1L,-1L]
+; endif else begin
+;     good = non_empty[sort(non_empty)] ; sort non-empty rings in North to South order
+;     ngr  = n_elements(good)
+;     ringphi = lonarr(ngr, 3)
+
+;     ringphi[0,0] = irlist[good]
+;     ringphi[0,1] = ip_low[good]
+;     ringphi[0,2] = ip_hi [good]
+; endelse
+
+
 return
 
 end
@@ -244,17 +243,20 @@ nsboost = wnside/nside
 if (nsboost le 1) then return
 
 ; print, ringphi
-sub0 = lindgen(2*nsboost-1) - (nsboost-1) - izlist[0]
+;;;sub0 = lindgen(2*nsboost-1) - (nsboost-1) - izlist[0]
+sub0 = lindgen(2*nsboost+1) - nsboost - izlist[0]
 for i=0, ngr-1 do begin ; loop on low-res rings
     subrings = ringphi[i,0]* nsboost + sub0
     for k=-1,1,2 do begin ; West and East side of disc
         kk = (k+3)/2 ; 1 or 2
         find_pixel_bounds, nside, nsboost, ringphi[i,0], ringphi[i,kk], phiw, phie
+        ;print, i, k, ringphi[i,0],ringphi[i,kk]
         if (ringphi[i,kk] ge 0) then begin
             phic = (phie+phiw)*.5d0
             dphi = (phie-phiw)*.5d0
-            dd = abs(phi0list[subrings]-phic) ; distance from disc center to sub-pixel center
+            dd = abs(phi0list[subrings]-phic) ; distance from disc center to pixel border sample
             dd <= (2.d0 * !dpi - dd) ; in [0,Pi]
+            ;;;;;print, dd,dphilist[subrings],dphi
             success = max(dd le (dphilist[subrings]+dphi)) ; 0:out or 1:in
             if (~success) then ringphi[i,kk] -= k ; move edge pixel inwards
         endif

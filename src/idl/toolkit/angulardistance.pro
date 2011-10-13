@@ -143,20 +143,20 @@ if (n1 gt 1 && n2 gt 1 && n1 ne n2) then begin
     message,'if V and W are both lists of vectors, they should be of the same length'
 endif
 one = replicate(1.d0, n1>n2)
-r1 = (n1 eq 1) ? one # reform(v1, 3) : v1
-r2 = (n2 eq 1) ? one # reform(v2, 3) : v2
+r1 = (n1 eq 1) ? one # reform(v1, 3) : double(v1)
+r2 = (n2 eq 1) ? one # reform(v2, 3) : double(v2)
 ; normalize both vectors
 one = replicate(1.d0, 3)
 r1 /= (sqrt(total(r1*r1, 2)) # one)
 r2 /= (sqrt(total(r2*r2, 2)) # one)
 
 ; scalar product
-sprod = total(r1*r2, 2)
+sprod = total(r1*r2, 2, /double)
     
-cut = 0.999d0
-
 ; standard calculation
 dist = acos ( sprod )
+
+cut = 0.9d0
 
 ; almost colinear vectors
 p1 = where(sprod gt cut,    n_p1)

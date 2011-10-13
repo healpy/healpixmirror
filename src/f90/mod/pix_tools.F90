@@ -51,6 +51,8 @@ module pix_tools
 !              largest supported Nside is now 2^28 instead of 2^13
 !             Note: the theoretical limit Nside=2^29 is not implemented to avoid
 !               dealing with too many 64 bit integer variables that slow down execution
+!    2011-08-25 : 2011-08-*: improves accuracy of pixel routines close to Poles
+!    2011-10-13: improved query_triangle, introduced process_intervals
 !==================================================================
   ! subroutine query_strip                          Done (To be Tested) depends on in_ring
   ! subroutine query_polygon                        Done (To be Tested) depends on isort
@@ -129,7 +131,7 @@ module pix_tools
   ! subroutine template_pixel_nest                  Done (to be tested)               
   ! subroutine same_shape_pixels_nest               Done (to be tested)
 ! 
-! 2011-08-25 : 2011-??: improves accuracy close to Poles
+! 2011-08-*: improves accuracy close to Poles
 ! ang2pix_nest  small
 ! ang2pix_ring  small
 ! ang2vec     OK      
@@ -573,19 +575,19 @@ contains
     dk(1:4) = -1.0e9_dp
 
 
-    if ((tr34.AND.tr31.AND.tr14) .OR. (tr43.AND.(tr31.OR.tr14))) then
+    if ((tr31.AND.tr14) .OR. (tr43.AND.(tr31.OR.tr14))) then
        ik = ik + 1
        dk(ik) = d1(1)  ! a1
     endif
-    if ((tr12.AND.tr13.AND.tr32) .OR. (tr21.AND.(tr13.OR.tr32))) then
+    if ((tr13.AND.tr32) .OR. (tr21.AND.(tr13.OR.tr32))) then
        ik = ik + 1
        dk(ik) = d2(1)  ! a2
     endif
-    if ((tr34.AND.tr32.AND.tr24) .OR. (tr43.AND.(tr32.OR.tr24))) then
+    if ((tr32.AND.tr24) .OR. (tr43.AND.(tr32.OR.tr24))) then
        ik = ik + 1
        dk(ik) = d1(2)  ! b1
     endif
-    if ((tr12.AND.tr14.AND.tr42) .OR. (tr21.AND.(tr14.OR.tr42))) then
+    if ((tr14.AND.tr42) .OR. (tr21.AND.(tr14.OR.tr42))) then
        ik = ik + 1
        dk(ik) =  d2(2)  ! b2
     endif
@@ -621,34 +623,24 @@ contains
     integer(i4b),          intent(out) :: n_out
     !
     integer(i4b) :: n_in, i_in, n_tmp_out
-!     real(dp), dimension(1:4) :: tmp_list_out
-!     real(dp), dimension(1:30) :: work
+    real(dp), dimension(1:4) :: w4
+    real(dp), dimension(1:30) :: work
     !=======================================================================
 
     n_out = 0
     interval_out = 0.d0
     n_in = size(interval_list)/2
+    work(1:2*n_in) = interval_list(1:2*n_in) ! copy input array to avoid overwritting it
+
     if (n_in > 0) then
-       do i_in=0, n_in
+       do i_in=0, n_in-1
           ! intersection of 2 intervals -> 0,1,2 intervals
-          call intrs_intrv(interval1, interval_list(1+2*i_in:2+2*i_in), &
-               & interval_out(2*n_out+1:2*n_out+4), n_tmp_out)
-          n_out = n_out + n_tmp_out
+          call intrs_intrv(interval1, work(1+2*i_in:2+2*i_in), w4, n_tmp_out)
+          if (n_tmp_out > 0) then ! n_tmp_out = 1 or 2
+             interval_out(2*n_out+1: 2*(n_out+n_tmp_out)) = w4(1:2*n_tmp_out)
+             n_out = n_out + n_tmp_out
+          endif
        enddo
-       
-!        work = 0.0
-!        do i_in=0, n_in
-!           ! intersection of 2 intervals -> 0,1,2 intervals
-!           call intrs_intrv(interval1, interval_list(1+2*i_in:2+2*i_in), &
-!                & tmp_list_out, n_tmp_out)
-!           if (n_tmp_out > 0) then
-!              work(          2*n_out+1:2*(n_out+n_tmp_out)) = &
-!                   & tmp_list_out(   1:2*n_tmp_out)
-!              n_out = n_out + n_tmp_out
-!           endif
-!        enddo
-!        allocate(interval_out(1:2*n_out))
-!        interval_out(1:2*n_out) = work(1:2*n_out)
     endif
     
     return

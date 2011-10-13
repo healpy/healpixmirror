@@ -51,19 +51,19 @@ ik = -1
 dk = replicate(-1.0d9,4)
 
 
-if ((tr34 && tr31 && tr14)  ||  (tr43 && (tr31 || tr14))) then begin
+if ((tr31 && tr14)  ||  (tr43 && (tr31 || tr14))) then begin
    ik ++
    dk[ik] = d1[0]  ; a1
 endif
-if ((tr12 && tr13 && tr32)  ||  (tr21 && (tr13 || tr32))) then begin
+if ((tr13 && tr32)  ||  (tr21 && (tr13 || tr32))) then begin
    ik ++
    dk[ik] = d2[0]  ; a2
 endif
-if ((tr34 && tr32 && tr24)  ||  (tr43 && (tr32 || tr24))) then begin
+if ((tr32 && tr24)  ||  (tr43 && (tr32 || tr24))) then begin
    ik ++
    dk[ik] = d1[1]  ; b1
 endif
-if ((tr12 && tr14 && tr42)  ||  (tr21 && (tr14 || tr42))) then begin
+if ((tr14 && tr42)  ||  (tr21 && (tr14 || tr42))) then begin
    ik ++
    dk[ik] =  d2[1]  ; b2
 endif
@@ -308,25 +308,15 @@ zmin = MIN([z1min, z2min, z3min, zmin])
 offset = 0.0d0
 sin_off = 0.0d0
 if (do_inclusive) then begin
-   offset = 1.36d0 * !DPI / (4.0d0*nside)
-   sin_off = sin(offset)
-   zmax = cos( acos(zmax) - offset) < 1.d0
-   zmin = cos( acos(zmin) + offset) > (-1.d0)
+; offset = 1.36d0 * !DPI / (4.0d0*nside)
+    offset = fudge_query_radius(nside, 0.d0)
+    sin_off = sin(offset)
+    cos_off = cos(offset)
+;    zmax = cos( acos(zmax) - offset) < 1.d0
+;    zmin = cos( acos(zmin) + offset) > (-1.d0)
+    zmax = (cos_off * zmax + sin_off * sqrt(1.d0 - zmax^2)) < 1.d0 ;cos(theta_zmax-offset)
+    zmin = (cos_off * zmin - sin_off * sqrt(1.d0 - zmin^2)) > (-1.d0) ;cos(theta_zmin+offset)
 endif
-
-; find one small circle containing all points, 
-; increased by fudge offset in inclusive case
-junk = min(sprod, longside)
-lsp1 = (longside+1) mod 3
-lsp2 = (longside+2) mod 3
-vcenter = 0.5d0*(vv[*,lsp1] + vv[*,lsp2]) ; mid point of longest side
-vcenter /= sqrt(total(vcenter^2))
-dd = angulardistance(vcenter, transpose(vv))
-radius_eff = max(dd) + offset
-; print,'Disc:'
-; print,vcenter, radius_eff*!radeg
-; vec2ang,/astro, vcenter, dec0, ra0
-; circle = generate_circle(ra0, dec0, radius_eff*!radeg, npoints=40, coord='G')
 
 ; northernmost and sourthernmost ring number
 irmin = ring_num(lnside, zmax)
@@ -336,8 +326,22 @@ irmax = ring_num(lnside, zmin)
 nz = irmax - irmin + 1
 izlist = irmin + lindgen(nz)    ; list of rings
 zlist  = ring2z(lnside, izlist) ; list of z
-if (do_inclusive) then dphilist = discphirange_at_z (vcenter, radius_eff, zlist, phi0=phi0disc) ; phi range in each ring
-
+if (do_inclusive) then begin
+; find one small circle containing all points, 
+; increased by fudge offset in inclusive case
+    junk = min(sprod, longside)
+    lsp1 = (longside+1) mod 3
+    lsp2 = (longside+2) mod 3
+    vcenter = 0.5d0*(vv[*,lsp1] + vv[*,lsp2]) ; mid point of longest side
+    vcenter /= sqrt(total(vcenter^2))
+    dd = angulardistance(vcenter, transpose(vv))
+    radius_eff = max(dd) + offset
+; print,'Disc:'
+; print,vcenter, radius_eff*!radeg
+; vec2ang,/astro, vcenter, dec0, ra0
+; circle = generate_circle(ra0, dec0, radius_eff*!radeg, npoints=40, coord='G')
+    dphilist = discphirange_at_z (vcenter, radius_eff, zlist, phi0=phi0disc) ; phi range in each ring
+endif
 ; -------- loop on the rings -------------------------
 
 tgthi = -1.0d30 * vo[2,*]
@@ -375,7 +379,7 @@ for iz = irmin, irmax do begin
     endfor
     dom[0:1,3] = [ -1.000001d0, -1.0d0 ] * 2.d0
     if (do_inclusive && dphilist[iz0] ge 0.d0) then dom[0:1,3] = (phi0disc + dphilist[iz0]*[-1.d0,1.d0] + twopi) mod twopi
-
+    
     ; identify the intersections (0,1,2 or 3) of the 3 intervals
     ; -------------------------------------------------------
     ; start with the first 2 intervals
