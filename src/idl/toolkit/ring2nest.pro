@@ -54,6 +54,7 @@ PRO ring2nest, nside, ipring, ipnest
 ;    June 2003,  EH, replaced STOPs by MESSAGEs
 ;    Dec 2007, EH, enabled Nside > 8192
 ;    Aug 2008, EH, IAP: issues warning if ipix is not of integer type
+;    Oct 2011, EH, IAP: uses CHEAP_ISQRT to compute ring index out of pixel index
 ;
 ;-
 ;*******************************************************************************
@@ -125,7 +126,8 @@ PRO ring2nest, nside, ipring, ipnest
   IF (n_npl GT 0) THEN BEGIN     ; north polar cap ; ---------------------------------
 
       ip = ROUND(ipring[pix_npl], L64=l64) + one
-      irn = LONG( SQRT( ip/2.d0 - SQRT(ip/2) ) ) + 1L ; counted from NORTH pole
+;;;      irn = LONG( SQRT( ip/2.d0 - SQRT(ip/2) ) ) + 1L ; counted from NORTH pole
+      irn = (cheap_isqrt(2*ip) + 1)/2L ; counted from NORTH pole
 
       iring[pix_npl]  = irn
       iphi[pix_npl]   = ip - 2L*irn*(irn-one)
@@ -170,10 +172,12 @@ PRO ring2nest, nside, ipring, ipnest
   IF (n_spl GT 0) THEN BEGIN     ; south polar cap ; ---------------------------------
       
       ip =  npix - ROUND(ipring[pix_spl], L64=l64)
-      irs = LONG( SQRT( ip/2.d0 - SQRT(ip/2) ) ) + 1 ; counted from SOUTH pole
+;;      irs = LONG( SQRT( ip/2.d0 - SQRT(ip/2) ) ) + 1 ; counted from SOUTH pole
+      irs = (cheap_isqrt(2*ip) + 1)/2L ; counted from SOUTH pole
 
       iring[pix_spl]   = nl4 - irs
-      iphi[pix_spl]  = 4*irs + one - (ip - 2L*irs*(irs-one))
+;;      iphi[pix_spl]  = 4*irs + one - (ip - 2L*irs*(irs-one))
+      iphi[pix_spl]  = one - ip + 2L*irs*(irs+one)
       kshift[pix_spl] = 0
       nr[pix_spl] = irs
       face_num[pix_spl] = (iphi[pix_spl]-1) / irs + 8 ; in {8,11}

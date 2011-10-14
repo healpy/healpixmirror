@@ -27,13 +27,14 @@
 ;===============================================================
 function fudge_query_radius, nside, radius_in, quadratic=quadratic
 ;+
-; radius_out = fudge_query_radius( nside, radius_in, QUADRATIC=)
+; radius_out = fudge_query_radius( nside, [radius_in, QUADRATIC=])
 ;
 ; with 
 ;   radius_out = radius_in + fudge            (default)
 ; or
 ;   radius_out = sqrt(radius_in^2 + fudge^2)  (quadratic)
 ;
+; if absent, radius_in = 0
 ; where
 ;   fudge = factor(nside) * Pi / (4 *Nside)
 ; with factor = sqrt( 5/9 + (8/Pi)^2 / 5 * (1-1/(2*Nside)) )
@@ -46,13 +47,16 @@ function fudge_query_radius, nside, radius_in, quadratic=quadratic
 ;   
 ;- 
 
+radius_out = 0.0d0
+if (n_params() eq 2) then radius_out = radius_in
+
 ;factor = 1.362d0
 factor = sqrt( 0.55555555555555555555d0 + 1.29691115062192347448165712908d0*(1.d0-0.5d0/nside) )
 fudge  = factor * !DPI / (4.0d0 * nside) ; increase effective radius
 if (keyword_set(quadratic)) then begin
-    radius_out = sqrt(radius_in^2 + fudge^2)
+    radius_out = sqrt(radius_out^2 + fudge^2)
 endif else begin
-    radius_out = radius_in + fudge
+    radius_out += fudge
 endelse
 radius_out <= !DPI
 

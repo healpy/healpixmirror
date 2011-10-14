@@ -64,7 +64,7 @@ end
 ;===============================================================
 pro pixels_on_edge, nside_in, irlist, phi0, dphi, ringphi, ngr
 
-pixels_per_ring, nside_in, npr, kshift, npc
+pixels_per_ring, nside_in, npr, kshift ;, npc
 nl4 = 4L*nside_in
 badvalue = -9999 ; NEGATIVE value given to phi index on empty rings
 

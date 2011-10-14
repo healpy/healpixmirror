@@ -1310,12 +1310,13 @@
     !     finds the ring number, the position of the ring and the face number
     if (ipring < ncap) then ! north polar cap
 
-       irn   = nint( sqrt( (ipring+1) * 0.50000_dp)) ! counted from North pole
+!       irn   = nint( sqrt( (ipring+1) * 0.50000_dp)) ! counted from North pole
+       irn   = (cheap_isqrt(2*ipring+2) + 1) / 2 ! counted from North pole
        iphi  = ipring - 2*irn*(irn - 1_MKD)
-#ifdef DOI8B
-       ! fix round-off error appearing at large Nside
-       call correct_ring_phi(1, irn, iphi)
-#endif
+! #ifdef DOI8B
+!        ! fix round-off error appearing at large Nside
+!        call correct_ring_phi(1, irn, iphi)
+! #endif
 
        kshift = 0
        nr = irn                  ! 1/4 of the number of points on the current ring
@@ -1344,12 +1345,13 @@
     else ! south polar cap
 
        ip    = npix - ipring
-       irs   = nint( sqrt( ip * 0.500000_dp) )  ! counted from South pole
+!       irs   = nint( sqrt( ip * 0.500000_dp) )  ! counted from South pole
+       irs   = (cheap_isqrt(2*ip) +1)/2  ! counted from South pole
        iphi  = 2*irs*(irs + 1_MKD) - ip
-#ifdef DOI8B
-       ! fix round-off error appearing at large Nside
-       call correct_ring_phi(-1, irs, iphi)
-#endif
+! #ifdef DOI8B
+!        ! fix round-off error appearing at large Nside
+!        call correct_ring_phi(-1, irs, iphi)
+! #endif
 
        kshift = 0
        nr = irs
@@ -1698,12 +1700,10 @@
     integer(kind=I4B), intent(in), optional       :: nest
     integer(kind=I4B), intent(in), optional       :: inclusive
 
-    INTEGER(kind=I4B) :: irmin, irmax, iz, ip, nir
+    INTEGER(kind=I4B) :: irmin, irmax, iz, ip, nir, nr
     REAL(kind=DP) :: norm_vect0
-    REAL(kind=DP) :: x0, y0, z0, radius_eff, fudge
-    REAL(kind=DP) :: a, b, c, cosang
-    REAL(kind=DP) :: dth1, dth2
-    REAL(kind=DP) :: phi0, cosphi0, cosdphi, dphi
+    REAL(kind=DP) :: z0, radius_eff, fudge
+    REAL(kind=DP) :: phi0, dphi
     REAL(kind=DP) :: rlat0, rlat1, rlat2, zmin, zmax, z
     INTEGER(kind=MKD), DIMENSION(:),   ALLOCATABLE  :: listir
     integer(kind=MKD) :: npix, list_size, nlost, ilist
@@ -1711,6 +1711,7 @@
     character(len=*), parameter :: code = "QUERY_DISC"
     logical(kind=LGT) :: do_inclusive
     integer(kind=I4B)                             :: my_nest
+    real(dp), allocatable, dimension(:) :: ztab, dphitab
 
     !=======================================================================
 
@@ -1746,27 +1747,12 @@
        call fatal_error("> program abort ")
     endif
 
-    dth1 = 1.0_dp / (3.0_dp*real(nside,kind=dp)**2)
-    dth2 = 2.0_dp / (3.0_dp*real(nside,kind=dp))
-
     radius_eff = radius
-    if (do_inclusive) then
-!        fudge = PI / (4.0_dp*nside) ! increase radius by half pixel size
-       fudge = acos(TWOTHIRD) / real(nside,kind=dp) ! 1.071* half pixel size
-       radius_eff = radius + fudge
-    endif
-    cosang = COS(radius_eff)
+    if (do_inclusive) radius_eff = fudge_query_radius(nside, radius)
 
     !     ---------- circle center -------------
     norm_vect0 =  SQRT(DOT_PRODUCT(vector0,vector0))
-    x0 = vector0(1) / norm_vect0
-    y0 = vector0(2) / norm_vect0
     z0 = vector0(3) / norm_vect0
-
-    phi0=0.0_dp
-    if ((x0/=0.0_dp).or.(y0/=0.0_dp)) phi0 = ATAN2 (y0, x0)  ! in ]-Pi, Pi]
-    cosphi0 = COS(phi0)
-    a = x0*x0 + y0*y0
 
     !     --- coordinate z of highest and lowest points in the disc ---
     rlat0  = ASIN(z0)    ! latitude in RAD of the center
@@ -1790,29 +1776,18 @@
 
     ilist = -1_MKD
 
+    nr = irmax-irmin+1
+    allocate(ztab(1:nr), dphitab(1:nr))
+    do iz = irmin, irmax
+       ztab(iz-irmin+1) = ring2z(nside, iz)
+    enddo
+    call discphirange_at_z(vector0, radius, ztab, dphitab, phi0)
+
     !     ------------- loop on ring number ---------------------
     do iz = irmin, irmax
 
-       z = ring2z(nside, iz) 
-
-       !        --------- phi range in the disc for each z ---------
-       b = cosang - z*z0
-       c = 1.0_dp - z*z
-       if ((x0==0.0_dp).and.(y0==0.0_dp)) then
-          dphi=PI
-          if (b > 0.0_dp) goto 1000 ! out of the disc, 2008-03-30
-          goto 500
-       endif
-       cosdphi = b / SQRT(a*c)
-       if (ABS(cosdphi) <= 1.0_dp) then
-          dphi = ACOS (cosdphi) ! in [0,Pi]
-       else
-          if (cosphi0 < cosdphi) goto 1000 ! out of the disc
-          dphi = PI ! all the pixels at this elevation are in the disc
-       endif
-500    continue
-
        !        ------- finds pixels in the disc ---------
+       dphi = dphitab(iz-irmin+1)
        call in_ring(nside, iz, phi0, dphi, listir, nir, nest=my_nest)
 
        !        ----------- merge pixel lists -----------
@@ -2241,7 +2216,7 @@
     !real(kind=DP), dimension(1:4) :: dom12, dom123a, dom123b
     real(kind=DP), dimension(1:8) :: alldom, adtmp
     real(kind=DP) :: a_i, b_i, phi0, dphiring, dphi, phi0disc, radius_eff, tmp
-    integer(kind=I4B) :: idom, nir, ip
+    integer(kind=I4B) :: idom, nir, ip, nr
     integer(kind=I4B) :: status
     integer(kind=I4B) :: j
     character(len=*), parameter :: code = "QUERY_TRIANGLE"
@@ -2250,6 +2225,7 @@
     integer(i4b), dimension(1:1) :: longside
     integer(i4b) :: lsp1, lsp2, i
     real(dp), dimension(1:3) :: vcenter, dd
+    real(dp), allocatable, dimension(:) :: ztab, dphitab
 
     !=======================================================================
 
@@ -2395,21 +2371,16 @@
     zmax = MAX(z1max, z2max, z3max, zmax)
     zmin = MIN(z1min, z2min, z3min, zmin)
 
-    ! if we are inclusive, move the upper point up, and the lower point down, by a half pixel size
     offset = 0.0_dp
     sin_off = 0.0_dp
     if (do_inclusive) then
-!       offset = PI / (4.0_dp*nside) ! half pixel size
-       offset = 1.36d0 * PI / (4.0_dp*nside) ! increased 2011-06-09
+       ! if we are inclusive, move the upper point up, and the lower point down, by a fudge offset
+       offset = fudge_query_radius(nside)
        sin_off = sin(offset)
        cos_off = cos(offset)
-!        zmax = min( 1.0_dp, cos( acos(zmax) - offset) )
-!        zmin = max(-1.0_dp, cos( acos(zmin) + offset) )
        zmax = min( 1.0_dp, cos_off * zmax + sin_off * sqrt(1.0_dp - zmax**2))  !cos(theta_zmax-offset)
        zmin = max(-1.0_dp, cos_off * zmin - sin_off * sqrt(1.0_dp - zmin**2))  !cos(theta_zmin+offset)
-    endif
 
-    if (do_inclusive) then
        ! find one small circle containing all points, 
        ! increased by fudge offset in inclusive case
        longside = minloc(sprod)      ! l   in {1,2,3}: longest leg
@@ -2445,13 +2416,23 @@
     ! the triangle boundaries are geodesics : intersection of the sphere with plans going thru (0,0,0)
     ! if we are inclusive, the boundaries are the intersecion of the sphere with plans pushed outward
     ! by sin(offset)
+
+    nr = irmax - irmin + 1
+    allocate(ztab(1:nr))
     do iz = irmin, irmax
-       z = ring2z(nside, iz) ! z of ring being considered
+       ztab(iz-irmin+1) = ring2z(nside, iz)
+    enddo
+    if (do_inclusive) then
+       allocate(dphitab(1:nr))
+       call discphirange_at_z(vcenter, radius_eff, ztab, dphitab, phi0disc)
+    endif
+
+    do iz = irmin, irmax
+       z = ztab(iz-irmin+1) ! z of ring being considered
 
        ! computes the 3 intervals described by the 3 great circles
        st = SQRT((1.0_dp - z)*(1.0_dp + z))
        tgth = z / st ! cotan(theta_ring)
-!        dc(1:3)  = tgthi(1:3) * tgth - sdet * sin_off / (sto(1:3) * st)
        dc(1:3)  = tgthi(1:3) * tgth - sdet * sin_off / ((sto(1:3)+1.e-30_dp) * st) ! sto is slightly offset to avoid division by 0
 
        do j=1,3
@@ -2469,7 +2450,7 @@
        enddo
        dom(1:2,4) = (/ -2.000002_dp, -2.0_dp /)
        if (do_inclusive) then
-          dphi = discphirange_at_z(vcenter, radius_eff, z, phi0disc)
+          dphi = dphitab(iz-irmin+1)
           if (dphi >= 0.0_dp) then
              dom(1,4) =  modulo (phi0disc - dphi + twopi, twopi)
              dom(2,4) =  modulo (phi0disc + dphi + twopi, twopi)
@@ -2478,7 +2459,7 @@
 
        call process_intervals(dom(1:2,2),dom(1:2,1), alldom, ndom)
        if (ndom == 0) goto 20
-       adtmp(1:2*ndom) = alldom(1:2*ndom) ! to avoid using same variable in input and output
+       adtmp(1:2*ndom) = alldom(1:2*ndom) ! to avoid using same variable in input and output of process_intervals
        call process_intervals(dom(1:2,3), adtmp(1:2*ndom), alldom, ndom)
        if (ndom == 0) goto 20
        if (do_inclusive) then
@@ -2520,6 +2501,8 @@
 
     !     ------- deallocate memory and exit ------
     DEALLOCATE(listir)
+    deallocate(ztab)
+    if (allocated(dphitab)) deallocate(dphitab)
 
     return
 #ifdef DOI8B
