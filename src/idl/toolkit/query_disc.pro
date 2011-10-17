@@ -205,8 +205,8 @@ if (nq eq nside || transition) then begin ; equatorial region (and transition ri
     phiw = c0 - f1
     phie = c0 + f1
     if (transition) then begin ; store for future use
-        phiw_e = phiw
-        phie_e = phie
+        phiw_t = phiw
+        phie_t = phie
     endif
 endif
 if (nq lt nside || transition) then begin ; polar regions and transition rings
@@ -225,12 +225,19 @@ if (nq lt nside || transition) then begin ; polar regions and transition rings
 endif
 
 if (transition) then begin
+;     if (iring eq nside) then begin ; transition in N hemisphere
+;         phiw = [phiw[0:nsboost],phiw_t[nsboost+1:2*nsboost]]
+;         phie = [phie[0:nsboost],phie_t[nsboost+1:2*nsboost]]
+;     endif else begin ; transition in S hemisphere
+;         phiw = [phiw_t[0:nsboost],phiw[nsboost+1:2*nsboost]]
+;         phie = [phie_t[0:nsboost],phie[nsboost+1:2*nsboost]]
+;     endelse
     if (iring eq nside) then begin ; transition in N hemisphere
-        phiw = [phiw[0:nsboost],phiw_e[nsboost+1:2*nsboost]]
-        phie = [phie[0:nsboost],phie_e[nsboost+1:2*nsboost]]
+        phiw[nsboost+1] = phiw_t[nsboost+1:2*nsboost]
+        phie[nsboost+1] = phie_t[nsboost+1:2*nsboost]
     endif else begin ; transition in S hemisphere
-        phiw = [phiw_e[0:nsboost],phiw[nsboost+1:2*nsboost]]
-        phie = [phie_e[0:nsboost],phie[nsboost+1:2*nsboost]]
+        phiw[0] = phiw_t[0:nsboost]
+        phie[0] = phie_t[0:nsboost]
     endelse
 endif
 
@@ -249,9 +256,9 @@ for i=0, ngr-1 do begin ; loop on low-res rings
     subrings = ringphi[i,0]* nsboost + sub0
     for k=-1,1,2 do begin ; West and East side of disc
         kk = (k+3)/2 ; 1 or 2
-        find_pixel_bounds, nside, nsboost, ringphi[i,0], ringphi[i,kk], phiw, phie
-        ;print, i, k, ringphi[i,0],ringphi[i,kk]
         if (ringphi[i,kk] ge 0) then begin
+            find_pixel_bounds, nside, nsboost, ringphi[i,0], ringphi[i,kk], phiw, phie
+                                ;print, i, k, ringphi[i,0],ringphi[i,kk]
             phic = (phie+phiw)*.5d0
             dphi = (phie-phiw)*.5d0
             dd = abs(phi0list[subrings]-phic) ; distance from disc center to pixel border sample
@@ -448,16 +455,13 @@ izlist = irmin + lindgen(nz)    ; list of rings
 zlist  = ring2z(lnside, izlist) ; list of z
 dphilist = discphirange_at_z (vector0, radius_eff, zlist, phi0=phi0) ; phi range in each ring
 phi0list = replicate(phi0, nz)
-
-; build list of pixels
-nlist = 0LL
+; identify edge pixel at nominal resolution
 pixels_on_edge, lnside, izlist, phi0list, dphilist, ringphi, ngr
+
 if do_inclusive then begin
     nsboost = defined(boost) ? boost : 16
-    wnside = lnside * nsboost 
-    wnside <= max(!healpix.nside)
+    wnside = (lnside * nsboost) <  max(!healpix.nside)
     radius2 = fudge_query_radius(wnside, radius, /quadratic)
-    ;print, nsboost, lnside, wnside, radius, radius2, radius_eff
 
     irmin = ring_num(wnside, zmax, shift=+1)
     irmax = ring_num(wnside, zmin, shift=-1)
@@ -468,9 +472,11 @@ if do_inclusive then begin
     phi0list = replicate(phi0, nz)
     ;print,izlist,dphilist
 
+;   check boundary of edge pixels
     check_edge_pixels, lnside, wnside, izlist, phi0list, dphilist, ringphi, ngr
 endif
-;print,ringphi
+
+nlist = 0LL
 discedge2fulldisc, lnside, ringphi, ngr, work, nlist
 
 if (nlist gt 0) then begin

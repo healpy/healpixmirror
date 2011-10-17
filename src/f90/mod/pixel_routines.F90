@@ -1685,13 +1685,14 @@
 ! 2011-06-09: uses ring2z
 !=======================================================================
 #ifdef DOI8B
-  subroutine query_disc_8( nside, vector0, radius, listpix, nlist, nest, inclusive)
+  subroutine query_disc_old_8( nside, vector0, radius, listpix, nlist, nest, inclusive)
     integer(i4b), parameter :: MKD = I8B
 #else
-  subroutine query_disc ( nside, vector0, radius, listpix, nlist, nest, inclusive)
+  subroutine query_disc_old ( nside, vector0, radius, listpix, nlist, nest, inclusive)
     integer(i4b), parameter :: MKD = I4B
 #endif
     !=======================================================================
+
     integer(kind=I4B), intent(in)                 :: nside
     real(kind=DP),     intent(in), dimension(1:)  :: vector0
     real(kind=DP),     intent(in)                 :: radius
@@ -1700,18 +1701,19 @@
     integer(kind=I4B), intent(in), optional       :: nest
     integer(kind=I4B), intent(in), optional       :: inclusive
 
-    INTEGER(kind=I4B) :: irmin, irmax, iz, ip, nir, nr
+    INTEGER(kind=I4B) :: irmin, irmax, iz, ip, nir
     REAL(kind=DP) :: norm_vect0
-    REAL(kind=DP) :: z0, radius_eff, fudge
-    REAL(kind=DP) :: phi0, dphi
+    REAL(kind=DP) :: x0, y0, z0, radius_eff, fudge
+    REAL(kind=DP) :: a, b, c, cosang
+    REAL(kind=DP) :: dth1, dth2
+    REAL(kind=DP) :: phi0, cosphi0, cosdphi, dphi
     REAL(kind=DP) :: rlat0, rlat1, rlat2, zmin, zmax, z
     INTEGER(kind=MKD), DIMENSION(:),   ALLOCATABLE  :: listir
     integer(kind=MKD) :: npix, list_size, nlost, ilist
     INTEGER(kind=I4B) :: status
-    character(len=*), parameter :: code = "QUERY_DISC"
+    character(len=*), parameter :: code = "QUERY_DISC_OLD"
     logical(kind=LGT) :: do_inclusive
     integer(kind=I4B)                             :: my_nest
-    real(dp), allocatable, dimension(:) :: ztab, dphitab
 
     !=======================================================================
 
@@ -1747,12 +1749,27 @@
        call fatal_error("> program abort ")
     endif
 
+    dth1 = 1.0_dp / (3.0_dp*real(nside,kind=dp)**2)
+    dth2 = 2.0_dp / (3.0_dp*real(nside,kind=dp))
+
     radius_eff = radius
-    if (do_inclusive) radius_eff = fudge_query_radius(nside, radius)
+    if (do_inclusive) then
+! !        fudge = PI / (4.0_dp*nside) ! increase radius by half pixel size
+!        fudge = acos(TWOTHIRD) / real(nside,kind=dp) ! 1.071* half pixel size
+        radius_eff = radius + fudge
+    endif
+    cosang = COS(radius_eff)
 
     !     ---------- circle center -------------
     norm_vect0 =  SQRT(DOT_PRODUCT(vector0,vector0))
+    x0 = vector0(1) / norm_vect0
+    y0 = vector0(2) / norm_vect0
     z0 = vector0(3) / norm_vect0
+
+    phi0=0.0_dp
+    if ((x0/=0.0_dp).or.(y0/=0.0_dp)) phi0 = ATAN2 (y0, x0)  ! in ]-Pi, Pi]
+    cosphi0 = COS(phi0)
+    a = x0*x0 + y0*y0
 
     !     --- coordinate z of highest and lowest points in the disc ---
     rlat0  = ASIN(z0)    ! latitude in RAD of the center
@@ -1776,18 +1793,29 @@
 
     ilist = -1_MKD
 
-    nr = irmax-irmin+1
-    allocate(ztab(1:nr), dphitab(1:nr))
-    do iz = irmin, irmax
-       ztab(iz-irmin+1) = ring2z(nside, iz)
-    enddo
-    call discphirange_at_z(vector0, radius, ztab, dphitab, phi0)
-
     !     ------------- loop on ring number ---------------------
     do iz = irmin, irmax
 
+       z = ring2z(nside, iz) 
+
+       !        --------- phi range in the disc for each z ---------
+       b = cosang - z*z0
+       c = 1.0_dp - z*z
+       if ((x0==0.0_dp).and.(y0==0.0_dp)) then
+          dphi=PI
+          if (b > 0.0_dp) goto 1000 ! out of the disc, 2008-03-30
+          goto 500
+       endif
+       cosdphi = b / SQRT(a*c)
+       if (ABS(cosdphi) <= 1.0_dp) then
+          dphi = ACOS (cosdphi) ! in [0,Pi]
+       else
+          if (cosphi0 < cosdphi) goto 1000 ! out of the disc
+          dphi = PI ! all the pixels at this elevation are in the disc
+       endif
+500    continue
+
        !        ------- finds pixels in the disc ---------
-       dphi = dphitab(iz-irmin+1)
        call in_ring(nside, iz, phi0, dphi, listir, nir, nest=my_nest)
 
        !        ----------- merge pixel lists -----------
@@ -1815,10 +1843,207 @@
     return
 
 #ifdef DOI8B
+  end subroutine query_disc_old_8
+#else
+  end subroutine query_disc_old
+#endif
+
+
+  !=======================================================================
+#ifdef DOI8B
+  subroutine discedge2fulldisc_8( nside, ringphi, ngr, pir, npir)
+    integer(i4b), parameter :: MKD = I8B
+#else
+  subroutine discedge2fulldisc( nside, ringphi, ngr, pir, npir)
+    integer(i4b), parameter :: MKD = I4B
+#endif
+    !=======================================================================
+    integer(i4b), intent(in) :: nside
+    integer(i4b), dimension(1:3,1:ngr), intent(in) :: ringphi
+    integer(i4b),                       intent(in) :: ngr
+    integer(MKD), dimension(1:),        intent(out) :: pir
+    integer(MKD),                       intent(out) :: npir
+    !
+    integer(i4b) :: j, jr_min, jr_max, nj, nr, kshift, np, my_low, my_hi
+    integer(i4b) :: ir, i, ip
+    integer(i8b) :: npc, listsize
+    !=======================================================================
+    
+    listsize = long_size(pir)
+    npir = 0_i8b
+    if (ngr == 0) then ! no valid rings
+       pir(1) = -1
+       return
+    endif
+
+    jr_min = ringphi(1, 1)
+    jr_max = ringphi(1, ngr)
+    nj = jr_max - jr_min + 1
+    do j=0, nj-1
+       ir = jr_min + j             ! current ring, in [1, nl4-1]
+       call pixels_per_ring(nside, ir, nr, kshift, npc)
+       my_low = ringphi(2, j+1)
+       if (my_low >= 0) then
+          my_hi  = ringphi(3, j+1)
+          np = my_hi - my_low     ! in [-nr+1, nr-1]
+          np = modulo(np, nr) + 1 ! deal with periodic BC
+          np = min(np, nr)
+          if (npir + np > listsize) then
+             print*,'Pixel query: too many pixels found for output list provided.'
+             print*,'truncated at ',npir
+             return
+          endif
+          do i=0, np-1
+             ip = modulo(my_low + i, nr)
+             pir(npir+1+i) = npc - nr + ip ! fill final list
+          enddo
+          npir = npir + np
+       endif
+    enddo
+    
+    if (npir == 0) pir(1) = -1
+    
+
+    return
+#ifdef DOI8B
+  end subroutine discedge2fulldisc_8
+#else
+  end subroutine discedge2fulldisc
+#endif
+
+#ifdef DOI8B
+  subroutine query_disc_8( nside, vector0, radius, listpix, nlist, nest, inclusive)
+    integer(i4b), parameter :: MKD = I8B
+#else
+  subroutine query_disc ( nside, vector0, radius, listpix, nlist, nest, inclusive)
+    integer(i4b), parameter :: MKD = I4B
+#endif
+    !=======================================================================
+    integer(kind=I4B), intent(in)                 :: nside
+    real(kind=DP),     intent(in), dimension(1:)  :: vector0
+    real(kind=DP),     intent(in)                 :: radius
+    integer(kind=MKD), intent(out), dimension(0:) :: listpix
+    integer(kind=MKD), intent(out)                :: nlist
+    integer(kind=I4B), intent(in), optional       :: nest
+    integer(kind=I4B), intent(in), optional       :: inclusive
+
+    INTEGER(kind=I4B) :: irmin, irmax, iz, ip, nir, nr, ngr, nrh
+    REAL(kind=DP) :: norm_vect0
+    REAL(kind=DP) :: z0, radius_eff, fudge
+    REAL(kind=DP) :: phi0, dphi
+    REAL(kind=DP) :: rlat0, rlat1, rlat2, zmin, zmax, z
+    integer(kind=MKD) :: npix, list_size, nlost, ilist
+    INTEGER(kind=I4B) :: status
+    character(len=*), parameter :: code = "QUERY_DISC"
+    logical(kind=LGT) :: do_inclusive
+    integer(kind=I4B) :: my_nest
+!    real(dp), allocatable, dimension(:) :: ztab, dphitab
+    real(dp), dimension(1:4*nside-1) :: ztab, dphitab
+    real(dp), dimension(:), allocatable :: zlist, dphilist
+    integer(i4b), dimension(1:3, 1:4*nside-1) :: ringphi
+    integer(i4b) :: nsideh, nsboost
+    real(dp) :: radiush
+
+    !=======================================================================
+
+    list_size = long_size(listpix)
+    !     ---------- check inputs ----------------
+    npix = nside2npix(nside)
+
+    if (radius < 0.0_dp .or. radius > PI) then
+       write(unit=*,fmt="(a)") code//"> the angular radius is in RADIAN "
+       write(unit=*,fmt="(a)") code//"> and should lie in [0,Pi] "
+       call fatal_error("> program abort ")
+    endif
+
+    do_inclusive = .false.
+    if (present(inclusive)) then
+       if (inclusive == 1) do_inclusive = .true.
+    endif
+
+    my_nest = 0
+    if (present(nest)) then
+       if (nest == 0 .or. nest == 1) then
+          my_nest = nest
+       else
+          print*,code//"> NEST should be 0 or 1"
+          call fatal_error("> program abort ")
+       endif
+    endif
+
+    !     --------- allocate memory -------------
+!     ALLOCATE( listir(0: 4*nside-1), STAT = status)
+!     if (status /= 0) then
+!        write(unit=*,fmt="(a)") code//"> can not allocate memory for listir :"
+!        call fatal_error("> program abort ")
+!     endif
+
+    radius_eff = radius
+    if (do_inclusive) radius_eff = fudge_query_radius(nside, radius)
+
+    !     ---------- circle center -------------
+    norm_vect0 =  SQRT(DOT_PRODUCT(vector0,vector0))
+    z0 = vector0(3) / norm_vect0
+
+    !     --- coordinate z of highest and lowest points in the disc ---
+    rlat0  = ASIN(z0)    ! latitude in RAD of the center
+    rlat1  = rlat0 + radius_eff
+    rlat2  = rlat0 - radius_eff
+    if (rlat1 >=  halfpi) then
+       zmax =  1.0_dp
+    else
+       zmax = SIN(rlat1)
+    endif
+    irmin = ring_num(nside, zmax)
+    irmin = MAX(1, irmin - 1) ! start from a higher point, to be safe
+
+    if (rlat2 <= -halfpi) then
+       zmin = -1.0_dp
+    else
+       zmin = SIN(rlat2)
+    endif
+    irmax = ring_num(nside, zmin)
+    irmax = MIN(4*nside-1, irmax + 1) ! go down to a lower point
+
+    nr = irmax-irmin+1 ! in [1, 4*Nside-1]
+    do iz = irmin, irmax
+       ztab(iz-irmin+1) = ring2z(nside, iz)
+    enddo
+    call discphirange_at_z(vector0, radius_eff, ztab, nr, dphitab, phi0)
+    call pixels_on_edge(nside, irmin, irmax, phi0, dphitab, ringphi, ngr)
+    if (do_inclusive) then
+       nsboost = 16
+       nsideh = min(NS_MAX8, nside * nsboost)
+       radiush = fudge_query_radius(nsideh, radius, quadratic=.true.)
+
+       irmin = ring_num(nsideh, zmax)
+       irmax = ring_num(nsideh, zmin)
+       nrh = irmax - irmin + 1
+       allocate(zlist(1:nrh), dphilist(1:nrh))
+       do iz = irmin, irmax
+          zlist(iz-irmin+1) = ring2z(nsideh, iz)
+       enddo
+       call discphirange_at_z(vector0, radiush, zlist, nrh, dphilist, phi0)
+       call check_edge_pixels(nside, nsboost, irmin, irmax, phi0, dphilist, ringphi, ngr)
+       deallocate(zlist, dphilist)
+    endif
+    call discedge2fulldisc(nside, ringphi, ngr, listpix, nlist)
+
+    if (my_nest == 1) then
+       do ip=0_MKD, nlist-1
+          call ring2nest(nside, listpix(ip), listpix(ip))
+       enddo
+    endif
+    
+
+    return
+
+#ifdef DOI8B
   end subroutine query_disc_8
 #else
   end subroutine query_disc
 #endif
+
 !=======================================================================
 ! query_strip ( nside, theta1, theta2, listpix, nlist, nest, inclusive)
 !
@@ -2424,7 +2649,7 @@
     enddo
     if (do_inclusive) then
        allocate(dphitab(1:nr))
-       call discphirange_at_z(vcenter, radius_eff, ztab, dphitab, phi0disc)
+       call discphirange_at_z(vcenter, radius_eff, ztab, nr, dphitab, phi0disc)
     endif
 
     do iz = irmin, irmax

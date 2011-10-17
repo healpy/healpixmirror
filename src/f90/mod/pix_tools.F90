@@ -268,6 +268,9 @@ module pix_tools
   interface query_strip
      module procedure query_strip
   end interface
+  interface query_disc_old ! <<<<<<<<<<<<<<<<<<<<<<
+     module procedure query_disc_old
+  end interface
   interface query_disc
      module procedure query_disc
   end interface
@@ -303,6 +306,9 @@ module pix_tools
   end interface
   interface cheap_isqrt
      module procedure cheap_isqrt_4
+  end interface
+  interface discedge2fulldisc
+     module procedure discedge2fulldisc
   end interface
 #else
   interface npix2nside
@@ -347,6 +353,9 @@ module pix_tools
   interface query_strip
      module procedure query_strip, query_strip_8
   end interface
+  interface query_disc_old ! <<<<<<<<<<<<<<<<<<<<<<
+     module procedure query_disc_old, query_disc_old_8
+  end interface
   interface query_disc
      module procedure query_disc, query_disc_8
   end interface
@@ -383,6 +392,9 @@ module pix_tools
   interface cheap_isqrt
      module procedure cheap_isqrt_4, cheap_isqrt_8
   end interface
+  interface discedge2fulldisc
+     module procedure discedge2fulldisc, discedge2fulldisc_8
+  end interface
 #endif
 
   private
@@ -411,6 +423,8 @@ module pix_tools
 !        pix2ang_nest_old, pix2vec_nest_old, &
 !        template_pixel_ring_old, same_shape_pixels_ring_old, &
 !        template_pixel_nest_old, same_shape_pixels_nest_old
+
+  public :: query_disc_old
 
   public :: nside2ntemplates, &
        & template_pixel_ring, same_shape_pixels_ring, &
@@ -693,7 +707,7 @@ contains
     return
   end function fudge_query_radius
   !=======================================================================
-  subroutine discphirange_at_z(vector0, radius, z, dphi, phi0)
+  subroutine discphirange_at_z(vector0, radius, z, nz, dphi, phi0)
     !=======================================================================
     !  for a disc centered on  vcenter and given radius,
     !  and for location z=cos(theta)
@@ -706,11 +720,12 @@ contains
     real(dp), dimension(1:3), intent(in) :: vector0
     real(dp),                 intent(in) :: radius
     real(dp), dimension(1:),  intent(in) :: z
+    integer(i4b),             intent(in) :: nz
     real(dp), dimension(1:),  intent(out) :: dphi
     real(dp),                 intent(out) :: phi0
     !
     real(dp) :: cosang, cosphi0, x0, y0, z0, a, b, c, cosdphi, norm
-    integer(i4b) :: nz, i
+    integer(i4b) ::  i
     real(DP), parameter :: zero=0.0_dp, one=1.0_dp
     
     cosang = cos(radius)
@@ -742,13 +757,12 @@ contains
     return
   end subroutine discphirange_at_z
   !=======================================================================
-  subroutine pixels_on_edge(nside, irlist, phi0, dphi, ringphi, ngr)
+  subroutine pixels_on_edge(nside, irmin, irmax, phi0, dphi, ringphi, ngr)
   !=======================================================================
   !=======================================================================
-    integer(i4b),                intent(in) :: nside
-    integer(i4b), dimension(1:), intent(in) :: irlist
-    real(dp),     dimension(1:), intent(in) :: dphi
+    integer(i4b),                intent(in) :: nside, irmin, irmax
     real(dp),                    intent(in) :: phi0
+    real(dp),     dimension(1:), intent(in) :: dphi
     integer(i4b), dimension(1:,1:), intent(out) :: ringphi
     integer(i4b),                   intent(out) :: ngr
     integer(i4b), parameter :: badvalue = -9999
@@ -757,26 +771,26 @@ contains
     integer(i4b) :: iphi_low, iphi_hi, kshift
     real(dp) :: shift
 
-    nrings = size(irlist)
+    nrings = irmax - irmin + 1
 
     ngr = 0
-    do ir=1, nrings
-       thisring = irlist(ir) ! ring index, in [1,4*Nside-1]
+    do thisring = irmin, irmax
+       ir = thisring - irmin + 1
        call pixels_per_ring(nside, thisring, npr, kshift)
        if (dphi(ir) >= PI) then ! full ring
           ngr = ngr + 1
-          ringphi(ngr, 1) = thisring
-          ringphi(ngr, 2) = 0
-          ringphi(ngr, 3) = npr-1
+          ringphi(1, ngr) = thisring
+          ringphi(2, ngr) = 0
+          ringphi(3, ngr) = npr-1
        elseif (dphi(ir) >= zero) then ! partial ring
           shift = kshift * 0.5_dp
           iphi_low = ceiling (npr * (phi0 - dphi(ir)) / TWOPI - shift)
           iphi_hi  = floor   (npr * (phi0 + dphi(ir)) / TWOPI - shift)
           if (iphi_hi >= iphi_low) then ! pixel center in range
              ngr = ngr + 1
-             ringphi(ngr, 1) = thisring
-             ringphi(ngr, 2) = modulo(iphi_low, npr)
-             ringphi(ngr, 3) = modulo(iphi_hi,  npr)
+             ringphi(1, ngr) = thisring
+             ringphi(2, ngr) = modulo(iphi_low, npr)
+             ringphi(3, ngr) = modulo(iphi_hi,  npr)
           endif
        endif
     enddo
@@ -819,58 +833,121 @@ contains
     return
   end subroutine pixels_per_ring
   !=======================================================================
-  subroutine discedge2fulldisc( nside, ringphi, ngr, pir, npir)
-    !=======================================================================
-    integer(i4b), intent(in) :: nside
-    integer(i4b), dimension(1:ngr,1:3), intent(in) :: ringphi
-    integer(i4b),                       intent(in) :: ngr
-    integer(i8b), dimension(1:),        intent(out) :: pir
-    integer(i8b),                       intent(out) :: npir
-    !
-    integer(i4b) :: j, jr_min, jr_max, nj, nr, kshift, np, my_low, my_hi
-    integer(i4b) :: ir, i, ip
-    integer(i8b) :: npc
-    !=======================================================================
-    
-    npir = 0_i8b
-    if (ngr == 0) then ! no valid rings
-       pir(1) = -1
-       return
-    endif
+  subroutine check_edge_pixels(nside, nsboost, irmin, irmax, phi0, dphi, ringphi, ngr)
+  !=======================================================================
+    integer(i4b), intent(in) :: nside, nsboost, irmin, irmax
+    real(dp),                       intent(in) :: phi0
+    real(dp),     dimension(1:),    intent(in) :: dphi
+    integer(i4b), dimension(1:,1:), intent(inout) :: ringphi
+    integer(i4b),                   intent(inout) :: ngr
 
+    integer(i4b) :: i, j, k, kk, ngr_out, diff, iphi, i0
+    real(dp), dimension(1:2*nsboost+1) :: phiw, phie
+    real(dp) :: dd, dph, phic
 
-    jr_min = ringphi(1, 1)
-    jr_max = ringphi(ngr, 1)
-    nj = jr_max - jr_min + 1
-    do j=0, nj-1
-       ir = jr_min + j             ! current ring, in [1, nl4-1]
-       call pixels_per_ring(nside, ir, nr, kshift, npc)
-       my_low = ringphi(j+1,2)
-       if (my_low >= 0) then
-          my_hi  = ringphi(j+1,3)
-          np = my_hi - my_low     ! in [-nr+1, nr-1]
-!           if (np >= 0) then ! deal with periodic BC
-!              np = np + 1
-!           else
-!              np = nr + np + 1
-!           endif
-          np = modulo(np, nr) + 1 ! deal with periodic BC
-          np = max(np, nr)
-          do i=0, np-1
-             ip = modulo(my_low + i, nr)
-             pir(npir+1+i) = npc - nr + ip ! fill final list
-          enddo
-          npir = npir + np
+  !=======================================================================
+    if (nsboost <= 1) return
+
+    do i=1, ngr ! loop on low-res rings
+       i0 = ringphi(1,i) * nsboost - nsboost - irmin
+       do k=-1,1,2 ! West and East side of disc
+          kk = (k+5)/2 ! 2 or 3
+          iphi = ringphi(kk, i)
+          if (iphi >= 0) then
+             call find_pixel_bounds(nside, nsboost, ringphi(1,i), iphi, phiw, phie)
+             do j=1, 2*nsboost+1
+                phic = (phie(i)+phiw(i))*0.5_dp ! pixel center
+                dph  = (phie(i)-phiw(i))*0.5_dp + dphi(i0+j) ! pixel size + circle radius
+                dd = abs(phi0 - phic)    ! distance from disc center to pixel border sample
+                dd = min(dd, twopi - dd) ! in [0,Pi]
+                if (dd <= dph) goto 1000 ! pixel touched by disc, move to next one
+             enddo
+             ringphi(kk, i)= iphi - k ! pixel not in disc, move edge pixel inwards
+1000         continue
+          endif
+       enddo ! loop on side
+    enddo ! loop on low-res rings
+
+    ! remove empty rings
+    ngr_out = 0
+    do i=1,ngr
+       diff = ringphi(3,i) - ringphi(2,i)
+       if (ringphi(2,i) >=0 .and. ringphi(3,i) >=0 .and. diff /= -2 .and. diff /= -1) then
+          ngr_out = ngr_out + 1
+          ringphi(1:3, ngr_out) = ringphi(1:3, i)
        endif
     enddo
+    ! set empty rings to -1
+    do i=ngr_out+1, ngr
+       ringphi(2:3, i) = -1
+    enddo
+
+    ngr = ngr_out
+    return
+  end subroutine check_edge_pixels
+  !=======================================================================
+  subroutine find_pixel_bounds (nside, nsboost, iring, iphi, phiw, phie)
+    !=======================================================================
+    integer(i4b),               intent(in)  :: nside, nsboost, iring, iphi
+    real(dp),     dimension(1:2*nsboost+1), intent(out) :: phiw, phie
     
-    if (npir == 0) pir(1) = -1
-    
+    real(dp),     dimension(1:2*nsboost+1) :: f, f1, phiw_t, phie_t
+    real(dp) :: c0, quad, phie1, phie2, phiw1, phiw2, cv
+    integer(i4b) :: npr, kshift, nq, ip, i
+    logical(lgt) :: transition
+  !=======================================================================
+
+    call pixels_per_ring(nside, iring, npr, kshift)
+    f = ((/ (i,i=0,2*nsboost) /) - nsboost) / nsboost
+
+    nq = npr/4 ! number of pixels on current ring in [0,Pi/2] (quadrant)
+    transition = (iring == nside .or. iring == nside*3)
+
+    if (nq == nside .or. transition) then ! equatorial region (and transition rings)
+
+       f1 = (1.0_dp-abs(f))*0.5_dp    ! triangle of height 1/2
+       f1 = halfpi * f1 / nq
+       c0 = halfpi * (iphi + kshift*0.5_dp) / nq
+       phiw = c0 - f1
+       phie = c0 + f1
+       if (transition) then ! store for future use
+          phiw_t = phiw
+          phie_t = phie
+       endif
+    endif
+
+    if (nq < nside .or. transition) then ! polar regions and transition rings
+       ip = mod(iphi,nq) ! in [0,nq-1]
+       quad = iphi / nq ! quadrant in [0,3]
+       if (iring <= nside*2) then
+          f1 = halfpi / (nq + f) 
+       else
+          f1 = halfpi / (nq - f)! swap sign for South pole
+       endif
+       do i=1, 2*nsboost+1
+          cv = f1(i)
+          phiw1 = min(cv *     ip,    halfpi)
+          phie1 = min(cv * (   ip+1), halfpi)
+          phiw2 = min(cv * (nq-ip-1), halfpi)
+          phie2 = min(cv * (nq-ip),   halfpi)
+          phiw(i) = max(phiw1, halfpi - phie2) + (quad * halfpi)
+          phie(i) = min(phie1, halfpi - phiw2) + (quad * halfpi)
+       enddo
+    endif
+
+    if (transition) then 
+       if (iring == nside) then ! transition in N hemisphere
+          phiw(nsboost+2:2*nsboost+1) = phiw_t(nsboost+2:2*nsboost+1) 
+          phie(nsboost+2:2*nsboost+1) = phie_t(nsboost+2:2*nsboost+1)
+       else ! transition in S hemisphere
+          phiw(1:nsboost+1) = phiw_t(1:nsboost+1)
+          phie(1:nsboost+1) = phie_t(1:nsboost+1)
+       endif
+    endif
 
     return
-  end subroutine discedge2fulldisc
+  end subroutine find_pixel_bounds
   
-
 !   !=======================================================================
 !   subroutine correct_ring_phi(location, iring, iphi)
 !     !=======================================================================
