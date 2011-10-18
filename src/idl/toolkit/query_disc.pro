@@ -256,16 +256,18 @@ for i=0, ngr-1 do begin ; loop on low-res rings
     subrings = ringphi[i,0]* nsboost + sub0
     for k=-1,1,2 do begin ; West and East side of disc
         kk = (k+3)/2 ; 1 or 2
-        if (ringphi[i,kk] ge 0) then begin
+rep:
+        if (ringphi[i,kk] ge 0 && ringphi[i,1] le ringphi[i,2]) then begin
             find_pixel_bounds, nside, nsboost, ringphi[i,0], ringphi[i,kk], phiw, phie
-                                ;print, i, k, ringphi[i,0],ringphi[i,kk]
             phic = (phie+phiw)*.5d0
             dphi = (phie-phiw)*.5d0
             dd = abs(phi0list[subrings]-phic) ; distance from disc center to pixel border sample
             dd <= (2.d0 * !dpi - dd) ; in [0,Pi]
-            ;;;;;print, dd,dphilist[subrings],dphi
-            success = max(dd le (dphilist[subrings]+dphi)) ; 0:out or 1:in
-            if (~success) then ringphi[i,kk] -= k ; move edge pixel inwards
+            touching = max(dd le (dphilist[subrings]+dphi)) ; 0:out or 1:in
+            if (~touching) then begin
+                ringphi[i,kk] -= k ; move edge pixel inwards
+                goto, rep ; repeat with next big pixel inward
+            endif
         endif
     endfor
 endfor

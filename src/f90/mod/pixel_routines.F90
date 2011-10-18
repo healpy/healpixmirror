@@ -1650,40 +1650,6 @@
 #endif
 
 !=======================================================================
-!
-!      query_disc (Nside, Vector0, Radius, Listpix, Nlist[, Nest, Inclusive])
-!      ----------
-!      routine for pixel query in the RING or NESTED scheme
-!      all pixels within an angular distance Radius of the center
-!
-!     Nside    = resolution parameter (a power of 2)
-!     Vector0  = central point vector position (x,y,z in double precision)
-!     Radius   = angular radius in RADIAN (in double precision)
-!     Listpix  = list of pixel closer to the center (angular distance) than Radius
-!     Nlist    = number of pixels in the list
-!     nest  (OPT), :0 by default, the output list is in RING scheme
-!                  if set to 1, the output list is in NESTED scheme
-!     inclusive (OPT) , :0 by default, only the pixels whose center
-!                       lie in the triangle are listed on output
-!                  if set to 1, all pixels overlapping the triangle are output
-!
-!      * all pixel numbers are in {0, 12*Nside*Nside - 1}
-!     NB : the dimension of the listpix array is fixed in the calling
-!     routine and should be large enough for the specific configuration
-!
-!      lower level subroutines called by getdisc_ring :
-!       (you don't need to know them)
-!      ring_num (nside, ir)
-!      --------
-!      in_ring(nside, iz, phi0, dphi, listir, nir, nest=nest)
-!      -------
-!
-! v1.0, EH, TAC, ??
-! v1.1, EH, Caltech, Dec-2001
-! v1.2, EH, IAP, 2008-03-30: fixed bug appearing when disc centered on either pole
-! 2009-06-17: deals with Nside > 8192
-! 2011-06-09: uses ring2z
-!=======================================================================
 #ifdef DOI8B
   subroutine query_disc_old_8( nside, vector0, radius, listpix, nlist, nest, inclusive)
     integer(i4b), parameter :: MKD = I8B
@@ -1756,7 +1722,8 @@
     if (do_inclusive) then
 ! !        fudge = PI / (4.0_dp*nside) ! increase radius by half pixel size
 !        fudge = acos(TWOTHIRD) / real(nside,kind=dp) ! 1.071* half pixel size
-        radius_eff = radius + fudge
+!        radius_eff = radius + fudge
+       radius_eff = fudge_query_radius(nside, radius)
     endif
     cosang = COS(radius_eff)
 
@@ -1851,28 +1818,28 @@
 
   !=======================================================================
 #ifdef DOI8B
-  subroutine discedge2fulldisc_8( nside, ringphi, ngr, pir, npir)
+  subroutine discedge2fulldisc_8( nside, ringphi, ngr, list, nlist)
     integer(i4b), parameter :: MKD = I8B
 #else
-  subroutine discedge2fulldisc( nside, ringphi, ngr, pir, npir)
+  subroutine discedge2fulldisc( nside, ringphi, ngr, list, nlist)
     integer(i4b), parameter :: MKD = I4B
 #endif
     !=======================================================================
     integer(i4b), intent(in) :: nside
     integer(i4b), dimension(1:3,1:ngr), intent(in) :: ringphi
     integer(i4b),                       intent(in) :: ngr
-    integer(MKD), dimension(1:),        intent(out) :: pir
-    integer(MKD),                       intent(out) :: npir
+    integer(MKD), dimension(1:),        intent(out) :: list
+    integer(MKD),                       intent(out) :: nlist
     !
     integer(i4b) :: j, jr_min, jr_max, nj, nr, kshift, np, my_low, my_hi
     integer(i4b) :: ir, i, ip
     integer(i8b) :: npc, listsize
     !=======================================================================
     
-    listsize = long_size(pir)
-    npir = 0_i8b
+    listsize = long_size(list)
+    nlist = 0_MKD
     if (ngr == 0) then ! no valid rings
-       pir(1) = -1
+       list(1) = -1
        return
     endif
 
@@ -1888,22 +1855,21 @@
           np = my_hi - my_low     ! in [-nr+1, nr-1]
           np = modulo(np, nr) + 1 ! deal with periodic BC
           np = min(np, nr)
-          if (npir + np > listsize) then
+          if (nlist + np > listsize) then
              print*,'Pixel query: too many pixels found for output list provided.'
-             print*,'truncated at ',npir
+             print*,'truncated at ',nlist
              return
           endif
           do i=0, np-1
              ip = modulo(my_low + i, nr)
-             pir(npir+1+i) = npc - nr + ip ! fill final list
+             list(nlist+1+i) = npc - nr + ip ! fill final list
           enddo
-          npir = npir + np
+          nlist = nlist + np
        endif
     enddo
     
-    if (npir == 0) pir(1) = -1
+    if (nlist == 0) list(1) = -1
     
-
     return
 #ifdef DOI8B
   end subroutine discedge2fulldisc_8
@@ -1911,6 +1877,47 @@
   end subroutine discedge2fulldisc
 #endif
 
+!=======================================================================
+!
+!      query_disc (Nside, Vector0, Radius, Listpix, Nlist[, Nest, Inclusive])
+!      ----------
+!      routine for pixel query in the RING or NESTED scheme
+!      all pixels within an angular distance Radius of the center
+!
+!     Nside    = resolution parameter (a power of 2)
+!     Vector0  = central point vector position (x,y,z in double precision)
+!     Radius   = angular radius in RADIAN (in double precision)
+!     Listpix  = list of pixel closer to the center (angular distance) than Radius
+!     Nlist    = number of pixels in the list
+!     nest  (OPT), :0 by default, the output list is in RING scheme
+!                  if set to 1, the output list is in NESTED scheme
+!     inclusive (OPT) , :0 by default, only the pixels whose center
+!                       lie in the triangle are listed on output
+!                  if set to 1, all pixels overlapping the triangle are output
+!
+!      * all pixel numbers are in {0, 12*Nside*Nside - 1}
+!     NB : the dimension of the listpix array is fixed in the calling
+!     routine and should be large enough for the specific configuration
+!
+!      lower level subroutines called by getdisc_ring :
+!       (you don't need to know them)
+!      x=fudge_query_radius()
+!      x=ring_num (nside, ir)
+!      x=ring2z()
+!      discphirange_at_z()
+!      pixels_on_edge()
+!      check_edge_pixels()
+!      discedge2fulldisc()
+!      -------
+!
+! v1.0, EH, TAC, ??
+! v1.1, EH, Caltech, Dec-2001
+! v1.2, EH, IAP, 2008-03-30: fixed bug appearing when disc centered on either pole
+! 2009-06-17: deals with Nside > 8192
+! 2011-06-09: uses ring2z
+! 2011-10-18: improve fuege radius determination.
+! New algorithm for Inclusive case: test boundary of edge pixels on each ring
+    !=======================================================================
 #ifdef DOI8B
   subroutine query_disc_8( nside, vector0, radius, listpix, nlist, nest, inclusive)
     integer(i4b), parameter :: MKD = I8B
@@ -1971,13 +1978,6 @@
        endif
     endif
 
-    !     --------- allocate memory -------------
-!     ALLOCATE( listir(0: 4*nside-1), STAT = status)
-!     if (status /= 0) then
-!        write(unit=*,fmt="(a)") code//"> can not allocate memory for listir :"
-!        call fatal_error("> program abort ")
-!     endif
-
     radius_eff = radius
     if (do_inclusive) radius_eff = fudge_query_radius(nside, radius)
 
@@ -2012,8 +2012,9 @@
     call discphirange_at_z(vector0, radius_eff, ztab, nr, dphitab, phi0)
     call pixels_on_edge(nside, irmin, irmax, phi0, dphitab, ringphi, ngr)
     if (do_inclusive) then
+       ! sample edge pixels at larger Nside
        nsboost = 16
-       nsideh = min(NS_MAX8, nside * nsboost)
+       nsideh = min(NS_MAX8, nside * int(nsboost,i8b))
        radiush = fudge_query_radius(nsideh, radius, quadratic=.true.)
 
        irmin = ring_num(nsideh, zmax)
@@ -2035,7 +2036,6 @@
        enddo
     endif
     
-
     return
 
 #ifdef DOI8B

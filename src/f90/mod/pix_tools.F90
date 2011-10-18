@@ -852,8 +852,9 @@ contains
        i0 = ringphi(1,i) * nsboost - nsboost - irmin
        do k=-1,1,2 ! West and East side of disc
           kk = (k+5)/2 ! 2 or 3
+222       continue
           iphi = ringphi(kk, i)
-          if (iphi >= 0) then
+          if (ringphi(2,i) <= ringphi(3,i) .and. iphi >= 0) then
              call find_pixel_bounds(nside, nsboost, ringphi(1,i), iphi, phiw, phie)
              do j=1, 2*nsboost+1
                 phic = (phie(i)+phiw(i))*0.5_dp ! pixel center
@@ -863,6 +864,7 @@ contains
                 if (dd <= dph) goto 1000 ! pixel touched by disc, move to next one
              enddo
              ringphi(kk, i)= iphi - k ! pixel not in disc, move edge pixel inwards
+             goto 222 ! try next pixel inward
 1000         continue
           endif
        enddo ! loop on side
