@@ -48,4 +48,7 @@ void module_startup (const std::string &name, bool argc_valid,
 void module_startup (const std::string &name, int argc, const char **argv,
   int argc_expected, const std::string &argv_expected, bool verbose=true);
 
+void module_startup (const std::string &name, int argc, const char **argv,
+  bool verbose=true);
+
 #endif

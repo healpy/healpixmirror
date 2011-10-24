@@ -43,6 +43,7 @@ template<typename T> void map2alm (const Healpix_Map<T> &map,
   planck_assert (map.Scheme()==RING, "map2alm: map must be in RING scheme");
   planck_assert (int(weight.size())>=2*map.Nside(),
     "map2alm: weight array has too few entries");
+  planck_assert (map.fullyDefined(),"map contains undefined pixels");
 
   psht_joblist<T> joblist;
   joblist.set_weighted_Healpix_geometry (map.Nside(),&weight[0]);
@@ -120,6 +121,8 @@ template<typename T> void map2alm_spin
     "map2alm_spin: a_lm are not conformable");
   planck_assert (int(weight.size())>=2*map1.Nside(),
     "map2alm_spin: weight array has too few entries");
+  planck_assert (map1.fullyDefined()&&map2.fullyDefined(),
+    "map contains undefined pixels");
 
   psht_joblist<T> joblist;
   joblist.set_weighted_Healpix_geometry (map1.Nside(),&weight[0]);
@@ -190,6 +193,8 @@ template<typename T> void map2alm_pol
     "map2alm_pol: a_lm are not conformable");
   planck_assert (int(weight.size())>=2*mapT.Nside(),
     "map2alm_pol: weight array has too few entries");
+  planck_assert (mapT.fullyDefined()&&mapQ.fullyDefined()&&mapU.fullyDefined(),
+    "map contains undefined pixels");
 
   psht_joblist<T> joblist;
   joblist.set_weighted_Healpix_geometry (mapT.Nside(),&weight[0]);

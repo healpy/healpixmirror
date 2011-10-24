@@ -104,3 +104,11 @@ void module_startup (const string &name, int argc, const char **,
   module_startup (name,argc==argc_expected,
     string("Usage: ")+name+" "+argv_expected, verbose);
   }
+
+void module_startup (const std::string &name, int argc, const char ** /*argv*/,
+  bool verbose)
+  {
+  module_startup (name,argc>=2,
+    string("Usage:\n  ")+name+" <parameter file / init object>\nor:\n  "
+                        +name+" par1=val1 par2=val2 ...", verbose);
+  }

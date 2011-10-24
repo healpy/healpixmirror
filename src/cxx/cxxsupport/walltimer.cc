@@ -90,15 +90,6 @@ wallTimerSet wallTimers;
 
 namespace {
 
-struct tstack_entry
-  {
-  string fullname, name;
-  int index;
-  };
-
-vector<tstack_entry> tstack;
-wallTimerSet stackTimers;
-
 class tstack_node;
 
 typedef map<string,tstack_node>::iterator Ti;
@@ -109,14 +100,12 @@ class tstack_node
   {
   public:
     tstack_node *parent;
-    string fullname, name;
-    int tidx;
+    wallTimer wt;
+    string name;
     map<string,tstack_node> child;
 
     tstack_node(const string &name_, tstack_node *parent_)
-      : parent(parent_),
-        fullname(parent ? parent->fullname+"$"+name_ : name_),
-        name(name_), tidx(stackTimers.getIndex(fullname)) {}
+      : parent(parent_), name(name_) {}
 
     int max_namelen() const
       {
@@ -125,17 +114,9 @@ class tstack_node
         res=max(res,it->second.max_namelen());
       return res;
       }
-    const tstack_node *find_fullname(const string &fname) const
-      {
-      const tstack_node *res=0;
-      if (fullname==fname) res=this;
-      for (Tci it=child.begin(); (!res) && (it!=child.end()); ++it)
-        res=it->second.find_fullname(fname);
-      return res;
-      }
   };
 
-tstack_node tstack_root("$root",0);
+tstack_node tstack_root("root",0);
 tstack_node *curnode=0;
 
 struct timecomp
@@ -147,10 +128,10 @@ struct timecomp
 void tstack_report(const tstack_node &node, const string &indent, int twidth,
   int slen)
   {
-  double total=stackTimers.acc(node.fullname);
+  double total=node.wt.acc();
   vector<Tipair> tmp;
   for (Tci it=node.child.begin(); it!=node.child.end(); ++it)
-    tmp.push_back(make_pair(it,stackTimers.acc(it->second.fullname)));
+    tmp.push_back(make_pair(it,it->second.wt.acc()));
 
   if (tmp.size()>0)
     {
@@ -179,18 +160,18 @@ void tstack_push(const string &name)
   if (it==curnode->child.end())
     it=curnode->child.insert (make_pair(name,tstack_node(name,curnode))).first;
   curnode=&(it->second);
-  stackTimers.start(curnode->tidx);
+  curnode->wt.start();
   }
 void tstack_pop(const string &name)
   {
   planck_assert(curnode && (curnode->name==name), "invalid tstack operation");
-  stackTimers.stop(curnode->tidx);
+  curnode->wt.stop();
   curnode=curnode->parent;
   }
 void tstack_pop()
   {
   planck_assert(curnode, "invalid tstack operation");
-  stackTimers.stop(curnode->tidx);
+  curnode->wt.stop();
   curnode=curnode->parent;
   }
 void tstack_replace(const string &name2)
@@ -202,7 +183,9 @@ void tstack_replace(const string &name2)
   if (it==curnode->child.end())
     it=curnode->child.insert(make_pair(name2,tstack_node(name2,curnode))).first;
   curnode=&(it->second);
-  stackTimers.stopstart(savenode->tidx,curnode->tidx);
+  double t=wallTime();
+  savenode->wt.stop(t);
+  curnode->wt.start(t);
   }
 void tstack_replace(const string &name1, const string &name2)
   {
@@ -212,14 +195,14 @@ void tstack_replace(const string &name1, const string &name2)
 
 void tstack_report(const string &stem)
   {
-  string stem2=string("$root$")+stem;
-
-  const tstack_node *ptr = tstack_root.find_fullname(stem2);
-  planck_assert(ptr,"requested stem not found");
+  const tstack_node *ptr = 0;
+  for (Tci it=tstack_root.child.begin(); it!=tstack_root.child.end(); ++it)
+    if (it->first==stem) ptr=&(it->second);
+  planck_assert(ptr,"invalid stem");
   int slen=string("<unaccounted>").size();
   slen = max(slen,ptr->max_namelen());
 
-  double total=stackTimers.acc(stem2);
+  double total=ptr->wt.acc();
   printf("\nTotal wall clock time for '%s': %1.4fs\n",stem.c_str(),total);
 
   int logtime=max(1,int(log10(total)+1));

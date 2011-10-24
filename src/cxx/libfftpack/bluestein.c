@@ -82,7 +82,7 @@ static size_t good_size(size_t n)
   return bestfac;
   }
 
-void bluestein_i (size_t n, double **tstorage)
+void bluestein_i (size_t n, double **tstorage, size_t *worksize)
   {
   static const double pi=3.14159265358979323846;
   size_t n2=good_size(n*2-1);
@@ -90,6 +90,7 @@ void bluestein_i (size_t n, double **tstorage)
   double angle, xn2;
   double *bk, *bkf, *work;
   double pibyn=pi/n;
+  *worksize=2+2*n+8*n2+16;
   *tstorage = RALLOC(double,2+2*n+8*n2+16);
   ((size_t *)(*tstorage))[0]=n2;
   bk  = *tstorage+2;
