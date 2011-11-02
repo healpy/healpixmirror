@@ -2617,6 +2617,8 @@
           call angdist(vcenter, vv(1:3,i), dd(i))
        enddo
        radius_eff = maxval(dd) + offset
+!        print*,'radius_eff, offset',radius_eff, offset
+!        print*,'vcenter',vcenter
     endif
 
 

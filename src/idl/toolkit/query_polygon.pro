@@ -25,11 +25,12 @@
 ;  For more information about HEALPix see http://healpix.jpl.nasa.gov
 ;
 ; -----------------------------------------------------------------------------
-pro query_polygon, nside, vlist, listpix, nlist, help=help, nested=nested, inclusive=inclusive
+pro query_polygon, nside, vlist, listpix, nlist, $
+                   help=help, nested=nested, inclusive=inclusive, walltime=walltime
 
 ;+
 ;=======================================================================
-; query_polygon, nside, vlist, listpix, [nlist, HELP=, NESTED=, INCLUSIVE=]
+; query_polygon, nside, vlist, listpix, [nlist, HELP=, NESTED=, INCLUSIVE=, WALLTIME=]
 ;
 ; finds pixels that lie within a polygon defined by its vertex on the sphere.
 ; The polygon must be CONVEX or have a single non-convex vertex.
@@ -56,6 +57,7 @@ pro query_polygon, nside, vlist, listpix, nlist, help=help, nested=nested, inclu
 ;=======================================================================
 ;-
 
+tstart = systime(1)
 routine = 'query_polygon'
 syntax = 'QUERY_POLYGON, Nside, Vlist, Listpix, [Nlist, HELP=, NESTED=, INCLUSIVE=]'
 
@@ -151,5 +153,6 @@ endif else begin
     nlist = 0L
 endelse
 
+walltime = systime(1) - tstart
 return
 end

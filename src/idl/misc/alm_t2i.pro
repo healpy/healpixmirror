@@ -25,13 +25,17 @@
 ;  For more information about HEALPix see http://healpix.jpl.nasa.gov
 ;
 ; -----------------------------------------------------------------------------
-pro alm_t2i, alm_tab, index, alm_list
+pro alm_t2i, alm_tab, index, alm_list, MFIRST=mfirst
 ;+
-; alm_t2i, alm_tab, index, alm_list
+; NAME:
+;     alm_t2i
 ;
-;  turn an alm COMPLEX array  a(l,m) (default)
+; PURPOSE:
+;  turn an alm COMPLEX or REAL array of the form 
+;    a[l,m] or a[l,m,0:1]           (default)
+;     or a[m,l] or [m,l,0:1] (if MFIRST is set)
 ;
-;  into an index list (with index = l*(l+1)+m+1)
+;  into an index list (with index = l*(l+1)+m+1 and abs(m) <= l)
 ;  and a 2D REAL array alm_list
 ;    where alm_list[*,0] is the real part of alm
 ;    and   alm_list[*,1] is the imaginary part of alm
@@ -42,9 +46,48 @@ pro alm_t2i, alm_tab, index, alm_list
 ; internally Healpix use complex arrays of the form a(l,m)
 ; (where l is the first index ie, the fastest varying one)
 ;
+; CALLING SEQUENCE:
+;     alm_t2i, alm_tab, index, alm_list
+; 
+; INPUTS:
+;     alm_tab: real or complex array, containing all the alm for l
+;         in [0,lmax] and m in [0,mmax].
+;       if REAL it has 3 dimensions
+;       if COMPLEX is has 2 dimensions
+;
+; KEYWORD PARAMETERS
+;    MFIRST: if set the array in a(m,l) instead of a(l,m)
+;        where abs(m) <= l
+;
+; OUTPUTS:
+;     index: Integer vector of size nl containing the index the 
+;            of alm coefficients, related to {l,m} by the relation
+;             i = l^2 + l + m + 1
+;
+;     alm_list: array of alm coefficients, with dimension (nl, 2)
+;            -- corresponding to
+;                  nl   = number of {l,m} indices
+;                  2 for real and imaginary parts of alm coefficients
+;
+; RESTRICTIONS:
+;
+;
+;
+; PROCEDURE:
+;
+;
+;
+; EXAMPLE:
+;
+;
+;
+; MODIFICATION HISTORY:
+;     2007-10-04: creation
+;     2011-10-21: addition of MFIRST
+;
 ;-
 
-syntax = 'ALM_T2I, alm_tab, index, alm_list '
+syntax = 'ALM_T2I, alm_tab, index, alm_list, MFIRST= '
 if (n_params() eq 0) then begin
     print,syntax
     return
@@ -54,16 +97,31 @@ if (n_params() ne 3) then begin
     message,'Abort'
 endif
 
-lf = 1
-if keyword_set(mfirst) then lf = 0
-
-alm = alm_tab
-
 ; generates l and m arrays
-nm = n_elements(alm[*,0])
-nl = n_elements(alm[0,*])
-mtab = indgen(nm) # replicate(1,nl)
-ltab = replicate(1,nm) # indgen(nl)
+sz = size(alm_tab)
+if (sz[0] lt 1) then begin
+    print,syntax
+    print,'alm_tab must have at least 1 dimension'
+    message,'Abort.'
+endif
+if (keyword_set(mfirst)) then begin ; m first index
+    nm = sz[1]
+    nl = (sz[0] gt 1) ? sz[2] : 1L
+    mtab = lindgen(nm) # replicate(1,nl)
+    ltab = replicate(1,nm) # lindgen(nl)
+endif else begin
+    nl = sz[1]
+    nm = (sz[0] gt 1) ? sz[2] : 1L
+    ltab = lindgen(nl) # replicate(1,nm)
+    mtab = replicate(1,nl) # lindgen(nm)
+endelse
+
+if (nm gt nl) then begin
+    print,syntax
+    print,'It seems that Max m ('+strtrim(nm-1,2)+') is larger than Max l ('+strtrim(nl-1,2)+'), '
+    print,'while we expect abs(m) <= l'
+    message, 'Abort.'
+endif
 
 ; find points where m <= l
 k = where(mtab le ltab,nk)
@@ -71,10 +129,18 @@ k = where(mtab le ltab,nk)
 ; define index = l*(l+1)+m+1 for those points
 index = ((ltab+1L)*ltab + mtab)[k] + 1L
 
+sample = alm_tab[0,0]*0 ; either (0.,0.) or (0.d0, 0.d0) or (0.) or (0.d0)
+if (size(/tname, sample) eq 'COMPLEX' || size(/tname, sample) eq 'DCOMPLEX') then begin
 ; fill the alm list with the real and imaginary parts
-alm_list = fltarr(nk,2)
-alm_list[*,0] = float(alm[k])
-alm_list[*,1] = imaginary(alm[k])
+    alm_list = replicate(real_part(sample),nk,2)
+    alm_list[0,0] = real_part(alm_tab[k])
+    alm_list[0,1] = imaginary(alm_tab[k])
+endif else begin
+; fill the alm list with the real and imaginary parts
+    alm_list = replicate(sample,nk,2)
+    alm_list[0,0] = alm_tab[k]         ; alm_tab[*,*,0]
+    alm_list[0,1] = alm_tab[k + nm*nl] ; alm_tab[*,*,1]
+endelse
 
 
 

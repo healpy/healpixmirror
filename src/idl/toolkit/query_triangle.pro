@@ -228,7 +228,8 @@ determ = vv[0,0]*vv[1,1]*vv[2,2] + vv[0,1]*vv[1,2]*vv[2,0] + vv[0,2]*vv[1,0]*vv[
 
 if (abs(determ) lt 1.d-20) then begin
     message,/info,' ************************************************************'
-    message,/info,' The triangle is degenerated (2 of the vertices are antipodal)'
+    message,/info,' The triangle is degenerate '
+    message,/info,' (2 of the vertices are antipodal or degenerate)'
     message,/info,' The query can not be performed '
     message,      ' ************************************************************'
 endif
@@ -243,12 +244,12 @@ sprod[2] = total(vv[*,0]*vv[*,1])
 
 ; vector orthogonal to the great circle containing the vertex doublet
 vo = dblarr(3,3)
-vo[*,0] = vect_prod( vv[*,1], vv[*,2]) 
-vo[*,1] = vect_prod( vv[*,2], vv[*,0]) 
-vo[*,2] = vect_prod( vv[*,0], vv[*,1]) 
+vo[0,0] = vect_prod( vv[*,1], vv[*,2]) 
+vo[0,1] = vect_prod( vv[*,2], vv[*,0]) 
+vo[0,2] = vect_prod( vv[*,0], vv[*,1]) 
 
 ; normalize the orthogonal vector
-for i=0,2 do vo[*,i] = vo[*,i] /  SQRT(total(vo[*,i]^2))
+for i=0,2 do vo[0,i] = vo[*,i] /  SQRT(total(vo[*,i]^2))
 
 ; test presence of poles in the triangle
 zmax = -1.0d0
@@ -336,11 +337,9 @@ if (do_inclusive) then begin
     vcenter /= sqrt(total(vcenter^2))
     dd = angulardistance(vcenter, transpose(vv))
     radius_eff = max(dd) + offset
-; print,'Disc:'
-; print,vcenter, radius_eff*!radeg
-; vec2ang,/astro, vcenter, dec0, ra0
-; circle = generate_circle(ra0, dec0, radius_eff*!radeg, npoints=40, coord='G')
     dphilist = discphirange_at_z (vcenter, radius_eff, zlist, phi0=phi0disc) ; phi range in each ring
+;     print,'radius',radius_eff,offset
+;     print,'vcenter',vcenter
 endif
 ; -------- loop on the rings -------------------------
 
@@ -359,6 +358,12 @@ twopi = 2.0d0 * !DPI
 
 dom    = dblarr(2,4)
 
+; create WORK array to collect list of pixels
+l64 = (nside gt 8192)
+nw = ceil(surface_triangle(vv[*,0], vv[*,1], vv[*,2]) / (4*!DPI) * npix * 1.4 + 12*nside, l64=l64)
+nw <= npix
+work = (l64) ? lon64arr(nw,/nozero) : lonarr(nw,/nozero) 
+;
 nlist = 0
 for iz = irmin, irmax do begin
     iz0 = iz - irmin
@@ -379,6 +384,7 @@ for iz = irmin, irmax do begin
     endfor
     dom[0:1,3] = [ -1.000001d0, -1.0d0 ] * 2.d0
     if (do_inclusive && dphilist[iz0] ge 0.d0) then dom[0:1,3] = (phi0disc + dphilist[iz0]*[-1.d0,1.d0] + twopi) mod twopi
+
     
     ; identify the intersections (0,1,2 or 3) of the 3 intervals
     ; -------------------------------------------------------
@@ -393,6 +399,7 @@ for iz = irmin, irmax do begin
         process_intervals, dom[0:1,3], alldom[0:2*ndom-1], alldom, ndom ; ndom = 0, 1, 2, 3 or 4
         if (ndom eq 0) then goto, empty
     endif
+    print,'alldom',alldom[0:2*ndom-1]
 
     for idom=0,ndom-1 do begin
         a_i = alldom[2*idom]
@@ -405,21 +412,26 @@ for iz = irmin, irmax do begin
         endif
 
         ;        ------- finds pixels in the triangle on that ring ---------
-        listir=in_ring( lnside, iz, phi0, dphiring, nir, nested=nested)
+        listir=in_ring( lnside, iz, phi0, dphiring, nir)
+        print,'iz, phi0, dphiring', iz, phi0, dphiring, nir
 
         ;        ----------- merge pixel lists -----------
-        if nir gt 0 then begin
-            if nlist le 0 then begin
-                listpix = listir 
-                nlist = nir
-            endif else begin
-                listpix = [listpix,listir]
-                nlist = nlist + nir
-            endelse
+        if (nir gt 0) then begin
+            work[nlist] = listir
+            nlist = nlist + nir
         endif
     endfor
 empty:
 endfor ;-----------------------------------------
+
+if (nlist eq 0) then begin
+    listpix = [-1L]
+endif else begin
+    listpix = work[0:nlist-1]
+    if keyword_set(nested) then begin
+        ring2nest, nside, listpix, listpix
+    endif
+endelse
 
 walltime = systime(1) - tstart
 return
