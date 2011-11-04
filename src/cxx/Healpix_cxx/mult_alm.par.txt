@@ -27,6 +27,20 @@ if ((nside_pixwin_in>0)||(nside_pixwin_out>0))
     directory containing the Healpix data files
 endif
 
+cl_in (string, default=""):
+  if supplied, the power spectrum from this file will be _removed_
+  from the input a_lm
+  NOTE: currently only supported for unpolarised a_lm
+
+cl_out (string, default=""):
+  if supplied, the power pectrum from this file will be applied
+  to the output a_lm
+  NOTE: currently only supported for unpolarised a_lm
+
+polarisation (bool):
+  if false, only the intensity a_lm are generated,
+  if true, T, G and C a_lm are generated
+
 double_precision (bool, default=false):
   if false, the a_lm are read/written in single precision,
   otherwise in double precision.

@@ -32,6 +32,8 @@
 #include "xcomplex.h"
 #include "paramfile.h"
 #include "healpix_data_io.h"
+#include "powspec.h"
+#include "powspec_fitsio.h"
 #include "alm.h"
 #include "alm_fitsio.h"
 #include "alm_powspec_tools.h"
@@ -52,6 +54,8 @@ template<typename T> void mult_alm (paramfile &params)
   planck_assert (nside_pixwin_in>=0,"nside_pixwin_in must be >= 0");
   int nside_pixwin_out = params.template find<int>("nside_pixwin_out",0);
   planck_assert (nside_pixwin_out>=0,"nside_pixwin_out must be >= 0");
+  string cl_in = params.template find<string>("cl_in","");
+  string cl_out = params.template find<string>("cl_out","");
   double fwhm_in = arcmin2rad*params.template find<double>("fwhm_arcmin_in",0);
   planck_assert (fwhm_in>=0,"fwhm_arcmin_in must be >= 0");
   double fwhm_out = arcmin2rad*params.template find<double>("fwhm_arcmin_out",0);
@@ -70,6 +74,7 @@ template<typename T> void mult_alm (paramfile &params)
     read_Alm_from_fits(infile,alm,nlmax,nmmax,2);
     if (fwhm_in>0) smoothWithGauss (alm, -fwhm_in);
     arr<double> temp(nlmax+1);
+    PowSpec tps;
     if (nside_pixwin_in>0)
       {
       read_pixwin(datadir,nside_pixwin_in,temp);
@@ -77,9 +82,23 @@ template<typename T> void mult_alm (paramfile &params)
         temp[l] = 1/temp[l];
       alm.ScaleL (temp);
       }
+    if (cl_in!="")
+      {
+      read_powspec_from_fits (cl_in,tps,1,alm.Lmax());
+      for (int l=0; l<=nlmax; ++l)
+        temp[l] = 1./sqrt(tps.tt(l));
+      alm.ScaleL (temp);
+      }
     if (nside_pixwin_out>0)
       {
       read_pixwin(datadir,nside_pixwin_out,temp);
+      alm.ScaleL (temp);
+      }
+    if (cl_out!="")
+      {
+      read_powspec_from_fits (cl_out,tps,1,alm.Lmax());
+      for (int l=0; l<=nlmax; ++l)
+        temp[l] = sqrt(tps.tt(l));
       alm.ScaleL (temp);
       }
     if (fwhm_out>0) smoothWithGauss (alm, fwhm_out);
@@ -100,11 +119,15 @@ template<typename T> void mult_alm (paramfile &params)
         { temp[l] = 1/temp[l]; pol[l] = 1/pol[l]; }
       almT.ScaleL(temp); almG.ScaleL(pol); almC.ScaleL(pol);
       }
+    if (cl_in!="")
+      planck_fail ("power spectra not (yet) supported with polarisation");
     if (nside_pixwin_out>0)
       {
       read_pixwin(datadir,nside_pixwin_out,temp,pol);
       almT.ScaleL(temp); almG.ScaleL(pol); almC.ScaleL(pol);
       }
+    if (cl_out!="")
+      planck_fail ("power spectra not (yet) supported with polarisation");
     if (fwhm_out>0) smoothWithGauss (almT, almG, almC, fwhm_out);
     write_Alm_to_fits (outfile,almT,almG,almC,nlmax,nmmax,planckType<T>());
     }

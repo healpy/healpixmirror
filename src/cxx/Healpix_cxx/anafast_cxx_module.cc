@@ -65,6 +65,11 @@ template<typename T> void anafast_cxx (paramfile &params)
     {
     Healpix_Map<T> map;
     read_Healpix_map_from_fits(infile,map,1,2);
+    tsize nmod = map.replaceUndefWith0();
+    if (nmod!=0)
+      cout << "WARNING: replaced " << nmod <<
+              " undefined map pixels with a value of 0" << endl;
+
     arr<double> weight;
     get_ring_weights (params,map.Nside(),weight);
 
@@ -89,6 +94,12 @@ template<typename T> void anafast_cxx (paramfile &params)
     {
     Healpix_Map<T> mapT, mapQ, mapU;
     read_Healpix_map_from_fits(infile,mapT,mapQ,mapU,2);
+    tsize nmod = mapT.replaceUndefWith0()+mapT.replaceUndefWith0()
+                +mapU.replaceUndefWith0();
+    if (nmod!=0)
+      cout << "WARNING: replaced " << nmod <<
+              " undefined map pixels with a value of 0" << endl;
+
     arr<double> weight;
     get_ring_weights (params,mapT.Nside(),weight);
 

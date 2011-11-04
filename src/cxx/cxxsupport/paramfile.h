@@ -69,6 +69,8 @@ class paramfile
 
     const params_type &getParams() const
       { return params; }
+
+    void setParam (const std::string &key, const std::string &value);
   };
 
 #endif
