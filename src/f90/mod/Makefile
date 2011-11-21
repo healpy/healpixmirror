@@ -24,7 +24,7 @@ obj2  = healpix_fft.o misc_utils.o
 obj3  = head_fits.o num_rec.o statistics.o paramfile_io.o 
 obj4  = pix_tools.o 
 obj5  = coord_v_convert.o fitstools.o udgrade_nr.o 
-obj6  = alm_tools.o
+obj6  = mask_tools.o alm_tools.o
 obj7  = healpix_modules.o
 
 obj   = $(obj0) $(obj1) $(obj2) $(obj3) $(obj4) $(obj5) $(obj6) $(obj7)
@@ -102,6 +102,8 @@ udgrade_nr.o: udgrade_nr.f90 $(incudgrade)
 
 num_rec.o: num_rec.F90 $(incnumrec)
 
+mask_tools.o: mask_tools.F90
+
 
 #obj1
 bit_manipulation.o:  $(obj0)
@@ -131,6 +133,7 @@ udgrade_nr.o :       $(obj4)
 
 #obj6
 alm_tools.o: $(obj5)
+mask_tools.o: $(obj5)
 
 #obj7
 healpix_modules.o: $(obj6)
