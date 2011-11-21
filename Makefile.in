@@ -100,7 +100,7 @@ distclean: $(DISTCLEAN)
 # ------------------------------- F90 rules ----------------------------
 
 
-f90-prog	= map2gif anafast smoothing synfast ud_grade hotspot plmgen alteralm median_filter ngsims_full_sky
+f90-prog	= map2gif anafast smoothing synfast ud_grade hotspot plmgen alteralm median_filter ngsims_full_sky process_mask
 
 f90-all: f90-libpsht f90-modules f90-libgif $(f90-prog)
 
@@ -146,6 +146,9 @@ median_filter: f90-libpsht f90-modules
 	@cd src/f90/$@; $(MAKE) $(F90_MKFLAGS)
 
 ngsims_full_sky: f90-libpsht f90-modules
+	@cd src/f90/$@; $(MAKE) $(F90_MKFLAGS)
+
+process_mask: f90-libpsht f90-modules
 	@cd src/f90/$@; $(MAKE) $(F90_MKFLAGS)
 
 f90-test: f90-all
