@@ -1,10 +1,39 @@
+!-----------------------------------------------------------------------------
+!
+!  Copyright (C) 1997-2010 Krzysztof M. Gorski, Eric Hivon,
+!                          Benjamin D. Wandelt, Anthony J. Banday, 
+!                          Matthias Bartelmann, Hans K. Eriksen, 
+!                          Frode K. Hansen, Martin Reinecke
+!
+!
+!  This file is part of HEALPix.
+!
+!  HEALPix is free software; you can redistribute it and/or modify
+!  it under the terms of the GNU General Public License as published by
+!  the Free Software Foundation; either version 2 of the License, or
+!  (at your option) any later version.
+!
+!  HEALPix is distributed in the hope that it will be useful,
+!  but WITHOUT ANY WARRANTY; without even the implied warranty of
+!  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+!  GNU General Public License for more details.
+!
+!  You should have received a copy of the GNU General Public License
+!  along with HEALPix; if not, write to the Free Software
+!  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+!
+!  For more information about HEALPix see http://healpix.jpl.nasa.gov
+!
+!-----------------------------------------------------------------------------
 
 module mask_tools
   ! module for mask processing
   !
-  ! adapted from mask_processing.f90
-  ! 2006-2010
+  ! All input mask are assumed to be in NESTED ordering
   !
+  ! HISTORY:
+  !  E. Hivon 2006-2010 firt developments (mask_processing.f90)
+  !  2011-11-22: inclusion in Healpix 
 
   use healpix_types
   use long_intrinsic, only: long_size
@@ -15,34 +44,32 @@ module mask_tools
   public :: fill_holes_nest
   public :: maskborder_nest
   public :: dist2holes_nest
-  !public :: dist2holes_nest_old, dist2holes_nest_new
   public :: size_holes_nest
 
 
 contains
-
-  subroutine fill_holes_nest(nside, nthreshold, mask_in, mask_out)
-    !
-    !-------------------------------------------------------------------
-    ! fill_holes_nest(nside, nthreshold, mask_in, mask_out)
+  !======================================================================
+  subroutine fill_holes_nest(nside, newminsize, mask_in, mask_out)
+    !======================================================================
+    ! fill_holes_nest(nside, newminsize, mask_in, mask_out)
     !
     ! nside      IN, Healpix resolution parameter
-    ! nthreshold IN, minimal size of hole (in pixel) on output
+    ! newminsize IN, minimal size of hole (in pixels) on output
     ! mask_in    IN, Integer*4, full sky map, in NESTED scheme
     !       mask of good pixels (mask=1) and bad pixels (mask=0)
     ! mask_out   OUT, Integer*4, full sky map, in NESTED scheme
-    !       bad pixels located in a 'hole' with fewer than nthreshold pixels
+    !       bad pixels located in a 'hole' with fewer than newminsize pixels
     !      take value 1 (ie become valid)
     !
     ! A hole is the set of all adjacent pixels initially set to 0.
     ! 2 pixels are adjacent if they have at least one point in common.
-    !-------------------------------------------------------------------
-    
+    !
+    !======================================================================
     use pix_tools,  only: nside2npix
     use misc_utils, only: fatal_error
     ! dummy variables
     integer(I4B),                intent(IN)  :: nside
-    integer(I4B),                intent(IN)  :: nthreshold
+    integer(I4B),                intent(IN)  :: newminsize
     integer(I4B), dimension(0:), intent(IN)  :: mask_in
     integer(I4B), dimension(0:), intent(OUT) :: mask_out
     ! local variables
@@ -50,13 +77,14 @@ contains
     integer(I4B), parameter :: MKD = I4B
     integer(MKD) :: p, nholes, npholes
     integer(MKD), dimension(:), pointer :: sizeholes, listpix
+    !-------------------------------------------------------------------
 
     mask_out = mask_in
-    if (nthreshold > 0) then
+    if (newminsize > 0) then
        call size_holes_nest(nside, mask_out, nholes, npholes, sizeholes=sizeholes, listpix=listpix)
        do p=0,nholes-1
           out = 0 ! leave that hole to hole value
-          if (sizeholes(p) < nthreshold) out = 1 ! fill that hole
+          if (sizeholes(p) < newminsize) out = 1 ! fill that hole
           mask_out(listpix(listpix(p):listpix(p+1)-1)) = out
        enddo
     endif
@@ -64,9 +92,9 @@ contains
     return
   end subroutine fill_holes_nest
 
+  !======================================================================
   subroutine maskborder_nest(nside, mask_in, mask_out, nbordpix)
-    !
-    !-------------------------------------------------------------------
+  !======================================================================
     ! maskborder_nest(nside, mask_in, mask_out, nbordpix)
     !
     ! mask_in IN, Integer*4, full sky map, in NESTED scheme
@@ -77,8 +105,7 @@ contains
     !
     ! nbordpix OUT, Integer*4
     !    number of pixels in border
-    !-------------------------------------------------------------------
-    
+    !======================================================================
     use pix_tools,  only: nside2npix, neighbours_nest
     use misc_utils, only: fatal_error
 
@@ -110,7 +137,6 @@ contains
        print*,'>>>>> Range: ',minmask,maxmask
        call fatal_error('input mask should be in [0,1] in '//code)
     endif
-    !print*,npix,nside,minmask,maxmask
 
     ! test particular cases
     nbordpix = 0
@@ -136,17 +162,23 @@ contains
 
        endif
     enddo
-    !print*,'===================================='
 
     return
   end subroutine maskborder_nest
 
   ! ==========================================================================
-  !!!!subroutine dist2holes_nest_new(nside, mask, distance, algo, nslow, dimtest)
   subroutine dist2holes_nest(nside, mask, distance)
     ! ==========================================================================
     ! for each valid pixel, returns distance (in radians) from pixel center to 
-    ! center of closest unvalid pixel
+    ! center of closest unvalid pixel.
+    ! The input mask must be NESTED ordered
+    !
+    ! Algorithm:
+    !  To begin with, the inner border (=unvalid pixels in touch with valid ones) 
+    !  of each unvalid region is identified
+    ! Then a small Nside is used to select the closest border pixels, and finally
+    ! the distance of each valid pixel to the selected border pixels is computed
+    ! to find its minimum.
     ! ==========================================================================
 
     use pix_tools, only: nside2npix, npix2nside, pix2vec_nest
@@ -156,13 +188,11 @@ contains
     integer(I4B),                intent(IN)  :: nside
     integer(I4B), dimension(0:), intent(IN)  :: mask
     real(DP),     dimension(0:), intent(OUT) :: distance
-!     integer(i4b), intent(in), optional :: algo
-!     integer(i4b), intent(in), optional :: nslow ! 4 or 8
-!     integer(i4b), intent(in), optional :: dimtest ! 1, 4, or 16
     integer(i4b), parameter :: algo = 1
-    integer(i4b), parameter :: nslow = 16
-    integer(i4b), parameter :: dimtest = 1
+    integer(i4b), parameter :: nslow = 64
+!    integer(i4b), parameter :: dimtest = 1
     logical(LGT), parameter :: brute_force = .false.
+    logical(LGT), parameter :: do_clock = .false.
     
 
     integer(I8B) :: npix1, npix2, npix
@@ -186,21 +216,18 @@ contains
     real(DP) :: ddmax, dtotop
     real(DP), dimension(1:3,1:4) :: tmpvertex
 
-    real(DP), dimension(1:4)              :: dist4
-    !real(DP), dimension(1:16)             :: dist16
-    real(DP), dimension(:,:), allocatable :: drange
+    real(DP), dimension(:), allocatable :: drange
     real(DP)                              :: distmin, distmax
 
     real(DP),    dimension(:,:), allocatable :: centlow, centpix
 
     character(len=*), parameter :: code = 'dist2holes_nest'
-    integer(i4b) ::  algo_in, q1, pp, pstart, np, nb, dimtest_in
+    integer(i4b) ::  algo_in, q1, pp, pstart, np, nb
     real(DP),     dimension(:,:), allocatable :: bordpospack
-    real(sp) :: t0, t1, t2, t3, ts1, ts2, ts3, tstart, tend, ta1, tsa1
+    real(sp) :: t0, t1, t2, t3, ts1, ts2, ts3, tstart, tend, ta1, tsa1, tinit
     real(DP) :: fudge, cfudge, sfudge, threshold
-    !real(DP), dimension(:), allocatable :: distcent
+    !----------------------------------------------------------------------
 
-    !===================================================================================
     period_brag = nint(1.e5)
     ! test inputs
     npix1 = long_size(mask)
@@ -219,7 +246,6 @@ contains
     ! find pixels lying on holes border
     allocate(mask1(0:npix-1))
     call maskborder_nest(nside, mask, mask1, nbordpix)
-    !PRINT*,code//'> border done',nbordpix
 
     ! treat particular case of no border
     if (nbordpix == 0) then
@@ -230,8 +256,7 @@ contains
 
     algo_in = algo
 
-    call wall_clock_time(tstart)
-    t0 = tstart
+    if (do_clock) call wall_clock_time(tstart)
     pb = 0
     distance = 1.e6 ! set all pixels to large values
     ! find 3D location of those border pixels
@@ -247,30 +272,25 @@ contains
        endif
        if (mask1(p) == 0) distance(p) = 0.0_dp
     enddo
+    if (do_clock) then
+       call wall_clock_time(t0)
+       tinit = t0-tstart
+    endif
 
     if (algo_in == 1) then
        ! define low resolution grid
        nslow_in = min(nslow, nside)
-       dimtest_in = dimtest
        !-------------------------------------------------
-       print*,'new fancy method 2 @',nslow_in, dimtest_in, nbordpix
+       !print*,'new fancy method 2 @',nslow_in, nbordpix
        !-------------------------------------------------
        nplow = nside2npix(nslow_in)
        iratio = (nside / nslow_in)**2
-       select case (dimtest_in)
-       case (1)
-          !fudge = 2.4d0*sqrt(FOURPI/nplow)! 2.4*side of nside=nslow_in pixel in Radians
-          !fudge = 3.0d0*sqrt(FOURPI/nplow)! 2.4*side of nside=nslow_in pixel in Radians
-          fudge = 3.21_dp / real(nslow_in, kind=DP) ! 1.5 x diagonal of longest pixel, at large Nside
-          fudge = min(fudge, PI)
-       case (4)
-          fudge = sqrt(FOURPI/nplow)!   side of nside=nslow_in pixel in Radians
-       case default
-          stop 'wrong case'
-       end select
+       !fudge = 2.4d0*sqrt(FOURPI/nplow)! 2.4*side of nside=nslow_in pixel in Radians
+       !fudge = 3.0d0*sqrt(FOURPI/nplow)! 2.4*side of nside=nslow_in pixel in Radians
+       fudge = 3.21_dp / real(nslow_in, kind=DP) ! 1.5 x diagonal of longest pixel, at large Nside
+       fudge = min(fudge, PI)
        sfudge = sin(fudge)
        cfudge = cos(fudge) ! cosine of fudge
-       !print*,fudge
 
        ! find low resolution pixels containing border pixels (=non_empty)
        allocate(nb_in_lp(0:nplow-1))
@@ -308,16 +328,16 @@ contains
        endif
        deallocate(nb_in_lp)
 
-       ! build location of center and vertices for non-empty low resolution pixels
+       ! build location of center and vertices for non-empty low resolution "border" pixels
        allocate(vertlow(1:3,1:4,0:nploweff-1))
-       if (dimtest_in == 1) allocate(centlow(1:3,    0:nploweff-1))
+       allocate(centlow(1:3,    0:nploweff-1))
        do qq=0, nploweff-1
           q = non_empty_low(qq,1)
           call pix2vec_nest(nslow_in, q, vv, tmpvertex)
-          if (dimtest_in == 1) centlow(1:3, qq)      = vv(1:3) !/ sqrt(sum(vv*vv))
+          centlow(1:3, qq)      = vv(1:3)
           vertlow(1:3, 1:4, qq) = tmpvertex(1:3, 1:4)
        enddo
-       allocate(drange(1:2,0:nploweff-1))
+       allocate(drange(0:nploweff-1))
        allocate(p2test(    0:nploweff-1))
        allocate(centpix(1:3, 0:iratio-1))
        allocate(dd(0:iratio-1))
@@ -329,72 +349,33 @@ contains
        do q1=0, nplow-1
           ! keep only those containing valid small pixel
           if (any(mask1(q1*iratio:(q1+1)*iratio-1) == 1) ) then
-             call wall_clock_time(t0)
+             if (do_clock) call wall_clock_time(t0)
              ! center location of current low-res pixel
              call pix2vec_nest(nslow_in, q1, vv)
-             select case (dimtest_in)
 
-             case (1)
-                ! distance of low-res pixel center with each center of low-res pixels
-                do qq=0, nploweff - 1
-                   drange(1,qq) = sum(centlow(1:3, qq) * vv(1:3))
-                enddo
-                drange(2,0:) = drange(1,0:)
-                ! min and max
-                distmax = maxval(drange(2,:))
-                distmin = distmax
-
-                ! find out list of low-res pixels close enough to be checked-out
-                n2test = 0
-                !!!! increase radius of query by cos(largest distance between 2 adjacent pixels)
-                !!!threshold = distmin - 1.04/nslow_in
-                distmin = min(distmin, 1.d0)
+             ! distance of low-res pixel center with each center of low-res "border" pixels
+             do qq=0, nploweff - 1
+                drange(qq) = sum(centlow(1:3, qq) * vv(1:3))
+             enddo
+             ! min distance (=max scalar product)
+             distmin = maxval(drange)
+             distmin = min(distmin, 1.0_dp)
+             
+             ! find out list of low-res "border" pixels close enough to be checked-out at higher-res
+             ! radius = smallest distance found above + fudge
+             if ((distmin + cfudge) > 0.0_dp) then ! new radius is less than Pi
                 threshold = distmin*cfudge - sfudge*sqrt((1.d0-distmin)*(1.d0+distmin))
-                do qq=0, nploweff - 1
-                   if (drange(2,qq) >= threshold) then ! for scalar product
-                      p2test(n2test) = qq
-                      n2test = n2test + 1
-                   endif
-                enddo
-
-             case (4)
-                ! distance of low-res pixel center with each vertex of *OTHER* low-res pixels
-                do qq=0, nploweff - 1
-                   do i1=1,4
-                      dist4(i1) = sum(vertlow(1:3, i1, qq)*vv(1:3))
-                   enddo
-                   drange(1,qq) = minval(dist4) ! smallest scalar product => farthest point
-                   drange(2,qq) = maxval(dist4) ! largest  scalar product => closest  point
-                   if (nploweff > 1 .and. non_empty_low(qq,1) == q1) then
-                      drange(2,qq) = drange(1,qq)
-                   endif
-                enddo
-                ! min and max
-                distmax = maxval(drange(2,:)) ! closest point
-                distmin = distmax             ! farthest point
-                do qq=0, nploweff - 1
-                   if (distmin >= drange(1,qq) .and. distmax <= drange(2,qq)) then
-                      distmin = drange(1,qq)
-                      distmax = drange(2,qq)
-                   endif
-                enddo
-
-                ! find out list of low-res pixels close enough to be checked-out
-                n2test = 0
-                ! increase radius of query
-                threshold = distmin*cfudge - sfudge*sqrt((1.d0-distmin)*(1.d0+distmin))
-                do qq=0, nploweff - 1
-                   if (drange(2,qq) >= threshold) then ! for scalar product
-                      p2test(n2test) = qq
-                      n2test = n2test + 1
-                   endif
-                enddo
-
-             end select
-             print*,'>>>',dimtest_in, threshold, distmin,distmax,n2test, p2test(0:n2test-1)
+             else! new radius can not exceed Pi
+                threshold = -1.0_dp
+             endif
+             n2test = 0
+             do qq=0, nploweff - 1
+                if (drange(qq) >= threshold) then ! for scalar product
+                   p2test(n2test) = qq
+                   n2test = n2test + 1
+                endif
+             enddo
                 
-             !print*,nside,dimtest,q1,n2test
-
              ! build list of border pixels contained in relevant low-res pixels
              pstart = 0
              do q=0, n2test-1
@@ -407,8 +388,10 @@ contains
              enddo
              nb = pstart ! number of border pixels close enough to be considered
 
-             call wall_clock_time(t1)
-             ts1 = ts1 + (t1 - t0)
+             if (do_clock) then
+                call wall_clock_time(t1)
+                ts1 = ts1 + (t1 - t0)
+             endif
              ! center location for small pixels
              pp = 0
              do p=q1*iratio, (q1+1)*iratio - 1
@@ -419,9 +402,11 @@ contains
                 endif
              enddo
              np = pp ! number of valid small pixels in current low-res pixels
-
-             call wall_clock_time(ta1)
-             tsa1 = tsa1 + (ta1 - t1)
+             
+             if (do_clock) then
+                call wall_clock_time(ta1)
+                tsa1 = tsa1 + (ta1 - t1)
+             endif
              ! scalar product: small pixels * border pixels
 !$OMP PARALLEL DEFAULT(NONE) &
 !$OMP SHARED(np, nb, dd, bordpospack, centpix) &
@@ -430,11 +415,12 @@ contains
              do pp = 0, np-1
                 dd(pp) = maxval(matmul(bordpospack(0:nb-1,1:3), centpix(1:3, pp)))
              enddo
-          !!!!!!!dd(0:np-1) = maxval(matmul(bordpospack(0:nb-1,1:3), centpix(1:3,0:np-1)), dim=1)
 !$OMP END DO
 !$OMP END PARALLEL
-             call wall_clock_time(t2)
-             ts2 = ts2 + (t2 - ta1)
+             if (do_clock) then
+                call wall_clock_time(t2)
+                ts2 = ts2 + (t2 - ta1)
+             endif
 
              ! scalar product -> angular distance (radians)
              pp = 0
@@ -442,24 +428,28 @@ contains
                 if (mask1(p) == 1) then
                    if (abs(dd(pp)) > 1.0_dp) then
                       n_unvalid = n_unvalid + 1
-                      print*, '--- ',dd(pp) !p, n_unvalid, pp, nb, np, dd(pp) 
                    endif
                    distance(p) = acos(dd(pp))
                    pp = pp + 1
                 endif
              enddo
-             call wall_clock_time(t3)
-             ts3 = ts3 + (t3 - t2)
+             if (do_clock) then
+                call wall_clock_time(t3)
+                ts3 = ts3 + (t3 - t2)
+             endif
           endif
-       enddo
+       enddo ! loop on low res pixels
        deallocate(vertlow, drange, p2test, dd)
        deallocate(bordpix)
        deallocate(non_empty_low)
        if (n_unvalid > 0) then
           write(*,'(a,i7,a)'),'WARNING: Found ',n_unvalid,' unvalid distances: '
        endif
-       call wall_clock_time(tend)
-       write(*,'(a,6(g12.4))') ' prep, pix2vec, main, acos, tot, actual: ', ts1, tsa1, ts2, ts3, ts1+tsa1+ts2+ts3, tend-tstart
+       if (do_clock) then
+          call wall_clock_time(tend)
+          write(*,'(7(a12))')     'init', 'prep', 'pix2vec', 'product','acos', 'total',          'actual'
+          write(*,'(4x,7(g12.4))') tinit, ts1,     tsa1,      ts2,    ts3,    ts1+tsa1+ts2+ts3, tend-tstart
+       endif
 
     endif ! algo_in
        
@@ -468,27 +458,25 @@ contains
   end subroutine dist2holes_nest
 
   !=========================================================================
-  ! SIZE_HOLES_NEST: subroutine to determine size (=number of pixels) of holes
-  ! A hole is the set of all adjacent pixels initially set to 0.
-  ! 2 pixels are adjacent if they have at least one point in common.
-  !
-  ! Nside: integer, IN, resolution parameter
-  ! Mask(0:): integer 1D array, IN, each pixel must be either 1 (=valid) or 0 (=unvalid)
-  ! Nholes: integer, OUT, number of holes
-  ! Nph:    integer, OUT, total number of pixels in holes
-  ! Tags(0:npix-1): integer 1D array, OPTIONAL, OUT:
-  !                   unvalid pixels belonging to largest hole have value -1,
-  !                   unvalid pixels belonging to second largest hole: -2,
-  !                   and so on, while valid pixels have value 1
-  ! Sizeholes(0:Nholes-1): integer pointer, OPTIONAL, OUT: respective size of each hole
-  ! Listpix(0:Nph-1): integer pointer, OPTIONAL, OUT: list of pixels in each hole
-  !
    subroutine size_holes_nest(nside, mask, nholes, nph, &
         &                     tags, sizeholes, listpix)
-!   subroutine size_holes_nest(nside, mask, nholes, nph)
-
-    !========================================================================
-    
+     !=========================================================================
+     ! SIZE_HOLES_NEST: subroutine to determine size (=number of pixels) of holes
+     ! A hole is the set of all adjacent pixels initially set to 0.
+     ! 2 pixels are adjacent if they have at least one point in common.
+     !
+     ! Nside: integer, IN, resolution parameter
+     ! Mask(0:): integer 1D array, IN, each pixel must be either 1 (=valid) or 0 (=unvalid)
+     ! Nholes: integer, OUT, number of holes
+     ! Nph:    integer, OUT, total number of pixels in holes
+     ! Tags(0:npix-1): integer 1D array, OPTIONAL, OUT:
+     !                   unvalid pixels belonging to largest hole have value -1,
+     !                   unvalid pixels belonging to second largest hole: -2,
+     !                   and so on, while valid pixels have value 1
+     ! Sizeholes(0:Nholes-1): integer pointer, OPTIONAL, OUT: respective size of each hole
+     ! Listpix(0:Nph-1): integer pointer, OPTIONAL, OUT: list of pixels in each hole
+     !
+     !========================================================================
     use healpix_types
     use pix_tools,  only: nside2npix, neighbours_nest
     use misc_utils, only: fatal_error, assert_alloc
