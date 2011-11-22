@@ -50,6 +50,7 @@ module healpix_modules
   use alm_tools
 !  use mpi_alm_tools
   use udgrade_nr
+  use mask_tools
 
   use ran_tools
   use obsolete

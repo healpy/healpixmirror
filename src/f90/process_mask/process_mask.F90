@@ -196,7 +196,9 @@ program process_mask
           &   nside=nside, &
           &   order=order, &
           &   creator=code, &
-          &   version=version)
+          &   version=version, &
+          &   units='RADIANS')
+     call add_card(header,'TTYPE1','ANGULAR_DISTANCE','[RAD]')
      call add_card(header,'HISTORY','Distance to closest hole for')
      call add_card(header,'HISTORY','Input mask:')
      call add_card(header,'HISTORY',trim(pm%mask_file))
