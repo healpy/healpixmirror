@@ -51,6 +51,7 @@ optional.}
 \newcommand{\modHealpixModules}{src/f90/mod/healpix\_modules.f90}
 \newcommand{\modHealpixTypes}{src/f90/mod/healpix\_types.F90}
 \newcommand{\modLongIntrinsic}{src/f90/mod/long\_intrinsic.F90}
+\newcommand{\modMaskTools}{src/f90/mod/mask\_tools.F90}
 \newcommand{\modMiscUtils}{src/f90/mod/misc\_utils.F90}
 \newcommand{\modMpiAlmTools}{src/f90/mod/mpi\_alm\_tools.f90}
 \newcommand{\modParamfileIo}{src/f90/mod/paramfile\_io.F90}
@@ -111,6 +112,13 @@ $\mathbf{\phi}$ & The azimuthal angle on the sphere, $\phi\in[0,2\pi[$.\\
 %--------------------------------------------
 %--------------------------------------------
 %--------------------------------------------
+\section[Changes between releases 2.20 and 2.??]{Changes between releases 2.20 and
+2.??}
+\label{sub:new2p30}
+\begin{itemize}
+\item \htmlref{dist2holes\_nest}{sub:dist2holes_nest}, \htmlref{fill\_holes\_nest}{sub:fill_holes_nest}
+\end{itemize}
+
 \section[Changes between releases 2.14 and 2.20]{Changes between releases 2.14 and
 2.20}
 \label{sub:new2p20}
@@ -351,7 +359,9 @@ smoothing\_getpar (initially in {\tt utilities} module).
 \include{coordsys2euler_zyz}
 \include{create_alm}
 \include{del_card}
+\include{dist2holes_nest}
 \include{dump_alms}
+\include{fill_holes_nest}
 \include{fits2alms}
 \include{fits2cl}
 \include{gaussbeam}

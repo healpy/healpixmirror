@@ -170,12 +170,12 @@ contains
   subroutine dist2holes_nest(nside, mask, distance)
     ! ==========================================================================
     ! for each valid pixel, returns distance (in radians) from pixel center to 
-    ! center of closest unvalid pixel.
+    ! center of closest invalid pixel.
     ! The input mask must be NESTED ordered
     !
     ! Algorithm:
-    !  To begin with, the inner border (=unvalid pixels in touch with valid ones) 
-    !  of each unvalid region is identified
+    !  To begin with, the inner border (=invalid pixels in touch with valid ones) 
+    !  of each invalid region is identified
     ! Then a small Nside is used to select the closest border pixels, and finally
     ! the distance of each valid pixel to the selected border pixels is computed
     ! to find its minimum.
@@ -199,7 +199,7 @@ contains
     integer(I4B) :: nside1, nside2
     integer(I4B) :: p, pb, pv, q, qq
     integer(I4B) :: cache, nstride, nl, il, i1, i2
-    integer(I4B) :: n_unvalid
+    integer(I4B) :: n_invalid
     integer(I4B), dimension(:), allocatable   :: mask1
     integer(I4B)                              :: nbordpix
     real(DP),     dimension(:,:), allocatable :: bordpos
@@ -252,7 +252,7 @@ contains
        distance = 0.0_DP
        return
     endif
-    n_unvalid = 0
+    n_invalid = 0
 
     algo_in = algo
 
@@ -427,7 +427,7 @@ contains
              do p=q1*iratio, (q1+1)*iratio - 1
                 if (mask1(p) == 1) then
                    if (abs(dd(pp)) > 1.0_dp) then
-                      n_unvalid = n_unvalid + 1
+                      n_invalid = n_invalid + 1
                    endif
                    distance(p) = acos(dd(pp))
                    pp = pp + 1
@@ -442,8 +442,8 @@ contains
        deallocate(vertlow, drange, p2test, dd)
        deallocate(bordpix)
        deallocate(non_empty_low)
-       if (n_unvalid > 0) then
-          write(*,'(a,i7,a)'),'WARNING: Found ',n_unvalid,' unvalid distances: '
+       if (n_invalid > 0) then
+          write(*,'(a,i7,a)'),'WARNING: Found ',n_invalid,' invalid distances: '
        endif
        if (do_clock) then
           call wall_clock_time(tend)
@@ -466,12 +466,12 @@ contains
      ! 2 pixels are adjacent if they have at least one point in common.
      !
      ! Nside: integer, IN, resolution parameter
-     ! Mask(0:): integer 1D array, IN, each pixel must be either 1 (=valid) or 0 (=unvalid)
+     ! Mask(0:): integer 1D array, IN, each pixel must be either 1 (=valid) or 0 (=invalid)
      ! Nholes: integer, OUT, number of holes
      ! Nph:    integer, OUT, total number of pixels in holes
      ! Tags(0:npix-1): integer 1D array, OPTIONAL, OUT:
-     !                   unvalid pixels belonging to largest hole have value -1,
-     !                   unvalid pixels belonging to second largest hole: -2,
+     !                   invalid pixels belonging to largest hole have value -1,
+     !                   invalid pixels belonging to second largest hole: -2,
      !                   and so on, while valid pixels have value 1
      ! Sizeholes(0:Nholes-1): integer pointer, OPTIONAL, OUT: respective size of each hole
      ! Listpix(0:Nph-1): integer pointer, OPTIONAL, OUT: list of pixels in each hole

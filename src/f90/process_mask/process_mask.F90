@@ -27,13 +27,13 @@
 !-----------------------------------------------------------------------------
 !=======================================================================
 !
-! For a given input binary mask, in which pixels have either value 0 (=unvalid) or 1 (=valid),
+! For a given input binary mask, in which pixels have either value 0 (=invalid) or 1 (=valid),
 ! this code produces a map containing for each valid pixel,
-! its distance (in Radians) to the closest unvalid pixel.
+! its distance (in Radians) to the closest invalid pixel.
 ! It can then be used to define an apodisation scheme.
 ! Distances are measured between pixel centers.
 !
-! It is possible to treat small holes (=cluster of adjacent unvalid pixels) as valid,
+! It is possible to treat small holes (=cluster of adjacent invalid pixels) as valid,
 ! by specifying a minimal number of pixels and/or minimal surface area (which ever is the largest),
 ! and the resulting new mask can be output.
 !
@@ -108,20 +108,20 @@ program process_mask
   pm%mask_file = parse_string(handle, 'mask_file', descr=description, filestatus='old')
 
   description = concatnl('',&
-       & 'Enter the minimal size (in pixels) of unvalid regions to be kept',&
+       & 'Enter the minimal size (in pixels) of invalid regions to be kept',&
        & '(can be used together with hole_min_surf_arcmin2 below,'// &
        & ' the result will be the largest of the two)')
   pm%hole_min_size = parse_int(handle,'hole_min_size',descr=description, default=0)
 
   description = concatnl('',&
-       & 'Enter the minimal surface area (in arcmin^2) of unvalid regions to be kept',&
+       & 'Enter the minimal surface area (in arcmin^2) of invalid regions to be kept',&
        & '(can be used together with hole_min_size above,' // &
        & ' the result will be the largest of the two)')
   !surface_deg2 = parse_double(handle,'surface_deg2',descr=description, default=0.d0)
   pm%hole_min_surf_arcmin2 = parse_double(handle,'hole_min_surf_arcmin2',descr=description, default=0.d0)
 
   description = concatnl('',&
-       & 'Enter the OPTIONAL output file to contain mask with filled-in small unvalid regions',&
+       & 'Enter the OPTIONAL output file to contain mask with filled-in small invalid regions',&
        & '(as defined above)')
   pm%filled_file = parse_string(handle,'filled_file',descr=description,filestatus='new',default="''")
 
