@@ -1,0 +1,103 @@
+%   !=========================================================================
+%    subroutine size_holes_nest(nside, mask, nholes, nph, &
+%         &                     tags, sizeholes, listpix)
+%      !=========================================================================
+%      ! SIZE_HOLES_NEST: subroutine to determine size (=number of pixels) of holes
+%      ! A hole is the set of all adjacent pixels initially set to 0.
+%      ! 2 pixels are adjacent if they have at least one point in common.
+%      !
+%      ! Nside: integer, IN, resolution parameter
+%      ! Mask(0:): integer 1D array, IN, each pixel must be either 1 (=valid) or 0 (=invalid)
+%      ! Nholes: integer, OUT, number of holes
+%      ! Nph:    integer, OUT, total number of pixels in holes
+%      ! Tags(0:npix-1): integer 1D array, OPTIONAL, OUT:
+%      !                   invalid pixels belonging to largest hole have value -1,
+%      !                   invalid pixels belonging to second largest hole: -2,
+%      !                   and so on, while valid pixels have value 1
+%      ! Sizeholes(0:Nholes-1): integer pointer, OPTIONAL, OUT: respective size of each hole
+%      ! Listpix(0:Nph+Nholes): integer pointer, OPTIONAL, OUT: list of pixels in each hole
+%      !
+%      !========================================================================
+\sloppy
+\docid{size\_holes\_nest}\section[size\_holes\_nest]{ }
+\label{sub:size_holes_nest}
+\docrv{Version 1.0}
+\author{Eric Hivon}
+\abstract{This document describes the \healpix Fortran90 subroutine SIZE\_HOLES\_NEST.}
+
+\begin{facility}
+{For a input binary mask in NESTED ordering, \thedocid\ identifies the pixels
+located on the inner boundary of {\em invalid} regions
+}
+{\modMaskTools}
+\end{facility}
+
+\begin{f90format}
+{nside, mask, nholes, nph,  \optional{[tags, sizeholes, listpix]}}
+\end{f90format}
+\aboutoptional
+
+\begin{arguments}
+{
+\begin{tabular}{p{0.25\hsize} p{0.05\hsize} p{0.08\hsize} p{0.50\hsize}} \hline  
+\textbf{name~\&~dim.} & \textbf{kind} & \textbf{in/out} & \textbf{description} \\ \hline
+                   &   &   &                           \\ %%% for presentation
+nside & I4B & IN & The $N_{side}$ value of the input mask. \\
+mask(0:Npix-1) & I4B & IN & Input binary NESTED-ordered mask. Npix =
+12*nside*nside\\
+nholes & I4B & OUT & Number of holes found \\
+nph & I4B & OUT & Number of pixels in holes 
+\\
+\optional{tags}(0:Npix-1) \hskip 2cm  (OPTIONAL) & I4B & OUT & Pointer allocated by \thedocid, containing
+a sky map in which {\em invalid} pixels belonging to the largest hole have
+value -1, those belonging to the second largest hole have value -2, and so on,
+while valid pixels keep value +1.
+\\
+\optional{sizeholes}(0:nholes-1) &I4B & OUT & Pointer allocated by \thedocid,
+containing on output the respective size of each hole (in decreasing order).
+Eg, {\tt sizeholes}(0) is the number of pixels in the largest hole (taking value -1 in
+{\tt tags}).
+\\
+\optional{listpix}(0:nholes+nph) & I4B & OUT & Pointer allocated by \thedocid,
+containing on output the indexed list of pixels in each hole. Pixels located in the first (and largest)
+hole are given by {\tt listpix(listpix(0):listpix(1)-1)}
+\end{tabular}
+}
+\end{arguments}
+
+\begin{example}
+{
+use healpix\_types \\
+use healpix\_modules \\
+% use pix\_tools, only : nside2npix \\
+% use alm\_tools, only : size\_holes\_nest \\
+% integer(I4B) :: nside, lmax, mmax, npix, spin\\
+% real(SP), dimension(:,:), allocatable :: map \\
+% complex(SPC), dimension(:,:,:), allocatable :: alm \\
+% \ldots \\
+% nside=256 ; lmax=512 ; mmax=lmax ; spin=4\\
+% npix=nside2npix(nside)\\
+% allocate(alm(1:2,0:lmax,0:mmax))\\
+% allocate(map(0:npix-1,1:2))\\
+\ldots \\
+call \thedocid(nside, mask, nholes, nph)  \\
+}
+{???
+}
+\end{example}
+
+\begin{modules}
+  \begin{sulist}{} %%%% NOTE the ``extra'' brace here %%%%
+  \item[\textbf{mask\_tools}] mask processing module (see related routines below)
+  \end{sulist}
+\end{modules}
+
+\begin{related}
+  \begin{sulist}{} %%%% NOTE the ``extra'' brace here %%%%
+	\maskToolsRelated
+  \end{sulist}
+\end{related}
+
+\rule{\hsize}{2mm}
+
+\newpage

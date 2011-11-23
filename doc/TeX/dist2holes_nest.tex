@@ -6,9 +6,9 @@
 \abstract{This document describes the \healpix Fortran90 subroutine DIST2HOLES\_NEST.}
 
 \begin{facility}
-{For a input binary mask in NESTED ordering, \thedocid\ returns the distance (in
-radians) from each valid (1-valued) pixel to the closest invalid (0-valued)
-pixel. Distance are measured between pixel centers}
+{For a input binary mask in NESTED ordering, \thedocid\ returns the angular distance (in
+radians) from each {\em valid} (1-valued) pixel to the closest {\em invalid} (0-valued)
+pixel. Distances are measured between pixel centers.}
 {\modMaskTools}
 \end{facility}
 
@@ -23,7 +23,7 @@ pixel. Distance are measured between pixel centers}
                    &   &   &                           \\ %%% for presentation
 nside & I4B & IN & the $N_{side}$ value of the input mask. \\
 mask(0:Npix-1) & I4B & IN & Input NESTED-ordered mask. Npix = 12*nside*nside\\
-distance(0:Npix-1) & DP & OUT & Output NESTED-ordered angular-distance output map
+distance(0:Npix-1) & DP & OUT & Output NESTED-ordered angular-distance map
 \end{tabular}
 }
 \end{arguments}
@@ -51,27 +51,13 @@ call dist2holes\_nest(nside, mask, distance)  \\
 
 \begin{modules}
   \begin{sulist}{} %%%% NOTE the ``extra'' brace here %%%%
-%   \item[\htmlref{ring\_synthesis}{sub:ring_synthesis}] Performs FFT over $m$ for synthesis of the rings.
-%   \item[compute\_lam\_mm, get\_pixel\_layout, ]
-%   \item[gen\_lamfac\_der, gen\_mfac, gen\_mfac\_spin, do\_lam\_lm\_spin, ] 
-%   \item[gen\_recfac, gen\_recfac\_spin, init\_rescale, l\_min\_ylm] Ancillary routines used
-%   for $Y_{\ell m}$ recursion
-  \item[\textbf{misc\_utils}] module, containing:
-  \item[assert\_alloc] routine to print error message, when an array can not be
-  allocated properly
+  \item[\textbf{mask\_tools}] mask processing module (see related routines below)
   \end{sulist}
 \end{modules}
 
 \begin{related}
   \begin{sulist}{} %%%% NOTE the ``extra'' brace here %%%%
-	\item[\htmlref{dist2holes\_nest}{sub:dist2holes_nest}] distance to
-closest invalid pixel of given mask
-	\item[\htmlref{fill\_holes\_nest}{sub:fill_holes_nest}] turn to valid
-pixels located in 'holes' with fewer pixels than given threshold
-	\item[\htmlref{maskborder\_nest}{sub:maskborder_nest}] identify inner
-boundary pixels of 'holes' for given mask
-	\item[\htmlref{size\_holes\_nest}{sub:size_holes_nest}] returns size (in
-pixels) of holes found in input mask
+	\maskToolsRelated
   \end{sulist}
 \end{related}
 

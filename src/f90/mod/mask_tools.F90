@@ -474,7 +474,7 @@ contains
      !                   invalid pixels belonging to second largest hole: -2,
      !                   and so on, while valid pixels have value 1
      ! Sizeholes(0:Nholes-1): integer pointer, OPTIONAL, OUT: respective size of each hole
-     ! Listpix(0:Nph-1): integer pointer, OPTIONAL, OUT: list of pixels in each hole
+     ! Listpix(0:Nph+Nholes): integer pointer, OPTIONAL, OUT: list of pixels in each hole
      !
      !========================================================================
     use healpix_types

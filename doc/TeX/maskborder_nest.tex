@@ -1,21 +1,19 @@
 \sloppy
-\docid{fill\_holes\_nest}\section[fill\_holes\_nest]{ }
-\label{sub:fill_holes_nest}
+\docid{maskborder\_nest}\section[maskborder\_nest]{ }
+\label{sub:maskborder_nest}
 \docrv{Version 1.0}
 \author{Eric Hivon}
-\abstract{This document describes the \healpix Fortran90 subroutine FILL\_HOLES\_NEST.}
+\abstract{This document describes the \healpix Fortran90 subroutine MASKBORDER\_NEST.}
 
 \begin{facility}
-{For a input binary mask in NESTED ordering, \thedocid\ flip to 1 all pixels located
-in invalid regions with fewer pixels than the threshold provided.\\
-Two pixels are adjacent (and belong to the same region or hole) if they have at
-least one point in common.
+{For a input binary mask in NESTED ordering, \thedocid\ identifies the pixels
+located on the inner boundary of {\em invalid} regions
 }
 {\modMaskTools}
 \end{facility}
 
 \begin{f90format}
-{nside, new\_min\_size, mask\_in, mask\_out}
+{nside, mask\_in, mask\_out, nbordpix}
 \end{f90format}
 
 \begin{arguments}
@@ -24,10 +22,11 @@ least one point in common.
 \textbf{name~\&~dimensionality} & \textbf{kind} & \textbf{in/out} & \textbf{description} \\ \hline
                    &   &   &                           \\ %%% for presentation
 nside & I4B & IN & The $N_{side}$ value of the input mask. \\
-new\_min\_size & I4B & IN & Minimal size of hole (in pixels) on output\\
-mask\_in(0:Npix-1) & I4B & IN & Input NESTED-ordered mask. Npix = 12*nside*nside\\
-mask\_out(0:Npix-1) &I4B & OUT & Output NESTED-ordered mask. Can be the same
-array as mask\_in.
+mask\_in(0:Npix-1) & I4B & IN & Input binary NESTED-ordered mask. Npix = 12*nside*nside\\
+mask\_out(0:Npix-1) &I4B & OUT & Output NESTED-ordered mask, in which inner border
+pixels (defined as 0-valued and adjacent to 1-valued pixels) take the value 2. Can be the same
+array as mask\_in.\\
+nbordpix & I4B & OUT & Number of border pixels found
 \end{tabular}
 }
 \end{arguments}
@@ -37,7 +36,7 @@ array as mask\_in.
 use healpix\_types \\
 use healpix\_modules \\
 % use pix\_tools, only : nside2npix \\
-% use alm\_tools, only : fill\_holes\_nest \\
+% use alm\_tools, only : maskborder\_nest \\
 % integer(I4B) :: nside, lmax, mmax, npix, spin\\
 % real(SP), dimension(:,:), allocatable :: map \\
 % complex(SPC), dimension(:,:,:), allocatable :: alm \\
@@ -47,7 +46,7 @@ use healpix\_modules \\
 % allocate(alm(1:2,0:lmax,0:mmax))\\
 % allocate(map(0:npix-1,1:2))\\
 \ldots \\
-call \thedocid(nside, new\_min\_size, mask\_in, mask\_in)  \\
+call \thedocid(nside, mask\_in, mask\_in, nbordpix)  \\
 }
 {???
 }

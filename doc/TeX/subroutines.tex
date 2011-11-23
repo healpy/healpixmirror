@@ -60,6 +60,18 @@ optional.}
 \newcommand{\modStatistics}{src/f90/mod/statistics.f90}
 \newcommand{\modUdgradeNr}{src/f90/mod/udgrade\_nr.f90}
 
+\newcommand{\maskToolsRelated}{%
+	\item[\htmlref{dist2holes\_nest}{sub:dist2holes_nest}] angular distance to
+closest invalid pixel of the given mask
+	\item[\htmlref{fill\_holes\_nest}{sub:fill_holes_nest}] turn to {\em valid} all
+pixels located in 'holes' containing fewer pixels than the given threshold
+	\item[\htmlref{maskborder\_nest}{sub:maskborder_nest}] identify inner
+boundary pixels of 'holes' for given mask
+	\item[\htmlref{size\_holes\_nest}{sub:size_holes_nest}] returns size (in
+pixels) of holes found in input mask
+}
+
+
 \newcommand{\mysmaller}{% small in LaTeX, normal in html
 \latexhtml{\scriptsize}{\normalsize}}
 %\includeonly{}
@@ -112,11 +124,16 @@ $\mathbf{\phi}$ & The azimuthal angle on the sphere, $\phi\in[0,2\pi[$.\\
 %--------------------------------------------
 %--------------------------------------------
 %--------------------------------------------
-\section[Changes between releases 2.20 and 2.??]{Changes between releases 2.20 and
-2.??}
+\section[Changes between releases 2.20 and 2.30]{Changes between releases 2.20 and
+2.30}
 \label{sub:new2p30}
 \begin{itemize}
-\item \htmlref{dist2holes\_nest}{sub:dist2holes_nest}, \htmlref{fill\_holes\_nest}{sub:fill_holes_nest}
+\item%
+new code {\tt process\_mask} and new module {\tt mask\_tools} containing the routines
+\htmlref{dist2holes\_nest}{sub:dist2holes_nest}, 
+\htmlref{fill\_holes\_nest}{sub:fill_holes_nest}, 
+\htmlref{maskborder\_nest}{sub:maskborder_nest},
+\htmlref{size\_holes\_nest}{sub:size_holes_nest} useful for mask apodization.
 \end{itemize}
 
 \section[Changes between releases 2.14 and 2.20]{Changes between releases 2.14 and
@@ -382,6 +399,7 @@ smoothing\_getpar (initially in {\tt utilities} module).
 \include{map2alm}
 \include{map2alm_iterative}
 \include{map2alm_spin}
+\include{maskborder_nest}
 \include{medfiltmap}
 \include{median}
 \include{merge_headers}
@@ -427,6 +445,7 @@ smoothing\_getpar (initially in {\tt utilities} module).
 \include{rotate_alm}
 \include{same_shape_pixels_xxx}
 \include{scan_directories}
+\include{size_holes_nest}
 \include{string}
 \include{surface_triangle}
 \include{template_pixel_xxx}
