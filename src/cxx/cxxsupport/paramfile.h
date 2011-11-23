@@ -36,6 +36,7 @@
 #include <set>
 #include <string>
 #include "datatypes.h"
+#include "string_utils.h"
 
 class paramfile
   {
@@ -70,7 +71,9 @@ class paramfile
     const params_type &getParams() const
       { return params; }
 
-    void setParam (const std::string &key, const std::string &value);
+    void setParamString (const std::string &key, const std::string &value);
+    template<typename T> void setParam (const std::string &key, const T &value)
+      { setParamString(key,dataToString(value)); }
   };
 
 #endif

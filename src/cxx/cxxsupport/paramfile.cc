@@ -132,7 +132,7 @@ template long double paramfile::find (const string &key,
 template bool paramfile::find (const string &key, const bool &deflt);
 template string paramfile::find (const string &key, const string &deflt);
 
-void paramfile::setParam (const string &key, const string &value)
+void paramfile::setParamString (const string &key, const string &value)
   {
   if (param_present(key))
     {

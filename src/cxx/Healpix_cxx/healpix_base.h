@@ -330,7 +330,9 @@ template<typename I> class T_Healpix_Base: public Healpix_Tables
     arr<int> swap_cycles() const;
   };
 
+/*! T_Healpix_Base for Nside up to 2^13. */
 typedef T_Healpix_Base<int> Healpix_Base;
+/*! T_Healpix_Base for Nside up to 2^29. */
 typedef T_Healpix_Base<int64> Healpix_Base2;
 
 #endif
