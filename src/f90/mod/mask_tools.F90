@@ -189,15 +189,15 @@ contains
     integer(I4B), dimension(0:), intent(IN)  :: mask
     real(DP),     dimension(0:), intent(OUT) :: distance
     integer(i4b), parameter :: algo = 1
-    integer(i4b), parameter :: nslow = 64
+    integer(i4b), parameter :: nslow = 64 ! 64 or 128
 !    integer(i4b), parameter :: dimtest = 1
     logical(LGT), parameter :: brute_force = .false.
-    logical(LGT), parameter :: do_clock = .false.
+    logical(LGT), parameter :: do_clock = .true.
     
 
-    integer(I8B) :: npix1, npix2, npix
+    integer(I8B) :: npix1, npix2, npix, p, iratio
     integer(I4B) :: nside1, nside2
-    integer(I4B) :: p, pb, pv, q, qq
+    integer(I4B) :: pb, pv, q, qq
     integer(I4B) :: cache, nstride, nl, il, i1, i2
     integer(I4B) :: n_invalid
     integer(I4B), dimension(:), allocatable   :: mask1
@@ -208,7 +208,7 @@ contains
     integer(I4B), dimension(:  ), allocatable :: bordpix
     real(DP),     dimension(1:3)              :: vv, v1
     real(DP)                                  :: ddmin
-    integer(I4B) :: nslow_in, nplow, nploweff, n2test, n_in_list, iratio
+    integer(I4B) :: nslow_in, nplow, nploweff, n2test, n_in_list
     integer(I4B) :: ntot, ntotmax, ntotmin, period_brag
     real(DP),    dimension(:,:,:), allocatable :: vertlow
     integer(I4B), dimension(:), allocatable :: nb_in_lp, p2test, start_list
@@ -280,13 +280,9 @@ contains
     if (algo_in == 1) then
        ! define low resolution grid
        nslow_in = min(nslow, nside)
-       !-------------------------------------------------
-       !print*,'new fancy method 2 @',nslow_in, nbordpix
-       !-------------------------------------------------
        nplow = nside2npix(nslow_in)
-       iratio = (nside / nslow_in)**2
-       !fudge = 2.4d0*sqrt(FOURPI/nplow)! 2.4*side of nside=nslow_in pixel in Radians
-       !fudge = 3.0d0*sqrt(FOURPI/nplow)! 2.4*side of nside=nslow_in pixel in Radians
+       iratio = nside / nslow_in
+       iratio = iratio * iratio ! ratio of number of pixels
        fudge = 3.21_dp / real(nslow_in, kind=DP) ! 1.5 x diagonal of longest pixel, at large Nside
        fudge = min(fudge, PI)
        sfudge = sin(fudge)
@@ -328,21 +324,18 @@ contains
        endif
        deallocate(nb_in_lp)
 
-       ! build location of center and vertices for non-empty low resolution "border" pixels
-       allocate(vertlow(1:3,1:4,0:nploweff-1))
+       ! build location of center for non-empty low resolution "border" pixels
        allocate(centlow(1:3,    0:nploweff-1))
        do qq=0, nploweff-1
           q = non_empty_low(qq,1)
-          call pix2vec_nest(nslow_in, q, vv, tmpvertex)
+          call pix2vec_nest(nslow_in, q, vv)
           centlow(1:3, qq)      = vv(1:3)
-          vertlow(1:3, 1:4, qq) = tmpvertex(1:3, 1:4)
        enddo
        allocate(drange(0:nploweff-1))
        allocate(p2test(    0:nploweff-1))
        allocate(centpix(1:3, 0:iratio-1))
        allocate(dd(0:iratio-1))
        allocate(bordpospack(0:nbordpix-1, 1:3 ))
-       !allocate(distcent(0:nploweff-1))
 
        ts1 = 0. ; tsa1 = 0. ; ts2 = 0. ; ts3 = 0.
        ! loop on low-resolution pixels
@@ -354,9 +347,15 @@ contains
              call pix2vec_nest(nslow_in, q1, vv)
 
              ! distance of low-res pixel center with each center of low-res "border" pixels
+!$OMP PARALLEL DEFAULT(NONE) &
+!$OMP SHARED(nploweff, drange, centlow, vv) &
+!$OMP PRIVATE(qq)
+!$OMP DO schedule(guided, 16)
              do qq=0, nploweff - 1
                 drange(qq) = sum(centlow(1:3, qq) * vv(1:3))
              enddo
+!$OMP END DO
+!$OMP END PARALLEL
              ! min distance (=max scalar product)
              distmin = maxval(drange)
              distmin = min(distmin, 1.0_dp)
@@ -439,7 +438,7 @@ contains
              endif
           endif
        enddo ! loop on low res pixels
-       deallocate(vertlow, drange, p2test, dd)
+       deallocate(drange, p2test, dd)
        deallocate(bordpix)
        deallocate(non_empty_low)
        if (n_invalid > 0) then
@@ -447,6 +446,7 @@ contains
        endif
        if (do_clock) then
           call wall_clock_time(tend)
+          print*,nslow
           write(*,'(7(a12))')     'init', 'prep', 'pix2vec', 'product','acos', 'total',          'actual'
           write(*,'(4x,7(g12.4))') tinit, ts1,     tsa1,      ts2,    ts3,    ts1+tsa1+ts2+ts3, tend-tstart
        endif
