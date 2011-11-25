@@ -25,7 +25,7 @@
  */
 
 /*
- *  Copyright (C) 2005 Max-Planck-Society
+ *  Copyright (C) 2005-2011 Max-Planck-Society
  *  Author: Martin Reinecke
  */
 
@@ -36,6 +36,7 @@
 #include "trafos.h"
 #include "announce.h"
 #include "string_utils.h"
+#include "lsconstants.h"
 
 using namespace std;
 
@@ -66,38 +67,40 @@ Trafo maketrafo (int num)
 int main(int argc, const char **argv)
   {
 PLANCK_DIAGNOSIS_BEGIN
-  announce ("rotalm_cxx");
-
-  if (argc!=5)
-    {
-    cout << "Usage: rotalm_cxx <infile> <outfile> <itransform> <pol>"
-         << endl
-         << "Transform 1: Equatorial (2000) -> Galactic   (2000)" << endl
-         << "          2: Galactic   (2000) -> Equatorial (2000)" << endl
-         << "          3: Equatorial (2000) -> Ecliptic   (2000)" << endl
-         << "          4: Ecliptic   (2000) -> Equatorial (2000)" << endl
-         << "          5: Ecliptic   (2000) -> Galactic   (2000)" << endl
-         << "          6: Galactic   (2000) -> Ecliptic   (2000)" << endl
-         << "          7: Equatorial (1950) -> Galactic   (1950)" << endl
-         << "          8: Galactic   (1950) -> Equatorial (1950)" << endl
-         << "          9: Equatorial (1950) -> Ecliptic   (1950)" << endl
-         << "         10: Ecliptic   (1950) -> Equatorial (1950)" << endl
-         << "         11: Ecliptic   (1950) -> Galactic   (1950)" << endl
-         << "         12: Galactic   (1950) -> Ecliptic   (1950)" << endl
-         << endl
-         << "pol: T or F" << endl << endl;
-    planck_fail_quietly("Incorrect usage");
-    }
+  module_startup("rotalm_cxx", (argc==5)||(argc==7),
+    "Usage: rotalm_cxx <infile> <outfile> <itransform> <pol>\n"
+    "or   : rotalm_cxx <infile> <outfile> <psi> <theta> <phi> <pol>\n\n"
+    "itransform: 1: Equatorial (2000) -> Galactic   (2000)\n"
+    "            2: Galactic   (2000) -> Equatorial (2000)\n"
+    "            3: Equatorial (2000) -> Ecliptic   (2000)\n"
+    "            4: Ecliptic   (2000) -> Equatorial (2000)\n"
+    "            5: Ecliptic   (2000) -> Galactic   (2000)\n"
+    "            6: Galactic   (2000) -> Ecliptic   (2000)\n"
+    "            7: Equatorial (1950) -> Galactic   (1950)\n"
+    "            8: Galactic   (1950) -> Equatorial (1950)\n"
+    "            9: Equatorial (1950) -> Ecliptic   (1950)\n"
+    "           10: Ecliptic   (1950) -> Equatorial (1950)\n"
+    "           11: Ecliptic   (1950) -> Galactic   (1950)\n"
+    "           12: Galactic   (1950) -> Ecliptic   (1950)\n\n"
+    "psi, theta, phi: Euler angles (in degrees)\n\n"
+    "pol: T or F\n");
 
   string infile  = argv[1];
   string outfile = argv[2];
-  int trafo = stringToData<int>(argv[3]);
-  bool polarisation = stringToData<bool>(argv[4]);
-
-  Trafo tr(maketrafo(trafo));
-
-  fitshandle out;
-  out.create (outfile);
+  bool polarisation = stringToData<bool>(argv[argc-1]);
+  rotmatrix rm;
+  if (argc==5)
+    {
+    int trafo = stringToData<int>(argv[3]);
+    Trafo tr(maketrafo(trafo));
+    rm=tr.Matrix();
+    }
+  else
+    {
+    rm.Make_CPAC_Euler_Matrix(degr2rad*stringToData<double>(argv[5]),
+                              degr2rad*stringToData<double>(argv[4]),
+                              degr2rad*stringToData<double>(argv[3]));
+    }
 
   Alm<xcomplex<double> > almT,almG,almC;
 
@@ -106,20 +109,16 @@ PLANCK_DIAGNOSIS_BEGIN
     int lmax, dummy;
     get_almsize (infile,lmax,dummy);
     read_Alm_from_fits (infile, almT, lmax, lmax);
-    rotate_alm(almT,tr.Matrix());
-    write_Alm_to_fits (out,almT,lmax,lmax,PLANCK_FLOAT32);
+    rotate_alm(almT,rm);
+    write_Alm_to_fits (outfile,almT,lmax,lmax,PLANCK_FLOAT32);
     }
   else
     {
     int lmax, dummy;
     get_almsize_pol (infile,lmax,dummy);
-    read_Alm_from_fits (infile, almT, lmax, lmax, 2);
-    read_Alm_from_fits (infile, almG, lmax, lmax, 3);
-    read_Alm_from_fits (infile, almC, lmax, lmax, 4);
-    rotate_alm(almT,almG,almC,tr.Matrix());
-    write_Alm_to_fits (out,almT,lmax,lmax,PLANCK_FLOAT64);
-    write_Alm_to_fits (out,almG,lmax,lmax,PLANCK_FLOAT64);
-    write_Alm_to_fits (out,almC,lmax,lmax,PLANCK_FLOAT64);
+    read_Alm_from_fits (infile, almT, almG, almC, lmax, lmax);
+    rotate_alm(almT,almG,almC,rm);
+    write_Alm_to_fits (outfile,almT,almG,almC,lmax,lmax,PLANCK_FLOAT32);
     }
 
 PLANCK_DIAGNOSIS_END
