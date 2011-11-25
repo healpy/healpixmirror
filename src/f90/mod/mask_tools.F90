@@ -179,6 +179,9 @@ contains
     ! Then a small Nside is used to select the closest border pixels, and finally
     ! the distance of each valid pixel to the selected border pixels is computed
     ! to find its minimum.
+    !
+    ! Note: final distances are computed with  2 ASIN (|v1-v2|/2) which is more
+    ! accurate than the usual ACOS(v1.v2) at small separations.
     ! ==========================================================================
 
     use pix_tools, only: nside2npix, npix2nside, pix2vec_nest
@@ -188,7 +191,7 @@ contains
     integer(I4B),                intent(IN)  :: nside
     integer(I4B), dimension(0:), intent(IN)  :: mask
     real(DP),     dimension(0:), intent(OUT) :: distance
-    integer(i4b), parameter :: algo = 1
+!    integer(i4b), parameter :: algo = 1
     integer(i4b), parameter :: nslow = 64 ! 64 or 128
 !    integer(i4b), parameter :: dimtest = 1
     logical(LGT), parameter :: brute_force = .false.
@@ -209,7 +212,7 @@ contains
     real(DP),     dimension(1:3)              :: vv, v1
     real(DP)                                  :: ddmin
     integer(I4B) :: nslow_in, nplow, nploweff, n2test, n_in_list
-    integer(I4B) :: ntot, ntotmax, ntotmin, period_brag
+    integer(I4B) :: nlactive
     real(DP),    dimension(:,:,:), allocatable :: vertlow
     integer(I4B), dimension(:), allocatable :: nb_in_lp, p2test, start_list
     integer(I4B), dimension(:,:), allocatable :: non_empty_low
@@ -225,10 +228,9 @@ contains
     integer(i4b) ::  algo_in, q1, pp, pstart, np, nb
     real(DP),     dimension(:,:), allocatable :: bordpospack
     real(sp) :: t0, t1, t2, t3, ts1, ts2, ts3, tstart, tend, ta1, tsa1, tinit
-    real(DP) :: fudge, cfudge, sfudge, threshold
+    real(DP) :: fudge, cfudge, sfudge, threshold, mean_nbord
     !----------------------------------------------------------------------
 
-    period_brag = nint(1.e5)
     ! test inputs
     npix1 = long_size(mask)
     nside1 = npix2nside(npix1)
@@ -254,7 +256,7 @@ contains
     endif
     n_invalid = 0
 
-    algo_in = algo
+    !algo_in = algo
 
     if (do_clock) call wall_clock_time(tstart)
     pb = 0
@@ -272,18 +274,14 @@ contains
        endif
        if (mask1(p) == 0) distance(p) = 0.0_dp
     enddo
-    if (do_clock) then
-       call wall_clock_time(t0)
-       tinit = t0-tstart
-    endif
 
-    if (algo_in == 1) then
+    !if (algo_in == 1) then
        ! define low resolution grid
        nslow_in = min(nslow, nside)
        nplow = nside2npix(nslow_in)
        iratio = nside / nslow_in
        iratio = iratio * iratio ! ratio of number of pixels
-       fudge = 3.21_dp / real(nslow_in, kind=DP) ! 1.5 x diagonal of longest pixel, at large Nside
+       fudge = 4.276_dp / real(nslow_in, kind=DP) ! 2.0 x diagonal of longest pixel, at large Nside
        fudge = min(fudge, PI)
        sfudge = sin(fudge)
        cfudge = cos(fudge) ! cosine of fudge
@@ -337,25 +335,32 @@ contains
        allocate(dd(0:iratio-1))
        allocate(bordpospack(0:nbordpix-1, 1:3 ))
 
+       if (do_clock) then
+          call wall_clock_time(t0)
+          tinit = t0-tstart
+       endif
+
        ts1 = 0. ; tsa1 = 0. ; ts2 = 0. ; ts3 = 0.
+       nlactive = 0
        ! loop on low-resolution pixels
        do q1=0, nplow-1
           ! keep only those containing valid small pixel
           if (any(mask1(q1*iratio:(q1+1)*iratio-1) == 1) ) then
+             nlactive = nlactive + 1
              if (do_clock) call wall_clock_time(t0)
              ! center location of current low-res pixel
              call pix2vec_nest(nslow_in, q1, vv)
 
              ! distance of low-res pixel center with each center of low-res "border" pixels
-!$OMP PARALLEL DEFAULT(NONE) &
-!$OMP SHARED(nploweff, drange, centlow, vv) &
-!$OMP PRIVATE(qq)
-!$OMP DO schedule(guided, 16)
+! !$OMP PARALLEL DEFAULT(NONE) &
+! !$OMP SHARED(nploweff, drange, centlow, vv) &
+! !$OMP PRIVATE(qq)
+! !$OMP DO schedule(static, 4)
              do qq=0, nploweff - 1
                 drange(qq) = sum(centlow(1:3, qq) * vv(1:3))
              enddo
-!$OMP END DO
-!$OMP END PARALLEL
+! !$OMP END DO
+! !$OMP END PARALLEL
              ! min distance (=max scalar product)
              distmin = maxval(drange)
              distmin = min(distmin, 1.0_dp)
@@ -375,7 +380,7 @@ contains
                 endif
              enddo
                 
-             ! build list of border pixels contained in relevant low-res pixels
+             ! store location of border pixels contained in relevant low-res pixels
              pstart = 0
              do q=0, n2test-1
                 qq = p2test(q)
@@ -386,6 +391,7 @@ contains
                 pstart = pstart + n_in_list
              enddo
              nb = pstart ! number of border pixels close enough to be considered
+             mean_nbord = mean_nbord + nb
 
              if (do_clock) then
                 call wall_clock_time(t1)
@@ -407,28 +413,33 @@ contains
                 tsa1 = tsa1 + (ta1 - t1)
              endif
              ! scalar product: small pixels * border pixels
+
 !$OMP PARALLEL DEFAULT(NONE) &
 !$OMP SHARED(np, nb, dd, bordpospack, centpix) &
 !$OMP PRIVATE(pp)
-!$OMP DO schedule(guided, 2)
+!$OMP DO schedule(guided, 4)
              do pp = 0, np-1
-                dd(pp) = maxval(matmul(bordpospack(0:nb-1,1:3), centpix(1:3, pp)))
+                ! compute (v1-v2)^2 in [0,4]
+                dd(pp) = minval(  (bordpospack(0:nb-1,1)-centpix(1,pp))**2 &
+                     &          + (bordpospack(0:nb-1,2)-centpix(2,pp))**2 &
+                     &          + (bordpospack(0:nb-1,3)-centpix(3,pp))**2)
              enddo
 !$OMP END DO
 !$OMP END PARALLEL
+
              if (do_clock) then
                 call wall_clock_time(t2)
                 ts2 = ts2 + (t2 - ta1)
              endif
 
-             ! scalar product -> angular distance (radians)
+             ! norm2 -> angular distance (radians)
              pp = 0
              do p=q1*iratio, (q1+1)*iratio - 1
                 if (mask1(p) == 1) then
-                   if (abs(dd(pp)) > 1.0_dp) then
+                   if (dd(pp) < 0.0_dp .or. dd(pp) > 4.0_dp) then
                       n_invalid = n_invalid + 1
                    endif
-                   distance(p) = acos(dd(pp))
+                   distance(p) = 2.d0 * asin( sqrt(dd(pp)) * 0.5d0 )
                    pp = pp + 1
                 endif
              enddo
@@ -446,12 +457,12 @@ contains
        endif
        if (do_clock) then
           call wall_clock_time(tend)
-          print*,nslow
+          print*,nside, nslow, nbordpix, mean_nbord/nlactive
           write(*,'(7(a12))')     'init', 'prep', 'pix2vec', 'product','acos', 'total',          'actual'
           write(*,'(4x,7(g12.4))') tinit, ts1,     tsa1,      ts2,    ts3,    ts1+tsa1+ts2+ts3, tend-tstart
        endif
 
-    endif ! algo_in
+    !endif ! algo_in
        
     deallocate(mask1)
 

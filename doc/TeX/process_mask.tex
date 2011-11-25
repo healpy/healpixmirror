@@ -50,19 +50,31 @@ filled-in small holes (as defined above). \default{'', no output file}
 \begin{codedescription}
 {For a given input binary mask, in which pixels have either value 0 (=invalid) or 1 (=valid),
 this code produces a map containing for each valid pixel,
-its distance (in Radians) to the closest invalid pixel.\\
-It can then be used to define an apodized mask.\\
-Distances are measured between pixel centers.
+its distance (in Radians, measured between pixel centers) to the closest invalid pixel.
+
+This distance map can then be used to define an apodized mask.
+
+Two pixels are considered adjacent if they have at least {\em one point} in common 
+(eg, a pixel corner or a pixel side).
 
 It is possible to treat small holes (=cluster of adjacent invalid pixels) as valid,
-by specifying a minimal number of pixels and/or minimal surface area (which ever is the largest),
+by specifying a minimal number of pixels and/or minimal surface area (whichever is the largest),
 and the resulting new mask can be output.
 
 The output FITS files have the same ordering as the input mask
 (even though the processing is done in NESTED ordering).
 
-Two pixels are considered adjacent if they have at least {\em one point} in common 
-(eg, a pixel corner or a pixel side).%
+{\small{The algorithmic complexity of the distance calculation is expected to scale like $\propto \npix^p
+\propto\nside^{2p}$ with $p$ in $[1.5,2]$ depending on the mask topology, even
+though the code has been optimized to reduce the number of calculations by a
+factor $10^2$ to $10^3$ compared to a naive implementation, and the most
+computationally intensive loops are parallelized with OpenMP.
+On a 3.06GHz Intel Core 2 Duo, the distances on a $\nside=512$ Galactic + Point sources mask can be computed in a few
+seconds, while a similar $\nside=2048$ mask takes a minute or less to process.
+For totally arbitrary masks though, the return times can be multiplied by as
+much as 10.}}
+
+%
 }
 \end{codedescription}
 
