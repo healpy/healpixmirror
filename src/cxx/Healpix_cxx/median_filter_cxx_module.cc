@@ -68,7 +68,7 @@ int median_filter_cxx_module (int argc, const char **argv)
   vector<float> list;
   for (int m=0; m<inmap.Npix(); ++m)
     {
-    inmap.query_disc(inmap.pix2ang(m),radius,false,pixset);
+    inmap.query_disc(inmap.pix2ang(m),radius,pixset);
     list.resize(pixset.nval());
     tsize cnt=0;
     for (tsize j=0; j<pixset.size(); ++j)

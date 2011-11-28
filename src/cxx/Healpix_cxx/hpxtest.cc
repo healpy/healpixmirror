@@ -299,7 +299,7 @@ void check_query_disc_strict (Healpix_Ordering_Scheme scheme)
       pointing ptg;
       random_dir (ptg);
       double rad = pi/1 * rng.rand_uni();
-      map.query_disc(ptg,rad,false,pixset);
+      map.query_disc(ptg,rad,pixset);
       vec3 vptg=ptg;
       double cosrad=cos(rad);
       for (tsize j=0; j<pixset.size(); ++j)
@@ -332,15 +332,15 @@ template<typename I>void check_query_disc()
       pointing ptg;
       random_dir (ptg);
       double rad = pi/1 * rng.rand_uni();
-      rbase.query_disc(ptg,rad,false,pixset);
+      rbase.query_disc(ptg,rad,pixset);
       I nval = pixset.nval();
-      nbase.query_disc(ptg,rad,false,pixset);
+      nbase.query_disc(ptg,rad,pixset);
       if (nval!=pixset.nval())
         cout << "  PROBLEM: number of pixels different: "
              << nval << " vs. " << pixset.nval() << endl;
-      rbase.query_disc(ptg,rad,true,pixset);
+      rbase.query_disc_inclusive(ptg,rad,pixset, 4);
       I nv1 = pixset.nval();
-      nbase.query_disc(ptg,rad,true,pixset);
+      nbase.query_disc_inclusive(ptg,rad,pixset, 4);
       I nv2 = pixset.nval();
       if (nv1<nv2)
         cout << "  PROBLEM: inclusive(RING)<inclusive(NEST): "
@@ -364,15 +364,15 @@ template<typename I>void check_query_polygon()
       {
       vector<pointing> corner(3);
       random_dir(corner[0]); random_dir(corner[1]); random_dir(corner[2]);
-      rbase.query_polygon(corner,false,pixset);
+      rbase.query_polygon(corner,pixset);
       I nval = pixset.nval();
-      nbase.query_polygon(corner,false,pixset);
+      nbase.query_polygon(corner,pixset);
       if (nval!=pixset.nval())
         cout << "  PROBLEM: number of pixels different: "
              << nval << " vs. " << pixset.nval() << endl;
-      rbase.query_polygon(corner,true,pixset);
+      rbase.query_polygon_inclusive(corner,pixset,4);
       I nv1=pixset.nval();
-      nbase.query_polygon(corner,true,pixset);
+      nbase.query_polygon_inclusive(corner,pixset,4);
       I nv2=pixset.nval();
       if (nv1<nv2)
         cout << "  PROBLEM: inclusive(RING)<inclusive(NEST): "
@@ -796,7 +796,7 @@ template<typename I>void perf_query_disc(const string &name,
   for (int m=0; m<1000; ++m)
     {
     rangeset<I> pix;
-    base.query_disc(vec3(1,0,0),halfpi/9,false,pix);
+    base.query_disc(vec3(1,0,0),halfpi/9,pix);
     dummy+=pix.size();
     ++cnt;
     }
@@ -816,7 +816,7 @@ template<typename I>void perf_query_triangle(const string &name,
   for (int m=0; m<1000; ++m)
     {
     rangeset<I> pix;
-    base.query_polygon(corner,false,pix);
+    base.query_polygon(corner,pix);
     dummy+=pix.size();
     ++cnt;
     }
@@ -837,7 +837,7 @@ template<typename I>void perf_query_polygon(const string &name,
   for (int m=0; m<1000; ++m)
     {
     rangeset<I> pix;
-    base.query_polygon(corner,false,pix);
+    base.query_polygon(corner,pix);
     dummy+=pix.size();
     ++cnt;
     }
