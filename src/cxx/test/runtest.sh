@@ -15,4 +15,6 @@ time $BINPATH/alm2map_cxx nlmax=512 infile=test.alm outfile=!test4.fits nside=31
 time $BINPATH/map2tga test4.fits test5.tga -bar -title "Synthesized Map (Nside=317)" && \
 time $BINPATH/median_filter_cxx test.fits '!test5.fits' 60 && \
 time $BINPATH/map2tga test5.fits test6.tga -bar -title "Median-filtered map (1 degree)" && \
-xv test.tga test2.tga test3.tga test4.tga test5.tga test6.tga
+time $BINPATH/smoothing_cxx nlmax=512 infile=test.fits outfile=\!test7.fits polarisation=true fwhm_arcmin=300 && \
+time $BINPATH/alice2 -in test7.fits -nside 256 -ell 100 -xsz 1024 -out test_alice && \
+xv test.tga test2.tga test3.tga test4.tga test5.tga test6.tga test_alice*.tga
