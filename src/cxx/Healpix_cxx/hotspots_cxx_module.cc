@@ -41,8 +41,8 @@ using namespace std;
 
 int hotspots_cxx_module (int argc, const char **argv)
   {
-  module_startup ("hotspots_cxx", argc, argv, 2, "<parameter file>");
-  paramfile params (argv[1]);
+  module_startup ("hotspots_cxx", argc, argv);
+  paramfile params (getParamsFromCmdline(argc,argv));
 
   string infile = params.find<string>("infile");
   string mapfile = params.find<string>("outmap","");

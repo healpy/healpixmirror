@@ -131,8 +131,8 @@ template<typename T> void anafast_cxx (paramfile &params)
 
 int anafast_cxx_module (int argc, const char **argv)
   {
-  module_startup ("anafast_cxx", argc, argv, 2, "<parameter file>");
-  paramfile params (argv[1]);
+  module_startup ("anafast_cxx", argc, argv);
+  paramfile params (getParamsFromCmdline(argc,argv));
 
   bool dp = params.find<bool> ("double_precision",false);
   dp ? anafast_cxx<double>(params) : anafast_cxx<float>(params);

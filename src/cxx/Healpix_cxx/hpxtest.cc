@@ -333,21 +333,29 @@ template<typename I>void check_query_disc()
       random_dir (ptg);
       double rad = pi/1 * rng.rand_uni();
       rbase.query_disc(ptg,rad,pixset);
+      rangeset<I> pslast=pixset;
+      for (tsize fct=5; fct>0; --fct)
+        {
+        rangeset<I> psi;
+        rbase.query_disc_inclusive(ptg,rad,psi,fct);
+        if (!psi.contains(pslast))
+          cout << "  PROBLEM: pixel sets inconsistent " << endl;
+        swap(pslast,psi);
+        }
       I nval = pixset.nval();
       nbase.query_disc(ptg,rad,pixset);
+      pslast=pixset;
+      for (tsize fct=8; fct>0; fct>>=1)
+        {
+        rangeset<I> psi;
+        nbase.query_disc_inclusive(ptg,rad,psi,fct);
+        if (!psi.contains(pslast))
+          cout << "  PROBLEM: pixel sets inconsistent " << endl;
+        swap(pslast,psi);
+        }
       if (nval!=pixset.nval())
         cout << "  PROBLEM: number of pixels different: "
              << nval << " vs. " << pixset.nval() << endl;
-      rbase.query_disc_inclusive(ptg,rad,pixset, 4);
-      I nv1 = pixset.nval();
-      nbase.query_disc_inclusive(ptg,rad,pixset, 4);
-      I nv2 = pixset.nval();
-      if (nv1<nv2)
-        cout << "  PROBLEM: inclusive(RING)<inclusive(NEST): "
-             << nv1 << " vs. " << nv2 << endl;
-      if (nv2<nval)
-        cout << "  PROBLEM: inclusive(NEST)<non-inclusive: "
-             << nv2 << " vs. " << nval << endl;
       }
     }
   }

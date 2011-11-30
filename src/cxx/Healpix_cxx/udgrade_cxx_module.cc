@@ -80,8 +80,8 @@ template<typename T> void udgrade_cxx (paramfile &params)
 
 int udgrade_cxx_module (int argc, const char **argv)
   {
-  module_startup ("udgrade_cxx", argc, argv, 2, "<parameter file>");
-  paramfile params (argv[1]);
+  module_startup ("udgrade_cxx", argc, argv);
+  paramfile params (getParamsFromCmdline(argc,argv));
 
   bool dp = params.find<bool> ("double_precision",false);
   dp ? udgrade_cxx<double>(params) : udgrade_cxx<float>(params);

@@ -76,4 +76,7 @@ class paramfile
       { setParamString(key,dataToString(value)); }
   };
 
+paramfile getParamsFromCmdline (int argc, const char **argv,
+  bool verbose=true);
+
 #endif

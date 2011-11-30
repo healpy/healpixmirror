@@ -137,8 +137,8 @@ template<typename T> void mult_alm (paramfile &params)
 
 int mult_alm_module (int argc, const char **argv)
   {
-  module_startup ("mult_alm", argc, argv, 2, "<parameter file>");
-  paramfile params (argv[1]);
+  module_startup ("mult_alm", argc, argv);
+  paramfile params (getParamsFromCmdline(argc,argv));
 
   bool dp = params.find<bool> ("double_precision",false);
   dp ? mult_alm<double>(params) : mult_alm<float>(params);

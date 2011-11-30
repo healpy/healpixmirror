@@ -83,8 +83,8 @@ template<typename T> void syn_alm_cxx (paramfile &params)
 
 int syn_alm_cxx_module (int argc, const char **argv)
   {
-  module_startup ("syn_alm_cxx", argc, argv, 2, "<parameter file>");
-  paramfile params (argv[1]);
+  module_startup ("syn_alm_cxx", argc, argv);
+  paramfile params (getParamsFromCmdline(argc,argv));
 
   bool dp = params.find<bool> ("double_precision",false);
   dp ? syn_alm_cxx<double>(params) : syn_alm_cxx<float>(params);

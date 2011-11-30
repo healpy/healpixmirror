@@ -99,6 +99,7 @@ template<typename T> class rangeset
     void clear() { r.clear(); }
     void reserve(tsize n) { r.reserve(n); }
     tsize size() const { return r.size(); }
+    const rtype &data() const { return r; }
 
     const interval<T> &operator[] (tsize i) const { return r[i]; }
 
@@ -241,6 +242,21 @@ template<typename T> class rangeset
       if (i==r.end() || !i->contains(v))
         return -1;
       return i-r.begin();
+      }
+
+    bool equals (const rangeset &other) const
+      { return r==other.data(); }
+    bool contains (const rangeset &other) const
+      {
+      c_iterator im=r.begin(), em=r.end();
+      for (tsize i=0; i<other.size(); ++i)
+        {
+        T a=other[i].a(), b=other[i].b();
+        while ((im!=em) && (im->b() < a)) ++im;
+        if (im==em) return false;
+        if ((im->a()>a) || (im->b()<b)) return false;
+        }
+      return true;
       }
   };
 

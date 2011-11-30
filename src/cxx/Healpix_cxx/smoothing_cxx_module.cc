@@ -115,8 +115,8 @@ template<typename T> void smoothing_cxx (paramfile &params)
 
 int smoothing_cxx_module (int argc, const char **argv)
   {
-  module_startup ("smoothing_cxx", argc, argv, 2, "<parameter file>");
-  paramfile params (argv[1]);
+  module_startup ("smoothing_cxx", argc, argv);
+  paramfile params (getParamsFromCmdline(argc,argv));
 
   bool dp = params.find<bool> ("double_precision",false);
   dp ? smoothing_cxx<double>(params) : smoothing_cxx<float>(params);

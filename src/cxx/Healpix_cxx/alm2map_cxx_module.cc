@@ -116,8 +116,8 @@ template<typename T> void alm2map_cxx (paramfile &params)
 
 int alm2map_cxx_module (int argc, const char **argv)
   {
-  module_startup ("alm2map_cxx", argc, argv, 2, "<parameter file>");
-  paramfile params (argv[1]);
+  module_startup ("alm2map_cxx", argc, argv);
+  paramfile params (getParamsFromCmdline(argc,argv));
 
   bool dp = params.find<bool> ("double_precision",false);
   dp ? alm2map_cxx<double>(params) : alm2map_cxx<float>(params);
