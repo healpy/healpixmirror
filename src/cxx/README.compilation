@@ -1,3 +1,18 @@
+Starting with release ?.??, there are two ways to compile Healpix C++:
+using the configure script (recommended) or the traditional manual approach.
+
+
+1) Using configure
+
+Simply run "./configure"; if this fails, please refer to the output of
+"./configure --help" for additional hints and, if necessary, provide
+additional flags to the configure script.
+Once the script finishes successfully, run "make" (or "gmake").
+This should install the compilation products in the subdirectory "auto/".
+
+
+2) Manual setup
+
 Starting with HEALPix 2.20, Healpix_cxx supports compilation using a
 pre-installed libcfitsio. In order to use this feature, simply set
 the following environment variables before running "make":
@@ -41,5 +56,5 @@ for different platforms.
 
 Documentation can be created by the command "(g)make doc".
 However this requires the doxygen application to be installed
-on your system.
+on your system (for more information, see http://doxygen.org).
 The documentation will be created in the subdirectory doc/.
