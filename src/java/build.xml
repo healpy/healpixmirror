@@ -147,6 +147,7 @@
 	<target name="extrajars" depends="init" description="Build a JAR file containing external libraries">
 	        <jar destfile="${dist}/jhealpixExternalLibs.jar">
 				<fileset file="${lib}/net-ivoa-fits.jar"/>
+				<fileset file="${lib}/nom-tam-fits.jar"/>
 				<fileset file="${lib}/vecmath.jar"/>
 				<fileset file="${lib}/j3dcore.jar"/>
 				<fileset file="${lib}/j3dutils.jar"/>		
