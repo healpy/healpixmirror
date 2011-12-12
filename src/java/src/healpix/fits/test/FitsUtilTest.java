@@ -22,18 +22,21 @@ import healpix.fits.*;
 import healpix.core.*;
 
 import junit.framework.TestCase;
+import java.util.UUID;
+import java.io.File;
 
 public class FitsUtilTest extends TestCase
   {
-
   public void testHPmapf() throws Exception
     {
+    String name = UUID.randomUUID().toString()+".fits";
     HealpixMapFloat hpmf = new HealpixMapFloat(128,Scheme.NESTED);
     for (long i=0; i<hpmf.getNpix(); ++i)
       hpmf.setPixel(i,(float)i);
-    FitsUtil.writeFloatMap(hpmf,"testmap.fits");
+    FitsUtil.writeFloatMap(hpmf,name);
     hpmf.setNsideAndScheme (64, Scheme.RING);
-    hpmf=FitsUtil.getFloatMap("testmap.fits",2,1);
+    hpmf=FitsUtil.getFloatMap(name,2,1);
+    new File(name).delete();
     assertEquals("Scheme problem",Scheme.NESTED,hpmf.getScheme());
     assertEquals("Nside problem",128,hpmf.getNside());
     for (long i=0; i<hpmf.getNpix(); ++i)
