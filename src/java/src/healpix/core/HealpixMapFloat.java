@@ -108,6 +108,8 @@ public class HealpixMapFloat extends HealpixBase
     { return data[(int)ipix]; }
   public void setPixel(int ipix, float val)
     { data[ipix] = val; }
+  public void setPixel(long ipix, float val)
+    { data[(int)ipix] = val; }
 
   public float[] getData()
     { return data; }

@@ -108,6 +108,8 @@ public class HealpixMap<Type> extends HealpixBase
     { return data[(int)ipix]; }
   public void setPixel(int ipix, <type> val)
     { data[ipix] = val; }
+  public void setPixel(long ipix, <type> val)
+    { data[(int)ipix] = val; }
 
   public <type>[] getData()
     { return data; }

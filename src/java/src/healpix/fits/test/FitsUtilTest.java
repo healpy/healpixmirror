@@ -28,21 +28,15 @@ public class FitsUtilTest extends TestCase
 
   public void testHPmapf() throws Exception
     {
-    HealpixMapFloat hpmf = FitsUtil.getFloatMap("/scratch/martin/sim/output/sky.fits",2,1);
-    System.out.println(hpmf.getPixel(0)+" " + hpmf.getPixel(1)+" "+hpmf.getPixel(hpmf.getNpix()-1));
-    hpmf.swapScheme();
-    System.out.println(hpmf.getPixel(0)+" " + hpmf.getPixel(1)+" "+hpmf.getPixel(hpmf.getNpix()-1));
-    hpmf.swapScheme();
-    System.out.println(hpmf.getPixel(0)+" " + hpmf.getPixel(1)+" "+hpmf.getPixel(hpmf.getNpix()-1));
-//    FitsUtil.writeFloatMap(hpmf,"!blub.fits");
-    }
-  public void testHPmapd() throws Exception
-    {
-    HealpixMapDouble hpmf = FitsUtil.getDoubleMap("/scratch/martin/sim/output/sky.fits",2,1);
-    System.out.println(hpmf.getPixel(0)+" " + hpmf.getPixel(1)+" "+hpmf.getPixel(hpmf.getNpix()-1));
-    hpmf.swapScheme();
-    System.out.println(hpmf.getPixel(0)+" " + hpmf.getPixel(1)+" "+hpmf.getPixel(hpmf.getNpix()-1));
-    hpmf.swapScheme();
-    System.out.println(hpmf.getPixel(0)+" " + hpmf.getPixel(1)+" "+hpmf.getPixel(hpmf.getNpix()-1));
+    HealpixMapFloat hpmf = new HealpixMapFloat(128,Scheme.NESTED);
+    for (long i=0; i<hpmf.getNpix(); ++i)
+      hpmf.setPixel(i,(float)i);
+    FitsUtil.writeFloatMap(hpmf,"testmap.fits");
+    hpmf.setNsideAndScheme (64, Scheme.RING);
+    hpmf=FitsUtil.getFloatMap("testmap.fits",2,1);
+    assertEquals("Scheme problem",Scheme.NESTED,hpmf.getScheme());
+    assertEquals("Nside problem",128,hpmf.getNside());
+    for (long i=0; i<hpmf.getNpix(); ++i)
+      assertEquals("Value problem",(float)i,hpmf.getPixel(i));
     }
   }
