@@ -6,7 +6,7 @@ Query routines:
   which is much more economic.
 - inclusive query routines: tradeoff between performance and number of false
   positives is tuneable.
-- queries now work natively in NESTED scheme.
+- queries now work natively in both NESTED and RING schemes.
 
 Healpix_Base:
 - Healpix_Base and Healpix_Base2 have been merged into the templated class
