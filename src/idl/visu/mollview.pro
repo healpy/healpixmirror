@@ -102,7 +102,7 @@ pro mollview, file_in, select_in, $
 ;                       QUADCUBE= , $
 ;                       NO_DIPOLE=, NO_MONOPOLE=, $
 ;                       RESO_ARCMIN= , ROT=, $
-;                       SAVE=, SHADED=, SILENT=, SUBTITLE=, $
+;                       SAVE=, SHADED=, SILENT=, STAGGER=, SUBTITLE=, $
 ;                       TITLEPLOT=, TRANSPARENT=, TRUECOLORS= $
 ;                       UNITS=, WINDOW=, XPOS=, YPOS=]
 ;                        
@@ -408,6 +408,11 @@ pro mollview, file_in, select_in, $
 ;                   ** orthview only **
 ;
 ;       SILENT: if set, the code runs silently
+;
+;       STAGGER: if set to a scalar value in ]0,2], 
+;             3 copies of the same sphere centered at [-stagger, 0, stagger]
+;             (expressed in radius units) along the plot horizontal axis are shown in ORTHOGRAPHIC projection
+;               ** orthview only **
 ;
 ; 	SUBTITLE : String containing the subtitle to the plot (see TITLEPLOT)
 ;

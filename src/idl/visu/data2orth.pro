@@ -32,7 +32,7 @@ pro data2orth, data, pol_data, pix_type, pix_param, do_conv, do_rot, coord_in, c
                GAL_CUT=gal_cut, POLARIZATION=polarization, HALF_SKY=half_sky, SILENT=silent, PIXEL_LIST=pixel_list, $
                ASINH=asinh, $
                DO_SHADE=shade, SHADEMAP = shademap, TRUECOLORS=truecolors, DATA_TC=data_tc, $
-               MAP_OUT = map_out, ROT=rot_ang, FITS=fits
+               MAP_OUT = map_out, ROT=rot_ang, FITS=fits, STAGGER=stagger
 ;+
 ;==============================================================================================
 ;     DATA2ORTH
@@ -45,7 +45,7 @@ pro data2orth, data, pol_data, pix_type, pix_param, do_conv, do_rot, coord_in, c
 ;          pxsize=, log=, hist_equal=, max=, min=, flip=, no_dipole=,
 ;          no_monopole=, units=, data_plot=, gal_cut=,
 ;          polarization=, half_sky, silent=, pixel_list, asinh=,
-;          do_shade=, shademap=, truecolors=, data_tc=, map_out=, rot=, fits=
+;          do_shade=, shademap=, truecolors=, data_tc=, map_out=, rot=, fits=, stagger=
 ;
 ; IN :
 ;      data, pol_data, pix_type, pix_param, do_conv, do_rot, coord_in,
@@ -70,9 +70,18 @@ pro data2orth, data, pol_data, pix_type, pix_param, do_conv, do_rot, coord_in, c
 do_shade = keyword_set(shade)
 do_true = keyword_set(truecolors)
 truetype = do_true ? truecolors : 0
-if keyword_set(half_sky) then do_fullsky = 0 else do_fullsky = 1
+do_stagger =  keyword_set(stagger)
+do_fullsky = ~ (keyword_set(half_sky) || do_stagger)
+nspheres = 1
+if (do_fullsky) then nspheres = 2
+if (do_stagger) then begin
+    nspheres = 3
+    if (stagger[0] le 0. or stagger[0] gt 2.) then begin
+        message, 'Stagger in ]0,2]'
+    endif
+endif
 
-if (do_fullsky) then begin
+if (nspheres gt 1) then begin
     du_dv = 2. 
     xsize_min = 200
     xsize_default = 800L
@@ -215,9 +224,12 @@ yll= 0 & yur =  ysize-1
 xc = 0.5*(xll+xur) & dx = (xur - xc)
 yc = 0.5*(yll+yur) & dy = (yur - yc)
 
-if (do_fullsky) then begin
+if (nspheres eq 2) then begin
     c0 =  1
     c1 = -1
+endif
+if (nspheres eq 3) then begin
+    cstag =   abs(stagger[0])*[1,0,-1]
 endif
 
 yband = LONG(5.e5 / FLOAT(xsize))
@@ -232,33 +244,38 @@ for ystart = 0, ysize - 1, yband do begin
     ; for each point on the orthographic map 
     ; looks for the corresponding position vector on the sphere
     ; -------------------------------------------------------------
-    if (do_fullsky) then begin
-        disc  = WHERE( (((u-c0)^2 + v^2) LE 1.) OR (((u-c1)^2 + v^2) LE 1.), ndisc)
-    endif else begin
-        disc  = WHERE( ((u^2 + v^2) LE 1.), ndisc)
-    endelse
-    if (~ small_file) then begin
-        if (do_fullsky) then begin
-            off_disc = WHERE( (((u-c0)^2 + v^2) GT 1.) AND (((u-c1)^2 + v^2) GT 1.), noff_ell)
-        endif else begin
-            off_disc = WHERE( ((u^2 + v^2) GT 1.), noff_ell)            
-        endelse
-        if (noff_ell NE 0) then plan_off = [plan_off, ystart*xsize+off_disc]
-    endif
+    case nspheres of
+        3: disc  = WHERE( (((u-cstag[0])^2 + v^2) LE 1.) OR $
+                          (((u-cstag[1])^2 + v^2) LE 1.) OR $
+                          (((u-cstag[2])^2 + v^2) LE 1.), ndisc, $
+                       complement=off_disc, ncomplement=noff_ell)
+        2: disc  = WHERE( (((u-c0)^2 + v^2) LE 1.) OR (((u-c1)^2 + v^2) LE 1.), ndisc, $
+                       complement=off_disc, ncomplement=noff_ell)
+        1: disc  = WHERE( ((u^2 + v^2) LE 1.), ndisc, $
+                       complement=off_disc, ncomplement=noff_ell)
+    endcase
+    if (~small_file && noff_ell NE 0) then plan_off = [plan_off, ystart*xsize+off_disc]
     if (ndisc gt 0) then begin
-        u1 =  u(disc)
-        v1 =  v(disc)
+        u1 =  u[disc]
+        v1 =  v[disc]
         u = 0 & v = 0
-        sign = (u1 ge 0.)*2 - 1 ; =1 for u1>0 , =-1 otherwise
-        if (do_fullsky) then begin
-            ys = abs(u1)-c0 
-            xs = sqrt(1.-ys*ys-v1*v1)
-            vector = [[sign*xs],[ys],[v1]] ; normalized vector
-        endif else begin
-            ys = u1
-            xs = sqrt(1.-ys*ys-v1*v1)
-            vector = [[xs],[ys],[v1]] ; normalized vector
-        endelse
+        case nspheres of
+            3: begin
+                trigger = (u1/cstag[0]) < 1
+                trigger >= (-1)
+                ys = u1 - nint(trigger)*cstag[0]
+            end
+            2: begin
+                sign = (u1 ge 0.)*2 - 1 ; =1 for u1>0 , =-1 otherwise
+                ys = abs(u1)-c0 
+            end
+            1: begin
+                ys = u1
+            end
+        endcase
+        xs = sqrt(1.-ys*ys-v1*v1)
+        if (nspheres eq 2) then xs *= sign
+        vector = [[xs],[ys],[v1]] ; normalized vector
         if (do_shade) then begin
             ; sphere shading (Phong model)
             ; ambiant light = 50%, specular light = 90%, diffuse light = ( 1 - ambiant)
@@ -347,10 +364,10 @@ endfor
 ; export in FITS and as an array the original mollweide map before alteration
 ;----------------------------------------------
 
-; planmap -> IDL array
+; planmap -> IDL array (implies small_file)
 if (do_map_out) then map_out = proj2map_out(planmap, offmap=off_disc, bad_data=bad_data)
 
-; planmap -> FITS file
+; planmap -> FITS file (implies small_file)
 if keyword_set(fits) then begin 
     reso_arcmin = 60.d0 * 180.d0/xsize * fudge * 2.d0 / !dpi
     ;;print,reso_arcmin,xsize

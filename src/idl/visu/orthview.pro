@@ -70,6 +70,7 @@ pro orthview, file_in, select_in, $
               SAVE = save, $
               SHADED = shaded, $
               SILENT = silent, $
+              STAGGER = stagger, $
               SUBTITLE = subtitle, $
               TITLEPLOT = titleplot, $
               TRANSPARENT = transparent, $
@@ -124,7 +125,7 @@ if (n_params() lt 1 or n_params() gt 2) then begin
     print,'              POLARIZATION=, PREVIEW=, '
     print,'              PS=, PXSIZE=, PYSIZE=, QUADCUBE= ,'
     print,'              RETAIN=, ROT=,  '
-    print,'              SAVE=, SHADED=, SILENT=, SUBTITLE=, '
+    print,'              SAVE=, SHADED=, SILENT=, STAGGER=, SUBTITLE=, '
     print,'              TITLEPLOT=, TRANSPARENT=, TRUECOLORS= '
     print,'              UNITS=, WINDOW=, XPOS=, YPOS=]'
     print
@@ -172,7 +173,7 @@ data2orth, $
   NO_DIPOLE=no_dipole, NO_MONOPOLE=no_monopole, UNITS=sunits, DATA_plot = data_plot, GAL_CUT=gal_cut, $
   POLARIZATION=polarization, HALF_SKY=half_sky, SILENT=silent, PIXEL_LIST=pixel_list, ASINH=asinh, $
   DO_SHADE=do_shade, SHADEMAP=shademap, $
-  TRUECOLORS=truecolors, DATA_TC=data_tc, MAP_OUT=map_out, ROT=rot, FITS=fits
+  TRUECOLORS=truecolors, DATA_TC=data_tc, MAP_OUT=map_out, ROT=rot, FITS=fits, STAGGER=stagger
 
 proj2out, $
   planmap, Tmax, Tmin, color_bar, 0., title_display, $
