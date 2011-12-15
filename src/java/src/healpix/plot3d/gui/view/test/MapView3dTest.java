@@ -122,8 +122,8 @@ public class MapView3dTest extends TestCase {
 	public static void main(String[] args) {
 		int imap = 1;
 		MapTaker mview;
-//		mview = new Map3DPanelContent();
-		mview = new MapView3d(false, false, 0.1f);
+		mview = new Map3DPanelContent();
+//		mview = new MapView3d(false, false, 0.1f);
 
 		HealpixMapCreator cr = new HealpixMapCreator(8);
 		HealpixMap map = cr.getMap();

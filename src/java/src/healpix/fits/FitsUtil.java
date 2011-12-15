@@ -19,19 +19,19 @@
  */
 package healpix.fits;
 
+import healpix.core.HealpixMapDouble;
+import healpix.core.HealpixMapFloat;
+import healpix.core.HealpixUtils;
+import healpix.core.Scheme;
+
 import java.io.FileOutputStream;
 
-import healpix.core.Scheme;
-import healpix.core.HealpixMapFloat;
-import healpix.core.HealpixMapDouble;
-import healpix.core.HealpixUtils;
-
+import nom.tam.fits.BasicHDU;
+import nom.tam.fits.BinaryTable;
+import nom.tam.fits.BinaryTableHDU;
 import nom.tam.fits.Fits;
 import nom.tam.fits.FitsFactory;
 import nom.tam.fits.Header;
-import nom.tam.fits.BinaryTable;
-import nom.tam.fits.BinaryTableHDU;
-import nom.tam.fits.BasicHDU;
 import nom.tam.util.BufferedDataOutputStream;
 
 public class FitsUtil

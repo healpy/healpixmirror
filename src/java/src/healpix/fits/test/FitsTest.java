@@ -20,10 +20,12 @@
 package healpix.fits.test;
 
 import junit.framework.TestCase;
-import net.ivoa.fits.FitsException;
-import net.ivoa.fits.data.BinaryTable;
-import net.ivoa.fits.hdu.BinaryTableHDU;
-import net.ivoa.fits.hdu.TableHDU;
+import nom.tam.fits.BinaryTable;
+import nom.tam.fits.BinaryTableHDU;
+import nom.tam.fits.Fits;
+import nom.tam.fits.FitsException;
+import nom.tam.fits.Header;
+import nom.tam.fits.TableHDU;
 
 /**
  * Test class on fits reading
@@ -67,12 +69,11 @@ public class FitsTest extends TestCase {
 	 * @return double[][] data read
 	 * @throws Exception
 	 */
-	@SuppressWarnings("deprecation")
 	public double[][] readFitsBinaryTable(String filename) throws Exception {
-		net.ivoa.fits.Fits fits = new net.ivoa.fits.Fits(filename);
+		Fits fits = new Fits(filename);
 		BinaryTableHDU thdu = (BinaryTableHDU) fits.getHDU(1);
 		BinaryTable data = (BinaryTable) thdu.getData();
-		net.ivoa.fits.Header head = thdu.getHeader();
+		Header head = thdu.getHeader();
 		int ncard = head.getNumberOfCards();
 		for (int n = 0; 0 < ncard; n++) {
 			if (head.getKey(n).equals("ORDERING")) {
@@ -90,11 +91,11 @@ public class FitsTest extends TestCase {
 		for (int i = 0; i < ncol; i++) {
 			if (types[i] != 'D')
 				return null;
-			double[] tdoub = (double[]) thdu.getColumn(i);
+			double[][] tdoub = (double[][]) thdu.getColumn(i);
 			names[i] = thdu.getColumnName(i);
 			System.out.println("Name:" + names[i]);
 			for (int j = 0; j < nrow; j++) {
-				array[i][j] = tdoub[j];
+				array[i][j] = tdoub[j][0];
 			}
 		}
 		return array;
@@ -122,7 +123,7 @@ public class FitsTest extends TestCase {
 	 */
 	public void testReadTableHDU() throws Exception, FitsException {
 		String testFITSFile = "data/test/FITSfile.fit";
-		net.ivoa.fits.Fits fits = new net.ivoa.fits.Fits(testFITSFile);
+		Fits fits = new Fits(testFITSFile);
 		TableHDU table = (BinaryTableHDU) fits.getHDU(1);
 
 		assertEquals(" Checks the first columns name : ", table

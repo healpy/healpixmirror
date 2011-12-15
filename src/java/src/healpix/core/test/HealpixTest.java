@@ -35,6 +35,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import junit.framework.Assert;
 import junit.framework.TestCase;
 
 
@@ -1461,6 +1462,16 @@ public class HealpixTest extends TestCase {
 		long nside = HealpixIndex.calculateNSide(pixsize);
 		System.out.println("Required nside is " + nside);
 		assertEquals("nside = " + nside, 8192, nside, 1e-1);
+		
+		int nside1[]= new int[]{8192,262144,536870912};
+		for (int i = 0; i < nside1.length; i++) {
+			double res = HealpixIndex.getPixRes(nside1[i]);
+			System.out.println("Resolution for "+nside1[i]+" is "+res);		
+			nside = HealpixIndex.calculateNSide(res);
+			System.out.println("Final resolution "+nside);
+			//Assert.assertTrue("Nside wrong, expected "+nside1[i]+" but was "+nside,nside == nside1[i]);
+		}
+				
 		System.out.println(" End of GetNSide test _______________________");
 	}
 

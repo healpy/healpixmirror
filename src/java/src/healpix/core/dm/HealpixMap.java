@@ -303,4 +303,18 @@ public interface HealpixMap extends AbstractHealpixMap {
 	 */
 	public CoordSys getCoordSys();
 	
+	/**
+	 * Get the unit of the map of index mapIndex
+	 * @param mapIndex
+	 * @return
+	 */
+	public String getUnit(short mapIndex);
+	
+	/**
+	 * Sets unit of the map index mapIndex
+	 * @param unit
+	 * @param mapIndex
+	 */
+	public void setUnit(String unit, short mapIndex);
+	
 }

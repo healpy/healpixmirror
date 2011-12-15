@@ -21,18 +21,18 @@ package healpix.core.dm;
 
 import healpix.core.AngularPosition;
 import healpix.core.HealpixBase;
-import healpix.core.Scheme;
 import healpix.core.Pointing;
+import healpix.core.Scheme;
 import healpix.core.dm.util.HealpixTool;
 import healpix.tools.Constants;
 
 import java.io.FileOutputStream;
 import java.io.Serializable;
 
-import net.ivoa.fits.Fits;
-import net.ivoa.fits.FitsFactory;
-import net.ivoa.fits.hdu.BinaryTableHDU;
-import net.ivoa.util.BufferedDataOutputStream;
+import nom.tam.fits.BinaryTableHDU;
+import nom.tam.fits.Fits;
+import nom.tam.fits.FitsFactory;
+import nom.tam.util.BufferedDataOutputStream;
 
 /**
  * A Healpix map can generate sky maps encoded in the HEALPix sky indexing
@@ -207,7 +207,7 @@ public class HealpixMapImp extends HealpixBase implements HealpixMap,
 	 * Construct a HEALPix mapper for a given NSIDE.
 	 * 
 	 * @param nsideIndex
-	 *            HEALPix sphere tesselisation is done with NSIDE=2^nSideIndex -
+	 *            HEALPix sphere tesselisation is done with NSIDE=2^nSideIndex,
 	 *            nSideIndex must be greater or equal to 0.
 	 * @param maps
 	 *            Array of strings with map names. the length of the array
@@ -492,7 +492,7 @@ public class HealpixMapImp extends HealpixBase implements HealpixMap,
 		bhdu.addValue("NSIDE", this.nside(), "HEALPix NSIDE parameter");
 		bhdu.addValue("ORDERING", this.scheme.toString().toUpperCase(),
 				"HEALPix ordering scheme");
-		bhdu.addValue("COORDSYS", this.coordSys.fitsType, "Coordinate system of map");
+		bhdu.addValue("COORDSYS", getCoordSys().fitsType, "Coordinate system of map");
 
 		for (int n = 0; n < this.nMaps; ++n) {
 			bhdu.addValue("TDMIN" + (n + 1), this.minVal[n],
@@ -958,11 +958,32 @@ public class HealpixMapImp extends HealpixBase implements HealpixMap,
 
 	@Override
 	public CoordSys getCoordSys() {
+		if(coordSys==null){
+			coordSys = CoordSys.fromFits('G');
+		}
 		return coordSys;
 	}
 
 	@Override
 	public void setCoordSys(CoordSys cs) {
 		coordSys=cs;
+	}
+
+	/**
+	 * @see healpix.core.dm.HealpixMap#getUnit(short)
+	 */
+	@Override
+	public String getUnit(short mapIndex) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	/**
+	 * @see healpix.core.dm.HealpixMap#setUnit(java.lang.String, short)
+	 */
+	@Override
+	public void setUnit(String unit, short mapIndex) {
+		// TODO Auto-generated method stub
+		
 	}
 }
