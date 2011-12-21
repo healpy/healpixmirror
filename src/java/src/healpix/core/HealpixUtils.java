@@ -35,10 +35,10 @@ public class HealpixUtils
   static public int ilog2(long arg)
     {
     int res=0;
-    while (arg > 0x0000FFFF) { res+=16; arg>>=16; }
-    if (arg > 0x000000FF) { res|=8; arg>>=8; }
-    if (arg > 0x0000000F) { res|=4; arg>>=4; }
-    if (arg > 0x00000003) { res|=2; arg>>=2; }
+    while (arg > 0x0000FFFF) { res+=16; arg>>>=16; }
+    if (arg > 0x000000FF) { res|=8; arg>>>=8; }
+    if (arg > 0x0000000F) { res|=4; arg>>>=4; }
+    if (arg > 0x00000003) { res|=2; arg>>>=2; }
     if (arg > 0x00000001) { res|=1; }
     return res;
     }
