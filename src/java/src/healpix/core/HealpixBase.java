@@ -23,8 +23,6 @@ package healpix.core;
 
 import java.util.Arrays;
 
-import healpix.core.base.set.*;
-
 /** Functionality related to the HEALPix pixelisation.
     This class is conceptually very similar the the Healpix_Base class
     of Healpix_cxx. It supports NESTED for nside parameters which are powers
@@ -676,10 +674,10 @@ public class HealpixBase extends HealpixTables
       { return p[s-1]; }
     }
 
-  private LongRangeSet queryStripInternal(double theta1, double theta2,
+  private RangeSet queryStripInternal(double theta1, double theta2,
     boolean inclusive) throws Exception
     {
-    LongRangeSetBuilder pixset = new LongRangeSetBuilder();
+    RangeSet pixset = new RangeSet(2);
     if (scheme==Scheme.RING)
       {
       long ring1 = Math.max(1,1+ringAbove(Math.cos(theta1))),
@@ -693,13 +691,13 @@ public class HealpixBase extends HealpixTables
       RingInfoSmall ris1 = get_ring_info_small(ring1),
                     ris2 = get_ring_info_small(ring2);
       long pix1 = ris1.startpix,
-           pix2 = ris2.startpix+ris2.ringpix-1;
-      if (pix1<=pix2) pixset.appendRange(pix1,pix2);
+           pix2 = ris2.startpix+ris2.ringpix;
+      if (pix1<pix2) pixset.append(pix1,pix2);
       }
     else
       HealpixUtils.check(false,"queryStrip not yet implemented for NESTED");
 
-    return pixset.build();
+    return pixset;
     }
 
   /** Returns a range set of pixels whose centers lie within a given latitude
@@ -713,12 +711,12 @@ public class HealpixBase extends HealpixTables
           {@code theta1} and pi.</li>
       <ul>
       This method currently only works in the RING scheme. */
-  public LongRangeSet queryStrip(double theta1, double theta2,
+  public RangeSet queryStrip(double theta1, double theta2,
     boolean inclusive) throws Exception
     {
     if (theta1<theta2)
       return queryStripInternal(theta1,theta2,inclusive);
-    LongRangeSet res = queryStripInternal(0.,theta2,inclusive);
+    RangeSet res = queryStripInternal(0.,theta2,inclusive);
     return res.union(queryStripInternal(theta1,Math.PI,inclusive));
     }
 
@@ -763,10 +761,10 @@ public class HealpixBase extends HealpixTables
         pixels centers lie within the disk; if {@code true}, return all pixels
         that overlap with the disk, and maybe a few more.
       @return an object containing the indices of all pixels within the disk */
-  public LongRangeSet queryDisc(Pointing ptg, double radius, boolean inclusive)
+  public RangeSet queryDisc(Pointing ptg, double radius, boolean inclusive)
     throws Exception
     {
-    LongRangeSetBuilder pixset = new LongRangeSetBuilder();
+    RangeSet pixset = new RangeSet();
     if (scheme==Scheme.RING)
       {
       int fct = inclusive ? (int)Math.min((long)FACT,(1L<<order_max)/nside) : 1;
@@ -782,7 +780,7 @@ public class HealpixBase extends HealpixTables
         rsmall = rbig = inclusive ? radius+maxPixrad() : radius;
 
       if (rsmall>=Math.PI)
-        { pixset.appendRange(0,npix-1); return pixset.build(); }
+        { pixset.append(0,npix); return pixset; }
 
       rbig = Math.min (Math.PI,rbig);
 
@@ -802,7 +800,7 @@ public class HealpixBase extends HealpixTables
       if ((rlat1<=0) && (irmin>1)) // north pole in the disk
         {
         RingInfoSmall info =get_ring_info_small(irmin-1);
-        pixset.appendRange(0,info.startpix+info.ringpix-1);
+        pixset.append(0,info.startpix+info.ringpix);
         }
 
       if ((fct>1) && (rlat1>0)) irmin=Math.max(1L,irmin-1);
@@ -846,24 +844,24 @@ public class HealpixBase extends HealpixTables
             { ip_lo-=nr; ip_hi-=nr; }
           if (ip_lo<0)
             {
-            pixset.appendRange(ipix1,ipix1+ip_hi);
-            pixset.appendRange(ipix1+ip_lo+nr,ipix2);
+            pixset.append(ipix1,ipix1+ip_hi+1);
+            pixset.append(ipix1+ip_lo+nr,ipix2+1);
             }
           else
-            pixset.appendRange(ipix1+ip_lo,ipix1+ip_hi);
+            pixset.append(ipix1+ip_lo,ipix1+ip_hi+1);
           }
         }
 
       if ((rlat2>=Math.PI) && (irmax+1<nl4)) // south pole in the disk
         {
         RingInfoSmall info =get_ring_info_small(irmax+1);
-        pixset.appendRange(info.startpix,npix-1);
+        pixset.append(info.startpix,npix);
         }
       }
     else // scheme_==NEST
       {
       if (radius>=Math.PI) // disk covers the whole sphere
-        { pixset.appendRange(0,npix-1); return pixset.build(); }
+        { pixset.append(0,npix); return pixset; }
 
       int oplus=inclusive ? OPLUS : 0;
       int omax=Math.min(order_max,order+oplus); // the order up to which we test
@@ -907,15 +905,15 @@ public class HealpixBase extends HealpixTables
           }
         }
       }
-    return pixset.build();
+    return pixset;
     }
 
-  private LongRangeSet queryMultiDisc (Vec3[] norm, double[] rad,
+  private RangeSet queryMultiDisc (Vec3[] norm, double[] rad,
     boolean inclusive) throws Exception
     {
     int nv=norm.length;
     HealpixUtils.check(nv==rad.length,"inconsistent input arrays");
-    LongRangeSetBuilder res = new LongRangeSetBuilder();
+    RangeSet res = new RangeSet();
 
     if (scheme==Scheme.RING)
       {
@@ -982,9 +980,8 @@ public class HealpixBase extends HealpixTables
         long ipix1=ris.startpix, nr=ris.ringpix;
         long ipix2 = ipix1 + nr - 1; // highest pixel number in the ring
         double shift = ris.shifted ? 0.5 : 0.;
-        LongRangeSetBuilder tr = new LongRangeSetBuilder();
-        tr.appendRange(ipix1,ipix2);
-        LongRangeSet rstmp = tr.build();
+        RangeSet tr = new RangeSet(), rstmp = new RangeSet();
+        rstmp.append(ipix1,ipix2+1);
 
         for (int j=0; (j<nd)&&(rstmp.size()>0); ++j)
           {
@@ -1011,24 +1008,23 @@ public class HealpixBase extends HealpixTables
           if (ip_hi>=nr)
             { ip_lo-=nr; ip_hi-=nr;}
 
-//FIXME: should be replaced by clear() method once it's available.
-          tr = new LongRangeSetBuilder();
+          tr.clear();
           if (ip_lo<0)
             {
             if (ip_hi+1<=ip_lo+nr-1)
-              tr.appendRange(ipix1+ip_hi+1,ipix1+ip_lo+nr-1);
+              tr.append(ipix1+ip_hi+1,ipix1+ip_lo+nr);
             }
           else
             {
             if (ip_lo>0)
-              tr.appendRange(ipix1,ipix1+ip_lo-1);
+              tr.append(ipix1,ipix1+ip_lo);
             if (ipix1+ip_hi+1<=ipix2)
-              tr.appendRange(ipix1+ip_hi+1,ipix2);
+              tr.append(ipix1+ip_hi+1,ipix2+1);
             }
           if (tr.size()>0)
-            rstmp=rstmp.substract(tr.build());
+            rstmp=rstmp.difference(tr);
           }
-        res.appendRangeSet(rstmp);
+        res.append(rstmp);
         }
       }
     else // scheme == NEST
@@ -1077,7 +1073,7 @@ public class HealpixBase extends HealpixTables
         if (zone>0) check_pixel (o, omax, zone, res, pix, stk, inclusive);
         }
       }
-    return res.build();
+    return res;
     }
 
   /** Returns a range set of pixels whose centers lie within the convex
@@ -1091,7 +1087,7 @@ public class HealpixBase extends HealpixTables
         pixels that overlap with the polygon, and maybe a few more.
       @return an object containing the indices of all pixels within the
         polygon */
-  public LongRangeSet queryPolygon (Pointing[] vertex, boolean inclusive)
+  public RangeSet queryPolygon (Pointing[] vertex, boolean inclusive)
     throws Exception
     {
     int nv=vertex.length;
@@ -1125,7 +1121,7 @@ public class HealpixBase extends HealpixTables
     }
 
   private void check_pixel (int o, int omax, int zone,
-    LongRangeSetBuilder pixset, long pix, pstack stk, boolean inclusive)
+    RangeSet pixset, long pix, pstack stk, boolean inclusive)
     {
     if (zone==0) return;
 
@@ -1134,7 +1130,7 @@ public class HealpixBase extends HealpixTables
       if (zone>=3) // output all subpixels
         {
         int sdist=2*(order-o); // the "bit-shift distance" between map orders
-        pixset.appendRange(pix<<sdist,((pix+1)<<sdist)-1);
+        pixset.append(pix<<sdist,((pix+1)<<sdist));
         }
       else // (zone>=1)
         for (int i=0; i<4; ++i)

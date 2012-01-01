@@ -36,13 +36,21 @@ import java.util.List;
  * Emmanuel Joliet with some methods added from pix_tools F90 code port to Java.
  * Performance for 64bits resolution improved using code from Jan Kotek and
  * inspired in PCJ (http://pcj.sourceforge.net/)
- * 
+ *
  * @author William O'Mullane, extended by Emmanuel Joliet
  * @version $Id: HealpixIndex.java 164005 2011-01-10 11:10:33Z ejoliet $
  */
 
 public class HealpixIndex extends HealpixBase implements Serializable {
-	
+
+   LongRangeSet toLRS (RangeSet rs)
+     {
+     long[] v=new long[2*rs.size()];
+     for (int i=0; i<rs.size(); ++i)
+       { v[2*i]=rs.ivbegin(i); v[2*i+1]=rs.ivend(i)-1; }
+     return new LongRangeSet(v,v.length);
+     }
+
 	/**
 	 * Default serial version
 	 */
@@ -65,7 +73,7 @@ public class HealpixIndex extends HealpixBase implements Serializable {
 
 	/**
 	 * Construct healpix routines tied to a given nside
-	 * 
+	 *
 	 * @param nSIDE2
 	 *            resolution number
 	 * @throws Exception
@@ -79,11 +87,11 @@ public class HealpixIndex extends HealpixBase implements Serializable {
 	}
 
 	/**
-	 * renders the pixel number ipix ( scheme as defined for object) 
+	 * renders the pixel number ipix ( scheme as defined for object)
 	 * for a pixel which contains
 	 * a point on a sphere at coordinates theta and phi, given the map
-	 * resolution parameter nside 
-	 * 
+	 * resolution parameter nside
+	 *
 	 * @param theta
 	 *            angle (along meridian), in [0,Pi], theta=0 : north pole
 	 * @param phi
@@ -103,7 +111,7 @@ public class HealpixIndex extends HealpixBase implements Serializable {
 	 * Convert from pix number to angle renders theta and phi coordinates of the
 	 * nominal pixel center for the pixel number ipix (NESTED scheme) given the
 	 * map resolution parameter nside
-	 * 
+	 *
 	 * @param ipix
 	 *            pixel index number
 	 * @return double array of [theta, phi] angles in radians [0,Pi], [0,2*Pi]
@@ -122,7 +130,7 @@ public class HealpixIndex extends HealpixBase implements Serializable {
 	 * Convert from pix number to angle renders theta and phi coordinates of the
 	 * nominal pixel center for the pixel number ipix (RING scheme) given the
 	 * map resolution parameter nside
-	 * 
+	 *
 	 * @param ipix
 	 *            pixel index number
 	 * @return double array of [theta, phi] angles in radians [0,Pi], [0,2*Pi]
@@ -144,7 +152,7 @@ public class HealpixIndex extends HealpixBase implements Serializable {
 	 * available (nside=8192) and then degraded to that required (by integer
 	 * division) this doesn't cost more, and it makes sure that the treatement
 	 * of round-off will be consistent for every resolution
-	 * 
+	 *
 	 * @param theta
 	 *            angle (along meridian), in [0,Pi], theta=0 : north pole
 	 * @param phi
@@ -162,7 +170,7 @@ public class HealpixIndex extends HealpixBase implements Serializable {
 
 	/**
 	 * integration limits in cos(theta) for a given ring i_th, i_th > 0
-	 * 
+	 *
 	 * @param i_th
 	 *            ith ring
 	 * @return limits
@@ -174,7 +182,7 @@ public class HealpixIndex extends HealpixBase implements Serializable {
 
 	/**
 	 * return ring number for given pix in ring scheme
-	 * 
+	 *
 	 * @param ipix
 	 *            pixel index number in ring scheme
 	 * @return ring number
@@ -191,7 +199,7 @@ public class HealpixIndex extends HealpixBase implements Serializable {
 
 	/**
 	 * Construct a {@link SpatialVector} from the angle (theta,phi)
-	 * 
+	 *
 	 * @param theta
 	 *            angle (along meridian), in [0,Pi], theta=0 : north pole
 	 * @param phi
@@ -208,7 +216,7 @@ public class HealpixIndex extends HealpixBase implements Serializable {
 
 	/**
 	 * Converts the unit vector to pix number in NEST scheme
-	 * 
+	 *
 	 * @param vec
 	 *            {@link SpatialVector}
 	 * @return pixel index number in nest scheme
@@ -223,7 +231,7 @@ public class HealpixIndex extends HealpixBase implements Serializable {
 	}
 	/**
 	 * Converts the unit vector to pix number in RING scheme
-	 * 
+	 *
 	 * @param vec
 	 *            {@link SpatialVector}
 	 * @return pixel index number in ring scheme
@@ -239,7 +247,7 @@ public class HealpixIndex extends HealpixBase implements Serializable {
 
 	/**
 	 * Converts pix number in NEST scheme to the unit vector
-	 * 
+	 *
 	 * @param pix
 	 *            pixel index number in nest scheme
 	 * @return {@link SpatialVector}
@@ -255,7 +263,7 @@ public class HealpixIndex extends HealpixBase implements Serializable {
 
 	/**
 	 * Converts pix number in RING scheme to the unit vector
-	 * 
+	 *
 	 * @param pix
 	 *            pixel index number in ring scheme
 	 * @return {@link SpatialVector}
@@ -272,7 +280,7 @@ public class HealpixIndex extends HealpixBase implements Serializable {
 	/**
 	 * Returns set of points along the boundary of the given pixel in NEST
 	 * scheme. Step 1 gives 4 points on the corners.
-	 * 
+	 *
 	 * @param pix
 	 *            pixel index number in nest scheme
 	 * @param step
@@ -292,7 +300,7 @@ public class HealpixIndex extends HealpixBase implements Serializable {
 	 * Returns set of points along the boundary of the given pixel in RING
 	 * scheme. Step 1 gives 4 points on the corners.
 	 * Mainly for graphics = you may not want to use LARGE NSIDEs..
-	 * 
+	 *
 	 * @param pix
 	 *            pixel index number in ring scheme
 	 * @param step
@@ -310,7 +318,7 @@ public class HealpixIndex extends HealpixBase implements Serializable {
 
 	/**
 	 * calculates angular resolution of the pixel map in arc seconds.
-	 * 
+	 *
 	 * @param nside
 	 * @return double resolution in arcsec
 	 */
@@ -321,7 +329,7 @@ public class HealpixIndex extends HealpixBase implements Serializable {
 
 	/**
 	 * calculate required nside given pixel size in arcsec
-	 * 
+	 *
 	 * @param pixsize
 	 *            in arcsec
 	 * @return long nside parameter
@@ -337,7 +345,7 @@ public class HealpixIndex extends HealpixBase implements Serializable {
 	 * calculates vector corresponding to angles theta (co-latitude measured
 	 * from North pole, in [0,pi] radians) phi (longitude measured eastward in
 	 * [0,2pi] radians) North pole is (x,y,z) = (0, 0, 1)
-	 * 
+	 *
 	 * @param theta
 	 *            angle (along meridian), in [0,Pi], theta=0 : north pole
 	 * @param phi
@@ -349,7 +357,7 @@ public class HealpixIndex extends HealpixBase implements Serializable {
 		return new SpatialVector(new Vec3 (new Pointing(theta,phi)));
 	}
 
-	
+
 	public static AngularPosition vec2AngularPosition(SpatialVector v) {
 		return new AngularPosition(new Pointing (v));
 	}
@@ -358,7 +366,7 @@ public class HealpixIndex extends HealpixBase implements Serializable {
 	 * converts a SpatialVector in a tuple of angles tup[0] = theta co-latitude
 	 * measured from North pole, in [0,PI] radians, tup[1] = phi longitude
 	 * measured eastward, in [0,2PI] radians
-	 * 
+	 *
 	 * @param v
 	 *            SpatialVector
 	 * @return double[] out_tup out_tup[0] = theta out_tup[1] = phi
@@ -376,7 +384,7 @@ public class HealpixIndex extends HealpixBase implements Serializable {
 	 * see, eg Bronshtein, Semendyayev Eq 2.86 half perimeter hp =
 	 * 0.5*(side1+side2+side3) l'Huilier formula x0 = tan( hp/2.) x1 = tan((hp -
 	 * side1)/2.) x2 = tan((hp - side2)/2.) x3 = tan((hp - side3)/2.)
-	 * 
+	 *
 	 * @param v1
 	 *            SpatialVector
 	 * @param v2
@@ -405,7 +413,7 @@ public class HealpixIndex extends HealpixBase implements Serializable {
 	/**
 	 * calculates angular distance (in radians) between 2 Vectors v1 and v2.
 
-	 * 
+	 *
 	 * @param v1
 	 *            SpatialVector
 	 * @param v2
@@ -417,7 +425,7 @@ public class HealpixIndex extends HealpixBase implements Serializable {
 		return v1.angle(v2);
         }
 
-	
+
 	/**
 	 * now using the C++ one this is here for compatibility
 	 * @param vec
@@ -429,10 +437,10 @@ public class HealpixIndex extends HealpixBase implements Serializable {
 	 */
 	public LongRangeSet queryDisc(SpatialVector vec,
 			double radius, int nest, int inclusive) throws Exception {
-		
+
 		Scheme sbak=scheme;
 		setScheme ((nest==0) ? Scheme.RING : Scheme.NESTED);
-		LongRangeSet res = super.queryDisc(new Pointing(vec),radius,(inclusive!=0));
+		LongRangeSet res = toLRS(super.queryDisc(new Pointing(vec),radius,(inclusive!=0)));
 		setScheme (sbak);
 		return res;
 	}
@@ -446,13 +454,13 @@ public class HealpixIndex extends HealpixBase implements Serializable {
 	 */
 	public LongRangeSet queryDisc(SpatialVector vec,
 			double radius, boolean inclusive) throws Exception {
-		return queryDisc(new Pointing(vec),radius,inclusive);
+		return toLRS(queryDisc(new Pointing(vec),radius,inclusive));
 	}
-	
+
 
 	/**
 	 * returns the ring number in {1, 4*nside - 1} calculated from z coordinate
-	 * 
+	 *
 	 * @param nside
 	 *            long resolution
 	 * @param z
@@ -483,7 +491,7 @@ public class HealpixIndex extends HealpixBase implements Serializable {
 	/**
 	 * finds pixels that lie within a CONVEX polygon defined by its vertex on
 	 * sphere
-	 * 
+	 *
 	 * @param nside
 	 *            the map resolution
 	 * @param vlist1
@@ -503,14 +511,14 @@ public class HealpixIndex extends HealpixBase implements Serializable {
 		Pointing[] vertex = new Pointing[vlist1.size()];
 		for (int i=0; i<vlist1.size(); ++i)
 			vertex[i]=new Pointing((Vec3)vlist1.get(i));
-		LongRangeSet res = super.queryPolygon(vertex,(inclusive!=0));
+		LongRangeSet res = toLRS(super.queryPolygon(vertex,(inclusive!=0)));
 		setScheme (sbak);
 		return res;
 	}
-	
+
 	/**
 	 * Prints the vec.
-	 * 
+	 *
 	 * @param vec the vec
 	 */
 	public void printVec(double[] vec) {
@@ -523,7 +531,7 @@ public class HealpixIndex extends HealpixBase implements Serializable {
 	/**
 	 * generates a list of pixels that lie inside a triangle defined by the
 	 * three vertex vectors
-	 * 
+	 *
 	 * @param nside
 	 *            long map resolution parameter
 	 * @param v1
@@ -552,7 +560,7 @@ public class HealpixIndex extends HealpixBase implements Serializable {
 		vertex[0] = new Pointing(v1);
 		vertex[1] = new Pointing(v2);
 		vertex[2] = new Pointing(v3);
-		LongRangeSet res = super.queryPolygon(vertex,(inclusive!=0));
+		LongRangeSet res = toLRS(super.queryPolygon(vertex,(inclusive!=0)));
 		setScheme (sbak);
 		return res;
 	}
@@ -562,7 +570,7 @@ public class HealpixIndex extends HealpixBase implements Serializable {
 	 * colatitude < theta2 with o <= theta1 < theta2 <= Pi if theta2 < theta1
 	 * then pixels with 0 <= colatitude < theta2 or theta1 < colatitude < Pi are
 	 * returned
-	 * 
+	 *
 	 * @param nside
 	 *            long the map resolution parameter
 	 * @param theta1
@@ -577,7 +585,7 @@ public class HealpixIndex extends HealpixBase implements Serializable {
 	public LongRangeSet query_strip(int nside, double theta1,
 			double theta2, long nest) throws Exception {
 		HealpixBase base= new HealpixBase(nside,(nest!=0)? Scheme.NESTED : Scheme.RING);
-		return base.queryStrip(theta1,theta2,false);
+		return toLRS(base.queryStrip(theta1,theta2,false));
 	}
 
 	/**
@@ -586,10 +594,10 @@ public class HealpixIndex extends HealpixBase implements Serializable {
 	 * the one west of the south direction is taken for pixels that don't have a
 	 * southern neighbour). From then on the neighbors are ordered in the
 	 * clockwise direction.
-	 * 
+	 *
 	 * @param ipix long pixel number
 	 * @return ArrayList
-	 * @throws Exception 
+	 * @throws Exception
 	 * @throws IllegalArgumentException
 	 */
 	public List<Long> neighbours_nest( long ipix) throws Exception  {
@@ -604,20 +612,20 @@ public class HealpixIndex extends HealpixBase implements Serializable {
 	}
 
 	/**
-	 * return the parent PIXEL of a given pixel at some higher NSIDE. 
+	 * return the parent PIXEL of a given pixel at some higher NSIDE.
 	 * One must also provide the nsode of the given pixel as otherwise it
 	 * can not be known.
-	 * 
+	 *
 	 * This only makes sense for Nested Scheme.
 	 * This is basically a simple bit shift in the difference
-	 * of number of bits between the two NSIDEs. 
-	 * 
-	 * @param child  the pixel 
+	 * of number of bits between the two NSIDEs.
+	 *
+	 * @param child  the pixel
 	 * @param childnside nside of the pixel
 	 * @param requirednside nside to upgrade to
-	 * 
+	 *
 	 * @return the new pixel number
-	 * @throws Exception 
+	 * @throws Exception
  	 */
 	static public long parentAt(long child, int childnside, int requirednside) throws Exception{
           HealpixUtils.check(childnside >= requirednside,
@@ -636,18 +644,18 @@ public class HealpixIndex extends HealpixBase implements Serializable {
 		return 2*Math.abs(HealpixUtils.ilog2(nside1)-HealpixUtils.ilog2(nside2));
 	}
 	/**
-	 * for a given pixel list all children pixels for it. 
+	 * for a given pixel list all children pixels for it.
 	 * This is simply a matter of shifting the pixel number left by
-	 * the difference in NSIDE bits and then listing all numbers 
-	 * which fill the empty bits. 
-	 * 
-	 * BEWARE - not checking you are not trying to go too DEEP. 
-	 * 
+	 * the difference in NSIDE bits and then listing all numbers
+	 * which fill the empty bits.
+	 *
+	 * BEWARE - not checking you are not trying to go too DEEP.
+	 *
 	 * @param nside  nside of pix
-	 * @param pix  the pixel 
+	 * @param pix  the pixel
 	 * @param requiredNside  the nside you want the children at
 	 * @return children pixels
-	 * @throws Exception 
+	 * @throws Exception
 	 */
 	public static long[] getChildrenAt(long nside, long pix, int requiredNside) throws Exception{
 	 	HealpixUtils.check(nside<requiredNside,

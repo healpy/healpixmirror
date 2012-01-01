@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <project name="healpix build file" default="dist" basedir=".">
-	
+
 	<property name="logdir" value="logs"/>
 	<property name="lib" value="${basedir}/lib"/>
 	<property name="classes" value="${basedir}/classes"/>
@@ -10,7 +10,7 @@
 	<property name="docs" value="${basedir}/healpixdocs"/>
 	<property name="junit.reports" value="${basedir}/reports/junit"/>
 	<property name="version" value="$Id: build.xml 131498 2010-04-15 13:56:00Z womullan $" />
-	<property name="author" value="$Author: womullan $" />    
+	<property name="author" value="$Author: womullan $" />
 	<property name="project-description" value="Java Healpix Library"/>
 	<path id="classpath">
 		<pathelement location="${classes}"/>
@@ -40,7 +40,7 @@
 			<classpath refid="classpath" />
 		</javac>
 	</target>
-	
+
 	<target name="test" depends="compile" description="Test the Java code">
 		<delete dir="${junit.reports}"/>
 		<mkdir dir="${junit.reports}"/>
@@ -62,10 +62,10 @@
 	</target>
 
 	<target name="docs" depends="svnrevision" description="Create the Javadocs">
-		<javadoc 
+		<javadoc
 			destdir="${docs}" failonerror="true" use="true"
-			sourcepath="${src}" 
-			additionalparam='-breakiterator -public -quiet -tag todo:a:"To Do:\" -link http://java.sun.com/j2se/1.5.0/docs/api -link http://download.java.net/media/java3d/javadoc/1.4.0' 
+			sourcepath="${src}"
+			additionalparam='-breakiterator -public -quiet -tag todo:a:"To Do:\" -link http://java.sun.com/j2se/1.5.0/docs/api -link http://download.java.net/media/java3d/javadoc/1.4.0'
 			classpathref="classpath">
 			<packageset dir="${src}" defaultexcludes="yes">
 				<include name="**" />
@@ -84,11 +84,11 @@
 		<delete dir="${junit.reports}"/>
 		<delete dir="${docs}"/>
 	</target>
-	
+
 	<target name="distwithdoc" depends="docs,distonly"
 	        description="generate the distribution" >
 	</target>
-	
+
 	<target name="distonly" depends="clean,compile" description="Build the JAR file containing only classes">
 		<jar destfile="${dist}/jhealpix.jar">
             <fileset dir="${classes}">
@@ -114,7 +114,7 @@
 				<exclude name="**/doc-files/**" />
 				<exclude name="**Test" />
 			</fileset>
-			-->	
+			-->
 		<manifest>
 			<attribute name="Class-Path" value=".:lib"/>
 			<attribute name="Specification-Title"        value="${project-description}"/>
@@ -150,14 +150,14 @@
 				<fileset file="${lib}/nom-tam-fits.jar"/>
 				<fileset file="${lib}/vecmath.jar"/>
 				<fileset file="${lib}/j3dcore.jar"/>
-				<fileset file="${lib}/j3dutils.jar"/>		
+				<fileset file="${lib}/j3dutils.jar"/>
 	        </jar>
 	    </target>
 
 
 	<target name="distsmall" depends="clean,compile" description="Build the JAR file containing only classes for HealpixIndex">
 		<jar destfile="${dist}/jhealpixSmall.jar">
-            <fileset dir="${classes}">     	
+            <fileset dir="${classes}">
                 <exclude name="**/doc-files/**" />
                 <exclude name="**/test/**" />
                 <exclude name="**/package-info*" />
@@ -183,11 +183,11 @@
 
 	<target name="distsmallsrc" depends="" description="Build the JAR file containing only classes for HealpixIndex">
 		<jar destfile="${dist}/jhealpixSmall_src.jar">
-            <fileset dir="${src}">     	
+            <fileset dir="${src}">
                 <exclude name="**/doc-files/**" />
                 <exclude name="**/test/**" />
                 <exclude name="**/package-info*" />
-                <exclude name="**/Healpix.class" />
+                <exclude name="**/Healpix.java" />
             	<exclude name="**/dm/**" />
             	<exclude name="**/fits/**" />
             	<exclude name="**/plot3d/**" />
@@ -206,6 +206,66 @@
 		</manifest>
 		</jar>
 	</target>
+         <target name="disttiny" depends="clean,compile" description="Build the JAR file containing only classes for HealpixBase">
+                <jar destfile="${dist}/jhealpixTiny.jar">
+            <fileset dir="${classes}">
+                <exclude name="**/doc-files/**" />
+                <exclude name="**/test/**" />
+                <exclude name="**/package-info*" />
+                <exclude name="**/Healpix.class" />
+                <exclude name="**/HealpixIndex.class" />
+                <exclude name="**/BitManipulation.class" />
+                <exclude name="**/AngularPosition.class" />
+                <exclude name="**/HealpixMap*" />
+                <exclude name="**/dm/**" />
+                <exclude name="**/fits/**" />
+                <exclude name="**/plot3d/**" />
+                <exclude name="**/tools/**" />
+                <exclude name="**/odk/**" />
+                <exclude name="**/base/**" />
+            </fileset>
 
-	
+                <manifest>
+                        <attribute name="Specification-Title"        value="${project-description}"/>
+                        <attribute name="Specification-Version"      value="${version}"/>
+                        <attribute name="Specification-Vendor"       value="${author}"/>
+                        <attribute name="Implementation-Title"       value="${project-description}"/>
+                        <attribute name="Implementation-Version"     value="${version}"/>
+                        <attribute name="Implementation-Vendor"      value="${author}"/>
+                        <attribute name="Author"                     value="${author}" />
+                </manifest>
+                </jar>
+        </target>
+       <target name="disttinysrc" depends="" description="Build the JAR file containing only classes for HealpixBase">
+                <jar destfile="${dist}/jhealpixTiny_src.jar">
+            <fileset dir="${src}">
+                <exclude name="**/doc-files/**" />
+                <exclude name="**/test/**" />
+                <exclude name="**/package-info*" />
+                <exclude name="**/Healpix.*" />
+                <exclude name="**/HealpixIndex.*" />
+                <exclude name="**/BitManipulation.*" />
+                <exclude name="**/AngularPosition.class" />
+                <exclude name="**/HealpixMap*" />
+                <exclude name="**/dm/**" />
+                <exclude name="**/fits/**" />
+                <exclude name="**/plot3d/**" />
+                <exclude name="**/tools/**" />
+                <exclude name="**/odk/**" />
+                <exclude name="**/base/**" />
+            </fileset>
+
+                <manifest>
+                        <attribute name="Specification-Title"        value="${project-description}"/>
+                        <attribute name="Specification-Version"      value="${version}"/>
+                        <attribute name="Specification-Vendor"       value="${author}"/>
+                        <attribute name="Implementation-Title"       value="${project-description}"/>
+                        <attribute name="Implementation-Version"     value="${version}"/>
+                        <attribute name="Implementation-Vendor"      value="${author}"/>
+                        <attribute name="Author"                     value="${author}" />
+                </manifest>
+                </jar>
+        </target>
+
+
 </project>
