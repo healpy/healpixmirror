@@ -310,9 +310,9 @@ public class MainFrame extends JFrame implements Runnable, AppletStub,
 		// the appropriately named .class file exists there. But
 		// this doesn't account for .zip files.
 		String path = System.getProperty("java.class.path");
-		Enumeration st = new StringTokenizer(path, ":");
+		StringTokenizer st = new StringTokenizer(path, ":");
 		while (st.hasMoreElements()) {
-			String dir = (String) st.nextElement();
+			String dir = st.nextToken();
 			String filename = dir + File.separatorChar + name + ".class";
 			File file = new File(filename);
 			if (file.exists()) {
