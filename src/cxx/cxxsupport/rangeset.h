@@ -25,7 +25,7 @@
 /*! \file rangeset.h
  *  Class for storing sets of ranges of integer numbers
  *
- *  Copyright (C) 2011 Max-Planck-Society
+ *  Copyright (C) 2011, 2012 Max-Planck-Society
  *  \author Martin Reinecke
  */
 
@@ -117,7 +117,7 @@ template<typename T> class rangeset
       T vsave;
       bool state_a=flip_a, state_b=flip_b,
            state_res=state_a||state_b;
-      tsize ia=0, ea=2*a.size(), ib=0, eb=2*a.size();
+      tsize ia=0, ea=2*a.size(), ib=0, eb=2*b.size();
       bool runa = ia!=ea, runb = ib!=eb;
       while(runa||runb)
         {
