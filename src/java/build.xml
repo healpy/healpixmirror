@@ -221,7 +221,6 @@
                 <exclude name="**/fits/**" />
                 <exclude name="**/plot3d/**" />
                 <exclude name="**/tools/**" />
-                <exclude name="**/odk/**" />
                 <exclude name="**/base/**" />
             </fileset>
 
@@ -245,14 +244,14 @@
                 <exclude name="**/Healpix.*" />
                 <exclude name="**/HealpixIndex.*" />
                 <exclude name="**/BitManipulation.*" />
-                <exclude name="**/AngularPosition.class" />
+                <exclude name="**/AngularPosition.*" />
                 <exclude name="**/HealpixMap*" />
                 <exclude name="**/dm/**" />
                 <exclude name="**/fits/**" />
                 <exclude name="**/plot3d/**" />
                 <exclude name="**/tools/**" />
-                <exclude name="**/odk/**" />
                 <exclude name="**/base/**" />
+                <exclude name="**/*.html" />
             </fileset>
 
                 <manifest>
