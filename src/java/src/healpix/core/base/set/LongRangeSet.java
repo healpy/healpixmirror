@@ -224,17 +224,18 @@ public class LongRangeSet implements Externalizable, Iterable<Long>{
     }
     
     public boolean containsAll(long first, long last){
-    	if(first>last)
-    		throw new IllegalArgumentException("First is bigger then last");
-    	if(isEmpty() || last < first() || first>last())
-    		return false;
+        if(first>last)
+            throw new IllegalArgumentException("First is bigger then last");
+        if(isEmpty() || last < first() || first>last())
+            return false;
 
-    	int firstIndex = Arrays.binarySearch(ranges, first);
-    	int lastIndex = Arrays.binarySearch(ranges, last);
-    	
-    	if(firstIndex>=0 && lastIndex>=0)
-    		return lastIndex - firstIndex <2;
-    	return false;
+        int index = Arrays.binarySearch(ranges, first);
+        if(index<0)
+            index = -index-1;
+
+        index = index - index%2;
+
+        return ranges[index]<=first && ranges[index+1]>=last;
     }
 
     public boolean containsAny(long first, long last){
