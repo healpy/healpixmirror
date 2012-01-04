@@ -1,25 +1,46 @@
+/*
+ * Experimental HEALPix Java code derived from the Gaia-developed Java sources
+ * and the Healpix C++ library.
+ *
+ *  This code is free software; you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation; either version 2 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This code is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this code; if not, write to the Free Software
+ *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+ *
+ *  For more information about HEALPix, see http://healpix.jpl.nasa.gov
+ */
+
 package healpix.core;
 
+/** Class for dealing with sets of integer ranges.
+    Ranges are described by the first element and the one-past-last element.
+    @author Martin Reinecke */
 public class RangeSet {
 
-  /** sorted list of interval starts.*/
+  /** Sorted list of ranges. */
   protected long[] r;
   /** current size */
   protected int sz = 0;
 
-
   public RangeSet() { this(16); }
-  /**
-   * construct new object with given array capacity
-   * @param cap
-   */
+  /** Construct new object with a given initial capacity (number of ranges)
+      @param cap */
   public RangeSet(int cap)
     {
     if (cap<1) throw new IllegalArgumentException("capacity too small");
     r = new long[2*cap];
     }
 
-  /** make sure underlying array has at least given size*/
+  /** Make sure the object can hold at least the given number of ranges. */
   public void ensureCapacity(int cap)
     {
     // grow the array if necessary.
@@ -31,17 +52,27 @@ public class RangeSet {
       }
     }
 
-  /** append single long into builder
-    * @param val - long to append
-    */
+  /** Append a single-value range to the object.
+      @param val - value to append */
   public void append(long val)
-    { append(val,val+1L); }
+    {
+    if ((sz>0) && (val<=r[sz-1]))
+      {
+      if (val<r[sz-2]) throw new IllegalArgumentException("bad append operation");
+      if (val==r[sz-1]) ++r[sz-1];
+      return;
+      }
+    if (sz+2>r.length)
+      ensureCapacity(r.length);
 
-  /**
-   * append range into builder
-   * @param a long in range (inclusive)
-   * @param b long in range (exclusive)
-   */
+    r[sz] = val;
+    r[sz+1] = val+1;
+    sz+=2;
+    }
+
+  /** Append a range to the object.
+      @param a long in range (inclusive)
+      @param b long in range (exclusive) */
   public void append (long a, long b)
     {
     if (a>=b) return;
@@ -59,6 +90,7 @@ public class RangeSet {
     sz+=2;
     }
 
+  /** Append an entire range set to the object. */
   public void append (RangeSet other)
     {
     for (int i=0; i<other.sz; i+=2)
@@ -94,10 +126,8 @@ public class RangeSet {
     boolean flip_a, boolean flip_b, RangeSet c)
     {
     c.clear();
-    int out=0;
-    boolean state_a=flip_a, state_b=flip_b,
-            state_res=state_a||state_b;
-    int ia=0, ea=2*a.size(), ib=0, eb=2*b.size();
+    boolean state_a=flip_a, state_b=flip_b, state_res=state_a||state_b;
+    int ia=0, ea=a.sz, ib=0, eb=b.sz, out=0;
     boolean runa = ia!=ea, runb = ib!=eb;
     while(runa||runb)
       {
@@ -109,12 +139,8 @@ public class RangeSet {
       if (runb && (!runa || (vb<=va))) { adv_b=true; val=vb; }
       if (adv_a) { state_a=!state_a; ++ia; runa = ia!=ea; }
       if (adv_b) { state_b=!state_b; ++ib; runb = ib!=eb; }
-      boolean tmp=state_a||state_b;
-      if (tmp!=state_res)
-        {
-        c.pushv(val);
-        state_res = tmp;
-        }
+      if ((state_a||state_b)!=state_res)
+        { c.pushv(val); state_res = !state_res; }
       }
     }
   public void setToUnion (RangeSet a, RangeSet b)
@@ -147,8 +173,7 @@ public class RangeSet {
     int count=sz, first=0;
     while (count>0)
       {
-      int it = first, step=count>>>1;
-      it+=step;
+      int step=count>>>1, it = first+step;
       if (r[it]<=val)
         { first=++it; count-=step+1; }
       else
@@ -157,10 +182,7 @@ public class RangeSet {
     return first-1;
     }
   public boolean contains (long a)
-    {
-    int res=iiv(a);
-    return ((res&1)==0);
-    }
+    { return ((iiv(a)&1)==0); }
   public boolean containsAll (long a,long b)
     {
     int res=iiv(a);
@@ -185,12 +207,6 @@ public class RangeSet {
       if (other.r[i]!=r[i]) return false;
     return true;
     }
-  public void print()
-    {
-    for (int i=0; i<sz; ++i)
-      System.out.print(r[i]+" ");
-    System.out.println();
-    }
   public long nval() {
     long res = 0;
     for (int i=0; i<sz; i+=2)
@@ -205,5 +221,20 @@ public class RangeSet {
       for (long j=r[i]; j<r[i+1]; ++j)
         res[ofs++]=j;
     return res;
+    }
+
+  public String toString()
+    {
+    StringBuilder s = new StringBuilder();
+    s.append('{');
+    for (int i=0; i<sz; i+=2)
+      {
+      s.append(r[i]);
+      if (r[i+1]>r[i]+1)
+        s.append("-"+(r[i+1]-1));
+      if (i<sz-2) s.append(",");
+      }
+    s.append('}');
+    return s.toString();
     }
   }
