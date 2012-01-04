@@ -20,11 +20,17 @@
  */
 
 package healpix.core;
+import java.util.NoSuchElementException;
 
 /** Class for dealing with sets of integer ranges.
     Ranges are described by the first element and the one-past-last element.
     @author Martin Reinecke */
 public class RangeSet {
+
+  public interface ValueIterator {
+    boolean hasNext();
+    long next();
+    }
 
   /** Sorted list of ranges. */
   protected long[] r;
@@ -236,5 +242,30 @@ public class RangeSet {
       }
     s.append('}');
     return s.toString();
+    }
+
+  public ValueIterator valueIterator()
+    {
+    return new ValueIterator()
+      {
+      int pos = 0;
+      long value = (sz>0) ? r[0] : 0;
+
+      public boolean hasNext()
+        { return (pos<sz); }
+
+      public long next() {
+        if (pos>sz)
+          throw new NoSuchElementException();
+        long ret = value;
+        if (++value==r[pos+1])
+          {
+          pos+=2;
+          if (pos<sz)
+            value = r[pos];
+          }
+        return ret;
+        }
+      };
     }
   }
