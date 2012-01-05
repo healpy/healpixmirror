@@ -195,7 +195,6 @@ public class HealpixBaseTest extends TestCase {
         {
         dummy+=base.ring2nest(pix);
         ++cnt;
-        dummy+=base.ring2nest(pix);
         }
       }
     double time = 1e-9*(System.nanoTime()-tstart);
