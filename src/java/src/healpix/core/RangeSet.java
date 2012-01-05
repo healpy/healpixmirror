@@ -1,6 +1,4 @@
-/*
- * Experimental HEALPix Java code derived from the Gaia-developed Java sources
- * and the Healpix C++ library.
+/*  Experimental HEALPix Java code.
  *
  *  This code is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -32,27 +30,45 @@ public class RangeSet {
     long next();
     }
 
-  /** Sorted list of ranges. */
+  /** Sorted list of entries. */
   protected long[] r;
   /** current size */
-  protected int sz = 0;
+  protected int sz;
 
-  public RangeSet() { this(16); }
-  /** Construct new object with a given initial capacity (number of ranges)
+  public RangeSet() { this(8); }
+  /** Construct new object with a given initial number of entries
       @param cap */
   public RangeSet(int cap)
     {
-    if (cap<1) throw new IllegalArgumentException("capacity too small");
-    r = new long[2*cap];
+    if (cap<0) throw new IllegalArgumentException("capacity must be positive");
+    r = new long[cap];
+    sz=0;
+    }
+  public RangeSet(long[] data)
+    {
+    sz=data.length;
+    r = new long[sz];
+    System.arraycopy(data,0,r,0,sz);
+    checkConsistency();
     }
 
-  /** Make sure the object can hold at least the given number of ranges. */
+  public void checkConsistency()
+    {
+    if ((sz&1)!=0)
+      throw new IllegalArgumentException("invalid number of entries");
+    for (int i=1; i<sz; ++i)
+      if (r[i]<=r[i-1])
+        throw new IllegalArgumentException("inconsistent entries");
+    }
+
+  /** Make sure the object can hold at least the given number of entries. */
   public void ensureCapacity(int cap)
     {
-    // grow the array if necessary.
-    if (r.length < 2*cap)
+    if (r.length<cap) // grow the array if necessary
       {
-      long[] rnew = new long[2*cap];
+      int goalSize = Math.max(2*r.length,cap);
+
+      long[] rnew = new long[goalSize];
       System.arraycopy(r,0,rnew,0,r.length);
       r = rnew;
       }
@@ -61,24 +77,11 @@ public class RangeSet {
   /** Append a single-value range to the object.
       @param val - value to append */
   public void append(long val)
-    {
-    if ((sz>0) && (val<=r[sz-1]))
-      {
-      if (val<r[sz-2]) throw new IllegalArgumentException("bad append operation");
-      if (val==r[sz-1]) ++r[sz-1];
-      return;
-      }
-    if (sz+2>r.length)
-      ensureCapacity(r.length);
-
-    r[sz] = val;
-    r[sz+1] = val+1;
-    sz+=2;
-    }
+    { append(val,val+1); }
 
   /** Append a range to the object.
-      @param a long in range (inclusive)
-      @param b long in range (exclusive) */
+      @param a first long in range
+      @param b one-after-last long in range */
   public void append (long a, long b)
     {
     if (a>=b) return;
@@ -88,8 +91,7 @@ public class RangeSet {
       if (b>r[sz-1]) r[sz-1]=b;
       return;
       }
-    if (sz+2>r.length)
-      ensureCapacity(r.length);
+    ensureCapacity(sz+2);
 
     r[sz] = a;
     r[sz+1] = b;
@@ -122,8 +124,7 @@ public class RangeSet {
     { return r[i]; }
   private void pushv(long v)
     {
-    if (sz+1>r.length)
-      ensureCapacity(r.length);
+    ensureCapacity(sz+1);
     r[sz]=v;
     ++sz;
     }
@@ -187,6 +188,19 @@ public class RangeSet {
       }
     return first-1;
     }
+  private int iiv (long val, int i1, int i2)
+    {
+    int count=i2-i1, first=i1;
+    while (count>0)
+      {
+      int step=count>>>1, it = first+step;
+      if (r[it]<=val)
+        { first=++it; count-=step+1; }
+      else
+        count=step;
+      }
+    return first-1;
+    }
   public boolean contains (long a)
     { return ((iiv(a)&1)==0); }
   public boolean containsAll (long a,long b)
@@ -220,6 +234,42 @@ public class RangeSet {
     return res;
     }
 
+  private void addRemove (long a, long b, int v)
+    {
+    int pos1=iiv(a), pos2=iiv(b);
+    if ((pos1>=0) && (r[pos1]==a)) --pos1;
+    // first to delete is at pos1+1; last is at pos2
+    boolean insert_a = (pos1&1)==v;
+    boolean insert_b = (pos2&1)==v;
+    int rmstart=pos1+1+(insert_a ? 1 : 0);
+    int rmend  =pos2-(insert_b?1:0);
+
+    if (((rmend-rmstart)&1)==0)
+      throw new IllegalArgumentException("cannot happen: "+rmstart+" "+rmend);
+
+    if (insert_a && insert_b && (pos1+1>pos2)) // insert
+      {
+      ensureCapacity(sz+2);
+      System.arraycopy(r,pos1+1,r,pos1+3,sz-pos1-1); // move to right
+      r[pos1+1]=a;
+      r[pos1+2]=b;
+      sz+=2;
+      }
+    else
+      {
+      if (insert_a) r[pos1+1]=a;
+      if (insert_b) r[pos2]=b;
+      if (rmstart!=rmend+1)
+        System.arraycopy(r,rmend+1,r,rmstart,sz-rmend-1); // move to left
+      sz-=rmend-rmstart+1;
+      }
+    }
+
+  public void add (long a, long b)
+    { addRemove(a,b,1); }
+  public void remove (long a, long b)
+    { addRemove(a,b,0); }
+
   public long[] toArray(){
     long[] res = new long[(int)nval()];
     int ofs=0;
@@ -232,15 +282,13 @@ public class RangeSet {
   public String toString()
     {
     StringBuilder s = new StringBuilder();
-    s.append('{');
+    s.append("{ ");
     for (int i=0; i<sz; i+=2)
       {
-      s.append(r[i]);
-      if (r[i+1]>r[i]+1)
-        s.append("-"+(r[i+1]-1));
+      s.append("["+r[i]+";"+r[i+1]+"]");
       if (i<sz-2) s.append(",");
       }
-    s.append('}');
+    s.append(" }");
     return s.toString();
     }
 

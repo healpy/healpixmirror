@@ -980,7 +980,7 @@ public class HealpixBase extends HealpixTables
         long ipix1=ris.startpix, nr=ris.ringpix;
         long ipix2 = ipix1 + nr - 1; // highest pixel number in the ring
         double shift = ris.shifted ? 0.5 : 0.;
-        RangeSet tr = new RangeSet(), rstmp = new RangeSet();
+        RangeSet rstmp = new RangeSet();
         rstmp.append(ipix1,ipix2+1);
 
         for (int j=0; (j<nd)&&(rstmp.size()>0); ++j)
@@ -1008,21 +1008,18 @@ public class HealpixBase extends HealpixTables
           if (ip_hi>=nr)
             { ip_lo-=nr; ip_hi-=nr;}
 
-          tr.clear();
           if (ip_lo<0)
             {
             if (ip_hi+1<=ip_lo+nr-1)
-              tr.append(ipix1+ip_hi+1,ipix1+ip_lo+nr);
+              rstmp.remove(ipix1+ip_hi+1,ipix1+ip_lo+nr);
             }
           else
             {
             if (ip_lo>0)
-              tr.append(ipix1,ipix1+ip_lo);
+              rstmp.remove(ipix1,ipix1+ip_lo);
             if (ipix1+ip_hi+1<=ipix2)
-              tr.append(ipix1+ip_hi+1,ipix2+1);
+              rstmp.remove(ipix1+ip_hi+1,ipix2+1);
             }
-          if (tr.size()>0)
-            rstmp=rstmp.difference(tr);
           }
         res.append(rstmp);
         }

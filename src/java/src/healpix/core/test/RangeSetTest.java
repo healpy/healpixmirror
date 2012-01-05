@@ -1,6 +1,4 @@
-/*
- * HEALPix Java code supported by the Gaia project.
- * Copyright (C) 2006-2011 Gaia Data Processing and Analysis Consortium
+/* Experimental HEALPix Java code.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -14,7 +12,7 @@
  *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  *
  */
 
@@ -25,11 +23,29 @@ import junit.framework.TestCase;
 
 public class RangeSetTest extends TestCase {
 
-  public void testAddRange(){
+  public void testAppend()
+    {
     RangeSet b = new RangeSet();
-    b.append(1, 11);
-    b.append(30, 41);
-
+    b.append(1,11);
+    assertEquals(b,new RangeSet(new long[]{1,11}));
+    b.append(10,15);
+    assertEquals(b,new RangeSet(new long[]{1,15}));
+    b.append(1,15);
+    assertEquals(b,new RangeSet(new long[]{1,15}));
+    b.append(7,15);
+    assertEquals(b,new RangeSet(new long[]{1,15}));
+    b.append(30,41);
+    assertEquals(b,new RangeSet(new long[]{1,15,30,41}));
+    try
+      {
+      b.append(29,31);
+      fail("Should have raised an IllegalArgumentException");
+      }
+    catch (IllegalArgumentException expected) {}
+    }
+  public void testContains()
+    {
+    RangeSet b=new RangeSet(new long[]{1,11,30,41});
     assertTrue(!b.contains(0));
     assertTrue(b.contains(1));
     assertTrue(b.contains(5));
@@ -40,88 +56,81 @@ public class RangeSetTest extends TestCase {
     assertTrue(b.contains(35));
     assertTrue(b.contains(40));
     assertTrue(!b.contains(41));
-  }
-  public void testUnion(){
-    RangeSet b1 = new RangeSet();
-    b1.append(20, 31);
-    b1.append(40, 51);
-
-    RangeSet b2 = new RangeSet();
-    b2.append(1,11);
-    b2.append(45, 56);
-
-    RangeSet b3 = new RangeSet();
-    b3.append(1,11);
-    b3.append(20,31);
-    b3.append(40,56);
-
-    RangeSet b4=b1.union(b2);
-
-    assertEquals(b3,b4);
-  }
-
-  public void testIntersect(){
-    RangeSet b1 = new RangeSet();
-    b1.append(20, 31);
-    b1.append(40, 51);
-
-    RangeSet b2 = new RangeSet();
-    b2.append(1,11);
-    b2.append(22,24);
-    b2.append(45,56);
-
-    RangeSet b3 = new RangeSet();
-    b3.append(22,24);
-    b3.append(45,51);
-
-    RangeSet b4=b1.intersection(b2);
-
-    assertEquals(b3,b4);
-  }
-  public void testIntersect2(){
-    RangeSet b1 = new RangeSet();
-    RangeSet b2 = new RangeSet();
-    RangeSet b3 = new RangeSet();
-    RangeSet b4 = new RangeSet();
-    b1.append(10, 101);
-    b1.append(110, 121);
-    b1.append(200, 221);
-
-    b2.append(20,31);
-    b2.append(40,51);
-    b2.append(90, 201);
-    b4.setToIntersection(b1,b2);
-
-    b3.append(20,31);
-    b3.append(40,51);
-    b3.append(90,101);
-    b3.append(110,121);
-    b3.append(200,201);
-
-    assertEquals(b3,b4);
-  }
-  public void testSubstract(){
-    RangeSet b1 = new RangeSet();
-    RangeSet b2 = new RangeSet();
-    RangeSet b3 = new RangeSet();
-    RangeSet b4 = new RangeSet();
-    b1.append(20, 31);
-    b1.append(40, 51);
-
-    b2.append(1,11);
-    b2.append(45, 56);
-    b4.setToDifference(b1,b2);
-
-    b3.append(20,31);
-    b3.append(40,45);
-
-    assertEquals(b3,b4);
-  }
-
-  public void testContainsAll(){
+    }
+  public void testAdd()
+    {
     RangeSet b = new RangeSet();
-    b.append(20, 31);
-    b.append(40, 51);
+    b.add(5, 11);
+    assertEquals(b,new RangeSet(new long[]{5,11}));
+    b.add(1, 7);
+    assertEquals(b,new RangeSet(new long[]{1,11}));
+    b.add(1, 11);
+    assertEquals(b,new RangeSet(new long[]{1,11}));
+    b.add(30, 41);
+    assertEquals(b,new RangeSet(new long[]{1,11,30,41}));
+    b.add(1, 11);
+    assertEquals(b,new RangeSet(new long[]{1,11,30,41}));
+    b.add(-1,0);
+    assertEquals(b,new RangeSet(new long[]{-1,0,1,11,30,41}));
+    b.add(-2,-1);
+    assertEquals(b,new RangeSet(new long[]{-2,0,1,11,30,41}));
+    b.add(-2,-1);
+    assertEquals(b,new RangeSet(new long[]{-2,0,1,11,30,41}));
+    b.add(2, 11);
+    assertEquals(b,new RangeSet(new long[]{-2,0,1,11,30,41}));
+    b.add(1, 10);
+    assertEquals(b,new RangeSet(new long[]{-2,0,1,11,30,41}));
+    b.add(15, 21);
+    assertEquals(b,new RangeSet(new long[]{-2,0,1,11,15,21,30,41}));
+    }
+  public void testRemove()
+    {
+    RangeSet b = new RangeSet(new long[]{0,11,20,31});
+    b.remove(5,25);
+    assertEquals(b,new RangeSet(new long[]{0,5,25,31}));
+    b.remove(31,32);
+    assertEquals(b,new RangeSet(new long[]{0,5,25,31}));
+    b.remove(35,38);
+    assertEquals(b,new RangeSet(new long[]{0,5,25,31}));
+    b.remove(-90,-80);
+    assertEquals(b,new RangeSet(new long[]{0,5,25,31}));
+    b.remove(27,29);
+    assertEquals(b,new RangeSet(new long[]{0,5,25,27,29,31}));
+    b.remove(25,26);
+    assertEquals(b,new RangeSet(new long[]{0,5,26,27,29,31}));
+    b.remove(4,6);
+    assertEquals(b,new RangeSet(new long[]{0,4,26,27,29,31}));
+    b.remove(-20,40);
+    assertEquals(b,new RangeSet(new long[]{}));
+    b.remove(-20,40);
+    assertEquals(b,new RangeSet(new long[]{}));
+    }
+  public void testUnion()
+    {
+    assertEquals(new RangeSet(new long[]{1,11,20,31,40,56}),
+                 new RangeSet(new long[]{20,31,40,51}).union
+                 (new RangeSet(new long[]{1,11,45,56})));
+    }
+
+  public void testIntersect()
+    {
+    assertEquals(new RangeSet(new long[]{22,24,45,51}),
+                 new RangeSet(new long[]{20,31,40,51}).intersection
+                 (new RangeSet(new long[]{1,11,22,24,45,56})));
+    assertEquals(new RangeSet(new long[]{20,31,40,51,90,101,110,121,200,201}),
+                 new RangeSet(new long[]{10,101,110,121,200,221}).intersection
+                 (new RangeSet(new long[]{20,31,40,51,90,201})));
+    }
+  public void testSubstract()
+    {
+    assertEquals(new RangeSet(new long[]{20,31,40,45}),
+                 new RangeSet(new long[]{20,31,40,51}).difference
+                 (new RangeSet(new long[]{1,11,45,56})));
+    }
+
+  public void testContainsAll()
+    {
+    RangeSet b = new RangeSet(new long[]{20,31,40,51});
 
     assertFalse(b.containsAll(0,11));
     assertFalse(b.containsAll(10,21));
@@ -137,11 +146,10 @@ public class RangeSetTest extends TestCase {
     assertTrue(b.containsAll(40,41));
     assertFalse(b.containsAll(45,56));
     assertFalse(b.containsAll(60,71));
-  }
-  public void testContainsAny(){
-    RangeSet b = new RangeSet();
-    b.append(20, 31);
-    b.append(40, 51);
+    }
+  public void testContainsAny()
+    {
+    RangeSet b = new RangeSet(new long[]{20,31,40,51});
 
     assertFalse(b.containsAny(0,11));
     assertTrue(b.containsAny(10,21));
@@ -157,17 +165,19 @@ public class RangeSetTest extends TestCase {
     assertTrue(b.containsAny(40,41));
     assertTrue(b.containsAny(45,56));
     assertFalse(b.containsAny(60,71));
-  }
+    }
 
-  public void testIterator(){
-    RangeSet b = new RangeSet();
-    b.append(20, 31);
-    b.append(40, 51);
+  public void testIterator()
+    {
+    RangeSet b = new RangeSet(new long[]{20,31,40,51});
     RangeSet.ValueIterator it =b.valueIterator();
     for (int i=0; i<b.size(); ++i)
       for (long j=b.ivbegin(i); j<b.ivend(i); ++j)
+        {
+        assertTrue(it.hasNext());
         assertEquals("value mismatch", j, it.next());
+        }
     assertFalse(it.hasNext());
-  }
+    }
 
 }
