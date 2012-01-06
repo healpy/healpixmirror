@@ -1,6 +1,5 @@
 /*
- * Experimental HEALPix Java code derived from the Gaia-developed Java sources
- * and the Healpix C++ library.
+ *  This file is part of Healpix Java.
  *
  *  This code is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -21,7 +20,10 @@
 
 package healpix.core;
 
-/** Cartesian 3-vector */
+/** Cartesian 3-vector
+
+    Copyright (C) 2011 Max-Planck-Society
+    @author Martin Reinecke */
 public class Vec3
   {
   public double x, y, z;

@@ -1,4 +1,5 @@
-/*  Experimental HEALPix Java code.
+/*
+ *  This file is part of Healpix Java.
  *
  *  This code is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -22,6 +23,8 @@ import java.util.NoSuchElementException;
 
 /** Class for dealing with sets of integer ranges.
     Ranges are described by the first element and the one-past-last element.
+
+    Copyright (C) 2011,2012 Max-Planck-Society
     @author Martin Reinecke */
 public class RangeSet {
 

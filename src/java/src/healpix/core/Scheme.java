@@ -1,12 +1,9 @@
 package healpix.core;
 
-/**
-  * The Enum Scheme.
-  */
+/** The Healpix pixel ordering scheme. */
 public enum Scheme {
-
-        /** The RING. */
-        RING,
-/** The NEST. */
-NESTED
+  /** RING ordering. */
+  RING,
+  /** NESTED ordering. */
+  NESTED
 };

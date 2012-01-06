@@ -1,6 +1,5 @@
 /*
- * Experimental HEALPix Java code derived from the Gaia-developed Java sources
- * and the Healpix C++ library.
+ *  This file is part of Healpix Java.
  *
  *  This code is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -22,6 +21,8 @@
 package healpix.core;
 
 /** Various data tables needed by the {@link HealpixBase} class.
+
+    Copyright (C) 2011 Max-Planck-Society
     @author Martin Reinecke */
 public class HealpixTables
   {

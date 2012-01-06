@@ -1,6 +1,5 @@
 /*
- * Experimental HEALPix Java code derived from the Gaia-developed Java sources
- * and the Healpix C++ library.
+ *  This file is part of Healpix Java.
  *
  *  This code is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -27,6 +26,8 @@ import java.util.Arrays;
     This class is conceptually very similar the the Healpix_Base class
     of Healpix_cxx. It supports NESTED for nside parameters which are powers
     of 2, and RING scheme for arbitrary nside parameters.
+
+    Copyright (C) 2011,2012 Max-Planck-Society
     @author Martin Reinecke */
 public class HealpixBase extends HealpixTables
   {

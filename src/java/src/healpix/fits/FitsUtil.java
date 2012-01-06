@@ -1,7 +1,6 @@
 /*
- * HEALPix Java code supported by the Gaia project.
- * Copyright (C) 2006-2011 Gaia Data Processing and Analysis Consortium
- * 
+ *  This file is part of Healpix Java.
+ *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
@@ -34,6 +33,10 @@ import nom.tam.fits.FitsFactory;
 import nom.tam.fits.Header;
 import nom.tam.util.BufferedDataOutputStream;
 
+/** Basic FITS I/O support for Healpix maps.
+
+    Copyright (C) 2011 Max-Planck-Society
+    @author Martin Reinecke */
 public class FitsUtil
   {
   private static String getKey (Header head, String key) throws Exception
