@@ -25,7 +25,7 @@
  */
 
 /*
- *  Copyright (C) 2005-2011 Max-Planck-Society
+ *  Copyright (C) 2005-2012 Max-Planck-Society
  *  Author: Martin Reinecke
  */
 
@@ -72,7 +72,7 @@ int median_filter_cxx_module (int argc, const char **argv)
     list.resize(pixset.nval());
     tsize cnt=0;
     for (tsize j=0; j<pixset.size(); ++j)
-      for (int i=pixset[j].a(); i<pixset[j].b(); ++i)
+      for (int i=pixset.ivbegin(j); i<pixset.ivend(j); ++i)
         if (!approx(inmap[i],float(Healpix_undef)))
           list[cnt++] = inmap[i];
     outmap[m] = (cnt>0) ? median(list.begin(),list.begin()+cnt)

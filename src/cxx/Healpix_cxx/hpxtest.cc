@@ -25,7 +25,7 @@
  */
 
 /*
- *  Copyright (C) 2004-2011 Max-Planck-Society
+ *  Copyright (C) 2004-2012 Max-Planck-Society
  *  Author: Martin Reinecke
  */
 
@@ -303,7 +303,7 @@ void check_query_disc_strict (Healpix_Ordering_Scheme scheme)
       vec3 vptg=ptg;
       double cosrad=cos(rad);
       for (tsize j=0; j<pixset.size(); ++j)
-        for (int i=pixset[j].a(); i<pixset[j].b(); ++i)
+        for (int i=pixset.ivbegin(j); i<pixset.ivend(j); ++i)
           map[i] = true;
       for (int i=0; i<map.Npix(); ++i)
         {
@@ -312,7 +312,7 @@ void check_query_disc_strict (Healpix_Ordering_Scheme scheme)
           cout << "  PROBLEM: order = " << order << ", ptg = " << ptg << endl;
         }
       for (tsize j=0; j<pixset.size(); ++j)
-        for (int i=pixset[j].a(); i<pixset[j].b(); ++i)
+        for (int i=pixset.ivbegin(j); i<pixset.ivend(j); ++i)
           map[i] = false;
       }
     }
@@ -339,7 +339,7 @@ template<typename I>void check_query_disc()
         rangeset<I> psi;
         rbase.query_disc_inclusive(ptg,rad,psi,fct);
         if (!psi.contains(pslast))
-          cout << "  PROBLEM: pixel sets inconsistent " << endl;
+          cout << "  PROBLEM: pixel sets inconsistent" << endl;
         swap(pslast,psi);
         }
       I nval = pixset.nval();
@@ -350,7 +350,7 @@ template<typename I>void check_query_disc()
         rangeset<I> psi;
         nbase.query_disc_inclusive(ptg,rad,psi,fct);
         if (!psi.contains(pslast))
-          cout << "  PROBLEM: pixel sets inconsistent " << endl;
+          cout << "  PROBLEM: pixel sets inconsistent" << endl;
         swap(pslast,psi);
         }
       if (nval!=pixset.nval())

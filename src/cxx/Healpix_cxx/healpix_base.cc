@@ -25,7 +25,7 @@
  */
 
 /*
- *  Copyright (C) 2003-2011 Max-Planck-Society
+ *  Copyright (C) 2003-2012 Max-Planck-Society
  *  Author: Martin Reinecke
  */
 
@@ -436,8 +436,7 @@ template<typename I> template<typename I2>
           tr.remove(ipix1+ip_hi+1,ipix2+1);
           }
         }
-      for (tsize j=0; j<tr.size(); ++j)
-        pixset.append(tr[j]);
+      pixset.append(tr);
       }
     }
   else // scheme_ == NEST
@@ -1038,8 +1037,7 @@ template<typename I> void T_Healpix_Base<I>::query_strip (double theta1,
     query_strip_internal(0.,theta2,inclusive,pixset);
     rangeset<I> ps2;
     query_strip_internal(theta1,pi,inclusive,ps2);
-    for (tsize i=0; i<ps2.size(); ++i)
-      pixset.appendRelaxed(ps2[i]);
+    pixset.append(ps2);
     }
   }
 
