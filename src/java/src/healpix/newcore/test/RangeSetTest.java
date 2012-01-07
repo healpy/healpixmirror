@@ -105,6 +105,37 @@ public class RangeSetTest extends TestCase {
     b.remove(-20,40);
     assertEquals(b,new RangeSet(new long[]{}));
     }
+  public void testIntersect2()
+    {
+    RangeSet b = new RangeSet(new long[]{0,11,20,31});
+    b.intersect(2,29);
+    assertEquals(b,new RangeSet(new long[]{2,11,20,29}));
+    b.intersect(-8,50);
+    assertEquals(b,new RangeSet(new long[]{2,11,20,29}));
+    b.intersect(2,50);
+    assertEquals(b,new RangeSet(new long[]{2,11,20,29}));
+    b.intersect(2,29);
+    assertEquals(b,new RangeSet(new long[]{2,11,20,29}));
+    b.intersect(-18,29);
+    assertEquals(b,new RangeSet(new long[]{2,11,20,29}));
+    b.intersect(3,11);
+    assertEquals(b,new RangeSet(new long[]{3,11}));
+    b = new RangeSet(new long[]{0,11,20,31});
+    b.intersect(3,15);
+    assertEquals(b,new RangeSet(new long[]{3,11}));
+    b = new RangeSet(new long[]{0,11,20,31});
+    b.intersect(17,30);
+    assertEquals(b,new RangeSet(new long[]{20,30}));
+    b = new RangeSet(new long[]{0,11,20,31});
+    b.intersect(11,20);
+    assertEquals(b,new RangeSet(new long[]{}));
+    b = new RangeSet(new long[]{0,11,20,31});
+    b.intersect(-8,-7);
+    assertEquals(b,new RangeSet(new long[]{}));
+    b = new RangeSet(new long[]{0,11,20,31});
+    b.intersect(31,35);
+    assertEquals(b,new RangeSet(new long[]{}));
+    }
   public void testUnion()
     {
     assertEquals(new RangeSet(new long[]{1,11,20,31,40,56}),

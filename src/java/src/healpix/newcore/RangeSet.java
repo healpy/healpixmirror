@@ -191,19 +191,6 @@ public class RangeSet {
       }
     return first-1;
     }
-  private int iiv (long val, int i1, int i2)
-    {
-    int count=i2-i1, first=i1;
-    while (count>0)
-      {
-      int step=count>>>1, it = first+step;
-      if (r[it]<=val)
-        { first=++it; count-=step+1; }
-      else
-        count=step;
-      }
-    return first-1;
-    }
   public boolean contains (long a)
     { return ((iiv(a)&1)==0); }
   public boolean containsAll (long a,long b)
@@ -266,6 +253,28 @@ public class RangeSet {
         System.arraycopy(r,rmend+1,r,rmstart,sz-rmend-1); // move to left
       sz-=rmend-rmstart+1;
       }
+    }
+
+  public void intersect (long a, long b)
+    {
+    int pos1=iiv(a), pos2=iiv(b);
+    if ((pos2>=0) && (r[pos2]==b)) --pos2;
+    // delete all up to pos1 (inclusive); and starting from pos2+1
+    boolean insert_a = (pos1&1)==0;
+    boolean insert_b = (pos2&1)==0;
+
+    // cut off end
+    sz=pos2+1;
+    if (insert_b) r[sz++]=b;
+
+    // erase start
+    if (insert_a) r[pos1--]=a;
+    if (pos1>=0)
+      System.arraycopy(r,pos1+1,r,0,sz-pos1-1); // move to left
+
+    sz-=pos1+1;
+    if ((sz&1)!=0)
+      throw new IllegalArgumentException("cannot happen");
     }
 
   public void add (long a, long b)

@@ -1015,12 +1015,7 @@ public class HealpixBase extends HealpixTables
               rstmp.remove(ipix1+ip_hi+1,ipix1+ip_lo+nr);
             }
           else
-            {
-            if (ip_lo>0)
-              rstmp.remove(ipix1,ipix1+ip_lo);
-            if (ipix1+ip_hi+1<=ipix2)
-              rstmp.remove(ipix1+ip_hi+1,ipix2+1);
-            }
+            rstmp.intersect(ipix1+ip_lo,ipix1+ip_hi+1);
           }
         res.append(rstmp);
         }
