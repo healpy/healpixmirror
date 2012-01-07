@@ -1,7 +1,7 @@
 /*
  * HEALPix Java code supported by the Gaia project.
  * Copyright (C) 2006-2011 Gaia Data Processing and Analysis Consortium
- * 
+ *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
@@ -24,7 +24,7 @@ import healpix.core.HealpixIndex;
 import healpix.core.base.set.LongIterator;
 import healpix.core.base.set.LongRangeSet;
 import healpix.core.dm.HealpixMap;
-import healpix.core.Scheme;
+import healpix.newcore.Scheme;
 import healpix.plot3d.gui.view.MapView3d;
 import healpix.tools.HealpixMapCreator;
 import healpix.tools.SpatialVector;
@@ -35,7 +35,7 @@ import java.util.List;
 /**
  * Testing query polygon to detect prime meridian black zone defect in Planck
  * Usage: java -cp jhealpix.jar healpix.plot3d.progs.testing.TestingQueryPolygon
- * 
+ *
  * @author ejoliet
  * @version $Id: Healpix3DMapViewer.java 26131 2007-06-27 16:02:03Z ejoliet $
  */
@@ -46,10 +46,10 @@ public class TestingQueryPolygon {
 
 	/**
 	 * The main method.
-	 * 
+	 *
 	 * @param args
 	 *            the arguments
-	 * 
+	 *
 	 * @throws Exception
 	 *             the exception
 	 */
@@ -74,9 +74,9 @@ public class TestingQueryPolygon {
 
 	/**
 	 * Gets the map.
-	 * 
+	 *
 	 * @return the map
-	 * 
+	 *
 	 * @throws Exception
 	 *             the exception
 	 */
@@ -112,7 +112,7 @@ public class TestingQueryPolygon {
 				.nside(), vlist, 1, 0);
 		pixlist = new HealpixIndex(map.nside()).query_triangle(map.nside(),
 				vec1, vec2, vec3, 1, 0);
-		LongIterator it = pixlist.longIterator(); 
+		LongIterator it = pixlist.longIterator();
 		while(it.hasNext()){
 			map.setValueCell(((Long)it.next()).intValue(), 0.5);
 			// System.out.println(ip);
@@ -127,9 +127,9 @@ public class TestingQueryPolygon {
 
 	/**
 	 * Gets the map with pix ring triangle.
-	 * 
+	 *
 	 * @return the map with pix ring triangle
-	 * 
+	 *
 	 * @throws Exception
 	 *             the exception
 	 */
@@ -159,7 +159,7 @@ public class TestingQueryPolygon {
 //		ArrayList pixlist;
 		LongRangeSet pixlist;
 		pixlist = pt.query_triangle(nside, v[0], v[1], v[2], nest, inclusive);
-		LongIterator it = pixlist.longIterator(); 
+		LongIterator it = pixlist.longIterator();
 		while(it.hasNext()){
 			long ip = ((Long) it.next()).longValue();
 			map.add((int) pt.ring2nest(ip), 5);
@@ -172,9 +172,9 @@ public class TestingQueryPolygon {
 
 	/**
 	 * Gets the map3 pixels ring.
-	 * 
+	 *
 	 * @return the map3 pixels ring
-	 * 
+	 *
 	 * @throws Exception
 	 *             the exception
 	 */
@@ -199,7 +199,7 @@ public class TestingQueryPolygon {
 //		ArrayList pixlist;
 		LongRangeSet pixlist;
 		pixlist = pt.query_triangle(nside, v[0], v[1], v[2], 0, 0);
-		LongIterator it = pixlist.longIterator(); 
+		LongIterator it = pixlist.longIterator();
 		while(it.hasNext()){
 			long ip = ((Long) it.next()).longValue();
 			map.add((int) pt.ring2nest( ip), 5);
@@ -210,9 +210,9 @@ public class TestingQueryPolygon {
 
 	/**
 	 * Gets the map with pix ring.
-	 * 
+	 *
 	 * @return the map with pix ring
-	 * 
+	 *
 	 * @throws Exception
 	 *             the exception
 	 */
@@ -247,7 +247,7 @@ public class TestingQueryPolygon {
 		addVec(v, map, pv++);
 
 		LongRangeSet pixlist = pt.query_polygon(nside, vlist1, 0, 0);
-		LongIterator it = pixlist.longIterator(); 
+		LongIterator it = pixlist.longIterator();
 		while(it.hasNext()){
 			Long ip = it.next();
 			map.add( ip.intValue(), 0.5);
@@ -260,9 +260,9 @@ public class TestingQueryPolygon {
 
 	/**
 	 * Gets the map with pix nest.
-	 * 
+	 *
 	 * @return the map with pix nest
-	 * 
+	 *
 	 * @throws Exception
 	 *             the exception
 	 */
@@ -283,7 +283,7 @@ public class TestingQueryPolygon {
 
 		for (int i = 0; i < arr.length; i++) {
 			v = pt.pix2vec_nest(arr[i]);
-			vlist1.add((Object) v);			
+			vlist1.add((Object) v);
 			addVec(nside,v, map, pv);
 			map.setValueCell(arr[i], pv);
 		}
@@ -305,9 +305,9 @@ public class TestingQueryPolygon {
 
 	/**
 	 * Gets the map with pix nest.
-	 * 
+	 *
 	 * @return the map with pix nest
-	 * 
+	 *
 	 * @throws Exception
 	 *             the exception
 	 */
@@ -341,7 +341,7 @@ public class TestingQueryPolygon {
 
 		addVec(v, map, pv++);
 		LongRangeSet pixlist = pt.query_polygon(nside, vlist1, 1, 0);
-		LongIterator it = pixlist.longIterator(); 
+		LongIterator it = pixlist.longIterator();
 		while(it.hasNext()){
 			Long ip = it.next();
 			map.add(ip.intValue(), 0.5);
@@ -354,14 +354,14 @@ public class TestingQueryPolygon {
 
 	/**
 	 * Adds the vec.
-	 * 
+	 *
 	 * @param vec
 	 *            the vec
 	 * @param map
 	 *            the map
 	 * @param v
 	 *            the v
-	 * 
+	 *
 	 * @throws Exception
 	 *             the exception
 	 */

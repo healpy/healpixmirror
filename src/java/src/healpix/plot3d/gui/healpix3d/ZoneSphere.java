@@ -1,7 +1,7 @@
 /*
  * HEALPix Java code supported by the Gaia project.
  * Copyright (C) 2006-2011 Gaia Data Processing and Analysis Consortium
- * 
+ *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
@@ -19,10 +19,10 @@
  */
 package healpix.plot3d.gui.healpix3d;
 
-import healpix.core.Pointing;
-import healpix.core.Scheme;
+import healpix.newcore.Pointing;
+import healpix.newcore.Scheme;
 import healpix.tools.Constants;
-import healpix.core.Vec3;
+import healpix.newcore.Vec3;
 
 import javax.media.j3d.Appearance;
 import javax.media.j3d.ColoringAttributes;
@@ -32,7 +32,7 @@ import javax.media.j3d.LineArray;
 
 /**
  * Part of the {@link HealSphere}
- * 
+ *
  * @author ejoliet
  * @version $Id: ZoneSphere.java 114558 2009-12-01 17:02:57Z ejoliet $
  */
@@ -43,7 +43,7 @@ public class ZoneSphere extends HealSphere {
 
 	/**
 	 * Instantiates a new zone sphere.
-	 * 
+	 *
 	 * @param nside the nside
 	 * @param zone the zone
 	 */

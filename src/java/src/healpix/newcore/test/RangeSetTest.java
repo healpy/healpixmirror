@@ -16,9 +16,9 @@
  *
  */
 
-package healpix.core.test;
+package healpix.newcore.test;
 
-import healpix.core.RangeSet;
+import healpix.newcore.RangeSet;
 import junit.framework.TestCase;
 
 public class RangeSetTest extends TestCase {

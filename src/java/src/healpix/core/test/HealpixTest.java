@@ -1,7 +1,7 @@
 /*
  * HEALPix Java code supported by the Gaia project.
  * Copyright (C) 2006-2011 Gaia Data Processing and Analysis Consortium
- * 
+ *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
@@ -21,7 +21,7 @@ package healpix.core.test;
 
 import healpix.core.AngularPosition;
 import healpix.core.HealpixIndex;
-import healpix.core.Scheme;
+import healpix.newcore.Scheme;
 import healpix.core.base.BitManipulation;
 import healpix.core.base.set.LongIterator;
 import healpix.core.base.set.LongList;
@@ -73,7 +73,7 @@ public class HealpixTest extends TestCase {
 
 	/**
 	 * Test ang dist.
-	 * 
+	 *
 	 * @throws Exception the exception
 	 */
 	public void testAngDist() throws Exception {
@@ -92,7 +92,7 @@ public class HealpixTest extends TestCase {
 		// double res6 = v55.angle(v66);
 		// System.out.println("res5 = " + res5 + " res6=" + res6);
 		// assertEquals("angular Distance=" + res6, 2.0, res5 / res6, 1e-10);
-		//		
+		//
 		// /* Check known problem with vecmath for small vector differences */
 		//
 		// SpatialVector v3 = new SpatialVector(1.5, 1.6, 0.);
@@ -110,7 +110,7 @@ public class HealpixTest extends TestCase {
 
 	/**
 	 * Test surface triangle.
-	 * 
+	 *
 	 * @throws Exception the exception
 	 */
 	public void testSurfaceTriangle() throws Exception {
@@ -126,7 +126,7 @@ public class HealpixTest extends TestCase {
 
 	/**
 	 * Test nside2 npix.
-	 * 
+	 *
 	 * @throws Exception the exception
 	 */
 	public void testNside2Npix() throws Exception {
@@ -141,7 +141,7 @@ public class HealpixTest extends TestCase {
 
 	/**
 	 * Test npix2 nside.
-	 * 
+	 *
 	 * @throws Exception the exception
 	 */
 	public void testNpix2Nside() throws Exception {
@@ -172,7 +172,7 @@ public class HealpixTest extends TestCase {
 
 	/**
 	 * Test ang2 pix.
-	 * 
+	 *
 	 * @throws Exception the exception
 	 */
 	public void testAng2Pix() throws Exception {
@@ -205,7 +205,7 @@ public class HealpixTest extends TestCase {
 
 	/**
 	 * Test ang2 vect.
-	 * 
+	 *
 	 * @throws Exception the exception
 	 */
 	public void testAng2Vect() throws Exception {
@@ -223,7 +223,7 @@ public class HealpixTest extends TestCase {
 
 	/**
 	 * Test ring num.
-	 * 
+	 *
 	 * @throws Exception the exception
 	 */
 	public void testringNum() throws Exception {
@@ -321,7 +321,7 @@ public class HealpixTest extends TestCase {
 
 	/**
 	 * Test nest2 ring.
-	 * 
+	 *
 	 * @throws Exception the exception
 	 */
 	public void testNest2Ring() throws Exception {
@@ -352,7 +352,7 @@ public class HealpixTest extends TestCase {
 
 	/**
 	 * Test ring2 nest.
-	 * 
+	 *
 	 * @throws Exception the exception
 	 */
 	public void testRing2Nest() throws Exception {
@@ -393,7 +393,7 @@ public class HealpixTest extends TestCase {
 
 	/**
 	 * Test pix2 vect_ring.
-	 * 
+	 *
 	 * @throws Exception the exception
 	 */
 	public void testPix2Vect_ring() throws Exception {
@@ -441,7 +441,7 @@ public class HealpixTest extends TestCase {
 
 	/**
 	 * Test pix2 vect_nest.
-	 * 
+	 *
 	 * @throws Exception the exception
 	 */
 	public void testPix2Vect_nest() throws Exception {
@@ -492,7 +492,7 @@ public class HealpixTest extends TestCase {
 
 	/**
 	 * Test vect2 pix_ring.
-	 * 
+	 *
 	 * @throws Exception the exception
 	 */
 	public void testVect2Pix_ring() throws Exception {
@@ -511,7 +511,7 @@ public class HealpixTest extends TestCase {
 
 	/**
 	 * Test vect2 pix_nest.
-	 * 
+	 *
 	 * @throws Exception the exception
 	 */
 	public void testVect2Pix_nest() throws Exception {
@@ -531,7 +531,7 @@ public class HealpixTest extends TestCase {
 
 	/**
 	 * Test query_ strip.
-	 * 
+	 *
 	 * @throws Exception the exception
 	 */
 	public void testQuery_Strip() throws Exception {
@@ -549,7 +549,7 @@ public class HealpixTest extends TestCase {
 		long nlist = pixlist.size();
 		assertEquals("different result lengths", pixel1.length, nlist);
 		LongIterator it = pixlist.longIterator();
-		long ipix; 
+		long ipix;
 		int i=0;
 		while(it.hasNext()) {
 			ipix = ((Long)it.next()).longValue();
@@ -563,7 +563,7 @@ public class HealpixTest extends TestCase {
 
     /**
      * Converts radians to arcsecs.
-     * 
+     *
      * @param rad
      *            radians
      * @return arcseconds
@@ -573,7 +573,7 @@ public class HealpixTest extends TestCase {
     }
     /**
      * Converts radians to arcmin.
-     * 
+     *
      * @param rad
      *            radians
      * @return arcmin
@@ -583,10 +583,10 @@ public class HealpixTest extends TestCase {
     }
     /**
      * test Query_disk  check for consistency in the query for RING/NESTED
-     * @throws Exception 
+     * @throws Exception
      */
     public void testQuery_disk2() throws Exception {
-    	System.out.println(" Start test query_disk HiRes!!!!!!!!!!!!!!!!!!!!!!!!");    	
+    	System.out.println(" Start test query_disk HiRes!!!!!!!!!!!!!!!!!!!!!!!!");
     	int nside = 1 << 20 ;
     	HealpixIndex pt = new HealpixIndex((int) nside);
     	pt.setScheme(Scheme.NESTED);
@@ -612,24 +612,24 @@ public class HealpixTest extends TestCase {
     	//assertEquals("npixels = " + diskQ2.size(), 9, diskQ2.size() , 1e-1);
     	 long vpix2 = pt.vec2pix_nest(v2);
     	assertTrue("Pix not in set ..",diskQ2.contains(vpix2));
-    	
+
     	//
     	LongRangeSet diskQ3 = pt.queryDisc(
     			v2,
     			radius,false);  // exclusive with point at pixel center
     	assertEquals("npixels = " + diskQ3.size(), 1L, diskQ3.size() );
 
- //   RING schema   
+ //   RING schema
     	pt.setScheme(Scheme.RING);
        	System.out.println("!!!!!!!!!!!!! RING !!!!!!!!!!!");
     	LongRangeSet diskQ4 = pt.queryDisc(
     			v1,
-    			radius, true);   // inclusiv at vector point 
+    			radius, true);   // inclusiv at vector point
     	//assertEquals("npixels = " + diskQ4.size(), 7, diskQ4.size() , 1e-1);
     	vpix1 = pt.vec2pix_ring(v1);
     	assertTrue("Pix not in set ..",diskQ4.contains(vpix1));
 
-  
+
     	LongRangeSet diskQ5 = pt.queryDisc(
     			v2,
     			radius, true);  // inclusive at pixel center
@@ -637,7 +637,7 @@ public class HealpixTest extends TestCase {
 
     	assertTrue("Pix not in set ..",diskQ5.contains(vpix2));
     	//assertEquals("npixels = " + diskQ5.size(), 9, diskQ5.size() , 1e-1);
-    	
+
 //    	System.out.println("n pixels in disk5 ="+diskQ5.size());
     	LongRangeSet diskQ6 = pt.queryDisc(
     			v2,
@@ -645,13 +645,13 @@ public class HealpixTest extends TestCase {
     	assertEquals("npixels = " + diskQ6.size(), 1L, diskQ6.size());
     	assertTrue("Pix not in set ..",diskQ6.contains(vpix2));
 
-    	
+
     	System.out.println(" End test of query_disc2____________________________");
-    	
+
     }
 	  /**
   	 * Test query_ disc.
-  	 * 
+  	 *
   	 * @throws Exception the exception
   	 */
   	public void DISABLEDtestQuery_Disc() throws Exception {
@@ -678,7 +678,7 @@ public class HealpixTest extends TestCase {
 		LongIterator it = pixlist.longIterator();
 		int i=0;
 		assertEquals("Wrong number pixels", pixel1.length,nlist);
-		
+
 		while (it.hasNext()) {
 			ipix =  it.next();
 			System.out.println(" i=" + i + " pixel=" + ipix);
@@ -694,7 +694,7 @@ public class HealpixTest extends TestCase {
 		assertEquals("Wrong number pixels", pixel1.length,nlist);
 		i=0;
 		while (it.hasNext()) {
-		
+
 			ipix =  it.next();
 			// how can this be pixel1 again ??
 			//TODO THIS FAILS ...
@@ -702,9 +702,9 @@ public class HealpixTest extends TestCase {
 			System.out.println(" i=" + i + " pixel=" + ipix);
 			 i++;
 		}
-		
-		v = pt.pix2vec_nest( (int) pt.ring2nest(93)); 
-		pt.setScheme(Scheme.NESTED); 
+
+		v = pt.pix2vec_nest( (int) pt.ring2nest(93));
+		pt.setScheme(Scheme.NESTED);
 		inclusive = true;
 		System.out.println("Doing disc radius="+radius + "  at " +v);
 		pixlist = pt.queryDisc( v, radius, inclusive);
@@ -718,7 +718,7 @@ public class HealpixTest extends TestCase {
 			i++;
 		}
 		System.out.println(" test query_disc is done");
-		
+
 		pt = new HealpixIndex(4096);
 		v = pt.pix2vec_nest( 175 );
 		//1 arcmin
@@ -749,7 +749,7 @@ public class HealpixTest extends TestCase {
 			System.out.println(" i=" + i + " pixel=" + ipix);
 			i++;
 		}
-		
+
 		SpatialVector sp = new SpatialVector(0.19344,-2.71955);
 //		sp.normalized();
 		pt = new HealpixIndex(256);
@@ -766,7 +766,7 @@ public class HealpixTest extends TestCase {
 			System.out.println(" i=" + i + " pixel=" + ipix);
 			i++;
 		}
-		
+
 		List<Long> ls = pt.neighbours_nest(278333);
 		Long[] lg2= new Long[ls.size()];
 		ls.toArray(lg2);
@@ -774,12 +774,12 @@ public class HealpixTest extends TestCase {
 		for (int j = 0; j < lg2.length; j++) {
 			System.out.println(j+">"+lg2[j].longValue());
 		}
-		
+
 	}
 
   	/**
   	 * specific problem
-  	 * 
+  	 *
   	 */
   	public void testQueryDisck15() throws Exception{
   		SpatialVector vec = HealpixIndex.ang2Vec(0.20448019896853498, 0.7853981633974483);
@@ -788,10 +788,10 @@ public class HealpixTest extends TestCase {
   		int inclusive=1;
   		double radius = 0.2;
   		hi.queryDisc(vec, radius, nest, inclusive);
-  		
+
   	}
   	/** still a problem in the poles ..
-  	 * 
+  	 *
   	 * @throws Exception
   	 */
 	public void testQuery_DiscFernique2() throws Exception {
@@ -806,37 +806,37 @@ public class HealpixTest extends TestCase {
 	    double res = HealpixIndex.getPixRes(nside); // pixel size in radians
 	    double pixSize = Math.toRadians(res/3600.0); // pixel size in radians
 	    System.out.println("res="+res+"  pixSize="+pixSize+" rad");
-		
+
 // no longer with magic .. get more pix		long[] expected = {127, 189, 190, 191, 255};
 		long[] expected = {125,127, 189, 190, 191, 255};
 		//WAS {63,125,127, 189, 190, 191, 254,255};
-		
+
 		long onePix = hi.vec2pix_nest(vector);
 
 		double[] ang = hi.pix2ang_nest(onePix);
 		double[] hang= HealpixIndex.vec2Ang(vector);
 		System.out.println("NEST "+onePix+" - theta="+ang[0]+" phi="+ang[1] +" from v2a "+hang[0]+" "+hang[1]);
-		
+
 		long twopix = hi.vec2pix_ring(vector);
 		double[] twang = hi.pix2ang_ring(twopix);
 		System.out.println("RING " +twopix+ "- theta="+twang[0]+" phi="+twang[1]);
 
         long tpix = hi.ang2pix_nest(hang[0], 0.03384187926107698);
         long tpix2 = hi.ang2pix_nest(hang[0], 0.03384187926107698+pixSize);
-        System.err.println("tpix="+tpix+ " tpix2="+tpix2);  
-		
+        System.err.println("tpix="+tpix+ " tpix2="+tpix2);
+
         System.out.println("ra="+vector.ra()+ " dec="+vector.dec()+" radius="+radius+" Nside="+nside);
         LongRangeSet vlist = hi.queryDisc(vector, radius, 1, inclusive);
         long [] list = vlist==null ? new long[0] : vlist.toArray();
 
         System.out.println(" => npixlist:"+list.length);
-        
-      
-        
+
+
+
 		HealpixMapCreator cre = new HealpixMapCreator(nside);
 		HealpixMap map = cre.getMap();
 
-		
+
         boolean found =false;
         System.out.print(" Pixels: ");
         for( int i = 0; i < list.length; i++ ) {
@@ -845,7 +845,7 @@ public class HealpixTest extends TestCase {
 				found=true;
 			}
 			List<Long> nebs= hi.neighbours_nest(list[i]);
-			System.out.print(" Neighbours:");  
+			System.out.print(" Neighbours:");
 			for (Long p: nebs) {
 				System.out.print(" " + p);
 			}
@@ -877,18 +877,18 @@ public class HealpixTest extends TestCase {
 		int inclusive = 1;
 		double radius = 2.875 / 180.0 * Constants.PI;
 		double expectedDist = radius +  Constants.PI / (double)( pt.getNside() *2);
-		
+
 		SpatialVector v = new SpatialVector(4.49208,-6.62294);
 		long onePix = pt.vec2pix_nest(v);
 		long ringPix = pt.vec2pix_ring(v);
-		
+
 		LongRangeSet pixlist;
 		pixlist = pt.queryDisc( v, radius, nest, inclusive);
 		long nlist = pixlist.size();
 		LongIterator it = pixlist.longIterator();
 		int i=0;
 		System.out.println (v.ra()+ " "+ v.dec()+" rad="+radius+" nest:"+
-				onePix+" ring:"+ ringPix+" => "); 
+				onePix+" ring:"+ ringPix+" => ");
 		HealpixMapCreator cre = new HealpixMapCreator(8);
 		HealpixMap map = cre.getMap();
 
@@ -907,7 +907,7 @@ public class HealpixTest extends TestCase {
 			//assertEquals(" Unexpected pixel ", pixel1[i],ipix);
 			i++;
 		}
-		
+
 	/*	MapView3d mview = new MapView3d(false);
 		mview.setMap(map);
 		mview.setSize(800, 800);
@@ -916,7 +916,7 @@ public class HealpixTest extends TestCase {
 		mview.wait();
    */
 		assertTrue(onePix + "Should be in the list but was not",found);
-	
+
 		long spix=764;
 		radius = (HealpixIndex.getPixRes(nside) * Constants.ARCSECOND_RADIAN)/4;
 		expectedDist = radius +  Constants.PI / (double)( pt.getNside() *2);
@@ -926,7 +926,7 @@ public class HealpixTest extends TestCase {
 		pixlist = pt.queryDisc( v2, radius, nest, inclusive);
 		it = pixlist.longIterator();
 		i=0;
-		System.out.println ("pix:"+spix +" pos "+v2.ra()+ " "+ v2.dec()+" rad="+radius+"[rad] => "); 
+		System.out.println ("pix:"+spix +" pos "+v2.ra()+ " "+ v2.dec()+" rad="+radius+"[rad] => ");
 		HealpixMap map2 = cre.getMap();
 		map2.add((int)spix, 1000.0);
 		boolean havespix=false;
@@ -950,7 +950,7 @@ public class HealpixTest extends TestCase {
 		System.in.read();
 		mview2.wait();
 		**/
-		
+
 	}
 
   	public void testIssue3983() throws Exception{
@@ -964,7 +964,7 @@ public class HealpixTest extends TestCase {
             throw new Exception("! Error using HealpixIndex! "+e);
         }
         int nHpPix = (int) HealpixIndex.nside2Npix((int) Math.pow(2,hpDepth));
-        
+
         double[] pixCenterThetaPhi;
         LongRangeSet hpPixInRadius;
         for (int currentPix = 0; currentPix<nHpPix; currentPix++) {
@@ -980,7 +980,7 @@ public class HealpixTest extends TestCase {
             } catch (Exception e) {
                 throw new Exception("! Error in converting from pixel to angle! "+e);
             }
-            
+
             // Get all healpix pixels that are within the safe radius of this pixel
             hpPixInRadius = hpIndex.queryDisc( HealpixIndex.ang2Vec(pixCenterThetaPhi[0],
                     pixCenterThetaPhi[1]),maxRadiusRad, (scheme == Scheme.NESTED ? 1:0), 1);
@@ -989,7 +989,7 @@ public class HealpixTest extends TestCase {
             int i = 0;
             while(it.hasNext()) {
             	pix = it.next();
-            	
+
                 if(pix<0) {
                     System.out.println("pixel: "+currentPix+" gives: "+hpPixInRadius);
 //                    break;
@@ -1018,7 +1018,7 @@ public class HealpixTest extends TestCase {
 
 	/**
 	 * Test query_ triangle360 nest.
-	 * 
+	 *
 	 * @throws Exception the exception
 	 */
 	public void testQuery_Triangle360Nest() throws Exception {
@@ -1027,7 +1027,7 @@ public class HealpixTest extends TestCase {
 		int nest = 1;
 		long ipix = 0;
 		int inclusive = 0;
-		
+
 		int triang[] = { 12, 0, 16 }; // crossing 360
 		int pixels[] = {0, 12,16,17,18,19 };
 		System.out.println("Start test Query Triangle");
@@ -1084,12 +1084,12 @@ public class HealpixTest extends TestCase {
 			 i++;
 		}
 		System.out.println(" test query_triangle is done");
-		
+
 	}
 
 	/**
 	 * Test query_ triangle360 ring.
-	 * 
+	 *
 	 * @throws Exception the exception
 	 */
 	public void testQuery_Triangle360Ring() throws Exception {
@@ -1150,26 +1150,26 @@ public class HealpixTest extends TestCase {
 		}
 		System.out.println(" test query_triangle is done");
 	}
-	
+
 	/**
 	 * Test query_ triangle not crossing360 ring.
-	 * 
+	 *
 	 * @throws Exception the exception
 	 */
 	public void testQuery_TriangleNotCrossing360Ring() throws Exception {
 		int nside = 4;
 		int triang[] = { 44, 46, 77 }; //not crossing 360
 		int pixels[] = { 44,45,46,77, };//60,120 is missing because center outside the triangle (inclusive=0)
-		
+
 //		nside = 2;
 //		int triang[] = { 14, 16, 31 }; // not crossing 360
 //		int pixels[] = { 14,15,16,22,23,31, };
-		
+
 		HealpixIndex pt = new HealpixIndex(nside);
 		int nest = 0;
 		long ipix = 0;
 		int inclusive = 0;
-		
+
 		System.out.println("Start test Query Triangle");
 		SpatialVector v[] = new SpatialVector[3];
 
@@ -1194,17 +1194,17 @@ public class HealpixTest extends TestCase {
 		}
 		System.out.println(" test query_triangle is done");
 	}
-	
+
 	/**
 	 * Test query_ triangle not crossing360 nest.
-	 * 
+	 *
 	 * @throws Exception the exception
 	 */
 	public void testQuery_TriangleNotCrossing360Nest() throws Exception {
 		int nside = 4;
 		int nest = 1;
 		int inclusive = 0;
-		
+
 		int triang[] = { 95, 20, 85 }; // not crossing 360
 		int pixels[] = { 18,19,20,24,85,95};//{95, 24, 19, 20, 18, 87, 85};//120 is missing because center outside the triangle (inclusive=0)
 //		took out 87 ..;
@@ -1238,10 +1238,10 @@ public class HealpixTest extends TestCase {
 		}
 		System.out.println(" test query_triangle is done");
 	}
-	
+
 	/**
 	 * Test query_ polygon.
-	 * 
+	 *
 	 * @throws Exception the exception
 	 */
 	@SuppressWarnings("unchecked")
@@ -1356,7 +1356,7 @@ public class HealpixTest extends TestCase {
 
 	/**
 	 * Test max resolution.
-	 * 
+	 *
 	 * @throws Exception the exception
 	 */
 	public void testMaxResolution() throws Exception {
@@ -1373,12 +1373,12 @@ public class HealpixTest extends TestCase {
 
 	/**
 	 * Higher resolution to lesser conversions test
-	 * @throws Exception 
+	 * @throws Exception
 	 */
 	public void test64to32Conversions() throws Exception {
 		//
 		// test HiRes conversions
-		//	    	
+		//
 		int nside = 262144;
 		SpatialVector pos = new SpatialVector(-0.704, 0.580, 0.408);
 		double res = HealpixIndex.getPixRes(nside);
@@ -1388,9 +1388,9 @@ public class HealpixTest extends TestCase {
 		nside = 1 << 12;
 		HealpixIndex pt = new HealpixIndex(nside);
 		HealpixIndex ptr = new HealpixIndex(nside, Scheme.RING);
-		
+
 		System.out.println("HiRes transformation tests: nside=" + nside);
-		
+
 		LongList nestPixels = new LongList(pt.queryDisc( pos,
 				radius, true));
 		LongList ringPixels = new LongList(ptr.queryDisc( pos,
@@ -1462,22 +1462,22 @@ public class HealpixTest extends TestCase {
 		long nside = HealpixIndex.calculateNSide(pixsize);
 		System.out.println("Required nside is " + nside);
 		assertEquals("nside = " + nside, 8192, nside, 1e-1);
-		
+
 		int nside1[]= new int[]{8192,262144,536870912};
 		for (int i = 0; i < nside1.length; i++) {
 			double res = HealpixIndex.getPixRes(nside1[i]);
-			System.out.println("Resolution for "+nside1[i]+" is "+res);		
+			System.out.println("Resolution for "+nside1[i]+" is "+res);
 			nside = HealpixIndex.calculateNSide(res);
 			System.out.println("Final resolution "+nside);
 			//Assert.assertTrue("Nside wrong, expected "+nside1[i]+" but was "+nside,nside == nside1[i]);
 		}
-				
+
 		System.out.println(" End of GetNSide test _______________________");
 	}
 
 	/**
 	 * Prints the vec.
-	 * 
+	 *
 	 * @param vec the vec
 	 */
 	public void printVec(double[] vec) {
@@ -1490,7 +1490,7 @@ public class HealpixTest extends TestCase {
 
 	/**
 	 * Test keith cover.
-	 * 
+	 *
 	 * @throws Exception the exception
 	 */
 	public void testKeithCover() throws Exception {
@@ -1532,11 +1532,11 @@ public class HealpixTest extends TestCase {
 	}
 	/**
 	 * tests Neighbour's method for nest schema of the pixelization
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	public void testNeighbours_Nest() throws Exception {
-		System.out.println(" Start test Neighbours_Nest !!!!!!!!!!!!!!!!!");		
+		System.out.println(" Start test Neighbours_Nest !!!!!!!!!!!!!!!!!");
 		int nside = 2;
 		HealpixIndex pt = new HealpixIndex(nside);
 		long ipix = 25;
@@ -1578,7 +1578,7 @@ public class HealpixTest extends TestCase {
 			//System.err.println("ip = " + npixList.get(i));
 		}
 		//System.out.println(" test NeighboursNest is done");
-		
+
 		nside = (int) Math.pow(2,2);
 		System.out.println(nside);
 		pt = new HealpixIndex(nside);
@@ -1598,29 +1598,29 @@ public class HealpixTest extends TestCase {
 	 * heal.Vect2Ang(vec); assertEquals("Ang theta is incorrect",theta,ang[0] );
 	 * assertEquals("Ang phi is incorrect",phi,ang[1] ); } } }
 	 */
-	
+
 	public void testGetParentAt(int childnside, int requirednside) throws Exception {
 		HealpixIndex c = new HealpixIndex(childnside);
 		HealpixIndex p = new HealpixIndex(requirednside);
-		
+
 		for (double theta =0.1;  theta < 3.16; theta+=0.2){
 			for (double phi=0.1; phi < 6.28 ; phi+=0.2){
 				long child = c.ang2pix_nest(theta, phi);
-				long ppix = p.ang2pix_nest(theta, phi);	
+				long ppix = p.ang2pix_nest(theta, phi);
 				long tppix = HealpixIndex.parentAt(child, childnside, requirednside);
-				
+
 				assertEquals("Parent is not as expexted",tppix,ppix) ;
 	   }}
 	}
-	
+
 	public void testGetParentAt() throws Exception{
 		testGetParentAt(4,2);
 		testGetParentAt(8,2);
 		testGetParentAt(1024,128);
-		
+
 	}
-	
-	
+
+
 	public void testGetChildrenAt() throws Exception {
 		long[] pix = HealpixIndex.getChildrenAt(2, 1, 4);
 		assertEquals("Incorrect number of pixels ",4, pix.length);
@@ -1628,9 +1628,9 @@ public class HealpixTest extends TestCase {
 		for (int i=0; i < pix.length; i++){
 			assertEquals("Incorrect pixel number", fpix+i, pix[i]);
 		}
-	
+
 	}
-	
+
 	public void testSpecificSmallLarge () throws Exception {
 		LongRangeSet listpixSmall, listpixLarge, difference;
 
@@ -1639,11 +1639,11 @@ public class HealpixTest extends TestCase {
 		HealpixIndex hpi2 = null;
 		SpatialVector sv3 = null;
 		int nside =512;
-		
+
 		sv3 = new SpatialVector(lon, lat);
-		
+
 		hpi2 = new HealpixIndex(nside);
-		
+
 		listpixSmall = hpi2.queryDisc( sv3,
 		((Math.toRadians(0.9))), 0, 0);
 		listpixLarge = hpi2.queryDisc( sv3,
@@ -1653,9 +1653,9 @@ public class HealpixTest extends TestCase {
 		if (listpixLarge.size() - listpixSmall.size() != difference.size()) {
 			System.out
 			.println("found a discrepancy at  " + lon+ ", "+ lat +" for nside:"+nside);
-		}	
+		}
 		//assertEquals(difference.size(), listpixLarge.size() - listpixSmall.size());
-		
+
 		// Iterate through listpixSmall
 		LongIterator listpixSmallIterator = listpixSmall.longIterator();
 		int counter = 0;
@@ -1669,9 +1669,9 @@ public class HealpixTest extends TestCase {
 				counter++;
 			}
 		}
-		
+
 		assertEquals("Pixels foudn in small not in large ", 0,counter);
-	
+
 	}
 	public void testDroegeBigSmall() throws Exception {
 		LongRangeSet listpixSmall, listpixLarge, difference;
@@ -1693,8 +1693,8 @@ public class HealpixTest extends TestCase {
 			.println("found a discrepancy at pixel number " + pix);
 			double[] other = null;
 			other = hpi2.pix2ang_ring(pix);
-			
-	
+
+
 			double latitude = 90.0 - (Math.toDegrees(other[0]));
 			double longitude = Math.toDegrees(other[1]);
 			System.out.println("the latitude is " + latitude);
@@ -1714,7 +1714,7 @@ public class HealpixTest extends TestCase {
 				counter++;
 			}
 		}
-		
+
 		assertEquals("Pixels found in small not in large ", counter,0);
 
 	}

@@ -1,7 +1,7 @@
 /*
  * HEALPix Java code supported by the Gaia project.
  * Copyright (C) 2006-2011 Gaia Data Processing and Analysis Consortium
- * 
+ *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
@@ -19,10 +19,10 @@
  */
 package healpix.plot3d.gui.healpix3d;
 
-import healpix.core.HealpixBase;
+import healpix.newcore.HealpixBase;
 import healpix.core.dm.HealpixMap;
 import healpix.plot3d.canvas3d.SineColorTransform;
-import healpix.core.Vec3;
+import healpix.newcore.Vec3;
 
 import javax.media.j3d.Geometry;
 import javax.media.j3d.GeometryArray;
@@ -33,7 +33,7 @@ import javax.vecmath.Point3d;
  * Despite name represents a single Healpix face. Uses a coloured quadrilateral
  * to indicate a data value for each pixel. DataSphere deals with different map
  * inside a HealpixMap object - e.g. read from fits file-.
- * 
+ *
  * @version $Id: DataSphere.java 120812 2010-01-24 23:12:12Z ejoliet $
  */
 public class DataSphere extends HealSphere {
@@ -55,7 +55,7 @@ public class DataSphere extends HealSphere {
 
 	/**
 	 * Most detailed constructor.
-	 * 
+	 *
 	 * @param nside
 	 *            the healpix resolution parameter.
 	 * @param face
@@ -79,7 +79,7 @@ public class DataSphere extends HealSphere {
 
 	/**
 	 * Instantiates a new data sphere.
-	 * 
+	 *
 	 * @param face the face
 	 * @param ch the ch
 	 */
@@ -96,7 +96,7 @@ public class DataSphere extends HealSphere {
 
 	/**
 	 * Used to get the data sphere from a ith map
-	 * 
+	 *
 	 * @param face
 	 * @param ch
 	 * @param imap
@@ -114,7 +114,7 @@ public class DataSphere extends HealSphere {
 
 	/**
 	 * Instantiates a new data sphere.
-	 * 
+	 *
 	 * @param face the face
 	 * @param ch the ch
 	 * @param imap the imap
@@ -134,7 +134,7 @@ public class DataSphere extends HealSphere {
 
 	/**
 	 * Instantiates a new data sphere.
-	 * 
+	 *
 	 * @param face the face
 	 * @param ch the ch
 	 * @param imap the imap
@@ -165,7 +165,7 @@ public class DataSphere extends HealSphere {
 		// QuadArrayExt[] quads2 = new QuadArrayExt[nQuads];
 		QuadArrayExt quads = new QuadArrayExt(nPoints,
 				GeometryArray.COORDINATES | GeometryArray.COLOR_3 );
-		
+
 		int offset;
 		Color3f c;
 
@@ -204,7 +204,7 @@ public class DataSphere extends HealSphere {
 
 	/**
 	 * Gets the face num.
-	 * 
+	 *
 	 * @return the face num
 	 */
 	public int getFaceNum() {

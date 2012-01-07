@@ -18,10 +18,10 @@
  */
 package healpix.fits;
 
-import healpix.core.HealpixMapDouble;
-import healpix.core.HealpixMapFloat;
-import healpix.core.HealpixUtils;
-import healpix.core.Scheme;
+import healpix.newcore.HealpixMapDouble;
+import healpix.newcore.HealpixMapFloat;
+import healpix.newcore.HealpixUtils;
+import healpix.newcore.Scheme;
 
 import java.io.FileOutputStream;
 

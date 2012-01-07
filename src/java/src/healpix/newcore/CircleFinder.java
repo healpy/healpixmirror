@@ -18,7 +18,7 @@
  *  For more information about HEALPix, see http://healpix.jpl.nasa.gov
  */
 
-package healpix.core;
+package healpix.newcore;
 
 /** Finds the smallest enclosing cone for a point set on the sphere according to
     Barequet & Elber: Information Processing Letters 93(2005), p.83.

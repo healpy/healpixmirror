@@ -1,7 +1,7 @@
 /*
  * HEALPix Java code supported by the Gaia project.
  * Copyright (C) 2006-2011 Gaia Data Processing and Analysis Consortium
- * 
+ *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
@@ -20,9 +20,9 @@
 package healpix.core.dm;
 
 import healpix.core.AngularPosition;
-import healpix.core.HealpixBase;
-import healpix.core.Pointing;
-import healpix.core.Scheme;
+import healpix.newcore.HealpixBase;
+import healpix.newcore.Pointing;
+import healpix.newcore.Scheme;
 import healpix.core.dm.util.HealpixTool;
 import healpix.tools.Constants;
 
@@ -37,10 +37,10 @@ import nom.tam.util.BufferedDataOutputStream;
 /**
  * A Healpix map can generate sky maps encoded in the HEALPix sky indexing
  * scheme (http://healpix.jpl.nasa.gov/).
- * 
+ *
  * The created maps can be written to a FITS data set for further processing
  * with e.g. visualisation/analysis tools in the HEALPix distribution.
- * 
+ *
  * @author ejoliet
  * @version $Id: HealpixMapImp.java 140496 2010-06-23 12:52:12Z womullan $
  */
@@ -48,7 +48,7 @@ public class HealpixMapImp extends HealpixBase implements HealpixMap,
 		Serializable, Cloneable {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 1L;
 
@@ -59,7 +59,7 @@ public class HealpixMapImp extends HealpixBase implements HealpixMap,
 	private class MapItem implements Serializable {
 
 		/**
-		 * 
+		 *
 		 */
 		private static final long serialVersionUID = 1L;
 
@@ -71,7 +71,7 @@ public class HealpixMapImp extends HealpixBase implements HealpixMap,
 
 		/**
 		 * Add a value to the HEALPix cell
-		 * 
+		 *
 		 * @param val
 		 *            Value to add
 		 */
@@ -82,7 +82,7 @@ public class HealpixMapImp extends HealpixBase implements HealpixMap,
 
 		/**
 		 * Return the accumultade value of this pixel.
-		 * 
+		 *
 		 * @return the accumulated value of this HEALPix cell
 		 */
 		public double getValue() {
@@ -91,7 +91,7 @@ public class HealpixMapImp extends HealpixBase implements HealpixMap,
 
 		/**
 		 * Set the value into this map cell
-		 * 
+		 *
 		 * @param cellVal
 		 *            the value to set
 		 */
@@ -102,7 +102,7 @@ public class HealpixMapImp extends HealpixBase implements HealpixMap,
 		/**
 		 * Return the counter indicating how many values have been accumulated
 		 * in this cell.
-		 * 
+		 *
 		 * @return the counter indicating how many values have been accumulated
 		 *         in this cell
 		 */
@@ -121,7 +121,7 @@ public class HealpixMapImp extends HealpixBase implements HealpixMap,
 
 		/**
 		 * Scale the cell value by the input value.
-		 * 
+		 *
 		 * @param f
 		 *            Cell scaling value
 		 */
@@ -166,7 +166,7 @@ public class HealpixMapImp extends HealpixBase implements HealpixMap,
 
 	/**
 	 * Construct a HEALPix mapper for a given map names and data columns.
-	 * 
+	 *
 	 * @param mapIt
 	 *            the data array
 	 * @param maps
@@ -205,7 +205,7 @@ public class HealpixMapImp extends HealpixBase implements HealpixMap,
 
 	/**
 	 * Construct a HEALPix mapper for a given NSIDE.
-	 * 
+	 *
 	 * @param nsideIndex
 	 *            HEALPix sphere tesselisation is done with NSIDE=2^nSideIndex,
 	 *            nSideIndex must be greater or equal to 0.
@@ -243,7 +243,7 @@ public class HealpixMapImp extends HealpixBase implements HealpixMap,
 	/**
 	 * Construct a HEALPix mapper whose sphere tesselisation contains no less
 	 * than a given number of pixels.
-	 * 
+	 *
 	 * @param pixels
 	 *            Minimum number of cells/pixels that the tesselisation shall
 	 *            contain.
@@ -261,7 +261,7 @@ public class HealpixMapImp extends HealpixBase implements HealpixMap,
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see healpix.core.dm.AbstractHealpixMap#nPixel()
 	 */
 	public long nPixel() {
@@ -270,7 +270,7 @@ public class HealpixMapImp extends HealpixBase implements HealpixMap,
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see healpix.core.dm.AbstractHealpixMap#nside()
 	 */
 	public int nside() {
@@ -279,7 +279,7 @@ public class HealpixMapImp extends HealpixBase implements HealpixMap,
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see healpix.core.dm.HealpixMap#add(healpix.core.AngularPosition, double)
 	 */
 	public void add(AngularPosition pos, double val) {
@@ -288,7 +288,7 @@ public class HealpixMapImp extends HealpixBase implements HealpixMap,
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see healpix.core.dm.HealpixMap#get(healpix.core.AngularPosition)
 	 */
 	public double get(AngularPosition pos) {
@@ -310,7 +310,7 @@ public class HealpixMapImp extends HealpixBase implements HealpixMap,
 
 	/**
 	 * Get the accumulated added value to a pixel
-	 * 
+	 *
 	 * @param i
 	 *            ith map
 	 * @param pixId
@@ -323,7 +323,7 @@ public class HealpixMapImp extends HealpixBase implements HealpixMap,
 
 	/**
 	 * Get the accumulated added value to a pixel
-	 * 
+	 *
 	 * @param i
 	 *            ith map
 	 * @param pos
@@ -338,7 +338,7 @@ public class HealpixMapImp extends HealpixBase implements HealpixMap,
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see healpix.core.dm.HealpixMap#get(int, int)
 	 */
 	public double get(int i, int pixId) {
@@ -347,7 +347,7 @@ public class HealpixMapImp extends HealpixBase implements HealpixMap,
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see healpix.core.dm.HealpixMap#get(int)
 	 */
 	public double get(int pixId) {
@@ -356,7 +356,7 @@ public class HealpixMapImp extends HealpixBase implements HealpixMap,
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see healpix.core.dm.HealpixMap#add(int, double)
 	 */
 	public void add(int index, double val) {
@@ -377,7 +377,7 @@ public class HealpixMapImp extends HealpixBase implements HealpixMap,
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see healpix.core.dm.HealpixMap#add(int, healpix.core.AngularPosition,
 	 *      double)
 	 */
@@ -411,7 +411,7 @@ public class HealpixMapImp extends HealpixBase implements HealpixMap,
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see healpix.core.dm.HealpixMap#normalize(int)
 	 */
 	public void normalize(int n) {
@@ -422,7 +422,7 @@ public class HealpixMapImp extends HealpixBase implements HealpixMap,
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see healpix.core.dm.HealpixMap#average(int)
 	 */
 	public void average(int n) {
@@ -444,7 +444,7 @@ public class HealpixMapImp extends HealpixBase implements HealpixMap,
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see healpix.core.dm.HealpixMap#scale(int, double)
 	 */
 	public void scale(int n, double f) {
@@ -457,7 +457,7 @@ public class HealpixMapImp extends HealpixBase implements HealpixMap,
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see healpix.core.dm.HealpixMap#toDataSet(java.lang.String)
 	 */
 	public void toDataSet(String name) throws Exception {
@@ -511,12 +511,12 @@ public class HealpixMapImp extends HealpixBase implements HealpixMap,
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see healpix.core.dm.HealpixMap#regrade(int)
 	 */
 	public HealpixMap regrade(int nside) {
 		HealpixMap m = null;
-		
+
 		if (nside > this.nside()) { // Upgrade!
 			try {
 				m = new HealpixTool(map_orig).upgrade(nside);
@@ -538,7 +538,7 @@ public class HealpixMapImp extends HealpixBase implements HealpixMap,
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see healpix.core.dm.HealpixMap#getMin()
 	 */
 	public double getMin() {
@@ -547,7 +547,7 @@ public class HealpixMapImp extends HealpixBase implements HealpixMap,
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see healpix.core.dm.HealpixMap#getMax()
 	 */
 	public double getMax() {
@@ -556,7 +556,7 @@ public class HealpixMapImp extends HealpixBase implements HealpixMap,
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see healpix.core.dm.HealpixMap#getMax(int)
 	 */
 	public double getMax(int i) {
@@ -577,9 +577,9 @@ public class HealpixMapImp extends HealpixBase implements HealpixMap,
 
 	/**
 	 * Gets the max map item.
-	 * 
+	 *
 	 * @param i the i
-	 * 
+	 *
 	 * @return the max map item
 	 */
 	public double getMaxMapItem(int i) {
@@ -599,7 +599,7 @@ public class HealpixMapImp extends HealpixBase implements HealpixMap,
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see healpix.core.dm.HealpixMap#getMin(int)
 	 */
 	public double getMin(int i) {
@@ -620,9 +620,9 @@ public class HealpixMapImp extends HealpixBase implements HealpixMap,
 
 	/**
 	 * Gets the min map item.
-	 * 
+	 *
 	 * @param i the i
-	 * 
+	 *
 	 * @return the min map item
 	 */
 	public double getMinMapItem(int i) {
@@ -641,7 +641,7 @@ public class HealpixMapImp extends HealpixBase implements HealpixMap,
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see healpix.core.dm.HealpixMap#setValueCell(int, int, double)
 	 */
 	public void setValueCell(int nmap, int ipix, double val) {
@@ -660,7 +660,7 @@ public class HealpixMapImp extends HealpixBase implements HealpixMap,
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see healpix.core.dm.HealpixMap#setValueCell(int, double)
 	 */
 	public void setValueCell(int ipix, double val) {
@@ -669,7 +669,7 @@ public class HealpixMapImp extends HealpixBase implements HealpixMap,
 
 	/**
 	 * Return the value of the HEALPix NSIDE parameter.
-	 * 
+	 *
 	 * @return the value of HEALPIx NSIDE parameter.
 	 */
 	public int getNside() {
@@ -678,7 +678,7 @@ public class HealpixMapImp extends HealpixBase implements HealpixMap,
 
 	/**
 	 * Setting the resolution number nside
-	 * 
+	 *
 	 * @param nside
 	 *            resolution number
 	 */
@@ -687,14 +687,14 @@ public class HealpixMapImp extends HealpixBase implements HealpixMap,
 
 	}
 
-	
+
 	public int ang2pix(double theta, double phi) throws Exception {
 		return (int) super.ang2pix(new Pointing(theta,phi));
 	}
 
 	/**
 	 * Get the map ith pixel from an {@link AngularPosition} position
-	 * 
+	 *
 	 * @param pos
 	 *            the {@link AngularPosition} position
 	 * @return healpix ith pixel number
@@ -706,7 +706,7 @@ public class HealpixMapImp extends HealpixBase implements HealpixMap,
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see healpix.core.dm.HealpixMap#pix2ang(long)
 	 */
 	public AngularPosition pix2ang(long ipix) throws Exception {
@@ -828,7 +828,7 @@ public class HealpixMapImp extends HealpixBase implements HealpixMap,
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see healpix.core.dm.AbstractHealpixMap#getName()
 	 */
 	public String[] getName() {
@@ -837,7 +837,7 @@ public class HealpixMapImp extends HealpixBase implements HealpixMap,
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see healpix.core.dm.AbstractHealpixMap#setName(java.lang.String[])
 	 */
 	public void setName(String[] colname) {
@@ -847,7 +847,7 @@ public class HealpixMapImp extends HealpixBase implements HealpixMap,
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see healpix.core.dm.AbstractHealpixMap#getImap(java.lang.String)
 	 */
 	public int getImap(String cname) {
@@ -861,7 +861,7 @@ public class HealpixMapImp extends HealpixBase implements HealpixMap,
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see healpix.core.dm.AbstractHealpixMap#setImap(int)
 	 */
 	public void setImap(int i) {
@@ -870,7 +870,7 @@ public class HealpixMapImp extends HealpixBase implements HealpixMap,
 
 	/**
 	 * makes the conversion map NEST to RING
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	public void convert_nest2ring() throws Exception {
@@ -891,7 +891,7 @@ public class HealpixMapImp extends HealpixBase implements HealpixMap,
 
 	/**
 	 * makes the conversion map RING to NEST
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	public void convert_ring2nest() throws Exception {
@@ -912,7 +912,7 @@ public class HealpixMapImp extends HealpixBase implements HealpixMap,
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see healpix.core.dm.HealpixMap#getMapItemData()
 	 */
 	public double[][] getMapItemData() {
@@ -928,7 +928,7 @@ public class HealpixMapImp extends HealpixBase implements HealpixMap,
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see healpix.core.dm.HealpixMap#mean(int, int, int)
 	 */
 	public double mean(int imap, int firstPix, int lastPix) {
@@ -945,7 +945,7 @@ public class HealpixMapImp extends HealpixBase implements HealpixMap,
 
 	/**
 	 * Shallow clone.
-	 * 
+	 *
 	 * @return the object
 	 */
 	public Object shallowClone() {
@@ -984,6 +984,6 @@ public class HealpixMapImp extends HealpixBase implements HealpixMap,
 	@Override
 	public void setUnit(String unit, short mapIndex) {
 		// TODO Auto-generated method stub
-		
+
 	}
 }

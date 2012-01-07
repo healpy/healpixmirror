@@ -21,6 +21,7 @@
 package healpix.core;
 
 import healpix.core.base.set.LongRangeSet;
+import healpix.newcore.*;
 import healpix.tools.Constants;
 import healpix.tools.SpatialVector;
 

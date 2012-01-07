@@ -1,7 +1,7 @@
 /*
  * HEALPix Java code supported by the Gaia project.
  * Copyright (C) 2006-2011 Gaia Data Processing and Analysis Consortium
- * 
+ *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
@@ -19,9 +19,9 @@
  */
 package healpix.plot3d.gui.healpix3d;
 
-import healpix.core.HealpixBase;
-import healpix.core.Scheme;
-import healpix.core.Vec3;
+import healpix.newcore.HealpixBase;
+import healpix.newcore.Scheme;
+import healpix.newcore.Vec3;
 
 import javax.media.j3d.Appearance;
 import javax.media.j3d.ColoringAttributes;

@@ -18,13 +18,13 @@
  *
  */
 
-package healpix.core.test;
+package healpix.newcore.test;
 
 import junit.framework.TestCase;
 import java.util.Random;
 import java.text.DecimalFormat;
 
-import healpix.core.*;
+import healpix.newcore.*;
 
 /** @author Martin Reinecke */
 public class HealpixBaseTest extends TestCase {

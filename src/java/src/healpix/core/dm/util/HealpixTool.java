@@ -1,7 +1,7 @@
 /*
  * HEALPix Java code supported by the Gaia project.
  * Copyright (C) 2006-2011 Gaia Data Processing and Analysis Consortium
- * 
+ *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
@@ -21,12 +21,12 @@ package healpix.core.dm.util;
 
 import healpix.core.dm.HealpixMap;
 import healpix.core.dm.HealpixMapImp;
-import healpix.core.Scheme;
+import healpix.newcore.Scheme;
 
 /**
  * Tools (Regrade) to apply to healpix maps. Could be extended with other tool
  * like comparing maps, combine maps,etc.
- * 
+ *
  * @author ejoliet
  * @version $Id: HealpixTool.java 135547 2010-05-13 13:40:26Z womullan $
  */
@@ -43,7 +43,7 @@ public class HealpixTool {
 
 	/**
 	 * Creates the tool to regrade an input map
-	 * 
+	 *
 	 * @param min
 	 *            input map {@link HealpixMap}
 	 */
@@ -54,14 +54,14 @@ public class HealpixTool {
 
 	/**
 	 * Default constructor
-	 * 
+	 *
 	 */
 	public HealpixTool() {
 	}
 
 	/**
 	 * Upgrade a healpix map from nside_in to nside_out (>nside_n)
-	 * 
+	 *
 	 * @param nside_out
 	 *            The nside of the resulting healpix map upgraded (>nside_in)
 	 * @return The {@link HealpixMap} upgraded.
@@ -79,7 +79,7 @@ public class HealpixTool {
 
 	/**
 	 * Upgrade a RING healpix map.
-	 * 
+	 *
 	 * @param nside_out
 	 *            The output resolution.
 	 * @throws Exception
@@ -98,7 +98,7 @@ public class HealpixTool {
 
 	/**
 	 * Upgrade a NEST healpix map to nside_out resolution.
-	 * 
+	 *
 	 * @param nside_out
 	 *            The output resolution.
 	 * @throws Exception
@@ -126,7 +126,7 @@ public class HealpixTool {
 
 	/**
 	 * Degrade the {@link HealpixMap} to Nside_out.
-	 * 
+	 *
 	 * @param nside_out
 	 *            The NSIDE output resolution.
 	 * @return The {@link HealpixMap} degraded.
@@ -156,7 +156,7 @@ public class HealpixTool {
 
 	/**
 	 * Sets the output result {@link HealpixMap}
-	 * 
+	 *
 	 * @param mout
 	 *            output map
 	 */
@@ -168,7 +168,7 @@ public class HealpixTool {
 
 	/**
 	 * Sets the input {@link HealpixMap}
-	 * 
+	 *
 	 * @param min
 	 *            the input map
 	 */

@@ -1,4 +1,4 @@
-package healpix.core;
+package healpix.newcore;
 
 /** The Healpix pixel ordering scheme. */
 public enum Scheme {

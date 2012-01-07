@@ -1,7 +1,7 @@
 /*
  * HEALPix Java code supported by the Gaia project.
  * Copyright (C) 2006-2011 Gaia Data Processing and Analysis Consortium
- * 
+ *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
@@ -20,7 +20,7 @@
 package healpix.fits;
 
 import healpix.core.AngularPosition;
-import healpix.core.Scheme;
+import healpix.newcore.Scheme;
 import healpix.core.dm.HealpixMap;
 import healpix.core.dm.HealpixMapImp;
 
@@ -44,7 +44,7 @@ import nom.tam.util.ColumnTable;
 /**
  * Converts fits file into healpix map. Read the fits and create the
  * {@link HealpixMap} object.
- * 
+ *
  * @version $Id: Fits2HealpixMapImp.java 135547 2010-05-13 13:40:26Z womullan $
  * @author ejoliet
  */
@@ -201,10 +201,10 @@ public class Fits2HealpixMapImp implements Fits2HealpixMap {
 
 	/**
 	 * Gets the dimension.
-	 * 
+	 *
 	 * @param ftype
 	 *            the ftype
-	 * 
+	 *
 	 * @return the dimension
 	 */
 	public int getDimension(String ftype) {
@@ -231,10 +231,10 @@ public class Fits2HealpixMapImp implements Fits2HealpixMap {
 
 	/**
 	 * Gets the data type.
-	 * 
+	 *
 	 * @param ftype
 	 *            the ftype
-	 * 
+	 *
 	 * @return the data type
 	 */
 	public char getDataType(String ftype) {
@@ -279,7 +279,7 @@ public class Fits2HealpixMapImp implements Fits2HealpixMap {
 
 	/**
 	 * Print out the data table.
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	public void printTable() throws Exception {

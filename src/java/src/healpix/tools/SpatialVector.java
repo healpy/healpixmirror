@@ -1,7 +1,7 @@
 /*
  * HEALPix Java code supported by the Gaia project.
  * Copyright (C) 2006-2011 Gaia Data Processing and Analysis Consortium
- * 
+ *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
@@ -18,24 +18,24 @@
  *
  */
 package healpix.tools;
-import healpix.core.Pointing;
-import healpix.core.Vec3;
+import healpix.newcore.Pointing;
+import healpix.newcore.Vec3;
 
 /**
  * The SpatialVector contains standard 3D vector with the addition that each
  * coordinate (x,y,z) is also kept in ra,dec since we expect the vector to live
  * on the surface of the unit sphere, i.e.
- * 
+ *
  * <pre>
  *  2   2   2
  *  x + y + z  = 1
  * </pre>
- * 
+ *
  * This is not enforced, so you can specify a vector that has not unit length.
  * If you request the ra/dec of such a vector, it will be automatically
  * normalized to length 1 and you get the ra/dec of that vector (the
  * intersection of the vector's direction with the unit sphere.
- * 
+ *
  * This code comes originally from the HTM library of Peter Kunst during his
  * time at JHU.
  */
@@ -43,7 +43,7 @@ import healpix.core.Vec3;
 public class SpatialVector extends Vec3 {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 1L;
 
@@ -58,7 +58,7 @@ public class SpatialVector extends Vec3 {
 
 	/**
 	 * Constructor from three coordinates
-	 * 
+	 *
 	 * @param x1
 	 * @param y1
 	 * @param z1
@@ -90,7 +90,7 @@ public class SpatialVector extends Vec3 {
 
 	/**
 	 * Copy constructor - be aware this only copies x,y,z
-	 * 
+	 *
 	 * @param copy
 	 *            the vector to copy
 	 */
@@ -112,12 +112,12 @@ public class SpatialVector extends Vec3 {
 
 	/**
 	 * Sets the ra and dec angles in degrees
-	 * 
+	 *
 	 * @param ra
 	 *            right ascension angle in degrees
 	 * @param dec
 	 *            declination angle in degrees
-	 * 
+	 *
 	 */
 	public void set(double ra, double dec) {
 		double cd = Math.cos(dec * Constants.cPr);
@@ -129,7 +129,7 @@ public class SpatialVector extends Vec3 {
 	/**
 	 * Returns the angle in radians between this vector and the vector
 	 * parameter; the return value is constrained to the range [0,PI].
-	 * 
+	 *
 	 * @param v1
 	 *            the other vector
 	 * @return the angle in radians in the range [0,PI]
@@ -145,7 +145,7 @@ public class SpatialVector extends Vec3 {
 
 	/**
 	 * Get the coordinates in a 3 elements 1D array
-	 * 
+	 *
 	 * @return coordinates [x,y,z]
 	 */
 	public double[] get() {
@@ -179,7 +179,7 @@ public class SpatialVector extends Vec3 {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see javax.vecmath.Tuple3d#toString()
 	 */
 	public String toString() {
@@ -189,7 +189,7 @@ public class SpatialVector extends Vec3 {
 
 	/**
 	 * vector cross product
-	 * 
+	 *
 	 * @param v
 	 *            the vector to cross
 	 * @return the vector cross product
@@ -202,7 +202,7 @@ public class SpatialVector extends Vec3 {
 
 	/**
 	 * Compare vectors if coordinates are equals
-	 * 
+	 *
 	 * @param v
 	 *            the vector to be compared with
 	 * @return true if both coordinates of vectors are equal
@@ -213,7 +213,7 @@ public class SpatialVector extends Vec3 {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
 	public boolean equals(Object obj) {
@@ -235,7 +235,7 @@ public class SpatialVector extends Vec3 {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.lang.Object#hashCode()
 	 */
 	@Override
@@ -254,7 +254,7 @@ public class SpatialVector extends Vec3 {
 
 	/**
 	 * multiply with a number
-	 * 
+	 *
 	 * @param n
 	 *            the scale number to be multiply to the coordinates x,y,z
 	 * @return the vector with coordinates multiplied by n
@@ -265,7 +265,7 @@ public class SpatialVector extends Vec3 {
 
 	/**
 	 * Computes the dot product of the this vector and vector v1.
-	 * 
+	 *
 	 * @param v1
 	 *            the other vector
 	 * @return dot product
@@ -276,7 +276,7 @@ public class SpatialVector extends Vec3 {
 
 	/**
 	 * vector addition
-	 * 
+	 *
 	 * @param v
 	 *            the vector to be added
 	 * @return vector result by addition
@@ -287,7 +287,7 @@ public class SpatialVector extends Vec3 {
 
 	/**
 	 * vector subtraction
-	 * 
+	 *
 	 * @param v
 	 *            the vector to be substracted
 	 * @return vector result by substraction
@@ -298,7 +298,7 @@ public class SpatialVector extends Vec3 {
 
 	/**
 	 * Get the dec angle in degrees
-	 * 
+	 *
 	 * @return declination angle
 	 */
 	public double dec() {
@@ -308,7 +308,7 @@ public class SpatialVector extends Vec3 {
 
 	/**
 	 * Get the ra angle in degrees
-	 * 
+	 *
 	 * @return right ascension
 	 */
 	public double ra() {

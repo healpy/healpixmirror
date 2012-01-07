@@ -18,7 +18,7 @@
  *  For more information about HEALPix, see http://healpix.jpl.nasa.gov
  */
 
-package healpix.core;
+package healpix.newcore;
 
 /** An angular position on the unit sphere
 

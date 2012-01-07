@@ -18,7 +18,7 @@
  *  For more information about HEALPix, see http://healpix.jpl.nasa.gov
  */
 
-package healpix.core;
+package healpix.newcore;
 
 /** Healpix-internal class for specifying locations on the sphere.
 

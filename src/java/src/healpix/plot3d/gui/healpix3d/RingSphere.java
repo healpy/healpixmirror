@@ -1,7 +1,7 @@
 /*
  * HEALPix Java code supported by the Gaia project.
  * Copyright (C) 2006-2011 Gaia Data Processing and Analysis Consortium
- * 
+ *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
@@ -19,10 +19,10 @@
  */
 package healpix.plot3d.gui.healpix3d;
 
-import healpix.core.Scheme;
+import healpix.newcore.Scheme;
 import healpix.tools.Constants;
-import healpix.core.Vec3;
-import healpix.core.Pointing;
+import healpix.newcore.Vec3;
+import healpix.newcore.Pointing;
 
 import javax.media.j3d.Appearance;
 import javax.media.j3d.ColoringAttributes;
@@ -32,7 +32,7 @@ import javax.media.j3d.LineArray;
 
 /**
  * Creates a Ring Healpix tesselasition
- * 
+ *
  * @author ejoliet
  * @version $Id: RingSphere.java 49444 2008-05-07 10:23:02Z ejoliet $
  */
@@ -43,7 +43,7 @@ public class RingSphere extends HealSphere {
 
 	/**
 	 * Instantiates a new ring sphere.
-	 * 
+	 *
 	 * @param nside the nside
 	 * @param ring the ring
 	 */

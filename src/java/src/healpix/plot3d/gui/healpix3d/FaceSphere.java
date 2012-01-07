@@ -1,7 +1,7 @@
 /*
  * HEALPix Java code supported by the Gaia project.
  * Copyright (C) 2006-2011 Gaia Data Processing and Analysis Consortium
- * 
+ *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
@@ -19,8 +19,8 @@
  */
 package healpix.plot3d.gui.healpix3d;
 
-import healpix.core.Vec3;
-import healpix.core.Scheme;
+import healpix.newcore.Vec3;
+import healpix.newcore.Scheme;
 
 import javax.media.j3d.Geometry;
 import javax.media.j3d.GeometryArray;
@@ -28,7 +28,7 @@ import javax.media.j3d.QuadArray;
 import javax.vecmath.Point3d;
 /**
  * Creates a Healpix Face tesselation
- * 
+ *
  * @author ejoliet
  * @version $Id: FaceSphere.java 49444 2008-05-07 10:23:02Z ejoliet $
  */
@@ -39,7 +39,7 @@ public class FaceSphere extends HealSphere {
 
 	/**
 	 * Instantiates a new face sphere.
-	 * 
+	 *
 	 * @param nside the nside
 	 * @param face the face
 	 */

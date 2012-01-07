@@ -19,7 +19,7 @@
  */
 package healpix.fits.test;
 import healpix.fits.*;
-import healpix.core.*;
+import healpix.newcore.*;
 
 import junit.framework.TestCase;
 import java.util.UUID;

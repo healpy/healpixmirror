@@ -18,7 +18,7 @@
  *  For more information about HEALPix, see http://healpix.jpl.nasa.gov
  */
 
-package healpix.core;
+package healpix.newcore;
 
 /** Cartesian 3-vector
 

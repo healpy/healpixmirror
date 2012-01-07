@@ -18,7 +18,7 @@
  *  For more information about HEALPix, see http://healpix.jpl.nasa.gov
  */
 
-package healpix.core;
+package healpix.newcore;
 import java.util.NoSuchElementException;
 
 /** Class for dealing with sets of integer ranges.

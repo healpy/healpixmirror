@@ -21,6 +21,7 @@
 package healpix.core;
 
 import healpix.tools.SpatialVector;
+import healpix.newcore.Pointing;
 
 import java.text.DecimalFormat;
 
@@ -38,7 +39,7 @@ public class AngularPosition extends Pointing {
 
 	/**
 	 * Simple constructor init both values.
-	 * @param theta in radians  [0,Pi] 
+	 * @param theta in radians  [0,Pi]
 	 * @param phi in radians [0,2*Pi]
 	 */
 	public AngularPosition(double theta, double phi) {
@@ -53,7 +54,7 @@ public class AngularPosition extends Pointing {
 
 	/**
 	 * Theta.
-	 * 
+	 *
 	 * @return the double
 	 */
 	public double theta() {
@@ -62,7 +63,7 @@ public class AngularPosition extends Pointing {
 
 	/**
 	 * Phi.
-	 * 
+	 *
 	 * @return the double
 	 */
 	public double phi() {
@@ -71,7 +72,7 @@ public class AngularPosition extends Pointing {
 
 	/**
 	 * Sets the theta.
-	 * 
+	 *
 	 * @param val the new theta in radians [0,2*Pi]
 	 */
 	public void setTheta(double val) {
@@ -80,7 +81,7 @@ public class AngularPosition extends Pointing {
 
 	/**
 	 * Sets the phi.
-	 * 
+	 *
 	 * @param val the new phi in radians [0,Pi]
 	 */
 	public void setPhi(double val) {
@@ -99,7 +100,7 @@ public class AngularPosition extends Pointing {
 
 	/**
 	 * Inits the.
-	 * 
+	 *
 	 * @param t the t
 	 * @param phi the phi
 	 */
@@ -107,7 +108,7 @@ public class AngularPosition extends Pointing {
 		this.theta=t;
 		this.phi=phi;
 	}
-	
+
 	/**
 	 * convenience conversion.
 	 * @return a normalized 3D vector pointing in the same direction
