@@ -35,7 +35,7 @@ import nom.tam.util.BufferedDataOutputStream;
 
 /** Basic FITS I/O support for Healpix maps.
 
-    Copyright (C) 2011 Max-Planck-Society
+    @copyright 2011 Max-Planck-Society
     @author Martin Reinecke */
 public class FitsUtil
   {

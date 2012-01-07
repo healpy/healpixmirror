@@ -25,7 +25,7 @@ package healpix.newcore;
     All points are expected to be passed as unit vectors.
     The enclosing cone must have an opening angle smaller than pi/2.
 
-    Copyright (C) 2011 Max-Planck-Society
+    @copyright 2011 Max-Planck-Society
     @author Martin Reinecke */
 class CircleFinder
   {

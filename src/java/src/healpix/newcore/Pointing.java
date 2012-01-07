@@ -20,9 +20,9 @@
 
 package healpix.newcore;
 
-/** An angular position on the unit sphere
+/** An angular position on the unit sphere.
 
-    Copyright (C) 2011 Max-Planck-Society
+    @copyright 2011 Max-Planck-Society
     @author Martin Reinecke */
 public class Pointing
   {

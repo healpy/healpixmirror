@@ -22,7 +22,7 @@ package healpix.newcore;
 
 /** Collection of utility functions.
 
-    Copyright (C) 2011 Max-Planck-Society
+    @copyright 2011 Max-Planck-Society
     @author Martin Reinecke */
 public class HealpixUtils
   {

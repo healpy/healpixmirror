@@ -22,7 +22,7 @@ package healpix.newcore;
 
 /** Healpix-internal class for specifying locations on the sphere.
 
-    Copyright (C) 2011 Max-Planck-Society
+    @copyright 2011 Max-Planck-Society
     @author Martin Reinecke */
 class Hploc
   {

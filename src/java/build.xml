@@ -97,24 +97,24 @@
             <fileset dir="${src}">
                 <exclude name="**/doc-files/**" />
             </fileset>
-			<!--
-			<fileset dir="${basedir}">
-				<exclude name="${junit.reports}/**" />
-				<exclude name="dist/**" />
-				<exclude name="magicdraw/**" />
-				<exclude name="classes/**" />
-				<exclude name="${classes}/**" />
-				<exclude name="tmp/**" />
-				<exclude name="lib/**" />
-				<exclude name="bin/**" />
-				<exclude name="${src}/**" />
-				<include name="lib/net-ivoa-fits.jar" />
-			</fileset>
-			<fileset dir="${classes}">
-				<exclude name="**/doc-files/**" />
-				<exclude name="**Test" />
-			</fileset>
-			-->
+                        <!--
+                        <fileset dir="${basedir}">
+                                <exclude name="${junit.reports}/**" />
+                                <exclude name="dist/**" />
+                                <exclude name="magicdraw/**" />
+                                <exclude name="classes/**" />
+                                <exclude name="${classes}/**" />
+                                <exclude name="tmp/**" />
+                                <exclude name="lib/**" />
+                                <exclude name="bin/**" />
+                                <exclude name="${src}/**" />
+                                <include name="lib/net-ivoa-fits.jar" />
+                        </fileset>
+                        <fileset dir="${classes}">
+                                <exclude name="**/doc-files/**" />
+                                <exclude name="**Test" />
+                        </fileset>
+                        -->
 		<manifest>
 			<attribute name="Class-Path" value=".:lib"/>
 			<attribute name="Specification-Title"        value="${project-description}"/>
@@ -169,15 +169,15 @@
             	<exclude name="**/tools/HealpixMap*" />
             </fileset>
 
-		<manifest>
-			<attribute name="Specification-Title"        value="${project-description}"/>
-			<attribute name="Specification-Version"      value="${version}"/>
-			<attribute name="Specification-Vendor"       value="${author}"/>
-			<attribute name="Implementation-Title"       value="${project-description}"/>
-			<attribute name="Implementation-Version"     value="${version}"/>
-			<attribute name="Implementation-Vendor"      value="${author}"/>
-			<attribute name="Author"                     value="${author}" />
-		</manifest>
+                <manifest>
+                        <attribute name="Specification-Title"        value="${project-description}"/>
+                        <attribute name="Specification-Version"      value="${version}"/>
+                        <attribute name="Specification-Vendor"       value="${author}"/>
+                        <attribute name="Implementation-Title"       value="${project-description}"/>
+                        <attribute name="Implementation-Version"     value="${version}"/>
+                        <attribute name="Implementation-Vendor"      value="${author}"/>
+                        <attribute name="Author"                     value="${author}" />
+                </manifest>
 		</jar>
 	</target>
 
@@ -195,76 +195,86 @@
             	<exclude name="**/tools/HealpixMap*" />
             </fileset>
 
-		<manifest>
-			<attribute name="Specification-Title"        value="${project-description}"/>
-			<attribute name="Specification-Version"      value="${version}"/>
-			<attribute name="Specification-Vendor"       value="${author}"/>
-			<attribute name="Implementation-Title"       value="${project-description}"/>
-			<attribute name="Implementation-Version"     value="${version}"/>
-			<attribute name="Implementation-Vendor"      value="${author}"/>
-			<attribute name="Author"                     value="${author}" />
-		</manifest>
+                <manifest>
+                        <attribute name="Specification-Title"        value="${project-description}"/>
+                        <attribute name="Specification-Version"      value="${version}"/>
+                        <attribute name="Specification-Vendor"       value="${author}"/>
+                        <attribute name="Implementation-Title"       value="${project-description}"/>
+                        <attribute name="Implementation-Version"     value="${version}"/>
+                        <attribute name="Implementation-Vendor"      value="${author}"/>
+                        <attribute name="Author"                     value="${author}" />
+                </manifest>
 		</jar>
 	</target>
-         <target name="disttiny" depends="clean,compile" description="Build the JAR file containing only classes for HealpixBase">
-                <jar destfile="${dist}/jhealpixTiny.jar">
-            <fileset dir="${classes}">
-                <exclude name="**/doc-files/**" />
-                <exclude name="**/test/**" />
-                <exclude name="**/package-info*" />
-                <exclude name="**/Healpix.class" />
-                <exclude name="**/HealpixIndex.class" />
-                <exclude name="**/BitManipulation.class" />
-                <exclude name="**/AngularPosition.class" />
-                <exclude name="**/HealpixMap*" />
-                <exclude name="**/dm/**" />
-                <exclude name="**/fits/**" />
-                <exclude name="**/plot3d/**" />
-                <exclude name="**/tools/**" />
-                <exclude name="**/base/**" />
-            </fileset>
 
-                <manifest>
-                        <attribute name="Specification-Title"        value="${project-description}"/>
-                        <attribute name="Specification-Version"      value="${version}"/>
-                        <attribute name="Specification-Vendor"       value="${author}"/>
-                        <attribute name="Implementation-Title"       value="${project-description}"/>
-                        <attribute name="Implementation-Version"     value="${version}"/>
-                        <attribute name="Implementation-Vendor"      value="${author}"/>
-                        <attribute name="Author"                     value="${author}" />
-                </manifest>
-                </jar>
-        </target>
-       <target name="disttinysrc" depends="" description="Build the JAR file containing only classes for HealpixBase">
-                <jar destfile="${dist}/jhealpixTiny_src.jar">
-            <fileset dir="${src}">
-                <exclude name="**/doc-files/**" />
-                <exclude name="**/test/**" />
-                <exclude name="**/package-info*" />
-                <exclude name="**/Healpix.*" />
-                <exclude name="**/HealpixIndex.*" />
-                <exclude name="**/BitManipulation.*" />
-                <exclude name="**/AngularPosition.*" />
-                <exclude name="**/HealpixMap*" />
-                <exclude name="**/dm/**" />
-                <exclude name="**/fits/**" />
-                <exclude name="**/plot3d/**" />
-                <exclude name="**/tools/**" />
-                <exclude name="**/base/**" />
-                <exclude name="**/*.html" />
-            </fileset>
-
-                <manifest>
-                        <attribute name="Specification-Title"        value="${project-description}"/>
-                        <attribute name="Specification-Version"      value="${version}"/>
-                        <attribute name="Specification-Vendor"       value="${author}"/>
-                        <attribute name="Implementation-Title"       value="${project-description}"/>
-                        <attribute name="Implementation-Version"     value="${version}"/>
-                        <attribute name="Implementation-Vendor"      value="${author}"/>
-                        <attribute name="Author"                     value="${author}" />
-                </manifest>
-                </jar>
-        </target>
-
+<target name="newcompile" depends="init" description="Compile the new Java code">
+  <echo>building </echo>
+  <javac destdir="${classes}" source="1.5" includeAntRuntime="false"
+    srcdir="${src}" debug="on"
+    includes="**/newcore/**/*.java,**/newfits/**/*.java" >
+    <classpath refid="classpath" />
+  </javac>
+</target>
+<target name="newtest" depends="newcompile" description="Test the new Java code">
+  <delete dir="${junit.reports}"/>
+  <mkdir dir="${junit.reports}"/>
+  <junit errorProperty="junit.failed" failureProperty="junit.failed" fork="yes"
+    maxmemory="1g" printsummary="withOutAndErr" showoutput="no">
+    <classpath refid="classpath" />
+    <formatter type="xml" usefile="true" />
+    <batchtest todir="${junit.reports}">
+      <fileset dir="${classes}" includes="**/newcore/test/*Test.class,**/newfits/test/*Test.class" />
+    </batchtest>
+  </junit>
+  <junitreport todir="${junit.reports}">
+    <fileset dir="${junit.reports}">
+      <include name="TEST-*.xml"/>
+    </fileset>
+    <report format="frames" todir="${junit.reports}/html"/>
+  </junitreport>
+  <fail message="Test Cases Failed" if="junit.failed"/>
+</target>
+<target name="newdist" depends="clean,newcompile,newtest" description="Build the JAR file containing only new classes">
+  <jar destfile="${dist}/jhealpixNew.jar">
+    <fileset dir="${classes}" includes="**/newcore/*.class,**/newfits/*.class" />
+      <manifest>
+        <attribute name="Specification-Title"        value="${project-description}"/>
+        <attribute name="Specification-Version"      value="unknown"/>
+        <attribute name="Specification-Vendor"       value="HEALPix team"/>
+        <attribute name="Implementation-Title"       value="${project-description}"/>
+        <attribute name="Implementation-Version"     value="unknown"/>
+        <attribute name="Implementation-Vendor"      value="HEALPix team"/>
+        <attribute name="Author"                     value="Martin Reinecke" />
+      </manifest>
+  </jar>
+</target>
+<target name="newdistsrc" depends="clean" description="Build the source JAR file containing only new classes">
+  <jar destfile="${dist}/jhealpixNew_src.jar">
+    <fileset dir="${src}" includes="**/newcore/**,**/newfits/**" />
+      <manifest>
+        <attribute name="Specification-Title"        value="${project-description}"/>
+        <attribute name="Specification-Version"      value="unknown"/>
+        <attribute name="Specification-Vendor"       value="HEALPix team"/>
+        <attribute name="Implementation-Title"       value="${project-description}"/>
+        <attribute name="Implementation-Version"     value="unknown"/>
+        <attribute name="Implementation-Vendor"      value="HEALPix team"/>
+        <attribute name="Author"                     value="Martin Reinecke" />
+      </manifest>
+  </jar>
+</target>
+<target name="newdocs" depends="svnrevision" description="Create the Javadocs">
+  <javadoc destdir="${docs}" failonerror="true" use="true"
+    additionalparam='-breakiterator -public -quiet -tag copyright:a:"Copyright:" -link http://java.sun.com/j2se/1.5.0/docs/api -link http://download.java.net/media/java3d/javadoc/1.4.0'
+    classpathref="classpath">
+    <packageset dir="${src}" defaultexcludes="yes">
+      <include name="**/newcore/" />
+      <include name="**/newfits/" />
+      <exclude name="**/doc-files/**" />
+      <exclude name="**/test/**" />
+    </packageset>
+    <footer>"Built from revision ${svn.revision}"</footer>
+  </javadoc>
+</target>
+<target name="newall" depends="newdist,newdistsrc,newdocs" description="Do everything for the new library"/>
 
 </project>

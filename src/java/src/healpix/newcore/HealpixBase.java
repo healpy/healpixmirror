@@ -27,7 +27,7 @@ import java.util.Arrays;
     of Healpix_cxx. It supports NESTED for nside parameters which are powers
     of 2, and RING scheme for arbitrary nside parameters.
 
-    Copyright (C) 2011,2012 Max-Planck-Society
+    @copyright 2011, 2012 Max-Planck-Society
     @author Martin Reinecke */
 public class HealpixBase extends HealpixTables
   {

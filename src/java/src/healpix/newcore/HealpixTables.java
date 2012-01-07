@@ -22,7 +22,7 @@ package healpix.newcore;
 
 /** Various data tables needed by the {@link HealpixBase} class.
 
-    Copyright (C) 2011 Max-Planck-Society
+    @copyright 2011 Max-Planck-Society
     @author Martin Reinecke */
 public class HealpixTables
   {
