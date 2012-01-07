@@ -148,6 +148,24 @@ template<typename T> class rangeset
     /*! Removes the value \a v from the rangeset. */
     void remove(const T &v) { addRemove(v,v+1,0); }
 
+    void intersect (const T &a, const T &b)
+      {
+      tdiff pos1=iiv(a), pos2=iiv(b);
+      if ((pos2>=0) && (r[pos2]==b)) --pos2;
+      // delete all up to pos1 (inclusive); and starting from pos2+1
+      bool insert_a = (pos1&1)==0;
+      bool insert_b = (pos2&1)==0;
+
+      // cut off end
+      r.erase(r.begin()+pos2+1,r.end());
+      if (insert_b) r.push_back(b);
+
+      // erase start
+      if (insert_a) r[pos1--]=a;
+      if (pos1>=0)
+        r.erase(r.begin(),r.begin()+pos1+1);
+      }
+
     /*! Returns the total number of elements in the rangeset. */
     T nval() const
       {

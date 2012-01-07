@@ -407,7 +407,6 @@ template<typename I> template<typename I2>
       bool shifted;
       get_ring_info_small(iz,ipix1,nr,shifted);
       double shift = shifted ? 0.5 : 0.;
-      I ipix2 = ipix1 + nr - 1; // highest pixel number in the ring
       rangeset<I2> tr;
       tr.append(ipix1,ipix1+nr);
       for (tsize j=0; j<z0.size(); ++j)
@@ -431,10 +430,7 @@ template<typename I> template<typename I2>
         if (ip_lo<0)
           tr.remove(ipix1+ip_hi+1,ipix1+ip_lo+nr);
         else
-          {
-          tr.remove(ipix1,ipix1+ip_lo);
-          tr.remove(ipix1+ip_hi+1,ipix2+1);
-          }
+          tr.intersect(ipix1+ip_lo,ipix1+ip_hi+1);
         }
       pixset.append(tr);
       }
