@@ -26,7 +26,7 @@ import java.util.Arrays;
     This class is conceptually very similar the the Healpix_Map<double> class
     of Healpix_cxx.
 
-    @copyright 2011 Max-Planck-Society
+    @copyright 2011,2012 Max-Planck-Society
     @author Martin Reinecke */
 public class HealpixMapDouble extends HealpixBase
   {
@@ -71,6 +71,9 @@ public class HealpixMapDouble extends HealpixBase
     data=new double[(int)getNpix()];
     }
 
+  /** Adjusts the object to scheme_in, and sets pixel data to data_in.
+      @param data_in pixel data; must have a valid length (12*nside^2)
+      @param scheme_in the new ordering scheme */
   public void setDataAndScheme(double[] data_in, Scheme scheme_in)
     throws Exception
     {
@@ -78,9 +81,14 @@ public class HealpixMapDouble extends HealpixBase
     data=data_in;
     }
 
+  /** Sets all map pixel to a specific value.
+      @param val pixel value to use */
   public void fill(double val)
     { Arrays.fill(data,val); }
 
+  /** Converts the map from NESTED to RING scheme or vice versa.
+      This operation is done in-place, i.e. it does not require additional
+      memory. */
   public void swapScheme() throws Exception
     {
     HealpixUtils.check((order>=0) && (order<=13),
@@ -103,18 +111,34 @@ public class HealpixMapDouble extends HealpixBase
     scheme = (scheme==Scheme.RING) ? Scheme.NESTED : Scheme.RING;
     }
 
+  /** Returns the value of the pixel with a given index.
+      @param ipix index of the requested pixel
+      @return pixel value */
   public double getPixel(int ipix)
     { return data[ipix]; }
+  /** Returns the value of the pixel with a given index.
+      @param ipix index of the requested pixel
+      @return pixel value */
   public double getPixel(long ipix)
     { return data[(int)ipix]; }
+  /** Sets the value of a specific pixel.
+      @param ipix index of the pixel
+      @param val new value for the pixel */
   public void setPixel(int ipix, double val)
     { data[ipix] = val; }
+  /** Sets the value of a specific pixel.
+      @param ipix index of the pixel
+      @param val new value for the pixel */
   public void setPixel(long ipix, double val)
     { data[(int)ipix] = val; }
 
+  /** Returns the array containing all map pixels.
+      @return the map array */
   public double[] getData()
     { return data; }
 
+  /** Imports the map "orig" to this object, adjusting pixel ordering.
+      @param orig map to import */
   public void importNograde (HealpixMapDouble orig) throws Exception
     {
     HealpixUtils.check (nside==orig.nside,
@@ -126,6 +150,9 @@ public class HealpixMapDouble extends HealpixBase
         data[scheme==Scheme.NESTED ? (int)ring2nest(m) : (int)nest2ring(m)]
           = orig.data[m];
     }
+  /** Imports the map "orig" to this object, adjusting pixel ordering
+      and increasing resolution.
+      @param orig map to import */
   public void importUpgrade (HealpixMapDouble orig) throws Exception
     {
     HealpixUtils.check(nside>orig.nside,"importUpgrade: this is no upgrade");
@@ -145,6 +172,12 @@ public class HealpixMapDouble extends HealpixBase
           }
       }
     }
+  /** Imports the map "orig" to this object, adjusting pixel ordering
+      and reducing resolution.
+      @param orig map to import
+      @param pessimistic if true, set a pixel to undefined if at least one the
+        original subpixels was undefined; otherwise only set it to undefined if
+        all original subpixels were undefined. */
   public void importDegrade (HealpixMapDouble orig, boolean pessimistic)
     throws Exception
     {
@@ -173,6 +206,13 @@ public class HealpixMapDouble extends HealpixBase
       data[m] = (hits<minhits) ? undef : (double) (sum/hits);
       }
     }
+  /** Imports the map "orig" to this object, adjusting pixel ordering
+      and resolution if necessary.
+      @param orig map to import
+      @param pessimistic only used when resolution must be reduced: if true,
+        set a pixel to undefined if at least one the original subpixels
+        was undefined; otherwise only set it to undefined if all original
+        subpixels were undefined. */
   public void Import (HealpixMapDouble orig, boolean pessimistic)
     throws Exception
     {

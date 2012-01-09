@@ -109,7 +109,9 @@ template<typename T> class rangeset
     /*! Returns the current vector of ranges. */
     const rtype &data() const { return r; }
 
+    /*! Returns the first value of range \a i. */
     const T &ivbegin (tdiff i) const { return r[2*i]; }
+    /*! Returns the one-past-last value of range \a i. */
     const T &ivend (tdiff i) const { return r[2*i+1]; }
 
     /*! Appends \a [v1;v2[ to the rangeset. \a v1 must be larger
@@ -130,6 +132,8 @@ template<typename T> class rangeset
     void append(const T &v)
       { append(v,v+1); }
 
+    /*! Appends \a other to the rangeset. All values in \a other must be larger
+        than the minimum of the last range in the rangeset. */
     void append (const rangeset &other)
       {
       for (tsize j=0; j<other.size(); ++j)
@@ -143,11 +147,12 @@ template<typename T> class rangeset
         with \a [v;v+1[. */
     void add(const T &v) { addRemove(v,v+1,1); }
 
-    /*! Removes all values within \a [v1;v2] from the rangeset. */
+    /*! Removes all values within \a [v1;v2[ from the rangeset. */
     void remove(const T &v1, const T &v2) { addRemove(v1,v2,0); }
     /*! Removes the value \a v from the rangeset. */
     void remove(const T &v) { addRemove(v,v+1,0); }
 
+    /*! Removes all values not within \a [v1;v2[ from the rangeset. */
     void intersect (const T &a, const T &b)
       {
       tdiff pos1=iiv(a), pos2=iiv(b);
@@ -210,16 +215,16 @@ template<typename T> class rangeset
       generalUnion (r,other.r,true,false,tmp);
       std::swap(r,tmp);
       }
-    /*! After this operation, the rangeset contains the union of \a r1
-        and \a r2. */
+    /*! After this operation, the rangeset contains the union of \a a
+        and \a b. */
     void setToUnion (const rangeset &a, const rangeset &b)
       { generalUnion (a.r,b.r,false,false,r); }
-    /*! After this operation, the rangeset contains the intersection of \a r1
-        and \a r2. */
+    /*! After this operation, the rangeset contains the intersection of \a a
+        and \a b. */
     void setToIntersection (const rangeset &a, const rangeset &b)
       { generalUnion (a.r,b.r,true,true,r); }
-    /*! After this operation, the rangeset contains the union of \a r1
-        with the inverse of \a r2. */
+    /*! After this operation, the rangeset contains the union of \a a
+        with the inverse of \a b. */
     void setToDifference (const rangeset &a, const rangeset &b)
       { generalUnion (a.r,b.r,true,false,r); }
 
@@ -236,6 +241,8 @@ template<typename T> class rangeset
     bool equals (const rangeset &other) const
       { return r==other.data(); }
 
+    /*! Returns \a true if the rangeset contains all values in the range
+        \a [a;b[, else \a false. */
     bool containsAll (T a,T b) const
       {
       tdiff res=iiv(a);

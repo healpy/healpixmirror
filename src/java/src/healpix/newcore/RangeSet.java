@@ -35,18 +35,21 @@ public class RangeSet {
 
   /** Sorted list of entries. */
   protected long[] r;
-  /** current size */
+  /** Current number of active entries. */
   protected int sz;
 
+  /** Construct new object with space for 8 entries (4 ranges). */
   public RangeSet() { this(8); }
-  /** Construct new object with a given initial number of entries
-      @param cap */
+  /** Construct new object with a given initial number of entries.
+      @param cap number of initially reserved entries. */
   public RangeSet(int cap)
     {
     if (cap<0) throw new IllegalArgumentException("capacity must be positive");
     r = new long[cap];
     sz=0;
     }
+  /** Construct new object from an array of longs.
+      @param data */
   public RangeSet(long[] data)
     {
     sz=data.length;
@@ -55,6 +58,8 @@ public class RangeSet {
     checkConsistency();
     }
 
+  /** Checks the object for internal consistency. If a problem is detected,
+      an IllegalArgumentException is thrown. */
   public void checkConsistency()
     {
     if ((sz&1)!=0)
@@ -78,7 +83,7 @@ public class RangeSet {
     }
 
   /** Append a single-value range to the object.
-      @param val - value to append */
+      @param val value to append */
   public void append(long val)
     { append(val,val+1); }
 
@@ -108,30 +113,31 @@ public class RangeSet {
       append(other.r[i],other.r[i+1]);
     }
 
-  /** @return number of added ranges so far*/
+  /** @return number of added ranges so far. */
   public int size()
     { return sz>>>1; }
 
+  /** @return true if no entries are stored, else false. */
   public boolean empty()
     { return sz==0; }
 
+  /** @return first number in range iv. */
   public long ivbegin(int iv)
     { return r[2*iv]; }
+  /** @return one-past-last number in range iv. */
   public long ivend(int iv)
     { return r[2*iv+1]; }
 
+  /** Remove all entries in the set. */
   public void clear()
     { sz=0; }
 
-  private long getv(int i)
-    { return r[i]; }
+  /** Push a single entry at the end of the entry vector. */
   private void pushv(long v)
-    {
-    ensureCapacity(sz+1);
-    r[sz]=v;
-    ++sz;
-    }
+    { ensureCapacity(sz+1); r[sz++]=v; }
 
+  /** Internal helper function for constructing unions, intersections
+      and differences of two RangeSets. */
   private static void generalUnion (RangeSet a, RangeSet b,
     boolean flip_a, boolean flip_b, RangeSet c)
     {
@@ -143,8 +149,8 @@ public class RangeSet {
       {
       boolean adv_a=false, adv_b=false;
       long val=0,va=0,vb=0;
-      if (runa) va = a.getv(ia);
-      if (runb) vb = b.getv(ib);
+      if (runa) va = a.r[ia];
+      if (runb) vb = b.r[ib];
       if (runa && (!runb || (va<=vb))) { adv_a=true; val=va; }
       if (runb && (!runa || (vb<=va))) { adv_b=true; val=vb; }
       if (adv_a) { state_a=!state_a; ++ia; runa = ia!=ea; }
@@ -153,24 +159,36 @@ public class RangeSet {
         { c.pushv(val); state_res = !state_res; }
       }
     }
+  /** After this operation, the RangeSet contains the union of RangeSets a
+      and b. */
   public void setToUnion (RangeSet a, RangeSet b)
     { generalUnion (a,b,false,false,this); }
+  /** After this operation, the RangeSet contains the intersection of RangeSets
+      a and b. */
   public void setToIntersection (RangeSet a, RangeSet b)
     { generalUnion (a,b,true,true,this); }
+  /** After this operation, the RangeSet contains the difference of RangeSets
+      a and b. */
   public void setToDifference (RangeSet a, RangeSet b)
     { generalUnion (a,b,true,false,this); }
+  /** After this operation, the RangeSet contains the union of itself and
+      other. */
   public RangeSet union (RangeSet other)
     {
     RangeSet res=new RangeSet();
     generalUnion (this,other,false,false,res);
     return res;
     }
+  /** After this operation, the RangeSet contains the intersection of itself and
+      other. */
   public RangeSet intersection (RangeSet other)
     {
     RangeSet res=new RangeSet();
     generalUnion (this,other,true,true,res);
     return res;
     }
+  /** After this operation, the RangeSet contains the difference of itself and
+      other. */
   public RangeSet difference (RangeSet other)
     {
     RangeSet res=new RangeSet();
@@ -178,6 +196,11 @@ public class RangeSet {
     return res;
     }
 
+  /** Returns an internal representation of the interval a number belongs to.
+      @param val number whose interval is requested
+      @return interval number, starting with -1 (smaller
+      than all numbers in the RangeSet, 0 (first "on" interval), 2 (first
+      "off" interval) etc. */
   private int iiv (long val)
     {
     int count=sz, first=0;
@@ -191,14 +214,18 @@ public class RangeSet {
       }
     return first-1;
     }
+  /** Returns true if a is contained in the set, else false. */
   public boolean contains (long a)
     { return ((iiv(a)&1)==0); }
+  /** Returns true if all numbers [a;b[ are contained in the set, else false. */
   public boolean containsAll (long a,long b)
     {
     int res=iiv(a);
     if ((res&1)!=0) return false;
     return (b<=r[res+1]);
     }
+  /** Returns true if any of the numbers [a;b[ are contained in the set,
+      else false. */
   public boolean containsAny (long a,long b)
     {
     int res=iiv(a);
@@ -206,6 +233,7 @@ public class RangeSet {
     if (res==sz-1) return false; // beyond the end of the set
     return (r[res+1]<b);
     }
+  /** Returns true the object represents an identical set of ranges as obj. */
   public boolean equals(Object obj) {
     if (this == obj)
       return true;
@@ -217,6 +245,7 @@ public class RangeSet {
       if (other.r[i]!=r[i]) return false;
     return true;
     }
+  /** @return total number of values (not ranges) in the set. */
   public long nval() {
     long res = 0;
     for (int i=0; i<sz; i+=2)

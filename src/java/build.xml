@@ -237,29 +237,16 @@
 <target name="newdist" depends="clean,newcompile,newtest" description="Build the JAR file containing only new classes">
   <jar destfile="${dist}/jhealpixNew.jar">
     <fileset dir="${classes}" includes="**/newcore/*.class,**/newfits/*.class" />
-      <manifest>
-        <attribute name="Specification-Title"        value="${project-description}"/>
-        <attribute name="Specification-Version"      value="unknown"/>
-        <attribute name="Specification-Vendor"       value="HEALPix team"/>
-        <attribute name="Implementation-Title"       value="${project-description}"/>
-        <attribute name="Implementation-Version"     value="unknown"/>
-        <attribute name="Implementation-Vendor"      value="HEALPix team"/>
-        <attribute name="Author"                     value="Martin Reinecke" />
-      </manifest>
+  </jar>
+</target>
+<target name="newdistsmall" depends="clean,newcompile,newtest" description="Build the JAR file containing only new classes">
+  <jar destfile="${dist}/jhealpixNewSmall.jar">
+    <fileset dir="${classes}" includes="**/newcore/*.class" excludes="**/newcore/HealpixMap*.class" />
   </jar>
 </target>
 <target name="newdistsrc" depends="clean" description="Build the source JAR file containing only new classes">
   <jar destfile="${dist}/jhealpixNew_src.jar">
     <fileset dir="${src}" includes="**/newcore/**,**/newfits/**" />
-      <manifest>
-        <attribute name="Specification-Title"        value="${project-description}"/>
-        <attribute name="Specification-Version"      value="unknown"/>
-        <attribute name="Specification-Vendor"       value="HEALPix team"/>
-        <attribute name="Implementation-Title"       value="${project-description}"/>
-        <attribute name="Implementation-Version"     value="unknown"/>
-        <attribute name="Implementation-Vendor"      value="HEALPix team"/>
-        <attribute name="Author"                     value="Martin Reinecke" />
-      </manifest>
   </jar>
 </target>
 <target name="newdocs" depends="svnrevision" description="Create the Javadocs">
