@@ -107,7 +107,7 @@ public class HealpixBase extends HealpixTables
     return ris.startpix + jp - 1L;
     }
 
-  private Xyf ring2xyf(long pix)
+  protected Xyf ring2xyf(long pix)
     {
     Xyf ret = new Xyf();
     long iring, iphi, kshift, nr;
@@ -159,15 +159,15 @@ public class HealpixBase extends HealpixTables
     return ret;
     }
 
-  private Xyf pix2xyf (long pix)
+  protected Xyf pix2xyf (long pix)
     { return (scheme==Scheme.RING) ? ring2xyf(pix) : nest2xyf(pix); }
 
-  private long xyf2pix (int ix, int iy, int face_num)
+  protected long xyf2pix (int ix, int iy, int face_num)
     {
     return (scheme==Scheme.RING) ?
       xyf2ring(ix,iy,face_num) : xyf2nest(ix,iy,face_num);
     }
-  private long xyf2pix (Xyf xyf)
+  protected long xyf2pix (Xyf xyf)
     {
     return (scheme==Scheme.RING) ?
       xyf2ring(xyf.ix,xyf.iy,xyf.face) : xyf2nest(xyf.ix,xyf.iy,xyf.face);

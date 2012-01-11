@@ -262,6 +262,6 @@
     <footer>"Built from revision ${svn.revision}"</footer>
   </javadoc>
 </target>
-<target name="newall" depends="newdist,newdistsrc,newdocs" description="Do everything for the new library"/>
+<target name="newall" depends="newdist,newdistsmall,newdistsrc,newdocs" description="Do everything for the new library"/>
 
 </project>
