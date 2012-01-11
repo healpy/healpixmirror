@@ -32,13 +32,10 @@ public class HealpixMap<Type> extends HealpixBase
   {
   private <type>[] data;
 
-  public static final <type> undef=-1.6375e30;
+  public static final <type> undef=(<type>)(-1.6375e30);
 
-  public HealpixMap<Type>()
-    {
-    super();
-    data=null;
-    }
+  public HealpixMap<Type>() throws Exception
+    { this(1,Scheme.NESTED); }
   public HealpixMap<Type>(long nside_in, Scheme scheme_in) throws Exception
     {
     super(nside_in,scheme_in);

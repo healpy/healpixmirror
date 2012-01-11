@@ -28,9 +28,11 @@ import java.util.NoSuchElementException;
     @author Martin Reinecke */
 public class RangeSet {
 
+  /** Interface describing an iterator for going through all values in
+      a RangeSet object. */
   public interface ValueIterator {
-    boolean hasNext();
-    long next();
+    public boolean hasNext();
+    public long next();
     }
 
   /** Sorted list of entries. */
@@ -113,7 +115,7 @@ public class RangeSet {
       append(other.r[i],other.r[i+1]);
     }
 
-  /** @return number of added ranges so far. */
+  /** @return number of ranges in the set. */
   public int size()
     { return sz>>>1; }
 
@@ -200,7 +202,7 @@ public class RangeSet {
       @param val number whose interval is requested
       @return interval number, starting with -1 (smaller
       than all numbers in the RangeSet, 0 (first "on" interval), 2 (first
-      "off" interval) etc. */
+      "off" interval etc.) */
   private int iiv (long val)
     {
     int count=sz, first=0;
@@ -253,6 +255,8 @@ public class RangeSet {
     return res;
     }
 
+  /** Internal helper function for building unions and differences of the
+      RangeSet with a single range. */
   private void addRemove (long a, long b, int v)
     {
     int pos1=iiv(a), pos2=iiv(b);
@@ -284,6 +288,8 @@ public class RangeSet {
       }
     }
 
+  /** After this operation, the RangeSet contains the intersection of itself and
+      [a;b[. */
   public void intersect (long a, long b)
     {
     int pos1=iiv(a), pos2=iiv(b);
@@ -306,11 +312,18 @@ public class RangeSet {
       throw new IllegalArgumentException("cannot happen");
     }
 
+  /** After this operation, the RangeSet contains the union of itself and
+      [a;b[. */
   public void add (long a, long b)
     { addRemove(a,b,1); }
+  /** After this operation, the RangeSet contains the difference of itself and
+      [a;b[. */
   public void remove (long a, long b)
     { addRemove(a,b,0); }
 
+  /** Creates an array cointainig all the numbers in the RangeSet.
+      Not recommended, because the arrays can become prohibitively large.
+      It is preferrable to use a ValueIterator or explicit loops. */
   public long[] toArray(){
     long[] res = new long[(int)nval()];
     int ofs=0;
@@ -333,6 +346,8 @@ public class RangeSet {
     return s.toString();
     }
 
+  /** Returns a ValueIterator, which iterates over all individual numbers
+      in the RangeSet. */
   public ValueIterator valueIterator()
     {
     return new ValueIterator()

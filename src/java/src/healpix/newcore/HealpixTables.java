@@ -22,7 +22,7 @@ package healpix.newcore;
 
 /** Various data tables needed by the {@link HealpixBase} class.
 
-    @copyright 2011 Max-Planck-Society
+    @copyright 2011, 2012 Max-Planck-Society
     @author Martin Reinecke */
 public class HealpixTables
   {
@@ -80,15 +80,15 @@ public class HealpixTables
           {  3, 0, 1, 2, 3, 0, 1, 2, 4, 5, 6, 7 },   // NW
           {  2, 3, 0, 1,-1,-1,-1,-1, 0, 1, 2, 3 } }; // N
   static final byte[][] swaparray =
-        { {  0,0,3 },   // S
-          {  0,0,6 },   // SE
-          {  0,0,0 },   // E
-          {  0,0,5 },   // SW
-          {  0,0,0 },   // center
-          {  5,0,0 },   // NE
-          {  0,0,0 },   // W
-          {  6,0,0 },   // NW
-          {  3,0,0 } }; // N
+        { { 0,0,3 },   // S
+          { 0,0,6 },   // SE
+          { 0,0,0 },   // E
+          { 0,0,5 },   // SW
+          { 0,0,0 },   // center
+          { 5,0,0 },   // NE
+          { 0,0,0 },   // W
+          { 6,0,0 },   // NW
+          { 3,0,0 } }; // N
 
   static final int swap_cycle[][] = {
     {},
@@ -111,5 +111,4 @@ public class HealpixTables
       95032729,139166747,171822389},
     {0,5,10,267,344,363,2968,3159,9083,18437,76602,147614,1246902,1593138,
       2035574,6529391,9511830,11340287,29565945,281666026,677946848} };
-
   }

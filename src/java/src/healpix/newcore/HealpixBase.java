@@ -159,15 +159,15 @@ public class HealpixBase extends HealpixTables
     return ret;
     }
 
-  public Xyf pix2xyf (long pix)
+  private Xyf pix2xyf (long pix)
     { return (scheme==Scheme.RING) ? ring2xyf(pix) : nest2xyf(pix); }
 
-  public long xyf2pix (int ix, int iy, int face_num)
+  private long xyf2pix (int ix, int iy, int face_num)
     {
     return (scheme==Scheme.RING) ?
       xyf2ring(ix,iy,face_num) : xyf2nest(ix,iy,face_num);
     }
-  public long xyf2pix (Xyf xyf)
+  private long xyf2pix (Xyf xyf)
     {
     return (scheme==Scheme.RING) ?
       xyf2ring(xyf.ix,xyf.iy,xyf.face) : xyf2nest(xyf.ix,xyf.iy,xyf.face);
@@ -176,7 +176,7 @@ public class HealpixBase extends HealpixTables
   /** Calculates the map order from its Nside parameter.
       @param nside the Nside parameter
       @return the map order corresponding to {@code nside}; -1 if
-               {@code nside} is not a power of 2. */
+        {@code nside} is not a power of 2. */
   public static int nside2order(long nside) throws Exception
     {
     HealpixUtils.check (nside>0,"nside must be positive");
@@ -239,17 +239,9 @@ public class HealpixBase extends HealpixTables
     setNside(nside_in);
     }
 
-  /** Initializes the object to Nside=1024 and scheme=NESTED. */
-  public HealpixBase()
-    {
-    try
-      {
-      nside=-1;
-      setNsideAndScheme(1024,Scheme.NESTED);
-      }
-    catch (Exception Ex) { /* cannot happen */ }
-    }
-
+  /** Initializes the object to Nside=1 and scheme=NESTED. */
+  public HealpixBase() throws Exception
+    { this(1,Scheme.NESTED); }
 
   /** Initializes the object to a user-supplied Nside and ordering scheme.
       @param nside_in the Nside parameter
@@ -329,7 +321,7 @@ public class HealpixBase extends HealpixTables
     return xyf2ring (xyf.ix,xyf.iy, xyf.face);
     }
 
-  public long loc2pix (Hploc loc)
+  protected long loc2pix (Hploc loc)
     {
     double z=loc.z, phi=loc.phi;
 
@@ -420,7 +412,7 @@ public class HealpixBase extends HealpixTables
       {
       if (pix<ncap) // North Polar cap
         {
-        long iring = (1+(HealpixUtils.isqrt(1+2*pix)))>>>1; //counted from North pole
+        long iring = (1+(HealpixUtils.isqrt(1+2*pix)))>>>1; //from North pole
         long iphi  = (pix+1) - 2*iring*(iring-1);
 
         double tmp = (iring*iring)*fact2;
@@ -443,7 +435,7 @@ public class HealpixBase extends HealpixTables
       else // South Polar cap
         {
         long ip = npix - pix;
-        long iring = (1+HealpixUtils.isqrt(2*ip-1))>>>1; //counted from South pole
+        long iring = (1+HealpixUtils.isqrt(2*ip-1))>>>1; //from South pole
         long iphi  = 4*iring + 1 - (ip - 2*iring*(iring-1));
 
         double tmp = (iring*iring)*fact2;
@@ -501,7 +493,7 @@ public class HealpixBase extends HealpixTables
       @return array with indices of the neighboring pixels.
         The returned array contains (in this order)
         the pixel numbers of the SW, W, NW, N, NE, E, SE and S neighbor
-        of ipix. If a neighbor does not exist (this can only be the case
+        of ipix. If a neighbor does not exist (this can only happen
         for the W, N, E and S neighbors), its entry is set to -1. */
   public long[] neighbours(long ipix) throws Exception
     {

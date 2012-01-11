@@ -32,13 +32,10 @@ public class HealpixMapDouble extends HealpixBase
   {
   private double[] data;
 
-  public static final double undef=-1.6375e30;
+  public static final double undef=(double)(-1.6375e30);
 
-  public HealpixMapDouble()
-    {
-    super();
-    data=null;
-    }
+  public HealpixMapDouble() throws Exception
+    { this(1,Scheme.NESTED); }
   public HealpixMapDouble(long nside_in, Scheme scheme_in) throws Exception
     {
     super(nside_in,scheme_in);

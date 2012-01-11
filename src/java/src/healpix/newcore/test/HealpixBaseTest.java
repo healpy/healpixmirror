@@ -1,23 +1,22 @@
 /*
- * Experimental HEALPix Java code derived from the Gaia-developed Java sources
- * and the Healpix C++ library.
+ *  This file is part of Healpix Java.
  *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation; either
- * version 2.1 of the License, or (at your option) any later version.
+ *  This code is free software; you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation; either version 2 of the License, or
+ *  (at your option) any later version.
  *
- * This library is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details.
+ *  This code is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+ *  You should have received a copy of the GNU General Public License
+ *  along with this code; if not, write to the Free Software
+ *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  *
+ *  For more information about HEALPix, see http://healpix.jpl.nasa.gov
  */
-
 package healpix.newcore.test;
 
 import junit.framework.TestCase;
@@ -43,7 +42,7 @@ public class HealpixBaseTest extends TestCase {
   public void test_perf_math()
     {
     final int ncomp=1000000;
-    System.out.println("\nRough performance test of math functions\n");
+    System.out.println("Rough performance test of math functions");
     long cnt=0;
     double dummy=0;
     double di=1./ncomp;
@@ -314,7 +313,7 @@ public class HealpixBaseTest extends TestCase {
 
   public void test_perf() throws Exception
     {
-    System.out.println("\nPerformance tests of HealpixBase methods\n");
+    System.out.println("Performance tests of HealpixBase methods");
     double d=0;
     d+=subtest_perf_neighbours("neighbours(NEST)",Scheme.NESTED);
     d+=subtest_perf_neighbours("neighbours(RING)",Scheme.RING);
@@ -338,7 +337,7 @@ public class HealpixBaseTest extends TestCase {
 
   public void test_accuracy()throws Exception
     {
-    System.out.println("\nTesting accuracy near the poles\n");
+    System.out.println("Testing accuracy near the poles");
 
     for (int order=0; order<=HealpixBase.order_max; ++order)
       {
@@ -349,7 +348,7 @@ public class HealpixBaseTest extends TestCase {
 
   public void test_ringnestring()throws Exception
     {
-    System.out.println("\nTesting identity ring2nest(nest2ring(i))==i\n");
+    System.out.println("Testing identity ring2nest(nest2ring(i))==i");
     Random rng = new Random();
 
     for (int order=0; order<=HealpixBase.order_max; ++order)
@@ -366,7 +365,7 @@ public class HealpixBaseTest extends TestCase {
 
   public void test_pixzphipix()throws Exception
     {
-    System.out.println("\nTesting identity pix2zphi(zphi2pix(i))==i\n");
+    System.out.println("Testing identity pix2zphi(zphi2pix(i))==i");
     int omax=HealpixBase.order_max;
     Random rng = new Random();
     for (int order=0; order<=omax; ++order)
@@ -397,7 +396,7 @@ public class HealpixBaseTest extends TestCase {
   public void test_zphipixzphi() throws Exception
     {
     System.out.println
-      ("\nTesting near-identity zphi2pix(pix2zphi(i))approx i\n");
+      ("Testing near-identity zphi2pix(pix2zphi(i))approx i");
     int omax=HealpixBase.order_max;
     Random rng = new Random();
     for (int order=0; order<=omax; ++order)
@@ -432,7 +431,7 @@ public class HealpixBaseTest extends TestCase {
 
   public void test_neighbors() throws Exception
     {
-    System.out.println("\nTesting neighbour function\n");
+    System.out.println("Testing neighbour function");
     int omax=HealpixBase.order_max;
     Random rng = new Random();
     for (int order=0; order<=omax; ++order)
@@ -483,7 +482,7 @@ public class HealpixBaseTest extends TestCase {
     }
   public void test_query_disc_strict() throws Exception
     {
-    System.out.println("\nTesting non-inclusive queryDisc()\n");
+    System.out.println("Testing non-inclusive queryDisc()");
     Random rng = new Random();
     for (int order=0; order<=5; ++order)
       {
@@ -519,7 +518,7 @@ public class HealpixBaseTest extends TestCase {
 
   public void test_query_disc() throws Exception
     {
-    System.out.println("\nTesting queryDisc() empirically\n");
+    System.out.println("Testing queryDisc() empirically");
     int omax=17;
     Random rng = new Random();
     for (int order=0; order<=omax; ++order)
@@ -547,7 +546,7 @@ public class HealpixBaseTest extends TestCase {
 
   public void testQueryPolygon() throws Exception
     {
-    System.out.println("\nTesting queryPolygon()\n");
+    System.out.println("Testing queryPolygon()");
     HealpixBase base = new HealpixBase(1024,Scheme.NESTED);
     Pointing[] corner = new Pointing[4];
     corner[0]=new Pointing(new Vec3(1,0.01,0.01));
@@ -567,7 +566,7 @@ public class HealpixBaseTest extends TestCase {
 
   public void testQueryPolygon2() throws Exception
     {
-    System.out.println("\nTesting queryPolygon() empirically\n");
+    System.out.println("Testing queryPolygon() empirically");
     int omax=17;
     Random rng = new Random();
     for (int order=0; order<=omax; ++order)

@@ -32,13 +32,10 @@ public class HealpixMapFloat extends HealpixBase
   {
   private float[] data;
 
-  public static final float undef=-1.6375e30f;
+  public static final float undef=(float)(-1.6375e30);
 
-  public HealpixMapFloat()
-    {
-    super();
-    data=null;
-    }
+  public HealpixMapFloat() throws Exception
+    { this(1,Scheme.NESTED); }
   public HealpixMapFloat(long nside_in, Scheme scheme_in) throws Exception
     {
     super(nside_in,scheme_in);
