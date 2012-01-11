@@ -22,7 +22,7 @@ package healpix.newcore;
 
 /** Cartesian 3-vector
 
-    Copyright (C) 2011 Max-Planck-Society
+    @copyright (C) 2011 Max-Planck-Society
     @author Martin Reinecke */
 public class Vec3
   {

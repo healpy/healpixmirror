@@ -22,7 +22,7 @@ package healpix.newcore;
 
 /** Class for storing a position on the unit sphere as a (z,phi)-tuple.
 
-    Copyright (C) 2011 Max-Planck-Society
+    @copyright (C) 2011 Max-Planck-Society
     @author Martin Reinecke */
 public class Zphi
   {
