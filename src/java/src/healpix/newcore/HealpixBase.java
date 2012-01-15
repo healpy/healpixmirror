@@ -861,16 +861,13 @@ public class HealpixBase extends HealpixTables
 
       Vec3 vptg = new Vec3(ptg);
 
-      HealpixBase[] base = new HealpixBase[omax+1];
-
       double[] crpdr = new double[omax+1];
       double[] crmdr = new double[omax+1];
 
       double cosrad=Math.cos(radius);
       for (int o=0; o<=omax; o++) // prepare data at the required orders
         {
-        base[o]=new HealpixBase(1L<<o,Scheme.NESTED);
-        double dr=base[o].maxPixrad(); // safety distance
+        double dr=HealpixProc.bn[o].maxPixrad(); // safety distance
         crpdr[o] = (radius+dr>Math.PI) ? -1. : Math.cos(radius+dr);
         crmdr[o] = (radius-dr<0.) ?  1. : Math.cos(radius-dr);
         }
@@ -886,7 +883,7 @@ public class HealpixBase extends HealpixTables
         int o=stk.otop();
         stk.pop();
 
-        Zphi pos=base[o].pix2zphi(pix);
+        Zphi pos=HealpixProc.bn[o].pix2zphi(pix);
         // cosine of angular distance between pixel center and disk center
         double cangdist=HealpixUtils.cosdist_zphi(vptg.z,ptg.phi,pos.z,pos.phi);
 
@@ -1019,12 +1016,10 @@ public class HealpixBase extends HealpixTables
 
       // TODO: ignore all disks with radius>=pi
 
-      HealpixBase[] base= new HealpixBase[omax+1];
       double[][][] crlimit=new double[omax+1][nv][3];
       for (int o=0; o<=omax; ++o) // prepare data at the required orders
         {
-        base[o]=new HealpixBase(1L<<o,Scheme.NESTED);
-        double dr=base[o].maxPixrad(); // safety distance
+        double dr=HealpixProc.bn[o].maxPixrad(); // safety distance
         for (int i=0; i<nv; ++i)
           {
           crlimit[o][i][0] = (rad[i]+dr>Math.PI) ? -1: Math.cos(rad[i]+dr);
@@ -1038,13 +1033,13 @@ public class HealpixBase extends HealpixTables
         stk.push(11-i,0);
       }
 
-      while (stk.size()>0) {// as long as there are pixels on the stack
+      while (stk.size()>0) { // as long as there are pixels on the stack
         // pop current pixel number and order from the stack
         long pix=stk.ptop();
         int o=stk.otop();
         stk.pop();
 
-        Vec3 pv = base[o].pix2vec(pix);
+        Vec3 pv = HealpixProc.bn[o].pix2vec(pix);
 
         int zone=3;
         for (int i=0; (i<nv)&&(zone>0); ++i)
@@ -1188,7 +1183,7 @@ public class HealpixBase extends HealpixTables
     * @return {@link Vec3} for each point
     * @throws Exception
     */
-  public Vec3[] corners(long pix, int step) throws Exception
+  public Vec3[] boundaries(long pix, int step) throws Exception
     {
     HealpixUtils.check(step>0,"step must be positive");
     Vec3[] points = new Vec3[4*step];

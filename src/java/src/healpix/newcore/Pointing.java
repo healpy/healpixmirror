@@ -26,7 +26,7 @@ package healpix.newcore;
     @author Martin Reinecke */
 public class Pointing
   {
-  /** Colatitude in radians */
+  /** Colatitude in radians (0 is North Pole; Pi is South Pole) */
   public double theta;
 
   /** Longitude in radians */
