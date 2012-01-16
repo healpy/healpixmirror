@@ -290,7 +290,7 @@ public class HealpixIndex extends HealpixBase implements Serializable {
 	 */
 	public SpatialVector[] corners_nest(long pix, int step) throws Exception {
 		long tpix = (scheme==Scheme.NESTED) ? pix : nest2ring(pix);
-		Vec3[] tvec = corners(tpix,step);
+		Vec3[] tvec = boundaries(tpix,step);
 		SpatialVector[] res=new SpatialVector[tvec.length];
 		for (int i=0; i<tvec.length; ++i)
 		  res[i]=new SpatialVector(tvec[i]);
@@ -310,7 +310,7 @@ public class HealpixIndex extends HealpixBase implements Serializable {
 	 */
 	public SpatialVector[] corners_ring(long pix, int step) throws Exception {
 		long tpix = (scheme==Scheme.RING) ? pix : ring2nest(pix);
-		Vec3[] tvec = corners(tpix,step);
+		Vec3[] tvec = boundaries(tpix,step);
 		SpatialVector[] res=new SpatialVector[tvec.length];
 		for (int i=0; i<tvec.length; ++i)
 		  res[i]=new SpatialVector(tvec[i]);

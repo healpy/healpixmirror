@@ -96,7 +96,7 @@ public class RingSphere extends HealSphere {
 					// Healpix.ang2pix_nest(nside,theta_center,phi_center);
 					int offset = q * ppq;
 					q++;
-					Vec3 corners[] = index.corners(rpix, step);
+					Vec3 corners[] = index.boundaries(rpix, step);
 					addPix(corners, offset, quads);
 
 				} catch (Exception e) {

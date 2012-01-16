@@ -62,7 +62,7 @@ public class NestSphere extends HealSphere
       {
       for (int q=0; q< nQuads; q++)
         {
-        Vec3[] points = index.corners(faceoff+q,step);
+        Vec3[] points = index.boundaries(faceoff+q,step);
         addPix(points,q*ppq,quads);
         }
       }

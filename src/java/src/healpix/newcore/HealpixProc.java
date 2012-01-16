@@ -44,7 +44,7 @@ public abstract class HealpixProc extends HealpixBase
     catch (Exception Ex) {/*doesn't happen*/}
     }
 
-  private HealpixProc() throws Exception {}
+  private HealpixProc() {}
 
   private static int cilog2 (long arg) throws Exception
     {

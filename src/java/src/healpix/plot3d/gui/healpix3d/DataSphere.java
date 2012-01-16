@@ -175,7 +175,7 @@ public class DataSphere extends HealSphere {
 				// quads2[q] = new QuadArrayExt(4,GeometryArray.COORDINATES
 				// | GeometryArray.COLOR_3);
 				int pixindex = faceoff + q;
-				Vec3[] points = index.corners(pixindex, 1);
+				Vec3[] points = index.boundaries(pixindex, 1);
 				double val = (double) ch.get(imap, pixindex);// ch.getPixAsFloat(pixindex);
 //				if(val==0)
 //					continue;

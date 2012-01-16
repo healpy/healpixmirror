@@ -71,18 +71,22 @@ public class RangeSet {
         throw new IllegalArgumentException("inconsistent entries");
     }
 
+  private void resize(int newsize)
+    {
+    if (newsize<sz)
+      throw new IllegalArgumentException("requested array size too small");
+    if (newsize==r.length) return;
+    long[] rnew = new long[newsize];
+    System.arraycopy(r,0,rnew,0,sz);
+    r = rnew;
+    }
+
   /** Make sure the object can hold at least the given number of entries. */
   public void ensureCapacity(int cap)
-    {
-    if (r.length<cap) // grow the array if necessary
-      {
-      int goalSize = Math.max(2*r.length,cap);
-
-      long[] rnew = new long[goalSize];
-      System.arraycopy(r,0,rnew,0,r.length);
-      r = rnew;
-      }
-    }
+    { if (r.length<cap) resize (Math.max(2*r.length,cap)); }
+  /** Shrinks the array for the entries to minimum size. */
+  public void trimSize()
+    { resize(sz); }
 
   /** Append a single-value range to the object.
       @param val value to append */

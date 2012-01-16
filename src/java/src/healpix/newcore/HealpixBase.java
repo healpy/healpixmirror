@@ -240,8 +240,12 @@ public class HealpixBase extends HealpixTables
     }
 
   /** Initializes the object to Nside=1 and scheme=NESTED. */
-  public HealpixBase() throws Exception
-    { this(1,Scheme.NESTED); }
+  public HealpixBase()
+    {
+    try
+      { nside=0; setNsideAndScheme(1,Scheme.NESTED); }
+    catch(Exception Ex) {/*cannot happen*/}
+    }
 
   /** Initializes the object to a user-supplied Nside and ordering scheme.
       @param nside_in the Nside parameter
@@ -1176,7 +1180,9 @@ public class HealpixBase extends HealpixTables
     }
 
   /** Returns a set of points along the boundary of the given pixel.
-    * Step 1 gives 4 points on the corners.
+    * Step 1 gives 4 points on the corners. The first point corresponds
+    * to the northernmost corner, the subsequent points follow the pixel
+    * boundary through west, south and east corners.
     *
     * @param pix pixel index number
     * @param step the number of returned points is 4*step

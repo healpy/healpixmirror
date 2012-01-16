@@ -64,7 +64,7 @@ public class FaceSphere extends HealSphere {
 		try {
 			int offset;
 			for (int q = 0; q < nQuads; q++) {
-				Vec3[] points = index.corners(faceoff + q, 1);
+				Vec3[] points = index.boundaries(faceoff + q, 1);
 				offset = q * ppq;
 				// need to add pixel
 

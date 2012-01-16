@@ -100,7 +100,7 @@ public class ZoneSphere extends HealSphere {
 
 					int offset = q * ppq;
 					q++;
-					Vec3[] corners = index.corners(rpix, step);
+					Vec3[] corners = index.boundaries(rpix, step);
 					addPix(corners, offset, quads);
 				} catch (Exception e) {
 					e.printStackTrace();

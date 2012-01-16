@@ -141,7 +141,7 @@ public class HealpixMap<Type> extends HealpixBase
     HealpixUtils.check (nside==orig.nside,
       "importNograde: maps have different nside");
     if (orig.scheme == scheme)
-      for (int m=0; m<npix; ++m) data[m] = orig.data[m];
+      System.arraycopy(orig.data,0,data,0,(int)npix);
     else
       for (int m=0; m<npix; ++m)
         data[scheme==Scheme.NESTED ? (int)ring2nest(m) : (int)nest2ring(m)]
@@ -210,7 +210,7 @@ public class HealpixMap<Type> extends HealpixBase
         set a pixel to undefined if at least one the original subpixels
         was undefined; otherwise only set it to undefined if all original
         subpixels were undefined. */
-  public void Import (HealpixMap<Type> orig, boolean pessimistic)
+  public void importGeneral (HealpixMap<Type> orig, boolean pessimistic)
     throws Exception
     {
     if (orig.nside==nside)
