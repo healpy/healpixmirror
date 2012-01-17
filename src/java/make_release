@@ -7,9 +7,9 @@ REV=HEAD
 svn export -r ${REV} ${URL} ${NAME} &&\
 cd ${NAME} &&\
 mv build2.xml build.xml &&\
-rm -rf .classpath .project magicdraw ext dist healpixdocs reports bin SuggestedIdeas.txt README lib/j3dcore.jar lib/j3dutils.jar lib/net-ivoa-fits.jar lib/vecmath.jar old_issues_dpac_mantis_projectId_60.txt data src/overview.html src/healpix/core src/healpix/tools src/healpix/plot3d src/healpix/fits &&\
+rm -rf make_release .classpath .project magicdraw ext dist healpixdocs reports bin SuggestedIdeas.txt README lib/j3dcore.jar lib/j3dutils.jar lib/net-ivoa-fits.jar lib/vecmath.jar old_issues_dpac_mantis_projectId_60.txt data src/overview.html src/healpix/core src/healpix/tools src/healpix/plot3d src/healpix/fits &&\
 cd .. &&\
-tar cvzf ${NAME}-src.tar.gz --exclude='*/lib*' ${NAME} &&\
+tar cvzf ${NAME}-src.tar.gz ${NAME} &&\
 cd ${NAME} &&\
 export CLASSPATH=${CLASSPATH}:`pwd`/lib/junit-4.3.1.jar &&\
 ant &&\

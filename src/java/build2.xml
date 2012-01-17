@@ -53,11 +53,6 @@
       <fileset dir="${classes}" excludes="**/test/**" />
     </jar>
   </target>
-  <target name="distsrc" depends="clean" description="Build the source JAR file containing only new classes">
-    <jar destfile="${dist}/jhealpixNew_src.jar">
-      <fileset dir="${src}" />
-    </jar>
-  </target>
   <target name="docs" description="Create the Javadocs">
     <javadoc destdir="${docs}" failonerror="true" use="true"
       additionalparam='-breakiterator -quiet -tag copyright:a:"Copyright:" -link http://java.sun.com/j2se/1.5.0/docs/api'
@@ -68,5 +63,5 @@
 <!--      <footer>"Built from revision ${svn.revision}"</footer> -->
     </javadoc>
   </target>
-  <target name="all" depends="dist,distsrc,docs" description="Do everything for the new library"/>
+  <target name="all" depends="dist,docs" description="Do everything for the new library"/>
 </project>
