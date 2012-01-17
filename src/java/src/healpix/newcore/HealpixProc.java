@@ -44,110 +44,66 @@ public abstract class HealpixProc extends HealpixBase
     catch (Exception Ex) {/*doesn't happen*/}
     }
 
-  private HealpixProc() {}
+  private HealpixProc() {} // this class should not be instantiated
 
-  private static int cilog2 (long arg) throws Exception
-    {
-    int res=HealpixUtils.ilog2(arg);
-    if ((1L<<res)!=arg) throw new Exception ("nside is not a power of 2");
-    return res;
-    }
+  public static double maxPixrad (int order)
+    { return bn[order].maxPixrad(); }
 
-  public static long ang2pixNestO (int order, Pointing ptg) throws Exception
+  public static long ang2pixNest (int order, Pointing ptg) throws Exception
     { return bn[order].ang2pix(ptg); }
-  public static long ang2pixNestN (long nside, Pointing ptg) throws Exception
-    { return bn[cilog2(nside)].ang2pix(ptg); }
-  public static long ang2pixRingO (int order, Pointing ptg) throws Exception
+  public static long ang2pixRing (int order, Pointing ptg) throws Exception
     { return br[order].ang2pix(ptg); }
-  public static long ang2pixRingN (long nside, Pointing ptg) throws Exception
-    { return br[cilog2(nside)].ang2pix(ptg); }
 
-  public static Pointing pix2angNestO (int order, long pix) throws Exception
+  public static Pointing pix2angNest (int order, long pix) throws Exception
     { return bn[order].pix2ang(pix); }
-  public static Pointing pix2angNestN (long nside, long pix) throws Exception
-    { return bn[cilog2(nside)].pix2ang(pix); }
-  public static Pointing pix2angRingO (int order, long pix) throws Exception
+  public static Pointing pix2angRing (int order, long pix) throws Exception
     { return br[order].pix2ang(pix); }
-  public static Pointing pix2angRingN (long nside, long pix) throws Exception
-    { return br[cilog2(nside)].pix2ang(pix); }
 
-  public static long vec2pixNestO (int order, Vec3 vec) throws Exception
+  public static long vec2pixNest (int order, Vec3 vec) throws Exception
     { return bn[order].vec2pix(vec); }
-  public static long vec2pixNestN (long nside, Vec3 vec) throws Exception
-    { return bn[cilog2(nside)].vec2pix(vec); }
-  public static long vec2pixRingO (int order, Vec3 vec) throws Exception
+  public static long vec2pixRing (int order, Vec3 vec) throws Exception
     { return br[order].vec2pix(vec); }
-  public static long vec2pixRingN (long nside, Vec3 vec) throws Exception
-    { return br[cilog2(nside)].vec2pix(vec); }
 
-  public static Vec3 pix2vecNestO (int order, long pix) throws Exception
+  public static Vec3 pix2vecNest (int order, long pix) throws Exception
     { return bn[order].pix2vec(pix); }
-  public static Vec3 pix2vecNestN (long nside, long pix) throws Exception
-    { return bn[cilog2(nside)].pix2vec(pix); }
-  public static Vec3 pix2vecRingO (int order, long pix) throws Exception
+  public static Vec3 pix2vecRing (int order, long pix) throws Exception
     { return br[order].pix2vec(pix); }
-  public static Vec3 pix2vecRingN (long nside, long pix) throws Exception
-    { return br[cilog2(nside)].pix2vec(pix); }
 
-  public static long ring2nestO (int order, long pix) throws Exception
+  public static long ring2nest (int order, long pix) throws Exception
     { return bn[order].ring2nest(pix); }
-  public static long ring2nestN (long nside, long pix) throws Exception
-    { return bn[cilog2(nside)].ring2nest(pix); }
-
-  public static long nest2ringO (int order, long pix) throws Exception
+  public static long nest2ring (int order, long pix) throws Exception
     { return bn[order].nest2ring(pix); }
-  public static long nest2ringN (long nside, long pix) throws Exception
-    { return bn[cilog2(nside)].nest2ring(pix); }
 
-  public static long[] neighboursNestO (int order, long pix) throws Exception
+  public static long[] neighboursNest (int order, long pix) throws Exception
     { return bn[order].neighbours(pix); }
-  public static long[] neighboursNestN (long nside, long pix) throws Exception
-    { return bn[cilog2(nside)].neighbours(pix); }
-
-  public static long[] neighboursRingO (int order, long pix) throws Exception
+  public static long[] neighboursRing (int order, long pix) throws Exception
     { return br[order].neighbours(pix); }
-  public static long[] neighboursRingN (long nside, long pix) throws Exception
-    { return br[cilog2(nside)].neighbours(pix); }
 
-  public static Vec3[] boundariesNestO(int order, long pix, int step)
+  public static Vec3[] boundariesNest(int order, long pix, int step)
     throws Exception
     { return bn[order].boundaries(pix,step); }
-  public static Vec3[] boundariesNestN(long nside, long pix, int step)
-    throws Exception
-    { return bn[cilog2(nside)].boundaries(pix,step); }
-
-  public static Vec3[] boundariesRingO(int order, long pix, int step)
+  public static Vec3[] boundariesRing(int order, long pix, int step)
     throws Exception
     { return br[order].boundaries(pix,step); }
-  public static Vec3[] boundariesRingN(long nside, long pix, int step)
-    throws Exception
-    { return br[cilog2(nside)].boundaries(pix,step); }
 
-  public static RangeSet queryDiscNestO(int order, Pointing ptg, double radius,
+  public static RangeSet queryDiscNest(int order, Pointing ptg, double radius,
     boolean inclusive) throws Exception
     { return bn[order].queryDisc(ptg,radius,inclusive); }
-  public static RangeSet queryDiscNestN(long nside, Pointing ptg, double radius,
-    boolean inclusive) throws Exception
-    { return bn[cilog2(nside)].queryDisc(ptg,radius,inclusive); }
-
-  public static RangeSet queryDiscRingO(int order, Pointing ptg, double radius,
+  public static RangeSet queryDiscRing(int order, Pointing ptg, double radius,
     boolean inclusive) throws Exception
     { return br[order].queryDisc(ptg,radius,inclusive); }
-  public static RangeSet queryDiscRingN(long nside, Pointing ptg, double radius,
-    boolean inclusive) throws Exception
-    { return br[cilog2(nside)].queryDisc(ptg,radius,inclusive); }
 
-  public static RangeSet queryPolygonNestO(int order, Pointing[] vertex,
+  public static RangeSet queryPolygonNest(int order, Pointing[] vertex,
     boolean inclusive) throws Exception
     { return bn[order].queryPolygon(vertex,inclusive); }
-  public static RangeSet queryPolygonNestN(long nside, Pointing[] vertex,
-    boolean inclusive) throws Exception
-    { return bn[cilog2(nside)].queryPolygon(vertex,inclusive); }
-
-  public static RangeSet queryPolygonRingO(int order, Pointing[] vertex,
+  public static RangeSet queryPolygonRing(int order, Pointing[] vertex,
     boolean inclusive) throws Exception
     { return br[order].queryPolygon(vertex,inclusive); }
-  public static RangeSet queryPolygonRingN(long nside, Pointing[] vertex,
+
+  public static RangeSet queryStripNest(int order, double theta1, double theta2,
     boolean inclusive) throws Exception
-    { return br[cilog2(nside)].queryPolygon(vertex,inclusive); }
+    { return bn[order].queryStrip(theta1,theta2,inclusive); }
+  public static RangeSet queryStripRing(int order, double theta1, double theta2,
+    boolean inclusive) throws Exception
+    { return br[order].queryStrip(theta1,theta2,inclusive); }
   };

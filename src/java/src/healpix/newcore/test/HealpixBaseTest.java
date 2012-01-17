@@ -429,7 +429,7 @@ public class HealpixBaseTest extends TestCase {
       }
     }
 
-  public void test_neighbors() throws Exception
+  public void test_neighbours() throws Exception
     {
     System.out.println("Testing neighbour function");
     int omax=HealpixBase.order_max;

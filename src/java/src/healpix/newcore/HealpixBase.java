@@ -204,6 +204,16 @@ public class HealpixBase extends HealpixTables
     return 12*nside*nside;
     }
 
+  /** Calculates the number of pixels from the order parameter.
+      @param order the order parameter
+      @return the computed number of pixels */
+  public static long order2Npix(int order) throws Exception
+    {
+    HealpixUtils.check (order>=0,"order must be nonnegative");
+    HealpixUtils.check(order<=order_max,"order is too large");
+    return 12*(1L<<(2*order));
+    }
+
   /** Adjusts the object to nside_in.
       @param nside_in the new Nside parameter */
   public void setNside (long nside_in) throws Exception
