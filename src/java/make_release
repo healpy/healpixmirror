@@ -1,0 +1,22 @@
+#!/bin/sh
+
+NAME=HealpixJava-3.0pre
+URL=https://healpix.svn.sourceforge.net/svnroot/healpix/trunk/src/java
+REV=HEAD
+
+svn export -r ${REV} ${URL} ${NAME} &&\
+cd ${NAME} &&\
+mv build2.xml build.xml &&\
+rm -rf .classpath .project magicdraw ext dist healpixdocs reports bin SuggestedIdeas.txt README lib/j3dcore.jar lib/j3dutils.jar lib/net-ivoa-fits.jar lib/vecmath.jar old_issues_dpac_mantis_projectId_60.txt data src/overview.html src/healpix/core src/healpix/tools src/healpix/plot3d src/healpix/fits &&\
+cd .. &&\
+tar cvzf ${NAME}-src.tar.gz --exclude='*/lib*' ${NAME} &&\
+cd ${NAME} &&\
+export CLASSPATH=${CLASSPATH}:`pwd`/lib/junit-4.3.1.jar &&\
+ant &&\
+cd .. &&\
+cp ${NAME}/dist/jhealpixNew.jar ./${NAME}-bin.jar &&\
+cp ${NAME}/dist/jhealpixNewSmall.jar ./${NAME}-binSmall.jar &&\
+mv ${NAME}/doc ./${NAME}-doc &&\
+tar cvzf ${NAME}-doc.tar.gz ${NAME}-doc &&\
+rm -rf ${NAME}-doc &&\
+rm -rf ${NAME}
