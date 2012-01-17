@@ -50,7 +50,7 @@
   </target>
   <target name="dist" depends="clean,compile,test" description="Build the JAR file containing only new classes">
     <jar destfile="${dist}/jhealpixNew.jar">
-      <fileset dir="${classes}" excludes="**/test/*Test.class" />
+      <fileset dir="${classes}" excludes="**/test/**" />
     </jar>
   </target>
   <target name="distsrc" depends="clean" description="Build the source JAR file containing only new classes">
@@ -60,7 +60,7 @@
   </target>
   <target name="docs" description="Create the Javadocs">
     <javadoc destdir="${docs}" failonerror="true" use="true"
-      additionalparam='-breakiterator -public -quiet -tag copyright:a:"Copyright:" -link http://java.sun.com/j2se/1.5.0/docs/api -link http://download.java.net/media/java3d/javadoc/1.4.0'
+      additionalparam='-breakiterator -quiet -tag copyright:a:"Copyright:" -link http://java.sun.com/j2se/1.5.0/docs/api'
       classpathref="classpath">
       <packageset dir="${src}" defaultexcludes="yes">
         <exclude name="**/test/**" />
