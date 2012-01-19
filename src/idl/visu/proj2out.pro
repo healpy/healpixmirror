@@ -37,7 +37,7 @@ pro proj2out, planmap, Tmax, Tmin, color_bar, dx, title_display, sunits, $
               PROJECTION=projection, MOLLWEIDE=mollweide, GNOMIC=gnomic, CARTESIAN=cartesian, $
               ORTHOGRAPHIC=orthographic, FLIP=flip, HALF_SKY=half_sky,COORD_IN=coord_in, $
               IGRATICULE = igraticule, HBOUND = hbound, DIAMONDS = diamonds, WINDOW = window_user, $
-              TRANSPARENT = transparent, EXECUTE=execute, SILENT=silent, GLSIZE=glsize, IGLSIZE=iglsize, SHADEMAP=SHADEMAP, RETAIN=retain, TRUECOLORS=truecolors, CHARTHICK=charthick
+              TRANSPARENT = transparent, EXECUTE=execute, SILENT=silent, GLSIZE=glsize, IGLSIZE=iglsize, SHADEMAP=SHADEMAP, RETAIN=retain, TRUECOLORS=truecolors, CHARTHICK=charthick, STAGGER=stagger
 
 ;===============================================================================
 ;+
@@ -87,6 +87,7 @@ pro proj2out, planmap, Tmax, Tmin, color_bar, dx, title_display, sunits, $
 ;   Mar 2010, EH, corrected bug with use_z_buffer
 ;   Apr 2010, EH, accepts array of OUTLINE;
 ;                  supports CHARTHICK
+;   Jan 2012, EH, turns off GRAT, IGRAT, HBOUND, OUTLINE when STAGGER is set
 ;-
 ;===============================================================================
 
@@ -648,37 +649,45 @@ if (do_gnom) then begin
 
 endif
 
-grattwice=0
+; do not plot graticules, outlines or pixel boundaries in stagger mode (orthview)
+skip_oplots = do_orth && keyword_set(stagger) && $
+  ( keyword_set(graticule) || keyword_set(igraticule) || keyword_set(hbound) || keyword_set(outline))
+
+if (skip_oplots) then begin
+    message,/info,level=-1,'*Warning*: GRAT, IGRAT, HBOUND and OUTLINE keywords are ignored in STAGGER mode'
+endif else begin
+    grattwice=0
 ;  the graticule in output astrophysical coordinates
-if (KEYWORD_SET(graticule)) then begin
-    grattwice =1
-    glabelsize = charsfactor * (keyword_set(glsize) ? glsize : 0 )
-    oplot_graticule, graticule, eul_mat, projection=proj_small, flip = flip, thick = 1.*thick_dev, color = !p.color, half_sky=half_sky, linestyle=0, charsize=glabelsize, reso_rad=dx
-endif 
+    if (KEYWORD_SET(graticule)) then begin
+        grattwice =1
+        glabelsize = charsfactor * (keyword_set(glsize) ? glsize : 0 )
+        oplot_graticule, graticule, eul_mat, projection=proj_small, flip = flip, thick = 1.*thick_dev, color = !p.color, half_sky=half_sky, linestyle=0, charsize=glabelsize, reso_rad=dx
+    endif 
 
 ;  the graticule in input coordinates
-if (KEYWORD_SET(igraticule)) then begin
-    lines_ig = 2*grattwice ; either 0 or 2
-    iglabelsize = charsfactor * (keyword_set(iglsize) ? iglsize : 0 )
-    oplot_graticule, igraticule, eul_mat, projection=proj_small, flip = flip, thick = 1.*thick_dev, color = !p.color, half_sky=half_sky, linestyle=lines_ig, coordsys=[coord_in,coord_out], charsize=iglabelsize, reso_rad=dx
-endif 
+    if (KEYWORD_SET(igraticule)) then begin
+        lines_ig = 2*grattwice  ; either 0 or 2
+        iglabelsize = charsfactor * (keyword_set(iglsize) ? iglsize : 0 )
+        oplot_graticule, igraticule, eul_mat, projection=proj_small, flip = flip, thick = 1.*thick_dev, color = !p.color, half_sky=half_sky, linestyle=lines_ig, coordsys=[coord_in,coord_out], charsize=iglabelsize, reso_rad=dx
+    endif 
 
 ; outlines on the map
-if (keyword_set(outline)) then begin
-    for iol=0, n_elements(outline)-1 do begin
-        outline_coord2uv, outline[iol], coord_out, eul_mat, projection=proj_small, flip = flip, /show, thick = 3.*thick_dev, half_sky=half_sky
-    endfor
-endif
+    if (keyword_set(outline)) then begin
+        for iol=0, n_elements(outline)-1 do begin
+            outline_coord2uv, outline[iol], coord_out, eul_mat, projection=proj_small, flip = flip, /show, thick = 3.*thick_dev, half_sky=half_sky
+        endfor
+    endif
 
 ; overplot pixel boundaries
-if keyword_set(hbound) then begin
-    nhbd = n_elements(hbound)
-    if (nhbd gt 3) then message,/info,level=-1,'Hbound must have 3 elements at most'
-    lnst = [0,2,1] ; solid (smallest Nside), dashes (median Nside), dots (largest Nside)
-    for i=0, (nhbd<3)-1 do begin
-        if (hbound[i] gt 0) then oplot_healpix_bounds, hbound[i], eul_mat, projection=proj_small, flip = flip, thick = 1.*thick_dev, color = !p.color, half_sky=half_sky, linestyle=lnst[i], coordsys=[coord_in,coord_out]
-    endfor
-endif
+    if keyword_set(hbound) then begin
+        nhbd = n_elements(hbound)
+        if (nhbd gt 3) then message,/info,level=-1,'Hbound must have 3 elements at most'
+        lnst = [0,2,1]          ; solid (smallest Nside), dashes (median Nside), dots (largest Nside)
+        for i=0, (nhbd<3)-1 do begin
+            if (hbound[i] gt 0) then oplot_healpix_bounds, hbound[i], eul_mat, projection=proj_small, flip = flip, thick = 1.*thick_dev, color = !p.color, half_sky=half_sky, linestyle=lnst[i], coordsys=[coord_in,coord_out]
+        endfor
+    endif
+endelse
 
 ; overplot user defined commands
 if keyword_set(execute) then begin

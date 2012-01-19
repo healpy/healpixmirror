@@ -64,6 +64,8 @@ pro data2orth, data, pol_data, pix_type, pix_param, do_conv, do_rot, coord_in, c
 ; May 2009: added do_shade, shademap
 ;           can deal with map without any valid pixel
 ; May 2010: added Map_Out and FITS
+; Dec 2011: STAGGER implemented
+; Jan 2012: added a twist to STAGGER
 ;==============================================================================================
 ;-
 
@@ -76,8 +78,8 @@ nspheres = 1
 if (do_fullsky) then nspheres = 2
 if (do_stagger) then begin
     nspheres = 3
-    if (stagger[0] le 0. or stagger[0] gt 2.) then begin
-        message, 'Stagger in ]0,2]'
+    if (stagger[0] le 0. || stagger[0] gt 2.) then begin
+        message, level=1, 'Stagger must be in ]0,2]'
     endif
 endif
 
@@ -230,6 +232,12 @@ if (nspheres eq 2) then begin
 endif
 if (nspheres eq 3) then begin
     cstag =   abs(stagger[0])*[1,0,-1]
+    ; astag = (n_elements(stagger) gt 1) ? double(stagger[1]) : 0.0_dp
+    do_twist = (n_elements(stagger) gt 1)
+    if (do_twist) then begin
+        astag = stagger[1] * !DtoR ; twist angle converted to Radians
+        rotstag = [[cos(astag), 0, sin(astag)],[0,1,0],[-sin(astag),0,cos(astag)]]
+    endif
 endif
 
 yband = LONG(5.e5 / FLOAT(xsize))
@@ -263,7 +271,8 @@ for ystart = 0, ysize - 1, yband do begin
             3: begin
                 trigger = (u1/cstag[0]) < 1
                 trigger >= (-1)
-                ys = u1 - nint(trigger)*cstag[0]
+                trigger = nint(trigger) ; -1, 0 or 1
+                ys = u1 - trigger*cstag[0]
             end
             2: begin
                 sign = (u1 ge 0.)*2 - 1 ; =1 for u1>0 , =-1 otherwise
@@ -291,6 +300,12 @@ for ystart = 0, ysize - 1, yband do begin
             spec = spec * ( cos_in gt 0) ; no specular highlight accros the sphere
             shade = (ambiant + (1.0 - ambiant) * cos_in + spec_frac* abs(spec)^16) > 0.
             spec = 0 & cos_in = 0.
+        endif
+        if (nspheres eq 3 && do_twist) then begin ; extra rotation for stagger with twist
+            km = where(trigger lt 0, nkm)
+            kp = where(trigger gt 0, nkp)
+            if nkm gt 0 then vector[km,0:2] = vector[km,0:2] # rotstag
+            if nkp gt 0 then vector[kp,0:2] = vector[kp,0:2] # transpose(rotstag)
         endif
 
         u1 = 0 & v1 = 0 & sign = 0 & xs = 0 & ys = 0

@@ -409,9 +409,15 @@ pro mollview, file_in, select_in, $
 ;
 ;       SILENT: if set, the code runs silently
 ;
-;       STAGGER: if set to a scalar value in ]0,2], 
-;             3 copies of the same sphere centered at [-stagger, 0, stagger]
-;             (expressed in radius units) along the plot horizontal axis are shown in ORTHOGRAPHIC projection
+;       STAGGER: scalar or 2 element vector.
+;            - if stagger[0] is in ]0,2], 
+;             3 copies of the same sphere centered at [-stagger[0], 0, stagger[0]]
+;             (expressed in radius units) along the plot horizontal axis are
+;             shown in ORTHOGRAPHIC projection
+;             - stagger[1] (if defined), defines the angle of rotation (in degrees) applied
+;               to the left and right partial spheres:
+;             the lhs sphere is rotated downward by the angle provided, while the rhs one
+;             is rotated upward. Rotations are swapped if FLIP is set.
 ;               ** orthview only **
 ;
 ; 	SUBTITLE : String containing the subtitle to the plot (see TITLEPLOT)
