@@ -22,14 +22,14 @@
     <delete dir="${junit.reports}"/>
     <delete dir="${docs}"/>
   </target>
-  <target name="compile" depends="init" description="Compile the new Java code">
+  <target name="compile" depends="init" description="Compile the Java code">
     <echo>building </echo>
     <javac destdir="${classes}" source="1.5" includeAntRuntime="false"
       srcdir="${src}" >
       <classpath refid="classpath" />
     </javac>
   </target>
-  <target name="test" depends="compile" description="Test the new Java code">
+  <target name="test" depends="compile" description="Test the Java code">
     <delete dir="${junit.reports}"/>
     <mkdir dir="${junit.reports}"/>
     <junit errorProperty="junit.failed" failureProperty="junit.failed" fork="yes"
@@ -48,7 +48,7 @@
     </junitreport>
     <fail message="Test Cases Failed" if="junit.failed"/>
   </target>
-  <target name="dist" depends="clean,compile,test" description="Build the JAR file containing only new classes">
+  <target name="dist" depends="clean,compile,test" description="Build the JAR file">
     <jar destfile="${dist}/jhealpixNew.jar">
       <fileset dir="${classes}" excludes="**/test/**" />
     </jar>
@@ -63,5 +63,5 @@
 <!--      <footer>"Built from revision ${svn.revision}"</footer> -->
     </javadoc>
   </target>
-  <target name="all" depends="dist,docs" description="Do everything for the new library"/>
+  <target name="all" depends="dist,docs" description="Do everything"/>
 </project>

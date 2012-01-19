@@ -39,11 +39,13 @@ public class HealpixMapDouble extends HealpixBase
   public HealpixMapDouble(long nside_in, Scheme scheme_in) throws Exception
     {
     super(nside_in,scheme_in);
+    HealpixUtils.check(nside<=(1<<13),"resolution too high");
     data=new double[(int)getNpix()];
     }
   public HealpixMapDouble(double[] data_in, Scheme scheme_in) throws Exception
     {
     super(npix2Nside(data_in.length),scheme_in);
+    HealpixUtils.check(nside<=(1<<13),"resolution too high");
     data=data_in;
     }
 
@@ -54,6 +56,7 @@ public class HealpixMapDouble extends HealpixBase
     if (nside_in!=nside)
       {
       super.setNside(nside_in);
+      HealpixUtils.check(nside<=(1<<13),"resolution too high");
       data=new double[(int)getNpix()];
       }
     }
@@ -65,6 +68,7 @@ public class HealpixMapDouble extends HealpixBase
     throws Exception
     {
     super.setNsideAndScheme(nside_in,scheme_in);
+    HealpixUtils.check(nside<=(1<<13),"resolution too high");
     data=new double[(int)getNpix()];
     }
 
