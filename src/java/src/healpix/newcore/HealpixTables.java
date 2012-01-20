@@ -64,8 +64,8 @@ public class HealpixTables
   21824,21825,21828,21829,21840,21841,21844,21845 };
 
   // coordinate of the lowest corner of each face
-  static final byte[] jrll = {  2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4 };
-  static final byte[] jpll = {  1, 3, 5, 7, 0, 2, 4, 6, 1, 3, 5, 7 };
+  static final byte[] jrll = { 2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4 };
+  static final byte[] jpll = { 1, 3, 5, 7, 0, 2, 4, 6, 1, 3, 5, 7 };
 
   static final short[] xoffset = { -1,-1, 0, 1, 1, 1, 0,-1 };
   static final short[] yoffset = {  0, 1, 1, 1, 0,-1,-1,-1 };
