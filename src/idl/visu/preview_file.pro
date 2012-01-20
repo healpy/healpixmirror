@@ -25,7 +25,7 @@
 ;  For more information about HEALPix see http://healpix.jpl.nasa.gov
 ;
 ; -----------------------------------------------------------------------------
-pro preview_file, file, ps=ps, gif=gif, png=png, landscape=landscape
+pro preview_file, file, ps=ps, gif=gif, png=png, jpeg=jpeg, landscape=landscape
 ;+
 ; NAME:
 ;     preview_file
@@ -39,7 +39,7 @@ pro preview_file, file, ps=ps, gif=gif, png=png, landscape=landscape
 ;
 ;
 ; CALLING SEQUENCE:
-;     preview_file, file, GIF=, LANDSCAPE=, PNG=, PS=
+;     preview_file, file, GIF=, JPEG=,  LANDSCAPE=, PNG=, PS=
 ;
 ; INPUTS:
 ;     file
@@ -49,6 +49,7 @@ pro preview_file, file, ps=ps, gif=gif, png=png, landscape=landscape
 ; 
 ; KEYWORD PARAMETERS:
 ;        GIF
+;        JPEG
 ;        LANDSCAPE
 ;        PNG
 ;        PS
@@ -99,7 +100,7 @@ gif_com = gif_scom
 settings = 'factory' ; that's how it feels
 
 comments=["-----------------------------------------------------------------------------",$
-          "You can choose the facilities used to visualize Postscript, PNG and GIF files",$
+          "You can choose the facilities used to visualize Postscript, PNG, GIF, JPEG files",$
           "and the hard copy paper size,",$
           "by running the configure script in the main Healpix directory.",$
 ;          "           (no need to restart IDL ;-)",$
@@ -163,7 +164,7 @@ ps_opt = ps_ext + ps_pps
 ; gif_com = 'kpaint '
 ; gif_com = 'kview '
 ; gif_opt = ' '
-if (keyword_set(gif) or keyword_set(png)) then begin
+if (keyword_set(gif) || keyword_set(png) || keyword_set(jpeg)) then begin
     if (gif_scom eq 'netscape' or gif_scom eq 'mozilla') then begin
         cd, current=cwd         ; find full path to current directory
         fullpath = filepath(file,root=cwd) ; build full path to file (OS dependent)
@@ -201,12 +202,12 @@ endcase
 
 ; POSTSCRIPT
 if (keyword_set(ps)) then begin
-    if ( not keyword_set(landscape)) then ps_lsc = ' '
+    if ( ~ keyword_set(landscape)) then ps_lsc = ' '
     command = ps_com + ps_opt + ps_lsc + blank + fullfile + bg
 endif
 
 ; PNG and GIF
-if (keyword_set(gif) or keyword_set(png)) then begin
+if (keyword_set(gif) || keyword_set(png) || keyword_set(jpeg)) then begin
     command = gif_com + blank + gif_opt + blank + fullfile + bg
 endif
 

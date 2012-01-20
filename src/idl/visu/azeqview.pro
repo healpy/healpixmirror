@@ -25,36 +25,37 @@
 ;  For more information about HEALPix see http://healpix.jpl.nasa.gov
 ;
 ; -----------------------------------------------------------------------------
-PRO gnomview, file_in, select_in, $
+PRO azeqview, file_in, select_in, $
               ASINH = asinh, $
               CHARSIZE = charsize, $
               CHARTHICK = charthick, $
               COLT = colt, $
               COORD = coord, $
               CROP = crop, $
-              EXECUTE=execute, $
+              EXECUTE = execute, $
               FACTOR = factor, $
               FITS = fits, $
               FLIP = flip, $
               GIF = gif, $
               GLSIZE = glsize, $
               GRATICULE = graticule, $
+              HALF_SKY = half_sky, $
               HBOUND = hbound, $
               HELP = help, $
               HIST_EQUAL = hist_equal, $
               HXSIZE = hxsize, $
               IGLSIZE = iglsize, $
               IGRATICULE = igraticule, $
-              JPEG=jpeg, $
+              JPEG = jpeg, $
               LOG = log, $
-              MAP_OUT = map_out, $
+              MAP_OUT=map_out, $
               MAX = max_set, $
               MIN = min_set, $
               NESTED = nested_online, $
               NOBAR = nobar, $
               NOLABELS = nolabels, $
               NOPOSITION = noposition, $
-              OFFSET = offset, $
+              OFFSET=offset, $
               ONLINE = online, $
               OUTLINE = outline, $
               PNG = png, $
@@ -78,22 +79,20 @@ PRO gnomview, file_in, select_in, $
               XPOS = xpos, $
               YPOS = ypos, $
               vector_scale = vector_scale
-
 ;+
 ; for extended description see mollview or the paper documentation
 ;-
-
 defsysv, '!healpix', exists = exists
 if (exists ne 1) then init_healpix
-@viewcom ; define common
 
+@viewcom ; define common
 data_plot = 0 ; empty common array
 ; record original color table and PLOTS settings
 record_original_settings, original_settings
 
 loadsky                         ; cgis package routine, define rotation matrices
-projection = 'GNOMIC'
-routine = 'gnomview'
+projection = 'AZIMUTHAL EQUIDISTANT'
+routine = 'azeqview'
 
 uroutine = strupcase(routine)
 if keyword_set(help) then begin
@@ -112,18 +111,18 @@ if (n_params() lt 1 or n_params() gt 2) then begin
     print, uroutine+', File, [Select, ]'
     print,'              [ASINH=, CHARSIZE=, COLT=, COORD=, CROP=, '
     print,'              EXECUTE=, FACTOR=, FITS=, FLIP=, GIF=, GLSIZE=, GRATICULE=, '
-    print,'              HBOUND=, HELP=, '
-    print,'              HIST_EQUAL=, HXSIZE=, '
+    print,'              HALF_SKY=, HBOUND, HELP=, '
+    print,'              HIST_EQUAL=, HXSIZE=,'
     print,'              IGLSIZE=, IGRATICULE=,'
     print,'              JPEG=, '
     print,'              LOG=, '
-    print,'              MAP_OUT=, MAX=, MIN=, '
-    print,'              NESTED=, NOBAR=, NOLABELS=, NOPOSITION = '
+    print,'              MAX=, MIN=, NESTED=, NOBAR=, NOLABELS=, NOPOSITION = '
+    print,'              NO_DIPOLE, NO_MONOPLE, '
     print,'              OFFSET=, ONLINE=, OUTLINE=,'
     print,'              PNG=,'
     print,'              POLARIZATION=, PREVIEW=, '
     print,'              PS=, PXSIZE=, PYSIZE=, QUADCUBE= ,'
-    print,'              RESO_ARCMIN=, RETAIN =, ROT=, '
+    print,'              RESO_ARCMIN=, RETAIN=, ROT=, '
     print,'              SAVE=, SILENT=, SUBTITLE=, '
     print,'              TITLEPLOT=, TRANSPARENT=, TRUECOLORS= '
     print,'              UNITS=, WINDOW=, XPOS=, YPOS=]'
@@ -137,10 +136,6 @@ IF (undefined(file_in)) then begin
     print,routine+': Undefined variable as 1st argument'
     return
 endif
-; file_in1   = file_in
-; if defined(select_in) then select_in1 = select_in else select_in1=1
-; if defined(save)      then save1 = save           else save1=0
-; if defined(online)    then online1 = online       else online1=0
 do_flip = keyword_set(flip)
 
 if (!D.n_colors lt 4) then begin
@@ -151,23 +146,25 @@ endif
 polar_type = 0
 if keyword_set(polarization) then polar_type = polarization
 
+
 loaddata_healpix, $
   file_in, select_in,$
   data, pol_data, pix_type, pix_param, do_conv, do_rot, coord_in, coord_out, eul_mat, title_display, sunits, $
   SAVE=save,ONLINE=online,NESTED=nested_online,UNITS=units,COORD=coord,FLIP=flip, $
   ROT=rot,QUADCUBE=quadcube,LOG=log,ERROR=error, $
-  POLARIZATION=polarization, FACTOR=factor, OFFSET=offset, SILENT=silent, COMPRESS=1, PIXEL_LIST=pixel_list, $
-  TRUECOLORS=truecolors, DATA_TC=data_tc
+  POLARIZATION=polarization, FACTOR=factor, OFFSET=offset, SILENT=silent, COMPRESS=1, $
+  PIXEL_LIST=pixel_list, TRUECOLORS=truecolors, DATA_TC=data_tc
 if error NE 0 then return
 
-data2gnom, $
+
+data2azeq, $
   data, pol_data, pix_type, pix_param, do_conv, do_rot, coord_in, coord_out, eul_mat, $
   planmap, Tmax, Tmin, color_bar, dx, planvec, vector_scale, $
   PXSIZE=pxsize, PYSIZE=pysize, ROT=rot, LOG=log, HIST_EQUAL=hist_equal, $
   MAX=max_set, MIN=min_set, $
   RESO_ARCMIN = reso_arcmin, FITS = fits, FLIP=flip, DATA_plot = data_plot, $
   POLARIZATION=polarization, SILENT=silent, PIXEL_LIST=pixel_list, ASINH=asinh, $
-  TRUECOLORS=truecolors, DATA_TC=data_tc, MAP_OUT=map_out
+  TRUECOLORS=truecolors, DATA_TC=data_tc, MAP_OUT=map_out, HALF_SKY=half_sky
 
 proj2out, $
   planmap, Tmax, Tmin, color_bar, dx, title_display, $
@@ -176,10 +173,9 @@ proj2out, $
   NOBAR = nobar, NOLABELS = nolabels, NOPOSITION = noposition, PNG = png, PREVIEW = preview, PS = ps, $
   PXSIZE=pxsize, PYSIZE=pysize, ROT = rot, SUBTITLE = subtitle, $
   TITLEPLOT = titleplot, XPOS = xpos, YPOS = ypos, $
-  POLARIZATION=polarization, OUTLINE=outline, /GNOM, FLIP=flip, COORD_IN=coord_in, IGRATICULE=igraticule, $
-  HBOUND = hbound, WINDOW = window, EXECUTE=execute, SILENT=silent, GLSIZE=glsize, $
-  IGLSIZE=iglsize, RETAIN=retain, TRUECOLORS=truecolors, TRANSPARENT=transparent, $
-  CHARTHICK=charthick, JPEG=jpeg
+  POLARIZATION=polarization, OUTLINE=outline, /AZEQ, FLIP=flip, COORD_IN=coord_in, IGRATICULE=igraticule, $
+  HBOUND = hbound, WINDOW = window, TRANSPARENT = transparent, EXECUTE=execute, $
+  SILENT=silent, GLSIZE = glsize, IGLSIZE = iglsize, RETAIN=retain, TRUECOLORS=truecolors, CHARTHICK=charthick, JPEG=jpeg
 
 w_num = !d.window
 ; restore original color table and PLOTS settings

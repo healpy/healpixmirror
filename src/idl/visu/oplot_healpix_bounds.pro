@@ -38,7 +38,7 @@ end
 
 
 
-pro oplot_healpix_bounds, nside, eul_mat, projection=projection, mollweide=mollweide, gnomic=gnomic, cartesian=cartesian, orthographic=orthographic, flip = flip, _extra = oplot_kw, half_sky=half_sky, coordsys=coordsys
+pro oplot_healpix_bounds, nside, eul_mat, projection=projection, mollweide=mollweide, gnomic=gnomic, cartesian=cartesian, orthographic=orthographic, azeq=azeq, flip = flip, _extra = oplot_kw, half_sky=half_sky, coordsys=coordsys
 ;+
 ; NAME:
 ;       OPLOT_HEALPIX_BOUNDS
@@ -90,7 +90,7 @@ pro oplot_healpix_bounds, nside, eul_mat, projection=projection, mollweide=mollw
 ;                 increased number of points (np) from 200 to 300
 ;-
 
-identify_projection, projtype, projection=projection, mollweide=mollweide, gnomic=gnomic, cartesian=cartesian
+identify_projection, projtype, projection=projection, mollweide=mollweide, gnomic=gnomic, cartesian=cartesian, azeq=azeq
 
 if keyword_set(flip) then flipconv=1 else flipconv = -1  ; longitude increase leftward by default (astro convention)
 
@@ -144,25 +144,33 @@ for regime=0,1 do begin
                         2 : begin ; gnomic
                             keep = where(vv(*,0) gt 0, nk)
                             if (nk gt 0) then begin
-                                u = vv(keep,1)/vv(keep,0)
-                                v = vv(keep,2)/vv(keep,0)
+                                u = vv(keep,1)/vv(keep,0) ; Y/X
+                                v = vv(keep,2)/vv(keep,0) ; Z/X
                                 oplot, flipconv * u, v, _extra = oplot_kw
                             endif
                         end
                         3 : begin ; cartesian
-                            phic = atan(vv[*,1],vv[*,0]) ; in [0,2pi]
-                            theta = asin(vv[*,2]) ; in [0,pi]
+                            phic = atan(vv[*,1],vv[*,0]) ; longitude in [0,2pi]
+                            theta = asin(vv[*,2]) ; latitude in [-pi/2,pi/2]
                             oplot_sphere, flipconv * phic, theta, _extra = oplot_kw
                         end
                         4 : begin ; orthographic
                             for sign = 1,1-nd,-2 do begin ; either (1,-1) or (1)
                                 keep = where(vv[*,0]*sign ge 0, nk)
                                 if (nk gt 0) then begin
-                                    u = vv[keep,1]
-                                    v = vv[keep,2]
+                                    u = vv[keep,1] ; Y
+                                    v = vv[keep,2] ; Z
                                     oplot_sphere, flipconv*(u+c0)*sign, v, _extra = oplot_kw
                                 endif ; nk>0
                             endfor ; loop on sign
+                        end
+                        6: begin ; azimuthal equidistant
+                            phia = atan(vv[*,2],vv[*,1]) ; in [0,2pi]
+                            theta = acos(vv[*,0]) ; colatitude in [0,pi]
+                            oplot_sphere, flipconv * theta * cos(phia), theta *sin(phia), _extra = oplot_kw
+                        end
+                        else: begin
+                            message,projtype,' unsupported projection'
                         end
                     endcase
                 endfor

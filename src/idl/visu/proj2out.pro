@@ -37,13 +37,15 @@ pro proj2out, planmap, Tmax, Tmin, color_bar, dx, title_display, sunits, $
               PROJECTION=projection, MOLLWEIDE=mollweide, GNOMIC=gnomic, CARTESIAN=cartesian, $
               ORTHOGRAPHIC=orthographic, FLIP=flip, HALF_SKY=half_sky,COORD_IN=coord_in, $
               IGRATICULE = igraticule, HBOUND = hbound, DIAMONDS = diamonds, WINDOW = window_user, $
-              TRANSPARENT = transparent, EXECUTE=execute, SILENT=silent, GLSIZE=glsize, IGLSIZE=iglsize, SHADEMAP=SHADEMAP, RETAIN=retain, TRUECOLORS=truecolors, CHARTHICK=charthick, STAGGER=stagger
+              TRANSPARENT = transparent, EXECUTE=execute, SILENT=silent, GLSIZE=glsize, IGLSIZE=iglsize, $
+              SHADEMAP=SHADEMAP, RETAIN=retain, TRUECOLORS=truecolors, CHARTHICK=charthick, $
+              STAGGER=stagger, AZEQ=azeq, JPEG=jpeg
 
 ;===============================================================================
 ;+
 ;  PROJ2OUT
-;  ouputs on X-screen or PS file or GIF or PNG file a gnomonic or
-;  mollweide or cartesian map
+;  ouputs on X-screen or PS, GIF, PNG or JPEG file a gnomonic,
+;  mollweide, cartesian, orthographic or azimuth equidistant map
 ;
 ;  IN:
 ;    planmap, Tmax, Tmin, color_bar, dx, title_display, sunits, 
@@ -62,7 +64,7 @@ pro proj2out, planmap, Tmax, Tmin, color_bar, dx, title_display, sunits, $
 ;              ORTHOGRAPHIC=orthographic, $
 ;              FLIP=flip, HALF_SKY=half_sky,COORD_IN=coord_in, IGRATICULE=,
 ;              HBOUND=, DIAMONDS =, WINDOW =, TRANSPARENT=, EXECUTE=, SILENT=
-;              GLSIZE=, IGLSIZE=, SHADEMAP=
+;              GLSIZE=, IGLSIZE=, SHADEMAP=, STAGGER=, AZEQ=, JPEG=
 ;
 ;   for more information, see Gnomview.pro Mollview.pro
 ;
@@ -88,19 +90,22 @@ pro proj2out, planmap, Tmax, Tmin, color_bar, dx, title_display, sunits, $
 ;   Apr 2010, EH, accepts array of OUTLINE;
 ;                  supports CHARTHICK
 ;   Jan 2012, EH, turns off GRAT, IGRAT, HBOUND, OUTLINE when STAGGER is set
+;                 added support of AZEQ and JPEG
 ;-
 ;===============================================================================
 
-identify_projection, projtype, projection=projection, mollweide=mollweide, gnomic=gnomic, cartesian=cartesian, orthographic=orthographic,  diamonds = diamonds
+identify_projection, projtype, projection=projection, mollweide=mollweide, gnomic=gnomic, cartesian=cartesian, orthographic=orthographic,  diamonds = diamonds, azeq=azeq
 do_gnom = 0
 do_moll = 0
 do_cart = 0
 do_orth = 0
+do_azeq = 0
 do_fullsky = 0 ; dummy, only matters for orthview
 do_gif = keyword_set(gif)
 do_png = keyword_set(png)
 do_ps  = keyword_set(ps)
-do_image = (do_gif || do_png)
+do_jpeg  = keyword_set(jpeg)
+do_image = (do_gif || do_png || do_jpeg)
 do_true = keyword_set(truecolors)
 do_crop = keyword_set(crop)
 
@@ -369,6 +374,56 @@ if (projtype eq 3) then begin
     ;yoffset = 1                 ; US (letter)
     endif
 endif
+
+if (projtype eq 6) then begin
+    ;------------ azimuthal equidistant projection ----------------
+    routine    = 'AZEQVIEW'
+    proj_small = 'azimequid'
+    proj_big   = 'AzimEquidistant'
+    do_cart    = 1
+    
+;     du_dv = 1.                  ; aspect ratio
+    du_dv = xsize/float(ysize)                  ; aspect ratio
+    fudge = 1.00                ; 
+    xc = (xsize-1)/2. & delta_x = (xsize-1 - xc)
+    yc = (ysize-1)/2. & delta_y = (ysize-1 - yc)
+; u and v range of the map
+    umin = - dx * xc * fudge & umax = dx * xc * fudge
+    vmin = - dx * yc * fudge & vmax = dx * yc * fudge
+; position of the rectangle in the final window
+    w_xll = 0.00 & w_xur = 1.00 & w_dx = w_xur - w_xll
+    w_yll = 0.10 & w_yur = 0.90 & w_dy = w_yur - w_yll
+    w_dx_dy = w_dx / w_dy       ; 1.4
+; color bar, position, dimension
+    cbar_dx = 1./3.
+    cbar_dy = 1./70.
+    cbar_xll = (1. - cbar_dx)/2.
+    cbar_xur = (1. + cbar_dx)/2.
+    cbar_yur = w_yll - cbar_dy
+    cbar_yll = cbar_yur - cbar_dy
+; polarisation color ring, position, dimension
+    cring_dx = 1./15.
+    cring_dy = 1./15.
+    cring_xll = .025
+    cring_yll = .025
+; location of astro. coordinate
+    x_aspos = 0.5
+    y_aspos = 0.04
+; pol vector scale
+    vscal_x = 0.05
+    vscal_y = 0.01
+; location of title and subtitle
+    x_title = 0.5 & y_title = 0.95
+    x_subtl = 0.5 & y_subtl = 0.915
+    if (do_ps) then begin
+; default X dimension of hardcopy (cm)
+        hxsize_def = 15.
+; offset along the long axis of the page
+        yoffset = (papersize eq 'a4') ? 2 : 1
+    ;yoffset = 2  ; Europe (A4)
+    ;yoffset = 1                 ; US (letter)
+    endif
+endif
 ;====================================================
 
 do_shade = (do_orth && defined(shademap))
@@ -432,14 +487,14 @@ if (do_ps) then begin
         do_landscape = 1
         DEVICE, /LANDSCAPE, XSIZE=hxsize, YSIZE=hxsize/du_dv*w_dx_dy, XOFFSET=4, YOFFSET=hxsize+yoffset
     endif
-    if (do_cart) then begin
+    if (do_cart || do_azeq) then begin
         do_landscape = 1
 ;         DEVICE, /LANDSCAPE, XSIZE=hxsize, YSIZE=hxsize/du_dv*w_dx_dy, XOFFSET=4, YOFFSET=hxsize+yoffset
         DEVICE, /LANDSCAPE, XSIZE=hxsize, YSIZE=hxsize/du_dv*w_dx_dy, XOFFSET=0, YOFFSET=hxsize+yoffset
     endif
     TVLCT,red,green,blue
     thick_dev = 2. ; device dependent thickness factor
-endif else begin ; X, png or gif output
+endif else begin ; X, png, gif or jpeg output
     idl_window = defined(window_user) ? window_user : 32 ; idl_window = 32 or window_user
     free_window    =  (idl_window gt 31) ; random  window if idl_window > 31
     virtual_window =  (idl_window lt 0)  ; virtual window if idl_window < 0
@@ -483,7 +538,7 @@ endif else begin ; X, png or gif output
             message,level=-1,/info,'         the actual window is not as large as expected !'
             message,level=-1,/info,strtrim(!d.x_size,2)+'*'+  strtrim(!d.y_size,2)+'    <    '+  strtrim(long(xsize),2)+'*'+strtrim(long(ysize*w_dx_dy),2)
             message,level=-1,/info,'         The result is unpredictable.'            
-            message,level=-1,/info,' If you are only interested in GIF/PNG output, you can use a virtual window (WINDOW<0) instead'            
+            message,level=-1,/info,' If you are only interested in GIF/PNG/JPEG output, you can use a virtual window (WINDOW<0) instead'            
             message,level=-1,/info,'==========================================================='
         endif
     endelse
@@ -697,11 +752,12 @@ if keyword_set(execute) then begin
 endif
 
 ; -----------------------------------------------
-;       output the PS/GIF/PNG
+;       output the PS/GIF/PNG/JPG
 ; -----------------------------------------------
 
-;  gif/png output
+;  gif/png/jpg output
 if do_image then begin
+    jquality = 100 ; JPEG quality in [0,100]
     valid_transparent = 0
     if (keyword_set(transparent)) then begin
         itr = nint(transparent)
@@ -711,11 +767,10 @@ if do_image then begin
         endif else valid_transparent = 1
     endif
 
-    if (do_gif) then begin
-        if (DATATYPE(gif) ne 'STR') then file_image = 'plot_'+proj_small+'.gif' else file_image = gif
-    endif else begin
-        if (DATATYPE(png) ne 'STR') then file_image = 'plot_'+proj_small+'.png' else file_image = png
-    endelse
+    if (do_gif)  then file_image = (datatype(gif)  ne 'STR') ? 'plot_'+proj_small+'.gif'  : gif
+    if (do_png)  then file_image = (datatype(png)  ne 'STR') ? 'plot_'+proj_small+'.png'  : png
+    if (do_jpeg) then file_image = (datatype(jpeg) ne 'STR') ? 'plot_'+proj_small+'.jpeg' : jpeg
+        
     image = (do_true) ? tvrd(true=3) : tvrd() ; a single call to tvrd()
     if (do_shade) then begin
         image3d  =   make_array(/uint, 3,!d.x_size,!d.y_size)
@@ -770,6 +825,13 @@ if do_image then begin
                 endelse
             endelse
         endif
+        if do_jpeg then begin
+            if (do_shade || do_true) then begin
+                write_jpg_custom, file_image, image3d[*,*,y_crop_low:y_crop_hi], true=1, quality=jquality
+            endif else begin
+                write_jpg_custom, file_image, cropped, red, green, blue,                 quality=jquality
+            endelse
+        endif
     endif else begin ; uncropped
         if do_gif then write_gif,file_image, image,red,green,blue
         if do_png then begin
@@ -781,6 +843,13 @@ if do_image then begin
                 endif else begin
                     write_png,file_image, image,red,green,blue
                 endelse
+            endelse
+        endif
+        if do_jpeg then begin
+            if (do_shade || do_true) then begin
+                write_jpg_custom, file_image, image3d,             true=1, quality=jquality
+            endif else begin
+                write_jpg_custom, file_image, image,red,green,blue,        quality=jquality
             endelse
         endif
     endelse
@@ -805,6 +874,7 @@ if do_image then begin
             resolve_routine,'preview_file',/either ; ,compile_full_file=in_idl
             if do_gif then preview_file, file_image, /gif
             if do_png then preview_file, file_image, /png
+            if do_jpeg then preview_file, file_image, /jpeg
         endif
     endif
 endif

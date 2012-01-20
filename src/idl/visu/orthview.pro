@@ -47,6 +47,7 @@ pro orthview, file_in, select_in, $
               HXSIZE = hxsize, $
               IGLSIZE = iglsize, $
               IGRATICULE=igraticule, $
+              JPEG=jpeg, $
               LOG = log, $
               MAP_OUT = map_out, $
               MAX = max_set, $
@@ -117,6 +118,7 @@ if (n_params() lt 1 or n_params() gt 2) then begin
     print,'              HALF_SKY=, HBOUND =,     HELP=, '
     print,'              HIST_EQUAL=, HXSIZE=,  '
     print,'              IGLSIZE=, IGRATICULE=,'
+    print,'              JPEG=,'
     print,'              LOG=, '
     print,'              MAP_OUT=, MAX=, MIN=, '
     print,'              NESTED=, NOBAR=, NOLABELS=, '
@@ -183,7 +185,8 @@ proj2out, $
   SUBTITLE = subtitle, TITLEPLOT = titleplot, XPOS = xpos, YPOS = ypos, $
   POLARIZATION=polarization, OUTLINE=outline, /ORTH, FLIP=flip, HALF_SKY=half_sky, COORD_IN=coord_in, $
   IGRATICULE=igraticule, HBOUND = hbound, WINDOW = window, SILENT=silent, GLSIZE=glsize, IGLSIZE=iglsize, $
-  SHADEMAP=shademap, EXECUTE=execute, RETAIN=retain, TRUECOLORS=truecolors, TRANSPARENT=transparent, CHARTHICK=charthick, STAGGER=stagger
+  SHADEMAP=shademap, EXECUTE=execute, RETAIN=retain, TRUECOLORS=truecolors, TRANSPARENT=transparent, $
+  CHARTHICK=charthick, STAGGER=stagger, JPEG=jpeg
 
 w_num = !d.window
 ; restore original color table and PLOTS settings

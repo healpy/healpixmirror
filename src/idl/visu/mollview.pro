@@ -46,6 +46,7 @@ pro mollview, file_in, select_in, $
               HXSIZE = hxsize, $
               IGLSIZE = iglsize, $
               IGRATICULE=igraticule, $
+              JPEG=jpeg, $
               LOG = log, $
               MAP_OUT = map_out, $
               MAX = max_set, $
@@ -92,7 +93,8 @@ pro mollview, file_in, select_in, $
 ;                       FACTOR=, FITS=, FLIP=, $
 ;                       GAL_CUT=, GIF=, GLSIZE=, GRATICULE=, $
 ;                       HALF_SKY =, HBOUND =, HELP =, HIST_EQUAL=, HXSIZE=, $
-;                       IGLSIZE=, IGRATICULE=igraticule, $
+;                       IGLSIZE=, IGRATICULE=, $
+;                       JPEG=, $
 ;                       LOG=, $
 ;                       MAP_OUT=, MAX=, MIN=, $ 
 ;                       NESTED=, NOBAR=, NOLABELS=, NOPOSITION =, $
@@ -177,7 +179,7 @@ pro mollview, file_in, select_in, $
 ;       the projected map in the primary image
 ;	      if set to 0 or not set : no .FITS done
 ;	      if set to 1            : output the plot in plot_XXX.fits
-;                with XXX = cartesian, gnomic, mollweide or orthographic
+;                with XXX = azimequid, cartesian, gnomic, mollweide or orthographic
 ;	      if set to a file name  : output the plot in that file 
 ;	   * For compatibility with standard FITS viewers (including STIFF), 
 ;        unobserved pixels, and pixels outside the sphere, take the value {\tt
@@ -195,9 +197,10 @@ pro mollview, file_in, select_in, $
 ;
 ;	GIF : string containing the name of a .GIF output
 ;	      if set to 0 or not set : no .GIF done
-;	      if set to 1            : output the plot in plot_mollweide.gif
+;	      if set to 1            : output the plot in plot_XXX.gif
+;                with XXX = azimequid, cartesian, gnomic, mollweide or orthographic
 ;	      if set to a file name  : output the plot in that file 
-;             (see also : CROP, PNG, PS and PREVIEW)
+;             (see also : CROP, JPEG, PNG, PS and PREVIEW)
 ;
 ;       GLSIZE : character size of the graticule labels in units of CHARSIZE
 ;             default: 0 (ie, no labeling of graticules)
@@ -251,6 +254,13 @@ pro mollview, file_in, select_in, $
 ;       IGRATICULE: if set, puts a graticule in the input coordinates
 ;          if both graticule and igraticule are set, these ones will
 ;          be represented by dashes
+;
+;	JPEG : string containing the name of a (lossless) .JPEG output
+;	      if set to 0 or not set : no .JPEG done
+;	      if set to 1            : output the plot in plot_XXX.jpeg
+;                with XXX = azimequid, cartesian, gnomic, mollweide or orthographic
+;	      if set to a file name  : output the plot in that file 
+;             (see also : CROP, GIF, PNG, PS and PREVIEW)
 ;
 ; 	LOG: display the log of map (see also : HIST)
 ;         only applies to pixel with signal > 0.
@@ -335,9 +345,10 @@ pro mollview, file_in, select_in, $
 ;
 ;	PNG : string containing the name of a .PNG output
 ;	      if set to 0 or not set : no .PNG done
-;	      if set to 1            : output the plot in plot_gnomic.png
+;	      if set to 1            : output the plot in plot_XXX.png
+;                with XXX = azimequid, cartesian, gnomic, mollweide or orthographic
 ;	      if set to a file name  : output the plot in that file 
-;             (see also : CROP, GIF, PS and PREVIEW)
+;             (see also : CROP, GIF, JPEG, PNG, PS and PREVIEW)
 ;
 ;       POLARIZATION: 
 ;         if set to 0, no polarization information is plotted.
@@ -361,14 +372,14 @@ pro mollview, file_in, select_in, $
 ;             vectors (default=1). Non positive values are replaced by 1.
 ;
 ;	PREVIEW : if set, there is a 'ghostview' preview of the postscript file (see : PS)
-;                    or a 'xv' preview of the gif or png file (see : GIF, PNG)
+;                    or a 'xv' preview of the gif or png file (see: CROP, GIF,
+;                    JPEG, PNG and PS)
 ;
 ;	PS :  if set to 0 or not set : output to screen
-;	      if set to 1            : output the plot in plot_mollweide.ps
-;                                                         plot_gnomic.ps
-;                                                         plot_cartesian.ps
+;	      if set to 1            : output the plot in plot_XXX.ps
+;                with XXX = azimequid, cartesian, gnomic, mollweide or orthographic
 ;	      if set to a file name  : output the plot in that file 
-;               (see : PREVIEW)
+;               (see: CROP, GIF, JPEG, PNG and PREVIEW)
 ;
 ; 	PXSIZE: number of horizontal screen_pixels / postscript_color_dots of the plot
 ;    		** mollview : default = 800, gnomview and cartview : default = 500 **
@@ -510,6 +521,7 @@ pro mollview, file_in, select_in, $
 ;       Oct-09:  added /TRUECOLORS to all routines and MAP_OUT= to Gnomview
 ;       Apr-10:  accept array of structures in Outline; added MAP_OUT= to
 ;       Cartview and Mollview
+;       Jan-12: added STAGGER to orthview; created azeqview; added JPEG to all
 ;-
 
 defsysv, '!healpix', exists = exists
@@ -544,6 +556,7 @@ if (n_params() lt 1 or n_params() gt 2) then begin
     print,'              HBOUND=, HELP=, '
     print,'              HIST_EQUAL=, HXSIZE=,'
     print,'              IGLSIZE=, IGRATICULE=,'
+    print,'              JPEG=,'
     print,'              LOG=, '
     print,'              MAP_OUT=, MAX=, MIN=, NESTED=, NOBAR=, NOLABELS=, '
     print,'              NO_DIPOLE, NO_MONOPLE, '
@@ -605,7 +618,8 @@ proj2out, $
   SUBTITLE = subtitle, TITLEPLOT = titleplot, XPOS = xpos, YPOS = ypos, $
   POLARIZATION=polarization, OUTLINE=outline, /MOLL, FLIP=flip, COORD_IN=coord_in, IGRATICULE=igraticule, $
   HBOUND = hbound, WINDOW = window, EXECUTE=execute, SILENT=silent, GLSIZE=glsize, $
-  IGLSIZE=iglsize, RETAIN=retain, TRUECOLORS=truecolors, TRANSPARENT=transparent, CHARTHICK=charthick
+  IGLSIZE=iglsize, RETAIN=retain, TRUECOLORS=truecolors, TRANSPARENT=transparent, CHARTHICK=charthick, $
+  JPEG=jpeg
 
 
 w_num = !d.window
