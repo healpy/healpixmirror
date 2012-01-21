@@ -349,7 +349,7 @@ public class HealpixBaseTest extends TestCase {
   public void test_ringnestring()throws Exception
     {
     System.out.println("Testing identity ring2nest(nest2ring(i))==i");
-    Random rng = new Random();
+    Random rng = new Random(5);
 
     for (int order=0; order<=HealpixBase.order_max; ++order)
       {
@@ -367,7 +367,7 @@ public class HealpixBaseTest extends TestCase {
     {
     System.out.println("Testing identity pix2zphi(zphi2pix(i))==i");
     int omax=HealpixBase.order_max;
-    Random rng = new Random();
+    Random rng = new Random(5);
     for (int order=0; order<=omax; ++order)
       {
       HealpixBase base1 = new HealpixBase (1L<<order,Scheme.RING),
@@ -398,7 +398,7 @@ public class HealpixBaseTest extends TestCase {
     System.out.println
       ("Testing near-identity zphi2pix(pix2zphi(i))approx i");
     int omax=HealpixBase.order_max;
-    Random rng = new Random();
+    Random rng = new Random(5);
     for (int order=0; order<=omax; ++order)
       {
       HealpixBase base1 = new HealpixBase (1L<<order,Scheme.RING),
@@ -433,7 +433,7 @@ public class HealpixBaseTest extends TestCase {
     {
     System.out.println("Testing neighbour function");
     int omax=HealpixBase.order_max;
-    Random rng = new Random();
+    Random rng = new Random(5);
     for (int order=0; order<=omax; ++order)
       {
       HealpixBase base1 = new HealpixBase (1L<<order,Scheme.RING),
@@ -483,7 +483,7 @@ public class HealpixBaseTest extends TestCase {
   public void test_query_disc_strict() throws Exception
     {
     System.out.println("Testing non-inclusive queryDisc()");
-    Random rng = new Random();
+    Random rng = new Random(5);
     for (int order=0; order<=5; ++order)
       {
       HealpixBase base = new HealpixBase (1L<<order,Scheme.NESTED);
@@ -520,7 +520,7 @@ public class HealpixBaseTest extends TestCase {
     {
     System.out.println("Testing queryDisc() empirically");
     int omax=17;
-    Random rng = new Random();
+    Random rng = new Random(5);
     for (int order=0; order<=omax; ++order)
       {
       HealpixBase rbase = new HealpixBase (1L<<order,Scheme.RING),
@@ -568,7 +568,7 @@ public class HealpixBaseTest extends TestCase {
     {
     System.out.println("Testing queryPolygon() empirically");
     int omax=17;
-    Random rng = new Random();
+    Random rng = new Random(5);
     for (int order=0; order<=omax; ++order)
       {
       HealpixBase rbase = new HealpixBase (1L<<order,Scheme.RING),

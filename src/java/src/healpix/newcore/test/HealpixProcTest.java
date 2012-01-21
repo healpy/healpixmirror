@@ -49,7 +49,7 @@ public class HealpixProcTest extends TestCase {
   public void test_ringnestring()throws Exception
     {
     System.out.println("Testing identity ring2nest(nest2ring(i))==i");
-    Random rng = new Random();
+    Random rng = new Random(5);
 
     for (int o=0; o<=HealpixBase.order_max; ++o)
       {
@@ -66,7 +66,7 @@ public class HealpixProcTest extends TestCase {
     {
     System.out.println("Testing identity pix2ang(ang2pix(i))==i");
     int omax=HealpixBase.order_max;
-    Random rng = new Random();
+    Random rng = new Random(5);
     for (int o=0; o<=omax; ++o)
       {
       for (int m=0; m<nsamples; ++m)
@@ -84,7 +84,7 @@ public class HealpixProcTest extends TestCase {
     {
     System.out.println("Testing neighbour function");
     int omax=HealpixBase.order_max;
-    Random rng = new Random();
+    Random rng = new Random(5);
     for (int o=0; o<=omax; ++o)
       {
       double maxang = 2.01*HealpixProc.maxPixrad(o);
@@ -114,7 +114,7 @@ public class HealpixProcTest extends TestCase {
   public void test_query_disc_strict() throws Exception
     {
     System.out.println("Testing non-inclusive queryDisc()");
-    Random rng = new Random();
+    Random rng = new Random(5);
     for (int o=0; o<=5; ++o)
       {
       int npix=(int)HealpixProc.order2Npix(o);
@@ -151,7 +151,7 @@ public class HealpixProcTest extends TestCase {
     {
     System.out.println("Testing queryDisc() empirically");
     int omax=17;
-    Random rng = new Random();
+    Random rng = new Random(5);
     for (int o=0; o<=omax; ++o)
       {
       int niter=Math.max(1,Math.min(nsamples/1000,100000>>o));
@@ -195,7 +195,7 @@ public class HealpixProcTest extends TestCase {
     {
     System.out.println("Testing queryPolygon() empirically");
     int omax=17;
-    Random rng = new Random();
+    Random rng = new Random(5);
     for (int o=0; o<=omax; ++o)
       {
       int niter=Math.max(1,Math.min(nsamples/1000,100000>>o));

@@ -27,7 +27,7 @@ package healpix.newcore;
 
     @copyright 2011 Max-Planck-Society
     @author Martin Reinecke */
-class CircleFinder
+final class CircleFinder
   {
   public Vec3 center;
   public double cosrad;

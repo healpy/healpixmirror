@@ -6,4 +6,4 @@ public enum Scheme {
   RING,
   /** NESTED ordering. */
   NESTED
-};
+}

@@ -24,7 +24,7 @@ package healpix.newcore;
 
     @copyright 2011 Max-Planck-Society
     @author Martin Reinecke */
-class Hploc
+final class Hploc
   {
   public double z, phi, sth;
   public boolean have_sth;

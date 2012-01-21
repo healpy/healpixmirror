@@ -25,7 +25,7 @@ import java.util.Arrays;
 /** Functionality related to the HEALPix pixelisation.
     This class is conceptually very similar the the Healpix_Base class
     of Healpix_cxx. It supports the NESTED scheme for nside parameters which are
-    powers of 2, and the RING scheme for arbitrary nonnegative nside parameters.
+    powers of 2, and the RING scheme for arbitrary positive nside parameters.
     The maximum supported nside parameter is 2^29.
 
     @copyright 2011, 2012 Max-Planck-Society

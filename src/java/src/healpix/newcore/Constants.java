@@ -24,7 +24,7 @@ package healpix.newcore;
 public class Constants
   {
   /** The Constant halfpi */
-  public static final double halfpi = 0.5*Math.PI;
+  public static final double halfpi = Math.PI/2.;
 
   public static final double inv_halfpi = 2./Math.PI;
 

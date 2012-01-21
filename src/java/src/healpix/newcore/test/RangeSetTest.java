@@ -21,6 +21,7 @@ package healpix.newcore.test;
 
 import healpix.newcore.RangeSet;
 import junit.framework.TestCase;
+import java.io.*;
 
 public class RangeSetTest extends TestCase {
 
@@ -212,4 +213,13 @@ public class RangeSetTest extends TestCase {
     assertFalse(it.hasNext());
     }
 
+  public void testSerialize() throws IOException, ClassNotFoundException {
+      RangeSet r = new RangeSet(new long[]{10,20,30,40,50,51});
+      ByteArrayOutputStream s = new ByteArrayOutputStream();
+      new ObjectOutputStream(s).writeObject(r);
+
+      RangeSet r2 = (RangeSet) new ObjectInputStream(new ByteArrayInputStream(s.toByteArray())).readObject();
+
+      assertEquals(r,r2);
+  }
 }

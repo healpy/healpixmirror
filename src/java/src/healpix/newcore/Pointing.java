@@ -24,7 +24,7 @@ package healpix.newcore;
 
     @copyright 2011 Max-Planck-Society
     @author Martin Reinecke */
-public class Pointing
+final public class Pointing
   {
   /** Colatitude in radians (0 is North Pole; Pi is South Pole) */
   public double theta;
@@ -69,4 +69,28 @@ public class Pointing
     s.append(")");
     return s.toString();
     }
+
+
+  public boolean equals(Object o) {
+          if (this == o) return true;
+          if (o == null || getClass() != o.getClass()) return false;
+
+          Pointing pointing = (Pointing) o;
+
+          if (Double.compare(pointing.phi, phi) != 0) return false;
+          if (Double.compare(pointing.theta, theta) != 0) return false;
+
+          return true;
+      }
+
+
+  public int hashCode() {
+          int result;
+          long temp;
+          temp = theta != +0.0d ? Double.doubleToLongBits(theta) : 0L;
+          result = (int) (temp ^ (temp >>> 32));
+          temp = phi != +0.0d ? Double.doubleToLongBits(phi) : 0L;
+          result = 31 * result + (int) (temp ^ (temp >>> 32));
+          return result;
+      }
   }
