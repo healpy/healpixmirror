@@ -57,12 +57,11 @@ public final class Vec3
     z=zphi.z;
     }
 
-  public Vec3 (double[] arr){
-      if(arr.length!=3) throw new IllegalArgumentException("Wrong array size");
-      x = arr[0];
-      y = arr[1];
-      z = arr[2];
-  }
+  public Vec3 (double[] arr)
+    {
+    if(arr.length!=3) throw new IllegalArgumentException("Wrong array size");
+    x = arr[0]; y = arr[1]; z = arr[2];
+    }
 
   /** Vector length
       @return the length of the vector. */
@@ -138,41 +137,34 @@ public final class Vec3
     return s.toString();
     }
 
+  public double[] toArray()
+    { return new double[]{x,y,z}; }
 
-  public double[] toArray(){
-      return new double[]{x,y,z};
+  public void toArray(double[] arr)
+    {
+    if(arr.length!=3) throw new IllegalArgumentException("wrong array size");
+    arr[0] = x; arr[1] = y; arr[2] = z;
+    }
+
+  public boolean equals(Object o)
+    {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    Vec3 vec3 = (Vec3) o;
+    if (Double.compare(vec3.x, x) != 0) return false;
+    if (Double.compare(vec3.y, y) != 0) return false;
+    if (Double.compare(vec3.z, z) != 0) return false;
+    return true;
+    }
+
+  public int hashCode()
+    {
+    long temp = x != +0.0d ? Double.doubleToLongBits(x) : 0L;
+    int result = (int) (temp ^ (temp >>> 32));
+    temp = y != +0.0d ? Double.doubleToLongBits(y) : 0L;
+    result = 31 * result + (int) (temp ^ (temp >>> 32));
+    temp = z != +0.0d ? Double.doubleToLongBits(z) : 0L;
+    result = 31 * result + (int) (temp ^ (temp >>> 32));
+    return result;
+    }
   }
-
-  public void toArray(double[] arr){
-      if(arr.length!=3) throw new IllegalArgumentException("wrong array size");
-      arr[0] = x;
-      arr[1] = y;
-      arr[2] = z;
-  }
-
-  public boolean equals(Object o) {
-          if (this == o) return true;
-          if (o == null || getClass() != o.getClass()) return false;
-
-          Vec3 vec3 = (Vec3) o;
-
-          if (Double.compare(vec3.x, x) != 0) return false;
-          if (Double.compare(vec3.y, y) != 0) return false;
-          if (Double.compare(vec3.z, z) != 0) return false;
-
-          return true;
-      }
-
-
-  public int hashCode() {
-          int result;
-          long temp;
-          temp = x != +0.0d ? Double.doubleToLongBits(x) : 0L;
-          result = (int) (temp ^ (temp >>> 32));
-          temp = y != +0.0d ? Double.doubleToLongBits(y) : 0L;
-          result = 31 * result + (int) (temp ^ (temp >>> 32));
-          temp = z != +0.0d ? Double.doubleToLongBits(z) : 0L;
-          result = 31 * result + (int) (temp ^ (temp >>> 32));
-          return result;
-  }
-}

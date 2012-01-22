@@ -29,26 +29,22 @@ import java.util.NoSuchElementException;
 
     @copyright 2011, 2012 Max-Planck-Society
     @author Martin Reinecke */
-public class RangeSet  implements Externalizable{
+public class RangeSet implements Externalizable
+  {
+  private static final long serialVersionUID = -4778909346616313978L;
 
-
-    private static final long serialVersionUID = -4778909346616313978L;
-
-    /** Interface describing an iterator for going through all values in
+  /** Interface describing an iterator for going through all values in
       a RangeSet object. */
   public interface ValueIterator {
     public boolean hasNext();
     public long next();
     }
 
-  private static final ValueIterator EMPTY_ITER = new ValueIterator() {
-      public boolean hasNext() {
-          return false;
-      }
-      public long next() {
-          throw new NoSuchElementException();
-      }
-  };
+  private static final ValueIterator EMPTY_ITER = new ValueIterator()
+    {
+    public boolean hasNext() { return false; }
+    public long next() { throw new NoSuchElementException(); }
+    };
 
   /** Sorted list of entries. */
   protected long[] r;
@@ -405,76 +401,71 @@ public class RangeSet  implements Externalizable{
       };
     }
 
-
-    public void writeExternal(ObjectOutput out) throws IOException {
-        out.writeInt(sz);
-        long last = 0;
-        for(long i:r){
-                //write packed differences between values, this way it occupies less space
-                long diff = i - last;
-                packLong(out, diff);
-                last = i;
-        }
+  public void writeExternal(ObjectOutput out) throws IOException
+    {
+    out.writeInt(sz);
+    long last = 0;
+    for (long i:r)
+      {
+//write packed differences between values, this way it occupies less space
+      long diff = i - last;
+      packLong(out, diff);
+      last = i;
+      }
     }
 
-    public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
-        if(sz>0) throw new IOException("RangeSet already contains data!");
-        sz = in.readInt();
-        if(sz%2!=0) throw new Error();
-
-        r = new long[sz];
-        long last = 0;
-        for(int i =0; i<sz;i++){
-                long v = last + unpackLong(in);
-                r[i] = v;
-                last = v;
-        }
+  public void readExternal(ObjectInput in)
+    throws IOException, ClassNotFoundException
+    {
+    if(sz>0) throw new IOException("RangeSet already contains data!");
+    sz = in.readInt();
+    if((sz<0)||((sz&1)!=0)) throw new Error();
+    r = new long[sz];
+    long last = 0;
+    for (int i =0; i<sz; i++)
+      r[i] = last = last + unpackLong(in);
     }
 
-
-
-    /**
-     * Pack  non-negative long into output stream.
-     * It will occupy 1-9 bytes depending on value (lower values occupy smaller space)
-     *
-     * @param os
-     * @param value
-     * @throws IOException
-     *
-     * Originally developed for Kryo by Nathan Sweet.
-     * Modified for JDBM by Jan Kotek
-     */
-    static private void packLong(DataOutput os, long value) throws IOException {
-        while ((value & ~0x7FL) != 0) {
-            os.write((((int) value & 0x7F) | 0x80));
-            value >>>= 7;
-        }
-        os.write((byte) value);
+  /** Pack  non-negative long value into output stream.
+    * It will occupy 1-9 bytes depending on value (lower values occupy
+    * less space)
+    *
+    * @param os
+    * @param value
+    * @throws IOException
+    *
+    * Originally developed for Kryo by Nathan Sweet.
+    * Modified for JDBM by Jan Kotek
+    */
+  static private void packLong(DataOutput os, long value) throws IOException
+    {
+    while ((value & ~0x7FL) != 0)
+      {
+      os.write((((int) value & 0x7F) | 0x80));
+      value >>>= 7;
+      }
+    os.write((byte) value);
     }
 
-
-    /**
-     * Unpack positive long value from the input stream.
-     *
-     * @param is The input stream.
-     * @return The long value.
-     * @throws java.io.IOException
-     *
-     * Originally developed for Kryo by Nathan Sweet.
-     * Modified for JDBM by Jan Kotek
-     */
-    static private long unpackLong(DataInput is) throws IOException {
-        long result = 0;
-        for (int offset = 0; offset < 64; offset += 7) {
-            long b = is.readUnsignedByte();
-            result |= (b & 0x7F) << offset;
-            if ((b & 0x80) == 0) {
-                return result;
-            }
-        }
-        throw new Error("Malformed long.");
+  /** Unpack positive long value from the input stream.
+    *
+    * @param is The input stream.
+    * @return The long value.
+    * @throws java.io.IOException
+    *
+    * Originally developed for Kryo by Nathan Sweet.
+    * Modified for JDBM by Jan Kotek
+    */
+  static private long unpackLong(DataInput is) throws IOException
+    {
+    long result = 0;
+    for (int offset=0; offset<64; offset+=7)
+      {
+      long b = is.readUnsignedByte();
+      result |= (b & 0x7F) << offset;
+      if ((b & 0x80) == 0)
+        return result;
+      }
+    throw new Error("Malformed long.");
     }
-
-
-
-}
+  }

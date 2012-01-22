@@ -56,27 +56,22 @@ public final  class Zphi
     return s.toString();
     }
 
+  public boolean equals(Object o)
+    {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    Zphi zphi = (Zphi) o;
+    if (Double.compare(zphi.phi, phi) != 0) return false;
+    if (Double.compare(zphi.z, z) != 0) return false;
+    return true;
+    }
 
-  public boolean equals(Object o) {
-          if (this == o) return true;
-          if (o == null || getClass() != o.getClass()) return false;
-
-          Zphi zphi = (Zphi) o;
-
-          if (Double.compare(zphi.phi, phi) != 0) return false;
-          if (Double.compare(zphi.z, z) != 0) return false;
-
-          return true;
-      }
-
-
-  public int hashCode() {
-          int result;
-          long temp;
-          temp = z != +0.0d ? Double.doubleToLongBits(z) : 0L;
-          result = (int) (temp ^ (temp >>> 32));
-          temp = phi != +0.0d ? Double.doubleToLongBits(phi) : 0L;
-          result = 31 * result + (int) (temp ^ (temp >>> 32));
-          return result;
-      }
+  public int hashCode()
+    {
+    long temp = z != +0.0d ? Double.doubleToLongBits(z) : 0L;
+    int result = (int) (temp ^ (temp >>> 32));
+    temp = phi != +0.0d ? Double.doubleToLongBits(phi) : 0L;
+    result = 31 * result + (int) (temp ^ (temp >>> 32));
+    return result;
+    }
   }
