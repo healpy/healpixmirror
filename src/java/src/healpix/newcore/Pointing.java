@@ -47,8 +47,8 @@ final public class Pointing
   /** Conversion from {@link Vec3} */
   public Pointing(Vec3 vec)
     {
-    theta = Math.atan2(Math.sqrt(vec.x*vec.x+vec.y*vec.y),vec.z);
-    phi = Math.atan2 (vec.y,vec.x);
+    theta = FastMath.atan2(Math.sqrt(vec.x*vec.x+vec.y*vec.y),vec.z);
+    phi = FastMath.atan2 (vec.y,vec.x);
     if (phi<0.) phi += 2*Math.PI;
     }
 
@@ -56,10 +56,10 @@ final public class Pointing
   public Pointing (Zphi zphi)
     {
     double xy=Math.sqrt((1.-zphi.z)*(1.+zphi.z));
-    theta = Math.atan2(xy,zphi.z); phi=zphi.phi;
+    theta = FastMath.atan2(xy,zphi.z); phi=zphi.phi;
     }
   // for some reason, the alternative below is much slower...
-  //{ theta=Math.acos(zphi.z); phi=zphi.phi; }
+  //{ theta=FastMath.acos(zphi.z); phi=zphi.phi; }
 
   public String toString()
     {

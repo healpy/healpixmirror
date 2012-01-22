@@ -43,17 +43,17 @@ public final class Vec3
   /** Conversion from {@link Pointing} */
   public Vec3 (Pointing ptg)
     {
-    double sth = Math.sin(ptg.theta);
-    x=sth*Math.cos(ptg.phi);
-    y=sth*Math.sin(ptg.phi);
-    z=Math.cos(ptg.theta);
+    double sth = FastMath.sin(ptg.theta);
+    x=sth*FastMath.cos(ptg.phi);
+    y=sth*FastMath.sin(ptg.phi);
+    z=FastMath.cos(ptg.theta);
     }
   /** Conversion from {@link Zphi} */
   public Vec3 (Zphi zphi)
     {
     double sth = Math.sqrt((1.0-zphi.z)*(1.0+zphi.z));
-    x=sth*Math.cos(zphi.phi);
-    y=sth*Math.sin(zphi.phi);
+    x=sth*FastMath.cos(zphi.phi);
+    y=sth*FastMath.sin(zphi.phi);
     z=zphi.z;
     }
 
@@ -85,7 +85,7 @@ public final class Vec3
       @return the angle in radians between this vector and {@code v1};
         constrained to the range [0,PI]. */
   public final double angle(Vec3 v1)
-    { return Math.atan2(cross(v1).length(), dot(v1)); }
+    { return FastMath.atan2(cross(v1).length(), dot(v1)); }
 
   /** Vector cross product.
       @param v another vector
@@ -168,3 +168,4 @@ public final class Vec3
     return result;
     }
   }
+

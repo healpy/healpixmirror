@@ -41,11 +41,11 @@ public final  class Zphi
 
   /** Conversion from {@link Vec3} */
   public Zphi (Vec3 v)
-    { z = v.z/v.length(); phi = Math.atan2(v.y,v.x); }
+    { z = v.z/v.length(); phi = FastMath.atan2(v.y,v.x); }
 
   /** Conversion from {@link Pointing} */
   public Zphi (Pointing ptg)
-    { z = Math.cos(ptg.theta); phi=ptg.phi; }
+    { z = FastMath.cos(ptg.theta); phi=ptg.phi; }
 
   public String toString()
     {

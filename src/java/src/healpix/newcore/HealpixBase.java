@@ -646,16 +646,16 @@ public class HealpixBase extends HealpixTables
     if (ring<nside)
       {
       double tmp=ring*ring*fact2;
-      return Math.atan2 (Math.sqrt(tmp*(2.-tmp)),1-tmp);
+      return FastMath.atan2 (Math.sqrt(tmp*(2.-tmp)),1-tmp);
       }
     if (ring <=nl3)
       {
       double cth=(nl2-ring)*fact1;
-      return Math.atan2 (Math.sqrt(1.-cth*cth),cth);
+      return FastMath.atan2 (Math.sqrt(1.-cth*cth),cth);
       }
     ring=nl4 - ring;
     double tmp=ring*ring*fact2;
-    return Math.atan2 (Math.sqrt(tmp*(2.-tmp)),tmp-1);
+    return FastMath.atan2 (Math.sqrt(tmp*(2.-tmp)),tmp-1);
     }
 
   private static class pstack
@@ -688,8 +688,8 @@ public class HealpixBase extends HealpixTables
     RangeSet pixset = new RangeSet(2);
     if (scheme==Scheme.RING)
       {
-      long ring1 = Math.max(1,1+ringAbove(Math.cos(theta1))),
-           ring2 = Math.min(4*nside-1,ringAbove(Math.cos(theta2)));
+      long ring1 = Math.max(1,1+ringAbove(FastMath.cos(theta1))),
+           ring2 = Math.min(4*nside-1,ringAbove(FastMath.cos(theta2)));
       if (inclusive)
         {
         ring1 = Math.max(1,ring1-1);
@@ -792,17 +792,17 @@ public class HealpixBase extends HealpixTables
 
       rbig = Math.min (Math.PI,rbig);
 
-      double cosrsmall = Math.cos(rsmall);
-      double cosrbig = Math.cos(rbig);
+      double cosrsmall = FastMath.cos(rsmall);
+      double cosrbig = FastMath.cos(rbig);
 
-      double z0 = Math.cos(ptg.theta);
+      double z0 = FastMath.cos(ptg.theta);
       double xa = 1./Math.sqrt((1-z0)*(1+z0));
 
       Zphi czphi = new Zphi(z0,ptg.phi);
       long cpix = zphi2pix(czphi);
 
       double rlat1  = ptg.theta - rsmall;
-      double zmax = Math.cos(rlat1);
+      double zmax = FastMath.cos(rlat1);
       long irmin = ringAbove (zmax)+1;
 
       if ((rlat1<=0) && (irmin>1)) // north pole in the disk
@@ -814,7 +814,7 @@ public class HealpixBase extends HealpixTables
       if ((fct>1) && (rlat1>0)) irmin=Math.max(1L,irmin-1);
 
       double rlat2  = ptg.theta + rsmall;
-      double zmin = Math.cos(rlat2);
+      double zmin = FastMath.cos(rlat2);
       long irmax = ringAbove (zmin);
 
       if ((fct>1) && (rlat2<Math.PI)) irmax=Math.min(nl4-1,irmax+1);
@@ -826,7 +826,7 @@ public class HealpixBase extends HealpixTables
         double x = (cosrbig-z*z0)*xa;
         double ysq = 1-z*z-x*x;
         double dphi = (ysq<=0) ? Math.PI-1e-15 :
-                                 Math.atan2(Math.sqrt(ysq),x);
+                                 FastMath.atan2(Math.sqrt(ysq),x);
         RingInfoSmall info =get_ring_info_small(iz);
         long ipix1 = info.startpix, nr=info.ringpix, ipix2=ipix1+nr-1;
         double shift = info.shifted ? 0.5 : 0.;
@@ -879,12 +879,12 @@ public class HealpixBase extends HealpixTables
       double[] crpdr = new double[omax+1];
       double[] crmdr = new double[omax+1];
 
-      double cosrad=Math.cos(radius);
+      double cosrad=FastMath.cos(radius);
       for (int o=0; o<=omax; o++) // prepare data at the required orders
         {
         double dr=HealpixProc.bn[o].maxPixrad(); // safety distance
-        crpdr[o] = (radius+dr>Math.PI) ? -1. : Math.cos(radius+dr);
-        crmdr[o] = (radius-dr<0.) ?  1. : Math.cos(radius-dr);
+        crpdr[o] = (radius+dr>Math.PI) ? -1. : FastMath.cos(radius+dr);
+        crmdr[o] = (radius-dr<0.) ?  1. : FastMath.cos(radius-dr);
         }
 
       pstack stk=new pstack(12+3*omax);
@@ -950,9 +950,9 @@ public class HealpixBase extends HealpixTables
           {
           double rbig = Math.min(Math.PI,rad[i]+rpbig);
           Pointing pnt= new Pointing(norm[i]);
-          cosrsmall[nd]=Math.cos(rsmall);
-          cosrbig[nd]=Math.cos(rbig);
-          double cth=Math.cos(pnt.theta);
+          cosrsmall[nd]=FastMath.cos(rsmall);
+          cosrbig[nd]=FastMath.cos(rbig);
+          double cth=FastMath.cos(pnt.theta);
           z0[nd]=cth;
           if (fct>1) cpix[nd]=zphi2pix(new Zphi(cth,pnt.phi));
           if (fct>1) czphi[nd]=new Zphi(cth,pnt.phi);
@@ -960,13 +960,13 @@ public class HealpixBase extends HealpixTables
           ptg[nd]=pnt;
 
           double rlat1 = pnt.theta - rsmall;
-          double zmax = Math.cos(rlat1);
+          double zmax = FastMath.cos(rlat1);
           long irmin_t = (rlat1<=0) ? 1 : ringAbove (zmax)+1;
 
           if ((fct>1) && (rlat1>0)) irmin_t=Math.max(1L,irmin_t-1);
 
           double rlat2 = pnt.theta + rsmall;
-          double zmin = Math.cos(rlat2);
+          double zmin = FastMath.cos(rlat2);
           long irmax_t = (rlat2>=Math.PI) ? nl4-1 : ringAbove (zmin);
 
           if ((fct>1) && (rlat2<Math.PI))
@@ -993,7 +993,7 @@ public class HealpixBase extends HealpixTables
           double x = (cosrbig[j]-z*z0[j])*xa[j];
           double ysq = 1.-z*z-x*x;
           double dphi = (ysq<=0) ? Math.PI-1e-15 :
-                                   Math.atan2(Math.sqrt(ysq),x);
+                                   FastMath.atan2(Math.sqrt(ysq),x);
 
           long ip_lo = (long)Math.floor
             (nr*Constants.inv_twopi*(ptg[j].phi-dphi)-shift)+1;
@@ -1037,9 +1037,9 @@ public class HealpixBase extends HealpixTables
         double dr=HealpixProc.bn[o].maxPixrad(); // safety distance
         for (int i=0; i<nv; ++i)
           {
-          crlimit[o][i][0] = (rad[i]+dr>Math.PI) ? -1: Math.cos(rad[i]+dr);
-          crlimit[o][i][1] = (o==0) ? Math.cos(rad[i]) : crlimit[0][i][1];
-          crlimit[o][i][2] = (rad[i]-dr<0.) ?  1. : Math.cos(rad[i]-dr);
+          crlimit[o][i][0] = (rad[i]+dr>Math.PI) ? -1: FastMath.cos(rad[i]+dr);
+          crlimit[o][i][1] = (o==0) ? FastMath.cos(rad[i]) : crlimit[0][i][1];
+          crlimit[o][i][2] = (rad[i]-dr<0.) ?  1. : FastMath.cos(rad[i]-dr);
           }
         }
 
@@ -1110,7 +1110,7 @@ public class HealpixBase extends HealpixTables
       {
       CircleFinder cf = new CircleFinder(vv);
       normal[nv]=cf.center;
-      rad[nv]=Math.acos(cf.cosrad);
+      rad[nv]=FastMath.acos(cf.cosrad);
       }
     return queryMultiDisc(normal,rad,inclusive);
     }

@@ -35,7 +35,7 @@ final class Hploc
     {
     double xl = 1./v.length();
     z = v.z*xl;
-    phi = Math.atan2(v.y,v.x);
+    phi = FastMath.atan2(v.y,v.x);
     if (Math.abs(z)>0.99)
       {
       sth = Math.sqrt(v.x*v.x+v.y*v.y)*xl;
@@ -50,11 +50,11 @@ final class Hploc
     }
   public Hploc (Pointing ptg)
     {
-    z = Math.cos(ptg.theta);
+    z = FastMath.cos(ptg.theta);
     phi = ptg.phi;
     if (Math.abs(z)>0.99)
       {
-      sth = Math.sin(ptg.theta);
+      sth = FastMath.sin(ptg.theta);
       have_sth=true;
       }
     }
@@ -64,11 +64,11 @@ final class Hploc
   public Pointing toPointing()
     {
     double st = have_sth ? sth : Math.sqrt((1.0-z)*(1.0+z));
-    return new Pointing(Math.atan2(st,z),phi);
+    return new Pointing(FastMath.atan2(st,z),phi);
     }
   public Vec3 toVec3()
     {
     double st = have_sth ? sth : Math.sqrt((1.0-z)*(1.0+z));
-    return new Vec3(st*Math.cos(phi),st*Math.sin(phi),z);
+    return new Vec3(st*FastMath.cos(phi),st*FastMath.sin(phi),z);
     }
   }

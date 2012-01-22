@@ -63,7 +63,7 @@ public class HealpixUtils
   static public double cosdist_zphi (double z1, double phi1,
     double z2, double phi2)
     {
-    return z1*z2+ Math.cos(phi1-phi2)* Math.sqrt((1.0-z1*z1)*(1.0-z2*z2));
+    return z1*z2+ FastMath.cos(phi1-phi2)* Math.sqrt((1.0-z1*z1)*(1.0-z2*z2));
     }
   /** Computes the cosine of the angular distance between two z, phi positions
       on the unit sphere. */
@@ -76,10 +76,7 @@ public class HealpixUtils
       @param v2 divisor; must be positive
       @return remainder of the division; positive and smaller than {@code v2} */
   static public double fmodulo (double v1, double v2)
-    {
-    return (v1>=0) ? ((v1<v2) ? v1 : Math.IEEEremainder(v1,v2)) :
-                                    (Math.IEEEremainder(v1,v2)+v2);
-    }
+    { return (v1>=0) ? ((v1<v2) ? v1 : v1%v2) : (v1%v2+v2); }
 
   static public boolean approx (float a, float b, float epsilon)
     { return Math.abs(a-b) < (epsilon*Math.abs(b)); }
