@@ -34,7 +34,7 @@ public class HealpixBase extends HealpixTables
   {
   private int FACT=4, OPLUS=2;
 
-  protected static class Xyf
+  protected final class Xyf
     {
     public int ix, iy, face;
     public Xyf () {}
@@ -42,7 +42,7 @@ public class HealpixBase extends HealpixTables
       { ix=x; iy=y; face=f; }
     }
 
-  protected static class RingInfoSmall
+  protected final class RingInfoSmall
     {
     long startpix, ringpix;
     boolean shifted;
@@ -658,7 +658,7 @@ public class HealpixBase extends HealpixTables
     return FastMath.atan2 (Math.sqrt(tmp*(2.-tmp)),tmp-1);
     }
 
-  private static class pstack
+  private final class pstack
     {
     private long[] p;
     private int[] o;
@@ -1205,47 +1205,15 @@ public class HealpixBase extends HealpixTables
     HealpixUtils.check(step>0,"step must be positive");
     Vec3[] points = new Vec3[4*step];
     Xyf xyf = pix2xyf(pix);
-    double d = 1./step;
+    double xc=(xyf.ix+0.5)/nside, yc=(xyf.iy+0.5)/nside;
+    double d = 1./(step*nside);
     for (int i=0; i<step; ++i)
       {
-      points[i       ]=fxyf2loc(xyf.ix+0.5-i*d, xyf.iy+0.5, xyf.face).toVec3();
-      points[i+  step]=fxyf2loc(xyf.ix-0.5, xyf.iy+0.5-i*d, xyf.face).toVec3();
-      points[i+2*step]=fxyf2loc(xyf.ix-0.5+i*d, xyf.iy-0.5, xyf.face).toVec3();
-      points[i+3*step]=fxyf2loc(xyf.ix+0.5, xyf.iy-0.5+i*d, xyf.face).toVec3();
+      points[i       ]=new Fxyf(xc+0.5-i*d, yc+0.5, xyf.face).toVec3();
+      points[i+  step]=new Fxyf(xc-0.5, yc+0.5-i*d, xyf.face).toVec3();
+      points[i+2*step]=new Fxyf(xc-0.5+i*d, yc-0.5, xyf.face).toVec3();
+      points[i+3*step]=new Fxyf(xc+0.5, yc-0.5+i*d, xyf.face).toVec3();
       }
     return points;
-    }
-
-  private Hploc fxyf2loc(double fx, double fy, int face)
-    {
-    Hploc loc = new Hploc();
-    double jr = ((long)(jrll[face])<<order) - fx - fy - 1;
-
-    double nr;
-    if (jr<nside)
-      {
-      nr = jr;
-      double tmp = (nr*nr)*fact2;
-      loc.z = 1 - tmp;
-      if (loc.z>0.99) { loc.sth=Math.sqrt(tmp*(2.-tmp)); loc.have_sth=true; }
-      }
-    else if (jr>nl3)
-      {
-      nr = nl4-jr;
-      double tmp = (nr*nr)*fact2;
-      loc.z = tmp - 1;
-      if (loc.z<-0.99) { loc.sth=Math.sqrt(tmp*(2.-tmp)); loc.have_sth=true; }
-      }
-    else
-      {
-      nr = nside;
-      loc.z = (nl2-jr)*fact1;
-      }
-
-    double tmp=(long)(jpll[face])*nr+fx-fy;
-    assert(tmp<8*nr); // must not happen
-    if (tmp<0) tmp+=8*nr;
-    loc.phi = (nr<1e-15) ? 0 : (0.5*Constants.halfpi*tmp)/nr;
-    return loc;
     }
   }
