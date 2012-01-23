@@ -95,7 +95,7 @@ commands {\tt hidl} or {\tt hidlde} which are aliases defined in the
 \healpix profile created during the installation process 
 for the package.
 
-\section{Changes between release 2.0 and 2.20}
+\section{Changes between release 2.0 and 2.30}
 Several routines have been added or improved since version 2.0, as listed below.
 Note that thanks to the newer {\tt IDL-astron} library, FITS read/write routines
 in IDL-Healpix routines can now deal with {\bf FITS files larger than 2GB} (on architectures supporting 64bit
@@ -106,14 +106,20 @@ pixels on the sphere.
 
 \begin{itemize}
 
-\item Latest edition (versions ??)
+\item Latest edition (versions 2.30)
 \begin{itemize}
 	\item \htmlref{{\tt fits2cl}}{idl:fits2cl}: addition of \mylink{idl:fits2cl:wmap7}{{\tt WMAP7}} keyword
 to read best fit $C(l)$ model to WMAP 7yr data.
 	\item \htmlref{{\tt cartview, gnomview, mollview,
 orthview}}{idl:mollview}:
  the length and spacing of the headless vectors used to represent
-polarization is now user-controlled  via \mylink{idl:mollview:polarization}{{\tt POLARIZATION}} keyword.
+polarization is now user-controlled  via \mylink{idl:mollview:polarization}{{\tt
+POLARIZATION}} keyword.
+	\item creation of \htmlref{\tt hpx2dm}{idl:hpx2dm} routine to generate
+DomeMaster images of \healpix maps that can be projected on planetariums.
+	\item \htmlref{\tt orthview}{idl:orthview} now accepts
+\mylink{idl:mollview:stagger}{\tt STAGGER} keyword to overplot staggered
+spheres (with a twist) in order to detect periodic boundary conditions on the sky
 \end{itemize}
 
 \item Recent edition (versions 2.20 and 2.20a)
@@ -128,14 +134,25 @@ symbols with {\tt PSYM} $> 8$, using
 symbols definition.
 \end{itemize}
 
+%
+%
+%
+%--------------------------------
+\end{itemize}
+{\footnotesize{%
+\begin{itemize}
+%--------------------------------
 \item Recent editions (versions 2.15 and 2.15a)
 \begin{itemize}
 	\item \htmlref{{\tt cartview, gnomview, mollview, orthview}}{idl:mollview}:
         \begin{itemize} 
 		\item export of projected map into a FITS file (\mylink{idl:mollview:fits}{{\tt FITS}} keyword), or an
 IDL array (\mylink{idl:mollview:fits}{{\tt MAP\_OUT}} option) now available with all viewing routines,
-		\item added \mylink{idl:mollview:charthick}{{\tt CHARTHICK}} support; accept array of \mylink{idl:mollview:outline}{{\tt
-OUTLINE}} structures (if they have the same fields),
+		\item added \mylink{idl:mollview:charthick}{{\tt CHARTHICK}}
+support; 
+  accept array of \mylink{idl:mollview:outline}{{\tt
+OUTLINE}} structures (if they have the same fields), and still support structure
+of structures,
 		\item correction of a bug (in {\tt loaddata\_healpix}) that was
 affecting the behavior of these viewing routines after consecutive calls with
 very partial cut-sky {\em and then} full-sky data sets [2.15a];
@@ -174,14 +191,7 @@ Precision input maps
 {\tt COORD\_IN=} and {\tt COORD\_OUT=} now
 accept lower case values; {\tt /SILENT} keyword added.
  \end{itemize}
-%
-%
-%
-%--------------------------------
-\end{itemize}
-{\footnotesize{%
-\begin{itemize}
-%--------------------------------
+
 \item Old edition (version 2.13)
    \begin{itemize}
 	\item new \htmlref{{\tt healpix\_doc}}{idl:healpix_doc} routine to
@@ -412,6 +422,7 @@ file containing $a_{lm}$ coefficients.
 \newpage
 \include{alm2fits_idl}
 \include{ang2vec_idl}
+\include{azeqview_idl}
 \include{bin_llcl_idl}
 \include{bl2fits_idl}
 \include{cartcursor_idl}
@@ -429,6 +440,7 @@ file containing $a_{lm}$ coefficients.
 \include{gnomview_idl}
 \include{healpix_doc_idl}
 \include{healpixwindow_idl}
+\include{hpx2dm_idl}
 \include{hpx2gs_idl}
 \include{ianafast_idl}
 \include{ismoothing_idl}

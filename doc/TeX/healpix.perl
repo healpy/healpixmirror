@@ -126,6 +126,11 @@ sub do_env_qualifiers_hpx2gs {
     "<H1>QUALIFIERS</H1><BR>" . $_ ;
 }
 
+sub do_env_qualifiers_hpx2dm {
+    local($_) = @_;
+    "<H1>QUALIFIERS</H1><BR>" . $_ ;
+}
+
 sub do_env_qualifiers_mollview {
     local($_) = @_;
     "<H1>QUALIFIERS</H1><BR>" . $_ ;

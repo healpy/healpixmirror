@@ -1,0 +1,196 @@
+% -*- LaTeX -*-
+
+\sloppy
+
+\title{\healpix IDL Facility User Guidelines}
+\docid{hpx2dm} \section[hpx2dm]{ }
+\label{idl:\thedocid}
+\docrv{Version 1.0}
+\author{Eric Hivon}
+\abstract{This document describes the \healpix facility \thedocid.}
+
+% q customized for hpx2dm IDL routines adapted from mollview qualifiers
+  \newenvironment{qualifiers_hpx2dm}
+    {\rule{\hsize}{0.7mm}
+     \textsc{\Large{\textbf{QUALIFIERS}}}\hfill\newline%
+	\renewcommand{\arraystretch}{1.5}%
+	}
+
+% \newcommand{\sizeoneg}{0.19\hsize}
+%\newcommand{\sizetwog}{0.08\hsize}
+%\newcommand{\sizethrg}{0.70\hsize}
+\newcommand{\sizeoneg}{0.12\hsize}
+\newcommand{\sizethrg}{0.85\hsize}
+
+\begin{facility}
+{This IDL facility provides a means to turn a \healpix\ data set
+into a DomeMaster
+compliant image (azimuthal equidistant projection of the half-sphere
+in a PNG or lossless JPEG file) that can be projected on a planetarium.
+See eg 
+\htmladdnormallink{http://fulldome.ryanwyatt.net/fulldome\_domemasterSpec\_v05.pdf}%
+{http://fulldome.ryanwyatt.net/fulldome_domemasterSpec_v05.pdf}
+}
+{src/idl/visu/hpx2dm.pro}
+\end{facility}
+
+\begin{IDLformat}
+{\thedocid, 
+\mylink{idl:hpx2dm:file}{File}, 
+[ \mylink{idl:hpx2dm:select}{Select}, ]
+[ \mylink{idl:hpx2dm:help}{/HELP}, 
+\mylink{idl:hpx2dm:jpeg}{JPEG=}, 
+\mylink{idl:hpx2dm:png}{PNG=}, 
+\mylink{idl:hpx2dm:preview}{PREVIEW=}, 
+\mylink{idl:hpx2dm:pxsize}{PXSIZE=}, 
+%
+  + %
+\mylink{idl:hpx2dm:other_keywords}{most of azeqview keywords}%
+$\ldots$
+]
+}
+\end{IDLformat}
+
+\newpage
+\begin{qualifiers_hpx2dm}
+\begin{tabular}{p{\sizeoneg}%
+% p{\sizetwog} 
+p{\sizethrg}}
+%% \begin{tabular}{p{0.14\hsize} p{0.08\hsize} p{0.75\hsize}}
+\hline  
+%\textbf{name}  & \textbf{description} \\ \hline
+%                    &   &                            \\ %%% for presentation
+\mytargetb{idl:hpx2dm:file}{File}    & \parbox[t]{0.95\hsize}{Required\\
+                    name of a FITS file containing 
+               the \healpix\ map in an extension or in the image field, \\
+          {\em or}\  \  name of an {\em online} variable (either array or
+structure) containing the \healpix\ map (See note below);\\
+          if Save is set   :    name of an IDL saveset file containing
+               the \healpix\ map stored under the variable  {\tt data} \\
+	\nodefault}\\ 
+
+\mytargetb{idl:hpx2dm:select}{Select}    & \parbox[t]{0.95\hsize}{Optional\\
+		  column of the BIN FITS table to be plotted, can be either  \\
+                -- a name : value given in TTYPEi of the FITS file \\
+                        NOT case sensitive and can be truncated, \\
+                        (only letters, digits and underscore are valid) \\
+               -- an integer        : number i of the column
+                            containing the data, starting with 1 (also valid if
+		  {\tt File} is an online array) \\
+                   \default {1 for full sky maps, 'SIGNAL' column for FITS files
+		  containing cut sky maps}}\\
+\end{tabular}
+\end{qualifiers_hpx2dm}
+
+\begin{keywords}
+  \begin{kwlist}{} %%%% NOTE the ``extra'' brace here %%%%
+
+\item [\mytargetb{idl:hpx2dm:jpeg}{JPEG=}] name of the output {\em lossless}
+JPEG file
+\item [\mytargetb{idl:hpx2dm:png}{PNG=}]  name of the output PNG file
+
+\item [\mytargetb{idl:hpx2dm:preview}{/PREVIEW}] if set, the output JPEG or PNG
+file will be previewed
+
+\item [\mytargetb{idl:hpx2dm:help}{/HELP}]  Prints out the documentation header 
+
+\item [\mytargetb{idl:hpx2dm:pxsize}{PXSIZE=}]  number of pixels in each
+dimension of the square output image
+
+% \item [\mytargetb{idl:hpx2dm:kml}{KML} =] Name of the KML file to be created (if the {\tt .kml} suffix is missing,
+%      it will be added automatically)
+%      \default {{\tt 'hpx2googlesky.kml'}}
+
+% \item [\mytargetb{idl:hpx2dm:png}{PNG} =] Name of the PNG overlay file to be created. Only to be used if you want the
+%      filename to be different from the default 
+% 	(\default{ same as KML file, with a {\tt .png} suffix instead
+%      of {\tt .kml}})
+
+% \item [\mytargetb{idl:hpx2dm:reso_arcmin}{RESO\_ARCMIN} =] Pixel angular size in arcmin (at the equator) of the cartesian
+%      map generated \default{30}
+
+% \item [\mytargetb{idl:hpx2dm:subtitle}{SUBTITLE} =] information on the data, 
+% will appear in KML file {\tt GroundOverlay
+%      description} field
+
+% \item [\mytargetb{idl:hpx2dm:titleplot}{TITLEPLOT} =] information on the data, 
+% will appear in KML file {\tt GroundOverlay
+%      name} field
+
+\item [\mytargetb{idl:hpx2dm:other_keywords}{}
+\mylink{idl:mollview:asinh}{/ASINH}, ]
+%
+\item [\mylink{idl:mollview:colt}{COLT}=,
+\mylink{idl:mollview:coord}{COORD}=,
+\mylink{idl:mollview:factor}{FACTOR}=,
+\mylink{idl:mollview:flip}{/FLIP},
+% \mylink{idl:mollview:glsize}{GLSIZE}=,
+% \mylink{idl:mollview:graticule}{GRATICULE}=,
+\mylink{idl:mollview:hbound}{HBOUND}=,]
+%
+\item [\mylink{idl:mollview:hist_equal}{/HIST\_EQUAL},
+% \item [\mylink{idl:mollview:jpeg}{JPEG=},
+% \mylink{idl:mollview:iglsize}{IGLSIZE}=,
+% \mylink{idl:mollview:igraticule}{IGRATICULE}=,
+\mylink{idl:mollview:log}{/LOG},
+\mylink{idl:mollview:max}{MAX}=,
+\mylink{idl:mollview:min}{MIN}=, %]
+\mylink{idl:mollview:nested}{/NESTED},
+% \mylink{idl:mollview:no_dipole}{/NO\_DIPOLE},
+% \mylink{idl:mollview:no_monopole}{/NO\_MONOPLE},
+\mylink{idl:mollview:offset}{OFFSET}=, ]
+% \item [\mylink{idl:mollview:outline}{OUTLINE}=,
+% \mylink{idl:mollview:polarization}{POLARIZATION}=,
+% \item [\mylink{idl:mollview:png}{PNG=},
+% \mylink{idl:mollview:preview}{/PREVIEW},]
+%
+\item [\mylink{idl:mollview:quadcube}{/QUADCUBE},
+\mylink{idl:mollview:rot}{ROT}=,
+\mylink{idl:mollview:save}{SAVE}=,
+\mylink{idl:mollview:silent}{/SILENT}, ]
+%
+\item [\mylink{idl:mollview:truecolors}{TRUECOLORS}=]
+ those keywords have the same meaning as in
+\htmlref{azeqview}{idl:azeqview} and 
+\htmlref{mollview}{idl:mollview}
+
+
+  \end{kwlist}
+\end{keywords}
+%***************************************************************
+
+
+\begin{codedescription}
+{\thedocid\ reads in a \healpix sky map in FITS format or from a memory array
+and generates a PNG or JPEG file containing a DomeMaster compliant map
+(azimuthal equidistant projection of the half-sky).%
+}
+\end{codedescription}
+
+%\include{mollview_idl_related}
+\begin{related}
+  \begin{sulist}{} %%%% NOTE the ``extra'' brace here %%%%
+  \item[\htmlref{azeqview}{idl:azeqview}] performs Azimuthal Equidistant
+projection required by \thedocid.
+  \item[\htmlref{hpx2gs}{idl:hpx2gs}] turns Healpix maps into GoogleEarth or
+GoogleSky images
+  \end{sulist}
+\end{related}
+
+
+% \begin{example}
+% {
+% \begin{tabular}{l} %%%% use this tabular format %%%%
+
+% map  = findgen(48) \\
+% \thedocid, map, kml='my\_map.kml',title='my map in Google'\\
+% \end{tabular}
+% }
+% {produces in {\tt my\_map.kml} and in {\tt my\_map.png} an image of the input map that can be seen with
+% Google Sky.
+% To do so, start GoogleEarth or GoogleSky and open {\tt my\_map.kml}. Under
+% Mac\-OSX, simply type {\tt open my\_map.kml} on the command line.
+% }
+% \end{example}
+
+\newpage

@@ -19,8 +19,8 @@
 % \newcommand{\sizeoneg}{0.19\hsize}
 %\newcommand{\sizetwog}{0.08\hsize}
 %\newcommand{\sizethrg}{0.70\hsize}
-\newcommand{\sizeoneg}{0.12\hsize}
-\newcommand{\sizethrg}{0.85\hsize}
+% \newcommand{\sizeoneg}{0.12\hsize} % see hpx2dm_idl.tex
+% \newcommand{\sizethrg}{0.85\hsize}
 
 \begin{facility}
 {This IDL facility provides a means to turn a \healpix  map into a image that
@@ -129,8 +129,8 @@ will appear in KML file {\tt GroundOverlay
 \mylink{idl:mollview:max}{MAX}=,
 \mylink{idl:mollview:min}{MIN}=, ]
 \item [\mylink{idl:mollview:nested}{/NESTED},
-\mylink{idl:mollview:no_dipole}{/NO\_DIPOLE},
-\mylink{idl:mollview:no_monopole}{/NO\_MONOPLE},
+% \mylink{idl:mollview:no_dipole}{/NO\_DIPOLE},
+% \mylink{idl:mollview:no_monopole}{/NO\_MONOPLE},
 \mylink{idl:mollview:offset}{OFFSET}=, ]
 \item [\mylink{idl:mollview:outline}{OUTLINE}=,
 \mylink{idl:mollview:polarization}{POLARIZATION}=,
@@ -162,6 +162,7 @@ file. Missing or unobserved pixels in the input data will be
 \begin{related}
   \begin{sulist}{} %%%% NOTE the ``extra'' brace here %%%%
   \item[{\ }] see \htmlref{cartview}{idl:cartview}
+  \item[\htmlref{hpx2dm}{idl:hpx2dm}] turns Healpix maps into DomeMaster images
   \end{sulist}
 \end{related}
 

@@ -116,7 +116,7 @@ if (n_params() lt 1 or n_params() gt 2) then begin
     print,'              JPEG=,'
     print,'              LOG=, '
     print,'              MAX=, MIN=, NESTED=, NOBAR=, NOLABELS=, NOPOSITION = '
-    print,'              NO_DIPOLE, NO_MONOPLE, '
+;    print,'              NO_DIPOLE, NO_MONOPLE, '
     print,'              OFFSET=, ONLINE=, OUTLINE=,'
     print,'              PNG=,'
     print,'              POLARIZATION=, PREVIEW=, '

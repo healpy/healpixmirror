@@ -1,0 +1,107 @@
+% -*- LaTeX -*-
+
+% PLEASE USE THIS FILE AS A TEMPLATE FOR THE DOCUMENTATION OF YOUR OWN
+% FACILITIES: IN PARTICULAR, IT IS IMPORTANT TO NOTE COMMENTS MADE IN
+% THE TEXT AND TO FOLLOW THIS ORDERING. THE FORMAT FOLLOWS ONE USED BY
+% THE COBE-DMR PROJECT.	
+% A.J. Banday, April 1999.
+
+
+
+
+\sloppy
+
+
+
+\title{\healpix IDL Facility User Guidelines}
+\docid{azeqview} \section[azeqview]{ }
+\label{idl:\thedocid}
+\docrv{Version 1.2}
+\author{Eric Hivon}
+\abstract{This document describes the \healpix facility azeqview.}
+
+
+
+\begin{facility}
+{This IDL facility provides a means to visualise an azimuthal equidistant projection 
+ of
+\healpix and COBE Quad-Cube maps in an IDL environment. 
+It also offers the possibility to
+generate GIF, JPEG, PNG and Postscript color-coded images of the projected map.
+The projected (but not color-coded) data can also be output in FITS files and
+IDL arrays.}
+{src/idl/visu/azeqview.pro}
+\end{facility}
+
+\begin{IDLformat}
+{AZEQVIEW, 
+\input{mollview_format_idl}
+}
+\end{IDLformat}
+
+\begin{qualifiers}
+  \begin{qulist}{} %%%% NOTE the ``extra'' brace here %%%%
+\item [{\  }] For a full list of qualifiers see \htmlref{mollview}{idl:mollview}
+  \end{qulist}
+\end{qualifiers}
+
+\begin{keywords}
+  \begin{kwlist}{} %%%% NOTE the ``extra'' brace here %%%%
+\item [{\  }] For a full list of keywords see \htmlref{mollview}{idl:mollview}
+  \end{kwlist}
+\end{keywords}
+
+
+\begin{codedescription}
+{\thedocid\ reads in a \healpix sky map in FITS format and generates an
+azimuthal equidistant projection of it, that can be visualized on the screen or
+exported in a GIF, JPEG, PNG or Postscript file. azeqview allows the selection of
+the coordinate system, point of projection, map size, color table, color bar inclusion,
+linear or log scaling, histogram equalised
+color scaling, maximum and 
+minimum range for the plot, plot-title {\it etc}. It also allows the representation of the
+polarization field. }
+\end{codedescription}
+
+%\include{mollview_idl_related}
+\begin{related}
+  \begin{sulist}{} %%%% NOTE the ``extra'' brace here %%%%
+  \item[{\ }] see \htmlref{mollview}{idl:mollview}
+  \item[\htmlref{hpx2dm}{idl:hpx2dm}] turns Healpix maps into DomeMaster images
+using \thedocid.
+  \end{sulist}
+\end{related}
+
+% \begin{example}
+% {
+% \begin{tabular}{ll} %%%% use this tabular format %%%%
+% azeqview, & \lq planck100GHZ-LFI.fits', rot=[160,-30], reso\_arcmin=2., \$ \\
+%           & pxsize = 500., title='Simulated Planck LFI Sky Map at 100GHz' \\
+% \end{tabular}
+% }
+% {azeqview reads in the map $\lq$ planck100GHZ-LFI.fits' and generates
+% an output 500$\times$500 image, with a resolution of 2 arcmin/pixel at
+% the center, in which
+% the temperature scale has been set to lie between $\pm$ 100 ($\mu$K), 
+% and the title $\lq$ Simulated Planck
+% LFI Sky Map at 100GHz' appended to the image. The map is centered on 
+% ($l=$160, $b=$-30) }
+% \end{example}
+
+% \begin{example}
+% {
+% \begin{tabular}{l} %%%% use this tabular format %%%%
+
+% map  = findgen(48) \\
+% triangle= create\_struct('coord','G','ra',[0,80,0],'dec',[40,45,65]) \\
+% azeqview,map,/online,res=45,graticule=[45,30],rot=[10,20,30],pysize=250,\$ \\
+% $\quad$	   title='Cartesian cylindrical (full sky)',subtitle='azeqview', \$ \\
+% $\quad$           outline=triangle \\
+% \end{tabular}
+% }
+% {makes a cartesian cylindrical projection of map (see Figure~\ref{fig:plot_visu}a on
+% page~\pageref{page:plot_visu}) after an arbitrary rotation, with a graticule grid
+% (with a 45$^o$ step in longitude and 30$^o$ in latitude) and an arbitrary triangular outline}
+% \end{example}
+
+\newpage

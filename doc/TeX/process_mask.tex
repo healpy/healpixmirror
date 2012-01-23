@@ -64,12 +64,12 @@ and the resulting new mask can be output.
 The output FITS files have the same ordering as the input mask
 (even though the processing is done in NESTED ordering).
 
-{\small{The algorithmic complexity of the distance calculation is expected to scale like $\propto \npix^p
+{\footnotesize{The algorithmic complexity of the distance calculation is expected to scale like $\propto \npix^p
 \propto\nside^{2p}$ with $p$ in $[1.5,2]$ depending on the mask topology, even
 though the code has been optimized to reduce the number of calculations by a
 factor $10^2$ to $10^3$ compared to a naive implementation, and the most
 computationally intensive loops are parallelized with OpenMP.
-On a 3.06GHz Intel Core 2 Duo, the distances on a $\nside=512$ Galactic + Point sources mask can be computed in a few
+On a 3.06GHz Intel Core 2 Duo, the distances on a \htmladdnormallink{$\nside=512$ Galactic + Point sources mask}{http://lambda.gsfc.nasa.gov/product/map/dr4/masks_get.cfm} can be computed in a few
 seconds, while a similar $\nside=2048$ mask takes a minute or less to process.
 For totally arbitrary masks though, the return times can be multiplied by as
 much as 10.}}
@@ -93,7 +93,15 @@ much as 10.}}
   \begin{sulist}{} %%%% NOTE the ``extra'' brace here %%%%
   \item[mollview] IDL routine to view the input and output masks and the angular
 distance map.
-%%%  \item[\htmlref{anafast}{fac:anafast}] This \healpix facility can analyse an up/downgraded map.
+%%%  \item[\htmlref{anafast}{fac:anafast}] This \healpix facility can analyse an
+%%up/downgraded map.
+  \item[mask\_tools] F90 module containing the routines   
+	{\tt dist2holes\_nest}, %{sub:dist2holes_nest}
+	{\tt fill\_holes\_nest}, %{sub:fill_holes_nest}
+	{\tt maskborder\_nest}, %{sub:maskborder_nest}
+	{\tt size\_holes\_nest}  %{sub:size_holes_nest}
+used in \thedocid\ and
+described in the \linklatexhtml{''Fortran Subroutines''}{subroutines.pdf}{subroutines.htm} document
   \end{sulist}
 \end{support}
 
@@ -108,7 +116,7 @@ process\_mask runs in interactive mode, self-explanatory.
 }
 \end{examples}
 
-\vfill\newpage
+%\vfill\newpage
 
 \begin{examples}{2}
 {
@@ -140,19 +148,19 @@ the holes containing fewer than 100 pixels, and outputs the result in '/tmp/dist
   \end{relist}
 \end{release}
 
-\begin{messages}
-{
-\begin{tabular}{p{0.25\hsize} p{0.1\hsize} p{0.35\hsize}} \hline  
-  \textbf{Message} & \textbf{Severity} & \textbf{Text} \\ \hline
-                   &                   &   \\ %%% for presentation
-can not allocate memory for array xxx &  Fatal & You do not have
-                   sufficient system resources to run this
-                   facility at the map resolution you required. 
-  Try a lower map resolution.  \\ 
-                   &                   &   \\ \hline %%% for presentation
-\end{tabular}
-} 
-\end{messages}
+% \begin{messages}
+% {
+% \begin{tabular}{p{0.25\hsize} p{0.1\hsize} p{0.35\hsize}} \hline  
+%   \textbf{Message} & \textbf{Severity} & \textbf{Text} \\ \hline
+%                    &                   &   \\ %%% for presentation
+% can not allocate memory for array xxx &  Fatal & You do not have
+%                    sufficient system resources to run this
+%                    facility at the map resolution you required. 
+%   Try a lower map resolution.  \\ 
+%                    &                   &   \\ \hline %%% for presentation
+% \end{tabular}
+% } 
+% \end{messages}
 
 \rule{\hsize}{2mm}
 

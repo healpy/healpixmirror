@@ -2,6 +2,7 @@ pro hpx2dm, file_in, select_in, $
                      _extra = other_kwds, $
                      gif = gif, $ ; not allowed
                      help = help, $
+                     preview = preview, $
                      pxsize = pxsize
 ;+
 ; NAME:
@@ -10,13 +11,14 @@ pro hpx2dm, file_in, select_in, $
 ; PURPOSE:
 ;    Turns a Healpix data set into DomeMaster compliant image
 ;   (azimuthal equidistant projection of the half-sphere)
-;   in PNG or lossless JPEG file
+;   in a PNG or lossless JPEG file.
+;   See eg http://fulldome.ryanwyatt.net/fulldome_domemasterSpec_v05.pdf
 ;
 ; CATEGORY:
 ;
 ; CALLING SEQUENCE:
-;   Hpx2dm, file [,select ...]
-;   + all remaining CARTVIEW's keywords 
+;   Hpx2dm, file [,select, COORD=, JPEG=, PNG=, PREVIEW=, PXSIZE=, ROT= ...
+;   + all remaining AZEQVIEW's keywords (except CROP, HALF_SKY, PNG, RESO_ARCMIN, WINDOW)]
 ;
 ;
 ; INPUTS:
@@ -39,44 +41,41 @@ pro hpx2dm, file_in, select_in, $
 ;                            containing the data, starting with 1
 ;
 ; KEYWORD PARAMETERS:
-;
+;      COORD=
+;      JPEG=
+;      PNG=
+;      PREVIEW=
+;      PXSIZE=  number of pixels in each dimension. default=1024
+;      ROT=
 ;
 ;
 ; OUTPUTS:
-;
-;
+;       none
 ;
 ; OPTIONAL OUTPUTS:
-;
-;
+;       none
 ;
 ; COMMON BLOCKS:
-;
-;
+;       none
 ;
 ; SIDE EFFECTS:
-;
-;
+;       creates a PNG or JPEG file and attempts to visualize it
 ;
 ; RESTRICTIONS:
-;
-;
+;       none?
 ;
 ; PROCEDURE:
-;
-;
+;       calls AzEqView
 ;
 ; EXAMPLE:
 ;
-;
-;
 ; MODIFICATION HISTORY:
-;
+;      2012-01-19: creation
 ;-
 
 routine = 'HPX2DM'
-syntax = [routine+', File [, Select ',$
-          '       <+ most of CARTVIEW''s keywords> ]']
+syntax = [routine+', File [,select, COORD=, JPEG=, PNG=, PREVIEW=, PXSIZE=, ROT= ...',$
+print,'             + most of AZEQVIEW''s keywords (except CROP, HALF_SKY, PNG, RESO_ARCMIN, WINDOW)]'
 
 if (keyword_set(help)) then begin
     doc_library,routine
@@ -89,6 +88,11 @@ if (n_params() eq 0) then begin
     print,'   for more help.'
     return
 endif
+
+if keyword_set(gif) then begin
+    print,syntax,format='(a)'
+    message,' GIF output not allowed.'
+endif
 ;-----------------
 
 ; forced : CROP, HALF_SKY, RESO_ARCMIN, WINDOW
@@ -97,6 +101,7 @@ reso_arcmin = 180.d0 * 60.d0 / mypxsize
 azeqview, file_in, select_in, $
           crop = 1, $
           half_sky = 1, $
+          preview = preview, $
           pxsize = mypxsize, $
           reso_arcmin = reso_arcmin, $
           _strict_extra = other_kwds, $
