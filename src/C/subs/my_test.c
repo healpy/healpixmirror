@@ -1,9 +1,9 @@
 /* -----------------------------------------------------------------------------
  *
  *  Copyright (C) 1997-2010 Krzysztof M. Gorski, Eric Hivon,
- *                          Benjamin D. Wandelt, Anthony J. Banday, 
- *                          Matthias Bartelmann, 
- *                          Reza Ansari & Kenneth M. Ganga 
+ *                          Benjamin D. Wandelt, Anthony J. Banday,
+ *                          Matthias Bartelmann,
+ *                          Reza Ansari & Kenneth M. Ganga
  *
  *
  *  This file is part of HEALPix.
@@ -25,7 +25,7 @@
  *  For more information about HEALPix see http://healpix.jpl.nasa.gov
  *
  *----------------------------------------------------------------------------- */
-/* test_chealpix.c 
+/* test_chealpix.c
  *
  */
 
@@ -54,20 +54,20 @@ int main(void) {
     ns1  = npix2nside(npix);
     printf("%ld %ld %ld %ld\n",pp,nside,ns1,npix);
   }
-  */  
-  
+  */
+
   theta = 0.5;
   phi = -0.4;
   ang2vec(theta, phi, vec);
-  vec2ang(vec, &th1, &ph1); 
-  printf("%f %f, %f %f\n",theta,th1,phi,ph1); 
+  vec2ang(vec, &th1, &ph1);
+  printf("%f %f, %f %f\n",theta,th1,phi,ph1);
 
-  
+
   theta = -0.1;
 /*    theta = 5.; */
 /*    ang2vec(theta, phi, vec); */
 /*    printf("%f %f %f\n",vec[0],vec[1],vec[2]); */
-  
+
 
 /*    printf("dpix: %ld\n", dpix); */
 /*    for (ipix = 0; ipix < npix; ipix +=dpix) { */

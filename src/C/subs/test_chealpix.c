@@ -1,9 +1,9 @@
 /* -----------------------------------------------------------------------------
  *
  *  Copyright (C) 1997-2010 Krzysztof M. Gorski, Eric Hivon,
- *                          Benjamin D. Wandelt, Anthony J. Banday, 
- *                          Matthias Bartelmann, 
- *                          Reza Ansari & Kenneth M. Ganga 
+ *                          Benjamin D. Wandelt, Anthony J. Banday,
+ *                          Matthias Bartelmann,
+ *                          Reza Ansari & Kenneth M. Ganga
  *
  *
  *  This file is part of HEALPix.
@@ -25,7 +25,7 @@
  *  For more information about HEALPix see http://healpix.jpl.nasa.gov
  *
  *----------------------------------------------------------------------------- */
-/* test_chealpix.c 
+/* test_chealpix.c
  *
  */
 
@@ -39,7 +39,7 @@
 int main(void) {
 
   double theta, phi;
-  long   nside = 8192; 
+  long   nside = 8192;
 /*    long   nside = 64; */
   long  ipix, jpix, npix, dpix;
 /*    float *map; */
@@ -47,7 +47,7 @@ int main(void) {
   /* Find the number of pixels in the full map */
   npix = nside2npix(nside);
   printf("Number of pixels in full map: %ld\n", npix);
-  
+
   dpix = npix/10000L;
   printf("dpix: %ld\n", dpix);
   for (ipix = 0; ipix < npix; ipix += dpix) {
