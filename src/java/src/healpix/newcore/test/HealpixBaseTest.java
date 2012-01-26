@@ -296,7 +296,6 @@ public class HealpixBaseTest extends TestCase {
       }
     }
 
-
   public void test() throws Exception
     {
     int nside=256;
@@ -312,4 +311,5 @@ public class HealpixBaseTest extends TestCase {
       assertEquals ("pixel mismatch_ringnestring",i,base.ring2nest(base.nest2ring(i)));
       }
     }
+
   }

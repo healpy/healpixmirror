@@ -31,6 +31,9 @@ public abstract class HealpixProc extends HealpixBase
   {
   static final HealpixBase[] bn=new HealpixBase[HealpixBase.order_max+1],
                              br=new HealpixBase[HealpixBase.order_max+1];
+  static final double[] mpr =new double[HealpixBase.order_max+1],
+                        cmpr=new double[HealpixBase.order_max+1],
+                        smpr=new double[HealpixBase.order_max+1];
 
   static
     {
@@ -39,6 +42,9 @@ public abstract class HealpixProc extends HealpixBase
         {
         bn[i]=new HealpixBase(1L<<i, Scheme.NESTED);
         br[i]=new HealpixBase(1L<<i, Scheme.RING);
+        mpr[i]=bn[i].maxPixrad();
+        cmpr[i]=FastMath.cos(mpr[i]);
+        smpr[i]=FastMath.sin(mpr[i]);
         }
       }
     catch (Exception Ex) {/*doesn't happen*/}

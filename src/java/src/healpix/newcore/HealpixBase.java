@@ -879,18 +879,39 @@ public class HealpixBase extends HealpixTables
       double[] crpdr = new double[omax+1];
       double[] crmdr = new double[omax+1];
 
-      double cosrad=FastMath.cos(radius);
+      double cosrad=FastMath.cos(radius),
+             sinrad=FastMath.sin(radius);
       for (int o=0; o<=omax; o++) // prepare data at the required orders
         {
-        double dr=HealpixProc.bn[o].maxPixrad(); // safety distance
-        crpdr[o] = (radius+dr>Math.PI) ? -1. : FastMath.cos(radius+dr);
-        crmdr[o] = (radius-dr<0.) ?  1. : FastMath.cos(radius-dr);
+        double dr = HealpixProc.mpr[o]; // safety distance
+        double cdr = HealpixProc.cmpr[o];
+        double sdr = HealpixProc.smpr[o];
+        crpdr[o] = (radius+dr>Math.PI) ? -1. : cosrad*cdr-sinrad*sdr;
+        crmdr[o] = (radius-dr<0.)      ?  1. : cosrad*cdr+sinrad*sdr;
         }
 
       pstack stk=new pstack(12+3*omax);
-      for (int i=0; i<12; i++) { // insert the 12 base pixels in reverse order
+
+/* Still experimental, therefore disabled
+      Fxyf fxyf=new Fxyf(vptg);
+      for (int o=order; o>=0; --o)
+        {
+        long nsd=HealpixProc.bn[o].nside;
+        double fx=nsd*fxyf.fx-(int)(nsd*fxyf.fx),
+               fy=nsd*fxyf.fy-(int)(nsd*fxyf.fy);
+        double fmin = Math.min(Math.min(fx,fy),Math.min(1-fx,1-fy));
+        if (fmin*0.7>nsd*radius)
+          {
+          System.out.println("contained completely at order "+o);
+          stk.push(HealpixProc.bn[o].vec2pix(vptg),o);
+          break;
+          }
+        }
+      if (stk.size()==0)
+*/
+
+      for (int i=0; i<12; i++) // insert the 12 base pixels in reverse order
         stk.push(11-i,0);
-      }
 
       while (stk.size()>0) {// as long as there are pixels on the stack
         // pop current pixel number and order from the stack
@@ -1044,9 +1065,8 @@ public class HealpixBase extends HealpixTables
         }
 
       pstack stk=new pstack(12+3*omax);
-      for (int i=0; i<12; i++) { // insert the 12 base pixels in reverse order
+      for (int i=0; i<12; i++) // insert the 12 base pixels in reverse order
         stk.push(11-i,0);
-      }
 
       while (stk.size()>0) { // as long as there are pixels on the stack
         // pop current pixel number and order from the stack
