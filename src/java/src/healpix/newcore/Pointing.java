@@ -24,7 +24,7 @@ package healpix.newcore;
 
     @copyright 2011 Max-Planck-Society
     @author Martin Reinecke */
-final public class Pointing
+public class Pointing
   {
   /** Colatitude in radians (0 is North Pole; Pi is South Pole) */
   public double theta;

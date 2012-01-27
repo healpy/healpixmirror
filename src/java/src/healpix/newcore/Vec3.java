@@ -28,7 +28,7 @@ package healpix.newcore;
 
     @copyright (C) 2011 Max-Planck-Society
     @author Martin Reinecke */
-public final class Vec3
+public class Vec3
   {
   public double x, y, z;
 
