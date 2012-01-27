@@ -129,7 +129,7 @@ public class HealpixProcTest extends TestCase {
         {
         Pointing ptg = random_dir (rng);
         double rad = Math.PI * rng.nextDouble();
-        RangeSet rs = HealpixProc.queryDiscRing(o,ptg,rad,false);
+        RangeSet rs = HealpixProc.queryDiscRing(o,ptg,rad);
         Vec3 vptg = new Vec3(ptg);
         double cosrad=Math.cos(rad);
         for (int i=0; i<rs.size(); ++i)
@@ -159,13 +159,13 @@ public class HealpixProcTest extends TestCase {
         {
         Pointing ptg = random_dir (rng);
         double rad = Math.PI * rng.nextDouble();
-        RangeSet rs = HealpixProc.queryDiscRing(o,ptg,rad,false);
+        RangeSet rs = HealpixProc.queryDiscRing(o,ptg,rad);
         long nval = rs.nval();
-        rs = HealpixProc.queryDiscNest(o,ptg,rad,false);
+        rs = HealpixProc.queryDiscNest(o,ptg,rad);
         assertEquals("queryDisc problem 1", nval,rs.nval());
-        rs = HealpixProc.queryDiscRing(o,ptg,rad,true);
+        rs = HealpixProc.queryDiscInclusiveRing(o,ptg,rad,4);
         long nv1 = rs.nval();
-        rs = HealpixProc.queryDiscNest(o,ptg,rad,true);
+        rs = HealpixProc.queryDiscInclusiveNest(o,ptg,rad,4);
         long nv2 = rs.nval();
         assertTrue("queryDisc problem 2", nv1>=nv2);
         assertTrue("queryDisc problem 3", nv2>=nval);
@@ -181,13 +181,13 @@ public class HealpixProcTest extends TestCase {
     corner[1]=new Pointing(new Vec3(1,1,-0.3));
     corner[2]=new Pointing(new Vec3(0.01,1,0.01));
     corner[3]=new Pointing(new Vec3(0.01,0.01,1));
-    RangeSet lrs=HealpixProc.queryPolygonNest(10,corner,false);
+    RangeSet lrs=HealpixProc.queryPolygonNest(10,corner);
     assertEquals("QueryPolygon problem",lrs.nval(),1696714);
-    lrs=HealpixProc.queryPolygonNest(10,corner,true);
+    lrs=HealpixProc.queryPolygonInclusiveNest(10,corner,4);
     assertEquals("QueryPolygon problem",lrs.nval(),1700206);
-    lrs=HealpixProc.queryPolygonRing(10,corner,false);
+    lrs=HealpixProc.queryPolygonRing(10,corner);
     assertEquals("QueryPolygon problem",lrs.nval(),1696714);
-    lrs=HealpixProc.queryPolygonRing(10,corner,true);
+    lrs=HealpixProc.queryPolygonInclusiveRing(10,corner,4);
     assertEquals("QueryPolygon problem",lrs.nval(),1700206);
     }
 
@@ -205,13 +205,13 @@ public class HealpixProcTest extends TestCase {
         corner[0]=random_dir(rng);
         corner[1]=random_dir(rng);
         corner[2]=random_dir(rng);
-        RangeSet rs = HealpixProc.queryPolygonRing(o,corner,false);
+        RangeSet rs = HealpixProc.queryPolygonRing(o,corner);
         long nval = rs.nval();
-        rs = HealpixProc.queryPolygonNest(o,corner,false);
+        rs = HealpixProc.queryPolygonNest(o,corner);
         assertEquals("queryPolygon problem 1", nval,rs.nval());
-        rs = HealpixProc.queryPolygonRing(o,corner,true);
+        rs = HealpixProc.queryPolygonInclusiveRing(o,corner,4);
         long nv1 = rs.nval();
-        rs = HealpixProc.queryPolygonNest(o,corner,true);
+        rs = HealpixProc.queryPolygonInclusiveNest(o,corner,4);
         long nv2 = rs.nval();
         assertTrue("queryPolygon problem 2", nv1>=nv2);
         assertTrue("queryPolygon problem 3", nv2>=nval);

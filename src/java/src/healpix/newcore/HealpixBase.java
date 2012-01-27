@@ -32,8 +32,6 @@ import java.util.Arrays;
     @author Martin Reinecke */
 public class HealpixBase extends HealpixTables
   {
-  private int FACT=4, OPLUS=2;
-
   protected final class Xyf
     {
     public int ix, iy, face;
@@ -757,25 +755,20 @@ public class HealpixBase extends HealpixTables
     return true;
     }
 
-  /** Returns a range set of pixels whose centers lie within a given disk on the
-      sphere (if {@code inclusive==false}), or which overlap with this disk
-      (if {@code inclusive==true}).<p>
-      This method is more efficient in the RING scheme, but the
-      algorithm used for {@code inclusive==true} returns fewer false positives
-      in the NESTED scheme.
-      @param ptg the angular coordinates of the disk center
-      @param radius the radius (in radians) of the disk
-      @param inclusive if {@code false}, return the exact set of pixels whose
-        pixels centers lie within the disk; if {@code true}, return all pixels
-        that overlap with the disk, and maybe a few more.
-      @return an object containing the indices of all pixels within the disk */
-  public RangeSet queryDisc(Pointing ptg, double radius, boolean inclusive)
+  private RangeSet queryDiscInternal(Pointing ptg, double radius, int fact)
     throws Exception
     {
+    boolean inclusive=(fact!=0);
     RangeSet pixset = new RangeSet();
     if (scheme==Scheme.RING)
       {
-      int fct = inclusive ? (int)Math.min((long)FACT,(1L<<order_max)/nside) : 1;
+      int fct=1;
+      if (inclusive)
+        {
+        HealpixUtils.check ((1L<<order_max)/nside>=fact,
+          "invalid oversampling factor");
+        fct = fact;
+        }
       HealpixBase b2=null;
       double rsmall,rbig;
       if (fct>1)
@@ -871,7 +864,14 @@ public class HealpixBase extends HealpixTables
       if (radius>=Math.PI) // disk covers the whole sphere
         { pixset.append(0,npix); return pixset; }
 
-      int oplus=inclusive ? OPLUS : 0;
+      int oplus=0;
+      if (inclusive)
+        {
+        HealpixUtils.check ((1L<<order_max)>=fact,"invalid oversampling factor");
+        HealpixUtils.check ((fact&(fact-1))==0,
+          "oversampling factor must be a power of 2");
+        oplus=HealpixUtils.ilog2(fact);
+        }
       int omax=Math.min(order_max,order+oplus); // the order up to which we test
 
       Vec3 vptg = new Vec3(ptg);
@@ -934,16 +934,46 @@ public class HealpixBase extends HealpixTables
     return pixset;
     }
 
+  /** Returns a range set of pixels whose centers lie within a given disk. <p>
+      This method is more efficient in the RING scheme.
+      @param ptg the angular coordinates of the disk center
+      @param radius the radius (in radians) of the disk
+      @return the requested set of pixel number ranges  */
+  public RangeSet queryDisc(Pointing ptg, double radius)
+    throws Exception
+    { return queryDiscInternal (ptg, radius, 0); }
+  /** Returns a range set of pixels which overlap with a given disk. <p>
+      This method is more efficient in the RING scheme. <p>
+      This method may return some pixels which don't overlap with
+      the polygon at all. The higher {@code fct} is chosen, the fewer false
+      positives are returned, at the cost of increased run time.
+      @param ptg the angular coordinates of the disk center
+      @param radius the radius (in radians) of the disk
+      @param fact The overlapping test will be done at the resolution
+        {@code fact*nside}. For NESTED ordering, {@code fact} must be a power
+        of 2, else it can be any positive integer. A typical choice would be 4.
+      @return the requested set of pixel number ranges  */
+  public RangeSet queryDiscInclusive (Pointing ptg, double radius, int fact)
+    throws Exception
+    { return queryDiscInternal (ptg, radius, fact); }
+
   private RangeSet queryMultiDisc (Vec3[] norm, double[] rad,
-    boolean inclusive) throws Exception
+    int fact) throws Exception
     {
+    boolean inclusive = (fact!=0);
     int nv=norm.length;
     HealpixUtils.check(nv==rad.length,"inconsistent input arrays");
     RangeSet res = new RangeSet();
 
     if (scheme==Scheme.RING)
       {
-      int fct = inclusive ? (int)Math.min((long)FACT,(1L<<order_max)/nside) : 1;
+      int fct=1;
+      if (inclusive)
+        {
+        HealpixUtils.check (((1L<<order_max)/nside)>=fact,
+          "invalid oversampling factor");
+        fct = fact;
+        }
       HealpixBase b2=null;
       double rpsmall,rpbig;
       if (fct>1)
@@ -1047,8 +1077,16 @@ public class HealpixBase extends HealpixTables
       }
     else // scheme == NEST
       {
-      int oplus=inclusive ? OPLUS : 0;
-      int omax=Math.min(order_max,order+oplus); // the order up to which we test
+      int oplus = 0;
+      if (inclusive)
+        {
+        HealpixUtils.check ((1L<<(order_max-order))>=fact,
+          "invalid oversampling factor");
+        HealpixUtils.check ((fact&(fact-1))==0,
+          "oversampling factor must be a power of 2");
+        oplus=HealpixUtils.ilog2(fact);
+        }
+      int omax=order+oplus; // the order up to which we test
 
       // TODO: ignore all disks with radius>=pi
 
@@ -1091,20 +1129,10 @@ public class HealpixBase extends HealpixTables
     return res;
     }
 
-  /** Returns a range set of pixels whose centers lie within the convex
-      polygon defined by the {@code vertex} array (if
-      {@code inclusive==false}), or which overlap with this polygon
-      (if {@code inclusive==true}).
-      @param vertex an array containing the vertices of the requested convex
-        polygon.
-      @param inclusive if {@code false}, return the exact set of pixels whose
-        pixel centers lie within the polygon; if {@code true}, return all
-        pixels that overlap with the polygon, and maybe a few more.
-      @return an object containing the indices of all pixels within the
-        polygon */
-  public RangeSet queryPolygon (Pointing[] vertex, boolean inclusive)
+  private RangeSet queryPolygonInternal (Pointing[] vertex, int fact)
     throws Exception
     {
+    boolean inclusive = (fact!=0);
     int nv=vertex.length;
     int ncirc = inclusive ? nv+1 : nv;
     HealpixUtils.check(nv>=3,"not enough vertices in polygon");
@@ -1132,8 +1160,31 @@ public class HealpixBase extends HealpixTables
       normal[nv]=cf.center;
       rad[nv]=FastMath.acos(cf.cosrad);
       }
-    return queryMultiDisc(normal,rad,inclusive);
+    return queryMultiDisc(normal,rad,fact);
     }
+  /** Returns a range set of pixels whose centers lie within the convex
+      polygon defined by the {@code vertex} array. <p>
+      This method is more efficient in the RING scheme.
+      @param vertex an array containing the vertices of the requested convex
+        polygon.
+      @return the requested set of pixel number ranges  */
+  public RangeSet queryPolygon (Pointing[] vertex) throws Exception
+    { return queryPolygonInternal (vertex, 0); }
+  /** Returns a range set of pixels that overlap with the convex
+      polygon defined by the {@code vertex} array. <p>
+      This method is more efficient in the RING scheme.<p>
+      This method may return some pixels which don't overlap with
+      the polygon at all. The higher {@code fct} is chosen, the fewer false
+      positives are returned, at the cost of increased run time.
+      @param vertex an array containing the vertices of the requested convex
+        polygon.
+      @param fact The overlapping test will be done at the resolution
+        {@code fact*nside}. For NESTED ordering, {@code fact} must be a power
+        of 2, else it can be any positive integer. A typical choice would be 4.
+      @return the requested set of pixel number ranges  */
+  public RangeSet queryPolygonInclusive (Pointing[] vertex, int fact)
+    throws Exception
+    { return queryPolygonInternal (vertex, fact); }
 
   private void check_pixel (int o, int omax, int zone,
     RangeSet pixset, long pix, pstack stk, boolean inclusive)

@@ -221,7 +221,7 @@ public class HealpixBasePerfTest extends TestCase
     long tstart = System.nanoTime();
     for (int m=0; m<1000; ++m)
       {
-      RangeSet lrs=base.queryDisc(new Pointing(new Vec3(1,0,0)),Constants.halfpi/9.,false);
+      RangeSet lrs=base.queryDisc(new Pointing(new Vec3(1,0,0)),Constants.halfpi/9.);
       dummy+=lrs.size();
       ++cnt;
       }
@@ -244,7 +244,7 @@ public class HealpixBasePerfTest extends TestCase
     long tstart = System.nanoTime();
     for (int m=0; m<1000; ++m)
       {
-      RangeSet lrs=base.queryPolygon(corner,false);
+      RangeSet lrs=base.queryPolygon(corner);
       dummy+=lrs.size();
       ++cnt;
       }

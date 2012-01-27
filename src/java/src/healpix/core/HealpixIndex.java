@@ -441,7 +441,9 @@ public class HealpixIndex extends HealpixBase implements Serializable {
 
 		Scheme sbak=scheme;
 		setScheme ((nest==0) ? Scheme.RING : Scheme.NESTED);
-		LongRangeSet res = toLRS(super.queryDisc(new Pointing(vec),radius,(inclusive!=0)));
+		LongRangeSet res= toLRS((inclusive!=0) ?
+                    super.queryDiscInclusive(new Pointing(vec),radius,4)
+                  : super.queryDisc(new Pointing(vec),radius));
 		setScheme (sbak);
 		return res;
 	}
@@ -455,7 +457,9 @@ public class HealpixIndex extends HealpixBase implements Serializable {
 	 */
 	public LongRangeSet queryDisc(SpatialVector vec,
 			double radius, boolean inclusive) throws Exception {
-		return toLRS(queryDisc(new Pointing(vec),radius,inclusive));
+		return toLRS(inclusive ?
+		    queryDiscInclusive(new Pointing(vec),radius,4)
+                  : queryDisc(new Pointing(vec),radius));
 	}
 
 
@@ -512,7 +516,9 @@ public class HealpixIndex extends HealpixBase implements Serializable {
 		Pointing[] vertex = new Pointing[vlist1.size()];
 		for (int i=0; i<vlist1.size(); ++i)
 			vertex[i]=new Pointing((Vec3)vlist1.get(i));
-		LongRangeSet res = toLRS(super.queryPolygon(vertex,(inclusive!=0)));
+		LongRangeSet res = toLRS((inclusive!=0) ?
+		    super.queryPolygonInclusive(vertex,4)
+		  : super.queryPolygon(vertex));
 		setScheme (sbak);
 		return res;
 	}
@@ -561,7 +567,9 @@ public class HealpixIndex extends HealpixBase implements Serializable {
 		vertex[0] = new Pointing(v1);
 		vertex[1] = new Pointing(v2);
 		vertex[2] = new Pointing(v3);
-		LongRangeSet res = toLRS(super.queryPolygon(vertex,(inclusive!=0)));
+		LongRangeSet res = toLRS((inclusive!=0)?
+		    super.queryPolygonInclusive(vertex,4)
+		  : super.queryPolygon(vertex));
 		setScheme (sbak);
 		return res;
 	}

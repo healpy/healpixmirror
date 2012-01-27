@@ -92,19 +92,31 @@ public abstract class HealpixProc extends HealpixBase
     throws Exception
     { return br[order].boundaries(pix,step); }
 
-  public static RangeSet queryDiscNest(int order, Pointing ptg, double radius,
-    boolean inclusive) throws Exception
-    { return bn[order].queryDisc(ptg,radius,inclusive); }
-  public static RangeSet queryDiscRing(int order, Pointing ptg, double radius,
-    boolean inclusive) throws Exception
-    { return br[order].queryDisc(ptg,radius,inclusive); }
+  public static RangeSet queryDiscNest(int order, Pointing ptg, double radius)
+    throws Exception
+    { return bn[order].queryDisc(ptg,radius); }
+  public static RangeSet queryDiscRing(int order, Pointing ptg, double radius)
+    throws Exception
+    { return br[order].queryDisc(ptg,radius); }
+  public static RangeSet queryDiscInclusiveNest(int order, Pointing ptg,
+    double radius, int fact) throws Exception
+    { return bn[order].queryDiscInclusive(ptg,radius,fact); }
+  public static RangeSet queryDiscInclusiveRing(int order, Pointing ptg,
+    double radius, int fact) throws Exception
+    { return br[order].queryDiscInclusive(ptg,radius,fact); }
 
-  public static RangeSet queryPolygonNest(int order, Pointing[] vertex,
-    boolean inclusive) throws Exception
-    { return bn[order].queryPolygon(vertex,inclusive); }
-  public static RangeSet queryPolygonRing(int order, Pointing[] vertex,
-    boolean inclusive) throws Exception
-    { return br[order].queryPolygon(vertex,inclusive); }
+  public static RangeSet queryPolygonNest(int order, Pointing[] vertex)
+    throws Exception
+    { return bn[order].queryPolygon(vertex); }
+  public static RangeSet queryPolygonRing(int order, Pointing[] vertex)
+    throws Exception
+    { return br[order].queryPolygon(vertex); }
+  public static RangeSet queryPolygonInclusiveNest(int order, Pointing[] vertex,
+    int fact) throws Exception
+    { return bn[order].queryPolygonInclusive(vertex,fact); }
+  public static RangeSet queryPolygonInclusiveRing(int order, Pointing[] vertex,
+    int fact) throws Exception
+    { return br[order].queryPolygonInclusive(vertex,fact); }
 
   public static RangeSet queryStripNest(int order, double theta1, double theta2,
     boolean inclusive) throws Exception
