@@ -25,32 +25,40 @@ angular distance {\tt Radius} from a defined center.
 \end{facility}
 
 \begin{IDLformat}
-{\facname, Nside, Vector0, Radius, Listpix, [Nlist, DEG=, NESTED=, INCLUSIVE=]}
+{\facname, 
+\mylink{idl:query_disc:nside}{Nside}, 
+\mylink{idl:query_disc:vector0}{Vector0}, 
+\mylink{idl:query_disc:radius}{Radius}, 
+\mylink{idl:query_disc:listpix}{Listpix}, 
+[\mylink{idl:query_disc:nlist}{Nlist}, 
+\mylink{idl:query_disc:deg}{/DEG}, 
+\mylink{idl:query_disc:nested}{/NESTED}, 
+\mylink{idl:query_disc:inclusive}{/INCLUSIVE}]}
 \end{IDLformat}
 
 \begin{qualifiers}
   \begin{qulist}{} %%%% NOTE the ``extra'' brace here %%%%
-    \item[Nside] \healpix resolution parameter used to index the pixel list (scalar integer)
-    \item[Vector0] position vector of the disc center (3 elements vector)
+    \item[\mytargetb{idl:query_disc:nside}{Nside}] \healpix resolution parameter used to index the pixel list (scalar integer)
+    \item[\mytargetb{idl:query_disc:vector0}{Vector0}] position vector of the disc center (3 elements vector)
           NB : the norm of Vector0 does not have to be one, what is
           consider is the intersection of the sphere with the line of
           direction Vector0.
-    \item[Radius] radius of the disc (in radians, unless DEG is set), (scalar
+    \item[\mytargetb{idl:query_disc:radius}{Radius}] radius of the disc (in radians, unless \mylink{idl:query_disc:deg}{DEG} is set), (scalar
     real)
-    \item[Listpix] on output: list of ordered index for the pixels found 
+    \item[\mytargetb{idl:query_disc:listpix}{Listpix}] on output: list of ordered index for the pixels found 
     within a radius Radius of the position defined by vector0. The RING numbering
-    scheme is used unless the keyword {\tt NESTED} is set.
+    scheme is used unless the keyword \mylink{idl:query_disc:nested}{{\tt NESTED}} is set.
      (=-1 if the radius is too small and no pixel is found)
-    \item[Nlist] on output: number of pixels in Listpix (=0 if no pixel is found).
+    \item[\mytargetb{idl:query_disc:nlist}{Nlist}] on output: number of pixels in Listpix (=0 if no pixel is found).
   \end{qulist}
 \end{qualifiers}
 
 \begin{keywords}
   \begin{kwlist}{} %%% extra brace
-    \item[DEG =] if set {\tt Radius} is in degrees instead of radians
-    \item[NESTED =] if set, the output list uses the NESTED numbering scheme
+    \item[\mytargetb{idl:query_disc:deg}{/DEG}] if set \mylink{idl:query_disc:radius}{{\tt Radius}} is in degrees instead of radians
+    \item[\mytargetb{idl:query_disc:nested}{/NESTED}] if set, the output list uses the NESTED numbering scheme
     instead of the default RING
-    \item[INCLUSIVE = ] if set, all the pixels overlapping (even partially)
+    \item[\mytargetb{idl:query_disc:inclusive}{/INCLUSIVE}] if set, all the pixels overlapping (even partially)
                    with the disc are listed, otherwise only those whose
                    center lies within the disc are listed
   \end{kwlist}

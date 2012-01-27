@@ -95,19 +95,22 @@ commands {\tt hidl} or {\tt hidlde} which are aliases defined in the
 \healpix profile created during the installation process 
 for the package.
 
-\section{Changes between release 2.0 and 2.30}
-Several routines have been added or improved since version 2.0, as listed below.
-Note that thanks to the newer {\tt IDL-astron} library, FITS read/write routines
-in IDL-Healpix routines can now deal with {\bf FITS files larger than 2GB} (on architectures supporting 64bit
-addressing).\\
-Using 64 bit integers available since version 5.2 of IDL the maximum resolution parameter Nside supported has increased
-from $2^{13}=8192$ to $2^{29}=536870912$, corresponding to $3.46\ 10^{18}$
-pixels on the sphere.
+\section{Changes between release 2.20 and 3.0}
+Several routines have been added or improved since version 2.20, as listed below.
 
 \begin{itemize}
 
-\item Latest edition (versions 2.30)
+\item Latest edition (version 3.0)
 \begin{itemize}
+	\item the pixel query routines 
+\htmlref{{\tt query\_triangle}}{idl:query_triangle}, 
+\htmlref{{\tt query\_polygon}}{idl:query_polygon}, 
+and in particular \htmlref{{\tt query\_disc}}{idl:query_disc}, 
+have been improved and will return fewer
+false positive pixels in the \mylink{idl:query_disc:inclusive}{{\em inclusive}} mode
+	\item improved accuracy of the co-latitude calculation in the vicinity
+of the poles for high resolution in \htmlref{{\tt nest2ring, ring2nest,
+pix2ang\_*, pix2vec\_*, $\ldots$}}{idl:pix_tools}
 	\item \htmlref{{\tt fits2cl}}{idl:fits2cl}: addition of \mylink{idl:fits2cl:wmap7}{{\tt WMAP7}} keyword
 to read best fit $C(l)$ model to WMAP 7yr data.
 	\item \htmlref{{\tt cartview, gnomview, mollview,
@@ -121,7 +124,27 @@ DomeMaster images of \healpix maps that can be projected on planetariums.
 \mylink{idl:mollview:stagger}{\tt STAGGER} keyword to overplot staggered
 spheres (with a twist) in order to detect periodic boundary conditions on the sky
 \end{itemize}
+\end{itemize}
 
+\section{Changes between release 2.0 and 2.20}
+Several routines have been added or improved since version 2.0, as listed below.
+Note that thanks to the newer {\tt IDL-astron} library, FITS read/write routines
+in IDL-Healpix routines can now deal with {\bf FITS files larger than 2GB} (on architectures supporting 64bit
+addressing).\\
+Using 64 bit integers available since version 5.2 of IDL the maximum resolution parameter Nside supported has increased
+from $2^{13}=8192$ to $2^{29}=536870912$, corresponding to $3.46\ 10^{18}$
+pixels on the sphere.
+
+%\begin{itemize}
+
+%
+%
+%
+%--------------------------------
+%\end{itemize}
+{\footnotesize{%
+\begin{itemize}
+%--------------------------------
 \item Recent edition (versions 2.20 and 2.20a)
 \begin{itemize}
 	\item \htmlref{{\tt fits2cl}}{idl:fits2cl}: addition of {\tt WMAP1} and
@@ -134,14 +157,6 @@ symbols with {\tt PSYM} $> 8$, using
 symbols definition.
 \end{itemize}
 
-%
-%
-%
-%--------------------------------
-\end{itemize}
-{\footnotesize{%
-\begin{itemize}
-%--------------------------------
 \item Recent editions (versions 2.15 and 2.15a)
 \begin{itemize}
 	\item \htmlref{{\tt cartview, gnomview, mollview, orthview}}{idl:mollview}:
@@ -424,6 +439,7 @@ file containing $a_{lm}$ coefficients.
 \include{ang2vec_idl}
 \include{azeqview_idl}
 \include{bin_llcl_idl}
+\include{bl2beam_idl}
 \include{bl2fits_idl}
 \include{cartcursor_idl}
 \include{cartview_idl}
