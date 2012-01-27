@@ -161,9 +161,9 @@ public class Ang2PixAllTest extends TestCase {
 		System.out.println(pix + " -> " + pos + " HealpixIndex -> " + posHi[0]
 				+ " ," + posHi[1]);
 		assertEquals("Healpix and HealpixIndex disagree on theta for " + pix,
-				pos.theta(), posHi[0]);
+				pos.theta(), posHi[0],1e-15);
 		assertEquals("Healpix and HealpixIndex disagree on phi for " + pix, pos
-				.phi(), posHi[1]);
+				.phi(), posHi[1],1e-15);
 		pix++;
 
 		pos = Healpix.pix2ang_ring(nside, pix);

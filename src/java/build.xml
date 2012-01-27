@@ -65,7 +65,7 @@
 		<javadoc
 			destdir="${docs}" failonerror="true" use="true"
 			sourcepath="${src}"
-			additionalparam='-breakiterator -public -quiet -tag todo:a:"To Do:\" -link http://java.sun.com/j2se/1.5.0/docs/api -link http://download.java.net/media/java3d/javadoc/1.4.0'
+			additionalparam='-breakiterator -public -quiet -tag todo:a:"To Do:\" -tag copyright:a:"Copyright:" -link http://java.sun.com/j2se/1.5.0/docs/api -link http://download.java.net/media/java3d/javadoc/1.4.0'
 			classpathref="classpath">
 			<packageset dir="${src}" defaultexcludes="yes">
 				<include name="**" />
