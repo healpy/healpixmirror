@@ -16,7 +16,7 @@ function beam2bl, beam, theta, lmax, arcmin=arcmin, degrees=degrees, HELP=help, 
 ; CATEGORY:
 ;
 ; CALLING SEQUENCE:
-;   bl = beam2bl(beam, theta, lmax) 
+;   bl = beam2bl(beam, theta, lmax [, ARCMIN=, DEGREES=, HELP=, RADIANS=]) 
 ;
 ; INPUTS:
 ;   beam:  Vector:              circular beam profile in theta
@@ -24,7 +24,10 @@ function beam2bl, beam, theta, lmax, arcmin=arcmin, degrees=degrees, HELP=help, 
 ;   lmax: Scalar integer, maximum multipole of bl
 ;
 ; KEYWORD PARAMETERS:
-;
+;     ARCMIN:  if set, theta is in arc-minutes
+;     DEGREES: if set, theta is in Degrees
+;     HELP:    if set, print out this doc header and leaves
+;     RADIANS: if set, theta in is Radians
 ;
 ;
 ; OUTPUTS:
@@ -36,7 +39,7 @@ function beam2bl, beam, theta, lmax, arcmin=arcmin, degrees=degrees, HELP=help, 
 ; PROCEDURE:
 ;   Since b_lm = \int vec B(vec) Y_lm^*(vec)
 ; then, for a circular beam
-; b_l0 = \int  B(theta) P_l(theta) sin(theta) dtheta 2Pi \sqrt{(2l+1)/(4 Pi)}: beam profile
+; b_l0 = \int  B(theta) P_l(theta) sin(theta) dtheta 2Pi \sqrt{(2l+1)/(4 Pi)}
 ; where P_l is Legendre Polynomial
 ; and B(l) = b_l0 / \sqrt{2l+1/(4 Pi)} : beam window (or transfer) function
 ;          = \int  B(theta) P_l(theta) sin(theta) dtheta 2Pi

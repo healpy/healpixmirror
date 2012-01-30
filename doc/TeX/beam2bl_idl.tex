@@ -1,0 +1,110 @@
+% -*- LaTeX -*-
+
+
+\sloppy
+
+\title{\healpix IDL Facility User Guidelines}
+\docid{beam2bl} \section[beam2bl]{ }
+\label{idl:beam2bl}
+\docrv{Version 1.0}
+\author{Eric Hivon}
+\abstract{This document describes the \healpix IDL facility beam2bl.}
+
+\begin{facility}
+{This IDL facility computes a transfer (or window) function $b(l)$ for a circular beam profile $b(\theta)$.
+}
+{src/idl/misc/beam2bl.pro}
+\end{facility}
+
+\begin{IDLformat}
+{%\mylink{idl:beam2bl:beam}
+{bl}=\thedocid(
+\mylink{idl:beam2bl:beam}{beam}, 
+\mylink{idl:beam2bl:theta}{theta}, 
+\mylink{idl:beam2bl:lmax}{lmax}, 
+[%
+\mylink{idl:beam2bl:arcmin}{/ARCMIN} ,
+\mylink{idl:beam2bl:degrees}{/DEGREES}, 
+\mylink{idl:beam2bl:help}{/HELP}, 
+\mylink{idl:beam2bl:radians}{/RADIANS}%
+])}
+\end{IDLformat}
+
+\begin{qualifiers}
+  \begin{qulist}{} %%%% NOTE the ``extra'' brace here %%%%
+%     \item[beam]\mytarget{idl:beam2bl:bl}%
+% 	output (circular) beam profile $b(\theta)$
+    \item[beam] \mytarget{idl:beam2bl:beam}%
+      input beam profile $b(\theta)$ 
+    \item[theta] \mytarget{idl:beam2bl:theta}%
+    angles $\theta$ (in arcmin, degrees or radians) 
+  at which the input beam $b(\theta)$ is defined
+    \item[lmax] \mytarget{idl:beam2bl:lmax}%
+    maximum multipole on which the output $b(l)$ is to be computed
+  \end{qulist}
+\end{qualifiers}
+
+\begin{keywords}
+  \begin{kwlist}{} %%% extra brace
+    \item[/ARCMIN] \mytarget{idl:beam2bl:arcmin}%
+	if set, \mylink{idl:beam2bl:theta}{$\theta$} is in arcmin
+    \item[/DEGREES] \mytarget{idl:beam2bl:degrees}%
+	if set, \mylink{idl:beam2bl:theta}{$\theta$} is in degrees
+    \item[/HELP] \mytarget{idl:beam2bl:help}%
+	if set, prints out the help header and exits
+    \item[/RADIANS] \mytarget{idl:beam2bl:radians}%
+	if set, \mylink{idl:beam2bl:theta}{$\theta$} is in radians
+  \end{kwlist}
+\end{keywords}  
+
+\begin{codedescription}
+{%
+Since the SH Transform of an arbitrary beam is
+\begin{equation}
+	b_{lm} = \int {\bf{r}} b({\bf{r}}) Y_{lm}^*({\bf{r}})
+\end{equation}
+ then, for a circular beam
+\begin{eqnarray}
+	b(l) &=& b_{l0}  \sqrt{\frac{4 \pi}{2l+1}} \nonumber \\
+             &=& \int  b(\theta) P_l(\theta) \sin(\theta) d\theta 2\pi
+\end{eqnarray}
+where $P_l$ is the Legendre Polynomial, $b(l)$ is the beam window (or transfer)
+function returned by \thedocid and $B(\theta)$ is the beam radial
+profile expected as input of \thedocid.\\
+IDL's routine {\tt{INT\_TABULATED}} is used to perform the integration.}
+\end{codedescription}
+
+
+
+\begin{related}
+  \begin{sulist}{} %%%% NOTE the ``extra'' brace here %%%%
+    \item[idl] version \idlversion or more is necessary to run \thedocid.
+    \item[\htmlref{bl2beam}{idl:bl2beam}] facility to performs the inverse
+transform to \thedocid.
+    \item[\htmlref{bl2fits}{idl:bl2fits}] facility to write a $b(l)$ window function into a FITS file.
+    \item[\htmlref{fits2cl}{idl:fits2cl}] facility to read a $b(l)$ window
+function from a FITS file
+  \end{sulist}
+\end{related}
+
+\begin{example}
+{
+\begin{tabular}{l} %%%% use this tabular format %%%%
+bl = \htmlref{gaussbeam}{idl:gaussbeam}(15.d0, 4000, 1) \\
+theta = dindgen(4000)/100. \\
+beam = \htmlref{bl2beam}{idl:bl2beam}(bl, theta, /arcmin)\\
+bl1 = \thedocid(beam, theta, 4000, /arcmin) \\
+plot, bl1-bl\\
+\end{tabular}
+}
+{
+the example above generates a beam window function (defined for
+all $l$ in $\{0,\ldots,4000\}$) for a 15arcmin-FWHM gaussian beam, computes the
+beam profile for angles in $[0,40]$ arcmin, computes back the beam window
+function from the beam profile and finally plots the difference between the beam
+window functions.%
+}
+\end{example}
+
+
+

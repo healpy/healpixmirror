@@ -102,15 +102,21 @@ Several routines have been added or improved since version 2.20, as listed below
 
 \item Latest edition (version 3.0)
 \begin{itemize}
+%
+	\item New routines to go from circular beam profile to transfer function (\htmlref{{\tt beam2bl}}{idl:beam2bl}), and back
+  		(\htmlref{{\tt bl2beam}}{idl:bl2beam}).
+%
 	\item the pixel query routines 
 \htmlref{{\tt query\_triangle}}{idl:query_triangle}, 
 \htmlref{{\tt query\_polygon}}{idl:query_polygon}, 
 and in particular \htmlref{{\tt query\_disc}}{idl:query_disc}, 
 have been improved and will return fewer
 false positive pixels in the \mylink{idl:query_disc:inclusive}{{\em inclusive}} mode
+%
 	\item improved accuracy of the co-latitude calculation in the vicinity
 of the poles for high resolution in \htmlref{{\tt nest2ring, ring2nest,
 pix2ang\_*, pix2vec\_*, $\ldots$}}{idl:pix_tools}
+%
 	\item \htmlref{{\tt fits2cl}}{idl:fits2cl}: addition of \mylink{idl:fits2cl:wmap7}{{\tt WMAP7}} keyword
 to read best fit $C(l)$ model to WMAP 7yr data.
 	\item \htmlref{{\tt cartview, gnomview, mollview,
@@ -438,6 +444,7 @@ file containing $a_{lm}$ coefficients.
 \include{alm2fits_idl}
 \include{ang2vec_idl}
 \include{azeqview_idl}
+\include{beam2bl_idl}
 \include{bin_llcl_idl}
 \include{bl2beam_idl}
 \include{bl2fits_idl}

@@ -38,7 +38,7 @@ function bl2beam, bl, theta, arcmin=arcmin, degrees=degrees, HELP=help, radians=
 ;
 ; EXAMPLE:
 ;   bl = gaussbeam(15.d0, 4000, 1) ; window function of a 15arcmin-FWHM gaussian beam
-;   theta = dindgen(1000)/100.    ; angle in arcmin
+;   theta = dindgen(3000)/100.    ; angle in arcmin
 ;   plot, theta,  bl2beam(bl, theta, /arcmin) ; its beam profile = a 15arcmin-FWHM gaussian
 ;
 ;
