@@ -30,7 +30,7 @@ the correct format to be ingested by the \healpix simulation facility
 \end{facility}
 
 \begin{IDLformat}
-{CL2FITS, cl\_array, fitsfile, [HDR = , /HELP, XHDR = , CMBFAST =, UNITS= ]}
+{CL2FITS, cl\_array, fitsfile, [HDR=, /HELP, XHDR=, /CMBFAST, UNITS=]}
 \end{IDLformat}
 
 \begin{qualifiers}
@@ -50,16 +50,16 @@ the correct format to be ingested by the \healpix simulation facility
       for the FITS file. 
     \item[/HELP] If set, a help message is printed out, no file is written
 
-    \item[XHDR =] String array containing the (non-trivial) extension header
+    \item[XHDR=] String array containing the (non-trivial) extension header
       for the FITS file. 
-    \item[CMBFAST =] if set, the routine will add the keyword 'POLNORM =
+    \item[/CMBFAST] if set, the routine will add the keyword 'POLNORM =
     CMBFAST' in the FITS header, meaning that the polarization power spectra
     have the same convention as CMBFAST (and Healpix 1.2). 
     If this keyword is not present in the input FITS file, {\tt synfast} will issue a
     warning when simulating a polarization map from that power spectrum, but no
     attempt to renormalize the power spectra will be made. To actually perform
     the renormalization, see \htmlref{convert\_oldhpx2cmbfast}{idl:convert_oldhpx2cmbfast}
-    \item[UNITS =] String scalar containing units of power spectrum (eg, uK{\^{}}2,
+    \item[UNITS=] String scalar containing units of power spectrum (eg, uK{\^{}}2,
          Kelvin**2, ...), to be put in keywords 'TUNIT*' of the extension header. 
          If provided, will override the values present in XHDR (if any).
     \item[ ] NOTE: optional header strings should NOT include the

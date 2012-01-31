@@ -61,15 +61,15 @@
 {%
 Since the SH Transform of an arbitrary beam is
 \begin{equation}
-	b_{lm} = \int {\bf{r}} b({\bf{r}}) Y_{lm}^*({\bf{r}})
+	b_{lm} = \int d{\bf{r}}\ b({\bf{r}})\ Y_{lm}^*({\bf{r}})
 \end{equation}
  then, for a circular beam
 \begin{eqnarray}
 	b(l) &=& b_{l0}  \sqrt{\frac{4 \pi}{2l+1}} \nonumber \\
-             &=& \int  b(\theta) P_l(\theta) \sin(\theta) d\theta 2\pi
+             &=& \int  b(\theta) P_l(\theta) \sin(\theta)\ d\theta\ 2\pi
 \end{eqnarray}
 where $P_l$ is the Legendre Polynomial, $b(l)$ is the beam window (or transfer)
-function returned by \thedocid and $B(\theta)$ is the beam radial
+function returned by \thedocid\ and $b(\theta)$ is the beam radial
 profile expected as input of \thedocid.\\
 IDL's routine {\tt{INT\_TABULATED}} is used to perform the integration.}
 \end{codedescription}

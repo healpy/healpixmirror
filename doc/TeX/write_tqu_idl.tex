@@ -36,7 +36,7 @@ Help=, Hdr=, Xhdr=, Units=, Help=]}
  	\item[{File}] 
           name of a FITS file in which the maps are to be written
 
-   \item[{TQU}] : array of Healpix maps of size ($N_{\rm pix}$,3,{\tt n\_ext}) where $N_{\rm pix}$ is the total
+   \item[{TQU}] array of Healpix maps of size ($N_{\rm pix}$,3,{\tt n\_ext}) where $N_{\rm pix}$ is the total
    number of Healpix pixels on the sky, and {\tt n\_ext} $\le$ 3.\\
      Three maps are written in each extension of the FITS file : \\
       -the temperature+polarization Stokes parameters maps (T,Q,U) in
@@ -140,17 +140,14 @@ their physical order) using the Extension option}
 {
 \begin{tabular}{l} %%%% use this tabular format %%%%
 npix = \htmlref{nside2npix}{idl:nside2npix}(64) \\
-t = randomn(seed,npix) \\
-q = randomn(seed,npix) \\
-u = randomn(seed,npix) \\
-TQU = [[t],[q],[u]] \\
+TQU = randomn(seed,npix,3) \\
 write\_tqu,  'map\_polarization.fits', TQU, coord='G', /ring\\
 \end{tabular}
 }
 {
 The array TQU is defined to contain a fictitious polarisation map, with
 the 3 Stokes parameters T, Q and U. The map is assumed to be in
-Galactic coordinates, with a RING ordering of the pixels.
+Galactic coordinates, with a RING ordering of the pixels and $\nside=64$.
 \thedocid  { }writes out the contents of TQU into the extension 
 of the FITS file 'map\_polarization.fits'.
 }
