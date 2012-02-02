@@ -217,7 +217,7 @@ template<typename I> class T_Healpix_Base: public Healpix_Tables
            \a fact*nside. For NESTED ordering, \a fact must be a power of 2,
            else it can be any positive integer. A typical choice would be 4.
         \note This method may return some pixels which don't overlap with
-           the disk at all. The higher \a fct is chosen, the fewer false
+           the disk at all. The higher \a fact is chosen, the fewer false
            positives are returned, at the cost of increased run time.
         \note This method is more efficient in the RING scheme. */
     void query_disc_inclusive (pointing ptg, double radius, rangeset<I> &pixset,
@@ -261,6 +261,9 @@ template<typename I> class T_Healpix_Base: public Healpix_Tables
         \param fact The overlapping test will be done at the resolution
            \a fact*nside. For NESTED ordering, \a fact must be a power of 2,
            else it can be any positive integer. A typical choice would be 4.
+        \note This method may return some pixels which don't overlap with
+           the polygon at all. The higher \a fact is chosen, the fewer false
+           positives are returned, at the cost of increased run time.
         \note This method is more efficient in the RING scheme. */
     void query_polygon_inclusive (const std::vector<pointing> &vertex,
       rangeset<I> &pixset, int fact=1) const;

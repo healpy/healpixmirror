@@ -75,7 +75,7 @@ void SSE_status()
 
 void announce (const string &name)
   {
-  string version = "v2.21pre";
+  string version = "v3.0pre";
   string name2 = name+" "+version;
   cout << endl << "+-";
   for (tsize m=0; m<name2.length(); ++m) cout << "-";

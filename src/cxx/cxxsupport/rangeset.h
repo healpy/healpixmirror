@@ -113,6 +113,8 @@ template<typename T> class rangeset
     const T &ivbegin (tdiff i) const { return r[2*i]; }
     /*! Returns the one-past-last value of range \a i. */
     const T &ivend (tdiff i) const { return r[2*i+1]; }
+    /*! Returns the length of range \a i. */
+    T ivlen (tdiff i) const { return r[2*i+1]-r[2*i]; }
 
     /*! Appends \a [v1;v2[ to the rangeset. \a v1 must be larger
         than the minimum of the last range in the rangeset. */

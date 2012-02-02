@@ -30,6 +30,7 @@
  */
 
 #include "fitshandle.h"
+#include "paramfile.h"
 #include "alm.h"
 #include "alm_fitsio.h"
 #include "powspec.h"
@@ -42,32 +43,40 @@ using namespace std;
 
 int calc_powspec_module (int argc, const char **argv)
   {
-  announce ("calc_powspec");
-  planck_assert (argc==3||argc==4,
-    "usage: calc_powspec <almfile1> [<almfile2>] <powspec_file>");
+  module_startup ("calc_powspec",argc,argv);
+  paramfile params (getParamsFromCmdline(argc,argv));
 
-  if (argc==3)
+  bool pol=params.find<bool>("pol",false);
+  string alm1=params.find<string>("alm1");
+  string ps=params.find<string>("ps");
+
+  if (!params.param_present("alm2"))
     {
     int lmax,mmax;
-    get_almsize(argv[1],lmax,mmax,2);
-    Alm<xcomplex<float> > alm;
-    read_Alm_from_fits (argv[1],alm,lmax,mmax,2);
+    pol ? get_almsize_pol(alm1,lmax,mmax)
+        : get_almsize    (alm1,lmax,mmax);
+    Alm<xcomplex<float> > almT, almG, almC;
+    pol ? read_Alm_from_fits (alm1,almT,almG,almC,lmax,mmax)
+        : read_Alm_from_fits (alm1,almT,lmax,mmax);
     PowSpec powspec;
-    extract_powspec (alm,powspec);
-    write_powspec_to_fits (argv[2],powspec,1);
+    pol ? extract_powspec (almT,almG,almC,powspec)
+        : extract_powspec (almT,powspec);
+    write_powspec_to_fits (ps,powspec,pol ? 6 : 1);
     }
   else
     {
+    planck_assert(!pol, "polarisation not supported for cross-powerspectra");
     int lmax,mmax;
-    get_almsize(argv[1],lmax,mmax,2);
-    Alm<xcomplex<float> > alm1;
-    read_Alm_from_fits (argv[1],alm1,lmax,mmax,2);
-    get_almsize(argv[2],lmax,mmax,2);
-    Alm<xcomplex<float> > alm2;
-    read_Alm_from_fits (argv[2],alm2,lmax,mmax,2);
+    get_almsize(alm1,lmax,mmax);
+    Alm<xcomplex<float> > Alm1;
+    read_Alm_from_fits (alm1,Alm1,lmax,mmax);
+    string alm2=params.find<string>("alm2");
+    get_almsize(alm2,lmax,mmax);
+    Alm<xcomplex<float> > Alm2;
+    read_Alm_from_fits (alm2,Alm2,lmax,mmax);
     PowSpec powspec;
-    extract_crosspowspec (alm1,alm2,powspec);
-    write_powspec_to_fits (argv[3],powspec,1);
+    extract_crosspowspec (Alm1,Alm2,powspec);
+    write_powspec_to_fits (ps,powspec,1);
     }
 
   return 0;
