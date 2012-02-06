@@ -715,7 +715,7 @@ public class HealpixBase extends HealpixTables
           and {@code theta2}</li>
       <li>otherwise it is the range between 0 and {@code theta2}, and between
           {@code theta1} and pi.</li>
-      <ul>
+      </ul>
       This method currently only works in the RING scheme. */
   public RangeSet queryStrip(double theta1, double theta2,
     boolean inclusive) throws Exception
@@ -945,7 +945,7 @@ public class HealpixBase extends HealpixTables
   /** Returns a range set of pixels which overlap with a given disk. <p>
       This method is more efficient in the RING scheme. <p>
       This method may return some pixels which don't overlap with
-      the polygon at all. The higher {@code fct} is chosen, the fewer false
+      the polygon at all. The higher {@code fact} is chosen, the fewer false
       positives are returned, at the cost of increased run time.
       @param ptg the angular coordinates of the disk center
       @param radius the radius (in radians) of the disk
@@ -1157,8 +1157,8 @@ public class HealpixBase extends HealpixTables
     if (inclusive)
       {
       CircleFinder cf = new CircleFinder(vv);
-      normal[nv]=cf.center;
-      rad[nv]=FastMath.acos(cf.cosrad);
+      normal[nv]=cf.getCenter();
+      rad[nv]=FastMath.acos(cf.getCosrad());
       }
     return queryMultiDisc(normal,rad,fact);
     }
@@ -1174,7 +1174,7 @@ public class HealpixBase extends HealpixTables
       polygon defined by the {@code vertex} array. <p>
       This method is more efficient in the RING scheme.<p>
       This method may return some pixels which don't overlap with
-      the polygon at all. The higher {@code fct} is chosen, the fewer false
+      the polygon at all. The higher {@code fact} is chosen, the fewer false
       positives are returned, at the cost of increased run time.
       @param vertex an array containing the vertices of the requested convex
         polygon.

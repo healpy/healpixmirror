@@ -29,8 +29,8 @@ package healpix.newcore;
     @author Martin Reinecke */
 final class CircleFinder
   {
-  public Vec3 center;
-  public double cosrad;
+  private Vec3 center;
+  private double cosrad;
 
   private void getCircle (Vec3[] point, int q1, int q2)
     {
@@ -65,4 +65,7 @@ final class CircleFinder
       if (point[i].dot(center)<cosrad) // point outside the current circle
         getCircle(point,i);
     }
+
+  public Vec3 getCenter() { return new Vec3(center); }
+  public double getCosrad() { return cosrad; }
   }
