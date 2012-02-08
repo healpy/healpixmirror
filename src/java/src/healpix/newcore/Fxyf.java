@@ -104,8 +104,8 @@ public final class Fxyf extends HealpixTables
       }
 
     double tmp=jpll[face]*nr+fx-fy;
-    assert(tmp<8); // must not happen
     if (tmp<0) tmp+=8;
+    if (tmp>=8) tmp-=8;
     loc.phi = (nr<1e-15) ? 0 : (0.5*Constants.halfpi*tmp)/nr;
     return loc;
     }
