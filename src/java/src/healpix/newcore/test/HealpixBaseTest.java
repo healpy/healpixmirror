@@ -37,6 +37,32 @@ public class HealpixBaseTest extends TestCase {
   private Pointing random_dir(Random rng)
     { return new Pointing(Math.acos(2*rng.nextDouble()-1),2*Math.PI*rng.nextDouble()); }
 
+  public void test_boundaries()throws Exception
+    {
+    System.out.println("Testing whether the boundary shapes look sane");
+
+    for (int nside=1; nside<=5; ++nside)
+      {
+      HealpixBase base=new HealpixBase(nside,Scheme.RING);
+      for (int pix=0; pix<base.getNpix(); ++pix)
+        {
+        for (int res=1; res<=50; res+=7)
+          {
+          Vec3[] points = base.boundaries(pix,res);
+          double dmin=1e30, dmax=-1e30;
+          for (int i=0; i<points.length; ++i)
+            {
+            double dv=(points[i].sub(points[(i+1)%points.length])).length();
+            assertTrue("error in boundaries",dv!=0);
+            dmin = Math.min(dv,dmin);
+            dmax = Math.max(dv,dmax);
+            }
+          assertTrue("error in boundaries",dmax/dmin<=2);
+          }
+        }
+      }
+    }
+
   public void test_accuracy()throws Exception
     {
     System.out.println("Testing accuracy near the poles");
