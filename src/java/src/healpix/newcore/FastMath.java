@@ -25,11 +25,6 @@ public final class FastMath {
   private static final boolean isinf(double d)
     { return Math.abs(d) == Double.POSITIVE_INFINITY; }
 
-  /** Returns the integer value that is closest to the argument.
-      The result is undefined if a denormal number is given. */
-  private static final int rint(double x)
-    { return x < 0 ? (int)(x - 0.5) : (int)(x + 0.5); }
-
   private static final double sign(double d) { return Math.copySign(1, d); }
 
   private static final double atanhelper(double s)
@@ -60,10 +55,10 @@ public final class FastMath {
 
   private static final double atan2k(double y, double x)
     {
-    int q = 0;
+    double q = 0.;
 
-    if (x < 0) { x = -x; q = -2; }
-    if (y > x) { double t = x; x = y; y = -t; q += 1; }
+    if (x < 0) { x = -x; q = -2.; }
+    if (y > x) { double t = x; x = y; y = -t; q += 1.; }
 
     return atanhelper(y/x) + q*(Math.PI/2);
     }
@@ -82,7 +77,6 @@ public final class FastMath {
       r = Math.PI/2 - (isinf(x) ? (sign(x) * (Math.PI*1/4)) : 0);
     if (            y == 0)
       r = (sign(x) == -1 ? Math.PI : 0);
-
     return isnan(x) || isnan(y) ? Double.NaN : mulsign(r, y);
     }
 
@@ -143,7 +137,7 @@ public final class FastMath {
   public static final double sin(double d)
     {
     double u = d * M_1_PI;
-    int q = (int)(u < 0 ? u - 0.5 : u + 0.5);
+    long q = (long)(u < 0 ? u - 0.5 : u + 0.5);
 
     double x=4.*q;
     d -= x*PI4_A;
@@ -159,7 +153,9 @@ public final class FastMath {
       have maximum error of 2 ulps. */
   public static final double cos(double d)
     {
-    int q = 1 + 2*rint(d * M_1_PI - 0.5);
+    double u = d*M_1_PI - 0.5;
+    long q = 1+2*(long)(u < 0 ? u - 0.5 : u + 0.5);
+
     double x=2.*q;
     d -= x*PI4_A;
     d -= x*PI4_B;

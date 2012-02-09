@@ -50,6 +50,7 @@ public class Pointing
     theta = FastMath.atan2(Math.sqrt(vec.x*vec.x+vec.y*vec.y),vec.z);
     phi = FastMath.atan2 (vec.y,vec.x);
     if (phi<0.) phi += 2*Math.PI;
+    if (phi>=2*Math.PI) phi -= 2*Math.PI;
     }
 
   /** Conversion from {@link Zphi} */

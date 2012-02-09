@@ -1276,14 +1276,15 @@ public class HealpixBase extends HealpixTables
     HealpixUtils.check(step>0,"step must be positive");
     Vec3[] points = new Vec3[4*step];
     Xyf xyf = pix2xyf(pix);
+    double dc=0.5/nside;
     double xc=(xyf.ix+0.5)/nside, yc=(xyf.iy+0.5)/nside;
     double d = 1./(step*nside);
     for (int i=0; i<step; ++i)
       {
-      points[i       ]=new Fxyf(xc+0.5-i*d, yc+0.5, xyf.face).toVec3();
-      points[i+  step]=new Fxyf(xc-0.5, yc+0.5-i*d, xyf.face).toVec3();
-      points[i+2*step]=new Fxyf(xc-0.5+i*d, yc-0.5, xyf.face).toVec3();
-      points[i+3*step]=new Fxyf(xc+0.5, yc-0.5+i*d, xyf.face).toVec3();
+      points[i       ]=new Fxyf(xc+dc-i*d, yc+dc, xyf.face).toVec3();
+      points[i+  step]=new Fxyf(xc-dc, yc+dc-i*d, xyf.face).toVec3();
+      points[i+2*step]=new Fxyf(xc-dc+i*d, yc-dc, xyf.face).toVec3();
+      points[i+3*step]=new Fxyf(xc+dc, yc-dc+i*d, xyf.face).toVec3();
       }
     return points;
     }
