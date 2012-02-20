@@ -48,6 +48,9 @@
 ; EXAMPLES:
 ;       (1) str = mrd_struct(['fld1', 'fld2'], ['0','dblarr(10,10)'],3)
 ;           print, str(0).fld2(3,3)
+;       Note that "0" is always considered short integer even if the default
+;       integer is set to long.
+;          
 ;
 ;       (2) str = mrd_struct(['a','b','c','d'],['1', '1.', '1.d0', "'1'"],1)
 ;               ; returns a structure with integer, float, double and string
@@ -76,12 +79,15 @@
 ;       Assume since V6.0 (lmgr function available), remove 131 string length
 ;             limit for execute    W. Landsman Jun 2009 
 ;      Restore EXECUTE limit (sigh...)   W. Landsman July 2009 
+;      Make sure "0" is a short integer even with compile_opt idl2  July 2010
 ;-
 
 ; Check that the number of names is the same as the number of values.
 
 function mrd_struct, names, values, nrow, no_execute = no_execute,  $
     structyp=structyp,  tempdir=tempdir, silent=silent, old_struct=old_struct
+
+compile_opt idl2
 
 ; Keywords TEMPDIR, SILENT and OLD_STRUCT no longer do anything but are kept
 ; for backward compatibility.
@@ -101,7 +107,7 @@ function mrd_struct, names, values, nrow, no_execute = no_execute,  $
 ; scalar values
 ;
 	    '0b': v = 0B
-	    '0' : v = 0
+	    '0' : v = 0S
 	    '0l': v = 0L
 	    '0ll' : v = 0LL
 	    '0.': v = 0.0
@@ -116,7 +122,7 @@ function mrd_struct, names, values, nrow, no_execute = no_execute,  $
 	    else: begin	     
 	        value = values[i]
 		remchar,value,"'"
-		remchar,value,'"'
+		remchar,value,'"'   
 		if strlen(value) EQ 1 then v= value else begin 
 	        type = gettok(value,'(')
 		if type eq 'string' then $
@@ -163,9 +169,11 @@ strng = "a={"
 
 comma = ' '
 for i=0,nel-1 do  begin
+    fval = values[i]
+    if (fval eq '0') then fval = '0s'
   
    ; Now for each element put in a name/value pair.
-    tstrng = strng + comma+names[i] + ':' + values[i]
+    tstrng = strng + comma+names[i] + ':' + fval
     
     ; The nominal max length of the execute is 131
     ; We need one chacacter for the "}"
@@ -175,7 +183,7 @@ for i=0,nel-1 do  begin
 	if  res eq 0 then return, 0
         struct = n_elements(struct) eq 0 ? a: $
 	         create_struct(temporary(struct), a)
-	strng = "a={" + names[i] + ":" + values[i]
+	strng = "a={" + names[i] + ":" + fval
 	
     endif else strng = tstrng
     comma = ","

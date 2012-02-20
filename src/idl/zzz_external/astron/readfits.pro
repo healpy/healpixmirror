@@ -21,7 +21,8 @@
 ;                 (including extension) to be read.   If the filename has
 ;                  a *.gz extension, it will be treated as a gzip compressed
 ;                  file.   If it has a .Z extension, it will be treated as a
-;                  Unix compressed file.
+;                  Unix compressed file.     If Filename is an empty string then
+;                  the user will be queried for the file name.
 ;                                   OR
 ;       Fileunit - A scalar integer specifying the unit of an already opened
 ;                  FITS file.  The unit will remain open after exiting 
@@ -83,7 +84,7 @@
 ;                FITS header.   Default is to scale.
 ;
 ;       /NO_UNSIGNED - By default, if the header indicates an unsigned integer 
-;               (BITPIX = 16, BZERO=2^15, BSCALE=1) then FITS_READ will output 
+;               (BITPIX = 16, BZERO=2^15, BSCALE=1) then READFITS() will output 
 ;               an IDL unsigned integer data type (UINT).   But if /NO_UNSIGNED
 ;               is set, then the data is converted to type LONG.  
 ;
@@ -163,8 +164,9 @@
 ;       and BZERO.   In the header, the values of BSCALE and BZERO are then 
 ;       reset to 1. and 0., while the original values are written into the 
 ;       new keywords O_BSCALE and O_BZERO.     If the BLANK keyword was
-;       present, then any input integer values equal to BLANK in the input
-;       integer image are unchanged by BSCALE or BZERO
+;       present (giving the value of undefined elements *prior* to the 
+;       application of BZERO and BSCALE) then the *keyword* value will be
+;       updated with the values of BZERO and BSCALE.
 ;       
 ;       (2) The use of the NSLICE keyword is incompatible with the NUMROW
 ;       or STARTROW keywords.
@@ -213,6 +215,12 @@
 ;       Fix error using NUMROW,STARTROW with non-byte data, allow these 
 ;           keywords to be used with primary array  W. Landsman July 2009
 ;       Ignore degenerate trailing dimensions with NSLICE keyword W.L. Oct 2009
+;       Add DIALOG_PICKFILE() if filename is an empty string  W.L. Apr 2010
+;       Set BLANK values *before* applying BSCALE,BZERO, use short-circuit
+;           operators  W.L. May 2010
+;      Skip extra SPAWN with FPACK decompress J. Eastman, W.L. July 2010
+;      Fix possible problem when startrow=0 supplied J. Eastman/W.L. Aug 2010
+;      First header is not necessarily primary if unit supplied WL Jan 2011
 ;-
 function READFITS, filename, header, heap, CHECKSUM=checksum, $ 
                    COMPRESS = compress, HBUFFER=hbuf, EXTEN_NO = exten_no, $
@@ -248,12 +256,17 @@ function READFITS, filename, header, heap, CHECKSUM=checksum, $
     if N_elements(unixpipe) EQ 0 then unixpipe = 0                  
     if unitsupplied then unit = filename else begin
     len = strlen(filename)
+    if len EQ 0 then begin
+        filename =dialog_pickfile(filter=['*.fit*;*.fts*;*.img*'], $
+	title='Please select a FITS file',/must_exist)
+        len = strlen(filename)
+    endif 
     ext = strlowcase(strmid(filename,len-3,3))
-    gzip = (ext EQ '.gz') or (ext EQ 'ftz')
-    compress = keyword_set(compress) or gzip[0]
+    gzip = (ext EQ '.gz') || (ext EQ 'ftz')
+    compress = keyword_set(compress) || gzip[0]
     unixZ =  (strmid(filename, len-2, 2) EQ '.Z') 
-    fcompress = keyword_set(fpack) or ( ext EQ '.fz') 
-    unixpipe = unixZ or fcompress	      
+    fcompress = keyword_set(fpack) || ( ext EQ '.fz') 
+    unixpipe = unixZ || fcompress	      
 
  
 ;  Go to the start of the file.
@@ -275,9 +288,12 @@ function READFITS, filename, header, heap, CHECKSUM=checksum, $
 
         endif else if fcompress then begin 
 	        free_lun, unit
-		spawn,'funpack -V',test,err
-		if err NE '' then message,'ERROR - ' + err
 		spawn,'funpack -S ' + filename, unit=unit,/sh
+                if eof(unit) then begin 
+		    message,'Error spawning FPACK decompression',/CON
+		    free_lun,unit
+		    return,-1
+		endif    
 	endif	
   endelse
   if keyword_set(POINTLUN) then mrd_skip, unit, pointlun
@@ -296,7 +312,7 @@ function READFITS, filename, header, heap, CHECKSUM=checksum, $
 
        block = string(replicate(32b,80,36))
        w = [-1]
-       if ((ext EQ exten_no) and (doheader)) then header = strarr(hbuf) $
+       if ((ext EQ exten_no) && (doheader)) then header = strarr(hbuf) $
                                              else header = strarr(36)
        headerblock = 0L
        i = 0L      
@@ -306,7 +322,7 @@ function READFITS, filename, header, heap, CHECKSUM=checksum, $
        if EOF(unit) then begin 
             message,/ CON, $
                'EOF encountered attempting to read extension ' + strtrim(ext,2)
-            if not unitsupplied then free_lun,unit
+            if ~unitsupplied then free_lun,unit
             return,-1
        endif
 
@@ -317,8 +333,8 @@ function READFITS, filename, header, heap, CHECKSUM=checksum, $
            message,'Warning-Invalid characters in header',/INF,NoPrint=Silent
            block[w] = string(replicate(32b, 80))
       endif
-      w = where(strmid(block, 0, 8) eq 'END     ', Nend)
-      if (headerblock EQ 1) or ((ext EQ exten_no) and (doheader)) then begin
+      w = where(strcmp(block,'END     ',8), Nend)
+      if (headerblock EQ 1) || ((ext EQ exten_no) && (doheader)) then begin
               if Nend GT 0 then  begin
              if headerblock EQ 1 then header = block[0:w[0]]   $
                                  else header = [header[0:i-1],block[0:w[0]]]
@@ -331,11 +347,11 @@ function READFITS, filename, header, heap, CHECKSUM=checksum, $
           endif
       endwhile
 
-      if (ext EQ 0 ) and (keyword_set(pointlun) EQ 0) then $
+      if (ext EQ 0 ) && ~(keyword_set(pointlun) || unitsupplied ) then $
              if strmid( header[0], 0, 8)  NE 'SIMPLE  ' then begin
               message,/CON, $
                  'ERROR - Header does not contain required SIMPLE keyword'
-                if not unitsupplied then free_lun, unit
+                if ~unitsupplied then free_lun, unit
                 return, -1
       endif
 
@@ -375,17 +391,17 @@ function READFITS, filename, header, heap, CHECKSUM=checksum, $
         else:   begin
                 message,/CON, 'ERROR - Illegal value of BITPIX (= ' +  $
                 strtrim(bitpix,2) + ') in FITS header'
-                if not unitsupplied then free_lun,unit
+                if ~unitsupplied then free_lun,unit
                 return, -1
                 end
   endcase     
  
   if nbytes EQ 0 then begin
-        if not SILENT then message, $
+        if ~SILENT then message, $
                 "FITS header has NAXIS or NAXISi = 0,  no data array read",/CON
         if do_checksum then begin
              result = FITS_TEST_CHECKSUM(header, data, ERRMSG = errmsg)
-             if not SILENT then begin
+             if ~SILENT then begin
                case result of 
                 1: message,/INF,'CHECKSUM keyword in header is verified'
                -1: message,/CON, errmsg
@@ -393,7 +409,7 @@ function READFITS, filename, header, heap, CHECKSUM=checksum, $
                 endcase
               endif
         endif
-        if not unitsupplied then free_lun, unit
+        if ~unitsupplied then free_lun, unit
         return,-1
  endif
 
@@ -406,11 +422,11 @@ function READFITS, filename, header, heap, CHECKSUM=checksum, $
 ; If an extension, did user specify row to start reading, or number of rows
 ; to read?
 
-   if not keyword_set(STARTROW) then startrow = 0
+   if N_elements(STARTROW) EQ 0 then startrow = 0       ;updated Aug 2010
    if naxis GE 2 then nrow = dims[1] else nrow = ndata
-   if not keyword_set(NUMROW) then numrow = nrow
-   if do_checksum then if ((startrow GT 0) or $
-      (numrow LT nrow) or (N_elements(nslice) GT 0)) then begin 
+   if ~keyword_set(NUMROW) then numrow = nrow
+   if do_checksum then if ((startrow GT 0) || $
+      (numrow LT nrow) || (N_elements(nslice) GT 0)) then begin 
       message,/CON, $
       'Warning - CHECKSUM not applied when STARTROW, NUMROW or NSLICE is set'
       do_checksum = 0
@@ -422,11 +438,11 @@ function READFITS, filename, header, heap, CHECKSUM=checksum, $
                 'WARNING - Header missing XTENSION keyword'
    endif 
 
-   if ((startrow NE 0) or (numrow NE nrow)) then begin
+   if ((startrow NE 0) || (numrow NE nrow)) then begin
         if startrow GE dims[1] then begin
            message,'ERROR - Specified starting row ' + strtrim(startrow,2) + $
           ' but only ' + strtrim(dims[1],2) + ' rows in extension',/CON
-           if not unitsupplied then free_lun,unit
+           if ~unitsupplied then free_lun,unit
            return,-1
         endif 
         dims[1] = dims[1] - startrow    
@@ -441,23 +457,31 @@ function READFITS, filename, header, heap, CHECKSUM=checksum, $
 	while lastdim EQ 1 do begin
 	      ldim = ldim-1
 	      lastdim = dims[ldim]
-	endwhile      
-        if nslice GE lastdim then message,/CON, $
+	endwhile
+	       if nslice GE lastdim then begin 
+	      message,/CON, $
         'ERROR - Value of NSLICE must be less than ' + strtrim(lastdim,2)
+               if ~unitsupplied then free_lun, unit
+ 	      return, -1
+	endif      
         dims = dims[0:ldim-1]
-        sxaddpar,header,'NAXIS' + strtrim(ldim+1,2),1
+        for i = ldim,naxis-1 do sxdelpar,header,'NAXIS' + strtrim(i+1,2)
+        naxis = ldim
+        sxaddpar,header,'NAXIS' + strtrim(ldim,2),1
         ndata = ndata/lastdim
         nskip = long64(nslice)*ndata*byte_elem
 	if Ndata GT 0 then mrd_skip, unit, nskip  
   endif
 
 
-  if not (SILENT) then begin   ;Print size of array being read
+  if ~SILENT then begin   ;Print size of array being read
 
          if exten_no GT 0 then message, $
-                     'Reading FITS extension of type ' + xtension, /INF
-         st = 'Now reading ' + strjoin(strtrim(dims,2),' by ') + ' array'
-         if (exten_no GT 0) and (pcount GT 0) then st = st + ' + heap area'
+                     'Reading FITS extension of type ' + xtension, /INF  
+	 if N_elements(dims) EQ 1 then $
+	 st = 'Now reading ' + strtrim(dims,2) + ' element vector' else $	          
+	 st = 'Now reading ' + strjoin(strtrim(dims,2),' by ') + ' array'
+         if (exten_no GT 0) && (pcount GT 0) then st = st + ' + heap area'
          message,/INF,st   
    endif
 
@@ -467,7 +491,7 @@ function READFITS, filename, header, heap, CHECKSUM=checksum, $
     data = make_array( DIM = dims, TYPE = IDL_type, /NOZERO)
     readu, unit, data
     if unixpipe  then swap_endian_inplace,data,/swap_if_little
-    if (exten_no GT 0) and (pcount GT 0) then begin
+    if (exten_no GT 0) && (pcount GT 0) then begin
         theap = sxpar(header,'THEAP')
         skip = theap - N_elements(data)
         if skip GT 0 then begin 
@@ -480,8 +504,8 @@ function READFITS, filename, header, heap, CHECKSUM=checksum, $
         result = fits_test_checksum(header,[data,heap],ERRMSG=errmsg)
     endif else if do_checksum then $
         result = fits_test_checksum(header, data, ERRMSG = errmsg)
-    if not unitsupplied then free_lun, unit
-    if do_checksum then if not SILENT then begin
+    if ~unitsupplied then free_lun, unit
+    if do_checksum then if ~SILENT then begin
         case result of 
         1: message,/INF,'CHECKSUM keyword in header is verified'
        -1: message,/CON, 'CHECKSUM ERROR! ' + errmsg
@@ -492,64 +516,69 @@ function READFITS, filename, header, heap, CHECKSUM=checksum, $
 ; Scale data unless it is an extension, or /NOSCALE is set
 ; Use "TEMPORARY" function to speed processing.  
 
-   do_scale = not keyword_set( NOSCALE )
-   if (do_scale and (exten_no GT 0)) then do_scale = xtension EQ 'IMAGE' 
+   do_scale = ~keyword_set( NOSCALE )
+   if (do_scale && (exten_no GT 0)) then do_scale = xtension EQ 'IMAGE' 
    if do_scale then begin
 
-          Nblank = 0
-          if bitpix GT 0 then begin
-                blank = sxpar( header, 'BLANK', Count = N_blank) 
-                if N_blank GT 0 then $ 
-                        blankval = where( data EQ blank, Nblank)
-          endif
-
+          if bitpix GT 0 then $
+                blank = sxpar( header, 'BLANK', Count = N_blank) $
+		else N_blank = 0
+ 
           Bscale = sxpar( header, 'BSCALE' , Count = N_bscale)
           Bzero = sxpar(header, 'BZERO', Count = N_Bzero )
+         if (N_blank GT 0) && ((N_bscale GT 0) || (N_Bzero GT 0)) then $
+                 sxaddpar,header,'O_BLANK',blank,' Original BLANK value'
+       
+ 
  
 ; Check for unsigned integer (BZERO = 2^15) or unsigned long (BZERO = 2^31)
 
-          if not keyword_set(No_Unsigned) then begin
-            no_bscale = (Bscale EQ 1) or (N_bscale EQ 0)
-            unsgn_int = (bitpix EQ 16) and (Bzero EQ 32768) and no_bscale
-            unsgn_lng = (bitpix EQ 32) and (Bzero EQ 2147483648) and no_bscale
-            unsgn = unsgn_int or unsgn_lng
+          if ~keyword_set(No_Unsigned) then begin
+            no_bscale = (Bscale EQ 1) || (N_bscale EQ 0)
+            unsgn_int = (bitpix EQ 16) && (Bzero EQ 32768) && no_bscale
+            unsgn_lng = (bitpix EQ 32) && (Bzero EQ 2147483648) && no_bscale
+            unsgn = unsgn_int || unsgn_lng
            endif else unsgn = 0
 
           if unsgn then begin
-                    if unsgn_int then $ 
-                        data =  uint(data) - 32768US else $
-                   if unsgn_lng then  data = ulong(data) - 2147483648UL 
-                   sxaddpar, header, 'BSCALE', 1.
-                   sxaddpar, header, 'O_BSCALE', Bscale,' Original BSCALE Value'
+                    if unsgn_int then begin  
+                        data =  uint(data) - 32768US
+			if N_blank then blank = uint(blank) - 32768US 
+		   endif else  begin 
+                         data = ulong(data) - 2147483648UL
+			if N_blank then blank = ulong(blank) - 2147483648UL
+		   endelse 
+		   if N_blank then sxaddpar,header,'BLANK',blank
+                   sxaddpar, header, 'BZERO', 0
+                   sxaddpar, header, 'O_BZERO', Bzero,' Original BZERO Value'
                
           endif else begin
  
           if N_Bscale GT 0  then $ 
                if ( Bscale NE 1. ) then begin
 	           if size(Bscale,/TNAME) NE 'DOUBLE' then $
-                      data = temporary(data) * float(Bscale) else $ 
-		      data = temporary(data) * Bscale 
-                   sxaddpar, header, 'BSCALE', 1.
+                      data *= float(Bscale) else $ 
+		      data *= Bscale 
+		  if N_blank then blank *= bscale    
+                  sxaddpar, header, 'BSCALE', 1.
                    sxaddpar, header, 'O_BSCALE', Bscale,' Original BSCALE Value'
-                   sxaddpar, header, 'BZERO', 0.
-                   sxaddpar, header, 'O_BZERO', Bzero,' Original BZERO Value'
+		   
                endif
 
          if N_Bzero GT 0  then $
                if (Bzero NE 0) then begin
 	             if size(Bzero,/TNAME) NE 'DOUBLE' then $
-                      data = temporary( data ) + float(Bzero) else $    ;Fixed Aug 07
-                      data = temporary( data ) + Bzero
+                      data += float(Bzero) else $    ;Fixed Aug 07
+                      data +=  Bzero
+		      if N_blank then blank += bzero
                      sxaddpar, header, 'BZERO', 0.
                      sxaddpar, header, 'O_BZERO', Bzero,' Original BZERO Value'
                endif
         
         endelse
-
-        if (Nblank GT 0) and ((N_bscale GT 0) or (N_Bzero GT 0)) then $
-                data[blankval] = blank
-
+	if  N_blank then sxaddpar,header,'BLANK',blank
         endif
+
 
 ; Return array.  If necessary, first convert NaN values.
 
@@ -562,7 +591,7 @@ function READFITS, filename, header, heap, CHECKSUM=checksum, $
 ; Come here if there was an IO_ERROR
     
  BAD:   print,!ERROR_STATE.MSG
-        if (not unitsupplied) and (N_elements(unit) GT 0) then free_lun, unit
+        if (~unitsupplied) && (N_elements(unit) GT 0) then free_lun, unit
         if N_elements(data) GT 0 then return,data else return, -1
 
  end 

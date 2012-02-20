@@ -146,7 +146,7 @@
 ; Prev. Hist. : 
 ;       C. Markwardt, based in concept on FXBREAD version 12 from
 ;                              IDLASTRO, but with significant and
-;                              major changes to accomodate the
+;                              major changes to accommodate the
 ;                              multiple row/column technique.  Mostly
 ;                              the parameter checking and general data
 ;                              flow remain.

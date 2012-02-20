@@ -11,9 +11,6 @@ pro fits_read,file_or_fcb,data,header,group_par,noscale=noscale, $
 ; PURPOSE:
 ;       To read a FITS file.
 ;
-; EXPLANATION:
-;       ***NOTE** This version of FITS_READ must be used with a post Sep 2006
-;          version of FITS_OPEN.
 ; CALLING SEQUENCE:
 ;       FITS_READ, filename_or_fcb, data [,header, group_par]
 ;
@@ -24,7 +21,9 @@ pro fits_read,file_or_fcb,data,header,group_par,noscale=noscale, $
 ;               FITS_OPEN and close the file with FITS_CLOSE before exiting.
 ;               When multiple extensions are to be read from the file, it is
 ;               more efficient for the user to call FITS_OPEN and leave the
-;               file open until all extensions are read.
+;               file open until all extensions are read. FPACK 
+;               ( http://heasarc.gsfc.nasa.gov/fitsio/fpack/ ) compressed FITS 
+;               files can be read provided that the FPACK software is installed.  
 ;
 ; OUTPUTS:
 ;       DATA - data array.  If /NOSCALE is specified, BSCALE and BZERO
@@ -81,7 +80,7 @@ pro fits_read,file_or_fcb,data,header,group_par,noscale=noscale, $
 ;       /NO_UNSIGNED - By default, if  the header indicates an unsigned integer
 ;              (BITPIX = 16, BZERO=2^15, BSCALE=1) then FITS_READ will output 
 ;               an IDL unsigned integer data type (UINT).   But if /NO_UNSIGNED
-;               is set, or the IDL, then the data is converted to type LONG.  
+;               is set, then the data is converted to type LONG.  
 ;       /PDU - If set, then always add the primary data unit header keywords
 ;              to the output header, even if the INHERIT=T keyword is not found
 ;              This was the default behavior of FITS_READ prior to April 2007
@@ -132,6 +131,11 @@ pro fits_read,file_or_fcb,data,header,group_par,noscale=noscale, $
 ;               for cases where NAXIS=0 and the NPIX1, NPIX2, and PIXVALUE
 ;               keywords are present.  The output image will be:
 ;                       image = replicate(PIXVALUE,NPIX1,NPIX2)
+;
+;      FPACK compressed files are always closed and reopened when exiting 
+;      FITS_READ so that the pointer is set to the beginning of the file. (Since 
+;      FPACK files are opened with a bidirectional pipe rather than OPEN, one 
+;      cannot use POINT_LUN to move to a specified position in the file.)
 ;
 ; EXAMPLES:
 ;       Read the primary data unit of a FITS file, if it is null read the
@@ -188,6 +192,7 @@ pro fits_read,file_or_fcb,data,header,group_par,noscale=noscale, $
 ;       Added /PDU keyword to always append primary header W. Landsman June 2007
 ;       Use PRODUCT to compute # of data points   W. Landsman  May 2009
 ;       Make sure FIRST is long64 when computing position W.L. October 2009
+;       Read FPACK compressed files, W.L.  December 2010
 ;-
 ;
 ;-----------------------------------------------------------------------------
@@ -227,7 +232,7 @@ pro fits_read,file_or_fcb,data,header,group_par,noscale=noscale, $
 ;
 ; Open file if file name is supplied
 ;
-        s = size(file_or_fcb) & fcbtype = s[s[0]+1]
+        fcbtype = size(file_or_fcb,/type)
         fcbsize = n_elements(file_or_fcb)
         if (fcbsize ne 1) or ((fcbtype ne 7) and (fcbtype ne 8)) then begin
                 message = 'Invalid Filename or FCB supplied'
@@ -249,7 +254,7 @@ pro fits_read,file_or_fcb,data,header,group_par,noscale=noscale, $
 ;
 ; case 2: extname, extver, or extlevel specified
 ;
-           if (extname ne '') or (extlevel ne 0) or (extver ne 0) or $
+           if (extname ne '') || (extlevel ne 0) || (extver ne 0) || $
               (xtension ne '') then begin
 ;
 ; find extensions with supplied extname, extver, extlevel, and xtension
@@ -276,7 +281,7 @@ pro fits_read,file_or_fcb,data,header,group_par,noscale=noscale, $
 ;       case 3: read next extension
 ;
                 enum = fcb.last_extension + 1
-                if (enum eq 0) and (fcb.naxis[0] eq 0) then enum = 1
+                if (enum eq 0) && (fcb.naxis[0] eq 0) then enum = 1
             end
         end
 ;
@@ -295,6 +300,7 @@ pro fits_read,file_or_fcb,data,header,group_par,noscale=noscale, $
         gcount = fcb.gcount[enum]
         pcount = fcb.pcount[enum]
         xtension = fcb.xtension[enum]
+	fcompress = tag_exist(fcb,'fcompress') ? fcb.fcompress : 0
 ;
 ; read header ================================================================
 ;
@@ -302,7 +308,9 @@ pro fits_read,file_or_fcb,data,header,group_par,noscale=noscale, $
         h = bytarr(80,36,/nozero)
         nbytes_in_file = fcb.nbytes
         position = fcb.start_header[enum]
-        point_lun,fcb.unit,position
+	
+        if fcompress then mrd_skip,fcb.unit,position else $
+	                 point_lun,fcb.unit,position
         first_block = 1         ; first block in header flag
         repeat begin
              if position ge nbytes_in_file then begin
@@ -311,9 +319,9 @@ pro fits_read,file_or_fcb,data,header,group_par,noscale=noscale, $
              endif
 
              readu,fcb.unit,h
-             position = position + 2880
+             position +=  2880
              hdr = string(h>32b)
-             endline = where(strmid(hdr,0,8) eq 'END     ',nend)
+             endline = where(strcmp(hdr,'END     ',8),nend)
              if nend gt 0 then hdr = hdr[0:endline[0]]
              if first_block then header = hdr else header = [header,hdr]
              first_block = 0
@@ -324,14 +332,14 @@ pro fits_read,file_or_fcb,data,header,group_par,noscale=noscale, $
         bscale = sxpar(header,'bscale', Count = N_bscale)
         bzero = sxpar(header,'bzero', Count = N_bzero)
         if bscale eq 0.0 then bscale = 1.0
-        unsgn_int = (bitpix EQ 16) and (Bzero EQ 32768) and (bscale EQ 1)
-        unsgn_lng = (bitpix EQ 32) and (Bzero EQ 2147483648) and (bscale EQ 1)
-        if (unsgn_int or unsgn_lng) then $
-	        if not keyword_set(no_unsigned) then noscale = 1
-        if (N_bscale gt 0) and (noscale eq 0) and (data_only eq 0) and $
-           (last eq 0) and (header_only eq 0) then sxaddpar,header,'bscale',1.0
-        if (N_bzero gt 0) and (noscale eq 0) and (data_only eq 0) and $
-           (last eq 0) and (header_only eq 0) then sxaddpar,header,'bzero',0.0
+        unsgn_int = (bitpix EQ 16) && (Bzero EQ 32768) && (bscale EQ 1)
+        unsgn_lng = (bitpix EQ 32) && (Bzero EQ 2147483648) && (bscale EQ 1)
+        if (unsgn_int || unsgn_lng) then $
+	        if ~keyword_set(no_unsigned) then noscale = 1
+        if (N_bscale gt 0) &&(noscale eq 0) && (data_only eq 0) && $
+           (last eq 0) && (header_only eq 0) then sxaddpar,header,'bscale',1.0
+        if (N_bzero gt 0) && (noscale eq 0) && (data_only eq 0) && $
+           (last eq 0) && (header_only eq 0) then sxaddpar,header,'bzero',0.0
         groups = sxpar(header,'groups')
 ;
 ; create header with form:
@@ -349,7 +357,7 @@ pro fits_read,file_or_fcb,data,header,group_par,noscale=noscale, $
 	       
 	if no_pdu EQ 0 then no_pdu = 1 - (sxpar(header,'INHERIT') > 0)
         if pdu then no_pdu = 0
-        if (no_pdu eq 0) and (enum gt 0) then begin
+        if (no_pdu eq 0) && (enum gt 0) then begin
 	
 ;
 ; delete required keywords
@@ -374,14 +382,14 @@ pro fits_read,file_or_fcb,data,header,group_par,noscale=noscale, $
         sxaddpar,hreq,'naxis',naxis,'number of axes'
         if naxis gt 0 then for i=1,naxis do $
                 sxaddpar,hreq,'naxis'+strtrim(i,2),axis[i-1]
-        if (enum eq 0)and (fcb.nextend GE 1) then $
+        if (enum eq 0) && (fcb.nextend GE 1) then $
                 sxaddpar,hreq,'EXTEND','T','file may contain extensions'
         if groups then sxaddpar,hreq,'GROUPS','T','Group format'
-        if (enum gt 0) or (pcount gt 0) then $
+        if (enum gt 0) || (pcount gt 0) then $
                      sxaddpar,hreq,'PCOUNT',pcount,'Number of group parameters'
-        if (enum gt 0) or (gcount gt 0) then $
+        if (enum gt 0) || (gcount gt 0) then $
                     sxaddpar,hreq,'GCOUNT',gcount,'Number of groups'
-       n0 = where(strmid(hreq,0,8) eq 'END     ') & n0=n0[0]
+       n0 = where(strcmp(hreq,'END     ',8)) & n0=n0[0]
             hpdu = fcb.hmain
             n1 = n_elements(hpdu)
             if n1 gt 1 then begin               
@@ -442,6 +450,8 @@ read_data:
 ;
 ; starting data position
 ;
+
+	skip = fcb.start_data[enum] - position
         position = fcb.start_data[enum]
 ;
 ; find correct group
@@ -451,19 +461,24 @@ read_data:
                         message='INVALID group number specified'
                         goto,error_exit
                 end
-                position = position + long64(group) * nbytes_per_group 
+		skip += long64(group) * nbytes_per_group 
+                position += skip
         end
 ;
 ; read group parameters
 ;
-        if (enum eq 0) and (fcb.random_groups eq 1) and (pcount gt 0) and $
+        if (enum eq 0) && (fcb.random_groups eq 1) && (pcount gt 0) && $
            (last eq 0) then begin
-            if n_params(0) gt 3 then begin
+            if N_params() gt 3 then begin
                 group_par = make_array( dim = [pcount], type = idl_type, /nozero)
-                point_lun,fcb.unit,position
+               
+             if fcompress then mrd_skip,fcb.unit,skip else $
+	                  point_lun,fcb.unit,position
+ 
                 readu,fcb.unit,group_par
             endif
-            position = position + long64(pcount) * bytes_per_word
+	    skip  =  long64(pcount) * bytes_per_word
+            position += skip
         endif
 ;
 ; create data array
@@ -472,13 +487,14 @@ read_data:
 ;
 ; user specified first and last
 ;
-                if (first lt 0) or (last le 1) or (first gt last) or $
+                if (first lt 0) || (last le 1) || (first gt last) || $
                    (last gt nwords-1) then begin
                         message = 'INVALID value for parameters FIRST & LAST'
                         goto,error_exit
                 endif
                 data = make_array(dim = [last-first+1], type=idl_type, /nozero)
-                position = position + long64(first) * bytes_per_word
+                skip +=  long64(first) * bytes_per_word
+                position += skip
             endif else begin
 ;
 ; full array
@@ -496,9 +512,11 @@ read_data:
 ;
 ; read array
 ;
-        point_lun,fcb.unit,position
+        if fcompress then mrd_skip,fcb.unit,skip else $
+	                 point_lun,fcb.unit,position
         readu,fcb.unit,data
-        if not keyword_set(No_Unsigned) and (not data_only) then begin
+	if fcb.fcompress then swap_endian_inplace,data,/swap_if_little
+        if ~keyword_set(No_Unsigned) && (~data_only) then begin
         if unsgn_int then begin 
                 data =  uint(data) - uint(32768) 
         endif else if unsgn_lng then begin 
@@ -509,19 +527,25 @@ read_data:
 ; scale data if header was read and first and last not used.   Do a special
 ; check of an unsigned integer (BZERO = 2^15) or unsigned long (BZERO = 2^31) 
 ;
-        if (data_only eq 0) and (last eq 0) and (noscale eq 0) then begin
+        if (data_only eq 0) && (last eq 0) && (noscale eq 0) then begin
 
                 if bitpix lt 32 then begin      ;use real*4 for bitpix<32
                         bscale = float(bscale)
                         bzero = float(bzero)
                 endif
-                if bscale ne 1.0 then data = temporary(data)*bscale
-                if bzero ne 0.0 then data = temporary(data) + bzero
+                if bscale ne 1.0 then data *= bscale
+                if bzero ne 0.0 then data +=  bzero
  	endif
 ;
 ; done
 ;
 done:   
+        if fcompress then begin 
+	        free_lun,fcb.unit 
+		ff = strmid(fcb.filename,1,strlen(fcb.filename)-2)	
+		spawn,ff,unit=unit,/sh, stderr = stderr		
+		fcb.unit = unit
+        endif else $		
         if fcbtype eq 7 then fits_close,fcb else file_or_fcb.last_extension=enum
         !err = 1
         return
@@ -530,9 +554,9 @@ done:
 ; error exit
 ;
 ioerror:
-        message = !err_string
+        message = !ERROR_STATE.MSG
 error_exit:
-        if (fcbtype eq 7) and (N_elements(fcb) GT 0) then  $
+        if (fcbtype eq 7) && (N_elements(fcb) GT 0) then  $
                    fits_close,fcb, no_abort=no_abort
         !err = -1
         if keyword_set(no_abort) then return

@@ -20,7 +20,10 @@
 ;                        /FPACK, /NO_FPACK
 ;
 ; INPUT PARAMETERS:
-;     FILE    = FITS file name, scalar string
+;     FILE    = FITS file name, scalar string.    If an empty string is supplied
+;              then the user will be prompted for the file name.   The user
+;              will also be prompted if a wild card is supplied, and more than 
+;              one file matches the wildcard.
 ;     EXT_NO_OR_NAME  = Either the extension to be moved to (scalar 
 ;               nonnegative integer) or the name of the extension to read 
 ;               (scalar string)
@@ -103,28 +106,40 @@
 ;       W. Landsman   May 2009     Support FPACK compressed files
 ;                                  Added /FPACK, /HEADERONLY keywords
 ;       W.Landsman    July 2009    Deprecated /HEADERONLY add /NO_FPACK
+;       W.Landsman    July 2011    Check for SIMPLE in first 8 chars 
+;               Use gunzip to decompress Unix. Z file since compress utility 
+;               often not installed anymore)
 ;-
 ;
-        ON_ERROR,2
+        On_Error,2
         compile_opt idl2  
 ;
 ;  Check the number of parameters.
 ;
-        IF N_PARAMS() LT 2 THEN BEGIN 
+        IF N_Params() LT 2 THEN BEGIN 
             PRINT,'SYNTAX:  UNIT = FXPOSIT(FILE, EXT_NO, /Readonly,' + $
 	                   'ERRMSG= , /SILENT, compress=prog, LUNIT = lunit)'
             RETURN,-1
         ENDIF
-        PRINTERR = NOT ARG_PRESENT(ERRMSG)
+        PRINTERR = ~ARG_PRESENT(ERRMSG)
 	ERRMSG = ''
 	UNIXPIPE=0
 ; The /headeronly keyword has been replaced with /no_fpack	
-        if not keyword_set(no_fpack) then no_fpack = keyword_set(headeronly)
+        if ~keyword_set(no_fpack) then no_fpack = keyword_set(headeronly)
 	exten = ext_no
 
    	COUNT=0
-	IF XFILE[0] NE '' THEN $
-             FILE = FILE_SEARCH(XFILE, COUNT=COUNT)         
+	IF XFILE[0] NE '' THEN BEGIN 
+             FILE = FILE_SEARCH(XFILE, COUNT=COUNT)  
+	     IF COUNT GT 1 THEN $
+	          FILE = DIALOG_PICKFILE(FILTER=XFILE, /MUST_EXIST, $
+		         TITLE = 'Please select a FITS file')
+	ENDIF ELSE BEGIN 
+             FILE =DIALOG_PICKFILE(FILTER=['*.fit*;*.fts*;*.img*;*.FIT*'], $
+	           TITLE='Please select a FITS file',/MUST_EXIST)
+         ENDELSE
+             COUNT = N_ELEMENTS(FILE)
+	            
 
         IF COUNT EQ 0 THEN BEGIN
 	    ERRMSG = 'Specified FITS File not found ' + XFILE[0]
@@ -158,23 +173,23 @@
         
             LEN = STRLEN(FILE)
             IF LEN GT 3 THEN $
-	        TAIL = STRLOWCASE(STRMID(FILE, LEN-3, 3))  $
-	    ELSE TAIL = ' '
+	        tail = STRLOWCASE(STRMID(file, len-3, 3))  $
+	    ELSE tail = ' '
 	    
-            IF STRMID(TAIL,1,2) EQ '.z'  THEN $
-                UCMPRS = 'uncompress'   $
-	    ELSE IF TAIL EQ '.gz' or tail EQ 'ftz' THEN $
-	        UCMPRS = 'gunzip'       $
-	    ELSE IF TAIL EQ 'bz2' THEN $
+            IF STRMID(tail,1,2) EQ '.z'  THEN $
+                UCMPRS = 'gunzip'   $
+	    ELSE IF (tail EQ '.gz') || (tail EQ 'ftz') THEN $
+	        UCMPRS = 'gzip'       $
+	    ELSE IF tail EQ 'bz2' THEN $
 	        UCMPRS = 'bunzip2'     $
-	    ELSE IF NOT KEYWORD_SET(NO_FPACK) THEN $
-	          IF TAIL EQ '.fz' THEN UCMPRS = 'funpack'	
+	    ELSE IF ~KEYWORD_SET(NO_FPACK) THEN $
+	          IF tail EQ '.fz' THEN UCMPRS = 'funpack'	
 	    
 	ENDELSE
 
 ;  Handle compressed files which are always opened for Read only.
 
-	IF UCMPRS EQ 'gunzip' THEN BEGIN
+	IF UCMPRS EQ 'gzip' THEN BEGIN
 	        
                 OPENR, UNIT, FILE, /COMPRESS, GET_LUN=glun, ERROR = ERROR, $
 		           /SWAP_IF_LITTLE       
@@ -219,14 +234,25 @@
         IF SIZE(EXT_NO,/TNAME) NE 'STRING' THEN $
 	      IF EXT_NO LE 0 THEN RETURN, UNIT
 
-	STAT = FXMOVE(UNIT, EXTEN, SILENT = Silent, EXT_NO = extnum, $
-	ERRMSG=ERRMSG)
+;For Uncompresed files test that the first 8 characters are 'SIMPLE'
 
-	IF STAT LT 0 THEN BEGIN
-            IF(NOT KEYWORD_SET(LUNIT)) THEN FREE_LUN, UNIT
-	    IF PRINTERR THEN MESSAGE,ERRMSG
-	    RETURN, STAT
-	ENDIF ELSE RETURN, UNIT
+        IF ucmprs EQ ' ' THEN BEGIN
+          simple = BytArr(6)
+	  READU,unit,simple
+          if string(simple) NE 'SIMPLE' then begin 
+                IF ~KEYWORD_SET(LUNIT) THEN Free_Lun, unit
+	        ERRMSG = "ERROR - FITS File must begin with 'SIMPLE'" 
+		if printerr THEN MESSAGE,errmsg,/CON
+		return,-1
+           endif 	
+	point_lun,unit,0    	
+	endif
+	stat = FXMOVE(unit, exten, SILENT = Silent, EXT_NO = extnum, $
+	ERRMSG=errmsg)
+
+	IF stat LT 0 THEN BEGIN
+            IF ~KEYWORD_SET(LUNIT) THEN Free_Lun, unit
+	    IF PrintErr THEN MESSAGE,ErrMsg
+	    RETURN, stat
+	ENDIF ELSE RETURN, unit
 END
-
-

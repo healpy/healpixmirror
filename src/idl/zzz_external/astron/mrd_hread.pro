@@ -1,5 +1,5 @@
 pro mrd_hread, unit, header, status, SILENT = silent, FIRSTBLOCK = firstblock, $
-    ERRMSG = errmsg,SKIPDATA=skipdata
+    ERRMSG = errmsg,SKIPDATA=skipdata,NO_BADHEADER=no_badheader
 ;+
 ; NAME: 
 ;     MRD_HREAD
@@ -28,10 +28,13 @@ pro mrd_hread, unit, header, status, SILENT = silent, FIRSTBLOCK = firstblock, $
 ;                even if the /FIRSTBLOCK keyword is supplied.
 ;      /SILENT - If set, then warning messages about any invalid characters in
 ;                the header are suppressed.
-;     /SKIPDATA - If set, then the file point is positioned at the end of the
+;      /SKIPDATA - If set, then the file point is positioned at the end of the
 ;                HDU after the header is read, i.e. the following data block
 ;                is skipped.   Useful, when one wants to the read the headers
 ;                of multiple extensions.
+;      /NO_BADHEADER - if set, returns if FITS header has illegal characters
+;                By default, MRD_HREAD replaces bad characters with blanks,
+;                issues a warning, and continues.
 ; OPTIONAL OUTPUT PARAMETER:
 ;       ERRMSG  = If this keyword is present, then any error messages will be
 ;                 returned to the user in this parameter rather than
@@ -55,10 +58,12 @@ pro mrd_hread, unit, header, status, SILENT = silent, FIRSTBLOCK = firstblock, $
 ;      Added /SILENT keyword   W. Landsman   December 2000
 ;      Added /FIRSTBLOCK keyword  W. Landsman   February 2003
 ;      Added ERRMSG, SKIPDATA keyword W. Landsman          April 2009
+;      Close file unit even after error message   W.L.  October 2010
+;      Added /NO_BADHEADER  Zarro (ADNET), January 2012
 ;-
   On_error,2
   compile_opt idl2
-  printerr = not arg_present(errmsg)
+  printerr = ~arg_present(errmsg)
   errmsg = ''
 
   block = string(replicate(32b, 80, 36))
@@ -71,7 +76,7 @@ pro mrd_hread, unit, header, status, SILENT = silent, FIRSTBLOCK = firstblock, $
 ; Shouldn't get eof in middle of header.
        if eof(unit) then begin
                 errmsg = 'EOF encountered in middle of FITS header'
-		if printerr then message,errmsg
+		if printerr then message,errmsg,/CON
 		free_lun, unit
 		status = -1
 		return
@@ -82,20 +87,24 @@ pro mrd_hread, unit, header, status, SILENT = silent, FIRSTBLOCK = firstblock, $
 	on_ioerror, null
 
 ; Check that there aren't improper null characters in strings that are causing 
-; them to be truncated.   Issue a warning but continue if problems are found.
+; them to be truncated.   Issue a warning but continue if problems are
+; found (unless /NO_BADHEADER is set)
 
 	w = where(strlen(block) ne 80, Nbad)
 	if (Nbad GT 0) then begin
-		if not keyword_set(SILENT) then message, /INF, $
-                            'Warning-Invalid characters in header'
+                warning='Warning-Invalid characters in header'
+		if ~keyword_set(SILENT) then message,warning,/INF
+                if keyword_set(NO_BADHEADER) then begin
+                  status=-1 & errmsg=warning & free_lun,unit & return
+                endif
 		block[w] = string(replicate(32b, 80))
 	endif	       
 	w = where(strmid(block, 0, 8) eq 'END     ', Nend)
         if nblock EQ 0 then begin
                header = Nend GT 0 ?  block[ 0:w[0] ] : block
-	       nblock = nblock + 1
+	       nblock =1
         endif else $
-	       if not keyword_set(firstblock) then $
+	       if ~keyword_set(firstblock) then $
 	         header = Nend GT 0 ? [header,block[0:w[0]]] : [header, block]
 			
 	endwhile

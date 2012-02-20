@@ -113,9 +113,11 @@ Pro sxaddpar, Header, Name, Value, Comment, Location, before=before, $
 ;       June 2003, Added SAVECOMMENT keyword    W. Landsman
 ;       Jan 2004, If END is missing, then add it at the end W. Landsman
 ;       May 2005 Fix SAVECOMMENT error with non-string values W. Landsman
-;       Oct 2005 Jan 2004 change made SXADDPAR fail for empty strings W.L. 
+;       Oct 2005 Jan 2004 change made SXADDPAR fail for empty strings W.L.
+;       May 2011 Fix problem with slashes in string values W.L. 
 ;       
 ;-
+ compile_opt idl2
  if N_params() LT 3 then begin             ;Need at least 3 parameters
       print,'Syntax - Sxaddpar, Header, Name,  Value, [Comment, Postion'
       print,'                      BEFORE = ,AFTER = , FORMAT =, /SAVECOMMENT]'
@@ -180,7 +182,7 @@ Pro sxaddpar, Header, Name, Value, Comment, Location, before=before, $
 ;  others.  They are simply added to the header array whether there are any
 ;  already there or not.
 
- if (nn EQ 'HISTORY ') or (nn EQ 'COMMENT ') or $
+ if (nn EQ 'HISTORY ') || (nn EQ 'COMMENT ') || $
     (nn EQ '        ')  then begin             ;add history record?
 ;
 ;  If the header array needs to grow, then expand it in increments of 5 lines.
@@ -252,7 +254,7 @@ Pro sxaddpar, Header, Name, Value, Comment, Location, before=before, $
 
 ; Find location to insert keyword.   Save the existing comment if user did
 ; not supply a new one.   Comment starts after column 32 for numeric data,
-; after the slash (but at least after column 20) for string data. 
+; after the slash (but at least after final quote) for string data. 
 
  ncomment = comment
  ipos  = where(keywrd eq nn,nfound)
@@ -261,7 +263,10 @@ Pro sxaddpar, Header, Name, Value, Comment, Location, before=before, $
          if comment eq '' or keyword_set(savecom) then begin  ;save comment?
          if strmid(header[i],10,1) NE "'" then $
                  ncomment=strmid(header[i],32,48) else begin
-                 slash = strpos(header[i],'/', 20)  
+		 quote = strpos(header[i],"'",11)
+		
+                 if quote EQ -1 then slash = -1 else $
+		       slash = strpos(header[i],'/',quote)  		
                  if slash NE -1 then $
                         ncomment =  strmid(header[i], slash+1, 80) else $
                         ncomment = string(replicate(32B,80))
@@ -307,7 +312,7 @@ REPLACE:
 
 7:      begin
           upval = strupcase(value)      ;force upper case.
-          if (upval eq 'T') or (upval eq 'F') then begin
+          if (upval eq 'T') || (upval eq 'F') then begin
                 strput,h,upval,29  ;insert logical value.
             end else begin              ;other string?
                 if strlen(value) gt 18 then begin       ;long string

@@ -141,7 +141,7 @@ function SXPAR, hdr, name, abort, COUNT=matches, COMMENT = comments, $
 ;       Check for valid header
 
 ;Check header for proper attributes.
-  if ( size(hdr,/N_dimen) NE 1 ) or ( size(hdr,/type) NE 7 ) then $
+  if ( size(hdr,/N_dimen) NE 1 ) || ( size(hdr,/type) NE 7 ) then $
            message,'FITS Header (first parameter) must be a string array'
 
   nam = strtrim( strupcase(name) )      ;Copy name, make upper case     
@@ -172,7 +172,7 @@ function SXPAR, hdr, name, abort, COUNT=matches, COMMENT = comments, $
 ;  a number.  Store the positions of the located keywords in NFOUND, and the
 ;  value of the number field in NUMBER.
 
-        histnam = (nam eq 'HISTORY ') or (nam eq 'COMMENT ') or (nam eq '') 
+        histnam = (nam eq 'HISTORY ') || (nam eq 'COMMENT ') || (nam eq '') 
         keyword = strmid( hdr, 0, 8)
  
         if vector then begin
@@ -192,7 +192,7 @@ function SXPAR, hdr, name, abort, COUNT=matches, COMMENT = comments, $
 
         endif else begin
             nfound = where(keyword EQ nam, matches)
-             if (matches GT 1) and ~histnam then        $
+             if (matches GT 1) && ~histnam then        $
                 if ~keyword_set(silent) then $
                 message,/informational, 'Warning - keyword ' +   $
                 nam + ' located more than once in ' + abort
@@ -239,7 +239,7 @@ function SXPAR, hdr, name, abort, COUNT=matches, COMMENT = comments, $
 ; SXPAR) 4. /NOCONTINE is not set
 
     if ~keyword_set(nocontinue) then begin
-                off = off + 1
+                off++
                 val = strtrim(value,2)
 
                 if (strlen(val) gt 0) && $
@@ -292,9 +292,9 @@ function SXPAR, hdr, name, abort, COUNT=matches, COMMENT = comments, $
 
 NOT_COMPLEX:
                 On_IOerror, GOT_VALUE
-                  if (strpos(value,'.') GE 0) or (strpos(value,'E') GT 0) $
-                  or (strpos(value,'D') GE 0) then begin  ;Floating or double?
-                      if ( strpos(value,'D') GT 0 ) or $  ;Double?
+                  if (strpos(value,'.') GE 0) || (strpos(value,'E') GT 0) $
+                  || (strpos(value,'D') GE 0) then begin  ;Floating or double?
+                      if ( strpos(value,'D') GT 0 ) || $  ;Double?
                          ( strlen(value) GE 8 ) then value = double(value) $
                                                 else value = float(value)
                        endif else begin                   ;Long integer

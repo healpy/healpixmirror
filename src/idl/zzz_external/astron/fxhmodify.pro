@@ -73,7 +73,7 @@ PRO FXHMODIFY, FILENAME, NAME, VALUE, COMMENT, BEFORE=BEFORE,   $
 ;       the structure of the FITS file, e.g. BITPIX, NAXIS, PCOUNT, etc.  Doing
 ;       so could corrupt the readability of the FITS file.
 ; Example:
-;       Modify the name 'OJBECT' keyword in the primary FITS header of a FITS 
+;       Modify the name 'OBJECT' keyword in the primary FITS header of a FITS 
 ;       file 'spec98.ccd' to contain the value 'test domeflat'
 ;
 ;       IDL> fxhmodify, 'spec98.ccd', 'OBJECT', 'test domeflat'

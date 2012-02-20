@@ -5,7 +5,7 @@
 ; PURPOSE:
 ;	Insert array INSERT into the array DESTINATION
 ; EXPLANATION:
-;	The dimensions of the DESTINATION array are adjusted to accomodate
+;	The dimensions of the DESTINATION array are adjusted to accommodate
 ;	the inserted array.
 ; CATEGOBY:
 ;	Utility

@@ -49,9 +49,10 @@ pro zparcheck,progname,parameter,parnum,types,dimens,message
 ;       Recognize double complex datatype    W. Landsman   September 1995
 ;       Converted to IDL V5.0   W. Landsman   September 1997
 ;       Check for new data types (e.g. unsigned) W. Landsman February 2000
+;       Print a traceback if an error occurs  W. Landsman  Aug 2011
 ;-
 ;----------------------------------------------------------
-
+  compile_opt idl2
   if N_params() LT 4 then begin
         print, $
    'Syntax -  ZPARCHECK, progname, parameter, parnum, types, dimens, [message ]
@@ -125,6 +126,7 @@ ABORT:
         endcase
   endfor
   print,'Valid types are:' + stype
+  help,/trace
   ;if !debug then stop
   retall  ; zparcheck
   end

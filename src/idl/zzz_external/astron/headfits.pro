@@ -16,6 +16,7 @@ function HEADFITS, filename, EXTEN = exten, Compress = compress, $
 ;
 ; INPUTS:
 ;       Filename = String containing the name of the FITS file to be read.
+;                If set to an empty string, then user will be prompted for name.
 ;                File names ending in '.gz' are assumed to be gzip'ed compressed
 ;                and under Unix file names ending in '.Z' are assumed to be
 ;                Unix compressed, and file names ending in .bz2 are assumed to
@@ -88,6 +89,7 @@ function HEADFITS, filename, EXTEN = exten, Compress = compress, $
 ;       Test output status of MRD_HREAD call October 2003 W. Landsman
 ;       Allow extension to be specified by name Dec 2006 W. Landsman
 ;       No need to uncompress FPACK compressed files  May 2009 W. Landsman
+;       Use V6.0 notation   W.L.   Feb. 2011  
 ;-
  On_error,2
  compile_opt idl2
@@ -98,9 +100,9 @@ function HEADFITS, filename, EXTEN = exten, Compress = compress, $
      return, -1
  endif
 
-  printerr = not arg_present(errmsg) 
+  printerr = ~arg_present(errmsg) 
   errmsg = ''
-  if not keyword_set(exten) then exten = 0
+  if ~keyword_set(exten) then exten = 0
 
   unitsupplied = size(filename,/TNAME) NE 'STRING'
   if unitsupplied then unit = filename else begin 
@@ -114,14 +116,14 @@ function HEADFITS, filename, EXTEN = exten, Compress = compress, $
      if eof(unit) then begin
         free_lun,unit
         message = 'Extension past EOF'
-        if not printerr then errmsg = message else $
+        if ~printerr then errmsg = message else $
                message,'ERROR - ' + message,/CON 
         return,-1
      endif
   endelse
   
   MRD_HREAD, unit, header, status, SILENT = silent
-  if not unitsupplied then free_lun, unit
+  if ~unitsupplied then free_lun, unit
   if status LT 0 then begin
          if N_elements(errmsg) GT 0 then errmsg = !ERROR_STATE.MSG else $
           message,'ERROR - ' + !ERROR_STATE.MSG,/CON 

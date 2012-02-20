@@ -4,7 +4,7 @@ pro readcol,name,v1,V2,v3,v4,v5,v6,v7,v8,v9,v10,v11,v12,v13,v14,v15, $
             FORMAT = fmt, DEBUG=debug, SILENT=silent, SKIPLINE = skipline, $
             NUMLINE = numline, DELIMITER = delimiter, NAN = NaN, $
             PRESERVE_NULL = preserve_null, COUNT=ngood, NLINES=nlines, $
-            STRINGSKIP = skipstart
+            STRINGSKIP = skipstart, QUICK = quick, COMPRESS = compress
 ;+
 ; NAME:
 ;       READCOL
@@ -16,7 +16,11 @@ pro readcol,name,v1,V2,v3,v4,v5,v6,v7,v8,v9,v10,v11,v12,v13,v14,v15, $
 ;
 ;       Use READFMT to read a fixed-format ASCII file.   Use RDFLOAT for
 ;       much faster I/O (but less flexibility).    Use FORPRINT to write 
-;       columns of data (inverse of READCOL).    
+;       columns of data (inverse of READCOL).   
+;
+;       If you sure that all lines meet the specified format (excluding 
+;       commented and SKIPed lines) then the speed for reading large files
+;       can be significantly improved by setting the /QUICK keyword.
 ;
 ; CALLING SEQUENCE:
 ;       READCOL, name, v1, [ v2, v3, v4, v5, ...  v40 , COMMENT=, /NAN
@@ -31,8 +35,8 @@ pro readcol,name,v1,V2,v3,v4,v5,v6,v7,v8,v9,v10,v11,v12,v13,v14,v15, $
 ;               for each column of data to be read.  Allowed letters are 
 ;               A - string data, B - byte, D - double precision, F- floating 
 ;               point, I - short integer, L - longword, LL - 64 bit integer, 
-;               U - unsigned short integer, Z - longword hexadecimal, 
-;               and X - skip a column.
+;               U - unsigned short integer, UL - unsigned long integer 
+;               Z - longword hexadecimal, and X - skip a column.
 ;
 ;               Columns without a specified format are assumed to be floating 
 ;               point.  Examples of valid values of FMT are
@@ -53,17 +57,24 @@ pro readcol,name,v1,V2,v3,v4,v5,v6,v7,v8,v9,v10,v11,v12,v13,v14,v15, $
 ;       COMMENT - single character specifying comment character.   Any line 
 ;                beginning with this character will be skipped.   Default is
 ;                no comment lines.
+;       /COMPRESS - If set, then the file is assumed to be gzip compressed.
+;                There is no automatic recognition of compressed files
+;                by extension type.
 ;       DELIMITER - Character(s) specifying delimiter used to separate 
 ;                columns.   Usually a single character but, e.g. delimiter=':,'
 ;                specifies that either a colon or comma as a delimiter. 
 ;                Set DELIM = string(9b) to read tab separated data
-;                The default delimiter is either a comma or a blank.                   
+;                The default delimiter is either a comma or a blank.
 ;       /NAN - if set, then an empty field will be read into a floating or 
 ;                double numeric variable as NaN; by default an empty field is 
 ;                converted to 0.0.
 ;       /PRESERVE_NULL - If set, then spaces are considered to be valid fields,
 ;                useful if the columns contain missing data.   Note that between
 ;                April and December 2006, /PRESERVE_NULL was the default.
+;       /QUICK -  If set, then READCOL does not check that each individual line
+;                matches the supplied format.     This makes READCOL less 
+;                flexible but can provide a significant speed improvement when
+;                reading large files.                       
 ;       SKIPLINE - Scalar specifying number of lines to skip at the top of file
 ;               before reading.   Default is to start at the first line.
 ;       NUMLINE - Scalar specifying number of lines in the file to read.  
@@ -146,26 +157,31 @@ pro readcol,name,v1,V2,v3,v4,v5,v6,v7,v8,v9,v10,v11,v12,v13,v14,v15, $
 ;           STRNUMBER()   W.L.  Feb 2010
 ;       Graceful return even if no valid lines are present D. Sahnow April 2010
 ;       Ability to read tab separated data WL April 2010
+;       Free memory used by pointers  WL  July 2010
+;       Added /QUICK keyword  WL  Sep 2010
+;       Accept normal FORTRAN formats (e.g. F5.1) P. Noterdaeme/W.L Jan 2011
+;       Add COMPRESS keyword, IDL 6 notation W. Landsman/J. Bailin   Feb 2011
+;       Allow filename to be 1 element array W.Landsman/S.Antonille Apr 2011
 ;-
   On_error,2                    ;Return to caller
   compile_opt idl2
 
   if N_params() lt 2 then begin
-     print,'Syntax - READCOL, name, v1, [ v2, v3,...v25, /NAN'
-     print,'        FORMAT= ,/SILENT  ,SKIPLINE =, NUMLINE = , /DEBUG, COUNT=]'
+    print,'Syntax - READCOL, name, v1, [ v2, v3,...v40, /NAN, DELIMITER=,/QUICK'
+    print,'        FORMAT= ,/SILENT  ,SKIPLINE =, NUMLINE = , /DEBUG, COUNT=]'
      return
   endif
 
 ; Get number of lines in file
 
   ngood = 0L                 ;Number of good lines
-  nlines = FILE_LINES( name )
+  nlines = FILE_LINES( name, COMPRESS=compress )
   
 
   if keyword_set(DEBUG) then $
      message,'File ' + name+' contains ' + strtrim(nlines,2) + ' lines',/INF
 
-  if not keyword_set( SKIPLINE ) then skipline = 0
+  if ~keyword_set( SKIPLINE ) then skipline = 0
   nlines = nlines - skipline
   if nlines LE 0 then begin
      message,'ERROR - File ' + name+' contains no data',/CON
@@ -173,7 +189,7 @@ pro readcol,name,v1,V2,v3,v4,v5,v6,v7,v8,v9,v10,v11,v12,v13,v14,v15, $
   endif     
   if keyword_set( NUMLINE) then nlines = numline < nlines
 
-  if not keyword_set( SKIPSTART ) then begin
+  if ~keyword_set( SKIPSTART ) then begin
      skipstart_flg=0 
   endif else begin
      skipstart_flg=1
@@ -198,14 +214,14 @@ pro readcol,name,v1,V2,v3,v4,v5,v6,v7,v8,v9,v10,v11,v12,v13,v14,v15, $
 
      while pos NE -1 do begin
         pos = strpos( frmt, 'X', pos+1)
-        nskip = nskip + 1
+        nskip++
      endwhile
 
   endif else begin              ;Read everything as floating point
 
      frmt = 'F'
      if ncol GT 1 then for i = 1,ncol-1 do frmt = frmt + ',F'
-     if not keyword_set( SILENT ) then message, $
+     if ~keyword_set( SILENT ) then message, $
         'Format keyword not supplied - All columns assumed floating point',/INF
 
   endelse
@@ -222,16 +238,15 @@ pro readcol,name,v1,V2,v3,v4,v5,v6,v7,v8,v9,v10,v11,v12,v13,v14,v15, $
 
      fmt1 = gettok( frmt, ',' )
      if fmt1 EQ '' then fmt1 = 'F' ;Default is F format
-     case strmid(fmt1,0,3) of 
+     case strmid(fmt1,0,1) of 
         'A':  idltype[i] = 7          
         'D':  idltype[i] = 5
         'F':  idltype[i] = 4
         'I':  idltype[i] = 2
         'B':  idltype[i] = 1
-        'L':  idltype[i] = 3
-	'LL': idltype[i] = 14
-	'UL': idltype[i] = 13
-	'ULL':idltype[i] = 15
+        'L':  idltype[i] = strmid(fmt1,0,2) EQ 'LL' ? 14 : 3 
+	'U':  if strmid(fmt1,1,1) NE 'L' then idltype[i] = 12 else $
+	      idltype[i] = strmid(fmt1,2,1) EQ 'L' ? 15 : 13
         'Z':  begin 
            idltype[i] = 3       ;Hexadecimal
            hex[i] = 1b
@@ -244,40 +259,40 @@ pro readcol,name,v1,V2,v3,v4,v5,v6,v7,v8,v9,v10,v11,v12,v13,v14,v15, $
 
      if idltype[i] GT 0 then begin
         bigarr[k] = ptr_new(make_array(nlines,type=idltype[i]))
-        k = k+1
+        k++
      endif
 
   endfor
   goodcol = where(idltype)
   idltype = idltype[goodcol]
   check_numeric = (idltype NE 7)
-  openr, lun, name, /get_lun
+  openr, lun, name, /get_lun, compress=compress
 
   temp = ' '
   skip_lun,lun,skipline, /lines
 
-  if not keyword_set(delimiter) then delimiter = ' ,'
+  if ~keyword_set(delimiter) then delimiter = ' ,'
   
-  for j = 0L, nlines-1 do begin
+  for j = 0L, nlines[0]-1 do begin
      readf, lun, temp
      if skipstart_flg then begin
                                 ; requested to skip lines starting with specifc string
         if strmid(temp,0,nskipstart) eq skipstart then begin
-           ngood = ngood-1
+           ngood--
            goto, BADLINE
         endif
      endif
 
      if strlen(temp) LT ncol then begin ;Need at least 1 chr per output line
-        ngood = ngood-1
-        if not keyword_set(SILENT) then $
+        ngood--
+        if ~keyword_set(SILENT) then $
            message,'Skipping Line ' + strtrim(skipline+j+1,2),/INF
         goto, BADLINE 
      endif
 
      temp = strtrim(temp,1)     ;Remove leading spaces
      if keyword_set(comment) then if strmid(temp,0,1) EQ comment then begin
-        ngood = ngood-1
+        ngood--
         if keyword_set(DEBUG) then $
            message,'Skipping Comment Line ' + strtrim(skipline+j+1,2),/INF
         goto, BADLINE 
@@ -287,31 +302,39 @@ pro readcol,name,v1,V2,v3,v4,v5,v6,v7,v8,v9,v10,v11,v12,v13,v14,v15, $
         strsplit(  temp,delimiter,/extract, preserve=preserve_null) $
        :strsplit(strcompress(temp) ,delimiter,/extract, preserve=preserve_null) 
      if N_elements(var) LT nfmt then begin 
-        if not keyword_set(SILENT) then $ 
+        if ~keyword_set(SILENT) then $ 
            message,'Skipping Line ' + strtrim(skipline+j+1,2),/INF 
-        ngood = ngood-1            
+        ngood--            
         goto, BADLINE           ;Enough columns?
      endif
      var = var[goodcol]
 
      k = 0
+     if keyword_set(quick) then $      ;Don't check for valid numeric values
+     
+         for i = 0L,ncol-1 do (*bigarr[i])[ngood] = var[i]   $
+    
+    else begin 
+     
+     
      for i = 0L,ncol-1 do begin
         
         if check_numeric[i] then begin                      ;Check for valid numeric data
            tst = strnumber(var[i],val,hex=hex[i],NAN=nan)   ;Valid number?
            if ~tst  then begin                           ;If not, skip this line
-              if not keyword_set(SILENT) then $ 
+              if ~keyword_set(SILENT) then $ 
                  message,'Skipping Line ' + strtrim(skipline+j+1,2),/INF 
-              ngood = ngood-1
+              ngood--
               goto, BADLINE 
            endif
         endif 
        (*bigarr[k])[ngood] = var[i]
-        k = k+1
+        k++
 
      endfor
 
-     BADLINE:  ngood = ngood+1
+endelse
+     BADLINE:  ngood++
 
   endfor
 
@@ -321,7 +344,7 @@ pro readcol,name,v1,V2,v3,v4,v5,v6,v7,v8,v9,v10,v11,v12,v13,v14,v15, $
      return
   endif
 
-  if not keyword_set(SILENT) then $
+  if ~keyword_set(SILENT) then $
      message,strtrim(ngood,2) + ' valid lines read', /INFORM  
 
 ; Compress arrays to match actual number of valid lines
@@ -331,5 +354,6 @@ pro readcol,name,v1,V2,v3,v4,v5,v6,v7,v8,v9,v10,v11,v12,v13,v14,v15, $
 ; Use SCOPE_VARFETCH to place into output variables..
    for i=0,ncol-1 do $
          (SCOPE_VARFETCH(vv[i],LEVEL=0)) = reform(*bigarr[i])
+    ptr_free, bigarr	 
   return
 end

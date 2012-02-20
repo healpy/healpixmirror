@@ -64,7 +64,8 @@ pro check_FITS, im, hdr, dimen, idltype, UPDATE = update, NOTYPE = notype, $
 ;       Remove explicit setting of obsolete !err W. Landsman February 2004
 ;       Remove SDAS support   W. Landsman       November 2006
 ;       Fix dimension errors introduced Nov 2006
-;       Work again for null arrays W. Landsman/E. Hivon May 2007 
+;       Work again for null arrays W. Landsman/E. Hivon May 2007
+;       Use V6.0 notation  W.L.  Feb. 2011 
 ;- 
  compile_opt idl2
  On_error,2
@@ -112,7 +113,7 @@ pro check_FITS, im, hdr, dimen, idltype, UPDATE = update, NOTYPE = notype, $
  if nax GT naxi then begin                 ;Does NAXIS agree with # of NAXISi?
         if keyword_set( UPDATE) then begin
                 fxaddpar, hdr, 'NAXIS', naxi
-                if not keyword_set(SILENT) then message, /INF, $
+                if ~keyword_set(SILENT) then message, /INF, $
         'NAXIS changed from ' + strtrim(nax,2) + ' to ' + strtrim(naxi,2)
         endif else begin 
                 message =  'FITS header has NAXIS = ' + strtrim(nax,2) + $
@@ -124,13 +125,13 @@ pro check_FITS, im, hdr, dimen, idltype, UPDATE = update, NOTYPE = notype, $
  endif
 
  last = naxi-1                        ;Remove degenerate dimensions
- while ( (naxis[last] EQ 1) and (last GE 1) ) do last = last -1
+ while ( (naxis[last] EQ 1) && (last GE 1) ) do last--
  if last NE nax-1 then begin
      naxis = naxis[ 0:last]
  endif 
 
  if ( ndimen NE last + 1 ) then begin
-    if not keyword_set( UPDATE) THEN begin
+    if ~keyword_set( UPDATE) THEN begin
         message = $
         '# of NAXISi keywords does not match # of array dimensions'
         if  N_elements(ERRMSG) GT 0 then errmsg = message else $
@@ -142,7 +143,7 @@ pro check_FITS, im, hdr, dimen, idltype, UPDATE = update, NOTYPE = notype, $
 
  for i = 0,last do begin
       if naxis[i] NE dimen[i] then begin
-      if not keyword_set( UPDATE ) then begin
+      if ~keyword_set( UPDATE ) then begin
           message =  'Invalid NAXIS' + strtrim( i+1,2 ) + $
 	             ' keyword value in header'
           if  N_elements(ERRMSG) GT 0 then errmsg = message else $ 
@@ -154,7 +155,7 @@ pro check_FITS, im, hdr, dimen, idltype, UPDATE = update, NOTYPE = notype, $
 
 BITPIX:     
 
- if not keyword_set( NOTYPE ) then begin
+ if ~keyword_set( NOTYPE ) then begin
 
  
   bitpix = fxpar( hdr, 'BITPIX')
@@ -195,7 +196,7 @@ BITPIX_ERROR:
                ' 32-bit unsigned binary integer' ]
     bitpix = bpix[idltype]
     comment = comm[idltype]
-    if not keyword_set(SILENT) then message, /INF, $
+    if ~keyword_set(SILENT) then message, /INF, $
         'BITPIX value of ' + strtrim(bitpix,2) +  ' added to FITS header'
     fxaddpar, hdr, 'BITPIX', bitpix, comment
     return
@@ -218,7 +219,7 @@ DIMEN_ERROR:
         if naxi GT ndimen then begin
                 for i = ndimen+1, naxi do sxdelpar, hdr, 'NAXIS'+strtrim(i,2)
         endif
-        if not keyword_set(SILENT) then message, /INF, $
+        if ~keyword_set(SILENT) then message, /INF, $
                 'NAXIS keywords in FITS header have been updated'
         goto, BITPIX
    endif

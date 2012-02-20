@@ -95,7 +95,7 @@ pro writefits, filename, data, header, heap, Append = Append,  $
 ;       EXTEND keyword no longer required in FITS files with extensions WL Feb 2008
 ;       Bug fix when filename ends with '.gz' and COMPRESS is used,
 ;            the output file must be compressed          S. Koposov June 2008 
-
+;      Use V6.0 notation  WL  Feb 2011
 ;-
   On_error, 2
   compile_opt idl2  
@@ -124,7 +124,7 @@ pro writefits, filename, data, header, heap, Append = Append,  $
 ; Remove any STSDAS/random group keywords from the primary header
 
   hdr = header
-  if not keyword_set( APPEND) then begin 
+  if ~keyword_set( APPEND) then begin 
          simple = 'SIMPLE  =                    T / Written by IDL:  ' $
                         + systime()  
          hdr[0] =  simple + string( replicate(32b,80-strlen(simple) ) )
@@ -135,7 +135,7 @@ pro writefits, filename, data, header, heap, Append = Append,  $
 
   if naxis NE 0 then begin
               
-        unsigned = (type EQ 12) or (type EQ 13)
+        unsigned = (type EQ 12) || (type EQ 13)
         if  unsigned then begin
              if type EQ 12 then begin
                      sxaddpar,hdr,'BZERO',32768,'Data is Unsigned Integer', $
@@ -150,7 +150,7 @@ pro writefits, filename, data, header, heap, Append = Append,  $
 
 ; For floating or double precision test for NaN values to write
 
-  NaNtest = keyword_set(NaNvalue) and ( (type EQ 4) or (type EQ 5) )
+  NaNtest = keyword_set(NaNvalue) && ( (type EQ 4) || (type EQ 5) )
   if NaNtest then begin
      NaNpts = where( data EQ NaNvalue, N_NaN)
      if (N_NaN GT 0) then begin
@@ -216,7 +216,7 @@ pro writefits, filename, data, header, heap, Append = Append,  $
 ; Add any CHECKSUM keywords if desired or already present
    
     do_Checksum = keyword_set(checksum)
-    if not do_checksum then test = sxpar(hdr,'CHECKSUM',count=do_checksum)
+    if ~do_checksum then test = sxpar(hdr,'CHECKSUM',count=do_checksum)
   
      if do_checksum then begin 
                if N_elements(heap) GT 0 then $

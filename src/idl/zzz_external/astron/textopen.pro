@@ -1,5 +1,5 @@
 PRO TEXTOPEN,PROGRAM,TEXTOUT=TEXTOUT, STDOUT = STDOUT, MORE_SET = more_set, $
-             SILENT = silent
+             SILENT = silent, WIDTH = width
 ;+
 ; NAME:
 ;       TEXTOPEN
@@ -11,7 +11,7 @@ PRO TEXTOPEN,PROGRAM,TEXTOUT=TEXTOUT, STDOUT = STDOUT, MORE_SET = more_set, $
 ;       TEXTOUT keyword or the (nonstandard) system variable !TEXTOUT.
 ;
 ; CALLING SEQUENCE:
-;       textopen, program, [ TEXTOUT =, /STDOUT, /SILENT, MORE_SET= ]
+;       textopen, program, [ TEXTOUT =, /STDOUT, /SILENT, MORE_SET=, WIDTH= ]
 ;
 ; INPUTS:
 ;       program - scalar string giving name of program calling textopen
@@ -34,6 +34,8 @@ PRO TEXTOPEN,PROGRAM,TEXTOUT=TEXTOUT, STDOUT = STDOUT, MORE_SET = more_set, $
 ;
 ;               The disadvantage of /STDOUT is that the /MORE option is not
 ;               available.
+;
+;         WIDTH - Specify line width for hardcopy output line wrapping (passed onto OPENW).
 ;
 ; OPTIONAL OUTPUT KEYWORD:
 ;       MORE_SET - Returns 1 if the output unit was opened with /MORE.   This
@@ -91,6 +93,8 @@ PRO TEXTOPEN,PROGRAM,TEXTOUT=TEXTOUT, STDOUT = STDOUT, MORE_SET = more_set, $
 ;       Return Calling Sequence if no parameters supplied W.Landsman Nov 2002
 ;       Remove VMS specific code  W. Landsman Sep 2006
 ;       Make sure MORE_SET is always defined   W. Landsman Jan 2007
+;       Added WIDTH keyword   J. Bailin Nov 2010
+;       Use V6.0 notation  W. Landsman April 2011
 ;-
 ;-----------------------------------------------------------
   On_Error,2
@@ -98,7 +102,7 @@ PRO TEXTOPEN,PROGRAM,TEXTOUT=TEXTOUT, STDOUT = STDOUT, MORE_SET = more_set, $
 
   if N_params() LT 1 then begin
       print,'Syntax - TEXTOPEN, program, [ TEXTOUT =, /STDOUT, /SILENT,' 
-      print,'                              MORE_SET= ]' 
+      print,'                              MORE_SET=, WIDTH= ]' 
       return
   endif
 
@@ -111,6 +115,9 @@ PRO TEXTOPEN,PROGRAM,TEXTOUT=TEXTOUT, STDOUT = STDOUT, MORE_SET = more_set, $
   ; Open proper unit.
   ;
   if N_elements( textout ) NE 1 then textout = !textout ;use default output dev.
+
+  ; keywords for openw
+  if n_elements(width) gt 0 then openw_keywords = {width: width}
 
   if size(textout,/tname) EQ 'STRING' then begin  ;test if filename entered
         filename = textout
@@ -136,10 +143,10 @@ PRO TEXTOPEN,PROGRAM,TEXTOUT=TEXTOUT, STDOUT = STDOUT, MORE_SET = more_set, $
      return
   end
    stndout = fstat(-1)
-   isatty = (stndout.isatty) and (not stndout.isagui) and $
-             (not keyword_set(STDOUT))
+   isatty = (stndout.isatty) && (~stndout.isagui) && $
+             (~keyword_set(STDOUT))
 
-   if isatty or (text_out GT 2) then begin 
+   if isatty || (text_out GT 2) then begin 
 
         if !TEXTUNIT GT 0 then free_lun,!TEXTUNIT 
         get_lun,unit
@@ -147,37 +154,37 @@ PRO TEXTOPEN,PROGRAM,TEXTOUT=TEXTOUT, STDOUT = STDOUT, MORE_SET = more_set, $
 
     endif else !TEXTUNIT = -1                     ;standard output
 
-  more_set = (text_out EQ 1) and isatty
+  more_set = (text_out EQ 1) && isatty
   
   case text_out of
-     1: if isatty then openw, !TEXTUNIT, filepath(/TERMINAL), /MORE
+     1: if isatty then openw, !TEXTUNIT, filepath(/TERMINAL), /MORE, _extra=openw_keywords
 
-     2: if isatty then openw, !TEXTUNIT, filepath(/TERMINAL) 
+     2: if isatty then openw, !TEXTUNIT, filepath(/TERMINAL) , _extra=openw_keywords
 
      3: begin
         oname = strlowcase( strtrim( PROGRAM,2) +'.prt')
-         openw, !TEXTUNIT, oname
-        if not keyword_set(SILENT) then $
+         openw, !TEXTUNIT, oname, _extra=openw_keywords
+        if ~keyword_set(SILENT) then $
         message,'Output is being directed to a file ' + oname,/INFORM
         end
 
-     4: openw, !TEXTUNIT, 'laser.tmp'
+     4: openw, !TEXTUNIT, 'laser.tmp', _extra=openw_keywords
 
      6: begin
-        openw,!TEXTUNIT,filename
-        if not keyword_set(SILENT) then $
+        openw,!TEXTUNIT,filename, _extra=openw_keywords
+        if ~keyword_set(SILENT) then $
         message,'Output is being directed to a file ' + filename,/INFORM
         end
 
      7: begin
         oname = strlowcase(strtrim( PROGRAM,2) +'.prt')
-        openw, !TEXTUNIT, oname, /append
-        if not keyword_set(SILENT) then $
+        openw, !TEXTUNIT, oname, /append, _extra=openw_keywords
+        if ~keyword_set(SILENT) then $
         message,'Output is being appended to file ' + oname,/INFORM
         for i=0,3 do printf,!textunit,' '       ;added a couple of blank lines
         end
 
-     0: openw,!TEXTUNIT, strtrim(PROGRAM,2) + '.tmp',/DELETE
+     0: openw,!TEXTUNIT, strtrim(PROGRAM,2) + '.tmp',/DELETE, _extra=openw_keywords
 
      else: begin
         !textunit = 0

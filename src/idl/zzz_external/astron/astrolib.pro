@@ -38,11 +38,11 @@ PRO ASTROLIB
 ;  setenv,'ASTRO_DATA=/export/home/ftp/pub/data/'
 
   defsysv, '!PRIV', exist = exist 
-     if not exist then defsysv, '!PRIV', 0
+     if ~exist then defsysv, '!PRIV', 0
   defsysv, '!TEXTUNIT', exist = exist
-     if not exist then  defsysv, '!TEXTUNIT', 0
+     if ~exist then  defsysv, '!TEXTUNIT', 0
   defsysv, '!TEXTOUT', exist = exist 
-     if not exist then defsysv, '!TEXTOUT', 1 
+     if ~exist then defsysv, '!TEXTOUT', 1 
 
    message,'Astronomy Library system variables have been added',/INF
 

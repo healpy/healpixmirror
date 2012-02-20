@@ -1,5 +1,5 @@
 pro fits_open,filename,fcb,write=write,append=append,update=update, $
-                 no_abort=no_abort,message=message,hprint=hprint
+                 no_abort=no_abort,message=message,hprint=hprint,fpack=fpack
 ;+
 ; NAME:
 ;       FITS_OPEN
@@ -8,24 +8,29 @@ pro fits_open,filename,fcb,write=write,append=append,update=update, $
 ;       Opens a FITS (Flexible Image Transport System) data file.
 ;
 ; EXPLANATION:
-;       FITS_OPEN was modified in Sep 2006 to open with /SWAP_IF_LITTLE_ENDIAN
-;       It must be used with post-Sep 2006 versions of FITS_READ, FITS_WRITE
-;       and MODFITS.
+;       Used by FITS_READ and FITS_WRITE
 ;
-;*CALLING SEQUENCE:
+; CALLING SEQUENCE:
 ;       FITS_OPEN, filename, fcb
 ;
-;*INPUTS:
+; INPUTS:
 ;       filename : name of the FITS file to open, scalar string
 ;                  FITS_OPEN can also open gzip compressed (.gz) file *for 
 ;                  reading only*, although there is a performance penalty 
+;                  FPACK ( http://heasarc.gsfc.nasa.gov/fitsio/fpack/ ) 
+;                  compressed FITS files can be read provided that the FPACK 
+;                  software is installed.
 ;*OUTPUTS:
 ;       fcb : (FITS Control Block) a IDL structure containing information
 ;               concerning the file.  It is an input to FITS_READ, FITS_WRITE
-;               FITS_CLOSE and MODFITS.
-;
+;               FITS_CLOSE and MODFITS.  
 ; INPUT KEYWORD PARAMETERS:
 ;       /APPEND: Set to append to an existing file.
+;       /FPACK - Signal that the file is compressed with the FPACK software. 
+;               http://heasarc.gsfc.nasa.gov/fitsio/fpack/ ) By default, 
+;               FITS_OPEN assumes that if the file name extension ends in 
+;               .fz that it is fpack compressed.     The FPACK software must
+;               be installed on the system 
 ;       /HPRINT - print headers with routine HPRINT as they are read.
 ;               (useful for debugging a strange file)
 ;       /NO_ABORT: Set to quietly return to calling program when an I/O error  
@@ -40,13 +45,15 @@ pro fits_open,filename,fcb,write=write,append=append,update=update, $
 ;       MESSAGE = value: Output error message.    If the FITS file was opened
 ;               successfully, then message = ''.
 ;       
-;*NOTES:
+; NOTES:
 ;       The output FCB should be passed to the other FITS routines (FITS_OPEN,
 ;       FITS_READ, FITS_HELP, and FITS_WRITE).  It has the following structure
 ;       when FITS_OPEN is called without /WRITE or /APPEND keywords set.
 ;
 ;           FCB.FILENAME - name of the input file
 ;               .UNIT - unit number the file is opened to
+;               .FCOMPRESS - 1 if unit is a FPACK compressed file opened with
+;                    a pipe to SPAWN
 ;               .NEXTEND - number of extensions in the file.
 ;               .XTENSION - string array giving the extension type for each
 ;                       extension.
@@ -91,15 +98,15 @@ pro fits_open,filename,fcb,write=write,append=append,update=update, $
 ;                                       3=open for update)
 ;
 ;
-;*EXAMPLES:
+; EXAMPLES:
 ;       Open a FITS file for reading:
 ;               FITS_OPEN,'myfile.fits',fcb
 ;
 ;       Open a new FITS file for output:
 ;               FITS_OPEN,'newfile.fits',fcb,/write
 ; PROCEDURES USED:
-;       HPRINT, SXDELPAR, SXPAR()
-;*HISTORY:
+;       GET_PIPE_FILESIZE (for Fcompress'ed files) HPRINT, SXDELPAR, SXPAR()
+; HISTORY:
 ;       Written by:     D. Lindler      August, 1995
 ;       July, 1996      NICMOS  Modified to allow open for overwrite
 ;                               to allow primary header to be modified
@@ -121,6 +128,9 @@ pro fits_open,filename,fcb,write=write,append=append,update=update, $
 ;       Open with /SWAP_IF_LITTLE_ENDIAN, remove obsolete keywords to OPEN
 ;                W. Landsman  Sep 2006
 ;       Warn that one cannot open a compressed file for update W.L. April 2007
+;       Use post-V6.0 notation W.L. October 2010
+;       Support FPACK compressed files, new .FCOMPRESS tag to FCB structure
+;               W.L.  December 2010
 ;-
 ;--------------------------------------------------------------------
       compile_opt idl2
@@ -166,20 +176,22 @@ pro fits_open,filename,fcb,write=write,append=append,update=update, $
 ;
 ; open file
 ;
-        docompress = 0
-        len = strlen(filename)
-        ext = strlowcase(strmid(filename, len-3, 3))
-        docompress = (ext EQ '.gz') or (ext EQ 'ftz') 
-        if docompress and open_for_overwrite then begin 
+
+        ext = strlowcase(strmid(filename, 2, /rev))
+        docompress = (ext EQ '.gz') || (ext EQ 'ftz') 
+        fcompress = keyword_set(fpack) || ( ext EQ '.fz')
+         if docompress && open_for_overwrite then begin 
             message = 'Compressed FITS files cannot be open for update'
-            if not keyword_set(no_abort) then $
+            if ~keyword_set(no_abort) then $
                    message,' ERROR: '+message,/CON
             return
        endif   
  ;
 ; open file
 ;
-        get_lun,unit
+       if ~fcompress then get_lun,unit
+       if fcompress then $
+                spawn,'funpack -S ' + filename, unit=unit,/sh else $	
        if docompress then $
                 openr,unit,filename, /compress,/swap_if_little else begin
        case 1 of
@@ -198,12 +210,18 @@ pro fits_open,filename,fcb,write=write,append=append,update=update, $
 ; compressed file.    I'm not sure how independent this code is with different
 ; shells and OS's.
 
-        if docompress then begin 
+        if fcompress then begin 
+	      get_pipe_filesize,unit, nbytes_in_file
+	      free_lun,unit
+	      spawn,'funpack -S ' + filename, unit=unit,/sh
+        endif else if docompress then begin 
              spawn,'gzip -l ' + fname, output
              output = strtrim(output,2)
-             g = where(strmid(output,0,8) EQ 'compress')
+             g = where(strmid(output,0,8) EQ 'compress', Nfound)
+	     if Nfound EQ 0 then message,'Unable to gzip decompress ' + fname
              nbytes_in_file = long64((strsplit(output[g[0]+1],/extract))[1])
         endif else nbytes_in_file = file.size
+	
 ;
 ; create vectors needed to store header information for each extension
 ;
@@ -219,22 +237,23 @@ pro fits_open,filename,fcb,write=write,append=append,update=update, $
         axis = lonarr(20,n)
         start_header = lon64arr(n)        ; starting byte in file for header
         start_data = lon64arr(n)          ; starting byte in file for data
-        position = long64(0)             ; current byte position in file
-        skip = long64(0)                 ; Amount to skip from current position
+        position = 0ULL             ; current byte position in file
+        skip = 0ULL                 ; Amount to skip from current position
 ;
 ; read and process each header in the file if open for read or update
 ;
         extend_number = 0               ; current extension number being
                                         ; processed
  
-        if open_for_read or open_for_update then begin
+        if open_for_read || open_for_update then begin
             main_header = 1             ; first header in file flag
             h = bytarr(80,36,/nozero)   ; read buffer
 ;
 ; loop on headers in the file
 ;
             repeat begin
-              if skip GT 0 then point_lun,unit,position 
+            if skip GT 0 then if fcompress then mrd_skip,unit,skip else $
+	                                     point_lun,unit,position 
               start = position
 ;
 ; loop on header blocks
@@ -242,7 +261,7 @@ pro fits_open,filename,fcb,write=write,append=append,update=update, $
                 first_block = 1         ; first block in header flag
                 repeat begin
 
-                    if position+2879 ge nbytes_in_file then begin
+                    if ~fcompress && position+2879 ge nbytes_in_file then begin
                         if extend_number eq 0 then begin
                                 message = 'EOF encountered while reading header'
                                 goto,error_exit
@@ -265,13 +284,13 @@ pro fits_open,filename,fcb,write=write,append=append,update=update, $
 ;
                         header = hdr 
                         keyword = strmid(header[0],0,8)
-                        if (extend_number eq 0) and $
+                        if (extend_number eq 0) && $
                            (keyword ne 'SIMPLE  ') then begin
                                 message = 'Invalid header, no SIMPLE keyword'
                                 goto,error_exit
                         endif
 
-                        if (extend_number gt 0) and $
+                        if (extend_number gt 0) && $
                            (keyword ne 'XTENSION') then begin
                                 print,'Invalid extension header encountered'
                                 print,'XTENSION keyword missing'
@@ -281,7 +300,6 @@ pro fits_open,filename,fcb,write=write,append=append,update=update, $
                         endif
 
                     end else header = [header,hdr]
-
                     first_block = 0
                 end until (nend gt 0)   
 
@@ -324,9 +342,13 @@ pro fits_open,filename,fcb,write=write,append=append,update=update, $
                 bitpix[extend_number] = sxpar(header,'bitpix')
                 nax = sxpar(header,'naxis')
                 naxis[extend_number] = nax
-                if nax gt 0 then for i=1,nax do $
-                    axis[i-1,extend_number] = sxpar(header,'naxis'+strtrim(i,2))
-                start_data[extend_number] = position    
+                if nax gt 0 then begin 
+		    naxisi = sxpar(header,'naxis*')
+		    axis[0,extend_number] = naxisi
+		    ndata = product(naxisi,/integer)
+                endif else ndata = 0 
+		
+               start_data[extend_number] = position    
                 start_header[extend_number] = start
 ;
 ; if first header, save without FITS required keywords
@@ -345,20 +367,16 @@ pro fits_open,filename,fcb,write=write,append=append,update=update, $
 ;
 ; skip past data to go to next header
 ;
-                ndata = long64(axis[0,extend_number])
-                if naxis[extend_number] gt 1 then $
-                                for i=2,naxis[extend_number] do $
-                                    ndata = ndata*axis[i-1,extend_number]
                 nbytes = (abs(bitpix[extend_number])/8) * $
                        (gcount[extend_number]>1)*(pcount[extend_number] + ndata)
                 skip = (nbytes + 2879)/2880*2880
-                position = position + skip
+                position += skip
 
 ;
 ; end loop on headers
 ;           
 
-                extend_number = extend_number + 1
+                extend_number +=  1
             end until (position ge nbytes_in_file-2879)
         end
 ;
@@ -386,8 +404,9 @@ done_headers:
                         open_for_write:open_for_write + open_for_update*2}
            end else begin
                 nx = nextend
-                fcb = {filename:fname,unit:unit,nextend:nextend, $
-                        xtension:xtension[0:nx],extname:extname[0:nx], $
+               fcb = {filename:fname,unit:unit,fcompress:fcompress, $
+		        nextend:nextend, $
+                         xtension:xtension[0:nx],extname:extname[0:nx], $
                         extver:extver[0:nx],extlevel:extlevel[0:nx], $
                         gcount:gcount[0:nx],pcount:pcount[0:nx], $
                         bitpix:bitpix[0:nx],naxis:naxis[0:nx], $
@@ -399,6 +418,11 @@ done_headers:
                         random_groups:random_groups, $
                         nbytes: nbytes_in_file }
         end
+         if fcompress then begin
+	
+	       free_lun,unit	      
+               spawn,'funpack -S ' + filename, unit=unit,/sh 
+         endif 
         !err = 1            ;For obsolete users still using !err
         return
 ;

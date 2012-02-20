@@ -11,12 +11,14 @@
 # 2009-10-08: deal with 2009Aug20 version
 #             smarter search of name occurence
 # 2010-05-26: deal with 2010May24 version
+# 2012-02-20: deal with 2012Feb01 version
 #
 
 #set dir = /home/soft/rsi/external_contributions/astron_2008Mar07/pro/
 #set dir = /Applications/itt/external_contributions/astron_2009Aug20/pro/
 #set dir = /Applications/itt/external_contributions/astron_2009Nov25/pro/
-set dir = /Applications/itt/external_contributions/astron_2010May24/pro/
+#set dir = /Applications/itt/external_contributions/astron_2010May24/pro/
+set dir = /Applications/itt/external_contributions/astron_2012Feb01/pro/
 
 # full list of routine name (no path, no trailing .pro)
 set fulllist = `ls $dir/*/*pro | awk -F/ '{print $NF}' | awk -F. '{print $1}' | sort`
