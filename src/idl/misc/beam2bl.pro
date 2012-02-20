@@ -67,7 +67,7 @@ function beam2bl, beam, theta, lmax, arcmin=arcmin, degrees=degrees, HELP=help, 
 ;-
 
 routine = 'beam2bl'
-syntax = 'bl = '+routine+'(beam, theta_deg, lmax [, ARCMIN=, DEGREES=, HELP=, RADIANS=] )'
+syntax = 'bl = '+routine+'(beam, theta, lmax [, ARCMIN=, DEGREES=, HELP=, RADIANS=] )'
 
 if keyword_set(help) then begin
     doc_library,routine

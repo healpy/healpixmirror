@@ -207,6 +207,7 @@ if (polar eq 3) then polvec = make_array(type=type, npix, 2, /nozero)
 
 ; read data piece by piece and process each piece individually
 stride = 5.e6 > n_wpr ; 5 MB or 1 row per piece (June-2008)
+;stride = 500.e6 > n_wpr ; 500 MB or 1 row per piece (Dec-2011)
 stride = FLOOR(stride / n_wpr) * n_wpr
 w_start = long64(0)
 pstart = long64(0)
@@ -222,16 +223,18 @@ while (w_start LE (n_words-1) ) do begin
     ; select useful columns and/or process data read
     if (polar eq 0) then begin ; standard case
         for i=0,nmaps-1 do begin
-            x = (tbget(tab_xhdr, data, cols[i]))[*]
             if (do_rescale) then begin
+                x = (tbget(tab_xhdr, data, cols[i]))[*]
                 bad_pixels = where(x le (bad_data*0.9) or finite(x,/nan), nbad)
                 if (nbad gt 0)    then x[bad_pixels] = !values.f_nan
                 id_fact = (n_factors eq nmaps) ? i : 0
                 id_offs = (n_offsets eq nmaps) ? i : 0
                 if (factor[id_fact] ne 1.) then x *=  factor[id_fact] 
                 if (offset[id_offs] ne 0.) then x += (factor[id_fact]*offset[id_offs])
-            endif
-            array[pstart,i] = x
+                array[pstart,i] = x
+            endif else begin
+                array[pstart,i] = (tbget(tab_xhdr, data, cols[i]))[*]
+            endelse
         endfor
     endif else begin
         if (w_start eq 0) then begin

@@ -211,7 +211,7 @@ if arg_present(map_out) then map_out = proj2map_out(grid, offmap=plan_off, bad_d
 if keyword_set(fits) then begin 
     proj2fits, grid, fits, $
                projection = 'CART', flip=flip, $
-               rot = rot_ang, coord=coord_out, reso = reso_arcmin, unit = sunits, min=mindata, max = maxdata
+               rot = rot_ang, coord=coord_out, reso_arcmin = resgrid*60., unit = sunits, min=mindata, max = maxdata
 endif
 
 ; -------------------------------------------------------------
