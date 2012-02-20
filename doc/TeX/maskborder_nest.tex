@@ -13,8 +13,9 @@ located on the inner boundary of {\em invalid} regions
 \end{facility}
 
 \begin{f90format}
-{nside, mask\_in, mask\_out, nbordpix}
+{nside, mask\_in, mask\_out, nbordpix, \optional{[ border\_value]}}
 \end{f90format}
+\aboutoptional
 
 \begin{arguments}
 {
@@ -24,9 +25,12 @@ located on the inner boundary of {\em invalid} regions
 nside & I4B & IN & The $N_{side}$ value of the input mask. \\
 mask\_in(0:Npix-1) & I4B & IN & Input binary NESTED-ordered mask. Npix = 12*nside*nside\\
 mask\_out(0:Npix-1) &I4B & OUT & Output NESTED-ordered mask, in which inner border
-pixels (defined as 0-valued and adjacent to 1-valued pixels) take the value 2. Can be the same
+pixels (defined as 0-valued and adjacent to 1-valued pixels) take the value 2
+(or {\tt border\_value}). Can be the same
 array as mask\_in.\\
-nbordpix & I4B & OUT & Number of border pixels found
+nbordpix & I4B & OUT & Number of border pixels found\\
+\optional{border\_value} & I4B & IN & value to be given to border pixels in
+output mask. \default{2}.
 \end{tabular}
 }
 \end{arguments}
@@ -48,7 +52,9 @@ use healpix\_modules \\
 \ldots \\
 call \thedocid(nside, mask\_in, mask\_in, nbordpix)  \\
 }
-{???
+{For a binary input mask {\tt mask\_in}, it will look for border pixels and output
+their number in {\tt nborpix}. In this example the {\tt mask\_in} will be
+modified so that border pixels take value 2 on output.
 }
 \end{example}
 
