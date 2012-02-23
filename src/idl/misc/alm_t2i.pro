@@ -25,20 +25,21 @@
 ;  For more information about HEALPix see http://healpix.jpl.nasa.gov
 ;
 ; -----------------------------------------------------------------------------
-pro alm_t2i, alm_tab, index, alm_list, MFIRST=mfirst
+pro alm_t2i, alm_tab, index, alm_list, HELP=help, MFIRST=mfirst
 ;+
 ; NAME:
 ;     alm_t2i
 ;
 ; PURPOSE:
-;  turn an alm COMPLEX or REAL array of the form 
-;    a[l,m] or a[l,m,0:1]           (default)
-;     or a[m,l] or [m,l,0:1] (if MFIRST is set)
+;  turn an alm COMPLEX or REAL array of the form (respectively)
+;        a[l,m,s] or a[l,m,0:1,s] (default)
+;     or a[m,l,s] or a[m,l,0:1,s] (if MFIRST is set)
+;  with s being the Stokes index (generally either 0 or {0,1,2})
 ;
 ;  into an index list (with index = l*(l+1)+m+1 and abs(m) <= l)
 ;  and a 2D REAL array alm_list
-;    where alm_list[*,0] is the real part of alm
-;    and   alm_list[*,1] is the imaginary part of alm
+;    where alm_list[*,0,s] is the real part of alm
+;    and   alm_list[*,1,s] is the imaginary part of alm
 ;
 ;
 ; index and alm_list can then be used by alm2fits
@@ -51,11 +52,14 @@ pro alm_t2i, alm_tab, index, alm_list, MFIRST=mfirst
 ; 
 ; INPUTS:
 ;     alm_tab: real or complex array, containing all the alm for l
-;         in [0,lmax] and m in [0,mmax].
-;       if REAL it has 3 dimensions
-;       if COMPLEX is has 2 dimensions
+;         in [0,lmax] and m in [0,mmax] (and s in [0,smax] if applicable)
+;       if REAL    it has 3 (or 4) dimensions
+;       if COMPLEX is has 2 (or 3) dimensions
 ;
 ; KEYWORD PARAMETERS
+;
+;    HELP: if set, prints out this help header
+;
 ;    MFIRST: if set the array in a(m,l) instead of a(l,m)
 ;        where abs(m) <= l
 ;
@@ -64,30 +68,44 @@ pro alm_t2i, alm_tab, index, alm_list, MFIRST=mfirst
 ;            of alm coefficients, related to {l,m} by the relation
 ;             i = l^2 + l + m + 1
 ;
-;     alm_list: array of alm coefficients, with dimension (nl, 2)
+;     alm_list: array of alm coefficients, with dimension (nl, 2 [, ns])
 ;            -- corresponding to
-;                  nl   = number of {l,m} indices
-;                  2 for real and imaginary parts of alm coefficients
+;                  nl: number of {l,m} indices
+;                  2: for real and imaginary parts of alm coefficients
+;                  ns: number of Stokes parameters (if > 1)
 ;
 ; RESTRICTIONS:
 ;
-;
-;
 ; PROCEDURE:
 ;
-;
-;
 ; EXAMPLE:
+;    ; combining two different sets of alm:
+;    fits2alm, i1, a1, 'alm1.fits'   ; read first set of alm from a FITS file
+;    ac1 = alm_i2t(i1, a1, /complex) ; make an array out of it
 ;
+;    fits2alm, i2, a2, 'alm2.fits'   ; read second set of alm
+;    ac2 = alm_i2t(i2, a2, /complex) ; make an array out of it
 ;
+;    ac = 0.9*ac1 + 0.1*ac2          ; weighted sum the 2 alm sets (only for
+;                                               (l,m) common to both sets)
+;
+;    alm_t2i, ac, i, a               ; makes an index list of the new alms
+;    alm2fits, i, a, 'almsum.fits'   ; save the new alms into a FITS file
 ;
 ; MODIFICATION HISTORY:
 ;     2007-10-04: creation
 ;     2011-10-21: addition of MFIRST
+;     2012-02-23: can deal with Stokes alm
 ;
 ;-
 
-syntax = 'ALM_T2I, alm_tab, index, alm_list, MFIRST= '
+routine='alm_t2i'
+syntax = strupcase(routine)+', alm_tab, index, alm_list [, /HELP, MFIRST=] '
+if (keyword_set(help)) then begin
+    doc_library,routine
+    return
+endif
+
 if (n_params() eq 0) then begin
     print,syntax
     return
@@ -123,24 +141,51 @@ if (nm gt nl) then begin
     message, 'Abort.'
 endif
 
+sample = alm_tab[0,0]*0 ; either (0.,0.) or (0.d0, 0.d0) or (0.) or (0.d0)
+complex = (size(/tname, sample) eq 'COMPLEX' || size(/tname, sample) eq 'DCOMPLEX') 
+
+; extra dimension (for eg, T, E, B alms)
+de = (complex) ? 3 : 4 ; 3rd dimension if complex array, 4th dimension otherwize
+nstokes = (sz[0] eq de) ? sz[de] : 1
+if sz[0] gt de then begin
+    print,syntax
+    message,'Too many dimensions in input array'
+endif
+
 ; find points where m <= l
 k = where(mtab le ltab,nk)
 
 ; define index = l*(l+1)+m+1 for those points
 index = ((ltab+1L)*ltab + mtab)[k] + 1L
 
-sample = alm_tab[0,0]*0 ; either (0.,0.) or (0.d0, 0.d0) or (0.) or (0.d0)
-if (size(/tname, sample) eq 'COMPLEX' || size(/tname, sample) eq 'DCOMPLEX') then begin
+; make sure that output alm are sorted by increasing index 
+; (in which m is fastest varying)
+if ~keyword_set(mfirst) then begin
+    ii = sort(index)
+    k = k[ ii ] 
+    index = index [ ii ]
+    ii = 0
+endif
+
+shift = nm*nl
+if complex then begin
 ; fill the alm list with the real and imaginary parts
-    alm_list = replicate(real_part(sample),nk,2)
-    alm_list[0,0] = real_part(alm_tab[k])
-    alm_list[0,1] = imaginary(alm_tab[k])
+    alm_list = replicate(real_part(sample),nk,2, nstokes)
+    for js=0, nstokes-1 do begin
+        alm_list[0,0,js] = real_part(alm_tab[k + shift*js]) ; R(alm_tab[*,*,js])
+        alm_list[0,1,js] = imaginary(alm_tab[k + shift*js]) ; I(alm_tab[*,*,js])
+    endfor
 endif else begin
 ; fill the alm list with the real and imaginary parts
-    alm_list = replicate(sample,nk,2)
-    alm_list[0,0] = alm_tab[k]         ; alm_tab[*,*,0]
-    alm_list[0,1] = alm_tab[k + nm*nl] ; alm_tab[*,*,1]
+    alm_list = replicate(sample,nk,2, nstokes)
+    for js=0, nstokes-1 do begin
+        alm_list[0,0,js] = alm_tab[k + shift*(2*js)  ] ; alm_tab[*,*,0,js]
+        alm_list[0,1,js] = alm_tab[k + shift*(2*js+1)] ; alm_tab[*,*,1,js]
+    endfor
 endelse
+if nstokes eq 1 then begin
+    alm_list=reform(alm_list, nk, 2, /Overwrite)
+endif
 
 
 
