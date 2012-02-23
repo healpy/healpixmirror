@@ -46,6 +46,10 @@ module mask_tools
   public :: dist2holes_nest
   public :: size_holes_nest
 
+  integer(i4b), parameter, private :: PIXBAD = 0  ! invalid pixels
+  integer(i4b), parameter, private :: PIXGOOD = 1 ! valid pixels
+  integer(i4b), parameter, private :: DEFBTAG = 2 ! default border value, must not be 0 nor 1
+
 
 contains
   !======================================================================
@@ -83,8 +87,8 @@ contains
     if (newminsize > 0) then
        call size_holes_nest(nside, mask_out, nholes, npholes, sizeholes=sizeholes, listpix=listpix)
        do p=0,nholes-1
-          out = 0 ! leave that hole to hole value
-          if (sizeholes(p) < newminsize) out = 1 ! fill that hole
+          out = PIXBAD ! leave that hole to hole value
+          if (sizeholes(p) < newminsize) out = PIXGOOD ! fill that hole
           mask_out(listpix(listpix(p):listpix(p+1)-1)) = out
        enddo
     endif
@@ -93,18 +97,21 @@ contains
   end subroutine fill_holes_nest
 
   !======================================================================
-  subroutine maskborder_nest(nside, mask_in, mask_out, nbordpix)
+  subroutine maskborder_nest(nside, mask_in, mask_out, nbordpix, border_value)
   !======================================================================
-    ! maskborder_nest(nside, mask_in, mask_out, nbordpix)
+    ! maskborder_nest(nside, mask_in, mask_out, nbordpix [, border_value])
     !
     ! mask_in IN, Integer*4, full sky map, in NESTED scheme
     !    on input: mask of good pixels (mask=1) and bad pixels (mask=0)
 
     ! mask_out OUT, Integer*4, full sky map, in NESTED scheme
-    !    on output: inner border of bad regions takes mask=2
+    !    on output: inner border of bad regions takesmask=border_value
     !
     ! nbordpix OUT, Integer*4
     !    number of pixels in border
+    !
+    ! border_value IN, OPTIONAL, Integer*4
+    !    value given to border pixels = 2 by default
     !======================================================================
     use pix_tools,  only: nside2npix, neighbours_nest
     use misc_utils, only: fatal_error
@@ -113,13 +120,17 @@ contains
     integer(I4B),                intent(IN) :: nside
     integer(I4B), dimension(0:), intent(in) :: mask_in
     integer(I4B), dimension(0:), intent(out) :: mask_out
-    integer(I4B),                intent(out)   :: nbordpix
+    integer(I4B),                intent(out) :: nbordpix
+    integer(I4B), optional,      intent(in) :: border_value
+    
     ! local variables
     integer(I8B) :: npix, sz1, sz2, p
     integer(I8B), dimension(0:7) :: list
     integer(I4B) :: minmask, maxmask, i, nn
     integer(I4B), dimension(0:7) :: values
     character(len=*), parameter  :: code = 'maskborder_nest'
+    integer(i4b) :: mytag ! user-defined border value
+    integer(i4b) :: minallowed, maxallowed
     !----------------------------------------------------------------------
 
     sz1  = long_size(mask_in)
@@ -133,28 +144,31 @@ contains
     endif
     minmask = minval(mask_in)
     maxmask = maxval(mask_in)
-    if (maxmask > 1 .or. minmask < 0) then
-       print*,'>>>>> Range: ',minmask,maxmask
-       call fatal_error('input mask should be in [0,1] in '//code)
+    minallowed = min(PIXGOOD, PIXBAD)
+    maxallowed = max(PIXGOOD, PIXBAD)
+    if (maxmask > maxallowed .or. minmask < minallowed) then
+       print*,'>>>>> Range of input mask: ',minmask,maxmask
+       print*,'>>>>> Allowed range: ',minallowed, maxallowed
+       call fatal_error('Aborting '//code)
     endif
 
-    ! test particular cases
+    ! test particular cases with no border
     nbordpix = 0
-    if (maxmask == 0) return !all pixels are bad
-    if (minmask == 1) return !all pixels are good
+    if (maxmask == minallowed) return !all pixels are bad
+    if (minmask == maxallowed) return !all pixels are good
 
     mask_out = mask_in
     ! start actual calculation
     do p = 0, npix - 1
-       if (mask_out(p) == 0) then
+       if (mask_out(p) == PIXBAD) then
           ! test neighbours of bad pixels
           call neighbours_nest(nside, p, list, nn)
           values(0:nn-1) = mask_out(list(0:nn-1))
           do i=0,nn-1
              ! if any neighbour is valid, then bad pixel belongs to border
-             if (values(i) == 1) then
+             if (values(i) == PIXGOOD) then
                 nbordpix = nbordpix + 1
-                mask_out(p) = 2
+                mask_out(p) = DEFBTAG
                 goto 1234
              endif
           enddo
@@ -162,6 +176,17 @@ contains
 
        endif
     enddo
+
+    ! change border value from default to user-defined (if applicable)
+    mytag = DEFBTAG
+    if (present(border_value)) then
+       mytag = border_value
+    endif
+    if (mytag /= DEFBTAG) then
+       do p = 0, npix - 1
+          if (mask_out(p) == DEFBTAG) mask_out(p) = mytag
+       enddo
+    endif
 
     return
   end subroutine maskborder_nest
@@ -265,14 +290,14 @@ contains
     allocate(bordpos(0:nbordpix-1,1:3))
     allocate(bordpix(0:nbordpix-1))
     do p=0, npix-1
-       if (mask1(p) == 2) then 
+       if (mask1(p) == DEFBTAG) then 
           call pix2vec_nest(nside, p, vv)
           bordpos(pb,1:3) = vv
           bordpix(pb) = p
           pb = pb + 1
           distance(p) = 0.0_dp
        endif
-       if (mask1(p) == 0) distance(p) = 0.0_dp
+       if (mask1(p) == PIXBAD) distance(p) = 0.0_dp
     enddo
 
     !if (algo_in == 1) then
@@ -345,7 +370,7 @@ contains
        ! loop on low-resolution pixels
        do q1=0, nplow-1
           ! keep only those containing valid small pixel
-          if (any(mask1(q1*iratio:(q1+1)*iratio-1) == 1) ) then
+          if (any(mask1(q1*iratio:(q1+1)*iratio-1) == PIXGOOD) ) then
              nlactive = nlactive + 1
              if (do_clock) call wall_clock_time(t0)
              ! center location of current low-res pixel
@@ -357,7 +382,9 @@ contains
 ! !$OMP PRIVATE(qq)
 ! !$OMP DO schedule(static, 4)
              do qq=0, nploweff - 1
-                drange(qq) = sum(centlow(1:3, qq) * vv(1:3))
+                drange(qq) = centlow(1, qq) * vv(1) &
+                     &     + centlow(2, qq) * vv(2) &
+                     &     + centlow(3, qq) * vv(3) 
              enddo
 ! !$OMP END DO
 ! !$OMP END PARALLEL
@@ -400,7 +427,7 @@ contains
              ! center location for small pixels
              pp = 0
              do p=q1*iratio, (q1+1)*iratio - 1
-                if (mask1(p) == 1) then
+                if (mask1(p) == PIXGOOD) then
                    call pix2vec_nest(nside, p, v1)
                    centpix(1:3, pp) = v1
                    pp = pp + 1
@@ -435,7 +462,7 @@ contains
              ! norm2 -> angular distance (radians)
              pp = 0
              do p=q1*iratio, (q1+1)*iratio - 1
-                if (mask1(p) == 1) then
+                if (mask1(p) == PIXGOOD) then
                    if (dd(pp) < 0.0_dp .or. dd(pp) > 4.0_dp) then
                       n_invalid = n_invalid + 1
                    endif

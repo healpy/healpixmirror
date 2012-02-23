@@ -50,6 +50,7 @@
 ! 2008-08-27 : in dump_alms and write_alms and write_*tab*: 
 !  do not write TTYPE# and TFORM# in excess of # of fields in the file
 ! 2008-10-14: corrected bug introduced in write_asctab
+! 2012-02-23: correction of a possible bug with index writing in dump_alms and write_alms
 !
 !=======================================================================
 ! input_map
@@ -1200,7 +1201,7 @@ subroutine input_map8_KLOAD(filename, map, npixtot, nmaps, fmissval, header, uni
           alms_out(cnt,2)=AIMAG(alms(l,m))
           cnt = cnt + 1
        enddo
-       call ftpclj(unit, 1_i4b, frow, felem, cnt, lm(0),         status)
+       call ftpclj(   unit, 1_i4b, frow, felem, cnt, lm,                  status)
        call f90ftpcl_(unit, 2_i4b, frow, felem, cnt, alms_out(0:cnt-1,1), status)
        call f90ftpcl_(unit, 3_i4b, frow, felem, cnt, alms_out(0:cnt-1,2), status)
        frow = frow + cnt
@@ -1390,7 +1391,7 @@ subroutine input_map8_KLOAD(filename, map, npixtot, nmaps, fmissval, header, uni
 
        frow = istart/repeat + 1
        npix = iend - istart + 1
-       call ftpclj(unit, 1_i4b, frow, felem, npix, lm(0), status)
+       call ftpclj(      unit, 1_i4b,  frow, felem, npix, lm,                         status)
        do colnum = 2, ncl
           call f90ftpcl_(unit, colnum, frow, felem, npix, alms(istart:iend,colnum+1), status)
        enddo
