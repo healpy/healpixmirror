@@ -1,0 +1,93 @@
+% -*- LaTeX -*-
+
+
+\sloppy
+
+\title{\healpix IDL Facility User Guidelines}
+\docid{angulardistance} \section[angulardistance]{ }
+\label{idl:angulardistance}
+\docrv{Version 1.0}
+\author{Eric Hivon}
+\abstract{This document describes the \healpix IDL facility angulardistance.}
+
+\begin{facility}
+{This IDL facility computes the angular distance (in RADIANS) between pairs of vectors.
+}
+{src/idl/toolkit/angulardistance.pro}
+\end{facility}
+
+\begin{IDLformat}
+{%\mylink{idl:angulardistance:beam}
+{distance}=\thedocid(%
+\mylink{idl:angulardistance:v}{V}, 
+\mylink{idl:angulardistance:w}{W},
+[\mylink{idl:angulardistance:help}{/HELP}])}
+\end{IDLformat}
+
+\begin{qualifiers}
+  \begin{qulist}{} %%%% NOTE the ``extra'' brace here %%%%
+    \item[V] \mytarget{idl:angulardistance:v}%
+      3D-vector (of shape (3) or (1,3)) or list of n 3D-vectors (of shape (n,3))
+    \item[W] \mytarget{idl:angulardistance:w}%
+      3D-vector (of shape (3) or (1,3)) or list of n 3D-vectors (of shape
+(n,3))\\
+	It is {\bf not} necessary for {\tt V} and {\tt W} vectors to be normalised to 1
+        upon calling the function\\
+% 	If {\tt V} and {\tt W} both are lists of vectors, 
+%         they should be of the same length
+If {\tt V} (and/or {\tt W}) has the form (n,3,4) (like the pixel {\em corners} returned by
+ \htmlref{pix2vec\_*}{idl:pix_tools}), it should be preprocessed with
+ {\tt V = reform( transpose(V, [0,2,1]), n\_elements(V)/3, 3)}
+  before being passed to \thedocid.  
+\end{qulist}
+\end{qualifiers}
+
+\begin{keywords}
+  \begin{kwlist}{} %%% extra brace
+    \item[/HELP] \mytarget{idl:angulardistance:help}%
+	if set, prints out the help header and exits
+  \end{kwlist}
+\end{keywords}  
+
+\newcommand{\vecV}{\ensuremath{\bf V}}
+\newcommand{\vecW}{\ensuremath{\bf W}}
+\begin{codedescription}
+{%
+After renormalizing the vectors, \thedocid\ computes the angular distance using
+$\cos^{-1}(\vecV.\vecW)$ in general, or
+$2 \sin^{-1}\left(||\vecV-\vecW||\right)/2$ when
+ $\vecV$ and $\vecW$ are almost aligned.\\
+If $\vecV$ (resp. $\vecW$) is a single vector, while $\vecW$ (resp. $\vecW$) is a list of vectors,
+then the result is a list of distances
+ $d_i = {\rm dist}(\vecV,{\vecW}_i)$ 
+(resp. $d_i = {\rm dist}({\vecV}_i,{\vecW})$).\\
+If both $\vecV$ and $\vecW$ are lists of vector {\em of the same length},
+then the result is a list of distances
+ $d_i = {\rm dist}({\vecV}_i,{\vecW}_i)$.\\
+}
+\end{codedescription}
+
+
+
+\begin{related}
+  \begin{sulist}{} %%%% NOTE the ``extra'' brace here %%%%
+    \item[idl] version \idlversion or more is necessary to run \thedocid.
+    \item[vect\_prod] facility to compute the vectorial product of 2 vectors
+  \end{sulist}
+\end{related}
+
+\begin{example}
+{%
+\begin{tabular}{l}   %%%% use this tabular format %%%%
+    nside=8\\
+      \htmlref{pix2vec\_ring}{idl:pix_tools}, nside, lindgen(\htmlref{nside2npix}{idl:nside2npix}(nside)), vpix \\
+      \htmlref{mollview}{idl:mollview}, angulardistance( vpix, [1,1,1])
+\end{tabular}
+}%
+{%
+will plot the angular distance between the Healpix pixels center for
+$\nside=8$ , and the vector $(x,y,z) = (1,1,1)/\sqrt{3}$%
+}
+\end{example}
+
+

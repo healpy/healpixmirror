@@ -105,6 +105,11 @@ Several routines have been added or improved since version 2.20, as listed below
 %
 	\item New routines to go from circular beam profile to transfer function (\htmlref{{\tt beam2bl}}{idl:beam2bl}), and back
   		(\htmlref{{\tt bl2beam}}{idl:bl2beam}).
+	\item New \htmlref{{\tt angulardistance}}{idl:angulardistance} routine
+to compute the angular distance between pairs of detectors.
+%
+	\item creation of \htmlref{\tt hpx2dm}{idl:hpx2dm} routine to generate
+DomeMaster images of \healpix maps that can be projected on planetariums.
 %
 	\item the pixel query routines 
 \htmlref{{\tt query\_triangle}}{idl:query_triangle}, 
@@ -124,8 +129,6 @@ orthview}}{idl:mollview}:
  the length and spacing of the headless vectors used to represent
 polarization is now user-controlled  via \mylink{idl:mollview:polarization}{{\tt
 POLARIZATION}} keyword.
-	\item creation of \htmlref{\tt hpx2dm}{idl:hpx2dm} routine to generate
-DomeMaster images of \healpix maps that can be projected on planetariums.
 	\item \htmlref{\tt orthview}{idl:orthview} now accepts
 \mylink{idl:mollview:stagger}{\tt STAGGER} keyword to overplot staggered
 spheres (with a twist) in order to detect periodic boundary conditions on the
@@ -448,6 +451,7 @@ file containing $a_{lm}$ coefficients.
 \newpage
 \include{alm2fits_idl}
 \include{ang2vec_idl}
+\include{angulardistance_idl}
 \include{azeqview_idl}
 \include{beam2bl_idl}
 \include{bin_llcl_idl}
