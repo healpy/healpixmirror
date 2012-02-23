@@ -1,6 +1,6 @@
 /* -----------------------------------------------------------------------------
  *
- *  Copyright (C) 1997-2011 Krzysztof M. Gorski, Eric Hivon, Martin Reinecke
+ *  Copyright (C) 1997-2012 Krzysztof M. Gorski, Eric Hivon, Martin Reinecke,
  *                          Benjamin D. Wandelt, Anthony J. Banday,
  *                          Matthias Bartelmann,
  *                          Reza Ansari & Kenneth M. Ganga

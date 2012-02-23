@@ -111,17 +111,12 @@ install :  chealpix.h
 
 # Make the programs to test the package.
 
-test_chealpix2 : test_chealpix2.c
-	$(CC) $(OPT) -c -o test_chealpix2.o $<
-	$(CC) $(OPT)    -o $@    test_chealpix2.o -L. -lchealpix -L$(CFITSIO_LIBDIR) $(WLRPATH) -lcfitsio -lm
+test_chealpix : test_chealpix.c shared
+	$(CC) $(OPT) -c -o test_chealpix.o $<
+	$(CC) $(OPT) -o $@ test_chealpix.o -L. -lchealpix -L$(CFITSIO_LIBDIR) $(WLRPATH) -lcfitsio -lm
 
-test_cio : test_cio.c
-	$(CC) $(OPT) -c -o test_cio.o $<          -I$(CFITSIO_INCDIR)
-	$(CC) $(OPT)    -o $@         test_cio.o  -L. -lchealpix -L$(CFITSIO_LIBDIR) $(WLRPATH) -lcfitsio -lm
-
-tests : test_chealpix2 test_cio
-	./test_cio
-	./test_chealpix2
+tests : test_chealpix
+	./test_chealpix
 
 #
 # General compilation rules
@@ -137,7 +132,7 @@ tests : test_chealpix2 test_cio
 clean :
 	$(RM) *~ *.o core  \
 		test_chealpix.dat test_chealpix.out test_output.fits test_map.fits libchealpix.*  \
-		test_chealpix2 test_cio
+		test_chealpix
 
 # Tidy: remove library and include files
 tidy : clean

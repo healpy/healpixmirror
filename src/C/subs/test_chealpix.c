@@ -1,6 +1,6 @@
 /* -----------------------------------------------------------------------------
  *
- *  Copyright (C) 1997-2010 Krzysztof M. Gorski, Eric Hivon,
+ *  Copyright (C) 1997-2012 Krzysztof M. Gorski, Eric Hivon, Martin Reinecke,
  *                          Benjamin D. Wandelt, Anthony J. Banday,
  *                          Matthias Bartelmann,
  *                          Reza Ansari & Kenneth M. Ganga
@@ -25,55 +25,110 @@
  *  For more information about HEALPix see http://healpix.jpl.nasa.gov
  *
  *----------------------------------------------------------------------------- */
-/* test_chealpix.c
- *
- */
 
-/* Standard Includes */
 #include <math.h>
 #include <stdio.h>
+#include <stdlib.h>
 
-/* Local Includes */
 #include "chealpix.h"
 
-int main(void) {
+void test1(void) {
 
   double theta, phi;
-  long   nside = 8192;
-/*    long   nside = 64; */
-  long  ipix, jpix, npix, dpix;
-/*    float *map; */
+  double vec[3];
+  long   nside;
+  long  ipix, npix, dpix, ip2, ip1;
+
+  printf("Starting C Healpix pixel routines test\n");
+
+  nside = 1024;
+  dpix = 23;
 
   /* Find the number of pixels in the full map */
   npix = nside2npix(nside);
   printf("Number of pixels in full map: %ld\n", npix);
 
-  dpix = npix/10000L;
   printf("dpix: %ld\n", dpix);
-  for (ipix = 0; ipix < npix; ipix += dpix) {
+  printf("Nest -> ang -> vec -> ang -> Ring -> Nest\n");
+  for (ipix = 0; ipix < npix; ipix +=dpix) {
     pix2ang_nest(nside, ipix, &theta, &phi);
-    printf("%9ld %12.8f %12.8f", ipix, theta, phi);
+    ang2vec(theta, phi, vec);
+    vec2ang(vec, &theta, &phi);
+    ang2pix_ring(nside, theta, phi, &ip2);
+    ring2nest(nside,ip2,&ip1);
+    if (ip1 != ipix) {printf("Error: %ld %ld %ld %ld\n",nside,ipix,ip2,ip1);}
+  }
+  printf("Ring -> ang -> Nest -> Ring\n");
+  for (ipix = 0; ipix < npix; ipix +=dpix) {
     pix2ang_ring(nside, ipix, &theta, &phi);
-    printf(" %12.8f %12.8f", theta, phi);
-    ring2nest(nside, ipix, &jpix);
-    printf(" %9ld", jpix);
-    nest2ring(nside, ipix, &jpix);
-    printf(" %9ld\n", jpix);
+    ang2pix_nest(nside, theta, phi, &ip2);
+    nest2ring(nside,ip2,&ip1);
+    if (ip1 != ipix) {printf("Error: %ld %ld %ld %ld\n",nside,ipix,ip2,ip1);}
   }
 
-  for (theta = 0.0; theta <= M_PI; theta += 0.1) {
-    for (phi = 0.0; phi <= 2.0*M_PI; phi += 0.1) {
-      ang2pix_nest(nside, theta, phi, &ipix);
-      printf("%12.8f %12.8f %9ld", theta, phi, ipix);
-      ang2pix_ring(nside, theta, phi, &ipix);
-      printf(" %9ld\n", ipix);
-    }
+  printf("Nest -> vec -> Ring -> Nest\n");
+  for (ipix = 0; ipix < npix; ipix +=dpix) {
+    pix2vec_nest(nside, ipix, vec);
+    vec2pix_ring(nside, vec, &ip2);
+    ring2nest(nside,ip2,&ip1);
+    if (ip1 != ipix) {printf("Error: %ld %ld %ld %ld\n",nside,ipix,ip2,ip1);}
+  }
+  printf("Ring -> vec -> Nest -> Ring\n");
+  for (ipix = 0; ipix < npix; ipix +=dpix) {
+    pix2vec_ring(nside, ipix, vec);
+    vec2pix_nest(nside, vec, &ip2);
+    nest2ring(nside,ip2,&ip1);
+    if (ip1 != ipix) {printf("Error: %ld %ld %ld %ld\n",nside,ipix,ip2,ip1);}
   }
 
-/*    map = read_healpix_map("/home/kmg/boom/dust/SFD_i150_healpix_512.fits", &nside); */
-/*    write_hpfits( map, 512, "foo.fits", 0); */
   printf("%ld\n", nside);
+  printf("test completed\n\n");
+}
 
-  /* Later */
+void test2 (void) {
+  float *map;
+  long nside, npix, np, ns;
+  int i;
+  char file[180] = "test_output.fits" ;
+  char fileforce[180] ;
+  char order1[10] ;
+  char order2[10] ;
+  char coord[10] ;
+
+
+  printf("Starting C Healpix IO test\n");
+
+  nside = 1;
+  npix = nside2npix(nside);
+
+  map = (float *)malloc(npix*sizeof(float));
+
+  for (i=0; i<npix; i++){
+    map[i] = 2.*i;
+  }
+
+  sprintf(fileforce, "!%s",file); // leading ! to allow overwrite
+  write_healpix_map( map, nside, fileforce, 1, "C");
+  fprintf(stdout,"file written\n");
+  free(map);
+
+  np = get_fits_size(file, &ns, order1);
+  fprintf(stdout,"%s %ld %ld %s\n", file, ns, np, order1);
+
+  map = read_healpix_map(file, &ns, coord, order2);
+  if (strcmp(coord,"C")!=0) {printf("Error: Bad coordinate system\n");}
+  if (strcmp(order1,order2)!=0) {printf("Error: Bad ordering\n");}
+  for (i=0; i<npix; i++){
+    if (map[i]!=2.*i) {printf("Error: Bad pixel value\n");}
+  }
+
+  free(map);
+
+  printf("test completed\n\n");
+}
+
+int main(void) {
+  test1();
+  test2();
   return 0;
 }

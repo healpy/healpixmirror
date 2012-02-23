@@ -41,7 +41,4 @@ README               : This file
 chealpix.h           : Header file to be included to define the functions
 chealpix.c           : implementation of the C Healpix routines
 
-test_chealpix.c      : Test routine for pixel operations (to be compared to IDL)
-test_chealpix2.c     : Test routine for pixel operations (self contained)
-test_chealpix.pro    : IDL routine used to compare to output of test_chealpix
-test_cio.c           : Test routine for FITS I/O
+test_chealpix.c      : Self-test for pixel operations and FITS I/O
