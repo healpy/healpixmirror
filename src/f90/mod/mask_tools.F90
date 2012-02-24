@@ -220,7 +220,7 @@ contains
     integer(i4b), parameter :: nslow = 64 ! 64 or 128
 !    integer(i4b), parameter :: dimtest = 1
     logical(LGT), parameter :: brute_force = .false.
-    logical(LGT), parameter :: do_clock = .true.
+    logical(LGT), parameter :: do_clock = .false. !.true.
     
 
     integer(I8B) :: npix1, npix2, npix, p, iratio

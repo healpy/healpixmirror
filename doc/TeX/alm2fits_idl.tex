@@ -29,16 +29,22 @@ performed by the \healpix facility \textbf{synfast}.
 \end{facility}
 
 \begin{IDLformat}
-{ALM2FITS, index, alm\_array, fitsfile, [HDR = , /HELP, XHDR = ]}
+{ALM2FITS, 
+\mylink{idl:alm2fits:index}{index}, 
+\mylink{idl:alm2fits:alm_array}{alm\_array}, 
+\mylink{idl:alm2fits:fitsfile}{fitsfile}, [%
+\mylink{idl:alm2fits:hdr}{HDR=}, 
+\mylink{idl:alm2fits:help}{/HELP}, 
+\mylink{idl:alm2fits:xhdr}{XHDR=}]}
 \end{IDLformat}
 
 \begin{qualifiers}
   \begin{qulist}{} %%%% NOTE the ``extra'' brace here %%%%
-    \item[index] Long array containing the index for the corresponding
+    \item[index] \mytarget{idl:alm2fits:index}Long array containing the index for the corresponding
                  array of alm coefficients (and erralm if required). The
                  index {$i$} is related to {$l,m$} by the relation \hfill\newline
                  $i$ = $\ell^2$ + $\ell$ + $m$ + 1
-    \item[alm\_array] Real array of alm coefficients written to the
+    \item[alm\_array] \mytarget{idl:alm2fits:alm_array}Real array of alm coefficients written to the
       file. This has dimension (nl,nalm,nsig) -- corresponding to\hfill\newline
       nl   = number of {l,m} indices \hfill\newline
       nalm = 2 for real and imaginary parts of alm coefficients or
@@ -46,17 +52,17 @@ performed by the \healpix facility \textbf{synfast}.
       nsig = number of signals to be written (1 for any of T E B
              or 3 if ALL to be written). Each signal is stored
              in a separate extension.
-    \item[fitsfile] String containing the name of the file to be
+    \item[fitsfile] \mytarget{idl:alm2fits:fitsfile}String containing the name of the file to be
       written.
   \end{qulist}
 \end{qualifiers}
 
 \begin{keywords}
   \begin{kwlist}{} %%% extra brace
-    \item[HDR =] String array containing the primary header to be written in the FITS
+    \item[HDR =] \mytarget{idl:alm2fits:hdr}String array containing the primary header to be written in the FITS
       file. 
-    \item[/HELP] If set, the routine documentation header is shown and the routine exits	
-    \item[XHDR =] String array containing the extension header. If
+    \item[/HELP] \mytarget{idl:alm2fits:help}If set, the routine documentation header is shown and the routine exits	
+    \item[XHDR =] \mytarget{idl:alm2fits:xhdr}String array containing the extension header. If
                   ALL signals are required, then each extension table
                   is given this header.
     \item[ ] NOTE: optional header strings should NOT include the
@@ -82,7 +88,9 @@ The keywords EXTNAME and TTYPE* are now also automatically generated.
     \item[idl] version \idlversion or more is necessary to run \thedocid.
     \item[\htmlref{fits2alm}{idl:fits2alm}] provides the complimentary routine to read in 
       alm coefficients from a FITS file.
-    \item[\htmlref{lm2index}{idl:lm2index}] converts the alm order and degree
+    \item[\htmlref{alm\_i2t}{idl:alm_i2t}, \htmlref{alm\_t2i}{idl:alm_t2i}]
+these facilities turn indexed lists of $a_{\ell m}$ into 2D a(l,m) tables and back
+    \item[\htmlref{lm2index}{idl:lm2index}] converts the $a_{\ell m}$ order and degree
     $(\ell, m)$ into the index $i$ = $\ell^2$ + $\ell$ + $m$ + 1 required by
 \thedocid.
     \item[\htmlref{cl2fits}{idl:cl2fits}] routine to write a power spectrum into

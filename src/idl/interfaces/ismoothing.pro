@@ -68,6 +68,7 @@ pro ismoothing, map_in, map_out $
 ;
 ; OUTPUT:
 ;   map_out: output smoothed map, can be a FITS file, or a memory array
+;   Will have the same orderin as the input map
 ;       
 ; KEYWORD PARAMETERS:
 ;

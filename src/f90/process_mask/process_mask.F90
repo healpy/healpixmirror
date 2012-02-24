@@ -64,7 +64,8 @@ program process_mask
   integer(I4B) :: nbordpix, status, n_args
   integer(I4B) :: nside, npix, order, new_min_size
   integer(I4B), allocatable, dimension(:) :: mask
-  real(DP), allocatable, dimension(:,:) :: map, map2
+  real(SP), allocatable, dimension(:,:) :: map
+  real(DP), allocatable, dimension(:,:) :: map2
   real(DP):: surface_deg2, surf_pix_deg
   
   real(kind=SP)                 :: clock_time, time0, time1, t0, t1

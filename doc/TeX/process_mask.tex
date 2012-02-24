@@ -135,10 +135,9 @@ In this example, the file contains the following qualifiers:\hfill\newline
 \fileparam{mask\_file = wmap\_temperature\_analysis\_mask\_r9\_5yr\_v3.fits}
 \fileparam{hole\_min\_size =    100}
 \fileparam{distance\_file = !/tmp/dist\_wmap.fits}
-}
-process\_mask computes the distance from each valid pixel to the closest invalid
+process\_mask computes the distance in Radians from each valid pixel to the closest invalid
 pixel for WMAP-5 mask 'wmap\_temperature\_analysis\_mask\_r9\_5yr\_v3.fits', ignoring
-the holes containing fewer than 100 pixels, and outputs the result in '/tmp/dist\_wmap.fits'
+the holes containing fewer than 100 pixels, and outputs the result in '/tmp/dist\_wmap.fits'.}
 \end{examples}
 
 \begin{release}

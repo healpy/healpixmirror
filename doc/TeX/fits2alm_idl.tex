@@ -29,17 +29,25 @@ the user to read the output from the \healpix facilities \textbf{anafast} and \t
 \end{facility}
 
 \begin{IDLformat}
-{FITS2ALM, index, alm\_array, fitsfile, [signal, /HELP, HDR=, LMAX=, LMIN=, XHDR= ]}
+{FITS2ALM, \mylink{idl:fits2alm:index}{index}, 
+\mylink{idl:fits2alm:alm_array}{alm\_array}, 
+\mylink{idl:fits2alm:fitsfile}{fitsfile}, [%
+\mylink{idl:fits2alm:signal}{signal}, 
+\mylink{idl:fits2alm:help}{/HELP}, 
+\mylink{idl:fits2alm:hdr}{HDR=}, 
+\mylink{idl:fits2alm:lmax}{LMAX=}, 
+\mylink{idl:fits2alm:lmin}{LMIN=}, 
+\mylink{idl:fits2alm:xhdr}{XHDR=} ]}
 \end{IDLformat}
 
 \begin{qualifiers}
   \begin{qulist}{} %%%% NOTE the ``extra'' brace here %%%%
-    \item[index] Long array containing the index for the corresponding
+    \item[index] \mytarget{idl:fits2alm:index} Long array containing the index for the corresponding
                  array of $a_{\ell m}$ coefficients (and errors if required). The
                  index ${i}$ is related to $(l,m)$ by the relation \hfill\newline
                  $i$ = $\ell^2$ + $\ell$ + $m$ + 1. \newline This has dimension
     nl (see below).
-    \item[alm\_array] Real or double array of alm coefficients read from the
+    \item[alm\_array] \mytarget{idl:fits2alm:alm_array} Real or double array of alm coefficients read from the
       file. This has dimension (nl,nalm,nsig) -- corresponding to\hfill\newline
       nl   = number of $(l,m)$ indices \hfill\newline
       nalm = 2 for real and imaginary parts of alm coefficients or
@@ -47,9 +55,9 @@ the user to read the output from the \healpix facilities \textbf{anafast} and \t
       nsig = number of signals to be written (1 for any of T E B
              or 3 if ALL to be written). Each signal is stored
              in a separate extension.
-    \item[fitsfile] String containing the name of the file to be
+    \item[fitsfile] \mytarget{idl:fits2alm:fitsfile}String containing the name of the file to be
       read.
-    \item[signal] String defining the signal coefficients to read
+    \item[signal] \mytarget{idl:fits2alm:signal}String defining the signal coefficients to read
                   Valid options: 'T', 'E', 'B' or 'ALL' \hfill\newline
 	\default{'T'}.  
   \end{qulist}
@@ -57,13 +65,13 @@ the user to read the output from the \healpix facilities \textbf{anafast} and \t
 
 \begin{keywords}
   \begin{kwlist}{} %%% extra brace
-    \item[HDR=] String array containing the primary header read from the FITS
+    \item[HDR=] \mytarget{idl:fits2alm:hdr}String array containing the primary header read from the FITS
       file. 
-    \item[/HELP] If set, the routine documentation header is shown and the routine exits	
-    \item[LMAX=] Largest $l$ multipole  to be output
-    \item[LMIN=] Smallest $l$ multipole to be output. If LMIN (resp. LMAX) is below (above) the range of $l$'s present in the file,
+    \item[/HELP] \mytarget{idl:fits2alm:help}If set, the routine documentation header is shown and the routine exits	
+    \item[LMAX=] \mytarget{idl:fits2alm:lmax}Largest $l$ multipole  to be output
+    \item[LMIN=] \mytarget{idl:fits2alm:lmin}Smallest $l$ multipole to be output. If LMIN (resp. LMAX) is below (above) the range of $l$'s present in the file,
               it will be silently ignored
-    \item[XHDR=] String array containing the read extension header(s). If
+    \item[XHDR=] \mytarget{idl:fits2alm:xhdr}String array containing the read extension header(s). If
                   ALL signals are required, then the three extension 
                   headers are returned appended into one string array.
   \end{kwlist}
@@ -84,6 +92,8 @@ input file.
     \item[idl] version \idlversion or more is necessary to run \thedocid.
     \item[\htmlref{alm2fits}{idl:alm2fits}] provides the complimentary routine to write
       $a_{lm}$ coefficients into a FITS file.
+    \item[\htmlref{alm\_i2t}{idl:alm_i2t}, \htmlref{alm\_t2i}{idl:alm_t2i}]
+these facilities turn indexed lists of $a_{\ell m}$ into 2D a(l,m) tables and back
     \item[\htmlref{index2lm}{idl:index2lm}] converts the index $i$ = $\ell^2$ +
     $\ell$ + $m$ + 1 returned by \thedocid\ into $\ell$ and $m$
     \item[\htmlref{lm2index}{idl:lm2index}] converts ($\ell$, $m$) vectors into $i$ = $\ell^2$ +

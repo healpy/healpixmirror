@@ -103,10 +103,14 @@ Several routines have been added or improved since version 2.20, as listed below
 \item Latest edition (version 3.0)
 \begin{itemize}
 %
-	\item New routines to go from circular beam profile to transfer function (\htmlref{{\tt beam2bl}}{idl:beam2bl}), and back
-  		(\htmlref{{\tt bl2beam}}{idl:bl2beam}).
-	\item New \htmlref{{\tt angulardistance}}{idl:angulardistance} routine
-to compute the angular distance between pairs of detectors.
+	\item New routines to go from circular beam profile to transfer function
+(\htmlref{{\tt beam2bl}}{idl:beam2bl}), 
+and back (\htmlref{{\tt bl2beam}}{idl:bl2beam}); 
+to go from indexed list of $a_{lm}$ to a(l,m) 2D table
+(\htmlref{{\tt alm\_i2t}}{idl:alm_i2t}), 
+and back
+(\htmlref{{\tt alm\_t2i}}{idl:alm_t2i}); and to compute the angular distance
+between pairs of vectors (\htmlref{{\tt angulardistance}}{idl:angulardistance}).
 %
 	\item creation of \htmlref{\tt hpx2dm}{idl:hpx2dm} routine to generate
 DomeMaster images of \healpix maps that can be projected on planetariums.
@@ -122,8 +126,6 @@ false positive pixels in the \mylink{idl:query_disc:inclusive}{{\em inclusive}} 
 of the poles for high resolution in \htmlref{{\tt nest2ring, ring2nest,
 pix2ang\_*, pix2vec\_*, $\ldots$}}{idl:pix_tools}
 %
-	\item \htmlref{{\tt fits2cl}}{idl:fits2cl}: addition of \mylink{idl:fits2cl:wmap7}{{\tt WMAP7}} keyword
-to read best fit $C(l)$ model to WMAP 7yr data.
 	\item \htmlref{{\tt cartview, gnomview, mollview,
 orthview}}{idl:mollview}:
  the length and spacing of the headless vectors used to represent
@@ -133,6 +135,8 @@ POLARIZATION}} keyword.
 \mylink{idl:mollview:stagger}{\tt STAGGER} keyword to overplot staggered
 spheres (with a twist) in order to detect periodic boundary conditions on the
 sky
+	\item \htmlref{{\tt fits2cl}}{idl:fits2cl}: addition of \mylink{idl:fits2cl:wmap7}{{\tt WMAP7}} keyword
+to read best fit $C(l)$ model to WMAP 7yr data.
 	\item \htmlref{\tt read\_fits\_map}{idl:read_fits_map} can now read
 $\nside$=8192 \healpix maps and is generally faster than previously for smaller
 maps
@@ -449,6 +453,8 @@ file containing $a_{lm}$ coefficients.
 %% \end{itemize}
 
 \newpage
+\include{alm_i2t_idl}
+\include{alm_t2i_idl}
 \include{alm2fits_idl}
 \include{ang2vec_idl}
 \include{angulardistance_idl}

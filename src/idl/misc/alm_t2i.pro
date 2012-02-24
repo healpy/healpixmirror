@@ -65,7 +65,7 @@ pro alm_t2i, alm_tab, index, alm_list, HELP=help, MFIRST=mfirst
 ;
 ; OUTPUTS:
 ;     index: Integer vector of size nl containing the index the 
-;            of alm coefficients, related to {l,m} by the relation
+;            of alm coefficients, related to {l,m} by 
 ;             i = l^2 + l + m + 1
 ;
 ;     alm_list: array of alm coefficients, with dimension (nl, 2 [, ns])
@@ -75,22 +75,12 @@ pro alm_t2i, alm_tab, index, alm_list, HELP=help, MFIRST=mfirst
 ;                  ns: number of Stokes parameters (if > 1)
 ;
 ; RESTRICTIONS:
+;     Unphysical values (m > l) are silently ignored
 ;
 ; PROCEDURE:
 ;
 ; EXAMPLE:
-;    ; combining two different sets of alm:
-;    fits2alm, i1, a1, 'alm1.fits'   ; read first set of alm from a FITS file
-;    ac1 = alm_i2t(i1, a1, /complex) ; make an array out of it
-;
-;    fits2alm, i2, a2, 'alm2.fits'   ; read second set of alm
-;    ac2 = alm_i2t(i2, a2, /complex) ; make an array out of it
-;
-;    ac = 0.9*ac1 + 0.1*ac2          ; weighted sum the 2 alm sets (only for
-;                                               (l,m) common to both sets)
-;
-;    alm_t2i, ac, i, a               ; makes an index list of the new alms
-;    alm2fits, i, a, 'almsum.fits'   ; save the new alms into a FITS file
+;       see ALM_I2T
 ;
 ; MODIFICATION HISTORY:
 ;     2007-10-04: creation

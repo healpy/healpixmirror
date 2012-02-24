@@ -25,7 +25,11 @@
 ;  For more information about HEALPix see http://healpix.jpl.nasa.gov
 ;
 ; -----------------------------------------------------------------------------
-function alm_i2t, index, alm_vec, complex=complex, help=help ;, lmax=lmax, mmax=mmax
+function alm_i2t, index, alm_vec, $
+                  complex=complex, $
+                  help=help, $
+                  lmax=lmax_usr, $
+                  mmax=mmax_usr
 ;+
 ; NAME:
 ;       alm_i2t
@@ -37,7 +41,7 @@ function alm_i2t, index, alm_vec, complex=complex, help=help ;, lmax=lmax, mmax=
 ; CATEGORY:
 ;
 ; CALLING SEQUENCE:
-;      alm_tabular = alm_i2t(index, alm_vector, complex=)
+;      alm_tabular = alm_i2t(index, alm_vector [, /COMPLEX, /HELP, LMAX=, MMAX=])
 ;
 ; INPUTS:
 ;     index: Integer vector of size nl containing the index the 
@@ -53,12 +57,18 @@ function alm_i2t, index, alm_vec, complex=complex, help=help ;, lmax=lmax, mmax=
 ;                         or 3 for T,E,B together)
 ;
 ; KEYWORD PARAMETERS:
-;    /complex: if set, the output array is complex with dimensions
+;    /COMPLEX: if set, the output array is complex with dimensions
 ;          (lmax+1, mmax+1, [nalm/2 , nsig]),
 ;      otherwise, the array is real with dimensions
 ;          (lmax+1, mmax+1, nalm [, nsig])
 ;
-;    /help: if set, prints out this documentation
+;    /HELP: if set, prints out this documentation
+;
+;    LMAX: lmax to be used in output array, regardless of
+;      value found in input index
+;
+;    MMAX: mmax to be used in output array, regardless of
+;      value found in input index
 ;
 ; OUTPUTS:
 ;     alm_tabular: real or complex array, containing all the alm for l
@@ -74,22 +84,21 @@ function alm_i2t, index, alm_vec, complex=complex, help=help ;, lmax=lmax, mmax=
 ; PROCEDURE:
 ;
 ; EXAMPLE:
-;    ; combining two different sets of alm:
-;    fits2alm, i1, a1, 'alm1.fits'   ; read first set of alm from a FITS file
-;    ac1 = alm_i2t(i1, a1, /complex) ; make an array out of it
+;    ; combining two different sets of alm for (l,m) <= 100
+;    fits2alm, i1, a1, 'alm1.fits'                       ; read first set of alm from a FITS file
+;    ac1 = alm_i2t(i1, a1, /complex, lmax=100, mmax=100) ; make an array out of those with (l,m) <= 100
 ;
-;    fits2alm, i2, a2, 'alm2.fits'   ; read second set of alm
-;    ac2 = alm_i2t(i2, a2, /complex) ; make an array out of it
+;    fits2alm, i2, a2, 'alm2.fits'                       ; read second set of alm
+;    ac2 = alm_i2t(i2, a2, /complex, lmax=100, mmax=100) ; make an array out of those with (l,m) <= 100
 ;
-;    ac = 0.9*ac1 + 0.1*ac2          ; weighted sum the 2 alm sets (only for
-;                                               (l,m) common to both sets)
+;    ac = 0.9*ac1 + 0.1*ac2          ; weighted sum the 2 alm sets 
 ;
 ;    alm_t2i, ac, i, a               ; makes an index list of the new alms
 ;    alm2fits, i, a, 'almsum.fits'   ; save the new alms into a FITS file
 ;
 ; MODIFICATION HISTORY:
 ;     2007-10-04: created
-;     2011-02-23: enforce m>=0
+;     2011-02-24: test m>=0; added LMAX and MMAX
 ;-
 
 routine = 'alm_i2t'
@@ -98,21 +107,25 @@ if keyword_set(help) then begin
     return,-1
 endif
 
-syntax = 'alm_tabular = '+routine+'(index, alm_vector [, COMPLEX=, HELP=])'
+syntax = 'alm_tabular = '+routine+'(index, alm_vector [, COMPLEX=, HELP=, LMAX=, MMAX=])'
 if n_params() ne 2 then begin
     print,syntax
     return,-1
 endif
 
+; compute (l,m)
 index2lm, index, l, m
 
 ; find out sizes
-lmax = (defined(lmax))? lmax*1L : max(l)
-mmax = (defined(mmax))? mmax*1L : max(m, min=mmin)
-if (mmin lt 0) then begin
-    message,'Negative m found in input alm index'
-    return,-1
-endif
+lmax = (defined(lmax_usr))? lmax_usr[0]*1L : max(l)
+mmax = (defined(mmax_usr))? mmax_usr[0]*1L : max(m)
+mmin = min(m)
+if (mmin lt 0) then message,/info,'WARNING: Negative m found in input alm index. They will be ignored'
+
+; select (l,m)
+good = where(l le lmax and m le mmax and m ge 0, ngood)
+if (ngood eq 0) then message,/info,'WARNING: No valid alm found in defined (l,m) range'
+
 sz = size(alm_vec)
 ndim = sz[0]
 n1 = sz[1]
@@ -131,27 +144,30 @@ if (keyword_set(complex)) then begin
     sample = complex(1.0, 0.0, double=double)
     ; create array with convenient shape for IDL l,m indexing
     alm_tab = make_array(lmax+1, mp1*n2*n3, type=size(/type,sample))
-    for j=0,n3-1 do begin
-        for i=0,n2-1 do begin
-            kshift =  mp1 * (i + n2 * j)
-            alm_tab[l, m + kshift] = complex(alm_vec[*,2*i,j], alm_vec[*,2*i+1,j], double=double)
+    if (ngood gt 0) then begin
+        ll = l[good] & mm = m[good]
+        for j=0,n3-1 do begin
+            for i=0,n2-1 do begin
+                kshift =  mp1 * (i + n2 * j)
+                alm_tab[ll, mm + kshift] = complex(alm_vec[good,2*i,j], alm_vec[good,2*i+1,j], double=double)
+            endfor
         endfor
-    endfor
-    alm_tab = reform(alm_tab, lmax+1, mp1, n2, n3, /Overwrite)
-
-
+    endif
 endif else begin
     ;---------------------------------------
     ; real array
     ;---------------------------------------
     ; create array with convenient shape for IDL l,m indexing
     alm_tab = make_array(lmax+1, mp1*n2*n3, type=size(/type,alm_vec))
-    for j=0,n3-1 do begin
-        for i=0,n2-1 do begin
-            kshift =  mp1 * (i + n2 * j)
-            alm_tab[l, m + kshift] = alm_vec[*,i,j]
+    if (ngood gt 0) then begin
+        ll = l[good] & mm = m[good]
+        for j=0,n3-1 do begin
+            for i=0,n2-1 do begin
+                kshift =  mp1 * (i + n2 * j)
+                alm_tab[ll, mm + kshift] = alm_vec[good,i,j]
+            endfor
         endfor
-    endfor
+    endif
 endelse
 
 
