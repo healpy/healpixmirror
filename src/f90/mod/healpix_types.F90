@@ -39,7 +39,7 @@ MODULE healpix_types
   !            Mars 2008: i8b same as i4b on machines not supporting 64 bits (NO64BITS flag set)
   !            Feb  2009: introduce healpix_version
   !
-  character(len=*), PARAMETER, public :: healpix_version = '2.20'
+  character(len=*), PARAMETER, public :: healpix_version = '3.00'
   INTEGER, PARAMETER, public :: i4b = SELECTED_INT_KIND(9)
 #ifdef NO64BITS
   INTEGER, PARAMETER, public :: i8b = i4b

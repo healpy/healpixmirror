@@ -10,79 +10,107 @@
 \abstract{This document describes the \healpix IDL facility \thedocid.}
 
 \begin{facility}
-{This IDL facility provides an interface to F90 'smoothing' facility}
+{This IDL facility provides an interface to F90 'smoothing' facility. It can be
+used to smooth a \healpix map by an arbitrary circular 'beam' defined by its
+Legendre window function (or its FWHM if it is assumed Gaussian)}
 {src/idl/interfaces/ismoothing.pro}
 \end{facility}
 
 \begin{IDLformat}
-{ISMOOTHING,  map1\_in, map\_out [, beam\_file=, binpath=, double=,
-fwhm\_arcmin=, 
-help=, iter\_order=, keep\_tmp\_files=, 
-       lmax=, nlmax=, nested=, ordering=, plmfile=, regression=, ring=, 
-       simul\_type=, silent=, theta\_cut\_deg=, tmpdir=, won=, w8file=, w8dir=]}
+{ISMOOTHING, 
+\mylink{idl:ismoothing:map1_in}{map1\_in},  
+\mylink{idl:ismoothing:map2_out}{map2\_out},[
+\mylink{idl:ismoothing:beam_file}{beam\_file=},
+\mylink{idl:ismoothing:binpath}{binpath=},
+\mylink{idl:ismoothing:double}{/double},
+\mylink{idl:ismoothing:fwhm_arcmin}{fwhm\_arcmin=},
+\mylink{idl:ismoothing:help}{/help},
+\mylink{idl:ismoothing:iter_order}{iter\_order=},
+\mylink{idl:ismoothing:keep_tmp_files}{keep\_tmp\_files=}, 
+\mylink{idl:ismoothing:lmax}{lmax=},
+\mylink{idl:ismoothing:lmax}{nlmax=},
+\mylink{idl:ismoothing:nested}{/nested},
+\mylink{idl:ismoothing:ordering}{ordering=}, 
+\mylink{idl:ismoothing:plmfile}{plmfile=},
+\mylink{idl:ismoothing:regression}{regression=},
+\mylink{idl:ismoothing:ring}{/ring},
+\mylink{idl:ismoothing:simul_type}{simul\_type=},
+\mylink{idl:ismoothing:silent}{/silent},
+\mylink{idl:ismoothing:theta_cut_deg}{theta\_cut\_deg=},  
+\mylink{idl:ismoothing:tmpdir}{tmpdir=},
+\mylink{idl:ismoothing:won}{/won},
+\mylink{idl:ismoothing:w8file}{w8file=},
+\mylink{idl:ismoothing:w8dir}{w8dir=}%            
+]}
 \end{IDLformat}
 
 \begin{qualifiers}
   \begin{qulist}{} %%%% NOTE the ``extra'' brace here %%%%
-   \item[map1\_in] required input: input map, can be a FITS file, or a memory array containing the
+   \item[map1\_in] \mytarget{idl:ismoothing:map1_in} required input: input map, can be a FITS file, or a memory array containing the
         map to smooth
-    \item[map2\_out] required output: output smoothed map, can be a FITS file, or a memory array
+    \item[map2\_out] \mytarget{idl:ismoothing:map2_out} required output: output smoothed map, can be a FITS file, or a memory array
   \end{qulist}
 \end{qualifiers}
 
 \begin{keywords}
   \begin{kwlist}{} %%% extra brace
- \item[beam\_file=] beam window function, either a FITS file or an array
+ \item[beam\_file=] \mytarget{idl:ismoothing:beam_file} beam window function, either a FITS file or an array
 
- \item[binpath=] full path to back-end routine \default {\$HEXE/smoothing, then \$HEALPIX/bin/smoothing}\\
+ \item[binpath=] \mytarget{idl:ismoothing:binpath} full path to back-end routine \default {\$HEXE/smoothing, then \$HEALPIX/bin/smoothing}\\
               -- a binpath starting with / (or $\backslash$), $~$ or \$ is interpreted as absolute\\
               -- a binpath starting with ./ is interpreted as relative to current directory\\
               -- all other binpathes are relative to \$HEALPIX
 
- \item[/double]    if set, I/O is done in double precision \default {single precision I/O}
+ \item[/double] \mytarget{idl:ismoothing:double} if set, I/O is done in double precision \default {single precision I/O}
 
- \item[fwhm\_arcmin=] gaussian beam FWHM in arcmin \default {0}
+ \item[fwhm\_arcmin=] \mytarget{idl:ismoothing:fwhm_arcmin} gaussian beam Full Width Half Maximum in arc-minutes \default {0}
 
- \item[/help]      if set, prints extended help
+ \item[/help]      \mytarget{idl:ismoothing:help} if set, prints extended help
 
-\item[iter\_order=] order of iteration in the analysis \default {0}
+\item[iter\_order=] \mytarget{idl:ismoothing:iter_order} order of iteration in the analysis \default {0}
 
-\item[/keep\_tmp\_files] if set, temporary files are not discarded at the end of the
+\item[/keep\_tmp\_files] \mytarget{idl:ismoothing:keep_tmp_files} if set, temporary files are not discarded at the end of the
                   run
 
- \item[lmax=, nlmax=]   maximum multipole of smoothing \default {determined by back-end routine (ie, smoothing)}
+ \item[lmax=, nlmax=]   \mytarget{idl:ismoothing:lmax} maximum multipole of smoothing \default {determined by back-end routine (ie, smoothing)}
 
-\item[/nested] if set, signals that *all* maps and mask read online are in
-   NESTED scheme (does not apply to FITS file), see also /ring and Ordering
+\item[/nested] \mytarget{idl:ismoothing:nested} if set, signals that *all* maps and mask read online are in
+   NESTED scheme (does not apply to FITS file), 
+\mylink{idl:smoothing:ring}{{\tt /ring}} and 
+\mylink{idl:smoothing:ordering}{{\tt Ordering}}
 
-\item[ordering=] either 'RING' or 'NESTED', ordering of online maps and masks,
- see /ring and Ordering
+\item[ordering=] \mytarget{idl:ismoothing:ordering} either 'RING' or 'NESTED', ordering of online maps and masks,
+see 
+\mylink{idl:smoothing:ring}{{\tt /ring}} and 
+\mylink{idl:smoothing:nested}{{\tt /nested}}
 
-\item[plmfile=] FITS file containing precomputed Spherical Harmonics \default {no file}
+\item[plmfile=] \mytarget{idl:ismoothing:plmfile} FITS file containing precomputed Spherical Harmonics \default {no file}
 
-\item[regression=] 0, 1 or 2, regress out best fit monopole and/or dipole before
+\item[regression=] \mytarget{idl:ismoothing:regression} 0, 1 or 2, regress out best fit monopole and/or dipole before
     alm analysis
   \default {0, analyze raw map} 
 
-\item[/ring] see /nested and Ordering above
+\item[/ring] \mytarget{idl:ismoothing:ring} see 
+\mylink{idl:smoothing:nested}{{\tt /nested}} and 
+\mylink{idl:smoothing:ordering}{{\tt Ordering}} above
 
-\item[simul\_type=] 1 or 2, analyze temperature only or temperature + polarization
+\item[simul\_type=] \mytarget{idl:ismoothing:simul_type} 1 or 2, analyze temperature only or temperature + polarization
 
-\item[/silent]    if set, works silently
+\item[/silent]    \mytarget{idl:ismoothing:silent} if set, works silently
 
-\item[theta\_cut\_deg=] cut around the equatorial plane 
+\item[theta\_cut\_deg=] \mytarget{idl:ismoothing:theta_cut_deg} cut around the equatorial plane 
 
-\item[tmpdir=]      directory in which are written temporary files 
+\item[tmpdir=]      \mytarget{idl:ismoothing:tmpdir} directory in which are written temporary files 
 \default {IDL\_TMPDIR (see IDL documentation)}
 
-\item[/won]     if set, a weighting scheme is used to improve the quadrature
+\item[/won]     \mytarget{idl:ismoothing:won} if set, a weighting scheme is used to improve the quadrature
     \default {apply weighting}
 
-\item[w8file=]    FITS file containing weights 
+\item[w8file=]    \mytarget{idl:ismoothing:w8file} FITS file containing weights 
      \default {determined automatically by back-end routine}.
    Do not set this keyword unless you really know what you are doing
 
-\item[w8dir=]     directory where the weights are to be found 
+\item[w8dir=]     \mytarget{idl:ismoothing:w8dir} directory where the weights are to be found 
         \default {determined automatically by back-end routine}
 
   \end{kwlist}
@@ -101,9 +129,12 @@ file, or as a memory array.}
   \begin{sulist}{} %%%% NOTE the ``extra'' brace here %%%%
     \item[idl] version \idlversion or more is necessary to run \thedocid.
     \item[smoothing] F90 facility called by \thedocid.
+    \item[\htmlref{beam2bl}{idl:beam2bl}] This IDL facility computes a transfer
+(or window) function $b(l)$ (such as the ones required by \thedocid) for a given
+circular beam profile $b(\theta)$
     \item[\htmlref{ianafast}{idl:ianafast}] IDL Interface to F90 anafast and C++ anafast\_cxx
     \item[\htmlref{isynfast}{idl:isynfast}] IDL Interface to F90 synfast
-%    \item[\htmlref{ismoothing}{idl:ismoothing}] IDL Interface to F90 smoothing
+    \item[\htmlref{iprocess\_mask}{idl:iprocess_mask}] IDL Interface to F90 process\_mask
   \end{sulist}
 \end{related}
 

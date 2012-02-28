@@ -112,6 +112,10 @@ and back
 (\htmlref{{\tt alm\_t2i}}{idl:alm_t2i}); and to compute the angular distance
 between pairs of vectors (\htmlref{{\tt angulardistance}}{idl:angulardistance}).
 %
+	\item addition of \htmlref{\tt iprocess\_mask}{idl:iprocess_mask}
+interface to F90 {\tt process\_mask} facility to compute the angular distance of valid
+pixels to the closest invalid pixels for a input binary mask.
+%
 	\item creation of \htmlref{\tt hpx2dm}{idl:hpx2dm} routine to generate
 DomeMaster images of \healpix maps that can be projected on planetariums.
 %
@@ -481,6 +485,7 @@ file containing $a_{lm}$ coefficients.
 \include{hpx2dm_idl}
 \include{hpx2gs_idl}
 \include{ianafast_idl}
+\include{iprocess_mask_idl}
 \include{ismoothing_idl}
 \include{isynfast_idl}
 \include{index2lm_idl}

@@ -29,6 +29,8 @@
 # 2011-01-28: C++ configuration ask for preinstalled cfitsio library
 # 2011-01-31: keep track of previous choice of FITSDIR and FITSINC (within same session)
 #           : propose OpenMP by default
+# 2011-03-07: allow linking with shared libcfitsio for the C++ port
+# 2012-02-27: better parsing of config.* files in C++ configuration
 #=====================================
 #=========== General usage ===========
 #=====================================
@@ -313,7 +315,7 @@ pickCppCompilation() {
     
     echo 'Available configurations for C++ compilation are:'
     cd $CXXCONFDIR
-    list=`${LS} -1 config.* | ${AWK} -F. '{print $2}'`
+    list=`${LS} -1 config.* | ${GREP} -v \.in$ | ${AWK} -F. '{print $2}'`
     ii=1
     for option in $list ; do
 	echo "   ${ii}: ${option}"

@@ -1,0 +1,132 @@
+% -*- LaTeX -*-
+
+\sloppy
+
+\title{\healpix IDL Facility User Guidelines}
+\docid{iprocess\_mask} \section[iprocess\_mask]{ }
+\label{idl:iprocess_mask}
+\docrv{Version 1.0}
+\author{Eric Hivon}
+\abstract{This document describes the \healpix IDL facility \thedocid.}
+
+\begin{facility}
+{This IDL facility provides an interface to F90 'process\_mask' facility. For a
+given input binary mask, it can determine the angular distance in Radians of all valid (1 valued)
+pixels to the closest invalid (0 valued) pixesl, with the option of ignoring small
+clusters of invalid pixels. The distance map can then be used to generate an
+apodized mask.}
+{src/idl/interfaces/iprocess\_mask.pro}
+\end{facility}
+
+\begin{IDLformat}
+{IPROCESS\_MASK, 
+\mylink{idl:iprocess_mask:mask_in}{mask\_in},  
+\mylink{idl:iprocess_mask:distance_map}{distance\_map},[
+\mylink{idl:iprocess_mask:binpath}{binpath=},
+\mylink{idl:iprocess_mask:filled_mask}{filled\_mask=},
+\mylink{idl:iprocess_mask:help}{/help},
+\mylink{idl:iprocess_mask:hole_arcmin2}{hole\_arcmin2=},
+\mylink{idl:iprocess_mask:hole_pixels}{hole\_pixels=},
+\mylink{idl:iprocess_mask:keep_tmp_files}{keep\_tmp\_files=}, 
+\mylink{idl:iprocess_mask:nested}{/nested},
+\mylink{idl:iprocess_mask:ordering}{ordering=}, 
+\mylink{idl:iprocess_mask:ring}{/ring},
+\mylink{idl:iprocess_mask:silent}{/silent},
+\mylink{idl:iprocess_mask:tmpdir}{tmpdir=}]}
+\end{IDLformat}
+
+\begin{qualifiers}
+  \begin{qulist}{} %%%% NOTE the ``extra'' brace here %%%%
+   \item[mask\_in] \mytarget{idl:iprocess_mask:mask_in} required input: input binary
+mask. It can be a FITS file, or a memory array containing the mask to process.
+    \item[distance\_map] \mytarget{idl:iprocess_mask:distance_map} optional
+output: double precision angular distance map in Radians. It can be a FITS file, or a
+   memory array. It will have the same ordering as the input mask.
+  \end{qulist}
+\end{qualifiers}
+
+\begin{keywords}
+  \begin{kwlist}{} %%% extra brace
+ \item[binpath=] \mytarget{idl:iprocess_mask:binpath} full path to back-end routine \default {\$HEXE/process\_mask, then \$HEALPIX/bin/process\_mask}\\
+              -- a binpath starting with / (or $\backslash$), $~$ or \$ is interpreted as absolute\\
+              -- a binpath starting with ./ is interpreted as relative to current directory\\
+              -- all other binpathes are relative to \$HEALPIX
+
+ \item[filled\_mask=] \mytarget{idl:iprocess_mask:filled_mask} optional output
+mask with holes smaller than 
+\mylink{idl:iprocess_mask:hole_arcmin2}{{\tt hole\_arcmin2}} or 
+\mylink{idl:iprocess_mask:hole_pixels}{{\tt hole\_pixels}} filled in.
+     Will have the same ordering as the input mask
+
+ \item[/help]      \mytarget{idl:iprocess_mask:help} if set, prints extended help
+
+ \item[hole\_arcmin2]   \mytarget{idl:iprocess_mask:hole_arcmin2} Minimal size
+(in arcmin$^2$) of invalid regions to be kept 
+    (can be used together with \mylink{idl:iprocess_mask:hole_pixels}{{\tt hole\_pixels}}, 
+     the result will be the largest of the two). \default{0.0}
+
+ \item[hole\_pixels]   \mytarget{idl:iprocess_mask:hole_pixels} Minimal size (in pixels) of invalid regions to be kept 
+    (can be used together with \mylink{idl:iprocess_mask:hole_arcmin2}{{\tt hole\_arcmin2}}, 
+     the result will be the largest of the two). \default{0}
+
+\item[/keep\_tmp\_files] \mytarget{idl:iprocess_mask:keep_tmp_files} if set,
+temporary files are not discarded at the end of the run
+
+\item[/nested] \mytarget{idl:iprocess_mask:nested} if set, signals that the mask read online is in
+   NESTED scheme (does not apply to FITS file), see also
+\mylink{idl:iprocess_mask:ring}{{\tt /ring}} and 
+\mylink{idl:iprocess_mask:ordering}{{\tt Ordering}}
+
+\item[ordering=] \mytarget{idl:iprocess_mask:ordering} either 'RING' or 'NESTED', ordering of online mask,
+ see 
+\mylink{idl:iprocess_mask:ring}{{\tt /ring}} and 
+\mylink{idl:iprocess_mask:nested}{{\tt /nested}}
+
+\item[/ring] \mytarget{idl:iprocess_mask:ring} see 
+\mylink{idl:iprocess_mask:nested}{{\tt /nested}} and 
+\mylink{idl:iprocess_mask:ordering}{{\tt Ordering}} above
+
+\item[/silent]    \mytarget{idl:iprocess_mask:silent} if set, works silently
+
+\item[tmpdir=]      \mytarget{idl:iprocess_mask:tmpdir} directory in which are written temporary files 
+\default {IDL\_TMPDIR (see IDL documentation)}
+
+  \end{kwlist}
+\end{keywords}  
+
+\begin{codedescription}
+{\thedocid\ is an interface to 'process\_mask' F90 facility. It
+requires some disk space on which to write the parameter file and the other
+temporary files. Most data can be provided/generated as an external FITS
+file, or as a memory array.}
+\end{codedescription}
+
+
+
+\begin{related}
+  \begin{sulist}{} %%%% NOTE the ``extra'' brace here %%%%
+    \item[idl] version \idlversion or more is necessary to run \thedocid.
+    \item[process\_mask] F90 facility called by \thedocid.
+    \item[\htmlref{ianafast}{idl:ianafast}] IDL Interface to F90 anafast and C++ anafast\_cxx
+    \item[\htmlref{isynfast}{idl:isynfast}] IDL Interface to F90 synfast
+    \item[\htmlref{ismoothing}{idl:ismoothing}] IDL Interface to F90 smoothing
+  \end{sulist}
+\end{related}
+
+\begin{example}
+{
+\begin{tabular}{l} %%%% use this tabular format %%%%
+ npix = nside2npix(256) \\
+ mask = replicate(1, npix) \& mask[randomu(seed,100)*npix] = 0 \\
+ \thedocid, mask, distance, /ring, /silent \\
+ mollview, distance
+\end{tabular}
+}
+{
+A binary mask in which 100 randomly located pixels are 0-valued
+(=invalid) is generated. Then the distance (in Radians) of the valid pixels to
+the closest invalid pixels is computed and plotted.
+}
+\end{example}
+
+

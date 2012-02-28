@@ -10,7 +10,10 @@
 \abstract{This document describes the \healpix IDL facility \thedocid.}
 
 \begin{facility}
-{This IDL facility provides an interface to 'anafast' F90 and 'anafast\_cxx' C++ facilities}
+{This IDL facility provides an interface to 'anafast' F90 and 'anafast\_cxx' C++
+facilities. It can be used to produce the Spherical Harmonics coefficients
+($a_{lm}$ of a \healpix map (or pair of maps) and/or the resulting auto (or
+cross) power spectra $C(l)$.}
 {src/idl/interfaces/ianafast.pro}
 \end{facility}
 
@@ -72,7 +75,7 @@ file or a memory array
 \item[nmmax=]   maximum degree m, only valid for C++ anafast\_cxx \default {nlmax}
 
 \item[ordering=] either 'RING' or 'NESTED', ordering of online maps and masks,
- see /ring and /ordering
+ see /nested and /ring
 
 \item[plmfile=] FITS file containing precomputed Spherical Harmonics \default {no file}
 
@@ -127,8 +130,9 @@ file, or as a memory array.}
     \item[idl] version \idlversion or more is necessary to run \thedocid.
     \item[anafast] F90 facility called by \thedocid.
     \item[anafast\_cxx] C++ called by \thedocid.
-    \item[\htmlref{isynfast}{idl:isynfast}] IDL Interface to F90 synfast
+    \item[\htmlref{iprocess\_mask}{idl:iprocess_mask}] IDL Interface to F90 process\_mask
     \item[\htmlref{ismoothing}{idl:ismoothing}] IDL Interface to F90 smoothing
+    \item[\htmlref{isynfast}{idl:isynfast}] IDL Interface to F90 synfast
 %    \item[\htmlref{ianafast}{idl:ianafast}] IDL Interface to F90 anafast and C++ anafast\_cxx
   \end{sulist}
 \end{related}

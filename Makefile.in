@@ -168,8 +168,10 @@ f90-test: f90-all
 	$(F90_BINDIR)/map2gif -inp test_mf.fits -out test_mf.gif -bar t -ttl 'Median Filtered Map'; \
 	$(F90_BINDIR)/sky_ng_sim ngfs.par ; \
 	$(F90_BINDIR)/map2gif -inp test_ngfs.fits -out test_ngfs.gif -bar t -ttl 'Non-Gaussian Map'; \
+	$(F90_BINDIR)/process_mask prmask.par ; \
+	$(F90_BINDIR)/map2gif -inp test_distmask.fits -out test_distmask.gif -bar t -ttl 'Distance to mask border'; \
 	echo "Healpix F90 tests done" ; \
-	echo "success rate: `ls -1 test*fits | wc -l`/9"
+	echo "success rate: `ls -1 test*fits | wc -l`/10"
 
 f90-clean:
 	for p in $(f90-prog) lib mod psht; do \
