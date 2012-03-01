@@ -1,0 +1,220 @@
+#! /bin/sh
+
+
+test_pdf_viewer () {
+    if [ "$VIEWER" = "" ]; then
+	for DIR in `echo $PATH | sed 's/:/ /g'`; do
+	    if [ -f "$DIR/$1" ]; then
+		VIEWER=$1
+	    fi
+	done
+    fi
+}
+
+open_pdf_viewer () {
+
+    # adapted from IDL's online_help_pdf (May 2010)
+    # added gv
+    # added evince 2012-02-29
+    this_code=open_pdf_viewer 
+    
+
+# If viewer is not specified by the environment variable, choose a default
+#    VIEWER=$IDL_ONLINE_HELP_PDF_VIEWER
+    VIEWER=$HEALPIX_PDF_VIEWER
+    if [ \( "$VIEWER" = "" \) -a \( `uname` = "Darwin" \) ]; then
+	VIEWER=darwin_open
+    fi
+
+    # If we see Adobe's acroread, we'll default to it.
+    test_pdf_viewer "acroread"
+
+    # If we didn't find acroread, then try the free Xpdf viewer
+    test_pdf_viewer "xpdf"
+
+    # fall back on evince # (Gnome)
+    test_pdf_viewer "evince"
+
+    # fall back on okular # (KDE)
+    test_pdf_viewer "okular"
+
+    # fall back on foxit # 
+    test_pdf_viewer "foxit"
+
+    # fall back on sumatra (Windows)
+    test_pdf_viewer "sumatra" 
+
+    # fall back on gv
+    test_pdf_viewer "gv" 
+
+    if [ "x$VIEWER" = "x" ]; then
+    # No view in evidence.
+	echo "PDF viewer (acroread, xpdf, evince, okular, foxit, sumatra, gv) not found in user's PATH" 1>&2
+	exit 1
+    fi
+  
+    case $VIEWER in
+	darwin_open)
+        open $1 &
+	;;
+
+	acroread*|xpdf*|evince*|okular*|foxit*|gv*)
+	$VIEWER $1 &
+	;;
+	
+	sumatra*)
+	$VIEWER $1 &
+	;;
+
+	*)
+	$VIEWER $1 &
+	;;
+
+    esac
+
+}
+
+
+open_html_browser () {
+    # adapted from IDL's online_help_html (May 2010)
+
+# If browser is not specified by the environment variable, then use the default
+#BROWSER=$IDL_ONLINE_HELP_HTML_BROWSER
+    if [ "$BROWSER" = "" ]; then
+	if [ `uname` = "Darwin" ]; then
+	    BROWSER=darwin_open
+	else
+	    firefoxFound=`which firefox 2>/dev/null`
+	    if test "$firefoxFound"
+		then BROWSER=firefox
+	    else mozillaFound=`which mozilla 2>/dev/null`
+		if test "$mozillaFound"
+		    then BROWSER=mozilla
+		else netscapeFound=`which netscape 2>/dev/null`
+		    if test "$netscapeFound"
+			then BROWSER=netscape
+		    else echo "$0:"
+			echo "Unable to find browser in execution path."
+			echo "Update execution path to include firefox, mozilla or netscape."
+			exit
+		    fi # netscape
+		fi # mozilla
+	    fi # firefox
+	fi # Darwin
+    fi # $BROWSER
+
+
+    case "$BROWSER" in
+	
+	"darwin_open")
+        href="\"file://$1\""
+	osascript -e  'open location '$href
+	;;
+
+	"lynx")
+	xterm -e lynx "$1" &
+	;;
+
+	"mozilla")
+	mozilla -remote "openURL(file:$1, new-tab)" 2>/dev/null # try to open tab in existing session
+	if [ $? != 0 ]; then # if it fails, start a fresh session
+	    mozilla "file:$1" &
+	fi
+	;;
+
+	"firefox")
+	firefox -remote "openURL(file:$1, new-tab)" 2>/dev/null
+	if [ $? != 0 ]; then
+	    firefox "file:$1" &
+	fi
+	;;
+
+	"netscape")
+	netscape -remote "openURL(file:$1)" 2>/dev/null
+	if [ $? != 0 ]; then
+	    netscape "$1" &
+	fi
+	;;
+
+	"opera")
+	opera -remote "openURL(file:$1)" & # open existing or new session
+	;;
+
+	*)
+	echo "$0: The $BROWSER browser is not known to ONLINE_HELP."
+	exit 1
+	;;
+
+    esac
+
+}
+
+# ======================================================================
+
+docdir=${HEALPIX}/doc
+
+[ ! -d ${docdir} ] && docdir=./doc
+if [ ! -d ${docdir} ]; then
+    echo "Can not find HEALPIX documentation."
+    exit 1
+fi
+
+file=""
+#[ ${#} -eq 1 ] && file=$1
+[ ${#} -ge 2 ] && file=$2
+
+type=0
+while [ ${type} -le 0 ]; do
+    if [ ${#} = 0 -o ${type} = -1 ]; then
+	echo " Healpix on line documentation "
+	echo
+	echo " healpix_doc [-h|-p] "
+	echo "   -h:  browse HTML documentation "          
+	echo "   -p:  view   PDF  documentation "  
+	echo 
+	printf " Enter your choice:  h, p or 0 (to exit): "
+	read answer
+	if [ "x$answer" = "x0" ]; then
+	    echo "Bye ..."
+	    exit 0
+	fi
+	[ "x$answer" = "xH" -o "x$answer" = "xh" ] && type=1
+	[ "x$answer" = "xP" -o "x$answer" = "xp" ] && type=2
+	if [ $type -le 0 ] ; then
+	    echo "unkwnown answer ..."
+	    exit 1
+	fi
+    else
+	type=-1
+	[ "${1:0:2}" = "-h" ] && type=1
+	[ "${1:0:2}" = "-p" ] && type=2
+    fi
+done
+echo $file
+
+        
+case $type in
+    1)
+	echo "opening HEALPIX HTML documention"
+	deffile=${docdir}/html/main.htm
+	[ "x$file" != "x" ] && deffile=${file}
+	open_html_browser  ${deffile}
+	#echo "browser: ${BROWSER}"
+    ;;
+    2)
+	echo "opening HEALPIX PDF documention"
+	deffile=${docdir}/pdf/pdf_index.pdf
+	[ "x$file" != "x" ] && deffile=${file}
+	open_pdf_viewer    ${deffile}
+	#echo "viewer: ${VIEWER}"
+    ;;
+    *)
+    echo "Unknown option"
+    exit 1
+    ;;
+esac
+
+exit 0
+
+
+

@@ -190,6 +190,7 @@ pro ianafast, map1_in, cl_out $
 ;       2009-09-07:  w8filedir -> w8dir *EVERYWHERE*
 ;       2009-09-09:  use !healpix.path.data instead of !healpix.directory+'/data'
 ;       2010-02-22: SILENT forwarded to hpx_file2mem
+;       2012-03-01: retrofitted to run with GDL
 ;
 ;-
 local = {routine: 'ianafast', exe: 'anafast', exe_cxx: 'anafast_cxx', double: keyword_set(double)}
@@ -216,6 +217,7 @@ endif
 if (keyword_set(cxx)) then begin
     if undefined(nlmax) then message,'nlmax is REQUIRED when invoking C++ code (/cxx option).'
 endif
+with_cl_out = (n_params() ge 2)
 
 ; check that no keyword is duplicated
 solve_kw_conflict,'w8dir', 'healpix_data',       k1=w8dir,    k2=healpix_data,   kout=w8dir, /defined
@@ -231,7 +233,7 @@ hpx_xface_generic, fullpath, tmp_par_file, binpath, init=local, cxx=cxx, tmpdir=
 NoFile = keyword_set(cxx) ? " " : " '' "
 
 ; deal with online data
-tmp_cl_out   = hpx_mem2file((arg_present(cl_out) || defined(cl_out)) ? cl_out : NoFile, /out)
+tmp_cl_out   = hpx_mem2file(with_cl_out ? (defined(cl_out)?cl_out :-1) : NoFile, /out)
 tmp_map1_in  = hpx_mem2file(set_parameter(map1_in, NoFile, /ifempty),  /in, /map, ring=ring, nested=nested, ordering=ordering)
 tmp_map2_in  = hpx_mem2file(set_parameter(map2_in, NoFile, /ifempty),  /in, /map, ring=ring, nested=nested, ordering=ordering)
 tmp_maskfile = hpx_mem2file(set_parameter(maskfile, NoFile,/ifempty), /in, /map, ring=ring, nested=nested, ordering=ordering)
@@ -283,7 +285,7 @@ free_lun, lunit
 hpx_xface_generic, /run, fullpath, tmp_par_file, silent=silent
 
 ; deal with online data
-if (arg_present(cl_out)) then hpx_file2mem, tmp_cl_out, cl_out, /cl, show_cl = show_cl, silent=silent
+if (with_cl_out) then hpx_file2mem, tmp_cl_out, cl_out, /cl, show_cl = show_cl, silent=silent
 
 ; to_remove
 hpx_xface_generic, clean = ~keyword_set(keep_tmp_files)

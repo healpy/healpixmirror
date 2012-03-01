@@ -64,8 +64,7 @@ pro healpix_doc, help=help, html=html, pdf=pdf, whole=whole
 ;
 ; PROCEDURE:
 ;        
-;       call ONLINE_HELP
-;
+;      calls healpix_doc script
 ;
 ; EXAMPLE:
 ;
@@ -74,8 +73,13 @@ pro healpix_doc, help=help, html=html, pdf=pdf, whole=whole
 ;
 ; MODIFICATION HISTORY:
 ;        created 2009-10-07 by EH.
-;        2010-03-12: opens main.htm instead of index.htm when used with /html,/whole
+;        2010-03-12: opens main.htm instead of index.htm when used with
+;        /html,/whole
+;        2012-03-01: replaces online_help with call to healpix_doc script
 ;-
+
+in_gdl = is_gdl()
+in_idl = ~in_gdl
 
 routine = 'healpix_doc'
 syntax = routine+', [HELP=, HTML=, PDF=, WHOLE=]'
@@ -139,7 +143,26 @@ endelse
 if (~file_test(doc_path)) then begin
     print,'ERROR: documentation file ('+doc_path+') not found.'
 endif else begin
-    online_help, /full_path, book=doc_path
+    cmd = !healpix.directory+'/'+'healpix_doc'
+    if keyword_set(pdf) then begin
+        cmd += ' -p '
+    endif else begin
+        cmd += ' -h '
+    endelse
+    cmd += doc_path
+    spawn, cmd, /sh
+
+;     if (in_idl) then begin
+;         online_help, /full_path, book=doc_path
+;     endif else begin
+;         bg = ' & '
+;         if keyword_set(pdf) then begin
+;             cmd = !dir+'/bin/online_help_pdf  '+doc_path+ bg
+;         endif else begin
+;             cmd = !dir+'/bin/online_help_html '+doc_path+ bg
+;         endelse
+;         spawn,cmd
+;     endelse
 endelse
 
 

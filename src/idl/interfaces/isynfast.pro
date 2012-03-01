@@ -160,6 +160,7 @@ pro isynfast, cl_in, map_out $
 ;       May  2008, v1.1.3 (post beta release): bug correction for map_out
 ;       2008-08-27, v1.1.3 (post 2.10 release): do not try to read map_out in
 ;                 alm-only generation mode
+;       2012-03-01: retrofitted to run with GDL
 ;-
 local = {routine: 'isynfast', exe: 'synfast', double: keyword_set(double)}
 syntax = [local.routine+', cl_in [, map_out,  ', $
@@ -172,12 +173,18 @@ if keyword_set(help) then begin
     return
 endif
 
+if (n_params() eq 0 || n_params() gt 2) then begin
+    print,syntax,form="(a)"
+    return
+endif
+
 if (undefined(cl_in) && undefined(alm_in)) then begin
     print,syntax,form='(a)'
     print,local.routine+': Should provide some input : cl_in or alm_in'
     return
 endif
-if (~arg_present(map_out) && undefined(map_out) && undefined(alm_out)) then begin
+with_map_out = (n_params() eq 2)
+if (~with_map_out  && undefined(alm_out)) then begin
     print,syntax,form='(a)'
     print,local.routine+': Should provide some output: map_out or alm_out'
     return
@@ -198,7 +205,7 @@ NoFile = " '' "
 x_cl_in = set_parameter(cl_in,     NoFile, /ifempty, /ifzero)
 tmp_cl_in     = hpx_mem2file(x_cl_in, /cl,   /in)
 tmp_beam_file = hpx_mem2file(set_parameter(beam_file, NoFile, /ifempty), /beam, /in)
-tmp_map_out   = hpx_mem2file((arg_present(map_out) || defined(map_out)) ? map_out : NoFile,  /out)
+tmp_map_out   = hpx_mem2file(with_map_out ? (defined(map_out)?map_out :-1) : NoFile,  /out)
 
 no_cl = undefined(x_cl_in) || (size(/tname,x_cl_in) eq 'STRING' && x_cl_in eq NoFile)
 if (no_cl && undefined(alm_in)) then begin
@@ -237,7 +244,7 @@ free_lun, lunit
 hpx_xface_generic, /run, fullpath, tmp_par_file, silent=silent
 
 ; deal with online data
-if (arg_present(map_out)) then hpx_file2mem, tmp_map_out, map_out,/map ; 2008-08-27
+if (with_map_out) then hpx_file2mem, tmp_map_out, map_out,/map ; 2008-08-27
 
 ; to_remove
 hpx_xface_generic, clean = ~keyword_set(keep_tmp_files)

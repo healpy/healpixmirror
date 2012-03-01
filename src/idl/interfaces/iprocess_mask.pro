@@ -115,6 +115,7 @@ pro iprocess_mask, mask_in, distance_map $
 ;
 ; MODIFICATION HISTORY:
 ;     2012-02-24: 1st version, adapted from ismoothing
+;     2012-03-01: retrofitted to run with GDL
 ;-
 
 local = {routine: 'iprocess_mask', exe: 'process_mask', double: keyword_set(double)}
@@ -133,7 +134,9 @@ if (n_params() eq 0 or n_params() gt 2) then begin
     print,local.routine+': Should provide some input mask'
     return
 endif
-if (~arg_present(distance_map) && undefined(distance_map) && undefined(filled_mask)) then begin
+with_distance_map = (n_params() eq 2)
+with_filled_mask  = defined(filled_mask) || arg_present(filled_mask)
+if (~with_distance_map && ~with_filled_mask) then begin
     print,syntax,form='(a)'
     print,local.routine+': Should provide some output: Distance_map or FILLED_MASK='
     return
@@ -147,9 +150,9 @@ NoFile = " '' "
 ;;; if (~arg_present(distance_map)) then distance_map = NoFile
 
 ; deal with online data
-tmp_mask_in    = hpx_mem2file(set_parameter(mask_in,    NoFile, /ifempty), /map,  /in, ring=ring, nested=nested, ordering=ordering)
-tmp_distance_map   = hpx_mem2file(distance_map,                                         /out)
-tmp_filled_mask   = hpx_mem2file(filled_mask,                                           /out)
+tmp_mask_in       = hpx_mem2file(set_parameter(mask_in,    NoFile, /ifempty), /map,  /in, ring=ring, nested=nested, ordering=ordering)
+tmp_distance_map  = hpx_mem2file(with_distance_map ? (defined(distance_map)?distance_map :-1) : NoFile, /out)
+tmp_filled_mask   = hpx_mem2file(with_filled_mask  ? (defined(filled_mask )?filled_mask  :-1) : NoFile, /out)
 
 ; writes parameter file
 openw,lunit,tmp_par_file, /get_lun
@@ -170,8 +173,8 @@ free_lun, lunit
 hpx_xface_generic, /run, fullpath, tmp_par_file, silent=silent
 
 ; deal with online data
-hpx_file2mem, tmp_distance_map, distance_map,/map
-hpx_file2mem, tmp_filled_mask,  filled_mask,/map
+if (with_distance_map) then hpx_file2mem, tmp_distance_map, distance_map,/map
+if (with_filled_mask)  then hpx_file2mem, tmp_filled_mask,  filled_mask, /map
 
 ; to_remove
 hpx_xface_generic, clean = ~keyword_set(keep_tmp_files)
