@@ -59,6 +59,8 @@
 !   s template_pixel_nest
 !   s same_shape_pixels_nest
 !
+! 2012-03-02: make sure that both arguments of iand and modulo 
+!      are of the same type (for XL Fortran compiler)
 !=======================================================================
 !     pix2ang_ring
 !
@@ -82,8 +84,8 @@
     INTEGER(KIND=MKD) ::  npix, ncap, ip
     REAL(KIND=DP) ::  fodd, dnside
     real(kind=dp), parameter :: half = 0.500000000000000_dp
-    real(kind=dp), parameter :: one  = 1.000000000000000_dp
-    real(kind=dp), parameter :: three = 3.00000000000000_dp
+    !real(kind=dp), parameter :: one  = 1.000000000000000_dp
+    !real(kind=dp), parameter :: three = 3.00000000000000_dp
     real(kind=dp), parameter :: threehalf = 1.50000000000000_dp
     character(len=*), parameter :: code = "pix2ang_ring"
     !-----------------------------------------------------------------------
@@ -121,7 +123,7 @@
        ip    = ipix - ncap
        nl4   = 4*nside
        iring = INT( ip / nl4 ) + nside ! counted from North pole
-       iphi  = iand(ip, nl4-1)
+       iphi  = iand(ip, nl4-1_MKD)
 
        fodd  = half * ( iand(iring+nside+1,1) )  ! 0 if iring+nside is odd, 1/2 otherwise
        theta = ACOS( (nl2 - iring) / (threehalf*dnside) )
@@ -246,7 +248,7 @@
        nl4 = 4*nside
        ip    = ipix - ncap
        iring = INT( ip / nl4 ) + nside ! counted from North pole
-       iphi  = iand(ip, nl4-1)
+       iphi  = iand(ip, nl4-1_MKD)
 
        fact1 =  1.50000_dp*nside
        fodd  = half * ( iand(iring+nside+1,1) )  ! 0 if iring+nside is odd, 1/2 otherwise
@@ -595,7 +597,7 @@
     !     finds the x,y on the face (starting from the lowest corner)
     !     from the pixel number
     if (nside <= ns_max4) then
-       ip_low = iand(ipf,1023)       ! content of the last 10 bits
+       ip_low = iand(ipf,1023_MKD)       ! content of the last 10 bits
        ip_trunc =    ipf/1024        ! truncation of the last 10 bits
        ip_med = iand(ip_trunc,1023)  ! content of the next 10 bits
        ip_hi  =      ip_trunc/1024   ! content of the high weight 10 bits
@@ -608,7 +610,7 @@
        scale = 1
        ismax = 4
        do i=0, ismax
-          ip_low = iand(ipf,1023)
+          ip_low = iand(ipf,1023_MKD)
           ix = ix + scale * pix2x(ip_low)
           iy = iy + scale * pix2y(ip_low)
           scale = scale * 32
@@ -744,7 +746,7 @@
     !     finds the x,y on the face (starting from the lowest corner)
     !     from the pixel number
     if (nside <= ns_max4) then
-       ip_low = iand(ipf,1023)       ! content of the last 10 bits
+       ip_low = iand(ipf,1023_MKD)       ! content of the last 10 bits
        ip_trunc =    ipf/1024        ! truncation of the last 10 bits
        ip_med = iand(ip_trunc,1023)  ! content of the next 10 bits
        ip_hi  =      ip_trunc/1024   ! content of the high weight 10 bits
@@ -757,7 +759,7 @@
        scale = 1
        ismax = 4
        do i=0, ismax
-          ip_low = iand(ipf,1023)
+          ip_low = iand(ipf,1023_MKD)
           ix = ix + scale * pix2x(ip_low)
           iy = iy + scale * pix2y(ip_low)
           scale = scale * 32
@@ -1200,7 +1202,7 @@
     !     finds the x,y on the face (starting from the lowest corner)
     !     from the pixel number
     if (nside <= ns_max4) then
-       ip_low = iand(ipf,1023)       ! content of the last 10 bits
+       ip_low = iand(ipf,1023_MKD)       ! content of the last 10 bits
        ip_trunc =    ipf/1024        ! truncation of the last 10 bits
        ip_med = iand(ip_trunc,1023)  ! content of the next 10 bits
        ip_hi  =      ip_trunc/1024   ! content of the high weight 10 bits
@@ -1213,7 +1215,7 @@
        scale = 1
        ismax = 4
        do i=0, ismax
-          ip_low = iand(ipf,1023)
+          ip_low = iand(ipf,1023_MKD)
           ix = ix + scale * pix2x(ip_low)
           iy = iy + scale * pix2y(ip_low)
           scale = scale * 32
@@ -1326,7 +1328,7 @@
 
        ip    = ipring - ncap
        irn   = INT( ip / nl4 ) + nside               ! counted from North pole
-       iphi  = iand(ip, nl4-1)
+       iphi  = iand(ip, nl4-1_MKD)
 
        kshift  = iand(irn+nside,1) ! MODULO(irn+nside,2)  ! 1 if irn+nside is odd, 0 otherwise
        nr = nside
@@ -1486,9 +1488,9 @@
     logical(kind=lgt) :: take_all, to_top, do_ring
 
     integer(kind=i4b) :: i, diff
-    integer(kind=i4b) :: nr, nir1, nir2, ir, kshift
+    integer(kind=i4b) :: nir1, nir2, ir, kshift
     integer(kind=MKD) :: ii, in, inext, npix, ncap, ipix1, ipix2
-    integer(kind=MKD) :: ip_low, ip_hi
+    integer(kind=MKD) :: ip_low, ip_hi, nr
     real(kind=dp)     :: phi_low, phi_hi, shift
     !=======================================================================
 
@@ -2745,6 +2747,7 @@
 !     Benjamin D. Wandelt 13/10/97
 !     using code from HEALPIX toolkit by K.Gorski and E. Hivon
 !     2009-06-15: deals with Nside > 8192
+!     2012-03-02: test validity of ix_in and iy_in instead of undefined ix and iy
 !=======================================================================
 #ifdef DOI8B
   subroutine xy2pix_nest_8(nside, ix_in, iy_in, face_num, ipix)
@@ -2762,8 +2765,8 @@
 
     !-----------------------------------------------------------------------
     if (nside<1 .or. nside>ns_max) call fatal_error(code//"> nside out of range")
-    if (ix<0 .or. ix>(nside-1)) call fatal_error(code//"> ix out of range")
-    if (iy<0 .or. iy>(nside-1)) call fatal_error(code//"> iy out of range")
+    if (ix_in<0 .or. ix_in>(nside-1)) call fatal_error(code//"> ix out of range")
+    if (iy_in<0 .or. iy_in>(nside-1)) call fatal_error(code//"> iy out of range")
     if (x2pix1(127) <= 0) call mk_xy2pix1()
 
     ix = ix_in
@@ -2805,6 +2808,8 @@
 !
 !     using code from HEALPIX toolkit by K.Gorski and E. Hivon
 !     2009-06-15: deals with Nside > 8192
+!     2012-03-02: test validity of ix_in and iy_in instead of undefined ix and iy
+!                 define ipf as MKD
 !=======================================================================
 #ifdef DOI8B
   subroutine pix2xy_nest_8(nside, ipf_in, ix, iy)
@@ -2817,18 +2822,19 @@
     INTEGER(KIND=MKD), INTENT(IN)  :: ipf_in
     INTEGER(KIND=I4B), INTENT(OUT) :: ix, iy
 
-    INTEGER(KIND=I4B) ::  ip_low, ip_trunc, ip_med, ip_hi, scale, ipf, i, ismax
+    integer(kind=MKD) :: ipf
+    INTEGER(KIND=I4B) ::  ip_low, ip_trunc, ip_med, ip_hi, scale, i, ismax
     character(len=*), parameter :: code = "pix2xy_nest"
 
     !-----------------------------------------------------------------------
     if (nside<1 .or. nside>ns_max) call fatal_error(code//"> nside out of range")
-    if (ipf <0 .or. ipf>nside*nside-1) &
+    if (ipf_in<0 .or. ipf_in>nside*nside-1) &
          &     call fatal_error(code//"> ipix out of range")
     if (pix2x(1023) <= 0) call mk_pix2xy()
 
     ipf = ipf_in
     if (nside <= ns_max4) then
-       ip_low = iand(ipf,1023)       ! content of the last 10 bits
+       ip_low = iand(ipf,1023_MKD)   ! content of the last 10 bits
        ip_trunc =    ipf/1024        ! truncation of the last 10 bits
        ip_med = iand(ip_trunc,1023)  ! content of the next 10 bits
        ip_hi  =      ip_trunc/1024   ! content of the high weight 10 bits
@@ -2841,7 +2847,7 @@
        scale = 1
        ismax = 4
        do i=0, ismax
-          ip_low = iand(ipf,1023)
+          ip_low = iand(ipf,1023_MKD)
           ix = ix + scale * pix2x(ip_low)
           ix = iy + scale * pix2y(ip_low)
           scale = scale * 32
