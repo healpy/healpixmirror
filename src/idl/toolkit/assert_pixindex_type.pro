@@ -44,16 +44,23 @@ if (type ge 4 and type le 11) then begin
                                 ; exclude float, double, (d)complex, string,
                                 ; structure, pointer and object reference
     if keyword_set(warning) then begin
-        message,level=-1,/info,'***************** WARNING ************************'
+        message_patch,level=-1,/info,'***************** WARNING ************************'
     endif else begin
-        message,level=-1,/info,'**************************************************'
+        message_patch,level=-1,/info,'**************************************************'
     endelse
-    message,level=-1,/info,'Pixel index must be a (1, 2,) 4 or 8-byte INTEGER,'
-    message,level=-1,/info,'ie, either (BYTE, INT,) LONG or LONG64,'
-    message,level=-1,/info,'any other type may create round-off errors.'
-    message,level=-1,/info,'It is currently: '+size(/tname,pixel[0])
-    message,level=-1,info=warning,'**************************************************'
-    if keyword_set(warning) then help,/traceback
+    message_patch,level=-1,/info,'Pixel index must be a (1, 2,) 4 or 8-byte INTEGER,'
+    message_patch,level=-1,/info,'ie, either (BYTE, INT,) LONG or LONG64,'
+    message_patch,level=-1,/info,'any other type may create round-off errors.'
+    message_patch,level=-1,/info,'It is currently: '+size(/tname,pixel[0])
+    message_patch,level=-1,info=warning,'**************************************************'
+    if (keyword_set(warning)) then begin
+        if is_gdl() then begin
+            help, call=trace
+            print, trace,form='(a)'
+        endif else begin
+            help,/traceback
+        endelse
+    endif
 endif
 
 

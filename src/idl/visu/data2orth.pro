@@ -79,7 +79,7 @@ if (do_fullsky) then nspheres = 2
 if (do_stagger) then begin
     nspheres = 3
     if (stagger[0] le 0. || stagger[0] gt 2.) then begin
-        message, level=1, 'Stagger must be in ]0,2]'
+        message_patch, level=-1, 'Stagger must be in ]0,2]'
     endif
 endif
 

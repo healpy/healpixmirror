@@ -138,7 +138,7 @@ case projtype of
         longpole = longpole1
         proj_small = 'orthographic'
         if (~keyword_set(half_sky)) then begin
-            message,'FITS output of orthographic map only possible with HALF_SKY',level=-2
+            message_patch,'FITS output of orthographic map only possible with HALF_SKY',level=-2
         endif
     end
     default: begin

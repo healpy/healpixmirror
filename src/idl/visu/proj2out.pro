@@ -543,13 +543,13 @@ endif else begin ; X, png, gif or jpeg output
                     RETAIN=window_retain
         endif
         if (~virtual_window && (!d.x_size lt long(xsize) || !d.y_size lt long(ysize*w_dx_dy))) then begin
-            message,level=-1,/info,'==========================================================='
-            message,level=-1,/info,'WARNING: Because of screen and window manager limitations,'
-            message,level=-1,/info,'         the actual window is not as large as expected !'
-            message,level=-1,/info,strtrim(!d.x_size,2)+'*'+  strtrim(!d.y_size,2)+'    <    '+  strtrim(long(xsize),2)+'*'+strtrim(long(ysize*w_dx_dy),2)
-            message,level=-1,/info,'         The result is unpredictable.'            
-            message,level=-1,/info,' If you are only interested in GIF/PNG/JPEG output, you can use a virtual window (WINDOW<0) instead'            
-            message,level=-1,/info,'==========================================================='
+            message_patch,level=-1,/info,'==========================================================='
+            message_patch,level=-1,/info,'WARNING: Because of screen and window manager limitations,'
+            message_patch,level=-1,/info,'         the actual window is not as large as expected !'
+            message_patch,level=-1,/info,strtrim(!d.x_size,2)+'*'+  strtrim(!d.y_size,2)+'    <    '+  strtrim(long(xsize),2)+'*'+strtrim(long(ysize*w_dx_dy),2)
+            message_patch,level=-1,/info,'         The result is unpredictable.'            
+            message_patch,level=-1,/info,' If you are only interested in GIF/PNG/JPEG output, you can use a virtual window (WINDOW<0) instead'            
+            message_patch,level=-1,/info,'==========================================================='
         endif
     endelse
     if (in_idl) then TVLCT,red,green,blue
@@ -719,7 +719,7 @@ skip_oplots = do_orth && keyword_set(stagger) && $
   ( keyword_set(graticule) || keyword_set(igraticule) || keyword_set(hbound) || keyword_set(outline))
 
 if (skip_oplots) then begin
-    message,/info,level=-1,'*Warning*: GRAT, IGRAT, HBOUND and OUTLINE keywords are ignored in STAGGER mode'
+    message_patch,/info,level=-1,'*Warning*: GRAT, IGRAT, HBOUND and OUTLINE keywords are ignored in STAGGER mode'
 endif else begin
     grattwice=0
 ;  the graticule in output astrophysical coordinates
@@ -746,7 +746,7 @@ endif else begin
 ; overplot pixel boundaries
     if keyword_set(hbound) then begin
         nhbd = n_elements(hbound)
-        if (nhbd gt 3) then message,/info,level=-1,'Hbound must have 3 elements at most'
+        if (nhbd gt 3) then message_patch,/info,level=-1,'Hbound must have 3 elements at most'
         lnst = [0,2,1]          ; solid (smallest Nside), dashes (median Nside), dots (largest Nside)
         for i=0, (nhbd<3)-1 do begin
             if (hbound[i] gt 0) then oplot_healpix_bounds, hbound[i], eul_mat, projection=proj_small, flip = flip, thick = 1.*thick_dev, color = !p.color, half_sky=half_sky, linestyle=lnst[i], coordsys=[coord_in,coord_out]

@@ -47,7 +47,7 @@ if (do_set) then begin
     ks1 = keyword_set(k1) 
     ks2 = keyword_set(k2)
     if (ks1 && ks2) then begin
-        message,level=-1,'Set either '+uname1+' or '+uname2+' but not both!'
+        message_patch,level=-1,'Set either '+uname1+' or '+uname2+' but not both!'
     endif
 endif
 
@@ -56,7 +56,7 @@ if (do_present) then begin
     ks1 = arg_present(k1) 
     ks2 = arg_present(k2)
     if (ks1 && ks2) then begin
-        message,level=-1,uname1+' or '+uname2+' should be present, but not both!'
+        message_patch,level=-1,uname1+' or '+uname2+' should be present, but not both!'
     endif
 endif
 
@@ -65,7 +65,7 @@ if (do_defined) then begin
     ks1 = defined(k1) 
     ks2 = defined(k2)
     if (ks1 && ks2) then begin
-        message,level=-1,'Define either '+uname1+' or '+uname2+' but not both!'
+        message_patch,level=-1,'Define either '+uname1+' or '+uname2+' but not both!'
     endif
 endif
 

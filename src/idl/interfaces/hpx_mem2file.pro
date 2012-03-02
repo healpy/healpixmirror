@@ -79,7 +79,7 @@ endif else begin
             do_map: begin
                 nmaps = n_elements(variable)/n_elements(variable[*,0])
                 if (undefined(ring) && undefined(nested) && undefined(ordering)) then begin
-                    message,'Set either /RING or /NESTED or ORDERING=  when dealing with online maps',level=-1
+                    message_patch,'Set either /RING or /NESTED or ORDERING=  when dealing with online maps',level=-1
                 endif
                 error = 0
                 if (nmaps eq 1) then begin

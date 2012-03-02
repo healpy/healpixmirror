@@ -209,7 +209,7 @@ if arg_present(map_out) then map_out = proj2map_out(grid, offmap=plan_off, bad_d
 
 ; grid -> FITS file
 if keyword_set(fits) then begin 
-    message,level=1,'FITS not supported yet',/info
+    message_patch,level=-1,'FITS not supported yet',/info
 ;     proj2fits, grid, fits, $
 ;                projection = 'CART', flip=flip, $
 ;                rot = rot_ang, coord=coord_out, reso = reso_arcmin, unit = sunits, min=mindata, max = maxdata

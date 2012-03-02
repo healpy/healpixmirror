@@ -120,7 +120,7 @@ endelse
 
 if (ngood eq 0) then begin
     index2lm, final_range, ll, mm
-    message,'No alm''s found in specified ell range '+string(ll[0])+string(ll[1]),level=-1
+    message_patch,'No alm''s found in specified ell range '+string(ll[0])+string(ll[1]),level=-1
 endif
 
 return
