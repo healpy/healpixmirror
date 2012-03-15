@@ -143,6 +143,12 @@ public class RangeSetTest extends TestCase {
     assertEquals(new RangeSet(new long[]{1,11,20,31,40,56}),
                  new RangeSet(new long[]{20,31,40,51}).union
                  (new RangeSet(new long[]{1,11,45,56})));
+    assertEquals(new RangeSet(new long[]{1,11,45,56}),
+                 new RangeSet(new long[]{}).union
+                 (new RangeSet(new long[]{1,11,45,56})));
+    assertEquals(new RangeSet(new long[]{1,11,45,56}),
+                 new RangeSet(new long[]{1,11,45,56}).union
+                 (new RangeSet(new long[]{})));
     }
 
   public void testIntersect()
@@ -153,12 +159,24 @@ public class RangeSetTest extends TestCase {
     assertEquals(new RangeSet(new long[]{20,31,40,51,90,101,110,121,200,201}),
                  new RangeSet(new long[]{10,101,110,121,200,221}).intersection
                  (new RangeSet(new long[]{20,31,40,51,90,201})));
+    assertEquals(new RangeSet(new long[]{}),
+                 new RangeSet(new long[]{20,31,40,51}).intersection
+                 (new RangeSet(new long[]{})));
+    assertEquals(new RangeSet(new long[]{}),
+                 new RangeSet(new long[]{}).intersection
+                 (new RangeSet(new long[]{20,31,40,51})));
     }
   public void testSubstract()
     {
     assertEquals(new RangeSet(new long[]{20,31,40,45}),
                  new RangeSet(new long[]{20,31,40,51}).difference
                  (new RangeSet(new long[]{1,11,45,56})));
+    assertEquals(new RangeSet(new long[]{}),
+                 new RangeSet(new long[]{}).difference
+                 (new RangeSet(new long[]{1,11,45,56})));
+    assertEquals(new RangeSet(new long[]{1,11,45,56}),
+                 new RangeSet(new long[]{1,11,45,56}).difference
+                 (new RangeSet(new long[]{})));
     }
 
   public void testContainsAll()

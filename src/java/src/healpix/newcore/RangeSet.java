@@ -70,6 +70,21 @@ public class RangeSet implements Externalizable
     System.arraycopy(data,0,r,0,sz);
     checkConsistency();
     }
+  /** Construct new object from another RangeSet
+      @param other */
+  public RangeSet(RangeSet other)
+    {
+    sz=other.sz;
+    r = new long[sz];
+    System.arraycopy(other.r,0,r,0,sz);
+    }
+
+  public void setTo(RangeSet other)
+    {
+    sz=other.sz;
+    r = new long[sz];
+    System.arraycopy(other.r,0,r,0,sz);
+    }
 
   /** Checks the object for internal consistency. If a problem is detected,
       an IllegalArgumentException is thrown. */
@@ -153,14 +168,51 @@ public class RangeSet implements Externalizable
   private void pushv(long v)
     { ensureCapacity(sz+1); r[sz++]=v; }
 
+  private static boolean generalAllOrNothing (RangeSet a, RangeSet b,
+    boolean flip_a, boolean flip_b)
+    {
+    if (a.isEmpty())
+      return flip_a ? true : b.isEmpty();
+    if (b.isEmpty())
+      return flip_b ? true : a.isEmpty();
+    boolean state_a=flip_a, state_b=flip_b, state_res=state_a||state_b;
+    int ia=0, ea=a.sz, ib=0, eb=b.sz;
+    boolean runa = ia!=ea, runb = ib!=eb;
+    while(runa||runb)
+      {
+      boolean adv_a=false, adv_b=false;
+      long va=0,vb=0;
+      if (runa) va = a.r[ia];
+      if (runb) vb = b.r[ib];
+      if (runa && (!runb || (va<=vb))) adv_a=true;
+      if (runb && (!runa || (vb<=va))) adv_b=true;
+      if (adv_a) { state_a=!state_a; ++ia; runa = ia!=ea; }
+      if (adv_b) { state_b=!state_b; ++ib; runb = ib!=eb; }
+      if ((state_a||state_b)!=state_res)
+        return false;
+      }
+    return true;
+    }
   /** Internal helper function for constructing unions, intersections
       and differences of two RangeSets. */
   private static void generalUnion (RangeSet a, RangeSet b,
     boolean flip_a, boolean flip_b, RangeSet c)
     {
     c.clear();
+    if (a.isEmpty())
+      {
+      if (flip_a) return; // full range
+      c.setTo(b); // only b
+      return;
+      }
+    if (b.isEmpty())
+      {
+      if (flip_b) return; // full range
+      c.setTo(a); // only a
+      return;
+      }
     boolean state_a=flip_a, state_b=flip_b, state_res=state_a||state_b;
-    int ia=0, ea=a.sz, ib=0, eb=b.sz, out=0;
+    int ia=0, ea=a.sz, ib=0, eb=b.sz;
     boolean runa = ia!=ea, runb = ib!=eb;
     while(runa||runb)
       {
@@ -250,6 +302,13 @@ public class RangeSet implements Externalizable
     if (res==sz-1) return false; // beyond the end of the set
     return (r[res+1]<b);
     }
+  /** Returns true if the set completely contains "other", else false. */
+  public boolean containsAll (RangeSet other)
+    { return generalAllOrNothing(this,other,false,true); }
+  /** Returns true if there is overlap between the set and "other",
+      else false. */
+  public boolean containsAny (RangeSet other)
+    { return !generalAllOrNothing(this,other,false,false); }
   /** Returns true the object represents an identical set of ranges as obj. */
   public boolean equals(Object obj) {
     if (this == obj)
@@ -426,7 +485,7 @@ public class RangeSet implements Externalizable
       r[i] = last = last + unpackLong(in);
     }
 
-  /** Pack  non-negative long value into output stream.
+  /** Pack non-negative long value into output stream.
     * It will occupy 1-9 bytes depending on value (lower values occupy
     * less space)
     *

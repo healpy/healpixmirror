@@ -15,7 +15,9 @@ to the HealpixIndex, Healpix and PixTools classes:
     for RING ordering, but much quicker than converting all pixels from a RING
     result to NESTED.
   * inclusive queries have been improved: several bugs were fixed, and the
-    number of false positives in the result has been reduced
+    number of false positives in the result has been reduced. Users can now
+    choose between quick inclusive queries returning more false positives,
+    and slower ones returning fewer false positives.
 - the HealpixProc class offers a procedural (instead of object-oriented)
   interface to the HealpixBase functionality, which simplifies transition
   for users of the "Healpix" and "PixTools" classes.
