@@ -164,7 +164,7 @@ return,map_out
 end
 ;_____________________________________________________________________
 ;
-pro ud_grade, map_in, map_out, nside_out=nside_out, order_in=order_in, order_out=order_out, bad_data = bad_data, pessimistic = pessimistic
+pro ud_grade, map_in, map_out, nside_out=nside_out, order_in=order_in, order_out=order_out, bad_data = bad_data, pessimistic = pessimistic, help=help
 ;+
 ; NAME:
 ;  ud_grade
@@ -178,7 +178,7 @@ pro ud_grade, map_in, map_out, nside_out=nside_out, order_in=order_in, order_out
 ;  Healpix toolkit
 ;
 ; CALLING SEQUENCE:
-;  ud_grade, map_in, map_out, [nside_out=, order_in=, order_out=, bad_data=, pessimistic=]
+;  ud_grade, map_in, map_out, [bad_data=, help=, nside_out=, order_in=, order_out=, pessimistic=]
 ;
 ; INPUTS:
 ;  map_in : either 
@@ -194,6 +194,11 @@ pro ud_grade, map_in, map_out, nside_out=nside_out, order_in=order_in, order_out
 ;        - if map_in is a vector, map_out should be an IDL variable
 ;
 ; KEYWORD PARAMETERS:
+;   bad_data : flag value of missing pixel
+;        default : !healpix.bad_value = -1.6375e30
+;
+;   help: if set, this documentation header is printed out and the code exits
+;
 ;   nside_out : output resolution parameter (can be larger or smaller than the
 ;        input one)
 ;        default : same as input (map unchanged)
@@ -204,9 +209,6 @@ pro ud_grade, map_in, map_out, nside_out=nside_out, order_in=order_in, order_out
 ;
 ;   order_out : output map ordering (either 'RING' or 'NESTED')
 ;        default : same as order_in
-;
-;   bad_data : flag value of missing pixel
-;        default : !healpix.bad_value = -1.6375e30
 ;
 ;   pessimistic : if set to 1, during degradation each big pixel containing one
 ;             bad or missing small pixel is also considered as bad,
@@ -243,12 +245,19 @@ pro ud_grade, map_in, map_out, nside_out=nside_out, order_in=order_in, order_out
 ;    2009-05-07: correctly flags bad output pixels with bad_data value when
 ;               upgrading maps
 ;    2010-02-17: bad pixels correctly identified in DP map
+;    2012-03-16: added HELP keyword
 ;-
 
 routine = 'UD_GRADE'
+
+if keyword_set(help) then begin
+    doc_library,routine
+    return
+endif
+
 if n_params() ne 2 then begin
     print,'syntax : '+routine+', map_in, map_out, '
-    print,'  [nside_out=, order_in=, order_out=, bad_data=, pessimistic=]'
+    print,'  [bad_data=, help=, nside_out=, order_in=, order_out=, pessimistic=]'
     print
     return
 endif

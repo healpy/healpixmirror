@@ -19,38 +19,55 @@
 
 
 \begin{facility}
-{This IDL facility provides a means to upgrade/degrade or reorder a Healpix full
-sky map contained in a FITS file or loaded in memory.
+{This IDL facility provides a means to upgrade/degrade or reorder a full
+sky or cut-sky \healpix map contained in a FITS file or loaded in memory.
 }
 {src/idl/toolkit/ud\_grade.pro}
 \end{facility}
 
 \begin{IDLformat}
-{\FACNAME, Map\_in, Map\_out [, NSIDE\_OUT=, ORDER\_IN=, ORDER\_OUT=, BAD\_DATA=, PESSIMISTIC=]}
+{\FACNAME, 
+\mylink{idl:ud_grade:map_in}{Map\_in}, 
+\mylink{idl:ud_grade:map_out}{Map\_out} [, 
+\mylink{idl:ud_grade:bad_data}{BAD\_DATA}=, 
+\mylink{idl:ud_grade:help}{HELP}=, 
+\mylink{idl:ud_grade:nside_out}{NSIDE\_OUT}=, 
+\mylink{idl:ud_grade:order_in}{ORDER\_IN}=, 
+\mylink{idl:ud_grade:order_out}{ORDER\_OUT}=, 
+\mylink{idl:ud_grade:pessimistic}{/PESSIMISTIC}]}
 \end{IDLformat}
 
 \begin{qualifiers}
   \begin{qulist}{} %%%% NOTE the ``extra'' brace here %%%%
-    \item[Map\_in] input map: either a character string with the name of a fits file 
-      or a memory vector (real, integer, ...) containing a full sky Healpix data
+    \item[Map\_in] \mytarget{idl:ud_grade:map_in} input map: either a character
+string with the name of a FITS file containing a full-sky or cut-sky Healpix
+data set, 
+      or a memory vector (real, integer, ...) containing a {\em full sky} data
       set.
-    \item[Map\_out] reordered map: if map\_in was a filename, map\_out should be
+    \item[Map\_out] \mytarget{idl:ud_grade:map_out} reordered map: if map\_in was a filename, map\_out should be
     a filename, otherwise map\_out should point to a memory array
   \end{qulist}
 \end{qualifiers}
 
 \begin{keywords}
   \begin{kwlist}{} %%% extra brace
-    \item[NSIDE\_OUT =] output resolution parameter, can be
+    \item[BAD\_DATA =] \mytarget{idl:ud_grade:bad_data}%
+	flag value of missing pixels.
+          \default{{\tt !healpix.bad\_value} $\equiv -1.6375\ 10^{30}$}.
+    \item[/HELP] \mytarget{idl:ud_grade:help}%
+	 if set, the documentation header is printed out and the code exits
+    \item[NSIDE\_OUT =] \mytarget{idl:ud_grade:nside_out}%
+	 output resolution parameter, can be
     larger or smaller than the input one (scalar integer).
 	 \default{same as input: map unchanged or simply reordered}
-    \item[ORDER\_IN =] input map ordering (either 'RING' or 'NESTED')
+    \item[ORDER\_IN =] \mytarget{idl:ud_grade:order_in}%
+	input map ordering (either 'RING' or 'NESTED')
 	\default{same as the input FITS keyword ORDERING if applicable}.
-    \item[ORDER\_OUT =] output map ordering (either 'RING' or 'NESTED')
+    \item[ORDER\_OUT =] \mytarget{idl:ud_grade:order_out}%
+	output map ordering (either 'RING' or 'NESTED')
 	\default{same as ORDER\_IN}.
-    \item[BAD\_DATA =] flag value of missing pixels.
-          \default{{\tt !healpix.bad\_value} $\equiv -1.6375\ 10^{30}$}.
-    \item[PESSIMISTIC =] \parbox[t]{0.5\hsize}{if set, during {\bf degradation} each big pixel containing one
+    \item[/PESSIMISTIC] \mytarget{idl:ud_grade:pessimistic}%
+	\parbox[t]{0.5\hsize}{if set, during {\bf degradation} each big pixel containing one
     bad or missing small pixel is also considered as bad, \\
         if not set, each big pixel containing at least one good pixel
     is considered as good (optimistic)
@@ -59,9 +76,10 @@ sky map contained in a FITS file or loaded in memory.
 \end{keywords}  
 
 \begin{codedescription}
-{\facname can upgrade/degrade a full sky \healpix map using the hierarchical
-properties of \healpix. It can also reorder a full sky map (from NEST to RING and
-vice-versa). It operates on FITS files as well as on memory variables.
+{\facname can upgrade/degrade a \healpix map using the hierarchical
+properties of \healpix. It can also reorder a sky map (from NEST to RING and
+vice-versa). It operates on FITS files as well as on memory variables. Cut-sky
+operations are only accessible via FITS files.
 The degradation/upgradation is done assuming an
 intensive quantity (like temperature) that does not scale with surface area. 
 In case of degradation a big pixel that contains at least one bad small pixel is

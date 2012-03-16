@@ -25,7 +25,7 @@
 ;  For more information about HEALPix see http://healpix.jpl.nasa.gov
 ;
 ; -----------------------------------------------------------------------------
-function reorder, map_in, in=in, out= out, n2r= n2r, r2n=r2n
+function reorder, map_in, in=in, out= out, n2r= n2r, r2n=r2n, help=help
 ;+
 ; NAME:
 ;   reorder
@@ -37,7 +37,7 @@ function reorder, map_in, in=in, out= out, n2r= n2r, r2n=r2n
 ;   Healpix pixel toolkit
 ;
 ; CALLING SEQUENCE:
-;   map_out = reorder(map_in, [in=in, out=out, /n2r, /r2n])
+;   map_out = reorder(map_in, [in=in, out=out, /n2r, /r2n, /help])
 ;
 ; INPUTS:
 ;   map_in : a full sky Healpix map, can be of any type 
@@ -47,6 +47,7 @@ function reorder, map_in, in=in, out= out, n2r= n2r, r2n=r2n
 ;   none
 ;
 ; KEYWORD PARAMETERS:
+;   help- if set, print out this Help header and exits
 ;   in- is either 'RING' or 'NESTED' : input map ordering
 ;   out- is either 'RING' or 'NESTED' : output map ordering
 ;   r2n- if set, equivalent to in='RING', out='NESTED'
@@ -78,12 +79,17 @@ function reorder, map_in, in=in, out= out, n2r= n2r, r2n=r2n
 ;    April 1999, EH, Caltech
 ;    Jan   2000, EH,  improved documentation header 
 ;    Oct   2004, EH,  added extra dimension, added R2N  and N2R
+;    Mars  2012, EH, IAP: added HELP keyword
 ;-
 
- ok = (defined(in) and defined(out)) + keyword_set(r2n) + keyword_set(n2r)
+ ok = (defined(in) && defined(out)) + keyword_set(r2n) + keyword_set(n2r)
+ if keyword_set(help) then begin
+     doc_library,'reorder'
+     return,-1
+ endif
 
  if (N_params() ne 1) then begin
-     print,' map_out = reorder(map_in, [In=in, Out=out,] [/R2N, /N2R])'
+     print,' map_out = reorder(map_in, [In=in, Out=out,] [/R2N, /N2R], [/HELP])'
      return,0
  endif
 

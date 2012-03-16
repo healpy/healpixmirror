@@ -32,34 +32,42 @@ scheme and vice-versa.}
 \end{facility}
 
 \begin{IDLformat}
-{Result = \FACNAME(Input\_map [, In=, Out=, N2R=, R2N=])}
+{\mylink{idl:reorder:result}{Result} = \FACNAME(%
+\mylink{idl:reorder:input_map}{Input\_map} [, 
+\mylink{idl:reorder:help}{/HELP}, 
+\mylink{idl:reorder:in}{In}=, 
+\mylink{idl:reorder:out}{Out}=, 
+\mylink{idl:reorder:n2r}{/N2R}, 
+\mylink{idl:reorder:r2n}{/R2N}])}
 \end{IDLformat}
 
 \begin{qualifiers}
   \begin{qulist}{} %%%% NOTE the ``extra'' brace here %%%%
-	\item[{Result}]
+	\item[{Result}] \mytarget{idl:reorder:result}
 	variable containing on output the reordered map
 
- 	\item[{Input\_map}] 
+ 	\item[{Input\_map}] \mytarget{idl:reorder:input_map}
           variable containing the input map
-
- 	\item[{In=}] 
-	specifies the input ordering, can be either 'RING' or 'NESTED'
-
-       \item[{Out=}]
-	specifies the output ordering, can be either 'RING' or 'NESTED'
-
 
   \end{qulist}
 \end{qualifiers}
 
 \begin{keywords}
   \begin{kwlist}{} %%% extra brace
- 	\item[{N2R=}] 
+	\item[{/HELP}]	 \mytarget{idl:reorder:help}
+	if set, the documentation header is printed out and the code exits
+
+ 	\item[{In=}] \mytarget{idl:reorder:in}
+	specifies the input ordering, can be either 'RING' or 'NESTED'
+
+       \item[{Out=}]\mytarget{idl:reorder:out}
+	specifies the output ordering, can be either 'RING' or 'NESTED'
+
+ 	\item[{/N2R}] \mytarget{idl:reorder:n2r}
 	  If set, does the NESTED to RING conversion, equivalent to In='NESTED'
 	  and Out='RING' 
 
- 	\item[{R2N=}] 
+ 	\item[{/R2N}] \mytarget{idl:reorder:r2n}
 	  If set, does the RING to NESTED conversion, equivalent to 
 In='RING' and Out='NESTED'
    \end{kwlist}
@@ -75,7 +83,9 @@ scheme and vice-versa}
 \begin{related}
   \begin{sulist}{} %%%% NOTE the ``extra'' brace here %%%%
   \item[idl] version \idlversion or more is necessary to run \facname
-  \end{sulist}
+  \item[\htmlref{ud\_grade}{idl:ud_grade}]  downgrades or progrades a full-sky
+or cut-sky \healpix map.
+\end{sulist}
 \end{related}
 
 
