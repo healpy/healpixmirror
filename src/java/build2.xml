@@ -25,7 +25,8 @@
   <target name="compile" depends="init" description="Compile the Java code">
     <echo>building </echo>
     <javac destdir="${classes}" source="1.5" includeAntRuntime="false"
-      srcdir="${src}" >
+      srcdir="${src}" debug="on">
+      <compilerarg value="-Xlint"/>
       <classpath refid="classpath" />
     </javac>
   </target>

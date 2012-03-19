@@ -308,7 +308,7 @@ public class RangeSet implements Externalizable
   /** Returns true if there is overlap between the set and "other",
       else false. */
   public boolean containsAny (RangeSet other)
-    { return !generalAllOrNothing(this,other,false,false); }
+    { return !generalAllOrNothing(this,other,true,true); }
   /** Returns true the object represents an identical set of ranges as obj. */
   public boolean equals(Object obj) {
     if (this == obj)

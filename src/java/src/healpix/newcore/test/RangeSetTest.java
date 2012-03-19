@@ -198,6 +198,19 @@ public class RangeSetTest extends TestCase {
     assertFalse(b.containsAll(45,56));
     assertFalse(b.containsAll(60,71));
     }
+  public void testContainsAll2()
+    {
+    RangeSet b = new RangeSet(new long[]{20,31,40,51});
+
+    assertTrue(b.containsAll(new RangeSet(new long[]{20,31,40,51})));
+    assertTrue(b.containsAll(new RangeSet(new long[]{20,21})));
+    assertTrue(b.containsAll(new RangeSet(new long[]{50,51})));
+    assertFalse(b.containsAll(new RangeSet(new long[]{19,31,40,51})));
+    assertFalse(b.containsAll(new RangeSet(new long[]{20,31,40,52})));
+    assertFalse(b.containsAll(new RangeSet(new long[]{20,51})));
+    assertFalse(b.containsAll(new RangeSet(new long[]{0,1})));
+    assertFalse(b.containsAll(new RangeSet(new long[]{0,20,31,40,51,100})));
+    }
   public void testContainsAny()
     {
     RangeSet b = new RangeSet(new long[]{20,31,40,51});
@@ -216,6 +229,19 @@ public class RangeSetTest extends TestCase {
     assertTrue(b.containsAny(40,41));
     assertTrue(b.containsAny(45,56));
     assertFalse(b.containsAny(60,71));
+    }
+  public void testContainsAny2()
+    {
+    RangeSet b = new RangeSet(new long[]{20,31,40,51});
+
+    assertTrue(b.containsAny(new RangeSet(new long[]{20,31,40,51})));
+    assertTrue(b.containsAny(new RangeSet(new long[]{20,21})));
+    assertTrue(b.containsAny(new RangeSet(new long[]{50,51})));
+    assertTrue(b.containsAny(new RangeSet(new long[]{19,31,40,51})));
+    assertTrue(b.containsAny(new RangeSet(new long[]{20,31,40,52})));
+    assertTrue(b.containsAny(new RangeSet(new long[]{20,51})));
+    assertFalse(b.containsAny(new RangeSet(new long[]{0,1})));
+    assertFalse(b.containsAny(new RangeSet(new long[]{0,20,31,40,51,100})));
     }
 
   public void testIterator()
