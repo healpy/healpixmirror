@@ -25,7 +25,7 @@
 
 \begin{arguments}
 {
-\begin{tabular}{p{0.4\hsize} p{0.05\hsize} p{0.05\hsize} p{0.40\hsize}} \hline  
+\begin{tabular}{p{0.39\hsize} p{0.05\hsize} p{0.06\hsize} p{0.40\hsize}} \hline  
 \textbf{name\&dimensionality} & \textbf{kind} & \textbf{in/out} & \textbf{description} \\ \hline
                    &   &   &                           \\ %%% for presentation
 filename(LEN=\filenamelen) & CHR & IN & filename of FITS file containing $a_{lm}$. \\
@@ -38,7 +38,7 @@ alms(0:nalms-1,1:6) & SP/ DP & OUT & the $a_{lm}$ read from the file. alms(i,1)
                    alms(i,5) (real) and alms(i,6) (imaginary). \\
 units(len=20)(1:) \hskip 6cm (OPTIONAL)& CHR & OUT & character string containing the units of the
                    $a_{\ell m}$ \\
-extno \hskip 6cm (OPTIONAL) & I4B & IN & extension (0 based) of the FITS file to be read
+extno \hskip 8cm (OPTIONAL) & I4B & IN & extension (0 based) of the FITS file to be read
 
 \end{tabular}
 }
@@ -66,7 +66,7 @@ Read 65*66/2 (the number of $a_{lm}$ needed to fill the whole range from l=0 to 
   \begin{sulist}{} %%%% NOTE the ``extra'' brace here %%%%
   \item[\htmlref{alms2fits}{sub:alms2fits}, \htmlref{dump\_alms}{sub:dump_alms}] routines to write $a_{lm}$ to a FITS-file 
   \item[\htmlref{fits2alms}{sub:fits2alms}] has the same function as read\_conbintab but is more general.
-  \item[\htmlref{number\_of\_alms}{sub:number_of_alms},[\htmlref{getsize\_fits}{sub:getsize_fits}]
+  \item[\htmlref{number\_of\_alms}{sub:number_of_alms}, \htmlref{getsize\_fits}{sub:getsize_fits}]
   can be used to find out the number of $a_{lm}$ available in the file.
   \end{sulist}
 \end{related}

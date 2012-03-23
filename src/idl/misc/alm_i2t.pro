@@ -44,8 +44,8 @@ function alm_i2t, index, alm_vec, $
 ;      alm_tabular = alm_i2t(index, alm_vector [, /COMPLEX, /HELP, LMAX=, MMAX=])
 ;
 ; INPUTS:
-;     index: Integer vector of size nl containing the index the 
-;            of alm coefficients, related to {l,m} by the relation
+;     index: Integer vector of size nl containing the index of
+;             the alm coefficients, related to {l,m} by 
 ;             i = l^2 + l + m + 1
 ;
 ;     alm_vector: array of alm coefficients, with dimension (nl, nalm [,nsig])

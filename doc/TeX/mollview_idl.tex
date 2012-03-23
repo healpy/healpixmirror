@@ -156,15 +156,38 @@ Examples \#4 below (on page~\pageref{page:example_hires_cutsky}). \\
 {CHARTHICK=}\mytarget{idl:mollview:charthick} & all & character thickness (in
 \mylink{idl:mollview:titleplot}{TITLE}, \mylink{idl:mollview:subtitle}{SUBTITLE} and
 color bar labeling). Other characters thickness (such as
-\mylink{idl:mollview:glsize}{graticule labels}), can be controlled with !P.CHARTHICK.
+\mylink{idl:mollview:glsize}{graticule labels}), can be controlled with {\tt !P.CHARTHICK}.
                 \default {1} \\
 
-{COLT=}\mytarget{idl:mollview:colt}  & all   & \parbox[t]{\hsize}{ color table number, in [-40,40]. If colt$<0$, the IDL color
-        	table abs(colt) is used, but the scale is
-               reversed (ie a red to blue scale becomes a blue to red
-        	scale). Note: -0.1 can be used as negative 0.\\
+% {COLT=}\mytarget{idl:mollview:colt}  & all   & \parbox[t]{\hsize}{ color table number, in [-40,40]. If colt$<0$, the IDL color
+%         	table abs(colt) is used, but the scale is
+%                reversed (ie a red to blue scale becomes a blue to red
+%         	scale). Note: -0.1 can be used as negative 0.\\
+%         	\default {33 (Blue-Red)} \\
+% \seealso \mylink{idl:mollview:truecolors}{\tt TrueColors}}\\ 
+
+{COLT=}\mytarget{idl:mollview:colt}  & all   & \parbox[t]{\hsize}{ color table
+index: \\
+-- Indexes in [0,40] are reserved for standard IDL color tables, while
+  [41,255] are used for user defined color tables read from disc (created and
+  written to disc with {\tt MODIFYCT}), if any. \\
+-- If the index does not match any existing table, or if it is above 255, 
+  the current online table (modifiable with {\tt TVLCT}, {\tt XLOADCT}, {\tt XPALETTE}, ... 
+  or eg, J. Davenport's 
+\htmladdnormallink%
+{{\tt cubehelix.pro}}%
+{http://www.astro.washington.edu/users/jrad/cubehelix.pro}
+   implementation of D. Green 's
+\htmladdnormallink%
+{cubehelix color scheme}%
+{http://www.mrao.cam.ac.uk/~dag/CUBEHELIX/}%
+) is used instead. \\
+--If {\tt colt}$<0$, the IDL color table ABS(colt) is used, but the scale is
+ reversed (ie a red to blue scale becomes a blue to red scale).
+ Note: -0.1 can be used as negative 0.\\
         	\default {33 (Blue-Red)} \\
 \seealso \mylink{idl:mollview:truecolors}{\tt TrueColors}}\\ 
+%--------
 
 {COORD=}\mytarget{idl:mollview:coord}  & all   & \parbox[t]{\hsize}{
 		vector with 1 or 2 elements describing the coordinate system of the map;
@@ -288,7 +311,7 @@ The resulting FITS file can be read in IDL with eg. map={\tt readfits}({\em file
           gnomview : gdef =  5, gmin =  0 \\
           mollview : gdef = 45, gmin = 10 \\
           orthview : gdef = 45, gmin = 10 \\
-	Note that the graticule will rotate with the sphere is Rot is set.
+	Note that the graticule will rotate with the sphere if Rot is set.
 	To outline only the equator set graticule=[360,90].
 	The automatic labeling of the graticule is controlled by {\tt Glsize}\\
 	\default {0 [no graticule]} \\

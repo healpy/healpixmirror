@@ -440,10 +440,11 @@ do_shade = (do_orth && defined(shademap))
 ct          = defined(colt)     ? colt     : 33
 charsfactor = defined(charsize) ? charsize : 1.0
 mycharthick = defined(charthick)? charthick : 1.0
+be_verbose  = ~keyword_set(silent)
 
 ; alter the color table
 ; -----------------------
-if (~keyword_set(silent)) then print,'... computing the color table ...'
+if (be_verbose) then print,'... computing the color table ...'
 if (do_true) then begin
     loadct, 0, /silent
     tvlct,red,green,blue,/get
@@ -454,7 +455,13 @@ endif else begin
         one = replicate(1.,ncol)
         tvlct,[0,0,0,findgen(ncol-3)]/(ncol-3)*720,one,one,/hsv ; hue is in degrees
     endif else begin
-        LOADCT, abs(ct), /SILENT
+        loadct, get_names = color_names
+        nmax_col = n_elements(color_names)-1
+        if (abs(ct) le nmax_col) then begin
+            LOADCT, abs(ct), /SILENT
+        endif else begin
+            if (be_verbose) then print,'... color table '+strtrim(abs(ct),2)+' unknown, using current color table instead ...'
+        endelse
     endelse
     tvlct,red,green,blue,/get
     if (ct lt 0) then begin
@@ -476,7 +483,7 @@ TVLCT,red,green,blue
 old_device=!d.name
 my_background = !p.background
 my_color = !p.color
-if (~keyword_set(silent)) then print,'... here it is.'
+if (be_verbose) then print,'... here it is.'
 titlewindow = proj_big+' projection : ' + title_display
 back      = REPLICATE(BYTE(!P.BACKGROUND),xsize,(ysize*cbar_dy*w_dx_dy)>1)
 use_z_buffer = 0 ; set it to 0 (for postscript) 2010-03-18
@@ -866,7 +873,6 @@ if do_image then begin
         endif
     endelse
     if (to_patch && ~use_z_buffer) then begin 
-        print,'here'
         if (in_gdl) then begin
             device, decomposed=0
             tvlct,red,green,blue ; revert to custom color table
@@ -880,7 +886,7 @@ if do_image then begin
         endelse
     endif
     image = 0
-    if (~keyword_set(silent)) then print,'IMAGE file is in '+file_image
+    if (be_verbose) then print,'IMAGE file is in '+file_image
     if (keyword_set(preview)) then begin
         test_preview, found_preview ;, /crash
         if (found_preview gt 0) then begin
@@ -896,7 +902,7 @@ endif
 if (do_ps) then begin
     device,/close
     set_plot,old_device
-    if (~keyword_set(silent)) then print,'PS file is in '+file_ps
+    if (be_verbose) then print,'PS file is in '+file_ps
     if (keyword_set(preview)) then begin
         test_preview, found_preview ;, /crash
         if (found_preview gt 0) then begin

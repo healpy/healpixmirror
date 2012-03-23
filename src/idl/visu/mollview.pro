@@ -149,9 +149,17 @@ pro mollview, file_in, select_in, $
 ;               controlled with !P.CHARTHICK.
 ;                default = 1
 ;
-; 	COLT : color table number, in [-40,40]
-;        	if not set, the color table will be 33 (Blue-Red)
-;              if colt<0, the IDL color table ABS(colt) is used, but the scale is
+; 	COLT : color table index:
+;              -Indexes [0,40] are reserved for standard IDL color tables, while
+;               [41,255] are used for user defined color tables read from disc (created and
+;               written to disc with MODIFYCT), if any.
+;              -If the index does not match any existing table, or if it is
+;              above 255, the current
+;               table (modifiable with TVLCT, XLOADCT, XPALETTE, ... 
+;               or eg, J.Davenport's cubehelix.pro implementation of D. Green cubehelix
+;               color scheme) is used instead.
+;              -If not set, the color table will be 33 (Blue-Red).
+;              -If colt<0, the IDL color table ABS(colt) is used, but the scale is
 ;              reversed (ie a red to blue scale becomes a blue to red scale).
 ;              (note: -0.1 can be used as negative 0)
 ;

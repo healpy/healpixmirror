@@ -60,7 +60,7 @@ pro alm_t2i, alm_tab, index, alm_list, HELP=help, MFIRST=mfirst
 ;
 ;    HELP: if set, prints out this help header
 ;
-;    MFIRST: if set the array in a(m,l) instead of a(l,m)
+;    MFIRST: if set, the input array is a(m,l) instead of a(l,m)
 ;        where abs(m) <= l
 ;
 ; OUTPUTS:
