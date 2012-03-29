@@ -146,4 +146,30 @@ public class FitsUtil
     s.flush();
     s.close();
     }
+  public static void writeDoubleMap(HealpixMapDouble map, String filename)
+    throws Exception
+    {
+    FitsFactory.setUseHierarch(true);
+    FitsFactory.setUseAsciiTables(false);
+    Fits f = new Fits();
+    Object[] table = new Object[1];
+    table[0] = map.getData();
+
+    f.addHDU(Fits.makeHDU(table));
+    BinaryTableHDU bhdu = (BinaryTableHDU) f.getHDU(1);
+
+    bhdu.setColumnName(0, "data", "values");
+
+    bhdu.addValue("PIXTYPE", "HEALPIX", "This is a HEALPix map");
+    bhdu.addValue("NSIDE", map.getNside(), "HEALPix NSIDE parameter");
+    bhdu.addValue("ORDERING", map.getScheme().toString().toUpperCase(),
+      "HEALPix ordering scheme");
+
+    FileOutputStream fos = new FileOutputStream(filename);
+    BufferedDataOutputStream s = new BufferedDataOutputStream(fos);
+
+    f.write(s);
+    s.flush();
+    s.close();
+    }
   }
