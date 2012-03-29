@@ -322,19 +322,21 @@ public class RangeSet implements Externalizable
     return true;
     }
 
+  public int hashCode()
+    {
+    int result = 0;
+    for (int i=0;i<sz;i++)
+      {
+      int elementHash = (int)(r[i] ^ (r[i] >>> 32));
+      result = 31 * result + elementHash;
+      }
+    result = 31 * result + sz;
+    return result;
+    }
 
-  public int hashCode() {
-     int result = 0;
-     for (int i=0;i<sz;i++) {
-        int elementHash = (int)(r[i] ^ (r[i] >>> 32));
-        result = 31 * result + elementHash;
-     }
-     result = 31 * result + sz;
-     return result;
-  }
-
-    /** @return total number of values (not ranges) in the set. */
-  public long nval() {
+  /** @return total number of values (not ranges) in the set. */
+  public long nval()
+    {
     long res = 0;
     for (int i=0; i<sz; i+=2)
       res+=r[i+1]-r[i];
