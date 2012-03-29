@@ -98,7 +98,7 @@ public class HealpixMapDouble extends HealpixBase
       {
       int istart = swap_cycle[order][m];
 
-      double pixbuf = data[(int)istart];
+      double pixbuf = data[istart];
       long iold = istart,
            inew = (scheme==Scheme.RING) ? nest2ring(istart) : ring2nest(istart);
       while (inew != istart)

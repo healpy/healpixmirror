@@ -98,7 +98,7 @@ public class HealpixMapFloat extends HealpixBase
       {
       int istart = swap_cycle[order][m];
 
-      float pixbuf = data[(int)istart];
+      float pixbuf = data[istart];
       long iold = istart,
            inew = (scheme==Scheme.RING) ? nest2ring(istart) : ring2nest(istart);
       while (inew != istart)
