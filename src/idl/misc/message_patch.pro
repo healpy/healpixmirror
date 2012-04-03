@@ -21,7 +21,7 @@ if is_gdl() then begin
     message, name+': '+text, informational=informational, /noname
 endif else begin
 
-    message_patch, text, level=mylevel, informational=informational
+    message, text, level=mylevel, informational=informational
 endelse
 
 

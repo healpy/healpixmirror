@@ -11,13 +11,11 @@
 \input{gdlversion}
 \end{htmlonly}
 
-% \begin{latexonly}
-% \hypersetup{%
-% 	pdftitle={HEALPix Installation Guidelines},%
-% 	pdfauthor={E. Hivon et al},%
-% 	pdfkeywords={HEALPix, Installation},%
-% 	colorlinks=true}
-% \end{latexonly}
+\hypersetup{%
+	pdftitle={HEALPix Installation Guidelines},%
+	pdfauthor={E. Hivon et al},%
+	pdfkeywords={HEALPix, Installation},%
+	colorlinks=true}
 
 
 \newcommand{\nside}{{N_{\rm side}}}
@@ -486,15 +484,15 @@ will return the \healpix directory to its original 'distribution' state by disca
 files as above, as well as the executable and library directories and the top
 level Makefile.
 
-\section{Upgrading from 2.0 to 2.1}
+% \section{Upgrading from 2.0 to 2.1}
 
-The internal structure of release 2.1 is quite different from release 2.0 and to
-avoid confusion during the compilation we highly recommend to put the new
-release in a {\em different} directory, rather than putting the new package on
-top of the old one. 
-If you actually change the name of the 'active' \healpix directory care must be taken that
-all references to the old directory are removed from your system profile before
-adding the new ones (see Note on {\it Re}-installation).
+% The internal structure of release 2.1 is quite different from release 2.0 and to
+% avoid confusion during the compilation we highly recommend to put the new
+% release in a {\em different} directory, rather than putting the new package on
+% top of the old one. 
+% If you actually change the name of the 'active' \healpix directory care must be taken that
+% all references to the old directory are removed from your system profile before
+% adding the new ones (see Note on {\it Re}-installation).
 
 % \section{Upgrading from 2.10 to 2.11}
 
@@ -680,11 +678,11 @@ This  may be due to the fact that
 different installations  have different floating point
 representations. Also, the FITS files carry date information.
 
-\subsection{MIPSPro Compilers on SGI machines}
+% \subsection{MIPSPro Compilers on SGI machines}
 
-Regrettably, the MIPSpro Compiler Version 7.20 has a compiler bug
-which cause run-time memory faults. We have not found any problems
-with Version 7.2.1.1m.
+% Regrettably, the MIPSpro Compiler Version 7.20 has a compiler bug
+% which cause run-time memory faults. We have not found any problems
+% with Version 7.2.1.1m.
 
 \subsection{Try {\tt unlimit}}
 
@@ -741,7 +739,7 @@ GNU Data Language (GDL), is a {\em free} clone of IDL 6.0 (for more information 
 Both the source code and precompiled executables for various platforms are available.
 
 When used to run IDL-Healpix routines, GDL \gdlversion or more gives
-satisfactory results\footnote{All the caveats listed below have been noticed in GDL v0.9rc3
+satisfactory results\footnote{All the caveats listed below have been noticed in GDL v0.9.2
 and may be solved in subsequent versions. Please send all your questions
 {\em on} GDL directly to GDL developpers.}. The calculations agree with those done under IDL, with
 comparable computation times, but a few features are missing in the production
@@ -751,22 +749,50 @@ of Postscript, GIF and PNG files, as described below.
 
 \subsubsection{Specific requirements}
 
+\begin{enumerate}
+\item
 \healpix requires a few IDL routines that are not yet part of GDL.
-Among those are \begin{itemize}
+Among those is
+\begin{itemize}
 \item {\tt congrid.pro},
-\item {\tt dl\_dos.pro}$^\dagger$,
-\item {\tt dl\_unix.pro}$^\dagger$,
-\item {\tt doc\_library.pro}$^\dagger$,
-\item {\tt file\_which.pro},
-\item {\tt interpol.pro}.
-		\end{itemize}
-Most of these routines can be downloaded from
+\end{itemize}
+which can be downloaded from
 \htmladdnormallink{{\tt http://idlastro.gsfc.nasa.gov/idl\-lib\-srch.html}}
 {http://idlastro.gsfc.nasa.gov/idllibsrch.html}.
-However, those marked with a $^\dagger$ above can only be found in IDL packages
-({\tt \$IDL\_DIR/lib/*.pro}). They are required for online documentation of the
-\healpix routines (ie {\tt /HELP} keyword available on most routines).
 
+\item
+Some GDL routines written in IDL language are currently faulty, and should be replaced by working implementations.
+Among those is
+\begin{itemize}
+\item {\tt swap\_endian\_inplace.pro},
+\end{itemize}
+which should be replaced with the original IDL version found at the same location as above, or with the patch found in \htmladdnormallink{GDL Bugs monitor}{http://sourceforge.net/tracker/index.php?func=detail&aid=3454317&group_id=97659&atid=618683}.
+
+\item
+The {\tt doc\_library} feature of IDL, invoked by many \healpix\ routines via the {\tt /HELP} keyword, will not work natively under GDL. A work-around is to install in the GDL path the IDL routines
+\begin{itemize}
+\item {\tt dl\_dos.pro},
+\item {\tt dl\_mac.pro},
+\item {\tt dl\_unix.pro},
+\item {\tt dl\_vms.pro},
+\item {\tt doc\_library.pro},
+\end{itemize}
+which can only be found in IDL packages
+({\tt \$IDL\_DIR/lib/*.pro}). 
+It is also necessary to copy the shell script {\tt \$IDL\_DIR/bin/doc\_library} into {\tt \$GDL\_DIR/lib/doc\_library} (ie, right next to the GDL executable).
+
+\item 
+By default, GDL uses the value of the environment variable {\tt \$GDL\_DIR}, or the location of the {\tt gdl} executable, 
+as temporary storage disc space location, which may create problems in many situations.
+It is therefore recommended to set the environment variable {\tt IDL\_TMPDIR} to a more suitable location
+with unrestricted access
+ (such as {\tt /tmp}, {\tt /usr/tmp} or {\tt /var/tmp}) before starting GDL.\\
+Ie, if your shell is bash, sh, ksh, or zsh:\\
+{\tt \% export IDL\_TMPDIR=/tmp}\hfill\\
+{\tt \% gdl}\hfill\\
+If your shell is csh or tcsh:\\
+{\tt \% setenv IDL\_TMPDIR /tmp}\hfill\\
+{\tt \% gdl}\hfill\\
 
 
 % These routines, coded in IDL are part of the ITTVIS library and
@@ -776,25 +802,28 @@ However, those marked with a $^\dagger$ above can only be found in IDL packages
 % {http://idlastro.gsfc.nasa.gov/idllibsrch.html}.
 % They will run properly under GDL.
 
-Please note that GDL must be linked with {\tt ImageMagick} during installation to produce PNG
+\item
+Please note that GDL must be linked with {\tt ImageMagick} during installation to produce PNG and JPEG
 output files.
+
+\end{enumerate}
 
 \subsubsection{Impact of GDL limitations on \healpix}
 \begin{itemize}
 \item {\tt Ximview} won't work under GDL \gdlversion
-\item Because of problems with GDL's {\tt point\_lun} routine, the reading of
-FITS files with most of Astronomy User's Library routines won't be possible.
+% \item Because of problems with GDL's {\tt point\_lun} routine, the reading of
+% FITS files with most of Astronomy User's Library routines won't be possible.
 \item Currently, the 
 {\tt cartview},
 {\tt gnomview},
 {\tt mollview} and  
 {\tt orthview} 
-routines won't produce Postscript nor GIF outputs when run under GDL (but PNG
+routines won't produce Postscript nor GIF outputs when run under GDL (but PNG and JPEG
 files are OK, see above).
 \item In those same routines, the {\tt TRANSPARENT} keyword will be ignored in the
 production of PNG files under GDL. For the same reasons, {\tt hpx2gs} won't mark missing pixels as
 transparent in the output PNG file.
-\item The {\tt healpix\_doc} routine won't work under GDL.
+% \item The {\tt healpix\_doc} routine won't work under GDL.
 %\item The behaviour of {\tt Ximview} under GDL has not been investigated.
 \end{itemize}
 
@@ -809,6 +838,29 @@ transparent in the output PNG file.
 \section{Appendix I: Recent Changes and New Features}
 \label{sec:newfeatures}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% BEGIN LATEST CHANGES %%%%%%%%%%%%%
+\subsection{Bug corrections and Improvements in Version 3.0} % 2012-??
+\subsubsection[C++]{C++}
+\begin{itemize}
+	\item
+\end{itemize}
+\subsubsection[Fortran]{\linklatexhtml{Fortran 90}{subroutines.pdf}{subroutines.htm}}
+\begin{itemize}
+	\item
+\end{itemize}
+\subsubsection[IDL]{\linklatexhtml{IDL}{idl.pdf}{idl.htm}}
+\begin{itemize}
+	\item
+\end{itemize}
+
+\subsubsection[Java]{Java}
+\begin{itemize}
+	\item
+\end{itemize}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% END LATEST CHANGES %%%%%%%%%%%%%
+{\tiny{%
+%{\scriptsize{%
+%{\footnotesize{%
 \subsection{Bug corrections and Improvements in Versions 2.20 and 2.20a} % 2011-02-04
 
 \subsubsection[C++]{C++}
@@ -879,7 +931,6 @@ BAD\_DATA} keyword added to FITS header;
 % here \hyperref{idl.pdf}{cross}{idl:mollview:fits}{extended FITS keyword in
 % Mollview} there
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% END LATEST CHANGES %%%%%%%%%%%%%
 
 
 %%%
@@ -942,52 +993,119 @@ classes to be used into other applications or from the web (applets, $\ldots$)
 % \subsubsection[C]{C}
 % %
 % \subsubsection[C++]{C++}
-%%%
-\subsection{Bug corrections and Improvements in Version 2.13a} % 2009-11-26
-%
-\subsubsection[New General Improvements]{general}
-\begin{itemize}
-	\item the {\tt configure} script and its subroutines are now POSIX
-compliant (in particular, they should now run smoothly under Ubuntu Linux)
-\end{itemize}
-%
-\subsubsection[Fortran90]{Fortran90}
-	\begin{itemize}
-	\item new {\tt get\_healpix\_data\_dir}, 
-	{\tt get\_healpix\_main\_dir},
-	{\tt get\_healpix\_test\_dir} functions
-	returning full path to \healpix directories
-	\end{itemize}
-%
-\subsubsection[IDL]{IDL}
-	\begin{itemize}
-	\item new {\tt healpix\_doc} routine to browse HTML and PDF documentations
-	\item {\tt cartview, gnomview, mollview, orthview}:
-        \begin{itemize}
-		\item introduction of the {\tt TRUECOLORS=} keyword to generate color image from 3 channel map
-		\item extended capability of the {\tt TRANSPARENT=} keyword
-		\item addition of {\tt MAP\_OUT=} to {\tt gnomview}
-	\end{itemize}
-	\item improved compatibility with 
-\htmladdnormallink{GDL}{http://gnudatalanguage.sourceforge.net} (free IDL
-clone). See \S\ref{sec:using_gdl} for current GDL limitations.
-	\item update of the {\tt IDL-astron} library routines, which now require IDL 6.1 or more
-	\item {\tt fits2alm}: new {\tt LMAX=} and {\tt LMIN=} keywords
-	\item {\tt fits2cl}: new {\tt LLFACTOR=}  keyword
-	\item {\tt init\_healpix} defines substructure with complete path to \healpix subdirectories (test, data, bin)
-	\item slightly faster {\tt write\_fits\_cut4} and {\tt write\_fits\_sb} routines.
-	%\item new alm\_i2t
-	\item {\tt ianafast}, {\tt ismoothing}: solved problem with {\tt W8DIR=} keyword.
-	\end{itemize}
+% %%%
+% \subsection{Bug corrections and Improvements in Version 2.13a} % 2009-11-26
+% %
+% \subsubsection[New General Improvements]{general}
+% \begin{itemize}
+% 	\item the {\tt configure} script and its subroutines are now POSIX
+% compliant (in particular, they should now run smoothly under Ubuntu Linux)
+% \end{itemize}
+% %
+% \subsubsection[Fortran90]{Fortran90}
+% 	\begin{itemize}
+% 	\item new {\tt get\_healpix\_data\_dir}, 
+% 	{\tt get\_healpix\_main\_dir},
+% 	{\tt get\_healpix\_test\_dir} functions
+% 	returning full path to \healpix directories
+% 	\end{itemize}
+% %
+% \subsubsection[IDL]{IDL}
+% 	\begin{itemize}
+% 	\item new {\tt healpix\_doc} routine to browse HTML and PDF documentations
+% 	\item {\tt cartview, gnomview, mollview, orthview}:
+%         \begin{itemize}
+% 		\item introduction of the {\tt TRUECOLORS=} keyword to generate color image from 3 channel map
+% 		\item extended capability of the {\tt TRANSPARENT=} keyword
+% 		\item addition of {\tt MAP\_OUT=} to {\tt gnomview}
+% 	\end{itemize}
+% 	\item improved compatibility with 
+% \htmladdnormallink{GDL}{http://gnudatalanguage.sourceforge.net} (free IDL
+% clone). See \S\ref{sec:using_gdl} for current GDL limitations.
+% 	\item update of the {\tt IDL-astron} library routines, which now require IDL 6.1 or more
+% 	\item {\tt fits2alm}: new {\tt LMAX=} and {\tt LMIN=} keywords
+% 	\item {\tt fits2cl}: new {\tt LLFACTOR=}  keyword
+% 	\item {\tt init\_healpix} defines substructure with complete path to \healpix subdirectories (test, data, bin)
+% 	\item slightly faster {\tt write\_fits\_cut4} and {\tt write\_fits\_sb} routines.
+% 	%\item new alm\_i2t
+% 	\item {\tt ianafast}, {\tt ismoothing}: solved problem with {\tt W8DIR=} keyword.
+% 	\end{itemize}
 
-%%%
-\subsection{Bug corrections and Improvements in Versions 2.12 and 2.12a} % 2009-07-13
-%
-\subsubsection[New General Improvements]{general}
-\begin{itemize}
-	\item the {\tt Makefile}s are can now handle parallel compilation
-(ie {\tt make -j} or {\tt make --jobs}).
-\end{itemize}
+% %%%
+% \subsection{Bug corrections and Improvements in Versions 2.12 and 2.12a} % 2009-07-13
+% %
+% \subsubsection[New General Improvements]{general}
+% \begin{itemize}
+% 	\item the {\tt Makefile}s are can now handle parallel compilation
+% (ie {\tt make -j} or {\tt make --jobs}).
+% \end{itemize}
+
+% % \subsubsection[C]{C}	
+% % 	\begin{itemize}
+% % 	\item edited {\tt src/C/subs/Makefile} to fix potential problem with
+% % {\tt test\_chealpix2} code compilation
+% % 	\end{itemize}
+
+% \subsubsection[C++]{C++}
+% 	\begin{itemize}
+% 	\item a warning (instead of an error) is issued in case of version
+% mismatch between CFITSIO header and run time library
+% 	\end{itemize}
+
+% \subsubsection[Fortran90]{Fortran90}
+% 	\begin{itemize}
+% 	\item to avoid confusion with a widespread library, 
+% 	the Healpix specific GIF routines library is now named {\tt libhpxgif.a} instead of
+% 	{\tt libgif.a}. However, to avoid disrupting existing user-developed
+% 	Makefiles, the library will remain available under both names
+% for the time being.
+% 	\item solved problem with {\tt gfortran} and {\tt g95}
+% occuring over a line longer than 132 characters [2.12a]
+% 	\end{itemize}
+
+% \subsubsection[IDL]{IDL}
+% 	\begin{itemize}
+% 	\item {\tt ianafast}, {\tt ismoothing}, {\tt isynfast}: the {\tt
+% TMPDIR} keyword now works properly, and {\tt \$IDL\_TMPDIR} is used as the
+% default temporary directory.
+% 	\item {\tt ud\_grade}: correctly flags bad output pixels with {\tt bad\_data}
+% value when upgrading maps; now works for
+% $\nside >  8192$ on cut sky data
+% 	\item {\tt cartview}, {\tt gnomview}, {\tt mollview}, {\tt orthview}:
+% using a virtual window (ie, {\tt WINDOW}$<0$) now allows faster generation 
+% of GIF and PNG files (especially useful over remote connections); 
+% added {\tt RETAIN=} keyword; deals correctly with user provided 
+% {\tt MIN} and {\tt MAX} keywords in {\tt /LOG} mode
+% 	\item {\tt orthview}: addition of {\tt /SHADED} keyword for 3D
+% rendering
+% 	\item {\tt ximview}: version 0.6.2, fixed bug in pixel
+% coordinates [2.12a]
+% 	\end{itemize}
+
+% \subsubsection[Java]{Java}
+% 	\begin{itemize}
+% 	\item {\tt getNSide} method in {\tt HealpixIndex} class changed to {\tt calculateNSide}.
+% 	\item Area methods static - upgrade/degrade methods added.
+% 	\end{itemize}
+
+% %---------------------------------------------------
+% %\end{itemize}
+
+% %\vfill\newpage
+% %\setcounter{section}{0}
+% %%%%%%%%%%%%%%%%%%%
+% %%%%%%%%%%%%%%%%%%%
+% \section{Appendix II: Older changes}
+% %---------------------------------------------------
+% %%%
+% \subsection{Bug corrections and Improvements in Version 2.11c}
+% %
+% \subsubsection[New General Improvements]{general}
+% \begin{itemize}
+% 	\item {\tt hpxconfig\_functions.sh}: corrected typos,
+% correctly detects recent {\tt gfortran}; 
+% 	\item {\tt configure}: added explanatory header
+% \end{itemize}
 
 % \subsubsection[C]{C}	
 % 	\begin{itemize}
@@ -995,474 +1113,406 @@ clone). See \S\ref{sec:using_gdl} for current GDL limitations.
 % {\tt test\_chealpix2} code compilation
 % 	\end{itemize}
 
-\subsubsection[C++]{C++}
-	\begin{itemize}
-	\item a warning (instead of an error) is issued in case of version
-mismatch between CFITSIO header and run time library
-	\end{itemize}
+% \subsubsection[C++]{C++}
+% 	\begin{itemize}
+% 	\item in {\tt src/cxx/alice/planck.make}, replaced confusing {\tt test} with {\tt test\_alice}
+% 	\end{itemize}
 
-\subsubsection[Fortran90]{Fortran90}
-	\begin{itemize}
-	\item to avoid confusion with a widespread library, 
-	the Healpix specific GIF routines library is now named {\tt libhpxgif.a} instead of
-	{\tt libgif.a}. However, to avoid disrupting existing user-developed
-	Makefiles, the library will remain available under both names
-for the time being.
-	\item solved problem with {\tt gfortran} and {\tt g95}
-occuring over a line longer than 132 characters [2.12a]
-	\end{itemize}
+% \subsubsection[Fortran90]{Fortran90}
+% 	\begin{itemize}
+% 	\item {\tt sky\_ng\_sim\_bin} code now working
+% 	\item  use pointers in {\tt map2alm\_iterative} routine in order to fix unexplained crashes
+% 	\item edited {\tt create\_alm} routine to work around a bug in with some versions of PGF90
+% 	\item {\tt write\_minimal\_header} corrected typo in FITS header for derivative maps
+% 	\end{itemize}
 
-\subsubsection[IDL]{IDL}
-	\begin{itemize}
-	\item {\tt ianafast}, {\tt ismoothing}, {\tt isynfast}: the {\tt
-TMPDIR} keyword now works properly, and {\tt \$IDL\_TMPDIR} is used as the
-default temporary directory.
-	\item {\tt ud\_grade}: correctly flags bad output pixels with {\tt bad\_data}
-value when upgrading maps; now works for
-$\nside >  8192$ on cut sky data
-	\item {\tt cartview}, {\tt gnomview}, {\tt mollview}, {\tt orthview}:
-using a virtual window (ie, {\tt WINDOW}$<0$) now allows faster generation 
-of GIF and PNG files (especially useful over remote connections); 
-added {\tt RETAIN=} keyword; deals correctly with user provided 
-{\tt MIN} and {\tt MAX} keywords in {\tt /LOG} mode
-	\item {\tt orthview}: addition of {\tt /SHADED} keyword for 3D
-rendering
-	\item {\tt ximview}: version 0.6.2, fixed bug in pixel
-coordinates [2.12a]
-	\end{itemize}
+% \subsubsection[IDL]{IDL}
+% 	\begin{itemize}
+% 	\item fixed bug in {\tt selectread}
+% 	\item introduced {\tt src/idl/misc/init\_astrolib.pro}: wrapper to {\tt
+% astrolib}
+% 	\item removed invocation to {\tt !debug} in 11 FITS related routines
+% 	\end{itemize}
+% %%%
+% \subsection{Bug corrections and Improvements in Version 2.11}
 
-\subsubsection[Java]{Java}
-	\begin{itemize}
-	\item {\tt getNSide} method in {\tt HealpixIndex} class changed to {\tt calculateNSide}.
-	\item Area methods static - upgrade/degrade methods added.
-	\end{itemize}
-
-%---------------------------------------------------
-%\end{itemize}
-
-%\vfill\newpage
-%\setcounter{section}{0}
-%%%%%%%%%%%%%%%%%%%
-{\footnotesize{%
-%%%%%%%%%%%%%%%%%%%
-\section{Appendix II: Older changes}
-%---------------------------------------------------
-%%%
-\subsection{Bug corrections and Improvements in Version 2.11c}
-%
-\subsubsection[New General Improvements]{general}
-\begin{itemize}
-	\item {\tt hpxconfig\_functions.sh}: corrected typos,
-correctly detects recent {\tt gfortran}; 
-	\item {\tt configure}: added explanatory header
-\end{itemize}
-
-\subsubsection[C]{C}	
-	\begin{itemize}
-	\item edited {\tt src/C/subs/Makefile} to fix potential problem with
-{\tt test\_chealpix2} code compilation
-	\end{itemize}
-
-\subsubsection[C++]{C++}
-	\begin{itemize}
-	\item in {\tt src/cxx/alice/planck.make}, replaced confusing {\tt test} with {\tt test\_alice}
-	\end{itemize}
-
-\subsubsection[Fortran90]{Fortran90}
-	\begin{itemize}
-	\item {\tt sky\_ng\_sim\_bin} code now working
-	\item  use pointers in {\tt map2alm\_iterative} routine in order to fix unexplained crashes
-	\item edited {\tt create\_alm} routine to work around a bug in with some versions of PGF90
-	\item {\tt write\_minimal\_header} corrected typo in FITS header for derivative maps
-	\end{itemize}
-
-\subsubsection[IDL]{IDL}
-	\begin{itemize}
-	\item fixed bug in {\tt selectread}
-	\item introduced {\tt src/idl/misc/init\_astrolib.pro}: wrapper to {\tt
-astrolib}
-	\item removed invocation to {\tt !debug} in 11 FITS related routines
-	\end{itemize}
-%%%
-\subsection{Bug corrections and Improvements in Version 2.11}
-
-\subsubsection[New General Improvements]{general}
-\begin{itemize}
-\item installation:
-	\begin{itemize}
-	\item Fixed IDL installation problem under (ba)sh
-	\item Check consistency of cfitsio library with F90 routines
-	\item introduced command line options for {\tt ./configure}
-	\item fixed infinite loop in main Makefile's tidy and distclean options
-	\end{itemize}
-\item documentation:
-	\begin{itemize}
-	\item ``IDL routines'': rightfully says that IDL6.0 or more recent is required
-	\end{itemize}
-\end{itemize}
+% \subsubsection[New General Improvements]{general}
+% \begin{itemize}
+% \item installation:
+% 	\begin{itemize}
+% 	\item Fixed IDL installation problem under (ba)sh
+% 	\item Check consistency of cfitsio library with F90 routines
+% 	\item introduced command line options for {\tt ./configure}
+% 	\item fixed infinite loop in main Makefile's tidy and distclean options
+% 	\end{itemize}
+% \item documentation:
+% 	\begin{itemize}
+% 	\item ``IDL routines'': rightfully says that IDL6.0 or more recent is required
+% 	\end{itemize}
+% \end{itemize}
 
 
-\subsubsection[C]{C}	
-	\begin{itemize}
-	\item Makefile no longer assumes that current directory ('.') is in PATH
-	\end{itemize}
+% \subsubsection[C]{C}	
+% 	\begin{itemize}
+% 	\item Makefile no longer assumes that current directory ('.') is in PATH
+% 	\end{itemize}
 
-\subsubsection[C++]{C++}
-	\begin{itemize}
-	\item fixed error affecting equatorial pixels in maps generated by {\tt alm2map*}
-	\end{itemize}
+% \subsubsection[C++]{C++}
+% 	\begin{itemize}
+% 	\item fixed error affecting equatorial pixels in maps generated by {\tt alm2map*}
+% 	\end{itemize}
 
-\subsubsection[Fortran90]{Fortran90}
-	\begin{itemize}
-	\item fixed problem with {\tt TTYPE*} when writing FITS header (was also
-affecting IDL's {\tt isynfast})
-	\item fixed crash causing bug in {\tt map2alm\_iterative} subroutine (was
-affecting {\tt anafast, sky\_ng\_sims} and {\tt smoothing} facilities)
-	\item fixed un-initialized variables in {\tt compute\_statistics} subroutine
-	\item fixed parameters parsing problem in interactive mode of {\tt synfast, anafast,} ...
-	\end{itemize}
+% \subsubsection[Fortran90]{Fortran90}
+% 	\begin{itemize}
+% 	\item fixed problem with {\tt TTYPE*} when writing FITS header (was also
+% affecting IDL's {\tt isynfast})
+% 	\item fixed crash causing bug in {\tt map2alm\_iterative} subroutine (was
+% affecting {\tt anafast, sky\_ng\_sims} and {\tt smoothing} facilities)
+% 	\item fixed un-initialized variables in {\tt compute\_statistics} subroutine
+% 	\item fixed parameters parsing problem in interactive mode of {\tt synfast, anafast,} ...
+% 	\end{itemize}
 
-\subsubsection[IDL]{IDL}
-	\begin{itemize}
-	\item issues warning when non-integer pixel indexes are fed to {\tt nest2ring, ring2nest, pix2ang\_*, pix2vec\_*,}   ...
-	\item more stable and elegant behaviour of {\tt isynfast} and {\tt ianafast}
-	\item {\tt cartview, gnomview, mollview, orthview}:
-		\begin{itemize}
-		\item deal properly with {\tt MIN} and {\tt MAX} in {\tt ASINH} mode
-		\item polarization norm map can be offset ({\tt POLARIZATION=1} mode)
-		\item original color table and plot settings are restored when
-leaving these routines
-		\end{itemize}
-	\item {\tt ximview}:
-		\begin{itemize}
-		\item fixed problem with cut-sky FITS files
-		\item color scale bar added to PNG output
-		\end{itemize}
-	\item cosmetic editions to {\tt remove\_dipole}
-	\end{itemize}
+% \subsubsection[IDL]{IDL}
+% 	\begin{itemize}
+% 	\item issues warning when non-integer pixel indexes are fed to {\tt nest2ring, ring2nest, pix2ang\_*, pix2vec\_*,}   ...
+% 	\item more stable and elegant behaviour of {\tt isynfast} and {\tt ianafast}
+% 	\item {\tt cartview, gnomview, mollview, orthview}:
+% 		\begin{itemize}
+% 		\item deal properly with {\tt MIN} and {\tt MAX} in {\tt ASINH} mode
+% 		\item polarization norm map can be offset ({\tt POLARIZATION=1} mode)
+% 		\item original color table and plot settings are restored when
+% leaving these routines
+% 		\end{itemize}
+% 	\item {\tt ximview}:
+% 		\begin{itemize}
+% 		\item fixed problem with cut-sky FITS files
+% 		\item color scale bar added to PNG output
+% 		\end{itemize}
+% 	\item cosmetic editions to {\tt remove\_dipole}
+% 	\end{itemize}
 
-\subsubsection[Java]{Java}
-	none
+% \subsubsection[Java]{Java}
+% 	none
 
-\subsection{Changes and New Features in Version 2.10}
-%\begin{itemize}
-%---------------------
-\subsubsection[New General Features]{general}
-  \begin{itemize}
-    \item single configure script and Makefile for C, C++, Fortran and IDL codes and libraries
-  \end{itemize}
-%---------------------
-\subsubsection[New Features: C]{C}
-  \begin{itemize}
-    \item shared {\tt chealpix} library available
-  \end{itemize}
-%---------------------
-\subsubsection[New Features: C++]{C++}
-  \begin{itemize}
-    \item new {\tt alice} visualization facility for polarized maps
-    \item new class Healpix\_Base2 supporting $\nside$ up to $2^{29}$
-    \item minor bug fixes
-  \end{itemize}
-%---------------------
-\subsubsection[New Features: Fortran90]{Fortran90}
-\label{sec:freef90compilers}
-  \begin{itemize}
-    \item The {\bf free} Fortran90/95 compilers supported include: 
-    \begin{itemize}
-      \item Intel Fortran Compiler for linux based computers (version 8.1, 9.* or 10.*) \hfill \\
-         \htmladdnormallink{{\tt
-        http://www.intel.com/software/products/compilers/downloads/forlin.htm}}{http://www.intel.com/software/products/compilers/downloads/forlin.htm}
-%% 	 Note that we encountered several problems with ifort 9.1.036 under 64
-%%          bit linux.
-      \item GNU Fortran 95 compiler (gfortran) included in GNU Compiler Collection {\em GCC} version 4.0.0
-         and up and available for Linux, Mac OSX, Windows, Sun ... platforms
-         \hfill \\
-          \htmladdnormallink{{\tt http://www.gnu.org/software/gcc/fortran/}}{http://www.gnu.org/software/gcc/fortran/}. \hfill \\
-         GFortran binaries for all platforms can also be downloaded from  \hfill \\
-          \htmladdnormallink{{\tt http://gcc.gnu.org/wiki/GFortranBinaries}}{http://gcc.gnu.org/wiki/GFortranBinaries}. \hfill \\
-         Please note that only the most recent versions of gfortran (Aug 2005
-         and later) compile HEALPix correctly, and v4.2.1 has given satisfying
-         results so far, including native OpenMP support.
-     \item g95 compiler available for Linux, Mac OSX, Windows, Sun and HP platforms
-         \hfill \\ \htmladdnormallink{{\tt http://g95.sf.net}}{http://g95.sf.net}
-    \end{itemize}
-\item New facilities
-\begin{itemize}
-\item The anafast facility can now compute the cross-correlations of two different
-maps. 
-\item The sky\_ng\_sim facility (Rocha et al, 2005), to produce non-Gaussian CMB temperature maps,
-has been added.
-\end{itemize}
-\item New routines: 
-\begin{itemize}
-	\item {alm2map\_spin}: synthesis of maps of arbitrary spin
-	\item {healpix\_modules}: meta-module
-	\item {map2alm\_iterative}: iterative analysis of map
-	\item {map2alm\_spin}: analysis of maps of arbitrary spin
-	\item {write\_minimal\_header}: routine to write minimal FITS header
-	\item {parse\_check\_unused}: prints out parameters present in parameter file but not used by the code.
-\end{itemize}
-\item Improved routines:
-\begin{itemize}
-\item {query\_strip}: the {\tt inclusive} option now
-returns {\em all} (and only) the pixels overlapping, even partially, with the
-strip
-\item {query\_disc}: when the disc center is on one of
-the poles, {\em only} the pixels overlapping with the disc are now returned.
-\item {remove\_dipole}: can now deal with non-uniform
-pixel weights.
-\item parse\_init: silent mode
-\item parse\_string: can expand environment variables
-(\$\{XXX\}) and leading \verb+~+$\!${\tt /}
-\end{itemize}
+% \subsection{Changes and New Features in Version 2.10}
+% %\begin{itemize}
+% %---------------------
+% \subsubsection[New General Features]{general}
+%   \begin{itemize}
+%     \item single configure script and Makefile for C, C++, Fortran and IDL codes and libraries
+%   \end{itemize}
+% %---------------------
+% \subsubsection[New Features: C]{C}
+%   \begin{itemize}
+%     \item shared {\tt chealpix} library available
+%   \end{itemize}
+% %---------------------
+% \subsubsection[New Features: C++]{C++}
+%   \begin{itemize}
+%     \item new {\tt alice} visualization facility for polarized maps
+%     \item new class Healpix\_Base2 supporting $\nside$ up to $2^{29}$
+%     \item minor bug fixes
+%   \end{itemize}
+% %---------------------
+% \subsubsection[New Features: Fortran90]{Fortran90}
+% \label{sec:freef90compilers}
+%   \begin{itemize}
+%     \item The {\bf free} Fortran90/95 compilers supported include: 
+%     \begin{itemize}
+%       \item Intel Fortran Compiler for linux based computers (version 8.1, 9.* or 10.*) \hfill \\
+%          \htmladdnormallink{{\tt
+%         http://www.intel.com/software/products/compilers/downloads/forlin.htm}}{http://www.intel.com/software/products/compilers/downloads/forlin.htm}
+% %% 	 Note that we encountered several problems with ifort 9.1.036 under 64
+% %%          bit linux.
+%       \item GNU Fortran 95 compiler (gfortran) included in GNU Compiler Collection {\em GCC} version 4.0.0
+%          and up and available for Linux, Mac OSX, Windows, Sun ... platforms
+%          \hfill \\
+%           \htmladdnormallink{{\tt http://www.gnu.org/software/gcc/fortran/}}{http://www.gnu.org/software/gcc/fortran/}. \hfill \\
+%          GFortran binaries for all platforms can also be downloaded from  \hfill \\
+%           \htmladdnormallink{{\tt http://gcc.gnu.org/wiki/GFortranBinaries}}{http://gcc.gnu.org/wiki/GFortranBinaries}. \hfill \\
+%          Please note that only the most recent versions of gfortran (Aug 2005
+%          and later) compile HEALPix correctly, and v4.2.1 has given satisfying
+%          results so far, including native OpenMP support.
+%      \item g95 compiler available for Linux, Mac OSX, Windows, Sun and HP platforms
+%          \hfill \\ \htmladdnormallink{{\tt http://g95.sf.net}}{http://g95.sf.net}
+%     \end{itemize}
+% \item New facilities
+% \begin{itemize}
+% \item The anafast facility can now compute the cross-correlations of two different
+% maps. 
+% \item The sky\_ng\_sim facility (Rocha et al, 2005), to produce non-Gaussian CMB temperature maps,
+% has been added.
+% \end{itemize}
+% \item New routines: 
+% \begin{itemize}
+% 	\item {alm2map\_spin}: synthesis of maps of arbitrary spin
+% 	\item {healpix\_modules}: meta-module
+% 	\item {map2alm\_iterative}: iterative analysis of map
+% 	\item {map2alm\_spin}: analysis of maps of arbitrary spin
+% 	\item {write\_minimal\_header}: routine to write minimal FITS header
+% 	\item {parse\_check\_unused}: prints out parameters present in parameter file but not used by the code.
+% \end{itemize}
+% \item Improved routines:
+% \begin{itemize}
+% \item {query\_strip}: the {\tt inclusive} option now
+% returns {\em all} (and only) the pixels overlapping, even partially, with the
+% strip
+% \item {query\_disc}: when the disc center is on one of
+% the poles, {\em only} the pixels overlapping with the disc are now returned.
+% \item {remove\_dipole}: can now deal with non-uniform
+% pixel weights.
+% \item parse\_init: silent mode
+% \item parse\_string: can expand environment variables
+% (\$\{XXX\}) and leading \verb+~+$\!${\tt /}
+% \end{itemize}
 
-  \end{itemize}
-%---------------------
-\subsubsection[New Features: IDL]{IDL} 
-  \begin{itemize}
-    \item New features
-  \begin{itemize}
-	\item Using 64 bit integers available since version 5.2 of IDL the maximum resolution parameter $\nside$ supported has increased
-from $2^{13}=8192$ to $2^{29}=536870912$, corresponding to $3.46\ 10^{18}$
-pixels on the sphere.
-	\item FITS files larger than 2GB can now be read/written on systems
-    supporting 64 bit addressing.
-  \end{itemize}
+%   \end{itemize}
+% %---------------------
+% \subsubsection[New Features: IDL]{IDL} 
+%   \begin{itemize}
+%     \item New features
+%   \begin{itemize}
+% 	\item Using 64 bit integers available since version 5.2 of IDL the maximum resolution parameter $\nside$ supported has increased
+% from $2^{13}=8192$ to $2^{29}=536870912$, corresponding to $3.46\ 10^{18}$
+% pixels on the sphere.
+% 	\item FITS files larger than 2GB can now be read/written on systems
+%     supporting 64 bit addressing.
+%   \end{itemize}
 
-\item New routines include
-\begin{itemize}
- \item {{\tt ximview}}: visualisation routine developed by J. P. Leahy intended for quick-look inspection of HEALPix images 
-(as well as ordinary 2-D images) at the level of individual pixels. Features
-include panning, zooming, blinking, image statistics and peak finding.
- \item {{\tt hpx2gs}}: turns a healpix data set into a
-\htmladdnormallink{Google Earth}{http://earth.google.com/}%
-/%
-\htmladdnormallink{Google Sky}{http://earth.google.com/sky/skyedu.html}%
--compatible image
- \item {{\tt ianafast}}: interface to (F90) {\tt anafast} and (C++) {\tt anafast\_cxx} facilities 
- \item {{\tt isynfast}}: interface to F90 {\tt synfast} facility
- \item {{\tt ismoothing}}: interface to F90 {\tt smoothing} facility
- \item {{\tt bin\_llcl}}: $C(l)$ binning
- \item {{\tt bl2fits}}: writes $B(l)$ or $W(l)$ window into
-FITS file
- \item {{\tt neighbours\_nest}}, %
-       {{\tt neighbours\_ring}}: %
-   find immediate neighbours of a given pixel
- \item {{\tt query\_strip}}: %
-   find pixels lying within a colatitude strip
-\end{itemize}
-%
-\item Routines with extended/improved user interface or new functionalities include
-\begin{itemize}
-\item {{\tt mollview, gnomview, cartview, orthview}}: 
-\begin{itemize}
-\item {\tt ONLINE} keyword is now redundant, 
-\item introduction of {\tt GLSIZE} and {\tt IGLSIZE} to
-control automatic labeling of graticules,
-\item addition of {\tt SILENT} and {\tt EXECUTE} keywords,
-\item addition of {\tt ASINH} keyword to allow better visualisation of highly
-contrasted maps.
-\item under certain circumstances, can process high resolution cut sky data sets
-without creating full sky dummy maps,
-\item accept gzip compressed FITS files,
-\item accept polarized cut sky maps,
-\item accept multi-dimensional online arrays,
-\item more robust {\tt OUTLINE} option.
-\end{itemize}
+% \item New routines include
+% \begin{itemize}
+%  \item {{\tt ximview}}: visualisation routine developed by J. P. Leahy intended for quick-look inspection of HEALPix images 
+% (as well as ordinary 2-D images) at the level of individual pixels. Features
+% include panning, zooming, blinking, image statistics and peak finding.
+%  \item {{\tt hpx2gs}}: turns a healpix data set into a
+% \htmladdnormallink{Google Earth}{http://earth.google.com/}%
+% /%
+% \htmladdnormallink{Google Sky}{http://earth.google.com/sky/skyedu.html}%
+% -compatible image
+%  \item {{\tt ianafast}}: interface to (F90) {\tt anafast} and (C++) {\tt anafast\_cxx} facilities 
+%  \item {{\tt isynfast}}: interface to F90 {\tt synfast} facility
+%  \item {{\tt ismoothing}}: interface to F90 {\tt smoothing} facility
+%  \item {{\tt bin\_llcl}}: $C(l)$ binning
+%  \item {{\tt bl2fits}}: writes $B(l)$ or $W(l)$ window into
+% FITS file
+%  \item {{\tt neighbours\_nest}}, %
+%        {{\tt neighbours\_ring}}: %
+%    find immediate neighbours of a given pixel
+%  \item {{\tt query\_strip}}: %
+%    find pixels lying within a colatitude strip
+% \end{itemize}
+% %
+% \item Routines with extended/improved user interface or new functionalities include
+% \begin{itemize}
+% \item {{\tt mollview, gnomview, cartview, orthview}}: 
+% \begin{itemize}
+% \item {\tt ONLINE} keyword is now redundant, 
+% \item introduction of {\tt GLSIZE} and {\tt IGLSIZE} to
+% control automatic labeling of graticules,
+% \item addition of {\tt SILENT} and {\tt EXECUTE} keywords,
+% \item addition of {\tt ASINH} keyword to allow better visualisation of highly
+% contrasted maps.
+% \item under certain circumstances, can process high resolution cut sky data sets
+% without creating full sky dummy maps,
+% \item accept gzip compressed FITS files,
+% \item accept polarized cut sky maps,
+% \item accept multi-dimensional online arrays,
+% \item more robust {\tt OUTLINE} option.
+% \end{itemize}
 
-\item {{\tt median\_filter}}: bugs correction
-\item {{\tt ud\_grade}}: more robust user interface
-\item {{\tt change\_polcconv}}: new {\tt /FORCE} keyword
-\item {{\tt remove\_dipole}}: more accurate
-\item {{\tt query\_disc}}: when the disc center is on one of
-the poles, {\em only} the pixels overlapping with the disc are now returned.
-\end{itemize}
-%
-\item Miscellaneous
-\begin{itemize}
-\item {{\tt mollcursor, gnomcursor...}}: an X11 patch is
-given so that these routines work under Mac OS X 10.4 and 10.5.
-\end{itemize}
-\end{itemize}
-%---------------------
-\subsubsection[New Features: Java]{Java}
-  \begin{itemize}
-    \item Almost all query pixels related methods ported to Java have been added
- like:
-  \begin{itemize}
-  \item query\_triangle, query\_polygon, etc,
-  \item a tool class for operating on healpix map.
-  \end{itemize}
+% \item {{\tt median\_filter}}: bugs correction
+% \item {{\tt ud\_grade}}: more robust user interface
+% \item {{\tt change\_polcconv}}: new {\tt /FORCE} keyword
+% \item {{\tt remove\_dipole}}: more accurate
+% \item {{\tt query\_disc}}: when the disc center is on one of
+% the poles, {\em only} the pixels overlapping with the disc are now returned.
+% \end{itemize}
+% %
+% \item Miscellaneous
+% \begin{itemize}
+% \item {{\tt mollcursor, gnomcursor...}}: an X11 patch is
+% given so that these routines work under Mac OS X 10.4 and 10.5.
+% \end{itemize}
+% \end{itemize}
+% %---------------------
+% \subsubsection[New Features: Java]{Java}
+%   \begin{itemize}
+%     \item Almost all query pixels related methods ported to Java have been added
+%  like:
+%   \begin{itemize}
+%   \item query\_triangle, query\_polygon, etc,
+%   \item a tool class for operating on healpix map.
+%   \end{itemize}
 
-  \item OO Data model added:
-  \begin{itemize}
-  \item HealpixMap data model interface introduced,
-  \item AbstractHealpixMap interface to deal with 3d viewer visualization.
-  \end{itemize}
+%   \item OO Data model added:
+%   \begin{itemize}
+%   \item HealpixMap data model interface introduced,
+%   \item AbstractHealpixMap interface to deal with 3d viewer visualization.
+%   \end{itemize}
 
-  \item Java graphical user interface included to plot healpix maps object
-into a 3d sphere using java3d api:
-  \begin{itemize}
-  \item 3 button Mouse operating 3d pixelised sphere: zoom, rotation and translation,
-  \item tool tip display value and angular position of the pixel selected,
-  \item color bar, grid, axes,
-  \item transparencies selector,
-  \item nside number selector,
-  \item face number selector.
-  \end{itemize}
+%   \item Java graphical user interface included to plot healpix maps object
+% into a 3d sphere using java3d api:
+%   \begin{itemize}
+%   \item 3 button Mouse operating 3d pixelised sphere: zoom, rotation and translation,
+%   \item tool tip display value and angular position of the pixel selected,
+%   \item color bar, grid, axes,
+%   \item transparencies selector,
+%   \item nside number selector,
+%   \item face number selector.
+%   \end{itemize}
 
-  \item Bugs fixed like:
-  \begin{itemize}
-  \item crosses the 0/360 line give correct query triangle solution,
-  \item library uses one constants class to define used constants,
-  \item SpatialVector extends the vector class from vecmath,
-  \item Change all float to double,
-  \item Many other minor bug fixed.
-  \end{itemize}
-  \end{itemize}
+%   \item Bugs fixed like:
+%   \begin{itemize}
+%   \item crosses the 0/360 line give correct query triangle solution,
+%   \item library uses one constants class to define used constants,
+%   \item SpatialVector extends the vector class from vecmath,
+%   \item Change all float to double,
+%   \item Many other minor bug fixed.
+%   \end{itemize}
+%   \end{itemize}
 
-\subsection{Changes and New Features in Version 2.00}
-\begin{itemize}
-  \item Free / Open source software license
-  \item New web page: \htmladdnormallink{{\tt \healpixwebpage}}{\healpixwebpage}
-%%    \htmladdnormallink{{\tt http://healpix.sf.net}}{http://healpix.sf.net}
-  \item HTML and PDF documentations are available in {\tt
-  [HEALPix]/doc/html/main.htm} and {\tt [HEALPix]/doc/pdf/}
-  \item C++ implementation of almost all codes and routines
-  \item Fortran90: 
-\begin{itemize}
-  \item 2 to 3 times faster Spherical Harmonics tools (ie, synfast, anafast, smoothing, plmgen)
-  \item parallelization for distributed memory architectures
-  \item More {\bf free} Fortran90/95 compilers supported: 
-\begin{itemize}
-\item Intel Fortran Compiler for linux based computers (version 8.1 or 9.0) \hfill \\
-\htmladdnormallink{{\tt
-    http://www.intel.com/software/products/compilers/downloads/forlin.htm}}{http://www.intel.com/software/products/compilers/downloads/forlin.htm}
-\item GNU Fortran 95 compiler (gfortran) included in GNU Compiler Collection {\em GCC} version 4.0.0
-  and up and available for Linux, Mac OSX, Windows, Sun ... platforms \hfill \\ \htmladdnormallink{{\tt http://www.gnu.org/software/gcc/fortran/}}{http://www.gnu.org/software/gcc/fortran/} \hfill \\
-  Please note that only the most recent CVS versions of gfortran (Aug 2005 and later) compile HEALPix correctly!
-\item g95 compiler available for Linux, Mac OSX, Windows, Sun and HP platforms
-  \hfill \\ \htmladdnormallink{{\tt http://g95.sf.net}}{http://g95.sf.net}
-\end{itemize}
-\end{itemize}
-  \item C++ and F90 codes
-\begin{itemize}
-\item (almost) identical user interface
-\item parallelization for shared memory architectures
-\item {\em new facilities:} median filtering of \healpix map and alteration/rotation
-of Spherical Harmonics coefficients
-\item single and double precision I/O
-\item speed optimization of FITS I/O
-\item more platforms/compilers supported (including Mac OS X, 32/64bit architecture, etc.)
-\item {\em new, longer period, random number generator}
-\item {\em linkage to FFTW has been discontinued}
-\item precomputed ring weights used for quadrature of the Spherical Harmonics
-are now available for all resolution parameters $N_{\rm side} \le 8192$
-\end{itemize}
-\item Java implementation of pixel tools
-\item IDL: 
-\begin{itemize}
-\item median filtering facility
-\item speed optimization of FITS I/O
-\item more options in file reading and visualisation routines 
-\end{itemize}
+% \subsection{Changes and New Features in Version 2.00}
+% \begin{itemize}
+%   \item Free / Open source software license
+%   \item New web page: \htmladdnormallink{{\tt \healpixwebpage}}{\healpixwebpage}
+% %%    \htmladdnormallink{{\tt http://healpix.sf.net}}{http://healpix.sf.net}
+%   \item HTML and PDF documentations are available in {\tt
+%   [HEALPix]/doc/html/main.htm} and {\tt [HEALPix]/doc/pdf/}
+%   \item C++ implementation of almost all codes and routines
+%   \item Fortran90: 
+% \begin{itemize}
+%   \item 2 to 3 times faster Spherical Harmonics tools (ie, synfast, anafast, smoothing, plmgen)
+%   \item parallelization for distributed memory architectures
+%   \item More {\bf free} Fortran90/95 compilers supported: 
+% \begin{itemize}
+% \item Intel Fortran Compiler for linux based computers (version 8.1 or 9.0) \hfill \\
+% \htmladdnormallink{{\tt
+%     http://www.intel.com/software/products/compilers/downloads/forlin.htm}}{http://www.intel.com/software/products/compilers/downloads/forlin.htm}
+% \item GNU Fortran 95 compiler (gfortran) included in GNU Compiler Collection {\em GCC} version 4.0.0
+%   and up and available for Linux, Mac OSX, Windows, Sun ... platforms \hfill \\ \htmladdnormallink{{\tt http://www.gnu.org/software/gcc/fortran/}}{http://www.gnu.org/software/gcc/fortran/} \hfill \\
+%   Please note that only the most recent CVS versions of gfortran (Aug 2005 and later) compile HEALPix correctly!
+% \item g95 compiler available for Linux, Mac OSX, Windows, Sun and HP platforms
+%   \hfill \\ \htmladdnormallink{{\tt http://g95.sf.net}}{http://g95.sf.net}
+% \end{itemize}
+% \end{itemize}
+%   \item C++ and F90 codes
+% \begin{itemize}
+% \item (almost) identical user interface
+% \item parallelization for shared memory architectures
+% \item {\em new facilities:} median filtering of \healpix map and alteration/rotation
+% of Spherical Harmonics coefficients
+% \item single and double precision I/O
+% \item speed optimization of FITS I/O
+% \item more platforms/compilers supported (including Mac OS X, 32/64bit architecture, etc.)
+% \item {\em new, longer period, random number generator}
+% \item {\em linkage to FFTW has been discontinued}
+% \item precomputed ring weights used for quadrature of the Spherical Harmonics
+% are now available for all resolution parameters $N_{\rm side} \le 8192$
+% \end{itemize}
+% \item Java implementation of pixel tools
+% \item IDL: 
+% \begin{itemize}
+% \item median filtering facility
+% \item speed optimization of FITS I/O
+% \item more options in file reading and visualisation routines 
+% \end{itemize}
 
-\end{itemize}
+% \end{itemize}
 
- \subsection{Changes and New Features in Version 1.20}
- %% details of some bug fixes, configure stuff, make etc etc
- \begin{itemize}
-   \item An extensive HTML documentation is included in the package (in {\tt
-   [HEALPix]/doc/html/main.htm}). It is also available at the web page
-   \htmladdnormallink{{\tt
-   \healpixwebpage}}{\healpixwebpage},
- as well as the PostScript documention.
-   \item The convention used for the normalisation of the polarization power
-   spectra has been changed to match that of CMBFAST. This subject and its
-   implications are described in details in the \linklatexhtml{\healpix
-   Primer}{intro.pdf}{intro.htm}
-   \item The pixel window functions are now provided for both temperature and
-     polarization. Recalculation of the temperature window for $N_{side} > 128$
-     induce a slight change of these functions (see the \linklatexhtml{``\healpix
-   Primer''}{intro.pdf}{intro.htm} for details).
-   \item Because of its obsolete F66 features that limited its portability with
-     current f90/f95 compilers, the FFTPACK module used in
-     version 1.10 is no longer in use. \healpix 1.2 can either use a different
-     self contained FFT module shipped with the package, or
-     use the freely available {\bf FFTW} library (see section~\ref{sec:requirements}). The script file asks which FFT the user wants
-     to use. If selected, FFTW must be correctly installed (in double
-     precision) before installing Healpix.
-   \item It is now possible to use an OpenMP parallelisation of the Spherical
-   Harmonics Transforms (see \S~\ref{sec:requirements}).
-   \item The compilers now supported under \textbf{Linux} systems are
-     \begin{itemize}
- 	\item Intel Fortran Compiler, available for {\bf free} \\
- 	\htmladdnormallink{{\tt http://www.intel.com/software/products/compilers/downloads/forlin.htm}}{http://www.intel.com/software/products/compilers/downloads/forlin.htm}
- 	(tested for version  6.01 and 7.0)
- 	\item Lahey/Fujitsu Compiler, both {\bf free} trial and
-     commercial versions \hfill \\ \htmladdnormallink{{\tt http://www.lahey.com/linux.htm}}{http://www.lahey.com/linux.htm}
- 	\item NAGWare f95, commercial \htmladdnormallink{{\tt http://www.nag.co.uk/nagware/NP.asp}}{http://www.nag.co.uk/nagware/NP.asp}
- 	\item Portland Group Compiler, commercial \htmladdnormallink{{\tt http://www.pgroup.com/}}{http://www.pgroup.com/}
- 	\item Fujitsu Compiler, commercial
-     \end{itemize}	
-   \item The \textbf{Mac} Operating System \textbf{Darwin} is now supported. To
-     this date (Jan 2003) it has only been tested with NAGWare f95 \htmladdnormallink{{\tt http://www.nag.co.uk/nagware/NP.asp}}{http://www.nag.co.uk/nagware/NP.asp}.
- %   \item new Fortran subroutines and functions include: \hfill\newline
- %     {\tt ....}
-   \item A small subset of routines for the pixel to sky coordinate conversion
-     is now available in C (see the documentation \linklatexhtml{''C Subroutines Overview''}{csub.pdf}{csub.htm}).
-   \item New Fortran subroutines have been added or upgraded (see the documentation
-   \linklatexhtml{''Fortran90 Subroutines Overview''}{subroutines.pdf}{subroutines.htm}) and
-   most of the Fortran facilities have been upgraded (see the documentation
-   \linklatexhtml{''Fortran90 Facilities User Guidelines''}{facilities.pdf}{facilities.htm})
-   \item several Fortran routines have been renamed and merged.
- 	\begin{itemize}
- 	\item The module {\tt wrap\_fits} has been renamed {\tt head\_fits} to reflect its
-     extended capabilities,
- %  	\item The module {\tt ran_tools} has been renamed {\tt
- %      ran_tools_dist}, and the random generator code it contains has been changed,
-        \item some routines no longer in use have been moved to {\tt obsolete} module
- 	\end{itemize}
-   \item New IDL routines have been added, and several routines have been renamed
-   or merged. See the documentation \linklatexhtml{''IDL Facilities
-   Overview''}{idl.pdf}{idl.htm}
-   \item The configure script automatically creates a (system specific)
-     profile defining useful environment variables and aliases. {\em In
-     particular, the system variable {\tt HEALPIX} must be correctly
-     defined (as the full path to the \healpix directory) prior to running the pipeline.}
-   \item All legacy f77 or f66 codes have been removed or replaced in
-     order to improve the portability
-   \item The script file has been improved to, among other things, get rid of problems
-     appearing under SunOS
- \end{itemize}
+%  \subsection{Changes and New Features in Version 1.20}
+%  %% details of some bug fixes, configure stuff, make etc etc
+%  \begin{itemize}
+%    \item An extensive HTML documentation is included in the package (in {\tt
+%    [HEALPix]/doc/html/main.htm}). It is also available at the web page
+%    \htmladdnormallink{{\tt
+%    \healpixwebpage}}{\healpixwebpage},
+%  as well as the PostScript documention.
+%    \item The convention used for the normalisation of the polarization power
+%    spectra has been changed to match that of CMBFAST. This subject and its
+%    implications are described in details in the \linklatexhtml{\healpix
+%    Primer}{intro.pdf}{intro.htm}
+%    \item The pixel window functions are now provided for both temperature and
+%      polarization. Recalculation of the temperature window for $N_{side} > 128$
+%      induce a slight change of these functions (see the \linklatexhtml{``\healpix
+%    Primer''}{intro.pdf}{intro.htm} for details).
+%    \item Because of its obsolete F66 features that limited its portability with
+%      current f90/f95 compilers, the FFTPACK module used in
+%      version 1.10 is no longer in use. \healpix 1.2 can either use a different
+%      self contained FFT module shipped with the package, or
+%      use the freely available {\bf FFTW} library (see section~\ref{sec:requirements}). The script file asks which FFT the user wants
+%      to use. If selected, FFTW must be correctly installed (in double
+%      precision) before installing Healpix.
+%    \item It is now possible to use an OpenMP parallelisation of the Spherical
+%    Harmonics Transforms (see \S~\ref{sec:requirements}).
+%    \item The compilers now supported under \textbf{Linux} systems are
+%      \begin{itemize}
+%  	\item Intel Fortran Compiler, available for {\bf free} \\
+%  	\htmladdnormallink{{\tt http://www.intel.com/software/products/compilers/downloads/forlin.htm}}{http://www.intel.com/software/products/compilers/downloads/forlin.htm}
+%  	(tested for version  6.01 and 7.0)
+%  	\item Lahey/Fujitsu Compiler, both {\bf free} trial and
+%      commercial versions \hfill \\ \htmladdnormallink{{\tt http://www.lahey.com/linux.htm}}{http://www.lahey.com/linux.htm}
+%  	\item NAGWare f95, commercial \htmladdnormallink{{\tt http://www.nag.co.uk/nagware/NP.asp}}{http://www.nag.co.uk/nagware/NP.asp}
+%  	\item Portland Group Compiler, commercial \htmladdnormallink{{\tt http://www.pgroup.com/}}{http://www.pgroup.com/}
+%  	\item Fujitsu Compiler, commercial
+%      \end{itemize}	
+%    \item The \textbf{Mac} Operating System \textbf{Darwin} is now supported. To
+%      this date (Jan 2003) it has only been tested with NAGWare f95 \htmladdnormallink{{\tt http://www.nag.co.uk/nagware/NP.asp}}{http://www.nag.co.uk/nagware/NP.asp}.
+%  %   \item new Fortran subroutines and functions include: \hfill\newline
+%  %     {\tt ....}
+%    \item A small subset of routines for the pixel to sky coordinate conversion
+%      is now available in C (see the documentation \linklatexhtml{''C Subroutines Overview''}{csub.pdf}{csub.htm}).
+%    \item New Fortran subroutines have been added or upgraded (see the documentation
+%    \linklatexhtml{''Fortran90 Subroutines Overview''}{subroutines.pdf}{subroutines.htm}) and
+%    most of the Fortran facilities have been upgraded (see the documentation
+%    \linklatexhtml{''Fortran90 Facilities User Guidelines''}{facilities.pdf}{facilities.htm})
+%    \item several Fortran routines have been renamed and merged.
+%  	\begin{itemize}
+%  	\item The module {\tt wrap\_fits} has been renamed {\tt head\_fits} to reflect its
+%      extended capabilities,
+%  %  	\item The module {\tt ran_tools} has been renamed {\tt
+%  %      ran_tools_dist}, and the random generator code it contains has been changed,
+%         \item some routines no longer in use have been moved to {\tt obsolete} module
+%  	\end{itemize}
+%    \item New IDL routines have been added, and several routines have been renamed
+%    or merged. See the documentation \linklatexhtml{''IDL Facilities
+%    Overview''}{idl.pdf}{idl.htm}
+%    \item The configure script automatically creates a (system specific)
+%      profile defining useful environment variables and aliases. {\em In
+%      particular, the system variable {\tt HEALPIX} must be correctly
+%      defined (as the full path to the \healpix directory) prior to running the pipeline.}
+%    \item All legacy f77 or f66 codes have been removed or replaced in
+%      order to improve the portability
+%    \item The script file has been improved to, among other things, get rid of problems
+%      appearing under SunOS
+%  \end{itemize}
 
- \subsection{Changes and New Features in Version 1.10}
+%  \subsection{Changes and New Features in Version 1.10}
 
- %% details of some bug fixes, configure stuff, make etc etc
- \begin{itemize}
-   \item Only native {\tt make} is required for building the
-     facilities, although we do still recommend GNU make.
-   \item The configure script automatically creates a (system specific)
-     profile defining useful environment variables and aliases
-   \item An IDL startup file is provided to ease use of IDL tools.
-     Users should invoke IDL using the command {\tt hidl} to take
-     advantage of these features
-   \item Various bug fixes and code modifications have been completed
-     to improve compatibility and usability of software with NAG F90
-     and F95 compilers, and the COMPAQ (DEC) Alpha compiler
-   \item New Fortran subroutines and functions include: \hfill\newline
-     {\tt ang2vec, vec2ang, npix2nside, nside2npix}
-   \item New IDL routines include: \hfill\newline 
-      {\tt add\_nside\_fits.pro, add\_units\_fits.pro, gaussbeam.pro, getdisc\_ring.pro,
-      healpixwindow.pro, npix2nside.pro, nside2npix.pro, remove\_dipole.pro, 
-      today\_fits.pro, ud\_grade.pro}
-   \item Those routines from The IDL Astronomy User's Library and the 
-      COBE (IDL) Analysis Software library required for use by
-      the \healpix IDL facilities are bundled with the distribution
- \end{itemize}
-%%%%%%%%%%%%%%%%%%%
-}}
-%%%%%%%%%%%%%%%%%%%
+%  %% details of some bug fixes, configure stuff, make etc etc
+%  \begin{itemize}
+%    \item Only native {\tt make} is required for building the
+%      facilities, although we do still recommend GNU make.
+%    \item The configure script automatically creates a (system specific)
+%      profile defining useful environment variables and aliases
+%    \item An IDL startup file is provided to ease use of IDL tools.
+%      Users should invoke IDL using the command {\tt hidl} to take
+%      advantage of these features
+%    \item Various bug fixes and code modifications have been completed
+%      to improve compatibility and usability of software with NAG F90
+%      and F95 compilers, and the COMPAQ (DEC) Alpha compiler
+%    \item New Fortran subroutines and functions include: \hfill\newline
+%      {\tt ang2vec, vec2ang, npix2nside, nside2npix}
+%    \item New IDL routines include: \hfill\newline 
+%       {\tt add\_nside\_fits.pro, add\_units\_fits.pro, gaussbeam.pro, getdisc\_ring.pro,
+%       healpixwindow.pro, npix2nside.pro, nside2npix.pro, remove\_dipole.pro, 
+%       today\_fits.pro, ud\_grade.pro}
+%    \item Those routines from The IDL Astronomy User's Library and the 
+%       COBE (IDL) Analysis Software library required for use by
+%       the \healpix IDL facilities are bundled with the distribution
+%  \end{itemize}
+% %%%%%%%%%%%%%%%%%%%
+% }}
+% %%%%%%%%%%%%%%%%%%%
 
 \vfill\newpage
 
