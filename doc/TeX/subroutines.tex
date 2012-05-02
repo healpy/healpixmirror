@@ -128,12 +128,19 @@ $\mathbf{\phi}$ & The azimuthal angle on the sphere, $\phi\in[0,2\pi[$.\\
 \hpxversion}
 \label{sub:new3p00}
 \begin{itemize}
-\item%
+	\item%
 new code {\tt process\_mask} and new module {\tt mask\_tools} containing the routines
 \htmlref{dist2holes\_nest}{sub:dist2holes_nest}, 
 \htmlref{fill\_holes\_nest}{sub:fill_holes_nest}, 
 \htmlref{maskborder\_nest}{sub:maskborder_nest},
-\htmlref{size\_holes\_nest}{sub:size_holes_nest} useful for mask apodization.
+\htmlref{size\_holes\_nest}{sub:size_holes_nest} useful for mask apodization,
+	\item the pixel query routine
+ \htmlref{{\tt query\_disc}}{sub:query_disc} 
+has been improved and will return fewer
+false positive pixels in the 
+inclusive
+%\mylink{sub:query_disc:inclusive}{{\em inclusive}} 
+mode.
 \end{itemize}
 
 %--------------------------------------------

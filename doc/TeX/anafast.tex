@@ -178,7 +178,11 @@ the WMAP Kp intensity mask to the data (see
 \htmladdnormallink{http://lambda.gsfc.nasa.gov}{http://lambda.gsfc.nasa.gov}
 ), but it will {\em not} handle the WMAP composite mask correctly.
 Can be used in conjonction with {\tt theta\_cut\_deg}. Masked or weighted pixels
- will be correctly accounted when performing the monopole and dipole regression.
+ will be correctly accounted when performing the monopole and dipole regression.\\
+{\em Note:} The mask's resolution ($nsmax$) and ordering can be different from the input map(s)
+one's, and the mask will be pro/down-graded and reordered to match the map. On the
+other hand, the mask and maps coordinates will always be presumed to match (ie, no
+attempt of rotation of the mask will be made).
 (default= `': no mask, all valid pixels are used)
  \item[{theta\_cut\_deg = }] Defines the latitude (in degrees) of 
 an optional, straight symmetric cut around the equator.  Pixels located within
@@ -219,6 +223,7 @@ default = 0.}}
  
   \end{qulist}
 \end{qualifiers}
+\vfill
 
 \begin{codedescription}
 {
@@ -358,6 +363,7 @@ weights are not used.
     \item Bug correction: correct interaction of iterative scheme with masked pixels (\healpix 2.01)
     \item New functionality: cross-correlation of 2 maps; Correction of this documentation: the code expects {\tt maskfile} and
 not {\tt mask\_file}  (\healpix 2.1)
+    \item Bug correction: now correctly supports mask pro/down-grading
   \end{relist}
 \end{release}
 

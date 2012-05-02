@@ -55,12 +55,13 @@
   !               Sep 2002 : implement new parser
   !               May 2007 : can cross-correlate 2 maps, introduced map2alm_iterative
   !               Jun 2010 : supports large maps
+  !               May 2012:  pro/down-grading of mask now works
   !
   !  FEEDBACK:
   !     for any questions : hivon@iap.fr
   !
   !=======================================================================
-  !     version 2.2
+  !     version 2.3
   !=======================================================================
   ! this file can not be compiled on its own.
   ! It must be inserted into the file anafast.f90 by the command  include
@@ -483,8 +484,10 @@
         call input_map(maskfile, mask, npix_mask, nmasks, fmissval = fmiss_mask)
      else
         ! mask has different resolution than map: read
-        allocate(mask_tmp(0:npix_mask-1,1:nmasks),stat=status)
+        allocate(mask(0:npixtot-1,1:nmasks),stat=status)
         call assert_alloc(status,code,"mask")
+        allocate(mask_tmp(0:npix_mask-1,1:nmasks),stat=status)
+        call assert_alloc(status,code,"mask_tmp")
         call input_map(maskfile, mask_tmp, npix_mask, nmasks, fmissval = fmiss_mask)
         ! then degrade or prograde
         print*,'Modifying mask to match map resolution:'

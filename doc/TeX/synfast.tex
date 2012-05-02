@@ -47,7 +47,7 @@ applications.}
     \item[{infile = }] Defines the input power spectrum file,
 	(default= cl.fits). Note that {\tt infile} is now optional :
     synfast can run even if only {\tt almsfile} is provided.
-    \item[{outfile = }] Defines the output map file,
+    \item[{outfile = }] Defines the output (RING ordered) map file,
 (default= map.fits). Note that {\tt outfile} is now optional: if it set to 
       `' (empty string),  mo map is synthesized but the $a_{lm}$ generated can be output.
     \item[{outfile\_alms = }] Defines the FITS file in which to output $a_{lm}$ used
@@ -256,7 +256,8 @@ In this example, the file contains the following qualifiers:\hfill\newline
 \fileparam{infile = cl.fits}
 \fileparam{outfile = map.fits}
 
-Synfast reads in the $C_l$ power spectrum in 'cl.fits' up to $l=64$, and produces the map
+Synfast reads in the $C_l$ power spectrum in 'cl.fits' up to $l=64$, and
+produces the (RING ordered) map
 'map.fits' which has $N_{\rm side}=32$.
 The map is convolved with a beam of FWHM 420.0 arcminutes. The $iseed=-1$ sets
 the random seed for the realisation. A different $iseed$ would have given a different 
