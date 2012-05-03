@@ -24,5 +24,7 @@ $(BLDROOT)/%.o : $(SRCROOT)/%.cc
 configclean:
 	rm -rf config.log config.status autom4te.cache config/config.auto
 
-distclean: docsrc_clean configclean
+clean:
 	rm -rf $(BLDROOT) $(PREFIX) $(DOCDIR) $(SRCROOT)/test/test*
+
+distclean: docsrc_clean configclean clean
