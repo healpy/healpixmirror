@@ -22,7 +22,7 @@
  *  (DLR).
  */
 
-/*! \file paranfile.h
+/*! \file paramfile.h
  *  Class for parsing parameter files
  *
  *  Copyright (C) 2003-2011 Max-Planck-Society
