@@ -19,7 +19,13 @@
 %\newcommand{\myhtmlimage}[1]{\htmlimage{#1}}
 \newcommand{\myhtmlimage}[1]{ }
 
+\hypersetup{%
+	pdftitle={HEALPix C Subroutines Overview},%
+	pdfauthor={E. Hivon et al},%
+	pdfkeywords={HEALPix, C},%
+	colorlinks=true}%
 %\includeonly{}
+
 \sloppy
 \setcounter{secnumdepth}{0}
 \begin{document}
@@ -61,12 +67,12 @@ $\mathbf{\phi}$ & The azimuthal angle on the sphere, $\phi\in[0,2\pi[$.\\
 
 \section[Compilation and Installation]{{\Large Compilation and Installation}}
 A tentative compilation and installation script is provided in {\tt
-src/C/doinstall.s}.
+src/C/doinstall}.
 If it does not work, you can try editing the {\tt
 src/C/subs/Makefile} by hand.
 
 \section[Usage]{{\Large Usage}}
-To use in your 'c' code, include the line 
+To use in your 'C' code, include the line 
  
 {\tt \#include "chealpix.h" } 
  
@@ -78,7 +84,7 @@ where <incdir> is where you've installed the '.h' files and
 <libdir> is where you've installed the libraries (See the header of 
 the 'subs/Makefile').
 
-You will also need the 'cfitsio' library. See 
+You will also need the 'cfitsio' library. See \hfill \\
 \htmladdnormallink{{\tt http://heasarc.gsfc.nasa.gov/docs/software/fitsio/}}
 			{http://heasarc.gsfc.nasa.gov/docs/software/fitsio/}
 
@@ -92,6 +98,7 @@ for details). As for the rest of the
 \newpage
 \include{ang2vec_c}
 \include{get_fits_size_c}
+\include{npix2nside_c}
 \include{nside2npix_c}
 \include{pix_tools_c}
 \include{read_healpix_map_c}

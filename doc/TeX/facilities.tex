@@ -7,7 +7,7 @@
 % A.J. Banday, April 1999.
 
 \documentclass[12pt,twoside]{article}
-\usepackage{healpix,html,graphicx,makeidx}
+\usepackage{healpix,xr-hyper,html,graphicx,makeidx}
 \begin{htmlonly}
 \renewcommand{\ell}{l}
 %\renewcommand{\lq}{`}
@@ -104,8 +104,9 @@ floating point reals. The following points should be noted: \label{page:ioprec}
 \section[Changes between releases 2.20 and \hpxversion]{Changes between releases 2.20 and
 \hpxversion}
 \begin{itemize}
-	\item introduction of \htmlref{{\tt process\_mask}}{fac:process_mask} to
-apodize a binary mask,
+	\item introduction of \htmlref{{\tt process\_mask}}{fac:process_mask} 
+facility to compute the angular distance of valid
+pixels to the closest invalid pixels for a input binary mask,
 	\item \htmlref{{\tt sky\_ng\_sim}}{fac:sky_ng_sim} now allows the computation
 of the spatial derivatives of the non Gaussian map being produced, and the
 output of the $a_{lm}$ coefficients of that map,

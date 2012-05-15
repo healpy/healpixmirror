@@ -1,10 +1,9 @@
 % -*- LaTeX -*-
 
 \documentclass[12pt,twoside]{article}
-%\usepackage{healpix,psfig,html}
-\usepackage{healpix,graphicx,html,makeidx}
-%\usepackage{hyperref,healpix,graphicx,html,makeidx}%putting hyperref first
-%screws up references in html
+\usepackage{xr-hyper,healpix,graphicx,html,makeidx}
+%putting hyperref first screws up references in html
+%%%
 \begin{htmlonly}
 \input{hpxversion}
 \input{idlversion}
@@ -25,6 +24,19 @@
 
 \newcommand{\linklatexhtml}[3]{% \linklatexhtml{name}{latex_target}{html_target}
 \latexhtml{\htmladdnormallink{#1}{#2}}{\htmladdnormallink{#1}{#3}}}
+\newcommand{\mylink}[2]{% \mylink{link_id}{link_text}
+\latexhtml{\hyperlink{#1}{#2}}{\hyperref{#2}{}{}{#1}}}
+\newcommand{\mytarget}[1]{% \mytarget{link_id}
+\latexhtml{\hypertarget{#1}{}}{\label{#1}}}
+\newcommand{\mytargetb}[2]{% \mytargett{link_id}{target_txt}
+\latexhtml{\hbox{{#2}\hypertarget{#1}{}}}{\label{#1}{#2}}}
+% \newcommand{\crossref}[3]{% \crossref{text}{latex_target}{html_target}
+% \latexhtml{\htmlref{#1}{#2}}{%
+% \htmladdnormallink{#1}{#3}}}
+% \newcommand{\crossref}[3]{% \crossref{text}{latex_target}{html_target}
+% \latexhtml{\htmlref{#1}{#2}}{%
+% \htmlref{#1}{#2}}}
+%%%%%\externalref{#1}{#2}}}
 
 %\input psfig
 
@@ -34,6 +46,24 @@
 \newcounter{append}
 %\newcounter{figure}
 %\newcounter{tab}
+
+% CROSS-LINK
+%%%%http://tex.stackexchange.com/questions/41539/does-hyperref-work-between-two-files
+%% add xr-hyper (part of hyperref) to used packages, *BEFORE* hyperref (or html)
+\newcommand{\facname}{} % must be here because it is in idl.tex
+\newcommand{\FACNAME}{}
+\externaldocument{csub}
+\externaldocument{idl}
+\externaldocument{facilities}
+\externaldocument{subroutines}
+\begin{htmlonly}
+\externallabels{.}{/tmp/csublabels.pl}
+\externallabels{.}{/tmp/idllabels.pl}
+\externallabels{.}{/tmp/facilitieslabels.pl}
+\externallabels{.}{/tmp/subroutineslabels.pl}
+\end{htmlonly}
+
+%%%%%
 \begin{document}
 
 \title{\healpix Facility Installation Guidelines}
@@ -163,7 +193,7 @@ library:
 \begin{tabular}{p{0.3\hsize} p{0.6\hsize}} \hline  
   \textbf{Software Package} & \textbf{Source} \\ \hline
                             &                          \\ %%% for presentation
-  CFITSIO V 2.xx or 3.xx library            & \htmladdnormallink{{\tt
+  CFITSIO V 3.xx library            & \htmladdnormallink{{\tt
                             http://heasarc.gsfc.nasa.gov/docs/software/fitsio/}}
 			{http://heasarc.gsfc.nasa.gov/docs/software/fitsio/}
                             \\ 
@@ -518,6 +548,28 @@ please contact
 {\em healpix} {\tt at} {\em jpl.nasa.gov}
 
 
+\subsection{Free Fortran90/95 Compilers}
+\label{sec:freef90compilers}
+The {\bf free} Fortran90/95 compilers that can be used do compile \healpix include: 
+    \begin{itemize}
+      \item {\bf Intel Fortran} Compiler for Linux based computers (versions 11.*
+or 12.*) \hfill \\
+         \htmladdnormallink{{\tt
+        http://software.intel.com/en-us/articles/intel-compilers/}}{http://software.intel.com/en-us/articles/intel-compilers/}
+        %%%%%http://www.intel.com/software/products/compilers/downloads/forlin.htm}}{http://www.intel.com/software/products/compilers/downloads/forlin.htm}
+      \item {\bf GNU Fortran 95} compiler (gfortran) included in GNU Compiler Collection {\em GCC} version 4.0.0
+         and up and available for Linux, Mac OSX, Windows, Sun ... platforms
+         \hfill \\
+          \htmladdnormallink{{\tt http://www.gnu.org/software/gcc/fortran/}}{http://www.gnu.org/software/gcc/fortran/}. \hfill \\
+         GFortran binaries for all platforms can also be downloaded from  \hfill \\
+          \htmladdnormallink{{\tt http://gcc.gnu.org/wiki/GFortranBinaries}}{http://gcc.gnu.org/wiki/GFortranBinaries}. \hfill \\
+         Please note that only the most recent versions of gfortran (Aug 2005
+         and later) compile HEALPix correctly, and v4.2.1 has given satisfying
+         results so far, including native OpenMP support.
+     \item {\bf G95} compiler available for Linux, Mac OSX, Windows, Sun and HP platforms
+         \hfill \\ \htmladdnormallink{{\tt http://g95.sf.net}}{http://g95.sf.net}
+    \end{itemize}
+
 \subsection{Installation under Microsoft Windows}
 \label{sec:windows}
 The installation and usage of HEALPix require many standard Unix/Linux tools
@@ -728,7 +780,7 @@ If the IDL cursor does not work correctly on X11 windows under Mac OS X, and the
 { {\tt defaults write org.x.x11 wm\_click\_through -bool true}}
 \end{itemize}
 at your X11 prompt and restart X11.
-(See also {\tt mollcusor} documentation in \linklatexhtml{''IDL
+(See also \htmlref{{\tt mollcursor}}{idl:mollcursor} documentation in \linklatexhtml{''IDL
 Facilities''}{idl.pdf}{idl.htm}).
 
 \subsection{Using GDL instead of IDL}
@@ -814,10 +866,7 @@ output files.
 % \item Because of problems with GDL's {\tt point\_lun} routine, the reading of
 % FITS files with most of Astronomy User's Library routines won't be possible.
 \item Currently, the 
-{\tt cartview},
-{\tt gnomview},
-{\tt mollview} and  
-{\tt orthview} 
+\htmlref{{\tt cartview}, {\tt gnomview}, {\tt mollview} and {\tt orthview}}{idl:mollview} 
 routines won't produce Postscript nor GIF outputs when run under GDL (but PNG and JPEG
 files are OK, see above).
 \item In those same routines, the {\tt TRANSPARENT} keyword will be ignored in the
@@ -839,29 +888,187 @@ transparent in the output PNG file.
 \label{sec:newfeatures}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% BEGIN LATEST CHANGES %%%%%%%%%%%%%
 \subsection{Bug corrections and Improvements in Version 3.0} % 2012-??
+
+\subsubsection[Python]{Python}
+\begin{itemize}
+	\item the 
+\linklatexhtml{{\tt{healpy}}}{%
+https://github.com/healpy/healpy}{%
+https://github.com/healpy/healpy}
+package (C. Rosset, A. Zonca et al.) is now part of \healpix
+\end{itemize}
+
+\subsubsection[C]{\linklatexhtml{C}{csub.pdf}{csub.htm}}
+\begin{itemize}
+	\item Interface has remained unchanged, but the code has been replaced by a C port
+of the relevant Healpix C++ functions, resulting in significant speedups.
+\end{itemize}
 \subsubsection[C++]{C++}
 \begin{itemize}
-	\item
+	\item Query routines:
+ \mytargetb{install:cpp:query}{query\_polygon()} and query\_polygon\_inclusive() added.
+Query routines now return lists of pixel ranges instead of lists of pixels,
+ which is much more economic.
+Inclusive query routines: tradeoff between performance and number of false
+ positives is tuneable.
+Queries now work natively in both NESTED and RING schemes. Operations on
+ the NESTED scheme are typically slower than in RING, but still much faster
+ than computing the query in RING and converting all pixel numbers to NESTED
+ afterwards.
+
+\item Healpix\_Base:
+Healpix\_Base and Healpix\_Base2 have been merged into the templated class
+ T\_Healpix\_Base; functionality is still available under the old names.
+Various performance improvements to T\_Healpix\_Base functionality
+
+\item User-friendliness:
+module parameters can now optionally be passed on the command line instead
+ of using a parameter file. For example:\\
+   {\tt anafast\_cxx nlmax=500 infile=test.fits iter\_order=3} $\langle\ldots\rangle$\\
+Facilities now check input maps for undefined pixels before calling map2alm().
+ If undefined pixels are found, a warning is printed, and the pixels are set
+ to zero. udgrade\_cxx refuses downgrading of polarised maps (which would produce
+ unphysical results)
+
+\item Bug fixes: accuracy of pix2ang near the poles at high resolutions has been improved.
+
+\item Configuration: optional autoconf support
+
+\item Interface changes:
+\begin{itemize}
+\item Healpix\_Base::query\_*(): new interface
+\item cxxutils.h has been split up into
+ announce.h (dealing with module banners), 
+ share\_utils.h (dealing with subdividing tasks between multiple workers) and
+ string\_utils.h (dealing with string manipulation and file parsing)
+\item psht.h: interface to alm\_info changed in order to add MPI support
+\item ylmgen\_c.h: Ylmgen\_init() interface has changed
+\item bluestein.h: bluestein\_i() interface changed
 \end{itemize}
+
+\end{itemize}
+
 \subsubsection[Fortran]{\linklatexhtml{Fortran 90}{subroutines.pdf}{subroutines.htm}}
 \begin{itemize}
-	\item
+	\item introduction of the 
+\htmlref{{\tt process\_mask}}{fac:process_mask}
+facility to compute the angular distance of valid
+pixels to the closest invalid pixels for a input binary mask,
+	\item the pixel query routine
+ \htmlref{{\tt query\_disc}}{sub:query_disc}
+has been improved and will return fewer
+false positive pixels in the 
+inclusive mode,
+%\mylink{sub:query_disc:inclusive}{{\em inclusive}} 
+	\item improved accuracy of the co-latitude calculation in the vicinity
+of the poles at high resolution in \htmlref{{\tt nest2ring, ring2nest,
+pix2ang\_*, pix2vec\_*, $\ldots$}}{sub:pix_tools},
+	\item \htmlref{{\tt sky\_ng\_sim}}{fac:sky_ng_sim} now allows the computation
+of the spatial derivatives of the non Gaussian map being produced, and the
+output of the $a_{lm}$ coefficients of that map,
+	\item \htmlref{{\tt anafast}}{fac:anafast} now allows the
+pro/down-grading of the input mask to match the resolution of the map(s) being
+analyzed.
+% 	\item%
+% new code {\tt process\_mask} and new module {\tt mask\_tools} containing the routines
+% \htmlref{dist2holes\_nest}{sub:dist2holes_nest}, 
+% \htmlref{fill\_holes\_nest}{sub:fill_holes_nest}, 
+% \htmlref{maskborder\_nest}{sub:maskborder_nest},
+% \htmlref{size\_holes\_nest}{sub:size_holes_nest} useful for mask apodization,
+mode.
 \end{itemize}
+
 \subsubsection[IDL]{\linklatexhtml{IDL}{idl.pdf}{idl.htm}}
 \begin{itemize}
-	\item
+	\item New routines to go from circular beam profile to transfer function
+(\htmlref{{\tt beam2bl}}{idl:beam2bl}), 
+and back (\htmlref{{\tt bl2beam}}{idl:bl2beam}); 
+to go from indexed list of $a_{lm}$ to a(l,m) 2D table
+(\htmlref{{\tt alm\_i2t}}{idl:alm_i2t}), 
+and back
+(\htmlref{{\tt alm\_t2i}}{idl:alm_t2i}); and to compute the angular distance
+between pairs of vectors (\htmlref{{\tt angulardistance}}{idl:angulardistance}).
+%
+	\item addition of \htmlref{\tt iprocess\_mask}{idl:iprocess_mask}
+interface to F90 {\tt process\_mask} facility to compute the angular distance of valid
+pixels to the closest invalid pixels for a input binary mask.
+%
+	\item creation of \htmlref{\tt hpx2dm}{idl:hpx2dm} routine to generate
+DomeMaster images of \healpix maps that can be projected on planetariums.
+%
+	\item the pixel query routines 
+\htmlref{{\tt query\_triangle}}{idl:query_triangle}, 
+\htmlref{{\tt query\_polygon}}{idl:query_polygon}, 
+and in particular \htmlref{{\tt query\_disc}}{idl:query_disc}, 
+have been improved and will return fewer
+false positive pixels in the {\em inclusive} mode
+%
+	\item improved accuracy of the co-latitude calculation in the vicinity
+of the poles at high resolution in \htmlref{{\tt nest2ring, ring2nest,
+pix2ang\_*, pix2vec\_*, $\ldots$}}{idl:pix_tools}
+%
+	\item \htmlref{{\tt cartview, gnomview, mollview,
+orthview}}{idl:mollview}:
+ the length and spacing of the headless vectors used to represent
+polarization is now user-controlled  via 
+{\tt POLARIZATION}
+keyword. The {\tt COLT} keyword now
+allows the use of an interactively modified color table.
+
+	\item \htmlref{\tt orthview}{idl:orthview} now accepts
+{\tt STAGGER} keyword to overplot staggered
+spheres (with a twist) in order to detect periodic boundary conditions on the
+sky
+	\item \htmlref{{\tt fits2cl}}{idl:fits2cl}: addition of {{\tt WMAP7}} keyword
+to read best fit $C(l)$ model to WMAP 7yr data.
+	\item \htmlref{\tt read\_fits\_map}{idl:read_fits_map} can now read
+$\nside$=8192 \healpix maps and is generally faster than previously for smaller
+maps
+	\item update of {\tt astron} library routines (01-Feb-2012).
 \end{itemize}
 
 \subsubsection[Java]{Java}
 \begin{itemize}
-	\item
+	\item Core functionality has been reimplemented from scratch in the form of the
+"healpix.newcore" package. It is strongly recommended to use this package
+directly in future projects making use of Java HEALPix.
+"healpix.newcore" is a port of the Healpix C++ library and presents a very
+similar interface.
+
+The "healpix.core" package is still provided. It uses "healpix.newcore"
+internally, and its interface has been kept stable as much as possible.
+Some adaptations in user code will still be necessary, however.
+Please note that using "healpix.core" will result in slightly lower performance
+than calling "healpix.newcore" methods directly, because of the necessary
+data conversion.
+	\item New features and improvements introduced with the HealpixBase class, compared
+to the HealpixIndex, Healpix and PixTools classes:
+\begin{itemize}
+\item close similarities with Healpix\_Base\_T class from Healpix C++, which allows
+ simultaneous development and bug fixes for both.
+\item support for arbitrary positive Nside values in RING scheme; no longer limited
+ to powers of 2
+\item maximum supported Nside value: $2^{29}$
+\item significant performance improvements: most methods have been accelerated
+ by integral factors, some by more than an order of magnitude.
+\item re-implementation of queryDisc and queryPolygon, with same new features
+as the C++ implementation (see \mylink{install:cpp:query}{above}).
+\item the HealpixProc class offers a procedural (instead of object-oriented)
+ interface to the HealpixBase functionality, which simplifies transition
+ for users of the "Healpix" and "PixTools" classes.
+ NOTE: this only works for Nside parameters which are powers of 2
+\item many bug fixes
+\item no external library dependencies, except for "nom.tam.fits" if FITS I/O is
+ required
 \end{itemize}
+\end{itemize}
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% END LATEST CHANGES %%%%%%%%%%%%%
 {\tiny{%
 %{\scriptsize{%
 %{\footnotesize{%
-\subsection{Bug corrections and Improvements in Versions 2.20 and 2.20a} % 2011-02-04
+\subsection{Bug corrections and Improvements in Versions 2.20 and 2.20a (2011-02)} % 2011-02-04
 
 \subsubsection[C++]{C++}
 \begin{itemize}
@@ -935,7 +1142,7 @@ BAD\_DATA} keyword added to FITS header;
 
 %%%
 %\subsection{Bug corrections and Improvements in Version 2.14} % 2010-03-04
-\subsection{Bug corrections and Improvements in Version 2.14a} % 2010-03-22
+\subsection{Bug corrections and Improvements in Version 2.14a (2010-03)} % 2010-03-22
 %
 % \subsubsection[New General Improvements]{general}
 % \begin{itemize}

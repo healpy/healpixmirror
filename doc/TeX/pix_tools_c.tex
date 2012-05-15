@@ -15,13 +15,13 @@
 {These subroutines can be used to convert between pixel number in the
 \healpix map and $(\theta,\phi)$ coordinates on the sphere. This is only a
 subset of the routines equivalent in Fortran90 or in IDL. }
-{src/C/subs/*.c}
+{src/C/subs/chealpix.c}
 \end{facility}
 
-Note: These routines are based on the translation of the original F77 routines
-to C++ and then to C, 
-by Reza Ansari (ansari@lal.in2p3.fr), Alex Kim (akim@lilys.lbl.gov), Guy
-Le Meur (lemeur@lal.in2p3.fr), Benoit Revenu (revenu@iap.fr) and Ken Ganga (kmg@ipac.caltech.edu).
+% Note: These routines are based on the translation of the original F77 routines
+% to C++ and then to C, 
+% by Reza Ansari (ansari@lal.in2p3.fr), Alex Kim (akim@lilys.lbl.gov), Guy
+% Le Meur (lemeur@lal.in2p3.fr), Benoit Revenu (revenu@iap.fr) and Ken Ganga (kmg@ipac.caltech.edu).
 
 \begin{arguments}
 {
@@ -116,8 +116,12 @@ vector & double & --- & 3D cartesian position vector $(x,y,z)$. The north pole i
 \begin{related}
   \begin{sulist}{} %%%% NOTE the ``extra'' brace here %%%%
 %%   \item[\htmlref{neighbours\_nest}{sub:neighbours_nest}] find neighbouring pixels.
-  \item[\htmlref{ang2vec}{csub:ang2vec}] convert $(\theta,\phi)$ spherical coordinates into $(x,y,z)$ cartesian coordinates.
-  \item[\htmlref{vec2ang}{csub:vec2ang}] convert $(x,y,z)$ cartesian coordinates into $(\theta,\phi)$ spherical coordinates.
+  \item[\htmlref{ang2vec}{csub:ang2vec}] converts $(\theta,\phi)$ spherical coordinates into $(x,y,z)$ cartesian coordinates.
+  \item[\htmlref{vec2ang}{csub:vec2ang}] converts $(x,y,z)$ cartesian coordinates into $(\theta,\phi)$ spherical coordinates.
+  \item[\htmlref{nside2npix}{csub:nside2npix}] converts number of full sky
+pixels $\npix$ into resolution parameter $\nside$
+  \item[\htmlref{npix2nside}{csub:npix2nside}] converts $\nside$ into number of
+full sky pixels $\npix$.
   \end{sulist}
 \end{related}
 

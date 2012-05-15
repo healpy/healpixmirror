@@ -13,13 +13,13 @@ L2HFLAGS := -dir $(HTMLDIR) -up_url main.htm -up_title "Main Page" -math -html_v
 #L2HFLAGS := -dir $(HTMLDIR) -up_url main.htm -up_title "Main Page" -math -html_version 4.1 -bottom_navigation -short_extn -white -local_icons -noexternal_images -toc_depth 8 -debug -verbosity 2 # -show_section_numbers 
 EQNFIX := ./eqnfix.sh
 
-docs := install.tex intro.tex facilities.tex subroutines.tex idl.tex csub.tex
+docs  := intro.tex facilities.tex subroutines.tex idl.tex csub.tex install.tex # install.* must be last
 style := healpix.sty # healrut.sty
-dvi := $(docs:.tex=.dvi)
-ps  := $(dvi:.dvi=.ps)
-gz  := $(dvi:.dvi=.ps.gz)
-pdf  := $(docs:.tex=.pdf) pdf_index.pdf
-html := $(docs:.tex=.html)
+dvi   := $(docs:.tex=.dvi)
+ps    := $(dvi:.dvi=.ps)
+gz    := $(dvi:.dvi=.ps.gz)
+pdf   := $(docs:.tex=.pdf) pdf_index.pdf
+html  := $(docs:.tex=.html)
 
 # dvi: $(dvi) 
 
@@ -64,6 +64,7 @@ install.html: $(style) healpix.perl
 	@echo '        INSTALL.HTML              '
 	@echo '=================================='
 	mkdir -p $(HTMLDIR)
+	-cp $(HTMLDIR)/*labels.pl /tmp
 	-$(LATEX2HTML) $(L2HFLAGS) -split 3 -prefix install   -t "Installing Healpix"       install
 	-$(EQNFIX) $(HTMLDIR)/install
 	mv -f $(HTMLDIR)/WARNINGS $(HTMLDIR)/WARNINGS_install
