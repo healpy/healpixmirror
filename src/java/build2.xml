@@ -36,7 +36,26 @@
       <classpath refid="classpath" />
       <formatter type="xml" usefile="true" />
       <batchtest todir="${junit.reports}">
-        <fileset dir="${classes}" includes="**/test/*Test.class" />
+        <fileset dir="${classes}" includes="**/test/*Test.class" excludes="**/test/*PerfTest.class" />
+      </batchtest>
+    </junit>
+    <junitreport todir="${junit.reports}">
+      <fileset dir="${junit.reports}">
+        <include name="TEST-*.xml"/>
+      </fileset>
+      <report format="frames" todir="${junit.reports}/html"/>
+    </junitreport>
+    <fail message="Test Cases Failed" if="junit.failed"/>
+  </target>
+  <target name="perftest" depends="compile" description="Test the Java code">
+    <delete dir="${junit.reports}"/>
+    <mkdir dir="${junit.reports}"/>
+    <junit errorProperty="junit.failed" failureProperty="junit.failed" fork="yes"
+      maxmemory="1g" printsummary="withOutAndErr" showoutput="yes">
+      <classpath refid="classpath" />
+      <formatter type="xml" usefile="true" />
+      <batchtest todir="${junit.reports}">
+        <fileset dir="${classes}" includes="**/test/*PerfTest.class" />
       </batchtest>
     </junit>
     <junitreport todir="${junit.reports}">
