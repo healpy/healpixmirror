@@ -49,7 +49,7 @@
 			<classpath refid="classpath" />
 			<formatter type="xml" usefile="true" />
 			<batchtest todir="${junit.reports}">
-				<fileset dir="${classes}" includes="**/test/*Test.class" />
+				<fileset dir="${classes}" includes="**/test/*Test.class" excludes="**/test/*PerfTest.class" />
 			</batchtest>
 		</junit>
 		<junitreport todir="${junit.reports}">
@@ -206,13 +206,17 @@
                 </manifest>
 		</jar>
 	</target>
+  <path id="newclasspath">
+    <pathelement location="${classes}"/>
+    <fileset dir="${lib}" includes="nom.tam.fits*.jar junit*.jar"/>
+  </path>
   <target name="newcompile" depends="init" description="Compile the new Java code">
     <echo>building </echo>
     <javac destdir="${classes}" source="1.5" includeAntRuntime="false"
       srcdir="${src}" debug="on"
       includes="**/newcore/**/*.java" >
       <compilerarg value="-Xlint"/>
-      <classpath refid="classpath" />
+      <classpath refid="newclasspath" />
     </javac>
   </target>
   <target name="newtest" depends="newcompile" description="Test the new Java code">
@@ -220,10 +224,10 @@
     <mkdir dir="${junit.reports}"/>
     <junit errorProperty="junit.failed" failureProperty="junit.failed" fork="yes"
       maxmemory="1g" printsummary="withOutAndErr" showoutput="yes">
-      <classpath refid="classpath" />
+      <classpath refid="newclasspath" />
       <formatter type="xml" usefile="true" />
       <batchtest todir="${junit.reports}">
-        <fileset dir="${classes}" includes="**/newcore/test/*Test.class" />
+        <fileset dir="${classes}" includes="**/newcore/test/*Test.class" excludes="**/newcore/test/*PerfTest.class" />
       </batchtest>
     </junit>
     <junitreport todir="${junit.reports}">
@@ -234,7 +238,26 @@
     </junitreport>
     <fail message="Test Cases Failed" if="junit.failed"/>
   </target>
-  <target name="newdist" depends="clean,newcompile,newtest" description="Build the JAR file containing only new classes">
+   <target name="newperftest" depends="newcompile" description="Test the new Java code">
+    <delete dir="${junit.reports}"/>
+    <mkdir dir="${junit.reports}"/>
+    <junit errorProperty="junit.failed" failureProperty="junit.failed" fork="yes"
+      maxmemory="1g" printsummary="withOutAndErr" showoutput="yes">
+      <classpath refid="newclasspath" />
+      <formatter type="xml" usefile="true" />
+      <batchtest todir="${junit.reports}">
+        <fileset dir="${classes}" includes="**/newcore/test/*PerfTest.class" />
+      </batchtest>
+    </junit>
+    <junitreport todir="${junit.reports}">
+      <fileset dir="${junit.reports}">
+        <include name="TEST-*.xml"/>
+      </fileset>
+      <report format="frames" todir="${junit.reports}/html"/>
+    </junitreport>
+    <fail message="Test Cases Failed" if="junit.failed"/>
+  </target>
+ <target name="newdist" depends="clean,newcompile,newtest" description="Build the JAR file containing only new classes">
     <jar destfile="${dist}/jhealpixNew.jar">
       <fileset dir="${classes}" includes="**/newcore/*.class" />
     </jar>
@@ -247,7 +270,7 @@
   <target name="newdocs" description="Create the Javadocs">
     <javadoc destdir="${docs}" failonerror="true" use="true"
       additionalparam='-breakiterator -public -quiet -tag copyright:a:"Copyright:" -link http://docs.oracle.com/javase/1.5.0/docs/api'
-      classpathref="classpath">
+      classpathref="newclasspath">
       <packageset dir="${src}" defaultexcludes="yes">
         <include name="**/newcore/" />
         <exclude name="**/doc-files/**" />

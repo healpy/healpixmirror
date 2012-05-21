@@ -1,5 +1,5 @@
-New features and improvements introduced with the HealpixBase class, compared
-to the HealpixIndex, Healpix and PixTools classes:
+New features and improvements introduced with the healpix.essentials package,
+compared to the HealpixIndex, Healpix and PixTools classes:
 
 - close similarities with Healpix_Base_T class from Healpix C++, which allows
   simultaneous development and bug fixes for both.

@@ -8,9 +8,7 @@
   <property name="junit.reports" value="${basedir}/reports/junit"/>
   <path id="classpath">
     <pathelement location="${classes}"/>
-    <fileset dir="${lib}">
-      <include name="*.jar"/>
-    </fileset>
+    <fileset dir="${lib}" includes="nom.tam.fits*.jar junit*.jar"/>
   </path>
   <target name="init" description="Initialize the build">
     <mkdir dir="${classes}"/>
