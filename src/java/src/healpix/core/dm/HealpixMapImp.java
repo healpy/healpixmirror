@@ -20,9 +20,9 @@
 package healpix.core.dm;
 
 import healpix.core.AngularPosition;
-import healpix.newcore.HealpixBase;
-import healpix.newcore.Pointing;
-import healpix.newcore.Scheme;
+import healpix.essentials.HealpixBase;
+import healpix.essentials.Pointing;
+import healpix.essentials.Scheme;
 import healpix.core.dm.util.HealpixTool;
 import healpix.tools.Constants;
 

@@ -21,7 +21,7 @@
 package healpix.core;
 
 import healpix.tools.SpatialVector;
-import healpix.newcore.Pointing;
+import healpix.essentials.Pointing;
 
 import java.text.DecimalFormat;
 

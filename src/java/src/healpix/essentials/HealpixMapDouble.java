@@ -18,31 +18,31 @@
  *  For more information about HEALPix, see http://healpix.jpl.nasa.gov
  */
 
-package healpix.newcore;
+package healpix.essentials;
 
 import java.util.Arrays;
 
 /** Functionality related to the HEALPix pixelisation.
-    This class is conceptually very similar the the Healpix_Map<<type>> class
+    This class is conceptually very similar the the Healpix_Map<double> class
     of Healpix_cxx.
 
     @copyright 2011,2012 Max-Planck-Society
     @author Martin Reinecke */
-public class HealpixMap<Type> extends HealpixBase
+public class HealpixMapDouble extends HealpixBase
   {
-  private <type>[] data;
+  private double[] data;
 
-  public static final <type> undef=(<type>)(-1.6375e30);
+  public static final double undef=(double)(-1.6375e30);
 
-  public HealpixMap<Type>() throws Exception
+  public HealpixMapDouble() throws Exception
     { this(1,Scheme.NESTED); }
-  public HealpixMap<Type>(long nside_in, Scheme scheme_in) throws Exception
+  public HealpixMapDouble(long nside_in, Scheme scheme_in) throws Exception
     {
     super(nside_in,scheme_in);
     HealpixUtils.check(nside<=(1<<13),"resolution too high");
-    data=new <type>[(int)getNpix()];
+    data=new double[(int)getNpix()];
     }
-  public HealpixMap<Type>(<type>[] data_in, Scheme scheme_in) throws Exception
+  public HealpixMapDouble(double[] data_in, Scheme scheme_in) throws Exception
     {
     super(npix2Nside(data_in.length),scheme_in);
     HealpixUtils.check(nside<=(1<<13),"resolution too high");
@@ -57,7 +57,7 @@ public class HealpixMap<Type> extends HealpixBase
       {
       super.setNside(nside_in);
       HealpixUtils.check(nside<=(1<<13),"resolution too high");
-      data=new <type>[(int)getNpix()];
+      data=new double[(int)getNpix()];
       }
     }
 
@@ -69,13 +69,13 @@ public class HealpixMap<Type> extends HealpixBase
     {
     super.setNsideAndScheme(nside_in,scheme_in);
     HealpixUtils.check(nside<=(1<<13),"resolution too high");
-    data=new <type>[(int)getNpix()];
+    data=new double[(int)getNpix()];
     }
 
   /** Adjusts the object to scheme_in, and sets pixel data to data_in.
       @param data_in pixel data; must have a valid length (12*nside^2)
       @param scheme_in the new ordering scheme */
-  public void setDataAndScheme(<type>[] data_in, Scheme scheme_in)
+  public void setDataAndScheme(double[] data_in, Scheme scheme_in)
     throws Exception
     {
     super.setNsideAndScheme(npix2Nside(data_in.length),scheme_in);
@@ -84,7 +84,7 @@ public class HealpixMap<Type> extends HealpixBase
 
   /** Sets all map pixel to a specific value.
       @param val pixel value to use */
-  public void fill(<type> val)
+  public void fill(double val)
     { Arrays.fill(data,val); }
 
   /** Converts the map from NESTED to RING scheme or vice versa.
@@ -98,7 +98,7 @@ public class HealpixMap<Type> extends HealpixBase
       {
       int istart = swap_cycle[order][m];
 
-      <type> pixbuf = data[istart];
+      double pixbuf = data[istart];
       long iold = istart,
            inew = (scheme==Scheme.RING) ? nest2ring(istart) : ring2nest(istart);
       while (inew != istart)
@@ -115,32 +115,32 @@ public class HealpixMap<Type> extends HealpixBase
   /** Returns the value of the pixel with a given index.
       @param ipix index of the requested pixel
       @return pixel value */
-  public <type> getPixel(int ipix)
+  public double getPixel(int ipix)
     { return data[ipix]; }
   /** Returns the value of the pixel with a given index.
       @param ipix index of the requested pixel
       @return pixel value */
-  public <type> getPixel(long ipix)
+  public double getPixel(long ipix)
     { return data[(int)ipix]; }
   /** Sets the value of a specific pixel.
       @param ipix index of the pixel
       @param val new value for the pixel */
-  public void setPixel(int ipix, <type> val)
+  public void setPixel(int ipix, double val)
     { data[ipix] = val; }
   /** Sets the value of a specific pixel.
       @param ipix index of the pixel
       @param val new value for the pixel */
-  public void setPixel(long ipix, <type> val)
+  public void setPixel(long ipix, double val)
     { data[(int)ipix] = val; }
 
   /** Returns the array containing all map pixels.
       @return the map array */
-  public <type>[] getData()
+  public double[] getData()
     { return data; }
 
   /** Imports the map "orig" to this object, adjusting pixel ordering.
       @param orig map to import */
-  public void importNograde (HealpixMap<Type> orig) throws Exception
+  public void importNograde (HealpixMapDouble orig) throws Exception
     {
     HealpixUtils.check (nside==orig.nside,
       "importNograde: maps have different nside");
@@ -154,7 +154,7 @@ public class HealpixMap<Type> extends HealpixBase
   /** Imports the map "orig" to this object, adjusting pixel ordering
       and increasing resolution.
       @param orig map to import */
-  public void importUpgrade (HealpixMap<Type> orig) throws Exception
+  public void importUpgrade (HealpixMapDouble orig) throws Exception
     {
     HealpixUtils.check(nside>orig.nside,"importUpgrade: this is no upgrade");
     int fact = (int)(nside/orig.nside);
@@ -179,7 +179,7 @@ public class HealpixMap<Type> extends HealpixBase
       @param pessimistic if true, set a pixel to undefined if at least one the
         original subpixels was undefined; otherwise only set it to undefined if
         all original subpixels were undefined. */
-  public void importDegrade (HealpixMap<Type> orig, boolean pessimistic)
+  public void importDegrade (HealpixMapDouble orig, boolean pessimistic)
     throws Exception
     {
     HealpixUtils.check(nside<orig.nside,"importDegrade: this is no degrade");
@@ -204,7 +204,7 @@ public class HealpixMap<Type> extends HealpixBase
             sum += orig.data[opix];
             }
           }
-      data[m] = (hits<minhits) ? undef : (<type>) (sum/hits);
+      data[m] = (hits<minhits) ? undef : (double) (sum/hits);
       }
     }
   /** Imports the map "orig" to this object, adjusting pixel ordering
@@ -214,7 +214,7 @@ public class HealpixMap<Type> extends HealpixBase
         set a pixel to undefined if at least one the original subpixels
         was undefined; otherwise only set it to undefined if all original
         subpixels were undefined. */
-  public void importGeneral (HealpixMap<Type> orig, boolean pessimistic)
+  public void importGeneral (HealpixMapDouble orig, boolean pessimistic)
     throws Exception
     {
     if (orig.nside==nside)

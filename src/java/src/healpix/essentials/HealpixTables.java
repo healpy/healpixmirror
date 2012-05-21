@@ -18,7 +18,7 @@
  *  For more information about HEALPix, see http://healpix.jpl.nasa.gov
  */
 
-package healpix.newcore;
+package healpix.essentials;
 
 /** Various data tables needed by the {@link HealpixBase} class.
 

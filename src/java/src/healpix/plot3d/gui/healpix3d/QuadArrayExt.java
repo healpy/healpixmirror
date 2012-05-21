@@ -19,7 +19,7 @@
  */
 package healpix.plot3d.gui.healpix3d;
 
-import healpix.newcore.Pointing;
+import healpix.essentials.Pointing;
 import healpix.core.dm.HealpixMap;
 
 import javax.media.j3d.QuadArray;

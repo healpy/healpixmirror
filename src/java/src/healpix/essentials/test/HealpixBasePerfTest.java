@@ -17,12 +17,12 @@
  *
  *  For more information about HEALPix, see http://healpix.jpl.nasa.gov
  */
-package healpix.newcore.test;
+package healpix.essentials.test;
 
 import junit.framework.TestCase;
 import java.text.DecimalFormat;
 
-import healpix.newcore.*;
+import healpix.essentials.*;
 
 /** @author Martin Reinecke */
 public class HealpixBasePerfTest extends TestCase

@@ -17,21 +17,32 @@
  *
  *  For more information about HEALPix, see http://healpix.jpl.nasa.gov
  */
+package healpix.essentials.test;
 
-package healpix.newcore;
+import junit.framework.TestCase;
+import java.util.Random;
+import java.text.DecimalFormat;
 
-/** The Class Constants. */
-public class Constants
-  {
-  /** The Constant halfpi */
-  public static final double halfpi = Math.PI/2.;
+import healpix.essentials.*;
 
-  public static final double inv_halfpi = 2./Math.PI;
+/** @author Martin Reinecke */
+public class HealpixMapTest extends TestCase {
 
-  /** The Constant twopi. */
-  public static final double twopi = 2*Math.PI;
-  public static final double inv_twopi = 1./(2*Math.PI);
+  public void test_swapScheme()throws Exception
+    {
+    System.out.println("Testing swapScheme()");
 
-  /** The Constant twothird. */
-  public static final double twothird = 2./3.;
+    for (int order=0; order<=8; ++order)
+      {
+      HealpixMapFloat map = new HealpixMapFloat (1L<<order,Scheme.RING);
+      for (int i=0; i<map.getNpix(); ++i)
+        map.setPixel(i,i);
+      map.swapScheme();
+      for (int i=0; i<map.getNpix(); ++i)
+        assertEquals("inconsistency",map.nest2ring(i),(int)map.getPixel(i));
+      map.swapScheme();
+      for (int i=0; i<map.getNpix(); ++i)
+        assertEquals("inconsistency",i,(int)map.getPixel(i));
+      }
+    }
   }

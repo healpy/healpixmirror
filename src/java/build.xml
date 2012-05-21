@@ -214,7 +214,7 @@
     <echo>building </echo>
     <javac destdir="${classes}" source="1.5" includeAntRuntime="false"
       srcdir="${src}" debug="on"
-      includes="**/newcore/**/*.java" >
+      includes="**/essentials/**/*.java" >
       <compilerarg value="-Xlint"/>
       <classpath refid="newclasspath" />
     </javac>
@@ -227,7 +227,7 @@
       <classpath refid="newclasspath" />
       <formatter type="xml" usefile="true" />
       <batchtest todir="${junit.reports}">
-        <fileset dir="${classes}" includes="**/newcore/test/*Test.class" excludes="**/newcore/test/*PerfTest.class" />
+        <fileset dir="${classes}" includes="**/essentials/test/*Test.class" excludes="**/essentials/test/*PerfTest.class" />
       </batchtest>
     </junit>
     <junitreport todir="${junit.reports}">
@@ -246,7 +246,7 @@
       <classpath refid="newclasspath" />
       <formatter type="xml" usefile="true" />
       <batchtest todir="${junit.reports}">
-        <fileset dir="${classes}" includes="**/newcore/test/*PerfTest.class" />
+        <fileset dir="${classes}" includes="**/essentials/test/*PerfTest.class" />
       </batchtest>
     </junit>
     <junitreport todir="${junit.reports}">
@@ -259,12 +259,12 @@
   </target>
  <target name="newdist" depends="clean,newcompile,newtest" description="Build the JAR file containing only new classes">
     <jar destfile="${dist}/jhealpixNew.jar">
-      <fileset dir="${classes}" includes="**/newcore/*.class" />
+      <fileset dir="${classes}" includes="**/essentials/*.class" />
     </jar>
   </target>
   <target name="newdistsrc" depends="clean" description="Build the source JAR file containing only new classes">
     <jar destfile="${dist}/jhealpixNew_src.jar">
-      <fileset dir="${src}" includes="**/newcore/**" />
+      <fileset dir="${src}" includes="**/essentials/**" />
     </jar>
   </target>
   <target name="newdocs" description="Create the Javadocs">
@@ -272,7 +272,7 @@
       additionalparam='-breakiterator -public -quiet -tag copyright:a:"Copyright:" -link http://docs.oracle.com/javase/1.5.0/docs/api'
       classpathref="newclasspath">
       <packageset dir="${src}" defaultexcludes="yes">
-        <include name="**/newcore/" />
+        <include name="**/essentials/" />
         <exclude name="**/doc-files/**" />
         <exclude name="**/test/**" />
       </packageset>

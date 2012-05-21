@@ -1,7 +1,7 @@
 package healpix.core.test;
 
-import healpix.newcore.Zphi;
-import healpix.newcore.HealpixUtils;
+import healpix.essentials.Zphi;
+import healpix.essentials.HealpixUtils;
 import healpix.core.HealpixIndex;
 import healpix.tools.SpatialVector;
 import junit.framework.TestCase;

@@ -19,8 +19,8 @@
  */
 package healpix.plot3d.gui.healpix3d;
 
-import healpix.newcore.Vec3;
-import healpix.newcore.Scheme;
+import healpix.essentials.Vec3;
+import healpix.essentials.Scheme;
 
 import javax.media.j3d.Geometry;
 import javax.media.j3d.GeometryArray;

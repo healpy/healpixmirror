@@ -19,8 +19,8 @@
  */
 package healpix.plot3d.gui.healpix3d;
 
-import healpix.newcore.Pointing;
-import healpix.newcore.HealpixBase;
+import healpix.essentials.Pointing;
+import healpix.essentials.HealpixBase;
 
 /**
  * This class is used to construct the quad geometry for the 3d sphere.

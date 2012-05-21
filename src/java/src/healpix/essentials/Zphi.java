@@ -18,7 +18,7 @@
  *  For more information about HEALPix, see http://healpix.jpl.nasa.gov
  */
 
-package healpix.newcore;
+package healpix.essentials;
 
 /** Class for storing a position on the unit sphere as a (z,phi)-tuple.
 

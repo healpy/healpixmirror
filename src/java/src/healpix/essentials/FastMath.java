@@ -1,4 +1,4 @@
-package healpix.newcore;
+package healpix.essentials;
 
 /* Subset of the SLEEF Java library by Naoki Shibata. The code in this file is
    released to the Public Domain. */

@@ -19,10 +19,10 @@
  */
 package healpix.plot3d.gui.healpix3d;
 
-import healpix.newcore.Scheme;
+import healpix.essentials.Scheme;
 import healpix.tools.Constants;
-import healpix.newcore.Vec3;
-import healpix.newcore.Pointing;
+import healpix.essentials.Vec3;
+import healpix.essentials.Pointing;
 
 import javax.media.j3d.Appearance;
 import javax.media.j3d.ColoringAttributes;

@@ -24,7 +24,7 @@ import healpix.core.HealpixIndex;
 import healpix.core.base.set.LongIterator;
 import healpix.core.base.set.LongRangeSet;
 import healpix.core.dm.HealpixMap;
-import healpix.newcore.Scheme;
+import healpix.essentials.Scheme;
 import healpix.plot3d.gui.view.MapView3d;
 import healpix.tools.HealpixMapCreator;
 import healpix.tools.SpatialVector;

@@ -21,7 +21,7 @@ package healpix.core.test;
 
 import healpix.core.AngularPosition;
 import healpix.core.HealpixIndex;
-import healpix.newcore.Scheme;
+import healpix.essentials.Scheme;
 import healpix.core.base.BitManipulation;
 import healpix.core.base.set.LongIterator;
 import healpix.core.base.set.LongList;

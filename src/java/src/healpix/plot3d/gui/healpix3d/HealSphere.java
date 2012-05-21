@@ -19,9 +19,9 @@
  */
 package healpix.plot3d.gui.healpix3d;
 
-import healpix.newcore.HealpixBase;
-import healpix.newcore.Scheme;
-import healpix.newcore.Vec3;
+import healpix.essentials.HealpixBase;
+import healpix.essentials.Scheme;
+import healpix.essentials.Vec3;
 
 import javax.media.j3d.Appearance;
 import javax.media.j3d.ColoringAttributes;

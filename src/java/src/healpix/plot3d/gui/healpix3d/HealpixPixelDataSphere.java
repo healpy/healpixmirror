@@ -20,7 +20,7 @@
 package healpix.plot3d.gui.healpix3d;
 
 import healpix.core.dm.HealpixMap;
-import healpix.newcore.Vec3;
+import healpix.essentials.Vec3;
 
 import javax.media.j3d.Geometry;
 import javax.media.j3d.GeometryArray;

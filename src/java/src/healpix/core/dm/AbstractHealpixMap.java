@@ -19,7 +19,7 @@
  */
 package healpix.core.dm;
 
-import healpix.newcore.Scheme;
+import healpix.essentials.Scheme;
 import java.io.Serializable;
 
 /**

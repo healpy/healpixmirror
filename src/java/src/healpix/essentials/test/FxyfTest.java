@@ -17,32 +17,30 @@
  *
  *  For more information about HEALPix, see http://healpix.jpl.nasa.gov
  */
-package healpix.newcore.test;
+package healpix.essentials.test;
 
 import junit.framework.TestCase;
 import java.util.Random;
-import java.text.DecimalFormat;
 
-import healpix.newcore.*;
+import healpix.essentials.*;
 
 /** @author Martin Reinecke */
-public class HealpixMapTest extends TestCase {
+public class FxyfTest extends TestCase {
 
-  public void test_swapScheme()throws Exception
+  public void testFxyf() throws Exception
     {
-    System.out.println("Testing swapScheme()");
-
-    for (int order=0; order<=8; ++order)
-      {
-      HealpixMapFloat map = new HealpixMapFloat (1L<<order,Scheme.RING);
-      for (int i=0; i<map.getNpix(); ++i)
-        map.setPixel(i,i);
-      map.swapScheme();
-      for (int i=0; i<map.getNpix(); ++i)
-        assertEquals("inconsistency",map.nest2ring(i),(int)map.getPixel(i));
-      map.swapScheme();
-      for (int i=0; i<map.getNpix(); ++i)
-        assertEquals("inconsistency",i,(int)map.getPixel(i));
-      }
+    System.out.println("Testing Fxyf");
+    for (int i=0; i<12; ++i)
+      for (int j=0; j<=100; ++j)
+        for (int k=0; k<=100; ++k)
+          {
+          double fx=(0.01*j)*(1-1e-14)+.5e-14,
+                 fy=(0.01*k)*(1-1e-14)+.5e-14;
+          Fxyf res=new Fxyf(new Fxyf(fx,fy,i).toVec3());
+          assertEquals (res.face,i);
+          assertEquals (res.fx,fx,5e-15);
+          assertEquals (res.fy,fy,5e-15);
+          }
     }
+
   }

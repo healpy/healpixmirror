@@ -19,8 +19,8 @@
  */
 package healpix.plot3d.demo;
 
-import healpix.newcore.HealpixBase;
-import healpix.newcore.Scheme;
+import healpix.essentials.HealpixBase;
+import healpix.essentials.Scheme;
 import healpix.core.dm.HealpixMap;
 import healpix.plot3d.canvas3d.Group3DAxis;
 import healpix.plot3d.canvas3d.Group3DCircle;

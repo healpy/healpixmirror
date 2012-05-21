@@ -18,8 +18,8 @@
  *
  */
 package healpix.tools;
-import healpix.newcore.Pointing;
-import healpix.newcore.Vec3;
+import healpix.essentials.Pointing;
+import healpix.essentials.Vec3;
 
 /**
  * The SpatialVector contains standard 3D vector with the addition that each

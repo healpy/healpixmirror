@@ -20,7 +20,7 @@
 package healpix.fits;
 
 import healpix.core.AngularPosition;
-import healpix.newcore.Scheme;
+import healpix.essentials.Scheme;
 import healpix.core.dm.HealpixMap;
 import healpix.core.dm.HealpixMapImp;
 

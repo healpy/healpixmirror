@@ -21,7 +21,7 @@ package healpix.core.dm.util;
 
 import healpix.core.dm.HealpixMap;
 import healpix.core.dm.HealpixMapImp;
-import healpix.newcore.Scheme;
+import healpix.essentials.Scheme;
 
 /**
  * Tools (Regrade) to apply to healpix maps. Could be extended with other tool

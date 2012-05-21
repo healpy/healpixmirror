@@ -1,8 +1,8 @@
-package healpix.newcore.test;
+package healpix.essentials.test;
 
 import junit.framework.TestCase;
 import java.text.DecimalFormat;
-import static healpix.newcore.FastMath.*;
+import static healpix.essentials.FastMath.*;
 
 /** A class to perform correctness and speed tests for the FastMath class
  *

@@ -17,9 +17,9 @@
  *
  *  For more information about HEALPix, see http://healpix.jpl.nasa.gov
  */
-package healpix.newcore.test;
+package healpix.essentials.test;
 
-import healpix.newcore.RangeSet;
+import healpix.essentials.RangeSet;
 import junit.framework.TestCase;
 import java.io.*;
 

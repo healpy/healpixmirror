@@ -18,7 +18,7 @@
  *  For more information about HEALPix, see http://healpix.jpl.nasa.gov
  */
 
-package healpix.newcore;
+package healpix.essentials;
 
 /** Functionality related to the HEALPix pixelisation.
     This class is intended for users who prefer a procedural (instead of

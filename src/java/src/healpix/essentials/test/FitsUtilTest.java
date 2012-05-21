@@ -17,9 +17,9 @@
  *
  *  For more information about HEALPix, see http://healpix.jpl.nasa.gov
  */
-package healpix.newcore.test;
+package healpix.essentials.test;
 
-import healpix.newcore.*;
+import healpix.essentials.*;
 
 import junit.framework.TestCase;
 import java.util.UUID;
