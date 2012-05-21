@@ -40,7 +40,7 @@ public class HealpixBase extends HealpixTables
       { ix=x; iy=y; face=f; }
     }
 
-  protected final class RingInfoSmall
+  private final class RingInfoSmall
     {
     long startpix, ringpix;
     boolean shifted;

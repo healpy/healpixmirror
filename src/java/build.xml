@@ -206,18 +206,11 @@
                 </manifest>
 		</jar>
 	</target>
-  <target name="newcompile_newcore" depends="init" description="Compile the new Java code">
-    <echo>building </echo>
-    <javac destdir="${classes}" source="1.5" includeAntRuntime="false"
-      srcdir="${src}"
-      includes="**/newcore/*.java" >
-    </javac>
-  </target>
   <target name="newcompile" depends="init" description="Compile the new Java code">
     <echo>building </echo>
     <javac destdir="${classes}" source="1.5" includeAntRuntime="false"
       srcdir="${src}" debug="on"
-      includes="**/newcore/**/*.java,**/newfits/**/*.java" >
+      includes="**/newcore/**/*.java" >
       <compilerarg value="-Xlint"/>
       <classpath refid="classpath" />
     </javac>
@@ -230,7 +223,7 @@
       <classpath refid="classpath" />
       <formatter type="xml" usefile="true" />
       <batchtest todir="${junit.reports}">
-        <fileset dir="${classes}" includes="**/newcore/test/*Test.class,**/newfits/test/*Test.class" />
+        <fileset dir="${classes}" includes="**/newcore/test/*Test.class" />
       </batchtest>
     </junit>
     <junitreport todir="${junit.reports}">
@@ -243,32 +236,26 @@
   </target>
   <target name="newdist" depends="clean,newcompile,newtest" description="Build the JAR file containing only new classes">
     <jar destfile="${dist}/jhealpixNew.jar">
-      <fileset dir="${classes}" includes="**/newcore/*.class,**/newfits/*.class" />
-    </jar>
-  </target>
-  <target name="newdistsmall" depends="clean,newcompile,newtest" description="Build the JAR file containing only new classes">
-    <jar destfile="${dist}/jhealpixNewSmall.jar">
-      <fileset dir="${classes}" includes="**/newcore/*.class" excludes="**/newcore/HealpixMap*.class" />
+      <fileset dir="${classes}" includes="**/newcore/*.class" />
     </jar>
   </target>
   <target name="newdistsrc" depends="clean" description="Build the source JAR file containing only new classes">
     <jar destfile="${dist}/jhealpixNew_src.jar">
-      <fileset dir="${src}" includes="**/newcore/**,**/newfits/**" />
+      <fileset dir="${src}" includes="**/newcore/**" />
     </jar>
   </target>
   <target name="newdocs" description="Create the Javadocs">
     <javadoc destdir="${docs}" failonerror="true" use="true"
-      additionalparam='-breakiterator -public -quiet -tag copyright:a:"Copyright:" -link http://docs.oracle.com/javase/1.5.0/docs/api -link http://download.java.net/media/java3d/javadoc/1.4.0'
+      additionalparam='-breakiterator -public -quiet -tag copyright:a:"Copyright:" -link http://docs.oracle.com/javase/1.5.0/docs/api'
       classpathref="classpath">
       <packageset dir="${src}" defaultexcludes="yes">
         <include name="**/newcore/" />
-        <include name="**/newfits/" />
         <exclude name="**/doc-files/**" />
         <exclude name="**/test/**" />
       </packageset>
       <footer>"Built from revision ${svn.revision}"</footer>
     </javadoc>
   </target>
-  <target name="newall" depends="newdist,newdistsmall,newdistsrc,newdocs" description="Do everything for the new library"/>
+  <target name="newall" depends="newdist,newdistsrc,newdocs" description="Do everything for the new library"/>
 
 </project>
