@@ -14,7 +14,7 @@ cd ${NAME} &&\
 export CLASSPATH=${CLASSPATH}:`pwd`/lib/junit-4.3.1.jar &&\
 ant &&\
 cd .. &&\
-cp ${NAME}/dist/jhealpixNew.jar ./${NAME}-bin.jar &&\
+cp ${NAME}/dist/jhealpix.jar ./${NAME}-bin.jar &&\
 mv ${NAME}/doc ./${NAME}-doc &&\
 tar cvzf ${NAME}-doc.tar.gz ${NAME}-doc &&\
 rm -rf ${NAME}-doc &&\

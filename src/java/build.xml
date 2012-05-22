@@ -76,7 +76,7 @@
 		</javadoc>
 	</target>
 
-	<target name="dist" depends="distcomplete" description="Complete: create the distributable jar file">
+	<target name="dist" depends="distcomplete,newall" description="Complete: create the distributable jar file">
 	</target>
 
 	<target name="clean" depends="" description="Clean the build">
@@ -90,7 +90,7 @@
 	</target>
 
 	<target name="distonly" depends="clean,compile" description="Build the JAR file containing only classes">
-		<jar destfile="${dist}/jhealpix.jar">
+		<jar destfile="${dist}/jhealpix_compat.jar">
             <fileset dir="${classes}">
                 <exclude name="**/doc-files/**" />
             </fileset>
@@ -131,7 +131,7 @@
 	<target name="distcomplete" depends="clean,test,docs,distonly,distsrc" description="Compile, run test and build the jar files containing classes,source,lib and docs">
 	</target>
 	<target name="distsrc" depends="svnrevision,extrajars" description="Build the source JAR file">
-		<jar destfile="${dist}/jhealpix_src.jar">
+		<jar destfile="${dist}/jhealpix_src_compat.jar">
 			<fileset dir="${basedir}">
 				<exclude name="dist/**" />
 				<exclude name="classes/**" />
@@ -145,7 +145,7 @@
 		</jar>
 	</target>
 	<target name="extrajars" depends="init" description="Build a JAR file containing external libraries">
-	        <jar destfile="${dist}/jhealpixExternalLibs.jar">
+	        <jar destfile="${dist}/jhealpixExternalLibs_compat.jar">
 				<fileset file="${lib}/net-ivoa-fits.jar"/>
 				<fileset file="${lib}/nom-tam-fits.jar"/>
 				<fileset file="${lib}/vecmath.jar"/>
@@ -156,7 +156,7 @@
 
 
 	<target name="distsmall" depends="clean,compile" description="Build the JAR file containing only classes for HealpixIndex">
-		<jar destfile="${dist}/jhealpixSmall.jar">
+		<jar destfile="${dist}/jhealpixSmall_compat.jar">
             <fileset dir="${classes}">
                 <exclude name="**/doc-files/**" />
                 <exclude name="**/test/**" />
@@ -182,7 +182,7 @@
 	</target>
 
 	<target name="distsmallsrc" depends="" description="Build the JAR file containing only classes for HealpixIndex">
-		<jar destfile="${dist}/jhealpixSmall_src.jar">
+		<jar destfile="${dist}/jhealpixSmall_src_compat.jar">
             <fileset dir="${src}">
                 <exclude name="**/doc-files/**" />
                 <exclude name="**/test/**" />
@@ -238,7 +238,7 @@
     </junitreport>
     <fail message="Test Cases Failed" if="junit.failed"/>
   </target>
-   <target name="newperftest" depends="newcompile" description="Test the new Java code">
+   <target name="newperftest" depends="newcompile" description="Measure the performance of the new Java code">
     <delete dir="${junit.reports}"/>
     <mkdir dir="${junit.reports}"/>
     <junit errorProperty="junit.failed" failureProperty="junit.failed" fork="yes"
@@ -258,12 +258,12 @@
     <fail message="Test Cases Failed" if="junit.failed"/>
   </target>
  <target name="newdist" depends="clean,newcompile,newtest" description="Build the JAR file containing only new classes">
-    <jar destfile="${dist}/jhealpixNew.jar">
+    <jar destfile="${dist}/jhealpix.jar">
       <fileset dir="${classes}" includes="**/essentials/*.class" />
     </jar>
   </target>
   <target name="newdistsrc" depends="clean" description="Build the source JAR file containing only new classes">
-    <jar destfile="${dist}/jhealpixNew_src.jar">
+    <jar destfile="${dist}/jhealpix_src.jar">
       <fileset dir="${src}" includes="**/essentials/**" />
     </jar>
   </target>
@@ -276,9 +276,11 @@
         <exclude name="**/doc-files/**" />
         <exclude name="**/test/**" />
       </packageset>
-      <footer>"Built from revision ${svn.revision}"</footer>
     </javadoc>
+    <jar destfile="${dist}/jhealpix_doc.jar">
+      <fileset dir="${docs}" />
+    </jar>
   </target>
-  <target name="newall" depends="newdist,newdistsrc,newdocs" description="Do everything for the new library"/>
+  <target name="newall" depends="clean,newdist,newdistsrc,newdocs" description="Do everything for the new library"/>
 
 </project>

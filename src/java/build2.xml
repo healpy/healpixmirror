@@ -47,7 +47,7 @@
     </junitreport>
     <fail message="Test Cases Failed" if="junit.failed"/>
   </target>
-  <target name="perftest" depends="compile" description="Test the Java code">
+  <target name="perftest" depends="compile" description="Measure the performance of the Java code">
     <delete dir="${junit.reports}"/>
     <mkdir dir="${junit.reports}"/>
     <junit errorProperty="junit.failed" failureProperty="junit.failed" fork="yes"
@@ -67,7 +67,7 @@
     <fail message="Test Cases Failed" if="junit.failed"/>
   </target>
   <target name="dist" depends="clean,compile,test" description="Build the JAR file">
-    <jar destfile="${dist}/jhealpixNew.jar">
+    <jar destfile="${dist}/jhealpix.jar">
       <fileset dir="${classes}" excludes="**/test/**" />
     </jar>
   </target>
