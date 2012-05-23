@@ -260,11 +260,29 @@
  <target name="newdist" depends="clean,newcompile,newtest" description="Build the JAR file containing only new classes">
     <jar destfile="${dist}/jhealpix.jar">
       <fileset dir="${classes}" includes="**/essentials/*.class" />
+      <manifest>
+        <attribute name="Specification-Title"    value="${project-description}"/>
+        <attribute name="Specification-Version"  value="3.0pre"/>
+        <attribute name="Specification-Vendor"   value="Max-Planck-Institute for Astrophysics"/>
+        <attribute name="Implementation-Title"   value="${project-description}"/>
+        <attribute name="Implementation-Version" value="3.0pre"/>
+        <attribute name="Implementation-Vendor"  value="Max-Planck-Institute for Astrophysics"/>
+        <attribute name="Author"                 value="Martin Reinecke" />
+      </manifest>
     </jar>
   </target>
   <target name="newdistsrc" depends="clean" description="Build the source JAR file containing only new classes">
     <jar destfile="${dist}/jhealpix_src.jar">
       <fileset dir="${src}" includes="**/essentials/**" />
+      <manifest>
+        <attribute name="Specification-Title"    value="${project-description}"/>
+        <attribute name="Specification-Version"  value="3.0pre"/>
+        <attribute name="Specification-Vendor"   value="Max-Planck-Institute for Astrophysics"/>
+        <attribute name="Implementation-Title"   value="${project-description}"/>
+        <attribute name="Implementation-Version" value="3.0pre"/>
+        <attribute name="Implementation-Vendor"  value="Max-Planck-Institute for Astrophysics"/>
+        <attribute name="Author"                 value="Martin Reinecke" />
+      </manifest>
     </jar>
   </target>
   <target name="newdocs" description="Create the Javadocs">
@@ -279,6 +297,15 @@
     </javadoc>
     <jar destfile="${dist}/jhealpix_doc.jar">
       <fileset dir="${docs}" />
+      <manifest>
+        <attribute name="Specification-Title"    value="${project-description}"/>
+        <attribute name="Specification-Version"  value="3.0pre"/>
+        <attribute name="Specification-Vendor"   value="Max-Planck-Institute for Astrophysics"/>
+        <attribute name="Implementation-Title"   value="${project-description}"/>
+        <attribute name="Implementation-Version" value="3.0pre"/>
+        <attribute name="Implementation-Vendor"  value="Max-Planck-Institute for Astrophysics"/>
+        <attribute name="Author"                 value="Martin Reinecke" />
+      </manifest>
     </jar>
   </target>
   <target name="newall" depends="clean,newdist,newdistsrc,newdocs" description="Do everything for the new library"/>
