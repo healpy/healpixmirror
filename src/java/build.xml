@@ -257,9 +257,10 @@
     </junitreport>
     <fail message="Test Cases Failed" if="junit.failed"/>
   </target>
- <target name="newdist" depends="clean,newcompile,newtest" description="Build the JAR file containing only new classes">
+ <target name="newdist" depends="clean,svnrevision,newcompile,newtest" description="Build the JAR file containing only new classes">
     <jar destfile="${dist}/jhealpix.jar">
       <fileset dir="${classes}" includes="**/essentials/*.class" />
+      <fileset dir="${basedir}" includes="src/healpix/essentials/** COPYING" />
       <manifest>
         <attribute name="Specification-Title"    value="${project-description}"/>
         <attribute name="Specification-Version"  value="3.0pre"/>
@@ -268,24 +269,11 @@
         <attribute name="Implementation-Version" value="3.0pre"/>
         <attribute name="Implementation-Vendor"  value="Max-Planck-Institute for Astrophysics"/>
         <attribute name="Author"                 value="Martin Reinecke" />
+        <attribute name="Svn-Revision"           value="${svn.revision}" />
       </manifest>
     </jar>
   </target>
-  <target name="newdistsrc" depends="clean" description="Build the source JAR file containing only new classes">
-    <jar destfile="${dist}/jhealpix_src.jar">
-      <fileset dir="${src}" includes="**/essentials/**" />
-      <manifest>
-        <attribute name="Specification-Title"    value="${project-description}"/>
-        <attribute name="Specification-Version"  value="3.0pre"/>
-        <attribute name="Specification-Vendor"   value="Max-Planck-Institute for Astrophysics"/>
-        <attribute name="Implementation-Title"   value="${project-description}"/>
-        <attribute name="Implementation-Version" value="3.0pre"/>
-        <attribute name="Implementation-Vendor"  value="Max-Planck-Institute for Astrophysics"/>
-        <attribute name="Author"                 value="Martin Reinecke" />
-      </manifest>
-    </jar>
-  </target>
-  <target name="newdocs" description="Create the Javadocs">
+  <target name="newdocs" depends="svnrevision" description="Create the Javadocs">
     <javadoc destdir="${docs}" failonerror="true" use="true"
       additionalparam='-breakiterator -public -quiet -tag copyright:a:"Copyright:" -link http://docs.oracle.com/javase/1.5.0/docs/api'
       classpathref="newclasspath">
@@ -305,9 +293,10 @@
         <attribute name="Implementation-Version" value="3.0pre"/>
         <attribute name="Implementation-Vendor"  value="Max-Planck-Institute for Astrophysics"/>
         <attribute name="Author"                 value="Martin Reinecke" />
+        <attribute name="Svn-Revision"           value="${svn.revision}" />
       </manifest>
     </jar>
   </target>
-  <target name="newall" depends="clean,newdist,newdistsrc,newdocs" description="Do everything for the new library"/>
+  <target name="newall" depends="clean,newdist,newdocs" description="Do everything for the new library"/>
 
 </project>
