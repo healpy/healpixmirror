@@ -25,3 +25,6 @@ compared to the HealpixIndex, Healpix and PixTools classes:
 - many bug fixes
 - no external library dependencies, except for "nom.tam.fits" if FITS I/O is
   required
+- the code base is thread-safe in the following sense:
+  * HealpixProc methods can be called concurrently
+  * HealpixBase methods can be called concurrently on different objects
