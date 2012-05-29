@@ -20,7 +20,7 @@
 
 package healpix.essentials;
 
-/** The Class Constants. */
+/** Some frequently used constants. */
 public class Constants
   {
   /** The Constant halfpi */

@@ -22,7 +22,7 @@ package healpix.essentials;
 
 import java.util.Arrays;
 
-/** Functionality related to the HEALPix pixelisation.
+/** Class representing a full HEALPix map containing double values.
     This class is conceptually very similar the the Healpix_Map<double> class
     of Healpix_cxx.
 

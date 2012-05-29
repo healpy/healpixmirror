@@ -20,7 +20,7 @@
 
 package healpix.essentials;
 
-/** Cartesian 3-vector
+/** Cartesian 3-vector.
     Instead of using the javax.vecmath.Vector3d class, this separate class was
     implemented for two reasons: first, to avoid the external dependency from
     vecmath.jar, and also because the function Vector3d.angle(Vector3d v1) is

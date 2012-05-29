@@ -20,7 +20,7 @@
 
 package healpix.essentials;
 
-/** Functionality related to the HEALPix pixelisation.
+/** Procedural interface to the {@link HealpixBase} functionality.
     This class is intended for users who prefer a procedural (instead of
     object-oriented) interface to the HEALPix functionality. It should make
     transition from packages like PixTools easier.
