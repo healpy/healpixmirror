@@ -31,6 +31,7 @@
 #           : propose OpenMP by default
 # 2011-03-07: allow linking with shared libcfitsio for the C++ port
 # 2012-02-27: better parsing of config.* files in C++ configuration
+# 2012-05-30:    and ignore healpy specific config.* files.
 #=====================================
 #=========== General usage ===========
 #=====================================
@@ -315,7 +316,7 @@ pickCppCompilation() {
     
     echo 'Available configurations for C++ compilation are:'
     cd $CXXCONFDIR
-    list=`${LS} -1 config.* | ${GREP} -v \.in$ | ${AWK} -F. '{print $2}'`
+    list=`${LS} -1 config.* | ${GREP} -v \.in$ | ${GREP} -v healpy | ${AWK} -F. '{print $2}'`
     ii=1
     for option in $list ; do
 	echo "   ${ii}: ${option}"
