@@ -1,6 +1,7 @@
 % -*- LaTeX -*-
 
 \documentclass[12pt,twoside]{article}
+%\usepackage{titlesec,xr-hyper,healpix,graphicx,html,makeidx}
 \usepackage{xr-hyper,healpix,graphicx,html,makeidx}
 %putting hyperref first screws up references in html
 %%%
@@ -37,6 +38,9 @@
 % \latexhtml{\htmlref{#1}{#2}}{%
 % \htmlref{#1}{#2}}}
 %%%%%\externalref{#1}{#2}}}
+
+%\begin{latexonly}
+%\end{latexonly}
 
 %\input psfig
 
@@ -82,7 +86,7 @@ Frode K.~Hansen and Krzysztof M.~G\'orski}
 
 In this document the installation procedure for the \healpix
 distribution is outlined. \healpix comprises a suite of Fortran 90, C++, 
-IDL and Java routines
+IDL, Java and Python routines
 providing both stand-alone facilities and callable subroutines as an alternative
 for those users who wish to build their own tools.
 A set of C subroutines and functions is also provided. 
@@ -122,20 +126,12 @@ platforms: \hfill\newline
 There may be problems in the facility build due to the local system 
 configuration which is beyond our control. 
 
+
 \section{Installation Requirements}
 \label{sec:requirements}
-The major part of the \healpix distribution is written in both \textbf{Fortran 90} and \textbf{C++} and
-so the appropriate compiler(s) must be present (Linux and Darwin users should look
-at Section~\ref{sec:freef90compilers} about free F90 compilers. Microsoft Windows
-users should look at Section~\ref{sec:windows}). Many visualisation tools and map
-manipulation routines are provided in \textbf{IDL} (please note 
-that at least version \idlversion is required) and \textbf{Java}. Some of the \healpix routines are
-also available in \textbf{C}.
 
-{\em This section and the next focus on the compilation and installation of the
-  \textbf{C}, \textbf{C++}, \textbf{Fortran~90}  and \textbf{IDL} routines. For more information on the 
-\textbf{Java} routines see table~\ref{tab:allpackages}}
 
+%--------------------------------------------------------------------
 \begin{table}[!h]
 \begin{tabular}{p{0.15\hsize} p{0.35\hsize} p{0.4\hsize}} \hline  
   \textbf{Healpix Package} & \textbf{Information on installation} &
@@ -159,10 +155,16 @@ also available in \textbf{C}.
 %
  & & \\
 %
-  java    & {\tt src/java/README} & 
+  Java    & {\tt src/java/README} & 
 %\htmladdnormallink{''Java Overview''}{java/index.html}
 \linklatexhtml{''Java Overview''}{../html/java/index.html}{java/index.html}
  (HTML only)\\
+%
+ & & \\
+%
+  Python    & {\tt src/healpy/README.rst} & 
+\linklatexhtml{''Healpy Documentation''}{http://healpy.github.com/healpy}{http://healpy.github.com/healpy}
+\\
 %
  & & \\
 %
@@ -175,6 +177,26 @@ also available in \textbf{C}.
 \label{tab:allpackages}  % put \label *IN* \caption !!!!!
 Documentation on the installation and usage of the different packages}
 \end{table}
+%--------------------------------------------------------------------
+
+The major part of the \healpix distribution is written in both \textbf{Fortran 90} and \textbf{C++} and
+so the appropriate compiler(s) must be present (Linux and Darwin users should look
+at Section~\ref{sec:freef90compilers} about free F90 compilers. Microsoft Windows
+users should look at Section~\ref{sec:windows}). Many visualisation tools and map
+manipulation routines are provided in \textbf{IDL} (please note 
+that at least version \idlversion is required) and \textbf{Java}. Some of the \healpix routines are
+also available in \textbf{C}. \\
+Starting with version 3.0, the
+\linklatexhtml{healpy}{https://github.com/healpy/healpy}{https://github.com/healpy/healpy}
+(HEALPix in Python) library has been integrated into \healpix releases. Since it
+is, to a large extent, a
+wrapper to the C++ routines, installing it also requires a C++ compiler (on top
+of {\tt python} and few supporting Python libraries) but it will perform
+its own compilation of the current \healpix C++ library.
+
+{\em This section and the next focus on the compilation and installation of the
+  \textbf{C}, \textbf{C++}, \textbf{Fortran~90}  and \textbf{IDL} routines. For more information on the 
+\textbf{Java} and \textbf{Python} routines see table~\ref{tab:allpackages}}
 
 The configure script is written in the Bourne shell. The script
 attempts to generate a {\tt Makefile} which is tailored to one of 
@@ -319,10 +341,10 @@ An online help is available with {\tt ./configure -h}.
 A feature introduced in previous releases and enhanced since v2.10, is that 
 the configure script creates a shell configuration file \hfill\\
 (located in
-{\tt \$\{HOME\}/.healpix/2\_12\_}{\em $\langle$OS\_TYPE$\rangle$}{\tt /config}
+{\tt \$\{HOME\}/.healpix/3\_00\_}{\em $\langle$OS\_TYPE$\rangle$}{\tt /config}
 or in
 \hfill\\
-{\tt \$\{HEALPIX\}/confdir/2\_12\_}{\em $\langle$OS\_TYPE$\rangle$}{\tt /config}
+{\tt \$\{HEALPIX\}/confdir/3\_00\_}{\em $\langle$OS\_TYPE$\rangle$}{\tt /config}
 if {\tt ./configure -L} was used)
 according to shell
 type in which various environment variables and aliases are defined
@@ -441,6 +463,7 @@ parameter files used, as well as the data files produced and the respective
 reference files.
 
 \begin{table}[!h]
+\footnotesize
 \begin{tabular}{l l l l l}
 \hline
 {\bf code}    \& parameter file & output data 		& reference data & output image & reference image \\
@@ -461,11 +484,13 @@ reference files.
 \end{tabular}
 \caption[Data files]{
 \label{tab:f90_tests} % put \label *IN* \caption !!!!!
+\footnotesize
 Data files and images produced by the Fortran codes during the tests,
 and the respective reference files to which they can be compared. All the files listed
 are located or produced in the {\tt Healpix\_\hpxversion/test} directory. The GIF images of full sky maps were
 produced using {\tt map2gif}. {\em NA}: No image available, because the data set is not a sky map}
 \end{table}
+
 
 
 {\bf{Notes:}} 
@@ -889,14 +914,6 @@ transparent in the output PNG file.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% BEGIN LATEST CHANGES %%%%%%%%%%%%%
 \subsection{Bug corrections and Improvements in Version 3.0} % 2012-??
 
-\subsubsection[Python]{Python}
-\begin{itemize}
-	\item the 
-\linklatexhtml{{\tt{healpy}}}{%
-https://github.com/healpy/healpy}{%
-https://github.com/healpy/healpy}
-package (C. Rosset, A. Zonca et al.) is now part of \healpix
-\end{itemize}
 
 \subsubsection[C]{\linklatexhtml{C}{csub.pdf}{csub.htm}}
 \begin{itemize}
@@ -1063,14 +1080,26 @@ as the C++ implementation (see \mylink{install:cpp:query}{above}).
 \end{itemize}
 \end{itemize}
 
+\subsubsection[Python]{Python}
+\begin{itemize}
+	\item the 
+\linklatexhtml{{\tt{healpy}}}{%
+https://github.com/healpy/healpy}{%
+https://github.com/healpy/healpy}
+package (C. Rosset, A. Zonca et al.) is now part of \healpix
+\end{itemize}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% END LATEST CHANGES %%%%%%%%%%%%%
-{\tiny{%
+
+\section{Appendix II: Older changes}
+
+%{\tiny{%
+{\mytiny{%
 %{\scriptsize{%
 %{\footnotesize{%
-\subsection{Bug corrections and Improvements in Versions 2.20 and 2.20a (2011-02)} % 2011-02-04
+\tinysubsection*{Bug corrections and Improvements in Versions 2.20 and 2.20a (2011-02)} % 2011-02-04
 
-\subsubsection[C++]{C++}
+\tinysubsubsection*{C++}
 \begin{itemize}
 	\item Faster Spherical Harmonic Transforms thanks to {\tt libpsht} routines
 	\item Support for spin-weighted Spherical Harmonic Transforms at the library level
@@ -1083,7 +1112,7 @@ as the C++ implementation (see \mylink{install:cpp:query}{above}).
 	\item FITS I/O performance improvements
 \end{itemize}
 
-\subsubsection[Fortran90]{\linklatexhtml{Fortran 90}{subroutines.pdf}{subroutines.htm}}
+\tinysubsubsection*{\linklatexhtml{Fortran 90}{subroutines.pdf}{subroutines.htm}}
 \begin{itemize}
 	\item Faster Spherical Harmonics Transforms thanks to {\tt libpsht} routines
 	\item $\nside > 8192$ now supported by most routines and facilities
@@ -1093,7 +1122,7 @@ ang2pix\_*}, {\tt vec2pix\_*}, ...)
 \end{itemize}
 
 
-\subsubsection[IDL]{\linklatexhtml{IDL}{idl.pdf}{idl.htm}}
+\tinysubsubsection*{\linklatexhtml{IDL}{idl.pdf}{idl.htm}}
 \begin{itemize}
 	\item {\tt fits2cl}: addition of the WMAP1 and WMAP5 keywords to read
 	best fit $C(l)$ model to WMAP 1st and 5yr data respectively,
@@ -1101,22 +1130,22 @@ ang2pix\_*}, {\tt vec2pix\_*}, ...)
 	larger choice of supported symbols in OUTLINE option.
 \end{itemize}
 
-\subsubsection[Java]{Java}
+\tinysubsubsection*{Java}
 \begin{itemize}
 	\item  bugs correction in {\tt query\_disc}
 \end{itemize}
 
 %%%
-\subsection{Bug corrections and Improvements in Versions 2.15 and 2.15a (2010-06)} % 2010-06-16
+\tinysubsection*{Bug corrections and Improvements in Versions 2.15 and 2.15a (2010-06)} % 2010-06-16
 
-\subsubsection[Fortran90]{\linklatexhtml{Fortran 90}{subroutines.pdf}{subroutines.htm}}
+\tinysubsubsection*{\linklatexhtml{Fortran 90}{subroutines.pdf}{subroutines.htm}}
 \begin{itemize}
 	\item {\tt remove\_dipole}: removed confusing warning messages about
 unused masks and weights.
 \end{itemize}
 
 
-\subsubsection[IDL]{\linklatexhtml{IDL}{idl.pdf}{idl.htm}}
+\tinysubsubsection*{\linklatexhtml{IDL}{idl.pdf}{idl.htm}}
 \begin{itemize}
 	\item {\tt cartview, gnomview, mollview, orthview}:
         \begin{itemize} 
@@ -1142,14 +1171,14 @@ BAD\_DATA} keyword added to FITS header;
 
 %%%
 %\subsection{Bug corrections and Improvements in Version 2.14} % 2010-03-04
-\subsection{Bug corrections and Improvements in Version 2.14a (2010-03)} % 2010-03-22
+\tinysubsection*{Bug corrections and Improvements in Version 2.14a (2010-03)} % 2010-03-22
 %
 % \subsubsection[New General Improvements]{general}
 % \begin{itemize}
 % 	none
 % \end{itemize}
 %
-\subsubsection[Fortran90]{Fortran90}
+\tinysubsubsection*{Fortran90}
  \begin{itemize}
 	\item
 	correction of a numerical bug in {\tt alm2map\_der} routine that was
@@ -1159,11 +1188,11 @@ $\partial X/\partial\theta$,
 $\partial^2 X/(\partial\theta\partial\phi\sin\theta)$, 
 $\partial^2 X/\partial \theta^2$, 
 for $X=Q,U$ produced by {\tt synfast}  (bug detected by Wen Zhao,
-Cardiff University). See \linklatexhtml{''Fortran
-Facilities''}{facilities.pdf}{facilities.htm} Appendix for details.
+Cardiff University). See 
+\htmlref{''Fortran Facilities'' Appendix}{fac:appendix} for details.
  \end{itemize}
 %
-\subsubsection[IDL]{IDL}
+\tinysubsubsection*{IDL}
  \begin{itemize}
 	\item {\tt cartview, gnomview, mollview, orthview}:
         \begin{itemize}
@@ -1184,7 +1213,7 @@ accept lower case values; {\tt /SILENT} keyword added.
  \end{itemize}
 
 %
-\subsubsection[Java]{Java}
+\tinysubsubsection*{Java}
 \begin{itemize}
 	\item 64 bit java-\healpix, supports $\nside$ up to $ = 2^{29}$ = 536870912
 	\begin{itemize}

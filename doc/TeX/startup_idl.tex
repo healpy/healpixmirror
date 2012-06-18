@@ -1,0 +1,140 @@
+%%%%
+\section{What is available?}
+
+
+% \subsection*{General}
+% \htmlref{{\tt init\_healpix}}{idl:init_healpix}
+
+The \healpixns-IDL tools are mostly designed to 
+generate, visualize, filter and analyze sky maps;
+identify, query and process \healpix pixels; 
+and deal with angular spectral objects (such as power spectra or Spherical
+Harmonics coefficients), 
+as detailed below.
+The full documentation is available online in IDL via \htmlref{{\tt healpix\_doc}}{idl:healpix_doc}
+\subsection[Maps related tools]{\healpix maps related tools}
+\begin{itemize} 
+%
+\item Visualization: gnomic, Mollweide, Cartesian,
+orthographic and azimuthal equatorial projections
+\htmlref{{\tt mollview}}{idl:mollview}, 
+\htmlref{{\tt gnomview}}{idl:gnomview}, 
+\htmlref{{\tt cartview}}{idl:cartview}, 
+\htmlref{{\tt orthview}}{idl:orthview}, 
+\htmlref{{\tt azeqview}}{idl:azeqview}
+(with interactive cursor:
+\htmlref{{\tt cartcursor}}{idl:cartcursor},
+\htmlref{{\tt mollcursor}}{idl:mollcursor},
+\htmlref{{\tt gnomcursor}}{idl:gnomcursor},
+\htmlref{{\tt orthcursor}}{idl:orthcursor})
+%
+\item production of \healpix maps in Google Sky and Dome Master format
+\htmlref{\tt hpx2gs}{idl:hpx2gs},
+\htmlref{\tt hpx2dm}{idl:hpx2dm}.
+% 
+\item Spherical Harmonics analysis and synthesis:
+\htmlref{{\tt ianafast}}{idl:ianafast},
+\htmlref{{\tt isynfast}}{idl:isynfast}
+%
+\item Smoothing and filtering:
+\htmlref{{\tt ismoothing}}{idl:ismoothing},
+\htmlref{{\tt median\_filter}}{idl:median_filter},
+\htmlref{{\tt remove\_dipole}}{idl:remove_dipole}
+%
+\item Pixel pro/down-grading and NESTED/RING pixel reordering:
+\htmlref{{\tt ud\_grade}}{idl:ud_grade},
+\htmlref{{\tt reorder}}{idl:reorder}
+%
+\item Mask processing:
+\htmlref{\tt iprocess\_mask}{idl:iprocess_mask}
+%
+\item Maps I/O:
+\htmlref{{\tt read\_fits\_cut4}}{idl:read_fits_cut4},
+\htmlref{{\tt read\_fits\_map}}{idl:read_fits_map},
+\htmlref{{\tt read\_fits\_s}}{idl:read_fits_s},
+\htmlref{{\tt read\_tqu}}{idl:read_tqu}.\\
+\htmlref{{\tt write\_fits\_cut4}}{idl:write_fits_cut4},
+\htmlref{{\tt write\_fits\_map}}{idl:write_fits_map}, 
+\htmlref{{\tt write\_fits\_sb}}{idl:write_fits_sb},
+\htmlref{{\tt write\_tqu}}{idl:write_tqu}. \\
+\htmlref{{\tt getsize\_fits}}{idl:getsize_fits},
+\htmlref{{\tt change\_polcconv}}{idl:change_polcconv}
+\end{itemize}
+%%%%
+\subsection[Pixels related tools]{\healpix pixels related tools}
+\begin{itemize}
+%
+\item Coordinate tools:
+\htmlref{{\tt ang2vec}}{idl:ang2vec},
+\htmlref{{\tt angulardistance}}{idl:angulardistance},
+\htmlref{{\tt euler\_matrix\_new}}{idl:euler_matrix_new},
+\htmlref{\tt rotate\_coord}{idl:rotate_coord},
+%
+\item Coordinates to pixel transforms, and back
+\htmlref{\tt nside2npix}{idl:nside2npix}, \htmlref{\tt npix2nside}{idl:npix2nside},
+\htmlref{{\tt ang2pix\_*, pix2ang\_*}}{idl:pix_tools},
+\htmlref{{\tt pix2vec\_*, vec2pix\_*}}{idl:pix_tools}
+%
+\item RING/NESTED transforms
+\htmlref{{\tt nest2ring, ring2nest}}{idl:pix_tools}
+%
+\item Neighbouring pixels:
+\htmlref{{\tt neighbours\_nest}}{idl:neighbours_nest}, %
+\htmlref{{\tt neighbours\_ring}}{idl:neighbours_ring}
+%
+\item Pixel query within a disc, polygon, strip or triangle:
+\htmlref{{\tt query\_disc}}{idl:query_disc}, 
+\htmlref{{\tt query\_polygon}}{idl:query_polygon}, 
+\htmlref{{\tt query\_strip}}{idl:query_strip},
+\htmlref{{\tt query\_triangle}}{idl:query_triangle}.
+%
+\item Template pixels:
+\htmlref{{\tt nside2templates}}{idl:nside2ntemplates},
+\htmlref{{\tt same\_shape\_pixels\_ring}}{idl:same_shape_pixels_xxx}, 
+\htmlref{{\tt same\_shape\_pixels\_nest}}{idl:same_shape_pixels_xxx},
+\htmlref{{\tt template\_pixel\_ring}}{idl:template_pixel_xxx}, 
+\htmlref{{\tt template\_pixel\_nest}}{idl:template_pixel_xxx}
+\end{itemize}
+
+%%%%%%%%%%
+\subsection[Power spectrum, alm, beam and pixel window functions]{Power spectrum, $a_{lm}$, beam and pixel window functions}
+\begin{itemize}
+%
+\item $B(l)$, $B(\theta)$ and pixel WF generation:
+\htmlref{{\tt gaussbeam}}{idl:gaussbeam},
+\htmlref{{\tt beam2bl}}{idl:beam2bl},
+\htmlref{{\tt bl2beam}}{idl:bl2beam},
+\htmlref{{\tt healpixwindow}}{idl:healpixwindow}
+%
+\item $C(l)$ binning:
+\htmlref{{\tt bin\_llcl}}{idl:bin_llcl}
+%
+\item $a_{lm}$ tools:
+\htmlref{{\tt alm\_i2t}}{idl:alm_i2t},
+\htmlref{{\tt alm\_t2i}}{idl:alm_t2i},
+\htmlref{{\tt index2lm}}{idl:index2lm},
+\htmlref{{\tt lm2index}}{idl:lm2index},
+%
+\item $C(l)$, $B(l)$ and $a_{lm}$ I/O:
+\htmlref{{\tt fits2cl}}{idl:fits2cl}/%
+\htmlref{{\tt cl2fits}}{idl:cl2fits},
+\htmlref{{\tt bl2fits}}{idl:bl2fits},
+\htmlref{{\tt fits2alm}}{idl:fits2alm}/%
+\htmlref{{\tt alm2fits}}{idl:alm2fits},
+%
+\end{itemize}
+
+\subsection{Other}
+\begin{itemize}
+\item \healpix variables and paths initialization: 
+\htmlref{{\tt init\_healpix}}{idl:init_healpix}
+\end{itemize}
+
+% %%%%
+% \subsection*{Miscellaneous}
+% \htmlref{{\tt ang2vec}}{idl:ang2vec}),
+% \htmlref{{\tt angulardistance}}{idl:angulardistance}),
+
+%  \include{change_polcconv_idl}
+% \include{euler_matrix_new_idl}
+% \include{convert_oldhpx2cmbfast_idl}

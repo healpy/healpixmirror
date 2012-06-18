@@ -54,6 +54,21 @@ are optional}}
 \input{idlversion}
 \input{gdlversion}
 
+
+\makeatletter
+\newcommand\tinysubsection{\@startsection{subsection}{2}{\z@}%
+{-3.25ex \@plus -1ex \@minus -.2ex}%
+{1.5ex \@plus.2ex}%
+{\normalfont\scriptsize\bfseries}}
+
+\newcommand\tinysubsubsection{\@startsection{subsubsection}{3}{\z@}%
+{-3.25ex \@plus -1ex \@minus -.2ex}%
+{1.5ex \@plus.2ex}%
+{\normalfont\tiny\bfseries}}
+\makeatother
+
+\newcommand{\mytiny}{\tiny}
+
 \ifletter\else
 \renewcommand{\title}[1]{\gdef\thetitle{#1}}
 \renewcommand{\author}[1]{\gdef\theauthor{#1}}

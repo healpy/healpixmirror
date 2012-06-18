@@ -656,6 +656,40 @@ sub top_navigation_panel {
 
 # ---------------------------
 
+# from article.perl 2012-05-18
+#
+# sub do_cmd_thesection {
+#     join('', &do_cmd_arabic("${O}0${C}section${O}0$C"), @_[0]) }
+# sub do_cmd_thesubsection {
+#     join('',&translate_commands("\\thesection")
+# 	,".", &do_cmd_arabic("${O}0${C}subsection${O}0$C"), @_[0]) }
+# sub do_cmd_thesubsubsection {
+#     join('',&translate_commands("\\thesubsection")
+# 	,"." , &do_cmd_arabic("${O}0${C}subsubsection${O}0$C"), @_[0]) }
+# sub do_cmd_theparagraph {
+#     join('',&translate_commands("\\thesubsubsection")
+# 	,"." , &do_cmd_arabic("${O}0${C}paragraph${O}0$C"), @_[0]) }
+# sub do_cmd_thesubparagraph {
+#     join('',&translate_commands("\\theparagraph")
+# 	,"." , &do_cmd_arabic("${O}0${C}subparagraph${O}0$C"), @_[0]) }
+sub do_cmd_thetinysubsection {
+    join('',&translate_commands("\\thesection")
+	,".", &do_cmd_arabic("${O}0${C}subsection${O}0$C"), @_[0]) }
+sub do_cmd_thetinysubsubsection {
+    join('',&translate_commands("\\thesubsection")
+	,"." , &do_cmd_arabic("${O}0${C}subsubsection${O}0$C"), @_[0]) }
+
+# hand made:
+sub do_cmd_tinysubsection {
+    return use_wrappers($_[0], '<b>', '</b>'); }
+sub do_cmd_tinysubsubsection {
+    return use_wrappers($_[0], '<b>', '</b>'); }
+sub do_cmd_tinysubsectionstar {
+    return use_wrappers($_[0], '<b>', '</b>'); }
+sub do_cmd_tinysubsubsectionstar {
+    return use_wrappers($_[0], '<b>', '</b>'); }
+
+
 #  &process_commands_inline_in_tex (<<_RAW_ARG_INLINE_CMDS_);
 #  thedocid
 #  #messages # <<\\endmessages>>
@@ -675,7 +709,10 @@ sub top_navigation_panel {
 &ignore_commands( <<_IGNORED_CMDS_);
 #setlength # {} # {}
 hsize
+mytiny
 #parbox # [] 
+externaldocument 
+hypersetup
 _IGNORED_CMDS_
 
 1;                              # This must be the last line

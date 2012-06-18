@@ -83,7 +83,7 @@ idl.html: $(style) healpix.perl
 	@echo '            IDL.HTML              '
 	@echo '=================================='
 	mkdir -p $(HTMLDIR)
-	-$(LATEX2HTML) $(L2HFLAGS) -prefix idl       -t "Healpix/IDL subroutines"   idl
+	-$(LATEX2HTML) $(L2HFLAGS) -split 4 -prefix idl       -t "Healpix/IDL subroutines"   idl
 	-$(EQNFIX) $(HTMLDIR)/idl
 	mv -f $(HTMLDIR)/WARNINGS $(HTMLDIR)/WARNINGS_idl
 
