@@ -13,6 +13,7 @@
 # where
 #  CC     is the C compiler you want to use (default: gcc)
 #  OPT    compilation option
+#  WITHOUT_CFITSIO=1: cfitsio integration will not be built
 #  CFITSIO_INCDIR is where the header files for the 'cfitsio' library is kept
 #  CFITSIO_LIBDIR is where the 'cfitsio' library archive is kept
 #  AR is the command to create the archive with its index table
@@ -58,12 +59,29 @@
 # You should not have to edit below this line ################################
 #
 #
-PIC =
+OPT =
+AR = ar -rsv
+WITHOUT_CFITSIO = 0
+WITH_HIGHRES = 0
+FLAGS = $(OPT)
+
+ifeq ($(WITHOUT_CFITSIO), 0)
+  FLAGS += -DENABLE_FITSIO 
+  ifdef CFITSIO_INCDIR
+    FLAGS += -I$(CFITSIO_INCDIR)
+  endif
+  ifdef CFITSIO_LIBDIR
+    CFITSIO_LIBS += -L$(CFITSIO_LIBDIR) 
+  endif
+  CFITSIO_LIBS += -lcfitsio
+endif
+
+PIC = -fPIC
 #
-SHLIB_LD =      $(CC) $(OPT) $(PIC) -shared
+SHLIB_LD =      $(CC) $(FLAGS) $(PIC) -shared
 SHLIB_SUFFIX =  .so
 #
-DYLIB_LD =      $(CC) $(OPT) $(PIC) -dynamiclib
+DYLIB_LD =      $(CC) $(FLAGS) $(PIC) -dynamiclib
 DYLIB_SUFFIX =  .dylib
 
 # The sources in the package
@@ -74,6 +92,7 @@ OBJS = ${MODS:%=%.s.o}
 
 # non-static objects
 OBJD = ${MODS:%=%.d.o}
+
 
 default: static
 #
@@ -94,7 +113,7 @@ libchealpix$(SHLIB_SUFFIX) : $(OBJD)
 dynamic: libchealpix$(DYLIB_SUFFIX) #tests
 
 libchealpix$(DYLIB_SUFFIX) : $(OBJD)
-	$(DYLIB_LD) -o $@ $(OBJD) -L$(CFITSIO_LIBDIR) -lcfitsio
+	$(DYLIB_LD) -o $@ $(OBJD) $(CFITSIO_LIBS)
 #
 # Install the static library (and the dynamic one)
 install :  chealpix.h
@@ -111,9 +130,9 @@ install :  chealpix.h
 
 # Make the programs to test the package.
 
-test_chealpix : test_chealpix.c shared
-	$(CC) $(OPT) -c -o test_chealpix.o $<
-	$(CC) $(OPT) -o $@ test_chealpix.o -L. -lchealpix -L$(CFITSIO_LIBDIR) $(WLRPATH) -lcfitsio -lm
+test_chealpix : test_chealpix.c static
+	$(CC) $(FLAGS) -c -o test_chealpix.o $<
+	$(CC) $(FLAGS) -o $@ test_chealpix.o -L. -lchealpix $(CFITSIO_LIBS) -lm
 
 tests : test_chealpix
 	./test_chealpix
@@ -122,11 +141,11 @@ tests : test_chealpix
 # General compilation rules
 # static objects
 %.s.o : %.c
-	$(CC) $(OPT)        -c -o $@ $< -I$(CFITSIO_INCDIR)
+	$(CC) $(FLAGS)        -c -o $@ $< 
 
 # non-static objects
 %.d.o : %.c
-	$(CC) $(OPT) $(PIC) -c -o $@ $< -I$(CFITSIO_INCDIR)
+	$(CC) $(FLAGS) $(PIC) -c -o $@ $< 
 
 # Clean: remove intermediate files
 clean :

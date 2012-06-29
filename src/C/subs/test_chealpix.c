@@ -56,7 +56,10 @@ void test1(void) {
     vec2ang(vec, &theta, &phi);
     ang2pix_ring(nside, theta, phi, &ip2);
     ring2nest(nside,ip2,&ip1);
-    if (ip1 != ipix) {printf("Error: %ld %ld %ld %ld\n",nside,ipix,ip2,ip1);}
+    if (ip1 != ipix) {
+      printf("Error: %ld %ld %ld %ld\n",nside,ipix,ip2,ip1);
+      abort();
+    }
   }
   printf("Ring -> ang -> Nest -> Ring\n");
   for (ipix = 0; ipix < npix; ipix +=dpix) {
@@ -85,6 +88,7 @@ void test1(void) {
   printf("test completed\n\n");
 }
 
+#ifdef ENABLE_FITSIO
 void test2 (void) {
   float *map;
   long nside, npix, np, ns;
@@ -126,9 +130,12 @@ void test2 (void) {
 
   printf("test completed\n\n");
 }
+#endif
 
 int main(void) {
   test1();
+#ifdef ENABLE_FITSIO
   test2();
+#endif
   return 0;
 }
