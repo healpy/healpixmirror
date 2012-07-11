@@ -99,14 +99,13 @@ static void test1b(void) {
   printf("Starting C Healpix pixel routines test for high nsides\n");
 
   nside = 1LL<<29;
-  dpix = nside*nside/12345678+1;
+  dpix = nside*nside/1234567+1;
 
   /* Find the number of pixels in the full map */
   npix = nside2npix64(nside);
   printf("Number of pixels in full map: %lld\n", npix);
 
   printf("dpix: %lld\n", dpix);
-  printf("Nest -> ang -> vec -> ang -> Ring -> Nest\n");
   printf("Nest -> Ring -> Nest\n");
   for (ipix = 0; ipix < npix; ipix +=dpix) {
     nest2ring64(nside, ipix, &ip2);
@@ -116,6 +115,7 @@ static void test1b(void) {
       abort();
     }
   }
+  printf("Nest -> ang -> vec -> ang -> Ring -> Nest\n");
   for (ipix = 0; ipix < npix; ipix +=dpix) {
     pix2ang_nest64(nside, ipix, &theta, &phi);
     ang2vec(theta, phi, vec);
