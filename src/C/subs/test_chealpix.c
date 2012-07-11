@@ -24,15 +24,16 @@
  *
  *  For more information about HEALPix see http://healpix.jpl.nasa.gov
  *
- *----------------------------------------------------------------------------- */
+ *--------------------------------------------------------------------------- */
 
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include "chealpix.h"
 
-void test1(void) {
+static void test1(void) {
 
   double theta, phi;
   double vec[3];
@@ -88,8 +89,81 @@ void test1(void) {
   printf("test completed\n\n");
 }
 
+static void test1b(void) {
+
+  double theta, phi;
+  double vec[3];
+  hpint64  nside;
+  hpint64  ipix, npix, dpix, ip2, ip1;
+
+  printf("Starting C Healpix pixel routines test for high nsides\n");
+
+  nside = 1LL<<29;
+  dpix = nside*nside/12345678+1;
+
+  /* Find the number of pixels in the full map */
+  npix = nside2npix64(nside);
+  printf("Number of pixels in full map: %lld\n", npix);
+
+  printf("dpix: %lld\n", dpix);
+  printf("Nest -> ang -> vec -> ang -> Ring -> Nest\n");
+  printf("Nest -> Ring -> Nest\n");
+  for (ipix = 0; ipix < npix; ipix +=dpix) {
+    nest2ring64(nside, ipix, &ip2);
+    ring2nest64(nside,ip2,&ip1);
+    if (ip1 != ipix) {
+      printf("Error0: %lld %lld %lld %lld\n",nside,ipix,ip2,ip1);
+      abort();
+    }
+  }
+  for (ipix = 0; ipix < npix; ipix +=dpix) {
+    pix2ang_nest64(nside, ipix, &theta, &phi);
+    ang2vec(theta, phi, vec);
+    vec2ang(vec, &theta, &phi);
+    ang2pix_ring64(nside, theta, phi, &ip2);
+    ring2nest64(nside,ip2,&ip1);
+    if (ip1 != ipix) {
+      printf("Error1: %lld %lld %lld %lld\n",nside,ipix,ip2,ip1);
+      abort();
+    }
+  }
+  printf("Ring -> ang -> Nest -> Ring\n");
+  for (ipix = 0; ipix < npix; ipix +=dpix) {
+    pix2ang_ring64(nside, ipix, &theta, &phi);
+    ang2pix_nest64(nside, theta, phi, &ip2);
+    nest2ring64(nside,ip2,&ip1);
+    if (ip1 != ipix) {
+      printf("Error2: %lld %lld %lld %lld %e %e\n",nside,ipix,ip2,ip1,theta,phi);
+      abort();
+    }
+  }
+  printf("Nest -> vec -> Ring -> Nest\n");
+  for (ipix = 0; ipix < npix; ipix +=dpix) {
+    pix2vec_nest64(nside, ipix, vec);
+    vec2pix_ring64(nside, vec, &ip2);
+    ring2nest64(nside,ip2,&ip1);
+    if (ip1 != ipix) {
+      printf("Error3: %lld %lld %lld %lld\n",nside,ipix,ip2,ip1);
+      abort();
+    }
+  }
+  printf("Ring -> vec -> Nest -> Ring\n");
+  for (ipix = 0; ipix < npix; ipix +=dpix) {
+    pix2vec_ring64(nside, ipix, vec);
+    vec2pix_nest64(nside, vec, &ip2);
+    nest2ring64(nside,ip2,&ip1);
+    if (ip1 != ipix) {
+      printf("Error4: %lld %lld %lld %lld\n",nside,ipix,ip2,ip1);
+      abort();
+    }
+  }
+
+  printf("%lld\n", nside);
+  printf("test completed\n\n");
+}
+
 #ifdef ENABLE_FITSIO
-void test2 (void) {
+static void test2 (void) {
   float *map;
   long nside, npix, np, ns;
   int i;
@@ -111,7 +185,7 @@ void test2 (void) {
     map[i] = 2.*i;
   }
 
-  sprintf(fileforce, "!%s",file); // leading ! to allow overwrite
+  sprintf(fileforce, "!%s",file); /* leading ! to allow overwrite */
   write_healpix_map( map, nside, fileforce, 1, "C");
   fprintf(stdout,"file written\n");
   free(map);
@@ -134,6 +208,7 @@ void test2 (void) {
 
 int main(void) {
   test1();
+  test1b();
 #ifdef ENABLE_FITSIO
   test2();
 #endif

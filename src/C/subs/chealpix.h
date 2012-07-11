@@ -67,6 +67,27 @@ void vec2pix_ring(long nside, const double *vec, long *ipix);
 void pix2vec_nest(long nside, long ipix, double *vec);
 void pix2vec_ring(long nside, long ipix, double *vec);
 
+/* operations on Nside values up to 2^29 */
+
+typedef long long hpint64;
+
+void ang2pix_nest64(hpint64 nside, double theta, double phi, hpint64 *ipix);
+void ang2pix_ring64(hpint64 nside, double theta, double phi, hpint64 *ipix);
+
+void pix2ang_nest64(hpint64 nside, hpint64 ipix, double *theta, double *phi);
+void pix2ang_ring64(hpint64 nside, hpint64 ipix, double *theta, double *phi);
+
+void nest2ring64(hpint64 nside, hpint64 ipnest, hpint64 *ipring);
+void ring2nest64(hpint64 nside, hpint64 ipring, hpint64 *ipnest);
+
+hpint64 nside2npix64(hpint64 nside);
+long npix2nside64(hpint64 npix);
+
+void vec2pix_nest64(hpint64 nside, const double *vec, hpint64 *ipix);
+void vec2pix_ring64(hpint64 nside, const double *vec, hpint64 *ipix);
+
+void pix2vec_nest64(hpint64 nside, hpint64 ipix, double *vec);
+void pix2vec_ring64(hpint64 nside, hpint64 ipix, double *vec);
 
 /* FITS operations */
 /* --------------- */
