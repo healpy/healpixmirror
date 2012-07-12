@@ -438,8 +438,7 @@ void vec2ang(const double *vec, double *theta, double *phi)
 long npix2nside(long npix)
   {
   long res = (long)floor(sqrt(npix/12.)+0.5);
-  UTIL_ASSERT(res*res*12==npix,"problem in npix2nside");
-  return res;
+  return (res*res*12==npix) ? res : -1;
   }
 
 long nside2npix(const long nside)
@@ -496,14 +495,14 @@ void pix2vec_nest(long nside, long ipix, double *vec)
 void nest2ring(long nside, long ipnest, long *ipring)
   {
   int ix, iy, face_num;
-  UTIL_ASSERT((nside&(nside-1))==0, "nest2ring: nside not a power of 2");
+  if ((nside&(nside-1))!=0) { *ipring=-1; return; }
   nest2xyf (nside, ipnest, &ix, &iy, &face_num);
   *ipring = xyf2ring (nside, ix, iy, face_num);
   }
 void ring2nest(long nside, long ipring, long *ipnest)
   {
   int ix, iy, face_num;
-  UTIL_ASSERT((nside&(nside-1))==0, "ring2nest: nside not a power of 2");
+  if ((nside&(nside-1))!=0) { *ipnest=-1; return; }
   ring2xyf (nside, ipring, &ix, &iy, &face_num);
   *ipnest = xyf2nest (nside, ix, iy, face_num);
   }
@@ -847,8 +846,7 @@ static void pix2ang_nest_z_phi64 (hpint64 nside_, hpint64 pix, double *z,
 long npix2nside64(hpint64 npix)
   {
   hpint64 res = isqrt64(npix/12.);
-  UTIL_ASSERT(res*res*12==npix,"problem in npix2nside");
-  return (long)res;
+  return (res*res*12==npix) ? (long)res : -1;
   }
 
 hpint64 nside2npix64(hpint64 nside)
@@ -911,14 +909,14 @@ void pix2vec_nest64(hpint64 nside, hpint64 ipix, double *vec)
 void nest2ring64(hpint64 nside, hpint64 ipnest, hpint64 *ipring)
   {
   int ix, iy, face_num;
-  UTIL_ASSERT((nside&(nside-1))==0, "nest2ring: nside not a power of 2");
+  if ((nside&(nside-1))!=0) { *ipring=-1; return; }
   nest2xyf64 (nside, ipnest, &ix, &iy, &face_num);
   *ipring = xyf2ring64 (nside, ix, iy, face_num);
   }
 void ring2nest64(hpint64 nside, hpint64 ipring, hpint64 *ipnest)
   {
   int ix, iy, face_num;
-  UTIL_ASSERT((nside&(nside-1))==0, "ring2nest: nside not a power of 2");
+  if ((nside&(nside-1))!=0) { *ipnest=-1; return; }
   ring2xyf64 (nside, ipring, &ix, &iy, &face_num);
   *ipnest = xyf2nest64 (nside, ix, iy, face_num);
   }
