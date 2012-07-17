@@ -44,6 +44,7 @@
 ; OPTIONAL INPUT:
 ;       signal   = String defining the signal coefficients to read
 ;                  Valid options: 'T' 'E' 'B' 'ALL' 
+;                  Default: 'T'
 ;
 ; OUTPUTS:
 ;       index    = Integer array containing the index for the corresponding 

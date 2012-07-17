@@ -83,8 +83,10 @@ pro ianafast, map1_in, cl_out $
 ; KEYWORD PARAMETERS:
 ;
 ;   alm1_out=:   output alm of 1st map          [default: alm not kept]
+;                must be a FITS file
 ;
 ;   alm2_out=:   output alm of 2nd map (if any) [default: alm not kept]
+;                must be a FITS file
 ;
 ;   binpath=: full path to back-end routine [default: $HEXE/anafast, then $HEALPIX/bin/anafast 
 ;                   or $HEALPIX/src/cxx/$HEALPIX_TARGET/bin/anafast_cxx, then $HEALPIX/src/cxx/generic_gcc/bin/anafast_cxx if cxx is set]

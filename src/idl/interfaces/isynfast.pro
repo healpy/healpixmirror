@@ -74,12 +74,15 @@ pro isynfast, cl_in, map_out $
 ;
 ; OPTIONAL OUTPUTS:
 ;    map_out : map synthetised from the power spectrum or from constraining alm
+;              either a FITS file or an array
 ;
 ; KEYWORD PARAMETERS:
 ;
 ;   alm_in=:    optional input (constraining) alm           [default: no alm]
+;               must be a FITS file
 ;
 ;   alm_out=:   contains on output the effective alm
+;               must be a FITS file
 ;
 ;   /apply_windows: if set, beam and pixel windows are applied to input alm_in
 ;   (if any)
