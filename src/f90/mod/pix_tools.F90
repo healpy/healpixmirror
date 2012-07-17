@@ -1380,9 +1380,6 @@ contains
     np = npix * fraction * 1.2 + 50
     call assert(np < MAX_I4B, code//": too many pixels to compute median")
 
-    allocate(listpix(0:np-1),stat=status)
-    call assert_alloc(status,code,'listpix')
-
     do_nest = .false.
     if (present(nest)) then
        call assert(nest>=0 .and. nest <=1,code//': invalid NEST flag')
@@ -1395,6 +1392,16 @@ contains
     fmissval_in = hpx_Sbadval
     if (present(fmissval)) fmissval_in = fmissval
 
+    ! make sure common arrays are initiated
+    call mk_pix2xy()
+    print*,'************* Parallel Median **************'
+!$OMP parallel default(none) &
+!$OMP   shared(in_map, med_map, pix2x, pix2y, &
+!$OMP          nside, npix, radius, np, do_nest, do_fill, nest, fmissval_in) &
+!$OMP  private(listpix, vector, p, nlist, status)
+    allocate(listpix(0:np-1),stat=status)
+    call assert_alloc(status,code,'listpix')
+!$OMP do schedule(dynamic, 64)
     do p = 0, npix-1
        ! find pixel location
        if (do_nest) then
@@ -1412,8 +1419,9 @@ contains
           med_map(p) = in_map(p)
        endif
     enddo
-
+!$OMP end do
     deallocate(listpix)
+!$OMP end parallel
     return
   end subroutine medfiltmap_S
   !=================================================================
