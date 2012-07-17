@@ -531,7 +531,12 @@ endif else begin ; X, png, gif or jpeg output
     ;;commented out 2009-10-28
     ;to_patch = ((!d.n_colors GT 256) && do_image  && ~do_crop)
     ;to_patch = ((!d.n_colors GT 256) && do_image && in_idl)
-    to_patch = ((!d.n_colors GT 256) && do_image)
+    n_colors = !d.n_colors
+    if (in_gdl && !d.name eq 'X') then begin ; work-around for GDL bug (!d.n_colors gets correct only after first call to WINDOW)
+        device,get_visual_depth=gvd
+        n_colors = 2L^gvd
+    endif
+    to_patch = (n_colors GT 256 && do_image)
     if (in_gdl) then begin
         if (use_z_buffer) then device else device,decomposed=0 ; in GDL, decomposed is only available when device='X'
 ;;;;        device ; in GDL, Decomposed keyword is either ignored (device='X') or unvalid (device='Z') 
@@ -562,7 +567,6 @@ endif else begin ; X, png, gif or jpeg output
     if (in_idl) then TVLCT,red,green,blue
     thick_dev = 1. ; device dependent thickness factor
 endelse
-
 !p.background = my_background
 !p.color = my_color
 ; -------------------------------------------------------------
