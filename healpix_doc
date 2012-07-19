@@ -26,6 +26,12 @@ open_pdf_viewer () {
 	VIEWER=darwin_open
     fi
 
+    # try general purpose file opener (Linux)
+    test_pdf_viewer "xdg-open"
+
+    # try general purpose file opener (Gnome)
+    test_pdf_viewer "gnome-open"
+
     # If we see Adobe's acroread, we'll default to it.
     test_pdf_viewer "acroread"
 
@@ -49,13 +55,18 @@ open_pdf_viewer () {
 
     if [ "x$VIEWER" = "x" ]; then
     # No view in evidence.
-	echo "PDF viewer (acroread, xpdf, evince, okular, foxit, sumatra, gv) not found in user's PATH" 1>&2
+	echo "PDF viewer (xdg-open, gnome-open, acroread, xpdf, evince, okular, foxit, sumatra, gv) not found in user's PATH" 1>&2
+	aboutCustomization
 	exit 1
     fi
   
     case $VIEWER in
 	darwin_open)
         open $1 &
+	;;
+
+	xdg-open*|gnome-open*)
+	$VIEWER $1 > /dev/null 2>&1  &
 	;;
 
 	acroread*|xpdf*|evince*|okular*|foxit*|gv*)
@@ -74,32 +85,38 @@ open_pdf_viewer () {
 
 }
 
+# ======================================================================
+
+test_html_browser () {
+    if [ "$BROWSER" = "" ]; then
+	found=`which $1 2> /dev/null`
+	[ "$found" ] && BROWSER=$1
+    fi
+
+}
 
 open_html_browser () {
     # adapted from IDL's online_help_html (May 2010)
 
 # If browser is not specified by the environment variable, then use the default
-#BROWSER=$IDL_ONLINE_HELP_HTML_BROWSER
+BROWSER=$HEALPIX_HTML_BROWSER
     if [ "$BROWSER" = "" ]; then
 	if [ `uname` = "Darwin" ]; then
 	    BROWSER=darwin_open
 	else
-	    firefoxFound=`which firefox 2>/dev/null`
-	    if test "$firefoxFound"
-		then BROWSER=firefox
-	    else mozillaFound=`which mozilla 2>/dev/null`
-		if test "$mozillaFound"
-		    then BROWSER=mozilla
-		else netscapeFound=`which netscape 2>/dev/null`
-		    if test "$netscapeFound"
-			then BROWSER=netscape
-		    else echo "$0:"
-			echo "Unable to find browser in execution path."
-			echo "Update execution path to include firefox, mozilla or netscape."
-			exit
-		    fi # netscape
-		fi # mozilla
-	    fi # firefox
+	    test_html_browser "xdg-open"
+	    test_html_browser "gnome-open"
+	    test_html_browser "firefox"
+	    test_html_browser "mozilla"
+	    test_html_browser "netscape"
+	    test_html_browser "opera"
+	    test_html_browser "lynx"
+	    if [ "x$BROWSER" = "x" ]; then
+    # No browser in evidence.
+		echo "HMTL browser (xdg-open, gnome-open, firefox, mozilla, netscape, opera, lynx) not found in user's PATH" 1>&2
+		aboutCustomization
+		exit 1
+	    fi # empty
 	fi # Darwin
     fi # $BROWSER
 
@@ -111,38 +128,34 @@ open_html_browser () {
 	osascript -e  'open location '$href
 	;;
 
+	"xdg-open"|"gnome-open")
+	$BROWSER $1 > /dev/null 2>&1  &
+	;;
+
 	"lynx")
 	xterm -e lynx "$1" &
 	;;
 
-	"mozilla")
-	mozilla -remote "openURL(file:$1, new-tab)" 2>/dev/null # try to open tab in existing session
+	"mozilla"|"firefox")
+	$BROWSER -remote "openURL(file:$1, new-tab)" 2>/dev/null # try to open tab in existing session
 	if [ $? != 0 ]; then # if it fails, start a fresh session
-	    mozilla "file:$1" &
-	fi
-	;;
-
-	"firefox")
-	firefox -remote "openURL(file:$1, new-tab)" 2>/dev/null
-	if [ $? != 0 ]; then
-	    firefox "file:$1" &
+	    $BROWSER "file:$1" &
 	fi
 	;;
 
 	"netscape")
-	netscape -remote "openURL(file:$1)" 2>/dev/null
+	$BROWSER -remote "openURL(file:$1)" 2>/dev/null
 	if [ $? != 0 ]; then
-	    netscape "$1" &
+	    $BROWSER "$1" &
 	fi
 	;;
 
 	"opera")
-	opera -remote "openURL(file:$1)" & # open existing or new session
+	$BROWSER -remote "openURL(file:$1)" & # open existing or new session
 	;;
 
 	*)
-	echo "$0: The $BROWSER browser is not known to ONLINE_HELP."
-	exit 1
+	$BROWSER "$1"
 	;;
 
     esac
@@ -150,7 +163,18 @@ open_html_browser () {
 }
 
 # ======================================================================
+aboutCustomization(){
+    echo ""
+    echo "Be default, $0 will look for a PDF viewer and HTML browser among the standard ones,"
+    echo "unless the variables \$HEALPIX_PDF_VIEWER and \$HEALPIX_HTML_BROWSER are set by the user."
+    echo "Currently: "
+    echo "HEALPIX_PDF_VIEWER = $HEALPIX_PDF_VIEWER"
+    echo "HEALPIX_HTML_BROWSER = $HEALPIX_HTML_BROWSER"
+    echo ""
+}
+# ======================================================================
 
+verbose=0 # set to 1 to know which tool is used
 docdir=${HEALPIX}/doc
 
 [ ! -d ${docdir} ] && docdir=./doc
@@ -172,7 +196,7 @@ while [ ${type} -le 0 ]; do
 	echo "   -h:  browse HTML documentation "          
 	echo "   -p:  view   PDF  documentation "  
 	echo 
-	printf " Enter your choice:  h, p or 0 (to exit): "
+	printf " Enter your choice:  h, p, ? (getting help) or 0 (to exit): "
 	read answer
 	if [ "x$answer" = "x0" ]; then
 	    echo "Bye ..."
@@ -180,6 +204,10 @@ while [ ${type} -le 0 ]; do
 	fi
 	[ "x$answer" = "xH" -o "x$answer" = "xh" ] && type=1
 	[ "x$answer" = "xP" -o "x$answer" = "xp" ] && type=2
+	if [ "x$answer" = "x?" ]; then
+	    aboutCustomization
+	    exit 0
+	fi
 	if [ $type -le 0 ] ; then
 	    echo "unkwnown answer ..."
 	    exit 1
@@ -199,14 +227,14 @@ case $type in
 	deffile=${docdir}/html/main.htm
 	[ "x$file" != "x" ] && deffile=${file}
 	open_html_browser  ${deffile}
-	#echo "browser: ${BROWSER}"
+	[ ${verbose} -eq 1 ] && echo "browser: ${BROWSER}"
     ;;
     2)
 	echo "opening HEALPIX PDF documention"
 	deffile=${docdir}/pdf/pdf_index.pdf
 	[ "x$file" != "x" ] && deffile=${file}
 	open_pdf_viewer    ${deffile}
-	#echo "viewer: ${VIEWER}"
+	[ ${verbose} -eq 1 ] && echo "viewer: ${VIEWER}"
     ;;
     *)
     echo "Unknown option"
