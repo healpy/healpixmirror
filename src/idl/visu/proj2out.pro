@@ -522,6 +522,7 @@ endif else begin ; X, png, gif or jpeg output
         set_plot,'z'
         pixel_depth = (do_true) ? 24 : 8
         if (in_gdl) then begin
+; unresolved GDL0.9.2 bug: set_character_size ignored
             device,set_resolution= [xsize, ysize*w_dx_dy], set_character_size=character_size,z_buffering=0
         endif else begin
             device,set_resolution= [xsize, ysize*w_dx_dy], set_character_size=character_size,z_buffering=0, set_pixel_depth=pixel_depth
@@ -532,14 +533,13 @@ endif else begin ; X, png, gif or jpeg output
     ;to_patch = ((!d.n_colors GT 256) && do_image  && ~do_crop)
     ;to_patch = ((!d.n_colors GT 256) && do_image && in_idl)
     n_colors = !d.n_colors
-    if (in_gdl && !d.name eq 'X') then begin ; work-around for GDL bug (!d.n_colors gets correct only after first call to WINDOW)
+    if (in_gdl && (!d.name eq 'X' || !d.name eq 'WIN')) then begin ; work-around for GDL0.9.2 bug (!d.n_colors gets correct only after first call to WINDOW)
         device,get_visual_depth=gvd
         n_colors = 2L^gvd
     endif
     to_patch = (n_colors GT 256 && do_image)
     if (in_gdl) then begin
-        if (use_z_buffer) then device else device,decomposed=0 ; in GDL, decomposed is only available when device='X'
-;;;;        device ; in GDL, Decomposed keyword is either ignored (device='X') or unvalid (device='Z') 
+        if (use_z_buffer) then device else device,decomposed=0 ; in GDL0.9.2, decomposed is only available (but ignored) when device='X', or unvalid when device='Z'
         if (to_patch) then loadct,0,/silent ; emulate decomposed
     endif else begin
         device, decomposed = use_z_buffer || to_patch
@@ -878,6 +878,9 @@ if do_image then begin
     endelse
     if (to_patch && ~use_z_buffer) then begin 
         if (in_gdl) then begin
+; unresolved GDL0.9.2 bug: if a window is already open for a given color table
+; (selected with loadct) subsequent tvlct are ignored for that window. Only a
+; new loadct will do the job.
             device, decomposed=0
             tvlct,red,green,blue ; revert to custom color table
         endif else begin
