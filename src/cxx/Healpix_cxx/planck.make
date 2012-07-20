@@ -17,8 +17,8 @@ ALLOBJ:=$(LIBOBJ) $(CXXBIN:%=%.o)
 LIBOBJ:=$(LIBOBJ:%=$(OD)/%)
 ALLOBJ:=$(ALLOBJ:%=$(OD)/%)
 
-ODEP:=$(HDR_$(PKG)) $(HDR_cxxsupport) $(HDR_libpsht) $(HDR_libfftpack) $(HDR_c_utils)
-BDEP:=$(LIB_$(PKG)) $(LIB_cxxsupport) $(LIB_libpsht) $(LIB_libfftpack) $(LIB_c_utils) $(LIB_libcfitsio)
+ODEP:=$(HDR_$(PKG)) $(HDR_cxxsupport) $(HDR_libpsht) $(HDR_libsharp) $(HDR_libfftpack) $(HDR_c_utils)
+BDEP:=$(LIB_$(PKG)) $(LIB_cxxsupport) $(LIB_libpsht) $(LIB_libsharp) $(LIB_libfftpack) $(LIB_c_utils) $(LIB_libcfitsio)
 
 $(LIB_$(PKG)): $(LIBOBJ)
 

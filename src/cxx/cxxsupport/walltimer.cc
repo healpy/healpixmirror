@@ -25,7 +25,7 @@
 /*
  *  This file contains functionality related to wall-clock timers
  *
- *  Copyright (C) 2010, 2011 Max-Planck-Society
+ *  Copyright (C) 2010, 2011, 2012 Max-Planck-Society
  *  Author: Martin Reinecke
  */
 
@@ -118,6 +118,7 @@ class tstack_node
 
 tstack_node tstack_root("root",0);
 tstack_node *curnode=0;
+double overhead=0.;
 
 struct timecomp
   {
@@ -155,27 +156,37 @@ void tstack_report(const tstack_node &node, const string &indent, int twidth,
 
 void tstack_push(const string &name)
   {
+  double t0=wallTime();
   if (curnode==0) curnode=&tstack_root;
   Ti it=curnode->child.find(name);
   if (it==curnode->child.end())
     it=curnode->child.insert (make_pair(name,tstack_node(name,curnode))).first;
   curnode=&(it->second);
-  curnode->wt.start();
+  double t1=wallTime();
+  curnode->wt.start(0.5*(t0+t1));
+  overhead+=t1-t0;
   }
 void tstack_pop(const string &name)
   {
+  double t0=wallTime();
   planck_assert(curnode && (curnode->name==name), "invalid tstack operation");
-  curnode->wt.stop();
+  double t1=wallTime();
+  curnode->wt.stop(0.5*(t0+t1));
   curnode=curnode->parent;
+  overhead+=t1-t0;
   }
 void tstack_pop()
   {
+  double t0=wallTime();
   planck_assert(curnode, "invalid tstack operation");
-  curnode->wt.stop();
+  double t1=wallTime();
+  curnode->wt.stop(0.5*(t0+t1));
   curnode=curnode->parent;
+  overhead+=t1-t0;
   }
 void tstack_replace(const string &name2)
   {
+  double t0=wallTime();
   planck_assert(curnode, "invalid tstack operation");
   tstack_node *savenode=curnode;
   curnode=curnode->parent;
@@ -183,9 +194,11 @@ void tstack_replace(const string &name2)
   if (it==curnode->child.end())
     it=curnode->child.insert(make_pair(name2,tstack_node(name2,curnode))).first;
   curnode=&(it->second);
-  double t=wallTime();
+  double t1=wallTime();
+  double t=0.5*(t0+t1);
   savenode->wt.stop(t);
   curnode->wt.start(t);
+  overhead+=t1-t0;
   }
 void tstack_replace(const string &name1, const string &name2)
   {
@@ -207,4 +220,6 @@ void tstack_report(const string &stem)
 
   int logtime=max(1,int(log10(total)+1));
   tstack_report(*ptr,"",logtime+5,slen);
+
+  printf("\nAccumulated timing overhead: approx. %1.4fs\n",overhead);
   }

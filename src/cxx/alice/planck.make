@@ -15,8 +15,8 @@ OBJ:=$(OBJ:%=$(OD)/%)
 ALLOBJ:=$(ALLOBJ:%=$(OD)/%)
 
 
-ODEP:=$(HDR_$(PKG)) $(HDR_Healpix_cxx) $(HDR_cxxsupport) $(HDR_libpsht) $(HDR_libfftpack) $(HDR_c_utils)
-BDEP:=$(OBJ) $(LIB_Healpix_cxx) $(LIB_cxxsupport) $(LIB_libpsht) $(LIB_libfftpack) $(LIB_c_utils) $(LIB_libcfitsio)
+ODEP:=$(HDR_$(PKG)) $(HDR_Healpix_cxx) $(HDR_cxxsupport) $(HDR_libpsht) $(HDR_libsharp) $(HDR_libfftpack) $(HDR_c_utils)
+BDEP:=$(OBJ) $(LIB_Healpix_cxx) $(LIB_cxxsupport) $(LIB_libpsht) $(LIB_libsharp) $(LIB_libfftpack) $(LIB_c_utils) $(LIB_libcfitsio)
 
 $(ALLOBJ): $(ODEP) | $(OD)_mkdir
 
