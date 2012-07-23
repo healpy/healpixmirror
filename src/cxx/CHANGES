@@ -42,3 +42,7 @@ Interface changes:
 - psht.h: interface to alm_info changed in order to add MPI support
 - ylmgen_c.h: Ylmgen_init() interface has changed
 - bluestein.h: bluestein_i() interface changed
+
+Performance:
+- libpsht partiallly replaced by libsharp => faster SHTs, especially on
+  AVX-capable CPUs.
