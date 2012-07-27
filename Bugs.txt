@@ -986,3 +986,5 @@ src/idl/toolkit/ang2pix_ring.pro 	2011-04-28: correction of a bug affecting phi 
 src/idl/toolkit/query_triangle.pro 	2011-04-29: no spurious pixels in inclusive mode 
 
 src/idl/fits/fits2cl.pro		2011-05-24: added WMAP7 keyword
+
+src/f90/ngsims_full_sky/sky_ng_sim.F90  2011-06-23: output of alm and map derivatives now possible

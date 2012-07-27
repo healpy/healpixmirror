@@ -173,15 +173,47 @@ aboutCustomization(){
     echo ""
 }
 # ======================================================================
+testDocLocation(){
+    docdir=""
+    
+    # try $HEALPIXDOC (custom installation)
+    [ "x${HEALPIXDOC}" = "x" ] && docdir=${HEALPIXDOC}
+
+    # try $HEALPIX/doc (standard installation)
+    if [ "x${docdir}" = "x" ]; then
+	if [ "x${HEALPIX}" = "x" ]; then
+	    echo ""
+	    echo "WARNING: \$HEALPIX variable not set"
+	    echo "         It must be defined before running Healpix"
+	    echo ""
+	else
+	    docdir=${HEALPIX}/doc
+	fi
+    fi
+
+    # try around current script (standard, but unfinished, installation)
+    ####if [ \( "x${docdir}" = "x" \)  -o  \( ! -d ${docdir} \)  ]; then
+    if [ "x${docdir}" = "x"   ]; then
+	topdir=$( cd "$( dirname "$0" )" && pwd )
+	docdir=${topdir}/doc
+    fi
+
+    # try current directory (desperate)
+    [ ! -d ${docdir} ] && docdir=./doc
+
+    # test final value of $docdir
+    if [ ! -d ${docdir} ]; then
+	echo "Can not find HEALPIX documentation."
+	exit 1
+    fi
+}
+# ======================================================================
+
 
 verbose=0 # set to 1 to know which tool is used
-docdir=${HEALPIX}/doc
 
-[ ! -d ${docdir} ] && docdir=./doc
-if [ ! -d ${docdir} ]; then
-    echo "Can not find HEALPIX documentation."
-    exit 1
-fi
+# find documentation location
+testDocLocation
 
 file=""
 #[ ${#} -eq 1 ] && file=$1
@@ -218,7 +250,7 @@ while [ ${type} -le 0 ]; do
 	[ "${1:0:2}" = "-p" ] && type=2
     fi
 done
-echo $file
+##echo $file
 
         
 case $type in

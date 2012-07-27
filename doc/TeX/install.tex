@@ -155,6 +155,11 @@ configuration which is beyond our control.
 %
  & & \\
 %
+  C       & This document, or \phantom{filling up --} {\tt src/C/README} & 
+    \linklatexhtml{''C Subroutines Overview''}{csub.pdf}{csub.htm} \\ 
+%
+ & & \\
+%
   Java    & {\tt src/java/README} & 
 %\htmladdnormallink{''Java Overview''}{java/index.html}
 \linklatexhtml{''Java Overview''}{../html/java/index.html}{java/index.html}
@@ -162,14 +167,10 @@ configuration which is beyond our control.
 %
  & & \\
 %
-  Python    & {\tt src/healpy/README.rst} & 
-\linklatexhtml{''Healpy Documentation''}{http://healpy.github.com/healpy}{http://healpy.github.com/healpy}
-\\
-%
- & & \\
-%
-  C       & This document, or \phantom{filling up --} {\tt src/C/README} & 
-    \linklatexhtml{''C Subroutines Overview''}{csub.pdf}{csub.htm} \\ 
+  Python    & {\tt src/healpy/INSTALL} & 
+\linklatexhtml{''Healpy
+Documentation''}{http://healpy.github.com/healpy}{http://healpy.github.com/healpy}
+ (HTML only)\\
 %
                                    &                          \\ \hline %%% for presentation
 \end{tabular}
@@ -298,6 +299,23 @@ We are providing one (both in C++ and F90) which is an adaptation of an xorshift
 %% One of us (BDW) has therefore attempted to create one and we
 %% provide it as free software with this package (cf. Appendix I).
 
+
+\section{{\tt healpix\_doc}: an easy access to \healpix documentation}
+The shell script {\tt healpix\_doc} now is available to provide easy
+access to the HTML and/or PDF documentation of {\em all} Healpix packages.
+It will automatically open a web browser or PDF viewer (among those found on the
+system) on the documentation
+available locally (at {\tt \$HEALPIX/doc}) or on remote web sites. To use it, simply type\\
+\mycode{\$HEALPIX/healpix\_doc} \\
+or \\
+\mycode{\$HEALPIX/healpix\_doc -p}\\
+to access respectively the HTML and PDF documentation. The default browser and
+viewer used by {\tt healpix\_doc} can {\em optionally} be set with the
+environment variables
+{\tt \$HEALPIX\_HTML\_BROWSER} and
+{\tt \$HEALPIX\_PDF\_VIEWER}.
+
+
 \section{The Installation Procedure}
 
 If the user has one of the supported OS's, then installation proceeds utilizing
@@ -418,6 +436,17 @@ If the HEALPix configuration file is
 sourced as described in \S~\ref{subsub:conf}, the aliases {\tt hidl} and {\tt hidle}
 are also defined to give you access to HEALPIX routines from IDL.
 
+\subsubsection{Java installation}
+The configuration and installation of the Healpix Java package is currently
+handled separately. See table~\ref{tab:allpackages} for more information.
+
+\subsubsection{Python installation}
+The configuration and installation of the Healpix Python package (healpy) is currently
+not handled by the {\tt configure} script: see table~\ref{tab:allpackages} for more
+information. Note that running the
+{\tt src/healpy/setup.py} Python script will automatically prompt a {\em fresh} compilation of the
+{\tt src/cxx/*} libraries, with all the options necessary to Python linkage, and
+can be done independently of the C++ installation described above.
 
 \subsection{Compilation and installation}
 
@@ -619,7 +648,7 @@ http://gcc.gnu.org/wiki/GFortranBinaries}.
 \end{itemize}
 
 \subsection{Problems with CFITSIO}
-\subsubsection{Compilation of CFITSIO Fortran wrappers}
+\subsubsection*{Compilation of CFITSIO Fortran wrappers}
 The most common problem with the Fortran \healpix compilation will produce
 messages like:
 \begin{verbatim}
@@ -665,7 +694,7 @@ system (it can be replaced below by {\tt \bf gfortran}, {\tt \bf g95}, {\tt \bf 
 \end{enumerate}
 See also the note below on 64 bit architectures.
 
-\subsubsection{CFITSIO problems on systems with 64 bit architecture}
+\subsubsection*{CFITSIO problems on systems with 64 bit architecture}
 
 \begin{enumerate}
 %
@@ -707,7 +736,7 @@ then force compilation to the same binary format by entering either
 %
 \end{enumerate}
 
-\subsubsection{CFITSIO linking problems}
+\subsubsection*{CFITSIO linking problems}
 
 A particular problem encountered with the CFITSIO Version 2.0 release relates
 to the inclusion of various libraries within the system release for a given
@@ -719,7 +748,7 @@ as one source of errors. The CFITSIO developers recommend compilation of the
 {\tt make testprog} statement will reveal those you need to include in the
 Makefile.
 
-\subsubsection{CFTISIO and Debian/Linux}
+\subsubsection*{CFTISIO and Debian/Linux}
 
 Some problems have been reported on Debian/Linux systems during the
 linking to the CFITSIO library shipped with Linux. If these problems
@@ -824,7 +853,7 @@ of Postscript, GIF and PNG files, as described below.
 
 
 
-\subsubsection{Specific requirements}
+\subsubsection*{Specific requirements}
 
 \begin{enumerate}
 \item
@@ -885,7 +914,7 @@ output files.
 
 \end{enumerate}
 
-\subsubsection{Impact of GDL limitations on \healpix}
+\subsubsection*{Impact of GDL limitations on \healpix}
 \begin{itemize}
 \item {\tt Ximview} won't work under GDL \gdlversion
 % \item Because of problems with GDL's {\tt point\_lun} routine, the reading of
@@ -914,6 +943,9 @@ transparent in the output PNG file.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% BEGIN LATEST CHANGES %%%%%%%%%%%%%
 \subsection{Bug corrections and Improvements in Version 3.0} % 2012-??
 
+\subsubsection[General]
+Introduction of the script {\tt healpix\_doc} for easy access to the \healpix
+PDF and HTML documentation.
 
 \subsubsection[C]{\linklatexhtml{C}{csub.pdf}{csub.htm}}
 \begin{itemize}
@@ -965,34 +997,44 @@ Facilities now check input maps for undefined pixels before calling map2alm().
 
 \end{itemize}
 
-\subsubsection[Fortran]{\linklatexhtml{Fortran 90}{subroutines.pdf}{subroutines.htm}}
+\subsubsection[Fortran]{%
+Fortran 90 \linklatexhtml{facilities}{facilities.pdf}{facilities.htm} and
+\linklatexhtml{subroutines}{subroutines.pdf}{subroutines.htm}
+}
 \begin{itemize}
 	\item introduction of the 
 \htmlref{{\tt process\_mask}}{fac:process_mask}
 facility to compute the angular distance of valid
-pixels to the closest invalid pixels for a input binary mask,
+pixels to the closest invalid pixels for a input binary mask, and of the
+supporting routines 
+\htmlref{\tt dist2holes\_nest}{sub:dist2holes_nest}, 
+\htmlref{\tt fill\_holes\_nest}{sub:fill_holes_nest}, 
+\htmlref{\tt maskborder\_nest}{sub:maskborder_nest},
+\htmlref{size\_holes\_nest}{sub:size_holes_nest};
 	\item the pixel query routine
  \htmlref{{\tt query\_disc}}{sub:query_disc}
 has been improved and will return fewer
 false positive pixels in the 
-inclusive mode,
+inclusive mode;
 %\mylink{sub:query_disc:inclusive}{{\em inclusive}} 
 	\item improved accuracy of the co-latitude calculation in the vicinity
 of the poles at high resolution in \htmlref{{\tt nest2ring, ring2nest,
-pix2ang\_*, pix2vec\_*, $\ldots$}}{sub:pix_tools},
+pix2ang\_*, pix2vec\_*, $\ldots$}}{sub:pix_tools};
 	\item \htmlref{{\tt sky\_ng\_sim}}{fac:sky_ng_sim} now allows the computation
 of the spatial derivatives of the non Gaussian map being produced, and the
-output of the $a_{lm}$ coefficients of that map,
+output of the $a_{lm}$ coefficients of that map;
 	\item \htmlref{{\tt anafast}}{fac:anafast} now allows the
 pro/down-grading of the input mask to match the resolution of the map(s) being
-analyzed.
+analyzed;
+	\item the median filter routine \htmlref{\tt medfiltmap}{sub:medfiltmap}, used by the facility
+\htmlref{\tt median\_filter}{fac:median_filter} is now parallelized.
 % 	\item%
 % new code {\tt process\_mask} and new module {\tt mask\_tools} containing the routines
 % \htmlref{dist2holes\_nest}{sub:dist2holes_nest}, 
 % \htmlref{fill\_holes\_nest}{sub:fill_holes_nest}, 
 % \htmlref{maskborder\_nest}{sub:maskborder_nest},
 % \htmlref{size\_holes\_nest}{sub:size_holes_nest} useful for mask apodization,
-mode.
+%mode.
 \end{itemize}
 
 \subsubsection[IDL]{\linklatexhtml{IDL}{idl.pdf}{idl.htm}}
