@@ -5,7 +5,7 @@
 	<classpathentry kind="lib" path="lib/j3dcore.jar"/>
 	<classpathentry kind="lib" path="lib/j3dutils.jar"/>
 	<classpathentry kind="lib" path="lib/vecmath.jar"/>
-	<classpathentry kind="lib" path="lib/nom-tam-fits.jar"/>
+	<classpathentry kind="lib" path="lib/nom.tam.fits-1.08.jar"/>
 	<classpathentry kind="lib" path="lib/junit-4.3.1.jar"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>
