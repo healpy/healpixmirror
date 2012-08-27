@@ -54,6 +54,7 @@ module pix_tools
 !    2011-08-25 : 2011-08-*: improves accuracy of pixel routines close to Poles
 !    2011-10-13: improved query_triangle, introduced process_intervals
 !    2012-07-17: Parallel OpenMP implementation of medfiltmap
+!    2012-08-27: correction of a bug affecting neighbours_nest and next_in_line_nest at Nside>8192
 !==================================================================
   ! subroutine query_strip                          Done (To be Tested) depends on in_ring
   ! subroutine query_polygon                        Done (To be Tested) depends on isort

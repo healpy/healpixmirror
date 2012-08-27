@@ -2808,8 +2808,9 @@
 !
 !     using code from HEALPIX toolkit by K.Gorski and E. Hivon
 !     2009-06-15: deals with Nside > 8192
-!     2012-03-02: test validity of ix_in and iy_in instead of undefined ix and iy
+!     2012-03-02: test validity of ipf_in instead of undefined ipf
 !                 define ipf as MKD
+!     2012-08-27:  corrected bug on (ix,iy) for Nside > 8192 (MARK)
 !=======================================================================
 #ifdef DOI8B
   subroutine pix2xy_nest_8(nside, ipf_in, ix, iy)
@@ -2849,12 +2850,12 @@
        do i=0, ismax
           ip_low = iand(ipf,1023_MKD)
           ix = ix + scale * pix2x(ip_low)
-          ix = iy + scale * pix2y(ip_low)
+          iy = iy + scale * pix2y(ip_low) ! corrected 2012-08-27
           scale = scale * 32
           ipf   = ipf/1024
        enddo
        ix = ix + scale * pix2x(ipf)
-       ix = iy + scale * pix2y(ipf)
+       iy = iy + scale * pix2y(ipf) ! corrected 2012-08-27
     endif
 
     return
