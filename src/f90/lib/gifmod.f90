@@ -306,7 +306,7 @@ contains
       integer(i4b), dimension(size(a,1),size(a,2)), intent(out) :: b
       logical(lgt), optional, dimension(size(a,1),size(a,2)), intent(in) :: m
       !logical(lgt), allocatable, dimension(:,:) :: n
-      real(sp) :: threshold = 1.e-6 * as
+      real(sp) :: threshold = 1.e-6 * abs(as) ! corrected 2012-08-27
       integer(i4b) :: i,j
 
       if (present(m)) then
