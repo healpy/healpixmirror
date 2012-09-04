@@ -76,7 +76,12 @@ public class HealpixUtils
       @param v2 divisor; must be positive
       @return remainder of the division; positive and smaller than {@code v2} */
   static public double fmodulo (double v1, double v2)
-    { return (v1>=0) ? ((v1<v2) ? v1 : v1%v2) : (v1%v2+v2); }
+    {
+    if (v1>=0)
+      return (v1<v2) ? v1 : v1%v2;
+    double tmp=v1%v2+v2;
+    return (tmp==v2) ? 0. : tmp;
+    }
 
   static public boolean approx (float a, float b, float epsilon)
     { return Math.abs(a-b) < (epsilon*Math.abs(b)); }

@@ -78,7 +78,11 @@ static void util_free_ (void *ptr)
     \a v1 can be positive or negative; \a v2 must be positive. */
 static double fmodulo (double v1, double v2)
   {
-  return (v1>=0) ? ((v1<v2) ? v1 : fmod(v1,v2)) : (fmod(v1,v2)+v2);
+  if (v1>=0)
+    return (v1<v2) ? v1 : fmod(v1,v2);
+  double tmp=fmod(v1,v2)+v2;
+  return (tmp==v2) ? 0. : tmp;
+/*  return (v1>=0) ? ((v1<v2) ? v1 : fmod(v1,v2)) : (fmod(v1,v2)+v2); */
   }
 /*! Returns the remainder of the division \a v1/v2.
     The result is non-negative.
