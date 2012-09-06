@@ -29,7 +29,7 @@
  *  Author: Martin Reinecke
  */
 
-#define NEWSHT
+//#define NEWSHT
 
 #include "alm_healpix_tools.h"
 #include "alm.h"

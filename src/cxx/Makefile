@@ -21,7 +21,7 @@ include libcfitsio/planck.make
 include c_utils/planck.make
 include libfftpack/planck.make
 include libpsht/planck.make
-include libsharp/planck.make
+#include libsharp/planck.make
 include cxxsupport/planck.make
 include Healpix_cxx/planck.make
 include alice/planck.make
