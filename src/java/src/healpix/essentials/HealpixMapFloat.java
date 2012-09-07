@@ -187,7 +187,7 @@ public class HealpixMapFloat extends HealpixBase
     HealpixUtils.check(orig.nside==nside*fact,
       "the larger Nside must be a multiple of the smaller one");
 
-    int minhits = pessimistic ? fact : 1;
+    int minhits = pessimistic ? fact*fact : 1;
     for (int m=0; m<npix; ++m)
       {
       Xyf xyf = pix2xyf(m);
