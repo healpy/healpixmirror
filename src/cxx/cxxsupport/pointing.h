@@ -25,7 +25,7 @@
 /*! \file pointing.h
  *  Class representing a direction in 3D space
  *
- *  Copyright (C) 2003-2011 Max-Planck-Society
+ *  Copyright (C) 2003-2012 Max-Planck-Society
  *  \author Martin Reinecke
  */
 
@@ -66,6 +66,8 @@ class pointing
     vec3 to_vec3() const;
     /*! Converts \a inp to \a ptg. \a inp need not be normalized. */
     void from_vec3 (const vec3 &inp);
+    /*! Changes the angles so that \a 0<=theta<=pi. */
+    void normalize_theta();
     /*! Changes the angles so that \a 0<=theta<=pi and \a 0<=phi<2*pi. */
     void normalize();
   };

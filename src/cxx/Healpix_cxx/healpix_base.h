@@ -25,7 +25,7 @@
  */
 
 /*! \file healpix_base.h
- *  Copyright (C) 2003-2011 Max-Planck-Society
+ *  Copyright (C) 2003-2012 Max-Planck-Society
  *  \author Martin Reinecke
  */
 
@@ -144,6 +144,8 @@ template<typename I> class T_Healpix_Base: public Healpix_Tables
         \a ang. */
     I ang2pix (const pointing &ang) const
       {
+      const double pi=3.141592653589793238462643383279502884197;
+      planck_assert((ang.theta>=0)&&(ang.theta<=pi),"invalid theta value");
       return ((ang.theta<0.01) || (ang.theta > 3.14159-0.01)) ?
         loc2pix(cos(ang.theta),ang.phi,sin(ang.theta),true) :
         loc2pix(cos(ang.theta),ang.phi,0.,false);

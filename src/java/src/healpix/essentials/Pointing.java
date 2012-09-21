@@ -62,6 +62,24 @@ public class Pointing
   // for some reason, the alternative below is much slower...
   //{ theta=FastMath.acos(zphi.z); phi=zphi.phi; }
 
+  /** Normalize theta range */
+  public void normalizeTheta()
+    {
+    theta=HealpixUtils.fmodulo(theta,2*Math.PI);
+    if (theta>Math.PI)
+      {
+      phi+=Math.PI;
+      theta=2*Math.PI-theta;
+      }
+    }
+
+  /** Normalize theta and phi ranges */
+  public void normalize()
+    {
+    normalizeTheta();
+    phi=HealpixUtils.fmodulo(phi,2*Math.PI);
+    }
+
   public String toString()
     {
     StringBuilder s = new StringBuilder();

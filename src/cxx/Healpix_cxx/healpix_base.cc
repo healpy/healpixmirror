@@ -1175,6 +1175,7 @@ template<typename I> void T_Healpix_Base<I>::neighbors (I pix,
 template<typename I> void T_Healpix_Base<I>::get_interpol (const pointing &ptg,
   fix_arr<I,4> &pix, fix_arr<double,4> &wgt) const
   {
+  planck_assert((ptg.theta>=0)&&(ptg.theta<=pi),"invalid theta value");
   double z = cos (ptg.theta);
   I ir1 = ring_above(z);
   I ir2 = ir1+1;

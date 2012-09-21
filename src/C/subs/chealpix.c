@@ -450,10 +450,12 @@ long nside2npix(const long nside)
 
 void ang2pix_ring(long nside, double theta, double phi, long *ipix)
   {
+  UTIL_ASSERT((theta>=0)&&(theta<=pi),"theta out of range");
   *ipix=ang2pix_ring_z_phi (nside,cos(theta),phi);
   }
 void ang2pix_nest(long nside, double theta, double phi, long *ipix)
   {
+  UTIL_ASSERT((theta>=0)&&(theta<=pi),"theta out of range");
   *ipix=ang2pix_nest_z_phi (nside,cos(theta),phi);
   }
 void vec2pix_ring(long nside, const double *vec, long *ipix)
@@ -858,11 +860,13 @@ hpint64 nside2npix64(hpint64 nside)
 
 void ang2pix_ring64(hpint64 nside, double theta, double phi, hpint64 *ipix)
   {
+  UTIL_ASSERT((theta>=0)&&(theta<=pi),"theta out of range");
   double cth=cos(theta), sth=(fabs(cth)>0.99) ? sin(theta) : -5;
   *ipix=ang2pix_ring_z_phi64 (nside,cth,sth,phi);
   }
 void ang2pix_nest64(hpint64 nside, double theta, double phi, hpint64 *ipix)
   {
+  UTIL_ASSERT((theta>=0)&&(theta<=pi),"theta out of range");
   double cth=cos(theta), sth=(fabs(cth)>0.99) ? sin(theta) : -5;
   *ipix=ang2pix_nest_z_phi64 (nside,cth,sth,phi);
   }

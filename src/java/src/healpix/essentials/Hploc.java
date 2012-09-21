@@ -48,8 +48,10 @@ final class Hploc
     phi = zphi.phi;
     have_sth=false;
     }
-  public Hploc (Pointing ptg)
+  public Hploc (Pointing ptg) throws Exception
     {
+    HealpixUtils.check((ptg.theta>=0.)&&(ptg.theta<=Math.PI),
+      "invalid theta value");
     z = FastMath.cos(ptg.theta);
     phi = ptg.phi;
     if (Math.abs(z)>0.99)

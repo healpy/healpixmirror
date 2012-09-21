@@ -25,7 +25,7 @@
 /*! \file pointing.cc
  *  Class representing a direction in 3D space
  *
- *  Copyright (C) 2003-2011 Max-Planck-Society
+ *  Copyright (C) 2003-2012 Max-Planck-Society
  *  \author Martin Reinecke
  */
 
@@ -46,7 +46,7 @@ void pointing::from_vec3 (const vec3 &inp)
   phi = safe_atan2 (inp.y,inp.x);
   if (phi<0.) phi += twopi;
   }
-void pointing::normalize()
+void pointing::normalize_theta()
   {
   theta=fmodulo(theta,twopi);
   if (theta>pi)
@@ -54,6 +54,10 @@ void pointing::normalize()
     phi+=pi;
     theta=twopi-theta;
     }
+  }
+void pointing::normalize()
+  {
+  normalize_theta();
   phi=fmodulo(phi,twopi);
   }
 
