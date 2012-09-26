@@ -1,0 +1,15 @@
+AC_INIT([Healpix_cxx], [1.0])
+AM_INIT_AUTOMAKE([foreign -Wall -Werror])
+LT_INIT
+AC_CONFIG_MACRO_DIR([m4])
+AC_PROG_CC_C99
+AC_PROG_CXX
+AC_PROG_LIBTOOL
+AC_OPENMP
+AC_CHECK_LIB([cfitsio],[ffgnrwll],,AC_MSG_ERROR([could not find the cfitsio library]),[-lm])
+AC_CHECK_HEADERS([fitsio.h],,AC_MSG_ERROR([could not find the cfitsio header file]),)
+CPPFLAGS="$CPPFLAGS $OPENMP_CFLAGS"
+CFLAGS="$CFLAGS $OPENMP_CFLAGS"
+CXXFLAGS="$CXXFLAGS $OPENMP_CFLAGS"
+AC_CONFIG_FILES([Makefile])
+AC_OUTPUT
