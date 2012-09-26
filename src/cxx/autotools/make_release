@@ -8,5 +8,7 @@ svn export -r ${REV} ${URL} ${NAME} &&\
 cd ${NAME} &&\
 mv autotools/Makefile.am autotools/configure.ac . &&\
 mkdir m4 &&\
+rm -f Makefile &&\
 autoreconf --install &&\
+./configure &&\
 make distcheck
