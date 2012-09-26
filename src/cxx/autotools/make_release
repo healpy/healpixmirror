@@ -7,5 +7,6 @@ REV=HEAD
 svn export -r ${REV} ${URL} ${NAME} &&\
 cd ${NAME} &&\
 mv autotools/Makefile.am autotools/configure.ac . &&\
+mkdir m4 &&\
 autoreconf --install &&\
 make distcheck
