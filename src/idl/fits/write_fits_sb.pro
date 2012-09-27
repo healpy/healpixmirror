@@ -25,13 +25,13 @@
 ;  For more information about HEALPix see http://healpix.jpl.nasa.gov
 ;
 ; -----------------------------------------------------------------------------
-pro write_fits_sb, filename, prim_st, exten_st, Coordsys=coordsys, Nested=nested, Ring=ring, Ordering=ordering, Partial=Partial_usr, Nside=nside_usr, Extension=extension_id, Nothealpix=nothealpix
+pro write_fits_sb, filename, prim_st, exten_st, Coordsys=coordsys, Nested=nested, Ring=ring, Ordering=ordering, Partial=Partial_usr, Nside=nside_usr, Extension=extension_id, Nothealpix=nothealpix, help=help
 ;+
 ; writes a FITS file with data contained in a BINTABLE extension
 ;
 ; CALLING SEQUENCE:
 ;    WRITE_FITS_SB, filename, prim_st, exten_st, [Coordsys=, Ring=, Nested=,
-;    Ordering=, Partial=, Nside=, Extension=, Nothealpix=]
+;    Ordering=, Partial=, Nside=, Extension=, Nothealpix=, Help=]
 ;
 ; INPUTS:
 ;    filename = name of the output file 
@@ -79,6 +79,8 @@ pro write_fits_sb, filename, prim_st, exten_st, Coordsys=coordsys, Nested=nested
 ;
 ;    Nside- only useful if the data is not full sky and Partial is set,
 ;      by default Nside = sqrt(npix/12) where npix is the number of data point
+;
+;    Help: prints out this header and leaves
 ;
 ; OPTIONAL KEYWORD
 ;   Coord = if set to either 'C', 'E' or 'G' specifies that the
@@ -128,15 +130,23 @@ pro write_fits_sb, filename, prim_st, exten_st, Coordsys=coordsys, Nested=nested
 ;  Jan 2009: calls init_astrolib
 ;  Nov 2009: increased buffersize in fxbwritm for slightly faster writing
 ;  2010-05-11: adds BAD_DATA = -1.6375e30  in FITS header of *Healpix* data sets
+;  2012-09-27: added HELP keyword. Work around for STRING(format='(:)') bug in GDL
 ;-
 ;
 ; NB : do NOT use 'T' or 'F' as the tag names
 ;-
 
+routine = 'write_fits_sb'
+if (keyword_set(help)) then begin
+    doc_library,routine
+    return
+endif
+
 if n_params() ne 3 then begin
     message,' Invalid number of arguments ',/nopref,/info 
     message,'Syntax : WRITE_FITS_SB, filename, prim_st, exten_st, $ ',/nopref,/info,/noname
-    message,'    [Coordsys=, Ring=, Nested=, Ordering=, Partial=, Nside=, Extension=, Nothealpix=]',/nopref,/noname
+    message,'    [Coordsys=, Ring=, Nested=, Ordering=, Partial=, Nside=, Extension=, Nothealpix=, Help=]',/nopref,/noname,/info
+    return
 endif
 
 init_astrolib
@@ -327,7 +337,7 @@ nloop = (long64(nrows) * bytes_per_row) / buffersize  ; number of chunks of size
 nloop = long(nloop+1) < nrows
 nw = nrows/nloop + 1L ; number of rows in each chunk
 buffersize = nw * bytes_per_row ; final size of chunk
-ip1   = indgen(number-1)+1
+ip1   = indgen(number-1)+1 ; from 1 to number-1
 ;print,nloop,nw,nw*nloop-nrows, buffersize
 
 
@@ -339,7 +349,13 @@ for i=0LL, nloop-1LL do begin
     hi  = long64(low + nw - 1) < (nrows-1)
 ; uses FXBWRITM rather than FXBWRITE, and write a few rows at a time
     srange = strcompress(string(low*nentry,hi*nentry+nentry-1,form='("[",i15,":",i15,"]")'),/remove_all)
-    starg =  strcompress(string(ip1,form='(50(:, ",exten_st.(",i2,")'+srange+'"))'),/remove_all)
+    if (is_gdl()) then begin
+        starg = ''
+        for ip=1,number-1 do starg += string(ip, form='(",exten_st.(",i0,")'+srange+'")')
+        starg = strcompress(starg, /remove_all)
+    endif else begin
+        starg =  strcompress(string(ip1,form='(50(:, ",exten_st.(",i2,")'+srange+'"))'),/remove_all)
+    endelse
     rows =   strcompress(string(low+1L,hi+1L,form='(",row=[",i12,",",i12,"]")'),/remove_all)
     command = 'FXBWRITM, unit, '+stcol+starg+rows+stbuf
     junk = execute(command)
