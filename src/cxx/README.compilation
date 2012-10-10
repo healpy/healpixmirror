@@ -23,6 +23,11 @@ CFITSIO_EXT_INC=<full name of a directory containing fitsio.h and longnam.h>
 
 The installed version of libcfitsio should be at least 3.23.
 
+NOTE: due to a conflict of header file names it is currently not possible
+to use the cfitsio library provided with the HEASOFT package for compilation
+of Healpix C++. HEASOFT's include directory contains a file called "rotmatrix.h"
+which clashes with Healpix's own rotmatrix.h.
+
 Alternatively, Healpix_cxx can be instructed to compile its own libcfitsio.
 For that purpose the file cfitsio3280.tar.gz needs to be present in
 the subdirectory libcfitsio/. It can be obtained from
