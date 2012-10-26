@@ -34,6 +34,13 @@
 #include "sharp_ylmgen_c.h"
 #include "c_utils.h"
 
+static inline void normalize (double *val, int *scale, double xfmax)
+  {
+  while (fabs(*val)>xfmax) { *val*=sharp_fsmall; ++*scale; }
+  if (*val!=0.)
+    while (fabs(*val)<xfmax*sharp_fsmall) { *val*=sharp_fbig; --*scale; }
+  }
+
 void sharp_Ylmgen_init (sharp_Ylmgen_C *gen, int l_max, int m_max, int spin)
   {
   const double inv_sqrt4pi = 0.2820947917738781434740397257803862929220;
@@ -92,14 +99,20 @@ void sharp_Ylmgen_init (sharp_Ylmgen_C *gen, int l_max, int m_max, int spin)
       {
       fac[m]=fac[m-1]*sqrt(m);
       facscale[m]=facscale[m-1];
-      if (fac[m]>1.) { fac[m]*=sharp_fsmall; ++facscale[m]; }
+      normalize(&fac[m],&facscale[m],sharp_fbighalf);
       }
     for (int m=0; m<=gen->mmax; ++m)
       {
       int mlo=gen->s, mhi=m;
       if (mhi<mlo) SWAP(mhi,mlo,int);
-      gen->prefac[m]=fac[2*mhi]/(fac[mhi+mlo]*fac[mhi-mlo]);
-      gen->fscale[m]=facscale[2*mhi]-facscale[mhi+mlo]-facscale[mhi-mlo];
+      double tfac=fac[2*mhi]/fac[mhi+mlo];
+      int tscale=facscale[2*mhi]-facscale[mhi+mlo];
+      normalize(&tfac,&tscale,sharp_fbighalf);
+      tfac/=fac[mhi-mlo];
+      tscale-=facscale[mhi-mlo];
+      normalize(&tfac,&tscale,sharp_fbighalf);
+      gen->prefac[m]=tfac;
+      gen->fscale[m]=tscale;
       }
     DEALLOC(fac);
     DEALLOC(facscale);

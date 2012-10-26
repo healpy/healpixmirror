@@ -25,7 +25,7 @@
 /*! \file paramfile.h
  *  Class for parsing parameter files
  *
- *  Copyright (C) 2003-2011 Max-Planck-Society
+ *  Copyright (C) 2003-2012 Max-Planck-Society
  *  Authors: Martin Reinecke
  */
 
@@ -56,6 +56,7 @@ class paramfile
     void setParamString (const std::string &key, const std::string &value);
 
   public:
+    paramfile () {}
     /*! Constructs a paramfile object from the contents of \a filename.
         If  \a verbose_==true, diagnostic output is generated when calling
         methods on this object, otherwise not. */

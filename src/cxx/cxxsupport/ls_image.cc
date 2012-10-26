@@ -25,7 +25,7 @@
 /*
  *  Classes for creation and output of image files
  *
- *  Copyright (C) 2003-2011 Max-Planck-Society
+ *  Copyright (C) 2003-2012 Max-Planck-Society
  *  Author: Martin Reinecke
  */
 
@@ -39,8 +39,8 @@
 
 using namespace std;
 
-const Font medium_bold_font = { 0, 128, 7, 13, medium_bold_font_data };
-const Font giant_font = { 0, 128, 9, 15, giant_font_data };
+const MP_Font medium_bold_font = { 0, 128, 7, 13, medium_bold_font_data };
+const MP_Font giant_font = { 0, 128, 9, 15, giant_font_data };
 
 void Palette::setPredefined (int num)
   {
@@ -107,7 +107,7 @@ void LS_Image::annotate_centered (int xpos, int ypos, const Colour &col,
   annotate (xpos,ypos,col,text,scale);
   }
 
-void LS_Image::set_font (const Font &fnt)
+void LS_Image::set_font (const MP_Font &fnt)
   { font = fnt; }
 
 void LS_Image::write_TGA (const string &file) const

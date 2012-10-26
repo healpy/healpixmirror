@@ -25,7 +25,7 @@
 /*! \file ls_image.h
  *  Classes for creation and output of image files
  *
- *  Copyright (C) 2003-2010 Max-Planck-Society
+ *  Copyright (C) 2003-2012 Max-Planck-Society
  *  \author Martin Reinecke, David Larson
  */
 
@@ -122,21 +122,21 @@ class Colour8
       { return (r != that.r) || (g != that.g) || (b != that.b); }
   };
 
-class Font
+class MP_Font
   {
   public:
     int offset, num_chars, xpix, ypix;
     const char *data;
   };
 
-extern const Font medium_bold_font;
-extern const Font giant_font;
+extern const MP_Font medium_bold_font;
+extern const MP_Font giant_font;
 
 /*! Class for creating and storing image files. */
 class LS_Image
   {
   private:
-    Font font;
+    MP_Font font;
     arr2<Colour8> pixel;
 
     void write_char (int xpos, int ypos, const Colour &col, char c,
@@ -153,7 +153,7 @@ class LS_Image
     /*! Fills the entire image with colour \a col. */
     void fill (const Colour &col) { pixel.fill(col); }
     /*! Sets the font used for annotations to \a fnt. */
-    void set_font (const Font &fnt);
+    void set_font (const MP_Font &fnt);
     /*! Outputs the string \a text in colour \a col.
         \a xpos, \a ypos is the lower left corner;
         the font is scaled by \a scale. */

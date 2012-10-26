@@ -262,7 +262,7 @@ void psht_make_gauss_geom_info_2 (int nrings, int nphi, int stride_lon,
 
   for (m=0; m<nrings; ++m)
     {
-    theta[m] = acos(theta[m]);
+    theta[m] = acos(-theta[m]);
     nph[m]=nphi;
     phi0[m]=0;
     ofs[m]=(ptrdiff_t)m*stride_lat;

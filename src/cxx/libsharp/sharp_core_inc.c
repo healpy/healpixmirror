@@ -70,10 +70,36 @@ static inline Tb Y(Tbprod)(Tb a, Tb b)
 static inline void Y(Tbmuleq)(Tb * restrict a, Tb b)
   { for (int i=0; i<nvec; ++i) vmuleq(a->v[i],b.v[i]); }
 
+static inline void Y(Tbnormalize) (Tb * restrict val, Tb * restrict scale,
+  double maxval)
+  {
+  const Tv vfsmall=vload(sharp_fsmall), vfbig=vload(sharp_fbig);
+  const Tv vfmin=vload(sharp_fsmall*maxval), vfmax=vload(maxval);
+  for (int i=0;i<nvec; ++i)
+    {
+    Tv mask = vgt(vabs(val->v[i]),vfmax);
+    while (vanyTrue(mask))
+      {
+      vmuleq(val->v[i],vblend(mask,vfsmall,vone));
+      vaddeq(scale->v[i],vblend(mask,vone,vzero));
+      mask = vgt(vabs(val->v[i]),vfmax);
+      }
+    mask = vand(vlt(vabs(val->v[i]),vfmin),vne(val->v[i],vzero));
+    while (vanyTrue(mask))
+      {
+      vmuleq(val->v[i],vblend(mask,vfbig,vone));
+      vsubeq(scale->v[i],vblend(mask,vone,vzero));
+      mask = vand(vlt(vabs(val->v[i]),vfmin),vne(val->v[i],vzero));
+      }
+    }
+  }
+
 static inline void Y(mypow) (Tb val, int npow, Tb * restrict resd,
   Tb * restrict ress)
   {
   Tb scale=Y(Tbconst)(0.), scaleint=Y(Tbconst)(0.), res=Y(Tbconst)(1.);
+
+  Y(Tbnormalize)(&val,&scaleint,sharp_fbighalf);
 
   do
     {
@@ -83,19 +109,15 @@ static inline void Y(mypow) (Tb val, int npow, Tb * restrict resd,
         {
         vmuleq(res.v[i],val.v[i]);
         vaddeq(scale.v[i],scaleint.v[i]);
-        Tv mask=vlt(vabs(res.v[i]),vload(sharp_fsmall));
-        vmuleq(res.v[i],vblend(mask,vload(sharp_fbig),vone));
-        vsubeq(scale.v[i],vblend(mask,vone,vzero));
         }
+      Y(Tbnormalize)(&res,&scale,sharp_fbighalf);
       }
     for (int i=0; i<nvec; ++i)
       {
       vmuleq(val.v[i],val.v[i]);
       vaddeq(scaleint.v[i],scaleint.v[i]);
-      Tv mask = vlt(vabs(val.v[i]),vload(sharp_fsmall));
-      vmuleq(val.v[i],vblend(mask,vload(sharp_fbig),vone));
-      vsubeq(scaleint.v[i],vblend(mask,vone,vzero));
       }
+    Y(Tbnormalize)(&val,&scaleint,sharp_fbighalf);
     }
   while(npow>>=1);
 
@@ -109,7 +131,7 @@ static inline int Y(rescale) (Tb * restrict lam1, Tb * restrict lam2,
   int did_scale=0;
   for (int i=0;i<nvec; ++i)
     {
-    Tv mask = vgt(vabs(lam2->v[i]),vone);
+    Tv mask = vgt(vabs(lam2->v[i]),vload(sharp_ftol));
     if (vanyTrue(mask))
       {
       did_scale=1;
@@ -119,30 +141,6 @@ static inline int Y(rescale) (Tb * restrict lam1, Tb * restrict lam2,
       }
     }
   return did_scale;
-  }
-
-static inline void Y(normalize) (Tb * restrict val, Tb * restrict scale)
-  {
-  const Tv vfsmall=vload(sharp_fsmall), vfbig=vload(sharp_fbig);
-  for (int i=0;i<nvec; ++i)
-    {
-    Tv mask = vgt(vabs(val->v[i]),vone);
-    while (vanyTrue(mask))
-      {
-      vmuleq(val->v[i],vblend(mask,vfsmall,vone));
-      vaddeq(scale->v[i],vblend(mask,vone,vzero));
-      mask = vgt(vabs(val->v[i]),vone);
-      }
-    mask = vlt(vabs(val->v[i]),vfsmall);
-    mask = vand(mask,vne(val->v[i],vzero));
-    while (vanyTrue(mask))
-      {
-      vmuleq(val->v[i],vblend(mask,vfbig,vone));
-      vsubeq(scale->v[i],vblend(mask,vone,vzero));
-      mask = vlt(vabs(val->v[i]),vfsmall);
-      mask = vand(mask,vne(val->v[i],vzero));
-      }
-    }
   }
 
 static inline int Y(TballLt)(Tb a,double b)
@@ -159,6 +157,14 @@ static inline int Y(TballGt)(Tb a,double b)
   Tv res=vgt(a.v[0],vb);
   for (int i=1; i<nvec; ++i)
     res=vand(res,vgt(a.v[i],vb));
+  return vallTrue(res);
+  }
+static inline int Y(TballGe)(Tb a,double b)
+  {
+  Tv vb=vload(b);
+  Tv res=vge(a.v[0],vb);
+  for (int i=1; i<nvec; ++i)
+    res=vand(res,vge(a.v[i],vb));
   return vallTrue(res);
   }
 
@@ -181,7 +187,7 @@ static void Y(iter_to_ieee) (const Tb sth, Tb cth, int *l_,
   Tb lam_1=Y(Tbconst)(0.), lam_2, scale;
   Y(mypow) (sth,l,&lam_2,&scale);
   Y(Tbmuleq1) (&lam_2,(gen->m&1) ? -gen->mfac[gen->m]:gen->mfac[gen->m]);
-  Y(normalize)(&lam_2,&scale);
+  Y(Tbnormalize)(&lam_2,&scale,sharp_ftol);
 
   int below_limit = Y(TballLt)(scale,sharp_limscale);
   while (below_limit)
@@ -238,10 +244,19 @@ static void Y(iter_to_ieee_spin) (const Tb cth, int *l_,
      prescale=vload(gen->fscale[gen->m]);
   for (int i=0; i<nvec; ++i)
     {
-    rec2p.v[i]=vmul(vmul(prefac,ccp.v[i]),ssp.v[i]);
-    scalep.v[i]=vadd(vadd(prescale,ccps.v[i]),ssps.v[i]);
-    rec2m.v[i]=vmul(vmul(prefac,csp.v[i]),scp.v[i]);
-    scalem.v[i]=vadd(vadd(prescale,csps.v[i]),scps.v[i]);
+    rec2p.v[i]=vmul(prefac,ccp.v[i]);
+    scalep.v[i]=vadd(prescale,ccps.v[i]);
+    rec2m.v[i]=vmul(prefac,csp.v[i]);
+    scalem.v[i]=vadd(prescale,csps.v[i]);
+    }
+  Y(Tbnormalize)(&rec2m,&scalem,sharp_fbighalf);
+  Y(Tbnormalize)(&rec2p,&scalep,sharp_fbighalf);
+  for (int i=0; i<nvec; ++i)
+    {
+    rec2p.v[i]=vmul(rec2p.v[i],ssp.v[i]);
+    scalep.v[i]=vadd(scalep.v[i],ssps.v[i]);
+    rec2m.v[i]=vmul(rec2m.v[i],scp.v[i]);
+    scalem.v[i]=vadd(scalem.v[i],scps.v[i]);
     if (gen->preMinus_p)
       rec2p.v[i]=vneg(rec2p.v[i]);
     if (gen->preMinus_m)
@@ -249,7 +264,8 @@ static void Y(iter_to_ieee_spin) (const Tb cth, int *l_,
     if (gen->s&1)
       rec2p.v[i]=vneg(rec2p.v[i]);
     }
-  Y(normalize)(&rec2m,&scalem); Y(normalize)(&rec2p,&scalep);
+  Y(Tbnormalize)(&rec2m,&scalem,sharp_ftol);
+  Y(Tbnormalize)(&rec2p,&scalep,sharp_ftol);
 
   int l=gen->mhi;
 

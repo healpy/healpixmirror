@@ -116,7 +116,9 @@ static int ringpair_compare (const void *xa, const void *xb)
   {
   const sharp_ringpair *a=xa, *b=xb;
   if (a->r1.nph==b->r1.nph)
-    return (a->r1.phi0 < b->r1.phi0) ? -1 : (a->r1.phi0 > b->r1.phi0) ? 1 : 0;
+    return (a->r1.phi0 < b->r1.phi0) ? -1 :
+      ((a->r1.phi0 > b->r1.phi0) ? 1 :
+        (a->r1.cth>b->r1.cth ? -1 : 1));
   return (a->r1.nph<b->r1.nph) ? -1 : 1;
   }
 
@@ -186,7 +188,13 @@ void sharp_make_geom_info (int nrings, const int *nph, const ptrdiff_t *ofs,
     info->pair[info->npairs].r1=infos[pos];
     if ((pos<nrings-1) && FAPPROX(infos[pos].cth,-infos[pos+1].cth,1e-12))
       {
-      info->pair[info->npairs].r2=infos[pos+1];
+      if (infos[pos].cth>0)  // make sure northern ring is in r1
+        info->pair[info->npairs].r2=infos[pos+1];
+      else
+        {
+        info->pair[info->npairs].r1=infos[pos+1];
+        info->pair[info->npairs].r2=infos[pos];
+        }
       ++pos;
       }
     else
@@ -542,7 +550,7 @@ static void sharp_execute_job (sharp_job *job)
   }
 
 static void sharp_build_job_common (sharp_job *job, sharp_jobtype type,
-  int spin, int add_output, void **alm, void **map,
+  int spin, int add_output, void *alm, void *map,
   const sharp_geom_info *geom_info, const sharp_alm_info *alm_info, int ntrans,
   int dp, int nv)
   {
@@ -566,8 +574,8 @@ static void sharp_build_job_common (sharp_job *job, sharp_jobtype type,
   job->fde=dp ? DOUBLE : FLOAT;
   }
 
-void sharp_execute (sharp_jobtype type, int spin, int add_output, void **alm,
-  void **map, const sharp_geom_info *geom_info, const sharp_alm_info *alm_info,
+void sharp_execute (sharp_jobtype type, int spin, int add_output, void *alm,
+  void *map, const sharp_geom_info *geom_info, const sharp_alm_info *alm_info,
   int ntrans, int dp, int nv, double *time, unsigned long long *opcnt)
   {
   sharp_job job;
@@ -617,8 +625,8 @@ static int sharp_oracle (sharp_jobtype type, int spin, int ntrans)
     int ntries=0;
     do
       {
-      sharp_execute(type,spin,0,(void **)(&alm[0]),(void **)(&map[0]),tinfo,
-        alms,ntrans,1,nv,&jtime,NULL);
+      sharp_execute(type,spin,0,&alm[0],&map[0],tinfo,alms,ntrans,1,nv,&jtime,
+        NULL);
 
       if (jtime<time) { time=jtime; nvbest=nv; }
       time_acc+=jtime;

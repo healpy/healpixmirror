@@ -251,6 +251,10 @@ template<typename T> class rangeset
       if (res&1) return false;
       return (b<=r[res+1]);
       }
+    /*! Returns \a true if the rangeset contains the value \a v,
+        else \a false. */
+    bool contains (T v) const
+      { return !(iiv(v)&1); }
     /*! Returns \a true if the rangeset contains all values stored in \a other,
         else \a false. */
     bool contains (const rangeset &other) const
@@ -272,7 +276,7 @@ template<typename T> inline std::ostream &operator<< (std::ostream &os,
   {
   os << "{ ";
   for (tsize i=0; i<rs.size(); ++i)
-    os << "["<<rs.ivbegin(i)<<";"<<rs.ivend(i)<<"] ";
+    os << "["<<rs.ivbegin(i)<<";"<<rs.ivend(i)<<"[ ";
   return os << "}";
   }
 
