@@ -27,7 +27,7 @@
 
 \sloppy
 \setcounter{secnumdepth}{0}
-\setcounter{tocdepth}{10}
+\setcounter{tocdepth}{1}
 
 \begin{document}
 \title{\healpix Fortran Facility User Guidelines}
@@ -104,6 +104,9 @@ floating point reals. The following points should be noted: \label{page:ioprec}
 \section[Changes between releases 2.20 and \hpxversion]{Changes between releases 2.20 and
 \hpxversion}
 \begin{itemize}
+	\item all {\em input} FITS files can now be compressed (with a 
+{\tt .gz}, {\tt .Z}, {\tt .z}, or {\tt .zip} 
+extension) and/or remotely located (with a {\tt ftp://} or {\tt http://} prefix).
 	\item introduction of \htmlref{{\tt process\_mask}}{fac:process_mask} 
 facility to compute the angular distance of valid
 pixels to the closest invalid pixels for a input binary mask,
@@ -116,7 +119,10 @@ analyzed.
 \end{itemize}
 
 
-\section[Changes between releases 2.14 and 2.20]{Changes between releases 2.14 and
+{\footnotesize{%
+%%%%%%%%%%%%%%%%%%%
+\section[Older Changes]{Older Changes}
+\subsection[Changes between releases 2.14 and 2.20]{Changes between releases 2.14 and
 2.20}
 \begin{itemize}
 	\item faster 
@@ -130,9 +136,6 @@ See
 \linklatexhtml{``F90 Subroutines Overview''}{subroutines.pdf}{subroutines.htm}
 for details.
 
-{\footnotesize{%
-%%%%%%%%%%%%%%%%%%%
-\section[Older Changes]{Older Changes}
 \subsection[Changes between releases 2.13 and 2.14]{Changes between releases 2.13 and
 2.14}
 \begin{itemize}

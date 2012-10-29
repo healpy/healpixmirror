@@ -1395,7 +1395,7 @@ contains
     character(len=*),      optional, intent(in)  :: beam_file
 
     character(len=256) :: new_beam_file
-    logical(kind=lgt) :: extfile
+    logical(kind=lgt) :: extfile, found_unix
     integer(kind=i4b) :: type, nl, nd, lunit, il, i
     character(len=80), dimension(1:180) :: header
     character(len=1600) :: str
@@ -1423,13 +1423,16 @@ contains
        print 9000,' Reading beam information from '//trim(new_beam_file)
 
        ! find out file nature
-       type = 1
-       open(unit=lunit,file=new_beam_file,status='old', &
+       type = 1 ! FITS by default
+       inquire(file=new_beam_file, exist=found_unix)
+       if (found_unix) then
+          open(unit=lunit,file=new_beam_file,status='old', &
                &          form='formatted',action='read')
-       read(lunit,'(a)') card
-       close(lunit)
-       card = adjustl(card)
-       if (card(1:8) /= 'SIMPLE  ' .AND. card(1:8) /= 'XTENSION') type = -1
+          read(lunit,'(a)') card
+          close(lunit)
+          card = adjustl(card)
+          if (card(1:8) /= 'SIMPLE  ' .AND. card(1:8) /= 'XTENSION') type = -1
+       endif
 
        ! read file according to its type
        if (type < 0) then 

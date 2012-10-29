@@ -43,6 +43,8 @@ module misc_utils
   ! edited 2006-10-31: fatal_error for gfortran gcc4.1.1 bug workaround (V. Stolyarov)
   ! 2007-06-06: string() now accepts LGT variables
   ! 2008-03-25: added expand_env_var, string() accepts 64-bit integer variables (on systems that can deal with them)
+  ! 2012-10-29: edited file_present to accept virtual files and CFITSIO 'extended filenames'
+  !    the NOCFITSIO flag must be set to return to standard UNIX 'inquire' behavior
   !--------------------------------------------------------------------------------------
   use healpix_types
   use extension, only : exit_with_status, getEnvironment
@@ -100,8 +102,17 @@ contains
   function file_present (filename)
     character(len=*), intent(in) :: filename
     logical :: file_present
+    integer :: ft_flag, ft_status
 
+#ifdef NOCFITSIO
     inquire(file=trim(filename),exist=file_present)
+#else
+    ft_status = 0
+    call ftexist(filename, ft_flag, ft_status)
+    ! accept disk files (+1) and remote/virtual files (-1)
+    file_present = (ft_flag == 1  .or. ft_flag == -1)
+#endif
+
   end function file_present
 
   !-----------------------------------------------------

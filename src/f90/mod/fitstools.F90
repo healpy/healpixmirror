@@ -83,7 +83,7 @@ module fitstools
   !
   ! subroutine read_fits_cut4               ?
   ! subroutine write_fits_cut4              ?
-  ! subroutine fits2cl                       NA
+  ! subroutine fits2cl                       NA    accepts extname addressing (eg myfile.fits[beam])
   ! subroutine read_asctab                   NA
   !
   ! subroutine output_map                  (4/8)
@@ -99,7 +99,7 @@ module fitstools
   !                                       
   ! subroutine read_par                    NA
   ! function getnumext_fits                NA
-  ! function getsize_fits                  (8)
+  ! function getsize_fits                  (8)    accepts extname addressing (eg myfile.fits[beam])
   ! function number_of_alms                NotYet
   !                                       
   ! subroutine putrec                      NA
@@ -844,10 +844,10 @@ contains
     CHARACTER(LEN=*), dimension(1:), optional,  INTENT(OUT) :: units
 
     INTEGER(I4B) :: status,unit,readwrite,blocksize,naxes(2),ncl_file, naxis
-    INTEGER(I4B) :: firstpix,lmax_file,lmax_min,nelems
+    INTEGER(I4B) :: firstpix,lmax_file,lmax_min,nelems,datacode,repeat,width
     CHARACTER(LEN=80) :: comment, pdmstr
     LOGICAL :: extend
-    INTEGER(I4B) :: nmove, hdutype
+    INTEGER(I4B) :: nmove, hdutype, hdunum
     INTEGER(I4B) :: column, frow
     REAL(KCL), DIMENSION(:), ALLOCATABLE :: clin_file
 
@@ -875,33 +875,41 @@ contains
     naxes(2) = 1
 
     readwrite=0
-    call ftopen(unit,filename,readwrite,blocksize,status)
+    call ftnopn(unit,filename,readwrite, status) !open primary HDU or specified HDU
     if (status > 0) call printerror(status)
     !     -----------------------------------------
+    call ftghdn(unit, hdunum)
+    if (hdunum == 1) then  ! in primary HDU: move to next HDU
+       !     determines the presence of image
+       call ftgkyj(unit,'NAXIS', naxis, comment, status)
+       if (status > 0) call printerror(status)
 
-    !     determines the presence of image
-    call ftgkyj(unit,'NAXIS', naxis, comment, status)
-    if (status > 0) call printerror(status)
+       !     determines the presence of an extension
+       call ftgkyl(unit,'EXTEND', extend, comment, status)
+       if (status > 0) call printerror(status)
 
-    !     determines the presence of an extension
-    call ftgkyl(unit,'EXTEND', extend, comment, status)
-    if (status > 0) call printerror(status)
-
-    if (extend) then ! there is an extension
        nmove = +1
        call ftmrhd(unit, nmove, hdutype, status)
+    else ! already in non primary HDU
+       extend = .true.
+       call ftghdt(unit, hdutype, status)
+    endif
+
+    if (extend) then ! there is an extension
 
        call assert ((hdutype==1).or.(hdutype==2), 'this is not a table')
 
        !        reads keywords related to table layout
-       if (hdutype==1) then
-         call ftghtb(unit, maxdim, &
-              &        rowlen, nrows, ncl_file, ttype, tbcol, tform, tunit, &
-              &        extname, status)
-       else
+       if (hdutype==1) then ! ASCII table
+         call ftghtb(unit, maxdim, rowlen, &
+              &      nrows, ncl_file, ttype, tbcol, &
+              &      tform, tunit, extname, status)
+         repeat = 1
+       else ! binary table
          call ftghbn(unit, maxdim, &
-              &        nrows, ncl_file, ttype, tform, tunit,extname, &
-              &        varidat, status)
+              &      nrows, ncl_file, ttype,        &
+              &      tform, tunit,extname, varidat, status)
+          call ftbnfm(tform(1), datacode, repeat, width, status)
        endif
 
        status = 0
@@ -918,7 +926,7 @@ contains
        column = 1
        frow = 1
        firstpix = 1
-       lmax_file = nrows - 1
+       lmax_file = nrows*repeat - 1
        lmax_min = MIN(lmax,lmax_file)
        nullval = 0.0_KCL
        nelems = lmax_min + 1
@@ -957,6 +965,129 @@ contains
 
     !     check for any error, and if so print out error messages
     if (status > 0) call printerror(status)
+
+!     CHARACTER(LEN=*),                          INTENT(IN) :: filename
+!     INTEGER(I4B),                              INTENT(IN) :: lmax, ncl
+!     REAL(KCL),         DIMENSION(0:lmax, 1:ncl), INTENT(OUT) :: clin
+!     CHARACTER(LEN=*), DIMENSION(1:),   INTENT(OUT) :: header
+!     CHARACTER(LEN=*), dimension(1:), optional,  INTENT(OUT) :: units
+
+!     INTEGER(I4B) :: status,unit,readwrite,blocksize,naxes(2),ncl_file, naxis
+!     INTEGER(I4B) :: firstpix,lmax_file,lmax_min,nelems
+!     CHARACTER(LEN=80) :: comment, pdmstr
+!     LOGICAL :: extend
+!     INTEGER(I4B) :: nmove, hdutype
+!     INTEGER(I4B) :: column, frow
+!     REAL(KCL), DIMENSION(:), ALLOCATABLE :: clin_file
+
+!     INTEGER(I4B), PARAMETER :: maxdim = 40 !number of columns in the extension
+!     INTEGER(I4B) :: rowlen, nrows, varidat
+!     INTEGER(I4B),      dimension(1:maxdim) :: tbcol
+!     CHARACTER(LEN=20), dimension(1:maxdim) :: ttype, tform, tunit
+!     CHARACTER(LEN=20)                      :: extname
+!     LOGICAL :: anynull
+!     REAL(KCL) ::  nullval
+!     logical :: planck_format
+
+
+!     !-----------------------------------------------------------------------
+!     status=0
+!     anynull = .false.
+!     ttype=''
+!     tform=''
+!     tunit=''
+!     extname=''
+!     comment=''
+
+!     unit = 110
+!     naxes(1) = 1
+!     naxes(2) = 1
+
+!     readwrite=0
+!     call ftopen(unit,filename,readwrite,blocksize,status)
+!     if (status > 0) call printerror(status)
+!     !     -----------------------------------------
+
+!     !     determines the presence of image
+!     call ftgkyj(unit,'NAXIS', naxis, comment, status)
+!     if (status > 0) call printerror(status)
+
+!     !     determines the presence of an extension
+!     call ftgkyl(unit,'EXTEND', extend, comment, status)
+!     if (status > 0) call printerror(status)
+
+!     if (extend) then ! there is an extension
+!        nmove = +1
+!        call ftmrhd(unit, nmove, hdutype, status)
+
+!        call assert ((hdutype==1).or.(hdutype==2), 'this is not a table')
+
+!        !        reads keywords related to table layout
+!        if (hdutype==1) then
+!          call ftghtb(unit, maxdim, &
+!               &        rowlen, nrows, ncl_file, ttype, tbcol, tform, tunit, &
+!               &        extname, status)
+!        else
+!          call ftghbn(unit, maxdim, &
+!               &        nrows, ncl_file, ttype, tform, tunit,extname, &
+!               &        varidat, status)
+!        endif
+
+!        status = 0
+!        header = ""
+!        call get_clean_header(unit, header, filename, status)
+
+!        if (present(units)) then 
+!           do column = 1, min(ncl, ncl_file)
+!              units(column) = adjustl(tunit(column))
+!           enddo
+!        endif
+
+!        !        reads the columns
+!        column = 1
+!        frow = 1
+!        firstpix = 1
+!        lmax_file = nrows - 1
+!        lmax_min = MIN(lmax,lmax_file)
+!        nullval = 0.0_KCL
+!        nelems = lmax_min + 1
+
+! ! check for the special Planck format (i.e. one additional column)
+!        planck_format=.true.
+!        call ftgkys(unit,'PDMTYPE',pdmstr,comment,status)
+!        if (status==202) then
+!          planck_format=.false.
+!          status=0
+!        endif
+!        allocate(clin_file(0:lmax_min),stat=status)
+!        clin = 0.0_KCL                         ! modification by EH
+!        if (planck_format) then
+!          do column = 1, MIN(ncl, ncl_file-1) ! modification by EH
+!             clin_file(:) = 0.0_KCL
+!             call ftgcvd(unit, column+1_i4b, frow, firstpix, nelems, nullval, &
+!                  &        clin_file(0), anynull, status)
+!             clin(0:lmax_min, column) = clin_file(0:lmax_min)
+!          enddo
+!        else
+!          do column = 1, MIN(ncl, ncl_file) ! modification by EH
+!             clin_file(:) = 0.0_KCL
+!             call ftgcvd(unit, column, frow, firstpix, nelems, nullval, &
+!                  &        clin_file(0), anynull, status)
+!             clin(0:lmax_min, column) = clin_file(0:lmax_min)
+!          enddo
+!        endif
+!        deallocate(clin_file)
+!     else ! no image no extension, you are dead, man
+!        call fatal_error(' No image, no extension')
+!     endif
+
+!     !     close the file
+!     call ftclos(unit, status)
+
+!     !     check for any error, and if so print out error messages
+!     if (status > 0) call printerror(status)
+
+
 
     return
   end subroutine fits2cl_d
@@ -1964,7 +2095,7 @@ contains
     INTEGER(I8B)      :: nsize
     CHARACTER(LEN=80) :: comment
     LOGICAL(LGT)      ::  extend
-    INTEGER(I4B)      ::  nmove, hdutype
+    INTEGER(I4B)      ::  nmove, hdutype, hdunum
     INTEGER(I4B)      :: datacode, repeat1, repeat2, width
 
     INTEGER(I4B),           PARAMETER :: maxdim = 40 !number of columns in the extension
@@ -1993,9 +2124,12 @@ contains
     tunit=''
     extname=''
     if (present(extno)) extno_in = extno
+    naxis = 0
+    extend = .false.
 
     readwrite=0
-    call ftopen(unit,filename,readwrite,blocksize,status)
+    !call ftopen(unit,filename,readwrite,blocksize,status)
+    call ftnopn(unit,filename,readwrite,status)
     if (status > 0) then
        ftype_in = -1
        getsize_fits = -1
@@ -2004,16 +2138,22 @@ contains
        return
     endif
     !     -----------------------------------------
+    call ftghdn(unit, hdunum)
+    if (hdunum == 1) then  ! in primary HDU: move to next HDU
+       !     determines the presence of image
+       call ftgkyj(unit,'NAXIS', naxis, comment, status)
 
-    !     determines the presence of image
-    call ftgkyj(unit,'NAXIS', naxis, comment, status)
-
-    !     determines the presence of an extension
-    call ftgkyl(unit,'EXTEND', extend, comment, status)
-    if (status > 0) then
-       ftype_in = 0
-       status = 0 ! no extension : 
+       !     determines the presence of an extension
+       call ftgkyl(unit,'EXTEND', extend, comment, status)
+       if (status > 0) then
+          ftype_in = 0
+          status = 0 ! no extension : 
        !     to be compatible with first version of the code
+       endif
+
+    else ! already in non primary HDU
+       extend = .true.
+       call ftghdt(unit, hdutype, status)
     endif
 
     if (naxis > 0) then 
@@ -2069,7 +2209,8 @@ contains
        ! there is an extension
        !-----------------------------------------------------------------
 
-       nmove =  extno_in + 1
+       nmove =  extno_in
+       if (hdunum == 1) nmove = extno_in + 1
        call ftmrhd(unit, nmove, hdutype, status)
        if (status > 0) then ! extension not found
           print*,'Extension #',extno_in,' not found in '//trim(filename)
@@ -2123,8 +2264,12 @@ contains
        if (present(mlpol)) then
           call ftgkyj(unit,'MAX-LPOL',mlpol_in,comment,status)
           if (status == 202) then ! max-lpol not found
-             mlpol_in = -1
              status = 0
+             call ftgkyj(unit,'LMAX',mlpol_in,comment,status)
+             if (status == 202) then
+                mlpol_in = -1
+                status = 0
+             endif
           endif
        endif
 

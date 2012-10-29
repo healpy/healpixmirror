@@ -96,6 +96,24 @@ commands {\tt hidl} or {\tt hidlde} which are aliases defined in the
 \healpix profile created during the installation process 
 for the package.
 
+\subsection{Using \healpix IDL together with other IDL libraries}
+Many users want to use \healpix IDL routines at the same time as other (home made
+or third party) IDL routines. There are several ways to achieve this.
+
+Before starting {\tt hidl} or {\tt hidlde}, (re)define the environment variable {\tt \$IDL\_PATH} so that it looks like:
+``{\tt +}{\it /path/to/my/idl/routines}{\tt :+}{\it /path/to/other/idl/routines}:{\tt
+<IDL\_DEFAULT>}''
+(where {\tt
+<IDL\_DEFAULT>} should be typed literally and the {\tt +}{\it /path} means that
+subdirectories of {\em path} will be searched recursively). For example, if
+young Albert types in Bourne shell:\\
+{\tt export IDL\_PATH=``+/home/aeinstein/brownian:<IDL\_DEFAULT>''}\\
+{\tt hidl}\\
+he will start an IDL session in which \healpix IDL routines and all those located
+in subdirectories of /home/aeinstein/brownian are accessible.
+
+
+
 %%%%%%
 %%%%\include{startup_idl}
 \input startup_idl

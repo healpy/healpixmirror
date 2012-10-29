@@ -39,6 +39,7 @@
 ! v1.5: 2009-09-07, introduces get_healpix_main_dir, get_healpix_data_dir, get_healpix_test_dir
 ! v1.6: 2009-11-26: bug correction in get_healpix_*_dir
 ! v1.7: 2011-01-03: addition of get_healpix_pixel_window_file & get_healpix_ring_weight_file
+! v1.8: 2012-10-29: replaced F90 inquire with misc_utils's file_present which will accept remote files
 module paramfile_io
   use healpix_types
   use extension
@@ -709,14 +710,16 @@ function parse_string (handle, keyname, default, descr, filestatus, options)
 
   if (present(filestatus) .and. trim(parse_string) /= '') then
      if (trim(filestatus)=='new' .or. trim(filestatus)=='NEW') then
-        inquire(file=trim(parse_string),exist=there)
+        !inquire(file=trim(parse_string),exist=there)
+        there = file_present(trim(parse_string))
         if (there) then
            print *, 'Parser: error: output file ' // trim(parse_string) // &
                 ' already exists!'
            goto 2
         end if
      else if (trim(filestatus)=='old' .or. trim(filestatus)=='OLD') then
-        inquire(file=trim(parse_string),exist=there)
+        !inquire(file=trim(parse_string),exist=there)
+        there = file_present(trim(parse_string))
         if (.not. there) then
            print *, 'Parser: error: input file ' // trim(parse_string) // &
                 ' does not exist!'
@@ -829,9 +832,10 @@ function scan_directories(directories, filename, fullpath)
      directory=trim(adjustl(directories(index(i)+1:index(i+1)-1)))
         do k = 1, size(separator)
            string = trim(directory)//trim(separator(k))//trim(filename)
-           inquire(&
-                &  file=string, &
-                &  exist=found)
+!            inquire(&
+!                 &  file=string, &
+!                 &  exist=found)
+           found = file_present(string)
            if (found) goto 10
         enddo
   enddo

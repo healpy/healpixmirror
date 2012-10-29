@@ -77,7 +77,7 @@ pixels) of holes found in input mask
 %\includeonly{}
 \sloppy
 \setcounter{secnumdepth}{0}
-\setcounter{tocdepth}{10}
+\setcounter{tocdepth}{1}
 \begin{document}
 
 \title{\healpix Fortran90 Subroutines Overview}
@@ -128,6 +128,13 @@ $\mathbf{\phi}$ & The azimuthal angle on the sphere, $\phi\in[0,2\pi[$.\\
 \hpxversion}
 \label{sub:new3p00}
 \begin{itemize}
+	\item all {\em input} FITS files can now be compressed (with a 
+{\tt .gz}, {\tt .Z}, {\tt .z}, or {\tt .zip} 
+extension) and/or remotely located (with a {\tt ftp://} or {\tt http://}
+prefix). Besides, the \htmlref{fits2cl}{sub:fits2cl} routine, used to read
+external beam window functions from FITS files, supports (part of) the CFTISIO Extended
+File Name Syntax in
+order to read an arbitrary extension identified by its number or its name.
 	\item%
 new code {\tt process\_mask} and new module {\tt mask\_tools} containing the routines
 \htmlref{dist2holes\_nest}{sub:dist2holes_nest}, 
@@ -147,11 +154,10 @@ mode.
 \end{itemize}
 
 %--------------------------------------------
-%{\footnotesize{
 {\mysmaller%
-%%{{
+\section{Older Changes}
 %--------------------------------------------
-\section[Changes between releases 2.14 and 2.20]{Changes between releases 2.14 and
+\subsection[Changes between releases 2.14 and 2.20]{Changes between releases 2.14 and
 2.20}
 \label{sub:new2p20}
 \begin{itemize}
@@ -205,7 +211,7 @@ routines}{sub:pix_tools} are now up to 20\% faster.
 
 \end{itemize}
 
-\section[Changes between releases 2.13 and 2.14]{Changes between releases 2.13 and 2.14}
+\subsection[Changes between releases 2.13 and 2.14]{Changes between releases 2.13 and 2.14}
 \begin{itemize}
 \item In \htmlref{alm2map\_der}{sub:alm2map_der} routine, a numerical bug affecting the accuracy of the Stokes parameter derivatives 
 $\partial X/\partial\theta$, 
@@ -215,7 +221,7 @@ for $X=Q,U$ has been corrected. See \linklatexhtml{''Fortran
 Facilities''}{facilities.pdf}{facilities.htm} Appendix for details.
 \end{itemize}
 
-\section[Changes between releases 2.0 and 2.13]{Changes between releases 2.0 and 2.13}
+\subsection[Changes between releases 2.0 and 2.13]{Changes between releases 2.0 and 2.13}
 \begin{itemize}
 \item New functions in version 2.13: 
 \begin{itemize}
@@ -255,7 +261,7 @@ pixel weights.
 \end{itemize}
 
 %--------------------------------------------
-\section[Changes between releases 1.2 and 2.0]{Changes between releases 1.2 and 2.0}
+\subsection[Changes between releases 1.2 and 2.0]{Changes between releases 1.2 and 2.0}
 Some new features have been added
 \begin{itemize}
 \item Most routines dealing with maps and $a_{\ell m}$ (eg, create\_alm, map2alm, alm2map,
@@ -305,7 +311,7 @@ Some new routines have been introduced since version 1.2, as listed below.
 \end{itemize}
 
 %--------------------------------------------
-\section{Changes between releases 1.1 and 1.2}
+\subsection{Changes between releases 1.1 and 1.2}
 Some new routines have been introduced since version 1.1, as listed below.
 % Most of the routines that already existed now have extended
 % capabilities.
