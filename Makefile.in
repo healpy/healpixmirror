@@ -4,11 +4,11 @@
 
 # ------------------------------ global variables --------------------------
 
-ALL     = c-void cpp-void f90-void
-TESTS   = c-void cpp-void f90-void
-CLEAN   = c-void cpp-void f90-void
-TIDY    = c-void cpp-void f90-void
-DISTCLEAN = c-void cpp-void f90-void
+ALL       = c-void cpp-void f90-void healpy-void 
+TESTS     = c-void cpp-void f90-void healpy-void 
+CLEAN     = c-void cpp-void f90-void healpy-void 
+TIDY      = c-void cpp-void f90-void healpy-void 
+DISTCLEAN = c-void cpp-void f90-void healpy-void 
 
 RM	= rm -f
 
@@ -78,6 +78,10 @@ EXTERNAL_CFITSIO=yes
 CFITSIO_EXT_LIB=
 CFITSIO_EXT_INC=
 export HEALPIX_TARGET EXTERNAL_CFITSIO CFITSIO_EXT_LIB CFITSIO_EXT_INC
+
+# ------------------------------ variables for Python healpy --------------------------
+
+CFITSIO_EXT_PREFIX=
 # ------------------------------- global rules -------------------------
 
 all: $(ALL)
@@ -268,3 +272,32 @@ cpp-distclean: cpp-tidy
 
 cpp-void:
 
+# ------------------------------- healpy rules ----------------------------
+
+# CFITSIO_EXT_LIB and _INC only are necessary when going thru a Makefile
+healpy-all:
+	@cd src/healpy; \
+	export EXTERNAL_CFITSIO=yes ; \
+	export CFITSIO_EXT_PREFIX=$(CFITSIO_EXT_PREFIX) ; \
+	export CFITSIO_EXT_LIB=$(CFITSIO_EXT_PREFIX)/lib/libcfitsio.a ; \
+	export CFITSIO_EXT_INC=$(CFITSIO_EXT_PREFIX)/include/ ; \
+	python setup.py build ; \
+	python setup.py install --user ; \
+	cd ../..
+
+healpy-test: healpy-all
+	@echo ' ' ;\
+	echo 'no healpy test currently available' ;\
+	echo ' ' ;\
+
+healpy-clean:
+	@cd src/healpy ; \
+	export CFITSIO_EXT_PREFIX=$(CFITSIO_EXT_PREFIX) ; \
+	python setup.py clean --all ; \
+	cd ../..
+
+healpy-tidy: healpy-clean
+
+healpy-distclean: healpy-tidy
+
+healpy-void:

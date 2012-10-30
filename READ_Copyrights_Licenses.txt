@@ -1,6 +1,6 @@
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-  Copyright (C) 1997-2008  HEALPix collaboration
+  Copyright (C) 1997-2012  HEALPix collaboration
 
 
   HEALPix is free software; you can redistribute it and/or modify
@@ -28,8 +28,8 @@ HISTORY
  in early 1997 by Krzysztof M. Gorski at the Theoretical Astrophysics 
  Center in Copenhagen. Early development of the HEALPix concept and initial 
  implementation was made in the spring of 1997 in  collaborative work 
- of KMG, currently at JPL with Eric Hivon, currently at Caltech. Benjamin D. Wandelt,
- currently at UI at Urbana-Champain, has contributed critically to the 
+ of KMG, currently at JPL with Eric Hivon, currently at IAP. Benjamin D. Wandelt,
+ currently at IAP, has contributed critically to the 
  further development of HEALPix and related mathematical methods.
 
  The  HEALPix-based  methods  contained  in  the  present  package,  their 
@@ -40,10 +40,10 @@ HISTORY
  Hans Kristian Eriksen (h.k.k.eriksen@astro.uio.no),
  Krzysztof M. Gorski (krzysztof.m.gorski@jpl.nasa.gov),
  Frode K. Hansen (fhansen@mpa-garching.mpg.de), 
- Eric Hivon (efh@ipac.caltech.edu),  
+ Eric Hivon (hivon@iap.fr),
  William O'Mullane (womullan@skysrv.pha.jhu.edu),
  Martin Reinecke (martin@mpa-garching.mpg.de), and
- Benjamin D. Wandelt (bwandelt@uiuc.edu).
+ Benjamin D. Wandelt (bwandelt@iap.fr).
 
  The HEALPix package is available at this address: 
  http://healpix.jpl.nasa.gov
@@ -113,6 +113,13 @@ COPYRIGHTS
  for the alice package
   All rights reserved.
 
+ Copyright 2010 by E. Hivon, M. Reinecke, W. O'Mullane, E. Joliet, K.M. Gorski, A.J. Banday
+ for the HEALPix package version 2.20
+  All rights reserved.
+
+ Copyright 2012 by E. Hivon, M. Reinecke, W. O'Mullane, E. Joliet, K.M. Gorski, A.J. Banday
+ for the HEALPix package version 3.00
+  All rights reserved.
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 

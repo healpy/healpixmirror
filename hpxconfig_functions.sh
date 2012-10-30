@@ -81,7 +81,7 @@ echoLn () {
 }
 #-------------
 findFITSLib () {
-    for dir in $* /usr/lib /usr/lib64 /usr/local/lib /usr/local/lib64 /usr/local/lib/cfitsio /usr/local/lib64/cftisio /usr/local/src/cfitsio ${HOME}/lib ${HOME}/lib64 ./src/cxx/${HEALPIX_TARGET}/lib/ ; do
+    for dir in $* /usr/lib /usr/lib64 /usr/local/lib /usr/local/lib64 /usr/local/lib/cfitsio /usr/local/lib64/cftisio /usr/local/src/cfitsio ${HOME}/lib ${HOME}/lib64 ./src/cxx/${HEALPIX_TARGET}/lib/ /softs/cfitsio/3.24/lib ; do
 	if [ -r "${dir}/lib${LIBFITS}.a" -o -r "${dir}/lib${LIBFITS}.so" ] ; then
 	    FITSDIR=$dir
 	    break
@@ -90,11 +90,21 @@ findFITSLib () {
 }
 #-------------
 findFITSInclude () {
-    for dir in $* /usr/include /usr/local/include /usr/local/src/cfitsio ${HOME}/include ${HOME}/include64 ./src/cxx/${HEALPIX_TARGET}/include/ ; do
+    for dir in $* /usr/include /usr/local/include /usr/local/src/cfitsio ${HOME}/include ${HOME}/include64 ./src/cxx/${HEALPIX_TARGET}/include/ /softs/cfitsio/3.24/include ; do
 	if [ -r "${dir}/fitsio.h" ] ; then
 	    FITSINC=$dir
 	    break
 	fi
+    done
+}
+#-------------
+findFITSPrefix () {
+    for dir in $* /usr /usr/local /usr/local/lib/cfitsio /usr/local/cfitsio /usr/local/lib64/cftisio /usr/local/src/cfitsio ${HOME}/softs/cfitsio/3.24 ; do
+	testlib="${dir}/lib/lib${LIBFITS}"
+	if ( ([ -r "${testlib}.a" ] || [ -r "${testlib}.so" ] || [ -r "${testlib}.dylib" ]) && [ -r "${dir}/include/fitsio.h" ] ) ; then
+	    FITSPREFIX=$dir
+	    break
+	fi	    
     done
 }
 #-------------
@@ -440,6 +450,57 @@ Cpp_config () {
     fi
 }
 
+#=====================================
+#=========== healpy Python pakage ===========
+#=====================================
+#-------------
+Healpy_config () {
+    # CFITSIO: make a first guess
+    LIBFITS=cfitsio
+    fullPath FITSDIR
+    guess2=`${DIRNAME} ${FITSDIR}`
+    guess3=`${DIRNAME} ${FITSINC}`
+    findFITSPrefix $FITSDIR $FITSINC ${guess2} ${guess3}
+    # ask user
+    echo "Enter directory prefix for CFitsio"
+    echoLn " ie containing lib/libcfitsio.* and include/fitsio.h ($FITSPREFIX): "
+    read answer
+    [ "x$answer" != "x" ] && FITSPREFIX=$answer
+    # double check
+    inc="${FITSPREFIX}/include/fitsio.h"
+    if [ ! -r $inc ]; then
+	echo "error: cfitsio include file $inc not found"
+	crashAndBurn
+    fi
+    # apply
+    editHealpyMakefile
+
+    # update paths for C and C++
+    FITSDIR=${FITSPREFIX}/lib
+    FITSINC=${FITSPREFIX}/include
+
+}
+#-------------
+editHealpyMakefile () {
+
+
+    echoLn "edit top Makefile for Python (healpy) ..."
+
+    mv -f Makefile Makefile_tmp
+    ${CAT} Makefile_tmp |\
+# 	${SED} "s|^P_CFITSIO_EXT_LIB\(.*\)|P_CFITSIO_EXT_LIB = ${FITSDIR}/lib${LIBFITS}.a|" |\
+# 	${SED} "s|^P_CFITSIO_EXT_INC\(.*\)|P_CFITSIO_EXT_INC = ${FITSINC}|" |\
+ 	${SED} "s|^CFITSIO_EXT_PREFIX\(.*\)|CFITSIO_EXT_PREFIX = ${FITSPREFIX}|" |\
+	${SED} "s|^ALL\(.*\) healpy-void\(.*\)|ALL\1 healpy-all \2|" |\
+	${SED} "s|^TESTS\(.*\) healpy-void\(.*\)|TESTS\1 healpy-test \2|" |\
+	${SED} "s|^CLEAN\(.*\) healpy-void\(.*\)|CLEAN\1 healpy-clean \2|" |\
+	${SED} "s|^DISTCLEAN\(.*\) healpy-void\(.*\)|DISTCLEAN\1 healpy-distclean \2|" |\
+	${SED} "s|^TIDY\(.*\) healpy-void\(.*\)|TIDY\1 healpy-tidy \2|" > Makefile
+	
+    echo " done."
+    edited_makefile=1
+
+}
 #=====================================
 #=========== IDL pakage ===========
 #=====================================
@@ -1515,8 +1576,9 @@ mainMenu () {
     echo "(2): configure Healpix C package, and edit Makefile"
     echo "(3): configure Healpix F90 package, and edit Makefile"
     echo "(4): configure Healpix C++ package, and edit Makefile"
-    echo "(5): see what configuration files have been created so far"
-    echo "(6): edit your shell configuration file to have easier access to Healpix codes"
+    echo "(5): configure Healpix Python (healpy) package, and edit Makefile"
+    echo "(8): see what configuration files have been created so far"
+    echo "(9): edit your shell configuration file to have easier access to Healpix codes"
     echo "(-1): reset"
     echo "     (will *REMOVE* the Makefile and configuration files, and exit)"
     echo "(0): exit"
@@ -1535,9 +1597,11 @@ mainMenu () {
 	x4)
 	   eval cppconffile=$HPX_CONF_CPP
 	   Cpp_config $cppconffile;;
-	x6)
+ 	x5)
+ 	   Healpy_config;;
+	x8)
 	   installProfile;;
-	x5)
+	x9)
 	   checkConfFiles;;
 	x0)
 	   goodBye;;
@@ -1698,6 +1762,7 @@ setTopDefaults() {
     LIBFITS="cfitsio"
     FITSDIR="/usr/local/lib"
     FITSINC="/usr/local/include"
+    FITSPREFIX="/usr/local"
 
     edited_makefile=0
 

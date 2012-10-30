@@ -30,7 +30,7 @@ welcome () {
     echo "*************************"
     echo
     echo "This script takes care of the configuration and compilation"
-    echo "of the C, C++, F90 and IDL packages of the Healpix distribution."
+    echo "of the C, C++, F90, IDL and Python packages of the Healpix distribution."
 
 }
 

@@ -210,7 +210,7 @@ generated. These automatically establish
 various environment variables and aliases to make the use of the
 \healpix package simpler. 
 
-The \healpix \textbf{Fortran 90}, \textbf{C++} and \textbf{C} distributions also require the publicly available CFTISIO
+The \healpix \textbf{Fortran 90}, \textbf{C++} and \textbf{C} distributions also require the publicly available CFITSIO
 library:
 
 \begin{tabular}{p{0.3\hsize} p{0.6\hsize}} \hline  
@@ -344,7 +344,7 @@ These different steps are detailled below.
 \subsection{./configure [-L]}
 
 The {\tt ./configure} script manages the configuration of the C, C++,
-Fortran90 and IDL suites of routines and facilities.
+Fortran90, IDL and Python suites of routines and facilities.
 
 Since v2.11, it accepts the {\tt -L} option to write the \healpix specific configuration files
 into the \healpix directory itself rather than in installer's home directory (see
@@ -390,7 +390,6 @@ After compilation
 in {\tt \$\{HEALPIX\}/lib/chealpix.*}\ .
 
 \subsubsection{C++ configuration}
-
 The {\tt ./configure} script will 
 ask for the full path to an installed {\tt cfitsio} library to link to, and then provide a choice of
 predefined targets corresponding to different combinations of C++ compilers and
@@ -434,31 +433,43 @@ You will be asked for the external applications you want to use to visualize the
 Postscript and PNG files created by IDL. \\
 If the HEALPix configuration file is
 sourced as described in \S~\ref{subsub:conf}, the aliases {\tt hidl} and {\tt hidle}
-are also defined to give you access to HEALPIX routines from IDL.
+are also defined to give you access to HEALPIX routines from IDL.\\
+See the \linklatexhtml{\healpix IDL Document}{idl.pdf}{idl.html} for more
+information on using \healpix IDL together with other IDL libraries.
+
 
 \subsubsection{Java installation}
 The configuration and installation of the Healpix Java package is currently
 handled separately. See table~\ref{tab:allpackages} for more information.
 
 \subsubsection{Python installation}
-The configuration and installation of the Healpix Python package (healpy) is currently
-not handled by the {\tt configure} script: see table~\ref{tab:allpackages} for more
-information. Note that running the
-{\tt src/healpy/setup.py} Python script will automatically prompt a {\em fresh} compilation of the
-{\tt src/cxx/*} libraries, with all the options necessary to Python linkage, and
-can be done independently of the C++ installation described above.
+The {\tt ./configure} script will 
+ask for the parent directory containing the {\tt lib/libcfitsio.*} library and
+the {\tt
+include/fitsio.h} include file (therefore {\tt /usr/local} often is the right
+choice) and
+the environment variable CFITSIO\_EXT\_PREFIX
+will be set accordingly.\\
+% The configuration and installation of the Healpix Python package (healpy) is currently
+% not handled by the {\tt configure} script: see table~\ref{tab:allpackages} for more
+% information. 
+Note that during the compilation with {\tt make} (see below), the 
+ {\tt src/healpy/setup.py} Python script will be invoked to automatically prompt a {\em fresh} compilation of the
+ {\tt src/cxx/*} libraries, with all the options necessary to Python linkage, and
+ can be done independently of the C++ installation described above.
 
 \subsection{Compilation and installation}
 
 The \\
 \mycode{make} \\
-command will compile one or several of the C, C++ and F90 packages
+command will compile one or several of the C, C++, F90 and Python packages
 depending on what was configured with the {\tt ./configure} script.
 Specific packages can be compiled with the respective commands 
 \begin{verbatim}
    make c-all
    make cpp-all
-   make f90-all.
+   make f90-all
+   make healpy-all
 \end{verbatim}
 
 To perform several compilation jobs simultaneously, the command {\tt make -j [jobs]}
@@ -748,7 +759,7 @@ as one source of errors. The CFITSIO developers recommend compilation of the
 {\tt make testprog} statement will reveal those you need to include in the
 Makefile.
 
-\subsubsection*{CFTISIO and Debian/Linux}
+\subsubsection*{CFITSIO and Debian/Linux}
 
 Some problems have been reported on Debian/Linux systems during the
 linking to the CFITSIO library shipped with Linux. If these problems
@@ -850,8 +861,6 @@ and may be solved in subsequent versions. Please send all your questions
 {\em on} GDL directly to GDL developpers.}. The calculations agree with those done under IDL, with
 comparable computation times, but a few features are missing in the production
 of Postscript, GIF and PNG files, as described below.
-
-
 
 \subsubsection*{Specific requirements}
 
