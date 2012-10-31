@@ -6,12 +6,11 @@
 #  cd /tmp
 #  svn co  [-r BRANCH] https://healpix.svn.sourceforge.net/svnroot/healpix/trunk Healpix_[VERSION]
 #
-# #  git clone https://github.com/healpy/healpy.git healpy ; cd healpy ; git checkout 1.x ; git branch
-# #  \rm -rf hpbeta .git*
-# #  cd .. 
+# #  git clone https://github.com/healpy/healpy.git healpy ; cd healpy ; git checkout 1.4.1 ; git branch
+# #  \rm -rf hpbeta .git* ;  ln -s ../cxx hpbeta ;  cd .. 
 # #  cp -p healpy Healpix_[VERSION]/src
 #
-#  wget https://github.com/healpy/healpy/tarball/1.4 -O healpy.tar.gz
+#  wget https://github.com/healpy/healpy/tarball/1.4.1 -O healpy.tar.gz
 #  tar -xvzpf healpy.tar.gz;  cd healpy-healpy-* ; \rm -r hpbeta .git* ; ln -s ../cxx hpbeta ; cd ..
 #  mv healpy-healpy-* Healpix_*/src/healpy
 #

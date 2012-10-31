@@ -12,8 +12,8 @@
 \begin{facility}
 {This routine reads a power spectrum or beam window function from a FITS ASCII or binary table. The routine can read temperature coefficients $C_l^T$ or both temperature and polarisation coefficients $C_l^T$, $C_l^E$, $C_l^B$, $C_l^{T\times E}$. If the keyword PDMTYPE is found in the header, fits2cl assumes the table to be in the special format used by {\em Planck}
 and will ignore the first data column. If the input FITS file contains several
-extensions or HDUs, the one to be read can be specified thanks to the CFITSIO Extended
-File Name Syntax, using its number (eg, {\tt file.fits[2]} or {\tt file.fits+2}) or its
+extensions or HDUs, the one to be read can be specified thanks to the CFITSIO 
+\htmladdnormallink{Extended File Name Syntax}{http://heasarc.gsfc.nasa.gov/docs/software/fitsio/c/c_user/node81.html}, using its number (eg, {\tt file.fits[2]} or {\tt file.fits+2}) or its
 {\tt EXTNAME} value (eg. {\tt file.fits[beam\_100x100]}). By default, only the first valid
 extension will be read.}
 {\modFitstools}
