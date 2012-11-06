@@ -11,7 +11,7 @@ LIBOBJ:=sharp_ylmgen_c.o sharp.o sharp_geomhelpers.o sharp_almhelpers.o sharp_co
 LIBOBJ:=$(LIBOBJ:%=$(OD)/%)
 
 ODEP:=$(HDR_$(PKG)) $(HDR_libfftpack) $(HDR_c_utils)
-$(OD)/sharp_core.o: $(SD)/sharp_inchelper1.inc.c $(SD)/sharp_core_inc.c $(SD)/sharp_core_inc2.c $(SD)/sharp_core_inc3.c
+$(OD)/sharp_core.o: $(SD)/sharp_inchelper1.inc.c $(SD)/sharp_core_inc.c $(SD)/sharp_core_inc2.c
 $(OD)/sharp.o:
 
 $(LIB_$(PKG)): $(LIBOBJ)

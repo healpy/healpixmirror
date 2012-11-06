@@ -38,6 +38,8 @@
 
 #include "sharp.h"
 
+#define SHARP_MAXTRANS 1
+
 typedef enum { FLOAT, DOUBLE } sharp_fde;
 
 typedef struct

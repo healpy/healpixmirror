@@ -43,9 +43,10 @@
 typedef complex double dcmplx;
 typedef complex float  fcmplx;
 
+static int chunksize_min=500, nchunks_max=10;
+
 static void get_chunk_info (int ndata, int nmult, int *nchunks, int *chunksize)
   {
-  static const int chunksize_min=500, nchunks_max=10;
   *chunksize = IMAX(chunksize_min,(ndata+nchunks_max-1)/nchunks_max);
   *chunksize = ((*chunksize+nmult-1)/nmult)*nmult;
   *nchunks = (ndata+*chunksize-1) / *chunksize;
@@ -213,6 +214,9 @@ void sharp_destroy_geom_info (sharp_geom_info *geom_info)
   DEALLOC (geom_info);
   }
 
+/* This currently requires all m values from 0 to nm-1 to be present.
+   It might be worthwhile to relax this criterion such that holes in the m
+   distribution are permissible. */
 static int sharp_get_mmax (int *mval, int nm)
   {
   int *mcheck=RALLOC(int,nm);
@@ -220,12 +224,12 @@ static int sharp_get_mmax (int *mval, int nm)
   for (int i=0; i<nm; ++i)
     {
     int m_cur=mval[i];
-    UTIL_ASSERT((m_cur>=0) && (m_cur<nm), "m out of range");
+    UTIL_ASSERT((m_cur>=0) && (m_cur<nm), "not all m values are present");
     UTIL_ASSERT(mcheck[m_cur]==0, "duplicate m value");
     mcheck[m_cur]=1;
     }
   DEALLOC(mcheck);
-  return nm-1; // FIXME: this looks wrong
+  return nm-1;
   }
 
 static void ringhelper_phase2ring (ringhelper *self,
@@ -412,18 +416,36 @@ static void dealloc_almtmp (sharp_job *job)
 static void alm2almtmp (sharp_job *job, int lmax, int mi)
   {
   if (job->type!=SHARP_MAP2ALM)
-    for (int l=job->ainfo->mval[mi]; l<=lmax; ++l)
+    {
+    ptrdiff_t ofs=job->ainfo->mvstart[mi];
+    int stride=job->ainfo->stride;
+    if (job->spin==0)
       {
-      ptrdiff_t aidx = sharp_alm_index(job->ainfo,l,mi);
-      double fct = job->norm_l[l];
-      for (int i=0; i<job->ntrans*job->nalm; ++i)
-        if (job->fde==DOUBLE)
-          job->almtmp[job->ntrans*job->nalm*l+i]
-            = ((dcmplx *)job->alm[i])[aidx]*fct;
-        else
-          job->almtmp[job->ntrans*job->nalm*l+i]
-            = ((fcmplx *)job->alm[i])[aidx]*fct;
+      if (job->fde==DOUBLE)
+        for (int l=job->ainfo->mval[mi]; l<=lmax; ++l)
+          for (int i=0; i<job->ntrans*job->nalm; ++i)
+            job->almtmp[job->ntrans*job->nalm*l+i]
+              = ((dcmplx *)job->alm[i])[ofs+l*stride];
+      else
+        for (int l=job->ainfo->mval[mi]; l<=lmax; ++l)
+          for (int i=0; i<job->ntrans*job->nalm; ++i)
+            job->almtmp[job->ntrans*job->nalm*l+i]
+              = ((fcmplx *)job->alm[i])[ofs+l*stride];
       }
+    else
+      {
+      if (job->fde==DOUBLE)
+        for (int l=job->ainfo->mval[mi]; l<=lmax; ++l)
+          for (int i=0; i<job->ntrans*job->nalm; ++i)
+            job->almtmp[job->ntrans*job->nalm*l+i]
+              = ((dcmplx *)job->alm[i])[ofs+l*stride]*job->norm_l[l];
+      else
+        for (int l=job->ainfo->mval[mi]; l<=lmax; ++l)
+          for (int i=0; i<job->ntrans*job->nalm; ++i)
+            job->almtmp[job->ntrans*job->nalm*l+i]
+              = ((fcmplx *)job->alm[i])[ofs+l*stride]*job->norm_l[l];
+      }
+    }
   else
     SET_ARRAY(job->almtmp,job->ntrans*job->nalm*job->ainfo->mval[mi],
               job->ntrans*job->nalm*(lmax+1),0.);
@@ -432,16 +454,33 @@ static void alm2almtmp (sharp_job *job, int lmax, int mi)
 static void almtmp2alm (sharp_job *job, int lmax, int mi)
   {
   if (job->type != SHARP_MAP2ALM) return;
-  for (int l=job->ainfo->mval[mi]; l<=lmax; ++l)
+  ptrdiff_t ofs=job->ainfo->mvstart[mi];
+  int stride=job->ainfo->stride;
+  if (job->spin==0)
     {
-    ptrdiff_t aidx = sharp_alm_index(job->ainfo,l,mi);
-    for (int i=0;i<job->ntrans*job->nalm;++i)
-      if (job->fde==DOUBLE)
-        ((dcmplx *)job->alm[i])[aidx] +=
-          job->almtmp[job->ntrans*job->nalm*l+i]*job->norm_l[l];
-      else
-        ((fcmplx *)job->alm[i])[aidx] +=
-          (fcmplx)(job->almtmp[job->ntrans*job->nalm*l+i]*job->norm_l[l]);
+    if (job->fde==DOUBLE)
+      for (int l=job->ainfo->mval[mi]; l<=lmax; ++l)
+        for (int i=0;i<job->ntrans*job->nalm;++i)
+          ((dcmplx *)job->alm[i])[ofs+l*stride] +=
+            job->almtmp[job->ntrans*job->nalm*l+i];
+    else
+      for (int l=job->ainfo->mval[mi]; l<=lmax; ++l)
+        for (int i=0;i<job->ntrans*job->nalm;++i)
+          ((fcmplx *)job->alm[i])[ofs+l*stride] +=
+            (fcmplx)(job->almtmp[job->ntrans*job->nalm*l+i]);
+    }
+  else
+    {
+    if (job->fde==DOUBLE)
+      for (int l=job->ainfo->mval[mi]; l<=lmax; ++l)
+        for (int i=0;i<job->ntrans*job->nalm;++i)
+          ((dcmplx *)job->alm[i])[ofs+l*stride] +=
+            job->almtmp[job->ntrans*job->nalm*l+i]*job->norm_l[l];
+    else
+      for (int l=job->ainfo->mval[mi]; l<=lmax; ++l)
+        for (int i=0;i<job->ntrans*job->nalm;++i)
+          ((fcmplx *)job->alm[i])[ofs+l*stride] +=
+            (fcmplx)(job->almtmp[job->ntrans*job->nalm*l+i]*job->norm_l[l]);
     }
   }
 
@@ -554,7 +593,8 @@ static void sharp_build_job_common (sharp_job *job, sharp_jobtype type,
   const sharp_geom_info *geom_info, const sharp_alm_info *alm_info, int ntrans,
   int dp, int nv)
   {
-  UTIL_ASSERT((ntrans>0),"bad number of simultaneous transforms");
+  UTIL_ASSERT((ntrans>0)&&(ntrans<=SHARP_MAXTRANS),
+    "bad number of simultaneous transforms");
   if (type==SHARP_ALM2MAP_DERIV1) spin=1;
   UTIL_ASSERT((spin>=0)&&(spin<=30), "bad spin");
   job->type = type;
@@ -587,6 +627,11 @@ void sharp_execute (sharp_jobtype type, int spin, int add_output, void *alm,
   if (opcnt!=NULL) *opcnt = job.opcnt;
   }
 
+void sharp_set_chunksize_min(int new_chunksize_min)
+  { chunksize_min=new_chunksize_min; }
+void sharp_set_nchunks_max(int new_nchunks_max)
+  { nchunks_max=new_nchunks_max; }
+
 int sharp_get_nv_max (void)
 { return 6; }
 
@@ -596,6 +641,8 @@ static int sharp_oracle (sharp_jobtype type, int spin, int ntrans)
   int mmax=(lmax+1)/2;
   int nrings=(lmax+1)/4;
   int ppring=1;
+
+  spin = (spin!=0) ? 2 : 0;
 
   ptrdiff_t npix=(ptrdiff_t)nrings*ppring;
   sharp_geom_info *tinfo;
