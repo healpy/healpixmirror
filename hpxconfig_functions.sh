@@ -32,6 +32,8 @@
 # 2011-03-07: allow linking with shared libcfitsio for the C++ port
 # 2012-02-27: better parsing of config.* files in C++ configuration
 # 2012-05-30:    and ignore healpy specific config.* files.
+# 2012-11-05: supports python (healpy) configuration
+#             proposes -fPIC compilation of F90 code
 #=====================================
 #=========== General usage ===========
 #=====================================
@@ -685,20 +687,30 @@ idl_config () {
 #   setF90Defaults: set default values of variables
 #   sun_modules : test weither the Sun compiler creates modules ending with .M or .mod
 #   ifc_modules : test weither the IFC compiler creates .d or .mod (version7) modules
+#   checkF90Fitsio: check that CFITSIO library contains Fortran wrapper
+#   checkF90FitsioLink: check that CFITSIO library links to Fortran test code
 #   GuessCompiler: tries to guess compiler from operating system
-#   askFFT: ask user for his choice of fft, find fftw library
+#####   askFFT: ask user for his choice of fft, find fftw library
 #   askOpenMP: ask user for compilation of OpenMP source files
+#   askF90PIC: ask user for -fPIC compilation of code
 #   countUnderScore: match trailing underscores with fftw
+#   IdentifyCParallCompiler: identify C compiler used for parallel compilation of SHT routines
 #   IdentifyCompiler : identify Non native f90 compiler
 #   add64bitF90Flags: add 64 bit flags to F90 (and C) compiler
+#   countF90Bits: count number of addressing bits in code produced by F90 compiler
+#   countCBits:   count number of addressing bits in code produced by C   compiler
+#   checkF90Compilation: check that F90 compiler actually works
+#   checkF90LongLong: check that F90 support 8 byte integers
 #   askUserF90:  ask user the f90 compiler command
-#   askUserMisc:  ask user to confirm or change various defaults
-#   editF90Makefile: create makefile from template
-#   makeProfile: create profile
-#   installProfile: modify user's shell profile if agreed
 #   showDefaultDirs: show default directories
 #   updateDirs: update those directories
 #   showActualDirs: show actual directories
+#   askUserMisc:  ask user to confirm or change various defaults
+#   askPgplot: ask if user wants to link with PGPlot
+#   editF90Makefile: create makefile from template
+#   generateConfF90File: generates configuration file for F90
+#   offerF90Compilation: propose to perform F90 compilation
+#   f90_config: top routine for F90
 #
 #-------------
 setF90Defaults () {
@@ -731,6 +743,7 @@ setF90Defaults () {
     PGLIBS=""
     PGLIBSDEF="-L/usr/local/pgplot -lpgplot -L/usr/X11R6/lib -lX11"
     WLRPATH="" # to add a directory to the (linker) runtime library search path
+    F90PIC="-fPIC"
 
     echo "you seem to be running $OS"
 
@@ -964,6 +977,23 @@ askOpenMP () {
 	    echo "Contact healpix at jpl.nasa.gov if you already used OpenMP in this configuration."
 	    echo "Will perform serial implementation instead"
 	    #crashAndBurn
+	fi 
+    fi
+}
+# -----------------------------------------------------------------
+
+askF90PIC () {
+    DoF90PIC="1"
+    echo " Do you want a Position Independent Compilation  (option  \"$F90PIC\") "
+    echo "(recommended if the Healpix-F90 library is to be linked to external codes)  (Y|n)"
+    read answer
+    if [ "x$answer" = "xy"  -o "x$answer" = "xY"  -o "x$answer" = "x" ]; then
+	if [ "x$F90PIC" != "x" ] ; then
+	    # update FFLAGS
+	    FFLAGS="$FFLAGS $F90PIC"
+	else
+	    echo "PIC compilation flag now known for  \"$FCNAME\" under \"$OS\" "
+	    echo "standard static compilation will be performed"
 	fi 
     fi
 }
@@ -1207,7 +1237,7 @@ EOF
 }
 # -----------------------------------------------------------------
 checkF90Compilation () {
-    # check that F90 compiler actually work
+    # check that F90 compiler actually works
     # requires compilation and execution of F90 code
     tmpfile=./to_be_removed
 ${CAT} > ${tmpfile}.f90 <<EOF
@@ -1539,6 +1569,7 @@ f90_config () {
     askUserMisc
     askPgplot
     askOpenMP
+    askF90PIC
     #makeProfile
     generateConfF90File
     editF90Makefile
@@ -1565,7 +1596,12 @@ checkConfFiles () {
 #=====================================
 #=========== Top package ===========
 #=====================================
-
+#   mainMenu:
+#   installProfile: modify user's shell profile if agreed
+#   makeTopConf:
+#   readyTopMakefile:
+#   setTopDefaults:
+#   setConfDir:
 #-------------
 mainMenu () {
 
@@ -1772,7 +1808,7 @@ setTopDefaults() {
     HPX_CONF_DIR_INPLACE=${HEALPIX}/confdir/${HPX_VERSION}_${OS}
 
 }
-
+#-------------
 setConfDir () {
 
     case $SHELL in
