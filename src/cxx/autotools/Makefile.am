@@ -112,7 +112,6 @@ EXTRA_DIST = \
   libfftpack/fftpack_inc.c \
   libsharp/sharp_core_inc.c \
   libsharp/sharp_core_inc2.c \
-  libsharp/sharp_core_inc3.c \
   libsharp/sharp_inchelper1.inc.c \
   cxxsupport/font_data.inc
 include_HEADERS = \
