@@ -26,7 +26,7 @@
  *  Internally used functionality for the spherical transform library.
  *
  *  Copyright (C) 2006-2012 Max-Planck-Society
- *  \author Martin Reinecke
+ *  \author Martin Reinecke \author Dag Sverre Seljebotn
  */
 
 #ifndef PLANCK_SHARP_INTERNAL_H
@@ -40,15 +40,13 @@
 
 #define SHARP_MAXTRANS 1
 
-typedef enum { FLOAT, DOUBLE } sharp_fde;
-
 typedef struct
   {
   sharp_jobtype type;
   int spin;
   int add_output;
   int nmaps, nalm;
-  sharp_fde fde;
+  int flags;
   void **map;
   void **alm;
   complex double *phase;
@@ -56,7 +54,6 @@ typedef struct
   complex double *almtmp;
   const sharp_geom_info *ginfo;
   const sharp_alm_info *ainfo;
-  int nv;
   double time;
   int ntrans;
   unsigned long long opcnt;

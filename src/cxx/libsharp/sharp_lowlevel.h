@@ -26,7 +26,7 @@
  *  Low-level, portable interface for the spherical transform library.
  *
  *  Copyright (C) 2012 Max-Planck-Society
- *  \author Martin Reinecke
+ *  \author Martin Reinecke \author Dag Sverre Seljebotn
  */
 
 #ifndef PLANCK_SHARP_LOWLEVEL_H
@@ -42,7 +42,7 @@ extern "C" {
     Helper type containing information about a single ring. */
 typedef struct
   {
-  double theta, phi0, weight, cth, sth;
+  double theta, phi0, w_a2m, w_m2a, cth, sth;
   ptrdiff_t ofs;
   int nph, stride;
   } sharp_ringinfo;
@@ -123,12 +123,15 @@ void sharp_destroy_alm_info (sharp_alm_info *info);
     \param stride the stride between consecutive pixels
     \param phi0 the azimuth (in radians) of the first pixel in each ring
     \param theta the colatitude (in radians) of each ring
-    \param weight the pixel weight to be used for the ring
+    \param wgt_a2m the pixel weight to be used for the ring in alm2map
+      transforms. Pass NULL to use 1.0 as weight for all rings.
+    \param wgt_m2a the pixel weight to be used for the ring in map2alm
+      transforms. Pass NULL to use 1.0 as weight for all rings.
     \param geom_info will hold a pointer to the newly created data structure
  */
 void sharp_make_geom_info (int nrings, const int *nph, const ptrdiff_t *ofs,
   const int *stride, const double *phi0, const double *theta,
-  const double *weight, sharp_geom_info **geom_info);
+  const double *wgt_a2m, const double *wgt_m2a, sharp_geom_info **geom_info);
 
 /*! Deallocates the geometry information in \a info. */
 void sharp_destroy_geom_info (sharp_geom_info *info);
@@ -144,12 +147,16 @@ typedef enum { SHARP_MAP2ALM,       /*!< analysis */
                SHARP_ALM2MAP_DERIV1 /*!< synthesis of first derivatives */
              } sharp_jobtype;
 
+/*! Job flags */
+typedef enum { SHARP_DP = 1<<4, /*!< map and alm is in double precision */
+               SHARP_ADD= 1<<5, /*!< results are added to the output data */
+               SHARP_NVMAX = (1<<4)-1 /* internal use only */
+             } sharp_jobflags;
+
 /*! Performs a libsharp SHT job. The interface deliberately does not use
-  the C99 "complex" data type, in order to be callable from C. 
+  the C99 "complex" data type, in order to be callable from C89 and C++.
   \param type the type of SHT
   \param spin the spin of the quantities to be transformed
-  \param add_output if 0, the output arrays will be overwritten,
-    else the result will be added to the output arrays.
   \param alm contains pointers to the a_lm coefficients. If \a spin==0,
     alm[0] points to the a_lm of the first SHT, alm[1] to those of the second
     etc. If \a spin>0, alm[0] and alm[1] point to the a_lm of the first SHT,
@@ -166,18 +173,17 @@ typedef enum { SHARP_MAP2ALM,       /*!< analysis */
     \a alm arrays. All \c m values from 0 to some \c mmax<=lmax must be present
     exactly once.
   \param ntrans the number of simultaneous SHTs
-  \param dp if 0, the \a alm is expected to have the type "complex float **"
-    and \a map is expected to have the type "float **"; otherwise the expected
-    types are "complex double **" and "double **", respectively.
-  \param nv Internally used SHT parameter. Set to 0 unless you know what you are
-    doing.
+  \param flags See sharp_jobflags. In particular, if SHARP_DP is set, then
+    \a alm is expected to have the type "complex double **" and \a map is
+    expected to have the type "double **"; otherwise, the expected
+    types are "complex float **" and "float **", respectively.
   \param time If not NULL, the wall clock time required for this SHT
     (in seconds)will be written here.
   \param opcnt If not NULL, a conservative estimate of the total floating point
     operation count for this SHT will be written here. */
-void sharp_execute (sharp_jobtype type, int spin, int add_output, void *alm,
-  void *map, const sharp_geom_info *geom_info, const sharp_alm_info *alm_info,
-  int ntrans, int dp, int nv, double *time, unsigned long long *opcnt);
+void sharp_execute (sharp_jobtype type, int spin, void *alm, void *map,
+  const sharp_geom_info *geom_info, const sharp_alm_info *alm_info, int ntrans,
+  int flags, double *time, unsigned long long *opcnt);
 
 void sharp_set_chunksize_min(int new_chunksize_min);
 void sharp_set_nchunks_max(int new_nchunks_max);
