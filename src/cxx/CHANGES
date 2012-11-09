@@ -16,6 +16,11 @@ Healpix_Base:
   T_Healpix_Base; functionality is still available under the old names.
 - various performance improvements to T_Healpix_Base functionality
 
+Standalone codes:
+- rotalm_cxx has a new mode which allows specifying Euler angles.
+- new code "udgrade_harmonic_cxx" which performs upgrading/degrading by going
+  through spherical harmonic space.
+
 User-friendliness:
 - module parameters can now optionally be passed on the command line instead
   of using a parameter file.
@@ -43,6 +48,9 @@ Interface changes:
 - ylmgen_c.h: Ylmgen_init() interface has changed
 - bluestein.h: bluestein_i() interface changed
 
+The changes below are currently deactivated but can be switched on easily.
+--------------------------------------------------------------------------
+
 Performance:
-- libpsht partiallly replaced by libsharp => faster SHTs, especially on
-  AVX-capable CPUs.
+- libpsht partially replaced by libsharp => faster SHTs, especially on
+  modern (2011+) CPUs with AVX.
