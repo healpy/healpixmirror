@@ -984,8 +984,9 @@ askOpenMP () {
 
 askF90PIC () {
     DoF90PIC="1"
+    echo " "
     echo " Do you want a Position Independent Compilation  (option  \"$F90PIC\") "
-    echo "(recommended if the Healpix-F90 library is to be linked to external codes)  (Y|n)"
+    echoLn "(recommended if the Healpix-F90 library is to be linked to external codes)  (Y|n): "
     read answer
     if [ "x$answer" = "xy"  -o "x$answer" = "xY"  -o "x$answer" = "x" ]; then
 	if [ "x$F90PIC" != "x" ] ; then
@@ -1636,9 +1637,9 @@ mainMenu () {
  	x5)
  	   Healpy_config;;
 	x8)
-	   installProfile;;
-	x9)
 	   checkConfFiles;;
+	x9)
+	   installProfile;;
 	x0)
 	   goodBye;;
 	"x-1")
