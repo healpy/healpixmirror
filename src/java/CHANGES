@@ -8,6 +8,9 @@ compared to the HealpixIndex, Healpix and PixTools classes:
 - maximum supported Nside value: 2^29
 - significant performance improvements: most methods have been accelerated
   by integral factors, some by more than an order of magnitude.
+- trigonometric functions are computed using an adapted version of Naoki
+  Shibata's SLEEF library (http://freecode.com/projects/sleef), which is
+  considerably faster than Java's own implementation.
 - re-implementation of queryDisc and queryPolygon:
   * query methods return RangeSet objects which allow much more compact storage
     of the result
