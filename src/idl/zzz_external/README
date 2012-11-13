@@ -95,4 +95,9 @@ have been added to satisfy new dependencies.
 
  2012-04-03
  EH
+----------------
 
+FITS_INFO has been updated with 21-Sep-2012 version to parse files with many extensions
+
+ 2012-11-13
+ EH

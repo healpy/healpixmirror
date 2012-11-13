@@ -210,15 +210,16 @@ generated. These automatically establish
 various environment variables and aliases to make the use of the
 \healpix package simpler. 
 
-The \healpix \textbf{Fortran 90}, \textbf{C++} and \textbf{C} distributions also require the publicly available CFITSIO
-library:
+The \healpix \textbf{Fortran 90}, \textbf{C++} and \textbf{C} distributions also
+require the publicly available CFITSIO library. Note that the 
+\textbf{Fortran 90} routines require version 3.14 or more (post March 2009) of CFITSIO
 
 \begin{tabular}{p{0.3\hsize} p{0.6\hsize}} \hline  
   \textbf{Software Package} & \textbf{Source} \\ \hline
                             &                          \\ %%% for presentation
-  CFITSIO V 3.xx library            & \htmladdnormallink{{\tt
-                            http://heasarc.gsfc.nasa.gov/docs/software/fitsio/}}
-			{http://heasarc.gsfc.nasa.gov/docs/software/fitsio/}
+  CFITSIO V 3.14 or more            & \htmladdnormallink{{\tt
+                         http://heasarc.gsfc.nasa.gov/fitsio/}}
+			{http://heasarc.gsfc.nasa.gov/fitsio/}
                             \\ 
                                    &                          \\ \hline %%% for presentation
 \end{tabular}\vspace{3ex}
@@ -230,7 +231,7 @@ available at
   \textbf{Software Package} & \textbf{Source} \\ \hline
                             &                          \\ %%% for presentation
 IDL V \idlversion or more          & \htmladdnormallink{{\tt
-                            http://www.ittvis.com/}}{http://www.ittvis.com/}
+                            http://www.exelisvis.com/}}{http://www.exelisvis.com/}
 			\\
                                    &                          \\ \hline %%% for presentation
 \end{tabular}\vspace{3ex}
@@ -950,7 +951,7 @@ transparent in the output PNG file.
 \section{Appendix I: Recent Changes and New Features}
 \label{sec:newfeatures}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% BEGIN LATEST CHANGES %%%%%%%%%%%%%
-\subsection{Bug corrections and Improvements in Version 3.0} % 2012-??
+\subsection{Bug corrections and Improvements in Version 3.0} % 2012-11-??
 
 \subsubsection[General]{General}
 Introduction of the script {\tt healpix\_doc} for easy access to the \healpix
@@ -1013,6 +1014,8 @@ Fortran 90 \linklatexhtml{facilities}{facilities.pdf}{facilities.htm} and
 \linklatexhtml{subroutines}{subroutines.pdf}{subroutines.htm}
 }
 \begin{itemize}
+	\item Compressed and/or remote (ftp or http) FITS files can now be
+read. CFITSIO 3.14 or more is now required;
 	\item introduction of the 
 \htmlref{{\tt process\_mask}}{fac:process_mask}
 facility to compute the angular distance of valid

@@ -103,11 +103,21 @@ contains
     character(len=*), intent(in) :: filename
     logical :: file_present
     integer :: ft_flag, ft_status
+    real(sp) :: version
 
 #ifdef NOCFITSIO
     inquire(file=trim(filename),exist=file_present)
 #else
     ft_status = 0
+    call ftvers(version)
+    if (version  < (3.14-0.001)) then
+       print *,'******************************************************'
+       print *,'CFITSIO library (version ' &
+            & //trim(string(version,format='(f6.3)')) &
+            & //') is too old.'
+       print *,'Version 3.14 or more is required.'
+       print *,'******************************************************'
+    endif
     call ftexist(filename, ft_flag, ft_status)
     ! accept disk files (+1) and remote/virtual files (-1)
     file_present = (ft_flag == 1  .or. ft_flag == -1)

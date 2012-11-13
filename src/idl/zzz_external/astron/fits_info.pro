@@ -37,6 +37,8 @@ pro fits_info, filename, SILENT=silent,TEXTOUT=textout, N_ext=n_ext, extname=ext
 ;
 ;               If TEXTOUT is not supplied, then !TEXTOUT is used
 ; OPTIONAL OUTPUT KEYWORDS:
+;       The following keyowrds are for use when only one file is processed
+;
 ;       N_ext - Returns an integer scalar giving the number of extensions in
 ;               the FITS file
 ;       extname - returns a list containing the EXTNAME keywords for each
@@ -101,6 +103,7 @@ pro fits_info, filename, SILENT=silent,TEXTOUT=textout, N_ext=n_ext, extname=ext
 ;       make Ndata a long64 to deal with large files. E. Hivon Mar 2008
 ;       For GDL compatibility, first check if file is compressed  before using
 ;          OPENR,/COMPRESS  B. Roukema/WL    Apr 2010
+;       Increased nmax (max number of extensions) from 400 to 2000   Sept 2012
 ;-
  On_error,2
  compile_opt idl2
@@ -135,7 +138,8 @@ pro fits_info, filename, SILENT=silent,TEXTOUT=textout, N_ext=n_ext, extname=ext
      
    N_ext = -1
     fdescript = ''
-    nmax = 400 ; MDP was 100
+    nmax = 2000 ; MDP was 100, then 400
+    nbuf= nmax
     extname = strarr(nmax)
 
    ptr = 0l
@@ -178,10 +182,10 @@ pro fits_info, filename, SILENT=silent,TEXTOUT=textout, N_ext=n_ext, extname=ext
    if strn(Ext_type) NE '0' then begin
         if (gcount NE 1) or (pcount NE 0) then $
              ext_type = 'VAR_' + ext_type
-        descript = descript + ' ' + Ext_type
+        descript += ' ' + Ext_type
   endif
 
-   descript = descript + ' ' + strn(Naxis)
+   descript += ' ' + strn(Naxis)
 
    case BITPIX of
       8:   IDL_type = 1     ; Byte
@@ -197,14 +201,14 @@ pro fits_info, filename, SILENT=silent,TEXTOUT=textout, N_ext=n_ext, extname=ext
    endcase
 
   if Naxis GT 0 then begin
-         descript = descript + ' ' + strn(IDL_type)
+         descript += ' ' + strn(IDL_type)
          Nax = sxpar( hd, 'NAXIS*')
          if N_elements(Nax) LT Naxis then begin 
               message, $
                  'ERROR - Missing required NAXISi keyword in FITS header',/CON
                   goto, SKIP
          endif
-         for i = 1, Naxis do descript = descript + ' '+strn(Nax[i-1])
+         for i = 1, Naxis do descript += ' '+strn(Nax[i-1])
   endif
 
   end_rec = where( strtrim(strmid(hd,0,8),2) EQ  'END')
@@ -221,7 +225,7 @@ pro fits_info, filename, SILENT=silent,TEXTOUT=textout, N_ext=n_ext, extname=ext
        ptr = ptr + 2880L
        hd1 = string( hdr > 32b)
        end_rec = where( strtrim(strmid(hd1,0,8),2) EQ  'END')
-       n_hdrblock = n_hdrblock + 1
+       n_hdrblock++ 
        if get_extname then begin
            exname = sxpar(hd1, 'extname', Count = N_extname)
            if N_extname GT 0 then begin
@@ -238,7 +242,7 @@ pro fits_info, filename, SILENT=silent,TEXTOUT=textout, N_ext=n_ext, extname=ext
 
  if Naxis GT 0 then begin
          ndata = long64(Nax[0])
-         if naxis GT 1 then for i = 2, naxis do ndata=ndata*Nax[i-1]
+         if naxis GT 1 then for i = 2, naxis do ndata *= Nax[i-1]
  endif else ndata = 0
 
  nbytes = (abs(bitpix)/8) * gcount * (pcount + ndata)
@@ -250,16 +254,15 @@ pro fits_info, filename, SILENT=silent,TEXTOUT=textout, N_ext=n_ext, extname=ext
 
  if ( simple EQ 0 ) && ( strlen(strn(exten)) EQ 1) then goto, END_OF_FILE  
 
-    N_ext = N_ext + 1
-    if N_ext GT nmax then begin
-              extname = [extname,strarr(nmax)]
-              nmax = nmax*2
-    endif
-
+    N_ext++ 
+    if N_ext GE (nmax-1) then begin 
+        extname = [extname,strarr(nbuf)]
+        nmax = N_elements(extname)
+    endif	
 
 ; Append information concerning the current extension to descriptor
 
-    fdescript = fdescript + ' ' + descript
+    fdescript += ' ' + descript
 
 ; Check for EOF
 ; Skip the headers and data records
