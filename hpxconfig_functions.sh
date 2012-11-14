@@ -689,6 +689,7 @@ idl_config () {
 #   ifc_modules : test weither the IFC compiler creates .d or .mod (version7) modules
 #   checkF90Fitsio: check that CFITSIO library contains Fortran wrapper
 #   checkF90FitsioLink: check that CFITSIO library links to Fortran test code
+#   checkF90FitsioVersion: check that CFITSIO library is recent enough
 #   GuessCompiler: tries to guess compiler from operating system
 #####   askFFT: ask user for his choice of fft, find fftw library
 #   askOpenMP: ask user for compilation of OpenMP source files
@@ -854,6 +855,43 @@ EOF
 	echo " - the library (C routines and F90 wrappers) was compiled "
 	echo "   with a number of bits compatible with ${FC} ${FFLAGS}"
 	crashAndBurn
+    fi
+
+    # clean up
+    ${RM} ${tmpfile}.*
+    
+
+}
+# ----------------
+checkF90FitsioVersion () {
+# check that FITSIO version is recent enough
+# requires compilation of F90 code
+    tmpfile=to_be_removed
+    # write simple test program
+cat > ${tmpfile}.f90 << EOF
+    program date_fitsio
+	real:: version
+	call ftvers(version)
+	write(*,'(f5.3)') version
+    end program date_fitsio
+EOF
+    # compile and link
+    ${FC} ${FFLAGS}  ${tmpfile}.f90 -o ${tmpfile}.x -L${FITSDIR} -l${LIBFITS} #${WLRPATH}
+
+    # run if compiled
+    if [ -s ${tmpfile}.x ]; then
+	CFITSIOVERSION=`${tmpfile}.x` # available version of CFITSIO 
+	CFITSIOVREQ="3.14"            # required  version of CFITSIO
+	v1=`echo ${CFITSIOVERSION} | ${AWK} '{print $1*1000}'` # multiply by 1000 to get integer
+	v2=`echo ${CFITSIOVREQ}    | ${AWK} '{print $1*1000}'`
+	${RM} ${tmpfile}.*
+	if [ $v1 -lt $v2 ]; then
+	    echo 
+	    echo "CFITSIO version in ${FITSDIR}/lib${LIBFITS}.a  is  $CFITSIOVERSION "
+	    echo "CFITSIO >= ${CFITSIOVREQ} is expected for Healpix-F90"
+	    echo
+	    crashAndBurn
+	fi
     fi
 
     # clean up
@@ -1425,6 +1463,7 @@ askUserMisc () {
 
     checkF90Fitsio ${lib}
     checkF90FitsioLink
+    checkF90FitsioVersion
 
 }
 

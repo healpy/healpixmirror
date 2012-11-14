@@ -40,6 +40,7 @@
 ! v1.6: 2009-11-26: bug correction in get_healpix_*_dir
 ! v1.7: 2011-01-03: addition of get_healpix_pixel_window_file & get_healpix_ring_weight_file
 ! v1.8: 2012-10-29: replaced F90 inquire with misc_utils's file_present which will accept remote files
+! v1.9: 2012-11-14: deal correctly with undefined HEALPIX (or equivalent) in get_healpix_data_dir
 module paramfile_io
   use healpix_types
   use extension
@@ -904,11 +905,12 @@ end function scan_directories
     !    HEALPIXDATA
     ! 2) the environment variable
     !    $HEALPIXDATA
-    ! otherwise, it will return the list of directories
+    ! otherwise, it will return the list of directories:
     !  .
     !  ../data
     !  ./data
     !  ..
+    !       (and if $HEALPIX is defined)
     !  $HEALPIX
     !  $HEALPIX/data
     !  $HEALPIX/../data
@@ -916,6 +918,7 @@ end function scan_directories
     ! separated by LineFeed
     !
     ! bug correction 2009-11-26
+    ! treat correctly the case where HEALPIX not defined 2012-11-14
     !-----------------------------------------------------------
     hdd = ''
 !    print*,'get_healpix_data'
@@ -927,7 +930,7 @@ end function scan_directories
     if (trim(hdd) == '') then
        def_dir  = concatnl("","../data","./data","..")
        healpixdir = get_healpix_main_dir()
-       if (trim(healpixdir) /= "") then
+       if (trim(healpixdir) /= "") then ! if $HEALPIX defined
 !          def_dir = concatnl(&
           hdd = concatnl(&
                & def_dir, &
@@ -935,6 +938,8 @@ end function scan_directories
                & trim(healpixdir)//"/data", &
                & trim(healpixdir)//"/../data", &
                & trim(healpixdir)//char(92)//"data") !backslash
+       else ! if $HEALPIX (or equivalent) not defined
+          hdd = def_dir
        endif
     endif
 #endif
