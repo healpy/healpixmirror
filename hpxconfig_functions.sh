@@ -1030,8 +1030,16 @@ askF90PIC () {
 	if [ "x$F90PIC" != "x" ] ; then
 	    # update FFLAGS
 	    FFLAGS="$FFLAGS $F90PIC"
+ 	    # update CFLAGS
+ 	    CPIC="-fPIC" # hacked from setCDefaults
+	    case $OS in
+		AIX)
+		    CPIC="-G"
+		;;
+	    esac
+ 	    CFLAGS="$CFLAGS $CPIC"
 	else
-	    echo "PIC compilation flag now known for  \"$FCNAME\" under \"$OS\" "
+	    echo "PIC compilation flag not known for  \"$FCNAME\" under \"$OS\" "
 	    echo "standard static compilation will be performed"
 	fi 
     fi
