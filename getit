@@ -1,0 +1,24 @@
+#! /bin/sh
+#
+#
+
+current=`grep -v '#' ./Version`
+version=${current}
+echoLn "Enter version number ($current) "
+read answer
+[ "x$answer" != "x" ] && version="$answer"
+
+VERSION=$version
+
+cd /tmp
+
+svn co    https://healpix.svn.sourceforge.net/svnroot/healpix/trunk Healpix_${VERSION}
+git clone https://github.com/healpy/healpy.git healpy ; cd healpy ; git checkout 1.4.1 ; git branch
+
+cd /tmp
+cp -pr healpy Healpix_${VERSION}/src
+cd Healpix_${VERSION}/src/healpy
+\rm -rf hpbeta .git* ;  ln -s ../cxx hpbeta ;  cd /tmp
+
+exit
+
