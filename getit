@@ -4,7 +4,7 @@
 
 current=`grep -v '#' ./Version`
 version=${current}
-echoLn "Enter version number ($current) "
+printf "Enter version number ($current) "
 read answer
 [ "x$answer" != "x" ] && version="$answer"
 
