@@ -15,8 +15,9 @@
   synthesize a \healpix {\em RING ordered} temperature map (and if specified, polarisation maps) 
 from input $a_{lm}^T$ (and if specified $a_{lm}^E$ and $a_{lm}^B$) values. 
 The different routines are called dependent on what parameters are passed. 
-Some routines synthesize maps with or without precomputed harmonics and some
-  with or without polarisation. 
+Some routines synthesize maps with or without precomputed harmonics (note that
+since \healpix v2.20 precomputed harmonics most likely won't speed up computation)
+and some with or without polarisation.
 The routines accept both single and double precision arrays for alm\_TGC and
   map\_TQU. The precision of these arrays should match.}
 {\modAlmTools}
@@ -82,7 +83,8 @@ Make temperature and polarisation maps from the scalar and tensor $a_{lm}$
 passed in alm. The maps have $N_{side}$ of 256, and are constructed from
 $a_{lm}$ values up to 512 in $\ell$ and $m$. Since the optional plm array is
 passed with both precomputed $P_{lm}(\theta)$ AND tensor harmonics, there will
-be no recursions in the routine and execution will be faster. 
+be no recursions in the routine. However, this will most likely have a
+\emph{negative} impact on execution speed.
 }
 \end{example}
 
