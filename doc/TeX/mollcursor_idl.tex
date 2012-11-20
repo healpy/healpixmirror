@@ -63,13 +63,13 @@ right button = quit mollcursor\\
 \footnote{the command {\tt sw\_vers -productVersion}
  can be used to know the Mac OS X version being used}%
 of Mac OS X
-, in particular Tiger (ie,
-10.4.*) and Leopard (ie, 10.5.*), the IDL function {\tt cursor}, and therefore \healpix \thedocid,
+, starting with Tiger (ie,
+10.4.*), the IDL function {\tt cursor}, and therefore \healpix \thedocid,
 gnomcursor, $\ldots$ will not
 work properly under X11. To solve this problem, type \\
 under Tiger (10.4): \\
 {\small {\tt defaults write com.apple.x11 wm\_click\_through -bool true}} \\
-or, under Leopard (10.5): \\
+or, under Leopard (10.5), Snow Leopard (10.6), Lion (10.7): \\
 {\small {\tt defaults write org.x.x11 wm\_click\_through -bool true}} \\
 at your X11 prompt and restart X11 (tips found respectively at
 \htmladdnormallink{\small

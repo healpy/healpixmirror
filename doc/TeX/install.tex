@@ -167,7 +167,7 @@ configuration which is beyond our control.
 %
  & & \\
 %
-  Python    & {\tt src/healpy/INSTALL} & 
+  Python    & This document, or \phantom{filling up --} {\tt src/healpy/INSTALL} & 
 \linklatexhtml{''Healpy
 Documentation''}{http://healpy.github.com/healpy}{http://healpy.github.com/healpy}
  (HTML only)\\
@@ -185,19 +185,20 @@ so the appropriate compiler(s) must be present (Linux and Darwin users should lo
 at Section~\ref{sec:freef90compilers} about free F90 compilers. Microsoft Windows
 users should look at Section~\ref{sec:windows}). Many visualisation tools and map
 manipulation routines are provided in \textbf{IDL} (please note 
-that at least version \idlversion is required) and \textbf{Java}. Some of the \healpix routines are
+that at least version \idlversion is required), \textbf{Java} and \textbf{Python}. Some of the \healpix routines are
 also available in \textbf{C}. \\
 Starting with version 3.0, the
 \linklatexhtml{healpy}{https://github.com/healpy/healpy}{https://github.com/healpy/healpy}
 (HEALPix in Python) library has been integrated into \healpix releases. Since it
 is, to a large extent, a
 wrapper to the C++ routines, installing it also requires a C++ compiler (on top
-of {\tt python} and few supporting Python libraries) but it will perform
+of {\tt python} and a few supporting Python libraries) but it will perform
 its own compilation of the current \healpix C++ library.
 
 {\em This section and the next focus on the compilation and installation of the
-  \textbf{C}, \textbf{C++}, \textbf{Fortran~90}  and \textbf{IDL} routines. For more information on the 
-\textbf{Java} and \textbf{Python} routines see table~\ref{tab:allpackages}}
+  \textbf{C}, \textbf{C++}, \textbf{Fortran~90}, \textbf{IDL} and
+\textbf{Python} routines. For more information on the 
+\textbf{Java} routines see table~\ref{tab:allpackages}}
 
 The configure script is written in the Bourne shell. The script
 attempts to generate a {\tt Makefile} which is tailored to one of 
@@ -210,7 +211,7 @@ generated. These automatically establish
 various environment variables and aliases to make the use of the
 \healpix package simpler. 
 
-The \healpix \textbf{Fortran 90}, \textbf{C++} and \textbf{C} distributions also
+The \healpix \textbf{Fortran 90}, \textbf{C++}, \textbf{C} and \textbf{Python} distributions also
 require the publicly available CFITSIO library. Note that the 
 \textbf{Fortran 90} routines require version 3.14 or more (post March 2009) of CFITSIO
 
@@ -235,7 +236,6 @@ IDL V \idlversion or more          & \htmladdnormallink{{\tt
 			\\
                                    &                          \\ \hline %%% for presentation
 \end{tabular}\vspace{3ex}
-
 while the GNU Data Language \textbf{GDL}, a {\em free} clone of IDL 6.0, can also be used (with some
 caveats, see \S\ref{sec:using_gdl}) and can be downloaded for free from
 
@@ -243,19 +243,17 @@ caveats, see \S\ref{sec:using_gdl}) and can be downloaded for free from
   \textbf{Software Package} & \textbf{Source} \\ \hline
                             &                          \\ %%% for presentation
 GDL \gdlversion or more         & \htmladdnormallink{{\tt
-                            http://sourceforge.net/projects/gnudatalanguage/}}{%
-			http://sourceforge.net/projects/gnudatalanguage/}
+                            http://sourceforge.net/projects/gnudatalanguage}}{%
+			http://sourceforge.net/projects/gnudatalanguage}
 			\\
                                    &                          \\ \hline %%% for presentation
 \end{tabular}\vspace{3ex}
-
-
-
 %\vspace{3ex}
-
 %(versions 5.3 to 6.2 have been extensively used during the development
 %of the \healpix IDL codes).
-As it was already the case in version 1.20, users no longer need to acquire the IDL
+
+As it was already the case in version 1.20, users no longer need to acquire the
+{\textbf IDL}
 Astronomy User's Library (\htmladdnormallink{{\tt http://idlastro.gsfc.nasa.gov/homepage.html}}{http://idlastro.gsfc.nasa.gov/homepage.html})
 or the COBE (IDL) Analysis Software (\htmladdnormallink{{\tt http://lambda.gsfc.nasa.gov/product/cobe/cgis.cfm}}{http://lambda.gsfc.nasa.gov/product/cobe/cgis.cfm}),
 although we do recommend these packages to the user.
@@ -265,6 +263,30 @@ These procedures are included in the \healpix package unchanged and
 solely for the purpose of making it self contained. In this way,
 we remove the burden of installation of additional libraries from 
 the end user.
+
+The  \textbf{Python} {\tt healpy} package requires
+
+\begin{tabular}{p{0.3\hsize} p{0.6\hsize}} \hline  
+  \textbf{Software Package} & \textbf{Source} \\ \hline
+                            &                          \\ %%% for presentation
+Python 2.4 to 2.7         & \htmladdnormallink{{\tt http://www.python.org}}{http://www.python.org}
+			\\
+Numpy 1.0.1 or more         & \htmladdnormallink{{\tt http://numpy.scipy.org}}{http://numpy.scipy.org}
+			\\
+Matplotlib 0.91.2 or more         & \htmladdnormallink{{\tt http://matplotlib.sourceforge.net}}{http://matplotlib.sourceforge.net}
+			\\
+PyFITS         & \htmladdnormallink{{\tt
+http://www.stsci.edu/institute/software\_\-hardware/pyfits}}{%
+	http://www.stsci.edu/institute/software_hardware/pyfits}
+			\\
+                                   &                          \\ \hline %%% for presentation
+\end{tabular}\vspace{3ex}
+
+While not required, the 
+{\tt IPython} (\htmladdnormallink{\tt http://ipython.org}{http://ipython.org})
+and 
+{\tt Cython} (\htmladdnormallink{\tt http://cython.org}{http://cython.org})
+softwares can also be useful.
 
 % For convenience we provide the freely available FFTPACK\footnote{At 
 % {\tt
@@ -278,12 +300,14 @@ the end user.
 %% double precision.
 
 A parallel implementation (based on OpenMP, for shared memory architectures) of the Spherical Harmonics
-Transforms involved in {\tt synfast, anafast, smoothing, plmgen} and {\tt alteralm} is now
+Transforms involved in \textbf{F90} {\tt synfast, anafast, smoothing, plmgen, alteralm}
+and \textbf{C++}
+{\tt synalm\_cxx, alm2map\_cxx, anafast\_cxx, smoothing\_cxx, rotalm\_cxx } ... is now
 available by default and can be readily compiled and used with the standard installation script. 
 
 A set of routines with MPI parallelization (for distributed memory architectures)
  is also available for Spherical Harmonics Transform, thanks to the work of H.K. Eriksen
- (h.k.k.eriksen@astro.uio.no) and Snorre Boasson (ITEA, NTNU). See the F90
+ (h.k.k.eriksen@astro.uio.no) and Snorre Boasson (ITEA, NTNU). See the \textbf{F90}
  subroutines documentation for more information on how to use those routines in
  your code.
 %% , thanks to the work of St\'ephane Colombi. It has
@@ -294,7 +318,7 @@ We found that it was remarkably difficult to find
 random number generators in the public
 domain which are simple yet
 powerful and easy to use. 
-We are providing one (both in C++ and F90) which is an adaptation of an xorshift generator described
+We are providing one (both in \textbf{C++} and \textbf{F90}) which is an adaptation of an xorshift generator described
  in Marsaglia (Journal of Statistical Software 2003, vol 8). It has a theoretical period of $2^{128}-1 \approx 3.4\ 10^{38}$.
 
 %% One of us (BDW) has therefore attempted to create one and we
@@ -353,7 +377,10 @@ into the \healpix directory itself rather than in installer's home directory (se
 Using the {\tt -L} option is recommended when doing a {\em project} or {\em system wide} installation of
 \healpix to be accessed by several different users.
 
-An online help is available with {\tt ./configure -h}.
+An online help is available with 
+{\tt ./configure~-h}, while 
+{\tt ./configure~-v} 
+will return the \healpix release number (currently \hpxversion) and exit.
 
 \subsubsection{Configuration profile}
 \label{subsub:conf}
@@ -447,8 +474,8 @@ handled separately. See table~\ref{tab:allpackages} for more information.
 The {\tt ./configure} script will 
 ask for the parent directory containing the {\tt lib/libcfitsio.*} library and
 the {\tt
-include/fitsio.h} include file (therefore {\tt /usr/local} often is the right
-choice) and
+include/fitsio.h} include file (therefore {\tt /usr/local} or {\tt /usr} often are the correct
+choices) and
 the environment variable CFITSIO\_EXT\_PREFIX
 will be set accordingly.\\
 % The configuration and installation of the Healpix Python package (healpy) is currently
@@ -842,7 +869,7 @@ If the IDL cursor does not work correctly on X11 windows under Mac OS X, and the
 \begin{itemize}
 \item under Tiger (10.4.*): \\
 { {\tt defaults write com.apple.x11 wm\_click\_through -bool true}}
-\item under Leopard (10.5.*) and Snow Leopard (10.6.*): \\
+\item under Leopard (10.5.*), Snow Leopard (10.6.*) and Lion (10.7.*): \\
 { {\tt defaults write org.x.x11 wm\_click\_through -bool true}}
 \end{itemize}
 at your X11 prompt and restart X11.
