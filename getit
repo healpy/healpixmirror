@@ -12,7 +12,9 @@ VERSION=$version
 
 cd /tmp
 
+\rm -rf /tmp/Healpix_${VERSION}
 svn co    https://healpix.svn.sourceforge.net/svnroot/healpix/trunk Healpix_${VERSION}
+\rm -rf /tmp/healpy
 git clone https://github.com/healpy/healpy.git healpy ; cd healpy ; git checkout 1.4.1 ; git branch
 
 cd /tmp
