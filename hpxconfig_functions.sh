@@ -866,7 +866,7 @@ EOF
 checkF90FitsioVersion () {
 # check that FITSIO version is recent enough
 # requires compilation of F90 code
-    tmpfile=to_be_removed
+    tmpfile=./to_be_removed # do not forget ./ to allow execution
     # write simple test program
 cat > ${tmpfile}.f90 << EOF
     program date_fitsio
@@ -878,8 +878,8 @@ EOF
     # compile and link
     ${FC} ${FFLAGS}  ${tmpfile}.f90 -o ${tmpfile}.x -L${FITSDIR} -l${LIBFITS} #${WLRPATH}
 
-    # run if compiled
-    if [ -s ${tmpfile}.x ]; then
+    # run if executable
+    if [ -x ${tmpfile}.x ]; then
 	CFITSIOVERSION=`${tmpfile}.x` # available version of CFITSIO 
 	CFITSIOVREQ="3.14"            # required  version of CFITSIO
 	v1=`echo ${CFITSIOVERSION} | ${AWK} '{print $1*1000}'` # multiply by 1000 to get integer
@@ -892,6 +892,8 @@ EOF
 	    echo
 	    crashAndBurn
 	fi
+    else
+	echo "Warning: unable to check that CFITSIO is recent enough (>= ${CFITSIOVREQ})"
     fi
 
     # clean up

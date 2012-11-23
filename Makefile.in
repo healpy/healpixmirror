@@ -279,8 +279,8 @@ healpy-all:
 	@cd src/healpy; \
 	export EXTERNAL_CFITSIO=yes ; \
 	export CFITSIO_EXT_PREFIX=$(CFITSIO_EXT_PREFIX) ; \
-	export CFITSIO_EXT_LIB="-L$(CFITSIO_EXT_PREFIX) -lcfitsio" ; \
-	export CFITSIO_EXT_INC=$(CFITSIO_EXT_PREFIX)/include/ ; \
+	export CFITSIO_EXT_LIB="-L$(CFITSIO_EXT_PREFIX)/lib -lcfitsio" ; \
+	export CFITSIO_EXT_INC="-I$(CFITSIO_EXT_PREFIX)/include" ; \
 	python setup.py build ; \
 	python setup.py install --user ; \
 	cd ../..
