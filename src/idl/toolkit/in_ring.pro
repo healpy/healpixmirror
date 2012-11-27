@@ -146,11 +146,11 @@ endif else begin
 endelse
 
 ; if min(listir) le 0 then help,nr,ip_low,ip_hi,phi_low,phi_hi,iz
-if min(listir) lt 0 then begin
-    help,take_all,to_top,nir1,nir2,nir,ipix1,ip_low
-    print,listir
-    message,'abort'
-endif
+; if min(listir) lt 0 then begin
+;     help,take_all,to_top,nir1,nir2,nir,ipix1,ip_low
+;     print,listir
+;     message,'abort'
+; endif
 return, listir
 end
 

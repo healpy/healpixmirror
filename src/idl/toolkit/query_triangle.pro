@@ -399,7 +399,7 @@ for iz = irmin, irmax do begin
         process_intervals, dom[0:1,3], alldom[0:2*ndom-1], alldom, ndom ; ndom = 0, 1, 2, 3 or 4
         if (ndom eq 0) then goto, empty
     endif
-    print,'alldom',alldom[0:2*ndom-1]
+    ;print,'alldom',alldom[0:2*ndom-1]
 
     for idom=0,ndom-1 do begin
         a_i = alldom[2*idom]
@@ -413,7 +413,7 @@ for iz = irmin, irmax do begin
 
         ;        ------- finds pixels in the triangle on that ring ---------
         listir=in_ring( lnside, iz, phi0, dphiring, nir)
-        print,'iz, phi0, dphiring', iz, phi0, dphiring, nir
+        ;print,'iz, phi0, dphiring', iz, phi0, dphiring, nir
 
         ;        ----------- merge pixel lists -----------
         if (nir gt 0) then begin

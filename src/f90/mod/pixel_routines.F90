@@ -2362,7 +2362,7 @@
     nlist = ilist + 1_MKD
 
     ! sort final list
-    call isort(nlist, listpix)
+    if (nlist > 0) call isort(nlist, listpix)
 
     ! remove redondant pixels
     ! (we keep 0th element of the list)
