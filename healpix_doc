@@ -177,7 +177,7 @@ testDocLocation(){
     docdir=""
     
     # try $HEALPIXDOC (custom installation)
-    [ "x${HEALPIXDOC}" = "x" ] && docdir=${HEALPIXDOC}
+    [ "x${HEALPIXDOC}" != "x" ] && docdir=${HEALPIXDOC}
 
     # try $HEALPIX/doc (standard installation)
     if [ "x${docdir}" = "x" ]; then
@@ -193,7 +193,7 @@ testDocLocation(){
 
     # try around current script (standard, but unfinished, installation)
     ####if [ \( "x${docdir}" = "x" \)  -o  \( ! -d ${docdir} \)  ]; then
-    if [ "x${docdir}" = "x"   ]; then
+    if [ ! -d "${docdir}"    ]; then
 	topdir=$( cd "$( dirname "$0" )" && pwd )
 	docdir=${topdir}/doc
     fi
@@ -208,7 +208,6 @@ testDocLocation(){
     fi
 }
 # ======================================================================
-
 
 verbose=0 # set to 1 to know which tool is used
 
