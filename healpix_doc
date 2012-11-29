@@ -192,9 +192,13 @@ testDocLocation(){
     fi
 
     # try around current script (standard, but unfinished, installation)
-    ####if [ \( "x${docdir}" = "x" \)  -o  \( ! -d ${docdir} \)  ]; then
     if [ ! -d "${docdir}"    ]; then
-	topdir=$( cd "$( dirname "$0" )" && pwd )
+	thiscode=$0
+	# poor man's emulation of recursive 'readlink -f'
+	[ -L "${thiscode}" ] && thiscode=$( readlink ${thiscode} ) # follow link, if applicable
+	[ -L "${thiscode}" ] && thiscode=$( readlink ${thiscode} ) # follow link again
+	thispath=$( dirname ${thiscode} )
+	topdir=$( cd ${thispath} && pwd )
 	docdir=${topdir}/doc
     fi
 
@@ -203,7 +207,8 @@ testDocLocation(){
 
     # test final value of $docdir
     if [ ! -d ${docdir} ]; then
-	echo "Can not find HEALPIX documentation."
+	echo "Can not find HEALPIX documentation"
+	echo "(expected to be in \${HEALPIX}/doc/ or in \${HEALPIXDOC}/)"
 	exit 1
     fi
 }
