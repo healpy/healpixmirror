@@ -90,6 +90,25 @@ updateVersion () {
 }
 
 #---------------
+updateCopyrightDate () {
+
+    dir=${here}
+    instring='Copyright (C) 1997-2010'
+    outstring='Copyright (C) 1997-2012'
+
+    echo "$dir"
+    echo "$instring -> $outstring"
+
+    inlist=`find $dir -type f | grep -v \\.svn | grep -v java | grep -vi bk | xargs grep "$instring" | awk -F: '{print $1}'`
+
+    for file in $inlist ; do
+	ls -l $file
+	grep "$instring" $file
+	cat $file | sed "s|$instring|$outstring|" | grep "$outstring"
+    done
+}
+#---------------
+
 
 revision=`svnversion .`
 echo "Revison=${revision}"
@@ -194,36 +213,11 @@ for p in quad_ring; do
 done
 [ -d extra ] && \rm -rf extra
 
-# echo "appending GPL header to source files"
-# tempfile='/tmp/tmp_edit.txt'
-# # F90 ------------
-# echo "   ... F90 ..."
-# list=`find src/f90 -type f -name \*90 -print`
-# for file in $list; do
-#    cat gpl_header/gpl_header.f90 $file > $tempfile
-#    mv $tempfile $file
-# done
-# # IDL (non ximview) -----------
-# echo "   ... IDL ..."
-# list=`find src/idl -type f -name \*pro -print | grep -v zzz | grep -v ximview`
-# for file in $list; do
-#    cat gpl_header/gpl_header.pro $file > $tempfile
-#    mv $tempfile $file
-# done
-# # # IDL (ximview) ---------
-# # echo "   ... ximview ..."
-# # list=`find src/idl/ximview -type f -name \*pro -print | grep -v astrolib`
-# # for file in $list; do
-# #    cat gpl_header/gpl_header_leahy.pro $file > $tempfile
-# #    mv $tempfile $file
-# # done
-# # C ---------
-# echo "   ... C ..."
-# list=`find src/C/subs -type f \( -name \*c -o -name \*h \) -print`
-# for file in $list; do
-#    cat gpl_header/gpl_header.c $file > $tempfile
-#    mv $tempfile $file
-# done
+# update copyright date in header
+cd ${here}
+updateCopyrightDate
+cd ${here}
+
 [ -d gpl_header ] && \rm -rf gpl_header
 
 echo "removing myself..."
