@@ -33,6 +33,7 @@
 #define PLANCK_MATH_UTILS_H
 
 #include <cmath>
+#include <algorithm>
 #include "datatypes.h"
 
 /*! \defgroup mathutilsgroup Mathematical helper functions */

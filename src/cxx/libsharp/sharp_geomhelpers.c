@@ -25,7 +25,7 @@
 /*! \file sharp_geomhelpers.c
  *  Spherical transform library
  *
- *  Copyright (C) 2006-2011 Max-Planck-Society
+ *  Copyright (C) 2006-2012 Max-Planck-Society<br>
  *  Copyright (C) 2007-2008 Pavel Holoborodko (for gauss_legendre_tbl)
  *  \author Martin Reinecke \author Pavel Holoborodko
  */
@@ -33,6 +33,7 @@
 #include <math.h>
 #include "sharp_geomhelpers.h"
 #include "c_utils.h"
+#include "ls_fft.h"
 
 void sharp_make_healpix_geom_info (int nside, int stride,
   sharp_geom_info **geom_info)
@@ -100,6 +101,9 @@ void sharp_make_weighted_healpix_geom_info (int nside, int stride,
   DEALLOC(stride_);
   }
 
+static inline double one_minus_x2 (double x)
+  { return (fabs(x)>0.1) ? (1.+x)*(1.-x) : 1.-x*x; }
+
 /* Function adapted from GNU GSL file glfixed.c
    Original author: Pavel Holoborodko (http://www.holoborodko.com)
 
@@ -137,8 +141,7 @@ static void gauss_legendre_tbl(int n, double* x, double* w)
         P0 = x0*P_1 + (k-1.)/k * (x0*P_1-P_2);
         }
 
-//      dpdx = ((x0*P0 - P_1) * n) / ((x0-1.)*(x0+1.));
-      dpdx = (x0*P0 - P_1) * n / (x0*x0-1.);
+      dpdx = (P_1 - x0*P0) * n / one_minus_x2(x0);
 
       /* Newton step */
       x1 = x0 - P0/dpdx;
@@ -152,61 +155,11 @@ static void gauss_legendre_tbl(int n, double* x, double* w)
 
     x[i-1] = -x0;
     x[n-i] = x0;
-//    w[i-1] = w[n-i] = 2. / (((1.-x0)*(1.+x0)) * dpdx * dpdx);
-    w[i-1] = w[n-i] = 2. / ((1.-x0*x0) * dpdx * dpdx);
+    w[i-1] = w[n-i] = 2. / (one_minus_x2(x0) * dpdx * dpdx);
     }
   }
 
-static void makeweights (int bw, double *weights)
-  {
-  const double pi = 3.141592653589793238462643383279502884197;
-  const double fudge = pi/(4*bw);
-  for (int j=0; j<2*bw; ++j)
-    {
-    double tmpsum = 0;
-    for (int k=0; k<bw; ++k)
-      tmpsum += 1./(2*k+1) * sin((2*j+1)*(2*k+1)*fudge);
-    tmpsum *= sin((2*j+1)*fudge);
-    tmpsum *= 2./bw;
-    weights[j] = tmpsum;
-    }
-  }
-
-void sharp_make_gauss_geom_info (int nrings, int nphi, int stride_lon,
-  int stride_lat, sharp_geom_info **geom_info)
-  {
-  const double pi=3.141592653589793238462643383279502884197;
-
-  double *theta=RALLOC(double,nrings);
-  double *weight=RALLOC(double,nrings);
-  int *nph=RALLOC(int,nrings);
-  double *phi0=RALLOC(double,nrings);
-  ptrdiff_t *ofs=RALLOC(ptrdiff_t,nrings);
-  int *stride_=RALLOC(int,nrings);
-
-  gauss_legendre_tbl(nrings,theta,weight);
-  for (int m=0; m<nrings; ++m)
-    {
-    theta[m] = acos(-theta[m]);
-    nph[m]=nphi;
-    phi0[m]=0;
-    ofs[m]=(ptrdiff_t)m*stride_lat;
-    stride_[m]=stride_lon;
-    weight[m]*=2*pi/nphi;
-    }
-
-  sharp_make_geom_info (nrings, nph, ofs, stride_, phi0, theta, NULL, weight,
-    geom_info);
-
-  DEALLOC(theta);
-  DEALLOC(weight);
-  DEALLOC(nph);
-  DEALLOC(phi0);
-  DEALLOC(ofs);
-  DEALLOC(stride_);
-  }
-
-void sharp_make_ecp_geom_info (int nrings, int nphi, double phi0,
+void sharp_make_gauss_geom_info (int nrings, int nphi, double phi0,
   int stride_lon, int stride_lat, sharp_geom_info **geom_info)
   {
   const double pi=3.141592653589793238462643383279502884197;
@@ -218,12 +171,10 @@ void sharp_make_ecp_geom_info (int nrings, int nphi, double phi0,
   ptrdiff_t *ofs=RALLOC(ptrdiff_t,nrings);
   int *stride_=RALLOC(int,nrings);
 
-  UTIL_ASSERT((nrings&1)==0,
-    "Even number of rings needed for equidistant grid!");
-  makeweights(nrings/2,weight);
+  gauss_legendre_tbl(nrings,theta,weight);
   for (int m=0; m<nrings; ++m)
     {
-    theta[m] = (m+0.5)*pi/nrings;
+    theta[m] = acos(-theta[m]);
     nph[m]=nphi;
     phi0_[m]=phi0;
     ofs[m]=(ptrdiff_t)m*stride_lat;
@@ -236,6 +187,180 @@ void sharp_make_ecp_geom_info (int nrings, int nphi, double phi0,
 
   DEALLOC(theta);
   DEALLOC(weight);
+  DEALLOC(nph);
+  DEALLOC(phi0_);
+  DEALLOC(ofs);
+  DEALLOC(stride_);
+  }
+
+/* Weights from Waldvogel 2006: BIT Numerical Mathematics 46, p. 195 */
+void sharp_make_ecp_geom_info (int nrings, int ppring, double phi0,
+  int stride_lon, int stride_lat, sharp_geom_info **geom_info)
+  {
+  const double pi=3.141592653589793238462643383279502884197;
+
+  double *theta=RALLOC(double,nrings);
+  double *weight=RALLOC(double,nrings);
+  int *nph=RALLOC(int,nrings);
+  double *phi0_=RALLOC(double,nrings);
+  ptrdiff_t *ofs=RALLOC(ptrdiff_t,nrings);
+  int *stride_=RALLOC(int,nrings);
+
+  weight[0]=2.;
+  for (int k=1; k<=(nrings-1)/2; ++k)
+    {
+    weight[2*k-1]=2./(1.-4.*k*k)*cos((k*pi)/nrings);
+    weight[2*k  ]=2./(1.-4.*k*k)*sin((k*pi)/nrings);
+    }
+  if ((nrings&1)==0) weight[nrings-1]=0.;
+  real_plan plan = make_real_plan(nrings);
+  real_plan_backward_fftpack(plan,weight);
+  kill_real_plan(plan);
+
+  for (int m=0; m<(nrings+1)/2; ++m)
+    {
+    theta[m]=pi*(m+0.5)/nrings;
+    theta[nrings-1-m]=pi-theta[m];
+    nph[m]=nph[nrings-1-m]=ppring;
+    phi0_[m]=phi0_[nrings-1-m]=phi0;
+    ofs[m]=(ptrdiff_t)m*stride_lat;
+    ofs[nrings-1-m]=(ptrdiff_t)((nrings-1-m)*stride_lat);
+    stride_[m]=stride_[nrings-1-m]=stride_lon;
+    weight[m]=weight[nrings-1-m]=weight[m]*2*pi/(nrings*nph[m]);
+    }
+
+  sharp_make_geom_info (nrings, nph, ofs, stride_, phi0_, theta, NULL, weight,
+    geom_info);
+
+  DEALLOC(theta);
+  DEALLOC(weight);
+  DEALLOC(nph);
+  DEALLOC(phi0_);
+  DEALLOC(ofs);
+  DEALLOC(stride_);
+  }
+
+/* Weights from Waldvogel 2006: BIT Numerical Mathematics 46, p. 195 */
+void sharp_make_hw_geom_info (int nrings, int ppring, double phi0,
+  int stride_lon, int stride_lat, sharp_geom_info **geom_info)
+  {
+  const double pi=3.141592653589793238462643383279502884197;
+
+  double *theta=RALLOC(double,nrings);
+  double *weight=RALLOC(double,nrings);
+  int *nph=RALLOC(int,nrings);
+  double *phi0_=RALLOC(double,nrings);
+  ptrdiff_t *ofs=RALLOC(ptrdiff_t,nrings);
+  int *stride_=RALLOC(int,nrings);
+
+  int n=nrings-1;
+  SET_ARRAY(weight,0,nrings,0.);
+  double dw=-1./(n*n-1.+(n&1));
+  weight[0]=2.+dw;
+  for (int k=1; k<=(n/2-1); ++k)
+    weight[2*k-1]=2./(1.-4.*k*k) + dw;
+  weight[2*(n/2)-1]=(n-3.)/(2*(n/2)-1) -1. -dw*((2-(n&1))*n-1);
+  real_plan plan = make_real_plan(n);
+  real_plan_backward_fftpack(plan,weight);
+  kill_real_plan(plan);
+  weight[n]=weight[0];
+
+  for (int m=0; m<(nrings+1)/2; ++m)
+    {
+    theta[m]=pi*m/(nrings-1.);
+    if (theta[m]<1e-15) theta[m]=1e-15;
+    theta[nrings-1-m]=pi-theta[m];
+    nph[m]=nph[nrings-1-m]=ppring;
+    phi0_[m]=phi0_[nrings-1-m]=phi0;
+    ofs[m]=(ptrdiff_t)m*stride_lat;
+    ofs[nrings-1-m]=(ptrdiff_t)((nrings-1-m)*stride_lat);
+    stride_[m]=stride_[nrings-1-m]=stride_lon;
+    weight[m]=weight[nrings-1-m]=weight[m]*2*pi/(n*nph[m]);
+    }
+
+  sharp_make_geom_info (nrings, nph, ofs, stride_, phi0_, theta, NULL, weight,
+    geom_info);
+
+  DEALLOC(theta);
+  DEALLOC(weight);
+  DEALLOC(nph);
+  DEALLOC(phi0_);
+  DEALLOC(ofs);
+  DEALLOC(stride_);
+  }
+
+/* Weights from Waldvogel 2006: BIT Numerical Mathematics 46, p. 195 */
+void sharp_make_fejer2_geom_info (int nrings, int ppring, double phi0,
+  int stride_lon, int stride_lat, sharp_geom_info **geom_info)
+  {
+  const double pi=3.141592653589793238462643383279502884197;
+
+  double *theta=RALLOC(double,nrings);
+  double *weight=RALLOC(double,nrings+1);
+  int *nph=RALLOC(int,nrings);
+  double *phi0_=RALLOC(double,nrings);
+  ptrdiff_t *ofs=RALLOC(ptrdiff_t,nrings);
+  int *stride_=RALLOC(int,nrings);
+
+  int n=nrings+1;
+  SET_ARRAY(weight,0,n,0.);
+  weight[0]=2.;
+  for (int k=1; k<=(n/2-1); ++k)
+    weight[2*k-1]=2./(1.-4.*k*k);
+  weight[2*(n/2)-1]=(n-3.)/(2*(n/2)-1) -1.;
+  real_plan plan = make_real_plan(n);
+  real_plan_backward_fftpack(plan,weight);
+  kill_real_plan(plan);
+  for (int m=0; m<nrings; ++m)
+    weight[m]=weight[m+1];
+
+  for (int m=0; m<(nrings+1)/2; ++m)
+    {
+    theta[m]=pi*(m+1)/(nrings+1.);
+    theta[nrings-1-m]=pi-theta[m];
+    nph[m]=nph[nrings-1-m]=ppring;
+    phi0_[m]=phi0_[nrings-1-m]=phi0;
+    ofs[m]=(ptrdiff_t)m*stride_lat;
+    ofs[nrings-1-m]=(ptrdiff_t)((nrings-1-m)*stride_lat);
+    stride_[m]=stride_[nrings-1-m]=stride_lon;
+    weight[m]=weight[nrings-1-m]=weight[m]*2*pi/(n*nph[m]);
+    }
+
+  sharp_make_geom_info (nrings, nph, ofs, stride_, phi0_, theta, NULL, weight,
+    geom_info);
+
+  DEALLOC(theta);
+  DEALLOC(weight);
+  DEALLOC(nph);
+  DEALLOC(phi0_);
+  DEALLOC(ofs);
+  DEALLOC(stride_);
+  }
+void sharp_make_mw_geom_info (int nrings, int ppring, double phi0,
+  int stride_lon, int stride_lat, sharp_geom_info **geom_info)
+  {
+  const double pi=3.141592653589793238462643383279502884197;
+
+  double *theta=RALLOC(double,nrings);
+  int *nph=RALLOC(int,nrings);
+  double *phi0_=RALLOC(double,nrings);
+  ptrdiff_t *ofs=RALLOC(ptrdiff_t,nrings);
+  int *stride_=RALLOC(int,nrings);
+
+  for (int m=0; m<nrings; ++m)
+    {
+    theta[m]=pi*(2.*m+1.)/(2.*nrings-1.);
+    if (theta[m]>pi-1e-15) theta[m]=pi-1e-15;
+    nph[m]=ppring;
+    phi0_[m]=phi0;
+    ofs[m]=(ptrdiff_t)m*stride_lat;
+    stride_[m]=stride_lon;
+    }
+
+  sharp_make_geom_info (nrings, nph, ofs, stride_, phi0_, theta, NULL, NULL,
+    geom_info);
+
+  DEALLOC(theta);
   DEALLOC(nph);
   DEALLOC(phi0_);
   DEALLOC(ofs);
