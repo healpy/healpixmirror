@@ -95,16 +95,18 @@ updateCopyrightDate () {
     dir=${here}
     instring='Copyright (C) 1997-2010'
     outstring='Copyright (C) 1997-2012'
+    #tmpfile='/tmp/tmp_updatecopyright.txt'
 
-    echo "$dir"
-    echo "$instring -> $outstring"
+    echo "In                $dir"
+    echo "Changing          $instring -> $outstring"
 
     inlist=`find $dir -type f | grep -v \\.svn | grep -v java | grep -vi bk | xargs grep "$instring" | awk -F: '{print $1}'`
 
     for file in $inlist ; do
 	ls -l $file
 	grep "$instring" $file
-	cat $file | sed "s|$instring|$outstring|" | grep "$outstring"
+	sed -i "s|$instring|$outstring|" ${file}
+	grep "$outstring" $file
     done
 }
 #---------------
