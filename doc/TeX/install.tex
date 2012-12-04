@@ -1129,16 +1129,16 @@ maps
 \subsubsection[Java]{Java}
 \begin{itemize}
 	\item Core functionality has been reimplemented from scratch in the form of the
-"healpix.newcore" package. It is strongly recommended to use this package
+"healpix.essentials" package. It is strongly recommended to use this package
 directly in future projects making use of Java HEALPix.
-"healpix.newcore" is a port of the Healpix C++ library and presents a very
+"healpix.essentials" is a port of the Healpix C++ library and presents a very
 similar interface.
 
-The "healpix.core" package is still provided. It uses "healpix.newcore"
+The "healpix.core" package is still provided. It uses "healpix.essentials"
 internally, and its interface has been kept stable as much as possible.
 Some adaptations in user code will still be necessary, however.
 Please note that using "healpix.core" will result in slightly lower performance
-than calling "healpix.newcore" methods directly, because of the necessary
+than calling "healpix.essentials" methods directly, because of the necessary
 data conversion.
 	\item New features and improvements introduced with the HealpixBase class, compared
 to the HealpixIndex, Healpix and PixTools classes:
