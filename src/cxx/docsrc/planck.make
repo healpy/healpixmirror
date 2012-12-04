@@ -5,7 +5,7 @@ docsrc_idx: | $(DOCDIR)_mkdir
 
 docsrc_code_doc: docsrc_idx
 	cd $(SRCROOT)/docsrc; \
-	for i in c_utils libfftpack libpsht cxxsupport Healpix_cxx; do \
+	for i in c_utils libfftpack libsharp cxxsupport Healpix_cxx; do \
 	  doxygen $${i}.dox; \
 	  mv htmldoc $(DOCDIR)/$${i}; \
 	done; \

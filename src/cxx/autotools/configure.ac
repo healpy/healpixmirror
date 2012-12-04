@@ -41,8 +41,6 @@ AC_LANG_POP([C++])
 AC_CHECK_LIB([cfitsio],[ffgnrwll],,AC_MSG_ERROR([could not find the cfitsio library]),[-lm])
 AC_CHECK_HEADERS([fitsio.h],,AC_MSG_ERROR([could not find the cfitsio header file]),)
 
-CXXFLAGS="$CXXFLAGS -DNEWSHT"
-
 AC_PROG_LIBTOOL
 
 AC_CONFIG_FILES([Makefile])
