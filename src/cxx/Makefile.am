@@ -178,3 +178,5 @@ hpxtest_LDADD = libhealpix_cxx.la
 TESTS=hpxtest
 
 AM_CPPFLAGS = -I$(top_srcdir)/c_utils -I$(top_srcdir)/libfftpack -I$(top_srcdir)/libsharp -I$(top_srcdir)/cxxsupport
+
+AM_LDFLAGS = -static-libtool-libs
