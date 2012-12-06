@@ -2,25 +2,50 @@
 #
 #
 
+healpytag="1.4.1"
+healpixbranch="trunk"
+#healpixbranch="branches/branch_v300r365"
+#
+healpyrepo="https://github.com/healpy/healpy.git"
+healpixrepo="https://healpix.svn.sourceforge.net/svnroot/healpix/"
+#
+WRKDIR="/tmp"
+#
 current=`grep -v '#' ./Version`
 version=${current}
 printf "Enter version number ($current) "
 read answer
 [ "x$answer" != "x" ] && version="$answer"
-
 VERSION=$version
 
-cd /tmp
+echo "Version: ${VERSION}    in ${WRKDIR}"
+echo "healpy:   ${healpyrepo}   ${healpytag}"
+echo "healpix:  ${healpixrepo}${healpixbranch}"
+printf "Do you want to proceed (y/n) [n]: "
+read answer
+doit=0
+[ "x$answer" = "xy" ] && doit=1
 
-\rm -rf /tmp/Healpix_${VERSION}
-svn co    https://healpix.svn.sourceforge.net/svnroot/healpix/trunk Healpix_${VERSION}
-\rm -rf /tmp/healpy
-git clone https://github.com/healpy/healpy.git healpy ; cd healpy ; git checkout 1.4.1 ; git branch
+if [ ${doit} = 1 ] ; then
+    cd ${WRKDIR}
 
-cd /tmp
-cp -pr healpy Healpix_${VERSION}/src
-cd Healpix_${VERSION}/src/healpy
-\rm -rf hpbeta .git* ;  ln -s ../cxx hpbeta ;  cd /tmp
+    \rm -rf             ${WRKDIR}/Healpix_${VERSION}
+    \rm -rf             ${WRKDIR}/healpy
+
+    cd ${WRKDIR}
+    svn co    ${healpixrepo}${healpixbranch} Healpix_${VERSION}
+    git clone ${healpyrepo}  healpy 
+    cd healpy 
+    git checkout ${healpytag} 
+    git branch
+
+    cd ${WRKDIR}
+    cp -pr healpy Healpix_${VERSION}/src
+    cd Healpix_${VERSION}/src/healpy
+    \rm -rf hpbeta .git* 
+    ln -s ../cxx hpbeta 
+    cd ${WRKDIR}
+fi
 
 exit
 
