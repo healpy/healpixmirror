@@ -76,7 +76,7 @@ void vec_status()
 
 void announce (const string &name)
   {
-  string version = "v" VERSION;
+  string version = "v3.1 (experimental)";
   string name2 = name+" "+version;
   cout << endl << "+-";
   for (tsize m=0; m<name2.length(); ++m) cout << "-";

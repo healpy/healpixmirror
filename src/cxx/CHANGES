@@ -1,6 +1,5 @@
 Changes since v3.0:
 - libpsht replaced by libsharp
-- full autotools-based build system
 
 Changes since v2.20a (incomplete):
 
