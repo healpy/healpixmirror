@@ -1279,6 +1279,86 @@ template<typename I> double T_Healpix_Base<I>::max_pixrad(I ring) const
   return max(hdist,vdist);
   }
 
+template<typename I> void T_Healpix_Base<I>::xyf2loc (double x, double y,
+  int face, double &z, double &phi, double &sth, bool &have_sth) const
+  {
+  have_sth = false;
+  double jr = jrll[face] - x - y;
+  double nr;
+  if (jr<1)
+    {
+    nr = jr;
+    double tmp = nr*nr/3.;
+    z = 1 - tmp;
+    if (z > 0.99)
+      {
+      sth = std::sqrt(tmp*(2.0-tmp));
+      have_sth = true;
+      }
+    }
+  else if (jr>3)
+    {
+    nr = 4-jr;
+    double tmp = nr*nr/3.;
+    z = tmp - 1;
+    if (z<-0.99)
+      {
+      sth = std::sqrt(tmp*(2.-tmp));
+      have_sth = true;
+      }
+    }
+  else
+    {
+    nr = 1;
+    z = (2-jr)*2./3.;
+    }
+
+  double tmp=jpll[face]*nr+x-y;
+  if (tmp<0) tmp+=8;
+  if (tmp>=8) tmp-=8;
+  phi = (nr<1e-15) ? 0 : (0.5*halfpi*tmp)/nr;
+  }
+
+namespace {
+
+vec3 locToVec3 (double z, double phi, double sth, bool have_sth)
+  {
+  if (have_sth)
+    return vec3(sth*cos(phi),sth*sin(phi),z);
+  else
+    {
+    vec3 res;
+    res.set_z_phi (z, phi);
+    return res;
+    }
+  }
+
+} // unnamed namespace
+
+template<typename I> void T_Healpix_Base<I>::boundaries(I pix, tsize step,
+  vector<vec3> &out) const
+  {
+  out.resize(4*step);
+  int ix, iy, face;
+  pix2xyf(pix, ix, iy, face);
+  double dc = 0.5 / nside_;
+  double xc = (ix + 0.5)/nside_, yc = (iy + 0.5)/nside_;
+  double d = 1.0/(step*nside_);
+  for (tsize i=0; i<step; ++i)
+    {
+    double z, phi, sth;
+    bool have_sth;
+    xyf2loc(xc+dc-i*d, yc+dc, face, z, phi, sth, have_sth);
+    out[i] = locToVec3(z, phi, sth, have_sth);
+    xyf2loc(xc-dc, yc+dc-i*d, face, z, phi, sth, have_sth);
+    out[i+step] = locToVec3(z, phi, sth, have_sth);
+    xyf2loc(xc-dc+i*d, yc-dc, face, z, phi, sth, have_sth);
+    out[i+2*step] = locToVec3(z, phi, sth, have_sth);
+    xyf2loc(xc+dc, yc-dc+i*d, face, z, phi, sth, have_sth);
+    out[i+3*step] = locToVec3(z, phi, sth, have_sth);
+    }
+  }
+
 template<typename I> arr<int> T_Healpix_Base<I>::swap_cycles() const
   {
   planck_assert(order_>=0, "need hierarchical map");
