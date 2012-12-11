@@ -3,7 +3,7 @@ LS_DEBUGFLAGS:= #-g
 
 CC= gcc
 CL= gcc
-CCFLAGS_NO_C= $(LS_DEBUGFLAGS) $(LS_OPTFLAGS) -fno-strict-aliasing --std=gnu89
+CCFLAGS_NO_C= $(LS_DEBUGFLAGS) $(LS_OPTFLAGS) -fno-strict-aliasing -std=c99
 CCFLAGS= $(CCFLAGS_NO_C) -c
 CLFLAGS= -L. -L$(LIBDIR) $(LS_OPTFLAGS) -lm
 

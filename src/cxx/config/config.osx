@@ -8,7 +8,7 @@ LS_PICFLAGS:= -fPIC
 CC= gcc
 CL= gcc
 CWARNFLAGS= -Wall -Wextra -Wno-long-long -Wno-unknown-pragmas -Wshadow -Wmissing-prototypes -Wfatal-errors
-CCFLAGS_NO_C= $(CWARNFLAGS) $(LS_PROFILEFLAGS) $(LS_DEBUGFLAGS) $(LS_OMPFLAGS) $(LS_PICFLAGS) $(LS_OPTFLAGS) -fno-strict-aliasing --std=gnu89 -pedantic -fdata-sections -ffunction-sections
+CCFLAGS_NO_C= $(CWARNFLAGS) $(LS_PROFILEFLAGS) $(LS_DEBUGFLAGS) $(LS_OMPFLAGS) $(LS_PICFLAGS) $(LS_OPTFLAGS) -fno-strict-aliasing -std=c99 -pedantic -fdata-sections -ffunction-sections
 CCFLAGS= $(CCFLAGS_NO_C) -c
 CLFLAGS= -L. -L$(LIBDIR) $(LS_PROFILEFLAGS) $(LS_OMPFLAGS) $(LS_STATICFLAGS) $(LS_PICFLAGS) $(LS_OPTFLAGS) -lm
 
