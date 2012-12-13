@@ -85,7 +85,7 @@
     complex(KALMC), intent(IN),  dimension(1:1,0:nlmax,0:nmmax) :: alm
     real(KMAP),   intent(OUT), dimension(0:(12_i8b*nsmax)*nsmax-1) :: map
 #ifdef USE_PSHT
-    call psht_hp_alm2map_x_KLOAD(nsmax,nlmax,nmmax,alm,map)
+    call sharp_hp_alm2map_x_KLOAD(nsmax,nlmax,nmmax,alm,map)
 #else
 
     integer(I4B) :: l, m, ith                          ! alm related
@@ -312,7 +312,7 @@
 #ifdef USE_PSHT
     aspin = abs(spin)
     if ((aspin>0).and.(aspin<=100)) then
-      call psht_hp_alm2map_spin_x_KLOAD(nsmax,nlmax,nmmax,aspin, &
+      call sharp_hp_alm2map_spin_x_KLOAD(nsmax,nlmax,nmmax,aspin, &
         alm(1:2,0:nlmax,0:nmmax),map(0:12*nsmax*nsmax-1,1:2))
       return
     endif
@@ -930,7 +930,7 @@
     real(KMAP),   intent(OUT), dimension(0:(12_i8b*nsmax)*nsmax-1,1:3) :: map_TQU
 
 #ifdef USE_PSHT
-    call psht_hp_alm2map_pol_x_KLOAD(nsmax,nlmax,nmmax,alm_TGC,map_TQU)
+    call sharp_hp_alm2map_pol_x_KLOAD(nsmax,nlmax,nmmax,alm_TGC,map_TQU)
 #else
 
     integer(I4B) :: l, m, ith                    ! alm related
@@ -2991,7 +2991,7 @@
     w8ring_in  = 1.d0
     if (present(w8ring))  w8ring_in  = w8ring
 
-    call psht_hp_map2alm_x_KLOAD(nsmax,nlmax,nmmax,map,alm,zbounds_in,w8ring_in)
+    call sharp_hp_map2alm_x_KLOAD(nsmax,nlmax,nmmax,map,alm,zbounds_in,w8ring_in)
 #else
 
     integer(I4B) :: l, m, ith, scalem, scalel   ! alm related
@@ -3268,7 +3268,7 @@
 #ifdef USE_PSHT
     aspin = abs(spin)
     if ((aspin>0).and.(aspin<=100)) then
-      call psht_hp_map2alm_spin_x_KLOAD(nsmax,nlmax,nmmax,aspin, &
+      call sharp_hp_map2alm_spin_x_KLOAD(nsmax,nlmax,nmmax,aspin, &
         map(0:12*nsmax*nsmax-1,1:2),alm(1:2,0:nlmax,0:nmmax),zbounds_in,w8ring_in)
       return
     endif
@@ -3931,7 +3931,7 @@
     w8ring_in  = 1.d0
     if (present(w8ring_TQU))  w8ring_in  = w8ring_TQU
 
-    call psht_hp_map2alm_pol_x_KLOAD(nsmax,nlmax,nmmax,map_TQU,alm_TGC,zbounds_in,w8ring_in)
+    call sharp_hp_map2alm_pol_x_KLOAD(nsmax,nlmax,nmmax,map_TQU,alm_TGC,zbounds_in,w8ring_in)
 #else
 
     integer(I4B) :: l, m, ith, scalel, scalem, nrings, nphmx

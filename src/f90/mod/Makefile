@@ -28,7 +28,7 @@ obj6  = mask_tools.o alm_tools.o
 obj7  = healpix_modules.o
 
 obj   = $(obj0) $(obj1) $(obj2) $(obj3) $(obj4) $(obj5) $(obj6) $(obj7)
-objpsht = ../psht/libpsht_all.o
+objpsht = ../psht/libsharp_all.o
 
 default: libhealpix.a 
 

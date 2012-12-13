@@ -78,7 +78,7 @@ data corruption.
 typedef struct
   {
   double *work;
-  size_t length;
+  size_t length, worksize;
   int bluestein;
   } complex_plan_i;
 
@@ -87,6 +87,8 @@ typedef complex_plan_i * complex_plan;
 
 /*! Returns a plan for a complex FFT with \a length elements. */
 complex_plan make_complex_plan (size_t length);
+/*! Constructs a copy of \a plan. */
+complex_plan copy_complex_plan (complex_plan plan);
 /*! Destroys a plan for a complex FFT. */
 void kill_complex_plan (complex_plan plan);
 /*! Computes a complex forward FFT on \a data, using \a plan.
@@ -101,7 +103,7 @@ void complex_plan_backward (complex_plan plan, double *data);
 typedef struct
   {
   double *work;
-  size_t length;
+  size_t length, worksize;
   int bluestein;
   } real_plan_i;
 
@@ -110,6 +112,8 @@ typedef real_plan_i * real_plan;
 
 /*! Returns a plan for a real FFT with \a length elements. */
 real_plan make_real_plan (size_t length);
+/*! Constructs a copy of \a plan. */
+real_plan copy_real_plan (real_plan plan);
 /*! Destroys a plan for a real FFT. */
 void kill_real_plan (real_plan plan);
 /*! Computes a real forward FFT on \a data, using \a plan
@@ -118,7 +122,7 @@ void kill_real_plan (real_plan plan);
     - on exit, it has the form <tt>r0, r1, i1, r2, i2, ...</tt>
       (a total of \a length values). */
 void real_plan_forward_fftpack (real_plan plan, double *data);
-/*! Computes a real forward FFT on \a data, using \a plan
+/*! Computes a real backward FFT on \a data, using \a plan
     and assuming the FFTPACK storage scheme:
     - on entry, \a data has the form <tt>r0, r1, i1, r2, i2, ...</tt>
     (a total of \a length values);
@@ -139,8 +143,7 @@ void real_plan_backward_fftw (real_plan plan, double *data);
     - on entry, \a data has the form <tt>r0, [ignored], r1, [ignored], ...,
       r[length-1], [ignored]</tt>;
     - on exit, it has the form <tt>r0, i0, r1, i1, ...,
-      r[length-1], i[length-1]</tt>.
-    */
+      r[length-1], i[length-1]</tt>. */
 void real_plan_forward_c (real_plan plan, double *data);
 /*! Computes a real backward FFT on \a data, using \a plan
     and assuming a full-complex storage scheme:

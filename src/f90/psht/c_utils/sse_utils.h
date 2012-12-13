@@ -25,20 +25,16 @@
 /*! \file sse_utils.h
  *  SSE/SSE2/SSE3-related functionality
  *
- *  Copyright (C) 2010 Max-Planck-Society
+ *  Copyright (C) 2010,2011 Max-Planck-Society
  *  \author Martin Reinecke
  */
 
 #ifndef PLANCK_SSE_UTILS_H
 #define PLANCK_SSE_UTILS_H
 
-#ifndef PLANCK_DISABLE_SSE
-
 #if (defined(__SSE__))
 
 #include <xmmintrin.h>
-
-#define PLANCK_HAVE_SSE
 
 #ifdef __cplusplus
 extern "C" {
@@ -73,8 +69,6 @@ static inline void read_v4sf (v4sf v, float *a, float *b, float *c, float *d)
 
 #include <emmintrin.h>
 
-#define PLANCK_HAVE_SSE2
-
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -93,8 +87,7 @@ typedef struct {
   V2DF a,b;
 } V2DF2;
 
-#define V2DF_SIGNMASK \
-  _mm_castsi128_pd(_mm_set_epi32(-0x80000000,0,-0x80000000,0))
+#define V2DF_SIGNMASK _mm_set1_pd(-0.0)
 
 static inline v2df build_v2df (double a, double b)
   { return _mm_set_pd(b,a); }
@@ -127,10 +120,6 @@ static inline v2df2 zero_v2df2(void)
 #if (defined(__SSE3__))
 
 #include <pmmintrin.h>
-
-#define PLANCK_HAVE_SSE3
-
-#endif
 
 #endif
 

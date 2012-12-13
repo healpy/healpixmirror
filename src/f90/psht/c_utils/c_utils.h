@@ -25,7 +25,7 @@
 /*! \file c_utils.h
  *  Convenience functions
  *
- *  Copyright (C) 2008, 2009, 2010 Max-Planck-Society
+ *  Copyright (C) 2008, 2009, 2010, 2011 Max-Planck-Society
  *  \author Martin Reinecke
  *  \note This file should only be included from .c files, NOT from .h files.
  */
@@ -46,42 +46,68 @@ void util_warn_ (const char *file, int line, const char *func, const char *msg);
 void *util_malloc_ (size_t sz);
 void util_free_ (void *ptr);
 
+void announce_c (const char *name);
+void module_startup_c (const char *name, int argc, int argc_expected,
+  const char *argv_expected, int verbose);
+
 #if defined (__GNUC__)
 #define UTIL_FUNC_NAME__ __func__
 #else
 #define UTIL_FUNC_NAME__ "unknown"
 #endif
 
+/*! \def UTIL_ASSERT(cond,msg)
+    If \a cond is false, print an error message containing function name,
+    source file name and line number of the call, as well as \a msg;
+    then exit the program with an error status. */
 #define UTIL_ASSERT(cond,msg) \
   if(!(cond)) util_fail_(__FILE__,__LINE__,UTIL_FUNC_NAME__,msg)
+/*! \def UTIL_WARN(cond,msg)
+    If \a cond is false, print an warning containing function name,
+    source file name and line number of the call, as well as \a msg. */
 #define UTIL_WARN(cond,msg) \
   if(!(cond)) util_warn_(__FILE__,__LINE__,UTIL_FUNC_NAME__,msg)
+/*! \def UTIL_FAIL(msg)
+    Print an error message containing function name,
+    source file name and line number of the call, as well as \a msg;
+    then exit the program with an error status. */
 #define UTIL_FAIL(msg) \
   util_fail_(__FILE__,__LINE__,UTIL_FUNC_NAME__,msg)
 
+/*! \def ALLOC(ptr,type,num)
+    Allocate space for \a num objects of type \a type. Make sure that the
+    allocation succeeded, else stop the program with an error. Return the
+    resulting pointer in \a ptr. */
 #define ALLOC(ptr,type,num) \
   do { (ptr)=(type *)util_malloc_((num)*sizeof(type)); } while (0)
+/*! \def RALLOC(type,num)
+    Allocate space for \a num objects of type \a type. Make sure that the
+    allocation succeeded, else stop the program with an error. Cast the
+    resulting pointer to \a (type*). */
 #define RALLOC(type,num) \
   ((type *)util_malloc_((num)*sizeof(type)))
+/*! \def DEALLOC(ptr)
+    Deallocate \a ptr. It must have been allocated using \a ALLOC or
+    \a RALLOC. */
 #define DEALLOC(ptr) \
   do { util_free_(ptr); (ptr)=NULL; } while(0)
 #define RESIZE(ptr,type,num) \
   do { util_free_(ptr); ALLOC(ptr,type,num); } while(0)
-#define REALLOC(ptr,type,num) \
-  do { \
-    ptr = (type *)realloc(ptr,(num)*sizeof(type)); \
-    UTIL_ASSERT(ptr,"realloc() failed"); \
-  } while(0)
 #define GROW(ptr,type,sz_old,sz_new) \
   do { \
     if ((sz_new)>(sz_old)) \
       { RESIZE(ptr,type,2*(sz_new));sz_old=2*(sz_new); } \
   } while(0)
+/*! \def SET_ARRAY(ptr,i1,i2,val)
+    Set the entries \a ptr[i1] ... \a ptr[i2-1] to \a val. */
 #define SET_ARRAY(ptr,i1,i2,val) \
   do { \
     ptrdiff_t cnt_; \
     for (cnt_=(i1);cnt_<(i2);++cnt_) (ptr)[cnt_]=(val); \
     } while(0)
+/*! \def COPY_ARRAY(src,dest,i1,i2)
+    Copy the entries \a src[i1] ... \a src[i2-1] to
+    \a dest[i1] ... \a dest[i2-1]. */
 #define COPY_ARRAY(src,dest,i1,i2) \
   do { \
     ptrdiff_t cnt_; \
@@ -91,10 +117,10 @@ void util_free_ (void *ptr);
 #define ALLOC2D(ptr,type,num1,num2) \
   do { \
     size_t cnt_, num1_=(num1), num2_=(num2); \
-    ALLOC(ptr,type *,num1_); \
-    ALLOC(ptr[0],type,num1_*num2_); \
+    ALLOC((ptr),type *,num1_); \
+    ALLOC((ptr)[0],type,num1_*num2_); \
     for (cnt_=1; cnt_<num1_; ++cnt_) \
-      ptr[cnt_]=ptr[cnt_-1]+num2_; \
+      (ptr)[cnt_]=(ptr)[cnt_-1]+num2_; \
     } while(0)
 #define DEALLOC2D(ptr) \
   do { if(ptr) DEALLOC((ptr)[0]); DEALLOC(ptr); } while(0)

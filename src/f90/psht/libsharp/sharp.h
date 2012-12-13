@@ -1,48 +1,43 @@
 /*
- *  This file is part of libfftpack.
+ *  This file is part of libsharp.
  *
- *  libfftpack is free software; you can redistribute it and/or modify
+ *  libsharp is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
  *  the Free Software Foundation; either version 2 of the License, or
  *  (at your option) any later version.
  *
- *  libfftpack is distributed in the hope that it will be useful,
+ *  libsharp is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *  GNU General Public License for more details.
  *
  *  You should have received a copy of the GNU General Public License
- *  along with libfftpack; if not, write to the Free Software
+ *  along with libsharp; if not, write to the Free Software
  *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
 /*
- *  libfftpack is being developed at the Max-Planck-Institut fuer Astrophysik
+ *  libsharp is being developed at the Max-Planck-Institut fuer Astrophysik
  *  and financially supported by the Deutsches Zentrum fuer Luft- und Raumfahrt
  *  (DLR).
  */
 
-/*
- *  Copyright (C) 2005 Max-Planck-Society
+/*! \file sharp.h
+ *  Interface for the spherical transform library.
+ *
+ *  Copyright (C) 2006-2012 Max-Planck-Society
  *  \author Martin Reinecke
  */
 
-#ifndef PLANCK_BLUESTEIN_H
-#define PLANCK_BLUESTEIN_H
-
-#include "c_utils.h"
+#ifndef PLANCK_SHARP_H
+#define PLANCK_SHARP_H
 
 #ifdef __cplusplus
-extern "C" {
+#error This header file cannot be included from C++, only from C
 #endif
 
-size_t prime_factor_sum (size_t n);
+#include <complex.h>
 
-void bluestein_i (size_t n, double **tstorage, size_t *worksize);
-void bluestein (size_t n, double *data, double *tstorage, int isign);
-
-#ifdef __cplusplus
-}
-#endif
+#include "sharp_lowlevel.h"
 
 #endif
