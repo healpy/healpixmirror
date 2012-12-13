@@ -57,9 +57,9 @@
   !   subroutine rotate_alm
   ! ===========================
 ! manage preprocessing variables:
-! libpsht is used, unless DONT_USE_PSHT is set
-#ifndef DONT_USE_PSHT
-#define USE_PSHT
+! libsharp is used, unless DONT_USE_SHARP is set
+#ifndef DONT_USE_SHARP
+#define USE_SHARP
 #endif
   ! ===========================
   !**************************************************************************
@@ -84,7 +84,7 @@
     integer(I4B), intent(IN)                   :: nsmax, nlmax, nmmax
     complex(KALMC), intent(IN),  dimension(1:1,0:nlmax,0:nmmax) :: alm
     real(KMAP),   intent(OUT), dimension(0:(12_i8b*nsmax)*nsmax-1) :: map
-#ifdef USE_PSHT
+#ifdef USE_SHARP
     call sharp_hp_alm2map_x_KLOAD(nsmax,nlmax,nmmax,alm,map)
 #else
 
@@ -309,7 +309,7 @@
     logical(LGT) :: even_spin
     integer(I4B) :: aspin
 
-#ifdef USE_PSHT
+#ifdef USE_SHARP
     aspin = abs(spin)
     if ((aspin>0).and.(aspin<=100)) then
       call sharp_hp_alm2map_spin_x_KLOAD(nsmax,nlmax,nmmax,aspin, &
@@ -929,7 +929,7 @@
     complex(KALMC), intent(IN),  dimension(1:3,0:nlmax,0:nmmax) :: alm_TGC
     real(KMAP),   intent(OUT), dimension(0:(12_i8b*nsmax)*nsmax-1,1:3) :: map_TQU
 
-#ifdef USE_PSHT
+#ifdef USE_SHARP
     call sharp_hp_alm2map_pol_x_KLOAD(nsmax,nlmax,nmmax,alm_TGC,map_TQU)
 #else
 
@@ -2985,7 +2985,7 @@
     real(DP), dimension(1:2)         :: zbounds_in
     real(DP), dimension(1:2*nsmax,1) :: w8ring_in
 
-#ifdef USE_PSHT
+#ifdef USE_SHARP
     zbounds_in = (/-1.d0 , 1.d0/)
     if (present(zbounds)) zbounds_in = zbounds
     w8ring_in  = 1.d0
@@ -3265,7 +3265,7 @@
     w8ring_in  = 1.d0
     if (present(w8ring))  w8ring_in  = w8ring
 
-#ifdef USE_PSHT
+#ifdef USE_SHARP
     aspin = abs(spin)
     if ((aspin>0).and.(aspin<=100)) then
       call sharp_hp_map2alm_spin_x_KLOAD(nsmax,nlmax,nmmax,aspin, &
@@ -3925,7 +3925,7 @@
 
     real(DP), dimension(1:2)         :: zbounds_in
     real(DP), dimension(1:2*nsmax,3) :: w8ring_in
-#ifdef USE_PSHT
+#ifdef USE_SHARP
     zbounds_in = (/-1.d0 , 1.d0/)
     if (present(zbounds)) zbounds_in = zbounds
     w8ring_in  = 1.d0

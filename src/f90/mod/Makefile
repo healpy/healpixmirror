@@ -28,7 +28,7 @@ obj6  = mask_tools.o alm_tools.o
 obj7  = healpix_modules.o
 
 obj   = $(obj0) $(obj1) $(obj2) $(obj3) $(obj4) $(obj5) $(obj6) $(obj7)
-objpsht = ../psht/libsharp_all.o
+objsharp = ../sharp/libsharp_all.o
 
 default: libhealpix.a 
 
@@ -67,8 +67,8 @@ long_intrinsic.o: long_intrinsic.F90
 	esac
 
 
-libhealpix.a: $(obj) $(objpsht) $(incpix) $(incalm) $(incfits) $(incudgrade)
-	$(AR) libhealpix.a $(obj) $(objpsht)
+libhealpix.a: $(obj) $(objsharp) $(incpix) $(incalm) $(incfits) $(incudgrade)
+	$(AR) libhealpix.a $(obj) $(objsharp)
 	@cp -p libhealpix.a $(LIBDIR)/
 	@for p in *.$(MOD); do \
 	cp $$p $(INCDIR)/; \
