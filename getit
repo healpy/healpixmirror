@@ -7,7 +7,8 @@ healpixbranch="trunk"
 #healpixbranch="branches/branch_v300r365"
 #
 healpyrepo="https://github.com/healpy/healpy.git"
-healpixrepo="https://healpix.svn.sourceforge.net/svnroot/healpix/"
+healpixrepo="svn://svn.code.sf.net/p/healpix/code/" # read-only
+#healpixrepo="https://healpix.svn.sourceforge.net/svnroot/healpix/"
 #
 WRKDIR="/tmp"
 #

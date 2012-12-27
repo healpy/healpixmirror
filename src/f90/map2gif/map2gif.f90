@@ -205,8 +205,7 @@ PROGRAM MAP2GIF
    call assert_alloc(status,'map2gif','map_IQU') 
 
    !--- read in the FITS file ---
-!   call input_map(input_file, map_IQU, npixtot, nmaps, fmissval=HPX_SBADVAL, extno=i_ext)
-   call read_bintab(input_file, map_IQU, npixtot, nmaps, fmissval, anynull, extno=i_ext) ! leave flagged pixels unchanged
+   call read_bintab(input_file, map_IQU, npixtot, nmaps, fmissval, anynull, extno=i_ext) ! flagged, NaN and Infinity pixels take same value of HPX_*BADVAL (returned in fmissval)
 !    call wall_clock_time(time1)
 !    print*,'file read:', time1-time0
 

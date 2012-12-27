@@ -36,7 +36,8 @@
 ;       and return them. Reads header information if required.
 ;
 ; CALLING SEQUENCE:
-;       FITS2ALM, index, alm_array, fitsfile, [signal, HDR=, LMAX=, LMIN=, XHDR= ]
+;       FITS2ALM, index, alm_array, fitsfile, 
+;          [signal, HDR=, LMAX=, LMIN=, XHDR=, HELP= ]
 ; 
 ; INPUTS:
 ;       fitsfile = String containing the name of the file to be written      

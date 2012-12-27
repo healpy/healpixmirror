@@ -39,7 +39,7 @@
 #include "sharp_core.h"
 #include "c_utils.h"
 
-typedef complex double dcmplx;
+/* typedef complex double dcmplx; */
 
 // must be in the range [0;6]
 #define MAXJOB_SPECIAL 2
