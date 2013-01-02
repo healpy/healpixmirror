@@ -40,6 +40,8 @@ $(all_cbin): %: | $(BINDIR)_mkdir
 
 compile_all: $(all_cbin) $(all_cxxbin) hdrcopy
 
+compile_libs: $(all_lib) $(LIB_libcfitsio) hdrcopy
+
 hdrclean:
 	@if [ -d $(INCDIR) ]; then rm -rf $(INCDIR)/* ; fi
 
