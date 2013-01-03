@@ -3,8 +3,17 @@
 #include "sharp_core_inc.c"
 
 #if (SHARP_MAXTRANS>MAXJOB_SPECIAL)
-#include "sharp_core_inc3.c"
+#define NJ1 , int njobs
+#define NJ2 , njobs
+#define Z(arg) CONCAT2(arg,nvec)
+#include "sharp_core_inc2.c"
+#undef Z
+#undef NJ1
+#undef NJ2
 #endif
+
+#define NJ1
+#define NJ2
 
 #if ((MAXJOB_SPECIAL>=1)&&(SHARP_MAXTRANS>=1))
 #define njobs 1
@@ -53,6 +62,9 @@
 #undef Z
 #undef njobs
 #endif
+
+#undef NJ1
+#undef NJ2
 
 #undef Y
 #undef Tb
