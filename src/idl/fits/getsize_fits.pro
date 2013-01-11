@@ -43,8 +43,9 @@ function getsize_fits, filename, nmaps = nmaps, nside = nside, mlpol = mlpol, or
 ;     filename = (IN) name of the (compressed) FITS file containing the map
 ;
 ;  OPTIONAL INPUT
-;     extension = (IN) number of extension (0 based) to read data from
-;     /header   = (IN) if set, filename is indeed as FITS header instead of a
+;     extension = (IN) number of extension (0 based) to read data from, or 
+;                     case un-sensitive string specifying extension name (stored in EXTNAME keyword).
+;     /header   = (IN) if set, filename is actually a FITS header instead of a
 ;          FITS file
 ;
 ;  OPTIONAL OUTPUT
@@ -73,6 +74,8 @@ function getsize_fits, filename, nmaps = nmaps, nside = nside, mlpol = mlpol, or
 ;      EH, 2000-11
 ;      2008-04-01: accepts compressed files
 ;       Jan 2009: calls init_astrolib
+;      2013-01-11: parse header for LMAX (on top of MAX-LPOL)
+;            Extension can now be a string as well as a number
 ;-
 
 routine = 'getsize_fits'
@@ -167,21 +170,27 @@ if (n_ext eq 0) then begin
     return, npix
 endif else begin
     type = 999
-    if undefined(extension_id) then extension_id = 0
+
     if (from_file) then begin
-        if (extension_id + 1) gt n_ext then begin
-            print,' Requested extension ',extension_id,' (0 based) from ',filename
-            print,' Only found ',n_ext,' extensions.'
-            message,' Abort'
-        endif 
+        if size(extension_id,/TNAME) eq 'STRING' then begin
+            extension_idp1 = extension_id[0]
+        endif else begin
+            extension_idp1 = defined(extension_id) ? extension_id[0] + 1 : 1
+            if (extension_idp1) gt n_ext then begin
+                print,' Requested extension ',extension_idp1-1,' (0 based) from '+filename
+                print,' Only found ',n_ext,' extensions.'
+                message,' Abort'
+            endif 
+        endelse
                                 ; open extension 1 and get header
         errmsg=''
         use_fxb = 1
-        fxbopen, lun, filename, extension_id+1, xhdr, errmsg=errmsg
+        fxbopen, lun, filename, extension_idp1, xhdr, errmsg=errmsg
         if (errmsg ne '') then begin ; maybe is it compressed ?
-            xhdr = headfits(filename, exten=extension_id+1, /silent)
+            xhdr = headfits(filename, exten=extension_idp1, /silent)
             use_fxb = 0
         endif
+        if size(xhdr,/TNAME) ne 'STRING' then message,'Can not read header of requested extension from '+filename
     endif else begin
         xhdr = fits_header
     endelse
@@ -210,6 +219,8 @@ endif else begin
     junk  = LONG(sxpar(xhdr,'NSIDE',count=countfits,/silent))
     if (countfits ne 0) then nside = junk[0]
 
+    junk  = LONG(sxpar(xhdr,'LMAX',count=countfits))
+    if (countfits ne 0) then mlpol = junk[0]
     junk  = LONG(sxpar(xhdr,'MAX-LPOL',count=countfits))
     if (countfits ne 0) then mlpol = junk[0]
 

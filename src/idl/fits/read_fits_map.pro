@@ -27,7 +27,10 @@
 ; -----------------------------------------------------------------------------
 
 
-PRO READ_FITS_MAP, filename, T_sky, hdr, exthdr, SILENT=silent, PIXEL=pixel, NSIDE=nside, ORDERING=ordering, COORDSYS=coordsys
+PRO READ_FITS_MAP, filename, T_sky, hdr, exthdr, $
+                   HELP=help, PIXEL=pixel, SILENT=silent, $
+                   NSIDE=nside, ORDERING=ordering, COORDSYS=coordsys, $
+                   EXTENSION=extension_id
 
 ;+
 ; NAME:
@@ -44,7 +47,7 @@ PRO READ_FITS_MAP, filename, T_sky, hdr, exthdr, SILENT=silent, PIXEL=pixel, NSI
 ;
 ; CALLING SEQUENCE:
 ; 	READ_FITS_MAP, filename, T_sky, [hdr, exthdr, SILENT=, PIXEL=, NSIDE=,
-; 	ORDERING=, COORDSYS=]
+; 	ORDERING=, COORDSYS=, HELP=]
 ; 
 ; INPUTS:
 ;	filename = String containing the name of the file to be read.
@@ -65,13 +68,21 @@ PRO READ_FITS_MAP, filename, T_sky, hdr, exthdr, SILENT=silent, PIXEL=pixel, NSI
 ;
 ;
 ; OPTIONAL KEYWORDS:
-;    SILENT : if set, no message is issued during normal execution
+;
+;    EXTENSION = number of extension of be read, 0 based, or
+;          case unsensitive string specifying extension name (stored in EXTNAME keyword).
+;
+;    HELP=  : if set, this help header is printed out and the routine exits
 ;
 ;    PIXEL      = pixel number to read from or pixel range to read
 ;                 (in the order of appearance in the file), starting from 0.
 ;               if >= 0 scalar        : read from pixel to the end of the file
 ;               if two elements array : reads from pixel[0] to pixel[1] (included)
 ;               if absent             : read the whole file
+;
+;    SILENT : if set, no message is issued during normal execution
+;
+
 ;
 ; PROCEDURES USED:
 ;	several (see below)
@@ -92,14 +103,22 @@ PRO READ_FITS_MAP, filename, T_sky, hdr, exthdr, SILENT=silent, PIXEL=pixel, NSI
 ;  Jan 2009: calls init_astrolib
 ;  Feb 2012: calls SELECTREAD which is much faster than FITS_READ
 ;    and can read Nside=8192 sky maps
+;  Jan 2013: added HELP= and EXTENSION= keywords
 ;
 ; requires the THE IDL ASTRONOMY USER'S LIBRARY 
 ; that can be found at http://idlastro.gsfc.nasa.gov/homepage.html
 ;
 ;-
 
-syntax = 'Syntax : READ_FITS_MAP, filename, T_sky [, hdr, exthdr, PIXEL=, SILENT=, NSIDE=, ORDERING=, COORDSYS=]'
+routine = 'read_fits_map'
+syntax = 'Syntax : READ_FITS_MAP, filename, T_sky [, hdr, exthdr, PIXEL=, SILENT=, NSIDE=, ORDERING=, COORDSYS=, HELP=, EXTENSION=]'
 syntax2 = '   No File Read, Abort !'
+
+if keyword_set(help) then begin
+    doc_library,routine
+    return
+endif
+
 if N_params() LT 2 then begin
     print,syntax
     print,syntax2
@@ -135,7 +154,12 @@ endif
 
 ; identify the format in the row (number of entry per row)
 ;exthdr = headfits(filename, exten=1)
-fits_read, filename, junk, exthdr, /header_only, /no_pdu, exten_no=1
+if size(extension_id,/tname) eq 'STRING' then begin
+    fits_read, filename, junk, exthdr, /header_only, /no_pdu, extname=extension_id
+endif else begin
+    xx = defined(extension_id) ? extension_id+1 : 1
+    fits_read, filename, junk, exthdr, /header_only, /no_pdu, exten_no=xx
+endelse
 
 nside  = LONG(       SXPAR(exthdr,'NSIDE',count=count  ))
 if (count eq 0) then nside = -1
@@ -148,7 +172,7 @@ if (count eq 0) then coordsys = sxpar(hdr,'SKYCOORD', count=count)
 if (count eq 0) then coordsys = ' ' else coordsys = strtrim(coordsys,2)
 
 ; actual reading
-selectread, filename, T_sky, exten=0, /no_pdu
+selectread, filename, T_sky, exten=extension_id, /no_pdu
 
 ; find pixels to keep
 max_pix  = n_elements(T_sky[*,0]) - 1L
