@@ -25,7 +25,7 @@
 /*! \file sharp_internal.h
  *  Internally used functionality for the spherical transform library.
  *
- *  Copyright (C) 2006-2012 Max-Planck-Society
+ *  Copyright (C) 2006-2013 Max-Planck-Society
  *  \author Martin Reinecke \author Dag Sverre Seljebotn
  */
 
@@ -44,11 +44,11 @@ typedef struct
   {
   sharp_jobtype type;
   int spin;
-  int add_output;
   int nmaps, nalm;
   int flags;
   void **map;
   void **alm;
+  int s_m, s_th; // strides in m and theta direction
   complex double *phase;
   double *norm_l;
   complex double *almtmp;

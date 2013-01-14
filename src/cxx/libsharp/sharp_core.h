@@ -25,7 +25,7 @@
 /*! \file sharp_core.h
  *  Interface for the computational core
  *
- *  Copyright (C) 2012 Max-Planck-Society
+ *  Copyright (C) 2012-2013 Max-Planck-Society
  *  \author Martin Reinecke
  */
 
@@ -41,7 +41,7 @@ extern "C" {
 
 void inner_loop (sharp_job *job, const int *ispair,const double *cth,
   const double *sth, int llim, int ulim, sharp_Ylmgen_C *gen, int mi,
-  const int *idx);
+  const int *mlim);
 
 #ifdef __cplusplus
 }
