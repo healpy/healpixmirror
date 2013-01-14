@@ -54,12 +54,14 @@ pro query_polygon, nside, vlist, listpix, nlist, $
 ; 2010-03-12: corrected typo in documentation header
 ; 2011-06-09: deal properly with empty returned list
 ;             Nested reordering done at the very final step
+; 2012-01-14: systematically returns Listpix=[-1], Nlist=0 in case of problem
 ;=======================================================================
 ;-
 
 tstart = systime(1)
 routine = 'query_polygon'
 syntax = 'QUERY_POLYGON, Nside, Vlist, Listpix, [Nlist, HELP=, NESTED=, INCLUSIVE=]'
+nlist = 0 & listpix = [-1]
 
 if keyword_set(help) then begin
     doc_library,routine

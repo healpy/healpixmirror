@@ -371,10 +371,14 @@ pro query_disc, nside, vector0, radius_in, listpix, nlist, deg = deg, inclusive=
 ;     2009-04-08: actually returns -1 if nlist = 0
 ;     2011-09-22: improved performance (fewer false positive) in /INCLUSIVE mode
 ;          by testing border of edge pixels (sampled at larger Nside)
+;     2013-01-14: avoid crashes is some configurations with empty Listpix list,
+;            systematically returns Listpix=[-1], Nlist=0 in case of problem
 ;-
 
 tstart = systime(1)
 code = 'query_disc'
+syntax= 'SYNTAX = '+code+', Nside, Vector0, Radius_In, Listpix, [Nlist, DEG=, HELP=, INCLUSIVE=, NESTED=, WALLTIME=]'
+nlist = 0 & listpix = [-1]
 
 if keyword_set(help) then begin
     doc_library,code
@@ -382,7 +386,7 @@ if keyword_set(help) then begin
 endif
 
 if (n_params() lt 4 || n_params() gt 5) then begin
-    print,'SYNTAX = '+code+', Nside, Vector0, Radius_In, Listpix, [Nlist, DEG=, HELP=, INCLUSIVE=, NESTED=, WALLTIME=]'
+    print,
     return
 endif
 
@@ -452,7 +456,7 @@ zmin = (rlat2 le -halfpi) ? -1.d0 : sin(rlat2)
 ; fills list of rings and dphi
 irmin = ring_num(lnside, zmax, shift=+1)
 irmax = ring_num(lnside, zmin, shift=-1)
-nz = irmax-irmin+1
+nz = (irmax-irmin+1) > 1  ; bug correction 2013-01
 izlist = irmin + lindgen(nz)    ; list of rings
 zlist  = ring2z(lnside, izlist) ; list of z
 dphilist = discphirange_at_z (vector0, radius_eff, zlist, phi0=phi0) ; phi range in each ring
@@ -467,14 +471,14 @@ if do_inclusive then begin
 
     irmin = ring_num(wnside, zmax, shift=+1)
     irmax = ring_num(wnside, zmin, shift=-1)
-    nz = irmax-irmin+1
+    nz = (irmax-irmin+1) > 1  ; bug correction 2013-01
     izlist = irmin + lindgen(nz) ; list of active rings
     zlist  = ring2z(wnside, izlist) ; list of z
     dphilist = discphirange_at_z (vector0, radius2, zlist, phi0=phi0) ; phi range in each ring
     phi0list = replicate(phi0, nz)
-    ;print,izlist,dphilist
 
 ;   check boundary of edge pixels
+;   ringphi and ngr computed in non-inclusive configuration (with lnside) will be updated
     check_edge_pixels, lnside, wnside, izlist, phi0list, dphilist, ringphi, ngr
 endif
 

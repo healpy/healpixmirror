@@ -53,11 +53,13 @@ pro query_strip, nside, theta1, theta2, listpix, nlist, help=help, nested=nested
 ;
 ;
 ; v1.0, EH, IAP, 2008-03-28 : adapted from F90 code
+; 2012-01-14: systematically returns Listpix=[-1], Nlist=0 in case of problem
 ;=======================================================================
 ;-
 
 routine = 'query_strip'
 syntax = routine+', Nside, theta1, theta2, Listpix [, Nlist, HELP=, NESTED=, INCLUSIVE=]'
+nlist = 0 & listpix = [-1]
 
 if keyword_set(help) then begin
     doc_library,routine

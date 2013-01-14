@@ -188,12 +188,14 @@ pro query_triangle, nside, v1, v2, v3, listpix, nlist, $
 ; v1.2, EH, IAP, Apr-2011: fewer spurious false positive pixels 
 ;  (for squeezed triangles in inclusive mode) by requiring
 ;   pixels to be within a disc enclosing the triangle
+; 2012-01-14: systematically returns Listpix=[-1], Nlist=0 in case of problem
 ;=======================================================================
 ;-
 
 tstart = systime(1)
 routine = 'query_triangle'
 syntax = routine+', Nside, V1, V2, V3, Listpix [, Nlist, HELP=, NESTED=, INCLUSIVE=, WALLTIME=]'
+nlist = 0 & listpix = [-1]
 
 if keyword_set(help) then begin
     doc_library,routine
@@ -226,30 +228,29 @@ vv[*,2] = v3 / sqrt(total(v3*v3, /double))
 determ = vv[0,0]*vv[1,1]*vv[2,2] + vv[0,1]*vv[1,2]*vv[2,0] + vv[0,2]*vv[1,0]*vv[2,1] $
        - vv[2,0]*vv[1,1]*vv[0,2] - vv[2,1]*vv[1,2]*vv[0,0] - vv[2,2]*vv[1,0]*vv[0,1]
 
-if (abs(determ) lt 1.d-20) then begin
-    message,/info,' ************************************************************'
-    message,/info,' The triangle is degenerate '
-    message,/info,' (2 of the vertices are antipodal or degenerate)'
-    message,/info,' The query can not be performed '
-    message,      ' ************************************************************'
-endif
-sdet = (determ lt 0.d0) ? -1.d0 : 1.d0 ; = +1 or -1, the sign of determ
-
 ; scalar product of vertices vectors
 sprod = dblarr(3)
 sprod[0] = total(vv[*,1]*vv[*,2])
 sprod[1] = total(vv[*,2]*vv[*,0])
 sprod[2] = total(vv[*,0]*vv[*,1])
 
-
 ; vector orthogonal to the great circle containing the vertex doublet
 vo = dblarr(3,3)
 vo[0,0] = vect_prod( vv[*,1], vv[*,2]) 
 vo[0,1] = vect_prod( vv[*,2], vv[*,0]) 
 vo[0,2] = vect_prod( vv[*,0], vv[*,1]) 
+vonorm = sqrt(total(vo^2, 1))
 
+if (abs(determ) lt 1.d-20 || min(vonorm) lt 1.d-20) then begin
+    message,/info,' ************************************************************'
+    message,/info,' The triangle is degenerate (2 of the vertices are antipodal or degenerate)'
+    message,/info,' The query can not be performed '
+    message,/info,' ************************************************************'
+    return
+endif
+sdet = (determ lt 0.d0) ? -1.d0 : 1.d0 ; = +1 or -1, the sign of determ
 ; normalize the orthogonal vector
-for i=0,2 do vo[0,i] = vo[*,i] /  SQRT(total(vo[*,i]^2))
+for i=0,2 do vo[0,i] = vo[*,i] /  vonorm[i]  ;;;;SQRT(total(vo[*,i]^2))
 
 ; test presence of poles in the triangle
 zmax = -1.0d0
@@ -325,6 +326,7 @@ irmax = ring_num(lnside, zmin)
 
 ; build list of phi range for disc containing triangle
 nz = irmax - irmin + 1
+help,nz,irmin,irmax,zmin,zmax
 izlist = irmin + lindgen(nz)    ; list of rings
 zlist  = ring2z(lnside, izlist) ; list of z
 if (do_inclusive) then begin
