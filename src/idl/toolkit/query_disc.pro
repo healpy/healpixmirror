@@ -386,7 +386,7 @@ if keyword_set(help) then begin
 endif
 
 if (n_params() lt 4 || n_params() gt 5) then begin
-    print,
+    print,syntax
     return
 endif
 
