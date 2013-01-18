@@ -25,7 +25,7 @@
  */
 
 /*! \file healpix_map.h
- *  Copyright (C) 2003-2011 Max-Planck-Society
+ *  Copyright (C) 2003-2013 Max-Planck-Society
  *  \author Martin Reinecke
  */
 
@@ -113,8 +113,9 @@ template<typename T> class Healpix_Map: public Healpix_Base
       }
 
     /*! Imports the map \a orig into the current map, adjusting the
-        ordering scheme and the map resolution. \a orig must have higher
-        resolution than the current map. */
+        ordering scheme and the map resolution. \a orig must have lower
+        resolution than the current map, and \a this->Nside() must be an
+        integer multiple of \a orig.Nside(). */
     void Import_upgrade (const Healpix_Map<T> &orig)
       {
       planck_assert(nside_>orig.nside_,"Import_upgrade: this is no upgrade");
@@ -142,7 +143,8 @@ template<typename T> class Healpix_Map: public Healpix_Base
 
     /*! Imports the map \a orig into the current map, adjusting the
         ordering scheme and the map resolution. \a orig must have higher
-        resolution than the current map.
+        resolution than the current map, and \a orig.Nside() must be an
+        integer multiple of \a this->Nside().
         \a pessimistic determines whether or not
         pixels are set to \a Healpix_undef when not all of the corresponding
         high-resolution pixels are defined.
