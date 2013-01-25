@@ -1,7 +1,7 @@
 #!/bin/sh
 
 NAME=HealpixCxx-3.1_experimental
-URL=https://healpix.svn.sourceforge.net/svnroot/healpix/trunk/src/cxx
+URL=http://svn.code.sf.net/p/healpix/code/trunk/src/cxx
 REV=HEAD
 
 svn export -r ${REV} ${URL} ${NAME} &&\
