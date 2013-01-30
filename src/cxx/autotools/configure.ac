@@ -1,7 +1,12 @@
 AC_INIT([Healpix_cxx], [3.0])
-AM_INIT_AUTOMAKE([foreign -Werror])
+AM_INIT_AUTOMAKE([silent-rules foreign -Werror])
 LT_INIT
 AC_CONFIG_MACRO_DIR([m4])
+
+dnl
+dnl Enable silent build rules if this version of Automake supports them
+dnl
+m4_ifdef([AM_SILENT_RULES], [AM_SILENT_RULES([yes])])
 
 AC_DEFUN([AX_CHECK_COMPILE_FLAG],
 [AS_VAR_PUSHDEF([CACHEVAR],[ax_cv_check_[]_AC_LANG_ABBREV[]flags_$4_$1])dnl
