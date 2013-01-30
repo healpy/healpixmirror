@@ -1,5 +1,5 @@
 AC_INIT([Healpix_cxx], [3.0])
-AM_INIT_AUTOMAKE([foreign -Wall -Werror])
+AM_INIT_AUTOMAKE([foreign -Werror])
 LT_INIT
 AC_CONFIG_MACRO_DIR([m4])
 
