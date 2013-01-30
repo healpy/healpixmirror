@@ -45,5 +45,10 @@ PKG_CHECK_MODULES([CFITSIO], [cfitsio])
 
 AC_PROG_LIBTOOL
 
+dnl
+dnl Create pkgconfig .pc file.
+dnl
+AX_CREATE_PKGCONFIG_INFO(,,,,[$CFITSIO_CFLAGS])
+
 AC_CONFIG_FILES([Makefile])
 AC_OUTPUT

@@ -191,3 +191,6 @@ hpxtest_LDFLAGS = -static-libtool-libs
 TESTS=hpxtest
 
 AM_CPPFLAGS = $(CFITSIO_CFLAGS) -I$(top_srcdir)/c_utils -I$(top_srcdir)/libfftpack -I$(top_srcdir)/libsharp -I$(top_srcdir)/cxxsupport
+
+pkgconfigdir = $(libdir)/pkgconfig
+nodist_pkgconfig_DATA = @PACKAGE_NAME@.pc
