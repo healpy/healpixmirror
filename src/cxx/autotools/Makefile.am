@@ -143,7 +143,7 @@ include_HEADERS = \
   Healpix_cxx/powspec.h \
   Healpix_cxx/powspec_fitsio.h
 libhealpix_cxx_la_SOURCES = $(src_c_utils) $(src_libfftpack) $(src_libsharp) $(src_cxxsupport) $(src_healpix_cxx)
-libhealpix_cxx_la_LIBADD = -lcfitsio
+libhealpix_cxx_la_LIBADD = $(CFITSIO_LIBS)
 
 bin_PROGRAMS = alm2map_cxx anafast_cxx calc_powspec hotspots_cxx map2tga \
   median_filter_cxx mult_alm rotalm_cxx smoothing_cxx syn_alm_cxx udgrade_cxx \
@@ -190,4 +190,4 @@ hpxtest_LDFLAGS = -static-libtool-libs
 
 TESTS=hpxtest
 
-AM_CPPFLAGS = -I$(top_srcdir)/c_utils -I$(top_srcdir)/libfftpack -I$(top_srcdir)/libsharp -I$(top_srcdir)/cxxsupport
+AM_CPPFLAGS = $(CFITSIO_CFLAGS) -I$(top_srcdir)/c_utils -I$(top_srcdir)/libfftpack -I$(top_srcdir)/libsharp -I$(top_srcdir)/cxxsupport

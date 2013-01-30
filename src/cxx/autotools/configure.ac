@@ -37,8 +37,11 @@ AX_CHECK_COMPILE_FLAG([-ffast-math],[CXXFLAGS="$CXXFLAGS -ffast-math"])
 AX_CHECK_COMPILE_FLAG([-fomit-frame-pointer],[CXXFLAGS="$CXXFLAGS -fomit-frame-pointer"])
 AC_LANG_POP([C++])
 
-AC_CHECK_LIB([cfitsio],[ffgnrwll],,AC_MSG_ERROR([could not find the cfitsio library]),[-lm])
-AC_CHECK_HEADERS([fitsio.h],,AC_MSG_ERROR([could not find the cfitsio header file]),)
+dnl
+dnl Using pkg-config, determine the compiler flags (CFITSIO_CFLAGS)
+dnl and linker flags (CFITSIO_LIBS) required to build against libcfitsio.
+dnl
+PKG_CHECK_MODULES([CFITSIO], [cfitsio])
 
 AC_PROG_LIBTOOL
 
