@@ -33,12 +33,14 @@ map(0:npixtot-1,1:nmaps)    & SP/ DP & OUT & full sky map(s) constructed
 npixtot                    & I4B/ I8B & IN & number of pixels in the full sky map \\
 nmaps     & I4B & IN &  number of maps in the file  \\
                    &   &   &                           \\ %%% for presentation
-\optional{fmissval}  & SP/ DP & IN &  value to be given to missing pixels, its default
-                   value is 0 \\
+\optional{fmissval}  & SP/ DP & IN &  value to be given to missing pixels,
+\default{0}%
+%its default value is 0 
+\\
 \optional{header}(LEN=80)(1:)     & CHR & OUT &   FITS extension header \\
 \optional{units}(LEN=20)(1:nmaps)  & CHR & OUT &  maps units \\
 \optional{extno}  & I4B & IN & extension number to read the data from
-                   (0 based).\default 0 (the first extension is read) 
+                   (0 based).\default{0} (the first extension is read) 
 \end{tabular}
 }
 \end{arguments}
@@ -51,10 +53,15 @@ use fitstools, only: getsize\_fits, input\_map \\
 npixtot = getsize\_fits('map.fits',nmaps=nmaps, nside=nside) \\
 npix = nside2npix(nside) \\
 allocate(map(0:npix-1,1:nmaps)) \\
-call input\_map('map.fits', map, npix, nmaps)  \\
+call input\_map('map.fits', map, npix, nmaps, fmissval=0.)  \\
 }
 {
-Reads into {\tt map} the content of the FITS file 'map.fits'
+Reads into {\tt map} the content of the FITS file 'map.fits'.
+If there are
+missing pixels in the input file (ie, having value {\tt NaN} (Not of Number),
+$\pm$ {\tt Infinity} or matching the FITS keyword {\tt BAD\_DATA}) they will
+take on output the value provided in optional {\tt fmissval} (here 0, which also
+is its default value).
 }
 \end{example}
 %%\newpage

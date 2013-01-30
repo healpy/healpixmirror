@@ -1917,7 +1917,7 @@
 ! v1.2, EH, IAP, 2008-03-30: fixed bug appearing when disc centered on either pole
 ! 2009-06-17: deals with Nside > 8192
 ! 2011-06-09: uses ring2z
-! 2011-10-18: improve fuege radius determination.
+! 2011-10-18: improve fudge radius determination.
 ! New algorithm for Inclusive case: test boundary of edge pixels on each ring
     !=======================================================================
 #ifdef DOI8B

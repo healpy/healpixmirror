@@ -29,9 +29,9 @@ npixtot & I4B & IN & Number of pixels to be read from map.\\
 nmap & I4B & IN & number of maps to be read, 1 for temperature only, and 3 for (T,Q,U). \\
 map(0:npixtot-1,1:nmap) & SP/ DP & OUT & the map read from the FITS-file.\\
 nullval & SP/ DP & OUT & value of missing pixels in the map. \\
-anynull & LGT & OUT & TRUE, if there are missing pixels, and FALSE
+anynull & LGT & OUT & {\tt .TRUE.}, if there are missing pixels, and {\tt .FALSE.}
                    otherwise. \\
-\optional{header}(LEN=80)(1:) (OPTIONAL) & CHR & OUT & character string array
+\optional{header}(LEN=80)(1:)\hskip 3cm (OPTIONAL) & CHR & OUT & character string array
                    containing the FITS header read from the file. Its
                    dimension has to be defined prior to calling the
                    routine \\
@@ -46,10 +46,16 @@ anynull & LGT & OUT & TRUE, if there are missing pixels, and FALSE
 
 \begin{example}
 {
-call read\_bintab ('map.fits',map,12*32**2,1,nullval,anynull)  \\
+call read\_bintab ('map.fits', map, 12*32**2, 1, nullval, anynull)  \\
 }
 {
-Reads a \healpix temperature map from the file `map.fits' to the array map(0:12*32**2-1,1:1). The pixel number 12*32**2 is the number of pixels in a $\nside=32$ \healpix map. If there are missing pixels in the file, anynull is TRUE and these pixels get the value returned in nullval. 
+Reads a \healpix temperature map from the file `map.fits' to the array
+map(0:12*32**2-1,1:1). The pixel number 12*32**2 is the number of pixels in a
+$\nside=32$ \healpix map. 
+If there are missing pixels in the input file (with
+value {\tt NaN} (Not a Number), $\pm${\tt Infinity}, or matching the FITS
+keyword {\tt BAD\_DATA}) then {\tt
+anynull} is {\tt .TRUE.} and these pixels get the value returned in {\tt nullval}. 
 }
 \end{example}
 
@@ -63,7 +69,7 @@ Reads a \healpix temperature map from the file `map.fits' to the array map(0:12*
 
 \begin{related}
   \begin{sulist}{} %%%% NOTE the ``extra'' brace here %%%%
-  \item[\htmlref{input\_map}{sub:input_map}] Routine which reads a map using \thedocid and fills missing pixels with a given value.
+  \item[\htmlref{input\_map}{sub:input_map}] Routine which reads a map using \thedocid\ and fills missing pixels with a given value.
   \item[\htmlref{map2alm}{sub:map2alm}] Routine which analyse a map and returns the $a_{lm}$
   coefficients.
   \item[\htmlref{read\_fits\_cut4}{sub:read_fits_cut4}] Routine to read cut sky \healpix FITS maps

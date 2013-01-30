@@ -71,6 +71,7 @@ function gaussbeam, fwhm, lmax, dim
 ;     version 1.0, EH, Caltech, 11-1999
 ;     version 1.1, EH, Caltech, 03-2000 : double precision
 ;     version 1.2, EH, Caltech, 08-2002 : added polarisation
+;     version 1.3, EH, IAP,     01-2013: double precision Deg to Rad conversion
 ;-
 
 Syntax = 'Syntax : beam = gaussbeam(fwhm, lmax [, dim])'
@@ -79,7 +80,8 @@ if (n_params() lt 2 or n_params() gt 3) then begin
 endif
 
 ; translates fwhm (arcmin) into sigma = rms (radians)
-sigma = fwhm/60.d0*!DtoR / sqrt(8.d0*alog(2.d0))
+;sigma = fwhm/60.d0*!DtoR / sqrt(8.d0*alog(2.d0))
+sigma = fwhm/60.d0*!DPI/180.d0 / sqrt(8.d0*alog(2.d0))
 
 ; l is in [0,lmax]
 l = dindgen(lmax+1)
