@@ -4,6 +4,12 @@ LT_INIT
 AC_CONFIG_MACRO_DIR([m4])
 
 dnl
+dnl By default, install the headers into a subdirectory of
+dnl ${prefix}/include to avoid possible header filename collisions.
+dnl
+includedir="${includedir}/${PACKAGE_NAME}"
+
+dnl
 dnl Enable silent build rules if this version of Automake supports them
 dnl
 m4_ifdef([AM_SILENT_RULES], [AM_SILENT_RULES([yes])])
