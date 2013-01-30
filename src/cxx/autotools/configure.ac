@@ -1,5 +1,11 @@
 AC_INIT([Healpix_cxx], [3.0])
-AM_INIT_AUTOMAKE([silent-rules foreign -Werror])
+AM_INIT_AUTOMAKE([silent-rules foreign -Wall -Werror])
+
+dnl
+dnl Needed for linking on Windows
+dnl
+AM_PROG_AR
+
 LT_INIT
 AC_CONFIG_MACRO_DIR([m4])
 
