@@ -194,3 +194,5 @@ AM_CPPFLAGS = $(CFITSIO_CFLAGS) -I$(top_srcdir)/c_utils -I$(top_srcdir)/libfftpa
 
 pkgconfigdir = $(libdir)/pkgconfig
 nodist_pkgconfig_DATA = @PACKAGE_NAME@.pc
+
+DISTCLEANFILES=@PACKAGE_NAME@.pc @PACKAGE_NAME@.pc.in  @PACKAGE_NAME@-uninstalled.pc  @PACKAGE_NAME@-uninstalled.sh
