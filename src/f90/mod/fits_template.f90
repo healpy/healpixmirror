@@ -247,7 +247,7 @@ subroutine input_map8_KLOAD(filename, map, npixtot, nmaps, fmissval, header, uni
     real(DP)     :: bscale,bzero
     character(len=80) :: comment
     logical(LGT) :: extend
-    integer(I4B) :: nmove, hdutype
+    integer(I4B) :: nmove, hdutype, hdunum
     integer(I4B) :: frow, imap
     integer(I4B) :: datacode, width
     LOGICAL(LGT) ::  anynull_i
@@ -294,20 +294,27 @@ subroutine input_map8_KLOAD(filename, map, npixtot, nmaps, fmissval, header, uni
     endif
 
     readwrite=0
-    call ftopen(unit,filename,readwrite,blocksize,status)
+    !call ftopen(unit,filename,readwrite,blocksize,status)
+    call ftnopn(unit,filename,readwrite, status) !open primary HDU or specified HDU
     if (status > 0) call printerror(status)
     !     -----------------------------------------
+    call ftghdn(unit, hdunum)
 
-    !     determines the presence of image
-    call ftgkyj(unit,'NAXIS', naxis, comment, status)
-    if (status > 0) call printerror(status)
+    if (hdunum == 1) then  ! in primary HDU
+       !     determines the presence of image
+       call ftgkyj(unit,'NAXIS', naxis, comment, status)
+       if (status > 0) call printerror(status)
 
-    !     determines the presence of an extension
-    call ftgkyl(unit,'EXTEND', extend, comment, status)
-    if (status > 0) status = 0 ! no extension : 
-    !     to be compatible with first version of the code
+       !     determines the presence of an extension
+       call ftgkyl(unit,'EXTEND', extend, comment, status)
+       if (status > 0) then
+          extend = .false.
+          status = 0 ! no extension : 
+       !     to be compatible with first version of the code
+       endif
+    endif
 
-    if (naxis > 0) then ! there is an image
+    if (naxis > 0 .and. .not.extend .and. hdunum==1) then ! there is an image
        !        determine the size of the image (look naxis1 and naxis2)
        call ftgknj(unit,'NAXIS',1_i4b,2_i4b,naxes,nfound,status)
 
@@ -343,12 +350,6 @@ subroutine input_map8_KLOAD(filename, map, npixtot, nmaps, fmissval, header, uni
           status = 0
        endif
        call f90ftgky_(unit, 'BLANK', blank, comment, status)
-!        if (KMAP == SP) then
-!           call ftgkye(unit, 'BLANK', sdummy, comment, status) ; blank = sdummy
-!        endif
-!        if (KMAP == DP) then
-!           call ftgkyd(unit, 'BLANK', ddummy, comment, status) ; blank = ddummy
-!        endif
        if (status == 202) then ! BLANK not found 
           ! (according to fitsio BLANK is integer)
           blank = -2.e25
@@ -375,10 +376,14 @@ subroutine input_map8_KLOAD(filename, map, npixtot, nmaps, fmissval, header, uni
        enddo
 111    continue
 
-    else if (extend) then ! there is an extension
-       nmove = +1
-       if (present(extno)) nmove = +1 + extno
-       call ftmrhd(unit, nmove, hdutype, status)
+    else if (extend .or. hdunum>1) then
+       if (hdunum == 1) then
+          nmove = +1
+          if (present(extno)) nmove = +1 + extno
+          call ftmrhd(unit, nmove, hdutype, status)
+       else
+          call ftghdt(unit, hdutype, status)
+       endif
 
        call assert (hdutype==2, 'this is not a binary table')
 
@@ -455,7 +460,7 @@ subroutine input_map8_KLOAD(filename, map, npixtot, nmaps, fmissval, header, uni
        enddo
 
     else ! no image no extension, you are dead, man
-       call fatal_error(' No image, no extension')
+       call fatal_error(' No image, no extension in '//trim(filename))
     endif
     !     close the file
     call ftclos(unit, status)

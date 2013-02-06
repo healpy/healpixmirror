@@ -124,6 +124,8 @@ if undefined(extension_id) then begin
 endif else begin
     if size(extension_id,/tname) eq 'STRING' then begin
         xtname = extension_id[0]
+        x0 = 0
+        xf = x0
         n_ext = 1
     endif else begin
         if (extension_id + 1) gt n_ext then begin
@@ -176,7 +178,7 @@ for i = x0,xf do begin
 
     ; deal with header
     hdr_merge = [hdr, xhdr] ; to be compatible with WMAP
-    if (i eq 0) then begin
+    if (i eq x0) then begin
         nside  = LONG(       SXPAR(hdr_merge,'NSIDE',count=count  ))
         if (count eq 0) then nside = -1
         ordering =  strupcase(strtrim(SXPAR(hdr_merge,'ORDERING', count=count),2))

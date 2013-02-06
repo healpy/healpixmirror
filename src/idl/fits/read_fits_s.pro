@@ -143,7 +143,7 @@ xten_stc = 0
 fits_info, filename, /silent, n_ext=n_ext, extname=extnames
 if size(extension_id,/TNAME) eq 'STRING' then begin
     extension_idp1 = extension_id[0]
-    junk = where(extnames eq strupcase(extension_idp1), count)
+    junk = where(strupcase(strtrim(extnames,2)) eq strupcase(extension_idp1), count)
     not_found = (count eq 0)
 endif else begin
     extension_idp1 = defined(extension_id) ? extension_id[0] + 1 : 1

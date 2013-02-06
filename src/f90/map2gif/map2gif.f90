@@ -194,7 +194,7 @@ PROGRAM MAP2GIF
 !    nsmax = NINT(SQRT( npixtot / 12.) )
 !    call assert(npixtot == 12*nsmax*nsmax,'wrong number of pixels')
    nsmax = npix2nside(npixtot)
-   call assert(nsmax > 1, 'wrong number of pixels')
+   call assert(nsmax > 0, 'wrong number of pixels')
    chunk = 1024*512
    if (nsmax <= 256) chunk = 2
 
