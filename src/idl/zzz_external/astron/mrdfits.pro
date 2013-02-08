@@ -123,13 +123,12 @@
 ;                This was only behavior prior to V2.5 for MRDFITS and remains
 ;                the default (see /POINTER_VAR)
 ;       /FPACK - If set, then assume the FITS file uses FPACK compression 
-;                (http://heasarc.gsfc.nasa.gov/fitsio/fpack/).     MRDFITS
-;                will automatically detect FPACK compressed files, but it is
-;                more efficient to supply the /FPACK keyword.   A file with an
-;                extension of .fz is assumed to be Fpack compressed.
+;                (http://heasarc.gsfc.nasa.gov/fitsio/fpack/).     To read
+;                an FPACK compressed file, either this must be set or the 
+;                file name must end in ".fz"
 ;       /NO_FPACK - If present, then MRDFITS will not uncompress an extension
-;                compressed with FPACK, but will just read the compressed
-;                binary stream. 
+;                compressed with FPACK (i.e with a .fz extension), but will 
+;                just read the compressed binary stream. 
 ;       /FSCALE - If present and non-zero then scale data to float
 ;                numbers for arrays and columns which have either
 ;                non-zero offset or non-unity scale.
@@ -225,6 +224,9 @@
 ;       (2)     Doesn't do anything with BLANK or NULL values or
 ;               NaN's.  They are just read in.  They may be scaled
 ;               if scaling is applied.
+;       (3)     Does not automatically detect a FPACK compressed file.  Either
+;               the file name must end in .fz, or the /FPACK keyword must
+;               be set
 ; NOTES:
 ;       This multiple format FITS reader is designed to provide a
 ;       single, simple interface to reading all common types of FITS data.
@@ -379,6 +381,7 @@
 ;       V2.19c Fix bug with ROWS keyword introduced Nov 2010 WL Mar 2011
 ;       V2.20  Convert Nulls in ASCII tables, better check of duplicate keywords
 ;                                            WL May 2011
+;       V2.20a Better error checking for FPACK files  WL October 2012
 ;-
 PRO mrd_fxpar, hdr, xten, nfld, nrow, rsize, fnames, fforms, scales, offsets
 compile_opt idl2, hidden
@@ -748,7 +751,7 @@ end
 ; Return the currrent version string for MRDFITS
 function mrd_version
 compile_opt idl2, hidden
-    return, '2.20 '
+    return, '2.20a '
 end
 ;=====================================================================
 ; END OF GENERAL UTILITY FUNCTIONS ===================================
@@ -2452,9 +2455,9 @@ pro mrd_table, header, structyp, use_colnum,           $
 
 		    line = xunsigned ?  unsarr[j] : arrstr[j]
 		    
-                    line = line + dimfld[i] + ')'
-                    if not keyword_set(emptystring) then $
-		         if ftype eq 'A' then line = line + ')' 
+                    line += dimfld[i] + ')'
+                    if ~keyword_set(emptystring) then $
+		         if ftype eq 'A' then line += ')' 
                     fvalues[i] = line
 		    
                 endelse
@@ -2554,7 +2557,7 @@ function mrdfits, file, extension, header,      $
     compile_opt idl2    
     ;   Let user know version if MRDFITS being used.
     if keyword_set(version) then $
-        print,'MRDFITS: Version '+mrd_version() + 'April 29, 2011'
+        print,'MRDFITS: Version '+mrd_version() + 'October 10, 2012'
         
       
     if N_elements(error_action) EQ 0 then error_action = 2
@@ -2631,12 +2634,14 @@ function mrdfits, file, extension, header,      $
         if fxmove(unit,extension) lt 0 then return, -1
     
     endif else begin                         ;File name specified
+
         unit = fxposit(file, extension, compress=compress, unixpipe=unixpipe, $
 	               /readonly,extnum=extnum, errmsg= errmsg, fpack=fpack)
 
         if unit lt 0 then begin
             message, 'File access error',/CON
 	    if errmsg NE '' then message,errmsg,/CON
+	    help,/trace
             status = -1
             return, 0
         endif
@@ -2658,19 +2663,7 @@ function mrdfits, file, extension, header,      $
         return, 0
     endif
 
-; If the ZIMAGE keyword is present in the header, then we must re-open the
-; file using a pipe.
-
-    if ~keyword_set(no_fpack) then $
-         if (inputunit EQ 0) && (~unixpipe) then begin 
-            if sxpar(header,'ZIMAGE') then begin 
-	    free_lun,unit
-            unit = fxposit(file, extension, compress=compress, /fpack, $ 
-	           unixpipe=unixpipe,/readonly,extnum=extnum, errmsg= errmsg)
-            mrd_hread, unit, header, status, SILENT = silent, ERRMSG = errmsg
-      endif
-    endif  	    
-	     
+;	     
     ; If this is primary array then XTENSION will have value
     ; 0 which will be converted by strtrim to '0'
 
@@ -2685,7 +2678,7 @@ function mrdfits, file, extension, header,      $
         return, 0
     endelse
 
-    scaling = keyword_set(fscale) or keyword_set(dscale)
+    scaling = keyword_set(fscale) || keyword_set(dscale)
 
     if type eq 0 then begin
 

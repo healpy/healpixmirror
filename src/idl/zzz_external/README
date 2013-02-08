@@ -12,6 +12,8 @@
 
  o  ./astron/ : required routines from  THE IDL ASTRONOMY USER'S LIBRARY 
     (http://idlastro.gsfc.nasa.gov/homepage.html)
+    including their supporting D. Fanning's COYOTE routines 
+    (http://www.idlcoyote.com/documents/programs.php)
 
  o  ./cgis/ : required routines from the COBE cgis library
     (http://space.gsfc.nasa.gov/astro/cobe/cgis.html)
@@ -22,6 +24,7 @@
 
  2000-03-03
  updated 2007-05-15
+ updated 2013-02-08
  AJB, KMG, EH
 
 ----------------
@@ -101,3 +104,18 @@ FITS_INFO has been updated with 21-Sep-2012 version to parse files with many ext
 
  2012-11-13
  EH
+
+----------------
+
+updated routines:
+CHECKSUM32 DAYCNV FITS_INFO FITS_OPEN FITS_READ FXBREADM FXBWRITM FXMOVE FXPAR FXPOSIT GET_COORDS HOST_TO_IEEE IEEE_TO_HOST MATCH MKHDR MRD_SKIP MRD_STRUCT MRDFITS PUTAST READCOL READFITS STRNUMBER SXADDHIST SXPAR WRITEFITS XDISPSTR
+
+replaced:
+SYMCAT -> CGSYMCAT (used in mollview and outline_coord2uv)
+
+added routines:
+ADD_DISTORT, CGCENTTLB, CGCOLOR, CGCOLOR24, CGPICKCOLORNAME, CGROOTNAME, CGSNAPSHOT, DECOMPOSEDCOLOR, ERROR_MESSAGE, GETDECOMPOSEDSTATE, GETPRIMARYSCREENSIZE
+
+ 2013-02-08
+
+----------------

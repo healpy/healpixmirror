@@ -147,6 +147,7 @@
 ;       E. Hivon: write 64bit integer and double precison columns, Mar 2008
 ;       C. Markwardt Allow unsigned integers, which have special
 ;          TSCAL/TZERO values.  Feb 2009
+;       C. Markwardt Add support for files larger than 2 GB, 2012-04-17
 ;
 ;-
 ;
@@ -348,11 +349,11 @@
 ;  extract the range.
 ;
         IF N_ELEMENTS(ROW) EQ 0 THEN BEGIN
-            ROW = [1L, NAXIS2[ILUN]]
+            ROW = [1LL, NAXIS2[ILUN]]
         ENDIF
 	CASE N_ELEMENTS(ROW) OF
-		1:  ROW2 = LONG(ROW[0])
-		2:  ROW2 = LONG(ROW[1])
+		1:  ROW2 = LONG64(ROW[0])
+		2:  ROW2 = LONG64(ROW[1])
 		ELSE:  BEGIN
 			MESSAGE = 'ROW must have one or two elements'
 			IF N_ELEMENTS(ERRMSG) NE 0 THEN BEGIN
@@ -361,7 +362,7 @@
 			END ELSE MESSAGE, MESSAGE
 			END
 	ENDCASE
-	ROW1 = LONG(ROW[0])
+	ROW1 = LONG64(ROW[0])
 
 ;
 ;  If ROW represents a range, then make sure that the row range is legal, and
@@ -545,11 +546,11 @@
 ;
 ;  Find the position of the first byte of the data array in the file.
 ;
-	OFFSET0 = NHEADER[ILUN] + NAXIS1[ILUN]*(ROW1-1)
+	OFFSET0 = NHEADER[ILUN] + NAXIS1[ILUN]*(ROW1-1LL)
 
-        POS = 0L
+        POS = 0LL
         NROWS0 = NROWS
-        J = 0L
+        J = 0LL
         ;; Here, we constrain the buffer to be at least 16 rows long.
         ;; If we fill up 32 kB with fewer than 16 rows, then there
         ;; must be a lot of (big) columns in this table.  It's

@@ -68,7 +68,7 @@ function strnumber, st, val, hex = hexflg, NaN = nan, L64 = l64
 
  On_IOerror, L1                 ;Go to L1 if conversion error occurs
 
-  If (NOT keyword_set(hexflg)) Then Begin
+  If ~keyword_set(hexflg) Then Begin
    val = double( newstr )
  EndIf Else Begin
    val = 0L

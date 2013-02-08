@@ -86,16 +86,16 @@ pro match, a, b, suba, subb, COUNT = count, SORT = sort, epsilon=epsilon
 
  da = size(a,/type) & db =size(b,/type)
  if keyword_set(sort) then hist = 0b else $
- hist = (( da LE 3 ) or (da GE 12)) and  ((db LE 3) or (db GE 12 ))
+ hist = (( da LE 3 ) || (da GE 12)) &&  ((db LE 3) || (db GE 12 ))
 
- if not hist then begin           ;Non-integer calculation
+ if ~hist then begin           ;Non-integer calculation
 
  na = N_elements(a)              ;number of elements in a
  nb = N_elements(b)             ;number of elements in b
 
 ; Check for a single element array
 
- if (na EQ 1) or (nb EQ 1) then begin
+ if (na EQ 1) || (nb EQ 1) then begin
         if (nb GT 1) then begin
                 subb = where(b EQ a[0], nw)
                 if (nw GT 0) then suba = replicate(0,nw) else suba = [-1]
@@ -153,7 +153,7 @@ pro match, a, b, suba, subb, COUNT = count, SORT = sort, epsilon=epsilon
   suba = -1
   subb = -1
   COUNT = 0L
- if (maxab lt minab) or (maxab lt 0) then return
+ if (maxab lt minab) || (maxab lt 0) then return
 
  ha = histogram([a], MIN=minab, MAX=maxab, reverse_indices=reva)
  hb = histogram([b], MIN=minab, MAX=maxab, reverse_indices=revb)

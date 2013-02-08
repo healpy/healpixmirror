@@ -9,6 +9,7 @@
 # 2009-10-08: deal with 2009Aug20 version
 # 2010-05-26: deal with 2010May24 version
 # 2012-02-20: deal with 2012Feb01 version
+# 2013-02-08: deal with 2013Jan28 version
 #
 # directory with new routines
 # set dir = /home/soft/idl/external_contributions/astron-aug00/pro/
@@ -19,7 +20,8 @@
 # set dir = /Applications/itt/external_contributions/astron_2009Aug20/pro/
 # set dir = /Applications/itt/external_contributions/astron_2009Nov25/pro/
 # set dir = /Applications/itt/external_contributions/astron_2010May24/pro/
-set dir = /Applications/itt/external_contributions/astron_2012Feb01/pro/
+# set dir = /Applications/itt/external_contributions/astron_2012Feb01/pro/
+set dir = /Applications/itt/external_contributions/astron_2013Jan28/pro/
 
 # list of routines in current directory
 set list = `ls -x *.pro`

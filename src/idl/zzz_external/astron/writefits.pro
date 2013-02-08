@@ -1,5 +1,6 @@
 pro writefits, filename, data, header, heap, Append = Append,  $
        compress = compress, CheckSum = checksum, NaNValue = NaNvalue
+       
 ;+
 ; NAME:
 ;       WRITEFITS
@@ -46,7 +47,7 @@ pro writefits, filename, data, header, heap, Append = Append,  $
 ;                 By default, checksum keywords will updated if they are already
 ;                 in the FITS header.
 ;       NaNvalue - Value in the data array which represents missing pixels.
-;		 This keyword is only used when missing pixels are not
+;		 This keyword should only used when missing pixels are not
 ;		 represented by NaN values in the input array.
 ; OUTPUTS:
 ;       None
@@ -57,8 +58,8 @@ pro writefits, filename, data, header, heap, Append = Append,  $
 ;       (2) WRITEFITS will remove any group parameters from the FITS header
 ;       (3) As of Feb 2008, WRITEFITS no longer requires the primary header of a
 ;           FITS file with extension contain the EXTEND keyword, consistent with 
-;           the draft revised FITS standard.    A warning is still given.
-;           http://fits.gsfc.nasa.gov/fits_draft.html
+;           Section 4.4.2.1 of the FITS 3.0 standard.    A warning is still 
+;           given.  See http://fits.gsfc.nasa.gov/fits_standard.html
 ;
 ; EXAMPLE:
 ;       Write a randomn 50 x 50 array as a FITS file creating a minimal header.
@@ -94,8 +95,9 @@ pro writefits, filename, data, header, heap, Append = Append,  $
 ;       Update CHECKSUM keywords if already present  WL   Oct 2007
 ;       EXTEND keyword no longer required in FITS files with extensions WL Feb 2008
 ;       Bug fix when filename ends with '.gz' and COMPRESS is used,
-;            the output file must be compressed          S. Koposov June 2008 
-;      Use V6.0 notation  WL  Feb 2011
+;            the output file must be compressed          S. Koposov June 2008
+;       Introduce V6.0 notation                W.L. Nov. 2010 
+;       Set /APPEND if XTENSION specifies a table   W.L.  July 2012
 ;-
   On_error, 2
   compile_opt idl2  
@@ -124,6 +126,17 @@ pro writefits, filename, data, header, heap, Append = Append,  $
 ; Remove any STSDAS/random group keywords from the primary header
 
   hdr = header
+  
+;If header indicates a table extension then set the append keyword  
+  if ~keyword_set( APPEND) && ( strmid(hdr[0],0,8) EQ 'XTENSION' ) then begin
+	 xten = strtrim(sxpar(hdr,'XTENSION'),2)
+	 if (xten EQ 'TABLE') || (xten Eq 'BINTABLE') || (xten Eq 'A3DTABLE') $
+	     then begin 
+	     append = 1
+	     message,'Writing FITS table extension',/INF
+	 endif    
+   endif	     
+
   if ~keyword_set( APPEND) then begin 
          simple = 'SIMPLE  =                    T / Written by IDL:  ' $
                         + systime()  
@@ -160,7 +173,6 @@ pro writefits, filename, data, header, heap, Append = Append,  $
   endif 
   endif
 
-
 ; Open file and write header information
 
         if keyword_set( APPEND) then begin
@@ -169,15 +181,14 @@ pro writefits, filename, data, header, heap, Append = Append,  $
             'ERROR - "XTENSION" must be first keyword in header extension',/CON
                   return
             endif
-            test = file_search(filename, COUNT = n) 
-             if n EQ 0 then  begin       ;Create default primary header
-                 mkhdr,h0,0,/exten
-                 writefits,filename,0,h0, checksum = checksum
+            if ~file_test(filename)  then  begin       ;Create default primary header
+                 mkhdr,h0,0b,/exten
+                 writefits,filename,0b,h0, checksum = checksum
                  openu, unit, filename, /GET_LUN, /swap_if_little_endian
              endif else begin
             openu, unit, filename, /GET_LUN, /swap_if_little_endian
             mrd_hread, unit, hprimary
-            extend = where( strmid(hprimary,0,8) EQ 'EXTEND  ', Nextend)
+            extend = where( strcmp(hprimary,'EXTEND  ',8), Nextend)
             if Nextend EQ 0 then $
                message,'WARNING - EXTEND keyword not found in primary FITS header',/CON
             endelse
@@ -204,7 +215,7 @@ pro writefits, filename, data, header, heap, Append = Append,  $
 
 ; Determine if an END line occurs, and add one if necessary
 
-       endline = where( strmid(hdr,0,8) EQ 'END     ', Nend)
+       endline = where( strcmp(hdr, 'END     ', 8), Nend)
      if Nend EQ 0 then begin
 
  message,'WARNING - An END statement has been appended to the FITS header',/INF
@@ -222,7 +233,7 @@ pro writefits, filename, data, header, heap, Append = Append,  $
                if N_elements(heap) GT 0 then $
 	         FITS_ADD_CHECKSUM, hdr, [data,heap] else $
                  FITS_ADD_CHECKSUM, hdr, data
-               endline = where( strmid(hdr,0,8) EQ 'END     ', Nend)
+               endline = where( strcmp(hdr,'END     ',8), Nend)
        endif
        nmax = endline[0] + 1
 

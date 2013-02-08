@@ -109,6 +109,7 @@
 ;       W.Landsman    July 2011    Check for SIMPLE in first 8 chars 
 ;               Use gunzip to decompress Unix. Z file since compress utility 
 ;               often not installed anymore)
+;       W. Landsman   October 2012 Add .fz extension if /FPACK set
 ;-
 ;
         On_Error,2
@@ -148,6 +149,10 @@
 	ENDIF    
         
         FILE = FILE[0]
+	IF KEYWORD_SET(FPACK) then $
+	    if strlowcase(strmid(FILE,2,3,/reverse)) NE '.fz' then $
+	    FILE += '.fz'
+	    
 ;
 ;  Check if logical unit number is specified explicitly.
 ;
@@ -247,6 +252,7 @@
            endif 	
 	point_lun,unit,0    	
 	endif
+	
 	stat = FXMOVE(unit, exten, SILENT = Silent, EXT_NO = extnum, $
 	ERRMSG=errmsg)
 

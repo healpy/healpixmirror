@@ -76,7 +76,11 @@
 ;       structure.    
 ;
 ;       PUTAST does not delete astrometry parameters already present in the 
-;       header, unless they are explicity overwritten.    
+;       header, unless they are explicity overwritten.   
+;
+;       As of April 2012, PUTAST will add SIP 
+;      ( http://fits.gsfc.nasa.gov/registry/sip.html ) distortion parameters to
+;       a FITS header if present in the astrometry structure.  
 ; PROMPTS:
 ;       If only a header is supplied, the user will be prompted for a plate 
 ;       scale, the X and Y coordinates of a reference pixel, the RA and
@@ -84,8 +88,8 @@
 ;       rotation angle.
 ;
 ; PROCEDURES USED:
-;       GETOPT(), GET_COORDS, GET_EQUINOX, SXADDPAR, SXPAR(), TAG_EXIST(), 
-;       ZPARCHECK
+;       ADD_DISTORT, GETOPT(), GET_COORDS, GET_EQUINOX(), SXADDPAR, SXPAR(), 
+;       TAG_EXIST(), ZPARCHECK
 ; REVISION HISTORY:
 ;       Written by W. Landsman 9-3-87
 ;       Major rewrite, use new astrometry structure   March, 1994
@@ -113,6 +117,10 @@
 ;       Added NAXIS keyword  W. Landsman   January 2007
 ;       Update PC matrix, if CD_TYPE=0 and CD matrix supplied W.L. July 2007
 ;       Don't write PV2 keywords for WCS types that don't use it W.L. Aug 2011
+;       Add SIP distortion parameters if present W.L. April 2012
+;       Work if empty distortion structure present  W.L. November 2012
+;       Spurious error message introduced April 2012 if CD matrix rather
+;         than structure supplied  W.L.  January 2013 
 ;-
 
  compile_opt idl2
@@ -131,7 +139,7 @@
 
  if ( npar EQ 1 ) then begin            ;Prompt for astrometry parameters?
    ctype = strtrim(sxpar(hdr,'CTYPE*', Count = N_Ctype),2)
-   if (N_Ctype NE 2) or (ctype[0] EQ 'PIXEL') or (ctype[0] EQ 'LINEAR') then $
+   if (N_Ctype NE 2) || (ctype[0] EQ 'PIXEL') || (ctype[0] EQ 'LINEAR') then $
                 ctype = ['RA---TAN','DEC--TAN']
    read,'Enter plate scale in arc seconds/pixel: ',cdelt
    inp =''
@@ -361,6 +369,27 @@ RD_CEN:
           endcase
 	  endif
      endif
+
+;Add SIP distortion parameters if present  
+
+  if size(astr,/tname) EQ 'STRUCT' && tag_exist(astr,'DISTORT') then $
+       if astr.distort.name EQ 'SIP' then begin 
+; First remove any SIP parameters in the FITS header.
+       nord = sxpar(hdr, 'A_Order',Count = N)
+       if (N GT 0) && (nord GT 0) then begin 
+            key = ''
+            for i=0,nord do begin
+	       for j=0,nord-i do begin
+               if i+j NE 0 then $
+	          key = [key, strtrim(i,2) + '_' + strtrim(j,2)]
+		  endfor
+		  endfor
+		  key = key[1:*]
+		  oldkey = ['A_' + key, 'B_' + key, 'AP_' + key,'BP_'+key]
+		  sxdelpar,oldkey, hdr
+       endif		  
+       add_distort, hdr, astr
+    endif
 
  sxaddhist,'PUTAST: ' + strmid(systime(),4,20) + hist,hdr
 

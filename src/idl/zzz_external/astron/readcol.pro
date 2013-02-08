@@ -95,7 +95,7 @@ pro readcol,name,v1,V2,v3,v4,v5,v6,v7,v8,v9,v10,v11,v12,v13,v14,v15, $
 ;
 ; EXAMPLES:
 ;       Each row in a file position.dat contains a star name and 6 columns
-;       of data giving an RA and Dec in sexigesimal format.   Read into IDL 
+;       of data giving an RA and Dec in sexagesimal format.   Read into IDL 
 ;       variables.   (NOTE: The star names must not include the delimiter 
 ;       as a part of the name, no spaces or commas as default.)
 ;
@@ -162,6 +162,8 @@ pro readcol,name,v1,V2,v3,v4,v5,v6,v7,v8,v9,v10,v11,v12,v13,v14,v15, $
 ;       Accept normal FORTRAN formats (e.g. F5.1) P. Noterdaeme/W.L Jan 2011
 ;       Add COMPRESS keyword, IDL 6 notation W. Landsman/J. Bailin   Feb 2011
 ;       Allow filename to be 1 element array W.Landsman/S.Antonille Apr 2011
+;       Feb 2010 change caused errors when reading blanks as numbers. 
+;                          W.L. July 2012
 ;-
   On_error,2                    ;Return to caller
   compile_opt idl2
@@ -328,7 +330,10 @@ pro readcol,name,v1,V2,v3,v4,v5,v6,v7,v8,v9,v10,v11,v12,v13,v14,v15, $
               goto, BADLINE 
            endif
         endif 
-       (*bigarr[k])[ngood] = var[i]
+	if strlen(strtrim(var[i],2)) Eq 0 then begin
+	   if keyword_set(NAN) then (*bigarr[k])[ngood] = !VALUES.F_NAN else $
+	                            (*bigarr[k])[ngood] = 0 
+        endif else (*bigarr[k])[ngood] = var[i]
         k++
 
      endfor

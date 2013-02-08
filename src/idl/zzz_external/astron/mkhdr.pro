@@ -22,9 +22,9 @@ pro mkhdr, header, im, naxisx, IMAGE = image, EXTEND = extend
 ;               to be the actual data; it can be a dummy array of the same
 ;               type and size as the data.    Set IM = '' to create a dummy
 ;               header with NAXIS = 0. 
-;       TYPE - If more than 2 parameters are supplied, then the second parameter
+;       TYPE - If 2 parameters are supplied, then the second parameter
 ;               is interpreted as an integer giving the IDL datatype e.g. 
-;               1 - LOGICAL*1, 2 - INTEGER*2, 4 - REAL*4, 3 - INTEGER*4
+;               1 - Byte, 2 - 16 bit integer, 4 - float, 3 - Long
 ;       NAXISX - Vector giving the size of each dimension (NAXIS1, NAXIS2, 
 ;               etc.).  
 ;
@@ -39,9 +39,9 @@ pro mkhdr, header, im, naxisx, IMAGE = image, EXTEND = extend
 ;               a primary FITS header except the first keyword is 
 ;               'XTENSION' = 'IMAGE' instead of 'SIMPLE  ' = 'T'
 ;       /EXTEND  = If set, then the keyword EXTEND is inserted into the file,
-;               with the value of "T" (true).    The EXTEND keyword must be
-;               included in a primary header, if the FITS file contains 
-;               extensions.
+;               with the value of "T" (true).    The EXTEND keyword can 
+;               optionally be included in a primary header, if the FITS file 
+;               contains extensions.
 ;
 ; RESTRICTIONS:
 ;       (1)  MKHDR should not be used to make an STSDAS header or a FITS
@@ -69,14 +69,15 @@ pro mkhdr, header, im, naxisx, IMAGE = image, EXTEND = extend
 ;       Written November, 1988               W. Landsman
 ;       May, 1990, Adapted for IDL Version 2.0, J. Isensee
 ;       Aug, 1997, Use SYSTIME(), new DATE format  W. Landsman
-;       Converted to IDL V5.0   W. Landsman   September 1997
 ;       Allow unsigned data types    W. Landsman   December 1999
 ;       Set BZERO = 0 for unsigned integer data  W. Landsman January 2000
 ;       EXTEND keyword must immediately follow last NAXISi W. Landsman Sep 2000
 ;       Add FITS definition COMMENT to primary headers W. Landsman Oct. 2001
 ;       Allow (nonstandard) 64 bit integers   W. Landsman  Feb. 2003
+;       Add V6.0 notation W. Landsman July 2012
 ;-                          
  On_error,2
+ compile_opt idl2
 
  npar = N_params()
  if npar LT 1 then begin
@@ -156,7 +157,7 @@ pro mkhdr, header, im, naxisx, IMAGE = image, EXTEND = extend
             ' Original Data is Unsigned Long'
  header = header[0:s[0]+7]
 
- if not keyword_set(IMAGE) then begin   ;Add FITS definition for primary header
+ if ~keyword_set(IMAGE) then begin   ;Add FITS definition for primary header
      sxaddpar,header,'COMMENT ', $
       "FITS (Flexible Image Transport System) format is defined in 'Astronomy"
      sxaddpar,header,'COMMENT ', $

@@ -57,7 +57,7 @@ pro ieee_to_host, data, IDLTYPE = idltype
  if npts EQ 0 then $
      message,'ERROR - IDL data variable (first parameter) not defined'
 
- if not keyword_set( idltype) then idltype = size(data,/type)
+ if ~keyword_set( idltype) then idltype = size(data,/type)
  
  case idltype of
 

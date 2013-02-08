@@ -131,6 +131,7 @@ pro fits_open,filename,fcb,write=write,append=append,update=update, $
 ;       Use post-V6.0 notation W.L. October 2010
 ;       Support FPACK compressed files, new .FCOMPRESS tag to FCB structure
 ;               W.L.  December 2010
+;       Read gzip'ed files even if gzip is not installed W.L. October 2012
 ;-
 ;--------------------------------------------------------------------
       compile_opt idl2
@@ -207,19 +208,25 @@ pro fits_open,filename,fcb,write=write,append=append,update=update, $
         docompress = file.compress
 
 ; Need to spawn to "gzip -l" to get the number of uncompressed bytes in a gzip
-; compressed file.    I'm not sure how independent this code is with different
-; shells and OS's.
+; compressed file.  If gzip doesn't work for some reason then use 
+; get_pipe_filesize.
 
         if fcompress then begin 
 	      get_pipe_filesize,unit, nbytes_in_file
 	      free_lun,unit
 	      spawn,'funpack -S ' + filename, unit=unit,/sh
         endif else if docompress then begin 
+	     if !VERSION.OS_FAMILY Eq 'Windows' then $
+	           fname = file_search(fname,/fully_qualify)
              spawn,'gzip -l ' + fname, output
              output = strtrim(output,2)
              g = where(strmid(output,0,8) EQ 'compress', Nfound)
-	     if Nfound EQ 0 then message,'Unable to gzip decompress ' + fname
-             nbytes_in_file = long64((strsplit(output[g[0]+1],/extract))[1])
+	     if Nfound EQ 0 then begin
+	            get_pipe_filesize, unit, nbytes_in_file
+		    close,unit
+		    openr,unit,filename, /compress,/swap_if_little
+             endif else $
+	         nbytes_in_file = long64((strsplit(output[g[0]+1],/extract))[1])
         endif else nbytes_in_file = file.size
 	
 ;

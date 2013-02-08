@@ -127,7 +127,7 @@ msg_text = widget_text(controls, xsize=20, ysize=1, font=font)
 array_text = widget_text(tlb, value=array, $
                          xsize=width, ysize=height, /scroll, edit=0, font=font)
 
-if not keyword_set(top_line) then top_line = 0
+if ~keyword_set(top_line) then top_line = 0
 widget_control, array_text, set_text_top_line=top_line
 widget_control, array_text, set_text_select=[0,0]
 

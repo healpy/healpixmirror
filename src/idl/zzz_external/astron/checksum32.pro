@@ -92,10 +92,10 @@ pro checksum32, array, checksum, FROM_IEEE = from_IEEE, NOSAVE = nosave
  Niter =  (N-1)/maxnum
  checksum = long64(0)
   word32 =  long64(2)^32
-  bswap  = 1 - is_ieee_big()
+  bswap  = ~is_ieee_big()
   if bswap then begin
-       if not keyword_set( from_ieee) then begin 
-            if (idltype NE 3) and (idltype NE 4) then begin 
+       if ~keyword_set( from_ieee) then begin 
+            if (idltype NE 3) && (idltype NE 4) then begin 
 	         if idltype NE 1 then host_to_ieee, uarray,idltype=idltype   
                  byteorder,uarray,/NTOHL
 	   endif	 

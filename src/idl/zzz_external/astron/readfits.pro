@@ -62,7 +62,6 @@
 ;               is required only if the the gzip compressed file name does not 
 ;               end in '.gz' or .ftz
 ;              
-;
 ;       EXTEN_NO - non-negative scalar integer specifying the FITS extension to
 ;               read.  For example, specify EXTEN = 1 or /EXTEN to read the 
 ;               first FITS extension.   
@@ -221,6 +220,7 @@
 ;      Skip extra SPAWN with FPACK decompress J. Eastman, W.L. July 2010
 ;      Fix possible problem when startrow=0 supplied J. Eastman/W.L. Aug 2010
 ;      First header is not necessarily primary if unit supplied WL Jan 2011
+;      Fix test for 'SIMPLE' at beginning of header WL November 2012
 ;-
 function READFITS, filename, header, heap, CHECKSUM=checksum, $ 
                    COMPRESS = compress, HBUFFER=hbuf, EXTEN_NO = exten_no, $
@@ -327,12 +327,13 @@ function READFITS, filename, header, heap, CHECKSUM=checksum, $
        endif
 
       readu, unit, block
-      headerblock = headerblock + 1
+      headerblock++
       w = where(strlen(block) NE 80, Nbad)
       if (Nbad GT 0) then begin
            message,'Warning-Invalid characters in header',/INF,NoPrint=Silent
            block[w] = string(replicate(32b, 80))
       endif
+
       w = where(strcmp(block,'END     ',8), Nend)
       if (headerblock EQ 1) || ((ext EQ exten_no) && (doheader)) then begin
               if Nend GT 0 then  begin
@@ -340,12 +341,11 @@ function READFITS, filename, header, heap, CHECKSUM=checksum, $
                                  else header = [header[0:i-1],block[0:w[0]]]
              endif else begin
                 header[i] = block
-                i = i+36
+                i += 36
                 if i mod hbuf EQ 0 then $
                               header = [header,strarr(hbuf)]
            endelse
           endif
-      endwhile
 
       if (ext EQ 0 ) && ~(keyword_set(pointlun) || unitsupplied ) then $
              if strmid( header[0], 0, 8)  NE 'SIMPLE  ' then begin
@@ -355,7 +355,7 @@ function READFITS, filename, header, heap, CHECKSUM=checksum, $
                 return, -1
       endif
 
-                
+      endwhile          
 ; Get parameters that determine size of data region.
                 
        bitpix =  sxpar(header,'BITPIX')

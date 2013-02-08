@@ -16,9 +16,9 @@ function SXPAR, hdr, name, abort, COUNT=matches, COMMENT = comments, $
 ;
 ;      Name = String name of the parameter to return.   If Name is of the
 ;             form 'keyword*' then an array is returned containing values of
-;             keywordN where N is an integer.  The value of keywordN will be
-;             placed in RESULT(N-1).  The data type of RESULT will be the
-;             type of the first valid match of keywordN found.
+;             keywordN where N is a positive (non-zero) integer.  The value of 
+;             keywordN will be placed in RESULT[N-1].  The data type of RESULT 
+;             will be the type of the first valid match of keywordN found.
 ;
 ; OPTIONAL INPUTS:
 ;       ABORT - string specifying that SXPAR should do a RETALL
@@ -119,6 +119,7 @@ function SXPAR, hdr, name, abort, COUNT=matches, COMMENT = comments, $
 ;             of mixed data type are returned with the highest type.
 ;       W.Landsman Aug 2008  Use vector form of VALID_NUM()
 ;       W. Landsman Jul 2009  Eliminate internal recursive call
+;       W. Landsman Apr 2012  Require vector numbers be greater than 0
 ;-
 ;----------------------------------------------------------------------
  On_error,2
@@ -183,6 +184,9 @@ function SXPAR, hdr, name, abort, COUNT=matches, COMMENT = comments, $
 		if matches GT 0 then begin 
 		     nfound = nfound[igood]
                      number = long(numst[igood])
+		     g = where(number GT 0, matches)
+ 		     if matches GT 0 then number = number[g]
+
 		endif 
            endif
 

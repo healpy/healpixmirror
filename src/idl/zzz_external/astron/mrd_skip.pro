@@ -42,7 +42,7 @@ pro mrd_skip, unit, nskip
 
 ; We try to use POINT_LUN but if an error ocurrs, we just read in the bytes 
 
-          if not compress then begin
+          if ~compress then begin
  	  On_IOerror, byte_read
 	  point_lun, -unit, curr_pos
 	  On_IOerror, null
@@ -63,7 +63,7 @@ byte_read:
 	while (nleft gt 0) do begin
 		readu, unit, buf
 		nleft = nleft - chunk
-	        if (nleft gt 0 and nleft lt chunk) then buf = buf[0:nleft-1]	
+	        if (nleft gt 0) && (nleft lt chunk) then buf = buf[0:nleft-1]	
 	endwhile
 	return
 DONE:  message,'Warning - Byte padding in FITS file may not be correct',/CON

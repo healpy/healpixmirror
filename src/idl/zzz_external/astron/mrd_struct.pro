@@ -78,8 +78,10 @@
 ;       Fix use of STRUCTYP with /NO_EXECUTE  W. Landsman June 2005
 ;       Assume since V6.0 (lmgr function available), remove 131 string length
 ;             limit for execute    W. Landsman Jun 2009 
-;      Restore EXECUTE limit (sigh...)   W. Landsman July 2009 
-;      Make sure "0" is a short integer even with compile_opt idl2  July 2010
+;       Restore EXECUTE limit (sigh...)   W. Landsman July 2009 
+;       Make sure "0" is a short integer even with compile_opt idl2  July 2010
+;       Added "0.0", "0.0d", "0u", "0ul", and "0ull" as valid tags
+;             for /NO_EXECUTE  E. Rykoff May 2012
 ;-
 
 ; Check that the number of names is the same as the number of values.
@@ -108,9 +110,15 @@ compile_opt idl2
 ;
 	    '0b': v = 0B
 	    '0' : v = 0S
+            '0u' : v = 0US
+            '0us': v = 0US
 	    '0l': v = 0L
 	    '0ll' : v = 0LL
+            '0ul' : v = 0UL
+            '0ull' : v = 0ULL
 	    '0.': v = 0.0
+            '0.0': v = 0.0
+            '0.0d': v = 0.0d0
 	    '0.0d0': v = 0.0d0
  	    '0.d0': v = 0.0d0
              '" "': v = " "          ;Added July 2004

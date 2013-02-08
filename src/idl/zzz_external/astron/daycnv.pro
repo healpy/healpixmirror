@@ -38,6 +38,7 @@ PRO DAYCNV, XJD, YR, MN, DAY, HR
 ;       Converted to IDL V5.0   W. Landsman   September 1997
 ;-
  On_error,2
+ compile_opt idl2
 
  if N_params() lt 2 then begin
     print,"Syntax - DAYCNV, xjd, yr, mn, day, hr'

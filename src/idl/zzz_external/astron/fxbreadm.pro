@@ -146,7 +146,7 @@
 ; Prev. Hist. : 
 ;       C. Markwardt, based in concept on FXBREAD version 12 from
 ;                              IDLASTRO, but with significant and
-;                              major changes to accommodate the
+;                              major changes to accomodate the
 ;                              multiple row/column technique.  Mostly
 ;                              the parameter checking and general data
 ;                              flow remain.
@@ -168,7 +168,7 @@
 ;      for TSCAL'ed, June 2004
 ;   Read 64bit integer columns, E. Hivon, Mar 2008
 ;   Add support for columns with TNULLn keywords, C. Markwardt, Apr 2010
-;
+;   Add support for files larger than 2 GB, C. Markwardt, 2012-04-17
 ;
 ;-
 ;
@@ -491,10 +491,10 @@ PRO FXBREADM, UNIT, COL, $
 ;  If ROW was not passed, then set it equal to the entire range.  Otherwise,
 ;  extract the range.
 ;
-        IF N_ELEMENTS(ROW) EQ 0 THEN ROW = [1L, NAXIS2[ILUN]]
+        IF N_ELEMENTS(ROW) EQ 0 THEN ROW = [1LL, NAXIS2[ILUN]]
         CASE N_ELEMENTS(ROW) OF
-                1:  ROW2 = LONG(ROW[0])
-                2:  ROW2 = LONG(ROW[1])
+                1:  ROW2 = LONG64(ROW[0])
+                2:  ROW2 = LONG64(ROW[1])
                 ELSE:  BEGIN
                         MESSAGE = 'ROW must have one or two elements'
                         IF N_ELEMENTS(ERRMSG) NE 0 THEN BEGIN
@@ -503,7 +503,7 @@ PRO FXBREADM, UNIT, COL, $
                         END ELSE MESSAGE, MESSAGE
                         END
         ENDCASE
-        ROW1 = LONG(ROW[0])
+        ROW1 = LONG64(ROW[0])
 ;
 ;  If ROW represents a range, then make sure that the row range is legal, and
 ;  that reading row ranges is allowed (i.e., the column is not variable length.
@@ -667,10 +667,10 @@ PRO FXBREADM, UNIT, COL, $
 ;
 ;  Find the position of the first byte of the data array in the file.
 ;
-        OFFSET0 = NHEADER[ILUN] + NAXIS1[ILUN]*(ROW1-1)
-        POS = 0L
+        OFFSET0 = NHEADER[ILUN] + NAXIS1[ILUN]*(ROW1-1LL)
+        POS = 0LL
         NROWS0 = NROWS
-        J = 0L
+        J = 0LL
         FIRST = 1
         ;; Here, we constrain the buffer to be at least 16 rows long.
         ;; If we fill up 32 kB with fewer than 16 rows, then there
@@ -696,6 +696,8 @@ PRO FXBREADM, UNIT, COL, $
         BB = BYTARR(NAXIS1[ILUN], NR)
         POINT_LUN, UNIT, OFFSET0+OFFSET1
         READU, UNIT, BB
+;        FXGSEEK, UNIT, OFFSET0+OFFSET1
+;        FXGREAD, UNIT, BB
 
 ;
 ;  Now select out the desired columns
@@ -777,13 +779,13 @@ PRO FXBREADM, UNIT, COL, $
             NTOT  = ROUND(TOTAL(NVALS)) ;; Total number of values
             IF NTOT EQ 0 THEN BEGIN
                 DD = {N_ELEMENTS: 0L, N_ROWS: NROWS0, $
-                      INDICES: LONARR(NROWS0+1), DATA: 0L}
+                      INDICES: LON64ARR(NROWS0+1), DATA: 0L}
                 GOTO, FILL_VARICOL
             ENDIF
 
             ;; Compute the width in bytes of the data value
             TYPE = IDLTYPE[ICOL[I], ILUN]
-            WID = WIDARR[TYPE < 10]
+            WID = LONG64(WIDARR[TYPE < 10])
             IF WID EQ 0 THEN BEGIN
                 OUTSTATUS[I] = 0
                 MESSAGE = 'ERROR: Column '+COLNAMES[I]+' has unknown data type'
@@ -794,11 +796,11 @@ PRO FXBREADM, UNIT, COL, $
             ENDIF
 
             ;; Coalesce the data pointers
-            BOFF1 = PDATA[1,*]
+            BOFF1 = LONG64(PDATA[1,*])
             BOFF2 = BOFF1 + NVALS*WID
             WH = WHERE(BOFF1[1:*] NE BOFF2, CT)
-            IF CT GT 0 THEN BI = [-1L, WH, N_ELEMENTS(BOFF1)-1] $
-            ELSE            BI = [-1L,     N_ELEMENTS(BOFF1)-1]
+            IF CT GT 0 THEN BI = [-1LL, WH, N_ELEMENTS(BOFF1)-1] $
+            ELSE            BI = [-1LL,     N_ELEMENTS(BOFF1)-1]
             CT = CT + 1
 
             ;; Create the output array
@@ -807,9 +809,9 @@ PRO FXBREADM, UNIT, COL, $
             BB = BYTARR(NB)                           ;; Byte array
 
             ;; Initialize the counter variables used in the read-loop
-            CC = 0L & CC1 = 0L & K = 0L
+            CC = 0LL & CC1 = 0LL & K = 0LL
             BUFFROWS = ROUND(BUFFERSIZE/WID) > 128L
-            BASE = NHEADER[ILUN]+HEAP[ILUN]
+            BASE = LONG64(NHEADER[ILUN]+HEAP[ILUN])
 
             ;; Read data from file
             WHILE CC LT NB DO BEGIN
@@ -818,6 +820,8 @@ PRO FXBREADM, UNIT, COL, $
 
                 POINT_LUN, UNIT, BASE+BOFF1[BI[K]+1]+CC1
                 READU, UNIT, BB1
+;                FXGSEEK, UNIT, BASE+BOFF1[BI[K]+1]+CC1
+;                FXGREAD, UNIT, BB1
                 BB[CC] = TEMPORARY(BB1)
 
                 CC  = CC  + NB1
@@ -843,8 +847,8 @@ PRO FXBREADM, UNIT, COL, $
             
             ;; Construct the indices; unfortunately we need to make an
             ;; accumulant with a FOR loop
-            INDICES = LONARR(NROWS0+1)
-            FOR K = 1L, NROWS0 DO $
+            INDICES = LON64ARR(NROWS0+1)
+            FOR K = 1LL, NROWS0 DO $
               INDICES[K] = INDICES[K-1] + NVALS[K-1]
 
             ;; Construct a structure with additional data

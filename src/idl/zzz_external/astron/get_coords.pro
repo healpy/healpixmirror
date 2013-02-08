@@ -8,7 +8,7 @@ pro GET_COORDS, Coords, PromptString, NumVals, InString=InString, Quiet=Quiet
 ;       Converts a string with angular coordinates  to floating point values.  
 ; EXPLANATION:
 ;       Although called by ASTRO.PRO, this is a general purpose routine.
-;       The user may input as floating point or sexigesimal.  If user inputs 
+;       The user may input as floating point or sexagesimal.  If user inputs 
 ;       calling procedure's job to convert hours to degrees if needed.
 ;       Since the input string is parsed character-by-character, ANY character
 ;       that is not a digit, minus sign or decimal point may be used as a 
@@ -39,7 +39,7 @@ pro GET_COORDS, Coords, PromptString, NumVals, InString=InString, Quiet=Quiet
 ; OPTIONAL OUTPUT:
 ;       NumVals - the number of separate values entered by the user:  2 if the
 ;               user entered the coordinates as floating point numbers, 6 if 
-;               the user entered the coordinates as sexigesimal numbers.  Some
+;               the user entered the coordinates as sexagesimal numbers.  Some
 ;               calling procedures might find this information useful (e.g., to
 ;               to print some output in the same format as the user's input).
 ;
@@ -122,7 +122,7 @@ for N = 0,(strlen(Coords)-1) do begin
 ; position, and reset StartPos to -1.
 ;   Put the resulting number in the ValArr.
 ;
-   if (not(NumFlag) and (StartPos gt -1)) then begin
+   if (~(NumFlag) && (StartPos gt -1)) then begin
       if (NumVals lt 6) then begin
          ValArr[NumVals] = float(strmid(Coords, StartPos, (N - StartPos)))
       endif
@@ -151,7 +151,7 @@ case NumVals of
 
    else : begin
       Coords = [-999,-999]
-      if not(keyword_set(Quiet)) then begin
+      if ~keyword_set(Quiet) then begin
          print, Bell
          print, "ERROR - Invalid Input!"
          print, "Coordinates must be input as 2 or 6 values."

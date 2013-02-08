@@ -123,7 +123,7 @@ pro fits_info, filename, SILENT=silent,TEXTOUT=textout, N_ext=n_ext, extname=ext
 ; File is gzip compressed if it ends in .gz or .ftz 
  len = strlen(fil)
  ext = strlowcase(strmid(fil,transpose(len-3),3))
- compress = (ext EQ '.gz') or (ext EQ 'ftz')
+ compress = (ext EQ '.gz') || (ext EQ 'ftz')
 
  silent = keyword_set( SILENT )
  if ~silent then begin 
@@ -147,7 +147,7 @@ pro fits_info, filename, SILENT=silent,TEXTOUT=textout, N_ext=n_ext, extname=ext
      START:  
      ON_IOerror, BAD_FILE
      descript = ''
-     
+;   Is this a proper FITS file?     
      test = bytarr(8)
      readu, lun1, test
      
@@ -164,7 +164,7 @@ pro fits_info, filename, SILENT=silent,TEXTOUT=textout, N_ext=n_ext, extname=ext
      hdr = bytarr(80, 36, /NOZERO)
      N_hdrblock = 1
      readu, lun1, hdr
-     ptr = ptr + 2880
+     ptr += 2880
      hd = string( hdr > 32b)
      
 ;                               Get values of BITPIX, NAXIS etc.
@@ -216,7 +216,7 @@ pro fits_info, filename, SILENT=silent,TEXTOUT=textout, N_ext=n_ext, extname=ext
      
      exname = sxpar(hd, 'extname', Count = N_extname)
      if N_extname GT 0 then extname[N_ext+1] = exname
-     get_extname =  (N_ext GE 0) && (N_extname EQ 0) ; && ~keyword_set(SILENT)  
+     get_extname =  (N_ext GE 0) && (N_extname EQ 0)  
   
 ;  Read header records, till end of header is reached
 
@@ -268,7 +268,7 @@ pro fits_info, filename, SILENT=silent,TEXTOUT=textout, N_ext=n_ext, extname=ext
 ; Check for EOF
 ; Skip the headers and data records
 
-     ptr = ptr + nrec*2880L
+     ptr += nrec*2880L
      if compress[nf] then mrd_skip,lun1,nrec*2880L else point_lun,lun1,ptr
      if ~eof(lun1) then goto, START
 ;
@@ -325,9 +325,9 @@ pro fits_info, filename, SILENT=silent,TEXTOUT=textout, N_ext=n_ext, extname=ext
                  if table_dim GT 0 then begin
                      table_type = gettok(fdescript,' ')
                      for j = 0, table_dim-1 do $
-                             table_desc = table_desc + gettok(fdescript,' ') + ' '
+                             table_desc += gettok(fdescript,' ') + ' '
                  endif
-                 table_desc = table_desc + ')'
+                 table_desc += ')'
                  
                  printf,!textunit, format='(a)',table_desc
              endfor

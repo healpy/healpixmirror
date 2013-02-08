@@ -193,6 +193,7 @@ pro fits_read,file_or_fcb,data,header,group_par,noscale=noscale, $
 ;       Use PRODUCT to compute # of data points   W. Landsman  May 2009
 ;       Make sure FIRST is long64 when computing position W.L. October 2009
 ;       Read FPACK compressed files, W.L.  December 2010
+;       Don't assume FCB has a FCOMPRESS tag  W.L./Satori UeNO   September 2012
 ;-
 ;
 ;-----------------------------------------------------------------------------
@@ -515,7 +516,7 @@ read_data:
         if fcompress then mrd_skip,fcb.unit,skip else $
 	                 point_lun,fcb.unit,position
         readu,fcb.unit,data
-	if fcb.fcompress then swap_endian_inplace,data,/swap_if_little
+	if fcompress then swap_endian_inplace,data,/swap_if_little
         if ~keyword_set(No_Unsigned) && (~data_only) then begin
         if unsgn_int then begin 
                 data =  uint(data) - uint(32768) 

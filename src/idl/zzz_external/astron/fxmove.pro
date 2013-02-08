@@ -23,7 +23,8 @@ FUNCTION FXMOVE, UNIT, EXTEN, SILENT = Silent, EXT_NO = ext_no, ERRMSG=errmsg
 ;                 returned to the user in this parameter rather than
 ;                 depending on the MESSAGE routine in IDL.  If no errors are
 ;                 encountered, then a null string is returned.
-;
+;       EXT_NO - Extension number, scalar integer, useful if the user supplied 
+;                an extension name in the EXTEN parameter
 ; RETURNS:
 ;     0 if successful.
 ;    -1 if an error is encountered.
@@ -54,7 +55,7 @@ FUNCTION FXMOVE, UNIT, EXTEN, SILENT = Silent, EXT_NO = ext_no, ERRMSG=errmsg
      compile_opt idl2
 
          DO_NAME = SIZE( EXTEN,/TNAME) EQ 'STRING'
-	 PRINT_ERROR = NOT ARG_PRESENT(ERRMSG)
+	 PRINT_ERROR = ~ARG_PRESENT(ERRMSG)
          ERRMSG = ''
          IF DO_NAME THEN BEGIN 
 	              FIRSTBLOCK = 0
@@ -87,6 +88,7 @@ FUNCTION FXMOVE, UNIT, EXTEN, SILENT = Silent, EXT_NO = ext_no, ERRMSG=errmsg
 
                 MRD_HREAD, UNIT, HEADER, STATUS, SILENT = Silent, $
 		    FIRSTBLOCK=FIRSTBLOCK, ERRMSG = ERRMSG
+		   
                 IF STATUS LT 0 THEN BEGIN 
 		    IF PRINT_ERROR THEN MESSAGE,ERRMSG   ;Typo fix 04/10
 		    RETURN, -1
@@ -121,7 +123,6 @@ FUNCTION FXMOVE, UNIT, EXTEN, SILENT = Silent, EXT_NO = ext_no, ERRMSG=errmsg
 ;  Move to the next extension header in the file.
 ;
                 NREC = (NBYTES + 2879) / 2880
-                
                 MRD_SKIP, UNIT, NREC*2880L 
 
         ENDFOR
