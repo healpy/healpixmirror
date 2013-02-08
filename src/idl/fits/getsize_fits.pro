@@ -25,10 +25,10 @@
 ;  For more information about HEALPix see http://healpix.jpl.nasa.gov
 ;
 ; -----------------------------------------------------------------------------
-function getsize_fits, filename, nmaps = nmaps, nside = nside, mlpol = mlpol, ordering = order, obs_npix =obs_npix, type = type, header = header, tags = tags, extension=extension_id
+function getsize_fits, filename, nmaps = nmaps, nside = nside, mlpol = mlpol, ordering = order, obs_npix =obs_npix, type = type, header = header, tags = tags, extension=extension_id, help=help
 ;+
 ;  result = getsize_fits(filename, [nmaps=, nside=, mlpol=, ordering=,
-;  obs_npix=, type=, header=, tags=, extension=])
+;  obs_npix=, type=, header=, tags=, extension=, help=])
 ;
 ;     Get the number of pixels stored in a map FITS file.
 ;     Each pixel is counted only once 
@@ -47,6 +47,8 @@ function getsize_fits, filename, nmaps = nmaps, nside = nside, mlpol = mlpol, or
 ;                     case un-sensitive string specifying extension name (stored in EXTNAME keyword).
 ;     /header   = (IN) if set, filename is actually a FITS header instead of a
 ;          FITS file
+;
+;     /help: if set, this header is printed out and the routine exits
 ;
 ;  OPTIONAL OUTPUT
 ;     nmaps = (OPTIONAL, OUT) number of maps in the file
@@ -79,9 +81,16 @@ function getsize_fits, filename, nmaps = nmaps, nside = nside, mlpol = mlpol, or
 ;-
 
 routine = 'getsize_fits'
+syntax = 'Syntax : size='+routine+'(filename, [nmaps= , nside= , mlpol= , ordering= , obs_npix=, type= , header=, tags=, extension=, help=])'
+
+if (keyword_set(help)) then begin
+    doc_library,routine
+    return,-1
+endif
+
 if n_params() eq 0 then begin
-    print,'Syntax : size='+routine+'(filename, nmaps= , nside= , mlpol= , ordering= , obs_npix=, type= , header=, tags=, extension=)'
-    message,'Abort'
+    print,syntax
+    ; message,'Abort'
     return,-1
 endif
 
@@ -102,10 +111,11 @@ if keyword_set(header) then begin
     from_header = 1
     fits_header = filename
 endif
-from_file = 1- from_header
+from_file = ~from_header
 
 if (from_file) then begin
 ; get the primary header information
+    if ~file_test(filename) then message,'file '+filename+' not found'
     hdr = headfits(filename, errmsg = errmsg)
     if (strtrim(errmsg) ne '') then begin
         print,errmsg          ; stop execution

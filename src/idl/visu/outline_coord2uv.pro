@@ -73,7 +73,7 @@ pro outline_coord2uv, outline, coord_out, eul_mat, outline_uv, projection=projec
 ;          (default = 0 : solid)
 ;       - (PSY*) symbol used to represent vertices of outline
 ;            (same meaning as standard PSYM in IDL,
-;             if 9<=abs(psym)<=46, D. Fanning's SYMCAT symbols
+;             if 9<=abs(psym)<=46, D. Fanning's cgSYMCAT symbols
 ;             definition will be used, for example psym=9 is an open circle)
 ;          if <=0, the vertices are represented with the chosen symbols, and
 ;          connected by arcs of geodesics.
@@ -122,6 +122,7 @@ pro outline_coord2uv, outline, coord_out, eul_mat, outline_uv, projection=projec
 ;       PSYM,LINES,SYMSIZE are not scalar
 ;       2007-05-14: test for ambiguous tag name in outline structure
 ;       2011-01-12: calls SYMCAT if 9 <= ABS(psym) <= 46
+;       2013-02-08: replaced SYMCAT with CGSYMCAT
 ;-
 
 ; outline : from astro coordinate to uv plan
@@ -200,7 +201,7 @@ for i=0,n_outlines-1 do begin
     ocuv_assert_scalar,sym_type,'PSYM', error=err_assert
     if (abs(sym_type) ge 9 && abs(sym_type) le 46) then begin
         mysign = (sym_type lt 0) ? -1 : 1
-        sym_type = mysign * symcat(abs(sym_type)) ; call usersym and set sym_type to 8 or -8
+        sym_type = mysign * cgsymcat(abs(sym_type)) ; call usersym and set sym_type to 8 or -8
     endif
     
     ssize = 1

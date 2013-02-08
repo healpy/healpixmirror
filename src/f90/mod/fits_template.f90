@@ -52,6 +52,60 @@
 ! 2008-10-14: corrected bug introduced in write_asctab
 ! 2012-02-23: correction of a possible bug with index writing in dump_alms and write_alms
 !
+
+!=======================================================================
+! map_bad_pixels(map, fin, fout, nbads, verbose)
+!   map: input data (2D)
+!   fin: input value of 'bad' pixels
+!   fout: output value of same 'bad' pixels
+!   nbads: number of bad pixels found
+!   verbose: OPTIONAL, if set, be verbose
+!=======================================================================
+
+subroutine map_bad_pixels_KLOAD(map, fin, fout, nbads, verbose)
+  use long_intrinsic, only: long_size
+  real(KMAP), dimension(0:,1:), intent(inout) :: map
+  real(KMAP),                   intent(in)    :: fin, fout
+  integer(I8B),                 intent(out)   :: nbads
+  logical(LGT),     optional,   intent(in)    :: verbose
+  integer(I8B) :: i, npix
+  integer(I8B), dimension(1:100) :: imiss
+  integer(I4B) :: imap, nmaps
+  logical(LGT) :: be_verbose
+  real(KMAP) :: threshold
+  !-----------------------------------------
+  
+  npix  = long_size(map, 1)
+  nmaps = long_size(map, 2)
+  threshold = fin * 1.e-5_KMAP
+  
+  imiss(:) = 0
+  do imap = 1, nmaps
+     do i=0,npix-1
+        if ( ABS( map(i,imap) - fin ) < threshold ) then
+           map(i,imap) = fout
+           imiss(imap) = imiss(imap)+1
+        endif
+     enddo
+  enddo
+  nbads = sum(imiss)
+  
+  be_verbose = .false.
+  if (present(verbose)) be_verbose=verbose
+  if (be_verbose) then
+     write(*,'(a,1pe11.4)') 'blank value : ' ,fin
+     do imap = 1, nmaps
+        if (imiss(imap) > 0) then
+           write(*,'(i7,a,f7.3,a,1pe11.4)') &
+                &           imiss(imap),' missing pixels (', &
+                &           (100.0_KMAP*imiss(imap))/npix,' %),'// &
+                &           ' have been set to : ',fout
+        endif
+     enddo
+  endif
+  
+  return
+end subroutine map_bad_pixels_KLOAD
 !=======================================================================
 ! input_map
 !     reads fits file
@@ -150,18 +204,19 @@ subroutine input_map8_KLOAD(filename, map, npixtot, nmaps, fmissval, header, uni
        if (present(units)) then
           units(1:size(units)) = unitsm(1:size(units))
        endif
-       do imap = 1, nmaps
-          anynull = .true.
-          if (anynull) then
-             imissing = 0
-             do i=0,npixtot-1
-                if ( ABS(map(i,imap)/fmissing -1.) < 1.e-5 ) then
-                   map(i,imap) = fmiss_effct
-                   imissing = imissing + 1
-                endif
-             enddo
-          endif
-       enddo
+       call map_bad_pixels(map, fmissing, fmiss_effct, imissing, verbose=.false.)
+!        do imap = 1, nmaps
+!           anynull = .true.
+!           if (anynull) then
+!              imissing = 0
+!              do i=0,npixtot-1
+!                 if ( ABS(map(i,imap)/fmissing -1.) < 1.e-5 ) then
+!                    map(i,imap) = fmiss_effct
+!                    imissing = imissing + 1
+!                 endif
+!              enddo
+!           endif
+!        enddo
        if (imissing > 0) write(*,'(a,1pe11.4)') 'blank value : ' ,fmissing
     else if (type_fits == 3 .and. (nmaps == 1 .or. nmaps == 3)) then
        do imap = 1, nmaps

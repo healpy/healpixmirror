@@ -123,6 +123,7 @@ module fitstools
 !      module procedure write_fits_cut4_s,write_fits_cut4_d
 !   end interface
 
+
   interface input_map
 #ifdef NO64BITS
      module procedure input_map8_s,input_map8_d
@@ -216,6 +217,9 @@ module fitstools
      module procedure f90ftgkye, f90ftgkyd
   end interface
 
+  interface map_bad_pixels
+     module procedure map_bad_pixels_s, map_bad_pixels_d
+  end interface
 
   private
 
@@ -800,15 +804,18 @@ contains
   end subroutine write_fits_cut4
 
   !=======================================================================
-  ! FITS2CL(filename, clin, lmax, ncl, header, units)
+  ! FITS2CL(filename, clin, lmax, ncl, header, units, fmissval)
   !     Read C_l from a FITS file
   !   Aug 2000 : modification by EH of the number of columns actually read
   !
   !     This routine is used for reading input power spectra for synfast
   !
   !  Dec 2004: overloading for single and double precision output array (clin)
+  ! Feb 2013: added fmissval (value to be given to NaN or Inf C(l))
+  !      if absent, those C(l) are left unchanged
+  !   
   !=======================================================================
-  subroutine fits2cl_s(filename, clin, lmax, ncl, header, units)
+  subroutine fits2cl_s(filename, clin, lmax, ncl, header, units, fmissval)
     !=======================================================================
     !        single precision
     !=======================================================================
@@ -816,22 +823,29 @@ contains
     !
     CHARACTER(LEN=*),                          INTENT(IN) :: filename
     INTEGER(I4B),                              INTENT(IN) :: lmax, ncl
-    REAL(KCL),         DIMENSION(0:lmax,1:ncl), INTENT(OUT) :: clin
-    CHARACTER(LEN=*), DIMENSION(1:),   INTENT(OUT) :: header
+    REAL(KCL),        DIMENSION(0:lmax,1:ncl), INTENT(OUT) :: clin
+    CHARACTER(LEN=*), DIMENSION(1:),            INTENT(OUT) :: header
     CHARACTER(LEN=*), dimension(1:), optional,  INTENT(OUT) :: units
+    real(KCL),                       optional,  intent(IN):: fmissval
 
     real(DP), dimension(:,:), allocatable :: cl_dp
+    real(DP) :: fmvd
 
     ! since the arrays involved are small
     ! read in double precision, and then cast in single
     allocate(cl_dp(0:lmax, 1:ncl))
-    call fits2cl_d(filename, cl_dp, lmax, ncl, header, units)
+    if (present(fmissval)) then
+       fmvd = fmissval * 1.0_DP
+       call fits2cl_d(filename, cl_dp, lmax, ncl, header, units, fmvd)
+    else
+       call fits2cl_d(filename, cl_dp, lmax, ncl, header, units)
+    endif
     clin(0:lmax, 1:ncl) = cl_dp(0:lmax, 1:ncl)
 
     return
   end subroutine fits2cl_s
 
-  subroutine fits2cl_d(filename, clin, lmax, ncl, header, units)
+  subroutine fits2cl_d(filename, clin, lmax, ncl, header, units, fmissval)
     !=======================================================================
     !        double precision
     !=======================================================================
@@ -842,6 +856,7 @@ contains
     REAL(KCL),         DIMENSION(0:lmax, 1:ncl), INTENT(OUT) :: clin
     CHARACTER(LEN=*), DIMENSION(1:),   INTENT(OUT) :: header
     CHARACTER(LEN=*), dimension(1:), optional,  INTENT(OUT) :: units
+    real(KCL),                       optional,  intent(IN):: fmissval
 
     INTEGER(I4B) :: status,unit,readwrite,blocksize,naxes(2),ncl_file, naxis
     INTEGER(I4B) :: firstpix,lmax_file,lmax_min,nelems,datacode,repeat,width
@@ -859,6 +874,7 @@ contains
     LOGICAL :: anynull
     REAL(KCL) ::  nullval
     logical :: planck_format
+    integer(i8b) :: nbads
 
 
     !-----------------------------------------------------------------------
@@ -928,8 +944,15 @@ contains
        firstpix = 1
        lmax_file = nrows*repeat - 1
        lmax_min = MIN(lmax,lmax_file)
-       nullval = 0.0_KCL
        nelems = lmax_min + 1
+       nullval = 0.0_KCL ! CFITSIO will leave bad pixels unchanged, and so will this routine
+       if (present(fmissval)) then
+          if (fmissval == 0.0_KCL) then
+             nullval = HPX_DBADVAL ! sentinel value to be given to bad pixels by CFITSIO, will later be mapped to user defined 0
+          else
+             nullval = fmissval ! user defined value to be given to bad pixels by CFITSIO, and by this routine
+          endif
+       endif
 
 ! check for the special Planck format (i.e. one additional column)
        planck_format=.true.
@@ -956,8 +979,11 @@ contains
          enddo
        endif
        deallocate(clin_file)
+       if (present(fmissval)) then
+          if (nullval /= fmissval) call map_bad_pixels(clin, nullval, fmissval, nbads)
+       endif
     else ! no image no extension, you are dead, man
-       call fatal_error(' No image, no extension')
+       call fatal_error(' No image, no extension in '//trim(filename))
     endif
 
     !     close the file
@@ -1541,7 +1567,7 @@ contains
     
     INTEGER(I4B) :: i,itod
     REAL(SP)     :: fmissing, fmiss_effct
-    INTEGER(I4B) :: imissing
+    INTEGER(I8B) :: imissing
     integer(i8b) :: fp = 0_i8b
 
     LOGICAL(LGT) :: anynull
@@ -1555,25 +1581,26 @@ contains
     CALL read_bintod_s(filename, tod, npixtot, ntods, fp, fmissing, anynull, &
          &             header, extno)
 
-    DO itod = 1, ntods
-       anynull = .TRUE.
-       IF (anynull) THEN
-          imissing = 0
-          DO i=0,npixtot-1
-             IF ( ABS(tod(i,itod)/fmissing -1.) .LT. 1.e-5 ) THEN
-                tod(i,itod) = fmiss_effct
-                imissing = imissing + 1
-             ENDIF
-          ENDDO
-          IF (imissing .GT. 0) THEN
-             WRITE(*,'(a,1pe11.4)') 'blank value : ' ,fmissing
-             WRITE(*,'(i7,a,f7.3,a,1pe11.4)') &
-                  &           imissing,' missing pixels (', &
-                  &           (100.*imissing)/npixtot,' %),'// &
-                  &           ' have been set to : ',fmiss_effct
-          ENDIF
-       ENDIF
-    ENDDO
+    call map_bad_pixels(tod, fmissing, fmiss_effct, imissing, verbose=.true.)
+!     DO itod = 1, ntods
+!        anynull = .TRUE.
+!        IF (anynull) THEN
+!           imissing = 0
+!           DO i=0,npixtot-1
+!              IF ( ABS(tod(i,itod)/fmissing -1.) .LT. 1.e-5 ) THEN
+!                 tod(i,itod) = fmiss_effct
+!                 imissing = imissing + 1
+!              ENDIF
+!           ENDDO
+!           IF (imissing .GT. 0) THEN
+!              WRITE(*,'(a,1pe11.4)') 'blank value : ' ,fmissing
+!              WRITE(*,'(i7,a,f7.3,a,1pe11.4)') &
+!                   &           imissing,' missing pixels (', &
+!                   &           (100.*imissing)/npixtot,' %),'// &
+!                   &           ' have been set to : ',fmiss_effct
+!           ENDIF
+!        ENDIF
+!     ENDDO
     RETURN
 
   END SUBROUTINE input_tod_s
@@ -1613,7 +1640,7 @@ contains
     
     INTEGER(I4B) :: i,itod
     REAL(DP)     :: fmissing, fmiss_effct
-    INTEGER(I4B) :: imissing
+    INTEGER(I8B) :: imissing
     integer(i8b) :: fp = 0_i8b
 
     LOGICAL(LGT) :: anynull
@@ -1628,25 +1655,26 @@ contains
     CALL read_bintod_d(filename, tod, npixtot, ntods, fp, fmissing, anynull, &
          &             header, extno)
 
-    DO itod = 1, ntods
-       anynull = .TRUE.
-       IF (anynull) THEN
-          imissing = 0
-          DO i=0,npixtot-1
-             IF ( ABS(tod(i,itod)/fmissing -1.) .LT. 1.e-5 ) THEN
-                tod(i,itod) = fmiss_effct
-                imissing = imissing + 1
-             ENDIF
-          ENDDO
-          IF (imissing .GT. 0) THEN
-             WRITE(*,'(a,1pe11.4)') 'blank value : ' ,fmissing
-             WRITE(*,'(i7,a,f7.3,a,1pe11.4)') &
-                  &           imissing,' missing pixels (', &
-                  &           (100.*imissing)/npixtot,' %),'// &
-                  &           ' have been set to : ',fmiss_effct
-          ENDIF
-       ENDIF
-    ENDDO
+    call map_bad_pixels(tod, fmissing, fmiss_effct, imissing, verbose=.true.)
+!     DO itod = 1, ntods
+!        anynull = .TRUE.
+!        IF (anynull) THEN
+!           imissing = 0
+!           DO i=0,npixtot-1
+!              IF ( ABS(tod(i,itod)/fmissing -1.) .LT. 1.e-5 ) THEN
+!                 tod(i,itod) = fmiss_effct
+!                 imissing = imissing + 1
+!              ENDIF
+!           ENDDO
+!           IF (imissing .GT. 0) THEN
+!              WRITE(*,'(a,1pe11.4)') 'blank value : ' ,fmissing
+!              WRITE(*,'(i7,a,f7.3,a,1pe11.4)') &
+!                   &           imissing,' missing pixels (', &
+!                   &           (100.*imissing)/npixtot,' %),'// &
+!                   &           ' have been set to : ',fmiss_effct
+!           ENDIF
+!        ENDIF
+!     ENDDO
     RETURN
 
   END SUBROUTINE input_tod_d

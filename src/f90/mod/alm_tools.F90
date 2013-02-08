@@ -1396,10 +1396,11 @@ contains
 
     character(len=256) :: new_beam_file
     logical(kind=lgt) :: extfile, found_unix
-    integer(kind=i4b) :: type, nl, nd, lunit, il, i
+    integer(kind=i4b) :: type, nl, nd, lunit, il, i, l100
     character(len=80), dimension(1:180) :: header
     character(len=1600) :: str
     character(len=80) :: card
+    real(dp) :: bref
     !==========================================================================
     ! test if name of external is given and valid
     extfile = .false.
@@ -1455,8 +1456,8 @@ contains
           endif
 
        else if (type == 1) then
-          ! FITS file with ascii table
-          call fits2cl(new_beam_file, gb, nl-1_i4b, nd, header)
+          ! FITS file with ascii or binary table
+          call fits2cl(new_beam_file, gb, nl-1_i4b, nd, header, fmissval=0.)
        else
           print 9000,' the file '//trim(new_beam_file) &
                &            //' is of unknown type.'
@@ -1464,8 +1465,10 @@ contains
        endif
 
        ! if Grad absent, replicate Temperature; if Curl absent, replicate Grad
+       l100 = min(100, nl-1)
+       bref = 1.e-4*sum(abs(gb(0:l100,1)))
        do i=2,nd
-          if ( sum(abs(gb(:,i))) < 1.e-7 ) then
+          if ( sum(abs(gb(0:l100,i))) <  bref ) then
              print 9002,' column #',i,' empty, fill in with column #',i-1
              gb(:,i) = gb(:,i-1)
           endif
