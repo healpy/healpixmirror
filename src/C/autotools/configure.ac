@@ -1,5 +1,14 @@
 AC_INIT([chealpix], [3.0])
-AM_INIT_AUTOMAKE([silent-rules foreign -Werror])
+AM_INIT_AUTOMAKE([silent-rules foreign -Wall -Werror])
+
+dnl
+dnl Needed for linking on Windows.
+dnl Protect with m4_ifdef because AM_PROG_AR is required in
+dnl autoconf >= 1.12 when using -Wall, but the macro is
+dnl absent in old versions of autoconf.
+dnl
+m4_ifdef([AM_PROG_AR], [AM_PROG_AR])
+
 LT_INIT
 AC_CONFIG_MACRO_DIR([m4])
 
