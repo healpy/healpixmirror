@@ -128,6 +128,7 @@ include_HEADERS = \
   cxxsupport/alloc_utils.h \
   cxxsupport/math_utils.h \
   cxxsupport/error_handling.h \
+  cxxsupport/lsconstants.h \
   cxxsupport/safe_cast.h \
   cxxsupport/vec3.h \
   cxxsupport/string_utils.h \
