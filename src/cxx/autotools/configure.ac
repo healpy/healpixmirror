@@ -72,6 +72,10 @@ dnl Now check for cfitsio using pkg-config. If cfitsio is not found, do nothing.
 dnl
 PKG_CHECK_MODULES([CFITSIO], [cfitsio], , [:])
 dnl
+dnl Linking against libcfitsio requires libm too.
+dnl
+CFITSIO_LIBS="-lm $CFITSIO_LIBS"
+dnl
 dnl With pkg-config < 0.24, PKG_CHECK_MODULES does not AC_SUBST the _CFLAGS
 dnl and _LIBS variables.
 dnl
