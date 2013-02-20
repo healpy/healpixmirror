@@ -72,6 +72,12 @@ dnl Now check for cfitsio using pkg-config. If cfitsio is not found, do nothing.
 dnl
 PKG_CHECK_MODULES([CFITSIO], [cfitsio], , [:])
 dnl
+dnl With pkg-config < 0.24, PKG_CHECK_MODULES does not AC_SUBST the _CFLAGS
+dnl and _LIBS variables.
+dnl
+AC_SUBST([CFITSIO_CFLAGS])
+AC_SUBST([CFITSIO_LIBS])
+dnl
 dnl Perform a test compile and link to determine if cfitsio is usable. If
 dnl pkg-config did not find cfitsio, then the user may still have provided
 dnl CFITSIO_CFLAGS and CFITSIO_LIBS manually. If pkg-config did find cfitsio,
