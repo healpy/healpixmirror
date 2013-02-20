@@ -38,11 +38,23 @@ AS_IF([test x"AS_VAR_GET(CACHEVAR)" = xyes],
 AS_VAR_POPDEF([CACHEVAR])dnl
 ])dnl AX_CHECK_COMPILE_FLAGS
 
+dnl
+dnl Introduce --enable-native-optimizations command line argument to turn on
+dnl -march=native compiler flag, disabled by default.
+dnl
+AC_ARG_ENABLE(
+    [native-optimizations],
+    [AS_HELP_STRING([--enable-native-optimizations], [Enable non-portable optimizations for your own CPU by compiling with -march=native @<:@default=no@:>@])]
+)
+
 AC_PROG_CC_C99
 AC_OPENMP
 CPPFLAGS="$CPPFLAGS $OPENMP_CFLAGS"
 CFLAGS="$CFLAGS $OPENMP_CFLAGS"
-AX_CHECK_COMPILE_FLAG([-march=native],[CC="$CC -march=native"])
+AS_IF(
+    [test "x$enable_native_optimizations" = "xyes"],
+    [AX_CHECK_COMPILE_FLAG([-march=native],[CC="$CC -march=native"])]
+)
 AX_CHECK_COMPILE_FLAG([-fno-tree-vectorize],[CFLAGS="$CFLAGS -fno-tree-vectorize"])
 AX_CHECK_COMPILE_FLAG([-ffast-math],[CFLAGS="$CFLAGS -ffast-math"])
 AX_CHECK_COMPILE_FLAG([-fomit-frame-pointer],[CFLAGS="$CFLAGS -fomit-frame-pointer"])
@@ -51,7 +63,10 @@ AC_PROG_CXX
 AC_LANG_PUSH([C++])
 AC_OPENMP
 CXXFLAGS="$CXXFLAGS $OPENMP_CFLAGS"
-AX_CHECK_COMPILE_FLAG([-march=native],[CXX="$CXX -march=native"])
+AS_IF(
+    [test "x$enable_native_optimizations" = "xyes"],
+    [AX_CHECK_COMPILE_FLAG([-march=native],[CXX="$CXX -march=native"])]
+)
 AX_CHECK_COMPILE_FLAG([-fno-tree-vectorize],[CXXFLAGS="$CXXFLAGS -fno-tree-vectorize"])
 AX_CHECK_COMPILE_FLAG([-ffast-math],[CXXFLAGS="$CXXFLAGS -ffast-math"])
 AX_CHECK_COMPILE_FLAG([-fomit-frame-pointer],[CXXFLAGS="$CXXFLAGS -fomit-frame-pointer"])
