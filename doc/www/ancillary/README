@@ -1,0 +1,14 @@
+
+
+banner1.pro:
+  generate banner image, using IDL and Image magick script 'vignette' from 
+http://www.fmwconcepts.com/imagemagick
+
+
+convert -resize '1000x5!' footer-top.jpg footer-top.png
+
+convert -negate -white-threshold 95% bullet.gif bullet3.gif
+
+
+fake_html.sh:   for each *.php found, creates htm(l) redirecting toward it
+

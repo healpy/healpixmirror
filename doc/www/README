@@ -1,0 +1,18 @@
+
+material for web site (at healpix.sf.net)
+
+cgi-bin/register.cgi  : must be ugo+x,
+must go into  /home/project-web/healpix/cgi-bin/ )
+must write into a  group writable directory
+(eg 
+/home/project-web/healpix/tmp/
+/home/project-web/healpix/registrations/
+
+htdocs:  web site material
+(will go into   
+/home/project-web/healpix/htdocs
+
+ancillary: supporting codes
+to go into
+/home/project-web/heapix/ancillary
+
