@@ -80,6 +80,11 @@ dnl Add help messages to describe the variables CFITSIO_CFLAGS and CFITSIO_LIBS,
 dnl which can be provided as environment variables or as commnad-line arguments.
 dnl These are output variables of PKG_CHECK_MODULES, but they can be overridden.
 dnl
+dnl Start by setting CFITSIO_LIBS to -lcfitsio, which should work if cfitsio is
+dnl installed in the standard linker path, even if there is no pkg-config file.
+dnl
+CFITSIO_LIBS=-lcfitsio
+dnl
 AC_ARG_VAR([CFITSIO_CFLAGS], [compiler flags needed for building with cfitsio, if not found by pkg-config])
 AC_ARG_VAR([CFITSIO_LIBS], [linker flags needed for building with cfitsio, if not found by pkg-config])
 dnl
