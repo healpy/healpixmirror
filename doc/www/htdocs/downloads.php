@@ -3,7 +3,7 @@
 
 
 
-<h2>Downloading Healpix</h2>
+<h2>Downloading HEALPix</h2>
 
 <p>
 The HEALPix software can be downloaded freely, without registration.
@@ -97,7 +97,7 @@ C</A>
 
 <UL>
 <LI>Interface has remained unchanged, but the code has been replaced by a C port
-of the relevant Healpix C++ functions, resulting in significant speedups.
+of the relevant HEALPix C++ functions, resulting in significant speedups.
 </LI>
 <LI>Additional functions are provided which support Nside values up to <SPAN CLASS="MATH">2<SUP>29</SUP></SPAN>.
 They have the same name as the traditional functions, with a ''64'' suffix appended.
@@ -231,7 +231,7 @@ interface to F90 <TT>process_mask</TT> facility to compute the angular distance 
 pixels to the closest invalid pixels for a input binary mask.
 </LI>
 <LI>creation of <TT>hpx2dm</TT> routine to generate
-DomeMaster images of HEALPixmaps that can be projected on planetariums.
+DomeMaster images of HEALPix maps that can be projected on planetariums.
 </LI>
 <LI>the pixel query routines 
 <TT>query_triangle</TT>, 
@@ -261,7 +261,7 @@ sky
 to read best fit <SPAN CLASS="MATH"><I>C</I>(<I>l</I>)</SPAN> model to WMAP 7yr data.
 </LI>
 <LI><TT>read_fits_map</TT> can now read
-<SPAN CLASS="MATH"><I>Nside</I></SPAN>=8192 HEALPixmaps and is generally faster than previously for smaller
+<SPAN CLASS="MATH"><I>Nside</I></SPAN>=8192 HEALPix maps and is generally faster than previously for smaller
 maps
 </LI>
 <LI>update of <TT>astron</TT> library routines (01-Feb-2012).
@@ -278,7 +278,7 @@ Java</A>
 <LI>Core functionality has been reimplemented from scratch in the form of the
 "healpix.essentials" package. It is strongly recommended to use this package
 directly in future projects making use of Java HEALPix.
-"healpix.essentials" is a port of the Healpix C++ library and presents a very
+"healpix.essentials" is a port of the HEALPix C++ library and presents a very
 similar interface.
 
 The "healpix.core" package is still provided. It uses "healpix.essentials"
@@ -292,7 +292,7 @@ data conversion.
 to the HealpixIndex, Healpix and PixTools classes:
 
 <UL>
-<LI>close similarities with Healpix_Base_T class from Healpix C++, which allows
+<LI>close similarities with Healpix_Base_T class from HEALPix C++, which allows
  simultaneous development and bug fixes for both.
 </LI>
 <LI>support for arbitrary positive Nside values in RING scheme; no longer limited

@@ -6,7 +6,7 @@
 		<!-- sidebar starts -->
 		<div id="sidebar">
 		
-			<h3>What&#039;s new</h3>
+			<h3>Latest news</h3>
 <?php require('_news.inc.php'); ?>
 
 <!--
@@ -37,7 +37,7 @@
 	<div id="footer-wrap"><div id="footer-content">
 	
 		<p>
-			Website content is developed by <a href="credits.php">The Healpix Team</a><br />
+			Website content is developed by <a href="credits.php">The HEALPix Team</a><br />
                         HEALPix documentation is a part of the HEALPix project and is released under the GNU General Public License<br />
 			Website layout based on the <a href="http://gnudatalanguage.sourceforge.net">GDL website</a> layout and <strong>Colourise</strong> template by <a href="http://www.styleshout.com/">styleshout.com</a><br />
 			Sui Generis font downloaded from <a href="http://www.urbanfonts.com">Urbanfonts.com</a><br>

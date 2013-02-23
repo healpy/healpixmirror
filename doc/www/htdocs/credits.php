@@ -3,7 +3,7 @@
 
 
 
-<h2>Healpix History</h2>
+<h2>HEALPix History</h2>
 
 <p>
               HEALPix  was  originally devised  in early 1997 by 
@@ -139,7 +139,7 @@
 
 <p>
 		We thank the following people for their contributions and/or suggestions, which
-		significantly helped us to improve Healpix throughout its several releases
+		significantly helped us to improve HEALPix throughout its several releases
 
             <table cellSpacing=0 cellPadding=0 border=0 width=605>
               <tr valign="top">

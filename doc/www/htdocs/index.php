@@ -104,7 +104,7 @@ as can be seen from the <a href="resources.php">Resources</a> and <a href="galle
                 <!-- br -->
                 <li>
                   C, C++, Fortan 90, IDL, Java, Python implementation of most 
-		  routines and facilities (for third party implementation in other languages, see <a href="http://sourceforge.net/p/healpix/wiki/Available%20languages/">this Healpix wiki page</a>)
+		  routines and facilities (for third party implementation in other languages, see <a href="http://sourceforge.net/p/healpix/wiki/Available%20languages/">this HEALPix wiki page</a>)
                 </li>
                 <!-- br -->
                 <li>
@@ -171,7 +171,7 @@ as can be seen from the <a href="resources.php">Resources</a> and <a href="galle
               </ul>
 </p>
 <p>
-    For a detailed list of the new features added in the latest Healpix release, see
+    For a detailed list of the new features added in the latest HEALPix release, see
     the <a href="downloads.php">Getting HEALPix page</a>.
 </p>
 

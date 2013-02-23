@@ -146,6 +146,7 @@ td {
 	padding-left: 12px;
 	padding-right: 12px;
 	border: 1px solid #FFF;	
+	font-size: 13px; /* FONT-SIZE default */
 }
 /* end - table */
 
@@ -365,13 +366,13 @@ input.button {
 }
 #main ul li {
 	list-style-image: url(bullet3.gif);
-	font-size: 13px; /* from GDL style */
+	font-size: 13px; /* FONT-SIZE default */
 }
 #main ol li {
-	font-size: 13px; /* added */
+	font-size: 13px; /* FONT-SIZE default */
 }
 
-/* from GDL style */
+/* FONT-SIZE default */
 #main p {
 	font-size: 13px;
 }

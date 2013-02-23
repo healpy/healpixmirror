@@ -2,12 +2,15 @@
 #
 # E. Hivon, Aug 2005, adapted from register.p by M. Bartelmann
 #           Jan 2006: replaced 'registration' by 'subscription'
+#           Feb 2013: test e-mail (for '@', '.' and length), adapt to sourceforge
 #
 use CGI;
 use POSIX;
 
-$::base = "/home/project-web/healpix/tmp/";
-$::back = "http://healpix.sourceforge.net/hiding/public/downloads.php";
+#$::base = "/home/project-web/healpix/tmp/";
+#$::back = "http://healpix.sourceforge.net/hiding/public/downloads.php";
+$::base = "/home/project-web/healpix/registrations/";
+$::back = "http://healpix.sourceforge.net/downloads.php";
 $::support = "healpix at jpl.nasa.gov";
 
 my $list = new CGI;

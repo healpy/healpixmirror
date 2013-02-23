@@ -29,11 +29,12 @@
           <li>
             The Haslam and <a href="http://lambda.gsfc.nasa.gov/product/iras/" target="_top">IRAS</a> maps
           </li>
-
+<!--
           <li>
             The <a href="http://www.drao-ofr.hia-iha.nrc-cnrc.gc.ca/26msurvey/data.html"
       target="_top">DRAO</a> 1.4 GHz polarized maps
           </li>
+-->
 
           <li>
             The Schlegel, Finkbeiner, and Davis
@@ -53,7 +54,7 @@
      </ul>
         </ul>
 
-<h2>Applications related to Healpix</h2>
+<h2>Applications related to HEALPix</h2>
 
 <p>
 
@@ -78,7 +79,7 @@
 		The java based <a href="http://aladin.u-strasbg.fr/">Aladin Sky Atlas</a> also supports HEALPix maps in FITS format
                 </li>
           <li>
-                 <a href="http://code.google.com/p/healpy/">Healpy</a>: python wrapper to HEALPix (now included in Healpix package)
+                 <a href="https://github.com/healpy/healpy">Healpy</a>: python wrapper to HEALPix (now included in HEALPix package)
          </li>
                 <li>
                   
@@ -97,22 +98,26 @@
 	  </ul>
 </p>
 
-<h2>Healpix in the literature</h2>
+<h2>HEALPix in the literature</h2>
 
 <p>
-	Published articles using Healpix: 
+	Published articles using HEALPix: 
         <ul>
         <li>
-	<a href="http://inspirebeta.net/search?ln=en&p=FIND+C+ASTRO-PH%2F9812350+or+refersto%3Arecid%3A659804+or+fulltext%3Ahealpix&f=&action_search=Search&sf=&so=d&rm=&rg=25&sc=0&of=hb">INSPIRE</a>
-(replaces <a href="http://www.slac.stanford.edu/spires/find/hep/www?rawcmd=FIND+C+ASTRO-PH+9812350+OR+ASJOA%2C622%2C759">SPIRES</a>)
+	First HEALPix paper: <a href="http://adsabs.harvard.edu/cgi-bin/nph-bib_query?bibcode=2005ApJ...622..759G&amp;db_key=AST&amp;high=41069202cf02947">K.M. G&oacute;rski et al., 2005, ApJ, 622, p759</a>
+        </li>
+        <li>HEALPix 
+	in <a href="http://inspirebeta.net/search?ln=en&p=FIND+C+ASTRO-PH%2F9812350+or+refersto%3Arecid%3A659804+or+fulltext%3Ahealpix&f=&action_search=Search&sf=&so=d&rm=&rg=25&sc=0&of=hb">INSPIRE</a> database,
+<!-- (replaces <a href="http://www.slac.stanford.edu/spires/find/hep/www?rawcmd=FIND+C+ASTRO-PH+9812350+OR+ASJOA%2C622%2C759">SPIRES</a>) -->
         </li>
         <li>
-	<a href="http://search.arxiv.org:8081/?query=healpix&in=physics">arXiv physics preprints</a>, 
-        </li>
-        <li>
-	<a href="http://search.arxiv.org:8081/?query=healpix&in=cs">arXiv computer science preprints</a>,
+	in arXiv <a href="http://search.arxiv.org:8081/?query=healpix&in=grp_physics">physics</a>, 
+	<a href="http://search.arxiv.org:8081/?query=healpix&in=grp_cs">computer science</a>,
+	<a href="http://search.arxiv.org:8081/?query=healpix&in=grp_math">mathematics </a> preprints.
         </li>
 	</ul>
+</p>
+<p>
 	Misc
 	<ul>
 	<li>
