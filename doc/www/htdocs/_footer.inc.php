@@ -37,11 +37,14 @@
 	<div id="footer-wrap"><div id="footer-content">
 	
 		<p>
+<!--
 			Website content is developed by <a href="credits.php">The HEALPix Team</a><br />
                         HEALPix documentation is a part of the HEALPix project and is released under the GNU General Public License<br />
 			Website layout based on the <a href="http://gnudatalanguage.sourceforge.net">GDL website</a> layout and <strong>Colourise</strong> template by <a href="http://www.styleshout.com/">styleshout.com</a><br />
 			Sui Generis font downloaded from <a href="http://www.urbanfonts.com">Urbanfonts.com</a><br>
                         Hosted by <a href="http://sf.net/">Sourceforge.net</a>
+-->
+<a href="credits.php#website">About this Web Site</a>
 
 <?php 
 if (version_compare(PHP_VERSION,'5.1.0') >=0){

@@ -33,14 +33,14 @@
               <a href="http://www.uio.no/">Universitetet i Oslo</a>, UIO)
 
               <u>Anthony J. Banday</u>
-              (then at <a href="http://www.mpa-garching.mpg.de/">Max Planck Institut f&#252r Astrophysik (MPA)</a>,
+              (then at <a href="http://www.mpa-garching.mpg.de/">Max Planck Institut f&#252r; Astrophysik (MPA)</a>,
 
               Garching, Germany, now at <a href="http://www.cesr.fr/">Centre d&#039;Etude 
 	       Spatiale du Rayonnement</a>, Toulouse, France) 
 
 	     and <u>Matthias Bartelmann</u> (then at MPA, now at
  		
-		<a href="http://www.ita.uni-heidelberg.de"> Institut f&#252r Theoretische Astrophysik</a>, 
+		<a href="http://www.ita.uni-heidelberg.de"> Institut f&#252r; Theoretische Astrophysik</a>, 
  		Heidelberg, Germany)
 
 
@@ -72,8 +72,8 @@
 
 		<u>Graca Rocha</u> (<a href="http://www.ipac.caltech.edu/">IPAC</a>),
                the inclusion of <u>Cyrille Rosset</u>&#039;s 
-		(APC) and <u>Andrea Zonca</u>&#039;s 
-		(UCSB)
+		(<a href="http://www.apc.univ-paris7.fr/APC_CS/en">APC</a>) and <u>Andrea Zonca</u>&#039;s 
+		(<a href="http://www.ucsb.edu/">UCSB</a>)
 		healpy package,
 
               and numerous contributions
@@ -83,42 +83,48 @@
 
               <br>
               <br>
-              The active support of HEALPix currently involves the following people:
+<a name="team"></a>
+              The active support of HEALPix currently involves the following people (in alphabetical order):
 		<ul>
+
+		<li>
+	      A.J. Banday;
+		</li>
+
+		<li>
+		K.M. G&oacute;rski;
+		</li>
+
 		<li>
                 E. Hivon:
-		IDL and F90 developments, release coordination, web site
+		IDL and F90 developments, release coordination, web site;
 		</li>
+
+		<li>
+		E. Joliet:		Java developments;
+		</li>
+
+
+		<li>
+              W. O&#039;Mullane:       Java developments;
+		</li>
+
 		<li>
               M. Reinecke:
-		C, C++ and Java developments
+		C, C++ and Java developments;
 		</li>
-		<li>
 
-              C. Rosset: Python
-		</li>
 		<li>
-
-              A. Zonca: Python
+		C. Rosset: Python developments;
 		</li>
+
 		<li>
-
-		E. Joliet:		Java
+              A. Zonca: Python developments.
 		</li>
-		<li>
 
-              W. O&#039;Mullane:       Java
-		</li>
-		<li>
 
-              K.M. G&oacute;rski
-		</li>
-		<li>
-              <!-- a href="http://www.mpa-garching.mpg.de/~banday"-->
-                A.J. Banday
-              <!--/a-->
 
-		</li>
+
 	</ul>
 		<b>
 	<p>
@@ -143,9 +149,10 @@
 
             <table cellSpacing=0 cellPadding=0 border=0 width=605>
               <tr valign="top">
-                <td width="300" valign="top">
+                <td width="280" valign="top">
                     <ul>
                       <li>    Reza Ansari    			</li>
+                      <li>    John Arballo    			</li>
                       <li>    Marc Ashdown   			</li>
                       <li>    Carlo Baccigalupi   		</li>
 		      <li>    Karim 		Benabed   	</li> 
@@ -168,17 +175,18 @@
 		      <li>    Reijo 		Keskitalo 	</li>
                       <li>    Alex Kim   			</li>
                       <li>    Ted Kisner   			</li>
-		      <li>    Masakazu A.R. Kobayashi		</li>
                     </ul>
                 </td>
 
-                <td width="5">
+<!--
+                <td width="1">
                   &nbsp;
                 </td>
+-->
 
-                <td width="300" valign="top">
+                <td width="320" valign="top">
                     <ul>
-
+		      <li>    Masakazu A.R. Kobayashi		</li>
 		      <li>    Eiichiro Komatsu			</li>
 		      <li>    Wayne Landsman			</li>
                       <li>    Guy Le Meur   			</li>
@@ -209,5 +217,21 @@
 
 
 </p>
+
+<a name="website">
+<h2>About this Web Site</h2>
+</a>
+<p>
+			Website content developed by the <a href="credits.php#team">HEALPix Team</a><br />
+	<!--
+                        HEALPix documentation is a part of the HEALPix project and is released under the GNU General Public License<br />
+-->
+			PHP scripts and CSS layout adapted from <a href="http://gnudatalanguage.sourceforge.net">GDL website</a> and <i>Colourise</i> template by <a href="http://www.styleshout.com/">styleshout.com</a>.
+			<i>Sui Generis</i> font downloaded from <a href="http://www.urbanfonts.com">Urbanfonts.com</a><br>
+<!--
+                        Hosted by <a href="http://sf.net/">Sourceforge.net</a>
+-->
+</p>
+
 
 <?php require('_footer.inc.php'); ?>

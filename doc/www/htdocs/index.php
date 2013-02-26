@@ -18,7 +18,7 @@ of a sphere. As suggested in the name, this pixelization produces a subdivision 
 <p>
               The original motivation for devising HEALPix was one of necessity.
               Satellite missions to measure the cosmic microwave background (CMB)
-              anisotropy -- NASA's 
+              anisotropy -- NASA&#039;s 
 
               <a href="http://map.gsfc.nasa.gov/" target="_top">Wilkinson Microwave
               Anisotropy Probe (WMAP)</a>,
@@ -71,7 +71,7 @@ of a sphere. As suggested in the name, this pixelization produces a subdivision 
                     Quadrilateralized Spherical Cube
                   </a>
 
-                  used for the NASA's
+                  used for the NASA&#039;s
 
                   <a href="http://space.gsfc.nasa.gov/astro/cobe" target="_top">COBE</a>
 
@@ -99,7 +99,7 @@ as can be seen from the <a href="resources.php">Resources</a> and <a href="galle
                   temperature and polarization anisotropy
                   (<a href="snapshots.php" target="_top">sky maps preview</a>)
                   up to sub-arcminute angular resolution.
-<!--(your computer's RAM permitting, see <a href="pdf/benchmark1.pdf">benchmarks</a>).-->
+<!--(your computer&#039;s RAM permitting, see <a href="pdf/benchmark1.pdf">benchmarks</a>).-->
                 </li>
                 <!-- br -->
                 <li>
@@ -108,7 +108,11 @@ as can be seen from the <a href="resources.php">Resources</a> and <a href="galle
                 </li>
                 <!-- br -->
                 <li>
-                  Most critical routines are parallelised
+                  Most critical routines are parallelized
+                </li>
+                <!-- br -->
+                <li>
+                  Forward and backward scalar and spin-weighted Spherical Harmonics Transforms
                 </li>
                 <!-- br -->
                 <li>
@@ -119,17 +123,17 @@ as can be seen from the <a href="resources.php">Resources</a> and <a href="galle
                   Routines to read and write the
                   <a href="http://fits.gsfc.nasa.gov/" target="_top">FITS</a>
                   formatted map data sets,
-                  and allowing the IDL, Java or Python display of your results.
+    and allowing the IDL, Java or Python display and processing of your results.
                 </li>
                 <!-- br -->
                 <li>
-                  Fortran 90 and C++ visualization facilities.
+                  Fortran 90 and C++ visualization facilities
                 </li>
                 <!-- br -->
                 <li>
-                  <a href="documentations.php">Comprehensive documentation</a> 
-		(<a href="doc/pdf_index.pdf">PDF</a> and 
-		<a href="doc/main.htm">HTML</a>)
+                  <a href="documentation.php">Comprehensive documentation</a> 
+		(<a href="../doc/pdf/pdf_index.pdf">PDF</a> and 
+		<a href="../doc/html/main.htm">HTML</a>)
                 </li>
                 <!-- br -->
                 <li>

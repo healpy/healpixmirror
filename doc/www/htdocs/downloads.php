@@ -41,7 +41,7 @@ However, if you wish to be kept informed of HEALPix developments, updates and ne
 <p>		
 <A NAME="top"></A>
 HEALPix package can be downloaded 	
- from the <a href="http://sourceforge.net/projects/healpix/">SourceForge Download page</a>.
+ from the <a href="http://sourceforge.net/projects/healpix/">SourceForge Download page</a> under the GNU General Public License, version2 <a href="http://www.gnu.org/licenses/gpl-2.0.html">(GPLv2)</a>.
 </p>
 
 <p>

@@ -13,10 +13,14 @@
 ------------------------------------------------- */ 
 
 @font-face {
-    font-family: 'Sui Generis Italic';
-    src: url(SUIGI___.TTF);
+    font-family: 'Sui_Generis_Italic';
+    src: url('SUIGI___.eot'); /* src: url(SUIGI___.TTF); */
+    src: local('?'), 
+	url('SUIGI___.woff') format('woff'), 
+	url('SUIGI___.TTF') format('truetype'), 
+	url('SUIGI___.svg') format('svg');
     font-weight:100;
-    font-style:italic;
+    font-style:normal;
 }
 
 /* Top Elements */
@@ -301,11 +305,7 @@ input.button {
 #header h1#logo-text a {
 	position: absolute;
 	margin: 0; padding: 0;
-/*	font-family: 'Sui Generis Italic';
-	font-size:100px;
-	font-weight:lighter;
-        font-style:italic;   */
-	font: normal 72px 'Sui Generis Italic', Georgia;
+	font: normal 72px 'Sui_Generis_Italic', Georgia;
 	letter-spacing: 0px;
 	color: #000050;
 	text-decoration: none;
