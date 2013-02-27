@@ -1,4 +1,4 @@
-AC_INIT([Healpix_cxx], [3.0])
+AC_INIT([healpix_cxx], [3.0])
 AM_INIT_AUTOMAKE([silent-rules foreign -Wall -Werror])
 
 dnl
@@ -77,7 +77,7 @@ dnl Determine the compiler flags (CFITSIO_CFLAGS)
 dnl and linker flags (CFITSIO_LIBS) required to build against libcfitsio.
 dnl
 dnl Add help messages to describe the variables CFITSIO_CFLAGS and CFITSIO_LIBS,
-dnl which can be provided as environment variables or as commnad-line arguments.
+dnl which can be provided as environment variables or as command-line arguments.
 dnl These are output variables of PKG_CHECK_MODULES, but they can be overridden.
 dnl
 AC_ARG_VAR([CFITSIO_CFLAGS], [compiler flags needed for building with cfitsio, if not found by pkg-config])

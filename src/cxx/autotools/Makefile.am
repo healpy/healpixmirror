@@ -131,6 +131,9 @@ include_HEADERS = \
   cxxsupport/lsconstants.h \
   cxxsupport/safe_cast.h \
   cxxsupport/vec3.h \
+  cxxsupport/wigner.h \
+  cxxsupport/rotmatrix.h \
+  cxxsupport/sse_utils_cxx.h \
   cxxsupport/string_utils.h \
   Healpix_cxx/alm.h \
   Healpix_cxx/alm_fitsio.h \
