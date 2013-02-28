@@ -151,7 +151,7 @@ as can be seen from the <a href="resources.php">Resources</a> and <a href="galle
                 <!-- br -->
                 <li>
                   Programs to manage, modify and rotate spherical harmonic 
-		  coefficients of arbritrary maps	
+		  coefficients of arbitrary maps	
                 </li>
                 <!-- br -->
                 <li>
