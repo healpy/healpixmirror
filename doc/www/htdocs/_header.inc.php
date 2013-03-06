@@ -3,6 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 
 <head>
+  <link rel="shortcut icon" href="images/healpix.ico">
   <title>HEALPix</title>
   <meta http-equiv="content-type" content="application/xhtml+xml; charset=UTF-8" />
   <link rel="stylesheet" href="images/Healpix.css" type="text/css" />
