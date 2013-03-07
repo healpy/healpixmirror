@@ -24,7 +24,7 @@ of a sphere. As suggested in the name, this pixelization produces a subdivision 
               Anisotropy Probe (WMAP)</a>,
 
               and currently 
-              operating ESA's mission
+              operating ESA&#039;s mission
 
               <a href="http://www.rssd.esa.int/index.php?project=Planck" target="_top">Planck</a>
 
@@ -116,7 +116,7 @@ as can be seen from the <a href="resources.php">Resources</a> and <a href="galle
                 </li>
                 <!-- br -->
                 <li>
-                  Optimised <SPAN CLASS="MATH"><I>P</I><SUB><I>lm</I></SUB></SPAN> C library for better performance.
+                  Optimised <span class="math"><i>P</i><sub><i>lm</i></sub></span> C library for better performance.
                 </li>
                 <!-- br -->
                 <li>

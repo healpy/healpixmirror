@@ -61,7 +61,7 @@ if (version_compare(PHP_VERSION,'5.1.0') >=0){
   $tz = 'UTC';
   date_default_timezone_set($tz);
   $f = basename($_SERVER['SCRIPT_FILENAME']); # file including this footer
-  echo ('<br />Last Edited on ' . date("Y-m-j h:i", filemtime($f)) . ' '  . $tz );
+  echo ('<br />Last Edited on ' . date("Y-m-d H:i", filemtime($f)) . ' '  . $tz );
 }
 ?>
 </p>
