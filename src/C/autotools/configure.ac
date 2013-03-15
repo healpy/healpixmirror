@@ -1,5 +1,5 @@
 AC_INIT([chealpix], [3.0])
-AM_INIT_AUTOMAKE([silent-rules foreign -Wall -Werror])
+AM_INIT_AUTOMAKE([foreign -Wall -Werror])
 
 dnl
 dnl Needed for linking on Windows.
