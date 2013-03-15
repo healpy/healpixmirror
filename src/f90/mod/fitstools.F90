@@ -136,6 +136,14 @@ module fitstools
      module procedure output_map_s, output_map_d
   end interface
 
+  interface write_plm
+#ifdef NO64BITS
+     module procedure write_plm8
+#else
+     module procedure write_plm8, write_plm4
+#endif
+  end interface
+
   interface write_bintab
 #ifdef NO64BITS
      module procedure write_bintab8_s, write_bintab8_d
@@ -756,7 +764,7 @@ contains
        nside_old = nside_final
     else
        if (nside_final /= nside_old) then
-          print*,routine//'> Unconsistent NSIDE: ',nside_final, nside_old
+          print*,routine//'> Inconsistent NSIDE: ',nside_final, nside_old
           print*,routine//'> Should use same NSIDE for all extensions'
        endif
     endif
@@ -1295,24 +1303,41 @@ contains
     return
   end subroutine write_dbintab
   !=======================================================================
-  subroutine write_plm(plm, nplm, nhar, header, nlheader, filename, nsmax, nlmax)
+  ! WRITE_PLM
+  !     Create a FITS file containing a binary table extension with 
+  !     the temperature map in the first column
+  !     written by EH from writeimage and writebintable 
+  !     (fitsio cookbook package)
+  !
+  !     slightly modified to deal with vector column 
+  !     in binary table       EH/IAP/Jan-98
+  !
+  !     simplified the calling sequence, the header sould be filled in
+  !     before calling the routine
+  !
+  !     Changed to write double precision plms for const.real. FKH/Apr-99
+  !
+  !=======================================================================
+#ifndef NO64BITS
+  subroutine write_plm4(plm, nplm, nhar, header, nlheader, filename, nsmax, nlmax)
     !=======================================================================
-    !     Create a FITS file containing a binary table extension with 
-    !     the temperature map in the first column
-    !     written by EH from writeimage and writebintable 
-    !     (fitsio cookbook package)
-    !
-    !     slightly modified to deal with vector column 
-    !     in binary table       EH/IAP/Jan-98
-    !
-    !     simplified the calling sequence, the header sould be filled in
-    !     before calling the routine
-    !
-    !     Changed to write double precision plms for const.real. FKH/Apr-99
-    !
+    INTEGER(I4B), INTENT(IN) :: nplm
+    INTEGER(I4B), INTENT(IN) :: nhar, nlheader, nsmax, nlmax
+    REAL(DP),          INTENT(IN), DIMENSION(0:nplm-1,1:nhar) :: plm
+    CHARACTER(LEN=80), INTENT(IN), DIMENSION(1:nlheader) :: header
+    CHARACTER(LEN=*),  INTENT(IN)               :: filename
+    integer(i8b) :: nplm8
+    nplm8 = nplm
+    call write_plm8(plm, nplm8, nhar, header, nlheader, filename, nsmax, nlmax)
+    return
+  end subroutine write_plm4
+    !=======================================================================
+#endif
+  subroutine write_plm8(plm, nplm, nhar, header, nlheader, filename, nsmax, nlmax)
     !=======================================================================
 
-    INTEGER(I4B), INTENT(IN) :: nplm, nhar, nlheader, nsmax, nlmax
+    INTEGER(I8B), INTENT(IN) :: nplm
+    INTEGER(I4B), INTENT(IN) :: nhar, nlheader, nsmax, nlmax
     REAL(DP),          INTENT(IN), DIMENSION(0:nplm-1,1:nhar) :: plm
     CHARACTER(LEN=80), INTENT(IN), DIMENSION(1:nlheader) :: header
     CHARACTER(LEN=*),  INTENT(IN)               :: filename
@@ -1323,12 +1348,13 @@ contains
     CHARACTER(LEN=80) :: comment
 
     INTEGER(I4B), PARAMETER :: maxdim = 40 !number of columns in the extension
-    INTEGER(I4B) :: nrows, tfields, varidat, nf, nmmax, nlm
+    INTEGER(I4B) :: nrows, tfields, varidat, nmmax
+    INTEGER(I8B) :: nlm, nf, i0, i1
     INTEGER(I4B) :: frow,  felem, colnum
     CHARACTER(LEN=20) :: ttype(maxdim), tform(maxdim), tunit(maxdim), extname
     CHARACTER(LEN=10) ::  card, num
     CHARACTER(LEN=2)  :: stn
-    INTEGER(I4B)      :: itn
+    INTEGER(I4B)      :: itn, irow, np
     real(DP)          :: dm
     !-----------------------------------------------------------------------
 
@@ -1370,9 +1396,9 @@ contains
     nlm = nplm / (2*nsmax) ! number of Plm per Healpix ring
     dm  = (2*nlmax + 3.0_dp)**2 - 8.0_dp*nlm
     nmmax = nlmax - (nint(sqrt(dm)) - 1)/2
-    call assert(nplm == nlm*2*nsmax, 'un-consistent array size in write_plm')
-    call assert(nplm == (nmmax+1)*(2*nlmax-nmmax+2)*nsmax, &
-         &     'un-consistent array size (nmmax) in write_plm')
+    call assert(nplm == nlm*2*nsmax, 'inconsistent array size in write_plm')
+    call assert(nplm == (nmmax+1_i8b)*(2*nlmax-nmmax+2_i8b)*nsmax, &
+         &     'inconsistent array size (nmmax) in write_plm')
 
     !     creates an extension
     call ftcrhd(unit, status)
@@ -1426,10 +1452,16 @@ contains
     call ftukyl(unit,'POLAR', (nhar>1),'Polarisation included (T/F)', status)
 
     !     write the extension one column by one column
-    frow   = 1  ! starting position (row)
-    felem  = 1  ! starting position (element)
-    do colnum = 1, nhar
-       call ftpcld(unit, colnum, frow, felem, nplm, plm(0,colnum), status)
+    do irow=1, nrows
+       frow   = irow  ! starting position (row)
+       felem  = 1  ! starting position (element)
+       np = nf
+       i0 = (irow-1)*nf
+       i1 = i0+nf-1
+       do colnum = 1, nhar
+          !call ftpcld(unit, colnum, frow, felem, nplm, plm(0,colnum), status)
+          call ftpcld(unit, colnum, frow, felem, np, plm(i0:i1,colnum), status)
+       enddo
     enddo
 
     !     ----------------------
@@ -1443,7 +1475,7 @@ contains
     if (status > 0) call printerror(status)
 
     return
-  end subroutine write_plm
+  end subroutine write_plm8
 
   !=======================================================================
   !       ALMS2FITS

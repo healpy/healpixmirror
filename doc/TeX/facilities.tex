@@ -101,8 +101,28 @@ floating point reals. The following points should be noted: \label{page:ioprec}
 
 \newpage
 
-\section[Changes between releases 2.20 and \hpxversion]{Changes between releases 2.20 and
-\hpxversion}
+\section[Changes between releases 3.00 and \hpxversion]{%
+Changes between releases 3.00 and \hpxversion}
+\begin{itemize}
+	\item all Fortran facilities now support {\tt cfitsio}'s ``Extended File
+Name Syntax''
+allowing the reading and processing of an arbitrary HDU and table column out of a
+FITS file. For example, setting \hfill \\
+{\tt infile = }{\tt ftp://}{\it url/file.fits}{\tt .gz}{\tt [}{\it extname}{\tt
+]}{\tt [col }{\it colname}{\tt ]}  \hfill \\
+in {\tt anafast} 
+will download the FITS file {\it file.fits.gz} from {\it url}, 
+uncompress it, open the HDU (extension) with keyword {\tt EXTNAME =}{\it
+extname}, read the table column with {\tt TTYPE*=}{\it colname} out of it and will
+analyze it.
+	\item 	still faster 
+\htmlref{{\tt synfast}}{fac:synfast},
+\htmlref{{\tt anafast}}{fac:anafast},
+\htmlref{{\tt smoothing}}{fac:smoothing} thanks to \htmladdnormallink{{\tt libsharp}}{http://sourceforge.net/projects/libsharp} routines
+\end{itemize}
+
+\section[Changes between releases 2.20 and 3.00]{%
+Changes between releases 2.20 and 3.00}
 \begin{itemize}
 	\item all {\em input} FITS files can now be compressed (with a 
 {\tt .gz}, {\tt .Z}, {\tt .z}, or {\tt .zip} 
@@ -129,7 +149,8 @@ analyzed.
 	\item faster 
 \htmlref{{\tt synfast}}{fac:synfast},
 \htmlref{{\tt anafast}}{fac:anafast},
-\htmlref{{\tt smoothing}}{fac:smoothing} thanks to {\tt libpsht} routines. 
+\htmlref{{\tt smoothing}}{fac:smoothing} thanks to 
+\htmladdnormallink{{\tt libpsht}}{http://libpsht.sourceforge.net/} routines. 
 	\item most facilities can handle maps with $\nside > 8192$, ie more than
 805,306,368 pixels.
 \end{itemize}

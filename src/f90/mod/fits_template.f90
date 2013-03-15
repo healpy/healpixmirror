@@ -77,12 +77,12 @@ subroutine map_bad_pixels_KLOAD(map, fin, fout, nbads, verbose)
   
   npix  = long_size(map, 1)
   nmaps = long_size(map, 2)
-  threshold = fin * 1.e-5_KMAP
+  threshold = abs(fin * 1.e-5_KMAP)
   
   imiss(:) = 0
   do imap = 1, nmaps
      do i=0,npix-1
-        if ( ABS( map(i,imap) - fin ) < threshold ) then
+        if ( abs( map(i,imap) - fin ) < threshold ) then
            map(i,imap) = fout
            imiss(imap) = imiss(imap)+1
         endif

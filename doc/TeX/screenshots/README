@@ -6,3 +6,8 @@ wmapV.png (IDL)
 
 orthview,wmapv,shade=1,png='/tmp/wmapV.png',/pre,win=-1,/asinh,fact=100,px=550,coord=['g','c'],/nobar,title='WMAP-5yr V band in Celestial Coordinates'
 
+
+wmapV_9yr.png:
+
+wmapv='/data/WMAP/9yr/maps/wmap_band_iqumap_r9_9yr_V_v5.fits'
+orthview,wmapv,shade=1,png='/tmp/wmapV_9yr.png',/pre,win=-1,/asinh,fact=100,px=550,coord=['g','c'],/nobar,title='WMAP-9yr V band in Celestial Coordinates'

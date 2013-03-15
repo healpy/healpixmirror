@@ -1118,6 +1118,8 @@ contains
   !========================================================
   subroutine plm_gen(nsmax, nlmax, nmmax, plm)
     !========================================================
+    use long_intrinsic, only: long_size
+
     integer(i4b),             intent(IN) :: nsmax, nlmax, nmmax
     real(dp), dimension(0:,1:), intent(OUT):: plm
 
@@ -1152,8 +1154,8 @@ contains
 
     n_lm  = ((nmmax+1)*(2*nlmax-nmmax+2))/2 !number of (l,m) with m in[0,M] and l in [m,L]
     n_plm = n_lm * nrings
-    nd1 = size(plm, 1)
-    nd2 = size(plm, 2)
+    nd1 = long_size(plm, 1)
+    nd2 = long_size(plm, 2)
 
     if (nd1 < n_plm) then
        print*,code//' > Plm array too small:', nd1, n_plm
@@ -1457,7 +1459,7 @@ contains
 
        else if (type == 1) then
           ! FITS file with ascii or binary table
-          call fits2cl(new_beam_file, gb, nl-1_i4b, nd, header, fmissval=0.)
+          call fits2cl(new_beam_file, gb, nl-1_i4b, nd, header, fmissval=0.0_dp)
        else
           print 9000,' the file '//trim(new_beam_file) &
                &            //' is of unknown type.'

@@ -72,6 +72,7 @@ pro bin_llcl, llcl_in, ubin, l_out, llcl_out, dllcl, uniform=uniform, deltal=del
 ;  2007-04-05: added deltal optional output
 ;  2007-05-31: added /flatten and /help
 ;  2008-03-03: ignore bins beyond data lmax, truncate last valid bin if necessary.
+;  2013-02-15: correctly deals with optional Dllcl argument
 ;-
 
 
@@ -89,9 +90,9 @@ if n_params() eq 0 then begin
     print,'Type '+routine+', /help              for extended help'
     return
 endif
-if n_params() ne 4 then begin
+if (n_params() lt 4 || n_params() gt 5) then begin
     print,'Number of arguments found: ',n_params()
-    print,'Expected 4'
+    print,'Expected 4 or 5'
     message,usage,/noname
 endif
 if (min(ubin) lt 0) then begin

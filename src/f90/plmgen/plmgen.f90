@@ -147,12 +147,19 @@ program plmgen
   n_plm_8 = (nmmax+1_i8b)*(2*nlmax-nmmax+2_i8b)*nsmax
   n_plm   = (nmmax+1    )*(2*nlmax-nmmax+2    )*nsmax
 
+!   if (n_plm_8 > 2147483647 .or. n_plm < 0) then
+!      print*,' '
+!      write(*,'(a,i6,i6,a)') 'Error: these values of Nside and l_max (',nsmax,nlmax,')'
+!      print*,' are too large for the current implementation of '//trim(lcode)//'.'
+!      print*,'See documentation for details.'
+!      call fatal_error('Aborting')
+!   endif
   if (n_plm_8 > 2147483647 .or. n_plm < 0) then
      print*,' '
-     write(*,'(a,i6,i6,a)') 'Error: these values of Nside and l_max (',nsmax,nlmax,')'
+     write(*,'(a,i6,i6,a)') 'Warning: these values of Nside and l_max (',nsmax,nlmax,')'
      print*,' are too large for the current implementation of '//trim(lcode)//'.'
      print*,'See documentation for details.'
-     call fatal_error('Aborting')
+     print*,'This may create problems.'
   endif
 
   nd = 1

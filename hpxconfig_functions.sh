@@ -162,7 +162,7 @@ setCDefaults () {
     CC="gcc"
     OPT="-O2 -Wall"
     AR="ar -rsv"
-    PIC="-fPIC"
+    PIC="-fPIC" # work with gcc and icc
     WLRPATH=""
 
     case $OS in
@@ -718,7 +718,8 @@ setF90Defaults () {
     FC="f90"
     CC="cc"
     FFLAGS="-I\$(F90_INCDIR)"
-    CFLAGS="-O"
+    #CFLAGS="-O"
+    CFLAGS="-O3 -std=c99"  # OK for gcc and icc
     #LDFLAGS="-L\$(F90_LIBDIR) -L\$(FITSDIR) -lhealpix -lhpxgif -lsharp_healpix_f -l\$(LIBFITS)"
     LDFLAGS="-L\$(F90_LIBDIR) -L\$(FITSDIR) -lhealpix -lhpxgif -l\$(LIBFITS)"
     F90_BINDIR="./bin"
@@ -1436,10 +1437,13 @@ askUserMisc () {
 	    echo "F90 compiler generates 32 bit code, "
 	    echo "while C compiler generates 64 bit code"
 	fi
-	echoLn "you may want to change the C compilations options ($CFLAGS): "
+	echoLn "you may want to change the C compilation options ($CFLAGS): "
 	read answer
 	[ "x$answer" != "x" ] && CFLAGS="$answer"
-	echo "you also may have to recompile cfitsio with the correct options to ensure that its C and Fortran codes are consistent with each other and with Healpix"
+	echoLn "or the F90 compilations options ($FFLAGS): "
+	read answer
+	[ "x$answer" != "x" ] && FFLAGS="$answer"
+	echo "you also may have to recompile cfitsio with the correct options to ensure that its C routines and Fortran wrappers are consistent with each other and with Healpix"
     fi
     echo "  C subroutines will be compiled with $CC $CFLAGS"
 

@@ -94,7 +94,7 @@ updateCopyrightDate () {
 
     dir=${here}
     instring='Copyright (C) 1997-2010'
-    outstring='Copyright (C) 1997-2012'
+    outstring='Copyright (C) 1997-2013'
     #tmpfile='/tmp/tmp_updatecopyright.txt'
 
     echo "In                $dir"
@@ -205,6 +205,9 @@ mv ${docautodir}/pdf/*  doc/pdf
 \rm -rf ${docautodir}/
 \rm -rf DONE.txt TODO Bugs.txt
 \rm -rf include bin lib
+
+echo "removing web site material ..."
+\rm -rf doc/www
 
 echo "removing non-releasable programs..."
 for p in quad_ring; do
