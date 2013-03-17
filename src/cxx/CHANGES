@@ -1,5 +1,6 @@
 Changes since v3.0:
 - libpsht replaced by libsharp
+- added boundaries() method to T_Healpix_Base
 
 Changes since v2.20a (incomplete):
 
