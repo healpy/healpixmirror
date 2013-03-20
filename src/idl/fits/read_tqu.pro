@@ -44,9 +44,10 @@ PRO read_tqu, fitsfile, TQU, EXTENSION=extension_id, HDR = hdr, XHDR = xhdr, HEL
 ;    fitsfile = String containing the name of the file to be read   
 ;
 ; OPTIONAL INPUTS:
-;    Extension : number ID of extension to be read (0 based), or
-;          case un-sensitive name of extension to be read, as defined in EXTNAME keyword.
-;         If absent, all the extensions found are read
+;    Extension : extension unit to be read from FITS file: 
+;     either its 0-based ID number (ie, 0 for first extension after primary array)
+;     or the case-insensitive value of its EXTNAME keyword.
+;	If absent, all available extensions are read.
 ;
 ; KEYWORDS:
 ;    Help : if set, provides help on routine

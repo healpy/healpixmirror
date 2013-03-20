@@ -25,7 +25,7 @@
 ;  For more information about HEALPix see http://healpix.jpl.nasa.gov
 ;
 ; -----------------------------------------------------------------------------
-pro selectread, file, array, polvec, header=exthdr, columns=columns, extension=extension_id, poltype=poltype, tonan=tonan, offset=offset, factor=factor, flip = flip, no_pdu= no_pdu
+pro selectread, file, array, polvec, header=exthdr, columns=columns, extension=extension_id, poltype=poltype, tonan=tonan, offset=offset, factor=factor, flip = flip, no_pdu= no_pdu, help=help
 ;+
 ; NAME:
 ;    selectread
@@ -39,7 +39,7 @@ pro selectread, file, array, polvec, header=exthdr, columns=columns, extension=e
 ;
 ; CALLING SEQUENCE:
 ;    selectread, File, Array, [Polvec, HEADER=, COLUMNS=, EXTENSION=, POLTYPE=,
-;    TONAN=, OFFSET=, FACTOR=, FLIP=, NO_PDU=]
+;    TONAN=, OFFSET=, FACTOR=, FLIP=, NO_PDU=, HELP=]
 ;
 ; INPUTS:
 ;     File : string containing FITS file name
@@ -52,8 +52,10 @@ pro selectread, file, array, polvec, header=exthdr, columns=columns, extension=e
 ;       By default all columns are read, unless POLTYPE is set, in which case
 ;       only the relevant columns are read and processed
 ;
-;     EXTENSION= number ID of extension to be read (0 based), or
-;          case un-sensitive name of extension to be read, as defined in EXTNAME keyword
+;     EXTENSION : extension unit to be read from FITS file: 
+;       either its 0-based ID number (ie, 0 for first extension after primary array)
+;       or the case-insensitive value of its EXTNAME keyword.
+;	If absent, first extension (=0) will be read
 ;
 ;     POLTYPE= processing to apply to polarised data before output
 ;        0: do nothing: output selected column(s) as read (after application of
@@ -68,7 +70,7 @@ pro selectread, file, array, polvec, header=exthdr, columns=columns, extension=e
 ;                 norm=sqrt(U^2+Q^2) * factor    and 
 ;                 psi=1/2 atan(U/Q)
 ;
-;     TONAN= set flagged pixel to NaN. Is set whn FACTOR and/or OFFSET are set
+;     TONAN= set flagged pixel to NaN. Is set when FACTOR and/or OFFSET are set
 ;
 ;     FACTOR= multiplicative factor applied to data, default = 1.
 ;
@@ -80,6 +82,8 @@ pro selectread, file, array, polvec, header=exthdr, columns=columns, extension=e
 ;
 ;     NO_PDU= if set, the primary data unit header is not included in the
 ;     returned header
+;
+;     HELP= if set, print out this help header and exit
 ;
 ; OUTPUTS:
 ;     Array: array of size (np, ncols) 
@@ -118,11 +122,19 @@ pro selectread, file, array, polvec, header=exthdr, columns=columns, extension=e
 ;  Dec 2008, EH: use OR instead of '||' for non-scalar tests
 ;  Nov 2009, EH: accepts non-scalar Offset and Factor
 ;  Jan 2013, EH: accepts string type EXTENSION keyword
+;  Mar 2013, EH: added HELP keyword
 ;-
 
+code = 'selectread'
+syntax = [code+', File, Array, [Polvec, HEADER=, COLUMNS=, EXTENSION=, EXTNAME= POLTYPE=,','                                  TONAN=, OFFSET=, FACTOR=, FLIP=, NO_PDU=, HELP=]']
+
+if keyword_set(help) then begin
+    doc_library,code
+    return
+endif
+
 if (n_params() lt 2) then begin
-    print,'selectread, File, Array, [Polvec, HEADER=, COLUMNS=, EXTENSION=, EXTNAME= POLTYPE=,'
-    print,'                                  TONAN=, OFFSET=, FACTOR=, FLIP=, NO_PDU=]'
+    print,syntax,form='(a)'
     return
 endif
 

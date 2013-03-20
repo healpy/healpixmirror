@@ -46,9 +46,11 @@
 ;          if not provided, then /WMAP1 or /WMAP5 must be set.   
 ;
 ; OPTIONAL INPUTS:
-;       EXTENSION= number ID of extension to be read (0 based), or
-;          case un-sensitive name of extension to be read, as defined in EXTNAME
-;          keyword. Will be ignored when reading alm file
+;       EXTENSION : extension unit to be read from FITS file: 
+;         either its 0-based ID number (ie, 0 for first extension after primary array)
+;         or the case-insensitive value of its EXTNAME keyword.
+;	  If absent, first extension (=0) will be read
+;          Will be ignored when reading alm file
 ;
 ;       HELP = if set, this header is printed out, no file is read
 ;

@@ -994,10 +994,24 @@ transparent in the output PNG file.
 % \subsubsection[Java]{Java}
 % \subsubsection[Python]{Python}
 \subsubsection[General]{General}
-%
+N/A%
 \subsubsection[C]{\linklatexhtml{C}{csub.pdf}{csub.htm}}
 %
+\begin{itemize}
+\item experimental GNU autotools support (undocumented); the standard
+configuration script remains available
+\end{itemize}
+
+
 \subsubsection[C++]{C++}
+\begin{itemize}
+\item Spherical Harmonics Transform library {\tt libpsht} replaced by \htmladdnormallink{{\tt
+libsharp}}{http://sourceforge.net/projects/libsharp}
+\item added {\tt boundaries()} method to {\tt T\_Healpix\_Base}
+\item experimental GNU autotools support (undocumented); the standard
+configuration script remains available
+\end{itemize}
+
 %
 \subsubsection[Fortran]{%
 	Fortran 90 \linklatexhtml{facilities}{facilities.pdf}{facilities.htm} and
@@ -1049,8 +1063,12 @@ libsharp}}{http://sourceforge.net/projects/libsharp} routines
 
 %
 \subsubsection[Java]{Java}
-%
+N/A%
 \subsubsection[Python]{Python}
+	switch to {\tt healpy 1.5.0}: addition of 
+\htmladdnormallink{{\tt
+gauss\_beam}}{https://healpy.readthedocs.org/en/1.5.0/generated/healpy.sphtfunc.gauss_beam.html}
+to generate Gaussian beam window function.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% END LATEST CHANGES %%%%%%%%%%%%%
 \section{Appendix II: Older changes}
@@ -1249,7 +1267,7 @@ https://github.com/healpy/healpy}
 package (C. Rosset, A. Zonca et al.) is now part of \healpix
 \end{itemize}
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%----------------------------------------------------
 
 \tinysubsection*{Bug corrections and Improvements in Versions 2.20 and 2.20a (2011-02)} % 2011-02-04
 

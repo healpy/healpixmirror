@@ -666,8 +666,8 @@ if (~(keyword_set(nobar) || do_poldirection || do_true)) then begin
     back(xsize*cbar_xll,0) = color_bar_out
     TV, back,0,cbar_yll,/normal,xsize = 1.
     ; For Totor <<<<<<<<<<<<<<<<<<<<<<<<<
-    plot, /nodata, [tmin,tmax],[0,1],pos=[cbar_xll,cbar_yll,cbar_xur,cbar_yur],/noerase
-    plot, /nodata, myplot.urange, myplot.vrange, pos=myplot.position, XSTYLE=myplot.xstyle, YSTYLE=myplot.ystyle, /noerase ; to ensure that mollcursor will work
+;     plot, /nodata, [tmin,tmax],[0,1],pos=[cbar_xll,cbar_yll,cbar_xur,cbar_yur],/noerase
+;     plot, /nodata, myplot.urange, myplot.vrange, pos=myplot.position, XSTYLE=myplot.xstyle, YSTYLE=myplot.ystyle, /noerase ; to ensure that mollcursor will work
 endif
 
 ;  the color bar labels

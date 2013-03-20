@@ -4,7 +4,7 @@
 
 
 <p>
-The HEALPix documentation is currently available for downloading in <a href="pdf/pdf_index.pdf">pdf</a> and can be browsed in html
+The HEALPix documentation is currently available for downloading in <a href="pdf/pdf_index.pdf">pdf</a> and can be browsed in <a href="html/main.htm"html</a>
 
               
 <table cellSpacing=0 cellPadding=0 border=0 width=585>

@@ -69,8 +69,10 @@ PRO READ_FITS_MAP, filename, T_sky, hdr, exthdr, $
 ;
 ; OPTIONAL KEYWORDS:
 ;
-;    EXTENSION = number of extension of be read, 0 based, or
-;          case unsensitive string specifying extension name (stored in EXTNAME keyword).
+;    EXTENSION : extension unit to be read from FITS file: 
+;     either its 0-based ID number (ie, 0 for first extension after primary array)
+;     or the case-insensitive value of its EXTNAME keyword.
+;	If absent, first extension (=0) will be read
 ;
 ;    HELP=  : if set, this help header is printed out and the routine exits
 ;

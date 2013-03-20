@@ -25,7 +25,7 @@
 ;  For more information about HEALPix see http://healpix.jpl.nasa.gov
 ;
 ; -----------------------------------------------------------------------------
-pro read_fits_s, filename, prim_stc, xten_stc, merge=merge, extension = extension_id, columns=columns
+pro read_fits_s, filename, prim_stc, xten_stc, merge=merge, extension = extension_id, columns=columns, help=help
 ;+
 ; NAME:
 ;       READ_FITS_S
@@ -66,8 +66,10 @@ pro read_fits_s, filename, prim_stc, xten_stc, merge=merge, extension = extensio
 ;      Merge = if set, the content of the primary and secondary units
 ;      are merged
 ;
-;      Extension = number of extension of be read, 0 based, or
-;          case unsensitive string specifying extension name (stored in EXTNAME keyword).
+;      Extension : extension unit to be read from FITS file: 
+;        either its 0-based ID number (ie, 0 for first extension after primary array)
+;        or the case-insensitive value of its EXTNAME keyword.
+;	 If absent, first extension (=0) will be read
 ;
 ;      Columns = list of columns to be read from a binary table 
 ;        can be a list of integer (1 based) indexing the columns positions
@@ -102,6 +104,7 @@ pro read_fits_s, filename, prim_stc, xten_stc, merge=merge, extension = extensio
 ;  June 2008, EH: can deal with file with large TFORM
 ;  Jan 2009: calls init_astrolib
 ;  Jan 2013: allows EXTENSION to be a string
+;  Mars 2013: added HELP
 ;
 ; requires the THE IDL ASTRONOMY USER'S LIBRARY 
 ; that can be found at http://idlastro.gsfc.nasa.gov/homepage.html
@@ -109,7 +112,12 @@ pro read_fits_s, filename, prim_stc, xten_stc, merge=merge, extension = extensio
 ;-
 
 code = 'READ_FITS_S'
-syntax =  'Syntax : '+code+', Filename, Prim_Stc, Xten_Stc, [Merge=, Extension=, Columns=]'
+syntax =  'Syntax : '+code+', Filename, Prim_Stc, Xten_Stc, [Merge=, Extension=, Columns=, Help=]'
+
+if keyword_set(help) then begin
+    doc_library,code
+    return
+endif
 
 if N_params() eq 0 then begin
     print, syntax

@@ -43,8 +43,11 @@ function getsize_fits, filename, nmaps = nmaps, nside = nside, mlpol = mlpol, or
 ;     filename = (IN) name of the (compressed) FITS file containing the map
 ;
 ;  OPTIONAL INPUT
-;     extension = (IN) number of extension (0 based) to read data from, or 
-;                     case un-sensitive string specifying extension name (stored in EXTNAME keyword).
+;      Extension : extension unit to be read from FITS file: 
+;        either its 0-based ID number (ie, 0 for first extension after primary array)
+;        or the case-insensitive value of its EXTNAME keyword.
+;	 If absent, first extension (=0) will be read
+;
 ;     /header   = (IN) if set, filename is actually a FITS header instead of a
 ;          FITS file
 ;

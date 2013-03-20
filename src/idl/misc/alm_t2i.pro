@@ -80,7 +80,17 @@ pro alm_t2i, alm_tab, index, alm_list, HELP=help, MFIRST=mfirst
 ; PROCEDURE:
 ;
 ; EXAMPLE:
-;       see ALM_I2T
+;    ; combining two different sets of alm for (l,m) <= 100
+;    fits2alm, i1, a1, 'alm1.fits'                       ; read first set of alm from a FITS file
+;    ac1 = alm_i2t(i1, a1, /complex, lmax=100, mmax=100) ; make an array out of those with (l,m) <= 100
+;
+;    fits2alm, i2, a2, 'alm2.fits'                       ; read second set of alm
+;    ac2 = alm_i2t(i2, a2, /complex, lmax=100, mmax=100) ; make an array out of those with (l,m) <= 100
+;
+;    ac = 0.9*ac1 + 0.1*ac2          ; weighted sum the 2 alm sets 
+;
+;    alm_t2i, ac, i, a               ; makes an index list of the new alms
+;    alm2fits, i, a, 'almsum.fits'   ; save the new alms into a FITS file
 ;
 ; MODIFICATION HISTORY:
 ;     2007-10-04: creation
