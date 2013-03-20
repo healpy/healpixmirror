@@ -225,7 +225,7 @@ program plmgen
 
 
   nlheader = SIZE(header)
-  call write_plm(plm, n_plm, nd, header, nlheader, outfile, nsmax, nlmax)
+  call write_plm(plm, n_plm_8, nd, header, nlheader, outfile, nsmax, nlmax)
 
   deallocate(plm)
 

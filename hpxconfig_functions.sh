@@ -877,7 +877,7 @@ cat > ${tmpfile}.f90 << EOF
     end program date_fitsio
 EOF
     # compile and link
-    ${FC} ${FFLAGS}  ${tmpfile}.f90 -o ${tmpfile}.x -L${FITSDIR} -l${LIBFITS} #${WLRPATH}
+    ${FC} ${FFLAGS}  ${tmpfile}.f90 -o ${tmpfile}.x -L${FITSDIR} -l${LIBFITS} ${WLRPATH_}
 
     # run if executable
     if [ -x ${tmpfile}.x ]; then
@@ -1169,6 +1169,7 @@ IdentifyCompiler () {
 		PRFLAGS="-openmp -openmp_report0" # Open MP enabled # June 2007
 		FI8FLAG="-i8" # change default INTEGER to 64 bits
 ##		FI8FLAG="-integer-size 64" # change default INTEGER to 64 bits
+		CFLAGS="$CFLAGS -DINTEL_COMPILER" # to combine C and F90
 		[ $OS = "Linux" ] && WLRPATH="-Wl,-R"
         elif [ $npgf != 0 ] ; then
                 FCNAME="Portland Group Compiler"
@@ -1188,7 +1189,7 @@ IdentifyCompiler () {
 		FFLAGS="$FFLAGS -qsuffix=f=f90:cpp=F90"
 		OFLAGS="-O"
 		#####CC="gcc"
-		CFLAGS="$CFLAGS -DRS6000" #### 
+		CFLAGS="$CFLAGS -DRS6000" # to combine C and F90
 		FPP="-WF,-D"
 		PRFLAGS="-qsmp=omp" # Open MP enabled
 		AR="ar -rsv" # archive with index table
@@ -1201,7 +1202,7 @@ IdentifyCompiler () {
 		FFLAGS="$FFLAGS -qfree=f90 -qsuffix=f=f90:cpp=F90"
 		OFLAGS="-O"
 		CC="gcc"
-		CFLAGS="$CFLAGS -DRS6000" #### 
+		CFLAGS="$CFLAGS -DRS6000" # to combine C and F90
 		#### FPP="-WF,-D"
 		PRFLAGS="-qsmp=omp" # Open MP enabled
 	    fi
@@ -1212,6 +1213,7 @@ IdentifyCompiler () {
 		FFLAGS="$FFLAGS -YEXT_NAMES=LCS -YEXT_SFX=_ -q"
 		OFLAGS="-O3 -cpu:host"
 		LDFLAGS="$LDFLAGS -lU77"
+		CFLAGS="$CFLAGS -DAbsoftProFortran"  # to combine C and F90
 		CC="gcc"
 	elif [ $ng95 != 0 ] ; then
 	        FCNAME="g95 compiler"
@@ -1225,6 +1227,7 @@ IdentifyCompiler () {
 		OFLAGS="-O3"
 		PRFLAGS="-fopenmp" # Open MP enabled
 		CC="gcc"
+		CFLAGS="$CFLAGS -DgFortran" # to combine C and F90
 		FI8FLAG="-fdefault-integer-8" # change default INTEGER to 64 bits
 		[ $OS = "Linux" ] && WLRPATH="-Wl,-R"
 	elif [ $npath != 0 ] ; then
@@ -1471,7 +1474,8 @@ askUserMisc () {
 
     # add option on where to search runtime libraries, on compilers supporting it
     if [ "x$WLRPATH" != "x" ] ; then
-	WLRPATH="${WLRPATH}\$(FITSDIR)"
+	WLRPATH_="${WLRPATH} ${FITSDIR}" # expand $FITSDIR
+	WLRPATH="${WLRPATH}\$(FITSDIR)"  # keep $(FITSDIR)
 	LDFLAGS="${LDFLAGS} ${WLRPATH}"
     fi
 
