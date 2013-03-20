@@ -74,7 +74,7 @@ intro.html: $(style) healpix.perl
 	@echo '          INTRO.HTML              '
 	@echo '=================================='
 	mkdir -p $(HTMLDIR)
-	-$(LATEX2HTML) $(L2HFLAGS) -prefix intro -external_file ./intro    -t "Introduction to Healpix"  intro
+	-$(LATEX2HTML) $(L2HFLAGS) -split 4 -prefix intro -external_file ./intro    -t "Introduction to Healpix"  intro
 	-$(EQNFIX) $(HTMLDIR)/intro > /dev/null
 	mv -f $(HTMLDIR)/WARNINGS $(HTMLDIR)/WARNINGS_intro
 

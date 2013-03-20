@@ -10,7 +10,7 @@
 \title{\healpix IDL Facility User Guidelines}
 \docid{\facname} \section[\facname]{ }
 \label{idl:getsize_fits}
-\docrv{Version 1.2}
+\docrv{Version 1.3}
 \author{Eric Hivon}
 \abstract{This document describes the \healpix facility \facname.}
 
@@ -22,7 +22,7 @@
 \end{facility}
 
 \begin{IDLformat}
-{var = \FACNAME(File, [Nmaps =, Nside =, Mlpol =, Ordering =, Obs\_Npix =, Type =, Header =])
+{var = \FACNAME(File, [Nmaps=, Nside=, Mlpol=, Ordering=, Obs\_Npix=, Type=, Header=, Extension=, /Help])
 }
 \end{IDLformat}
 
@@ -68,13 +68,20 @@
 
 	\item[{Header=}] contains on output the FITS extension header
 		
+       \item[{Extension=}]
+	extension unit to be read from FITS file: 
+ either its 0-based ID number (ie, 0 for first extension {\em after} primary array) 
+ or the case-insensitive value of its EXTNAME keyword.
+
   \end{qulistwide}
 \end{qualifiers}
 
-% \begin{keywords}
-%   \begin{kwlist}{} %%% extra brace
-%    \end{kwlist}
-% \end{keywords}
+\begin{keywords}
+  \begin{kwlist}{} %%% extra brace
+   \item[{HELP=}] if set, an extensive help is displayed and no
+	file is read
+   \end{kwlist}
+\end{keywords}
 
 \begin{codedescription}
 {\facname gets the number of pixels in a FITS file. If the file

@@ -27,7 +27,7 @@ from separate extensions
 \end{facility}
 
 \begin{IDLformat}
-{\FACNAME, File, TQU, [Extension=, Hdr=, Xhdr=, Help=, Nside=, Ordering=, Coordsys=]}
+{\FACNAME, File, TQU, [Extension=, Hdr=, Xhdr=, /HELP, Nside=, Ordering=, Coordsys=]}
 \end{IDLformat}
 
 \begin{qualifiers}
@@ -46,8 +46,10 @@ from separate extensions
 
        \item[{Extension=}]
 		(optional), \\
-	extension unit from which to read the data (0 based). 
-	If absent, all available extensions are read
+	extension unit to be read from FITS file: 
+ either its 0-based ID number (ie, 0 for first extension {\em after} primary array) 
+ or the case-insensitive value of its EXTNAME keyword.
+	If absent, all available extensions are read.
 
        \item[{Hdr=}]
 		  (optional), \\
@@ -81,7 +83,7 @@ from separate extensions
 
 \begin{keywords}
   \begin{kwlist}{} %%% extra brace
-	\item[{Help}] if set, an extensive help is displayed and no
+	\item[{/HELP}] if set, an extensive help is displayed and no
 	file is read
    \end{kwlist}
 \end{keywords}

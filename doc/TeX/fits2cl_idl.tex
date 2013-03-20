@@ -26,6 +26,7 @@ output from the \healpix facility \textbf{anafast}.
 \mylink{idl:fits2cl:cl_array}{cl\_array}, 
 [%
 \mylink{idl:fits2cl:fitsfile}{fitsfile}, %
+\mylink{idl:fits2cl:extension}{EXTENSION=} ,
 \mylink{idl:fits2cl:hdr}{HDR=} ,
 \mylink{idl:fits2cl:help}{/HELP}, 
 \mylink{idl:fits2cl:interactive}{/INTERACTIVE}, 
@@ -65,6 +66,10 @@ must be set.
 
 \begin{keywords}
   \begin{kwlist}{} %%% extra brace
+       \item[EXTENSION=]\mytarget{idl:fits2cl:extension}%
+	extension unit to be read from FITS file: 
+ either its 0-based ID number (ie, 0 for first extension {\em after} primary array) 
+ or the case-insensitive value of its EXTNAME keyword.
     \item[HDR =] \mytarget{idl:fits2cl:hdr}%
 	String array containing on output the primary header
       read from the FITS file. 

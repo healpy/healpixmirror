@@ -1,0 +1,2001 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset
+      xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
+            http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
+<!-- created with Free Online Sitemap Generator www.xml-sitemaps.com -->
+
+<url>
+  <loc>http://healpix.sourceforge.net/</loc>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/index.php</loc>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/gallery.php</loc>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/resources.php</loc>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/downloads.php</loc>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/documentation.php</loc>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/support.php</loc>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/credits.php</loc>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/pdf/pdf_index.pdf</loc>
+  <lastmod>2012-12-19T14:31:27+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/main.htm</loc>
+  <lastmod>2013-02-26T15:57:01+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/pdf/pdf_index.pdf</loc>
+  <lastmod>2012-12-19T14:31:27+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/pdf/intro.pdf</loc>
+  <lastmod>2012-12-19T14:31:27+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/intro.htm</loc>
+  <lastmod>2012-12-19T14:32:18+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/pdf/install.pdf</loc>
+  <lastmod>2012-12-19T14:31:27+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/install.htm</loc>
+  <lastmod>2012-12-19T14:34:20+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/pdf/facilities.pdf</loc>
+  <lastmod>2012-12-19T14:31:27+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/facilities.htm</loc>
+  <lastmod>2012-12-19T14:32:41+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/pdf/subroutines.pdf</loc>
+  <lastmod>2012-12-19T14:31:27+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/subroutines.htm</loc>
+  <lastmod>2012-12-19T14:33:29+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/pdf/idl.pdf</loc>
+  <lastmod>2012-12-19T14:31:27+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/idl.htm</loc>
+  <lastmod>2012-12-19T14:34:08+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/pdf/csub.pdf</loc>
+  <lastmod>2012-12-19T14:31:27+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/csub.htm</loc>
+  <lastmod>2012-12-19T14:34:15+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/index_cxx.htm</loc>
+  <lastmod>2012-12-19T14:30:59+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/java/index.html</loc>
+  <lastmod>2012-12-19T14:30:57+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/intro.htm</loc>
+  <lastmod>2012-12-19T14:32:18+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/install.htm</loc>
+  <lastmod>2012-12-19T14:34:20+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/facilities.htm</loc>
+  <lastmod>2012-12-19T14:32:41+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/subroutines.htm</loc>
+  <lastmod>2012-12-19T14:33:29+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/idl.htm</loc>
+  <lastmod>2012-12-19T14:34:08+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/csub.htm</loc>
+  <lastmod>2012-12-19T14:34:15+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/index_cxx.html</loc>
+  <lastmod>2012-12-19T14:31:07+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/java/index.html</loc>
+  <lastmod>2012-12-19T14:30:57+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/main.htm</loc>
+  <lastmod>2013-02-26T15:57:01+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/intronode1.htm</loc>
+  <lastmod>2012-12-19T14:32:18+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/intronode2.htm</loc>
+  <lastmod>2012-12-19T14:32:18+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/intronode3.htm</loc>
+  <lastmod>2012-12-19T14:32:18+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/intronode4.htm</loc>
+  <lastmod>2012-12-19T14:32:18+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/intronode5.htm</loc>
+  <lastmod>2012-12-19T14:32:18+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/intronode6.htm</loc>
+  <lastmod>2012-12-19T14:32:18+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/intronode7.htm</loc>
+  <lastmod>2012-12-19T14:32:18+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/intronode8.htm</loc>
+  <lastmod>2012-12-19T14:32:18+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/intronode9.htm</loc>
+  <lastmod>2012-12-19T14:32:18+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/intronode10.htm</loc>
+  <lastmod>2012-12-19T14:32:18+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/intronode11.htm</loc>
+  <lastmod>2012-12-19T14:32:18+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/intronode12.htm</loc>
+  <lastmod>2012-12-19T14:32:18+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/intronode13.htm</loc>
+  <lastmod>2012-12-19T14:32:18+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/intronode14.htm</loc>
+  <lastmod>2012-12-19T14:32:18+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/intronode15.htm</loc>
+  <lastmod>2012-12-19T14:32:18+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/intronode16.htm</loc>
+  <lastmod>2012-12-19T14:32:18+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/intronode17.htm</loc>
+  <lastmod>2012-12-19T14:32:18+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/index_cxx.html</loc>
+  <lastmod>2012-12-19T14:31:07+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/installfootnode.htm</loc>
+  <lastmod>2012-12-19T14:34:20+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/idlnode42.htm</loc>
+  <lastmod>2012-12-19T14:34:09+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/idlnode43.htm</loc>
+  <lastmod>2012-12-19T14:34:09+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/facilitiesnode15.htm</loc>
+  <lastmod>2012-12-19T14:32:41+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/subroutinesnode31.htm</loc>
+  <lastmod>2012-12-19T14:33:29+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/subroutinesnode33.htm</loc>
+  <lastmod>2012-12-19T14:33:29+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/subroutinesnode54.htm</loc>
+  <lastmod>2012-12-19T14:33:29+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/subroutinesnode100.htm</loc>
+  <lastmod>2012-12-19T14:33:30+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/subroutinesnode79.htm</loc>
+  <lastmod>2012-12-19T14:33:30+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/subroutinesnode76.htm</loc>
+  <lastmod>2012-12-19T14:33:30+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/facilitiesnode17.htm</loc>
+  <lastmod>2012-12-19T14:32:41+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/facilitiesnode10.htm</loc>
+  <lastmod>2012-12-19T14:32:41+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/subroutinesnode55.htm</loc>
+  <lastmod>2012-12-19T14:33:29+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/facilitiesnode13.htm</loc>
+  <lastmod>2012-12-19T14:32:41+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/idlnode13.htm</loc>
+  <lastmod>2012-12-19T14:34:08+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/idlnode15.htm</loc>
+  <lastmod>2012-12-19T14:34:08+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/idlnode7.htm</loc>
+  <lastmod>2012-12-19T14:34:08+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/idlnode8.htm</loc>
+  <lastmod>2012-12-19T14:34:08+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/idlnode11.htm</loc>
+  <lastmod>2012-12-19T14:34:08+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/idlnode37.htm</loc>
+  <lastmod>2012-12-19T14:34:09+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/idlnode32.htm</loc>
+  <lastmod>2012-12-19T14:34:09+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/idlnode55.htm</loc>
+  <lastmod>2012-12-19T14:34:09+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/idlnode53.htm</loc>
+  <lastmod>2012-12-19T14:34:09+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/idlnode52.htm</loc>
+  <lastmod>2012-12-19T14:34:09+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/idlnode51.htm</loc>
+  <lastmod>2012-12-19T14:34:09+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/idlnode50.htm</loc>
+  <lastmod>2012-12-19T14:34:09+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/idlnode24.htm</loc>
+  <lastmod>2012-12-19T14:34:09+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/idlnode57.htm</loc>
+  <lastmod>2012-12-19T14:34:09+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/facilitiesnode20.htm</loc>
+  <lastmod>2012-12-19T14:32:41+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/facilitiesnode1.htm</loc>
+  <lastmod>2012-12-19T14:32:41+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/facilitiesnode2.htm</loc>
+  <lastmod>2012-12-19T14:32:41+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/facilitiesnode3.htm</loc>
+  <lastmod>2012-12-19T14:32:41+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/facilitiesnode4.htm</loc>
+  <lastmod>2012-12-19T14:32:41+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/facilitiesnode5.htm</loc>
+  <lastmod>2012-12-19T14:32:41+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/facilitiesnode6.htm</loc>
+  <lastmod>2012-12-19T14:32:41+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/facilitiesnode7.htm</loc>
+  <lastmod>2012-12-19T14:32:41+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/facilitiesnode8.htm</loc>
+  <lastmod>2012-12-19T14:32:41+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/facilitiesnode9.htm</loc>
+  <lastmod>2012-12-19T14:32:41+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/facilitiesnode11.htm</loc>
+  <lastmod>2012-12-19T14:32:41+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/facilitiesnode12.htm</loc>
+  <lastmod>2012-12-19T14:32:41+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/facilitiesnode14.htm</loc>
+  <lastmod>2012-12-19T14:32:41+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/facilitiesnode16.htm</loc>
+  <lastmod>2012-12-19T14:32:41+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/facilitiesnode18.htm</loc>
+  <lastmod>2012-12-19T14:32:41+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/facilitiesnode19.htm</loc>
+  <lastmod>2012-12-19T14:32:41+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/facilitiesnode21.htm</loc>
+  <lastmod>2012-12-19T14:32:41+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/facilitiesnode22.htm</loc>
+  <lastmod>2012-12-19T14:32:41+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/subroutinesnode1.htm</loc>
+  <lastmod>2012-12-19T14:33:29+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/subroutinesnode2.htm</loc>
+  <lastmod>2012-12-19T14:33:29+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/subroutinesnode3.htm</loc>
+  <lastmod>2012-12-19T14:33:29+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/subroutinesnode4.htm</loc>
+  <lastmod>2012-12-19T14:33:29+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/subroutinesnode5.htm</loc>
+  <lastmod>2012-12-19T14:33:29+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/subroutinesnode6.htm</loc>
+  <lastmod>2012-12-19T14:33:29+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/subroutinesnode7.htm</loc>
+  <lastmod>2012-12-19T14:33:29+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/subroutinesnode8.htm</loc>
+  <lastmod>2012-12-19T14:33:29+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/subroutinesnode9.htm</loc>
+  <lastmod>2012-12-19T14:33:29+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/subroutinesnode10.htm</loc>
+  <lastmod>2012-12-19T14:33:29+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/subroutinesnode11.htm</loc>
+  <lastmod>2012-12-19T14:33:29+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/subroutinesnode12.htm</loc>
+  <lastmod>2012-12-19T14:33:29+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/subroutinesnode13.htm</loc>
+  <lastmod>2012-12-19T14:33:29+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/subroutinesnode14.htm</loc>
+  <lastmod>2012-12-19T14:33:29+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/subroutinesnode15.htm</loc>
+  <lastmod>2012-12-19T14:33:29+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/subroutinesnode16.htm</loc>
+  <lastmod>2012-12-19T14:33:29+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/subroutinesnode17.htm</loc>
+  <lastmod>2012-12-19T14:33:29+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/subroutinesnode18.htm</loc>
+  <lastmod>2012-12-19T14:33:29+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/subroutinesnode19.htm</loc>
+  <lastmod>2012-12-19T14:33:29+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/subroutinesnode20.htm</loc>
+  <lastmod>2012-12-19T14:33:29+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/subroutinesnode21.htm</loc>
+  <lastmod>2012-12-19T14:33:29+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/subroutinesnode22.htm</loc>
+  <lastmod>2012-12-19T14:33:29+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/subroutinesnode23.htm</loc>
+  <lastmod>2012-12-19T14:33:29+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/subroutinesnode24.htm</loc>
+  <lastmod>2012-12-19T14:33:29+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/subroutinesnode25.htm</loc>
+  <lastmod>2012-12-19T14:33:29+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/subroutinesnode26.htm</loc>
+  <lastmod>2012-12-19T14:33:29+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/subroutinesnode27.htm</loc>
+  <lastmod>2012-12-19T14:33:29+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/subroutinesnode28.htm</loc>
+  <lastmod>2012-12-19T14:33:29+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/subroutinesnode29.htm</loc>
+  <lastmod>2012-12-19T14:33:29+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/subroutinesnode30.htm</loc>
+  <lastmod>2012-12-19T14:33:29+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/subroutinesnode32.htm</loc>
+  <lastmod>2012-12-19T14:33:29+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/subroutinesnode34.htm</loc>
+  <lastmod>2012-12-19T14:33:29+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/subroutinesnode35.htm</loc>
+  <lastmod>2012-12-19T14:33:29+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/subroutinesnode36.htm</loc>
+  <lastmod>2012-12-19T14:33:29+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/subroutinesnode37.htm</loc>
+  <lastmod>2012-12-19T14:33:29+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/subroutinesnode38.htm</loc>
+  <lastmod>2012-12-19T14:33:29+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/subroutinesnode39.htm</loc>
+  <lastmod>2012-12-19T14:33:29+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/subroutinesnode40.htm</loc>
+  <lastmod>2012-12-19T14:33:29+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/subroutinesnode41.htm</loc>
+  <lastmod>2012-12-19T14:33:29+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/subroutinesnode42.htm</loc>
+  <lastmod>2012-12-19T14:33:29+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/subroutinesnode43.htm</loc>
+  <lastmod>2012-12-19T14:33:29+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/subroutinesnode44.htm</loc>
+  <lastmod>2012-12-19T14:33:29+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/subroutinesnode45.htm</loc>
+  <lastmod>2012-12-19T14:33:29+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/subroutinesnode46.htm</loc>
+  <lastmod>2012-12-19T14:33:29+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/subroutinesnode47.htm</loc>
+  <lastmod>2012-12-19T14:33:29+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/subroutinesnode48.htm</loc>
+  <lastmod>2012-12-19T14:33:29+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/subroutinesnode49.htm</loc>
+  <lastmod>2012-12-19T14:33:29+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/subroutinesnode50.htm</loc>
+  <lastmod>2012-12-19T14:33:29+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/subroutinesnode51.htm</loc>
+  <lastmod>2012-12-19T14:33:29+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/subroutinesnode52.htm</loc>
+  <lastmod>2012-12-19T14:33:29+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/subroutinesnode53.htm</loc>
+  <lastmod>2012-12-19T14:33:29+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/subroutinesnode56.htm</loc>
+  <lastmod>2012-12-19T14:33:29+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/subroutinesnode57.htm</loc>
+  <lastmod>2012-12-19T14:33:30+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/subroutinesnode58.htm</loc>
+  <lastmod>2012-12-19T14:33:30+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/subroutinesnode59.htm</loc>
+  <lastmod>2012-12-19T14:33:30+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/subroutinesnode60.htm</loc>
+  <lastmod>2012-12-19T14:33:30+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/subroutinesnode61.htm</loc>
+  <lastmod>2012-12-19T14:33:30+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/subroutinesnode62.htm</loc>
+  <lastmod>2012-12-19T14:33:30+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/subroutinesnode63.htm</loc>
+  <lastmod>2012-12-19T14:33:30+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/subroutinesnode64.htm</loc>
+  <lastmod>2012-12-19T14:33:30+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/subroutinesnode65.htm</loc>
+  <lastmod>2012-12-19T14:33:30+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/subroutinesnode66.htm</loc>
+  <lastmod>2012-12-19T14:33:30+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/subroutinesnode67.htm</loc>
+  <lastmod>2012-12-19T14:33:30+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/subroutinesnode68.htm</loc>
+  <lastmod>2012-12-19T14:33:30+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/subroutinesnode69.htm</loc>
+  <lastmod>2012-12-19T14:33:30+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/subroutinesnode70.htm</loc>
+  <lastmod>2012-12-19T14:33:30+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/subroutinesnode71.htm</loc>
+  <lastmod>2012-12-19T14:33:30+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/subroutinesnode72.htm</loc>
+  <lastmod>2012-12-19T14:33:30+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/subroutinesnode73.htm</loc>
+  <lastmod>2012-12-19T14:33:30+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/subroutinesnode74.htm</loc>
+  <lastmod>2012-12-19T14:33:30+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/subroutinesnode75.htm</loc>
+  <lastmod>2012-12-19T14:33:30+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/subroutinesnode77.htm</loc>
+  <lastmod>2012-12-19T14:33:30+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/subroutinesnode78.htm</loc>
+  <lastmod>2012-12-19T14:33:30+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/subroutinesnode80.htm</loc>
+  <lastmod>2012-12-19T14:33:30+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/subroutinesnode81.htm</loc>
+  <lastmod>2012-12-19T14:33:30+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/subroutinesnode82.htm</loc>
+  <lastmod>2012-12-19T14:33:30+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/subroutinesnode83.htm</loc>
+  <lastmod>2012-12-19T14:33:30+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/subroutinesnode84.htm</loc>
+  <lastmod>2012-12-19T14:33:30+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/subroutinesnode85.htm</loc>
+  <lastmod>2012-12-19T14:33:30+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/subroutinesnode86.htm</loc>
+  <lastmod>2012-12-19T14:33:30+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/subroutinesnode87.htm</loc>
+  <lastmod>2012-12-19T14:33:30+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/subroutinesnode88.htm</loc>
+  <lastmod>2012-12-19T14:33:30+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/subroutinesnode89.htm</loc>
+  <lastmod>2012-12-19T14:33:30+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/subroutinesnode90.htm</loc>
+  <lastmod>2012-12-19T14:33:30+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/subroutinesnode91.htm</loc>
+  <lastmod>2012-12-19T14:33:30+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/subroutinesnode92.htm</loc>
+  <lastmod>2012-12-19T14:33:30+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/subroutinesnode93.htm</loc>
+  <lastmod>2012-12-19T14:33:30+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/subroutinesnode94.htm</loc>
+  <lastmod>2012-12-19T14:33:30+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/subroutinesnode95.htm</loc>
+  <lastmod>2012-12-19T14:33:30+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/subroutinesnode96.htm</loc>
+  <lastmod>2012-12-19T14:33:30+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/subroutinesnode97.htm</loc>
+  <lastmod>2012-12-19T14:33:30+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/subroutinesnode98.htm</loc>
+  <lastmod>2012-12-19T14:33:30+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/subroutinesnode99.htm</loc>
+  <lastmod>2012-12-19T14:33:30+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/subroutinesnode101.htm</loc>
+  <lastmod>2012-12-19T14:33:30+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/subroutinesnode102.htm</loc>
+  <lastmod>2012-12-19T14:33:30+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/subroutinesnode103.htm</loc>
+  <lastmod>2012-12-19T14:33:30+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/subroutinesnode104.htm</loc>
+  <lastmod>2012-12-19T14:33:30+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/subroutinesnode105.htm</loc>
+  <lastmod>2012-12-19T14:33:30+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/subroutinesnode106.htm</loc>
+  <lastmod>2012-12-19T14:33:30+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/subroutinesnode107.htm</loc>
+  <lastmod>2012-12-19T14:33:30+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/subroutinesnode108.htm</loc>
+  <lastmod>2012-12-19T14:33:30+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/subroutinesnode109.htm</loc>
+  <lastmod>2012-12-19T14:33:30+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/subroutinesnode110.htm</loc>
+  <lastmod>2012-12-19T14:33:30+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/subroutinesnode111.htm</loc>
+  <lastmod>2012-12-19T14:33:30+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/subroutinesnode112.htm</loc>
+  <lastmod>2012-12-19T14:33:30+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/subroutinesnode113.htm</loc>
+  <lastmod>2012-12-19T14:33:30+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/subroutinesnode114.htm</loc>
+  <lastmod>2012-12-19T14:33:30+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/subroutinesnode115.htm</loc>
+  <lastmod>2012-12-19T14:33:30+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/subroutinesnode116.htm</loc>
+  <lastmod>2012-12-19T14:33:30+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/idlnode1.htm</loc>
+  <lastmod>2012-12-19T14:34:08+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/idlnode2.htm</loc>
+  <lastmod>2012-12-19T14:34:08+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/idlnode3.htm</loc>
+  <lastmod>2012-12-19T14:34:08+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/idlnode4.htm</loc>
+  <lastmod>2012-12-19T14:34:08+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/idlnode5.htm</loc>
+  <lastmod>2012-12-19T14:34:08+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/idlnode6.htm</loc>
+  <lastmod>2012-12-19T14:34:08+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/idlnode9.htm</loc>
+  <lastmod>2012-12-19T14:34:08+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/idlnode10.htm</loc>
+  <lastmod>2012-12-19T14:34:08+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/idlnode12.htm</loc>
+  <lastmod>2012-12-19T14:34:08+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/idlnode14.htm</loc>
+  <lastmod>2012-12-19T14:34:08+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/idlnode16.htm</loc>
+  <lastmod>2012-12-19T14:34:08+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/idlnode17.htm</loc>
+  <lastmod>2012-12-19T14:34:08+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/idlnode18.htm</loc>
+  <lastmod>2012-12-19T14:34:08+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/idlnode19.htm</loc>
+  <lastmod>2012-12-19T14:34:08+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/idlnode20.htm</loc>
+  <lastmod>2012-12-19T14:34:08+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/idlnode21.htm</loc>
+  <lastmod>2012-12-19T14:34:08+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/idlnode22.htm</loc>
+  <lastmod>2012-12-19T14:34:08+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/idlnode23.htm</loc>
+  <lastmod>2012-12-19T14:34:09+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/idlnode25.htm</loc>
+  <lastmod>2012-12-19T14:34:09+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/idlnode26.htm</loc>
+  <lastmod>2012-12-19T14:34:09+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/idlnode27.htm</loc>
+  <lastmod>2012-12-19T14:34:09+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/idlnode28.htm</loc>
+  <lastmod>2012-12-19T14:34:09+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/idlnode29.htm</loc>
+  <lastmod>2012-12-19T14:34:09+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/idlnode30.htm</loc>
+  <lastmod>2012-12-19T14:34:09+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/idlnode31.htm</loc>
+  <lastmod>2012-12-19T14:34:09+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/idlnode33.htm</loc>
+  <lastmod>2012-12-19T14:34:09+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/idlnode34.htm</loc>
+  <lastmod>2012-12-19T14:34:09+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/idlnode35.htm</loc>
+  <lastmod>2012-12-19T14:34:09+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/idlnode36.htm</loc>
+  <lastmod>2012-12-19T14:34:09+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/idlnode38.htm</loc>
+  <lastmod>2012-12-19T14:34:09+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/idlnode39.htm</loc>
+  <lastmod>2012-12-19T14:34:09+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/idlnode40.htm</loc>
+  <lastmod>2012-12-19T14:34:09+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/idlnode41.htm</loc>
+  <lastmod>2012-12-19T14:34:09+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/idlnode44.htm</loc>
+  <lastmod>2012-12-19T14:34:09+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/idlnode45.htm</loc>
+  <lastmod>2012-12-19T14:34:09+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/idlnode46.htm</loc>
+  <lastmod>2012-12-19T14:34:09+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/idlnode47.htm</loc>
+  <lastmod>2012-12-19T14:34:09+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/idlnode48.htm</loc>
+  <lastmod>2012-12-19T14:34:09+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/idlnode49.htm</loc>
+  <lastmod>2012-12-19T14:34:09+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/idlnode54.htm</loc>
+  <lastmod>2012-12-19T14:34:09+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/idlnode56.htm</loc>
+  <lastmod>2012-12-19T14:34:09+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/idlnode58.htm</loc>
+  <lastmod>2012-12-19T14:34:09+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/idlnode59.htm</loc>
+  <lastmod>2012-12-19T14:34:09+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/idlnode60.htm</loc>
+  <lastmod>2012-12-19T14:34:09+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/idlnode61.htm</loc>
+  <lastmod>2012-12-19T14:34:09+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/idlnode62.htm</loc>
+  <lastmod>2012-12-19T14:34:09+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/idlnode63.htm</loc>
+  <lastmod>2012-12-19T14:34:09+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/idlnode64.htm</loc>
+  <lastmod>2012-12-19T14:34:09+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/idlnode65.htm</loc>
+  <lastmod>2012-12-19T14:34:09+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/idlnode66.htm</loc>
+  <lastmod>2012-12-19T14:34:09+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/idlnode67.htm</loc>
+  <lastmod>2012-12-19T14:34:09+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/idlnode68.htm</loc>
+  <lastmod>2012-12-19T14:34:09+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/idlnode69.htm</loc>
+  <lastmod>2012-12-19T14:34:09+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/idlnode70.htm</loc>
+  <lastmod>2012-12-19T14:34:09+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/idlnode71.htm</loc>
+  <lastmod>2012-12-19T14:34:09+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/csubnode1.htm</loc>
+  <lastmod>2012-12-19T14:34:15+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/csubnode2.htm</loc>
+  <lastmod>2012-12-19T14:34:15+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/csubnode3.htm</loc>
+  <lastmod>2012-12-19T14:34:15+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/csubnode4.htm</loc>
+  <lastmod>2012-12-19T14:34:15+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/csubnode5.htm</loc>
+  <lastmod>2012-12-19T14:34:15+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/csubnode6.htm</loc>
+  <lastmod>2012-12-19T14:34:15+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/csubnode7.htm</loc>
+  <lastmod>2012-12-19T14:34:15+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/csubnode8.htm</loc>
+  <lastmod>2012-12-19T14:34:15+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/csubnode9.htm</loc>
+  <lastmod>2012-12-19T14:34:15+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/csubnode10.htm</loc>
+  <lastmod>2012-12-19T14:34:15+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/csubnode11.htm</loc>
+  <lastmod>2012-12-19T14:34:15+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/csubnode12.htm</loc>
+  <lastmod>2012-12-19T14:34:15+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/csubnode13.htm</loc>
+  <lastmod>2012-12-19T14:34:15+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/csubnode14.htm</loc>
+  <lastmod>2012-12-19T14:34:15+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/c_utils/index.html</loc>
+  <lastmod>2012-12-19T14:30:59+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/libfftpack/index.html</loc>
+  <lastmod>2012-12-19T14:30:59+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/libpsht/index.html</loc>
+  <lastmod>2012-12-19T14:31:01+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/cxxsupport/index.html</loc>
+  <lastmod>2012-12-19T14:31:01+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/Healpix_cxx/index.html</loc>
+  <lastmod>2012-12-19T14:31:02+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/java/overview-summary.html</loc>
+  <lastmod>2012-12-19T14:30:57+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/java/overview-frame.html</loc>
+  <lastmod>2012-12-19T14:30:56+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/html/java/allclasses-frame.html</loc>
+  <lastmod>2012-12-19T14:30:57+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/intronode1.htm</loc>
+  <lastmod>2012-12-19T14:32:18+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/intronode2.htm</loc>
+  <lastmod>2012-12-19T14:32:18+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/intronode3.htm</loc>
+  <lastmod>2012-12-19T14:32:18+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/intronode4.htm</loc>
+  <lastmod>2012-12-19T14:32:18+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/intronode5.htm</loc>
+  <lastmod>2012-12-19T14:32:18+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/intronode6.htm</loc>
+  <lastmod>2012-12-19T14:32:18+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/intronode7.htm</loc>
+  <lastmod>2012-12-19T14:32:18+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/intronode8.htm</loc>
+  <lastmod>2012-12-19T14:32:18+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/intronode9.htm</loc>
+  <lastmod>2012-12-19T14:32:18+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/intronode10.htm</loc>
+  <lastmod>2012-12-19T14:32:18+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/intronode11.htm</loc>
+  <lastmod>2012-12-19T14:32:18+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/intronode12.htm</loc>
+  <lastmod>2012-12-19T14:32:18+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/intronode13.htm</loc>
+  <lastmod>2012-12-19T14:32:18+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/intronode14.htm</loc>
+  <lastmod>2012-12-19T14:32:18+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/intronode15.htm</loc>
+  <lastmod>2012-12-19T14:32:18+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/intronode16.htm</loc>
+  <lastmod>2012-12-19T14:32:18+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/intronode17.htm</loc>
+  <lastmod>2012-12-19T14:32:18+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/installfootnode.htm</loc>
+  <lastmod>2012-12-19T14:34:20+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/idlnode42.htm</loc>
+  <lastmod>2012-12-19T14:34:09+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/idlnode43.htm</loc>
+  <lastmod>2012-12-19T14:34:09+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/facilitiesnode15.htm</loc>
+  <lastmod>2012-12-19T14:32:41+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/subroutinesnode31.htm</loc>
+  <lastmod>2012-12-19T14:33:29+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/subroutinesnode33.htm</loc>
+  <lastmod>2012-12-19T14:33:29+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/subroutinesnode54.htm</loc>
+  <lastmod>2012-12-19T14:33:29+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/subroutinesnode100.htm</loc>
+  <lastmod>2012-12-19T14:33:30+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/subroutinesnode79.htm</loc>
+  <lastmod>2012-12-19T14:33:30+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/subroutinesnode76.htm</loc>
+  <lastmod>2012-12-19T14:33:30+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/facilitiesnode17.htm</loc>
+  <lastmod>2012-12-19T14:32:41+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/facilitiesnode10.htm</loc>
+  <lastmod>2012-12-19T14:32:41+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/subroutinesnode55.htm</loc>
+  <lastmod>2012-12-19T14:33:29+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/facilitiesnode13.htm</loc>
+  <lastmod>2012-12-19T14:32:41+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/idlnode13.htm</loc>
+  <lastmod>2012-12-19T14:34:08+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/idlnode15.htm</loc>
+  <lastmod>2012-12-19T14:34:08+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/idlnode7.htm</loc>
+  <lastmod>2012-12-19T14:34:08+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/idlnode8.htm</loc>
+  <lastmod>2012-12-19T14:34:08+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/idlnode11.htm</loc>
+  <lastmod>2012-12-19T14:34:08+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/idlnode37.htm</loc>
+  <lastmod>2012-12-19T14:34:09+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/idlnode32.htm</loc>
+  <lastmod>2012-12-19T14:34:09+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/idlnode55.htm</loc>
+  <lastmod>2012-12-19T14:34:09+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/idlnode53.htm</loc>
+  <lastmod>2012-12-19T14:34:09+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/idlnode52.htm</loc>
+  <lastmod>2012-12-19T14:34:09+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/idlnode51.htm</loc>
+  <lastmod>2012-12-19T14:34:09+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/idlnode50.htm</loc>
+  <lastmod>2012-12-19T14:34:09+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/idlnode24.htm</loc>
+  <lastmod>2012-12-19T14:34:09+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/idlnode57.htm</loc>
+  <lastmod>2012-12-19T14:34:09+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/facilitiesnode20.htm</loc>
+  <lastmod>2012-12-19T14:32:41+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/facilitiesnode1.htm</loc>
+  <lastmod>2012-12-19T14:32:41+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/facilitiesnode2.htm</loc>
+  <lastmod>2012-12-19T14:32:41+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/facilitiesnode3.htm</loc>
+  <lastmod>2012-12-19T14:32:41+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/facilitiesnode4.htm</loc>
+  <lastmod>2012-12-19T14:32:41+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/facilitiesnode5.htm</loc>
+  <lastmod>2012-12-19T14:32:41+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/facilitiesnode6.htm</loc>
+  <lastmod>2012-12-19T14:32:41+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/facilitiesnode7.htm</loc>
+  <lastmod>2012-12-19T14:32:41+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/facilitiesnode8.htm</loc>
+  <lastmod>2012-12-19T14:32:41+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/facilitiesnode9.htm</loc>
+  <lastmod>2012-12-19T14:32:41+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/facilitiesnode11.htm</loc>
+  <lastmod>2012-12-19T14:32:41+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/facilitiesnode12.htm</loc>
+  <lastmod>2012-12-19T14:32:41+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/facilitiesnode14.htm</loc>
+  <lastmod>2012-12-19T14:32:41+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/facilitiesnode16.htm</loc>
+  <lastmod>2012-12-19T14:32:41+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/facilitiesnode18.htm</loc>
+  <lastmod>2012-12-19T14:32:41+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/facilitiesnode19.htm</loc>
+  <lastmod>2012-12-19T14:32:41+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/facilitiesnode21.htm</loc>
+  <lastmod>2012-12-19T14:32:41+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/facilitiesnode22.htm</loc>
+  <lastmod>2012-12-19T14:32:41+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/subroutinesnode1.htm</loc>
+  <lastmod>2012-12-19T14:33:29+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/subroutinesnode2.htm</loc>
+  <lastmod>2012-12-19T14:33:29+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/subroutinesnode3.htm</loc>
+  <lastmod>2012-12-19T14:33:29+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/subroutinesnode4.htm</loc>
+  <lastmod>2012-12-19T14:33:29+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/subroutinesnode5.htm</loc>
+  <lastmod>2012-12-19T14:33:29+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/subroutinesnode6.htm</loc>
+  <lastmod>2012-12-19T14:33:29+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/subroutinesnode7.htm</loc>
+  <lastmod>2012-12-19T14:33:29+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/subroutinesnode8.htm</loc>
+  <lastmod>2012-12-19T14:33:29+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/subroutinesnode9.htm</loc>
+  <lastmod>2012-12-19T14:33:29+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/subroutinesnode10.htm</loc>
+  <lastmod>2012-12-19T14:33:29+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/subroutinesnode11.htm</loc>
+  <lastmod>2012-12-19T14:33:29+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/subroutinesnode12.htm</loc>
+  <lastmod>2012-12-19T14:33:29+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/subroutinesnode13.htm</loc>
+  <lastmod>2012-12-19T14:33:29+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/subroutinesnode14.htm</loc>
+  <lastmod>2012-12-19T14:33:29+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/subroutinesnode15.htm</loc>
+  <lastmod>2012-12-19T14:33:29+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/subroutinesnode16.htm</loc>
+  <lastmod>2012-12-19T14:33:29+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/subroutinesnode17.htm</loc>
+  <lastmod>2012-12-19T14:33:29+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/subroutinesnode18.htm</loc>
+  <lastmod>2012-12-19T14:33:29+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/subroutinesnode19.htm</loc>
+  <lastmod>2012-12-19T14:33:29+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/subroutinesnode20.htm</loc>
+  <lastmod>2012-12-19T14:33:29+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/subroutinesnode21.htm</loc>
+  <lastmod>2012-12-19T14:33:29+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/subroutinesnode22.htm</loc>
+  <lastmod>2012-12-19T14:33:29+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/subroutinesnode23.htm</loc>
+  <lastmod>2012-12-19T14:33:29+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/subroutinesnode24.htm</loc>
+  <lastmod>2012-12-19T14:33:29+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/subroutinesnode25.htm</loc>
+  <lastmod>2012-12-19T14:33:29+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/subroutinesnode26.htm</loc>
+  <lastmod>2012-12-19T14:33:29+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/subroutinesnode27.htm</loc>
+  <lastmod>2012-12-19T14:33:29+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/subroutinesnode28.htm</loc>
+  <lastmod>2012-12-19T14:33:29+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/subroutinesnode29.htm</loc>
+  <lastmod>2012-12-19T14:33:29+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/subroutinesnode30.htm</loc>
+  <lastmod>2012-12-19T14:33:29+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/subroutinesnode32.htm</loc>
+  <lastmod>2012-12-19T14:33:29+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/subroutinesnode34.htm</loc>
+  <lastmod>2012-12-19T14:33:29+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/subroutinesnode35.htm</loc>
+  <lastmod>2012-12-19T14:33:29+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/subroutinesnode36.htm</loc>
+  <lastmod>2012-12-19T14:33:29+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/subroutinesnode37.htm</loc>
+  <lastmod>2012-12-19T14:33:29+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/subroutinesnode38.htm</loc>
+  <lastmod>2012-12-19T14:33:29+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/subroutinesnode39.htm</loc>
+  <lastmod>2012-12-19T14:33:29+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/subroutinesnode40.htm</loc>
+  <lastmod>2012-12-19T14:33:29+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/subroutinesnode41.htm</loc>
+  <lastmod>2012-12-19T14:33:29+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/subroutinesnode42.htm</loc>
+  <lastmod>2012-12-19T14:33:29+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/subroutinesnode43.htm</loc>
+  <lastmod>2012-12-19T14:33:29+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/subroutinesnode44.htm</loc>
+  <lastmod>2012-12-19T14:33:29+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/subroutinesnode45.htm</loc>
+  <lastmod>2012-12-19T14:33:29+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/subroutinesnode46.htm</loc>
+  <lastmod>2012-12-19T14:33:29+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/subroutinesnode47.htm</loc>
+  <lastmod>2012-12-19T14:33:29+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/subroutinesnode48.htm</loc>
+  <lastmod>2012-12-19T14:33:29+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/subroutinesnode49.htm</loc>
+  <lastmod>2012-12-19T14:33:29+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/subroutinesnode50.htm</loc>
+  <lastmod>2012-12-19T14:33:29+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/subroutinesnode51.htm</loc>
+  <lastmod>2012-12-19T14:33:29+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/subroutinesnode52.htm</loc>
+  <lastmod>2012-12-19T14:33:29+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/subroutinesnode53.htm</loc>
+  <lastmod>2012-12-19T14:33:29+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/subroutinesnode56.htm</loc>
+  <lastmod>2012-12-19T14:33:29+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/subroutinesnode57.htm</loc>
+  <lastmod>2012-12-19T14:33:30+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/subroutinesnode58.htm</loc>
+  <lastmod>2012-12-19T14:33:30+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/subroutinesnode59.htm</loc>
+  <lastmod>2012-12-19T14:33:30+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/subroutinesnode60.htm</loc>
+  <lastmod>2012-12-19T14:33:30+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/subroutinesnode61.htm</loc>
+  <lastmod>2012-12-19T14:33:30+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/subroutinesnode62.htm</loc>
+  <lastmod>2012-12-19T14:33:30+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/subroutinesnode63.htm</loc>
+  <lastmod>2012-12-19T14:33:30+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/subroutinesnode64.htm</loc>
+  <lastmod>2012-12-19T14:33:30+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/subroutinesnode65.htm</loc>
+  <lastmod>2012-12-19T14:33:30+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/subroutinesnode66.htm</loc>
+  <lastmod>2012-12-19T14:33:30+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/subroutinesnode67.htm</loc>
+  <lastmod>2012-12-19T14:33:30+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/subroutinesnode68.htm</loc>
+  <lastmod>2012-12-19T14:33:30+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/subroutinesnode69.htm</loc>
+  <lastmod>2012-12-19T14:33:30+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/subroutinesnode70.htm</loc>
+  <lastmod>2012-12-19T14:33:30+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/subroutinesnode71.htm</loc>
+  <lastmod>2012-12-19T14:33:30+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/subroutinesnode72.htm</loc>
+  <lastmod>2012-12-19T14:33:30+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/subroutinesnode73.htm</loc>
+  <lastmod>2012-12-19T14:33:30+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/subroutinesnode74.htm</loc>
+  <lastmod>2012-12-19T14:33:30+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/subroutinesnode75.htm</loc>
+  <lastmod>2012-12-19T14:33:30+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/subroutinesnode77.htm</loc>
+  <lastmod>2012-12-19T14:33:30+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/subroutinesnode78.htm</loc>
+  <lastmod>2012-12-19T14:33:30+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/subroutinesnode80.htm</loc>
+  <lastmod>2012-12-19T14:33:30+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/subroutinesnode81.htm</loc>
+  <lastmod>2012-12-19T14:33:30+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/subroutinesnode82.htm</loc>
+  <lastmod>2012-12-19T14:33:30+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/subroutinesnode83.htm</loc>
+  <lastmod>2012-12-19T14:33:30+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/subroutinesnode84.htm</loc>
+  <lastmod>2012-12-19T14:33:30+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/subroutinesnode85.htm</loc>
+  <lastmod>2012-12-19T14:33:30+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/subroutinesnode86.htm</loc>
+  <lastmod>2012-12-19T14:33:30+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/subroutinesnode87.htm</loc>
+  <lastmod>2012-12-19T14:33:30+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/subroutinesnode88.htm</loc>
+  <lastmod>2012-12-19T14:33:30+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/subroutinesnode89.htm</loc>
+  <lastmod>2012-12-19T14:33:30+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/subroutinesnode90.htm</loc>
+  <lastmod>2012-12-19T14:33:30+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/subroutinesnode91.htm</loc>
+  <lastmod>2012-12-19T14:33:30+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/subroutinesnode92.htm</loc>
+  <lastmod>2012-12-19T14:33:30+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/subroutinesnode93.htm</loc>
+  <lastmod>2012-12-19T14:33:30+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/subroutinesnode94.htm</loc>
+  <lastmod>2012-12-19T14:33:30+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/subroutinesnode95.htm</loc>
+  <lastmod>2012-12-19T14:33:30+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/subroutinesnode96.htm</loc>
+  <lastmod>2012-12-19T14:33:30+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/subroutinesnode97.htm</loc>
+  <lastmod>2012-12-19T14:33:30+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/subroutinesnode98.htm</loc>
+  <lastmod>2012-12-19T14:33:30+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/subroutinesnode99.htm</loc>
+  <lastmod>2012-12-19T14:33:30+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/subroutinesnode101.htm</loc>
+  <lastmod>2012-12-19T14:33:30+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/subroutinesnode102.htm</loc>
+  <lastmod>2012-12-19T14:33:30+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/subroutinesnode103.htm</loc>
+  <lastmod>2012-12-19T14:33:30+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/subroutinesnode104.htm</loc>
+  <lastmod>2012-12-19T14:33:30+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/subroutinesnode105.htm</loc>
+  <lastmod>2012-12-19T14:33:30+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/subroutinesnode106.htm</loc>
+  <lastmod>2012-12-19T14:33:30+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/subroutinesnode107.htm</loc>
+  <lastmod>2012-12-19T14:33:30+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/subroutinesnode108.htm</loc>
+  <lastmod>2012-12-19T14:33:30+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/subroutinesnode109.htm</loc>
+  <lastmod>2012-12-19T14:33:30+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/subroutinesnode110.htm</loc>
+  <lastmod>2012-12-19T14:33:30+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/subroutinesnode111.htm</loc>
+  <lastmod>2012-12-19T14:33:30+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/subroutinesnode112.htm</loc>
+  <lastmod>2012-12-19T14:33:30+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/subroutinesnode113.htm</loc>
+  <lastmod>2012-12-19T14:33:30+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/subroutinesnode114.htm</loc>
+  <lastmod>2012-12-19T14:33:30+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/subroutinesnode115.htm</loc>
+  <lastmod>2012-12-19T14:33:30+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/subroutinesnode116.htm</loc>
+  <lastmod>2012-12-19T14:33:30+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/idlnode1.htm</loc>
+  <lastmod>2012-12-19T14:34:08+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/idlnode2.htm</loc>
+  <lastmod>2012-12-19T14:34:08+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/idlnode3.htm</loc>
+  <lastmod>2012-12-19T14:34:08+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/idlnode4.htm</loc>
+  <lastmod>2012-12-19T14:34:08+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/idlnode5.htm</loc>
+  <lastmod>2012-12-19T14:34:08+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/idlnode6.htm</loc>
+  <lastmod>2012-12-19T14:34:08+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/idlnode9.htm</loc>
+  <lastmod>2012-12-19T14:34:08+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/idlnode10.htm</loc>
+  <lastmod>2012-12-19T14:34:08+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/idlnode12.htm</loc>
+  <lastmod>2012-12-19T14:34:08+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/idlnode14.htm</loc>
+  <lastmod>2012-12-19T14:34:08+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/idlnode16.htm</loc>
+  <lastmod>2012-12-19T14:34:08+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/idlnode17.htm</loc>
+  <lastmod>2012-12-19T14:34:08+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/idlnode18.htm</loc>
+  <lastmod>2012-12-19T14:34:08+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/idlnode19.htm</loc>
+  <lastmod>2012-12-19T14:34:08+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/idlnode20.htm</loc>
+  <lastmod>2012-12-19T14:34:08+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/idlnode21.htm</loc>
+  <lastmod>2012-12-19T14:34:08+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/idlnode22.htm</loc>
+  <lastmod>2012-12-19T14:34:08+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/idlnode23.htm</loc>
+  <lastmod>2012-12-19T14:34:09+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/idlnode25.htm</loc>
+  <lastmod>2012-12-19T14:34:09+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/idlnode26.htm</loc>
+  <lastmod>2012-12-19T14:34:09+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/idlnode27.htm</loc>
+  <lastmod>2012-12-19T14:34:09+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/idlnode28.htm</loc>
+  <lastmod>2012-12-19T14:34:09+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/idlnode29.htm</loc>
+  <lastmod>2012-12-19T14:34:09+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/idlnode30.htm</loc>
+  <lastmod>2012-12-19T14:34:09+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/idlnode31.htm</loc>
+  <lastmod>2012-12-19T14:34:09+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/idlnode33.htm</loc>
+  <lastmod>2012-12-19T14:34:09+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/idlnode34.htm</loc>
+  <lastmod>2012-12-19T14:34:09+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/idlnode35.htm</loc>
+  <lastmod>2012-12-19T14:34:09+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/idlnode36.htm</loc>
+  <lastmod>2012-12-19T14:34:09+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/idlnode38.htm</loc>
+  <lastmod>2012-12-19T14:34:09+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/idlnode39.htm</loc>
+  <lastmod>2012-12-19T14:34:09+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/idlnode40.htm</loc>
+  <lastmod>2012-12-19T14:34:09+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/idlnode41.htm</loc>
+  <lastmod>2012-12-19T14:34:09+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/idlnode44.htm</loc>
+  <lastmod>2012-12-19T14:34:09+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/idlnode45.htm</loc>
+  <lastmod>2012-12-19T14:34:09+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/idlnode46.htm</loc>
+  <lastmod>2012-12-19T14:34:09+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/idlnode47.htm</loc>
+  <lastmod>2012-12-19T14:34:09+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/idlnode48.htm</loc>
+  <lastmod>2012-12-19T14:34:09+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/idlnode49.htm</loc>
+  <lastmod>2012-12-19T14:34:09+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/idlnode54.htm</loc>
+  <lastmod>2012-12-19T14:34:09+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/idlnode56.htm</loc>
+  <lastmod>2012-12-19T14:34:09+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/idlnode58.htm</loc>
+  <lastmod>2012-12-19T14:34:09+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/idlnode59.htm</loc>
+  <lastmod>2012-12-19T14:34:09+00:00</lastmod>
+</url>
+<url>
+  <loc>http://healpix.sourceforge.net/doc/html/idlnode60.htm</loc>
+  <lastmod>2012-12-19T14:34:09+00:00</lastmod>
+</url>
+</urlset>

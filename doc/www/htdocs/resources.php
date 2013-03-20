@@ -111,9 +111,12 @@
 <!-- (replaces <a href="http://www.slac.stanford.edu/spires/find/hep/www?rawcmd=FIND+C+ASTRO-PH+9812350+OR+ASJOA%2C622%2C759">SPIRES</a>) -->
         </li>
         <li>
+        in <a href="http://adsabs.harvard.edu/cgi-bin/nph-ref_query?bibcode=2005ApJ...622..759G&amp;refs=CITATIONS&amp;db_key=AST">ADS</a> database.
+	<!--
 	in arXiv <a href="http://search.arxiv.org:8081/?query=healpix&in=grp_physics">physics</a>, 
 	<a href="http://search.arxiv.org:8081/?query=healpix&in=grp_cs">computer science</a>,
 	<a href="http://search.arxiv.org:8081/?query=healpix&in=grp_math">mathematics </a> preprints.
+	-->
         </li>
 	</ul>
 </p>

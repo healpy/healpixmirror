@@ -20,7 +20,9 @@
 
 \newcommand{\nside}{{N_{\rm side}}}
 \newcommand{\npix}{{N_{\rm pix}}}
-\newcommand{\healpixwebpage}{http://healpix.jpl.nasa.gov}
+\newcommand{\healpixwebpage}{http://healpix.sourceforge.net}
+\newcommand{\healpixmail}{{\em healpix} {\tt at} {\em jpl.nasa.gov}}
+\newcommand{\healpixsupport}{\healpixwebpage/support.php}
 \renewcommand{\contentsname}{{TABLE OF CONTENTS}}
 
 \newcommand{\linklatexhtml}[3]{% \linklatexhtml{name}{latex_target}{html_target}
@@ -632,13 +634,16 @@ allowing the corrected version to be added.
 \section{Troubleshooting and further information}
 \label{sec:troubleshoot}
 This section contains a list of difficulties which we have dealt
-with. It is by no means exhaustive. A troubleshooting forum has
-been established at \htmladdnormallink{{\tt \healpixwebpage/healpixSoftwareProblemsBugsSolutions.shtml}}{\healpixwebpage/healpixSoftwareProblemsBugsSolutions.shtml}, where we 
-list current questions and solutions to known problems (for
-a given release). A bug tracker is also available on SourceForge \htmladdnormallink{at this address}{http://sourceforge.net/tracker/?group_id=130539&atid=718128}.
-If the problem you encounter is not addressed in those forums nor below, 
-please contact 
-{\em healpix} {\tt at} {\em jpl.nasa.gov}
+with. It is by no means exhaustive. 
+In case of problems, see \htmladdnormallink{\tt
+\healpixsupport}{\healpixsupport} or contact \healpixmail
+% A troubleshooting forum has
+% been established at \htmladdnormallink{{\tt \healpixwebpage/healpixSoftwareProblemsBugsSolutions.shtml}}{\healpixwebpage/healpixSoftwareProblemsBugsSolutions.shtml}, where we 
+% list current questions and solutions to known problems (for
+% a given release). A bug tracker is also available on SourceForge \htmladdnormallink{at this address}{http://sourceforge.net/tracker/?group_id=130539&atid=718128}.
+% If the problem you encounter is not addressed in those forums nor below, 
+% please contact \healpixmail
+
 
 
 \subsection{Free Fortran90/95 Compilers}
@@ -978,20 +983,93 @@ transparent in the output PNG file.
 \section{Appendix I: Recent Changes and New Features}
 \label{sec:newfeatures}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% BEGIN LATEST CHANGES %%%%%%%%%%%%%
-\subsection{Bug corrections and Improvements in Version 3.0} % 2012-11-??
-
+\subsection{Bug corrections and Improvements in Version 3.1}
+% \subsubsection[General]{General}
+% \subsubsection[C]{\linklatexhtml{C}{csub.pdf}{csub.htm}}
+% \subsubsection[C++]{C++}
+% \subsubsection[Fortran]{%
+% 	Fortran 90 \linklatexhtml{facilities}{facilities.pdf}{facilities.htm} and
+% 	\linklatexhtml{subroutines}{subroutines.pdf}{subroutines.htm}
+% \subsubsection[IDL]{\linklatexhtml{IDL}{idl.pdf}{idl.htm}}
+% \subsubsection[Java]{Java}
+% \subsubsection[Python]{Python}
 \subsubsection[General]{General}
+%
+\subsubsection[C]{\linklatexhtml{C}{csub.pdf}{csub.htm}}
+%
+\subsubsection[C++]{C++}
+%
+\subsubsection[Fortran]{%
+	Fortran 90 \linklatexhtml{facilities}{facilities.pdf}{facilities.htm} and
+	\linklatexhtml{subroutines}{subroutines.pdf}{subroutines.htm}}
+\begin{itemize}
+	\item all Fortran facilities now support {\tt cfitsio}'s ``Extended File
+Name Syntax''
+allowing the reading and processing of an arbitrary HDU and table column out of a
+FITS file. For example, setting \hfill \\
+{\tt infile = }{\tt ftp://}{\it url/file.fits}{\tt .gz}{\tt [}{\it extname}{\tt
+]}{\tt [col }{\it colname}{\tt ]}  \hfill \\
+in {\tt anafast} 
+will download the FITS file {\it file.fits.gz} from {\it url}, 
+uncompress it, open the HDU (extension) with keyword {\tt EXTNAME =}{\it
+extname}, read the table column with {\tt TTYPE*=}{\it colname} out of it and will
+analyze it.
+	\item 	still faster 
+\htmlref{{\tt synfast}}{fac:synfast},
+\htmlref{{\tt anafast}}{fac:anafast},
+\htmlref{{\tt smoothing}}{fac:smoothing} thanks to \htmladdnormallink{{\tt
+libsharp}}{http://sourceforge.net/projects/libsharp} routines
+\end{itemize}
+
+%
+\subsubsection[IDL]{\linklatexhtml{IDL}{idl.pdf}{idl.htm}}
+\begin{itemize}
+	\item bug corrections: 
+	\htmlref{{\tt query\_disc}}{{idl:query_disc}}: correct handling of empty disc; 
+	\htmlref{{\tt bin\_llcl}}{{idl:bin_llcl}}: correct handling of optional argument.
+
+	\item double precision of input now preserved in
+	\htmlref{{\tt gaussbeam}}{{idl:gaussbeam}} and 
+	\htmlref{{\tt euler\_matrix\_new}}{{idl:euler_matrix_new}}.
+
+	\item it is now possible to read a specific FITS file extension identified by its
+	(0-based) number or its case-insensitive EXTNAME value with the {\tt Extension}
+	keyword added to 
+	\htmlref{{\tt fits2cl}}{{idl:fits2cl}},
+	\htmlref{{\tt getsize\_fits}}{{idl:getsize_fits}},
+	\htmlref{{\tt read\_fits\_map}}{{idl:read_fits_map}},
+	\htmlref{{\tt read\_fits\_s}}{{idl:read_fits_s}} and 
+	\htmlref{{\tt read\_tqu}}{{idl:read_tqu}}.
+
+	\item update of the required
+	\htmladdnormallink{{\tt IDL-astron} library}{http://idlastro.gsfc.nasa.gov/homepage.html}
+	routines, and their supporting \htmladdnormallink{\tt Coyote}{http://www.idlcoyote.com}
+	routines (2013-02-08).
+\end{itemize}
+
+%
+\subsubsection[Java]{Java}
+%
+\subsubsection[Python]{Python}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% END LATEST CHANGES %%%%%%%%%%%%%
+\section{Appendix II: Older changes}
+
+{\mytiny{%
+\tinysubsection{Bug corrections and Improvements in Version 3.0} % 2012-11-27?
+
+\tinysubsubsection[General]{General}
 Introduction of the script {\tt healpix\_doc} for easy access to the \healpix
 PDF and HTML documentation.
 
-\subsubsection[C]{\linklatexhtml{C}{csub.pdf}{csub.htm}}
+\tinysubsubsection[C]{\linklatexhtml{C}{csub.pdf}{csub.htm}}
 \begin{itemize}
 	\item Interface has remained unchanged, but the code has been replaced by a C port
 of the relevant Healpix C++ functions, resulting in significant speedups.
 	\item Additional functions are provided which support Nside values up to $2^{29}$.
 They have the same name as the traditional functions, with a ``64'' suffix appended.
 \end{itemize}
-\subsubsection[C++]{C++}
+\tinysubsubsection[C++]{C++}
 \begin{itemize}
 	\item Query routines:
  \mytargetb{install:cpp:query}{query\_polygon()} and query\_polygon\_inclusive() added.
@@ -1036,7 +1114,7 @@ Facilities now check input maps for undefined pixels before calling map2alm().
 
 \end{itemize}
 
-\subsubsection[Fortran]{%
+\tinysubsubsection[Fortran]{%
 Fortran 90 \linklatexhtml{facilities}{facilities.pdf}{facilities.htm} and
 \linklatexhtml{subroutines}{subroutines.pdf}{subroutines.htm}
 }
@@ -1078,7 +1156,7 @@ analyzed;
 %mode.
 \end{itemize}
 
-\subsubsection[IDL]{\linklatexhtml{IDL}{idl.pdf}{idl.htm}}
+\tinysubsubsection[IDL]{\linklatexhtml{IDL}{idl.pdf}{idl.htm}}
 \begin{itemize}
 	\item New routines to go from circular beam profile to transfer function
 (\htmlref{{\tt beam2bl}}{idl:beam2bl}), 
@@ -1126,7 +1204,7 @@ maps
 	\item update of {\tt astron} library routines (01-Feb-2012).
 \end{itemize}
 
-\subsubsection[Java]{Java}
+\tinysubsubsection[Java]{Java}
 \begin{itemize}
 	\item Core functionality has been reimplemented from scratch in the form of the
 "healpix.essentials" package. It is strongly recommended to use this package
@@ -1162,7 +1240,7 @@ as the C++ implementation (see \mylink{install:cpp:query}{above}).
 \end{itemize}
 \end{itemize}
 
-\subsubsection[Python]{Python}
+\tinysubsubsection[Python]{Python}
 \begin{itemize}
 	\item the 
 \linklatexhtml{{\tt{healpy}}}{%
@@ -1171,14 +1249,8 @@ https://github.com/healpy/healpy}
 package (C. Rosset, A. Zonca et al.) is now part of \healpix
 \end{itemize}
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% END LATEST CHANGES %%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{Appendix II: Older changes}
-
-%{\tiny{%
-{\mytiny{%
-%{\scriptsize{%
-%{\footnotesize{%
 \tinysubsection*{Bug corrections and Improvements in Versions 2.20 and 2.20a (2011-02)} % 2011-02-04
 
 \tinysubsubsection*{C++}

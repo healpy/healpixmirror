@@ -31,7 +31,7 @@
 \end{facility}
 
 \begin{IDLformat}
-{\FACNAME, File, Prim\_stc, [Xten\_stc, MERGE=, EXTENSION=]
+{\FACNAME, File, Prim\_stc, [Xten\_stc, COLUMNS=, EXTENSION=, /HELP, /MERGE]
 }
 \end{IDLformat}
 
@@ -55,16 +55,27 @@
 		- data column 2 (if any, tag : 2, tag name given by TTYPE2)  \\
 		...
 
-	\item[{EXTENSION=}]
+      \item[{Columns=}]
 		(optional), \\
-	scalar integer containing on input the extension to be read (0 based)\\
+        list of columns to be read from a binary table 
+        can be a list of integer (1 based) indexing the columns positions
+        or a list of names matching the TTYPE* of the columns
+        by default, all columns are read
+
+       \item[{Extension=}]
+		(optional), \\
+	extension unit to be read from FITS file: 
+ either its 0-based ID number (ie, 0 for first extension {\em after} primary array) 
+ or the case-insensitive value of its EXTNAME keyword.
 	\default 0
   \end{qulist}
 \end{qualifiers}
 
 \begin{keywords}
   \begin{kwlist}{} %%% extra brace
-	\item[{MERGE=}]
+	\item[{/HELP}] if set, an extensive help is displayed and no
+	file is read
+	\item[{/MERGE}]
 	if set {\tt Prim\_stc} contains : \\
 		- the concatenated primary and extension header (tag name : HDR) \\
 		- primary image (if any, tag name : IMG) \\

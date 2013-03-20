@@ -97,7 +97,7 @@ as can be seen from the <a href="resources.php">Resources</a> and <a href="galle
                 <li>
                   Programs for fast simulation and analysis of full-sky maps of CMB
                   temperature and polarization anisotropy
-                  (<a href="snapshots.php" target="_top">sky maps preview</a>)
+                  (<a href="gallery.php" target="_top">sky maps preview</a>)
                   up to sub-arcminute angular resolution.
 <!--(your computer&#039;s RAM permitting, see <a href="pdf/benchmark1.pdf">benchmarks</a>).-->
                 </li>

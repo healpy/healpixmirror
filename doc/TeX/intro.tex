@@ -8,6 +8,13 @@
 \renewcommand{\ell}{l}
 \input{hpxversion}
 \end{htmlonly}
+
+\hypersetup{%
+	pdftitle={HEALPix Introduction},%
+	pdfauthor={HEALPix collaboration},%
+	pdfkeywords={HEALPix, Introduction},%
+	colorlinks=true}
+
 %\newcommand{\myhtmlimage}[1]{\htmlimage{#1}}
 \newcommand{\myhtmlimage}[1]{ }
 \newcommand{\htmlfigwidth}{0.5\textwidth}
@@ -18,6 +25,7 @@
 \begin{htmlonly}
 \renewcommand{\myequal}{$=$}
 \end{htmlonly}
+\newcommand{\healpixwebpage}{http://healpix.sourceforge.net}
 
 \sloppy
 \setcounter{secnumdepth}{10}%must be non-zero for cross-reference of Figs and Sections
@@ -140,8 +148,8 @@ properties of our proposed approach for a high resolution numerical
 representation of  functions on the sphere
  --- the Hierarchical
 Equal Area and iso-Latitude Pixelization  (\healpixns, see 
-\htmladdnormallink{{\tt http://healpix.jpl.nasa.gov}}
-{http://healpix.jpl.nasa.gov}), 
+\htmladdnormallink{{\tt \healpixwebpage}}
+{\healpixwebpage}), 
 and the associated multi-purpose computer 
 software package. 
  
@@ -432,7 +440,8 @@ the realisation by prior information.
 \item Analysis of the full sky CMB temperature and polarisation maps
 resulting in power spectra and/or spherical harmonic
 coefficients. Relevant conventions are given in Appendix \ref{conventions}.
-{\large {\em Note that the convention used for polarization has been changed !}}.
+{\large {\em Note that the convention used for polarization has been changed in
+release 1.2!}}.
 \item Global smoothing of whole sky maps with a Gaussian kernel.
 \item Degradation and upgrade of the resolution of discrete maps.
 \item Global searches on the maps for nearest-neighbours and 
@@ -451,21 +460,22 @@ process, the Fortran 90
 facilities, the IDL facilities and a large number of 
 subroutines contained in the library. It is
 available to the scientific community  at \htmladdnormallink{{\tt
-http://healpix.jpl.nasa.gov}}
-{http://healpix.jpl.nasa.gov}.
+\healpixwebpage}}
+{\healpixwebpage}.
 
-\healpix is  the format chosen by the {\bf WMAP}
+\healpix is the format chosen by the {\bf WMAP}
 collaboration 
 to be used for the production
 of sky maps (see 
-\htmladdnormallink{{\tt http://map.gsfc.nasa.gov/html/technical\_info.html}}
-{http://map.gsfc.nasa.gov/html/technical_info.html}) from the mission data. 
+\htmladdnormallink{{\tt 
+http://map.gsfc.nasa.gov/news/index.html}}{http://map.gsfc.nasa.gov/news/index.html})
+ from the mission data. 
 
-\healpix software is widely used 
-for simulation work within both the LFI and HFI consortia of the {\bf Planck}
-collaboration (see 
-\htmladdnormallink{{\tt
-http://astro.estec.esa.nl/Planck/}}{http://astro.estec.esa.nl/Planck/}).
+\healpix software and format are used by the HFI and LFI consortia of {\bf Planck}
+collaboration for the simulation, analysis and data release of {\bf Planck} data
+(see \htmladdnormallink{{\tt
+http://www.sciops.esa.int/index.php?project=planck}}%
+{http://www.sciops.esa.int/index.php?project=planck}).
 
 It is also being used to analyse the data provided by the balloon CMB missions
 {\bf Boomerang}

@@ -1,0 +1,58 @@
+404 - http://healpix.sourceforge.net/+p1+p2+p3+n1+n2+
+      (found at http://healpix.sourceforge.net/support.php)
+
+404 - http://healpix.sourceforge.net/doc/html/idl.html
+      (found at http://healpix.sourceforge.net/doc/html/install.htm)
+
+404 - http://healpix.sourceforge.net/doc/html/install.html
+      (found at http://healpix.sourceforge.net/doc/html/idlnode2.htm)
+
+404 - http://healpix.sourceforge.net/doc/html/ximview/home.html
+      (found at http://healpix.sourceforge.net/doc/html/main.htm)
+
+404 - http://healpix.sourceforge.net/html/idl.html
+      (found at http://healpix.sourceforge.net/html/install.htm)
+
+404 - http://healpix.sourceforge.net/html/install.html
+      (found at http://healpix.sourceforge.net/html/idlnode2.htm)
+
+404 - http://healpix.sourceforge.net/html/ximview/home.html
+      (found at http://healpix.sourceforge.net/html/main.htm)
+
+404 - http://healpix.sourceforge.net/snapshots.php
+      (found at http://healpix.sourceforge.net/)
+
+404 - http://healpix.sourceforge.net/src/java/healpixjava/healpixdocs/index.html
+      (found at http://healpix.sourceforge.net/doc/html/main.htm)
+
+Common error codes:
+200 - OK / no error
+301 - Redirect
+302 - Redirect
+400 - Bad request
+401 - Unauthorized. This page requires a login+password.
+402 - Payment Required
+403 - Forbidden.
+404 - Page not found
+405 - Method Not Allowed
+406 - Not Acceptable
+407 - Proxy Authentication Required
+408 - Request Timeout
+409 - Conflict
+410 - Gone
+411 - Length Required
+412 - Precondition Failed
+413 - Request Entity Too Large
+414 - Request-URI Too Long
+415 - Unsupported Media Type
+416 - Requested Range Not Satisfiable
+417 - Expectation Failed
+500 - Internal Server error
+501 - Not Implemented
+502 - Bad Gateway
+503 - Service Unavailable
+504 - Gateway Timeout
+505 - HTTP Version Not Supported
+0 - Some network connection error. Most likely it is a time out. Don't worry about it if it happens with a few pages.
+990 - Blocked by your robots.txt file.
+999 - Undefined error. Something went wrong, but we don't know what.

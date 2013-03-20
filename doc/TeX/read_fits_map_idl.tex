@@ -31,7 +31,8 @@
 \end{facility}
 
 \begin{IDLformat}
-{\FACNAME, File, T\_sky, [Hdr, Exthdr, PIXEL=, SILENT=, NSIDE=, ORDERING=, COORDSYS=]
+{\FACNAME, File, T\_sky, [Hdr, Exthdr, PIXEL=, SILENT=, NSIDE=, ORDERING=,
+COORDSYS=, EXTENSION=, HELP=]
 }
 \end{IDLformat}
 
@@ -78,6 +79,12 @@
 	        returns on output the astrophysical coordinate system used, 
 		as read from FITS header (value of keywords COORDSYS or SKYCOORD)
 
+       \item[{Extension=}]
+		(optional), \\
+	extension unit to be read from FITS file: 
+ either its 0-based ID number (ie, 0 for first extension {\em after} primary array) 
+ or the case-insensitive value of its EXTNAME keyword.
+	If absent, all available extensions are read.
  
 
 % 		Either row number in the binary table to read data from,
@@ -89,6 +96,8 @@
 
 \begin{keywords}
   \begin{kwlist}{} %%% extra brace
+   \item[{HELP=}] if set, an extensive help is displayed and no
+	file is read
   \item[{SILENT=}] if set, no message is issued during normal execution
    \end{kwlist}
 \end{keywords}
