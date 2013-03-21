@@ -7,10 +7,7 @@
 	<br>
           <ul>
           <li>
-            The <a href="http://www.rssd.esa.int/index.php?project=Planck" target="_top"> Planck</a>
-            Data Processing Centres for <a href="http://prof.planck.fr/heading1.html&planck_style=colors">HFI</a>
-    and <a href="http://planck.oat.ts.astro.it/">LFI</a> are using the HEALPix software and
-            producing simulated data streams from maps built on the HEALPix scheme
+	    The <a href="http://www.rssd.esa.int/index.php?project=Planck">Planck</a> satellite full sky maps, <a href="http://www.sciops.esa.int/index.php?project=PLANCK&page=Planck_Published_Papers">observed at 30 to 857 GHz with unprecedented accuracy</a>, and their decomposition in cosmological and astrophysical components are available in HEALPix format from the <a href="http://www.sciops.esa.int/index.php?project=planck&page=Planck_Legacy_Archive">Planck Legacy Archive</a>
           </li>
 
               <li>
@@ -107,16 +104,9 @@
 	First HEALPix paper: <a href="http://adsabs.harvard.edu/cgi-bin/nph-bib_query?bibcode=2005ApJ...622..759G&amp;db_key=AST&amp;high=41069202cf02947">K.M. G&oacute;rski et al., 2005, ApJ, 622, p759</a>
         </li>
         <li>HEALPix 
-	in <a href="http://inspirebeta.net/search?ln=en&p=FIND+C+ASTRO-PH%2F9812350+or+refersto%3Arecid%3A659804+or+fulltext%3Ahealpix&f=&action_search=Search&sf=&so=d&rm=&rg=25&sc=0&of=hb">INSPIRE</a> database,
-<!-- (replaces <a href="http://www.slac.stanford.edu/spires/find/hep/www?rawcmd=FIND+C+ASTRO-PH+9812350+OR+ASJOA%2C622%2C759">SPIRES</a>) -->
-        </li>
-        <li>
-        in <a href="http://adsabs.harvard.edu/cgi-bin/nph-ref_query?bibcode=2005ApJ...622..759G&amp;refs=CITATIONS&amp;db_key=AST">ADS</a> database.
-	<!--
-	in arXiv <a href="http://search.arxiv.org:8081/?query=healpix&in=grp_physics">physics</a>, 
-	<a href="http://search.arxiv.org:8081/?query=healpix&in=grp_cs">computer science</a>,
-	<a href="http://search.arxiv.org:8081/?query=healpix&in=grp_math">mathematics </a> preprints.
-	-->
+	on <a href="http://inspirebeta.net/search?ln=en&p=FIND+C+ASTRO-PH%2F9812350+or+refersto%3Arecid%3A659804+or+fulltext%3Ahealpix&f=&action_search=Search&sf=&so=d&rm=&rg=25&sc=0&of=hb">INSPIRE</a>,
+	<a href="http://adsabs.harvard.edu/cgi-bin/nph-ref_query?bibcode=2005ApJ...622..759G&amp;refs=CITATIONS&amp;db_key=AST">ADS</a>,
+	<a href="http://scholar.google.com/scholar?q=healpix&btnG=&hl=en&as_sdt=0%2C5">Google Scholar</a>
         </li>
 	</ul>
 </p>
@@ -127,7 +117,8 @@
 	    <a href="http://en.wikipedia.org/wiki/Healpix" target="_top">Wikipedia Page on HEALPix</a>
 	</li>
 	<li>
-	    <a href="https://www.ohloh.net/p/healpix" target="_top">HEALPix on Ohloh</a>
+	    HEALPix on <a href="https://www.ohloh.net/p/healpix">Ohloh</a> and
+	<a href="http://www.digplanet.com/wiki/HEALPix#">digplanet</a>
 	</li>
 	</ul>
 </p>
