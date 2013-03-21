@@ -27,7 +27,9 @@ It is also useful for image generation in a pipeline environment.}
       displayed \default{.false.}. 
     \item[{- col}] The number of the color table to utilise \default{5}.
     \item[{- hlp}] Print on-line help for the facility.
-    \item[{- inp}] The file name of the input FITS sky map \nodefault.
+    \item[{- inp}] The file name of the input FITS sky map \nodefault.\\
+In \thedocid\ (and \thedocid\ only) it may be necessary to put the file name between quotes if it contains symbols
+such as {\tt \&}, {\tt [}, {\tt ]}, {\tt ?}, {\tt =}  or blanks
     \item[{- log}] Logical to use the log of the signal when plotting 
       \default{.false.}
     \item[{- ash}] Logical to use the hyperbolic arc sine of the signal when
@@ -44,7 +46,9 @@ It is also useful for image generation in a pipeline environment.}
     \item[{- max}] Set the maximum value for the plotted signal
       \default{is to use the actual signal maximum}.
     \item[{- pro}] Select the projection scheme \default{Mollweide}.
-    \item[{- out}] The file name of the output gif image \nodefault.
+    \item[{- out}] The file name of the output gif image \nodefault.\\
+Prepending the output file name with {\tt $\backslash$!} (see example below) will allow the overwriting of the
+file if it already exists
     \item[{- sig}] The identifier of the signal to plot: for a
       polarisation map, then the mapping is 1 = I; 2 = Q; 3 = U
       \default{1}.
@@ -88,7 +92,7 @@ a command-line interface.}
 {
 \begin{tabular}{ll} %%%% use this tabular format %%%%
 map2gif & -inp planck100GHZ-LFI.fits \\
-        & -out planck100GHZ-LFI.gif \\
+        & -out $\backslash$!planck100GHZ-LFI.gif \\
         & -bar .true. \\
         & -min -100 \\
         & -max 100 \\
@@ -96,7 +100,8 @@ map2gif & -inp planck100GHZ-LFI.fits \\
 \end{tabular}
 }
 {map2gif reads in the map `planck100GHZ-LFI.fits' and generates
-an output gif image with name `planck100GHZ-LFI.gif' in which
+an output gif image with name `planck100GHZ-LFI.gif' (overwriting it if
+necessary) in which
 the temperature scale has been set to lie between $\pm$ 100 ($\mu$K), 
 a color bar has been drawn and the title `Simulated Planck
 LFI Sky Map at 100GHz' appended to the image.

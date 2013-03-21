@@ -155,6 +155,9 @@ executing \thedocid\ under such cicumstances!
   \begin{qulist}{} %%%% NOTE the ``extra'' brace here %%%%
     \item[{infile = }] Defines the input map file. 
 	(default= map.fits)
+	If not blank, the filename should {\em never} be put between quotes even if it contains
+symbols such as {\tt \&, [, ], ?, =} which should be typed literally (ie, unprotected). For instance
+ {\tt infile~=~http://site/action?file.fits[2][col FLUX]} is just fine.
     \item[{infile2 = }] Defines the 2nd input map file, to be cross-correlated with
 	the first one. The 2 maps should match in resolution ($nsmax$) and coordinate.
 	(default= `', only the auto-correlation of the first map will be computed)

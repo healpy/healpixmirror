@@ -14,6 +14,13 @@
 \renewcommand{\lq}{'}
 \input{hpxversion}
 \end{htmlonly}
+
+\hypersetup{%
+	pdftitle={HEALPix Fortran Facilities Overview},%
+	pdfauthor={E. Hivon et al},%
+	pdfkeywords={HEALPix, Fortran},%
+	colorlinks=true}%
+
 \newcommand{\nside}{{N_{\rm side}}}
 \newcommand{\npix}{{N_{\rm pix}}}
 %% \renewcommand{\contentsname}{{TABLE OF CONTENTS\\
@@ -104,21 +111,36 @@ floating point reals. The following points should be noted: \label{page:ioprec}
 \section[Changes between releases 3.00 and \hpxversion]{%
 Changes between releases 3.00 and \hpxversion}
 \begin{itemize}
-	\item all Fortran facilities now support {\tt cfitsio}'s ``Extended File
-Name Syntax''
-allowing the reading and processing of an arbitrary HDU and table column out of a
-FITS file. For example, setting \hfill \\
-{\tt infile = }{\tt ftp://}{\it url/file.fits}{\tt .gz}{\tt [}{\it extname}{\tt
+%
+	\item all Fortran facilities now support most of {\tt cfitsio}'s ``\htmladdnormallink{Extended File
+Name Syntax}{http://heasarc.gsfc.nasa.gov/docs/software/fitsio/filters.html}'' features,
+allowing the reading and processing of an arbitrary HDU and table column out of
+remote, compressed FITS files. For example, setting \hfill \\
+{\tt infile = }{\tt ftp://}{\it url/file.fits}{\tt .gz}{\tt [}{\it extn}{\tt
 ]}{\tt [col }{\it colname}{\tt ]}  \hfill \\
-in {\tt anafast} 
+in \htmlref{{\tt anafast}}{fac:anafast}
 will download the FITS file {\it file.fits.gz} from {\it url}, 
-uncompress it, open the HDU (extension) with keyword {\tt EXTNAME =}{\it
-extname}, read the table column with {\tt TTYPE*=}{\it colname} out of it and will
-analyze it.
-	\item 	still faster 
+uncompress it, open the HDU (extension) featuring keyword {\tt EXTNAME=}{\it
+extn}, or the one with 1-based rank number {\it extn}, read the table column
+with {\tt TTYPE*=}{\it colname} out of it and will analyze it.\\
+It is also possible to perform a remote \htmlref{{\tt anafast}}{fac:anafast} analysis of a 
+\htmladdnormallink{Planck Legacy Archive (PLA)}{http://www.sciops.esa.int/index.php?project=planck&page=Planck_Legacy_Archive}
+sky map named {\it map.fits} via the PLA \htmladdnormallink{AIO
+Subsystem}{http://pla.esac.esa.int/pla/aio/} by simply setting
+{\tt infile=http://pla.esac.esa.int/pla/aio/product-action?MAP.MAP\_ID=}{\it map.fits}
+as input map file.
+%
+	\item yet faster 
 \htmlref{{\tt synfast}}{fac:synfast},
 \htmlref{{\tt anafast}}{fac:anafast},
-\htmlref{{\tt smoothing}}{fac:smoothing} thanks to \htmladdnormallink{{\tt libsharp}}{http://sourceforge.net/projects/libsharp} routines
+\htmlref{{\tt smoothing}}{fac:smoothing} thanks to \htmladdnormallink{{\tt
+libsharp}}{http://sourceforge.net/projects/libsharp} routines. \\
+{\em Note that 
+some \htmladdnormallink{{\tt gcc} versions}{http://gcc.gnu.org/releases.html}
+(4.4.1 to 4.4.6) crash with an internal compiler error during compilation of {\tt libsharp}}. 
+The problem has been fixed in {\tt gcc} 4.4.7, 4.5.*, 4.6.*, 4.7.* and
+newer versions and was not present in versions 4.2.* and 4.3.*.
+%
 \end{itemize}
 
 \section[Changes between releases 2.20 and 3.00]{%
@@ -127,7 +149,7 @@ Changes between releases 2.20 and 3.00}
 	\item all {\em input} FITS files can now be compressed (with a 
 {\tt .gz}, {\tt .Z}, {\tt .z}, or {\tt .zip} 
 extension) and/or remotely located (with a {\tt ftp://} or {\tt http://} prefix).
-{\em Version 3.14 (March 2009) or newer of CFITSIO is required for \healpix \hpxversion.}
+{\em Version 3.14 (March 2009) or newer of CFITSIO is required for \healpix 3.0.}
 	\item introduction of \htmlref{{\tt process\_mask}}{fac:process_mask} 
 facility to compute the angular distance of valid
 pixels to the closest invalid pixels for a input binary mask,
