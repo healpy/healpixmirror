@@ -60,3 +60,20 @@ Notes:
  which should improve the lensed BB spectrum compared to lower l runs.   
 
  It is defined up to l=3726.
+
+
+     4) The file planck2013ext_lcdm_cl_v1.fits
+ has been added in this directory for convenience, even though
+ it is currently *NOT* used in any of the simulations included here.
+
+ It is the theoretical Lambda-CDM best fit to
+ Planck 2013 + WMAP9 Polarization (l<24) + ACT + SPT + SDSS DR7+WiggleZ+BOSS DR9+6dF
+ with lensed B modes > 0
+
+ See Planck 2013 results. XVI. Cosmological parameters                  
+  by Planck collaboration (http://arxiv.org/abs/1303.5076v1), and        
+  http://www.sciops.esa.int/index.php?project=planck                    
+  for further details.                                                    
+
+ It is defined up to l=4500.
+

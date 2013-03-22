@@ -38,12 +38,12 @@
 ;
 ; CALLING SEQUENCE:
 ;       FITS2CL, cl_array, [fitsfile, EXTENSION=, HELP=, INTERACTIVE=, RSHOW=, SILENT =, SHOW=$
-;                                     WMAP1=, WMAP5=, WMAP7= ,$
+;                                     PLANCK1=, WMAP1=, WMAP5=, WMAP7= ,$
 ;                                     HDR =, LLFACTOR=, MULTIPOLES=, XHDR =]
 ; 
 ; INPUTS:
 ;       fitsfile = String containing the name of the file to be read  
-;          if not provided, then /WMAP1 or /WMAP5 must be set.   
+;          if not provided, then /WMAP1, /WMAP5, /WMAP7 or /PLANCK1 or must be set.   
 ;
 ; OPTIONAL INPUTS:
 ;       EXTENSION : extension unit to be read from FITS file: 
@@ -65,6 +65,12 @@
 ;
 ;       SHOW = if set, the power spectra read from the file and 
 ;              multiplied by l(l+1)/2Pi   are plotted
+;
+;       PLANCK1 = if set, and fitsfile is not provided, then the theoretical
+;          Lambda CDM best fit to   Planck2013 + external data
+;          (!healpix.path.test+'planck2013ext_lcdm_cl_v1.fits') 
+;          defined up to l=4500, is read
+;          See !healpix.path.test+'README' for details
 ;
 ;       WMAP1 = if set, and fitsfile is not provided, then one WMAP-1yr best fit
 ;          model (!healpix.path.test+'wmap_lcdm_pl_model_yr1_v1.fits') 
@@ -138,6 +144,7 @@
 ;       Sep 2010: EH, added WMAP1 and WMAP5 keywords
 ;       May 2011: EH, added WMAP7 keyword
 ;       Feb 2013: EH, added EXTNAME keyword
+;       Mar 2013: EH, added PLANCK1 keyword
 ;
 ; requires the THE IDL ASTRONOMY USER'S LIBRARY 
 ; that can be found at http://idlastro.gsfc.nasa.gov/homepage.html
@@ -190,13 +197,14 @@ PRO FITS2CL, cl_array, fitsfile, $
              SILENT=silent, $
              SHOW=show, $
              XHDR = xhdr, $
+             PLANCK1=planck1, $
              WMAP1=wmap1, WMAP5=wmap5, WMAP7=wmap7
 
 code = 'FITS2CL'
 syntax = ['Syntax : '+code+', cl_array, [fitsfile, ',$
           '         EXTENSION=, HELP=, INTERACTIVE=, RSHOW=, SILENT =, SHOW=', $
           '         HDR =, LLFACTOR=, MULTIPOLES=, XHDR =', $
-          '         WMAP1=, WMAP5=, WMAP7=]']
+          '         PLANCK1 =, WMAP1=, WMAP5=, WMAP7=]']
 
 if keyword_set(help) then begin
       doc_library,code
@@ -206,12 +214,13 @@ endif
 read_wmap1 = keyword_set(wmap1)
 read_wmap5 = keyword_set(wmap5)
 read_wmap7 = keyword_set(wmap7)
-read_internal = (read_wmap1 || read_wmap5 || read_wmap7)
-multi_internal = (read_wmap1 + read_wmap5 + read_wmap7 gt 1)
+read_planck1 = keyword_set(planck1)
+read_internal = (read_wmap1 || read_wmap5 || read_wmap7 || read_planck1)
+multi_internal = (read_wmap1 + read_wmap5 + read_wmap7 + read_planck1 gt 1)
 
 if ((defined(fitsfile) && read_internal) || multi_internal) then begin
     print,syntax,form='(a)'
-    print,'  choose either an external FITSfile *or* /WMAP1 *or* /WMAP5 *or* /WMAP7'
+    print,'  choose either an external FITSfile *or* /WMAP1 *or* /WMAP5 *or* /WMAP7 *or* /PLANCK1'
     print,'   file NOT read '
     goto, Exit
 endif
@@ -225,9 +234,10 @@ endif
 
 init_healpix ; define !healpix
 myfitsfile = ''
-if (read_wmap1) then myfitsfile = !healpix.path.test+'wmap_lcdm_pl_model_yr1_v1.fits'
-if (read_wmap5) then myfitsfile = !healpix.path.test+'wmap_lcdm_sz_lens_wmap5_cl_v3.fits'
-if (read_wmap7) then myfitsfile = !healpix.path.test+'wmap_lcdm_sz_lens_wmap7_cl_v4.fits'
+if (read_wmap1)   then myfitsfile = !healpix.path.test+'wmap_lcdm_pl_model_yr1_v1.fits'
+if (read_wmap5)   then myfitsfile = !healpix.path.test+'wmap_lcdm_sz_lens_wmap5_cl_v3.fits'
+if (read_wmap7)   then myfitsfile = !healpix.path.test+'wmap_lcdm_sz_lens_wmap7_cl_v4.fits'
+if (read_planck1) then myfitsfile = !healpix.path.test+'planck2013ext_lcdm_cl_v1.fits'
 if (myfitsfile eq '') then myfitsfile = fitsfile
 
 if (datatype(cl_array) eq 'STR' or datatype(myfitsfile) ne 'STR') then begin

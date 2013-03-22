@@ -1008,7 +1008,7 @@ configuration script remains available
 \item Spherical Harmonics Transform library {\tt libpsht} replaced by \htmladdnormallink{{\tt
 libsharp}}{http://sourceforge.net/projects/libsharp}
 (\htmladdnormallink{Reinecke \& Seljebotn, 2013}{http://arxiv.org/abs/1303.4945}). \\
-{\em Note that 
+{\em \mytargetb{install:cpp:gccreleases}{Note} that 
 some \htmladdnormallink{{\tt gcc} versions}{http://gcc.gnu.org/releases.html}
 (4.4.1 to 4.4.6) crash with an internal compiler error during compilation of {\tt libsharp}}. 
 The problem has been fixed in {\tt gcc} 4.4.7, 4.5.*, 4.6.*, 4.7.* and
@@ -1046,8 +1046,8 @@ as input map file.
 \htmlref{{\tt synfast}}{fac:synfast},
 \htmlref{{\tt anafast}}{fac:anafast},
 \htmlref{{\tt smoothing}}{fac:smoothing} thanks to \htmladdnormallink{{\tt
-libsharp}}{http://sourceforge.net/projects/libsharp} routines (see warning on
-gcc releases above).
+libsharp}}{http://sourceforge.net/projects/libsharp} routines (see \mylink{install:cpp:gccreleases}{warning on
+gcc releases above}).
 %
 \end{itemize}
 
@@ -1061,6 +1061,10 @@ gcc releases above).
 	\item double precision of input now preserved in
 	\htmlref{{\tt gaussbeam}}{{idl:gaussbeam}} and 
 	\htmlref{{\tt euler\_matrix\_new}}{{idl:euler_matrix_new}}.
+
+	\item \htmlref{{\tt fits2cl}}{idl:fits2cl}: addition of 
+	{\tt /PLANCK1} keyword
+	to read best fit $C(l)$ model to Planck 2013 + external data.
 
 	\item it is now possible to read a specific FITS file extension identified by its
 	(0-based) number or its case-insensitive EXTNAME value with the {\tt Extension}
@@ -1090,20 +1094,20 @@ to generate Gaussian beam window function.
 \section{Appendix II: Older changes}
 
 {\mytiny{%
-\tinysubsection{Bug corrections and Improvements in Version 3.0} % 2012-11-27?
+\tinysubsection{Bug corrections and Improvements in Version 3.0 (2012-11)} % 2012-11-27?
 
-\tinysubsubsection[General]{General}
+\tinysubsubsection{General}
 Introduction of the script {\tt healpix\_doc} for easy access to the \healpix
 PDF and HTML documentation.
 
-\tinysubsubsection[C]{\linklatexhtml{C}{csub.pdf}{csub.htm}}
+\tinysubsubsection{\linklatexhtml{C}{csub.pdf}{csub.htm}}
 \begin{itemize}
 	\item Interface has remained unchanged, but the code has been replaced by a C port
 of the relevant Healpix C++ functions, resulting in significant speedups.
 	\item Additional functions are provided which support Nside values up to $2^{29}$.
 They have the same name as the traditional functions, with a ``64'' suffix appended.
 \end{itemize}
-\tinysubsubsection[C++]{C++}
+\tinysubsubsection{C++}
 \begin{itemize}
 	\item Query routines:
  \mytargetb{install:cpp:query}{query\_polygon()} and query\_polygon\_inclusive() added.
@@ -1148,7 +1152,7 @@ Facilities now check input maps for undefined pixels before calling map2alm().
 
 \end{itemize}
 
-\tinysubsubsection[Fortran]{%
+\tinysubsubsection{%
 Fortran 90 \linklatexhtml{facilities}{facilities.pdf}{facilities.htm} and
 \linklatexhtml{subroutines}{subroutines.pdf}{subroutines.htm}
 }
@@ -1190,7 +1194,7 @@ analyzed;
 %mode.
 \end{itemize}
 
-\tinysubsubsection[IDL]{\linklatexhtml{IDL}{idl.pdf}{idl.htm}}
+\tinysubsubsection{\linklatexhtml{IDL}{idl.pdf}{idl.htm}}
 \begin{itemize}
 	\item New routines to go from circular beam profile to transfer function
 (\htmlref{{\tt beam2bl}}{idl:beam2bl}), 
@@ -1238,7 +1242,7 @@ maps
 	\item update of {\tt astron} library routines (01-Feb-2012).
 \end{itemize}
 
-\tinysubsubsection[Java]{Java}
+\tinysubsubsection{Java}
 \begin{itemize}
 	\item Core functionality has been reimplemented from scratch in the form of the
 "healpix.essentials" package. It is strongly recommended to use this package
@@ -1274,7 +1278,7 @@ as the C++ implementation (see \mylink{install:cpp:query}{above}).
 \end{itemize}
 \end{itemize}
 
-\tinysubsubsection[Python]{Python}
+\tinysubsubsection{Python}
 \begin{itemize}
 	\item the 
 \linklatexhtml{{\tt{healpy}}}{%
