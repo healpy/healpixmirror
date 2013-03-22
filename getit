@@ -43,7 +43,7 @@ if [ ${doit} = 1 ] ; then
 	cd healpy 
 	git checkout ${healpytag} 
 	git branch
-    else ;
+    else
 	wget ${healpyarchive}${healpytag}.tar.gz -O healpy-${healpytag}.tar.gz
 	tar -xvzpf healpy-${healpytag}.tar.gz
 	mv healpy-${healpytag} healpy
@@ -59,7 +59,7 @@ if [ ${doit} = 1 ] ; then
     \rm -rf healpixcxx .git*
     mkdir -p healpixcxx/src
     cd healpixcxx/src
-    ln -s ../../cxx .
+    ln -s ../../../cxx .
 
     cd ${WRKDIR}
 fi
