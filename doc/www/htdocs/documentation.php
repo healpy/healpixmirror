@@ -163,7 +163,7 @@ The HEALPix documentation is currently available for downloading in <a href="pdf
 </td>
 
 <td width="75" align="center">
-    <a href="http://healpy.readthedocs.org/en/1.4.1/" target="_top">html</a>
+    <a href="http://healpy.readthedocs.org/en/1.5.0/" target="_top">html</a>
 <br><br>
 </td>
 

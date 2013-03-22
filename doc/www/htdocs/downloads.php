@@ -55,34 +55,226 @@ Use of the HEALPix software package should be explicitly acknowledged in all pub
                 </li>
 </ul>
 </p>
+
+
+<!-- ******************************************************  -->
+<!-- ******************************************************  -->
+
+
+<h2>New Features in HEALPix 3.10</h2>
+<P>
+<!--Table of Child-Links-->
+<A NAME="top"></A>
+
+<UL CLASS="ChildLinks">
+<LI><A NAME="tex2html11"
+  HREF="#SECTION00010000000000000000">Bug corrections and Improvements in Version 3.1</A>
+<UL>
+<!-- <LI><A NAME="tex2html12"
+   HREF="#SECTION00011000000000000000">General</A> -->
+<LI><A NAME="tex2html13"
+  HREF="#SECTION00012000000000000000">C</A>
+<LI><A NAME="tex2html14"
+  HREF="#SECTION00013000000000000000">C++</A>
+<LI><A NAME="tex2html15"
+  HREF="#SECTION00014000000000000000">Fortran</A>
+<LI><A NAME="tex2html16"
+  HREF="#SECTION00015000000000000000">IDL</A>
+<!-- <LI><A NAME="tex2html17"
+  HREF="#SECTION00016000000000000000">Java</A> -->
+<LI><A NAME="tex2html18"
+  HREF="#SECTION00017000000000000000">Python</A>
+</UL></UL>
+<!--End of Table of Child-Links-->
+
+<!--
+<h3><A NAME="SECTION00011000000000000000">
+General</A>
+</H3>
+N/A
+-->
+
+
+<H3><A NAME="SECTION00012000000000000000">
+C</A>
+</H3>
+
+<UL>
+<LI>experimental GNU autotools support (undocumented); the standard
+configuration script remains available
+</LI>
+</UL>
+<A HREF=#top>    Back to Top</A><br><br>
+
+<P>
+
+<H3><A NAME="SECTION00013000000000000000">
+C++</A>
+</H3>
+
+<UL>
+<LI>Spherical Harmonics Transform library <TT>libpsht</TT> replaced by <A NAME="tex2html2"
+  HREF="http://sourceforge.net/projects/libsharp"><TT>libsharp</TT></A>
+(<A NAME="tex2html3"
+  HREF="http://arxiv.org/abs/1303.4945">Reinecke &amp; Seljebotn, 2013</A>). 
+<BR><EM>Note that 
+some <A NAME="tex2html1"
+  HREF="http://gcc.gnu.org/releases.html"><TT>gcc</TT> versions</A>
+(4.4.1 to 4.4.6) crash with an internal compiler error during compilation of <TT>libsharp</TT></EM>. 
+The problem has been fixed in <TT>gcc</TT> 4.4.7, 4.5.*, 4.6.*, 4.7.* and
+newer versions and was not present in versions 4.2.* and 4.3.*.
+</LI>
+<LI>added <TT>boundaries()</TT> method to <TT>T_Healpix_Base</TT>
+</LI>
+<LI>experimental GNU autotools support (undocumented); the standard
+configuration script remains available
+</LI>
+</UL>
+<A HREF=#top>    Back to Top</A><br><br>
+
+<P>
+
+<H3><A NAME="SECTION00014000000000000000">
+Fortran 90 facilities and
+	subroutines</A>
+</H3>
+
+<UL>
+<LI>all Fortran facilities now support most of <TT>cfitsio</TT>s ``<A NAME="tex2html4"
+  HREF="http://heasarc.gsfc.nasa.gov/docs/software/fitsio/filters.html">Extended File
+Name Syntax</A>'' features,
+allowing the reading and processing of an arbitrary HDU and table column out of
+remote, compressed FITS files. For example, setting 
+<BR><TT>infile = ftp://</TT><I>url/file.fits</I><TT>.gz[</TT><I>extn</I><TT>][col </TT><I>colname</I><TT>]</TT>  
+<BR>
+in <TT>anafast</TT>
+will download the FITS file <I>file.fits.gz</I> from <I>url</I>, 
+uncompress it, open the HDU (extension) featuring keyword <TT>EXTNAME=</TT><I>extn</I>, or the one with 1-based rank number <I>extn</I>, read the table column
+with <TT>TTYPE*=</TT><I>colname</I> out of it and will analyze it.
+<BR>
+It is also possible to perform a remote <TT>anafast</TT> analysis of a 
+<A NAME="tex2html5"
+  HREF="http://www.sciops.esa.int/index.php?project=planck&amp;page=Planck_Legacy_Archive">Planck Legacy Archive (PLA)</A>
+sky map named <I>map.fits</I> via the PLA <A NAME="tex2html6"
+  HREF="http://pla.esac.esa.int/pla/aio/">AIO
+Subsystem</A>
+by simply setting
+<TT>infile=http://pla.esac.esa.int/pla/aio/product-action?MAP.MAP_ID=</TT><I>map.fits</I>
+as input map file.
+</LI>
+<LI>yet faster 
+<TT>synfast</TT>,
+<TT>anafast</TT>,
+<TT>smoothing</TT> thanks to <A NAME="tex2html7"
+  HREF="http://sourceforge.net/projects/libsharp"><TT>libsharp</TT></A>
+routines (see install:cpp:gccreleaseswarning on
+gcc releases above).
+</LI>
+</UL>
+<A HREF=#top>    Back to Top</A><br><br>
+
+<P>
+
+<H3><A NAME="SECTION00015000000000000000">
+IDL</A>
+</H3>
+
+<UL>
+<LI>bug corrections: 
+	<A HREF="#idl:query_disc"><TT>query_disc</TT></A>: correct handling of empty disc; 
+	<A HREF="#idl:bin_llcl"><TT>bin_llcl</TT></A>: correct handling of optional argument.
+
+<P>
+</LI>
+<LI>double precision of input now preserved in
+	<A HREF="#idl:gaussbeam"><TT>gaussbeam</TT></A> and 
+	<A HREF="#idl:euler_matrix_new"><TT>euler_matrix_new</TT></A>.
+
+<P>
+</LI>
+<LI><TT>fits2cl</TT>: addition of 
+	<TT>/PLANCK1</TT> keyword
+	to read best fit <SPAN CLASS="MATH"><I>C</I>(<I>l</I>)</SPAN> model to Planck 2013 + external data.
+
+<P>
+</LI>
+<LI>it is now possible to read a specific FITS file extension identified by its
+	(0-based) number or its case-insensitive EXTNAME value with the <TT>Extension</TT>
+	keyword added to 
+	<A HREF="#idl:fits2cl"><TT>fits2cl</TT></A>,
+	<A HREF="#idl:getsize_fits"><TT>getsize_fits</TT></A>,
+	<A HREF="#idl:read_fits_map"><TT>read_fits_map</TT></A>,
+	<A HREF="#idl:read_fits_s"><TT>read_fits_s</TT></A> and 
+	<A HREF="#idl:read_tqu"><TT>read_tqu</TT></A>.
+
+<P>
+</LI>
+<LI>update of the required
+	<A NAME="tex2html8"
+  HREF="http://idlastro.gsfc.nasa.gov/homepage.html"><TT>IDL-astron</TT> library</A>
+routines, and their supporting <A NAME="tex2html9"
+  HREF="http://www.idlcoyote.com"><TT>Coyote</TT></A>
+routines (2013-02-08).
+</LI>
+</UL>
+<A HREF=#top>    Back to Top</A><br><br>
+
+<P>
+
+<!--
+<H3><A NAME="SECTION00016000000000000000">
+Java</A>
+</H3>
+N/A
+<A HREF=#top>    Back to Top</A><br><br>
+-->
+
+<H3><A NAME="SECTION00017000000000000000">
+Python</A>
+</H3>
+<ul><li>
+	switch to <TT>healpy 1.5.0</TT>: addition of 
+<A NAME="tex2html10"
+  HREF="https://healpy.readthedocs.org/en/1.5.0/generated/healpy.sphtfunc.gauss_beam.html"><TT>gauss_beam</TT></A>
+to generate Gaussian beam window function.
+</li></ul>
+
+<A HREF=#top>    Back to Top</A><br><br>
+
+<!-- ******************************************************  -->
+
+<br />
+<HR>
+
+
 <h2>New Features in HEALPix 3.00</h2>
 <P>
 <!--
-The latest version of the HEALPix package (3.00) offers the following new
+The previous version of the HEALPix package (3.00) offered the following new
 features: -->
 
 <!--Table of Child-Links-->
 
 <ul CLASS="ChildLinks">
 <li><A name="tex2html3"
-  href="#SECTION00011000000000000000">General</A>
+  href="#SECTION11111000000000000000">General</A>
 <li><A name="tex2html4"
-  href="#SECTION00012000000000000000">C</A>
+  href="#SECTION11112000000000000000">C</A>
 <li><A name="tex2html5"
-  href="#SECTION00013000000000000000">C++</A>
+  href="#SECTION11113000000000000000">C++</A>
 <li><A name="tex2html6"
-  href="#SECTION00014000000000000000">Fortran</A>
+  href="#SECTION11114000000000000000">Fortran</A>
 <li><A name="tex2html7"
-  href="#SECTION00015000000000000000">IDL</A>
+  href="#SECTION11115000000000000000">IDL</A>
 <li><A name="tex2html8"
-  href="#SECTION00016000000000000000">Java</A>
+  href="#SECTION11116000000000000000">Java</A>
 <li><A name="tex2html9"
-  href="#SECTION00017000000000000000">Python</A>
+  href="#SECTION11117000000000000000">Python</A>
 </ul>
 <!--End of Table of Child-Links-->
 </p>
 
-<h3><A name="SECTION00011000000000000000">
+<h3><A name="SECTION11111000000000000000">
 General</A>
 </h3>
 <ul><li>
@@ -91,7 +283,7 @@ PDF and HTML documentation.
 </li></ul>
 <A href=#top>    Back to Top</A><br><br>
 
-<h3><A name="SECTION00012000000000000000">
+<h3><A name="SECTION11112000000000000000">
 C</A>
 </h3>
 
@@ -105,7 +297,7 @@ They have the same name as the traditional functions, with a ''64'' suffix appen
 </ul>
 <A href=#top>    Back to Top</A><br><br>
 
-<h3><A name="SECTION00013000000000000000">
+<h3><A name="SECTION11113000000000000000">
 C++</A>
 </h3>
 
@@ -167,7 +359,7 @@ Facilities now check input maps for undefined pixels before calling map2alm().
 <A href=#top>    Back to Top</A><br><br>
 
 
-<h3><A name="SECTION00014000000000000000">
+<h3><A name="SECTION11114000000000000000">
 Fortran 90 facilities and
 subroutines
 </A>
@@ -212,7 +404,7 @@ analyzed;
 <A href=#top>    Back to Top</A><br><br>
 
 
-<h3><A name="SECTION00015000000000000000">
+<h3><A name="SECTION11115000000000000000">
 IDL</A>
 </h3>
 
@@ -270,7 +462,7 @@ maps
 <A href=#top>    Back to Top</A><br><br>
 
 
-<h3><A name="SECTION00016000000000000000">
+<h3><A name="SECTION11116000000000000000">
 Java</A>
 </h3>
 
@@ -322,7 +514,7 @@ as the C++ implementation (see install:cpp:queryabove).
 <A href=#top>    Back to Top</A><br><br>
 
 
-<h3><A name="SECTION00017000000000000000">
+<h3><A name="SECTION11117000000000000000">
 Python</A>
 </h3>
 
