@@ -61,41 +61,61 @@ Use of the HEALPix software package should be explicitly acknowledged in all pub
 <!-- ******************************************************  -->
 
 
-<h2>New Features in HEALPix 3.10</h2>
+<h2>New Features in HEALPix</h2>
 <P>
 <!--Table of Child-Links-->
-<A NAME="top"></A>
+<A NAME="tocl"></A>
 
 <UL CLASS="ChildLinks">
 <LI><A NAME="tex2html11"
-  HREF="#SECTION00010000000000000000">Bug corrections and Improvements in Version 3.1</A>
+  HREF="#SECTION_310_10000000000000000">Bug corrections and Improvements in Version 3.10</A>
 <UL>
-<!-- <LI><A NAME="tex2html12"
-   HREF="#SECTION00011000000000000000">General</A> -->
+<!-- <LI><A NAME="tex2html12" HREF="#SECTION_310_11000000000000000">General</A> -->
 <LI><A NAME="tex2html13"
-  HREF="#SECTION00012000000000000000">C</A>
+  HREF="#SECTION_310_12000000000000000">C</A>
 <LI><A NAME="tex2html14"
-  HREF="#SECTION00013000000000000000">C++</A>
+  HREF="#SECTION_310_13000000000000000">C++</A>
 <LI><A NAME="tex2html15"
-  HREF="#SECTION00014000000000000000">Fortran</A>
+  HREF="#SECTION_310_14000000000000000">Fortran</A>
 <LI><A NAME="tex2html16"
-  HREF="#SECTION00015000000000000000">IDL</A>
-<!-- <LI><A NAME="tex2html17"
-  HREF="#SECTION00016000000000000000">Java</A> -->
+  HREF="#SECTION_310_15000000000000000">IDL</A>
+<!-- <LI><A NAME="tex2html17" HREF="#SECTION_310_16000000000000000">Java</A> -->
 <LI><A NAME="tex2html18"
-  HREF="#SECTION00017000000000000000">Python</A>
-</UL></UL>
-<!--End of Table of Child-Links-->
+  HREF="#SECTION_310_17000000000000000">Python</A>
+</UL>
 
+<LI><A NAME="tex2html11"
+  HREF="#SECTION_300_10000000000000000">Bug corrections and Improvements in Version 3.00</A>
+<UL>
+<li><A name="tex2html3"
+  href="#SECTION_300_11000000000000000">General</A>
+<li><A name="tex2html4"
+  href="#SECTION_300_12000000000000000">C</A>
+<li><A name="tex2html5"
+  href="#SECTION_300_13000000000000000">C++</A>
+<li><A name="tex2html6"
+  href="#SECTION_300_14000000000000000">Fortran</A>
+<li><A name="tex2html7"
+  href="#SECTION_300_15000000000000000">IDL</A>
+<li><A name="tex2html8"
+  href="#SECTION_300_16000000000000000">Java</A>
+<li><A name="tex2html9"
+  href="#SECTION_300_17000000000000000">Python</A>
+</ul>
+</ul>
+<!--End of Table of Child-Links-->
+</p>
+
+<h3><a name="SECTION_310_10000000000000000">New Features in HEALPix 3.10</a></h3>
 <!--
-<h3><A NAME="SECTION00011000000000000000">
+<h3><A NAME="SECTION_310_11000000000000000">
 General</A>
 </H3>
 N/A
 -->
 
 
-<H3><A NAME="SECTION00012000000000000000">
+<H3><A NAME="SECTION_310_12000000000000000">
 C</A>
 </H3>
 
@@ -108,7 +128,7 @@ configuration script remains available
 
 <P>
 
-<H3><A NAME="SECTION00013000000000000000">
+<H3><A NAME="SECTION_310_13000000000000000">
 C++</A>
 </H3>
 
@@ -134,7 +154,7 @@ configuration script remains available
 
 <P>
 
-<H3><A NAME="SECTION00014000000000000000">
+<H3><A NAME="SECTION_310_14000000000000000">
 Fortran 90 facilities and
 	subroutines</A>
 </H3>
@@ -167,15 +187,14 @@ as input map file.
 <TT>anafast</TT>,
 <TT>smoothing</TT> thanks to <A NAME="tex2html7"
   HREF="http://sourceforge.net/projects/libsharp"><TT>libsharp</TT></A>
-routines (see install:cpp:gccreleaseswarning on
-gcc releases above).
+routines (see warning on gcc releases above).
 </LI>
 </UL>
 <A HREF=#top>    Back to Top</A><br><br>
 
 <P>
 
-<H3><A NAME="SECTION00015000000000000000">
+<H3><A NAME="SECTION_310_15000000000000000">
 IDL</A>
 </H3>
 
@@ -222,14 +241,14 @@ routines (2013-02-08).
 <P>
 
 <!--
-<H3><A NAME="SECTION00016000000000000000">
+<H3><A NAME="SECTION_310_16000000000000000">
 Java</A>
 </H3>
 N/A
 <A HREF=#top>    Back to Top</A><br><br>
 -->
 
-<H3><A NAME="SECTION00017000000000000000">
+<H3><A NAME="SECTION_310_17000000000000000">
 Python</A>
 </H3>
 <ul><li>
@@ -247,34 +266,14 @@ to generate Gaussian beam window function.
 <HR>
 
 
-<h2>New Features in HEALPix 3.00</h2>
+<h3><a name="SECTION_300_10000000000000000">New Features in HEALPix 3.00</a></h3>
 <P>
 <!--
 The previous version of the HEALPix package (3.00) offered the following new
 features: -->
 
-<!--Table of Child-Links-->
 
-<ul CLASS="ChildLinks">
-<li><A name="tex2html3"
-  href="#SECTION11111000000000000000">General</A>
-<li><A name="tex2html4"
-  href="#SECTION11112000000000000000">C</A>
-<li><A name="tex2html5"
-  href="#SECTION11113000000000000000">C++</A>
-<li><A name="tex2html6"
-  href="#SECTION11114000000000000000">Fortran</A>
-<li><A name="tex2html7"
-  href="#SECTION11115000000000000000">IDL</A>
-<li><A name="tex2html8"
-  href="#SECTION11116000000000000000">Java</A>
-<li><A name="tex2html9"
-  href="#SECTION11117000000000000000">Python</A>
-</ul>
-<!--End of Table of Child-Links-->
-</p>
-
-<h3><A name="SECTION11111000000000000000">
+<h3><A name="SECTION_300_11000000000000000">
 General</A>
 </h3>
 <ul><li>
@@ -283,7 +282,7 @@ PDF and HTML documentation.
 </li></ul>
 <A href=#top>    Back to Top</A><br><br>
 
-<h3><A name="SECTION11112000000000000000">
+<h3><A name="SECTION_300_12000000000000000">
 C</A>
 </h3>
 
@@ -297,7 +296,7 @@ They have the same name as the traditional functions, with a ''64'' suffix appen
 </ul>
 <A href=#top>    Back to Top</A><br><br>
 
-<h3><A name="SECTION11113000000000000000">
+<h3><A name="SECTION_300_13000000000000000">
 C++</A>
 </h3>
 
@@ -359,7 +358,7 @@ Facilities now check input maps for undefined pixels before calling map2alm().
 <A href=#top>    Back to Top</A><br><br>
 
 
-<h3><A name="SECTION11114000000000000000">
+<h3><A name="SECTION_300_14000000000000000">
 Fortran 90 facilities and
 subroutines
 </A>
@@ -404,7 +403,7 @@ analyzed;
 <A href=#top>    Back to Top</A><br><br>
 
 
-<h3><A name="SECTION11115000000000000000">
+<h3><A name="SECTION_300_15000000000000000">
 IDL</A>
 </h3>
 
@@ -462,7 +461,7 @@ maps
 <A href=#top>    Back to Top</A><br><br>
 
 
-<h3><A name="SECTION11116000000000000000">
+<h3><A name="SECTION_300_16000000000000000">
 Java</A>
 </h3>
 
@@ -496,7 +495,7 @@ to the HealpixIndex, Healpix and PixTools classes:
  by integral factors, some by more than an order of magnitude.
 </li>
 <li>re-implementation of queryDisc and queryPolygon, with same new features
-as the C++ implementation (see install:cpp:queryabove).
+as the C++ implementation (see above).
 </li>
 <li>the HealpixProc class offers a procedural (instead of object-oriented)
  interface to the HealpixBase functionality, which simplifies transition
@@ -514,7 +513,7 @@ as the C++ implementation (see install:cpp:queryabove).
 <A href=#top>    Back to Top</A><br><br>
 
 
-<h3><A name="SECTION11117000000000000000">
+<h3><A name="SECTION_300_17000000000000000">
 Python</A>
 </h3>
 
