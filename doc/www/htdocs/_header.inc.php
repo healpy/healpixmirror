@@ -26,6 +26,11 @@
 
 <body>
 
+<!-- Google analytics -->
+<?php 
+  include_once("_analytics_tracking.php") 
+?>
+
 <!-- wrap starts here -->
 <div id="wrap">
 
