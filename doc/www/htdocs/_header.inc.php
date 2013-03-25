@@ -22,14 +22,16 @@
 ?>
   <meta http-equiv="content-type" content="application/xhtml+xml; charset=UTF-8" />
   <link rel="stylesheet" href="images/Healpix.css" type="text/css" />
-</head>
 
-<body>
 
 <!-- Google analytics -->
 <?php 
   include_once("_analytics_tracking.php") 
 ?>
+</head>
+
+<body>
+
 
 <!-- wrap starts here -->
 <div id="wrap">
