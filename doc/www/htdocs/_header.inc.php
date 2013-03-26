@@ -26,7 +26,7 @@
 
 <!-- Google analytics -->
 <?php 
-  include_once("_analytics_tracking.php") 
+  include_once("_analytics_tracking.php");
 ?>
 </head>
 

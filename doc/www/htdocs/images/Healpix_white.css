@@ -12,6 +12,12 @@
    HTML ELEMENTS
 ------------------------------------------------- */ 
 
+
+/* Top Elements */
+* { margin: 0; padding: 0; outline: 0; 
+    border: 0; font-size: 100%; font:inherit;}  
+/*   vertical-align: baseline; }  */
+
 @font-face {
     font-family: 'Sui_Generis_Italic';
     src: url('SUIGI___.eot'); /* src: url(SUIGI___.TTF); */
@@ -22,9 +28,6 @@
     font-weight:100;
     font-style:normal;
 }
-
-/* Top Elements */
-* { margin: 0; padding: 0; outline: 0 }
 
 
 body {
@@ -42,6 +45,7 @@ a, a:active, a:link {
 }
 a:visited {
 	text-decoration: none;
+	color: #707090;			
 }
 a:hover {
 	color: #000;
@@ -150,7 +154,7 @@ td {
 	padding-left: 12px;
 	padding-right: 12px;
 	border: 1px solid #FFF;	
-	font-size: 13px; /* FONT-SIZE default */
+	font-size: 118%; /* FONT-SIZE default */
 }
 /* end - table */
 
@@ -366,15 +370,15 @@ input.button {
 }
 #main ul li {
 	list-style-image: url(bullet3.gif);
-	font-size: 13px; /* FONT-SIZE default */
+	font-size: 118%; /* FONT-SIZE default */
 }
 #main ol li {
-	font-size: 13px; /* FONT-SIZE default */
+	font-size: 118%; /* FONT-SIZE default */
 }
 
-/* FONT-SIZE default */
+/* FONT-SIZE default, with 11px=100% */
 #main p {
-	font-size: 13px;
+	font-size: 118%;
 }
 
 /* Sidebar */	
