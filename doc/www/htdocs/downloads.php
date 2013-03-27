@@ -7,7 +7,18 @@
 
 <p>
 The HEALPix software can be downloaded freely, without registration.
-However, if you wish to be kept informed of HEALPix developments, updates and new releases, provide your name and e-mail address below:
+However, if you wish to be kept informed of HEALPix developments, updates and new releases, 
+please subscribe to the moderated <tt>Healpix-users</tt> mailing list by filling in <a href="https://lists.sourceforge.net/lists/listinfo/healpix-users">its web form</a>, <em>or</em> by sending to 
+
+<script language=javascript><!--
+var p1 = 'ma'; var n1 = 'healpix&#045;'; var s1 = '&#063;'; var p2 = 'ilto&'; var n2 = 'users&#045;'; var s2 = 'subject&#061;'; var p3 = '#58;'; var n3 = 'request&#64;'; var s3 = 'subscribe'
+var n5 = 'sourceforge&#046;'; var n4 = 'lists&#046;'; var n6 = 'net';
+  document.write('<a href='+p1+p2+p3+n1+n2+n3+n4+n5+n6+s1+s2+s3+'>'+n1+n2+n3+n4+n5+n6+'</a>')
+--></script>
+
+an empty email with only &quot;<tt>subscribe</tt>&quot; on the Subject line.
+</p>
+<!-- provide your name and e-mail address below:
 </p>
 
 			<form action="/cgi-bin/register.cgi">
@@ -37,7 +48,9 @@ However, if you wish to be kept informed of HEALPix developments, updates and ne
     </td>
   </tr>
 </table>			
-			</form>				
+			</form>	
+-->
+			
 <p>		
 <A name="top"></A>
 HEALPix package can be downloaded 	
