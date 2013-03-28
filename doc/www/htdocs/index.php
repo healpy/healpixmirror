@@ -9,8 +9,8 @@ HEALPix is an acronym for
 <strong>E</strong>qual 
 <strong>A</strong>rea 
 iso<strong>L</strong>atitude 
-<strong>Pix</strong>elization 
-of a sphere. As suggested in the name, this pixelization produces a subdivision of a spherical surface in which each pixel covers the same surface area as every other pixel.
+<strong>Pix</strong>elation 
+of a sphere. As suggested in the name, this pixelation produces a subdivision of a spherical surface in which each pixel covers the same surface area as every other pixel.
 </p>
 
 <h2>Purpose</h2>

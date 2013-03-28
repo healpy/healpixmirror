@@ -6,7 +6,7 @@
 		<!-- sidebar starts -->
 		<div id="sidebar">
 		
-			<h3>Latest news</h3>
+			<h3>Latest News</h3>
 <?php require('_news.inc.php'); ?>
 
 <!--
@@ -16,20 +16,24 @@
 </div>
 -->
 
-<h3>Search Box</h3>	
-	<form action="http://www.google.com/search" class="searchform" method="get">
+<h3>Site Search</h3>	
+	<form action="http://www.google.com/search" class="searchform" method="get" target="_blank">
 	<table width=100% border="0" cellpadding="0" cellspacing="0">
-	<tr align=center><td colspan=2>
+	<tr align="center"><td colspan="2">
 	<input type="text"   name="q" size="32" maxlength="255" value="" />
 	</td></tr>
-	<tr align=center><td colspan=2>
+	<tr align="center"><td colspan="2">
 	<input class="button" type="submit" value="Search" />
 	<input class="button" type="reset" value="Clear" />
 	</td></tr>
 	<tr><td align="center" style="font-size:100%">
 	<input type="checkbox"  name="sitesearch"
 	 value="healpix.sourceforge.net" checked /> only search this site<br />
-	</td></tr></table>
+	</td></tr>
+	<tr align="center"><td colspan="2" style="font-size:100%">
+	Search result will appear in a new tab
+	</td></tr>
+	</table>
 	</form>		
 
 <!--

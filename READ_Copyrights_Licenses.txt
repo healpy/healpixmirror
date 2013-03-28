@@ -1,6 +1,6 @@
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-  Copyright (C) 1997-2012  HEALPix collaboration
+  Copyright (C) 1997-2013  HEALPix collaboration
 
 
   HEALPix is free software; you can redistribute it and/or modify
@@ -17,14 +17,14 @@
   along with HEALPix; if not, write to the Free Software
   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-  For more information about HEALPix see http://healpix.jpl.nasa.gov
+  For more information about HEALPix see http://healpix.sourceforge.net
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 HISTORY
  
  This is a software package for HEALPix, the Hierarchical, Equal Area, and 
- iso-Latitude Pixelisation of the sphere, which was  originally devised 
+ iso-Latitude Pixelation of the sphere, which was  originally devised 
  in early 1997 by Krzysztof M. Gorski at the Theoretical Astrophysics 
  Center in Copenhagen. Early development of the HEALPix concept and initial 
  implementation was made in the spring of 1997 in  collaborative work 
@@ -46,7 +46,7 @@ HISTORY
  Benjamin D. Wandelt (bwandelt@iap.fr).
 
  The HEALPix package is available at this address: 
- http://healpix.jpl.nasa.gov
+ http://healpix.sourceforge.net
 
 COPYRIGHTS
 
@@ -94,7 +94,7 @@ COPYRIGHTS
   All rights reserved.
 
  Copyright 2005 by  H.K. Eriksen, Snorre Boasson (snorre.boasson@ntnu.no), M. Reinecke, E. Hivon
- for the MPI implementation of Healpix F90 alm routines
+ for the MPI implementation of HEALPix F90 alm routines
   All rights reserved.
 
  Copyright 2008 by E. Hivon, M. Reinecke, W. O'Mullane, H.K. Eriksen, K.M. Gorski, A.J. Banday, E. Joliet
@@ -121,12 +121,20 @@ COPYRIGHTS
  for the HEALPix package version 3.00
   All rights reserved.
 
+ Copyright 2013 by E. Hivon, M. Reinecke, W. O'Mullane, E. Joliet, K.M. Gorski, A.J. Banday
+ for the HEALPix package version 3.10
+  All rights reserved.
+
+ Copyright 2013 by A. Zonca, C. Rosset
+ for the healpy package version 1.5.0
+  All rights reserved.
+
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 ACKNOWLEDGMENTS
 
 We thank the following people for their contributions and/or suggestions, which
-significantly helped us to improve Healpix throughout its several releases
+significantly helped us to improve HEALPix throughout its several releases
 
  Reza Ansari,
  Marc Ashdown,

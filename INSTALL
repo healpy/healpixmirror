@@ -11,7 +11,7 @@ However we highly recommend the user to read the documentation
 or
    doc/pdf/pdf_index.pdf 
 or   
-   http://healpix.jpl.nasa.gov/healpixSoftwareDocumentation.shtml)
+   http://healpix.sourceforge.net/documentation.php)
 
 All packages, expect the java one (see further down), can be configured, 
 compiled and tested with the commands
@@ -127,7 +127,7 @@ or
 
 
 For background information on healpix see
-   http://healpix.jpl.nasa.gov
+   http://healpix.sourceforge.net
 or
    doc/pdf/intro.pdf
 or

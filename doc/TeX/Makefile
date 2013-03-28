@@ -65,7 +65,7 @@ install.html: $(style) healpix.perl
 	@echo '=================================='
 	mkdir -p $(HTMLDIR)
 	-cp $(HTMLDIR)/*labels.pl /tmp
-	-$(LATEX2HTML) $(L2HFLAGS) -split 3 -prefix install   -t "Installing Healpix"       install
+	-$(LATEX2HTML) $(L2HFLAGS) -split 3 -prefix install   -t "Installing HEALPix"       install
 	-$(EQNFIX) $(HTMLDIR)/install
 	mv -f $(HTMLDIR)/WARNINGS $(HTMLDIR)/WARNINGS_install
 
@@ -74,7 +74,7 @@ intro.html: $(style) healpix.perl
 	@echo '          INTRO.HTML              '
 	@echo '=================================='
 	mkdir -p $(HTMLDIR)
-	-$(LATEX2HTML) $(L2HFLAGS) -split 4 -prefix intro -external_file ./intro    -t "Introduction to Healpix"  intro
+	-$(LATEX2HTML) $(L2HFLAGS) -split 4 -prefix intro -external_file ./intro    -t "Introduction to HEALPix"  intro
 	-$(EQNFIX) $(HTMLDIR)/intro > /dev/null
 	mv -f $(HTMLDIR)/WARNINGS $(HTMLDIR)/WARNINGS_intro
 
@@ -83,7 +83,7 @@ idl.html: $(style) healpix.perl
 	@echo '            IDL.HTML              '
 	@echo '=================================='
 	mkdir -p $(HTMLDIR)
-	-$(LATEX2HTML) $(L2HFLAGS) -split 4 -prefix idl       -t "Healpix/IDL subroutines"   idl
+	-$(LATEX2HTML) $(L2HFLAGS) -split 4 -prefix idl       -t "HEALPix/IDL subroutines"   idl
 	-$(EQNFIX) $(HTMLDIR)/idl
 	mv -f $(HTMLDIR)/WARNINGS $(HTMLDIR)/WARNINGS_idl
 
@@ -93,7 +93,7 @@ subroutines.html: $(style) healpix.perl
 	@echo '      SUBROUTINES.HTML            '
 	@echo '=================================='
 	mkdir -p $(HTMLDIR)
-	-$(LATEX2HTML) $(L2HFLAGS) -prefix subroutines -t "Healpix/F90 subroutines" subroutines
+	-$(LATEX2HTML) $(L2HFLAGS) -prefix subroutines -t "HEALPix/F90 subroutines" subroutines
 	-$(EQNFIX) $(HTMLDIR)/subroutines
 	mv -f $(HTMLDIR)/WARNINGS $(HTMLDIR)/WARNINGS_subroutines
 
@@ -102,7 +102,7 @@ facilities.html: $(style) healpix.perl
 	@echo '        FACILITIES.HTML           '
 	@echo '=================================='
 	mkdir -p $(HTMLDIR)
-	-$(LATEX2HTML) $(L2HFLAGS) -prefix facilities -t "Healpix/F90 facilities"  facilities
+	-$(LATEX2HTML) $(L2HFLAGS) -prefix facilities -t "HEALPix/F90 facilities"  facilities
 	-$(EQNFIX) $(HTMLDIR)/facilities
 	mv -f $(HTMLDIR)/WARNINGS $(HTMLDIR)/WARNINGS_facilities
 
@@ -111,7 +111,7 @@ csub.html: $(style) healpix.perl
 	@echo '            CSUB.HTML             '
 	@echo '=================================='
 	mkdir -p $(HTMLDIR)
-	-$(LATEX2HTML) $(L2HFLAGS) -prefix csub       -t "Healpix/C subroutines"  csub
+	-$(LATEX2HTML) $(L2HFLAGS) -prefix csub       -t "HEALPix/C subroutines"  csub
 	-$(EQNFIX) $(HTMLDIR)/csub
 	mv -f $(HTMLDIR)/WARNINGS $(HTMLDIR)/WARNINGS_csub
 

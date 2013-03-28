@@ -38,7 +38,7 @@
 \author{Krzysztof M.~G\'orski, Benjamin D.~Wandelt, Eric Hivon, Frode K.~Hansen,
 and Anthony J. Banday}
 \abstract{
-\healpix is a Hierarchical, Equal Area, and iso-Latitude Pixelisation 
+\healpix is a Hierarchical, Equal Area, and iso-Latitude Pixelation 
 of the sphere  designed to support efficiently
 (1) local operations on the pixel set,
 (2) a hierarchical tree structure for  multi-resolution applications, and
@@ -147,7 +147,7 @@ This document is an introduction to the
 properties of our proposed approach for a high resolution numerical
 representation of  functions on the sphere
  --- the Hierarchical
-Equal Area and iso-Latitude Pixelization  (\healpixns, see 
+Equal Area and iso-Latitude Pixelation  (\healpixns, see 
 \htmladdnormallink{{\tt \healpixwebpage}}
 {\healpixwebpage}), 
 and the associated multi-purpose computer 
@@ -238,7 +238,7 @@ of the data base.
 \caption[Quadrilateral tree pixel numbering]%
 {\label{fig:quadtree}%
 Quadrilateral tree pixel numbering. 
-The coarsely pixelised coordinate patch on
+The coarsely pixelated coordinate patch on
 the left consists 
 of four pixels. Two bits suffice to label the pixels. 
 To increase the resolution, every 
@@ -293,7 +293,7 @@ and \cite{szalay}  --- a triangular grid), but none
 satisfies simultaneously all three stated requirements. 
 
 All three requirements formulated above are satisfied by construction with the
-Hierarchical Equal Area, iso-Latitude Pixelisation (\healpixns) 
+Hierarchical Equal Area, iso-Latitude Pixelation (\healpixns) 
 of the sphere, which is shown in Figure~\ref{fig:HEALPIX}.
 %\htmlonly{ (on page~\pageref{page:HEALPIX}). 
 A more detailed description of
@@ -504,7 +504,7 @@ $-\ell_{max}$ to $\ell_{max}$ but all quantities with index ${\ell m}$ vanish
 for $m>\ell$. Our conventions for $Y_{\ell m}$ are defined in subsection
 \ref{sphericalstuff} below.
 
-Pixelising $f({ \gamma})$ corresponds to sampling it at $N_{\rm{pix}}$
+Pixelating $f({ \gamma})$ corresponds to sampling it at $N_{\rm{pix}}$
  locations $\gamma_{p}$, $p\in[0,N_{\rm{pix}}-1]$. The sample
 function values $f_p$ can then be used  
 to estimate  $a_{\ell m}$. A straightforward estimator is
@@ -1094,7 +1094,7 @@ $(-1)^m$ ({\it a.k.a.} Condon-Shortley phase).
 \renewcommand{\u}{{\bf{u}}}
 %\warnhtml
 
-A pixelised signal $f(p)$ is the average within each pixel $p$ (with surface
+A pixelated signal $f(p)$ is the average within each pixel $p$ (with surface
 area $\Opix$) of the underlying signal 
 \begin{eqnarray}
   f(p) &\myequal& \int d\u w_p(\u)f(\u) \myhtmlimage{}
@@ -1108,7 +1108,7 @@ Eq.~(\ref{eq:alms}) then becomes
 \end{eqnarray}
 where
 %% $\int d\u w_p(\u) = 1$
-%% The effect of the finite pixel size on the measured power of a pixelized map
+%% The effect of the finite pixel size on the measured power of a pixelated map
 %% depends on the average of the Spherical Harmonic on pixel $p$ (of surface area $\Opix$), defined as
 \begin{eqnarray}
  	w_{\ell m}(p) &\myequal& \int d\u w_p(\u) Y_{\ell m}(\u), \myhtmlimage{} \label{eq:pixel_lmp} 
@@ -1117,7 +1117,7 @@ is the Spherical Harmonic Transform of the pixel $p$.
 %% where $w_p$ is equal to $1/\Opix$ within the pixel, and equal to 0 outside, such that
 %% $\int d\u w_p(\u) = 1$.
 
-However, complete analysis of a pixelised map with the exact $w_{\ell m}(p)$
+However, complete analysis of a pixelated map with the exact $w_{\ell m}(p)$
 defined above would be computationally intractable (because of azimutal
 variation of pixel shape over the polar caps of the \healpix grid), 
 and some simplifying asumptions have to be
@@ -1135,7 +1135,7 @@ where we introduced the $m$-averaged window function
 which is independent of the pixel location on the sky.
 
 If we assume all the pixels to be identical, the power spectrum of the
-pixelized map, $C_{\ell}^{\rm pix}$, is related to the hypothetical unpixelized
+pixelated map, $C_{\ell}^{\rm pix}$, is related to the hypothetical unpixelated
 one, $C_{\ell}^{\rm unpix}$, by 
 \begin{eqnarray}
 	C_{\ell}^{\rm pix} &\myequal& w^2_{\ell} C_{\ell}^{\rm unpix} \myhtmlimage{}

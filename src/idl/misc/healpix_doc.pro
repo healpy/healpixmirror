@@ -76,6 +76,7 @@ pro healpix_doc, help=help, html=html, pdf=pdf, whole=whole
 ;        2010-03-12: opens main.htm instead of index.htm when used with
 ;        /html,/whole
 ;        2012-03-01: replaces online_help with call to healpix_doc script
+;        2013-03-28: recursive search of healpix_doc script
 ;-
 
 in_gdl = is_gdl()
@@ -142,8 +143,16 @@ endelse
 
 if (~file_test(doc_path)) then begin
     print,'ERROR: documentation file ('+doc_path+') not found.'
+    return
 endif else begin
-    cmd = !healpix.directory+'/'+'healpix_doc'
+    ; cmd = !healpix.directory+'/'+'healpix_doc'
+    ; recursively search subdirectories of !healpix.directory
+    cmd = file_search(!healpix.directory,'healpix_doc',/FULLY_QUALIFY_PATH,count=count)
+    if (count lt 1) then begin
+        print,'ERROR: healpix_doc shell script was not found.'
+        return
+    endif 
+    cmd = cmd[0]
     if keyword_set(pdf) then begin
         cmd += ' -p '
     endif else begin
