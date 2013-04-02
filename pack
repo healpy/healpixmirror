@@ -110,6 +110,26 @@ updateCopyrightDate () {
     done
 }
 #---------------
+updateHEALPixWebSite () {
+
+    dir=${here}
+    instring='healpix.jpl.nasa.gov'
+    outstring='healpix.sourceforge.net'
+    #tmpfile='/tmp/tmp_updatecopyright.txt'
+
+    echo "In                $dir"
+    echo "Changing          $instring -> $outstring"
+
+    inlist=`find $dir -type f | grep -v \\.svn | grep -v java | grep -v cxx | grep -vi bk | xargs grep "$instring" | awk -F: '{print $1}'`
+
+    for file in $inlist ; do
+	ls -l $file
+	grep "$instring" $file
+	sed -i "s|$instring|$outstring|" ${file}
+	grep "$outstring" $file
+    done
+}
+#---------------
 
 
 revision=`svnversion .`
@@ -221,6 +241,8 @@ done
 # update copyright date in header
 cd ${here}
 updateCopyrightDate
+cd ${here}
+updateHEALPixWebSite
 cd ${here}
 
 [ -d gpl_header ] && \rm -rf gpl_header

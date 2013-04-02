@@ -65,6 +65,7 @@ PRO ang2pix_ring, nside, theta, phi, ipring
 ;    Mar 2011, EH, IAP: MOD -> AND, replaced repeated WHERE with HISTOGRAM
 ;    Apr 2011, EH, IAP, correction of a bug affecting phi out of [-2Pi, 2Pi] 
 ;    Aug 2011, EH, IAP: more accurate calculations close to pole
+;    Apr 2013, EH, IAP: works with scalar theta and phi
 ;-
 ;
 ; in North polar cap
@@ -113,6 +114,7 @@ PRO ang2pix_ring, nside, theta, phi, ipring
   ;;;;;phi_in = phi + (phi LE 0.d0)*twopi
   phi_in += (phi LE 0.d0)*twopi ; bug correction 2011-04-28
 
+  if (n_elements(cth_in) eq 1) then cth_in = [cth_in] ; make sure cth_in is an array (for HISTOGRAM)
   histo = histogram( cth_in * 1.5d0, min=-3.d0, max=3.d0, binsize=2.d0, reverse=rev)
   n_sp  = histo[0]
   n_eqt = histo[1]

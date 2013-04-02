@@ -106,7 +106,7 @@ pro write_fits_sb, filename, prim_st, exten_st, Coordsys=coordsys, Nested=nested
 ; ----
 ; for consistency with Healpix format the user should 
 ; give missing pixels
-; the value -1.6375e30 in the array data
+; the value !healpix.bad_value = -1.6375e30 in the array data
 ;
 ; MODIFICATION HISTORY:
 ;    written by Eric Hivon, IAP, Nov 11 1997

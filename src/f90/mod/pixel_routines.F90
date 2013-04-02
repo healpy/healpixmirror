@@ -22,7 +22,7 @@
 !  along with HEALPix; if not, write to the Free Software
 !  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 !
-!  For more information about HEALPix see http://healpix.jpl.nasa.gov
+!  For more information about HEALPix see http://healpix.sourceforge.net
 !
 !-----------------------------------------------------------------------------
 !
@@ -1919,6 +1919,7 @@
 ! 2011-06-09: uses ring2z
 ! 2011-10-18: improve fudge radius determination.
 ! New algorithm for Inclusive case: test boundary of edge pixels on each ring
+!    2013-04-02: bug correction in query_disc in inclusive mode
     !=======================================================================
 #ifdef DOI8B
   subroutine query_disc_8( nside, vector0, radius, listpix, nlist, nest, inclusive)
@@ -2019,8 +2020,8 @@
        nsideh = min(NS_MAX8, nside * int(nsboost,i8b))
        radiush = fudge_query_radius(nsideh, radius, quadratic=.true.)
 
-       irmin = ring_num(nsideh, zmax)
-       irmax = ring_num(nsideh, zmin)
+       irmin = ring_num(nsideh, zmax, shift=+1) ! shifted South
+       irmax = ring_num(nsideh, zmin, shift=-1) ! shifted North
        nrh = irmax - irmin + 1
        allocate(zlist(1:nrh), dphilist(1:nrh))
        do iz = irmin, irmax

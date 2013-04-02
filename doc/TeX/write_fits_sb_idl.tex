@@ -131,13 +131,16 @@ given in {\tt Header}. \\
 The data is assumed to represent a full sky data set with 
 the number of data points npix = 12*Nside*Nside
 unless   \hfill\newline
-Partial is set OR the input fits header contains OBJECT =
+Partial is set {\em or} the input FITS header contains OBJECT =
                'PARTIAL' \hfill\newline
        AND \hfill\newline
-         the Nside qualifier is given a valid value OR the FITS header contains
-                 a NSIDE}
+         the Nside qualifier is given a valid value {\em or} the FITS header contains
+                 a NSIDE.\\
 
-If {\tt Nothealpix} is set, the restrictions on Nside a void.}
+In the \healpix scheme, invalid or missing pixels should be given the value {\tt
+!healpix.bad\_value}$= -1.63750\, 10^{30}$.\\
+
+If {\tt Nothealpix} is set, the restrictions on Nside are void.}}
 \end{codedescription}
 
 

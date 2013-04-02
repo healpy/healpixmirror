@@ -22,7 +22,7 @@
 !  along with HEALPix; if not, write to the Free Software
 !  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 !
-!  For more information about HEALPix see http://healpix.jpl.nasa.gov
+!  For more information about HEALPix see http://healpix.sourceforge.net
 !
 !-----------------------------------------------------------------------------
 module pix_tools
@@ -55,6 +55,7 @@ module pix_tools
 !    2011-10-13: improved query_triangle, introduced process_intervals
 !    2012-07-17: Parallel OpenMP implementation of medfiltmap
 !    2012-08-27: correction of a bug affecting neighbours_nest and next_in_line_nest at Nside>8192
+!    2013-04-02: bug correction in query_disc in inclusive mode
 !==================================================================
   ! subroutine query_strip                          Done (To be Tested) depends on in_ring
   ! subroutine query_polygon                        Done (To be Tested) depends on isort
@@ -843,13 +844,14 @@ contains
     integer(i4b), dimension(1:,1:), intent(inout) :: ringphi
     integer(i4b),                   intent(inout) :: ngr
 
-    integer(i4b) :: i, j, k, kk, ngr_out, diff, iphi, i0
+    integer(i4b) :: i, j, k, kk, ngr_out, diff, iphi, i0, nrh
     real(dp), dimension(1:2*nsboost+1) :: phiw, phie
     real(dp) :: dd, dph, phic
 
   !=======================================================================
     if (nsboost <= 1) return
 
+    nrh = irmax-irmin+1
     do i=1, ngr ! loop on low-res rings
        i0 = ringphi(1,i) * nsboost - nsboost - irmin
        do k=-1,1,2 ! West and East side of disc
@@ -859,11 +861,13 @@ contains
           if (ringphi(2,i) <= ringphi(3,i) .and. iphi >= 0) then
              call find_pixel_bounds(nside, nsboost, ringphi(1,i), iphi, phiw, phie)
              do j=1, 2*nsboost+1
-                phic = (phie(i)+phiw(i))*0.5_dp ! pixel center
-                dph  = (phie(i)-phiw(i))*0.5_dp + dphi(i0+j) ! pixel size + circle radius
-                dd = abs(phi0 - phic)    ! distance from disc center to pixel border sample
-                dd = min(dd, twopi - dd) ! in [0,Pi]
-                if (dd <= dph) goto 1000 ! pixel touched by disc, move to next one
+                if (i0+j >= 1 .and. i0+j <= nrh) then
+                   phic = (phie(j)+phiw(j))*0.5_dp ! pixel center
+                   dph  = (phie(j)-phiw(j))*0.5_dp + dphi(i0+j) ! pixel size + circle radius
+                   dd = abs(phi0 - phic)    ! distance from disc center to pixel border sample
+                   dd = min(dd, twopi - dd) ! in [0,Pi]
+                   if (dd <= dph) goto 1000 ! pixel touched by disc, move to next one
+                endif
              enddo
              ringphi(kk, i)= iphi - k ! pixel not in disc, move edge pixel inwards
              goto 222 ! try next pixel inward
@@ -902,7 +906,8 @@ contains
   !=======================================================================
 
     call pixels_per_ring(nside, iring, npr, kshift)
-    f = ((/ (i,i=0,2*nsboost) /) - nsboost) / nsboost
+    !f = ((/ (i,i=0,2*nsboost) /) - nsboost) / nsboost
+    f = ((/ (i*1.d0,i=0,2*nsboost) /) - nsboost*1.d0) / nsboost
 
     nq = npr/4 ! number of pixels on current ring in [0,Pi/2] (quadrant)
     transition = (iring == nside .or. iring == nside*3)

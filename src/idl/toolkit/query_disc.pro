@@ -261,6 +261,7 @@ rep:
             find_pixel_bounds, nside, nsboost, ringphi[i,0], ringphi[i,kk], phiw, phie
             phic = (phie+phiw)*.5d0
             dphi = (phie-phiw)*.5d0
+            ;print,nside,izlist[0],max(izlist),k,n_elements(dphilist),i,minmax(subrings)
             dd = abs(phi0list[subrings]-phic) ; distance from disc center to pixel border sample
             dd <= (2.d0 * !dpi - dd) ; in [0,Pi]
             touching = max(dd le (dphilist[subrings]+dphi)) ; 0:out or 1:in
