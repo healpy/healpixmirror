@@ -409,6 +409,10 @@ template <typename T, typename storageManager> class arr2T
     void fill (const T &val)
       { for (tsize m=0; m<s1*s2; ++m) d[m]=val; }
 
+    /*! Multiplies all array elements by \a val. */
+    void scale (const T &val)
+      { for (tsize m=0; m<s1*s2; ++m) d[m]*=val; }
+
     /*! Changes the array to be a copy of \a orig. */
     arr2T &operator= (const arr2T &orig)
       {
