@@ -36,7 +36,7 @@ import nom.tam.util.BufferedDataOutputStream;
 
 /**
  * A Healpix map can generate sky maps encoded in the HEALPix sky indexing
- * scheme (http://healpix.jpl.nasa.gov/).
+ * scheme (http://healpix.sourceforge.net/).
  *
  * The created maps can be written to a FITS data set for further processing
  * with e.g. visualisation/analysis tools in the HEALPix distribution.
