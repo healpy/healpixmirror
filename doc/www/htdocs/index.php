@@ -172,6 +172,12 @@ as can be seen from the <a href="resources.php">Resources</a> and <a href="galle
                   file manipulation.
                 </li>
                 <!-- br -->
+                <li>
+                  Facilities to output HEALPix maps into 
+		<a href="http://earth.google.com/">Google Earth</a>/<a href="http://earth.google.com/sky/skyedu.html">Google Sky</a> compliant images
+		and into <a href=" http://fulldome.ryanwyatt.net/fulldome_domemasterSpec_v05.pdf">DomeMaster</a> format used in planetariums.
+                </li>
+                <!-- br -->
               </ul>
 </p>
 <p>
