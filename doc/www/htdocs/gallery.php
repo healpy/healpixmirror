@@ -5,11 +5,16 @@
 
 <h2>Picture Gallery</h2>
 
-<h3>Planck 2013 full sky CMB map</h3>
+<h3>Planck 2013</h3>
+<h4>CMB map</h4>
 <p>
 <a href="images/CMB_2k.jpg" title="Click to enlarge"><img src="images/CMB_2k_tb.jpg" alt="Planck 2013 CMB map" width="500" align="center"></a>
 </p>
 
+<h4>CMB and Frequency maps</h4>
+<p>
+Planck maps can be seen in <a href="http://astrog80.astro.cf.ac.uk/Planck/Chromoscope/">2D (Planck Chromoscope)</a> and <a href="http://www.thecmb.org">3D (thecmb.org)</a>
+</p>
 
 <h3>Earth topography</h3>
 <p align="center">

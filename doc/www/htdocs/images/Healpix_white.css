@@ -53,7 +53,7 @@ a:hover {
 }
 
 /* headers */
-h1, h2, h3 {
+h1, h2, h3, h4 {
 	font-family: 'Trebuchet MS', Tahoma, Arial, Sans-serif;
 	color: #ABABAB;
 }
@@ -71,6 +71,12 @@ h2 {
 h3 {
 	font-size: 1.8em;
 	font-weight: normal;
+	padding: 20px 10px 5px 10px;	
+}
+h4 {
+	font-size: 1.4em;
+	font-weight: normal;
+	font-style: italic;
 	padding: 20px 10px 5px 10px;	
 }
 

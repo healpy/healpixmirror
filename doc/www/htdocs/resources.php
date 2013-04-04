@@ -5,7 +5,7 @@
 <br>
 <ul>
 <li>
-The <a href="http://www.rssd.esa.int/index.php?project=Planck">Planck</a> satellite full sky maps, <a href="http://www.sciops.esa.int/index.php?project=PLANCK&page=Planck_Published_Papers">observed at 30 to 857 GHz with unprecedented accuracy</a>, and their decomposition in cosmological and astrophysical components are available in HEALPix format from the <a href="http://www.sciops.esa.int/index.php?project=planck&page=Planck_Legacy_Archive">Planck Legacy Archive</a>
+The <a href="http://www.rssd.esa.int/index.php?project=Planck">Planck</a> satellite full sky maps, <a href="http://www.sciops.esa.int/index.php?project=PLANCK&page=Planck_Published_Papers">observed at 30 to 857 GHz with unprecedented accuracy</a>, and their decomposition in cosmological and astrophysical components are available in HEALPix format from the <a href="http://www.sciops.esa.int/index.php?project=planck&page=Planck_Legacy_Archive">Planck Legacy Archive</a>.
 </li>
 
 <li>
