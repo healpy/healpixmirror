@@ -39,18 +39,18 @@
 /*! \defgroup mathutilsgroup Mathematical helper functions */
 /*! \{ */
 
-/*! Returns \e true if | \a a-b | < \a epsilon * | \a b |, else \e false. */
+/*! Returns \e true if | \a a-b | <= \a epsilon * | \a b |, else \e false. */
 template<typename F> inline bool approx (F a, F b, F epsilon=1e-5)
   {
   using namespace std;
-  return abs(a-b) < (epsilon*abs(b));
+  return abs(a-b) <= (epsilon*abs(b));
   }
 
-/*! Returns \e true if | \a a-b | < \a epsilon, else \e false. */
+/*! Returns \e true if | \a a-b | <= \a epsilon, else \e false. */
 template<typename F> inline bool abs_approx (F a, F b, F epsilon=1e-5)
   {
   using namespace std;
-  return abs(a-b) < epsilon;
+  return abs(a-b) <= epsilon;
   }
 
 /*! Returns the largest integer which is smaller than (or equal to) \a arg. */
