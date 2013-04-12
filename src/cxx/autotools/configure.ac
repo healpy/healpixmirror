@@ -53,7 +53,17 @@ CPPFLAGS="$CPPFLAGS $OPENMP_CFLAGS"
 CFLAGS="$CFLAGS $OPENMP_CFLAGS"
 AS_IF(
     [test "x$enable_native_optimizations" = "xyes"],
-    [AX_CHECK_COMPILE_FLAG([-march=native],[CC="$CC -march=native"])]
+    [AX_CHECK_COMPILE_FLAG([-march=native],[CC="$CC -march=native"])],
+    dnl
+    dnl FIXME: On GCC 4.4, we hit an internal compiler error unless either
+    dnl -march=native or -fno-tree-fre is specified.
+    dnl
+    [
+        AS_IF(
+            [test "x$GCC" = "xyes" -a "x`$CC -dumpversion | cut -d. -f1,2`" = "x4.4"],
+            [AX_CHECK_COMPILE_FLAG([-fno-tree-fre], [CFLAGS="$CFLAGS -fno-tree-fre"])]
+        )
+    ]
 )
 AX_CHECK_COMPILE_FLAG([-fno-tree-vectorize],[CFLAGS="$CFLAGS -fno-tree-vectorize"])
 AX_CHECK_COMPILE_FLAG([-ffast-math],[CFLAGS="$CFLAGS -ffast-math"])
@@ -65,7 +75,17 @@ AC_OPENMP
 CXXFLAGS="$CXXFLAGS $OPENMP_CFLAGS"
 AS_IF(
     [test "x$enable_native_optimizations" = "xyes"],
-    [AX_CHECK_COMPILE_FLAG([-march=native],[CXX="$CXX -march=native"])]
+    [AX_CHECK_COMPILE_FLAG([-march=native],[CXX="$CXX -march=native"])],
+    dnl
+    dnl FIXME: On GCC 4.4, we hit an internal compiler error unless either
+    dnl -march=native or -fno-tree-fre is specified.
+    dnl
+    [
+        AS_IF(
+            [test "x$GCC_CXX" = "xyes" -a "x`$CXX -dumpversion | cut -d. -f1,2`" = "x4.4"],
+            [AX_CHECK_COMPILE_FLAG([-fno-tree-fre], [CXXFLAGS="$CXXFLAGS -fno-tree-fre"])]
+        )
+    ]
 )
 AX_CHECK_COMPILE_FLAG([-fno-tree-vectorize],[CXXFLAGS="$CXXFLAGS -fno-tree-vectorize"])
 AX_CHECK_COMPILE_FLAG([-ffast-math],[CXXFLAGS="$CXXFLAGS -ffast-math"])
