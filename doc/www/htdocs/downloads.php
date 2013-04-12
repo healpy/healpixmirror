@@ -213,33 +213,25 @@ IDL</A>
 
 <UL>
 <LI>bug corrections: 
-	<A HREF="#idl:query_disc"><TT>query_disc</TT></A>: correct handling of empty disc; 
-	<A HREF="#idl:bin_llcl"><TT>bin_llcl</TT></A>: correct handling of optional argument.
-
-<P>
+	<TT>query_disc</TT>: correct handling of empty disc; 
+	<TT>bin_llcl</TT>: correct handling of optional argument.
 </LI>
 <LI>double precision of input now preserved in
-	<A HREF="#idl:gaussbeam"><TT>gaussbeam</TT></A> and 
-	<A HREF="#idl:euler_matrix_new"><TT>euler_matrix_new</TT></A>.
-
-<P>
+	<TT>gaussbeam</TT> and 
+	<TT>euler_matrix_new</TT>.
 </LI>
 <LI><TT>fits2cl</TT>: addition of 
 	<TT>/PLANCK1</TT> keyword
 	to read best fit <SPAN CLASS="MATH"><I>C</I>(<I>l</I>)</SPAN> model to Planck 2013 + external data.
-
-<P>
 </LI>
 <LI>it is now possible to read a specific FITS file extension identified by its
 	(0-based) number or its case-insensitive EXTNAME value with the <TT>Extension</TT>
 	keyword added to 
-	<A HREF="#idl:fits2cl"><TT>fits2cl</TT></A>,
-	<A HREF="#idl:getsize_fits"><TT>getsize_fits</TT></A>,
-	<A HREF="#idl:read_fits_map"><TT>read_fits_map</TT></A>,
-	<A HREF="#idl:read_fits_s"><TT>read_fits_s</TT></A> and 
-	<A HREF="#idl:read_tqu"><TT>read_tqu</TT></A>.
-
-<P>
+	<TT>fits2cl</TT>,
+	<TT>getsize_fits</TT>,
+	<TT>read_fits_map</TT>,
+	<TT>read_fits_s</TT> and 
+	<TT>read_tqu</TT>.
 </LI>
 <LI>update of the required
 	<A NAME="tex2html8"
