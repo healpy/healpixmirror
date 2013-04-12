@@ -14,15 +14,15 @@ or if you want to provide feed-back, ask a question or make a suggestion, have a
 
 <p>
 If everything else fails, send us an e-mail at 
-<script language=javascript><!--
+<script language="javascript"><!--
 var n2 = 'pix';var n1 = 'heal';var p1 = 'ma';var p2 =  'ilto&';var p3 = '#58;';var dn1 = 'jpl';var dn2 = 'nasa';var dn3 = 'gov';
 document.write('<a href='+p1+p2+p3+n1+n2+'&#64;'+dn1+'&#46;'+dn2+'&#46;'+dn3+'>'+n1+n2+'&#64;'+dn1+'&#46;'+dn2+'&#46;'+dn3+'</a>') 
---></script>
+--></script><noscript><em>[Enable javascript in your browser to see the email address]</em></noscript>
 </p>
 
 <h3>Search HEALPix code</h3>
 <div class="ohloh" style="margin-top:0px">
-<script type="text/javascript" src="http://www.ohloh.net/p/40087/widgets/project_search_code.js"></script>
+<script type="text/javascript" src="http://www.ohloh.net/p/40087/widgets/project_search_code.js"></script><noscript><em>[Enable javascript in your browser to see this widget]</em></noscript>
 </div>
 
 <?php require('_footer.inc.php'); ?>

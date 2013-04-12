@@ -98,7 +98,7 @@ as can be seen from the <a href="resources.php">Resources</a> and <a href="galle
                   Programs for fast simulation and analysis of full-sky maps of CMB
                   temperature and polarization anisotropy
                   (<a href="gallery.php" target="_top">sky maps preview</a>)
-                  up to sub-arcminute angular resolution.
+                  up to sub-arcminute angular resolution
 <!--(your computer&#039;s RAM permitting, see <a href="pdf/benchmark1.pdf">benchmarks</a>).-->
                 </li>
                 <!-- br -->
@@ -116,14 +116,16 @@ as can be seen from the <a href="resources.php">Resources</a> and <a href="galle
                 </li>
                 <!-- br -->
                 <li>
-                  Optimised <span class="math"><i>P</i><sub><i>lm</i></sub></span> C library for better performance.
+     Highly optimised Spherical Harmonics Transforms library 
+    (<a href="http://sourceforge.net/projects/libsharp"><tt>libsharp</tt></a>) 
+     used by all implementations for better performance
                 </li>
                 <!-- br -->
                 <li>
                   Routines to read and write the
                   <a href="http://fits.gsfc.nasa.gov/" target="_top">FITS</a>
                   formatted map data sets,
-    and allowing the IDL, Java or Python display and processing of your results.
+    and allowing the IDL, Java or Python display and processing of your results
                 </li>
                 <!-- br -->
                 <li>
@@ -137,12 +139,12 @@ as can be seen from the <a href="resources.php">Resources</a> and <a href="galle
                 </li>
                 <!-- br -->
                 <li>
-                  Automated installation and build scripts.
+                  Automated installation and build scripts
                 </li>
                 <!-- br -->
                 <li>
                   Programs to search the maps for pixel neighbours and extrema 
-		  of a random field.
+		  of a random field
                 </li>
                 <!-- br -->
                 <li>
@@ -163,7 +165,7 @@ as can be seen from the <a href="resources.php">Resources</a> and <a href="galle
                 </li>
                 <!-- br -->
                 <li>
-                  Mask processing facilities.
+                  Mask processing facilities
                 </li>
                 <!-- br -->
                 <li>

@@ -14,7 +14,7 @@ please subscribe to the moderated <tt>Healpix-users</tt> mailing list by filling
 var p1 = 'ma'; var n1 = 'healpix&#045;'; var s1 = '&#063;'; var p2 = 'ilto&'; var n2 = 'users&#045;'; var s2 = 'subject&#061;'; var p3 = '#58;'; var n3 = 'request&#64;'; var s3 = 'subscribe'
 var n5 = 'sourceforge&#046;'; var n4 = 'lists&#046;'; var n6 = 'net';
   document.write('<a href='+p1+p2+p3+n1+n2+n3+n4+n5+n6+s1+s2+s3+'>'+n1+n2+n3+n4+n5+n6+'</a>')
---></script>
+    --></script><noscript><em>[Enable javascript in your browser to see the email address]</em></noscript>
 
 an empty email with only &quot;<tt>subscribe</tt>&quot; on the Subject line.
 </p>
@@ -137,7 +137,7 @@ C</A>
 configuration script remains available
 </LI>
 </UL>
-<A HREF=#top>    Back to Top</A><br><br>
+<A HREF="#top">    Back to Top</A><br><br>
 
 <P>
 
@@ -163,7 +163,7 @@ newer versions and was not present in versions 4.2.* and 4.3.*.
 configuration script remains available
 </LI>
 </UL>
-<A HREF=#top>    Back to Top</A><br><br>
+<A HREF="#top">    Back to Top</A><br><br>
 
 <P>
 
@@ -203,7 +203,7 @@ as input map file.
 routines (see warning on gcc releases above).
 </LI>
 </UL>
-<A HREF=#top>    Back to Top</A><br><br>
+<A HREF="#top">    Back to Top</A><br><br>
 
 <P>
 
@@ -249,7 +249,7 @@ routines, and their supporting <A NAME="tex2html9"
 routines (2013-02-08).
 </LI>
 </UL>
-<A HREF=#top>    Back to Top</A><br><br>
+<A HREF="#top">    Back to Top</A><br><br>
 
 <P>
 
@@ -258,7 +258,7 @@ routines (2013-02-08).
 Java</A>
 </H3>
 N/A
-<A HREF=#top>    Back to Top</A><br><br>
+<A HREF="#top">    Back to Top</A><br><br>
 -->
 
 <H3><A NAME="SECTION_310_17000000000000000">
@@ -271,7 +271,7 @@ Python</A>
 to generate Gaussian beam window function.
 </li></ul>
 
-<A HREF=#top>    Back to Top</A><br><br>
+<A HREF="#top">    Back to Top</A><br><br>
 
 <!-- ******************************************************  -->
 
@@ -293,7 +293,7 @@ General</A>
 Introduction of the script <TT>healpix_doc</TT> for easy access to the HEALPix
 PDF and HTML documentation.
 </li></ul>
-<A href=#top>    Back to Top</A><br><br>
+<A href="#top">    Back to Top</A><br><br>
 
 <h3><A name="SECTION_300_12000000000000000">
 C</A>
@@ -307,7 +307,7 @@ of the relevant HEALPix C++ functions, resulting in significant speedups.
 They have the same name as the traditional functions, with a ''64'' suffix appended.
 </li>
 </ul>
-<A href=#top>    Back to Top</A><br><br>
+<A href="#top">    Back to Top</A><br><br>
 
 <h3><A name="SECTION_300_13000000000000000">
 C++</A>
@@ -368,7 +368,7 @@ Facilities now check input maps for undefined pixels before calling map2alm().
 </ul>
 </li>
 </ul>
-<A href=#top>    Back to Top</A><br><br>
+<A href="#top">    Back to Top</A><br><br>
 
 
 <h3><A name="SECTION_300_14000000000000000">
@@ -413,7 +413,7 @@ analyzed;
 <TT>median_filter</TT> is now parallelized.
 </li>
 </ul>
-<A href=#top>    Back to Top</A><br><br>
+<A href="#top">    Back to Top</A><br><br>
 
 
 <h3><A name="SECTION_300_15000000000000000">
@@ -471,7 +471,7 @@ maps
 <li>update of <TT>astron</TT> library routines (01-Feb-2012).
 </li>
 </ul>
-<A href=#top>    Back to Top</A><br><br>
+<A href="#top">    Back to Top</A><br><br>
 
 
 <h3><A name="SECTION_300_16000000000000000">
@@ -523,7 +523,7 @@ as the C++ implementation (see above).
 </ul>
 </li>
 </ul>
-<A href=#top>    Back to Top</A><br><br>
+<A href="#top">    Back to Top</A><br><br>
 
 
 <h3><A name="SECTION_300_17000000000000000">
@@ -537,7 +537,7 @@ Python</A>
 package (C. Rosset, A. Zonca et al.) is now part of HEALPix
 </li>
 </ul>
-<A href=#top>    Back to Top</A><br><br>
+<A href="#top">    Back to Top</A><br><br>
 
 <p>
 For any problem, question or comment, see the <a href="support.php">Support</a> page.

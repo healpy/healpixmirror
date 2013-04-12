@@ -92,8 +92,9 @@ cut-sky, beam smoothing, noise contamination, ...
 <li>
 Wavelets on the Sphere: 
 <a href="http://jstarck.free.fr/isap.html">iSAP</a>, 
-<a href="http://www.s2let.org/">S2LET</a>, 
-<a href="http://www.apc.univ-paris7.fr/Downloads/adamis/spherelab/spherelab.html">SphereLab</a>
+    <a href="http://irfu.cea.fr/en/Phocea/Vie_des_labos/Ast/ast_visu.php?id_ast=895">MRS</a>,
+    <a href="http://www.s2let.org/">S2LET</a>, 
+    <a href="http://www.apc.univ-paris7.fr/Downloads/adamis/spherelab/spherelab.html">SphereLab</a>
 </li>
 
 <li>
