@@ -106,7 +106,7 @@ static void X(hp_alm2map_spin) (int nside, int lmax, int mmax, int spin,
 
   mapptr[0]=map; mapptr[1]=map+npix;
   almptr[0]=alm; almptr[1]=alm+2;
-  sharp_execute(SHARP_ALM2MAP,2,&almptr[0],&mapptr[0],ginfo,ainfo,1,FLAG,0,0);
+  sharp_execute(SHARP_ALM2MAP,spin,&almptr[0],&mapptr[0],ginfo,ainfo,1,FLAG,0,0);
 
   sharp_destroy_alm_info(ainfo);
   sharp_destroy_geom_info(ginfo);
