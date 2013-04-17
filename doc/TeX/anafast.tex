@@ -22,36 +22,36 @@ from the map(s) if the input provides, respectively, only the temperature,
 or temperature and polarisation maps.
 The total operation count scales as 
 ${\cal {O}}(N_{\rm pix}^{3/2} )$ with a prefactor
-depending on $\ell_{max}$. 
-
+depending on $\ell_{max}$. %
+\\ %
 Anafast reads one (two) file(s) containing the map(s) and produces 
 a file containing the temperature auto- (or cross-) power spectrum
 $C^T_l$ and, if requested, 
 also the polarisation power spectra $C^E_l$, $C^B_l$, $C^{T\times E}_l$,
 $C^{T\times B}_l$ and $C^{E\times B}_l$.
 The $a_{lm}$  coefficients computed during the execution also can be  
-written to a (two) file(s) if requested. 
-
+written to a (two) file(s) if requested. %
+\\ %
 Anafast executes an approximate, discrete point-set quadrature on 
 a sphere
 sampled at the \healpix pixel centers.
 Spherical harmonic transforms are computed 
 using recurrence relations for Legendre polynomials on co-latitude, 
 $\theta$, 
-and  Fast Fourier Transforms on longitude, $\phi$. 
-
+and  Fast Fourier Transforms on longitude, $\phi$. %
+\\%
 Anafast is provided with an option to use precomputed Legendre Polynomials;
 please note that since version 2.20 this will most likely reduce performance
-instead of increasing it.
-
+instead of increasing it. %
+\\%
 Anafast permits two execution options 
 which allow a significant improvement of accuracy of 
-the approximate quadrature performed by this facility:
-
+the approximate quadrature performed by this facility:%
+\\ %
 $\bullet$ An improved analysis using the provided ring weights, 
 which correct the quadrature
-on latitude, and/or
- 
+on latitude, and/or  %
+\\%
 $\bullet$ An iterative scheme using in 
 succession several backward and forward harmonic transforms 
 of the maps.} 

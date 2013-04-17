@@ -6,7 +6,18 @@
 
 package main;
 
-print "Using HEALPix Style Conversions...\n";
+
+open (MYINPUTFILE, "<healpix_src_url.tex");
+while(<MYINPUTFILE>){
+  my($line) = $_;
+  print "\n $line \n";
+  chomp($line);
+  $srcurl = $line;
+}
+close(MYINPUTFILE);
+### $srcurl = "http://sourceforge.net/p/healpix/code/HEAD/tree/trunk/";
+
+print "\n \n Using HEALPix Style Conversions...\n $srcurl \n";
 
 #-------------------------
 # from python.perl
@@ -184,7 +195,7 @@ sub do_env_keywords_mollview {
 sub do_env_facility {
     local($_) = @_;
     local($descr) = &get_next_argument;
-    "<b><font size=+6>$t_docid</font></b><hr><H2>$descr</H2><br>Location in HEALPix directory tree: <b>$_</b>";
+    "<b><font size=+6>$t_docid</font></b><hr><H2>$descr</H2><br>Location in HEALPix directory tree: <a href=\"$srcurl$_\"><b>$_</b></a>";
 }
 # sub do_env_facility {
 #     local($_) = @_;
@@ -568,6 +579,13 @@ sub do_cmd_date {
     $_;
 }
 
+sub do_cmd_website {
+    local($_) = @_;
+    s/$next_pair_pr_rx//o;
+    ($t_website) = &translate_commands($&);
+    $_;
+}
+
 # sub do_cmd_frontpage {
 #     local($_) = @_;
 #     local($the_title) = '';
@@ -593,13 +611,17 @@ sub do_cmd_frontpage {
         $the_title .= "<H1 ALIGN=CENTER>$t_title</H1>\n";
     } else { &write_warnings("This document has no title."); }
     if ($t_abstract) {
- 	$the_title .= "<DIV>$t_abstract</DIV>\n";
+ 	$the_title .= "<div id=abstract align=center>$t_abstract</div>\n";
+# 	$the_title .= "<DIV>$t_abstract</DIV>\n";
     }
     if ($t_author) {
         $the_title .= "<P ALIGN=CENTER><STRONG>$t_author</STRONG></P>\n";
     } else { &write_warnings("There is no author for this document."); }
     if (($t_date)&&!($t_date=~/^\s*(($O|$OP)\d+($C|$CP))\s*\1\s*$/)) {
         $the_title .= "<BR><P ALIGN=CENTER><I>Revision: </I>$t_docrv; $t_date</P>\n";}
+    if ($t_website) {
+      $the_title .= "<P ALIGN=CENTER>$t_website</P>\n";
+    }
  
     $the_title . $_ ;
 }

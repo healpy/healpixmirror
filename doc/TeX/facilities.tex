@@ -42,6 +42,7 @@
 \author{Eric Hivon, Frode K.~Hansen, Benjamin D.~Wandelt, Krzysztof M.~G\'orski,
 Anthony J.~Banday, Martin Reinecke}
 \abstract{This document describes the \healpix Fortran stand-alone facilities}
+\input{hpxwebsite}
 \date{\today}
 
 \frontpage
@@ -134,7 +135,9 @@ as input map file.
 \htmlref{{\tt synfast}}{fac:synfast},
 \htmlref{{\tt anafast}}{fac:anafast},
 \htmlref{{\tt smoothing}}{fac:smoothing} thanks to \htmladdnormallink{{\tt
-libsharp}}{http://sourceforge.net/projects/libsharp} routines. \\
+libsharp}}{http://sourceforge.net/projects/libsharp} routines\footnote{
+To {\em revert} to the original F90 implementation of all these routines, the preprocessing
+variable {\tt DONT\_USE\_SHARP} must be set during compilation.}. \\
 {\em Note that 
 some \htmladdnormallink{{\tt gcc} versions}{http://gcc.gnu.org/releases.html}
 (4.4.1 to 4.4.6) crash with an internal compiler error during compilation of {\tt libsharp}}. 

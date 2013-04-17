@@ -74,6 +74,7 @@ are optional}}
 \renewcommand{\title}[1]{\gdef\thetitle{#1}}
 \renewcommand{\author}[1]{\gdef\theauthor{#1}}
 \newcommand{\docid}[1]{\gdef\thedocid{#1}}
+\newcommand{\website}[1]{\gdef\thewebsite{#1}}
 \fi
 \ifminutes
   \newcommand{\meetingdate}[1]{\gdef\themeetingdate{#1}}
@@ -212,6 +213,7 @@ are optional}}
          \textsc{\huge{\textbf{\thedocid}}} &   \\
       \end{tabular}
       \rule{\hsize}{2mm} 
+% 	\textbf{Location in \healpix directory tree: \htmladdnormallink{\ploc}{http://sourceforge.net/p/healpix/code/HEAD/tree/trunk/\ploc}} \\
  	\textbf{Location in \healpix directory tree: \ploc} \\
  \hbox{\hskip 0.3\hsize \begin{minipage}[t]{0.7\hsize}{\setlength{\parindent}{0.5cm}{\noindent\pdes}}\end{minipage}} \\
       \vspace{\baselineskip}}
@@ -675,122 +677,130 @@ are optional}}
      \setlength{\itemsep}{0ex plus 0.2ex}}}
     {\setcounter{savecreq}{\thecreq}\end{list}}
 \fi
+%--------------------------------------------------
+%%%%%%%%%%%%%%%%%%%%%%% FRONT PAGE %%%%%%%%%%%%%%%%
+%--------------------------------------------------
+%--------------------------------------------------
+%%%%%%                    minutes
+%--------------------------------------------------
+% \ifminutes
+%   \newcommand{\frontpage}{%
+%   \newlength{\iconsep}
+%   \setlength{\iconsep}{6em}
+%   \addtolength{\iconsep}{1ex}
+%   \addtolength{\iconsep}{-\bigicon}
+%   \newlength{\headsize}
+%   \setlength{\headsize}{\textwidth}
+%   \addtolength{\headsize}{-\iconsep}
+%   \addtolength{\headsize}{-\bigicon}
+%   \thispagestyle{empty}
+%   \pagestyle{myheadings}
+%   \markboth{\underline{\sffamily minutes-of-meetings}}
+%            {\underline{\sffamily minutes-of-meetings}}
 
-\ifminutes
-  \newcommand{\frontpage}{%
-  \newlength{\iconsep}
-  \setlength{\iconsep}{6em}
-  \addtolength{\iconsep}{1ex}
-  \addtolength{\iconsep}{-\bigicon}
-  \newlength{\headsize}
-  \setlength{\headsize}{\textwidth}
-  \addtolength{\headsize}{-\iconsep}
-  \addtolength{\headsize}{-\bigicon}
-  \thispagestyle{empty}
-  \pagestyle{myheadings}
-  \markboth{\underline{\sffamily minutes-of-meetings}}
-           {\underline{\sffamily minutes-of-meetings}}
+%   \noindent\parbox{\bigicon}{%
+%     \includegraphics[width=\hsize]{\iconfile}}
+%   \underline{\parbox{\headsize}{%
+%   \Large\thegroup\\%
+%   \phantom{|}\hfill\sffamily minutes-of-meetings}}
 
-  \noindent\parbox{\bigicon}{%
-    \includegraphics[width=\hsize]{\iconfile}}
-  \underline{\parbox{\headsize}{%
-  \Large\thegroup\\%
-  \phantom{|}\hfill\sffamily minutes-of-meetings}}
+%   \vspace{\baselineskip}
 
-  \vspace{\baselineskip}
+%   \noindent
+%   \begin{tabular}{|p{0.70\hsize}|p{0.24\hsize}|}
+%     \hline
+%     \begin{tabular}{ll}
+%       \textbf{\sffamily from:}    & \theauthor\\
+%       \textbf{\sffamily subject:} & \thetitle\\
+%       \textbf{\sffamily ref.:}    & \thedocid\\
+%     \end{tabular} & \parbox{\hsize}{\vspace{1ex}
+%       \textbf{\sffamily date of minutes:}\\ \theminutesdate\\
+%       \textbf{\sffamily date of meeting:}\\ \themeetingdate\\}\\
+%     \hline
+%   \end{tabular}
 
-  \noindent
-  \begin{tabular}{|p{0.70\hsize}|p{0.24\hsize}|}
-    \hline
-    \begin{tabular}{ll}
-      \textbf{\sffamily from:}    & \theauthor\\
-      \textbf{\sffamily subject:} & \thetitle\\
-      \textbf{\sffamily ref.:}    & \thedocid\\
-    \end{tabular} & \parbox{\hsize}{\vspace{1ex}
-      \textbf{\sffamily date of minutes:}\\ \theminutesdate\\
-      \textbf{\sffamily date of meeting:}\\ \themeetingdate\\}\\
-    \hline
-  \end{tabular}
+%   \vspace{0.5\baselineskip}
 
-  \vspace{0.5\baselineskip}
-
-  \noindent
-  \begin{tabular}{|p{0.47\hsize}|p{0.47\hsize}|}
-    \hline & \\
-    {\sffamily\bfseries ATTENDEES:} &
-    {\sffamily\bfseries DISTRIBUTION:} \\[1ex]
-    \parbox{\hsize}{\theattendees}&%
-    \parbox{\hsize}{\thedistribution}\\&\\%
-    \hline
-  \end{tabular}}
-\fi
-\ifletter
-  \newcommand{\opening}[1]{%
-  \newlength{\iconsep}
-  \setlength{\iconsep}{6em}
-  \addtolength{\iconsep}{1ex}
-  \addtolength{\iconsep}{-\bigicon}
-  \newlength{\headsize}
-  \setlength{\headsize}{\textwidth}
-  \addtolength{\headsize}{-\iconsep}
-  \addtolength{\headsize}{-\bigicon}
-  \thispagestyle{empty}
-  \pagestyle{myheadings}
-  \markboth{\underline{\sffamily Letter: \thesubject}}
-  	   {\underline{\sffamily Letter: \thesubject}}
+%   \noindent
+%   \begin{tabular}{|p{0.47\hsize}|p{0.47\hsize}|}
+%     \hline & \\
+%     {\sffamily\bfseries ATTENDEES:} &
+%     {\sffamily\bfseries DISTRIBUTION:} \\[1ex]
+%     \parbox{\hsize}{\theattendees}&%
+%     \parbox{\hsize}{\thedistribution}\\&\\%
+%     \hline
+%   \end{tabular}}
+% \fi
+%--------------------------------------------------
+%                    letter
+%--------------------------------------------------
+% \ifletter
+%   \newcommand{\opening}[1]{%
+%   \newlength{\iconsep}
+%   \setlength{\iconsep}{6em}
+%   \addtolength{\iconsep}{1ex}
+%   \addtolength{\iconsep}{-\bigicon}
+%   \newlength{\headsize}
+%   \setlength{\headsize}{\textwidth}
+%   \addtolength{\headsize}{-\iconsep}
+%   \addtolength{\headsize}{-\bigicon}
+%   \thispagestyle{empty}
+%   \pagestyle{myheadings}
+%   \markboth{\underline{\sffamily Letter: \thesubject}}
+%   	   {\underline{\sffamily Letter: \thesubject}}
   
-  \noindent\parbox{\bigicon}{%
-    \includegraphics[width=\hsize]{\iconfile}}
-    \underline{\parbox{\headsize}{%
-    \Large\thegroup\\%
-    \phantom{|}\hfill\sffamily Letter}}
+%   \noindent\parbox{\bigicon}{%
+%     \includegraphics[width=\hsize]{\iconfile}}
+%     \underline{\parbox{\headsize}{%
+%     \Large\thegroup\\%
+%     \phantom{|}\hfill\sffamily Letter}}
   
-  \vspace{\baselineskip}
+%   \vspace{\baselineskip}
   
-  \noindent
+%   \noindent
 
-  \begin{minipage}[t]{0.6\hsize}
-    \begin{tabular}{@{}p{0.14\hsize}p{0.8\hsize}@{}}
-      \textbf{\sffamily To:} & \parbox[t]{\hsize}{\theto} \\ & \\
-      \textbf{\sffamily From:} & \parbox[t]{\hsize}{\thefrom} \\ & \\
-      \ifcc
-      \textbf{\sffamily CC:} & \parbox[t]{\hsize}{\thecc} \\ & \\
-      \fi
-      \textbf{\sffamily Subject:} & \parbox[t]{\hsize}{\thesubject} \\
-    \end{tabular}
-  \end{minipage}\hfill
-  \begin{minipage}{0.34\hsize}
-    \theplace, \today
-  \end{minipage}
+%   \begin{minipage}[t]{0.6\hsize}
+%     \begin{tabular}{@{}p{0.14\hsize}p{0.8\hsize}@{}}
+%       \textbf{\sffamily To:} & \parbox[t]{\hsize}{\theto} \\ & \\
+%       \textbf{\sffamily From:} & \parbox[t]{\hsize}{\thefrom} \\ & \\
+%       \ifcc
+%       \textbf{\sffamily CC:} & \parbox[t]{\hsize}{\thecc} \\ & \\
+%       \fi
+%       \textbf{\sffamily Subject:} & \parbox[t]{\hsize}{\thesubject} \\
+%     \end{tabular}
+%   \end{minipage}\hfill
+%   \begin{minipage}{0.34\hsize}
+%     \theplace, \today
+%   \end{minipage}
   
-  \vspace{\baselineskip}
+%   \vspace{\baselineskip}
   
-  \hrule
+%   \hrule
   
-  \vspace{2\baselineskip}
+%   \vspace{2\baselineskip}
 
-  \noindent#1
+%   \noindent#1
 
-  \vspace{2em}}
+%   \vspace{2em}}
 
-  \newcommand{\closing}[1]{%
-  \vspace{2em}
+%   \newcommand{\closing}[1]{%
+%   \vspace{2em}
 
-  \noindent#1
+%   \noindent#1
 
-  \vspace{\baselineskip}
+%   \vspace{\baselineskip}
 
-  \noindent\thefrom
+%   \noindent\thefrom
 
-  \ifcc
-  \vspace{2em}
+%   \ifcc
+%   \vspace{2em}
  
-  \begin{itemize}
+%   \begin{itemize}
  
-  \item[cc:] \thecc
+%   \item[cc:] \thecc
  
-  \end{itemize}\fi}
-\fi
+%   \end{itemize}\fi}
+% \fi
 %% \ifdocument
 %%   \newcommand{\frontpage}{%
 %%   \addtolength{\headheight}{\smallicon}
@@ -824,6 +834,9 @@ are optional}}
 %%    \newcounter{fig}
 %%   }
 %% \fi
+%--------------------------------------------------
+%                    document
+%--------------------------------------------------
 \ifdocument
 	% standard page
   \pagestyle{fancyplain}
@@ -850,6 +863,8 @@ are optional}}
       Prepared by: & \theauthor \\
       Abstract: & \theabstract \\
     \end{tabular}
+	\vskip 3cm
+	 \thewebsite
   \end{center}
   \clearpage
    \newcounter{fig}

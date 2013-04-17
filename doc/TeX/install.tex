@@ -78,6 +78,7 @@
 \author{Eric Hivon, Anthony J.~Banday, Matthias Bartelmann, Benjamin D.~Wandelt,
 Frode K.~Hansen and Krzysztof M.~G\'orski}
 \abstract{This document describes the installation for the \healpix facilities.}
+\input{hpxwebsite}
 \date{\today}
 
 \frontpage
@@ -1100,7 +1101,7 @@ to generate Gaussian beam window function.
 Introduction of the script {\tt healpix\_doc} for easy access to the \healpix
 PDF and HTML documentation.
 
-\tinysubsubsection{\linklatexhtml{C}{csub.pdf}{csub.htm}}
+\tinysubsubsection[C]{\linklatexhtml{C}{csub.pdf}{csub.htm}}
 \begin{itemize}
 	\item Interface has remained unchanged, but the code has been replaced by a C port
 of the relevant Healpix C++ functions, resulting in significant speedups.
@@ -1152,7 +1153,7 @@ Facilities now check input maps for undefined pixels before calling map2alm().
 
 \end{itemize}
 
-\tinysubsubsection{%
+\tinysubsubsection[Fortran 90 facilities and subroutines]{%
 Fortran 90 \linklatexhtml{facilities}{facilities.pdf}{facilities.htm} and
 \linklatexhtml{subroutines}{subroutines.pdf}{subroutines.htm}
 }
@@ -1194,7 +1195,7 @@ analyzed;
 %mode.
 \end{itemize}
 
-\tinysubsubsection{\linklatexhtml{IDL}{idl.pdf}{idl.htm}}
+\tinysubsubsection[IDL]{\linklatexhtml{IDL}{idl.pdf}{idl.htm}}
 \begin{itemize}
 	\item New routines to go from circular beam profile to transfer function
 (\htmlref{{\tt beam2bl}}{idl:beam2bl}), 
