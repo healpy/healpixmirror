@@ -34,6 +34,7 @@
 # 2012-05-30:    and ignore healpy specific config.* files.
 # 2012-11-05: supports python (healpy) configuration
 #             proposes -fPIC compilation of F90 code
+# 2013-04-18: work-around for GCC 4.4 bug
 #=====================================
 #=========== General usage ===========
 #=====================================
@@ -694,6 +695,7 @@ idl_config () {
 #####   askFFT: ask user for his choice of fft, find fftw library
 #   askOpenMP: ask user for compilation of OpenMP source files
 #   askF90PIC: ask user for -fPIC compilation of code
+#   patchF90: all patches to apply to F90 and/or C compilers
 #   countUnderScore: match trailing underscores with fftw
 #   IdentifyCParallCompiler: identify C compiler used for parallel compilation of SHT routines
 #   IdentifyCompiler : identify Non native f90 compiler
@@ -1048,6 +1050,21 @@ askF90PIC () {
     fi
 }
 
+# -----------------------------------------------------------------
+patchF90 (){
+# all patches to apply to F90 and/or C compilers
+
+# F90 compiler: nothing!
+
+# C compiler: 
+#  *  add -fno-tree-fre for GCC 4.4* versions (adapted from autoconf)
+    GCCVERSION="`$CC -dumpversion 2>&1`"
+    gcc44=`echo $GCCVERSION | grep -c '^4\.4'`
+
+    if test $gcc44 -gt 0; then
+	CFLAGS="$CFLAGS -fno-tree-fre"
+    fi
+}
 # -----------------------------------------------------------------
 
 countUnderScore () {
@@ -1628,6 +1645,7 @@ f90_config () {
     askPgplot
     askOpenMP
     askF90PIC
+    patchF90
     #makeProfile
     generateConfF90File
     editF90Makefile
