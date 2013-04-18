@@ -1,23 +1,40 @@
 # -*- perl -*-
-# This attempts to define necessary translations for the HEALPix 
-# style files. (cf healpix.sty and healrut.sty)  
+# This attempts to define necessary translations for the HEALPix
+# style files. (cf healpix.sty)
 #
 # Eric Hivon & Ted Kisner
 
 package main;
 
+print "\n \n Using HEALPix Style Conversions...\n \n";
 
-open (MYINPUTFILE, "<healpix_src_url.tex");
-while(<MYINPUTFILE>){
-  my($line) = $_;
-  print "\n $line \n";
-  chomp($line);
-  $srcurl = $line;
+$srcurl = get_srcurl();
+sub get_srcurl {
+  open (MYINPUTFILE, "<$ENV{HEALPIX}/doc/TeX/healpix_src_url.tex");
+  $mysrcurl='XXX';
+  while(<MYINPUTFILE>){
+    my($line) = $_;
+    chomp($line);
+    my $i = substr $line, 0, 1; # first letter
+    if ($i ne "#") {
+      my @values = split('=', $line);
+      if (efhtrim(@values[0]) eq "srcurl"){
+	$mysrcurl = efhtrim(@values[1]);
+      }
+    }
+  }
+  close(MYINPUTFILE);
+  print "\n url =$mysrcurl,\n";
+  return $mysrcurl;
 }
-close(MYINPUTFILE);
-### $srcurl = "http://sourceforge.net/p/healpix/code/HEAD/tree/trunk/";
 
-print "\n \n Using HEALPix Style Conversions...\n $srcurl \n";
+
+sub efhtrim {
+#http://stackoverflow.com/questions/4597937/perl-function-to-trim-string-leading-and-trailing-whitespace
+    (my $s = $_[0]) =~ s/^\s+|\s+$//g;
+    return $s;
+}
+
 
 #-------------------------
 # from python.perl
