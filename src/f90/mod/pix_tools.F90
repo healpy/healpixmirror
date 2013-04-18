@@ -1,6 +1,6 @@
 !-----------------------------------------------------------------------------
 !
-!  Copyright (C) 1997-2010 Krzysztof M. Gorski, Eric Hivon,
+!  Copyright (C) 1997-2013 Krzysztof M. Gorski, Eric Hivon,
 !                          Benjamin D. Wandelt, Anthony J. Banday, 
 !                          Matthias Bartelmann, Hans K. Eriksen, 
 !                          Frode K. Hansen, Martin Reinecke

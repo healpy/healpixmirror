@@ -1,6 +1,6 @@
 ; -----------------------------------------------------------------------------
 ;
-;  Copyright (C) 1997-2010  Krzysztof M. Gorski, Eric Hivon, Anthony J. Banday
+;  Copyright (C) 1997-2013  Krzysztof M. Gorski, Eric Hivon, Anthony J. Banday
 ;
 ;
 ;
@@ -22,7 +22,7 @@
 ;  along with HEALPix; if not, write to the Free Software
 ;  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 ;
-;  For more information about HEALPix see http://healpix.jpl.nasa.gov
+;  For more information about HEALPix see http://healpix.sourceforge.net
 ;
 ; -----------------------------------------------------------------------------
 pro solve_kw_conflict, name1, name2, k1=k1, k2=k2, kout=kout, set=set, present=present, defined=defnd

@@ -89,48 +89,48 @@ updateVersion () {
   mv $tmpfile $infile
 }
 
+# #---------------
+# updateCopyrightDate () {
+
+#     dir=${here}
+#     instring='Copyright (C) 1997-2013'
+#     outstring='Copyright (C) 1997-2013'
+#     #tmpfile='/tmp/tmp_updatecopyright.txt'
+
+#     echo "In                $dir"
+#     echo "Changing          $instring -> $outstring"
+
+#     inlist=`find $dir -type f | grep -v \\.svn | grep -v java | grep -vi bk | xargs grep "$instring" | awk -F: '{print $1}'`
+
+#     for file in $inlist ; do
+# 	ls -l $file
+# 	grep "$instring" $file
+# 	sed -i "s|$instring|$outstring|" ${file}
+# 	grep "$outstring" $file
+#     done
+# }
+# #---------------
+# updateHEALPixWebSite () {
+
+#     dir=${here}
+#     instring='healpix.sourceforge.net'
+#     outstring='healpix.sourceforge.net'
+#     #tmpfile='/tmp/tmp_updatecopyright.txt'
+
+#     echo "In                $dir"
+#     echo "Changing          $instring -> $outstring"
+
+#     inlist=`find $dir -type f | grep -v \\.svn | grep -v java | grep -v cxx | grep -vi bk | xargs grep "$instring" | awk -F: '{print $1}'`
+
+#     for file in $inlist ; do
+# 	ls -l $file
+# 	grep "$instring" $file
+# 	sed -i "s|$instring|$outstring|" ${file}
+# 	grep "$outstring" $file
+#     done
+# }
 #---------------
-updateCopyrightDate () {
-
-    dir=${here}
-    instring='Copyright (C) 1997-2010'
-    outstring='Copyright (C) 1997-2013'
-    #tmpfile='/tmp/tmp_updatecopyright.txt'
-
-    echo "In                $dir"
-    echo "Changing          $instring -> $outstring"
-
-    inlist=`find $dir -type f | grep -v \\.svn | grep -v java | grep -vi bk | xargs grep "$instring" | awk -F: '{print $1}'`
-
-    for file in $inlist ; do
-	ls -l $file
-	grep "$instring" $file
-	sed -i "s|$instring|$outstring|" ${file}
-	grep "$outstring" $file
-    done
-}
-#---------------
-updateHEALPixWebSite () {
-
-    dir=${here}
-    instring='healpix.jpl.nasa.gov'
-    outstring='healpix.sourceforge.net'
-    #tmpfile='/tmp/tmp_updatecopyright.txt'
-
-    echo "In                $dir"
-    echo "Changing          $instring -> $outstring"
-
-    inlist=`find $dir -type f | grep -v \\.svn | grep -v java | grep -v cxx | grep -vi bk | xargs grep "$instring" | awk -F: '{print $1}'`
-
-    for file in $inlist ; do
-	ls -l $file
-	grep "$instring" $file
-	sed -i "s|$instring|$outstring|" ${file}
-	grep "$outstring" $file
-    done
-}
-#---------------
-
+# cf hand_editions.sh
 
 revision=`svnversion .`
 echo "Revison=${revision}"
@@ -238,12 +238,12 @@ for p in quad_ring; do
 done
 [ -d extra ] && \rm -rf extra
 
-# update copyright date in header
-cd ${here}
-updateCopyrightDate
-cd ${here}
-updateHEALPixWebSite
-cd ${here}
+# # update copyright date in header
+# cd ${here}
+# updateCopyrightDate
+# cd ${here}
+# updateHEALPixWebSite
+# cd ${here}
 
 [ -d gpl_header ] && \rm -rf gpl_header
 

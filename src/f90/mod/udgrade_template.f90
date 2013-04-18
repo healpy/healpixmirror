@@ -1,6 +1,6 @@
 !-----------------------------------------------------------------------------
 !
-!  Copyright (C) 1997-2010 Krzysztof M. Gorski, Eric Hivon,
+!  Copyright (C) 1997-2013 Krzysztof M. Gorski, Eric Hivon,
 !                          Benjamin D. Wandelt, Anthony J. Banday, 
 !                          Matthias Bartelmann, Hans K. Eriksen, 
 !                          Frode K. Hansen, Martin Reinecke
@@ -22,7 +22,7 @@
 !  along with HEALPix; if not, write to the Free Software
 !  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 !
-!  For more information about HEALPix see http://healpix.jpl.nasa.gov
+!  For more information about HEALPix see http://healpix.sourceforge.net
 !
 !-----------------------------------------------------------------------------
 ! template for routine SP/DP overloading for module udgrade_nr
