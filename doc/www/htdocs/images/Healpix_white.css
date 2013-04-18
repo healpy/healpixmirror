@@ -43,6 +43,10 @@ a, a:active, a:link {
 	text-decoration: none;
 	color: #006193;			
 }
+/* a:target {
+	text-decoration: none;
+	color: #000000;			
+} */
 a:visited {
 	text-decoration: none;
 	color: #707090;			

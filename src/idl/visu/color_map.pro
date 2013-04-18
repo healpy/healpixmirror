@@ -25,6 +25,26 @@
 ;  For more information about HEALPix see http://healpix.jpl.nasa.gov
 ;
 ; -----------------------------------------------------------------------------
+function my_asinh, x, type
+;
+; if type=1, returns asinh(x) [default]
+;   which is ~x    when x<<1 and ~ln(2x)   when x >> 1
+; if type=2, returns asinh(x/2)/ln(10) 
+;  which is ~x*0.21 for x<<1 and ~log10(x) when x >> 1
+;
+
+case defined(type)?type:1 of
+    1: y = asinh(x)
+    2: begin
+        two = (size(x[0],/tname) eq 'DOUBLE') ? 2d : 2.0
+        y = asinh(x/two)/alog(two*5)
+    end
+    else: message,'type must be 1 or 2'
+endcase
+return, y
+end
+;----------------------------------
+
 function color_map, data, mindata, maxdata, Obs, $
                     color_bar = color_bar, mode = mode, minset = min_set, maxset = max_set, silent = silent
 ;+
@@ -58,10 +78,11 @@ function color_map, data, mindata, maxdata, Obs, $
 ;-
 
 if undefined (mode) then mode = 0
-do_hist  = (mode and 1)
-do_log   = (mode and 2)/2
-do_asinh = (mode and 4)/4
-if (do_asinh && (do_log || do_hist)) then begin
+do_hist  = (mode and  1)   ; lowest bit -> [0,1]
+do_log   = (mode and  2)/2 ; 2nd bit    -> [0,1]
+tasinh   = (mode and 12)/4 ; 3rd and 4th bit -> 0, 1 or 2
+
+if ((tasinh gt 0) && (do_log || do_hist)) then begin
     message,'Asinh mode can NOT be used together with Log or Hist mode'
 endif
 
@@ -161,18 +182,16 @@ if (do_hist) then begin
 
 endif else begin
 ;   linear scaling or Asinh mapping
-    if (do_asinh) then begin
+    if (tasinh gt 0) then begin
         Tmax = maxdata*1.0 & Tmin = mindata*1.0
         if (N_No_Obs eq 0) then begin
-;             Color = 3B + BYTSCL( asinh(data), Top=N_Color-4 )
-            Color = 3B + BYTSCL( asinh(data), MIN=asinh(Tmin), MAX=asinh(Tmax), Top=N_Color-4 )
+            Color = 3B + BYTSCL( my_asinh(data, tasinh), MIN=my_asinh(Tmin, tasinh), MAX=my_asinh(Tmax, tasinh), Top=N_Color-4 )
         endif else begin 
-;             Color[Obs] = 3B + BYTSCL( asinh(data[Obs]), Top=N_Color-4 )
-            Color[Obs] = 3B + BYTSCL( asinh(data[Obs]), MIN=asinh(Tmin), MAX=asinh(Tmax), Top=N_Color-4 )
+            Color[Obs] = 3B + BYTSCL( my_asinh(data[Obs], tasinh), MIN=my_asinh(Tmin, tasinh), MAX=my_asinh(Tmax, tasinh), Top=N_Color-4 )
         endelse
         
         bs = 5 * N_color
-        junk2= asinh(  dindgen(bs)/(bs-1)*(Tmax-Tmin) + Tmin  )
+        junk2= my_asinh(  dindgen(bs)/(bs-1)*(Tmax-Tmin) + Tmin, tasinh  )
         color_bar = (3B + BYTSCL( junk2, TOP = N_Color-4 ))
 
     endif else begin

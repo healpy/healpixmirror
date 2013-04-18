@@ -78,7 +78,7 @@ do_polvector    = (polarization[0] eq 3)
 !P.COLOR = 0                    ; black foreground
 
 mode_col = keyword_set(hist_equal)
-mode_col = mode_col + 2*keyword_set(log) + 4*keyword_set(asinh)
+mode_col = mode_col + 2*keyword_set(log) + 4*keyword_value(asinh, default=0, min=0, max=2)
 
 obs_npix = N_ELEMENTS(data)
 npix_full = (pix_type eq 'Q') ? 6*(4L)^(pix_param-1) : nside2npix(pix_param)

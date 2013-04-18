@@ -13,6 +13,7 @@ L2HFLAGS := -dir $(HTMLDIR) -up_url main.htm -up_title "Main Page" -math -html_v
 #L2HFLAGS := -dir $(HTMLDIR) -up_url main.htm -up_title "Main Page" -math -html_version 4.1 -bottom_navigation -short_extn -white -local_icons -noexternal_images -toc_depth 8 -debug -verbosity 2 # -show_section_numbers 
 EQNFIX := ./eqnfix.sh
 CSSFILE := common.css
+COLORS = 1
 
 docs  := intro.tex facilities.tex subroutines.tex idl.tex csub.tex install.tex # install.* must be last
 style := healpix.sty # healrut.sty
@@ -21,6 +22,15 @@ ps    := $(dvi:.dvi=.ps)
 gz    := $(dvi:.dvi=.ps.gz)
 pdf   := $(docs:.tex=.pdf) pdf_index.pdf
 html  := $(docs:.tex=.html)
+incs  := hpxversion.tex idlversion.tex gdlversion.tex hpxwebsite.tex healpix_src_url.tex
+
+# define color output if needed
+ifeq ($(COLORS),1)
+NO_COLOR=\x1b[0m
+GREEN_COLOR=\x1b[32;11m
+RED_COLOR=\x1b[31;01m
+BLUE_COLOR=\x1b[35;11m
+endif
 
 # dvi: $(dvi) 
 
@@ -34,19 +44,22 @@ pdf: $(pdf)
 
 html: $(html) main.html
 
-$(pdf): %.pdf : %.tex healpix.sty hpxversion.tex idlversion.tex
+$(pdf): %.pdf : %.tex healpix.sty $(incs)
+	@echo "$(GREEN_COLOR)==================================$(NO_COLOR)"
+	@echo "$(GREEN_COLOR)              $@                  $(NO_COLOR)"
+	@echo "$(GREEN_COLOR)==================================$(NO_COLOR)"
 	-$(PDFTEX) $(PDFLLAGS) $< 
 	-$(PDFTEX) $(PDFLLAGS) $< >/dev/null
 	-$(PDFTEX) $(PDFLLAGS) $< >/dev/null
 	-$(PDFTEX) $(PDFLLAGS) $< >/dev/null
 
-$(dvi): %.dvi : %.tex healpix.sty # healrut.sty
-	-$(TEX) $(TEXFLAGS) $< 
-	-$(TEX) $(TEXFLAGS) $< >/dev/null
-	-$(TEX) $(TEXFLAGS) $< >/dev/null
+# $(dvi): %.dvi : %.tex healpix.sty # healrut.sty
+# 	-$(TEX) $(TEXFLAGS) $< 
+# 	-$(TEX) $(TEXFLAGS) $< >/dev/null
+# 	-$(TEX) $(TEXFLAGS) $< >/dev/null
 
-$(ps): %.ps : %.dvi
-	$(DVIPS) $(DVIFLAGS) -o $@ $<
+# $(ps): %.ps : %.dvi
+# 	$(DVIPS) $(DVIFLAGS) -o $@ $<
 
 .PHONY: main.html
 
@@ -55,9 +68,9 @@ cssfile: $(CSSFILE)
 	cp -f $(CSSFILE) $(HTMLDIR)
 
 main.html: 
-	@echo '=================================='
-	@echo '        MAIN.HTM                  '
-	@echo '=================================='
+	@echo "$(GREEN_COLOR)==================================$(NO_COLOR)"
+	@echo "$(GREEN_COLOR)        MAIN.HTM                  $(NO_COLOR)"
+	@echo "$(GREEN_COLOR)==================================$(NO_COLOR)"
 	mkdir -p $(HTMLDIR)
 	cp main.html $(HTMLDIR)/main.htm
 	rm -f $(HTMLDIR)/index.htm
@@ -66,9 +79,9 @@ main.html:
 #	cp fig/backsmall3balls.gif $(HTMLDIR)
 
 install.html: $(style) healpix.perl cssfile
-	@echo '=================================='
-	@echo '        INSTALL.HTML              '
-	@echo '=================================='
+	@echo "$(GREEN_COLOR)==================================$(NO_COLOR)"
+	@echo "$(GREEN_COLOR)        INSTALL.HTML              $(NO_COLOR)"
+	@echo "$(GREEN_COLOR)==================================$(NO_COLOR)"
 	mkdir -p $(HTMLDIR)
 	-cp $(HTMLDIR)/*labels.pl /tmp
 	-$(LATEX2HTML) $(L2HFLAGS) -split 3 -prefix install   -t "Installing HEALPix"       install
@@ -77,9 +90,9 @@ install.html: $(style) healpix.perl cssfile
 	ln -sf $(CSSFILE) $(HTMLDIR)/install.css
 
 intro.html: $(style) healpix.perl cssfile
-	@echo '=================================='
-	@echo '          INTRO.HTML              '
-	@echo '=================================='
+	@echo "$(GREEN_COLOR)==================================$(NO_COLOR)"
+	@echo "$(GREEN_COLOR)          INTRO.HTML              $(NO_COLOR)"
+	@echo "$(GREEN_COLOR)==================================$(NO_COLOR)"
 	mkdir -p $(HTMLDIR)
 	-$(LATEX2HTML) $(L2HFLAGS) -split 4 -prefix intro -external_file ./intro    -t "Introduction to HEALPix"  intro
 	-$(EQNFIX) $(HTMLDIR)/intro > /dev/null
@@ -87,9 +100,9 @@ intro.html: $(style) healpix.perl cssfile
 	ln -sf $(CSSFILE) $(HTMLDIR)/intro.css
 
 idl.html: $(style) healpix.perl cssfile
-	@echo '=================================='
-	@echo '            IDL.HTML              '
-	@echo '=================================='
+	@echo "$(GREEN_COLOR)==================================$(NO_COLOR)"
+	@echo "$(GREEN_COLOR)            IDL.HTML              $(NO_COLOR)"
+	@echo "$(GREEN_COLOR)==================================$(NO_COLOR)"
 	mkdir -p $(HTMLDIR)
 	-$(LATEX2HTML) $(L2HFLAGS) -split 4 -prefix idl       -t "HEALPix/IDL subroutines"   idl
 	-$(EQNFIX) $(HTMLDIR)/idl
@@ -98,9 +111,9 @@ idl.html: $(style) healpix.perl cssfile
 
 
 subroutines.html: $(style) healpix.perl cssfile
-	@echo '=================================='
-	@echo '      SUBROUTINES.HTML            '
-	@echo '=================================='
+	@echo "$(GREEN_COLOR)==================================$(NO_COLOR)"
+	@echo "$(GREEN_COLOR)      SUBROUTINES.HTML            $(NO_COLOR)"
+	@echo "$(GREEN_COLOR)==================================$(NO_COLOR)"
 	mkdir -p $(HTMLDIR)
 	-$(LATEX2HTML) $(L2HFLAGS) -split 4 -prefix subroutines -t "HEALPix/F90 subroutines" subroutines
 	-$(EQNFIX) $(HTMLDIR)/subroutines
@@ -108,9 +121,9 @@ subroutines.html: $(style) healpix.perl cssfile
 	ln -sf $(CSSFILE) $(HTMLDIR)/subroutines.css
 
 facilities.html: $(style) healpix.perl cssfile
-	@echo '=================================='
-	@echo '        FACILITIES.HTML           '
-	@echo '=================================='
+	@echo "$(GREEN_COLOR)==================================$(NO_COLOR)"
+	@echo "$(GREEN_COLOR)        FACILITIES.HTML           $(NO_COLOR)"
+	@echo "$(GREEN_COLOR)==================================$(NO_COLOR)"
 	mkdir -p $(HTMLDIR)
 	-$(LATEX2HTML) $(L2HFLAGS) -split 4 -prefix facilities -t "HEALPix/F90 facilities"  facilities
 	-$(EQNFIX) $(HTMLDIR)/facilities
@@ -118,9 +131,9 @@ facilities.html: $(style) healpix.perl cssfile
 	ln -sf $(CSSFILE) $(HTMLDIR)/facilities.css
 
 csub.html: $(style) healpix.perl cssfile
-	@echo '=================================='
-	@echo '            CSUB.HTML             '
-	@echo '=================================='
+	@echo "$(GREEN_COLOR)==================================$(NO_COLOR)"
+	@echo "$(GREEN_COLOR)            CSUB.HTML             $(NO_COLOR)"
+	@echo "$(GREEN_COLOR)==================================$(NO_COLOR)"
 	mkdir -p $(HTMLDIR)
 	-$(LATEX2HTML) $(L2HFLAGS) -prefix csub       -t "HEALPix/C subroutines"  csub
 	-$(EQNFIX) $(HTMLDIR)/csub
