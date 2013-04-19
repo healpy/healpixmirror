@@ -141,32 +141,32 @@ are optional}}
 \setlength{\parindent}{0pt}
 \setlength{\parskip}{0.75ex plus 0.2ex minus 0.1ex}
 
-\ifminutes
-  \newcounter{cact}
-  \newcounter{savecact}
-  \newenvironment{actions}[1]{\begin{list}
-    {\ifcol\color{red}\fi\bfseries\upshape Action~\thecact:\hfill}
-    {\usecounter{cact}%
-     \setcounter{cact}{\thesavecact}%
-     \setlength{\labelwidth}{5em}%
-     \setlength{\labelsep}{1ex}%
-     \setlength{\leftmargin}{\labelwidth}%
-     \addtolength{\leftmargin}{\labelsep}
-     \setlength{\parsep}{0.5ex plus 0.2ex minus 0.1ex}
-     \setlength{\itemsep}{0ex plus 0.2ex}}\bfseries}
-    {\setcounter{savecact}{\thecact}\end{list}}
+% \ifminutes
+%   \newcounter{cact}
+%   \newcounter{savecact}
+%   \newenvironment{actions}[1]{\begin{list}
+%     {\ifcol\color{red}\fi\bfseries\upshape Action~\thecact:\hfill}
+%     {\usecounter{cact}%
+%      \setcounter{cact}{\thesavecact}%
+%      \setlength{\labelwidth}{5em}%
+%      \setlength{\labelsep}{1ex}%
+%      \setlength{\leftmargin}{\labelwidth}%
+%      \addtolength{\leftmargin}{\labelsep}
+%      \setlength{\parsep}{0.5ex plus 0.2ex minus 0.1ex}
+%      \setlength{\itemsep}{0ex plus 0.2ex}}\bfseries}
+%     {\setcounter{savecact}{\thecact}\end{list}}
 
-  \newcounter{catb}
-  \newcommand{\action}[3]{%
-    \stepcounter{catb}%
-    \thecatb&#1&#2&#3\\\hline}
-  \newenvironment{actiontable}
-  {\begin{center}\begin{tabular}{|r|p{0.6\hsize}|r|r|}%
-   \hline%
-   \textbf{Action}&\textbf{Description}&\textbf{Status}&\textbf{On}\\
-   \hline\hline\setcounter{catb}{0}}
-  {\end{tabular}\end{center}}
-\fi
+%   \newcounter{catb}
+%   \newcommand{\action}[3]{%
+%     \stepcounter{catb}%
+%     \thecatb&#1&#2&#3\\\hline}
+%   \newenvironment{actiontable}
+%   {\begin{center}\begin{tabular}{|r|p{0.6\hsize}|r|r|}%
+%    \hline%
+%    \textbf{Action}&\textbf{Description}&\textbf{Status}&\textbf{On}\\
+%    \hline\hline\setcounter{catb}{0}}
+%   {\end{tabular}\end{center}}
+% \fi
 \ifdocument
   \newlength{\blocksize}%
   \newcommand{\inputs}{\item[\textsc{Inputs:}\hfill]}
@@ -441,14 +441,15 @@ are optional}}
      \vspace{\baselineskip}}
 
 % several examples
-% \begin{example}{1}
+% \begin{examples}{1}
 %   { example text }
 %   { example description }
-% \end{example}
-% \begin{example}{2}
+% \end{examples}
+% \begin{examples}{2}
 %   { example text }
 %   { example description }
-% \end{example}
+% \end{examples}
+
   \newenvironment{examples}[3]
     {\rule{\hsize}{0.7mm}
      \def\pnum{#1}%
@@ -615,52 +616,52 @@ are optional}}
      \vspace{\baselineskip}}
 
 
-  \newenvironment{task}[8]
-    {\def\pnum{#1}%
-     \def\ptit{#2}%
-     \def\pcon{#3}%
-     \def\pman{#4}%
-     \def\stev{#5}%
-     \def\stpd{#6}%
-     \def\enev{#7}%
-     \def\enpd{#8}%
-     \if!\pnum!\def\pnum{??}\fi
-     \if!\ptit!\def\ptit{??}\fi
-     \if!\pcon!\def\pcon{\textit{TBD}}\fi
-     \if!\pman!\def\pman{\textit{TBD}}\fi
-     \if!\stev!\def\stev{---}\fi
-     \if!\stpd!\def\stpd{---}\fi
-     \if!\enev!\def\enev{---}\fi
-     \if!\enpd!\def\enpd{---}\fi
-     \hrule%
-     \begin{tabular}{@{}p{0.35\hsize}@{\hspace{1ex}}
-                        p{0.25\hsize}p{0.20\hsize}p{0.15\hsize}@{}}
-        \textsc{WP Ref:} &
-          \multicolumn{3}{@{}l}{\textbf{\pnum}} \\
-        \textsc{WP Title:} &
-          \multicolumn{3}{@{}l}{\ptit} \\
-        \textsc{Contractors/Institutes:} &
-          \multicolumn{3}{@{}l}{\pcon} \\
-        \textsc{WP Manager:} &
-          \multicolumn{3}{@{}l}{\pman} \\
-        \textsc{Start Event:} & \stev &
-          \textsc{Planned Date} & \stpd \\
-        \textsc{End Event:} & \enev &
-          \textsc{Planned Date} & \enpd \\
-     \end{tabular}
-     \begin{list}
-       {--}%
-       {\setlength{\labelwidth}{0.35\hsize}%
-        \setlength{\labelsep}{1ex}%
-        \setlength{\leftmargin}{\labelwidth}%
-        \addtolength{\leftmargin}{\labelsep}%
-        \setlength{\blocksize}{\hsize}%
-        \addtolength{\blocksize}{-\leftmargin}%
-        \def\hsep{\rule[2pt]{\blocksize}{0.5pt}}%
-        \setlength{\parsep}{0.5ex plus 0.2ex minus 0.1ex}%
-   	\setlength{\itemsep}{0ex plus 0.2ex}}%
-	\item[]\hsep}
-    {\end{list}\hrule}
+%   \newenvironment{task}[8]
+%     {\def\pnum{#1}%
+%      \def\ptit{#2}%
+%      \def\pcon{#3}%
+%      \def\pman{#4}%
+%      \def\stev{#5}%
+%      \def\stpd{#6}%
+%      \def\enev{#7}%
+%      \def\enpd{#8}%
+%      \if!\pnum!\def\pnum{??}\fi
+%      \if!\ptit!\def\ptit{??}\fi
+%      \if!\pcon!\def\pcon{\textit{TBD}}\fi
+%      \if!\pman!\def\pman{\textit{TBD}}\fi
+%      \if!\stev!\def\stev{---}\fi
+%      \if!\stpd!\def\stpd{---}\fi
+%      \if!\enev!\def\enev{---}\fi
+%      \if!\enpd!\def\enpd{---}\fi
+%      \hrule%
+%      \begin{tabular}{@{}p{0.35\hsize}@{\hspace{1ex}}
+%                         p{0.25\hsize}p{0.20\hsize}p{0.15\hsize}@{}}
+%         \textsc{WP Ref:} &
+%           \multicolumn{3}{@{}l}{\textbf{\pnum}} \\
+%         \textsc{WP Title:} &
+%           \multicolumn{3}{@{}l}{\ptit} \\
+%         \textsc{Contractors/Institutes:} &
+%           \multicolumn{3}{@{}l}{\pcon} \\
+%         \textsc{WP Manager:} &
+%           \multicolumn{3}{@{}l}{\pman} \\
+%         \textsc{Start Event:} & \stev &
+%           \textsc{Planned Date} & \stpd \\
+%         \textsc{End Event:} & \enev &
+%           \textsc{Planned Date} & \enpd \\
+%      \end{tabular}
+%      \begin{list}
+%        {--}%
+%        {\setlength{\labelwidth}{0.35\hsize}%
+%         \setlength{\labelsep}{1ex}%
+%         \setlength{\leftmargin}{\labelwidth}%
+%         \addtolength{\leftmargin}{\labelsep}%
+%         \setlength{\blocksize}{\hsize}%
+%         \addtolength{\blocksize}{-\leftmargin}%
+%         \def\hsep{\rule[2pt]{\blocksize}{0.5pt}}%
+%         \setlength{\parsep}{0.5ex plus 0.2ex minus 0.1ex}%
+%    	\setlength{\itemsep}{0ex plus 0.2ex}}%
+% 	\item[]\hsep}
+%     {\end{list}\hrule}
 
   \newcounter{creq}
   \newcounter{savecreq}

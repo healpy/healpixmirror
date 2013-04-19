@@ -9,8 +9,12 @@ PDFFLAGS :=
 LATEX2HTML := latex2html
 # LATEX2HTML := ~/bin/latex2html
 HTMLDIR := ../../healpix-dynamicPages/html/
-L2HFLAGS := -dir $(HTMLDIR) -up_url main.htm -up_title "Main Page" -math -html_version 4.0 -bottom_navigation -short_extn -white -local_icons -noexternal_images -toc_depth 8 # -debug -verbosity 2  -show_section_numbers 
-#L2HFLAGS := -dir $(HTMLDIR) -up_url main.htm -up_title "Main Page" -math -html_version 4.1 -bottom_navigation -short_extn -white -local_icons -noexternal_images -toc_depth 8 -debug -verbosity 2 # -show_section_numbers 
+ADDRESS := -address `date +%Y-%m-%d` -info 1
+#L2HFLAGS := -dir $(HTMLDIR) -up_url main.htm -up_title "Main Page" -math -html_version 4.0 -bottom_navigation -short_extn -white -local_icons -noexternal_images -toc_depth 8 $(ADDRESS) # -debug -verbosity 2  -show_section_numbers 
+L2HFLAGS := -dir $(HTMLDIR) -up_url main.htm -up_title "Main Page" \
+	-down_url main.htm -down_title "Main Page" \
+	-math -html_version 4.1 -bottom_navigation -short_extn -white -local_icons \
+	-noexternal_images -toc_depth 8 $(ADDRESS) # -debug -verbosity 2 # -show_section_numbers 
 EQNFIX := ./eqnfix.sh
 CSSFILE := common.css
 COLORS = 1
@@ -84,7 +88,7 @@ install.html: $(style) healpix.perl cssfile
 	@echo "$(GREEN_COLOR)==================================$(NO_COLOR)"
 	mkdir -p $(HTMLDIR)
 	-cp $(HTMLDIR)/*labels.pl /tmp
-	-$(LATEX2HTML) $(L2HFLAGS) -split 3 -prefix install   -t "Installing HEALPix"       install
+	-$(LATEX2HTML) $(L2HFLAGS) -split 3 -prefix install   -t "Installing HEALPix"      install
 	-$(EQNFIX) $(HTMLDIR)/install
 	mv -f $(HTMLDIR)/WARNINGS $(HTMLDIR)/WARNINGS_install
 	ln -sf $(CSSFILE) $(HTMLDIR)/install.css

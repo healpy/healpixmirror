@@ -35,6 +35,11 @@ sub efhtrim {
     return $s;
 }
 
+sub efhpack {
+    (my $s = $_[0]) =~ s/\\par/<br><br>/g;
+    return $s;
+}
+
 
 #-------------------------
 # from python.perl
@@ -210,8 +215,8 @@ sub do_env_keywords_mollview {
 #-------------------------------
 
 sub do_env_facility {
-    local($_) = @_;
-    local($descr) = &get_next_argument;
+    local($_) = efhpack(@_);
+    local($descr) = efhpack(&get_next_argument);
     "<b><font size=+6>$t_docid</font></b><hr><H2>$descr</H2><br>Location in HEALPix directory tree: <a href=\"$srcurl$_\"><b>$_</b></a>";
 }
 # sub do_env_facility {
@@ -251,8 +256,8 @@ sub do_env_IDLformat {
 }
 
 sub do_env_recommend {
-    local($_) = @_;
-    "<hr><H1>RECOMMENDATIONS FOR USERS</H1><blockquote>$_</blockquote>";
+    local($_) = efhpack(@_);
+    "<hr><H1>RECOMMENDATIONS FOR USERS</H1><br><blockquote>$_</blockquote>";
 }
 
 sub do_env_arguments {
@@ -261,8 +266,8 @@ sub do_env_arguments {
 }
 
 sub do_env_codedescription{
-    local($_) = @_;
-    "<hr><H1>DESCRIPTION</H1><BR> <blockquote>" . $_ . "</blockquote>";
+    local($_) = efhpack(@_);
+    "<hr><H1>DESCRIPTION</H1><BR><blockquote>$_</blockquote>";
 }
 
 sub do_env_cd_contd{
@@ -328,7 +333,7 @@ sub do_env_qualifiers{
 }
 
 sub do_env_options{
-    local($_) = @_;
+    local($_) = efhpack(@_);
     "<hr><H1>COMMAND LINE OPTIONS</H1><BR> " . $_;
 }
 
@@ -367,7 +372,8 @@ sub do_env_qulistwide{
 }
 
 sub do_env_optionlistwide{
-  &do_env_mylist(@_," COMPACT");
+  local($_) = efhpack(@_);
+  &do_env_mylist($_," COMPACT");
 }
 
 sub do_env_sulist{
@@ -752,6 +758,7 @@ mytiny
 #parbox # [] 
 externaldocument 
 hypersetup
+examples # {} # {} # {}
 _IGNORED_CMDS_
 
 1;                              # This must be the last line
