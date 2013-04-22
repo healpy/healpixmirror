@@ -126,11 +126,30 @@ $\mathbf{\phi}$ & The azimuthal angle on the sphere, $\phi\in[0,2\pi[$.\\
 %--------------------------------------------
 \section[Changes between releases 3.00 and \hpxversion]{Changes between releases 3.00 and
 \hpxversion}
+\subsection{Version 3.11}
+\label{sub:new3p11}
+\begin{itemize}
+	\item {\tt libsharp} C routines used for Spherical Harmonics Transforms 
+and introduced in \healpix\ 3.10
+can now be compiled with any {\tt gcc} version.
+	\item bug correction in \htmlref{{\tt query\_disc}}{sub:query_disc} in {\tt inclusive}
+mode
+	\item bug correction in \htmlref{{\tt alm2map\_spin}}{sub:alm2map_spin} routine,
+which had its {\tt spin} value set to 2
+\end{itemize}
+
+\subsection{Version 3.10}
 \label{sub:new3p10}
 \begin{itemize}
-\item Support for {\tt cfitsio} 'Extended File Name Syntax'', and usage of {\tt
+	\item Support for {\tt cfitsio} 'Extended File Name Syntax'', and usage of {\tt
 libsharp} Spherical Harmonics Transform library. See \linklatexhtml{''Fortran
 Facilities''}{facilities.pdf}{facilities.htm} for details.
+%
+	\item Faster Spherical Harmonics Transform routines 
+thanks to \htmladdnormallink{{\tt
+libsharp}}{http://sourceforge.net/projects/libsharp} C routines\footnote{
+To {\em revert} to the original F90 implementation of these routines, the preprocessing
+variable {\tt DONT\_USE\_SHARP} must be set during compilation.}.
 \end{itemize}
 
 %--------------------------------------------

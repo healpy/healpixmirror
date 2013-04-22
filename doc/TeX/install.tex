@@ -559,7 +559,9 @@ reference files.
 Data files and images produced by the Fortran codes during the tests,
 and the respective reference files to which they can be compared. All the files listed
 are located or produced in the {\tt Healpix\_\hpxversion/test} directory. The GIF images of full sky maps were
-produced using {\tt map2gif}. {\em NA}: No image available, because the data set is not a sky map}
+produced using {\tt map2gif}. {\em NA}: No image available, because the data set
+is not a sky map}
+\normalsize
 \end{table}
 
 
@@ -984,7 +986,7 @@ transparent in the output PNG file.
 \section{Appendix I: Recent Changes and New Features}
 \label{sec:newfeatures}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% BEGIN LATEST CHANGES %%%%%%%%%%%%%
-\subsection{Bug corrections and Improvements in Version 3.1}
+\subsection{Bug corrections and Improvements in Version 3.11}
 % \subsubsection[General]{General}
 % \subsubsection[C]{\linklatexhtml{C}{csub.pdf}{csub.htm}}
 % \subsubsection[C++]{C++}
@@ -994,6 +996,36 @@ transparent in the output PNG file.
 % \subsubsection[IDL]{\linklatexhtml{IDL}{idl.pdf}{idl.htm}}
 % \subsubsection[Java]{Java}
 % \subsubsection[Python]{Python}
+
+% \subsubsection[General]{General}
+% \subsubsection[C]{\linklatexhtml{C}{csub.pdf}{csub.htm}}
+% \subsubsection[C++]{C++}
+%
+\subsubsection[Fortran]{%
+	Fortran 90 \linklatexhtml{facilities}{facilities.pdf}{facilities.htm} and
+	\linklatexhtml{subroutines}{subroutines.pdf}{subroutines.htm}}
+\begin{itemize}
+	\item {\tt libsharp} C routines used for Spherical Harmonics Transforms 
+and introduced in \healpix\ 3.10
+can now be compiled with any {\tt gcc} version.
+	\item bug correction in \htmlref{{\tt query\_disc}}{sub:query_disc} in {\tt inclusive}
+mode
+	\item bug correction in \htmlref{{\tt alm2map\_spin}}{sub:alm2map_spin} routine,
+which had its {\tt spin} value set to 2
+\end{itemize}
+%
+\subsubsection[IDL]{\linklatexhtml{IDL}{idl.pdf}{idl.htm}}
+\begin{itemize}
+	\item %
+		\htmlref{{\tt ang2pix\_ring}}{{idl:pix_tools}} and
+		\htmlref{{\tt pix2ang\_nest}}{{idl:pix_tools}}
+		now accept scalar arguments
+\end{itemize}
+%	
+% \subsubsection[Java]{Java}
+% \subsubsection[Python]{Python}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% END LATEST CHANGES %%%%%%%%%%%%%
+\subsection{Bug corrections and Improvements in Version 3.10}
 \subsubsection[General]{General}
 N/A%
 \subsubsection[C]{\linklatexhtml{C}{csub.pdf}{csub.htm}}
@@ -1091,7 +1123,6 @@ N/A%
 gauss\_beam}}{https://healpy.readthedocs.org/en/1.5.0/generated/healpy.sphtfunc.gauss_beam.html}
 to generate Gaussian beam window function.
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% END LATEST CHANGES %%%%%%%%%%%%%
 \section{Appendix II: Older changes}
 
 {\mytiny{%

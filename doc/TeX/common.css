@@ -32,6 +32,12 @@ p { 	padding: 0px 0px 0px 0px;
   }
 
 blockquote { 
+	font-size: small;
+	line-height: normal;
+}
+
+tt		{ 
+	font: monospace;
 }
 
 /* heading styles */
@@ -67,14 +73,4 @@ SPAN.it		{   }
 SPAN.sc		{   }
 SPAN.textbf		{ font-weight: bold  }
 SPAN.tt		{   }
-
-#par21832		{   }
-#par21845		{   }
-#par21859		{   }
-#par3353		{   }
-#par3357		{   }
-#par3371		{   }
-#par3448		{   }
-#par3680		{   }
-#par5303		{   }
 
