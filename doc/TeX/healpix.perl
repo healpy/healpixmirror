@@ -306,7 +306,7 @@ sub do_env_datasets {
     } else {
   	$the_docid .= "<b>I don t know</b>";
     }
-    "<hr><H1>DATASETS</H1><h3> The following datasets are involved in the $the_docid processing.</h3>" . $_ ;
+    "<hr><H1>DATASETS</H1>\n<h3>The following datasets are involved in the $the_docid processing.</h3>" . $_ ;
 }
 
 

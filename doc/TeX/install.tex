@@ -997,35 +997,36 @@ transparent in the output PNG file.
 % \subsubsection[Java]{Java}
 % \subsubsection[Python]{Python}
 
-% \subsubsection[General]{General}
-% \subsubsection[C]{\linklatexhtml{C}{csub.pdf}{csub.htm}}
-% \subsubsection[C++]{C++}
+\subsubsection[General]{General}
+\begin{itemize}
+	\item \htmladdnormallink{{\tt
+libsharp}}{http://sourceforge.net/projects/libsharp}
+C library used for Spherical Harmonics Transforms 
+in Fortran and C++ since \healpix\ 3.10
+can now be compiled with {\em any} {\tt gcc} version.
+\end{itemize}
 %
 \subsubsection[Fortran]{%
 	Fortran 90 \linklatexhtml{facilities}{facilities.pdf}{facilities.htm} and
 	\linklatexhtml{subroutines}{subroutines.pdf}{subroutines.htm}}
 \begin{itemize}
-	\item {\tt libsharp} C routines used for Spherical Harmonics Transforms 
-and introduced in \healpix\ 3.10
-can now be compiled with any {\tt gcc} version.
-	\item bug correction in \htmlref{{\tt query\_disc}}{sub:query_disc} in {\tt inclusive}
-mode
-	\item bug correction in \htmlref{{\tt alm2map\_spin}}{sub:alm2map_spin} routine,
-which had its {\tt spin} value set to 2
+	\item bug correction in \htmlref{{\tt query\_disc}}{sub:query_disc} 
+	routine in {\tt inclusive} mode
+	\item bug correction in \htmlref{{\tt alm2map\_spin}}{sub:alm2map_spin} 
+	routine, which had its {\tt spin} value set to 2
 \end{itemize}
 %
 \subsubsection[IDL]{\linklatexhtml{IDL}{idl.pdf}{idl.htm}}
 \begin{itemize}
-	\item %
-		\htmlref{{\tt ang2pix\_ring}}{{idl:pix_tools}} and
+	\item \htmlref{{\tt ang2pix\_ring}}{{idl:pix_tools}} and
 		\htmlref{{\tt pix2ang\_nest}}{{idl:pix_tools}}
-		now accept scalar arguments
+		routines now accept scalar arguments
 \end{itemize}
 %	
 % \subsubsection[Java]{Java}
 % \subsubsection[Python]{Python}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% END LATEST CHANGES %%%%%%%%%%%%%
-\subsection{Bug corrections and Improvements in Version 3.10}
+\subsection{Bug corrections and Improvements in Version 3.10 (2013-03)}
 \subsubsection[General]{General}
 N/A%
 \subsubsection[C]{\linklatexhtml{C}{csub.pdf}{csub.htm}}
@@ -1118,21 +1119,29 @@ gcc releases above}).
 \subsubsection[Java]{Java}
 N/A%
 \subsubsection[Python]{Python}
-	switch to {\tt healpy 1.5.0}: addition of 
+\begin{itemize}
+	\item	switch to {\tt healpy 1.5.0}: addition of 
 \htmladdnormallink{{\tt
 gauss\_beam}}{https://healpy.readthedocs.org/en/1.5.0/generated/healpy.sphtfunc.gauss_beam.html}
 to generate Gaussian beam window function.
+\end{itemize}
 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%----------------------------------------------------
 \section{Appendix II: Older changes}
 
 {\mytiny{%
-\tinysubsection{Bug corrections and Improvements in Version 3.0 (2012-11)} % 2012-11-27?
+\tinysubsection*{Bug corrections and Improvements in Version 3.0 (2012-11)} % 2012-11-27?
 
 \tinysubsubsection{General}
 Introduction of the script {\tt healpix\_doc} for easy access to the \healpix
 PDF and HTML documentation.
 
-\tinysubsubsection[C]{\linklatexhtml{C}{csub.pdf}{csub.htm}}
+\tinysubsubsection*{\linklatexhtml{C}{csub.pdf}{csub.htm}}
 \begin{itemize}
 	\item Interface has remained unchanged, but the code has been replaced by a C port
 of the relevant Healpix C++ functions, resulting in significant speedups.
@@ -1184,7 +1193,7 @@ Facilities now check input maps for undefined pixels before calling map2alm().
 
 \end{itemize}
 
-\tinysubsubsection[Fortran 90 facilities and subroutines]{%
+\tinysubsubsection*{%
 Fortran 90 \linklatexhtml{facilities}{facilities.pdf}{facilities.htm} and
 \linklatexhtml{subroutines}{subroutines.pdf}{subroutines.htm}
 }
@@ -1226,7 +1235,7 @@ analyzed;
 %mode.
 \end{itemize}
 
-\tinysubsubsection[IDL]{\linklatexhtml{IDL}{idl.pdf}{idl.htm}}
+\tinysubsubsection*{\linklatexhtml{IDL}{idl.pdf}{idl.htm}}
 \begin{itemize}
 	\item New routines to go from circular beam profile to transfer function
 (\htmlref{{\tt beam2bl}}{idl:beam2bl}), 
@@ -1274,7 +1283,7 @@ maps
 	\item update of {\tt astron} library routines (01-Feb-2012).
 \end{itemize}
 
-\tinysubsubsection{Java}
+\tinysubsubsection*{Java}
 \begin{itemize}
 	\item Core functionality has been reimplemented from scratch in the form of the
 "healpix.essentials" package. It is strongly recommended to use this package
@@ -1310,7 +1319,7 @@ as the C++ implementation (see \mylink{install:cpp:query}{above}).
 \end{itemize}
 \end{itemize}
 
-\tinysubsubsection{Python}
+\tinysubsubsection*{Python}
 \begin{itemize}
 	\item the 
 \linklatexhtml{{\tt{healpy}}}{%
@@ -1319,7 +1328,6 @@ https://github.com/healpy/healpy}
 package (C. Rosset, A. Zonca et al.) is now part of \healpix
 \end{itemize}
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%----------------------------------------------------
 
 \tinysubsection*{Bug corrections and Improvements in Versions 2.20 and 2.20a (2011-02)} % 2011-02-04
 

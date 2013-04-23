@@ -8,8 +8,9 @@ DVIFLAGS :=
 PDFFLAGS :=
 LATEX2HTML := latex2html
 # LATEX2HTML := ~/bin/latex2html
+VERSION =  $(shell grep newcommand hpxversion.tex | sed "s/[a-z{}\\]*//g")
 HTMLDIR := ../../healpix-dynamicPages/html/
-ADDRESS := -address `date +%Y-%m-%d` -info 1
+ADDRESS := -address "Version $(VERSION), `date +%Y-%m-%d`" -info 1
 #L2HFLAGS := -dir $(HTMLDIR) -up_url main.htm -up_title "Main Page" -math -html_version 4.0 -bottom_navigation -short_extn -white -local_icons -noexternal_images -toc_depth 8 $(ADDRESS) # -debug -verbosity 2  -show_section_numbers 
 L2HFLAGS := -dir $(HTMLDIR) -up_url main.htm -up_title "Main Page" \
 	-down_url main.htm -down_title "Main Page" \
@@ -36,15 +37,8 @@ RED_COLOR=\x1b[31;01m
 BLUE_COLOR=\x1b[35;11m
 endif
 
-# dvi: $(dvi) 
-
-# ps: $(ps)
-
 pdf: $(pdf)
 	cp $(pdf) ../../healpix-dynamicPages/pdf
-
-# gz: $(ps)
-# 	gzip -9vf $(ps)
 
 html: $(html) main.html
 
@@ -56,14 +50,6 @@ $(pdf): %.pdf : %.tex healpix.sty $(incs)
 	-$(PDFTEX) $(PDFLLAGS) $< >/dev/null
 	-$(PDFTEX) $(PDFLLAGS) $< >/dev/null
 	-$(PDFTEX) $(PDFLLAGS) $< >/dev/null
-
-# $(dvi): %.dvi : %.tex healpix.sty # healrut.sty
-# 	-$(TEX) $(TEXFLAGS) $< 
-# 	-$(TEX) $(TEXFLAGS) $< >/dev/null
-# 	-$(TEX) $(TEXFLAGS) $< >/dev/null
-
-# $(ps): %.ps : %.dvi
-# 	$(DVIPS) $(DVIFLAGS) -o $@ $<
 
 .PHONY: main.html
 
