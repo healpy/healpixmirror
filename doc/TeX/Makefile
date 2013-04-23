@@ -34,7 +34,7 @@ ifeq ($(COLORS),1)
 NO_COLOR=\x1b[0m
 GREEN_COLOR=\x1b[32;11m
 RED_COLOR=\x1b[31;01m
-BLUE_COLOR=\x1b[35;11m
+BLUE_COLOR=\x1b[34;11m
 endif
 
 pdf: $(pdf)

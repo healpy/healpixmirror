@@ -39,7 +39,7 @@ updateVersion () {
 
   # update configure script
   infile='./configure'
-  echo "editing ${infile}"
+  echoBlu "editing ${infile}"
   cat $infile |\
       sed "s|^HPXVERSION=.*|HPXVERSION=${version}|g" >\
       $tmpfile
@@ -48,7 +48,7 @@ updateVersion () {
 
   # update INSTALL
   infile='./INSTALL'
-  echo "editing ${infile}"
+  echoBlu "editing ${infile}"
   cat $infile |\
       sed "s|_HPV_|$version|g" >\
       $tmpfile
@@ -56,7 +56,7 @@ updateVersion () {
 
   # update main directory Version file
   infile='./Version'
-  echo "editing ${infile}"
+  echoBlu "editing ${infile}"
   cat $infile |\
       sed "s|$current|$version|g" >\
       $tmpfile
@@ -64,7 +64,7 @@ updateVersion () {
 
   # update IDL init_healpix file
   infile='./src/idl/misc/init_healpix.pro'
-  echo "editing ${infile}"
+  echoBlu "editing ${infile}"
   cat $infile |\
       sed "s|version =.*$|version = '$version'|g" |\
       sed "s|date =.*$|date = '$reldate'|g" >\
@@ -73,7 +73,7 @@ updateVersion () {
 
   # update doc/Tex/hpxversion.tex file
   infile='./doc/Tex/hpxversion.tex'
-  echo "editing ${infile}"
+  echoBlu "editing ${infile}"
   cat $infile |\
       sed "s|newcommand{\\\\hpxversion}.*$|newcommand{\\\\hpxversion}{$version}|g" >\
       $tmpfile
@@ -82,11 +82,20 @@ updateVersion () {
 
   # update F90 healpix_types file (2009-07-01)
   infile='./src/f90/mod/healpix_types.F90'
-  echo "editing ${infile}"
+  echoBlu "editing ${infile}"
   cat $infile |\
       sed "s|healpix_version =.*$|healpix_version = '$version'|g" >\
       $tmpfile
   mv $tmpfile $infile
+
+  # update sourceforge URL of code sources
+  infile='doc/TeX/healpix_src_url.tex'
+  echoBlu "editing ${infile}"
+  cat $infile |\
+      sed "s|/HEAD/|/$revision/|g" >\
+      $tmpfile
+  mv $tmpfile $infile
+
 }
 
 # #---------------
@@ -132,7 +141,28 @@ updateVersion () {
 #---------------
 # cf hand_editions.sh
 
-revision=`svnversion .`
+NO_COLOR='\x1b[0m'
+RED_COLOR='\x1b[31;01m'
+GREEN_COLOR='\x1b[32;11m'
+YELLOW_COLOR='\x1b[33;11m'
+BLUE_COLOR='\x1b[34;11m'
+MAGENTA_COLOR='\x1b[35;11m'
+CYAN_COLOR='\x1b[36;11m'
+
+echoBlu (){
+    echo "${BLUE_COLOR}$1${NO_COLOR}"
+    }
+
+echoGrn (){
+    echo "${GREEN_COLOR}$1${NO_COLOR}"
+    }
+
+echoRed (){
+    echo "${RED_COLOR}$1${NO_COLOR}"
+    }
+#---------------
+
+revision=`svnversion . | sed "s|[A-Z]*||g"`
 echo "Revison=${revision}"
 setTopDefaults
 echo "This script will destroy several files and subdirectories"
@@ -149,10 +179,10 @@ do_split=0
 # read answer
 # [ "$answer" == "yes" ] && do_split=1
 
-echo "removing CVS directories..."
+echoRed "removing CVS directories..."
 find . -type d -name CVS -exec \rm -rf {} \;
 
-echo "removing SVN directories..."
+echoRed "removing SVN directories..."
 find . -type d -name .svn -exec \rm -rf {} \;
 
 OS=`uname -s`
@@ -162,7 +192,7 @@ here=`\pwd`
 mkdir -p doc/html
 mkdir -p doc/pdf
 
-echo "installing java Documentation"
+echoGrn "installing java Documentation"
 cd src/java
 ant docs
 cp -pr healpixdocs ${here}/doc/html/java
@@ -173,7 +203,7 @@ cd $here
 #cp -pr src/java/healpixdocs doc/html/java
 #\rm -r src/java/healpixdocs/* # re-instated 2010-02-22
 
-echo "cleaning up C++..."
+echoRed "cleaning up C++..."
 cd src/cxx
 export HEALPIX_TARGET=generic_gcc
 make doc
@@ -194,14 +224,14 @@ oldwebsite="public_html_healpix"
 newwebsite="healpix-dynamicPages"
 docautodir=${newwebsite}
 
-echo "remove old and new web sites"
+echoRed "remove old and new web sites"
 [ -d ${oldwebsite} ]  && \rm -rf ${oldwebsite}
 [ -d  ${newwebsite} ] && \rm -rf ${newwebsite}
 
-echo "removing change logs..."
+echoRed "removing change logs..."
 find . -name ChangeLog -exec \rm -f {} \;
 
-echo "generating documentations"
+echoRed "generating documentations"
 # recreate directory receiving doc from doc/TeX/Makefile
 mkdir -p ${docautodir}/pdf
 mkdir -p ${docautodir}/html
@@ -212,12 +242,12 @@ make pdf
 make html
 cd $here
 
-echo "dealing with Ximview doc"
+echoGrn "dealing with Ximview doc"
 mkdir -p doc/html/ximview
 cp -p src/idl/ximview/docs/* doc/html/ximview/
 
 
-echo "removing doc/TeX and doc/*.txt..."
+echoRed "removing doc/TeX and doc/*.txt..."
 \rm -rf doc/TeX
 \rm -f doc/*.txt
 mv ${docautodir}/html/* doc/html
@@ -226,10 +256,10 @@ mv ${docautodir}/pdf/*  doc/pdf
 \rm -rf DONE.txt TODO Bugs.txt
 \rm -rf include bin lib
 
-echo "removing web site material ..."
+echoRed "removing web site material ..."
 \rm -rf doc/www
 
-echo "removing non-releasable programs..."
+echoRed "removing non-releasable programs..."
 for p in quad_ring; do
     echo "  $p..."
     \rm -rf src/f90/$p
@@ -247,18 +277,18 @@ done
 
 [ -d gpl_header ] && \rm -rf gpl_header
 
-echo "removing myself..."
+echoRed "removing myself..."
 \rm -f $0
 \rm -f 'getit'
 
-echo "--------------------"
-echo $version $reldate
-echo "--------------------"
+echoBlu "--------------------"
+echoBlu $version $reldate
+echoBlu "--------------------"
 
 relsuf="${version}_${shortdate}"
 package="Healpix_${relsuf}.tar.gz"
 rnfile="Healpix_${relsuf}.ReleaseNotes.txt"
-echo "creating package ../${package}"
+echoBlu "creating package ../${package}"
 cd ..
 tar -cvzpf ${package} `basename ${here}`
 cd ${here}
