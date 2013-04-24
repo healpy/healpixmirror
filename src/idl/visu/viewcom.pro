@@ -34,3 +34,5 @@ common view_data, data_plot, $
    pix_type, pix_param, do_conv, do_rot, coord_in, coord_out, eul_mat, sunits, do_flip, $
    polar_type, w_num, projection, do_fullsky, pixel_list, indlist
 
+if is_gdl() then test_preview
+

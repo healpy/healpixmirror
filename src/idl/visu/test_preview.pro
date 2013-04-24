@@ -63,8 +63,8 @@ endelse
 comments=["-----------------------------------------------------------------------------",$
           "You can choose the facilities used to visualize Postscript, PNG and GIF files",$
           "and the hard copy paper size,",$
-          "by running the configure script in Healpix main directory (submenu: IDL).",$
-          "           (no need to restart IDL ;-)",$
+          "by running the configure script in HEALPix main directory (submenu: IDL).",$
+          "           (no need to restart IDL or GDL ;-)",$
           "-----------------------------------------------------------------------------"]
 
 print,comments,form='(a)'
