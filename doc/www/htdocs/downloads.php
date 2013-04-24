@@ -80,10 +80,23 @@ Use of the HEALPix software package should be explicitly acknowledged in all pub
 <A NAME="tocl"></A>
 
 <UL CLASS="ChildLinks">
+
+<LI><A NAME="tex2html22"
+  HREF="#SECTION_311_00010000000000000000">Bug corrections and Improvements in Version 3.11</A>
+<UL>
+<LI><A NAME="tex2html23"
+  HREF="#SECTION_311_00011000000000000000">General</A>
+<LI><A NAME="tex2html24"
+  HREF="#SECTION_311_00012000000000000000">C++</A>
+<LI><A NAME="tex2html25"
+  HREF="#SECTION_311_00013000000000000000">Fortran</A>
+<LI><A NAME="tex2html26"
+  HREF="#SECTION_311_00014000000000000000">IDL</A>
+</UL>
+
 <LI><A NAME="tex2html11"
   HREF="#SECTION_310_10000000000000000">Bug corrections and Improvements in Version 3.10</A>
 <UL>
-<!-- <LI><A NAME="tex2html12" HREF="#SECTION_310_11000000000000000">General</A> -->
 <LI><A NAME="tex2html13"
   HREF="#SECTION_310_12000000000000000">C</A>
 <LI><A NAME="tex2html14"
@@ -92,41 +105,97 @@ Use of the HEALPix software package should be explicitly acknowledged in all pub
   HREF="#SECTION_310_14000000000000000">Fortran</A>
 <LI><A NAME="tex2html16"
   HREF="#SECTION_310_15000000000000000">IDL</A>
-<!-- <LI><A NAME="tex2html17" HREF="#SECTION_310_16000000000000000">Java</A> -->
 <LI><A NAME="tex2html18"
   HREF="#SECTION_310_17000000000000000">Python</A>
 </UL>
 
-<LI><A NAME="tex2html11"
+<LI><A NAME="tex2html01"
   HREF="#SECTION_300_10000000000000000">Bug corrections and Improvements in Version 3.00</A>
 <UL>
-<li><A name="tex2html3"
+<li><A name="tex2html03"
   href="#SECTION_300_11000000000000000">General</A>
-<li><A name="tex2html4"
+<li><A name="tex2html04"
   href="#SECTION_300_12000000000000000">C</A>
-<li><A name="tex2html5"
+<li><A name="tex2html05"
   href="#SECTION_300_13000000000000000">C++</A>
-<li><A name="tex2html6"
+<li><A name="tex2html06"
   href="#SECTION_300_14000000000000000">Fortran</A>
-<li><A name="tex2html7"
+<li><A name="tex2html07"
   href="#SECTION_300_15000000000000000">IDL</A>
-<li><A name="tex2html8"
+<li><A name="tex2html08"
   href="#SECTION_300_16000000000000000">Java</A>
-<li><A name="tex2html9"
+<li><A name="tex2html09"
   href="#SECTION_300_17000000000000000">Python</A>
 </ul>
 </ul>
 <!--End of Table of Child-Links-->
 </p>
 
-<h3><a name="SECTION_310_10000000000000000">New Features in HEALPix 3.10</a></h3>
-<!--
-<h3><A NAME="SECTION_310_11000000000000000">
-General</A>
-</H3>
-N/A
--->
+<!-- ************************************************* -->
 
+<h3><A NAME="SECTION_311_00010000000000000000">
+New Features in HEALPix 3.11</A>
+</h3>
+
+<h3><A NAME="SECTION_311_00011000000000000000"></A>
+<A NAME="sec:general3p11"></A>
+<BR>
+General
+</h3>
+
+<UL>
+<LI><A NAME="tex2html1"
+  HREF="http://sourceforge.net/projects/libsharp"><TT>libsharp</TT></A>
+C library used for Spherical Harmonics Transforms 
+in Fortran and C++ since HEALPix 3.10
+can now be compiled with <EM>any</EM> <TT>gcc</TT> version.
+</LI>
+</UL>
+<A HREF="#top">    Back to Top</A><br><br>
+
+<h3><A NAME="SECTION_311_00012000000000000000">
+C++</A>
+</h3>
+
+<UL>
+<LI>See General section above
+</LI>
+</UL>
+<A HREF="#top">    Back to Top</A><br><br>
+
+<h3><A NAME="SECTION_311_00013000000000000000">
+Fortran 90 facilities and
+	subroutines</A>
+</h3>
+
+<UL>
+<LI>bug correction in <TT>query_disc</TT> 
+	routine in <TT>inclusive</TT> mode
+</LI>
+<LI>bug correction in <TT>alm2map_spin</TT> 
+	routine, which had its <TT>spin</TT> value set to 2
+</LI>
+<LI>See General section above
+</LI>
+</UL>
+<A HREF="#top">    Back to Top</A><br><br>
+
+<h3><A NAME="SECTION_311_00014000000000000000">
+IDL</A>
+</h3>
+
+<UL>
+<LI><A HREF="#idl:pix_tools"><TT>ang2pix_ring</TT></A> and
+		<A HREF="#idl:pix_tools"><TT>pix2ang_nest</TT></A>
+		routines now accept scalar arguments
+</LI>
+</UL>
+<A HREF="#top">    Back to Top</A><br><br>
+
+<!-- ************************************************* -->
+
+<h3><a name="SECTION_310_10000000000000000">
+New Features in HEALPix 3.10</a></h3>
 
 <H3><A NAME="SECTION_310_12000000000000000">
 C</A>
