@@ -1,4 +1,4 @@
-LS_OPTFLAGS:= -O2 -ffast-math
+LS_OPTFLAGS:= -O2 -ffast-math -fno-tree-fre
 LS_DEBUGFLAGS:= #-g
 
 CC= gcc
