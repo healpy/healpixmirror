@@ -18,13 +18,13 @@ src_libsharp = \
   libsharp/sharp.c \
   libsharp/sharp.h \
   libsharp/sharp_cxx.h \
-  libsharp/sharp_almhelpers.c \
-  libsharp/sharp_almhelpers.h \
   libsharp/sharp_complex_hacks.h \
   libsharp/sharp_core.c \
   libsharp/sharp_core.h \
   libsharp/sharp_geomhelpers.c \
   libsharp/sharp_geomhelpers.h \
+  libsharp/sharp_standard_comm.c \
+  libsharp/sharp_standard_comm.h \
   libsharp/sharp_internal.h \
   libsharp/sharp_lowlevel.h \
   libsharp/sharp_vecsupport.h \
