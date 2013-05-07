@@ -56,6 +56,7 @@ module pix_tools
 !    2012-07-17: Parallel OpenMP implementation of medfiltmap
 !    2012-08-27: correction of a bug affecting neighbours_nest and next_in_line_nest at Nside>8192
 !    2013-04-02: bug correction in query_disc in inclusive mode
+!    2013-05-07: G95-compatible
 !==================================================================
   ! subroutine query_strip                          Done (To be Tested) depends on in_ring
   ! subroutine query_polygon                        Done (To be Tested) depends on isort
@@ -164,10 +165,10 @@ module pix_tools
 #endif
 
   !initialise array x2pix, y2pix and pix2x, pix2y used in several routines
-  integer(KIND=i4b), private, save, dimension(128) :: x2pix=0,y2pix=0
-  integer(KIND=i4b), private, save, dimension(0:127) :: x2pix1=0,y2pix1=0
+!  integer(KIND=i4b), private, save, dimension(128) :: x2pix=0,y2pix=0
+  integer(KIND=i4b), private, save, dimension(0:127) :: x2pix1=-1,y2pix1=-1
 
-  integer(KIND=i4b), private, save, dimension(0:1023) :: pix2x=0, pix2y=0
+  integer(KIND=i4b), private, save, dimension(0:1023) :: pix2x=-1, pix2y=-1
 
   ! coordinate of the lowest corner of each face
   INTEGER(KIND=I4B), private, save, dimension(0:11) :: jrll1 = (/ 2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4 /) ! in unit of nside
@@ -412,7 +413,7 @@ module pix_tools
        & convert_nest2ring, convert_ring2nest, &
        & convert_inplace, convert_inplace_real, convert_inplace_int, &
        & nest2ring, ring2nest, xy2pix_nest, pix2xy_nest, &
-       & mk_pix2xy, mk_xy2pix, &
+!!!       & mk_pix2xy, mk_xy2pix, &
        & neighbours_nest, &
        & next_in_line_nest, &
        & ang2vec, vec2ang, &
@@ -1820,43 +1821,43 @@ contains
 
     return
   end subroutine mk_pix2xy
-  !=======================================================================
-  subroutine mk_xy2pix()
-    !=======================================================================
-    !     sets the array giving the number of the pixel lying in (x,y)
-    !     x and y are in {1,128}
-    !     the pixel number is in {0,128**2-1}
-    !
-    !     if  i-1 = sum_p=0  b_p * 2^p
-    !     then ix = sum_p=0  b_p * 4^p
-    !          iy = 2*ix
-    !     ix + iy in {0, 128**2 -1}
-    !=======================================================================
-    INTEGER(KIND=I4B):: k,ip,i,j,id
-    !=======================================================================
+!   !=======================================================================
+!   subroutine mk_xy2pix()
+!     !=======================================================================
+!     !     sets the array giving the number of the pixel lying in (x,y)
+!     !     x and y are in {1,128}
+!     !     the pixel number is in {0,128**2-1}
+!     !
+!     !     if  i-1 = sum_p=0  b_p * 2^p
+!     !     then ix = sum_p=0  b_p * 4^p
+!     !          iy = 2*ix
+!     !     ix + iy in {0, 128**2 -1}
+!     !=======================================================================
+!     INTEGER(KIND=I4B):: k,ip,i,j,id
+!     !=======================================================================
 
-    do i = 1,128           !for converting x,y into
-       j  = i-1            !pixel numbers
-       k  = 0
-       ip = 1
+!     do i = 1,128           !for converting x,y into
+!        j  = i-1            !pixel numbers
+!        k  = 0
+!        ip = 1
 
-       do
-          if (j==0) then
-             x2pix(i) = k
-             y2pix(i) = 2*k
-             exit
-          else
-             id = MODULO(J,2)
-             j  = j/2
-             k  = ip*id+k
-             ip = ip*4
-          endif
-       enddo
+!        do
+!           if (j==0) then
+!              x2pix(i) = k
+!              y2pix(i) = 2*k
+!              exit
+!           else
+!              id = MODULO(J,2)
+!              j  = j/2
+!              k  = ip*id+k
+!              ip = ip*4
+!           endif
+!        enddo
 
-    enddo
+!     enddo
 
-    return
-  end subroutine mk_xy2pix
+!     return
+!   end subroutine mk_xy2pix
   !=======================================================================
   subroutine mk_xy2pix1()
     !=======================================================================

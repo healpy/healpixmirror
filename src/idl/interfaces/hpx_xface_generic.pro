@@ -40,6 +40,7 @@ pro hpx_xface_generic, fullpath, param_file, usrpath, init=init, run=run, silent
 ; 2008-07-04: set stack size to hard limit
 ; 2009-04-30: deal with tmpdir, using IDL_TMPDIR as default
 ; 2009-09-09: uses !healpix.path.* sub-structure
+; 2013-05-02: do not use /SH keyword with SPAWN under Windows
 ;-
 
 do_init = keyword_set(init)
@@ -106,7 +107,11 @@ if (do_run) then begin
         print,command
 ;;;;        spawn,'cat '+param_file
     endelse
-    spawn,/sh,command
+    if (strupcase(!version.os_family) eq 'WINDOWS') then begin
+        spawn,command
+    endif else begin
+        spawn,/sh,command
+    endelse
 endif
 
 if (do_clean) then begin

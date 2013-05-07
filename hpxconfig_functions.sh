@@ -1002,25 +1002,20 @@ askOpenMP () {
     read answer
     [ "x$answer" != "x" ] && OpenMP="$answer"
     if [ $OpenMP = 1 ] ; then
-	# deal with C flags
-	IdentifyCParallCompiler
-	if [ "x$PRCFLAGS" != "x" ] ; then
-	    CFLAGS="$CFLAGS $PRCFLAGS"
-	else
-	    echo "C routines won't be compiled with OpenMP"
-	fi
 
-	# deal with F90 flags
-	if [ "x$PRFLAGS" != "x" ] ; then
-	    # update FFLAGS
+	# deal with C and F90 flags
+	IdentifyCParallCompiler
+	if [ "x$PRCFLAGS" != "x"  -a "x$PRFLAGS" != "x" ] ; then
+	    # openMP must be supported by the F90 and C compilers
+	    CFLAGS="$CFLAGS $PRCFLAGS"
 	    FFLAGS="$FFLAGS $PRFLAGS"
 ##	    PARALL="_omp" # no need for a different source file
 	else
 	    echo "Healpix+OpenMP not tested for  \"$FCNAME\" under \"$OS\" "
 	    echo "Contact healpix at jpl.nasa.gov if you already used OpenMP in this configuration."
-	    echo "Will perform serial implementation instead"
-	    #crashAndBurn
-	fi 
+	    echo "Will perform serial implementation of C and F90 routines instead."
+	fi
+
     fi
 }
 # -----------------------------------------------------------------
@@ -1234,7 +1229,7 @@ IdentifyCompiler () {
 		CC="gcc"
 	elif [ $ng95 != 0 ] ; then
 	        FCNAME="g95 compiler"
-		FFLAGS="$FFLAGS -DGFORTRAN"
+		FFLAGS="$FFLAGS -DGFORTRAN -DG95 -w -ffree-form -fno-second-underscore"
 		OFLAGS="-O3"
 		CC="gcc"
 		FI8FLAG="-i8" # change default INTEGER to 64 bits

@@ -37,7 +37,11 @@ program HotSpots
   use healpix_types
   use maxima_tools, ONLY : find_maxima
   use fitstools,  ONLY : getsize_fits, input_map, write_bintab
+#ifdef G95
+  use pix_tools,  ONLY : convert_ring2nest, convert_nest2ring, npix2nside
+#else
   use pix_tools,  ONLY : convert_inplace, ring2nest, nest2ring, npix2nside
+#endif
   USE head_fits,  ONLY : add_card, write_minimal_header
   use misc_utils, ONLY : assert_alloc, fatal_error
   USE extension,  ONLY : getArgument, nArguments
@@ -167,7 +171,11 @@ program HotSpots
 
   if(order_type==1) then
      write(*,*) code//'> Converting to NESTED numbering scheme.'
+#ifdef G95
+     call convert_ring2nest(nside, map)
+#else
      call convert_inplace(ring2nest,map)
+#endif
   endif
 
   allocate(peak(0:npix-1))
@@ -186,10 +194,17 @@ program HotSpots
   write(*,*) 'Done.'
 
   if(order_type==1) then
+#ifdef G95
+     write(*,*) code//'> Converting map back to RING numbering.'
+     call convert_nest2ring(nside,map)
+     write(*,*) code//'> Converting peaks to RING numbering.'
+     call convert_nest2ring(nside,peak)
+#else
      write(*,*) code//'> Converting map back to RING numbering.'
      call convert_inplace(nest2ring,map)
      write(*,*) code//'> Converting peaks to RING numbering.'
      call convert_inplace(nest2ring,peak)
+#endif
   endif
 
   write (*,*) code//' Writing '//trim(outfile_extrema)//' FITS file...'

@@ -38,7 +38,8 @@ module extension
   !
   ! exit_with_status : verbose and clean exit, added by M.R.
   ! 2005-08: edited for Gfortran
-
+  ! 2013-05-07: G95-compatible
+  
 #ifdef NAG
   USE f90_unix, ONLY : iargc, getarg, exit
 #endif
@@ -60,7 +61,9 @@ interface
 end interface
 #endif
 
-  integer(kind=I4B), private :: arg_shift = 0
+! work-around G95 bug (2013-05-07)
+  integer(kind=I4B), parameter, private :: arg_shift = 0
+!  integer(kind=I4B), private :: arg_shift = 0
 !VF  integer(kind=I4B), private :: arg_shift = 1
 
   private

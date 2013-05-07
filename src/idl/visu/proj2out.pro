@@ -455,6 +455,7 @@ endif else begin
         one = replicate(1.,ncol)
         tvlct,[0,0,0,findgen(ncol-3)]/(ncol-3)*720,one,one,/hsv ; hue is in degrees
     endif else begin
+        color_names = '' ; seems necessary on some (?) IDL version
         loadct, get_names = color_names
         nmax_col = n_elements(color_names)-1
         if (abs(ct) le nmax_col) then begin

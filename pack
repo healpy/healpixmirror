@@ -96,6 +96,16 @@ updateVersion () {
       $tmpfile
   mv $tmpfile $infile
 
+  # update C++ code version
+  infile='src/cxx/cxxsupport/announce.cc'
+  echoBlu "editing ${infile}"
+  cat $infile | sed 's|string version =.*$|string version =\"v$version\";|g' > $tmpfile
+  mv $tmpfile $infile
+  infile='src/cxx/autotools/configure.ac'
+  echoBlu "editing ${infile}"
+  cat $infile | sed "s|AC_INIT.*|AC_INIT([healpix_cxx], [$version])|g" > $tmpfile
+  mv $tmpfile $infile
+
 }
 
 # #---------------
@@ -276,6 +286,9 @@ done
 # cd ${here}
 
 [ -d gpl_header ] && \rm -rf gpl_header
+
+echoRed "removing C++ make_release..."
+\rm -rf src/cxx/autotools/make_release
 
 echoRed "removing myself..."
 \rm -f $0

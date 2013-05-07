@@ -2,32 +2,25 @@
 
 VPATH	= $(BINDIR)
 exec	= $(BINDIR)/hotspot
-src	= maxima_tools.f90 HotSpots.f90
+src	= maxima_tools.f90 HotSpots.F90
 obj 	= maxima_tools.o HotSpots.o
 
-# %.o: %.F90
-# 	case $(OS) in \
-# 	AIX ) \
-# 	ln -s -f $< $*.F; \
-# 	$(FC) $(FFLAGS) -c $*.F -o $@; \
-# 	rm $*.F;; \
-# 	OSF ) \
-# 	ln -s -f $< $*.f90; \
-# 	$(FC) $(FFLAGS) -cpp -c $(basename $<).f90 -o $@;; \
-# 	* ) \
-# 	$(FC) $(FFLAGS) -c $< -o $@;; \
-# 	esac
-# %.o: %.f90
-# 	case $(OS) in \
-# 	AIX ) \
-# 	ln -s -f $< $*.f; \
-# 	$(FC) $(FFLAGS) -c $*.f -o $@; \
-# 	rm $*.f;; \
-# 	* ) \
-# 	$(FC) $(FFLAGS) -c $< -o $@;; \
-# 	esac
 %.o: %.f90
-	$(FC) $(FFLAGS) -c $< -o $@
+	$(FC) $(FFLAGS) -c -o $@ $<
+
+%.o: %.F90
+	@echo compiling $*.F90
+	@case $(OS) in \
+	Darwin ) \
+	ln -s -f $< $*.junk.F90; \
+	$(FC) $(FFLAGS) $(ADDUS) $(PPFLAGS) -c $*.junk.F90 -o $@; \
+	rm $*.junk.F90;; \
+	OSF ) \
+	ln -s -f $< $*.f90; \
+	$(FC) $(FFLAGS) $(ADDUS) -cpp -c $(basename $<).f90 -o $@;; \
+	* ) \
+	$(FC) $(FFLAGS) $(ADDUS) $(PPFLAGS) -c $< -o $@;; \
+	esac
 
 default: $(exec)
 

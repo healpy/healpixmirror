@@ -31,7 +31,8 @@ module sub_ngpdf_sho
   use healpix_types
   integer(i4b), parameter :: namax = 20
   real(DP), dimension(0:namax) :: factorial
-  logical(LGT) :: precomp_done = .false.
+!  logical(LGT) :: precomp_done = .false.
+  logical(LGT) :: precomp_done ! 2013-05-07: edited for G95
 
 
   private
@@ -94,6 +95,7 @@ contains
     !      initialize variables
 
     If (present(bins)) do_bin = .True.
+    precomp_done = .false.
 
     chline = 'iseed'
     If (do_bin) call add_subscript(chline, bins)

@@ -37,6 +37,7 @@ module head_fits
   ! EH, 2002-08-09
   ! 2007-09-20 added write_minimal_header
   ! 2009-01-08 corrected typo in FITS header written by write_minimal_header (DY_Y -> DY_T)
+  ! 2013-05-07: G95-compatible
   !-------------------------------------------------------------------------
 
   ! subroutine add_card   [interface]
@@ -115,8 +116,12 @@ module head_fits
   character (LEN=1 ), private :: dtype
   character (LEN=20), private :: stval
   character (LEN=80), private :: card, stcom
-  integer(kind=I4B) , private :: nlh, statusfits, count_in = 0
-  logical(kind=LGT) , private :: match, exact, casesen = .false., verbose = .true.
+! work arond G95 bug that does not accept SAVEd variables with value 0 or .false. (2013-05-07)
+!   integer(kind=I4B) , private :: nlh, statusfits, count_in = 0
+!   logical(kind=LGT) , private :: match, exact, casesen = .false., verbose = .true.
+  integer(kind=I4B) , private :: nlh, statusfits, count_in
+  logical(kind=LGT) , private :: match, exact
+  logical(kind=LGT), private, parameter :: casesen = .false., verbose = .true.
 
   public :: add_card, merge_headers
 

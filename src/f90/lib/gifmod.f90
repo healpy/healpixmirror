@@ -88,6 +88,7 @@
 !     redefined AS parameter
 !     replaced WHERE structure by loops in imgscl
 !     used loop to flip A array in gifmap
+! 2013-05-07: G95-compatible
 ! ---------------------------------------------------------------------
 
 module gifmod
@@ -98,7 +99,7 @@ module gifmod
 !   real(sp), parameter :: as = -1.6375e30, tiny = 1.0e-20
    real(sp), parameter :: as = hpx_sbadval, tiny = 1.0e-20
    real(sp) :: amin,amax
-   integer(i4b) :: nc = 0
+   integer(i4b) :: nc = -1 ! for G95
    integer(i4b), allocatable, dimension(:) :: r,g,b
 
    ! ------------------------------------------------------------------
@@ -275,7 +276,7 @@ contains
       character(len=*), intent(in) :: fn
       integer(i4b), dimension(:,:), allocatable :: arvs
 
-      if (nc == 0) then
+      if (nc <= 0) then
          print *, "error in gifmap: color table undefined"
          call fatal_error
       end if
@@ -432,7 +433,7 @@ contains
       real(sp), allocatable, dimension(:,:) :: c
       character(len=12) :: smin,smax
 
-      if (nc == 0) then
+      if (nc <= 0) then
          print *, "error in addbar: color table undefined"
          call fatal_error
       end if
