@@ -32,7 +32,7 @@ module sub_ngpdf_sho
   integer(i4b), parameter :: namax = 20
   real(DP), dimension(0:namax) :: factorial
 !  logical(LGT) :: precomp_done = .false.
-  logical(LGT) :: precomp_done ! 2013-05-07: edited for G95
+  logical(LGT), save :: precomp_done ! 2013-05-07: edited for G95
 
 
   private

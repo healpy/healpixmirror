@@ -1,3 +1,4 @@
+! -*- F90 -*-
 !-----------------------------------------------------------------------------
 !
 !  Copyright (C) 1997-2013 Krzysztof M. Gorski, Eric Hivon,
@@ -25,7 +26,6 @@
 !  For more information about HEALPix see http://healpix.sourceforge.net
 !
 !-----------------------------------------------------------------------------
-! -*- F90 -*-
 
 ! ---------------------------------------------------------------------
 ! Module [gifmod] provides six subroutines: [setcol] to set color
@@ -34,54 +34,6 @@
 !   [gifmap] to write an array as a GIF file, and [gifget] to read a
 !   GIF file into an array.
 !
-! Interfaces:
-!
-! interface gifmap
-!    subroutine gifmap(a,fn)
-!       integer(i4b), dimension(:,:) :: a
-!       character(len=*) :: fn
-!    end subroutine gifmap
-! end interface
-!
-! interface setcol
-!    subroutine setcol_i(i)
-!       integer(i4b) :: i
-!    end subroutine setcol_i
-!
-!    subroutine setcol_t(rc,gc,bc)
-!       integer(i4b), dimension(:) :: rc,gc,bc
-!    end subroutine setcol_t
-! end interface
-!
-! interface addbar
-!    subroutine addbar(a,b)
-!       integer(i4b), dimension(:,:) :: a
-!       integer(i4b), pointer, dimension(:,:) :: b
-!    end subroutine addbar
-! end interface
-!
-! interface addttl
-!    subroutine addttl(a,b,st)
-!       integer(i4b), dimension(:,:) :: a
-!       integer(i4b), pointer, dimension(:,:) :: b
-!       character(len=*) :: st
-!    end subroutine addttl
-! end interface
-!
-! interface imgscl
-!    subroutine imgscl(a,b,m)
-!       real(sp), dimension(:,:) :: a
-!       integer(i4b), dimension(size(a,1),size(a,2)) :: b
-!       logical(lgt), optional, dimension(size(a,1),size(a,2)) :: m
-!    end subroutine imgscl
-! end interface
-!
-! interface gifget
-!    subroutine gifget(a,fn)
-!       integer(i4b), pointer, dimension(:,:) :: a
-!       character(len=*) :: fn
-!    end subroutine gifget
-! end interface
 !
 ! Matthias Bartelmann and Anthony J. Banday, Dec. 1998
 ! Dec 2010, EH.
@@ -97,9 +49,9 @@ module gifmod
    implicit none
 
 !   real(sp), parameter :: as = -1.6375e30, tiny = 1.0e-20
-   real(sp), parameter :: as = hpx_sbadval, tiny = 1.0e-20
-   real(sp) :: amin,amax
-   integer(i4b) :: nc = -1 ! for G95
+   real(sp),     parameter         :: as = hpx_sbadval, tiny = 1.0e-20
+   real(sp),     save                      :: amin,amax
+   integer(i4b), save                      :: nc = -1 ! for G95
    integer(i4b), allocatable, dimension(:) :: r,g,b
 
    ! ------------------------------------------------------------------
