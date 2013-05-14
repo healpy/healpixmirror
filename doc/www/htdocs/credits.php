@@ -1,8 +1,6 @@
 <?php require('_header.inc.php'); ?>
 
 
-
-
 <h2>HEALPix History</h2>
 
 <p>
@@ -81,12 +79,13 @@
 
               <a href="#acknowledgments">Acknowledgments</a>).
 
-              <br>
-              <br>
+</p>
 <a name="team"></a>
+<h2>HEALPix Team</h2>
+<p>
               The active support of HEALPix currently involves the following people (in alphabetical order):
+   <!-- <table cellSpacing=0 cellPadding=0 border=0 width="525"><tr valign="top"><td width="525" valign="top"> -->
 		<ul>
-
 		<li>
 	      A.J. Banday;
 		</li>
@@ -122,7 +121,7 @@
               A. Zonca: Python developments.
 		</li>
 
-
+   <!-- </td></tr></table>  -->
 
 
 	</ul>
@@ -147,9 +146,9 @@
 		We thank the following people for their contributions and/or suggestions, which
 		significantly helped us to improve HEALPix throughout its several releases
 
-            <table cellSpacing=0 cellPadding=0 border=0 width=605>
+            <table cellSpacing=0 cellPadding=0 border=0 width="601" class="tablelist">
               <tr valign="top">
-                <td width="280" valign="top">
+                <td width="250" valign="top">
                     <ul>
                       <li>    Reza Ansari    			</li>
                       <li>    John Arballo    			</li>
@@ -184,7 +183,7 @@
                 </td>
 -->
 
-                <td width="320" valign="top">
+                <td width="350" valign="top">
                     <ul>
 		      <li>    Masakazu A.R. Kobayashi		</li>
 		      <li>    Eiichiro Komatsu			</li>

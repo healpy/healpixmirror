@@ -1,8 +1,5 @@
 <?php require('_header.inc.php'); ?>
 
-
-
-
 <p>
 The HEALPix documentation is currently available for downloading in <a href="pdf/pdf_index.pdf">pdf</a> and can be browsed in <a href="html/main.htm">html</a>
 

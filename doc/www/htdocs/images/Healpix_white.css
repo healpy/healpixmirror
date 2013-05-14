@@ -144,6 +144,7 @@ blockquote {
 table {
 	margin: 15px 10px; 
 	border-collapse: collapse;			
+	font-size: 118%; /* same as parent level */
 }
 th {
 	background: #000;
@@ -160,13 +161,20 @@ th {
 tr {
 	color: #000000;
 	height: 34px;	
+	font: inherit; /* same as parent level */
 }
 td {
 	padding-left: 12px;
 	padding-right: 12px;
 	border: 1px solid #FFF;	
-	font-size: 118%; /* FONT-SIZE default */
+	/* font-size: 118%; /* FONT-SIZE default */
+	font: inherit; /* same as parent level */
 }
+
+/* table.tablelist td {font-size: 100%;}*/
+/* ul.tablelist li {font-size: 100%; } */
+.tablelist {	font-size: 100%; }
+
 /* end - table */
 
 /* form elements */
@@ -359,6 +367,11 @@ input.button {
 	top: 245px; left: 15px;		
 }
 
+/* FONT-SIZE default, with 11px=100% */
+#main p {
+	font-size: 118%;
+}
+
 /* Main Column */
 #main {
 	float: left;
@@ -391,10 +404,6 @@ input.button {
 	font-size: 118%; /* FONT-SIZE default */
 }
 
-/* FONT-SIZE default, with 11px=100% */
-#main p {
-	font-size: 118%;
-}
 
 /* Sidebar */	
 #sidebar {
