@@ -1,4 +1,4 @@
-AC_INIT([healpix_cxx], [3.10])
+AC_INIT([healpix_cxx], [3.11])
 AM_INIT_AUTOMAKE([foreign -Wall -Werror])
 
 dnl

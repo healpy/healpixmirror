@@ -187,7 +187,7 @@ template <typename T, typename storageManager> class arrT: public arr_ref<T>
     /*! Creates a zero-sized array. */
     arrT() : arr_ref<T>(0,0), own(true) {}
     /*! Creates an array with \a sz entries. */
-    arrT(tsize sz) : arr_ref<T>(stm.alloc(sz),sz), own(true) {}
+    explicit arrT(tsize sz) : arr_ref<T>(stm.alloc(sz),sz), own(true) {}
     /*! Creates an array with \a sz entries, and initializes them with
         \a inival. */
     arrT(tsize sz, const T &inival) : arr_ref<T>(stm.alloc(sz),sz), own(true)
@@ -304,7 +304,7 @@ template <typename T>
     /*! Creates a zero-sized array. */
     arr() : arrT<T,normalAlloc__<T> >() {}
     /*! Creates an array with \a sz entries. */
-    arr(tsize sz) : arrT<T,normalAlloc__<T> >(sz) {}
+    explicit arr(tsize sz) : arrT<T,normalAlloc__<T> >(sz) {}
     /*! Creates an array with \a sz entries, and initializes them with
         \a inival. */
     arr(tsize sz, const T &inival) : arrT<T,normalAlloc__<T> >(sz,inival) {}
@@ -333,7 +333,7 @@ template <typename T, int align>
     /*! Creates a zero-sized array. */
     arr_align() : arrT<T,alignAlloc__<T,align> >() {}
     /*! Creates an array with \a sz entries. */
-    arr_align(tsize sz) : arrT<T,alignAlloc__<T,align> >(sz) {}
+    explicit arr_align(tsize sz) : arrT<T,alignAlloc__<T,align> >(sz) {}
     /*! Creates an array with \a sz entries, and initializes them with
         \a inival. */
     arr_align(tsize sz, const T &inival)

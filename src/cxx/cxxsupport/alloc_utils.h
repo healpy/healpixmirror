@@ -25,7 +25,7 @@
 /*! \file alloc_utils.h
  *  Classes providing raw memory allocation and deallocation support.
  *
- *  Copyright (C) 2011 Max-Planck-Society
+ *  Copyright (C) 2011-2013 Max-Planck-Society
  *  \author Martin Reinecke
  */
 
@@ -44,6 +44,9 @@ template <typename T> class normalAlloc__
 
 template <typename T, int align> class alignAlloc__
   {
+  private:
+    enum { max_nat_align = sizeof(void *) }; // C++11: alignof(std::max_align_t)
+
   public:
     T *alloc(tsize sz) const
       {
@@ -51,22 +54,35 @@ template <typename T, int align> class alignAlloc__
       if (sz==0) return 0;
       planck_assert((align&(align-1))==0,"alignment must be power of 2");
       void *res;
-/* OSX up to version 10.5 does not define posix_memalign(), but fortunately
-   the normal malloc() returns 16 byte aligned storage */
-#ifdef __APPLE__
-      planck_assert(align<=16, "bad alignment requested");
-      res=malloc(sz*sizeof(T));
-      planck_assert(res!=0,"error in malloc()");
-#else
-      planck_assert(posix_memalign(&res,align,sz*sizeof(T))==0,
-        "error in posix_memalign()");
-#endif
+      if (align<=max_nat_align)
+        {
+        res=malloc(sz*sizeof(T));
+        planck_assert(res!=0,"error in malloc()");
+        }
+      else
+        {
+        tsize overhead=align-1+sizeof(void*);
+        void *ptr=malloc(sz*sizeof(T)+overhead);
+        planck_assert(ptr!=0,"error in malloc()");
+        tsize sptr=reinterpret_cast<tsize>(ptr);
+        sptr = (sptr+overhead) & ~(align-1);
+        void **ptr2 = reinterpret_cast<void **>(sptr);
+        ptr2[-1]=ptr;
+        res=ptr2;
+        }
       return static_cast<T *>(res);
       }
     void dealloc(T *ptr) const
       {
       using namespace std;
-      free(ptr);
+      if (align<=max_nat_align)
+        free(ptr);
+      else
+        {
+        if (ptr==0) return;
+        void **ptr2 = reinterpret_cast<void **>(ptr);
+        free (ptr2[-1]);
+        }
       }
   };
 
