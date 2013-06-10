@@ -25,7 +25,7 @@
  */
 
 /*
- *  Copyright (C) 2003-2012 Max-Planck-Society
+ *  Copyright (C) 2003-2013 Max-Planck-Society
  *  Author: Martin Reinecke
  */
 
@@ -51,7 +51,7 @@ template<typename T> void Healpix_Map<T>::Import_degrade
     int x,y,f;
     pix2xyf(m,x,y,f);
     int hits = 0;
-    double sum = 0;
+    kahan_adder<double> adder;
     for (int j=fact*y; j<fact*(y+1); ++j)
       for (int i=fact*x; i<fact*(x+1); ++i)
         {
@@ -59,10 +59,10 @@ template<typename T> void Healpix_Map<T>::Import_degrade
         if (!approx<double>(orig.map[opix],Healpix_undef))
           {
           ++hits;
-          sum += orig.map[opix];
+          adder.add(orig.map[opix]);
           }
         }
-    map[m] = T((hits<minhits) ? Healpix_undef : sum/hits);
+    map[m] = T((hits<minhits) ? Healpix_undef : adder.result()/hits);
     }
 }
   }

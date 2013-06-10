@@ -25,7 +25,7 @@
 /*! \file math_utils.h
  *  Various convenience mathematical functions.
  *
- *  Copyright (C) 2002-2012 Max-Planck-Society
+ *  Copyright (C) 2002-2013 Max-Planck-Society
  *  \author Martin Reinecke
  */
 
@@ -175,5 +175,22 @@ template<typename T> inline bool multiequal (const T &a, const T &b, const T &c,
 template<typename T> inline bool multiequal (const T &a, const T &b, const T &c,
   const T &d, const T &e, const T &f)
   { return (a==b) && (a==c) && (a==d) && (a==e) && (a==f); }
+
+template<typename T> class kahan_adder
+  {
+  private:
+    T sum, c;
+  public:
+    kahan_adder(): sum(0), c(0) {}
+
+    void add (const T &val)
+      {
+      T y=val-c;
+      T t=sum+y;
+      c=(t-sum)-y;
+      sum=t;
+      }
+    T result() const { return sum; }
+  };
 
 #endif

@@ -25,7 +25,7 @@
  */
 
 /*
- *  Copyright (C) 2004-2012 Max-Planck-Society
+ *  Copyright (C) 2004-2013 Max-Planck-Society
  *  Author: Martin Reinecke
  */
 
@@ -457,20 +457,20 @@ void check_average()
     {
     Healpix_Map<double> map (order,RING), map2(1,RING);
     for (int m=0; m<map.Npix(); ++m)
-      map[m] = rng.rand_uni()+2;
+      map[m] = rng.rand_uni()+0.01;
     map2.Import(map);
     double avg=map.average(), avg2=map2.average();
-    if (!approx(avg,avg2,1e-12))
+    if (!approx(avg,avg2,1e-14))
       cout << "PROBLEM: order = " << order << " " << avg/avg2-1 << endl;
     }
   for (int nside=3; nside<1000; nside += nside/2+1)
     {
     Healpix_Map<double> map (nside,RING,SET_NSIDE), map2(1,RING,SET_NSIDE);
     for (int m=0; m<map.Npix(); ++m)
-      map[m] = rng.rand_uni()+2;
+      map[m] = rng.rand_uni()+0.01;
     map2.Import(map);
     double avg=map.average(), avg2=map2.average();
-    if (!approx(avg,avg2,1e-12))
+    if (!approx(avg,avg2,1e-14))
       cout << "PROBLEM: nside = " << nside << " " << avg/avg2-1 << endl;
     }
   }
