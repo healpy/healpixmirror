@@ -36,7 +36,10 @@ sub efhtrim {
 }
 
 sub efhpack {
-    (my $s = $_[0]) =~ s/\\par/<br><br>/g;
+# bug correction 2013-06-26: remove \par but leave \partial (and \parbox) in
+  my $s = $_[0];
+  $s =~ s/\\par$/<br><br>/g;
+  $s =~ s/\\par\\end/<br><br>\\end/g;
     return $s;
 }
 
