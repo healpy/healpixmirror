@@ -89,102 +89,125 @@ as can be seen from the <a href="resources.php">Resources</a> and <a href="galle
 </p>
 
 <h2>Main Features of HEALPix Software</h2>
-<p>
-              The HEALPix package 
-              contains a suite of programs which allow all of the following (and more):
-              <br />
-              <ul>
-                <li>
-                  Programs for fast simulation and analysis of full-sky maps of CMB
-                  temperature and polarization anisotropy
-                  (<a href="gallery.php" target="_top">sky maps preview</a>)
-                  up to sub-arcminute angular resolution
-<!--(your computer&#039;s RAM permitting, see <a href="pdf/benchmark1.pdf">benchmarks</a>).-->
-                </li>
-                <!-- br -->
-                <li>
-                  C, C++, Fortan 90, IDL, Java, Python implementation of most 
-		  routines and facilities (for third party implementation in other languages, see <a href="http://sourceforge.net/p/healpix/wiki/Available%20languages/">this HEALPix wiki page</a>)
-                </li>
-                <!-- br -->
-                <li>
-                  Most critical routines are parallelized
-                </li>
-                <!-- br -->
-                <li>
-                  Forward and backward scalar and spin-weighted Spherical Harmonics Transforms
-                </li>
-                <!-- br -->
-                <li>
+<p>		The HEALPix software is available in C, C++, Fortran90, IDL, Java and Python.
+		In each of these languages are available an extensive library of HEALPix specific tools 
+		and their supporting routines as well as a suite of programs implementing the
+		key features of HEALPix. Each package allows all of, or most of, the following (and more):
+              	<br />
+	      	<ul>
+		<li>
+		Spherical Harmonics Transforms:
+              		<ul>	
+                	<li>
+                  	Fast simulation and analysis of full-sky maps of CMB
+                  	temperature and polarization anisotropy
+                  	(<a href="gallery.php" target="_top">sky maps preview</a>)
+                  	up to sub-arcminute angular resolution
+			<!--(your computer&#039;s RAM permitting, see <a href="pdf/benchmark1.pdf">benchmarks</a>).-->
+                	</li>
+                	<!-- br -->
+			<li>
+			Filtering of sky maps with arbitrary circular window
+			</li>
+                	<!-- br -->
+                	<li>
+                  	Constrained and non-Gaussian realization facilities
+                	</li>
+                	<!-- br -->
+                	<li>
      Highly optimised Spherical Harmonics Transforms library 
     (<a href="http://sourceforge.net/projects/libsharp"><tt>libsharp</tt></a>) 
      used by all implementations for better performance
-                </li>
-                <!-- br -->
-                <li>
-                  Routines to read and write the
-                  <a href="http://fits.gsfc.nasa.gov/" target="_top">FITS</a>
-                  formatted map data sets,
-    and allowing the IDL, Java or Python display and processing of your results
-                </li>
-                <!-- br -->
-                <li>
-                  Fortran 90 and C++ visualization facilities
-                </li>
-                <!-- br -->
-                <li>
-                  <a href="documentation.php">Comprehensive documentation</a> 
-		(<a href="../doc/pdf/pdf_index.pdf">PDF</a> and 
-		<a href="../doc/html/main.htm">HTML</a>)
-                </li>
-                <!-- br -->
-                <li>
-                  Automated installation and build scripts
-                </li>
-                <!-- br -->
-                <li>
-                  Programs to search the maps for pixel neighbours and extrema 
-		  of a random field
-                </li>
-                <!-- br -->
-                <li>
-                  Pixel queries in discs, triangles, polygons and strips
-                </li>
-                <!-- br -->
-                <li>
-                  Programs to manage, modify and rotate spherical harmonic 
-		  coefficients of arbitrary maps	
-                </li>
-                <!-- br -->
-                <li>
-                  Programs to perform median filtering of sky maps
-                </li>
-                <!-- br -->
-                <li>
-                  Constrained and non-Gaussian realization facilities.
-                </li>
-                <!-- br -->
-                <li>
-                  Mask processing facilities
-                </li>
-                <!-- br -->
-                <li>
-                  An IDL toolkit for pixel manipulation and
-                  <a href="http://fits.gsfc.nasa.gov/" target="_top">FITS</a>
-                  file manipulation.
-                </li>
-                <!-- br -->
-                <li>
-                  Facilities to output HEALPix maps into 
-		<a href="http://earth.google.com/">Google Earth</a>/<a href="http://earth.google.com/sky/skyedu.html">Google Sky</a> compliant images
-		and into <a href=" http://fulldome.ryanwyatt.net/fulldome_domemasterSpec_v05.pdf">DomeMaster</a> format used in planetariums.
-                </li>
-                <!-- br -->
-              </ul>
+                	</li>
+                	<!-- br -->
+                	<li>
+                  	Forward and backward scalar and spin-weighted Spherical Harmonics Transforms
+                	</li>
+                	<!-- br -->
+                	<li>
+                  	Programs to manage, modify and rotate spherical harmonic 
+		  	coefficients of arbitrary maps	
+                	</li>
+			</ul>
+                </li><!-- br -->
+		<li>
+		Pixel manipulation:
+			<ul>
+			<li>
+			Pixelation of the sphere supported down to a pixel size of 0.4&nbsp;mas (milli-arcseconds), corresponding to potentially 3.5&nbsp;10<sup>18</sup> pixels on the sphere
+                	<!-- br -->
+                	<li>
+                  	Pixel queries in discs, triangles, polygons and strips
+                	</li>
+                	<!-- br -->
+                	<li>
+                  	Programs to search the maps for pixel neighbours and extrema 
+		  	of a random field
+                	</li>
+                	<!-- br -->
+                	<li>
+                  	Median filtering of sky maps
+                	</li>
+			<!-- br -->
+			<li>
+			Mask processing facilities
+			<!-- br -->
+			</li>
+			</ul>
+                </li><!-- br -->
+		<li>
+		General:
+			<ul>
+			<li>
+                  	<a href="documentation.php">Comprehensive documentation</a> 
+			(<a href="../doc/pdf/pdf_index.pdf">PDF</a> and 
+			<a href="../doc/html/main.htm">HTML</a>); 
+			web-based and email <a href="support.php">support</a>
+                	</li>
+                	<!-- br -->
+                	<li>
+                  	Automated installation and build scripts
+                	</li>
+                	<!-- br -->
+                	<li>
+                  	Most critical routines are parallelized
+                	<!-- br -->
+			</ul>
+			</li>
+                </li><!-- br -->
+		<li>
+		Visualization:
+			<ul>
+                	<li>
+                  	 Visualization facilities available in C++, Fortran 90, IDL, Java and Python
+                	</li>
+                	<!-- br -->
+			<li>
+                  	Facilities to output HEALPix maps into 
+			<a href="http://earth.google.com/">Google Earth</a>/<a href="http://earth.google.com/sky/skyedu.html">Google Sky</a> compliant images
+			and into <a href=" http://fulldome.ryanwyatt.net/fulldome_domemasterSpec_v05.pdf">DomeMaster</a> format used in planetariums.
+                	</li>
+                	<!-- br -->
+              		</ul>
+		</li><!-- br -->
+		<li>
+		Input/Output:
+			<ul>
+			<li>
+			routines to manipulate and visualize the 
+			<a href="http://fits.gsfc.nasa.gov/" target="_top">FITS</a>
+			files generally used for I/O
+                	</li>
+                	<!-- br -->
+			</ul>
+                </li><!-- br -->
+		</ul>
 </p>
 <p>
     For a detailed list of the new features added in the latest HEALPix release, see
-    the <a href="downloads.php">Getting HEALPix page</a>.
+    the <a href="downloads.php">Getting HEALPix page</a>.<br>
+    For third party implementation in other languages, see <a href="http://sourceforge.net/p/healpix/wiki/Available%20languages/">this HEALPix wiki page</a>.<br>
+    For third party extensions of HEALPix capabilities, see the <a href="resources.php">Resources page</a>.
 </p>
 
 <?php require('_footer.inc.php'); ?>

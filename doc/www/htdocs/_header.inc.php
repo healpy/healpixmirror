@@ -27,7 +27,9 @@
 
 <!-- Google analytics -->
 <?php 
-  include_once("_analytics_tracking.php");
+$myhost = parse_url($_SERVER['SERVER_NAME'], PHP_URL_HOST);
+$goodhost = 'healpix.sourceforge.net';
+if ($myhost == $goodhost) include_once("_analytics_tracking.php");
 ?>
 </head>
 
