@@ -25,7 +25,7 @@
  */
 
 /*! \file powspec_fitsio.h
- *  Copyright (C) 2003-2010 Max-Planck-Society
+ *  Copyright (C) 2003-2013 Max-Planck-Society
  *  \author Martin Reinecke
  */
 
@@ -33,23 +33,27 @@
 #define POWSPEC_FITSIO_H
 
 #include <string>
-class fitshandle;
 
+class fitshandle;
 class PowSpec;
 
 /*! \defgroup powspec_fitsio_group FITS-based I/O of power spectra */
 /*! \{ */
 
-/*! Opens the FITS file \a filename, jumps to HDU 2, and reads \a nspecs
+/*! Reads the power spectrum stored in the FITS binary table pointed to by
+    \a inp into \a powspec. */
+void read_powspec_from_fits (fitshandle &inp, PowSpec &powspec, int nspecs,
+  int lmax);
+/*! Opens the FITS file \a filename, jumps to HDU \a hdunum, and reads \a nspecs
     columns into \a powspec. \a nspecs must be 1, 4, or 6. */
 void read_powspec_from_fits (const std::string &infile,
-  PowSpec &powspec, int nspecs, int lmax);
+  PowSpec &powspec, int nspecs, int lmax, int hdunum=2);
+
 /*! Inserts a new binary table into \a out, which contains \a nspecs columns
     of FITS type TDOUBLE, and writes the components of \a powspec into it.
     \a nspecs must be 1, 4, or 6. */
 void write_powspec_to_fits (fitshandle &out,
   const PowSpec &powspec, int nspecs);
-
 /*! Creates a new FITS file called \a outfile, inserts a binary table,
     which contains \a nspecs columns of FITS type TDOUBLE, and writes the
     components of \a powspec into it. \a nspecs must be 1, 4, or 6. */

@@ -25,7 +25,7 @@
  */
 
 /*
- *  Copyright (C) 2003-2010 Max-Planck-Society
+ *  Copyright (C) 2003-2013 Max-Planck-Society
  *  Author: Martin Reinecke
  */
 
@@ -35,14 +35,11 @@
 
 using namespace std;
 
-void read_powspec_from_fits (const string &infile, PowSpec &powspec,
-  int nspecs, int lmax)
+void read_powspec_from_fits (fitshandle &inp, PowSpec &powspec, int nspecs,
+  int lmax)
   {
   planck_assert ((nspecs==1)||(nspecs==4)||(nspecs==6),
     "wrong number of spectra");
-  fitshandle inp;
-  inp.open(infile);
-  inp.goto_hdu(2);
 
   arr<double> tt(lmax+1,0),gg(lmax+1,0),cc(lmax+1,0),tg(lmax+1,0),
               tc(lmax+1,0),gc(lmax+1,0);
@@ -68,6 +65,16 @@ void read_powspec_from_fits (const string &infile, PowSpec &powspec,
   if (nspecs==1) powspec.Set(tt);
   if (nspecs==4) powspec.Set(tt,gg,cc,tg);
   if (nspecs==6) powspec.Set(tt,gg,cc,tg,tc,gc);
+  }
+
+void read_powspec_from_fits (const string &infile, PowSpec &powspec,
+  int nspecs, int lmax, int hdunum)
+  {
+  fitshandle inp;
+  inp.open(infile);
+  inp.goto_hdu(hdunum);
+
+  read_powspec_from_fits (inp,powspec,nspecs,lmax);
   }
 
 void write_powspec_to_fits (fitshandle &out,
