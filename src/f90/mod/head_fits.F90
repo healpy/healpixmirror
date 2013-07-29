@@ -119,8 +119,8 @@ module head_fits
 ! work arond G95 bug that does not accept SAVEd variables with value 0 or .false. (2013-05-07)
 !   integer(kind=I4B) , private :: nlh, statusfits, count_in = 0
 !   logical(kind=LGT) , private :: match, exact, casesen = .false., verbose = .true.
-  integer(kind=I4B) , private :: nlh, statusfits, count_in
-  logical(kind=LGT) , private :: match, exact
+  integer(kind=I4B), private :: nlh, statusfits, count_in
+  logical(kind=LGT), private :: match, exact
   logical(kind=LGT), private, parameter :: casesen = .false., verbose = .true.
 
   public :: add_card, merge_headers

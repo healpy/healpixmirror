@@ -1,15 +1,26 @@
 # -*- Makefile -*-
 
-VPATH	= $(BINDIR)
-exec	= $(BINDIR)/anafast
-src	= anafast.f90
-obj 	= anafast.o
+fac     = anafast
 inc     = ana_sub_inc.f90
+VPATH	= $(BINDIR)
+exec	= $(BINDIR)/$(fac)
+src	= $(fac).f90
+obj 	= $(fac).o
 
-%.o: %.f90 $(inc)
-	$(FC) $(FFLAGS) -c $< -o $@
+MKDIR   = mkdir -p
+OD :=$(BUILDDIR)/$(fac)
+SD :=$(shell pwd)
+OBJ:=$(obj:%=$(OD)/%)
 
-default: $(exec)
 
-$(exec): $(obj) $(LIBDIR)/libhealpix.a
-	$(FC) $(FFLAGS) -o $(exec) $(obj) $(LDFLAGS)
+%_mkdir:
+	@if [ ! -d $* ]; then $(MKDIR) $* ; fi 
+
+
+$(OD)/%.o: $(SD)/%.f90 $(inc) $(OD)_mkdir
+	$(FC) $(FFLAGS) -c $< -o $@ $(MODDIR)$(OD)
+
+default:  $(exec) 
+
+$(exec): $(OBJ) $(LIBDIR)/libhealpix.a
+	$(FC) $(FFLAGS) -o $(exec) $(OBJ) $(LDFLAGS)

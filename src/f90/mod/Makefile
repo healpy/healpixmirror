@@ -104,37 +104,43 @@ num_rec.o: num_rec.F90 $(incnumrec)
 
 mask_tools.o: mask_tools.F90
 
+$(obj1): $(obj0)
+$(obj2): $(obj1)
+$(obj3): $(obj2)
+$(obj4): $(obj3)
+$(obj5): $(obj4)
+$(obj6): $(obj5)
+$(obj7): $(obj6)
+# #obj1
+# bit_manipulation.o:  $(obj0)
+# extension.o:         $(obj0)
+# long_intrinsic.o:    $(obj0)
+# obsolete.o:          $(obj0)
+# ran_tools_dist.o:    $(obj0)
+# rngmod.o:            $(obj0)
 
-#obj1
-bit_manipulation.o:  $(obj0)
-extension.o:         $(obj0)
-long_intrinsic.o:    $(obj0)
-obsolete.o:          $(obj0)
-ran_tools_dist.o:    $(obj0)
-rngmod.o:            $(obj0)
+# #obj2
+# healpix_fft.o :  $(obj1)
+# misc_utils.o:    $(obj1)
 
-#obj2
-healpix_fft.o :  $(obj1)
-misc_utils.o:    $(obj1)
+# #obj3
+# head_fits.o :     $(obj2)
+# num_rec.o :       $(obj2)
+# paramfile_io.o :  $(obj2)
+# statistics.o :    $(obj2)
 
-#obj3
-head_fits.o :     $(obj2)
-num_rec.o :       $(obj2)
-paramfile_io.o :  $(obj2)
-statistics.o :    $(obj2)
+# #obj4
+# pix_tools.o:  $(obj3)
 
-#obj4
-pix_tools.o:  $(obj3)
+# #obj5
+# fitstools.o :        $(obj4)
+# coord_v_convert.o :  $(obj4)
+# udgrade_nr.o :       $(obj4)
 
-#obj5
-fitstools.o :        $(obj4)
-coord_v_convert.o :  $(obj4)
-udgrade_nr.o :       $(obj4)
+# #obj6
+# alm_tools.o: $(obj5)
+# mask_tools.o: $(obj5)
 
-#obj6
-alm_tools.o: $(obj5)
-mask_tools.o: $(obj5)
-
-#obj7
-healpix_modules.o: $(obj6)
+# #obj7
+# healpix_modules.o: $(obj6)
 

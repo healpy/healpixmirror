@@ -81,6 +81,7 @@ function getsize_fits, filename, nmaps = nmaps, nside = nside, mlpol = mlpol, or
 ;       Jan 2009: calls init_astrolib
 ;      2013-01-11: parse header for LMAX (on top of MAX-LPOL)
 ;            Extension can now be a string as well as a number
+;      2013-07-15: accepts number-free TFORM (eg, 'E', 'I', 'D')
 ;-
 
 routine = 'getsize_fits'
@@ -217,13 +218,13 @@ endif else begin
     if (countfits ne 0) then nmaps = junk
 
     nrows  = ROUND(FLOAT(sxpar(xhdr,'NAXIS2',count=countfits)))
-    tforms = strtrim(sxpar(xhdr,'TFORM*'),2)
-    sl = strupcase(strmid(tforms,0,1)) ; first letter of 'TFORM*'
-    if (sl[0] eq 'E' or sl[0] eq 'I') then begin
-        fsize = nrows
-    endif else begin
-        fsize = nrows * max(long(tforms))
-    endelse
+    tforms = strtrim(    sxpar(xhdr,'TFORM*',count=nforms),2)
+    digits = '0123456789' ; all digits,   letter = 'ABCDEIJKLMX'; all valid TFORM* string value
+    for jf=0, nforms-1 do begin
+        sl = strupcase(strmid(tforms[jf],0,1)) ; first character of 'TFORM*'
+        if (strpos(digits,sl) lt 0) then tforms[jf] = '1'+tforms[jf] ; add a leading 1 if it is not starting with a digit
+    endfor
+    fsize = nrows * max(long(tforms))
 
     ;if the same keyword is present twice, SXPAR takes the last one
     junk  = STRTRIM(sxpar(xhdr,'ORDERING',count=countfits,/silent),2)

@@ -35,6 +35,7 @@
 # 2012-11-05: supports python (healpy) configuration
 #             proposes -fPIC compilation of F90 code
 # 2013-04-18: work-around for GCC 4.4 bug
+# 2013-07-26: F90: add output location of modules ($MODDIR). Hacked from CMake.
 #=====================================
 #=========== General usage ===========
 #=====================================
@@ -61,7 +62,7 @@ checkDir () {
 	read answer
 	if [ "x$answer" != "xn"  -a  "x$answer" != "xN"  ]; then
 	    for d in $l; do
-		mkdir $d 1>${DEVNULL} 2>&1
+		${MKDIR} $d 1>${DEVNULL} 2>&1
 		if [ $? -gt 0 ]; then
 		    echo "Error: Could not create directory $d"
 		    crashAndBurn
@@ -163,7 +164,7 @@ setCDefaults () {
     CC="gcc"
     OPT="-O2 -Wall"
     AR="ar -rsv"
-    PIC="-fPIC" # work with gcc and icc
+    PIC="-fPIC" # works with gcc, icc and clang
     WLRPATH=""
 
     case $OS in
@@ -721,12 +722,13 @@ setF90Defaults () {
     CC="cc"
     FFLAGS="-I\$(F90_INCDIR)"
     #CFLAGS="-O"
-    CFLAGS="-O3 -std=c99"  # OK for gcc and icc
+    CFLAGS="-O3 -std=c99"  # OK for gcc, icc and clang
     #LDFLAGS="-L\$(F90_LIBDIR) -L\$(FITSDIR) -lhealpix -lhpxgif -lsharp_healpix_f -l\$(LIBFITS)"
     LDFLAGS="-L\$(F90_LIBDIR) -L\$(FITSDIR) -lhealpix -lhpxgif -l\$(LIBFITS)"
     F90_BINDIR="./bin"
     F90_INCDIR="./include"
     F90_LIBDIR="./lib"
+    F90_BUILDDIR="./build"
     DIRSUFF=""
     MOD="mod"
     #OS=`uname -s`
@@ -1117,8 +1119,11 @@ EOF
 }
 # -----------------------------------------------------------------
 IdentifyCParallCompiler () {
+# add OpenMP flag for C compiler (currently only gcc and icc)
+#    clang support to be added soon
     nicc=`$CC -V 2>&1 | ${GREP} -i intel    | ${WC} -l`
     ngcc=`$CC --version 2>&1 | ${GREP} -i 'GCC' | ${WC} -l`
+    nclang=`$CC --version 2>&1 | ${GREP}  'clang' | ${WC} -l`
     PRCFLAGS=""
     if [ $nicc != 0 ] ; then
 	PRCFLAGS='-openmp' # -openmp-report0
@@ -1167,6 +1172,7 @@ IdentifyCompiler () {
 # standard flags
                 FFLAGS="$FFLAGS -DNAG -strict95"
 		FI8FLAG="-double" # change default INTEGER and FLOAT to 64 bits
+		MODDIR="-mdir " # output location of modules
         elif [ $nifc != 0 ] ; then 
 		ifc_modules
                 FCNAME="Intel Fortran Compiler"
@@ -1182,10 +1188,12 @@ IdentifyCompiler () {
 		FI8FLAG="-i8" # change default INTEGER to 64 bits
 ##		FI8FLAG="-integer-size 64" # change default INTEGER to 64 bits
 		CFLAGS="$CFLAGS -DINTEL_COMPILER" # to combine C and F90
+		MODDIR="-module " # output location of modules
 		[ $OS = "Linux" ] && WLRPATH="-Wl,-R"
         elif [ $npgf != 0 ] ; then
                 FCNAME="Portland Group Compiler"
 		PRFLAGS="-mp" # Open MP enabled, to be tested
+		MODDIR="-module " # output location of modules
         elif [ $nlah != 0 ] ; then
                 FCNAME="Lahey/Fujitsu Compiler"
 #  		FFLAGS="$FFLAGS --nap --nchk --npca --ntrace --tpp --trap dio"
@@ -1218,6 +1226,7 @@ IdentifyCompiler () {
 		#### FPP="-WF,-D"
 		PRFLAGS="-qsmp=omp" # Open MP enabled
 	    fi
+	    MODDIR="-qmoddir " # output location of modules
 	    FI8FLAG="-qintsize=8" # change default INTEGER to 64 bits
 	elif [ $nabs != 0 ] ; then
 	        FCNAME="Absoft Pro Compiler"
@@ -1227,12 +1236,14 @@ IdentifyCompiler () {
 		LDFLAGS="$LDFLAGS -lU77"
 		CFLAGS="$CFLAGS -DAbsoftProFortran"  # to combine C and F90
 		CC="gcc"
+		MODDIR="-YMOD_OUT_DIR=" # output location of modules
 	elif [ $ng95 != 0 ] ; then
 	        FCNAME="g95 compiler"
 		FFLAGS="$FFLAGS -DGFORTRAN -DG95 -w -ffree-form -fno-second-underscore"
 		OFLAGS="-O3"
 		CC="gcc"
 		FI8FLAG="-i8" # change default INTEGER to 64 bits
+		MODDIR="-fmod=" # output location of modules
 	elif [ $ngfortran != 0 ] ; then
 	        FCNAME="gfortran compiler"
 		FFLAGS="$FFLAGS -DGFORTRAN -fno-second-underscore"
@@ -1242,6 +1253,7 @@ IdentifyCompiler () {
 		CFLAGS="$CFLAGS -DgFortran" # to combine C and F90
 		FI8FLAG="-fdefault-integer-8" # change default INTEGER to 64 bits
 		[ $OS = "Linux" ] && WLRPATH="-Wl,-R"
+		MODDIR="-J" # output location of modules
 	elif [ $npath != 0 ] ; then
 	        FCNAME="PathScale EKOPath compiler"
 		FFLAGS="$FFLAGS"
@@ -1250,6 +1262,7 @@ IdentifyCompiler () {
 		PRFLAGS="-mp" # Open MP enabled
 		FI8FLAG="-i8" # change default INTEGER to 64 bits
 		#FI8FLAG="-default64" # change default INTEGER and FLOAT to 64 bits
+		MODDIR="-module " # output location of modules
         else
 	    nvas=`$FC | ${GREP} -i sierra | ${WC} -l`
             if [ $nvas != 0 ] ; then
@@ -1377,6 +1390,7 @@ showDefaultDirs () {
     echo "F90_BINDIR =  ${F90_BINDIR}[suffix]"
     echo "F90_INCDIR =  ${F90_INCDIR}[suffix]"
     echo "F90_LIBDIR =  ${F90_LIBDIR}[suffix]"
+    echo "F90_BUILDDIR =  ${F90_BUILDDIR}[suffix]"
 #    echo " and the Makefile will be copied into Makefile[suffix]"
 }
 
@@ -1384,6 +1398,7 @@ updateDirs () {
     F90_BINDIR=${F90_BINDIR}$DIRSUFF
     F90_INCDIR=${F90_INCDIR}$DIRSUFF
     F90_LIBDIR=${F90_LIBDIR}$DIRSUFF
+    F90_BUILDDIR=${F90_BUILDDIR}$DIRSUFF
 }
 
 showActualDirs () {
@@ -1391,6 +1406,7 @@ showActualDirs () {
     echo "F90_BINDIR =  ${F90_BINDIR}"
     echo "F90_INCDIR =  ${F90_INCDIR}"
     echo "F90_LIBDIR =  ${F90_LIBDIR}"
+    echo "F90_BUILDDIR =  ${F90_BUILDDIR}"
 }
 # -----------------------------------------------------------------
 askUserMisc () {
@@ -1407,8 +1423,8 @@ askUserMisc () {
     updateDirs
     showActualDirs
 
-    checkDir $F90_BINDIR $F90_INCDIR $F90_LIBDIR
-    fullPath F90_BINDIR F90_INCDIR F90_LIBDIR
+    checkDir $F90_BINDIR $F90_INCDIR $F90_LIBDIR $F90_BUILDDIR
+    fullPath F90_BINDIR  F90_INCDIR  F90_LIBDIR  F90_BUILDDIR
 
     echoLn " "
 
@@ -1546,11 +1562,13 @@ editF90Makefile () {
 	${SED} "s|^F90_BINDIR.*$|F90_BINDIR	= $F90_BINDIR|" |\
 	${SED} "s|^F90_INCDIR.*$|F90_INCDIR	= $F90_INCDIR|" |\
 	${SED} "s|^F90_LIBDIR.*$|F90_LIBDIR	= $F90_LIBDIR|" |\
+	${SED} "s|^F90_BUILDDIR.*$|F90_BUILDDIR	= $F90_BUILDDIR|" |\
 	${SED} "s|^F90_AR.*$|F90_AR        = $AR|" |\
 	${SED} "s|^F90_FFTSRC.*$|F90_FFTSRC	= $FFTSRC|" |\
 	${SED} "s|^F90_ADDUS.*$|F90_ADDUS	= $ADDUS|" |\
 ####	${SED} "s|^F90_PARALL.*$|F90_PARALL	= $PARALL|" |\
-	${SED} "s|^F90_MOD.*$|F90_MOD	= $MOD|" |\
+	${SED} "s|^F90_MODDIR[[:space:]=].*$|F90_MODDIR	= \"$MODDIR\"|" |\
+	${SED} "s|^F90_MOD[[:space:]=].*$|F90_MOD	= $MOD|" |\
 	${SED} "s|^F90_FTYPE.*$|F90_FTYPE	= $FTYPE|" |\
 	${SED} "s|^F90_PPFLAGS.*$|F90_PPFLAGS	= $PPFLAGS|" |\
 	${SED} "s|^F90_PGFLAG.*$|F90_PGFLAG  = $PGFLAG|" |\
@@ -1772,7 +1790,7 @@ ${CAT} ${HPX_CONF_MAIN}
 #-------------
 makeTopConf(){
 
-    mkdir -p ${HPX_CONF_DIR}
+    ${MKDIR} -p ${HPX_CONF_DIR}
 
     case $SHELL in
     sh|ksh|bash|zsh)
@@ -1849,6 +1867,7 @@ setTopDefaults() {
     HEAD="head" # introduced 2008-11-21
     LS="ls"
     MAKE="make"
+    MKDIR="mkdir"
     NM="nm"
     PRINTF="printf"
     PWD="pwd"

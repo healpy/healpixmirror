@@ -45,11 +45,11 @@ function rotate_coord, in_uvec, inco=in_coord, outco=out_coord, euler_matrix=eul
 ;
 ; 
 ; INPUTS:
-;    vec : a (N x 3) array
+;    vec : a (N x 3) array of coordinates
 ;
 ;
 ; OPTIONAL INPUTS:
-;    Euler_matrix : matrix of the active rotation
+;    Euler_matrix : 3x3 matrix of the active rotation
 ;
 ;    Stokes_parameters : (N x 2) array, values of Stokes parameters Q
 ;    and U at the location of the input vector vec.
@@ -58,14 +58,14 @@ function rotate_coord, in_uvec, inco=in_coord, outco=out_coord, euler_matrix=eul
 ;    On output contain the value of Q and U resulting from the rotation
 ;      
 ; KEYWORD PARAMETERS:
-;    Inco : input coordinates
-;    outco : output coordinates
+;    Inco : input coordinate system
+;    outco : output coordinate system
 ;    'G' :     Galactic
 ;    'E' :     Ecliptic
-;    'C','Q' : Eelestial, aka eQuatorial
+;    'C','Q' : Celestial, aka eQuatorial
 ;
 ; OUTPUTS:
-;    result : a (N x 3) array
+;    result : a (N x 3) array of coordinates
 ;
 ;
 ; OPTIONAL OUTPUTS:
@@ -81,7 +81,7 @@ function rotate_coord, in_uvec, inco=in_coord, outco=out_coord, euler_matrix=eul
 ;
 ;
 ; RESTRICTIONS:
-;    Only one of the rotation (astrophysical coordinate system or
+;    Only one of the rotations (astrophysical coordinate system or
 ;    active rotation) can be applied at a time
 ;
 ;

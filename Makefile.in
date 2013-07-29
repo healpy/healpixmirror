@@ -19,6 +19,7 @@ F90_INCDIR	=
 F90_LIBDIR	=
 FITSDIR	= 
 LIBFITS	= 
+F90_BUILDDIR    =
 
 F90_FFTSRC  = 
 F90_ADDUS   = 
@@ -37,13 +38,15 @@ F90_I8FLAG  =
 F90_PGFLAG  =
 F90_PGLIBS  =
 
-F90_MOD	=
+F90_MOD     =
+F90_MODDIR  =
 
 F90_OS	=
 
 F90_MKFLAGS	= FC="$(F90_FC)" FFLAGS="$(F90_FFLAGS)" LDFLAGS="$(F90_LDFLAGS)" \
-	CC="$(F90_CC)" CFLAGS="$(F90_CFLAGS)" MOD="$(F90_MOD)" OS="$(F90_OS)" HEALPIX=$(HEALPIX) \
-	LIBDIR=$(F90_LIBDIR) INCDIR=$(F90_INCDIR) BINDIR=$(F90_BINDIR) \
+	CC="$(F90_CC)" CFLAGS="$(F90_CFLAGS)" MOD="$(F90_MOD)" MODDIR=$(F90_MODDIR) \
+	OS="$(F90_OS)" HEALPIX=$(HEALPIX) \
+	LIBDIR=$(F90_LIBDIR) INCDIR=$(F90_INCDIR) BINDIR=$(F90_BINDIR) BUILDDIR=$(F90_BUILDDIR) \
 	FFTSRC=$(F90_FFTSRC) ADDUS="$(F90_ADDUS)" PARALL="$(F90_PARALL)" AR="$(F90_AR)" \
 	PPFLAGS="$(F90_PPFLAGS)" PGFLAG="$(F90_PGFLAG)" PGLIBS="$(F90_PGLIBS)" FI8FLAG="$(F90_I8FLAG)"
 
@@ -181,6 +184,7 @@ f90-clean:
 	for p in $(f90-prog) lib mod sharp; do \
 	$(RM) src/f90/$$p/*.o src/f90/$$p/*.$(F90_MOD) src/f90/$$p/lib*.a src/f90/$$p/*.pc src/f90/$$p/*.pcl src/f90/$$p/*.il ; \
 	done
+	$(RM) -r $(F90_BUILDDIR)
 
 f90-vclean: f90-clean
 	for p in $(f90-prog); do \

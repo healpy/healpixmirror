@@ -14,10 +14,18 @@ or if you want to provide feed-back, ask a question or make a suggestion, have a
 
 <p>
 If everything else fails, send us an e-mail at 
-<script language="javascript"><!--
+<!-- <script language="javascript"> -->
+<!--
 var n2 = 'pix';var n1 = 'heal';var p1 = 'ma';var p2 =  'ilto&';var p3 = '#58;';var dn1 = 'jpl';var dn2 = 'nasa';var dn3 = 'gov';
 document.write('<a href='+p1+p2+p3+n1+n2+'&#64;'+dn1+'&#46;'+dn2+'&#46;'+dn3+'>'+n1+n2+'&#64;'+dn1+'&#46;'+dn2+'&#46;'+dn3+'</a>') 
+-->
+<!-- </script><noscript><em>[Enable javascript in your browser to see the email address]</em></noscript>
+or <br> -->
+<script language="javascript"><!--
+var n2 = '-support';var n1 = 'healpix';var p1 = 'ma';var p2 =  'ilto&';var p3 = '#58;';var dn1 = 'lists';var dn2 = 'sourceforge';var dn3 = 'net';
+document.write('<a href='+p1+p2+p3+n1+n2+'&#64;'+dn1+'&#46;'+dn2+'&#46;'+dn3+'>'+n1+n2+'&#64;'+dn1+'&#46;'+dn2+'&#46;'+dn3+'</a>') 
 --></script><noscript><em>[Enable javascript in your browser to see the email address]</em></noscript>
+(archived <a href="http://sourceforge.net/p/healpix/mailman/healpix-support/?style=threaded">here</a>)
 </p>
 
 <h3>Search HEALPix code</h3>

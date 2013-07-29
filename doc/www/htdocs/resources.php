@@ -71,7 +71,8 @@ software can be used to simulate lensed polarized CMB maps in HEALPix format usi
 </li>
 
 <li>
-The java based <a href="http://aladin.u-strasbg.fr/">Aladin Sky Atlas</a> also supports HEALPix maps in FITS format
+Visualization tools supporting HEALPix maps in FITS format:
+<a href="http://aladin.u-strasbg.fr/">Aladin&nbsp;Sky&nbsp;Atlas</a> (which can overlay any astronomical map or catalog), <a href="http://helios.av.it.pt/projects/healpixviewer">HealpixViewer</a>, <a href="http://lambda.gsfc.nasa.gov/toolbox/tb_skyviewer_ov.cfm">SkyViewer</a>
 </li>
 
 <li>
@@ -86,7 +87,7 @@ cut-sky, beam smoothing, noise contamination, ...
     </li>
 
 <li>
-<a href="http://www2.iap.fr/users/sousbie/web/html/indexd41d.html?"> DisPerSE</a>: Automatic identification of persistent structures in 2D & 3D.
+<a href="http://www2.iap.fr/users/sousbie/web/html/indexd41d.html?"> DisPerSE</a>: Automatic identification of persistent structures in 2D & 3D
 </li>
 
 <li>
@@ -95,6 +96,10 @@ Wavelets on the Sphere:
     <a href="http://irfu.cea.fr/en/Phocea/Vie_des_labos/Ast/ast_visu.php?id_ast=895">MRS</a>,
     <a href="http://www.s2let.org/">S2LET</a>, 
     <a href="http://www.apc.univ-paris7.fr/Downloads/adamis/spherelab/spherelab.html">SphereLab</a>
+</li>
+
+<li>
+<a href="http://guilhem.lavaux.free.fr/wordpress/?page_id=172">FLINTS</a>: interpolation algorithm of fields sampled on a sphere
 </li>
 
 <li>
