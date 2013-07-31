@@ -164,7 +164,7 @@ pro ianafast, map1_in, cl_out $
 ;    hxp_xface_com
 ;
 ; SIDE EFFECTS:
-;    writes temporary and data files, spawn external processes
+;    writes temporary parameter and data files, spawns external processes
 ;
 ; RESTRICTIONS:
 ;

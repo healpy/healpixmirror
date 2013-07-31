@@ -15,6 +15,9 @@
 <p>
 Planck maps can be seen in <a href="http://astrog80.astro.cf.ac.uk/Planck/Chromoscope/">2D (Planck Chromoscope)</a> and <a href="http://www.thecmb.org">3D (thecmb.org)</a>
 </p>
+<p>
+An <a href="http://www.jonathanfeldschuh.com/universe_digital.htm">artist's impression</a> of Planck (and WMAP) observations
+</p>
 
 <h3>Earth topography</h3>
 <p align="center">
