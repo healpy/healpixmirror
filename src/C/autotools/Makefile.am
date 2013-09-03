@@ -15,3 +15,5 @@ AM_CPPFLAGS = $(CFITSIO_CFLAGS)
 
 pkgconfigdir = $(libdir)/pkgconfig
 nodist_pkgconfig_DATA = @PACKAGE_NAME@.pc
+
+DISTCLEANFILES=@PACKAGE_NAME@.pc @PACKAGE_NAME@.pc.in  @PACKAGE_NAME@-uninstalled.pc  @PACKAGE_NAME@-uninstalled.sh

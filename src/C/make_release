@@ -1,6 +1,6 @@
 #!/bin/sh
 
-NAME=CHealpix-3.0pre
+NAME=CHealpix-3.12
 URL=https://healpix.svn.sourceforge.net/svnroot/healpix/trunk/src/C
 REV=HEAD
 
