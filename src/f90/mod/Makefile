@@ -28,49 +28,60 @@ obj6  = mask_tools.o alm_tools.o
 obj7  = healpix_modules.o
 
 obj   = $(obj0) $(obj1) $(obj2) $(obj3) $(obj4) $(obj5) $(obj6) $(obj7)
-objsharp = ../sharp/libsharp_all.o
+objsharp = $(BUILDDIR)/sharp/libsharp_all.o
 
-default: libhealpix.a 
+fac = mod
+MKDIR   = mkdir -p
+OD :=$(BUILDDIR)/$(fac)
+#SD :=$(shell pwd)
+SD = $(shell pwd)
+OBJ:=$(obj:%=$(OD)/%)
 
-%.o: %.c
-	$(CC) $(CFLAGS) -c -o $@ $<
 
-%.o: %.f90
-	$(FC) $(FFLAGS) -c -o $@ $<
+%_mkdir:
+	@if [ ! -d $* ]; then $(MKDIR) $* ; fi 
 
-%.o: %.F90
-	@echo compiling $*.F90
+default: $(OD)/libhealpix.a 
+
+$(OD)/%.o: $(SD)/%.c  $(OD)_mkdir
+	$(CC) $(CFLAGS) -c $< -o $@
+
+$(OD)/%.o: $(SD)/%.f90  $(OD)_mkdir
+	$(FC) $(FFLAGS) -c $< -o $@ $(MODDIR)$(OD)
+
+$(OD)/%.o: $(SD)/%.F90  $(OD)_mkdir
+	@echo compiling $(SD)/$*.F90
 	@case $(OS) in \
 	Darwin ) \
 	ln -s -f $< $*.junk.F90; \
-	$(FC) $(FFLAGS) $(ADDUS) $(PPFLAGS) -c $*.junk.F90 -o $@; \
+	$(FC) $(FFLAGS) $(ADDUS) $(PPFLAGS) -c $*.junk.F90 -o $@ $(MODDIR)$(OD) ; \
 	rm $*.junk.F90;; \
 	OSF ) \
 	ln -s -f $< $*.f90; \
-	$(FC) $(FFLAGS) $(ADDUS) -cpp -c $(basename $<).f90 -o $@;; \
+	$(FC) $(FFLAGS) $(ADDUS) -cpp       -c $(basename $<).f90 -o $@ $(MODDIR)$(OD) ;; \
 	* ) \
-	$(FC) $(FFLAGS) $(ADDUS) $(PPFLAGS) -c $< -o $@;; \
+	$(FC) $(FFLAGS) $(ADDUS) $(PPFLAGS) -c $< -o $@  $(MODDIR)$(OD);; \
 	esac
 
-long_intrinsic.o: long_intrinsic.F90
-	@echo compiling $*.F90
+$(OD)/long_intrinsic.o: $(SD)/long_intrinsic.F90  $(OD)_mkdir
+	@echo compiling $(SD)/long_intrinsic.F90
 	@case $(OS) in \
 	Darwin ) \
-	ln -s -f $< $*.junk.F90; \
-	$(FC) $(FFLAGS) $(ADDUS) $(PPFLAGS) $(FI8FLAG) -c $*.junk.F90 -o $@; \
-	rm $*.junk.F90;; \
+	ln -s -f $< long_intrinsic.junk.F90; \
+	$(FC) $(FFLAGS) $(ADDUS) $(PPFLAGS) $(FI8FLAG) -c long_intrinsic.junk.F90 -o $@ $(MODDIR)$(OD); \
+	rm long_intrinsic.junk.F90;; \
 	OSF ) \
-	ln -s -f $< $*.f90; \
-	$(FC) $(FFLAGS) $(ADDUS) -cpp $(FI8FLAG) -c $(basename $<).f90 -o $@;; \
+	ln -s -f $< long_intrinsic.f90; \
+	$(FC) $(FFLAGS) $(ADDUS) -cpp $(FI8FLAG) -c $(basename $<).f90 -o $@ $(MODDIR)$(OD) ;; \
 	* ) \
-	$(FC) $(FFLAGS) $(ADDUS) $(PPFLAGS) $(FI8FLAG) -c $< -o $@;; \
+	$(FC) $(FFLAGS) $(ADDUS) $(PPFLAGS) $(FI8FLAG) -c $< -o $@ $(MODDIR)$(OD) ;; \
 	esac
 
 
-libhealpix.a: $(obj) $(objsharp) $(incpix) $(incalm) $(incfits) $(incudgrade)
-	$(AR) libhealpix.a $(obj) $(objsharp)
-	@cp -p libhealpix.a $(LIBDIR)/
-	@for p in *.$(MOD); do \
+$(OD)/libhealpix.a: $(OBJ) $(objsharp) $(incpix) $(incalm) $(incfits) $(incudgrade)
+	$(AR)  $(OD)/libhealpix.a $(OBJ) $(objsharp)
+	@cp -p $(OD)/libhealpix.a $(LIBDIR)/
+	@for p in $(OD)/*.$(MOD); do \
 	cp $$p $(INCDIR)/; \
 	done
 
@@ -92,17 +103,17 @@ udgrade_s_inc.f90: udgrade_template.f90 gen_udgrade_code
 udgrade_d_inc.f90: udgrade_template.f90 gen_udgrade_code udgrade_s_inc.f90
 	@./gen_udgrade_code
 
-pix_tools.o:pix_tools.F90  $(incpix)
+$(OD)/pix_tools.o:pix_tools.F90  $(incpix)
 
-alm_tools.o:alm_tools.F90  $(incalm)
+$(OD)/alm_tools.o:alm_tools.F90  $(incalm)
 
-fitstools.o: fitstools.F90 $(incfits)
+$(OD)/fitstools.o: fitstools.F90 $(incfits)
 
-udgrade_nr.o: udgrade_nr.f90 $(incudgrade)
+$(OD)/udgrade_nr.o: udgrade_nr.f90 $(incudgrade)
 
-num_rec.o: num_rec.F90 $(incnumrec)
+$(OD)/num_rec.o: num_rec.F90 $(incnumrec)
 
-mask_tools.o: mask_tools.F90
+$(OD)/mask_tools.o: mask_tools.F90
 
 $(obj1): $(obj0)
 $(obj2): $(obj1)

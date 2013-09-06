@@ -80,10 +80,13 @@ pro ialteralm, alm_in, alm_out $
 ;
 ;   beam_file_in= : beam window function of input alm
 ;                 either a FITS file or an array
+;                 If defined and valid, it will override fwhm_arcmin_in
 ;                 Default: value of BEAM_LEG  keyword read from input alm FITS file
 ;
 ;   beam_file_out=: beam window function of output alm, 
-;                 either a FITS file or an array
+;                 either a FITS file or an array. 
+;                 If defined and valid, it will override fwhm_arcmin_out
+;                 Default: '' (empty string, no beam window applied)
 ;
 ;   coord_in=     : Astrophysical coordinates system used to compute input alm.
 ;                 Case-insensitive single letter code.
@@ -97,13 +100,15 @@ pro ialteralm, alm_in, alm_out $
 ;   epoch_in=     : astronomical epoch of input coordinates (coord_in)
 ;                 Default: 2000.0
 ;
-;   epoch_out=     : astronomical epoch of input coordinates (coord_out)
+;   epoch_out=     : astronomical epoch of output coordinates (coord_out)
 ;                 Default: epoch_in
 ;
 ;   fwhm_arcmin_in= : Full Width Half-Maximum in arcmin of Gaussian beam applied
-;                 to map from which are obtained input alm
+;                 to map from which are obtained input alm.
+;                 Default: value of FWHM keyword in input alm FITS file
 ;
 ;   fwhm_arcmin_out=: FWHM in arcmin to be applied to output alm
+;                 Default: fwhm_arcmin_in
 ;
 ;   /help:      if set, prints extended help
 ;
@@ -142,12 +147,13 @@ pro ialteralm, alm_in, alm_out $
 ; EXAMPLE:
 ;ialteralm,!healpix.path.test+'alm.fits','/tmp/alm_equat.fits',coord_in='g',coord_out='q'
 ;isynfast, 0, alm_in='/tmp/alm_equat.fits', '/tmp/map_equat.fits'
-;mollview,'/tmp/map_equat.fits',1,title='I'
-;mollview,'/tmp/map_equat.fits',2,title='Q'
+;mollview,'/tmp/map_equat.fits',1
+;mollview,'/tmp/map_equat.fits',2
 ;
-;  will rotate the set of test (polarised) alm from Galactic to Equatorial
-;  coordinates, will then synthetize a map out of these rotated alm,
-;  and finally plots its I and Q component (in Equatorial coordinates)
+;   This example script reads the test (polarised) a_{lm} located in 
+; $HEALPIX/test/alm.fits and rotates them from Galactic to Equatorial
+;   coordinates, it then synthetizes a map out of those,
+;   and finally plots its I and Q Stokes components (in Equatorial coordinates)
 ;
 ; MODIFICATION HISTORY:
 ;     2013-07-30: 1st version, adapted from iprocess_mask

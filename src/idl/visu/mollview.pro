@@ -27,6 +27,8 @@
 ; -----------------------------------------------------------------------------
 pro mollview, file_in, select_in, $
               ASINH = asinh, $
+              BAD_COLOR = bad_color, $
+              BG_COLOR = bg_color, $
               CHARSIZE = charsize, $
               CHARTHICK = charthick, $
               COLT = colt, $
@@ -35,6 +37,7 @@ pro mollview, file_in, select_in, $
               EXECUTE = execute, $
               FACTOR = factor, $
               FITS = fits, $
+              FG_COLOR=fg_color, $
               FLIP = flip, $
               GAL_CUT = gal_cut, $
               GIF = gif, $
@@ -88,9 +91,11 @@ pro mollview, file_in, select_in, $
 ;
 ; CALLING SEQUENCE:
 ; 	xxxxVIEW, File, [Select, ] $
-;                       [ASINH=, CHARSIZE=, COLT=, COORD=, CROP=, $
-;                       EXECUTE=execute, $
-;                       FACTOR=, FITS=, FLIP=, $
+;                       [ASINH=, $
+;                       BAD_COLOR=, BG_COLOR=, $
+;                       CHARSIZE=, COLT=, COORD=, CROP=, $
+;                       EXECUTE=, $
+;                       FACTOR=, FG_COLOR=, FITS=, FLIP=, $
 ;                       GAL_CUT=, GIF=, GLSIZE=, GRATICULE=, $
 ;                       HALF_SKY =, HBOUND =, HELP =, HIST_EQUAL=, HXSIZE=, $
 ;                       IGLSIZE=, IGRATICULE=, $
@@ -98,11 +103,11 @@ pro mollview, file_in, select_in, $
 ;                       LOG=, $
 ;                       MAP_OUT=, MAX=, MIN=, $ 
 ;                       NESTED=, NOBAR=, NOLABELS=, NOPOSITION =, $
+;                       NO_DIPOLE=, NO_MONOPOLE=, $
 ;                       OFFSET =, ONLINE=, OUTLINE=, $
 ;                       PNG=, POLARIZATION=, PREVIEW=,$
 ;                       PS=, PXSIZE=, PYSIZE=, $
 ;                       QUADCUBE= , $
-;                       NO_DIPOLE=, NO_MONOPOLE=, $
 ;                       RESO_ARCMIN= , ROT=, $
 ;                       SAVE=, SHADED=, SILENT=, STAGGER=, SUBTITLE=, $
 ;                       TITLEPLOT=, TRANSPARENT=, TRUECOLORS= $
@@ -140,6 +145,24 @@ pro mollview, file_in, select_in, $
 ;            Can be used in conjonction with FACTOR and OFFSET, but can not be
 ;            used with /LOG nor /HIST_EQUAL
 ;
+;       BAD_COLOR: color given to missing pixels (having
+;            !healpix.bad_value=-1.6375e30 or NaN value on input).
+;          The color can be provided as either:
+;           - a single integer in [0,255], specifying the index to be used in
+;             the color table chosen via COLT (in which the indexes 0, 1 and 2
+;             are reserved for black, white and grey respectively),
+;           - a 3 element vector, with each element in [0,255], specifying the
+;             amount of RED, GREEN and BLUE
+;           - a 7-character string, starting with '#', specifying the color in
+;             HTML Hexadecimal fashion (eg, '#ff0000' for red).
+;          Default: neutral grey (=2, =[175, 175, 175], ='#afafaf')
+;          See also: BG_COLOR, FG_COLOR
+;
+;       BG_COLOR: color given to pixels outside the sphere
+;          See BAD_COLOR for expected format
+;          Default: white (=1, =[255, 255, 255], ='#ffffff')
+;          See also: BAD_COLOR, FG_COLOR
+;
 ;       CHARSIZE : overall multiplicative factor applied to the size of all
 ;               characters appearing on the plot
 ;                default = 1.0
@@ -162,6 +185,7 @@ pro mollview, file_in, select_in, $
 ;              -If colt<0, the IDL color table ABS(colt) is used, but the scale is
 ;              reversed (ie a red to blue scale becomes a blue to red scale).
 ;              (note: -0.1 can be used as negative 0)
+;          See also: BAD_COLOR, BG_COLOR, FG_COLOR
 ;
 ;       COORD : vector with 1 or 2 elements describing the coordinate system of the map 
 ;                either 'C' or 'Q' : Celestial2000 = eQuatorial,
@@ -182,6 +206,12 @@ pro mollview, file_in, select_in, $
 ;       FACTOR : multiplicative factor to be applied to the data (default = 1.0)
 ;               the data plotted is of the form FACTOR*(data + OFFSET)
 ;               see also : OFFSET, LOG
+;
+;       FG_COLOR: color of title and subtile characters, 
+;          graticule lines and labels, units, outlines ...
+;          See BAD_COLOR for expected format
+;          Default: black (=0, =[0, 0, 0], ='#000000')
+;          See also: BAD_COLOR, BG_COLOR
 ;
 ;       FITS : string containing the name of an output fits file with
 ;       the projected map in the primary image
@@ -530,6 +560,7 @@ pro mollview, file_in, select_in, $
 ;       Apr-10:  accept array of structures in Outline; added MAP_OUT= to
 ;       Cartview and Mollview
 ;       Jan-12: added STAGGER to orthview; created azeqview; added JPEG to all
+;       Sep-13: added BAD_COLOR, BG_COLOR, FG_COLOR
 ;-
 
 defsysv, '!healpix', exists = exists
@@ -559,21 +590,25 @@ if (n_params() lt 1 or n_params() gt 2) then begin
     PRINT, 'Wrong number of arguments in '+uroutine
     print,'Syntax : '
     print, uroutine+', File, [Select, ]'
-    print,'              [ASINH=, CHARSIZE=, COLT=, COORD=, CROP=, '
-    print,'              EXECUTE=, FACTOR=, FLIP=, GAL_CUT=, GIF=, GLSIZE=, GRATICULE=, '
-    print,'              HBOUND=, HELP=, '
-    print,'              HIST_EQUAL=, HXSIZE=,'
+    print,'              [ASINH=, '
+    print,'              BAD_COLOR=, BG_COLOR=, '
+    print,'              CHARSIZE=, CHARTHICK=, COLT=, COORD=, CROP=, '
+    print,'              EXECUTE=, '
+    print,'              FACTOR=, FG_COLOR=, FITS=, FLIP=, '
+    print,'              GAL_CUT=, GIF=, GLSIZE=, GRATICULE=, '
+    print,'              HBOUND=, HELP=, HIST_EQUAL=, HXSIZE=,'
     print,'              IGLSIZE=, IGRATICULE=,'
     print,'              JPEG=,'
     print,'              LOG=, '
-    print,'              MAP_OUT=, MAX=, MIN=, NESTED=, NOBAR=, NOLABELS=, '
+    print,'              MAP_OUT=, MAX=, MIN=, '
+    print,'              NESTED=, NOBAR=, NOLABELS=, '
     print,'              NO_DIPOLE, NO_MONOPLE, '
     print,'              OFFSET=, ONLINE=, OUTLINE=,'
-    print,'              PNG=,'
-    print,'              POLARIZATION=, PREVIEW=, '
+    print,'              PNG=, POLARIZATION=, PREVIEW=, '
     print,'              PS=, PXSIZE=, PYSIZE=, QUADCUBE= ,'
-    print,'              RETAIN=, ROT=, SAVE=, SILENT=, '
-    print,'              SUBTITLE=, TITLEPLOT=, TRANSPARENT=, TRUECOLORS=, '
+    print,'              RETAIN=, ROT=,  '
+    print,'              SAVE=, SILENT=, SUBTITLE=, '
+    print,'              TITLEPLOT=, TRANSPARENT=, TRUECOLORS=, '
     print,'              UNITS=, WINDOW=, XPOS=, YPOS=]'
     print
     print,' Type '+uroutine+', /help '
@@ -627,7 +662,7 @@ proj2out, $
   POLARIZATION=polarization, OUTLINE=outline, /MOLL, FLIP=flip, COORD_IN=coord_in, IGRATICULE=igraticule, $
   HBOUND = hbound, WINDOW = window, EXECUTE=execute, SILENT=silent, GLSIZE=glsize, $
   IGLSIZE=iglsize, RETAIN=retain, TRUECOLORS=truecolors, TRANSPARENT=transparent, CHARTHICK=charthick, $
-  JPEG=jpeg
+  JPEG=jpeg, BAD_COLOR=bad_color, BG_COLOR=bg_color, FG_COLOR=fg_color
 
 
 w_num = !d.window

@@ -1,14 +1,27 @@
 # -*- Makefile -*-
 
+fac	= map2gif
+inc     = 
 VPATH	= $(BINDIR)
-exec	= $(BINDIR)/map2gif
-src	= euler_matrix_new.f90 map2gif.f90
-obj 	= euler_matrix_new.o   map2gif.o
+exec	= $(BINDIR)/$(fac)
+#src	= euler_matrix_new.f90 $(fac).f90
+obj 	= euler_matrix_new.o   $(fac).o
 
-%.o: %.f90
-	$(FC) $(FFLAGS) -c $< -o $@
+MKDIR   = mkdir -p
+OD :=$(BUILDDIR)/$(fac)
+SD :=$(shell pwd)
+OBJ:=$(obj:%=$(OD)/%)
 
-default: $(exec)
 
-$(exec): $(obj) $(LIBDIR)/libhealpix.a $(LIBDIR)/libhpxgif.a
-	$(FC) $(FFLAGS) -o $(exec) $(obj) $(LDFLAGS)
+%_mkdir:
+	@if [ ! -d $* ]; then $(MKDIR) $* ; fi 
+
+
+$(OD)/%.o: $(SD)/%.f90 $(inc) $(OD)_mkdir
+	$(FC) $(FFLAGS) -c $< -o $@ $(MODDIR)$(OD)
+
+default:  $(exec) 
+
+$(exec): $(OBJ) $(LIBDIR)/libhealpix.a
+	$(FC) $(FFLAGS) -o $(exec) $(OBJ) $(LDFLAGS)
+

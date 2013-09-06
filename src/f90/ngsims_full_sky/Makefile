@@ -1,46 +1,58 @@
 # -*- Makefile -*-
 
+fac1    = sky_ng_sim
+fac2    = sky_ng_sim_bin
+inc     =
 VPATH	= $(BINDIR)
-exec1	= $(BINDIR)/sky_ng_sim
-src1	= sky_ng_sim
+exec1	= $(BINDIR)/$(fac1)
+exec2	= $(BINDIR)/$(fac2)
 subs    = sky_sub.o  sub_ngpdf_powergauss.o  sub_ngpdf_sho.o
 obj1 	= $(subs)  sky_ng_sim.o
-
-exec2	= $(BINDIR)/sky_ng_sim_bin
-src2	= sky_ng_sim_bin
 obj2 	= $(subs)  sky_ng_sim_bin.o
 
-%.o: %.f90
-	$(FC) $(FFLAGS)  -c $< -o $@
+MKDIR   = mkdir -p
+OD :=$(BUILDDIR)/$(fac1)
+SD :=$(shell pwd)
+OBJ1:=$(obj1:%=$(OD)/%)
+OBJ2:=$(obj2:%=$(OD)/%)
+SUBS:=$(subs:%=$(OD)/%)
 
-%.o: %.F90
-	@echo compiling $*.F90
+
+%_mkdir:
+	@if [ ! -d $* ]; then $(MKDIR) $* ; fi 
+
+
+$(OD)/%.o: $(SD)/%.f90 $(inc) $(OD)_mkdir
+	$(FC) $(FFLAGS) -c $< -o $@ $(MODDIR)$(OD)
+
+$(OD)/%.o: $(SD)/%.F90 $(inc) $(OD)_mkdir
+	@echo compiling $(SD)/$*.F90
 	@case $(OS) in \
 	Darwin ) \
 	ln -s -f $< $*.junk.F90; \
-	$(FC) $(FFLAGS)  $(ADDUS) $(PPFLAGS) $(PGFLAG) -c $*.junk.F90 -o $@; \
+	$(FC) $(FFLAGS) $(ADDUS) $(PPFLAGS) -c $*.junk.F90 -o $@ $(MODDIR)$(OD) ; \
 	rm $*.junk.F90;; \
 	OSF ) \
 	ln -s -f $< $*.f90; \
-	$(FC) $(FFLAGS)  $(ADDUS) -cpp       $(PGFLAG) -c $(basename $<).f90 -o $@;; \
+	$(FC) $(FFLAGS) $(ADDUS) -cpp       -c $(basename $<).f90 -o $@ $(MODDIR)$(OD) ;; \
 	* ) \
-	$(FC) $(FFLAGS)  $(ADDUS) $(PPFLAGS) $(PGFLAG) -c $< -o $@;; \
+	$(FC) $(FFLAGS) $(ADDUS) $(PPFLAGS) -c $< -o $@  $(MODDIR)$(OD);; \
 	esac
 
 default: $(exec1) $(exec2)
 
-$(exec1): $(obj1) $(LIBDIR)/libhealpix.a
-	$(FC)  $(FFLAGS) -o $(exec1) $(obj1) $(PGLIBS) $(LDFLAGS)
+$(exec1): $(OBJ1) $(LIBDIR)/libhealpix.a
+	$(FC)  $(FFLAGS) -o $(exec1) $(OBJ1) $(PGLIBS) $(LDFLAGS)
 
-$(exec2): $(obj2) $(LIBDIR)/libhealpix.a
-	$(FC)  $(FFLAGS) -o $(exec2) $(obj2) $(PGLIBS) $(LDFLAGS)
+$(exec2): $(OBJ2) $(LIBDIR)/libhealpix.a
+	$(FC)  $(FFLAGS) -o $(exec2) $(OBJ2) $(PGLIBS) $(LDFLAGS)
 
 # spell out dependencies to allow parallel compilation (make -j)
-sub_ngpdf_powergauss.o: sky_sub.o
+$(OD)/sub_ngpdf_powergauss.o: $(OD)/sky_sub.o
 
-sub_ngpdf_sho.o:        sky_sub.o
+$(OD)/sub_ngpdf_sho.o:        $(OD)/sky_sub.o
 
-sky_ng_sim.o:           $(subs)
+$(OD)/sky_ng_sim.o:           $(SUBS)
 
-sky_ng_sim_bin.o:       $(subs)
+$(OD)/sky_ng_sim_bin.o:       $(SUBS)
 

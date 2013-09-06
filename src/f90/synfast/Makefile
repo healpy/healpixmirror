@@ -4,7 +4,7 @@ fac     = synfast
 inc     = syn_sub_inc.f90
 VPATH	= $(BINDIR)
 exec	= $(BINDIR)/$(fac)
-src	= $(fac).f90
+#src	= $(fac).f90
 obj 	= $(fac).o
 
 MKDIR   = mkdir -p

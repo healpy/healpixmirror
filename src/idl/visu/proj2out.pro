@@ -39,7 +39,7 @@ pro proj2out, planmap, Tmax, Tmin, color_bar, dx, title_display, sunits, $
               IGRATICULE = igraticule, HBOUND = hbound, DIAMONDS = diamonds, WINDOW = window_user, $
               TRANSPARENT = transparent, EXECUTE=execute, SILENT=silent, GLSIZE=glsize, IGLSIZE=iglsize, $
               SHADEMAP=SHADEMAP, RETAIN=retain, TRUECOLORS=truecolors, CHARTHICK=charthick, $
-              STAGGER=stagger, AZEQ=azeq, JPEG=jpeg
+              STAGGER=stagger, AZEQ=azeq, JPEG=jpeg, BAD_COLOR=bad_color, BG_COLOR=bg_color, FG_COLOR=fg_color
 
 ;===============================================================================
 ;+
@@ -471,11 +471,13 @@ endif else begin
 endelse
 ; set up some specific definitions
 ; reserve first colors for Black, White and Neutral grey
-idx_black = 0B & idx_white = 1B   & idx_grey = 2B   & idx_bwg = [idx_black, idx_white, idx_grey]
-col_black = 0B & col_white = 255B & col_grey = 175B & col_bwg = [col_black, col_white, col_grey]
-red  [idx_bwg] = col_bwg
-green[idx_bwg] = col_bwg
-blue [idx_bwg] = col_bwg
+; idx_black = 0B & idx_white = 1B   & idx_grey = 2B   & idx_bwg = [idx_black, idx_white, idx_grey]
+; col_black = 0B & col_white = 255B & col_grey = 175B & col_bwg = [col_black, col_white, col_grey]
+; red  [idx_bwg] = col_bwg
+; green[idx_bwg] = col_bwg
+; blue [idx_bwg] = col_bwg
+reserved_colors, red, green, blue, bad_color=bad_color, bg_color=bg_color, fg_color=fg_color, idx_bwg=idx_bwg
+idx_black = idx_bwg[0] & idx_white = idx_bwg[1] & idx_grey = idx_bwg[2]
 TVLCT,red,green,blue
 
 ; ---------------------
@@ -816,11 +818,17 @@ if do_image then begin
         if (valid_transparent) then begin
             image3d[3,*,*] = 255B
             if (itr   and 1) then begin ; turn grey  into transparent
-                pix_tr = where( total(abs(image3d[0:2,*,*]-col_grey ),1) eq 0, n_tr)
+                ;pix_tr = where( total(abs(image3d[0:2,*,*]-col_grey ),1) eq 0, n_tr)
+                pix_tr = where( (abs(image3d[0,*,*]-red[  idx_grey])$
+                                +abs(image3d[1,*,*]-green[idx_grey])$
+                                +abs(image3d[2,*,*]-blue[ idx_grey])) eq 0, n_tr)
                 if (n_tr gt 0) then image3d[3 +4*pix_tr] = 0B
             endif
             if (itr/2 and 1) then begin ; turn white into transparent
-                pix_tr = where( total(abs(image3d[0:2,*,*]-col_white),1) eq 0, n_tr)
+                ;pix_tr = where( total(abs(image3d[0:2,*,*]-col_white),1) eq 0, n_tr)
+                pix_tr = where( (abs(image3d[0,*,*]-red[  idx_white])$
+                                +abs(image3d[1,*,*]-green[idx_white])$
+                                +abs(image3d[2,*,*]-blue[ idx_white])) eq 0, n_tr)
                 if (n_tr gt 0) then image3d[3 +4*pix_tr] = 0B
             endif
         endif

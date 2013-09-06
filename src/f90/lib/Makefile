@@ -1,31 +1,39 @@
 # -*- Makefile -*-
 
-# VPATH	= $(HEALPIX)/lib
-
-modsrc	= gifmod.f90
+fac	= lib
+inc     = 
+VPATH	= $(BINDIR)
+exec	= $(BINDIR)/$(fac)
+#src	= $(fac).f90
 modobj	= gifmod.o
-
-gifsrc	= gifout.c gifarr.c gifdim.c gifstr.c chopst.c
 gifobj	= gifout.o gifarr.o gifdim.o gifstr.o chopst.o
-
-libsrc	= gd.c gdfontt.c gdfonts.c gdfontmb.c gdfontl.c gdfontg.c
 libobj	= gd.o gdfontt.o gdfonts.o gdfontmb.o gdfontl.o gdfontg.o
-libhdr	= gd.h gdfontt.h gdfonts.h gdfontmb.h gdfontl.h gdfontg.h
+obj 	= $(libobj) $(gifobj) $(modobj)
 
-allobj	= $(libobj) $(gifobj) $(modobj)
+MKDIR   = mkdir -p
+OD :=$(BUILDDIR)/$(fac)
+SD :=$(shell pwd)
+OBJ:=$(obj:%=$(OD)/%)
 
-%.o: %.f90
-	$(FC) $(FFLAGS) -c $< -o $@
 
-%.o: %.c
+%_mkdir:
+	@if [ ! -d $* ]; then $(MKDIR) $* ; fi 
+
+
+$(OD)/%.o: $(SD)/%.f90 $(inc) $(OD)_mkdir
+	$(FC) $(FFLAGS) -c $< -o $@ $(MODDIR)$(OD)
+
+$(OD)/%.o: $(SD)/%.c $(inc) $(OD)_mkdir
 	$(CC) $(CFLAGS) -c $< -o $@
 
-default: libhpxgif.a
 
-libhpxgif.a: $(allobj)
-	$(AR) libhpxgif.a $(allobj)
-	@cp -p libhpxgif.a $(LIBDIR)/
-	@cp -p libhpxgif.a $(LIBDIR)/libgif.a
-	@for p in *.$(MOD); do \
+default: $(OD)/libhpxgif.a
+
+$(OD)/libhpxgif.a: $(OBJ)
+	$(AR)  $(OD)/libhpxgif.a $(OBJ)
+	@cp -p $(OD)/libhpxgif.a $(LIBDIR)/
+	@cp -p $(OD)/libhpxgif.a $(LIBDIR)/libgif.a
+	@for p in $(OD)/*.$(MOD); do \
 	cp $$p $(INCDIR)/; \
 	done
+

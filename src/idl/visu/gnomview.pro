@@ -27,6 +27,8 @@
 ; -----------------------------------------------------------------------------
 PRO gnomview, file_in, select_in, $
               ASINH = asinh, $
+              BAD_COLOR = bad_color, $
+              BG_COLOR = bg_color, $
               CHARSIZE = charsize, $
               CHARTHICK = charthick, $
               COLT = colt, $
@@ -35,6 +37,7 @@ PRO gnomview, file_in, select_in, $
               EXECUTE=execute, $
               FACTOR = factor, $
               FITS = fits, $
+              FG_COLOR = fg_color, $
               FLIP = flip, $
               GIF = gif, $
               GLSIZE = glsize, $
@@ -110,8 +113,11 @@ if (n_params() lt 1 or n_params() gt 2) then begin
     PRINT, 'Wrong number of arguments in '+uroutine
     print,'Syntax : '
     print, uroutine+', File, [Select, ]'
-    print,'              [ASINH=, CHARSIZE=, COLT=, COORD=, CROP=, '
-    print,'              EXECUTE=, FACTOR=, FITS=, FLIP=, GIF=, GLSIZE=, GRATICULE=, '
+    print,'              [ASINH=, '
+    print,'              BAD_COLOR=, BG_COLOR=, '
+    print,'              CHARSIZE=, CHARTHICK=, COLT=, COORD=, CROP=, '
+    print,'              EXECUTE=, '
+    print,'              FACTOR=, FG_COLOR=, FITS=, FLIP=, GIF=, GLSIZE=, GRATICULE=, '
     print,'              HBOUND=, HELP=, '
     print,'              HIST_EQUAL=, HXSIZE=, '
     print,'              IGLSIZE=, IGRATICULE=,'
@@ -179,7 +185,7 @@ proj2out, $
   POLARIZATION=polarization, OUTLINE=outline, /GNOM, FLIP=flip, COORD_IN=coord_in, IGRATICULE=igraticule, $
   HBOUND = hbound, WINDOW = window, EXECUTE=execute, SILENT=silent, GLSIZE=glsize, $
   IGLSIZE=iglsize, RETAIN=retain, TRUECOLORS=truecolors, TRANSPARENT=transparent, $
-  CHARTHICK=charthick, JPEG=jpeg
+  CHARTHICK=charthick, JPEG=jpeg, BAD_COLOR=bad_color, BG_COLOR=bg_color, FG_COLOR=fg_color
 
 w_num = !d.window
 ; restore original color table and PLOTS settings

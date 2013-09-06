@@ -1,29 +1,42 @@
 # -*- Makefile -*-
 
+fac	= process_mask
+inc     = 
 VPATH	= $(BINDIR)
-exec	= $(BINDIR)/process_mask
-src	= process_mask.F90
-obj 	= process_mask.o
-# inc     = 
+exec	= $(BINDIR)/$(fac)
+#src	= $(fac).f90
+obj 	= $(fac).o
 
-%.o: %.f90 $(inc)
-	$(FC) $(FFLAGS) -c $< -o $@
+MKDIR   = mkdir -p
+OD :=$(BUILDDIR)/$(fac)
+SD :=$(shell pwd)
+OBJ:=$(obj:%=$(OD)/%)
 
-%.o: %.F90
-	@echo compiling $*.F90
+
+%_mkdir:
+	@if [ ! -d $* ]; then $(MKDIR) $* ; fi 
+
+
+$(OD)/%.o: $(SD)/%.f90 $(inc) $(OD)_mkdir
+	$(FC) $(FFLAGS) -c $< -o $@ $(MODDIR)$(OD)
+
+$(OD)/%.o: $(SD)/%.F90 $(inc) $(OD)_mkdir
+	@echo compiling $(SD)/$*.F90
 	@case $(OS) in \
 	Darwin ) \
 	ln -s -f $< $*.junk.F90; \
-	$(FC) $(FFLAGS)  $(ADDUS) $(PPFLAGS)  -c $*.junk.F90 -o $@; \
+	$(FC) $(FFLAGS) $(ADDUS) $(PPFLAGS) -c $*.junk.F90 -o $@ $(MODDIR)$(OD) ; \
 	rm $*.junk.F90;; \
 	OSF ) \
 	ln -s -f $< $*.f90; \
-	$(FC) $(FFLAGS)  $(ADDUS) -cpp        -c $(basename $<).f90 -o $@;; \
+	$(FC) $(FFLAGS) $(ADDUS) -cpp       -c $(basename $<).f90 -o $@ $(MODDIR)$(OD) ;; \
 	* ) \
-	$(FC) $(FFLAGS)  $(ADDUS) $(PPFLAGS)  -c $< -o $@;; \
+	$(FC) $(FFLAGS) $(ADDUS) $(PPFLAGS) -c $< -o $@  $(MODDIR)$(OD);; \
 	esac
 
-default: $(exec)
+default:  $(exec) 
 
-$(exec): $(obj) $(LIBDIR)/libhealpix.a
-	$(FC) $(FFLAGS) -o $(exec) $(obj) $(LDFLAGS)
+$(exec): $(OBJ) $(LIBDIR)/libhealpix.a
+	$(FC) $(FFLAGS) -o $(exec) $(OBJ) $(LDFLAGS)
+
+

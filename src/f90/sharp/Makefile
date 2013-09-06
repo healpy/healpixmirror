@@ -1,15 +1,26 @@
 # -*- Makefile -*-
 
-libsrc	= libsharp_all.c
-libobj	= libsharp_all.o
+fac     = sharp
+inc     = 
+#VPATH	= $(BINDIR)
+#exec	= $(BINDIR)/$(fac)
+#src	= $(fac).f90
+obj	= libsharp_all.o
 
-allobj	= $(libobj)
+MKDIR   = mkdir -p
+OD :=$(BUILDDIR)/$(fac)
+SD :=$(shell pwd)
+OBJ:=$(obj:%=$(OD)/%)
 
-%.o: %.c
+
+%_mkdir:
+	@if [ ! -d $* ]; then $(MKDIR) $* ; fi 
+
+$(OD)/%.o: $(SD)/%.c $(inc) $(OD)_mkdir
 	$(CC) $(CFLAGS) -I c_utils -I libfftpack -I libsharp -I libsharp_healpix_f -c $< -o $@
 
-default: libsharp_healpix_f.a
+default: $(OD)/libsharp_healpix_f.a
 
-libsharp_healpix_f.a: $(libobj)
-	$(AR) libsharp_healpix_f.a $(libobj)
-	@cp -p libsharp_healpix_f.a $(LIBDIR)/
+$(OD)/libsharp_healpix_f.a: $(OBJ)
+	$(AR)  $(OD)/libsharp_healpix_f.a $(OBJ)
+	@cp -p $(OD)/libsharp_healpix_f.a $(LIBDIR)/
