@@ -1,3 +1,6 @@
+Changes since v3.11:
+- use Kahan summation in some situations to improve numerical accuracy
+
 Changes since v3.0:
 - libpsht replaced by libsharp
 - added boundaries() method to T_Healpix_Base
