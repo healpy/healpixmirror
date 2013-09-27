@@ -106,6 +106,17 @@ updateVersion () {
   cat $infile | sed "s|AC_INIT.*|AC_INIT([healpix_cxx], [$version])|g" > $tmpfile
   mv $tmpfile $infile
 
+  # update test/*.par files (2013-09)
+  echoBlu "editing  test/*.par  files"
+  inlist=`find test -name \*.par`
+  outstring="# HEALPix $version"
+  for file in $inlist ; do
+      ls -l $file
+      sed -i "s|^# HEALPix.*$|$outstring|" ${file}
+      sed -i "s|^# Healpix.*$|$outstring|" ${file}
+      grep "$outstring" $file
+  done
+
 }
 
 # #---------------
