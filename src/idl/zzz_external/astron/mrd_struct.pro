@@ -19,7 +19,7 @@
 ;       /NO_EXECUTE - If set then the use of the EXECUTE() statement is avoided.
 ;                  By default, the NO_EXECUTE pathway is used if IDL is 
 ;                  running under the Virtual Machine.    Note if  /NO_EXECUTE
-;                  is set, then the user cannot supply arbitary values, but
+;                  is set, then the user cannot supply arbitrary values, but
 ;                  all possible values used by MRDFITS will be allowed.
 ;       STRUCTYP = The structure type.  Since IDL does not allow the
 ;                  redefinition of a named structure it is an error
@@ -82,6 +82,7 @@
 ;       Make sure "0" is a short integer even with compile_opt idl2  July 2010
 ;       Added "0.0", "0.0d", "0u", "0ul", and "0ull" as valid tags
 ;             for /NO_EXECUTE  E. Rykoff May 2012
+;       Fix for create long64 arrays with /no_execute  E. Rykoff Sep 2013
 ;-
 
 ; Check that the number of names is the same as the number of values.
@@ -95,7 +96,7 @@ compile_opt idl2
 ; for backward compatibility.
 
 
- noexecute = keyword_set(no_execute) or lmgr(/vm) 
+ noexecute = keyword_set(no_execute) || lmgr(/vm) 
 
  if noexecute then begin
 
@@ -142,7 +143,7 @@ compile_opt idl2
 		    'intarr': v = make_array(dimen=dimen,/int)
 		    'fltarr': v = make_array(dimen=dimen,/float)
 		    'lonarr': v = make_array(dimen=dimen,/long)
-		    'lon64arr': v = make_array(dimen=dimen,/long64)
+		    'lon64arr': v = make_array(dimen=dimen,/l64)  ;Fix Sep 13
 		    'dblarr': v = make_array(dimen=dimen,/double)
 		    'complexarr': v = make_array(dimen=dimen,/complex)
 		    'dcomplexarr': v = make_array(dimen=dimen,/dcomplex)

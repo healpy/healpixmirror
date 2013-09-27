@@ -20,7 +20,8 @@
 #set dir = /Applications/itt/external_contributions/astron_2009Nov25/pro/
 #set dir = /Applications/itt/external_contributions/astron_2010May24/pro/
 #set dir = /Applications/itt/external_contributions/astron_2012Feb01/pro/
-set dir = /Applications/itt/external_contributions/astron_2013Jan28/pro/
+#set dir = /Applications/itt/external_contributions/astron_2013Jan28/pro/
+set dir = /Applications/itt/external_contributions/astron_2013Sep27/pro/
 
 # full list of routine name (no path, no trailing .pro)
 set fulllist = `ls $dir/*/*pro | awk -F/ '{print $NF}' | awk -F. '{print $1}' | sort`

@@ -67,7 +67,7 @@
 ;                 when reading a FPACK, bzip or Unix compressed file.   Note 
 ;                 that automatic byteswapping cannnot be set for a Unix pipe, 
 ;                 since the SWAP_IF_LITTLE_ENDIAN keyword is only available for the
-;                 OPEN command, and it is the responsibilty of the calling 
+;                 OPEN command, and it is the responsibility of the calling 
 ;                 routine to perform the byteswapping.
 ; SIDE EFFECTS:
 ;      Opens and returns a file unit.
@@ -110,6 +110,7 @@
 ;               Use gunzip to decompress Unix. Z file since compress utility 
 ;               often not installed anymore)
 ;       W. Landsman   October 2012 Add .fz extension if /FPACK set
+;       W. Landsman   July 2013    More diagnostics if file not found
 ;-
 ;
         On_Error,2
@@ -134,20 +135,22 @@
              FILE = FILE_SEARCH(XFILE, COUNT=COUNT)  
 	     IF COUNT GT 1 THEN $
 	          FILE = DIALOG_PICKFILE(FILTER=XFILE, /MUST_EXIST, $
-		         TITLE = 'Please select a FITS file')
-	ENDIF ELSE BEGIN 
+		         TITLE = 'Please select a FITS file') $	 		 
+	    ELSE IF COUNT EQ 0 THEN BEGIN 
+	        ERRMSG = 'Specified FITS file not found: ' + XFILE[0]
+	        IF PRINTERR THEN MESSAGE,ERRMSG,/CON 
+                RETURN, -1   ; Don't print anything out, just report an error
+	     ENDIF 
+	ENDIF ELSE $
              FILE =DIALOG_PICKFILE(FILTER=['*.fit*;*.fts*;*.img*;*.FIT*'], $
 	           TITLE='Please select a FITS file',/MUST_EXIST)
-         ENDELSE
-             COUNT = N_ELEMENTS(FILE)
-	            
 
-        IF COUNT EQ 0 THEN BEGIN
-	    ERRMSG = 'Specified FITS File not found ' + XFILE[0]
+            IF FILE[0] EQ '' THEN BEGIN
+	      ERRMSG = 'No FITS file specified '   
 	    IF PRINTERR THEN MESSAGE,ERRMSG,/CON 
             RETURN, -1   ; Don't print anything out, just report an error
 	ENDIF    
-        
+                   
         FILE = FILE[0]
 	IF KEYWORD_SET(FPACK) then $
 	    if strlowcase(strmid(FILE,2,3,/reverse)) NE '.fz' then $

@@ -12,7 +12,7 @@ pro create_struct, struct, strname, tagnames, tag_descript, DIMEN = dimen, $
 ;
 ;       Unlike the intrinsic function CREATE_STRUCT(), this procedure does not
 ;       require the user to know the number of tags before run time.   (Note
-;       there is no name conflict since the intrinsic CREATE_STRUCT is a 
+;       there is no name conflict since the intrinsic CREATE_STRUCT() is a 
 ;       function, and this file contains a procedure.)
 ; CALLING SEQUENCE:
 ;       CREATE_STRUCT, STRUCT, strname, tagnames, tag_descript, 
@@ -66,9 +66,9 @@ pro create_struct, struct, strname, tagnames, tag_descript, DIMEN = dimen, $
 ;
 ;       IDL> help,new,/struc
 ;       ** Structure NAME, 3 tags, 20 length:
-;          TAG1            DOUBLE         Array(2)
+;          TAG1            DOUBLE         Array[2]
 ;          TAG2            FLOAT          0.0
-;          TAG3            STRING         Array(1)
+;          TAG3            STRING         Array[1]
 ;
 ; PROCEDURE:
 ;       Generates a temporary procedure file using input information with
@@ -115,6 +115,7 @@ pro create_struct, struct, strname, tagnames, tag_descript, DIMEN = dimen, $
 ;       Suppress compilation mesage of temporary file A. Conley/W.L. May 2009
 ;       Remove FDECOMP, some cleaner coding  W.L. July 2009
 ;       Do not limit string length to 1000 chars   P. Broos,  Feb 2011
+;       Assume since IDL V6.4 W. Landsman Aug 2013
 ;-
 ;-------------------------------------------------------------------------------
 
@@ -153,11 +154,8 @@ pro create_struct, struct, strname, tagnames, tag_descript, DIMEN = dimen, $
  Ntags = N_elements(tagname)
 
 ; Make sure supplied tag names are valid.
-
- if !VERSION.RELEASE GE '6.4' then $ 
-          tagname = idl_validname( tagname, /convert_all ) else $
- for k = 0, Ntags -1 do $ 
-         tagname[k] = idl_validname( tagname[k], /convert_all )
+ 
+ tagname = idl_validname( tagname, /convert_all )
 
 ;  If user supplied a scalar string descriptor then we want to break it up
 ;  into individual items.    This is somewhat complicated because the string

@@ -5,8 +5,8 @@ function fits_ascii_encode, sum32
 ; PURPOSE:
 ;    Encode an unsigned longword as an ASCII string to insert in a FITS header
 ; EXPLANATION:
-;     Follows the 23 May 2002 version of the FITS checksum proposal at 
-;     http://heasarc.gsfc.nasa.gov/docs/heasarc/fits/checksum.html   
+;     Follows the July 2007 version of the FITS checksum proposal at 
+;       http://fits.gsfc.nasa.gov/registry/checksum.html
 ; CALLING SEQUENCE:
 ;     result = FITS_ASCII_ENCODE( sum32)
 ; INPUTS:
@@ -29,6 +29,7 @@ function fits_ascii_encode, sum32
 ;                  
 ; REVISION HISTORY:
 ;     Written  W. Landsman  SSAI              December 2002
+;     Use V6.0 notation  W.L.                 August 2013
 ;-
  if N_Params() LT 1 then begin
       print,'Syntax -  result = FITS_ASCII_ENCODE( sum32)'
@@ -54,8 +55,8 @@ function fits_ascii_encode, sum32
  for i=il,il+3 do begin
   bad = where( (exclude EQ ch[i]) or (exclude Eq ch[i+4]) , Nbad) 
    if Nbad GT 0 then begin
-       ch[i] = ch[i]+1b
-       ch[i+4] = ch[i+4] -1b
+       ch[i]++
+       ch[i+4]--
        check=1b
   endif
  endfor

@@ -46,7 +46,7 @@ pro sxdelpar, h, parname
  par = strtrim( strupcase(parname),2 ) 
 
  sz = size(h,/structure)
- if (sz.N_dimensions NE 1) or (sz.type NE 7) then $
+ if (sz.N_dimensions NE 1) || (sz.type NE 7) then $
 	message,'FITS header (1st parameter) must be a string array'
 
  nlines = sz.N_elements		;number of lines in header array
@@ -58,7 +58,7 @@ pro sxdelpar, h, parname
  for i = 0L, nlines-1 do begin
         if array_equal(keyword[i] NE par, 1b) then begin   
  	   h[pos] = h[i]		;keep it
-	   pos = pos+1		;increment number of lines kept
+	   pos++		;increment number of lines kept
 	   if keyword[i] eq 'END' then break  	;end of header
         endif 
  endfor

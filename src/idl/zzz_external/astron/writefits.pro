@@ -98,6 +98,8 @@ pro writefits, filename, data, header, heap, Append = Append,  $
 ;            the output file must be compressed          S. Koposov June 2008
 ;       Introduce V6.0 notation                W.L. Nov. 2010 
 ;       Set /APPEND if XTENSION specifies a table   W.L.  July 2012
+;       Bug fix when /CHECKSUM used with unsigned data  W.L. June 2013
+;       June 2013 bug fix introduced problem when NAXIS=0  W.L. July 2013
 ;-
   On_error, 2
   compile_opt idl2  
@@ -146,6 +148,7 @@ pro writefits, filename, data, header, heap, Append = Append,  $
   
 ; If necessary,convert unsigned to signed.    Do not destroy the original data
 
+  unsigned = 0
   if naxis NE 0 then begin
               
         unsigned = (type EQ 12) || (type EQ 13)
@@ -230,9 +233,15 @@ pro writefits, filename, data, header, heap, Append = Append,  $
     if ~do_checksum then test = sxpar(hdr,'CHECKSUM',count=do_checksum)
   
      if do_checksum then begin 
+               if unsigned then begin 
+	       if N_elements(heap) GT 0 then $
+	         FITS_ADD_CheckSum, hdr, [newdata,heap] else $
+		 FITS_Add_CheckSum, hdr, newdata
+	       endif else begin 	 
                if N_elements(heap) GT 0 then $
 	         FITS_ADD_CHECKSUM, hdr, [data,heap] else $
                  FITS_ADD_CHECKSUM, hdr, data
+	       endelse	 
                endline = where( strcmp(hdr,'END     ',8), Nend)
        endif
        nmax = endline[0] + 1

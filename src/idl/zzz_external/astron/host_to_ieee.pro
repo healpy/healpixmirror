@@ -35,8 +35,6 @@ pro host_to_ieee, data, IDLTYPE = idltype
 ;
 ; MODIFICATION HISTORY:
 ;      Adapted from CONV_UNIX_VAX, W. Landsman   Hughes/STX    January, 1992
-;      Version for IDL V5.0  August 1997
-;      Converted to IDL V5.0   W. Landsman   September 1997
 ;      Added new integer datatypes  C. Markwardt/W. Landsman  July 2000
 ;      Use /SWAP_IF_LITTLE_ENDIAN keyword for 64bit types W. Landsman Feb 2003
 ;      Do not use XDR keywords to BYTEORDER for much improved speed
@@ -53,7 +51,7 @@ pro host_to_ieee, data, IDLTYPE = idltype
  if npts EQ 0 then $
      message,'ERROR - IDL data variable (first parameter) not defined'
 
- if ~keyword_set( idltype) then idltype = size(data,/type)
+ if N_elements( idltype) EQ 0 then idltype = size(data,/type)
 
  case idltype of
 

@@ -144,7 +144,7 @@
 ;          keyword values; if that is the case, then the passed values
 ;          will be quantized to match those scale factors before being
 ;          written.  Sep 2007
-;       E. Hivon: write 64bit integer and double precison columns, Mar 2008
+;       E. Hivon: write 64bit integer and double precision columns, Mar 2008
 ;       C. Markwardt Allow unsigned integers, which have special
 ;          TSCAL/TZERO values.  Feb 2009
 ;       C. Markwardt Add support for files larger than 2 GB, 2012-04-17

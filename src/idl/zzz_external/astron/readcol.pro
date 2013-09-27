@@ -1,6 +1,7 @@
 pro readcol,name,v1,V2,v3,v4,v5,v6,v7,v8,v9,v10,v11,v12,v13,v14,v15, $
             v16,v17,v18,v19,v20,v21,v22,v23,v24,v25,v26,v27,v28,v29,v30,$
-            v31,v32,v33,v34,v35,v36,v37,v38,v39,v40, COMMENT = comment, $
+            v31,v32,v33,v34,v35,v36,v37,v38,v39,v40,v41,v42,v43,v44,v45, $
+	    v46,v47,v48,v49,v50, COMMENT = comment, $
             FORMAT = fmt, DEBUG=debug, SILENT=silent, SKIPLINE = skipline, $
             NUMLINE = numline, DELIMITER = delimiter, NAN = NaN, $
             PRESERVE_NULL = preserve_null, COUNT=ngood, NLINES=nlines, $
@@ -23,7 +24,7 @@ pro readcol,name,v1,V2,v3,v4,v5,v6,v7,v8,v9,v10,v11,v12,v13,v14,v15, $
 ;       can be significantly improved by setting the /QUICK keyword.
 ;
 ; CALLING SEQUENCE:
-;       READCOL, name, v1, [ v2, v3, v4, v5, ...  v40 , COMMENT=, /NAN
+;       READCOL, name, v1, [ v2, v3, v4, v5, ...  v50 , COMMENT=, /NAN
 ;           DELIMITER= ,FORMAT = , /DEBUG ,  /SILENT , SKIPLINE = , NUMLINE = 
 ;           COUNT =, STRINGSKIP= 
 ;
@@ -84,8 +85,8 @@ pro readcol,name,v1,V2,v3,v4,v5,v6,v7,v8,v9,v10,v11,v12,v13,v14,v15, $
 ;               skip over comment lines.
 ;
 ; OUTPUTS:
-;       V1,V2,V3,...V40 - IDL vectors to contain columns of data.
-;               Up to 40 columns may be read.  The type of the output vectors
+;       V1,V2,V3,...V50 - IDL vectors to contain columns of data.
+;               Up to 50 columns may be read.  The type of the output vectors
 ;               are as specified by FORMAT.
 ;
 ; OPTIONAL OUTPUT KEYWORDS:
@@ -164,12 +165,13 @@ pro readcol,name,v1,V2,v3,v4,v5,v6,v7,v8,v9,v10,v11,v12,v13,v14,v15, $
 ;       Allow filename to be 1 element array W.Landsman/S.Antonille Apr 2011
 ;       Feb 2010 change caused errors when reading blanks as numbers. 
 ;                          W.L. July 2012
+;       Read up to 50 columns W.L.  March 2013
 ;-
   On_error,2                    ;Return to caller
   compile_opt idl2
 
   if N_params() lt 2 then begin
-    print,'Syntax - READCOL, name, v1, [ v2, v3,...v40, /NAN, DELIMITER=,/QUICK'
+    print,'Syntax - READCOL, name, v1, [ v2, v3,...v50, /NAN, DELIMITER=,/QUICK'
     print,'        FORMAT= ,/SILENT  ,SKIPLINE =, NUMLINE = , /DEBUG, COUNT=]'
      return
   endif
@@ -183,15 +185,15 @@ pro readcol,name,v1,V2,v3,v4,v5,v6,v7,v8,v9,v10,v11,v12,v13,v14,v15, $
   if keyword_set(DEBUG) then $
      message,'File ' + name+' contains ' + strtrim(nlines,2) + ' lines',/INF
 
-  if ~keyword_set( SKIPLINE ) then skipline = 0
+  if N_elements( SKIPLINE ) EQ 0 then skipline = 0
   nlines = nlines - skipline
   if nlines LE 0 then begin
      message,'ERROR - File ' + name+' contains no data',/CON
      return
   endif     
-  if keyword_set( NUMLINE) then nlines = numline < nlines
+  if N_elements( NUMLINE) GT 0 then nlines = numline < nlines
 
-  if ~keyword_set( SKIPSTART ) then begin
+  if N_elements( SKIPSTART ) EQ 0 then begin
      skipstart_flg=0 
   endif else begin
      skipstart_flg=1
@@ -222,7 +224,7 @@ pro readcol,name,v1,V2,v3,v4,v5,v6,v7,v8,v9,v10,v11,v12,v13,v14,v15, $
   endif else begin              ;Read everything as floating point
 
      frmt = 'F'
-     if ncol GT 1 then for i = 1,ncol-1 do frmt = frmt + ',F'
+     if ncol GT 1 then for i = 1,ncol-1 do frmt += ',F'
      if ~keyword_set( SILENT ) then message, $
         'Format keyword not supplied - All columns assumed floating point',/INF
 
@@ -268,6 +270,7 @@ pro readcol,name,v1,V2,v3,v4,v5,v6,v7,v8,v9,v10,v11,v12,v13,v14,v15, $
   goodcol = where(idltype)
   idltype = idltype[goodcol]
   check_numeric = (idltype NE 7)
+  check_comment = N_elements(comment) GT 0
   openr, lun, name, /get_lun, compress=compress
 
   temp = ' '
@@ -293,7 +296,7 @@ pro readcol,name,v1,V2,v3,v4,v5,v6,v7,v8,v9,v10,v11,v12,v13,v14,v15, $
      endif
 
      temp = strtrim(temp,1)     ;Remove leading spaces
-     if keyword_set(comment) then if strmid(temp,0,1) EQ comment then begin
+     if check_comment then if strmid(temp,0,1) EQ comment then begin
         ngood--
         if keyword_set(DEBUG) then $
            message,'Skipping Comment Line ' + strtrim(skipline+j+1,2),/INF

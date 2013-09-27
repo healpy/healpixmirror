@@ -97,12 +97,11 @@ Pro sxaddpar, Header, Name, Value, Comment, Location, before=before, $
 ;       Added Format keyword, J. Isensee, July, 1990
 ;       Added keywords BEFORE and AFTER. K. Venkatakrishna, May '92
 ;       Pad string values to at least 8 characters   W. Landsman  April 94
-;       Aug 95: added /PDU option and changed routine to update last occurence
+;       Aug 95: added /PDU option and changed routine to update last occurrence
 ;               of an existing keyword (the one SXPAR reads) instead of the
-;               first occurence.
+;               first occurrence.
 ;       Comment for string data can start after column 32 W. Landsman June 97
 ;       Make sure closing quote supplied with string value  W. Landsman  June 98
-;       Converted to IDL V5.0    W. Landsman   June 98
 ;       Increase precision of default formatting of double precision floating
 ;               point values.   C. Gehman, JPL  September 1998
 ;       Mar 2000, D. Lindler, Modified to use capital E instead of lower case
@@ -115,6 +114,7 @@ Pro sxaddpar, Header, Name, Value, Comment, Location, before=before, $
 ;       May 2005 Fix SAVECOMMENT error with non-string values W. Landsman
 ;       Oct 2005 Jan 2004 change made SXADDPAR fail for empty strings W.L.
 ;       May 2011 Fix problem with slashes in string values W.L. 
+;       Aug 2013 Only use keyword_set for binary keywords W. L. 
 ;       
 ;-
  compile_opt idl2
@@ -132,12 +132,12 @@ Pro sxaddpar, Header, Name, Value, Comment, Location, before=before, $
 ;  If Location parameter not defined, set it equal to 'END     '
 ;
  if ( N_params() GT 4 ) then loc = strupcase(location) else $
- if keyword_set( BEFORE) then loc = strupcase(before) else $
- if keyword_set( AFTER)  then loc = strupcase(after) else $
- if keyword_set( PDU) then loc = 'BEGIN EX' else $
+ if N_elements( BEFORE) GT 0 then loc = strupcase(before) else $
+ if N_elements( AFTER) GT 0  then loc = strupcase(after) else $
+ if N_elements( PDU) GT 0  then loc = 'BEGIN EX' else $
                              loc = 'END'
 
- while strlen(loc) lt 8 do loc = loc + ' '
+ while strlen(loc) lt 8 do loc += ' '
 
  if N_params() lt 4 then comment = ''      ;Is comment field specified?
 
@@ -148,7 +148,7 @@ Pro sxaddpar, Header, Name, Value, Comment, Location, before=before, $
           n=10
  endif else begin
           s = size(header)               ;check for string type
-              if (s[0] ne 1) or (s[2] ne 7) then $
+              if (s[0] ne 1) || (s[2] ne 7) then $
                   message,'FITS Header (first parameter) must be a string array'
  endelse
 
@@ -170,7 +170,7 @@ Pro sxaddpar, Header, Name, Value, Comment, Location, before=before, $
                 ii = max(ii) + 1
                 if ii eq n_elements(header) then begin
                         header = [header,endline]
-                        n = n+1 
+                        n++ 
                 endif else header[ii] = endline
                 keywrd = strmid(header,0,8)
                 iend = where(keywrd eq 'END     ',nfound)

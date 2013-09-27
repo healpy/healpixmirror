@@ -55,7 +55,7 @@ function SXPAR, hdr, name, abort, COUNT=matches, COMMENT = comments, $
 ;       instead the COUNT keyword is preferred
 ;
 ;       If a keyword (except HISTORY or COMMENT) occurs more than once in a 
-;       header, a warning is given, and the *last* occurence is used.
+;       header, a warning is given, and the *last* occurrence is used.
 ;
 ; EXAMPLES:
 ;       Given a FITS header, h, return the values of all the NAXISi values

@@ -132,7 +132,7 @@
 ;       The row number must be consistent with the number of rows stored in the
 ;       binary table header.
 ;
-;       Generaly speaking, FXBREADM will be faster than iterative
+;       Generally speaking, FXBREADM will be faster than iterative
 ;       calls to FXBREAD when (a) a large number of columns is to be
 ;       read or (b) the size in bytes of each cell is small, so that
 ;       the overhead of the FOR loop in FXBREAD becomes significant.
@@ -146,7 +146,7 @@
 ; Prev. Hist. : 
 ;       C. Markwardt, based in concept on FXBREAD version 12 from
 ;                              IDLASTRO, but with significant and
-;                              major changes to accomodate the
+;                              major changes to accommodate the
 ;                              multiple row/column technique.  Mostly
 ;                              the parameter checking and general data
 ;                              flow remain.

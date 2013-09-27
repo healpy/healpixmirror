@@ -35,7 +35,6 @@ pro ieee_to_host, data, IDLTYPE = idltype
 ;
 ; MODIFICATION HISTORY:
 ;      Written, W. Landsman   Hughes/STX   May, 1992
-;      Converted to IDL V5.0   W. Landsman   September 1997
 ;      Under VMS check for IEEE -0.0 values   January 1998
 ;      VMS now handle -0.0 values under IDL V5.1    July 1998
 ;      Added new integer datatypes  C. Markwardt/W. Landsman  July 2000
@@ -57,7 +56,7 @@ pro ieee_to_host, data, IDLTYPE = idltype
  if npts EQ 0 then $
      message,'ERROR - IDL data variable (first parameter) not defined'
 
- if ~keyword_set( idltype) then idltype = size(data,/type)
+ if N_elements(idltype) EQ 0 then idltype = size(data,/type)
  
  case idltype of
 

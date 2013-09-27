@@ -10,7 +10,7 @@
 ; CALLING SEQUENCE:    
 ;                 
 ;     xdispstr, array, [/BLOCK, WIDTH= , HEIGHT=, TITLE=, GROUP_LEADER=, FONT=
-;                       TOP_LINE = ]
+;                       TOP_LINE=, POS= ]
 ;
 ; INPUT PARAMETER:
 ;
@@ -19,21 +19,29 @@
 ;  OPTIONAL INPUT KEYWORD PARAMETERS:
 ;
 ;    block -  Set to 1 to make widget blocking.  Default = block=0
+;
+;    font  -     Display font for text.
 ;          
 ;    width, height  - Scalars giving number of characters per line, number
-;                           of lines.  Default = 80x24
-;
-;    title  - Scalar Title for outermost base widget.
+;                           of lines.  Default = 80x48
 ;
 ;    group_leader  -    Group leader for top level base.
 ;
+;    title  - Scalar Title for outermost base widget.
+;
+;    pos - 2 element array containing the normalized X and Y position to
+;            display the widget on the screen. 
+;
 ;    top_line - first line in the string array to display (default is 0)
 ;
-;    font  -     Display font for text.
+; PROCEDURES USED:
+;     CGCENTERTLB
 ;
 ;  MODIFICATION HISTORY:
 ;     Written by R. S. Hill, RITSS, 17 Nov 2000
 ;     Use cumulative keyword to TOTAL   W. Landsman   May 2006
+;     Made resizeable, default size now 48 lines  W. Landsman   July 2013
+;     Added POS keyword W. Landsman  Sep 2013
 ;-
 
 
@@ -43,12 +51,17 @@ widget_control, event.top, get_uvalue=info
 
 search = 0b
 destroy = 0b
+if tag_names(event,/STRUCTURE_NAME) EQ 'WIDGET_BASE' then begin
+    widget_control,(*info).array_text, $
+          scr_ysize = event.Y,scr_xsize=event.X
+endif else begin	  
 CASE event.id OF
 (*info).done_button:  destroy=1b
 (*info).search_button:  search=1b
 (*info).search_text:  search=1b
 ELSE:
 ENDCASE
+endelse
 
 IF search THEN BEGIN
     widget_control, (*info).search_text, get_value=seastr
@@ -99,11 +112,12 @@ END
 
 
 PRO XDISPSTR, Array, BLOCK=block, WIDTH=width, HEIGHT=height, TITLE=title, $
-                     GROUP_LEADER=group_leader, FONT=font,top_line=top_line
+                     GROUP_LEADER=group_leader, FONT=font,top_line=top_line, $
+		     POS = pos
 
 on_error, 2
 
-IF n_params(0) LT 1 THEN BEGIN
+IF N_params() LT 1 THEN BEGIN
     print, 'CALLING SEQUENCE:  XDISPSTR, Array'
     print, 'KEYWORD PARAMETERS:  BLOCK, WIDTH, HEIGHT, TITLE, ' $
             + 'GROUP_LEADER, FONT'
@@ -112,10 +126,10 @@ ENDIF
 
 IF n_elements(block) LT 1 THEN block=0
 IF n_elements(width) LT 1 THEN width=80
-IF n_elements(height) LT 1 THEN height=24
+IF n_elements(height) LT 1 THEN height=48 < N_elements(array)
 IF n_elements(title) LT 1 THEN title='XDISPSTR'
 
-tlb = widget_base(title=title,col=1,group_leader=group_leader)
+tlb = widget_base(title=title,col=1,group_leader=group_leader,/TLB_Size_Events)
 
 controls = widget_base(tlb, frame=1, row=1)
 done_button = widget_button(controls, value='Done', /no_release)
@@ -127,7 +141,7 @@ msg_text = widget_text(controls, xsize=20, ysize=1, font=font)
 array_text = widget_text(tlb, value=array, $
                          xsize=width, ysize=height, /scroll, edit=0, font=font)
 
-if ~keyword_set(top_line) then top_line = 0
+if N_elements(top_line) EQ 0 then top_line = 0
 widget_control, array_text, set_text_top_line=top_line
 widget_control, array_text, set_text_select=[0,0]
 
@@ -135,17 +149,20 @@ widget_control, tlb, /realize
     
 linelen1 = strlen(array) + 1
 cumul_len = [0, total(linelen1,/cumulative,/integer)]
+geom = widget_info(tlb,/geometry)
 info = ptr_new({done_button:done_button, $
                 search_button:search_button, search_text:search_text, $
                 array_text:array_text, arrayptr:ptr_new(array), $
                 clenptr:ptr_new(cumul_len,/no_copy), $
                 msg_text:msg_text, width:width, height:height})
 
-widget_control, tlb, set_uvalue=info
 
+widget_control, tlb, set_uvalue=info
+widget_control, tlb,tlb_get_size = basesize
 xmanager, 'xdispstr', tlb, cleanup='xdispstr_cleanup', $
           event_handler='xdispstr_event', no_block=1b-block, $
           group_leader=group_leader
+if N_elements(pos) EQ 2 then cgcentertlb,tlb,pos[0],pos[1]	  
 
 RETURN
 END

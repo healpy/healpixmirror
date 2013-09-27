@@ -126,7 +126,7 @@ ABORT:
         endcase
   endfor
   print,'Valid types are:' + stype
-  help,/trace
+  if scope_level() GT 3 then help,/trace
   ;if !debug then stop
   retall  ; zparcheck
   end

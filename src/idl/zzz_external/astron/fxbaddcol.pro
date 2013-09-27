@@ -37,7 +37,7 @@
 ;		  only needed prior to IDL Version 4.0, when the double 
 ;		  double complex datatype was unavailable in IDL
 ;	BIT	= If passed, and ARRAY is of type byte, then the column is
-;		  defined as containg bit mask arrays (type "X"), with the
+;		  defined as containing bit mask arrays (type "X"), with the
 ;		  value of BIT being equal to the number of mask bits.
 ;	LOGICAL	= If set, and array is of type byte, then the column is defined
 ;		  as containing logical arrays (type "L").

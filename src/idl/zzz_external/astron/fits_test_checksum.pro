@@ -13,7 +13,8 @@
 ; INPUTS:
 ;    HDR - FITS header (vector string)
 ; OPTIONAL DATA:
-;    DATA - data array associated with the FITS header.   If not supplied, or
+;    DATA - data array associated with the FITS header.   An IDL structure is 
+;           not allowed.    If not supplied, or
 ;           set to a scalar, then there is assumed to be no data array 
 ;           associated with the FITS header.
 ; RESULT:

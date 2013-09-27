@@ -184,7 +184,7 @@ pro fits_read,file_or_fcb,data,header,group_par,noscale=noscale, $
 ;       Work with compress files (read file size from fcb),
 ;       requires updated (Jan 2003) version of FITS_OPEN W. Landsman Jan 2003
 ;       Do not modify BSCALE/BZERO for  unsigned integers W. Landsman April 2006
-;       Asuume FITS_OPEN has opened the file with /SWAP_IF_LITTLE_ENDIAN
+;       Assume FITS_OPEN has opened the file with /SWAP_IF_LITTLE_ENDIAN
 ;                         W. Landsman   September 2006
 ;       Fix problem with /DATA_ONLY keyword  M.Buie/W.Landsman  October 2006
 ;       Only append primary header if INHERIT=T  W. Landsman  April 2007

@@ -221,6 +221,7 @@
 ;      Fix possible problem when startrow=0 supplied J. Eastman/W.L. Aug 2010
 ;      First header is not necessarily primary if unit supplied WL Jan 2011
 ;      Fix test for 'SIMPLE' at beginning of header WL November 2012
+;      Fix problem passing extensions with > 2GB WL, M. Carlson August 2013
 ;-
 function READFITS, filename, header, heap, CHECKSUM=checksum, $ 
                    COMPRESS = compress, HBUFFER=hbuf, EXTEN_NO = exten_no, $
@@ -296,9 +297,9 @@ function READFITS, filename, header, heap, CHECKSUM=checksum, $
 		endif    
 	endif	
   endelse
-  if keyword_set(POINTLUN) then mrd_skip, unit, pointlun
+  if N_elements(POINTLUN) GT 0 then mrd_skip, unit, pointlun
 
-  doheader = arg_present(header) or do_checksum
+  doheader = arg_present(header) || do_checksum
   if doheader  then begin
           if N_elements(hbuf) EQ 0 then hbuf = 180 else begin
                   remain = hbuf mod 36
@@ -347,7 +348,7 @@ function READFITS, filename, header, heap, CHECKSUM=checksum, $
            endelse
           endif
 
-      if (ext EQ 0 ) && ~(keyword_set(pointlun) || unitsupplied ) then $
+      if (ext EQ 0 ) && ~((N_elements(pointlun) GT 0) || unitsupplied ) then $
              if strmid( header[0], 0, 8)  NE 'SIMPLE  ' then begin
               message,/CON, $
                  'ERROR - Header does not contain required SIMPLE keyword'
@@ -376,7 +377,7 @@ function READFITS, filename, header, heap, CHECKSUM=checksum, $
 ;  types (regular, compressed, Unix pipe, socket) 
 
       if ext LT exten_no then begin
-                nrec = long((nbytes + 2879) / 2880)
+                nrec = long64((nbytes + 2879) / 2880)
                 if nrec GT 0 then mrd_skip, unit, nrec*2880L    
        endif
        endfor
@@ -424,7 +425,7 @@ function READFITS, filename, header, heap, CHECKSUM=checksum, $
 
    if N_elements(STARTROW) EQ 0 then startrow = 0       ;updated Aug 2010
    if naxis GE 2 then nrow = dims[1] else nrow = ndata
-   if ~keyword_set(NUMROW) then numrow = nrow
+   if N_elements(NUMROW) EQ 0 then numrow = nrow
    if do_checksum then if ((startrow GT 0) || $
       (numrow LT nrow) || (N_elements(nslice) GT 0)) then begin 
       message,/CON, $

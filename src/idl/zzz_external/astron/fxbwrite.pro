@@ -141,7 +141,7 @@
 			2: STYPE = 'short integer'
 			3: STYPE = 'long integer'
 			4: STYPE = 'floating point'
-			5: STYPE = 'double precison'
+			5: STYPE = 'double precision'
 			6: STYPE = 'complex'
 			7: STYPE = 'string'
 			9: STYPE = 'double complex'

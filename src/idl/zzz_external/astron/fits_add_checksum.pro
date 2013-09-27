@@ -6,18 +6,18 @@ pro fits_add_checksum, hdr, im, no_timestamp = no_timestamp, $
 ; PURPOSE:
 ;    Add or update the CHECKSUM and DATASUM keywords in a FITS header
 ; EXPLANATION: 
-;     Follows the 23 May 2002 version of the FITS checksum proposal at 
-;     http://heasarc.gsfc.nasa.gov/docs/heasarc/fits/checksum.html  
+;     Follows the May 2002 version of the FITS checksum proposal at 
+;     http://fits.gsfc.nasa.gov/registry/checksum.html 
 ; CALLING SEQUENCE:
 ;     FITS_ADD_CHECKSUM, Hdr, [ Data, /No_TIMESTAMP, /FROM_IEEE ]
 ; INPUT-OUTPUT:
 ;     Hdr - FITS header (string array), it will be updated with new 
-;           (or modfied) CHECKSUM and DATASUM keywords 
+;           (or modified) CHECKSUM and DATASUM keywords 
 ; OPTIONAL INPUT:
 ;     Data - data array associated with the FITS header.   If not supplied, or
 ;           set to a scalar, then the program checks whether there is a 
 ;           DATASUM keyword already in the FITS header containing the 32bit
-;           checksum for the data.   if there is no such keyword then there 
+;           checksum for the data.  If there is no such keyword then there 
 ;           assumed to be no data array associated with the FITS header.
 ; OPTIONAL INPUT KEYWORDS:
 ;    /FROM_IEEE - If this keyword is set, then the input is assumed to be in 
