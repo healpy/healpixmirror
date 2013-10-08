@@ -3,7 +3,7 @@
 fac	= lib
 inc     = 
 VPATH	= $(BINDIR)
-exec	= $(BINDIR)/$(fac)
+#exec	= $(BINDIR)/$(fac)
 #src	= $(fac).f90
 modobj	= gifmod.o
 gifobj	= gifout.o gifarr.o gifdim.o gifstr.o chopst.o
@@ -14,6 +14,8 @@ MKDIR   = mkdir -p
 OD :=$(BUILDDIR)/$(fac)
 SD :=$(shell pwd)
 OBJ:=$(obj:%=$(OD)/%)
+###LIB:=$(OD)/libhpxgif$(LIBSUFFIX)
+LIB:=$(LIBDIR)/libhpxgif$(LIBSUFFIX)
 
 
 %_mkdir:
@@ -27,13 +29,20 @@ $(OD)/%.o: $(SD)/%.c $(inc) $(OD)_mkdir
 	$(CC) $(CFLAGS) -c $< -o $@
 
 
-default: $(OD)/libhpxgif.a
+default: $(LIB)
 
-$(OD)/libhpxgif.a: $(OBJ)
-	$(AR)  $(OD)/libhpxgif.a $(OBJ)
-	@cp -p $(OD)/libhpxgif.a $(LIBDIR)/
-	@cp -p $(OD)/libhpxgif.a $(LIBDIR)/libgif.a
+$(LIB): $(OBJ)
+	$(AR)  $(LIB) $(OBJ)
+	@cp -p $(LIB) $(LIBDIR)/libgif$(LIBSUFFIX)
 	@for p in $(OD)/*.$(MOD); do \
 	cp $$p $(INCDIR)/; \
 	done
+
+# $(LIB): $(OBJ)
+# 	$(AR)  $(LIB) $(OBJ)
+# 	@cp -p $(LIB) $(LIBDIR)/
+# 	@cp -p $(LIB) $(LIBDIR)/libgif$(LIBSUFFIX)
+# 	@for p in $(OD)/*.$(MOD); do \
+# 	cp $$p $(INCDIR)/; \
+# 	done
 

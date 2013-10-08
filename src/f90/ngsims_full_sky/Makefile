@@ -16,6 +16,7 @@ SD :=$(shell pwd)
 OBJ1:=$(obj1:%=$(OD)/%)
 OBJ2:=$(obj2:%=$(OD)/%)
 SUBS:=$(subs:%=$(OD)/%)
+LIB:=$(LIBDIR)/libhealpix$(LIBSUFFIX)
 
 
 %_mkdir:
@@ -41,10 +42,10 @@ $(OD)/%.o: $(SD)/%.F90 $(inc) $(OD)_mkdir
 
 default: $(exec1) $(exec2)
 
-$(exec1): $(OBJ1) $(LIBDIR)/libhealpix.a
+$(exec1): $(OBJ1) $(LIB)
 	$(FC)  $(FFLAGS) -o $(exec1) $(OBJ1) $(PGLIBS) $(LDFLAGS)
 
-$(exec2): $(OBJ2) $(LIBDIR)/libhealpix.a
+$(exec2): $(OBJ2) $(LIB)
 	$(FC)  $(FFLAGS) -o $(exec2) $(OBJ2) $(PGLIBS) $(LDFLAGS)
 
 # spell out dependencies to allow parallel compilation (make -j)

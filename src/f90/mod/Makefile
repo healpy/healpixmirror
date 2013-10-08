@@ -36,12 +36,14 @@ OD :=$(BUILDDIR)/$(fac)
 #SD :=$(shell pwd)
 SD = $(shell pwd)
 OBJ:=$(obj:%=$(OD)/%)
+###LIB:=$(OD)/libhealpix$(LIBSUFFIX)
+LIB:=$(LIBDIR)/libhealpix$(LIBSUFFIX)
 
 
 %_mkdir:
 	@if [ ! -d $* ]; then $(MKDIR) $* ; fi 
 
-default: $(OD)/libhealpix.a 
+default: $(LIB) 
 
 $(OD)/%.o: $(SD)/%.c  $(OD)_mkdir
 	$(CC) $(CFLAGS) -c $< -o $@
@@ -78,12 +80,18 @@ $(OD)/long_intrinsic.o: $(SD)/long_intrinsic.F90  $(OD)_mkdir
 	esac
 
 
-$(OD)/libhealpix.a: $(OBJ) $(objsharp) $(incpix) $(incalm) $(incfits) $(incudgrade)
-	$(AR)  $(OD)/libhealpix.a $(OBJ) $(objsharp)
-	@cp -p $(OD)/libhealpix.a $(LIBDIR)/
+$(LIB): $(OBJ) $(objsharp) $(incpix) $(incalm) $(incfits) $(incudgrade)
+	$(AR)  $(LIB) $(OBJ) $(objsharp)
 	@for p in $(OD)/*.$(MOD); do \
 	cp $$p $(INCDIR)/; \
 	done
+
+# $(LIB): $(OBJ) $(objsharp) $(incpix) $(incalm) $(incfits) $(incudgrade)
+# 	$(AR)  $(LIB) $(OBJ) $(objsharp)
+# 	@cp -p $(LIB) $(LIBDIR)/
+# 	@for p in $(OD)/*.$(MOD); do \
+# 	cp $$p $(INCDIR)/; \
+# 	done
 
 alm_map_ss_inc.F90: alm_map_template.F90 gen_alm_code
 	@./gen_alm_code

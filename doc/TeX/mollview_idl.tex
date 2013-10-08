@@ -148,6 +148,30 @@ Examples \#4 below (on page~\pageref{page:example_hires_cutsky}). \\
 		\seealso \mylink{idl:mollview:factor}{Factor}, \mylink{idl:mollview:hist_equal}{Hist\_Equal}, \mylink{idl:mollview:log}{Log}, \mylink{idl:mollview:offset}{Offset}
 	}\\
 
+
+{BAD\_COLOR=}\mytarget{idl:mollview:bad_color}  & all  & 
+\parbox[t]{\hsize}{color given to missing pixels (having
+\htmlref{{\tt
+!healpix.bad\_value}}{idl:init_healpix} ($=-1.6375\,10^{30}$) 
+      or {\tt NaN} value on input).
+   The color can be provided as either:\\
+    -- a single integer in [0,255], specifying the index to be used in
+      the color table chosen via \mylink{idl:mollview:colt}{COLT} (in which the indexes 0, 1 and 2
+      are reserved for black, white and grey respectively),\\
+    -- a 3 element vector, with each element in [0,255], specifying the
+      amount of RED, GREEN and BLUE\\
+    -- a 7-character string, starting with '\#', specifying the color in
+      HTML Hexadecimal fashion (eg, '\#ff0000' for red).\\
+   \default{neutral grey (=2, =[175, 175, 175], ='\#afafaf')}
+   \seealso \mylink{idl:mollview:bg_color}{BG\_COLOR},
+\mylink{idl:mollview:fg_color}{FG\_COLOR}} \\
+ 
+{BG\_COLOR=}\mytarget{idl:mollview:bg_color}  & all   &  
+\parbox[t]{\hsize}{color given to background pixels (outside the sphere).\\
+    See \mylink{idl:mollview:bad_color}{BAD\_COLOR} for expected format.\\
+    \default{white (=1, =[255, 255, 255], ='\#ffffff')}\\
+\seealso \mylink{idl:mollview:fg_color}{FG\_COLOR}}\\
+
 {CHARSIZE=}\mytarget{idl:mollview:charsize}  & all   &  
 	overall multiplicative factor applied to the size of
         all characters appearing on the plot
@@ -165,6 +189,16 @@ color bar labeling). Other characters thickness (such as
 %         	scale). Note: -0.1 can be used as negative 0.\\
 %         	\default {33 (Blue-Red)} \\
 % \seealso \mylink{idl:mollview:truecolors}{\tt TrueColors}}\\ 
+
+%%%%%%%%%%%%%%%%%
+\end{tabular}
+\mollbacktotop
+%-----------------------------------------------------------
+\begin{tabular}{p{\sizeone} p{\sizetwo} p{\sizethr}}
+\hline  
+\textbf{name} & \textbf{routines} & \textbf{\ description} \\ \hline
+%                   &   &                            \\ %%% for presentation
+%%%%%%%%%%%%%%%%%
 
 {COLT=}\mytarget{idl:mollview:colt}  & all   & \parbox[t]{\hsize}{ color table
 index: \\
@@ -189,6 +223,7 @@ index: \\
 \seealso \mylink{idl:mollview:truecolors}{\tt TrueColors}}\\ 
 %--------
 
+
 {COORD=}\mytarget{idl:mollview:coord}  & all   & \parbox[t]{\hsize}{
 		vector with 1 or 2 elements describing the coordinate system of the map;
                 either\\
@@ -209,14 +244,6 @@ index: \\
 			\mylink{idl:mollview:jpeg}{Jpeg}, 
 			\mylink{idl:mollview:png}{Png}}\\
 
-%
-\end{tabular}
-\mollbacktotop
-%-----------------------------------------------------------
-\begin{tabular}{p{\sizeone} p{\sizetwo} p{\sizethr}}
-\hline  
-\textbf{name} & \textbf{routines} & \textbf{\ description} \\ \hline
-%                   &   &                            \\ %%% for presentation
 
 {EXECUTE=}\mytarget{idl:mollview:execute}  & all   & \parbox[t]{\hsize}{
 		character string containing IDL command(s) to be executed in the
@@ -231,6 +258,26 @@ Figure~\ref{fig:plot_example_execute} on page~\pageref{page:plot_example_execute
 	When used with TRUECOLORS, FACTOR can be a 3-element vector. \\
         \seealso \mylink{idl:mollview:asinh}{ASINH}, \mylink{idl:mollview:offset}{Offset}, \mylink{idl:mollview:log}{LOG}, \mylink{idl:mollview:truecolors}{Truecolors} \\
 	\default {1.0} } \\
+
+%%%%%%%%%%%%%%%%%
+\end{tabular}
+\mollbacktotop
+%-----------------------------------------------------------
+\begin{tabular}{p{\sizeone} p{\sizetwo} p{\sizethr}}
+\hline  
+\textbf{name} & \textbf{routines} & \textbf{\ description} \\ \hline
+%                   &   &                            \\ %%% for presentation
+%%%%%%%%%%%%%%%%%
+
+{FG\_COLOR=}\mytarget{idl:mollview:fg_color}  & all   &  
+\parbox[t]{\hsize}{color of title and subtile characters, 
+    graticule lines and labels, units, outlines $\ldots$\\
+    See \mylink{idl:mollview:bad_color}{BAD\_COLOR} for expected format.\\
+    \default{black (=0, =[0, 0, 0], ='\#000000')}\\
+   \seealso
+\mylink{idl:mollview:bad_color}{BAD\_COLOR},
+\mylink{idl:mollview:bg_color}{BG\_COLOR}} \\
+
 
 {FITS=}\mytarget{idl:mollview:fits} %\hyperdef{cross}{idl:mollview:fits} %
 		& all & \parbox[t]{\hsize}{
@@ -263,14 +310,6 @@ The resulting FITS file can be read in IDL with eg. map={\tt readfits}({\em file
 {/FLIP}\mytarget{idl:mollview:flip}  & all   & if set the longitude increases to the right, whereas by
                 default (astronomical convention) it increases towards the left \\
  
-%
-\end{tabular}
-\mollbacktotop
-%-----------------------------------------------------------
-\begin{tabular}{p{\sizeone} p{\sizetwo} p{\sizethr}}
-\hline  
-\textbf{name} & \textbf{routines} & \textbf{\ description} \\ \hline
-%                   &   &                            \\ %%% for presentation
 
 
 {GAL\_CUT=}\mytarget{idl:mollview:gal_cut}  & ---MO   & (positive float) specifies the symmetric galactic cut in degrees
@@ -293,6 +332,16 @@ The resulting FITS file can be read in IDL with eg. map={\tt readfits}({\em file
 		\mylink{idl:mollview:ps}{Ps}, 
 		\mylink{idl:mollview:preview}{Preview}
 		and \mylink{idl:mollview:retain}{Retain}}\\
+
+%%%%%%%%%%%%%%%%%
+\end{tabular}
+\mollbacktotop
+%-----------------------------------------------------------
+\begin{tabular}{p{\sizeone} p{\sizetwo} p{\sizethr}}
+\hline  
+\textbf{name} & \textbf{routines} & \textbf{\ description} \\ \hline
+%                   &   &                            \\ %%% for presentation
+%%%%%%%%%%%%%%%%%
 
 {GLSIZE=}\mytarget{idl:mollview:glsize} & all & \parbox[t]{\hsize}{
 	character size of the graticule labels in units of {\tt Charsize}. \\
@@ -318,13 +367,7 @@ The resulting FITS file can be read in IDL with eg. map={\tt readfits}({\em file
 	\seealso \mylink{idl:mollview:igraticule}{Igraticule}, \mylink{idl:mollview:rot}{Rot}, \mylink{idl:mollview:coord}{Coord}, \mylink{idl:mollview:glsize}{Glsize}
 	}\\
 
-\end{tabular}
-\mollbacktotop
-%-----------------------------------------------------------
-\begin{tabular}{p{\sizeone} p{\sizetwo} p{\sizethr}}
-\hline  
-\textbf{name} & \textbf{routines} & \textbf{\ description} \\ \hline
-%                   &   &                            \\ %%% for presentation
+
 {/HALF\_SKY}\mytarget{idl:mollview:half_sky} & ---O & if set, only shows only one half of the sky 
    (centered on (0,0) or on the location parametrized by \mylink{idl:mollview:rot}{Rot}) instead of the full sky \\
  
@@ -355,6 +398,16 @@ boundaries with solid lines.
 				unless \mylink{idl:mollview:min}{Min} and 
 	                               \mylink{idl:mollview:max}{Max} are not symmetric}\\
                      \seealso \mylink{idl:mollview:asinh}{Asinh}, \mylink{idl:mollview:log}{Log}}\\
+
+%%%%%%%%%%%%%%%%%
+\end{tabular}
+\mollbacktotop
+%-----------------------------------------------------------
+\begin{tabular}{p{\sizeone} p{\sizetwo} p{\sizethr}}
+\hline  
+\textbf{name} & \textbf{routines} & \textbf{\ description} \\ \hline
+%                   &   &                            \\ %%% for presentation
+%%%%%%%%%%%%%%%%%
 
 {HXSIZE=}\mytarget{idl:mollview:hxsize}  & all   & \parbox[t]{\hsize}{
 		horizontal dimension (in cm) of the \mylink{idl:mollview:ps}{Postscript} printout \\
@@ -398,6 +451,14 @@ boundaries with solid lines.
 \mylink{idl:mollview:ps}{Ps}, 
 and \mylink{idl:mollview:retain}{Retain}}\\
 
+
+{/LOG}\mytarget{idl:mollview:log}  & all   & \parbox[t]{\hsize}{
+		display the log of map. This is intended for
+ 	application to positive definite maps only, eg. Galactic foreground
+	emission templates; for arbitrary maps, use /ASINH instead.	 \\
+	\seealso \mylink{idl:mollview:asinh}{Asinh}, \mylink{idl:mollview:factor}{Factor}, \mylink{idl:mollview:hist_equal}{Hist\_Equal}, \mylink{idl:mollview:offset}{Offset}}\\
+
+%%%%%%%%%%%%%%%%%
 \end{tabular}
 \mollbacktotop
 %-----------------------------------------------------------
@@ -405,11 +466,7 @@ and \mylink{idl:mollview:retain}{Retain}}\\
 \hline  
 \textbf{name} & \textbf{routines} & \textbf{\ description} \\ \hline
 %                   &   &                            \\ %%% for presentation
-{/LOG}\mytarget{idl:mollview:log}  & all   & \parbox[t]{\hsize}{
-		display the log of map. This is intended for
- 	application to positive definite maps only, eg. Galactic foreground
-	emission templates; for arbitrary maps, use /ASINH instead.	 \\
-	\seealso \mylink{idl:mollview:asinh}{Asinh}, \mylink{idl:mollview:factor}{Factor}, \mylink{idl:mollview:hist_equal}{Hist\_Equal}, \mylink{idl:mollview:offset}{Offset}}\\
+%%%%%%%%%%%%%%%%%
 
 {MAP\_OUT=}\mytarget{idl:mollview:map_out} & all & \parbox[t]{\hsize}{
 	variable that will contain the projected map on output.\\
@@ -466,6 +523,7 @@ Unobserved pixels, and pixels outside the sphere, take value \htmlref{{\tt
 {/NOPOSITION}\mytarget{idl:mollview:noposition} & --G-- & if set, the astronomical location of the map
         central point is not indicated \\
  
+%%%%%%%%%%%%%%%%%
 \end{tabular}
 \mollbacktotop
 %-----------------------------------------------------------
@@ -473,6 +531,7 @@ Unobserved pixels, and pixels outside the sphere, take value \htmlref{{\tt
 \hline  
 \textbf{name} & \textbf{routines} & \textbf{\ description} \\ \hline
 %                   &   &                            \\ %%% for presentation
+%%%%%%%%%%%%%%%%%
 
 {OFFSET=}\mytarget{idl:mollview:offset} & all & \parbox[t]{\hsize}{scalar additive factor to be applied to the valid data \\
 	the data plotted is of the form Factor*(data + Offset) \\
@@ -520,6 +579,7 @@ Unobserved pixels, and pixels outside the sphere, take value \htmlref{{\tt
 	attempt to close the outline.\\Several outlines can be overplotted at
 once by gathering the respective structures into one meta-structure or an array.\\ \seealso{\mylink{idl:mollview:coord}{Coord}, \mylink{idl:mollview:graticule}{Graticule}}} \\
  
+%%%%%%%%%%%%%%%%%
 \end{tabular}
 \mollbacktotop
 %-----------------------------------------------------------
@@ -527,6 +587,7 @@ once by gathering the respective structures into one meta-structure or an array.
 \hline  
 \textbf{name} & \textbf{routines} & \textbf{\ description} \\ \hline
 %                   &   &                            \\ %%% for presentation
+%%%%%%%%%%%%%%%%%
 
 {PNG=}\mytarget{idl:mollview:png}  & all   & \parbox[t]{\hsize}{
 		string containing the name of a .PNG output \\
@@ -584,6 +645,7 @@ and \mylink{idl:mollview:retain}{Retain}}\\
       legible, in which case the projection-induced distortions are small.
 	}   \\
 
+%%%%%%%%%%%%%%%%%
 \end{tabular}
 \mollbacktotop
 %-----------------------------------------------------------
@@ -591,6 +653,7 @@ and \mylink{idl:mollview:retain}{Retain}}\\
 \hline  
 \textbf{name} & \textbf{routines} & \textbf{\ description} \\ \hline
 %                   &   &                            \\ %%% for presentation
+%%%%%%%%%%%%%%%%%
 
 {/PREVIEW}\mytarget{idl:mollview:preview}  & all   & \parbox[t]{\hsize}{
 		if set, there is a 'ghostview' preview of the
@@ -664,6 +727,7 @@ backing store to use for direct graphics windows in \{0,1,2\}.
 }\\
 
 
+%%%%%%%%%%%%%%%%%
 \end{tabular}
 \mollbacktotop
 %-----------------------------------------------------------
@@ -671,6 +735,7 @@ backing store to use for direct graphics windows in \{0,1,2\}.
 \hline  
 \textbf{name} & \textbf{routines} & \textbf{\ description} \\ \hline
 %                   &   &                            \\ %%% for presentation
+%%%%%%%%%%%%%%%%%
 
 {/SAVE}\mytarget{idl:mollview:save}  & all   & \parbox[t]{\hsize}{
 		if set, assumes that \mylink{idl:mollview:file}{File} is in IDL saveset format, 
@@ -717,6 +782,7 @@ If set to 2, the background pixels will be transparent (instead of the usual whi
 If set to 3, both the grey and white pixels will look transparent.\\
 Active only in conjunction with \mylink{idl:mollview:png}{PNG}}\\
 
+%%%%%%%%%%%%%%%%%
 \end{tabular}
 \mollbacktotop
 %-----------------------------------------------------------
@@ -724,6 +790,7 @@ Active only in conjunction with \mylink{idl:mollview:png}{PNG}}\\
 \hline  
 \textbf{name} & \textbf{routines} & \textbf{\ description} \\ \hline
 %                   &   &                            \\ %%% for presentation
+%%%%%%%%%%%%%%%%%
 
 {TRUECOLORS=}\mytarget{idl:mollview:truecolors} & all & \parbox[t]{\hsize}{
 if the input data is of the form [Npix,3], then the 3 fields
@@ -880,8 +947,8 @@ map  = findgen(48) \\
 mycommand = 'x=findgen(64)/10. \& ' + \$ \\
 $\quad\quad$	'plot,x,sin(x),pos=[0.8,0.8,0.99,0.99],/noerase \&' +\$ \\
 $\quad\quad$	'xyouts,0.5,0.5,''Hello World !'',/normal,charsize=2,align=0.5'  \\
-\htmlref{\thedocid}{idl:mollview},map, \mylink{idl:mollview:execute}{execute}=mycommand, \mylink{idl:mollview:png}{png}='plot\_example\_execute.png',\mylink{idl:mollview:preview}{/preview},\$ \\
-$\quad\quad$	\mylink{idl:mollview:graticule}{/graticule},\mylink{idl:mollview:glsize}{/glsize} \\
+\htmlref{\thedocid}{idl:mollview},map, \mylink{idl:mollview:execute}{execute}=mycommand, \mylink{idl:mollview:png}{png}='plot\_example\_execute.png',\$ \\
+$\quad\quad$	\mylink{idl:mollview:preview}{/preview},\mylink{idl:mollview:graticule}{/graticule},\mylink{idl:mollview:glsize}{/glsize} \\
 \end{tabular}
 }
 {produces a PNG file containing a Mollweide projection of a pixel index map

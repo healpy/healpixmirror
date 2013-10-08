@@ -750,6 +750,7 @@ setF90Defaults () {
     PGLIBSDEF="-L/usr/local/pgplot -lpgplot -L/usr/X11R6/lib -lX11"
     WLRPATH="" # to add a directory to the (linker) runtime library search path
     F90PIC="-fPIC"
+    F90_LIBSUFFIX=".a" # static library by default
 
     echo "you seem to be running $OS"
 
@@ -1575,6 +1576,7 @@ editF90Makefile () {
 	${SED} "s|^F90_PGLIBS.*$|F90_PGLIBS  = $PGLIBS|" |\
 	${SED} "s|^F90_OS.*$|F90_OS	= $OS|" |\
 	${SED} "s|^F90_I8FLAG.*$|F90_I8FLAG  = $FI8FLAG|" |\
+	${SED} "s|^F90_LIBSUFFIX.*$|F90_LIBSUFFIX = $F90_LIBSUFFIX|" |\
 	${SED} "s|^ALL\(.*\) f90-void\(.*\)|ALL\1 f90-all\2|" |\
 	${SED} "s|^TESTS\(.*\) f90-void\(.*\)|TESTS\1 f90-test\2|" |\
 	${SED} "s|^CLEAN\(.*\) f90-void\(.*\)|CLEAN\1 f90-clean\2|" |\

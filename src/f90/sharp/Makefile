@@ -11,6 +11,8 @@ MKDIR   = mkdir -p
 OD :=$(BUILDDIR)/$(fac)
 SD :=$(shell pwd)
 OBJ:=$(obj:%=$(OD)/%)
+###LIB:=$(OD)/libsharp_healpix_f$(LIBSUFFIX)
+LIB:=$(LIBDIR)/libsharp_healpix_f$(LIBSUFFIX)
 
 
 %_mkdir:
@@ -19,8 +21,11 @@ OBJ:=$(obj:%=$(OD)/%)
 $(OD)/%.o: $(SD)/%.c $(inc) $(OD)_mkdir
 	$(CC) $(CFLAGS) -I c_utils -I libfftpack -I libsharp -I libsharp_healpix_f -c $< -o $@
 
-default: $(OD)/libsharp_healpix_f.a
+default: $(LIB)
 
-$(OD)/libsharp_healpix_f.a: $(OBJ)
-	$(AR)  $(OD)/libsharp_healpix_f.a $(OBJ)
-	@cp -p $(OD)/libsharp_healpix_f.a $(LIBDIR)/
+$(LIB): $(OBJ)
+	$(AR)  $(LIB) $(OBJ)
+
+# $(LIB): $(OBJ)
+# 	$(AR)  $(LIB) $(OBJ)
+# 	@cp -p $(LIB) $(LIBDIR)/

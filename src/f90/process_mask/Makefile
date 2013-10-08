@@ -11,6 +11,7 @@ MKDIR   = mkdir -p
 OD :=$(BUILDDIR)/$(fac)
 SD :=$(shell pwd)
 OBJ:=$(obj:%=$(OD)/%)
+LIB:=$(LIBDIR)/libhealpix$(LIBSUFFIX)
 
 
 %_mkdir:
@@ -36,7 +37,7 @@ $(OD)/%.o: $(SD)/%.F90 $(inc) $(OD)_mkdir
 
 default:  $(exec) 
 
-$(exec): $(OBJ) $(LIBDIR)/libhealpix.a
+$(exec): $(OBJ) $(LIB)
 	$(FC) $(FFLAGS) -o $(exec) $(OBJ) $(LDFLAGS)
 
 

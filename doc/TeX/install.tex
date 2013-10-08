@@ -892,46 +892,15 @@ GNU Data Language (GDL), is a {\em free} clone of IDL 6.0 (for more information 
 Both the source code and precompiled executables for various platforms are available.
 
 When used to run IDL-Healpix routines, GDL \gdlversion or more gives
-satisfactory results\footnote{All the caveats listed below have been noticed in GDL v0.9.2
+satisfactory results\footnote{All the caveats listed below have been noticed in
+GDL v0.9.2 and v0.9.3
 and may be solved in subsequent versions. Please send all your questions
 {\em on} GDL directly to GDL developpers.}. The calculations agree with those done under IDL, with
 comparable computation times, but a few features are missing in the production
 of Postscript, GIF and PNG files, as described below.
 
-\subsubsection*{Specific requirements}
-
+\subsubsection*{GDL Specific requirements}
 \begin{enumerate}
-\item
-\healpix requires a few IDL routines that are not yet part of GDL.
-Among those is
-\begin{itemize}
-\item {\tt congrid.pro},
-\end{itemize}
-which can be downloaded from
-\htmladdnormallink{{\tt http://idlastro.gsfc.nasa.gov/idl\-lib\-srch.html}}
-{http://idlastro.gsfc.nasa.gov/idllibsrch.html}.
-
-\item
-Some GDL routines written in IDL language are currently faulty, and should be replaced by working implementations.
-Among those is
-\begin{itemize}
-\item {\tt swap\_endian\_inplace.pro},
-\end{itemize}
-which should be replaced with the original IDL version found at the same location as above, or with the patch found in \htmladdnormallink{GDL Bugs monitor}{http://sourceforge.net/tracker/index.php?func=detail&aid=3454317&group_id=97659&atid=618683}.
-
-\item
-The {\tt doc\_library} feature of IDL, invoked by many \healpix\ routines via the {\tt /HELP} keyword, will not work natively under GDL. A work-around is to install in the GDL path the IDL routines
-\begin{itemize}
-\item {\tt dl\_dos.pro},
-\item {\tt dl\_mac.pro},
-\item {\tt dl\_unix.pro},
-\item {\tt dl\_vms.pro},
-\item {\tt doc\_library.pro},
-\end{itemize}
-which can only be found in IDL packages
-({\tt \$IDL\_DIR/lib/*.pro}). 
-It is also necessary to copy the shell script {\tt \$IDL\_DIR/bin/doc\_library} into {\tt \$GDL\_DIR/bin/doc\_library} (ie, right next to the GDL executable).
-
 \item 
 By default, GDL uses the value of the environment variable {\tt \$GDL\_DIR}, or the location of the {\tt gdl} executable, 
 as temporary storage disc space location, which may create problems in many situations.
@@ -959,15 +928,57 @@ output files.
 
 \end{enumerate}
 
+\subsubsection*{Requirements specific to GDL 0.9.2}
+
+\begin{enumerate}
+\item
+\healpix requires a few IDL routines that were not yet part of GDL 0.9.2
+Among those is
+\begin{itemize}
+\item {\tt congrid.pro},
+\end{itemize}
+which can be downloaded from
+\htmladdnormallink{{\tt http://idlastro.gsfc.nasa.gov/idl\-lib\-srch.html}}
+{http://idlastro.gsfc.nasa.gov/idllibsrch.html}. {\em Fixed in GDL v0.9.3}
+
+\item
+Some GDL 0.9.2 routines written in IDL language were faulty, and should be replaced by working implementations.
+Among those is
+\begin{itemize}
+\item {\tt swap\_endian\_inplace.pro},
+\end{itemize}
+which should be replaced with the original IDL version found at the same
+location as above, or with the patch found in \htmladdnormallink{GDL Bugs
+monitor}{http://sourceforge.net/tracker/index.php?func=detail&aid=3454317&group_id=97659&atid=618683}.
+{\em Fixed in GDL v0.9.3}
+
+\item
+The {\tt doc\_library} feature of IDL, invoked by many \healpix\ routines via
+the {\tt /HELP} keyword, will not work natively under GDL 0.9.2. A work-around is to install in the GDL path the IDL routines
+\begin{itemize}
+\item {\tt dl\_dos.pro},
+\item {\tt dl\_mac.pro},
+\item {\tt dl\_unix.pro},
+\item {\tt dl\_vms.pro},
+\item {\tt doc\_library.pro},
+\end{itemize}
+which can only be found in IDL packages
+({\tt \$IDL\_DIR/lib/*.pro}). 
+It is also necessary to copy the shell script {\tt \$IDL\_DIR/bin/doc\_library}
+into {\tt \$GDL\_DIR/bin/doc\_library} (ie, right next to the GDL executable). {\em Fixed in GDL v0.9.3}
+\end{enumerate}
+
+
 \subsubsection*{Impact of GDL limitations on \healpix}
 \begin{itemize}
-\item {\tt Ximview} won't work under GDL \gdlversion
-% \item Because of problems with GDL's {\tt point\_lun} routine, the reading of
-% FITS files with most of Astronomy User's Library routines won't be possible.
-\item Currently, the 
+\item {\tt Ximview} won't work under GDL 0.9.2 nor 0.9.3 (because it requires the
+IDL native routine {\tt WIDGET\_DRAW})
+\item When run under GDL, the 
 \htmlref{{\tt cartview}, {\tt gnomview}, {\tt mollview} and {\tt orthview}}{idl:mollview} 
-routines won't produce Postscript nor GIF outputs when run under GDL (but PNG and JPEG
-files are OK, see above).
+routines won't produce Postscript outputs (because GDL's {\tt TV} routine does
+not accept the {\tt NORMAL} keyword) nor GIF outputs (because GDL's {\tt
+WRITE\_GIF} is not yet functional). \\
+But PNG and JPEG files are OK, see above.
 \item In those same routines, the {\tt TRANSPARENT} keyword will be ignored in the
 production of PNG files under GDL. For the same reasons, {\tt hpx2gs} won't mark missing pixels as
 transparent in the output PNG file.
