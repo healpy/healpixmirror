@@ -206,7 +206,7 @@ as can be seen from the <a href="resources.php">Resources</a> and <a href="galle
 <p>
     For a detailed list of the new features added in the latest HEALPix release, see
     the <a href="downloads.php">Getting HEALPix page</a>.<br>
-    For third party implementation in other languages, see <a href="http://sourceforge.net/p/healpix/wiki/Available%20languages/">this HEALPix wiki page</a>.<br>
+    For third party implementations in other languages (including Matlab/Octave and Yorick), see <a href="http://sourceforge.net/p/healpix/wiki/Available%20languages/">this HEALPix wiki page</a>.<br>
     For third party extensions of HEALPix capabilities, see the <a href="resources.php">Resources page</a>.
 </p>
 
