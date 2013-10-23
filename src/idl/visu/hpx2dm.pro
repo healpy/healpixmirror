@@ -74,8 +74,8 @@ pro hpx2dm, file_in, select_in, $
 ;-
 
 routine = 'HPX2DM'
-syntax = [routine+', File [,select, COORD=, JPEG=, PNG=, PREVIEW=, PXSIZE=, ROT= ...',$
-print,'             + most of AZEQVIEW''s keywords (except CROP, HALF_SKY, PNG, RESO_ARCMIN, WINDOW)]'
+syntax = [routine+', File [,select, COORD=, JPEG=, PNG=, PREVIEW=, PXSIZE=, ROT= ...,',$
+'             + most of AZEQVIEW''s keywords (except CROP, HALF_SKY, PNG, RESO_ARCMIN, WINDOW)]']
 
 if (keyword_set(help)) then begin
     doc_library,routine
