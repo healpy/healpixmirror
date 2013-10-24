@@ -53,12 +53,12 @@ an empty email with only &quot;<tt>subscribe</tt>&quot; on the Subject line.
 			
 <p>		
 <A name="top"></A>
-HEALPix package can be downloaded 	
- from the <a href="http://sourceforge.net/projects/healpix/">SourceForge Download page</a> under the GNU General Public License, version2 <a href="http://www.gnu.org/licenses/gpl-2.0.html">(GPLv2)</a>.
+The recommended channel for obtaining and installing the latest HEALPix software is to download the <em>source</em> package from the <a href="http://sourceforge.net/projects/healpix/">SourceForge Download page</a> under the GNU General Public License, version2 <a href="http://www.gnu.org/licenses/gpl-2.0.html">(GPLv2)</a>, and follow the <a href="documentation.php">installation directions</a>.<br>
+Prepackaged or precompiled HEALPix packages can also be found in various places, for e.g. MacOSX (<a href="http://www.macports.org/ports.php?by=name&substr=healpix">MacPorts</a>) and Linux (<a href="http://fr2.rpmfind.net/linux/rpm2html/search.php?query=healpix&submit=Search+...">RPM</a>) systems, under the <a href="http://www.gnu.org/licenses/gpl-2.0.html">same licensing scheme</a>.
 </p>
 
 <p>
-Use of the HEALPix software package should be explicitly acknowledged in all publications in the following form:
+Use of the HEALPix software package <em>in any form</em> should be explicitly acknowledged in all publications in the following form:
               <ul>
                 <li>
                   an acknowledgment statement &ndash; "Some of the results in this paper have been derived using the HEALPix (<a href="http://adsabs.harvard.edu/cgi-bin/nph-bib_query?bibcode=2005ApJ...622..759G&amp;db_key=AST&amp;high=41069202cf02947">K.M. G&oacute;rski et al., 2005, ApJ, 622, p759</a>) package", and
