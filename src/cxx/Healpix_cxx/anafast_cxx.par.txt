@@ -39,3 +39,7 @@ if (polarisation==true && outfile!="")
     if true, write a 6-column power spectrum;
     if false, write a 4-column power spectrum.
 endif
+
+remove_monopole (bool, default=false):
+  if true, subtract the average pixel value from the temperature map, and add
+  the corresponding value to almT(0,0) after the map2alm transform.

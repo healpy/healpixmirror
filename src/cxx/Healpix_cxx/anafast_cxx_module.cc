@@ -25,7 +25,7 @@
  */
 
 /*
- *  Copyright (C) 2003-2010 Max-Planck-Society
+ *  Copyright (C) 2003-2013 Max-Planck-Society
  *  Author: Martin Reinecke
  */
 
@@ -60,11 +60,20 @@ template<typename T> void anafast_cxx (paramfile &params)
     "no output specified, nothing done");
   bool polarisation = params.template find<bool>("polarisation");
   int num_iter = params.template find<int>("iter_order",0);
+  bool remove_mono = params.template find<bool>("remove_monopole",false);
 
   if (!polarisation)
     {
     Healpix_Map<T> map;
     read_Healpix_map_from_fits(infile,map,1,2);
+
+    double avg=0.;
+    if (remove_mono)
+      {
+      avg=map.average();
+      map.Add(T(-avg));
+      }
+
     tsize nmod = map.replaceUndefWith0();
     if (nmod!=0)
       cout << "WARNING: replaced " << nmod <<
@@ -74,8 +83,6 @@ template<typename T> void anafast_cxx (paramfile &params)
     get_ring_weights (params,map.Nside(),weight);
 
     Alm<xcomplex<T> > alm(nlmax,nmmax);
-    double avg=map.average();
-    map.Add(T(-avg));
     if (map.Scheme()==NEST) map.swap_scheme();
     map2alm_iter(map,alm,num_iter,weight);
 
@@ -94,6 +101,14 @@ template<typename T> void anafast_cxx (paramfile &params)
     {
     Healpix_Map<T> mapT, mapQ, mapU;
     read_Healpix_map_from_fits(infile,mapT,mapQ,mapU,2);
+
+    double avg=0.;
+    if (remove_mono)
+      {
+      avg=mapT.average();
+      mapT.Add(T(-avg));
+      }
+
     tsize nmod = mapT.replaceUndefWith0()+mapT.replaceUndefWith0()
                 +mapU.replaceUndefWith0();
     if (nmod!=0)
@@ -104,8 +119,6 @@ template<typename T> void anafast_cxx (paramfile &params)
     get_ring_weights (params,mapT.Nside(),weight);
 
     Alm<xcomplex<T> > almT(nlmax,nmmax), almG(nlmax,nmmax), almC(nlmax,nmmax);
-    double avg=mapT.average();
-    mapT.Add(T(-avg));
     if (mapT.Scheme()==NEST) mapT.swap_scheme();
     if (mapQ.Scheme()==NEST) mapQ.swap_scheme();
     if (mapU.Scheme()==NEST) mapU.swap_scheme();
