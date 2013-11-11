@@ -82,8 +82,8 @@ const double astronomicalUnit=1.49597870691e11;
 //! Solar constant in W/m^2
 const double solarConstant=1368.0;
 
-//! Average CMB temperature in K (Mather et al. 1999, ApJ 512, 511)
-const double tcmb = 2.725;
+//! Average CMB temperature in K (Fixsen, ApJ 709 (2009), arXiv:0911.1955)
+const double tcmb = 2.72548;
 
 //! offset (in seconds) between Jan 1, 1958 and Jan 1, 1970
 const double sec_58_70 = 378691200.;

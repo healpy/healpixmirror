@@ -123,6 +123,15 @@ template<typename I> inline uint32 isqrt (I arg)
 /*! Returns the largest integer \a n that fulfills \a 2^n<=arg. */
 template<typename I> inline int ilog2 (I arg)
   {
+#ifdef __GNUC__
+  if (arg==0) return 0;
+  if (sizeof(I)==sizeof(int))
+    return 8*sizeof(int)-1-__builtin_clz(arg);
+  if (sizeof(I)==sizeof(long))
+    return 8*sizeof(long)-1-__builtin_clzl(arg);
+  if (sizeof(I)==sizeof(long long))
+    return 8*sizeof(long long)-1-__builtin_clzll(arg);
+#endif
   int res=0;
   while (arg > 0x0000FFFF) { res+=16; arg>>=16; }
   if (arg > 0x000000FF) { res|=8; arg>>=8; }
@@ -130,6 +139,27 @@ template<typename I> inline int ilog2 (I arg)
   if (arg > 0x00000003) { res|=2; arg>>=2; }
   if (arg > 0x00000001) { res|=1; }
   return res;
+  }
+
+template<typename I> inline int ilog2_nonnull (I arg)
+  {
+#ifdef __GNUC__
+  if (sizeof(I)<=sizeof(int))
+    return 8*sizeof(int)-1-__builtin_clz(arg);
+  if (sizeof(I)==sizeof(long))
+    return 8*sizeof(long)-1-__builtin_clzl(arg);
+  if (sizeof(I)==sizeof(long long))
+    return 8*sizeof(long long)-1-__builtin_clzll(arg);
+#endif
+  return ilog2 (arg);
+  }
+
+/*! Returns the number of bits needed to encode a value in the range
+    [0; \a arg] */
+template<typename I> int nbits(I arg)
+  {
+  if (arg<=1) return 0;
+  return 1+ilog2(arg-1);
   }
 
 /*! Returns \a atan2(y,x) if \a x!=0 or \a y!=0; else returns 0. */

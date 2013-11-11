@@ -139,7 +139,7 @@ void paramfile::setParamString (const string &key, const string &value)
     if (params[key]!=value)
       {
       if (verbose)
-        cout << "Parser: altering value of key'"<<key<<"' to '"<<value<<"'."
+        cout << "Parser: altering value of key '"<<key<<"' to '"<<value<<"'."
              << endl;
       params[key]=value;
       }
@@ -147,7 +147,7 @@ void paramfile::setParamString (const string &key, const string &value)
   else
     {
     if (verbose)
-      cout << "Parser: setting new key'"<<key<<"' to '"<<value<<"'."<<endl;
+      cout << "Parser: setting new key '"<<key<<"' to '"<<value<<"'."<<endl;
     params[key]=value;
     }
   }

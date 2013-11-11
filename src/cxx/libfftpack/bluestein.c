@@ -23,7 +23,7 @@
  */
 
 /*
- *  Copyright (C) 2005, 2006, 2007, 2008 Max-Planck-Society
+ *  Copyright (C) 2005-2008 Max-Planck-Society
  *  \author Martin Reinecke
  */
 
