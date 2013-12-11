@@ -25,7 +25,7 @@
 /*! \file rangeset.h
  *  Class for storing sets of ranges of integer numbers
  *
- *  Copyright (C) 2011, 2012 Max-Planck-Society
+ *  Copyright (C) 2011-2013 Max-Planck-Society
  *  \author Martin Reinecke
  */
 
@@ -48,6 +48,8 @@ template<typename T> class rangeset
     typedef typename rtype::const_iterator c_iterator;
     rtype r;
 
+    /*! Returns the index of the last number in \c r which is <= \a val.
+        If \a val is smaller than all numbers in \c r, returns -1. */
     tdiff iiv (const T &val) const
       { return tdiff(std::upper_bound(r.begin(),r.end(),val)-r.begin())-1; }
 
@@ -154,20 +156,21 @@ template<typename T> class rangeset
     /*! Removes the value \a v from the rangeset. */
     void remove(const T &v) { addRemove(v,v+1,0); }
 
-    /*! Removes all values not within \a [v1;v2[ from the rangeset. */
+    /*! Removes all values not within \a [a;b[ from the rangeset. */
     void intersect (const T &a, const T &b)
       {
-      tdiff pos1=iiv(a), pos2=iiv(b);
-      if ((pos2>=0) && (r[pos2]==b)) --pos2;
-      // delete all up to pos1 (inclusive); and starting from pos2+1
-      bool insert_a = (pos1&1)==0;
-      bool insert_b = (pos2&1)==0;
+      if (r.empty()) return; // nothing to remove
+      if ((b<=r[0]) || (a>=r.back())) {r.clear(); return; } // no overlap
+      if ((a<=r[0]) && (b>=r.back())) return; // full rangeset in interval
 
-      // cut off end
+      tdiff pos2=iiv(b);
+      if ((pos2>=0) && (r[pos2]==b)) --pos2;
+      bool insert_b = (pos2&1)==0;
       r.erase(r.begin()+pos2+1,r.end());
       if (insert_b) r.push_back(b);
 
-      // erase start
+      tdiff pos1=iiv(a);
+      bool insert_a = (pos1&1)==0;
       if (insert_a) r[pos1--]=a;
       if (pos1>=0)
         r.erase(r.begin(),r.begin()+pos1+1);
