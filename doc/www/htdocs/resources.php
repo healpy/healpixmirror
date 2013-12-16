@@ -5,7 +5,7 @@
 <br>
 <ul>
 <li>
-The <a href="http://www.rssd.esa.int/index.php?project=Planck">Planck</a> satellite full sky maps, <a href="http://www.sciops.esa.int/index.php?project=PLANCK&page=Planck_Published_Papers">observed at 30 to 857 GHz with unprecedented accuracy</a>, and their decomposition in cosmological and astrophysical components are available in HEALPix format from the <a href="http://www.sciops.esa.int/index.php?project=planck&page=Planck_Legacy_Archive">Planck Legacy Archive</a>.
+The <a href="http://www.rssd.esa.int/index.php?project=Planck">Planck</a> satellite full sky maps, <a href="http://www.sciops.esa.int/index.php?project=PLANCK&page=Planck_Published_Papers">observed at 30 to 857 GHz with unprecedented accuracy</a>, and their decomposition in cosmological and astrophysical components are available in HEALPix format from ESA <a href="http://www.sciops.esa.int/index.php?project=planck&page=Planck_Legacy_Archive">Planck Legacy Archive</a>, and NASA <a href="http://irsa.ipac.caltech.edu/">Infrared Science Archive</a>
 </li>
 
 <li>
@@ -100,6 +100,10 @@ Wavelets on the Sphere:
 
 <li>
 <a href="http://guilhem.lavaux.free.fr/wordpress/?page_id=172">FLINTS</a>: interpolation algorithm of fields sampled on a sphere
+</li>
+
+<li>
+<a href="http://galprop.stanford.edu/index.php">GALPROP</a>: Numerical code for calculating the propagation of relativistic charged particles and the diffuse emissions they produce (now compatible with HEALPix 3.11)
 </li>
 
 <li>

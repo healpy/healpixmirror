@@ -14,7 +14,7 @@
 
 <td width="75" align="center">
     <a href="pdf/intro.pdf" target="_top"
-  onClick="_gaq.push(['_trackEvent', 'PDF', 'Download', 'PDF Introduction']);"
+  onClick="_ga('send', 'event', 'PDF', 'Download', 'PDF Introduction');"
 >pdf</a>
 <br>
 (448 KB)
@@ -33,7 +33,7 @@
 
 <td width="75" align="center">
     <a href="pdf/install.pdf" target="_top"
-  onClick="_gaq.push(['_trackEvent', 'PDF', 'Download', 'PDF Installation']);"
+  onClick="_ga('send', 'event', 'PDF', 'Download', 'PDF Installation');"
 >pdf</a>
 <br>
 (256 KB)
@@ -53,7 +53,7 @@
 
 <td width="75" align="center">
     <a href="pdf/facilities.pdf" target="_top"
-  onClick="_gaq.push(['_trackEvent', 'PDF', 'Download', 'PDF F90 Facilities']);"
+  onClick="_ga('send', 'event', 'PDF', 'Download', 'PDF F90 Facilities');"
 >pdf</a>
 <br>
 (528 KB)
@@ -73,7 +73,7 @@
 
 <td width="75" align="center">
     <a href="pdf/subroutines.pdf" target="_top"
-  onClick="_gaq.push(['_trackEvent', 'PDF', 'Download', 'PDF F90 Subroutines']);"
+  onClick="_ga('send', 'event', 'PDF', 'Download', 'PDF F90 Subroutines');"
 >pdf</a>
 <br>
 (880 KB)
@@ -93,7 +93,7 @@
 
 <td width="75" align="center">
     <a href="pdf/idl.pdf" target="_top"
-  onClick="_gaq.push(['_trackEvent', 'PDF', 'Download', 'PDF IDL Facilities']);"
+  onClick="_ga('send', 'event', 'PDF', 'Download', 'PDF IDL Facilities');"
 >pdf</a>
 <br>
 (1256 KB)
@@ -113,7 +113,7 @@
 
 <td width="75" align="center">
     <a href="pdf/csub.pdf" target="_top"
-  onClick="_gaq.push(['_trackEvent', 'PDF', 'Download', 'PDF C subroutines']);"
+  onClick="_ga('send', 'event', 'PDF', 'Download', 'PDF C subroutines');"
 >pdf</a>
 <br>
 (120 KB)
