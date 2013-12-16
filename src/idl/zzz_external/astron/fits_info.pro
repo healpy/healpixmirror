@@ -105,6 +105,7 @@ pro fits_info, filename, SILENT=silent,TEXTOUT=textout, N_ext=n_ext, extname=ext
 ;          OPENR,/COMPRESS  B. Roukema/WL    Apr 2010
 ;       Increased nmax (max number of extensions) from 400 to 2000   Sept 2012
 ;       Correctly fills EXTNAME when SILENT is set    EH   Jan 2013
+;       Turned ptr to long64 in order to read very large files EH Dec 2013
 ;-
  On_error,2
  compile_opt idl2
@@ -143,7 +144,7 @@ pro fits_info, filename, SILENT=silent,TEXTOUT=textout, N_ext=n_ext, extname=ext
      nbuf= nmax
      extname = strarr(nmax)
 
-     ptr = 0l
+     ptr = 0LL
      START:  
      ON_IOerror, BAD_FILE
      descript = ''
