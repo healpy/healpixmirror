@@ -1,7 +1,7 @@
 <?php require('_header.inc.php'); ?>
 
 <p>The HEALPix documentation is currently available for downloading in <a href="pdf/pdf_index.pdf"
-  onClick="_gaq.push(['_trackEvent', 'PDF', 'Download', 'PDF Index']);"
+  onClick="_ga('send', 'event', 'PDF', 'Download', 'PDF Index');"
 >pdf</a> and can be browsed in <a href="html/main.htm">html</a>
 
               
