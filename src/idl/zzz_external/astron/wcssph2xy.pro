@@ -224,6 +224,7 @@
 ;       3.5.1  May 2013  W. Landsman Allow GLS as a synonym for SFL
 ;       3.6    Jul 2013  J. P. Leahy added XPH projection, apply polar offsets
 ;                        only for cylindrical & conic projections. 
+;       3.6.1  Dec 2013  W. Landsman Polar offsets done in radians
 ;-
 
 PRO wcssph2xy,longitude,latitude,x,y,map_type, ctype=ctype,$
@@ -233,6 +234,7 @@ PRO wcssph2xy,longitude,latitude,x,y,map_type, ctype=ctype,$
               badindex = badindex
 
 compile_opt idl2, hidden
+
 
 ; DEFINE ANGLE CONSTANTS
  pi = !DPI
@@ -341,6 +343,7 @@ if ((n_elements(crval) ne 0) && (n_elements(crval) ne 2)) then $
  if N_elements(crval) GE 2 then begin
         wcs_rotate, lng, lat, phi, theta, crval, pv1 = pv1, $
                 latpole = latpole, longpole=longpole, theta0 = theta0
+	
         phi   /= radeg
         theta /= radeg
  endif else begin
@@ -348,7 +351,7 @@ if ((n_elements(crval) ne 0) && (n_elements(crval) ne 2)) then $
      theta = lat/radeg
  endelse
 
- IF cylindrical || conic THEN BEGIN
+  IF cylindrical || conic  THEN BEGIN
 ; Make small offsets at poles to allow the transformations to be
 ; completely invertible. They are necessary in cylindrical & conic 
 ; projections since the pole is mapped to a line in the projection plane. 
@@ -357,16 +360,16 @@ if ((n_elements(crval) ne 0) && (n_elements(crval) ne 2)) then $
      IF N_elements(north_offset) EQ 0 then north_offset = 1.d-7
      IF N_elements(south_offset) EQ 0 then south_offset = 1.d-7
 
-     bad = where(abs(theta - 90d0) lt north_offset*radeg)
-     IF (bad[0] ne -1) THEN BEGIN
+     bad = where(abs(theta - pi2) lt north_offset, Nbad)
+     IF (Nbad GT 0) THEN BEGIN
          MESSAGE,/INFORM,'Some input points are too close to the NORTH pole.'
-         theta[bad] = 90d0 - north_offset*RADEG
+         theta[bad] = pi2 - north_offset
          IF KEYWORD_SET(badindex) THEN badindex = bad
      ENDIF
-     bad = where(abs(theta + 90d0) lt south_offset*radeg)
-     IF (bad[0] ne -1) THEN BEGIN
+     bad = where(abs(theta + pi2) lt south_offset, Nbad)
+     IF (Nbad GT 0) THEN BEGIN
          MESSAGE,/INFORM,'Some input points are too close to the SOUTH pole.'
-         lat[bad] = south_offset*radeg - 90d0
+         lat[bad] = south_offset - pi2
          IF KEYWORD_SET(badindex) THEN BEGIN
              badindex = [badindex, bad]
              badindex = badindex[sort(badindex)]

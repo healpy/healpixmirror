@@ -30,7 +30,8 @@
 ;    title  - Scalar Title for outermost base widget.
 ;
 ;    pos - 2 element array containing the normalized X and Y position to
-;            display the widget on the screen. 
+;            display the widget on the screen.    [0,0] is the upper left
+;            hand corner.
 ;
 ;    top_line - first line in the string array to display (default is 0)
 ;

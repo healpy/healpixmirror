@@ -65,6 +65,7 @@
 ;       Traps put in to detect no rotation and avoid rounding errors for
 ;       common special cases. PV1 introduced. Comments updated & corrected.
 ;                                            J. P. Leahy July 2013.
+;       Avoid roundoff error when longitude = +/- 180 W. Landsman Dec 2013 
 ;       
 ;-
 
@@ -171,7 +172,9 @@ pro wcs_rotate, longitude, latitude, phi, theta, crval, LONGPOLE = longpole, $
         r = transpose(r)
  endif else begin
         phi = longitude
-        phi1 = double(longitude)/radeg
+	phi1 = dblarr(N_elements(longitude) ) 
+	g = where(abs(longitude) NE 180.0d, Ng)    ;Avoid roundoff error
+	if Ng GT 0 then phi1[g] = double(longitude[g])/radeg
         theta1 = double(latitude)/radeg
  endelse
 
