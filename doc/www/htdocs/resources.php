@@ -72,7 +72,10 @@ software can be used to simulate lensed polarized CMB maps in HEALPix format usi
 
 <li>
 Visualization tools supporting HEALPix maps in FITS format:
-<a href="http://aladin.u-strasbg.fr/">Aladin&nbsp;Sky&nbsp;Atlas</a> (which can overlay any astronomical map or catalog), <a href="http://helios.av.it.pt/projects/healpixviewer">HealpixViewer</a>, <a href="http://lambda.gsfc.nasa.gov/toolbox/tb_skyviewer_ov.cfm">SkyViewer</a>
+<a href="http://aladin.u-strasbg.fr/">Aladin&nbsp;Sky&nbsp;Atlas</a> (which can overlay any astronomical map or catalog), 
+<a href="http://helios.av.it.pt/projects/healpixviewer">HealpixViewer</a>,
+<a href="http://www.ast.cam.ac.uk/~vlad/univiewer/index.html">Univiewer</a>,
+<a href="http://lambda.gsfc.nasa.gov/toolbox/tb_skyviewer_ov.cfm">SkyViewer</a>
 </li>
 
 <li>

@@ -160,7 +160,8 @@ as can be seen from the <a href="resources.php">Resources</a> and <a href="galle
 			<ul>
 			<li>
                   	<a href="documentation.php">Comprehensive documentation</a> 
-			(<a href="../doc/pdf/pdf_index.pdf">PDF</a> and 
+			(<a href="../doc/pdf/pdf_index.pdf"
+                         onClick="_ga('send', 'event', 'PDF', 'Download', 'PDF Index');">PDF</a> and 
 			<a href="../doc/html/main.htm">HTML</a>); 
 			web-based and email <a href="support.php">support</a>
                 	</li>
