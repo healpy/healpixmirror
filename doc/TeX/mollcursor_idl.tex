@@ -59,25 +59,35 @@ middle button = print out this information in the IDL command window
 
 right button = quit mollcursor\\
 \\
-{\bf{Note on Mac OS X, X11 and IDL cursor:}} on some versions%
+{\bf{Note on Mac OS X, X11 and IDL cursor:}} 
+depending on the Mac OS X version%
 \footnote{the command {\tt sw\_vers -productVersion}
- can be used to know the Mac OS X version being used}%
-of Mac OS X
-, starting with Tiger (ie,
-10.4.*), the IDL function {\tt cursor}, and therefore \healpix \thedocid,
+ can be used to know the Mac OS X version being used}
+and most importantly on the X Window System being used,%
+\footnote{the command
+{\tt ls -lrt  \$HOME/Library/Preferences/*[xX]11*plist}
+can be used to determine the X implementation and its configuration file}
+the IDL function {\tt cursor}, and therefore \healpix \thedocid,
 gnomcursor, $\ldots$ will not
-work properly under X11. To solve this problem, type \\
-under Tiger (10.4): \\
-{\small {\tt defaults write com.apple.x11 wm\_click\_through -bool true}} \\
+work properly under X11. To solve this problem, type the relevant line below at your X11 prompt and restart X11.\\
+If you are using Apple's X11, type under Tiger (10.4): \\
+{\footnotesize {\tt defaults write com.apple.x11 wm\_click\_through -bool true}} \\
 or, under Leopard (10.5), Snow Leopard (10.6), Lion (10.7): \\
-{\small {\tt defaults write org.x.x11 wm\_click\_through -bool true}} \\
-at your X11 prompt and restart X11 (tips found respectively at
-\htmladdnormallink{\small
-{http://marc.sauvage.free.fr/SApMUG/Xnotes.html}}{http://marc.sauvage.free.fr/SApMUG/Xnotes.html}
-and 
+{\footnotesize {\tt defaults write org.x.x11 wm\_click\_through -bool true}} \\
+If you are using Xquartz (default under Montain Lion (10.8)): \\
+{\footnotesize {\tt defaults write org.macosforge.xquartz.X11 wm\_click\_through -bool true}}\\
+and if you are using MacPort's X11 (package xorg-server):\\
+{\footnotesize {\tt defaults write org.macports.X11 wm\_click\_through -bool true}}\\
+(see
+%\htmladdnormallink{\small
+%{http://marc.sauvage.free.fr/SApMUG/Xnotes.html}}{http://marc.sauvage.free.fr/SApMUG/Xnotes.html},
+%\htmladdnormallink{\small 
+%{https://sympa.obspm.fr/wws/arc/micros-mac/2008-06/msg00001.html}}{https://sympa.obspm.fr/wws/arc/micros-mac/2008-06/msg00001.html}
+%and 
 \htmladdnormallink{\small 
-{https://sympa.obspm.fr/wws/arc/micros-mac/2008-06/msg00001.html}}{https://sympa.obspm.fr/wws/arc/micros-mac/2008-06/msg00001.html}). 
-To make the patch permanent, add the line above into your .bashrc (or
+{http://www.idlcoyote.com/misc\_tips/maccursor.html}}{http://www.idlcoyote.com/misc_tips/maccursor.html}
+and \linklatexhtml{''\healpix Installation Documentation''}{install.pdf}{install.htm}). \\
+To make the patch permanent, add that line into your .bashrc (or
 .cshrc, depending on your shell) file, and restart X11.\\
 And finally, \thedocid\ obviously requires the '3 button mouse' to be enabled,
 which can be done in the X11 Preferences menu.

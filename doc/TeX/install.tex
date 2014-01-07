@@ -653,8 +653,8 @@ In case of problems, see \htmladdnormallink{\tt
 \label{sec:freef90compilers}
 The {\bf free} Fortran90/95 compilers that can be used do compile \healpix include: 
     \begin{itemize}
-      \item {\bf Intel Fortran} Compiler for Linux based computers (versions 11.*
-or 12.*) \hfill \\
+      \item {\bf Intel Fortran} Compiler for Linux based computers (versions 11.*,
+12.*, or 13.*) \hfill \\
          \htmladdnormallink{{\tt
         http://software.intel.com/en-us/articles/intel-compilers/}}{http://software.intel.com/en-us/articles/intel-compilers/}
         %%%%%http://www.intel.com/software/products/compilers/downloads/forlin.htm}}{http://www.intel.com/software/products/compilers/downloads/forlin.htm}
@@ -668,7 +668,7 @@ or 12.*) \hfill \\
          and later) compile HEALPix correctly, and v4.2.1 has given satisfying
          results so far, including native OpenMP support.
      \item {\bf G95} compiler available for Linux, Mac OSX, Windows, Sun and HP platforms
-         \hfill \\ \htmladdnormallink{{\tt http://g95.sf.net}}{http://g95.sf.net}
+         \hfill \\ \htmladdnormallink{{\tt http://www.g95.org}}{http://www.g95.org}
     \end{itemize}
 
 \subsection{Installation under Microsoft Windows}
@@ -873,15 +873,28 @@ administrator to adjust the local IDL script.
 
 \subsection{Mac OS X,  X11 and IDL cursor}
 If the IDL cursor does not work correctly on X11 windows under Mac OS X, and the
-2nd and 3rd button clicks are ineffective, type
+2nd and 3rd button clicks are ineffective, 
+type
+\begin{itemize}
+\item with Apple's X11:
 \begin{itemize}
 \item under Tiger (10.4.*): \\
 { {\tt defaults write com.apple.x11 wm\_click\_through -bool true}}
 \item under Leopard (10.5.*), Snow Leopard (10.6.*) and Lion (10.7.*): \\
 { {\tt defaults write org.x.x11 wm\_click\_through -bool true}}
 \end{itemize}
-at your X11 prompt and restart X11.
-(See also \htmlref{{\tt mollcursor}}{idl:mollcursor} documentation in \linklatexhtml{''IDL
+\item with Xquartz (default under Moutain Lion (10.8.*)):\\
+{{\tt defaults write org.macosforge.xquartz.X11 wm\_click\_through -bool true}}
+\item with MacPort's X11 (package xorg-server):\\
+{{\tt defaults write org.macports.X11 wm\_click\_through -bool true}}
+\end{itemize}
+at your X11 prompt and restart X11.\\
+Note that the command {\tt ls -lrt  \$HOME/Library/Preferences/*[xX]11*plist} 
+can be used to determine the X window system installed on
+your Mac.
+See also \htmladdnormallink{{\tt http://www.idlcoyote.com/misc\_tips/maccursor.html}}
+{http://www.idlcoyote.com/misc_tips/maccursor.html} and
+\htmlref{{\tt mollcursor}}{idl:mollcursor} documentation in \linklatexhtml{''IDL
 Facilities''}{idl.pdf}{idl.htm}).
 
 \subsection{Using GDL instead of IDL}
@@ -997,16 +1010,43 @@ transparent in the output PNG file.
 \section{Appendix I: Recent Changes and New Features}
 \label{sec:newfeatures}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% BEGIN LATEST CHANGES %%%%%%%%%%%%%
-\subsection{Bug corrections and Improvements in Version 3.11}
+\subsection{Bug corrections and Improvements in Version \hpxversion}
 % \subsubsection[General]{General}
 % \subsubsection[C]{\linklatexhtml{C}{csub.pdf}{csub.htm}}
 % \subsubsection[C++]{C++}
 % \subsubsection[Fortran]{%
 % 	Fortran 90 \linklatexhtml{facilities}{facilities.pdf}{facilities.htm} and
-% 	\linklatexhtml{subroutines}{subroutines.pdf}{subroutines.htm}
+% 	\linklatexhtml{subroutines}{subroutines.pdf}{subroutines.htm}}
 % \subsubsection[IDL]{\linklatexhtml{IDL}{idl.pdf}{idl.htm}}
 % \subsubsection[Java]{Java}
 % \subsubsection[Python]{Python}
+\subsubsection[General]{General}
+\subsubsection[C]{\linklatexhtml{C}{csub.pdf}{csub.htm}}
+\subsubsection[C++]{C++}
+\subsubsection[Fortran]{%
+	Fortran 90 \linklatexhtml{facilities}{facilities.pdf}{facilities.htm} and
+	\linklatexhtml{subroutines}{subroutines.pdf}{subroutines.htm}}
+\begin{itemize}
+	\item \healpix-F90 routines and facilities can now also be compiled with
+the free Fortran95 compiler \textbf{g95} (\htmladdnormallink{http://www.g95.org/}{http://www.g95.org/})
+\end{itemize}
+\subsubsection[IDL]{\linklatexhtml{IDL}{idl.pdf}{idl.htm}}
+\begin{itemize}
+\item addition of \htmlref{{\tt ialteralm}}{{idl:ialteralm}}
+
+\item \htmlref{{\tt cartview, gnomview, mollview,
+orthview}}{idl:mollview}: addition of  
+\mylink{idl:mollview:bad_color}{{\tt BAD\_COLOR}},
+\mylink{idl:mollview:bg_color}{{\tt BG\_COLOR}} and
+\mylink{idl:mollview:fg_color}{{\tt FG\_COLOR}} keywords to change the color of the
+missing pixels, background and foreground labels and lines.
+
+\end{itemize}
+\subsubsection[Java]{Java}
+\subsubsection[Python]{Python}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% END LATEST CHANGES %%%%%%%%%%%%%
+\subsection{Bug corrections and Improvements in Version 3.11 (2013-04)} 
 
 \subsubsection[General]{General}
 \label{sec:general3p11}
@@ -1042,7 +1082,7 @@ can now be compiled with {\em any} {\tt gcc} version.
 %	
 % \subsubsection[Java]{Java}
 % \subsubsection[Python]{Python}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% END LATEST CHANGES %%%%%%%%%%%%%
+
 \subsection{Bug corrections and Improvements in Version 3.10 (2013-03)}
 \subsubsection[General]{General}
 N/A%
