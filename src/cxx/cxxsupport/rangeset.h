@@ -160,7 +160,7 @@ template<typename T> class rangeset
     void intersect (const T &a, const T &b)
       {
       if (r.empty()) return; // nothing to remove
-      if ((b<=r[0]) || (a>=r.back())) {r.clear(); return; } // no overlap
+      if ((b<=r[0]) || (a>=r.back())) { r.clear(); return; } // no overlap
       if ((a<=r[0]) && (b>=r.back())) return; // full rangeset in interval
 
       tdiff pos2=iiv(b);
@@ -185,7 +185,7 @@ template<typename T> class rangeset
       return result;
       }
 
-    /*! After this opration, \a res contains all elements of the rangeset
+    /*! After this operation, \a res contains all elements of the rangeset
         in ascending order. */
     void toVector (std::vector<T> &res) const
       {
