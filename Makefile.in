@@ -85,7 +85,7 @@ export HEALPIX_TARGET EXTERNAL_CFITSIO CFITSIO_EXT_LIB CFITSIO_EXT_INC
 
 # ------------------------------ variables for Python healpy --------------------------
 
-CFITSIO_EXT_PREFIX=
+HPY_SETUP=
 # ------------------------------- global rules -------------------------
 
 all: $(ALL)
@@ -279,27 +279,45 @@ cpp-void:
 
 # ------------------------------- healpy rules ----------------------------
 
-# CFITSIO_EXT_LIB and _INC only are necessary when going thru a Makefile
 healpy-all:
 	@cd src/healpy; \
-	export EXTERNAL_CFITSIO=yes ; \
-	export CFITSIO_EXT_PREFIX=$(CFITSIO_EXT_PREFIX) ; \
-	export CFITSIO_EXT_LIB="-L$(CFITSIO_EXT_PREFIX)/lib -lcfitsio" ; \
-	export CFITSIO_EXT_INC="-I$(CFITSIO_EXT_PREFIX)/include" ; \
-	python setup.py build ; \
-	python setup.py install --user ; \
+	python $(HPY_SETUP) build ; \
+	python $(HPY_SETUP) install --user ; \
 	cd ../..
 
 healpy-test: healpy-all
-	@echo ' ' ;\
-	echo 'no healpy test currently available' ;\
-	echo ' ' ;\
+	@cd /tmp ; \
+	python -c "import pylab; import healpy; import numpy ; hpv=healpy.__version__ ; print '\n\n Welcome to Healpy %s! \n\n'%(hpv); healpy.mollview(numpy.arange(12),title='Healpy %s'%(hpv)); pylab.show()" ; \
+	cd $(HEALPIX)
 
 healpy-clean:
 	@cd src/healpy ; \
-	export CFITSIO_EXT_PREFIX=$(CFITSIO_EXT_PREFIX) ; \
-	python setup.py clean --all ; \
+	python $(HPY_SETUP) clean --all ; \
 	cd ../..
+
+
+
+# # CFITSIO_EXT_LIB and _INC only are necessary when going thru a Makefile
+# healpy-all:
+# 	@cd src/healpy; \
+# 	export EXTERNAL_CFITSIO=yes ; \
+# 	export CFITSIO_EXT_PREFIX=$(CFITSIO_EXT_PREFIX) ; \
+# 	export CFITSIO_EXT_LIB="-L$(CFITSIO_EXT_PREFIX)/lib -lcfitsio" ; \
+# 	export CFITSIO_EXT_INC="-I$(CFITSIO_EXT_PREFIX)/include" ; \
+# 	python setup.py build ; \
+# 	python setup.py install --user ; \
+# 	cd ../..
+
+# healpy-test: healpy-all
+# 	@cd /tmp ; \
+# 	python -c "import pylab; import healpy; import numpy ; hpv=healpy.__version__ ; print '\n\n Welcome to Healpy %s! \n\n'%(hpv); healpy.mollview(numpy.arange(12),title='Healpy %s'%(hpv)); pylab.show()" ; \
+# 	cd $(HEALPIX)
+
+# healpy-clean:
+# 	@cd src/healpy ; \
+# 	export CFITSIO_EXT_PREFIX=$(CFITSIO_EXT_PREFIX) ; \
+# 	python setup.py clean --all ; \
+# 	cd ../..
 
 healpy-tidy: healpy-clean
 

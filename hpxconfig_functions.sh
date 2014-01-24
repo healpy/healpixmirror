@@ -163,7 +163,7 @@ setCDefaults () {
 
     CC="gcc"
     OPT="-O2 -Wall"
-    AR="ar -rsv"
+    C_AR="ar -rsv"
     PIC="-fPIC" # works with gcc, icc and clang
     WLRPATH=""
 
@@ -196,7 +196,7 @@ add64bitCFlags () {
 	read answer
 	if [ "x$answer" = "xy" -o "x$answer" = "xY" ]; then
 	    OPT="$OPT $CF64"
-	    AR="$AR $AR64"
+	    C_AR="$C_AR $AR64"
 	fi
     fi
 }
@@ -216,9 +216,9 @@ askCUserMisc () {
     read answer
     [ "x$answer" != "x" ] && OPT=$answer
     
-    echoLn "enter archive creation (and indexing) command ($AR): "
+    echoLn "enter archive creation (and indexing) command ($C_AR): "
     read answer
-    [ "x$answer" != "x" ] && AR=$answer
+    [ "x$answer" != "x" ] && C_AR=$answer
     
     echoLn "enter full name of cfitsio library (lib${LIBFITS}.a): "
     read answer
@@ -288,7 +288,7 @@ editCMakefile () {
 	${SED} "s|^C_OPT.*$|C_OPT       = $OPT|"   |\
 	${SED} "s|^C_INCDIR.*$|C_INCDIR      = $INCDIR|"   |\
 	${SED} "s|^C_LIBDIR.*$|C_LIBDIR      = $LIBDIR|"   |\
-	${SED} "s|^C_AR.*$|C_AR        = $AR|"   |\
+	${SED} "s|^C_AR.*$|C_AR        = $C_AR|"   |\
 	${SED} "s|^C_CFITSIO_INCDIR.*$|C_CFITSIO_INCDIR = $FITSINC|" |\
 	${SED} "s|^C_CFITSIO_LIBDIR.*$|C_CFITSIO_LIBDIR = $FITSDIR|" |\
 	${SED} "s|^C_WLRPATH.*$|C_WLRPATH = $WLRPATH|" |\
@@ -457,31 +457,106 @@ Cpp_config () {
 #=====================================
 #=========== healpy Python pakage ===========
 #=====================================
+# #-------------
+# Healpy_config () {
+#     # CFITSIO: make a first guess
+#     LIBFITS=cfitsio
+#     fullPath FITSDIR
+#     guess2=`${DIRNAME} ${FITSDIR}`
+#     guess3=`${DIRNAME} ${FITSINC}`
+#     findFITSPrefix $FITSDIR $FITSINC ${guess2} ${guess3}
+#     # ask user
+#     echo "Enter directory prefix for CFitsio"
+#     echoLn " ie containing lib/libcfitsio.* and include/fitsio.h ($FITSPREFIX): "
+#     read answer
+#     [ "x$answer" != "x" ] && FITSPREFIX=$answer
+#     # double check
+#     inc="${FITSPREFIX}/include/fitsio.h"
+#     if [ ! -r $inc ]; then
+# 	echo "error: cfitsio include file $inc not found"
+# 	crashAndBurn
+#     fi
+#     # apply
+#     editHealpyMakefile
+
+#     # update paths for C and C++
+#     FITSDIR=${FITSPREFIX}/lib
+#     FITSINC=${FITSPREFIX}/include
+
+# }
+# #-------------
+# editHealpyMakefile () {
+
+
+#     echoLn "edit top Makefile for Python (healpy) ..."
+
+#     mv -f Makefile Makefile_tmp
+#     ${CAT} Makefile_tmp |\
+# # 	${SED} "s|^P_CFITSIO_EXT_LIB\(.*\)|P_CFITSIO_EXT_LIB = ${FITSDIR}/lib${LIBFITS}.a|" |\
+# # 	${SED} "s|^P_CFITSIO_EXT_INC\(.*\)|P_CFITSIO_EXT_INC = ${FITSINC}|" |\
+#  	${SED} "s|^CFITSIO_EXT_PREFIX\(.*\)|CFITSIO_EXT_PREFIX = ${FITSPREFIX}|" |\
+# 	${SED} "s|^ALL\(.*\) healpy-void\(.*\)|ALL\1 healpy-all \2|" |\
+# 	${SED} "s|^TESTS\(.*\) healpy-void\(.*\)|TESTS\1 healpy-test \2|" |\
+# 	${SED} "s|^CLEAN\(.*\) healpy-void\(.*\)|CLEAN\1 healpy-clean \2|" |\
+# 	${SED} "s|^DISTCLEAN\(.*\) healpy-void\(.*\)|DISTCLEAN\1 healpy-distclean \2|" |\
+# 	${SED} "s|^TIDY\(.*\) healpy-void\(.*\)|TIDY\1 healpy-tidy \2|" > Makefile
+	
+#     echo " done."
+#     edited_makefile=1
+
+# }
+
+
+
 #-------------
-Healpy_config () {
-    # CFITSIO: make a first guess
-    LIBFITS=cfitsio
-    fullPath FITSDIR
-    guess2=`${DIRNAME} ${FITSDIR}`
-    guess3=`${DIRNAME} ${FITSINC}`
-    findFITSPrefix $FITSDIR $FITSINC ${guess2} ${guess3}
-    # ask user
-    echo "Enter directory prefix for CFitsio"
-    echoLn " ie containing lib/libcfitsio.* and include/fitsio.h ($FITSPREFIX): "
+Healpy_config () {  # for healpy 1.7.0
+
+    PYTHON='python'
+    tmpfile=to_be_removed
+    HPY_SETUP='setup.py' # default setup
+
+    # ask for python command
+    echoLn "Enter python command [$PYTHON] "
     read answer
-    [ "x$answer" != "x" ] && FITSPREFIX=$answer
-    # double check
-    inc="${FITSPREFIX}/include/fitsio.h"
-    if [ ! -r $inc ]; then
-	echo "error: cfitsio include file $inc not found"
+    [ "x$answer" != "x" ] && PYTHON="$answer"
+
+    # test python version number
+    ${PYTHON} --version 1> ${tmpfile} 2>&1
+    python_version=`${CAT} ${tmpfile} | ${AWK} '{print \$NF}'` # current version
+    python_reqrd="2.4" # minimal version supported
+    p_v1=`echo ${python_version} | ${AWK} '{print $1*10}'`
+    p_v2=`echo ${python_reqrd}   | ${AWK} '{print $1*10}'`
+    ${RM} ${tmpfile}
+    if [ ${p_v1} -lt ${p_v2} ]; then
+	echo
+	echo "Python version (${python_version}) must be >= ${python_reqrd}"
+	echo
 	crashAndBurn
     fi
+
+    # special treatement for MacOSX
+    HPY_SETUP2='setup2.py' # backup setup
+    if [ "${OS}" = "Darwin" ]; then
+	# find out compiler and options used by python (and therefore healpy in setup.py)
+	HPY_CC=`${PYTHON}   -c "from distutils.sysconfig import get_config_var ; print get_config_var('CC')"`
+	HPY_OPTS=`${PYTHON} -c "from distutils.sysconfig import get_config_var ; print get_config_var('CFLAGS')"`
+
+	# test these options on a C code
+${CAT} > ${tmpfile}.c <<EOF
+int main(){
+}
+EOF
+	${HPY_CC} -E ${HPY_OPTS} ${tmpfile}.c -o ${tmpfile}.p  1>${DEVNULL} 2>&1
+	# if test fails, use back up setup.py
+	if [ ! -e ${tmpfile}.p ] ; then
+	    HPY_SETUP=${HPY_SETUP2}
+	fi
+	# clean up
+	${RM}  ${tmpfile}.*
+    fi
+
     # apply
     editHealpyMakefile
-
-    # update paths for C and C++
-    FITSDIR=${FITSPREFIX}/lib
-    FITSINC=${FITSPREFIX}/include
 
 }
 #-------------
@@ -489,12 +564,10 @@ editHealpyMakefile () {
 
 
     echoLn "edit top Makefile for Python (healpy) ..."
-
+    echo ${HPY_SETUP}
     mv -f Makefile Makefile_tmp
     ${CAT} Makefile_tmp |\
-# 	${SED} "s|^P_CFITSIO_EXT_LIB\(.*\)|P_CFITSIO_EXT_LIB = ${FITSDIR}/lib${LIBFITS}.a|" |\
-# 	${SED} "s|^P_CFITSIO_EXT_INC\(.*\)|P_CFITSIO_EXT_INC = ${FITSINC}|" |\
- 	${SED} "s|^CFITSIO_EXT_PREFIX\(.*\)|CFITSIO_EXT_PREFIX = ${FITSPREFIX}|" |\
+	${SED} "s|^HPY_SETUP.*$|HPY_SETUP    = ${HPY_SETUP}|" |\
 	${SED} "s|^ALL\(.*\) healpy-void\(.*\)|ALL\1 healpy-all \2|" |\
 	${SED} "s|^TESTS\(.*\) healpy-void\(.*\)|TESTS\1 healpy-test \2|" |\
 	${SED} "s|^CLEAN\(.*\) healpy-void\(.*\)|CLEAN\1 healpy-clean \2|" |\
@@ -692,14 +765,14 @@ idl_config () {
 #   checkF90Fitsio: check that CFITSIO library contains Fortran wrapper
 #   checkF90FitsioLink: check that CFITSIO library links to Fortran test code
 #   checkF90FitsioVersion: check that CFITSIO library is recent enough
-#   GuessCompiler: tries to guess compiler from operating system
+#   GuessF90Compiler: tries to guess compiler from operating system
 #####   askFFT: ask user for his choice of fft, find fftw library
 #   askOpenMP: ask user for compilation of OpenMP source files
 #   askF90PIC: ask user for -fPIC compilation of code
 #   patchF90: all patches to apply to F90 and/or C compilers
 #   countUnderScore: match trailing underscores with fftw
 #   IdentifyCParallCompiler: identify C compiler used for parallel compilation of SHT routines
-#   IdentifyCompiler : identify Non native f90 compiler
+#   IdentifyF90Compiler : identify Non native f90 compiler
 #   add64bitF90Flags: add 64 bit flags to F90 (and C) compiler
 #   countF90Bits: count number of addressing bits in code produced by F90 compiler
 #   countCBits:   count number of addressing bits in code produced by C   compiler
@@ -739,7 +812,7 @@ setF90Defaults () {
     FPP="-D"
     PARALL=""
     PRFLAGS=""
-    AR="ar rv"
+    F90_AR="ar rv"
     FTYPE=""
     PPFLAGS=""
     FF64=""
@@ -910,10 +983,10 @@ EOF
  
 # -----------------------------------------------------------------
 
-GuessCompiler () {
+GuessF90Compiler () {
     case $OS in
 	AIX)
-	    IdentifyCompiler;;
+	    IdentifyF90Compiler;;
 	SunOS)
 	    sun_modules
 	    FFLAGS=`echo $FFLAGS | ${SED} "s/-I/-M/g"`
@@ -925,13 +998,13 @@ GuessCompiler () {
 	    OFLAGS="-O"
 	    PRFLAGS="-mp";;
 	Linux)
-	    AR="ar -rsv" # archive with index table
+	    F90_AR="ar -rsv" # archive with index table
   	    OFLAGS="-O"
-	    IdentifyCompiler;;
+	    IdentifyF90Compiler;;
 	Darwin)
   	    OFLAGS="-O"
-	    AR="libtool -static -s -o"  # archive with index table
-	    IdentifyCompiler;;
+	    F90_AR="libtool -static -s -o"  # archive with index table
+	    IdentifyF90Compiler;;
 	OSF*)
 	    OS="OSF"
 	    OFLAGS="-O5 -fast"
@@ -945,7 +1018,7 @@ GuessCompiler () {
 	    PRFLAGS="-P openmp";;
 	CYGWIN*)
 	    OFLAGS="-O"
-	    IdentifyCompiler;;
+	    IdentifyF90Compiler;;
 	*)
 	    echo "\"$OS\" is not supported yet"
 	    crashAndBurn;;
@@ -1139,9 +1212,10 @@ IdentifyCParallCompiler () {
 }
 # -----------------------------------------------------------------
 
-IdentifyCompiler () {
+IdentifyF90Compiler () {
 # For Linux and Darwin
 # Lahey and Fujitsu still have to be tested
+	F90_SHARED=0 # do NOT know how to create a shared library
         nima=`$FC -V 2>&1 | ${GREP} -i imagine1 | ${WC} -l`
         nnag=`$FC -V 2>&1 | ${GREP} -i nagware  | ${WC} -l`
         nifc=`$FC -V 2>&1 | ${GREP} -i intel    | ${WC} -l`
@@ -1191,6 +1265,7 @@ IdentifyCompiler () {
 		CFLAGS="$CFLAGS -DINTEL_COMPILER" # to combine C and F90
 		MODDIR="-module " # output location of modules
 		[ $OS = "Linux" ] && WLRPATH="-Wl,-R"
+		F90_SHARED=1
         elif [ $npgf != 0 ] ; then
                 FCNAME="Portland Group Compiler"
 		PRFLAGS="-mp" # Open MP enabled, to be tested
@@ -1213,7 +1288,7 @@ IdentifyCompiler () {
 		CFLAGS="$CFLAGS -DRS6000" # to combine C and F90
 		FPP="-WF,-D"
 		PRFLAGS="-qsmp=omp" # Open MP enabled
-		AR="ar -rsv" # archive with index table
+		F90_AR="ar -rsv" # archive with index table
 		FF64="-q64"
 		CF64="-q64"
 		AR64="-X64"
@@ -1245,6 +1320,7 @@ IdentifyCompiler () {
 		CC="gcc"
 		FI8FLAG="-i8" # change default INTEGER to 64 bits
 		MODDIR="-fmod=" # output location of modules
+		F90_SHARED=1
 	elif [ $ngfortran != 0 ] ; then
 	        FCNAME="gfortran compiler"
 		FFLAGS="$FFLAGS -DGFORTRAN -fno-second-underscore"
@@ -1255,6 +1331,7 @@ IdentifyCompiler () {
 		FI8FLAG="-fdefault-integer-8" # change default INTEGER to 64 bits
 		[ $OS = "Linux" ] && WLRPATH="-Wl,-R"
 		MODDIR="-J" # output location of modules
+		F90_SHARED=1
 	elif [ $npath != 0 ] ; then
 	        FCNAME="PathScale EKOPath compiler"
 		FFLAGS="$FFLAGS"
@@ -1286,7 +1363,7 @@ add64bitF90Flags () {
 	if [ "x$answer" = "xy" -o "x$answer" = "xY" ]; then
 	    FFLAGS="$FFLAGS $FF64"
 	    CFLAGS="$CFLAGS $CF64"
-	    AR="$AR $AR64"
+	    F90_AR="$F90_AR $AR64"
 	fi
     fi
 }
@@ -1479,9 +1556,9 @@ askUserMisc () {
     fi
     echo "  C subroutines will be compiled with $CC $CFLAGS"
 
-    echoLn "enter command for library archiving ($AR): "
+    echoLn "enter command for library archiving ($F90_AR): "
     read answer
-    [ "x$answer" != "x" ] && AR="$answer"
+    [ "x$answer" != "x" ] && F90_AR="$answer"
 
     echoLn "enter full name of cfitsio library (lib${LIBFITS}.a): "
     read answer
@@ -1564,7 +1641,7 @@ editF90Makefile () {
 	${SED} "s|^F90_INCDIR.*$|F90_INCDIR	= $F90_INCDIR|" |\
 	${SED} "s|^F90_LIBDIR.*$|F90_LIBDIR	= $F90_LIBDIR|" |\
 	${SED} "s|^F90_BUILDDIR.*$|F90_BUILDDIR	= $F90_BUILDDIR|" |\
-	${SED} "s|^F90_AR.*$|F90_AR        = $AR|" |\
+	${SED} "s|^F90_AR.*$|F90_AR        = $F90_AR|" |\
 	${SED} "s|^F90_FFTSRC.*$|F90_FFTSRC	= $FFTSRC|" |\
 	${SED} "s|^F90_ADDUS.*$|F90_ADDUS	= $ADDUS|" |\
 ####	${SED} "s|^F90_PARALL.*$|F90_PARALL	= $PARALL|" |\
@@ -1655,7 +1732,7 @@ f90_config () {
     HPX_CONF_F90=$1
     setF90Defaults
     askUserF90
-    GuessCompiler
+    GuessF90Compiler
     askUserMisc
     askPgplot
     askOpenMP

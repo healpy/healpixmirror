@@ -119,6 +119,38 @@ updateVersion () {
 
 }
 
+
+gettingHealpy(){
+    HPY_VERSION=1.7.0
+    wrkdir = /tmp
+    cd ${wrkdir}
+
+    wget https://pypi.python.org/packages/source/h/healpy/healpy-${HPY_VERSION}.tar.gz --no-check-certificate -O healpy-${HPY_VERSION}.tar.gz
+
+    tar -xvzpf healpy-${HPY_VERSION}.tar.gz
+    \rm -rf healpy
+    mv healpy-${HPY_VERSION} healpy
+
+    cd ${wrkdir}/healpy
+    filein='setup.py'
+    fileout='setup2.py'
+    cat ${filein} | sed "s|'--disable-shared',|'--disable-shared', '--disable-dependency-tracking',|g" > ${fileout}
+    grep -H 'disable' ${filein}
+    grep -H 'disable' ${fileout}
+
+    cd healpixsubmodule/src/cxx/autotools
+    chmod ugo+x install-sh
+    for dir in Healpix_cxx c_utils cxxsupport libfftpack libsharp ; do
+	echo ${dir}
+	\rm -r ${dir}
+	\ln -sf ../../../../../cxx/${dir} .
+    done
+
+    cd ${here}
+    mv ${wrkdir}/healpy src
+
+}
+
 # #---------------
 # updateCopyrightDate () {
 
@@ -194,11 +226,17 @@ if [ "$answer" != "yes" ]; then
     exit 0
 fi
 
+here=`\pwd`
+
 do_split=0
 # echo "Do you want to split the produced tar files (for HFI DPC)"
 # echoLn "[NO/yes]                       "
 # read answer
 # [ "$answer" == "yes" ] && do_split=1
+
+
+echoGrn "getting healpy (python) directory"
+gettingHealpy
 
 echoRed "removing CVS directories..."
 find . -type d -name CVS -exec \rm -rf {} \;
@@ -209,7 +247,6 @@ find . -type d -name .svn -exec \rm -rf {} \;
 OS=`uname -s`
 updateVersion
 
-here=`\pwd`
 mkdir -p doc/html
 mkdir -p doc/pdf
 

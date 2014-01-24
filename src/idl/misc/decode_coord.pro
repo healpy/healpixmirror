@@ -36,8 +36,7 @@ function decode_coord, coord_code, nlong=nlong, nlat=nlat, flong=flong, flat = f
 ; CATEGORY:
 ;
 ; CALLING SEQUENCE:
-;  result = DECODE_COORD(Coord_code, [Nlong=, Nlat=, Flong=, Flat=,
-;  Slong=, Slat=])
+;  result = DECODE_COORD(Coord_code, [Nlong=, Nlat=, Flong=, Flat=, Error=])
 ; 
 ; INPUTS:
 ;  Coord_code = 1 character string coding for coordinate system
@@ -57,7 +56,9 @@ function decode_coord, coord_code, nlong=nlong, nlat=nlat, flong=flong, flat = f
 ;  Coord_code         result   Nlong   Nlat    Flong      Flat   Slong   Slat
 ;         'E'     'Ecliptic'  'Long'  'Lat'   'ELON-'   'ELAT-'
 ;         'Q'   'Equatorial'    'RA'  'Dec'   'RA---'   'DEC--'   'Alpha' 'Delta'
-;         'G'     'Galactic'  'Long'  'Lat'   'GLON-'   'GLAT-'       'l'     'b'
+;         'C'    same as for 'Q'
+;         'G'     'Galactic'  'Long'  'Lat'   'GLON-'   'GLAT-'       'l'        'b'
+;       other      'Unknown'  '????'  '???'   '-----'   '-----'
 ;      
 ; COMMON BLOCKS:
 ; SIDE EFFECTS:
@@ -69,6 +70,9 @@ function decode_coord, coord_code, nlong=nlong, nlat=nlat, flong=flong, flat = f
 ;         Feb   2000,  added error variable
 ;         Feb   2002,  added missing '-' in flong and flat (pointed
 ;            out by P.R.McCullough)
+;         Jan 2013,      EH IAP, 
+;               treat 'C' as 'Q'
+;               defines all output values for unknown coordinates
 ;-
 
 
@@ -82,27 +86,30 @@ ENDIF
 
 code = STRMID(STRTRIM(STRUPCASE(coord_code),2),0,1) ; first letter, upper case
 
-case code of
-    'G' : begin
+case 1 of
+    (code eq 'G') : begin
         coordinate = 'Galactic'
-        nlong = 'Long' & Nlat = 'Lat'
-        flong = 'GLON-' & Flat = 'GLAT-'
+        nlong = 'Long'  & nlat = 'Lat'
+        flong = 'GLON-' & flat = 'GLAT-'
         error = 0
         end
-    'E' : begin
+    (code eq 'E') : begin
         coordinate = 'Ecliptic'
-        nlong = 'Long' & Nlat = 'Lat'
-        flong = 'ELON-' & Flat = 'ELAT-'
+        nlong = 'Long'  & nlat = 'Lat'
+        flong = 'ELON-' & flat = 'ELAT-'
         error = 0
         end
-    'Q' : begin
+    (code eq 'Q' || code eq 'C') : begin
         coordinate = 'Equatorial'
-        nlong = 'RA'   & Nlat = 'Dec'
-        flong = 'RA---' & Flat = 'DEC--'
+        nlong = 'RA'    & nlat = 'Dec'
+        flong = 'RA---' & flat = 'DEC--'
         error = 0
         end
     else : begin
         print,'coordinate code unknown'
+        coordinate = 'Unknown'
+        nlong = '????'  & nlat = '???'
+        flong = '-----' & flat = '-----'
         error = 1
     end
 endcase
