@@ -1,5 +1,6 @@
 AC_INIT([healpix_cxx], [3.11.2])
 AM_INIT_AUTOMAKE([foreign subdir-objects -Wall -Werror])
+AM_MAINTAINER_MODE([enable])
 
 dnl
 dnl Needed for linking on Windows.
