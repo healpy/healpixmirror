@@ -13,15 +13,20 @@ SD :=$(shell pwd)
 OBJ:=$(obj:%=$(OD)/%)
 LIB:=$(LIBDIR)/libhealpix$(LIBSUFFIX)
 
+# executable creation
+.DEFAULT_GOAL := all
 
-%_mkdir:
-	@if [ ! -d $* ]; then $(MKDIR) $* ; fi 
-
-
-$(OD)/%.o: $(SD)/%.f90 $(inc) $(OD)_mkdir
-	$(FC) $(FFLAGS) -c $< -o $@ $(MODDIR)$(OD)
-
-default:  $(exec) 
+all: $(OD)_mkdir $(exec)
 
 $(exec): $(OBJ) $(LIB)
 	$(FC) $(FFLAGS) -o $(exec) $(OBJ) $(LDFLAGS)
+
+# create build sub-directory
+%_mkdir:
+	@if [ ! -d $* ]; then $(MKDIR) $* ; fi 
+
+# objects creation
+$(OD)/%.o: $(SD)/%.f90 $(inc)
+	$(FC) $(FFLAGS) -c $< -o $@ $(MODDIR)$(OD)
+
+

@@ -14,22 +14,13 @@ MKDIR   = mkdir -p
 OD :=$(BUILDDIR)/$(fac)
 SD :=$(shell pwd)
 OBJ:=$(obj:%=$(OD)/%)
-###LIB:=$(OD)/libhpxgif$(LIBSUFFIX)
 LIB:=$(LIBDIR)/libhpxgif$(LIBSUFFIX)
 
 
-%_mkdir:
-	@if [ ! -d $* ]; then $(MKDIR) $* ; fi 
+# library creation
+.DEFAULT_GOAL := all
 
-
-$(OD)/%.o: $(SD)/%.f90 $(inc) $(OD)_mkdir
-	$(FC) $(FFLAGS) -c $< -o $@ $(MODDIR)$(OD)
-
-$(OD)/%.o: $(SD)/%.c $(inc) $(OD)_mkdir
-	$(CC) $(CFLAGS) -c $< -o $@
-
-
-default: $(LIB)
+all: $(OD)_mkdir $(LIB)
 
 $(LIB): $(OBJ)
 	$(AR)  $(LIB) $(OBJ)
@@ -38,11 +29,17 @@ $(LIB): $(OBJ)
 	cp $$p $(INCDIR)/; \
 	done
 
-# $(LIB): $(OBJ)
-# 	$(AR)  $(LIB) $(OBJ)
-# 	@cp -p $(LIB) $(LIBDIR)/
-# 	@cp -p $(LIB) $(LIBDIR)/libgif$(LIBSUFFIX)
-# 	@for p in $(OD)/*.$(MOD); do \
-# 	cp $$p $(INCDIR)/; \
-# 	done
+# create build sub-directory
+%_mkdir:
+	@if [ ! -d $* ]; then $(MKDIR) $* ; fi 
+
+
+# objects creation
+$(OD)/%.o: $(SD)/%.f90 $(inc)
+	$(FC) $(FFLAGS) -c $< -o $@ $(MODDIR)$(OD)
+
+$(OD)/%.o: $(SD)/%.c $(inc)
+	$(CC) $(CFLAGS) -c $< -o $@
+
+
 

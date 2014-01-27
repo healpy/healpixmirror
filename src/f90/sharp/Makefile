@@ -2,9 +2,6 @@
 
 fac     = sharp
 inc     = 
-#VPATH	= $(BINDIR)
-#exec	= $(BINDIR)/$(fac)
-#src	= $(fac).f90
 obj	= libsharp_all.o
 
 MKDIR   = mkdir -p
@@ -15,17 +12,19 @@ OBJ:=$(obj:%=$(OD)/%)
 LIB:=$(LIBDIR)/libsharp_healpix_f$(LIBSUFFIX)
 
 
-%_mkdir:
-	@if [ ! -d $* ]; then $(MKDIR) $* ; fi 
+# library creation
+.DEFAULT_GOAL := all
 
-$(OD)/%.o: $(SD)/%.c $(inc) $(OD)_mkdir
-	$(CC) $(CFLAGS) -I c_utils -I libfftpack -I libsharp -I libsharp_healpix_f -c $< -o $@
-
-default: $(LIB)
+all: $(OD)_mkdir $(LIB)
 
 $(LIB): $(OBJ)
 	$(AR)  $(LIB) $(OBJ)
 
-# $(LIB): $(OBJ)
-# 	$(AR)  $(LIB) $(OBJ)
-# 	@cp -p $(LIB) $(LIBDIR)/
+# create build sub-directory
+%_mkdir:
+	@if [ ! -d $* ]; then $(MKDIR) $* ; fi 
+
+# object creation
+$(OD)/%.o: $(SD)/%.c $(inc)
+	$(CC) $(CFLAGS) -I c_utils -I libfftpack -I libsharp -I libsharp_healpix_f -c $< -o $@
+
