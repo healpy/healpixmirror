@@ -4,15 +4,7 @@
 #  script to pack a release
 #
 #  cd /tmp
-#  svn co  [-r BRANCH] https://healpix.svn.sourceforge.net/svnroot/healpix/trunk Healpix_[VERSION]
-#
-# #  git clone https://github.com/healpy/healpy.git healpy ; cd healpy ; git checkout 1.4.1 ; git branch
-# #  \rm -rf hpbeta .git* ;  ln -s ../cxx hpbeta ;  cd .. 
-# #  cp -p healpy Healpix_[VERSION]/src
-#
-#  wget https://github.com/healpy/healpy/tarball/1.4.1 -O healpy.tar.gz
-#  tar -xvzpf healpy.tar.gz;  cd healpy-healpy-* ; \rm -r hpbeta .git* ; ln -s ../cxx hpbeta ; cd ..
-#  mv healpy-healpy-* Healpix_*/src/healpy
+#  svn co  [-r BRANCH] https://svn.code.sf.net/p/healpix/code/trunk Healpix_[VERSION]
 #
 #  cd Healpix_[VERSION]
 #  ./pack
@@ -117,12 +109,18 @@ updateVersion () {
       grep "$outstring" $file
   done
 
+  # update test/README file (2014-01)
+  echoBlu "editing  test/README  file"
+  outstring="test data for HEALPix $version"
+  sed -i "s|test data for HEALPix.*$|$outstring|" ${file}
+  grep "$outstring" $file
+
 }
 
 
 gettingHealpy(){
     HPY_VERSION=1.7.0
-    wrkdir = /tmp
+    wrkdir=/tmp
     cd ${wrkdir}
 
     wget https://pypi.python.org/packages/source/h/healpy/healpy-${HPY_VERSION}.tar.gz --no-check-certificate -O healpy-${HPY_VERSION}.tar.gz

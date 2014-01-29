@@ -156,12 +156,12 @@ pro mollview, file_in, select_in, $
 ;           - a 7-character string, starting with '#', specifying the color in
 ;             HTML Hexadecimal fashion (eg, '#ff0000' for red).
 ;          Default: neutral grey (=2, =[175, 175, 175], ='#afafaf')
-;          See also: BG_COLOR, FG_COLOR
+;          See also: BG_COLOR, FG_COLOR, TRANSPARENT
 ;
 ;       BG_COLOR: color given to pixels outside the sphere
 ;          See BAD_COLOR for expected format
 ;          Default: white (=1, =[255, 255, 255], ='#ffffff')
-;          See also: BAD_COLOR, FG_COLOR
+;          See also: BAD_COLOR, FG_COLOR, TRANSPARENT
 ;
 ;       CHARSIZE : overall multiplicative factor applied to the size of all
 ;               characters appearing on the plot
@@ -475,8 +475,8 @@ pro mollview, file_in, select_in, $
 ;     		if not set the title will be File (see SUBTITLE)
 ;
 ;       TRANSPARENT: some pixels are transparent in the produced PNG file
-;            if set to 1: bad pixels (usually grey) are transparent
-;            if set to 2: white background pixels are transparent
+;            if set to 1: bad pixels (usually grey or BAD_COLOR) are transparent
+;            if set to 2: background pixels (usually white or BG_COLOR) are transparent
 ;            if set to 3: all of the above
 ;            only valid with PNG
 ;

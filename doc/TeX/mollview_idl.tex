@@ -164,13 +164,15 @@ Examples \#4 below (on page~\pageref{page:example_hires_cutsky}). \\
       HTML Hexadecimal fashion (eg, '\#ff0000' for red).\\
    \default{neutral grey (=2, =[175, 175, 175], ='\#afafaf')}
    \seealso \mylink{idl:mollview:bg_color}{BG\_COLOR},
-\mylink{idl:mollview:fg_color}{FG\_COLOR}} \\
+\mylink{idl:mollview:fg_color}{FG\_COLOR}, 
+\mylink{idl:mollview:transparent}{TRANSPARENT}} \\
  
 {BG\_COLOR=}\mytarget{idl:mollview:bg_color}  & all   &  
 \parbox[t]{\hsize}{color given to background pixels (outside the sphere).\\
     See \mylink{idl:mollview:bad_color}{BAD\_COLOR} for expected format.\\
     \default{white (=1, =[255, 255, 255], ='\#ffffff')}\\
-\seealso \mylink{idl:mollview:fg_color}{FG\_COLOR}}\\
+\seealso \mylink{idl:mollview:fg_color}{FG\_COLOR},
+\mylink{idl:mollview:transparent}{TRANSPARENT}}\\
 
 {CHARSIZE=}\mytarget{idl:mollview:charsize}  & all   &  
 	overall multiplicative factor applied to the size of
@@ -777,8 +779,9 @@ Currently {\bf can not} be used with
 		If set to 1, the input data pixels with value \htmlref{{\tt
 !healpix.bad\_value}}{idl:init_healpix} ($=-1.6375\,10^{30}$) 
 will appear totally transparent on the output PNG file (instead of the usual
-grey).\\ 
-If set to 2, the background pixels will be transparent (instead of the usual white)\\
+grey or \mylink{idl:mollview:bad_color}{BAD\_COLOR}).\\ 
+If set to 2, the background pixels will be transparent (instead of the usual
+white or \mylink{idl:mollview:bg_color}{BG\_COLOR})\\
 If set to 3, both the grey and white pixels will look transparent.\\
 Active only in conjunction with \mylink{idl:mollview:png}{PNG}}\\
 
