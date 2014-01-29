@@ -110,7 +110,8 @@ updateVersion () {
   done
 
   # update test/README file (2014-01)
-  echoBlu "editing  test/README  file"
+  file='test/README'
+  echoBlu "editing  $file  file"
   outstring="test data for HEALPix $version"
   sed -i "s|test data for HEALPix.*$|$outstring|" ${file}
   grep "$outstring" $file
@@ -347,24 +348,26 @@ echoBlu "--------------------"
 relsuf="${version}_${shortdate}"
 package="Healpix_${relsuf}.tar.gz"
 rnfile="Healpix_${relsuf}.ReleaseNotes.txt"
+#tar_opts="-cvzpf"
+tar_opts="-czpf"
 echoBlu "creating package ../${package}"
 cd ..
-tar -cvzpf ${package} `basename ${here}`
+tar ${tar_opts} ${package} `basename ${here}`
 cd ${here}
 
 if [ $do_split == 1 ] ; then
     echo "splitting tar file"
-    tar -cvzpf "../Hpx_java.tar.gz" src/java
+    tar ${tar_opts} "../Hpx_java.tar.gz" src/java
     \rm -rf src/java
-    tar -cvzpf "../Hpx_test.tar.gz" test
+    tar ${tar_opts} "../Hpx_test.tar.gz" test
     \rm -rf test
-    tar -cvzpf "../Hpx_doc.tar.gz"  doc
+    tar ${tar_opts} "../Hpx_doc.tar.gz"  doc
     \rm -rf doc
-    tar -cvzpf "../Hpx_data.tar.gz" data
+    tar ${tar_opts} "../Hpx_data.tar.gz" data
     \rm -rf data
     
     cd ..
-    tar -cvzpf "Healpix_src_${relsuf}.tar.gz" `basename ${here}`
+    tar ${tar_opts} "Healpix_src_${relsuf}.tar.gz" `basename ${here}`
     cd ${here}
 fi
 
