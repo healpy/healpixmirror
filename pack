@@ -121,10 +121,11 @@ updateVersion () {
 
 gettingHealpy(){
     HPY_VERSION=1.7.0
+    hpy_repo="https://pypi.python.org/packages/source/h/healpy"
     wrkdir=/tmp
     cd ${wrkdir}
 
-    wget https://pypi.python.org/packages/source/h/healpy/healpy-${HPY_VERSION}.tar.gz --no-check-certificate -O healpy-${HPY_VERSION}.tar.gz
+    wget ${hpy_repo}/healpy-${HPY_VERSION}.tar.gz --no-check-certificate -O healpy-${HPY_VERSION}.tar.gz
 
     tar -xvzpf healpy-${HPY_VERSION}.tar.gz
     \rm -rf healpy
@@ -150,48 +151,7 @@ gettingHealpy(){
 
 }
 
-# #---------------
-# updateCopyrightDate () {
-
-#     dir=${here}
-#     instring='Copyright (C) 1997-2013'
-#     outstring='Copyright (C) 1997-2013'
-#     #tmpfile='/tmp/tmp_updatecopyright.txt'
-
-#     echo "In                $dir"
-#     echo "Changing          $instring -> $outstring"
-
-#     inlist=`find $dir -type f | grep -v \\.svn | grep -v java | grep -vi bk | xargs grep "$instring" | awk -F: '{print $1}'`
-
-#     for file in $inlist ; do
-# 	ls -l $file
-# 	grep "$instring" $file
-# 	sed -i "s|$instring|$outstring|" ${file}
-# 	grep "$outstring" $file
-#     done
-# }
-# #---------------
-# updateHEALPixWebSite () {
-
-#     dir=${here}
-#     instring='healpix.sourceforge.net'
-#     outstring='healpix.sourceforge.net'
-#     #tmpfile='/tmp/tmp_updatecopyright.txt'
-
-#     echo "In                $dir"
-#     echo "Changing          $instring -> $outstring"
-
-#     inlist=`find $dir -type f | grep -v \\.svn | grep -v java | grep -v cxx | grep -vi bk | xargs grep "$instring" | awk -F: '{print $1}'`
-
-#     for file in $inlist ; do
-# 	ls -l $file
-# 	grep "$instring" $file
-# 	sed -i "s|$instring|$outstring|" ${file}
-# 	grep "$outstring" $file
-#     done
-# }
-#---------------
-# cf hand_editions.sh
+#=======================================
 
 NO_COLOR='\x1b[0m'
 RED_COLOR='\x1b[31;01m'
@@ -296,7 +256,7 @@ mkdir -p ${docautodir}/html
 \rm -f ${docautodir}/html/*
 cd doc/TeX
 make pdf
-make html
+make html > /dev/null
 cd $here
 
 echoGrn "dealing with Ximview doc"
@@ -331,15 +291,22 @@ done
 # cd ${here}
 # updateHEALPixWebSite
 # cd ${here}
+# cf : hand_editions.sh
 
-[ -d gpl_header ] && \rm -rf gpl_header
+p='gpl_header'
+echoRed "removing $p directory..."
+[ -d ${p} ] && \rm -rf ${p}
 
 echoRed "removing C++ make_release..."
 \rm -rf src/cxx/autotools/make_release
 
+for p in getit hand_editions.sh; do
+    echo "removing ${p} ..."
+    \rm -f $p
+done
+
 echoRed "removing myself..."
 \rm -f $0
-\rm -f 'getit'
 
 echoBlu "--------------------"
 echoBlu $version $reldate
