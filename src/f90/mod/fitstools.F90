@@ -2594,10 +2594,10 @@ contains
           call ftdkey(unit, kwd, status)
           status = 0
           ! append
-          call ftprec(unit, cardfits, status)
+          call ftprec(unit, trim(cardfits), status)
        endif
     case (1) ! append (for HISTORY and COMMENT)
-       call ftprec(unit, cardfits, status)
+       call ftprec(unit, trim(cardfits), status)
     case default
        write(unit=*,fmt=*)" Unexpected card format in fits header :"
        write(unit=*,fmt="(a80)") card
