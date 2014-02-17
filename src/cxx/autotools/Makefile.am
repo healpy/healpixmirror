@@ -151,7 +151,8 @@ libhealpix_cxx_la_LIBADD = $(CFITSIO_LIBS)
 
 bin_PROGRAMS = alm2map_cxx anafast_cxx calc_powspec hotspots_cxx map2tga \
   median_filter_cxx mult_alm rotalm_cxx smoothing_cxx syn_alm_cxx udgrade_cxx \
-  udgrade_harmonic_cxx hpxtest
+  udgrade_harmonic_cxx
+check_PROGRAMS = hpxtest
 alm2map_cxx_SOURCES = Healpix_cxx/alm2map_cxx.cc
 alm2map_cxx_LDADD = libhealpix_cxx.la
 alm2map_cxx_LDFLAGS = -static-libtool-libs
