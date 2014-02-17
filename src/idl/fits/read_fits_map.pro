@@ -177,18 +177,19 @@ if (count eq 0) then coordsys = ' ' else coordsys = strtrim(coordsys,2)
 selectread, filename, T_sky, exten=extension_id, /no_pdu
 
 ; find pixels to keep
-max_pix  = n_elements(T_sky[*,0]) - 1L
-firstpix = 0L
+;max_pix  = n_elements(T_sky[*,0]) - 1L ; costly in memory
+max_pix = (size(T_sky))[1] - 1LL
+firstpix = 0LL
 lastpix = max_pix
 cut = 0
 if (defined(pixel)) then begin
-    if (n_elements(pixel) ge 1 && pixel[0] ge 0) then firstpix  = LONG(pixel[0])
+    if (n_elements(pixel) ge 1 && pixel[0] ge 0) then firstpix  = LONG64(pixel[0])
     if (n_elements(pixel) eq 2) then begin
         if (pixel[1] lt pixel[0]) then begin
             print,pixel
             message,'Invalid pixel range'
         endif
-        lastpix   = LONG(pixel[1])
+        lastpix   = LONG64(pixel[1])
     endif
     cut = 1
 endif

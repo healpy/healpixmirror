@@ -109,7 +109,8 @@ n_out = n_elements(out_pix)
 
 iid2 = defined(id2)? id2 : 0
 iid3 = defined(id3)? id3 : 0
-partial = (n_elements(in_pix) eq n_elements(in_values[*,iid2,iid3]))
+;partial = (n_elements(in_pix) eq n_elements(in_values[*,iid2,iid3]))
+partial = (n_elements(in_pix) eq (size(in_values))[1])
 
 if (n_elements(in_pix) gt 0 && ~partial) then begin
     message,syntax,/info

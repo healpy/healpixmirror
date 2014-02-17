@@ -25,6 +25,36 @@
 ;  For more information about HEALPix see http://healpix.sourceforge.net
 ;
 ; -----------------------------------------------------------------------------
+function all_dims, array, index
+; --------------------------------------------------
+;  dim = all_dims(array, [Index])
+;  dim : output 8-element vector
+;  array : input array
+;  index: optional 1-based index, can be a vector
+;
+;  dim2 = all_dims(array,2) 
+;  is more economical in memory (and problably faster) than
+;  dim2 = n_elements(array[0,*])
+;
+; examples:
+;   array = fltarr(10,20,30)
+;    print,all_dims(array)   -> 10, 20 , 30, 1, 1, 1, 1, 1
+;    print,all_dims(array,1) -> 10
+;    print,all_dims(array,2) -> 20
+;    print,all_dims(array,3) -> 30
+;    print,all_dims(array,4) -> 1
+;    print,all_dims(array,[3,1,2])  ->  30, 10, 20
+;
+; v 1.0:  EH, 2014-02-17
+; --------------------------------------------------
+;
+sz = size(array, /L64, /structure)
+mydims = (sz.dimensions * 1LL) 
+if (sz.n_elements gt 0) then mydims >= 1LL ; existing array: replace 0s by 1s to be closer to n_elements(array[*,0]) answer
+output = defined(index) ? mydims[index-1] : mydims
+return, output
+end
+
 pro list_all_ttypes, file, ttype, extn, nbefore
 
 case datatype(file) of
@@ -259,7 +289,8 @@ pol_data = 0.
 if (kw_save) then begin            
     icolumn = (defined(select_in)) ? (select_in - 1) : 0
     RESTORE, file_in, /VERBOSE
-    dim2 = n_elements(data[0,*])
+    ;dim2 = n_elements(data[0,*])
+    dim2 = all_dims(data, 2)
     if (icolumn ge dim2) then message,'selected column not available in array read from saveset'
     data = data[*,icolumn]
     if (do_rescale) then begin
@@ -282,8 +313,10 @@ endif
 ;--------------------------------------------------------------
 if (online_array) then begin
     title_display = ' on line processing '
-    dim1 = n_elements(file_in[*,0])
-    dim2 = n_elements(file_in[0,*])
+;     dim1 = n_elements(file_in[*,0])
+;     dim2 = n_elements(file_in[0,*])
+    dim1 = all_dims(file_in, 1)
+    dim2 = all_dims(file_in, 2)
     ; *********** polarization ***************
     if (do_polarization) then begin
         if (dim2 lt 3) then begin ; 3 rows or less -> crash
