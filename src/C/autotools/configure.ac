@@ -59,6 +59,10 @@ AC_CHECK_HEADERS([fitsio.h], [:], AC_MSG_ERROR([could not find the cfitsio heade
 CFLAGS=$save_CFLAGS
 LIBS=$save_LIBS
 
+dnl This macro affects conditional compilation inside some of the source files.
+dnl FIXME: do we want to make cfitsio optional? It is required for healpix_cxx.
+AC_DEFINE([ENABLE_FITSIO])
+
 AC_PROG_LIBTOOL
 
 dnl
