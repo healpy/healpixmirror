@@ -140,10 +140,12 @@ gettingHealpy(){
 
     cd healpixsubmodule/src/cxx/autotools
     chmod ugo+x install-sh
+    \ln -sf ../../../../../cxx .
     for dir in Healpix_cxx c_utils cxxsupport libfftpack libsharp ; do
 	echo ${dir}
 	\rm -r ${dir}
-	\ln -sf ../../../../../cxx/${dir} .
+	\ln -sf cxx/${dir} .
+#	\ln -sf ../../../../../cxx/${dir} .
     done
 
     cd ${here}

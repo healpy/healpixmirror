@@ -449,11 +449,14 @@ We have not attempted to provide the best optimisation flags for all
 operating systems. The configure
 script will have a guess at optimisation options for some systems, but it
 is up to the user to figure out an optimal set\footnote{In particular, the Intel Fortran
-Compiler, available for free for PC's with Intel-like processors, have a set of
-optimization options for each of Intel processor families (Pro, II, MMX, 4). Please consult
+Compiler, available for free for Linux systems with Intel-like processors, have
+specific tuning options for each Intel processor family and instructions set. Please consult
 the online help ({\tt ifort -help}) or PDF documentation ({\tt
-/opt/intel\_fc\_80/doc/} or {\tt /opt/intel/fc/9.*/doc}) or HTML documentation
-({\tt /opt/intel/fce/10.*/doc/Doc\_Index.htm}) for further information.}. From our experience,
+/opt/intel/composer*/Documentation/en\_US/Release\_NotesF.pdf}) or HTML documentation
+({\tt 
+/opt/intel/composer*/Documentation/en\_US/documentation\_f.htm}) for further
+information.}. 
+From our experience,
 we have not found significant accumulation of numerical error even
 when using the most aggressive optimisation level available. \\
 If the HEALPIX configuration file is sourced as described in \S~\ref{subsub:conf}, the full path to the F90
@@ -653,10 +656,11 @@ In case of problems, see \htmladdnormallink{\tt
 \label{sec:freef90compilers}
 The {\bf free} Fortran90/95 compilers that can be used do compile \healpix include: 
     \begin{itemize}
-      \item {\bf Intel Fortran} Compiler for Linux based computers (versions 11.*,
-12.*, or 13.*) \hfill \\
+      \item {\bf Intel Fortran} Compiler for Linux based computers (versions
+11.* to 14.*\footnote{problems have been reported with one of the code ({\tt sky\_ng\_sim}) when compiled with
+{\tt ifort 14.0.1.106}}) \hfill \\
          \htmladdnormallink{{\tt
-        http://software.intel.com/en-us/articles/intel-compilers/}}{http://software.intel.com/en-us/articles/intel-compilers/}
+        http://software.intel.com/en-us/intel-compilers}}{http://software.intel.com/en-us/intel-compilers}
         %%%%%http://www.intel.com/software/products/compilers/downloads/forlin.htm}}{http://www.intel.com/software/products/compilers/downloads/forlin.htm}
       \item {\bf GNU Fortran 95} compiler (gfortran) included in GNU Compiler Collection {\em GCC} version 4.0.0
          and up and available for Linux, Mac OSX, Windows, Sun ... platforms

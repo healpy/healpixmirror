@@ -11,6 +11,12 @@ OBJ:=$(obj:%=$(OD)/%)
 ###LIB:=$(OD)/libsharp_healpix_f$(LIBSUFFIX)
 LIB:=$(LIBDIR)/libsharp_healpix_f$(LIBSUFFIX)
 
+# add internal name of shared library
+ifneq ($(strip $(FLAGNAMELIB)),)
+NAMELIB = $(FLAGNAMELIB)$(notdir $(LIB))
+else
+NAMELIB = 
+endif
 
 # library creation
 .DEFAULT_GOAL := all
@@ -18,7 +24,7 @@ LIB:=$(LIBDIR)/libsharp_healpix_f$(LIBSUFFIX)
 all: $(OD)_mkdir $(LIB)
 
 $(LIB): $(OBJ)
-	$(AR)  $(LIB) $(OBJ)
+	$(AR) $@ $(NAMELIB) $(OBJ)
 
 # create build sub-directory
 %_mkdir:

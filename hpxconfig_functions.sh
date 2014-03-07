@@ -186,7 +186,7 @@ setCDefaults () {
 
     FITSINC="/usr/local/include"
 
-    DOSHARED=0
+    DO_C_SHARED=0
 }
 # -------------
 add64bitCFlags () {
@@ -254,14 +254,14 @@ askCUserMisc () {
     fi
 
     echoLn "A static library is produced by default. Do you also want a shared library ?"
-    if [ $DOSHARED -eq 1 ]; then
+    if [ ${DO_C_SHARED} -eq 1 ]; then
 	echoLn "(Y|n) "
 	read answer
-	[ "x$answer" = "xn" -o "x$answer" = "xN" ] && DOSHARED=0
+	[ "x$answer" = "xn" -o "x$answer" = "xN" ] && DO_C_SHARED=0
     else
 	echoLn "(y|N) "
 	read answer
-	[ "x$answer" = "xy" -o "x$answer" = "xY" ] && DOSHARED=1
+	[ "x$answer" = "xy" -o "x$answer" = "xY" ] && DO_C_SHARED=1
     fi
 }
 #-------------
@@ -270,7 +270,7 @@ editCMakefile () {
     echoLn "Editing top Makefile  for C ..."
 
     clibtypes='c-static'
-    if [ $DOSHARED -eq 1 ]; then
+    if [ ${DO_C_SHARED} -eq 1 ]; then
 	if [ "${OS}" = "Darwin" ]; then
 	    clibtypes="${clibtypes} c-dynamic"
 	else
@@ -787,6 +787,7 @@ idl_config () {
 #   editF90Makefile: create makefile from template
 #   generateConfF90File: generates configuration file for F90
 #   offerF90Compilation: propose to perform F90 compilation
+#   f90_shared: deal with shared F90 library
 #   f90_config: top routine for F90
 #
 #-------------
@@ -1215,7 +1216,7 @@ IdentifyCParallCompiler () {
 IdentifyF90Compiler () {
 # For Linux and Darwin
 # Lahey and Fujitsu still have to be tested
-	F90_SHARED=0 # do NOT know how to create a shared library
+	DO_F90_SHARED=0 # do NOT know how to create a shared library
         nima=`$FC -V 2>&1 | ${GREP} -i imagine1 | ${WC} -l`
         nnag=`$FC -V 2>&1 | ${GREP} -i nagware  | ${WC} -l`
         nifc=`$FC -V 2>&1 | ${GREP} -i intel    | ${WC} -l`
@@ -1265,7 +1266,7 @@ IdentifyF90Compiler () {
 		CFLAGS="$CFLAGS -DINTEL_COMPILER" # to combine C and F90
 		MODDIR="-module " # output location of modules
 		[ $OS = "Linux" ] && WLRPATH="-Wl,-R"
-		F90_SHARED=1
+		DO_F90_SHARED=1
         elif [ $npgf != 0 ] ; then
                 FCNAME="Portland Group Compiler"
 		PRFLAGS="-mp" # Open MP enabled, to be tested
@@ -1320,7 +1321,7 @@ IdentifyF90Compiler () {
 		CC="gcc"
 		FI8FLAG="-i8" # change default INTEGER to 64 bits
 		MODDIR="-fmod=" # output location of modules
-		F90_SHARED=1
+		DO_F90_SHARED=1
 	elif [ $ngfortran != 0 ] ; then
 	        FCNAME="gfortran compiler"
 		FFLAGS="$FFLAGS -DGFORTRAN -fno-second-underscore"
@@ -1331,7 +1332,7 @@ IdentifyF90Compiler () {
 		FI8FLAG="-fdefault-integer-8" # change default INTEGER to 64 bits
 		[ $OS = "Linux" ] && WLRPATH="-Wl,-R"
 		MODDIR="-J" # output location of modules
-		F90_SHARED=1
+		DO_F90_SHARED=1
 	elif [ $npath != 0 ] ; then
 	        FCNAME="PathScale EKOPath compiler"
 		FFLAGS="$FFLAGS"
@@ -1654,6 +1655,7 @@ editF90Makefile () {
 	${SED} "s|^F90_OS.*$|F90_OS	= $OS|" |\
 	${SED} "s|^F90_I8FLAG.*$|F90_I8FLAG  = $FI8FLAG|" |\
 	${SED} "s|^F90_LIBSUFFIX.*$|F90_LIBSUFFIX = $F90_LIBSUFFIX|" |\
+	${SED} "s|^F90_FLAGNAMELIB.*$|F90_FLAGNAMELIB = $F90_FLAGNAMELIB|" |\
 	${SED} "s|^ALL\(.*\) f90-void\(.*\)|ALL\1 f90-all\2|" |\
 	${SED} "s|^TESTS\(.*\) f90-void\(.*\)|TESTS\1 f90-test\2|" |\
 	${SED} "s|^CLEAN\(.*\) f90-void\(.*\)|CLEAN\1 f90-clean\2|" |\
@@ -1727,6 +1729,36 @@ offerF90Compilation () {
 }
 
 # -----------------------------------------------------------------
+f90_shared () {
+    echoLn "A static library is produced by default. Do you rather want a shared library ?"
+    if [ ${DO_F90_SHARED} -eq 1 ]; then
+	echoLn "(Y|n) "
+	read answer
+	[ "x$answer" = "xn" -o "x$answer" = "xN" ] && DO_F90_SHARED=0
+    else
+	echoLn "(y|N) "
+	read answer
+	[ "x$answer" = "xy" -o "x$answer" = "xY" ] && DO_F90_SHARED=1
+    fi
+
+    if [ ${DO_F90_SHARED} -eq 1 ]; then
+	case $OS in
+	    Darwin)
+		F90_AR="${FC} ${F90_PIC} -dynamiclib -Wl,-undefined,dynamic_lookup -o "
+		F90_FLAGNAMELIB="" #"-Wl,-install_name,"
+		F90_LIBSUFFIX=".dylib";;
+	    Linux)
+		F90_AR="${FC} ${F90_PIC} -shared -o "
+		F90_FLAGNAMELIB="-Wl,-soname,"
+		F90_LIBSUFFIX=".so";;
+	    *)
+		F90_AR="${FC} ${F90_PIC} -shared -o "
+		F90_FLAGNAMELIB="-Wl,-soname,"
+		F90_LIBSUFFIX=".so";;
+	esac
+    fi
+}
+# -----------------------------------------------------------------
 
 f90_config () {
     HPX_CONF_F90=$1
@@ -1738,12 +1770,14 @@ f90_config () {
     askOpenMP
     askF90PIC
     patchF90
+    f90_shared
     #makeProfile
     generateConfF90File
     editF90Makefile
     [ $NOPROFILEYET = 1 ] && installProfile
 #    offerF90Compilation
 }
+
 
 #=====================================
 #=========== Check Configuration ===========

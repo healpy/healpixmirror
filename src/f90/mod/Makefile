@@ -37,13 +37,20 @@ SD :=$(shell pwd)
 OBJ:=$(obj:%=$(OD)/%)
 LIB:=$(LIBDIR)/libhealpix$(LIBSUFFIX)
 
+# add internal name of shared library
+ifneq ($(strip $(FLAGNAMELIB)),)
+NAMELIB = $(FLAGNAMELIB)$(notdir $(LIB))
+else
+NAMELIB = 
+endif
+
 # library creation
 .DEFAULT_GOAL := all
 
 all: $(OD)_mkdir $(LIB)
 
 $(LIB): $(OBJ) $(objsharp) $(incpix) $(incalm) $(incfits) $(incudgrade)
-	$(AR)  $(LIB) $(OBJ) $(objsharp)
+	$(AR) $@ $(NAMELIB) $(OBJ) $(objsharp)
 	@for p in $(OD)/*.$(MOD); do \
 	cp $$p $(INCDIR)/; \
 	done
