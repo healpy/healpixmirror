@@ -86,7 +86,7 @@ echoLn () {
 #-------------
 findFITSLib () {
     for dir in $* /usr/lib /usr/lib64 /usr/local/lib /usr/local/lib64 /usr/local/lib/cfitsio /usr/local/lib64/cftisio /usr/local/src/cfitsio ${HOME}/lib ${HOME}/lib64 ./src/cxx/${HEALPIX_TARGET}/lib/ /softs/cfitsio/3.24/lib ; do
-	if [ -r "${dir}/lib${LIBFITS}.a" -o -r "${dir}/lib${LIBFITS}.so" ] ; then
+	if [ -r "${dir}/lib${LIBFITS}.a" -o -r "${dir}/lib${LIBFITS}.so" -o -r "${dir}/lib${LIBFITS}.dylib" ] ; then
 	    FITSDIR=$dir
 	    break
 	fi	    
@@ -351,7 +351,7 @@ pickCppCompilation() {
 	    ii=$((ii+1))
 	done
 	echo "will compile with ${target} configuration"
-	export HEALPIX_TARGET=${target}
+	HEALPIX_TARGET=${target} ; export HEALPIX_TARGET
 	target_chosen=1
 	cd $HEALPIX
     fi

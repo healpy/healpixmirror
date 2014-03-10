@@ -17,6 +17,7 @@
 #
 # 2008-03-26, IAP, EH
 # 2009-01-08: added comments on shells above
+# 2014-03-10: more portable substring parsing
 #
 
 # version number
@@ -47,14 +48,17 @@ usage="Usage: ./$(basename $0) [?|-h|-L|-v]"
 usage2="Type    ./$(basename $0) -h    for extended help"
 # do not accept options starting with a non-dash or with double dash
 if [ ${#} -gt 0 ]; then
-	    if [ "${1:0:1}" != "-"  -o  "${1:0:2}" = "--"  -o "${1}" = "-" ]; then
-		echo 
-		echo "${usage}"
-		echo
-		echo "${usage2}"
-		echo
-		exit -1
-	    fi
+    arg=$1
+    one=${arg%${arg#?}}
+    two=${arg%${arg#??}}
+    if [ "${one}" != "-"  -o  "${two}" = "--"  -o "${arg}" = "-"  -o "x${arg}" = "x?" ]; then
+	echo 
+	echo "${usage}"
+	echo
+	echo "${usage2}"
+	echo
+	exit -1
+    fi
 fi
 
 while getopts 'hLv' OPTION
