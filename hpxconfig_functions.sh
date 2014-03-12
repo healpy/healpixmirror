@@ -846,12 +846,13 @@ setF90Defaults () {
 
 sun_modules () {
 tmpfile=to_be_removed
-${CAT} > ${tmpfile}.f90 << EOF
+suffix=.f90
+${CAT} > ${tmpfile}${suffix} << EOF
    module ${tmpfile}
        integer :: i
    end module ${tmpfile}
 EOF
-   $FC -c ${tmpfile}.f90 -o ${tmpfile}.o
+   $FC -c ${tmpfile}${suffix} -o ${tmpfile}.o
 
    if test -s ${tmpfile}.M  ; then
        MOD="M"
@@ -865,12 +866,13 @@ EOF
 # -----------------------------------------------------------------
 ifc_modules () {
 tmpfile=to_be_removed
-${CAT} > ${tmpfile}.f90 << EOF
+suffix=.f90
+${CAT} > ${tmpfile}${suffix} << EOF
    module ${tmpfile}
        integer :: i
    end module ${tmpfile}
 EOF
-   $FC -c ${tmpfile}.f90 -o ${tmpfile}.o 2> ${DEVNULL}
+   $FC -c ${tmpfile}${suffix} -o ${tmpfile}.o 2> ${DEVNULL}
 
    if test -s ${tmpfile}.d  ; then
     # version 5 and 6 of ifc
@@ -916,15 +918,16 @@ checkF90FitsioLink () {
 # check that F90 routines can link with F90-fitsio wrappers
 # requires compilation of F90 code
     tmpfile=to_be_removed
+    suffix=.f90
     # write simple program to link with fitsio
-cat > ${tmpfile}.f90 << EOF
+cat > ${tmpfile}${suffix} << EOF
     program needs_fitsio
 	character(len=6) :: string='abcdef'
 	call ftupch(string)
     end program needs_fitsio
 EOF
     # compile and link
-    ${FC} ${FFLAGS}  ${tmpfile}.f90 -o ${tmpfile}.x -L${FITSDIR} -l${LIBFITS} #${WLRPATH}
+    ${FC} ${FFLAGS}  ${tmpfile}${suffix} -o ${tmpfile}.x -L${FITSDIR} -l${LIBFITS} #${WLRPATH}
 
     # test
     if [ ! -s ${tmpfile}.x ]; then
@@ -947,8 +950,9 @@ checkF90FitsioVersion () {
 # check that FITSIO version is recent enough
 # requires compilation of F90 code
     tmpfile=./to_be_removed # do not forget ./ to allow execution
+    suffix=.f90
     # write simple test program
-cat > ${tmpfile}.f90 << EOF
+cat > ${tmpfile}${suffix} << EOF
     program date_fitsio
 	real:: version
 	call ftvers(version)
@@ -956,7 +960,7 @@ cat > ${tmpfile}.f90 << EOF
     end program date_fitsio
 EOF
     # compile and link
-    ${FC} ${FFLAGS}  ${tmpfile}.f90 -o ${tmpfile}.x -L${FITSDIR} -l${LIBFITS} ${WLRPATH_}
+    ${FC} ${FFLAGS}  ${tmpfile}${suffix} -o ${tmpfile}.x -L${FITSDIR} -l${LIBFITS} ${WLRPATH_}
 
     # run if executable
     if [ -x ${tmpfile}.x ]; then
@@ -1149,16 +1153,17 @@ patchF90 (){
 
 countUnderScore () {
 tmpfile=to_be_removed
-${CAT} > ${tmpfile}.f90 << EOF
+suffix=.f90
+${CAT} > ${tmpfile}${suffix} << EOF
     subroutine sub1()
       return
     end subroutine sub1
 EOF
  case $FTYPE in
   xlf)
-    $FC -qsuffix=f=f90 -c ${tmpfile}.f90 -o ${tmpfile}.o  2>&1 ${DEVNULL} ;;
+    $FC -qsuffix=f=f90 -c ${tmpfile}${suffix} -o ${tmpfile}.o  2>&1 ${DEVNULL} ;;
   *)
-    $FC -c ${tmpfile}.f90 -o ${tmpfile}.o  2>&1 ${DEVNULL} ;;
+    $FC -c ${tmpfile}${suffix} -o ${tmpfile}.o  2>&1 ${DEVNULL} ;;
  esac
 
     stwo=`${NM} ${tmpfile}.o | ${GREP} sub1__ | ${WC} -l`
@@ -1204,19 +1209,53 @@ EOF
 IdentifyCParallCompiler () {
 # add OpenMP flag for C compiler (currently only gcc and icc)
 #    clang support to be added soon
-    nicc=`$CC -V 2>&1 | ${GREP} -i intel    | ${WC} -l`
-    ngcc=`$CC --version 2>&1 | ${GREP} -i 'GCC' | ${WC} -l`
+    nicc=`$CC -V 2>&1          | ${GREP} -i intel | ${WC} -l`
+    ngcc=`$CC --version 2>&1   | ${GREP} -i 'GCC' | ${WC} -l`
     nclang=`$CC --version 2>&1 | ${GREP}  'clang' | ${WC} -l`
+    npgc=`$CC -V 2>&1          | ${GREP} -i portland | ${WC} -l` # portland C
+    npath=`$CC -v 2>&1         | ${GREP} -i ekopath  | ${WC} -l` # pathscale EKOPath
     PRCFLAGS=""
     if [ $nicc != 0 ] ; then
 	PRCFLAGS='-openmp' # -openmp-report0
     elif [ $ngcc != 0 ] ; then
 	PRCFLAGS='-fopenmp'
+    elif [ $npgc != 0 ] ; then
+	PRCFLAGS='-mp'
+    elif [ $npath != 0 ] ; then
+	PRCFLAGS='-mp'
     else
 	echo "$CC: Unknown C compiler"
 	echo "Enter flags for C compilation with OpenMP"
 	read answer
 	[ "x$answer" != "x" ] && PRCFLAGS="$answer"
+    fi
+}
+# -----------------------------------------------------------------
+
+IdentifyCCompiler () {
+    ngcc=`$CC --version 2>&1   | ${GREP} '(GCC)'     | ${WC} -l` # gcc
+    nicc=`$CC -V 2>&1          | ${GREP} -i intel    | ${WC} -l` # intel C compiler
+    nclang=`$CC --version 2>&1 | ${GREP} clang       | ${WC} -l` # clang
+    npgc=`$CC -V 2>&1          | ${GREP} -i portland | ${WC} -l` # portland C
+    npath=`$CC -v 2>&1         | ${GREP} -i ekopath  | ${WC} -l` # pathscale EKOPath
+    if [ $ngcc != 0 ] ; then
+	echo "$CC: GCC compiler"
+	CFLAGS="-O3 -std=c99"
+    elif [ $nicc != 0 ] ; then
+	echo "$CC: Intel C compiler"
+	CFLAGS="-O3 -std=c99"
+    elif [ $nclang != 0 ] ; then
+	echo "$CC: clang C compiler"
+	CFLAGS="-O3 -std=c99"
+    elif [ $npgc != 0 ] ; then
+	echo "$CC: Portland Group C compiler"
+	CFLAGS="-O3"
+    elif [ $npath != 0 ] ; then
+	echo "$CC: Pathscale EKOPath C compiler"
+	CFLAGS="-O3"
+    else
+	echo "$CC: unknown C compiler"
+	CFLAGS="-O"
     fi
 }
 # -----------------------------------------------------------------
@@ -1379,25 +1418,32 @@ add64bitF90Flags () {
 }
 # -----------------------------------------------------------------
 countF90Bits () {
+    # count bits in F90 compilation
     tmpfile=to_be_removed
-${CAT} > ${tmpfile}.f90 <<EOF
+    suffix=.f90
+    ${CAT} > ${tmpfile}${suffix} <<EOF
 program test
 end program test
 EOF
-
-     $FC $FFLAGS ${tmpfile}.f90 -o ${tmpfile} 1>${DEVNULL} 2>&1
-     f90_64=`${FILE} ${tmpfile} | ${GREP} 64 | ${WC} -l`
-     ${RM}  ${tmpfile}*
+    ${FC} ${FFLAGS} ${tmpfile}${suffix} -o ${tmpfile} 1>${DEVNULL} 2>&1
+    f90_ok=0
+    [ -s ${tmpfile} ] && f90_ok=1
+    f90_64=`${FILE} ${tmpfile} | ${GREP} 64 | ${WC} -l`
+    ${RM}  ${tmpfile}*
 }
 # -----------------------------------------------------------------
 countCBits () {
+    # count bits in C compilation
     tmpfile=to_be_removed
-${CAT} > ${tmpfile}.c <<EOF
+    suffix=.c
+    ${CAT} > ${tmpfile}${suffix} <<EOF
 int main(){
 }
 EOF
 
-    $CC $CFLAGS ${tmpfile}.c -o ${tmpfile} 1>${DEVNULL} 2>&1
+    $CC $CFLAGS ${tmpfile}${suffix} -o ${tmpfile} 1>${DEVNULL} 2>&1
+    c_ok=0
+    [ -s ${tmpfile} ] && c_ok=1
     c_64=`${FILE} ${tmpfile} | ${GREP} 64 | ${WC} -l`
     ${RM}  ${tmpfile}*
 }
@@ -1406,14 +1452,15 @@ checkF90Compilation () {
     # check that F90 compiler actually works
     # requires compilation and execution of F90 code
     tmpfile=./to_be_removed
-${CAT} > ${tmpfile}.f90 <<EOF
+    suffix=.f90
+    ${CAT} > ${tmpfile}${suffix} <<EOF
 program test
     print*,'hello'
 end program test
 EOF
     canrun=0
     cancompile=0
-    $FC $FFLAGS ${tmpfile}.f90 -o ${tmpfile}  1>${DEVNULL} 2>&1
+    $FC $FFLAGS ${tmpfile}${suffix} -o ${tmpfile}  1>${DEVNULL} 2>&1
     [ -s ${tmpfile} ] && cancompile=1
     if [ -x ${tmpfile} ] ; then
 	canrun=`${tmpfile} | grep hello | ${WC} -l`
@@ -1447,16 +1494,16 @@ checkF90LongLong () {
     # check that F90 support 8 byte integers
     # requires compilation and execution of F90 code
     tmpfile=./to_be_removed
-
+    suffix=.f90
 
     # conduct real test
-${CAT} > ${tmpfile}.f90 <<EOF
+    ${CAT} > ${tmpfile}${suffix} <<EOF
 program test
     if (selected_int_kind(16) > selected_int_kind(9)) print*,'OK'
 end program test
 EOF
     longlong=0
-    $FC $FFLAGS ${tmpfile}.f90 -o ${tmpfile}  1>${DEVNULL} 2>&1
+    $FC $FFLAGS ${tmpfile}${suffix} -o ${tmpfile}  1>${DEVNULL} 2>&1
     if [ -x ${tmpfile} ] ; then
 	longlong=`${tmpfile} | grep OK | ${WC} -l`
     fi
@@ -1540,6 +1587,7 @@ askUserMisc () {
     echoLn "enter name of your C compiler ($CC): "
     read answer
     [ "x$answer" != "x" ] && CC="$answer"
+    IdentifyCCompiler
 
     echoLn "enter compilation/optimisation flags for C compiler ($CFLAGS): "
     read answer
@@ -1547,6 +1595,18 @@ askUserMisc () {
 
     countF90Bits
     countCBits
+    if [ ${f90_ok} -eq 0 -o ${c_ok} -eq 0 ] ; then
+	echo
+	echo "ERROR!:"
+	if [ ${f90_ok} -eq 0 ] ; then
+	    echo " F90 Compilation ($FC $FFLAGS) failed!"
+	fi
+	if [ ${c_ok} -eq 0 ] ; then
+	    echo " C Compilation ($CC $CFLAGS) failed!"
+	fi
+	echo "Check the availability of the compiler(s) and the options used."
+	crashAndBurn
+    fi
     if [ $c_64 != $f90_64 ] ; then
 	echo "Warning: "
 	if [ $f90_64 != 0 ] ; then
@@ -1739,13 +1799,16 @@ offerF90Compilation () {
 
 # -----------------------------------------------------------------
 f90_shared () {
-    echoLn "A static library is produced by default. Do you rather want a shared library ?"
+    echo " "
+    echo " Experimental feature: "
+    echoLn "A static library is produced by default. Do you rather want a shared/dynamic library ?"
+    DO_F90_SHARED=0
     if [ ${DO_F90_SHARED} -eq 1 ]; then
-	echoLn "(Y|n) "
+	echoLn " (Y|n) "
 	read answer
 	[ "x$answer" = "xn" -o "x$answer" = "xN" ] && DO_F90_SHARED=0
     else
-	echoLn "(y|N) "
+	echoLn " (y|N) "
 	read answer
 	[ "x$answer" = "xy" -o "x$answer" = "xY" ] && DO_F90_SHARED=1
     fi
