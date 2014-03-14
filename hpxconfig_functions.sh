@@ -1530,10 +1530,10 @@ showDefaultDirs () {
 }
 
 updateDirs () {
-    F90_BINDIR=${F90_BINDIR}$DIRSUFF
-    F90_INCDIR=${F90_INCDIR}$DIRSUFF
-    F90_LIBDIR=${F90_LIBDIR}$DIRSUFF
-    F90_BUILDDIR=${F90_BUILDDIR}$DIRSUFF
+    F90_BINDIR=${F90_BINDIR}${DIRSUFF}
+    F90_INCDIR=${F90_INCDIR}${DIRSUFF}
+    F90_LIBDIR=${F90_LIBDIR}${DIRSUFF}
+    F90_BUILDDIR=${F90_BUILDDIR}${DIRSUFF}
 }
 
 showActualDirs () {
@@ -1816,19 +1816,46 @@ f90_shared () {
     if [ ${DO_F90_SHARED} -eq 1 ]; then
 	case $OS in
 	    Darwin)
-		F90_AR="${FC} ${F90_PIC} -dynamiclib -Wl,-undefined,dynamic_lookup -o "
+		F90_AR="${FC} ${F90PIC} -dynamiclib -Wl,-undefined,dynamic_lookup -o "
 		F90_FLAGNAMELIB="" #"-Wl,-install_name,"
 		F90_LIBSUFFIX=".dylib";;
 	    Linux)
-		F90_AR="${FC} ${F90_PIC} -shared -o "
+		F90_AR="${FC} ${F90PIC} -shared -o "
 		F90_FLAGNAMELIB="-Wl,-soname,"
 		F90_LIBSUFFIX=".so";;
 	    *)
-		F90_AR="${FC} ${F90_PIC} -shared -o "
+		F90_AR="${FC} ${F90PIC} -shared -o "
 		F90_FLAGNAMELIB="-Wl,-soname,"
 		F90_LIBSUFFIX=".so";;
 	esac
     fi
+}
+# -----------------------------------------------------------------
+writeF90pkgconfigFile (){
+    pkgconfigFile=${HEALPIX}/lib${DIRSUFF}/healpix.pc
+    echo
+    echo "Writing pkgconfig file: ${pkgconfigFile}"
+    ${CAT}<<EOF > ${pkgconfigFile}
+# HEALPix pkg-config file
+
+prefix=${HEALPIX}
+exec_prefix=\${prefix}/bin${DIRSUFF}
+libdir=\${prefix}/lib${DIRSUFF}
+includedir=\${prefix}/include${DIRSUFF}
+
+Name: HEALPix
+Description: F90 library for HEALPix (Hierarchical Equal-Area iso-Latitude) pixelisation of the sphere
+Version: ${HPX_VERSION}
+Requires: cfitsio
+Libs: -L\${libdir} -lhealpix -lhpxgif
+Cflags: -I\${includedir} ${PRFLAGS} ${F90PIC} 
+
+EOF
+
+    ${CAT} ${pkgconfigFile}
+    echo "           -------------- "
+    echo
+
 }
 # -----------------------------------------------------------------
 
@@ -1847,6 +1874,7 @@ f90_config () {
     generateConfF90File
     editF90Makefile
     [ $NOPROFILEYET = 1 ] && installProfile
+    writeF90pkgconfigFile
 #    offerF90Compilation
 }
 
@@ -1860,7 +1888,7 @@ checkConfFiles () {
     echo "__________________________________________________________________"
     for conffile in ${HPX_CONF_DIR}/*; do
 	echo "${conffile} : "
-	cat ${conffile}
+	${CAT} ${conffile}
 	echo
     done
     echo "__________________________________________________________________"
@@ -1979,7 +2007,7 @@ makeTopConf(){
 
     case $SHELL in
     sh|ksh|bash|zsh)
-	cat<<EOF >| ${HPX_CONF_MAIN}
+	${CAT}<<EOF >| ${HPX_CONF_MAIN}
 # configuration for Healpix $HPXVERSION
 HEALPIX=${HEALPIX} ; export HEALPIX 
 HPX_CONF_DIR=${HPX_CONF_DIR}
@@ -1990,7 +2018,7 @@ if [ -r ${HPX_CONF_C} ] ;   then . ${HPX_CONF_C} ;   fi
 EOF
     echo ' ' ;;
     csh|tcsh)
-	cat<<EOF >| ${HPX_CONF_MAIN}
+	${CAT}<<EOF >| ${HPX_CONF_MAIN}
 # configuration for Healpix $HPXVERSION
 setenv HEALPIX $HEALPIX
 setenv HPX_CONF_DIR ${HPX_CONF_DIR}
