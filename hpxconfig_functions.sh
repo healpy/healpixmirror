@@ -158,6 +158,12 @@ crashAndBurn () {
 #=====================================
 #=========== C pakage ===========
 #=====================================
+# setCDefaults
+# add64bitCFlags
+# askCUserMisc
+# editCMakefile
+# writeCpkgconfigFile
+# C_config
 
 setCDefaults () {
 
@@ -303,6 +309,34 @@ editCMakefile () {
     edited_makefile=1
 
 }
+# -----------------------------------------------------------------
+writeCpkgconfigFile (){
+    pkgconfigFile=${HEALPIX}/lib/chealpix.pc
+    echo
+    echo "Writing pkgconfig file: ${pkgconfigFile}"
+    ${CAT}<<EOF > ${pkgconfigFile}
+# HEALPix/C pkg-config file
+
+prefix=${HEALPIX}
+libdir=\${prefix}/lib
+includedir=\${prefix}/include
+
+Name: chealpix
+Description: C library for HEALPix (Hierarchical Equal-Area iso-Latitude) pixelisation of the sphere
+Version: ${HPX_VERSION}
+URL: http://healpix.sourceforge.net
+Requires: cfitsio 
+Libs: -L\${libdir} -lchealpix
+Cflags: -I\${includedir} ${PIC}
+
+EOF
+
+    ${CAT} ${pkgconfigFile}
+    echo "           -------------- "
+    echo
+
+}
+
 #-------------
 C_config () {
 
@@ -311,6 +345,7 @@ C_config () {
 #    makeCInstall
     editCMakefile
     [ $NOPROFILEYET = 1 ] && installProfile
+    writeCpkgconfigFile
 
 }
 
@@ -788,6 +823,7 @@ idl_config () {
 #   generateConfF90File: generates configuration file for F90
 #   offerF90Compilation: propose to perform F90 compilation
 #   f90_shared: deal with shared F90 library
+#   writeF90pkgconfigFile: writes pkg-config (.pc) file for F90 library
 #   f90_config: top routine for F90
 #
 #-------------
@@ -962,10 +998,10 @@ EOF
     # compile and link
     ${FC} ${FFLAGS}  ${tmpfile}${suffix} -o ${tmpfile}.x -L${FITSDIR} -l${LIBFITS} ${WLRPATH_}
 
+    CFITSIOVREQ="3.14"            # required  version of CFITSIO
     # run if executable
     if [ -x ${tmpfile}.x ]; then
 	CFITSIOVERSION=`${tmpfile}.x` # available version of CFITSIO 
-	CFITSIOVREQ="3.14"            # required  version of CFITSIO
 	v1=`echo ${CFITSIOVERSION} | ${AWK} '{print $1*1000}'` # multiply by 1000 to get integer
 	v2=`echo ${CFITSIOVREQ}    | ${AWK} '{print $1*1000}'`
 	${RM} ${tmpfile}.*
@@ -1836,17 +1872,19 @@ writeF90pkgconfigFile (){
     echo
     echo "Writing pkgconfig file: ${pkgconfigFile}"
     ${CAT}<<EOF > ${pkgconfigFile}
-# HEALPix pkg-config file
+# HEALPix/F90 pkg-config file
 
 prefix=${HEALPIX}
-exec_prefix=\${prefix}/bin${DIRSUFF}
-libdir=\${prefix}/lib${DIRSUFF}
-includedir=\${prefix}/include${DIRSUFF}
+suffix=${DIRSUFF}
+exec_prefix=\${prefix}/bin\${suffix}
+libdir=\${prefix}/lib\${suffix}
+includedir=\${prefix}/include\${suffix}
 
 Name: HEALPix
 Description: F90 library for HEALPix (Hierarchical Equal-Area iso-Latitude) pixelisation of the sphere
 Version: ${HPX_VERSION}
-Requires: cfitsio
+URL: http://healpix.sourceforge.net
+Requires: cfitsio >= ${CFITSIOVREQ}
 Libs: -L\${libdir} -lhealpix -lhpxgif
 Cflags: -I\${includedir} ${PRFLAGS} ${F90PIC} 
 
