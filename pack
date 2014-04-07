@@ -27,7 +27,8 @@ updateVersion () {
   echoLn "Enter version number ($current) "
   read answer
   [ "x$answer" != "x" ] && version="$answer"
-  echo $version $reldate
+  verstex=`echo $version | sed "s|\.|\\\\\\_|g"`
+  echo $version $verstex $reldate
 
   # update configure script
   infile='./configure'
@@ -67,7 +68,8 @@ updateVersion () {
   infile='./doc/Tex/hpxversion.tex'
   echoBlu "editing ${infile}"
   cat $infile |\
-      sed "s|newcommand{\\\\hpxversion}.*$|newcommand{\\\\hpxversion}{$version}|g" >\
+      sed "s|newcommand{\\\\hpxversion}.*$|newcommand{\\\\hpxversion}{$version}|g" |\
+      sed "s|newcommand{\\\\hpxverstex}.*$|newcommand{\\\\hpxverstex}{$verstex}|g" >\
       $tmpfile
   mv $tmpfile $infile
   cat $infile

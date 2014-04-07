@@ -6,7 +6,9 @@ whose installation procedure is summarized below.
 
 Every effort has been made to make the installation and usage of Healpix easy and straightforward.
 However we highly recommend the user to read the documentation
-(see   
+(type:
+   healpix_doc
+or see:   
    doc/html/main.htm  
 or
    doc/pdf/pdf_index.pdf 
@@ -132,10 +134,11 @@ or
    doc/pdf/intro.pdf
 or
    doc/html/intro.htm
+or type
+   healpix_doc
 
 
 For questions/comments/suggestions on Healpix: 
-  healpix AT jpl.nasa.gov
-
+  healpix-support AT lists.sourceforge.net
 
 
