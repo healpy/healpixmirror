@@ -38,6 +38,7 @@ module head_fits
   ! 2007-09-20 added write_minimal_header
   ! 2009-01-08 corrected typo in FITS header written by write_minimal_header (DY_Y -> DY_T)
   ! 2013-05-07: G95-compatible
+  ! 2014-05-02: fixed problem with keywords having a long string value
   !-------------------------------------------------------------------------
 
   ! subroutine add_card   [interface]
@@ -236,7 +237,7 @@ contains
     logical(LGT),      intent(IN), OPTIONAL  :: update, long_strn
     integer(kind=I4B) :: iblank, iwrite, hdtype, kmatch, iwlong
 
-    character (LEN=240) :: fullcard
+    character (LEN=480) :: fullcard
     character (LEN=80)  :: oldline
     character (LEN=20)  :: kwd2, this_kwd
     logical(LGT)        :: do_update, do_long_strn
@@ -263,8 +264,16 @@ contains
 
     kwd2 = adjustl(strupcase(kwd))
     fullcard = kwd2
-    if (present(st_value)) fullcard = fullcard(1:max( 8,len_trim(fullcard)))//' '//adjustl(st_value)
-    if (present(comment))  fullcard = fullcard(1:max(32,len_trim(fullcard)))//' '//TRIM(adjustl(comment))
+    if (present(st_value)) fullcard = fullcard(1:max( 8,len_trim(fullcard)))//' '//trim(adjustl(st_value))
+    if (present(comment)) then
+       if (len_trim(adjustl(comment)) > 0) then
+          if (do_long_strn) then ! put a slash between value and comment for easier idenfication later on
+             fullcard = fullcard(1:max(32,len_trim(fullcard)))//' / '//trim(adjustl(comment))
+          else
+             fullcard = fullcard(1:max(32,len_trim(fullcard)))//' '//trim(adjustl(comment))
+          endif
+       endif
+    endif
 
     if (iblank > nlh) then
        print*,'WARNING: Header is too short ('//trim(string(nlh))//' lines); card not written:'
@@ -340,16 +349,16 @@ contains
 
 
   !=====================================================================
-  subroutine insert_line_in_header(header, index, card, overwrite, long_strn)
+  subroutine insert_line_in_header(header, idx, card, overwrite, long_strn)
     IMPLICIT none
     character (LEN=80), dimension(1:), intent(INOUT) :: header
     character (LEN=*),                 intent(IN)    :: card
-    integer(kind=I4B),                 intent(IN)    :: index
+    integer(kind=I4B),                 intent(IN)    :: idx
     logical(LGT),                      intent(IN)    :: overwrite
     logical(LGT),     optional,        intent(IN)    :: long_strn
 
     integer(i4b) :: i2, j_low, j_hi, iw, hdtype, k, step
-    integer(i4b) :: lencard, nlh
+    integer(i4b) :: lencard, nlh, lenkv
     character(len=80) :: tmpline
     character (LEN=10)  :: pad10 = '    '
     logical(LGT)        :: do_long_strn
@@ -359,14 +368,19 @@ contains
     if (present(long_strn)) do_long_strn = long_strn
 
     nlh = size(header)
-    lencard = len_trim(card) ! length of input card
-    step = 80
-    if (do_long_strn) step = 70
+    lencard = len_trim(card) ! total length of input card "kwd = value / comment"
+    if (do_long_strn) then
+       lenkv = index(card,"' / ",back=.true.) ! length of "kwd = value"
+       step = 77
+    else
+       lenkv = lencard
+       step = 80
+    endif
 
     j_low = 1  ! character along the card
     j_hi  = step
     k = 1
-    iw = index ! line down the header
+    iw = idx ! line down the header
 
 
     do ! deal with long cards
@@ -390,9 +404,15 @@ contains
           if (k == 1) then
              header(iw) = trim(card(j_low:j_hi))
           else
-             header(iw) = "CONTINUE '"//trim(card(j_low:j_hi))
+             if (j_low <= lenkv) then
+                ! (long) keyword substring
+                header(iw) = "CONTINUE  '"//trim(card(j_low:j_hi))
+             else
+                ! (long) comment substring
+                header(iw) = "           "//trim(card(j_low:j_hi))
+             endif
           endif
-          if (j_hi < lencard) header(iw) = trim(header(iw))//"&'"
+          if (j_hi < lenkv) header(iw) = trim(header(iw))//"&'"
        else
           hdtype = 0
           statusfits = 0
@@ -407,7 +427,7 @@ contains
 
        ! select next characters from card to put in header
        j_low = j_hi + 1
-       j_hi  = min(j_low + step - 10, lencard)
+       j_hi  = min(j_low + step - 11, lencard)
 
        ! next header line
        k = k + 1
@@ -1001,7 +1021,7 @@ contains
        if (present(nlmax)) call add_card(header,"MAX-LPOL",nlmax  ,"Maximum Legendre order L")
        if (present(nmmax)) call add_card(header,"MAX-MPOL",nmmax  ,"Maximum Legendre degree M")
        if (present(randseed))  call add_card(header,"RANDSEED",randseed,"Random generator seed")
-       call add_card(header,"POLCCONV","COSMO"," Coord. convention for polarisation (COSMO/IAU)")
+       call add_card(header,"POLCCONV","COSMO","Coord. convention for polarisation (COSMO/IAU)")
        if (trim(my_beam_leg)/='') then
           call add_card(header,"BEAM_LEG",trim(my_beam_leg),"File containing Legendre transform of symmetric beam")
        else if (present(fwhm_degree)) then
