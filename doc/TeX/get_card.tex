@@ -31,7 +31,8 @@ The type of the fortran variable 'value' (double, real, integer, logical or
                    value is written in the FITS file, except if
                    'value' is a character string, in which case it can read any
                    keyword value, or if 'value' if real or double, in which case
-                   it can read any numerical value\\
+                   it can read any numerical value. Note that long string values
+(more than 68 characters in length) are supported.\\
 comment(LEN=*) & CHR & OUT & comment read for the keyword. \\ 
 \end{tabular}
 }

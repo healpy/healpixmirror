@@ -290,6 +290,7 @@ contains
     hdtype = 0
     statusfits = 0
     CALL ftgthd(fullcard(1:79), oldline, hdtype, statusfits)
+    if (statusfits == 205) statusfits = 0 ! ignore unmatched quotes due to long strings
     ! hdtype: -1: delete, 0: append or replace, 1: append, 2: END
     select case (hdtype)
     case (-1)! delete keyword
@@ -357,11 +358,12 @@ contains
     logical(LGT),                      intent(IN)    :: overwrite
     logical(LGT),     optional,        intent(IN)    :: long_strn
 
-    integer(i4b) :: i2, j_low, j_hi, iw, hdtype, k, step
+    integer(i4b) :: i2, j_low, j_hi, iw, hdtype, k, step0, step
     integer(i4b) :: lencard, nlh, lenkv
     character(len=80) :: tmpline
     character (LEN=10)  :: pad10 = '    '
     logical(LGT)        :: do_long_strn
+    logical(LGT), parameter :: WAC = .false. ! wrap-around long comments
     !=====================================================================
     tmpline=''
     do_long_strn = .false.
@@ -370,13 +372,14 @@ contains
     nlh = size(header)
     lencard = len_trim(card) ! total length of input card "kwd = value / comment"
     if (do_long_strn) then
-       lenkv = index(card,"' / ",back=.true.) ! length of "kwd = value"
-       step = 77
+       lenkv = index(card,"' / ",back=.true.) ! length of "kwd = 'value'"
+       step0 = 75
     else
        lenkv = lencard
-       step = 80
+       step0 = 80
     endif
 
+    step = step0
     j_low = 1  ! character along the card
     j_hi  = step
     k = 1
@@ -406,13 +409,24 @@ contains
           else
              if (j_low <= lenkv) then
                 ! (long) keyword substring
-                header(iw) = "CONTINUE  '"//trim(card(j_low:j_hi))
+                if (j_hi >= lenkv .and. WAC) then
+                   header(iw) = "CONTINUE  '"//&
+                        & trim(card(j_low:lenkv-1))//&
+                        & "&'"//trim(card(lenkv+1:j_hi))
+                else
+                   header(iw) = "CONTINUE  '"//trim(card(j_low:j_hi))
+                endif
              else
                 ! (long) comment substring
-                header(iw) = "           "//trim(card(j_low:j_hi))
+                if (WAC) header(iw) = "CONTINUE  '&' /"//trim(card(j_low:j_hi))
              endif
           endif
           if (j_hi < lenkv) header(iw) = trim(header(iw))//"&'"
+          if (j_hi < lenkv) then
+             step = step0 - 10
+          else
+             step = step0 - 15
+          endif
        else
           hdtype = 0
           statusfits = 0
@@ -420,14 +434,16 @@ contains
              CALL ftgthd(card(j_low:j_hi), tmpline, hdtype, statusfits)
              header(iw) = tmpline
           else
-             CALL ftgthd(pad10//card(j_low:j_hi), tmpline, hdtype, statusfits)
-             header(iw) = tmpline
+             if (WAC) then ! wrap around long comment
+                CALL ftgthd(pad10//card(j_low:j_hi), tmpline, hdtype, statusfits)
+                header(iw) = tmpline
+             endif
           endif
        endif
 
        ! select next characters from card to put in header
        j_low = j_hi + 1
-       j_hi  = min(j_low + step - 11, lencard)
+       j_hi  = min(j_low + step, lencard)
 
        ! next header line
        k = k + 1
@@ -550,6 +566,44 @@ contains
     return
   end subroutine f_get_card
 
+
+  !===================================================================
+  function trim_quotes(card) result(c2)
+    ! remove first and last quotes
+    implicit none
+    character(len=*), intent(IN) :: card
+    character(len=FILENAMELEN)   :: c2
+    !
+    character(len=FILENAMELEN)   :: c1
+    integer :: ifor, ibac
+
+    c1 = trim(adjustl(card))
+    ifor = index(c1,"'")
+    ibac = index(c1,"'",back=.true.)
+    if (ifor >= 1                        ) c1(ifor:ifor) = " "
+    if (ibac <= len(c1) .and. ibac > ifor) c1(ibac:ibac) = " "
+    c2 = trim(adjustl(c1))
+
+    return
+  end function trim_quotes
+  !===================================================================
+  function trim_taa(card) result(c2)
+    ! remove trailing Ampersand (&)
+    implicit none
+    character(len=*), intent(IN) :: card
+    character(len=FILENAMELEN)   :: c2
+    !
+    character(len=FILENAMELEN)   :: c1
+    integer :: ibac
+
+    c1 = trim(adjustl(card))
+    ibac = index(c1,"&",back=.true.)
+    if (ibac <= len(c1)) c1(ibac:ibac) = " "
+    c2 = trim(adjustl(c1))
+
+    return
+  end function trim_taa
+
   !===================================================================
   subroutine a_get_card(header, kwd, value, comment, count) ! ascii string
     implicit none
@@ -559,25 +613,55 @@ contains
     character (LEN=*),         intent(OUT), OPTIONAL :: comment
     integer(kind=I4B),         intent(OUT), OPTIONAL :: count
 
-    integer :: ifor, ibac, i
+    character(len=80) :: stval1, stcom1, card1
+    integer :: ifor, ibac, i, kaa, kq1, kq2, ip1
+    logical(LGT) :: long_strn
 
     count_in = 0
     value = ' '
+    stcom = ''
     nlh = size(header)
+    statusfits = 0
+    long_strn = .false.
+
+    ! test for possible long string keywords
+    do i=1, nlh 
+       card = header(i)
+       call ftcmps('CONTINUE',card(1:8), casesen, long_strn, exact)
+       if (long_strn) exit
+    enddo
+
+
     do i=1, nlh ! scan header for keyword
        card = header(i)
        call ftcmps(kwd,card(1:8), casesen, match, exact)
        if (match) then
-          !                        extract value as a string
-          call ftpsvc(card, stval, stcom, statusfits)
-          stval = adjustl(stval)
-          ! remove first and last quote
-          ifor = index(stval,"'")
-          ibac = index(stval,"'",back=.true.)
-          if (ifor >= 1         ) stval(ifor:ifor) = " "
-          if (ibac <= len(stval) .and. ibac > ifor) &
-               &                  stval(ibac:ibac) = " "
-          value = trim(adjustl(stval))
+          if (long_strn) then ! test if current keyword is long string
+             long_strn = long_strn .and. (index(card,"&'",back=.true.) > 0)
+             call ftpsvc(card, stval1, stcom1, statusfits)
+             value = trim(trim_taa(trim_quotes(stval1)))
+             stcom = trim(stcom1)
+          endif
+          if (long_strn) then
+             ip1 = i
+             do 
+                ip1 = ip1+1
+                card1 = header(ip1)
+                if (card1(1:10) == 'CONTINUE  ') then
+                   card1(1:10)   = 'JUNK    = ' ! trick to get ftpsvc to work
+                   call ftpsvc(card1, stval1, stcom1, statusfits)
+                   value = trim(value)//trim(trim_taa(trim_quotes(stval1)))
+                   stcom = trim(stcom)//trim(stcom1)
+                else
+                   exit
+                endif
+             enddo
+          else
+             !                        extract value as a string
+             call ftpsvc(card, stval1, stcom1, statusfits)
+             value = trim(trim_quotes(stval1))
+             stcom = trim(stcom1)
+          endif
           count_in = 1
           if (present(comment)) comment = stcom
           if (present(count))   count = count_in
