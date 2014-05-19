@@ -1,18 +1,10 @@
 % -*- LaTeX -*-
 
-% PLEASE USE THIS FILE AS A TEMPLATE FOR THE DOCUMENTATION OF YOUR OWN
-% FACILITIES: IN PARTICULAR, IT IS IMPORTANT TO NOTE COMMENTS MADE IN
-% THE TEXT AND TO FOLLOW THIS ORDERING. THE FORMAT FOLLOWS ONE USED BY
-% THE COBE-DMR PROJECT.	
-% A.J. Banday, April 1999.
-
 \documentclass[12pt,twoside]{article}
-% \usepackage{healrut,psfig,html,makeidx}
-%\usepackage{healpix,psfig,html,makeidx}
-%\usepackage{healpix,graphicx,html,makeidx}
-\usepackage{healpix,graphicx,xr-hyper,html,makeidx}
-%\usepackage{hyperref,healpix,graphicx,html,makeidx}%putting hyperref first
-%screws up references in html
+\usepackage{xr-hyper,healpix,graphicx,html,makeidx} 
+%xr-hyper first to have correct Equation and Figure cross-referencing in html
+%putting hyperref first screws up references in html
+%
 %\externaldocument{install}
 %%%%%% ----- HTML only commands -------
 \begin{htmlonly}
@@ -124,7 +116,11 @@ See \linklatexhtml{the Installation Document}{install.pdf}{install.html} for mor
 \section{Changes between releases 3.11 and \hpxversion}
 
 \begin{itemize}
-\item addition of \htmlref{{\tt ialteralm}}{{idl:ialteralm}}
+\item addition of \htmlref{{\tt ialteralm}}{{idl:ialteralm}} to modify Spherical
+Harmonics coefficients ($a_{lm}$).
+
+\item addition of \htmlref{{\tt planck\_colors}}{{idl:planck_colors}} to modify
+current color table to one used in Planck 2013 publications.
 
 \item \htmlref{{\tt cartview, gnomview, mollview,
 orthview}}{idl:mollview}: addition of  
@@ -590,6 +586,7 @@ file containing $a_{lm}$ coefficients.
 \include{orthcursor_idl}
 \include{orthview_idl}
 \include{pix_tools_idl}
+\include{planck_colors_idl}
 \include{query_disc_idl}
 \include{query_polygon_idl}
 \include{query_strip_idl}

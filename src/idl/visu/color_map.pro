@@ -32,8 +32,8 @@ function my_asinh, x, type
 ; if type=2, returns asinh(x/2)/ln(10) 
 ;  which is ~x*0.21 for x<<1 and ~log10(x) when x >> 1
 ;
-
-case defined(type)?type:1 of
+mytype = defined(type) ? type : 1
+case mytype of
     1: y = asinh(x)
     2: begin
         two = (size(x[0],/tname) eq 'DOUBLE') ? 2d : 2.0

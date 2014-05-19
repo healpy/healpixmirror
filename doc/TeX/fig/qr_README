@@ -1,0 +1,5 @@
+qr_healpixwebsite.png: 
+ encodes http://healpix.sourceforge.net  (ECC: M 15%)
+produced with http://qrcode.fr/encoder
+can be decoded with http://zxing.org/w/decode.jspx
+

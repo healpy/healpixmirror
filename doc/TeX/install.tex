@@ -3,6 +3,7 @@
 \documentclass[12pt,twoside]{article}
 %\usepackage{titlesec,xr-hyper,healpix,graphicx,html,makeidx}
 \usepackage{xr-hyper,healpix,graphicx,html,makeidx}
+%xr-hyper first to have correct Equation and Figure cross-referencing in html
 %putting hyperref first screws up references in html
 %%%
 \begin{htmlonly}
@@ -1068,7 +1069,11 @@ modules, ... produced during the compilation of the source codes
 \end{itemize}
 \subsubsection[IDL]{\linklatexhtml{IDL}{idl.pdf}{idl.htm}}
 \begin{itemize}
-\item addition of \htmlref{{\tt ialteralm}}{{idl:ialteralm}}
+\item addition of \htmlref{{\tt ialteralm}}{{idl:ialteralm}} to modify Spherical
+Harmonics coefficients ($a_{lm}$).
+
+\item addition of \htmlref{{\tt planck\_colors}}{{idl:planck_colors}} to modify
+current color table to one used in Planck 2013 publications.
 
 \item \htmlref{{\tt cartview, gnomview, mollview,
 orthview}}{idl:mollview}: addition of  
