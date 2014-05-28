@@ -110,6 +110,7 @@ module alm_tools
   public :: alm2map, map2alm, alm2map_der, alm2map_spin, map2alm_spin
   public :: map2alm_iterative
   public :: alter_alm, create_alm, alm2cl, rotate_alm
+  public :: create_alm_old ! for tests only
   public :: plm_gen
   public :: ring_synthesis, ring_analysis
   public :: generate_beam, gaussbeam, pixel_window, pow2alm_units
@@ -128,6 +129,10 @@ module alm_tools
  
   interface create_alm
      module procedure create_alm_s, create_alm_d, create_alm_v12_s, create_alm_v12_d
+  end interface
+
+  interface create_alm_old ! for tests only
+     module procedure create_alm_old_s, create_alm_old_d
   end interface
  
   interface alm2map_der

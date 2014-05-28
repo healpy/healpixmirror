@@ -5032,7 +5032,7 @@
     return
   end subroutine create_alm_v12_KLOAD
    !=======================================================================
-  subroutine create_alm_KLOAD &
+  subroutine create_alm_old_KLOAD &
        &     (nsmax, nlmax, nmmax, polar, filename, rng_handle, fwhm_arcmin, &
        &        alm_TGC, header_PS, windowfile, units, beam_file)
     !=======================================================================
@@ -5332,6 +5332,386 @@
              alm_TGC(2, l, m) = alm_TGC(2, l, m) &
                   &                 + CMPLX(zeta2_r, zeta2_i, kind=KALM) * rms_g2 ! G
              alm_TGC(3, l, m) = CMPLX(zeta3_r, zeta3_i, kind=KALM) * rms_cc ! C
+          enddo
+       enddo
+    endif
+
+    return
+  end subroutine create_alm_old_KLOAD
+
+   !=======================================================================
+  subroutine create_alm_KLOAD &
+       &     (nsmax, nlmax, nmmax, polar, filename, rng_handle, fwhm_arcmin, &
+       &        alm_TGC, header_PS, windowfile, units, beam_file)
+    !=======================================================================
+    !     creates the a_lm from the power spectrum,
+    !     assuming they are gaussian  and complex
+    !     with a variance given by C(l)
+    !
+    !     the input file FILENAME should contain :
+    !       l, C_temp(l), [ C_grad(l), C_curl(l), C_temp_grad(l), [C_temp_curl(l), C_grad_curl(l)] ]
+    !
+    !     with *consecutive* l's (missing C(l) are set to 0.)
+    !
+    !     because the map is real we have : a_l-m = (-)^m conjug(a_lm)
+    !     so we actually compute them only for m >= 0
+    !
+    !
+    !     RNG_HANDLE : planck_rng structure
+    !
+    !     FWHM_ARCMIN
+    !
+    !     ALM_TGC (Complex array) : either (1:1, 0:nlmax, 0:nmmax)
+    !       for temperature only (if POLAR=0)
+    !                               or     (1:3, 0:nlmax, 0:nmmax)
+    !       for temperature + polarisation (if POLAR =1 or POLAR =2)
+    !       (respectively Temp, Grad or Electric component
+    !        and Curl or Magnetic one)
+    !
+    ! 2014-05-28: support of POLAR=2, in which the unconventional  
+    ! TC (=TB) and GC (=EB) spectra (if available in the input FITS file),
+    ! are taken into account
+    !
+    !=======================================================================
+    use fitstools,  only: fits2cl, getsize_fits
+    use rngmod,     only: rand_gauss, planck_rng
+    use head_fits,  only: add_card, merge_headers, get_card
+    use misc_utils, only: string
+
+    INTEGER(I4B),       INTENT(IN)      :: nsmax, nlmax, nmmax
+    INTEGER(I4B),       INTENT(IN)      :: polar
+    type(planck_rng),   intent(inout)   :: rng_handle
+    CHARACTER(LEN=*),   INTENT(IN)      :: filename
+    REAL(KALM),         INTENT(IN)      :: fwhm_arcmin
+    COMPLEX(KALMC),     INTENT(OUT), &
+         & DIMENSION(1:1+2*min(polar,1),0:nlmax,0:nmmax) :: alm_TGC
+    CHARACTER(LEN=80),  INTENT(OUT),             DIMENSION(1:):: header_PS
+    CHARACTER(LEN=*),   INTENT(IN),    OPTIONAL               :: windowfile
+    CHARACTER(LEN=80),  INTENT(OUT),   OPTIONAL, DIMENSION(1:):: units
+    CHARACTER(LEN=*),   INTENT(IN),    OPTIONAL               :: beam_file
+
+    INTEGER(I4B) :: i, l, m, npw, l_max
+    INTEGER(I4B) :: ncl, nlheader, count_tt, count_pn
+    INTEGER(I4B) :: status
+    REAL(DP)     ::  hsqrt2, quadrupole
+    REAL(DP)     ::  rms_tt, rms_g1, rms_g2, rms_c1, rms_c2, rms_c3
+    real(DP)     ::  var_g2, var_c3
+    REAL(DP)     ::  zeta1_r, zeta1_i, zeta2_r, zeta2_i, zeta3_r, zeta3_i
+    real(DP), parameter :: ZERO = 0.0_DP
+    complex(KALMC) :: zeta1, zeta2, zeta3
+    integer(I4B) :: junk, ncl_file
+
+    LOGICAL(LGT) ::  polarisation, bcoupling
+
+    REAL(DP), DIMENSION(:,:), ALLOCATABLE :: pixlw, beamw
+    REAL(DP), DIMENSION(0:nlmax)          :: cls_tt, cls_gg, cls_cc, cls_tg
+    REAL(DP), DIMENSION(0:nlmax)          :: cls_tc, cls_gc
+    REAL(DP), DIMENSION(0:nlmax,1:6)      :: cl_in
+!    REAL(DP), DIMENSION(:),   ALLOCATABLE :: fact_norm
+
+    CHARACTER(LEN=*), PARAMETER :: code = 'CREATE_ALM'
+    CHARACTER(LEN=*), PARAMETER :: version = '2.1.0'
+    CHARACTER(LEN=20)                            ::  string_quad
+    CHARACTER(LEN=80), DIMENSION(1:180)          :: header_file
+    CHARACTER(LEN=80), DIMENSION(:), allocatable :: units_power
+    CHARACTER(LEN=80) :: temptype, com_tt
+    CHARACTER(LEN=80) :: polnorm, com_pn
+
+
+    !=======================================================================
+    ! Is polarisation required ?
+    if (polar == 0) then
+       polarisation = .false.
+       bcoupling    = .false.
+    elseif (polar == 1) then
+       polarisation = .true.
+       bcoupling    = .false.
+    elseif (polar == 2) then
+       polarisation = .true.
+       bcoupling    = .true.       
+    else
+       print*,code//'> wrong choice of polar: '//trim(string(polar))
+       print*,code//'> must be 0, 1 or 2'
+       call fatal_error
+    endif
+
+    ! set maximum multipole (depends on user choice and pixel window function)
+    l_max = nlmax
+    npw = 4*nsmax + 1
+    if (present(windowfile)) then
+       l_max = min(l_max, npw - 1)
+    else
+       npw = l_max + 1
+    endif
+    if (l_max < nlmax) then
+       print*,code//'> WARNING: a_lm are only generated for 0 <= l <= '//trim(string(l_max))
+    endif
+    !-----------------------------------------------------------------------
+
+    !     ----- set the alm array to zero ------
+    if (polarisation) then
+       alm_TGC(1:3, 0:nlmax, 0:nmmax) = CMPLX(0.0,0.0, kind=KALM)
+    else
+       alm_TGC(1  , 0:nlmax, 0:nmmax) = CMPLX(0.0,0.0, kind=KALM)
+    endif
+    !     --------------------------------------
+    cls_tt = ZERO
+    cls_gg = ZERO
+    cls_cc = ZERO
+    cls_tg = ZERO
+    cls_tc = ZERO
+    cls_gc = ZERO
+    cl_in  = ZERO
+
+    !     --- reads the C(l) file ---
+    ncl = 1
+    if (polarisation) ncl = 4
+    if (polarisation .and. bcoupling) ncl = 6
+
+    junk = getsize_fits(filename, nmaps=ncl_file)
+    if (ncl_file < ncl) then 
+       print*,code//'> Only '//trim(string(ncl_file))//' spectra found in '//trim(filename)
+       print*,code//'> Expected at least '//trim(string(ncl))
+       print*,code//'> WARNING: absent (cross-)spectra will be set to 0'
+       ncl = ncl_file
+       !call fatal_error()
+    endif
+    polarisation = (ncl >= 4)
+    bcoupling    = (ncl == 6)
+
+    nlheader = SIZE(header_file)
+    allocate(units_power(1:ncl), stat = status)
+    call assert_alloc(status,code,'units_power')
+
+    call fits2cl(filename, cl_in(0:l_max,1:ncl), l_max, ncl, &
+         &       header_file, units=units_power)
+
+    !    ---- check input power spectra consistency  ----
+    do i=1,ncl
+       do l=0,l_max
+          if (i < 4) then ! TT, EE, BB auto correlation
+             if (cl_in(l,i) < 0.0) then
+                print*,code//'> Negative input auto power spectrum at l =', l,', index = ',i
+                print*,code//'> ',cl_in(l,i)
+                call fatal_error
+             endif
+          elseif (i == 4) then ! TE cross correlation
+             if (abs(cl_in(l,4)) > sqrt(cl_in(l,1))*sqrt(cl_in(l,2)) ) then
+                print*,code//'> Inconsistent TT, EE and TE power spectrum terms at l = ',l
+                print*,code//'> ',cl_in(l,1),cl_in(l,2),cl_in(l,4)
+             endif
+          elseif (i == 5) then ! TB cross correlation
+             if (abs(cl_in(l,5)) > sqrt(cl_in(l,1))*sqrt(cl_in(l,3)) ) then
+                print*,code//'> Inconsistent TT, BB and TB power spectrum terms at l = ',l
+                print*,code//'> ',cl_in(l,1),cl_in(l,3),cl_in(l,5)
+             endif
+          elseif (i == 6) then ! EB cross correlation
+             if (abs(cl_in(l,6)) > sqrt(cl_in(l,2))*sqrt(cl_in(l,3)) ) then
+                print*,code//'> Inconsistent EE, BB and EB power spectrum terms at l = ',l
+                print*,code//'> ',cl_in(l,2),cl_in(l,3),cl_in(l,6)
+             endif
+          endif
+       enddo
+    enddo
+
+    ! 2009-01-07: removed fact_norm, was creating problem with PGF90
+    !     we always expect 4 or 6 columns, in the order T, G(=E), C(=B) and TG(=TE), TC(=TB), GC(=EB)
+    cls_tt(0:l_max) = cl_in(0:l_max,1)
+    if (polarisation) then
+       cls_gg(0:l_max) = cl_in(0:l_max,2)
+       cls_cc(0:l_max) = cl_in(0:l_max,3)
+       cls_tg(0:l_max) = cl_in(0:l_max,4)
+       if (bcoupling) then
+          cls_tc(0:l_max) = cl_in(0:l_max,5)
+          cls_gc(0:l_max) = cl_in(0:l_max,6)
+       endif
+    endif
+
+    ! converts units for power spectrum into units for maps
+    if (present(units)) then
+       call pow2alm_units(units_power, units)
+    endif
+
+    ! finds out temperature type (THERMO or ANTENNA)
+    ! THERMO is the default
+    call get_card(header_file,"TEMPTYPE",temptype,com_tt,count=count_tt)
+    if (count_tt < 1) then
+       temptype = "THERMO"
+       com_tt = " temperature : either THERMO or ANTENNA"
+       print*,'   Will assume '//temptype
+    endif
+
+    if (polar > 0) then
+       call get_card(header_file,"POLNORM",polnorm,com_pn,count=count_pn)
+       if (count_pn < 1) then
+          print*,' ********************************************************* '
+          print*,'            The convention for normalization '
+          print*,'        of the input polarization power spectra '
+          print*,'                      is unknown. '
+          print*,' The code will proceed as if the convention was that of CMBFAST'
+          print*,'  See the Healpix PDF of Html documentation for details'
+          print*,' ********************************************************* '
+       endif
+    endif
+
+    quadrupole = cls_tt(2)
+    !     --- creates the header relative to power spectrum ---
+    header_PS = ''
+    call add_card(header_PS)
+    call add_card(header_PS,'HISTORY',' alm generated by ' &
+         &        //code//'_'//version//' from following power spectrum')
+    call add_card(header_PS)
+    call add_card(header_PS,'COMMENT','----------------------------------------------------')
+    call add_card(header_PS,'COMMENT','Planck Power Spectrum Description Specific Keywords')
+    call add_card(header_PS,'COMMENT','----------------------------------------------------')
+    call add_card(header_PS,'COMMENT','Input power spectrum in : ')
+    call add_card(header_PS,'COMMENT',TRIM(filename))
+    call add_card(header_PS)
+    call add_card(header_PS,'COMMENT','Quadrupole')
+    write(string_quad,'(1pe15.6)') quadrupole
+    call add_card(header_PS,'COMMENT','  C(2) = '//string_quad//' '//trim(units_power(1)))
+    call add_card(header_PS)
+    call add_card(header_PS,"TEMPTYPE",temptype,com_tt)
+    call add_card(header_PS)
+    ! ------- insert header read in power spectrum file -------
+    call merge_headers(header_file, header_PS)
+    deallocate(units_power)
+
+    !     --- smoothes the initial power spectrum ---
+    !       beam (gaussian or external file) + pixel (external file)
+
+    ! define beam
+    allocate(beamw(0:l_max,1:3), stat = status)
+    call assert_alloc(status,code,'beamw')
+    call generate_beam(real(fwhm_arcmin,kind=dp), l_max, beamw, beam_file)
+!     call gaussbeam(real(fwhm_arcmin,kind=dp), l_max, beamw)
+
+    ! get the pixel window function
+    allocate(pixlw(0:npw-1,1:3), stat = status)
+    call assert_alloc(status,code,'pixlw')
+    if(present(windowfile)) then
+       call pixel_window(pixlw, windowfile=windowfile)
+    else
+       pixlw(:,:)  = 1.0_dp
+    endif
+    ! multiply beam and pixel windows
+    beamw(0:l_max,1:3) = beamw(0:l_max,1:3) * pixlw(0:l_max,1:3)
+
+    cls_tt(0:l_max) = cls_tt(0:l_max) * beamw(0:l_max,1)**2
+    cls_gg(0:l_max) = cls_gg(0:l_max) * beamw(0:l_max,2)**2
+    cls_cc(0:l_max) = cls_cc(0:l_max) * beamw(0:l_max,3)**2
+    cls_tg(0:l_max) = cls_tg(0:l_max) * beamw(0:l_max,1)*beamw(0:l_max,2)
+    cls_tc(0:l_max) = cls_tc(0:l_max) * beamw(0:l_max,1)*beamw(0:l_max,3)
+    cls_gc(0:l_max) = cls_gc(0:l_max) * beamw(0:l_max,2)*beamw(0:l_max,3)
+    deallocate(pixlw)
+    deallocate(beamw)
+
+
+    !     --- generates randomly the alm according to their power spectra ---
+    !         (Cholesky decomposition of spectra covariance matrix)
+    !     alm_T = zeta1 * rms_tt
+    !     alm_G = zeta1 * rms_g1 + zeta2 * rms_g2
+    !     alm_C = zeta1 * rms_c1 + zeta2 * rms_c2 + zeta3 * rms_c3
+    !
+    ! rms_tt = sqrt(TT), rms_g1 = TE/rms_tt, rms_c1 = TB/rms_tt
+    ! rms_g2 = sqrt( EE - (TE)^2/TT )
+    ! rms_c2 = ( EB - TE TB/TT ) / rms_g2
+    ! rms_c3 = sqrt( BB - rms_c1^2 - rms_c2^2 )
+
+    hsqrt2 = SQRT2 / 2.0_dp
+
+    do l = 0, l_max
+       rms_tt = ZERO
+       rms_g1 = ZERO
+       rms_c1 = ZERO
+       if (cls_tt(l) > ZERO) then
+          rms_tt   = sqrt(cls_tt(l))
+          rms_g1   = cls_tg(l) / rms_tt
+          rms_c1   = cls_tc(l) / rms_tt
+       endif
+
+       !        ------ m = 0 ------
+       zeta1_r = rand_gauss(rng_handle)
+       zeta1_i = ZERO
+       zeta1   = CMPLX(zeta1_r, zeta1_i, kind=KALM)
+       alm_TGC(1, l, 0)                   = zeta1 * rms_tt ! T->T
+       if (polarisation) alm_TGC(2, l, 0) = zeta1 * rms_g1 ! T->E
+       if (bcoupling)    alm_TGC(3, l, 0) = zeta1 * rms_c1 ! T->B
+
+       !        ------ m > 0 ------
+       do m = 1,l
+          zeta1_r = rand_gauss(rng_handle) * hsqrt2
+          zeta1_i = rand_gauss(rng_handle) * hsqrt2
+          zeta1   = CMPLX(zeta1_r, zeta1_i, kind=KALM)
+          alm_TGC(1, l, m)                   = zeta1 * rms_tt
+          if (polarisation) alm_TGC(2, l, m) = zeta1 * rms_g1
+          if (bcoupling)    alm_TGC(3, l, m) = zeta1 * rms_c1 
+       enddo
+    enddo
+
+    !     the coefficient generation is separated so that the Temperature
+    !     coeff. are the same (for the same seed) whether the polarisation is set or not
+
+    if (polarisation) then
+       do l = 0, l_max
+          rms_g2 = ZERO
+          rms_c1 = ZERO
+          rms_c2 = ZERO
+          rms_c3 = ZERO
+          if (cls_tt(l) > ZERO) then
+             var_g2 = cls_gg(l) - (cls_tg(l)/cls_tt(l))*cls_tg(l) ! to avoid underflow
+             ! test for consistency but make sure it is not due to round off error
+             if (var_g2 <= ZERO) then
+                if (abs(var_g2) > abs(1.e-8*cls_gg(l))) then
+                   print*,code//'> Inconsistent TT, GG and TG spectra at l=',l
+                   call fatal_error
+                else ! only round off error, keep going
+                   var_g2 = ZERO
+                endif
+             endif
+             rms_c1 = cls_tc(l) / sqrt( cls_tt(l) )
+             if (var_g2 > ZERO) then
+                rms_g2 = sqrt( var_g2 )
+                rms_c2 = ( cls_gc(l) - cls_tc(l) * (cls_tg(l) / cls_tt(l)) ) / rms_g2
+             endif
+             var_c3 = cls_cc(l) - rms_c1**2 - rms_c2**2 
+             if (var_c3 <= ZERO) then
+                if (abs(var_c3) > abs(1.e-8*cls_cc(l))) then
+                   print*,code//'> Inconsistent spectra at l=',l
+                   call fatal_error
+                else ! only round off error, keep going
+                   var_c3 = ZERO
+                endif
+             endif
+             rms_c3 = sqrt( var_c3 )
+          endif
+
+          !           ------ m = 0 ------
+          zeta2_r = rand_gauss(rng_handle)
+          zeta2_i = ZERO
+          zeta3_r = rand_gauss(rng_handle)
+          zeta3_i = ZERO
+          zeta2   = CMPLX(zeta2_r, zeta2_i, kind=KALM)
+          zeta3   = CMPLX(zeta3_r, zeta3_i, kind=KALM)
+          alm_TGC(2, l, 0) = alm_TGC(2, l, 0) + zeta2 * rms_g2 ! E->E
+          alm_TGC(3, l, 0) = alm_TGC(3, l, 0) + zeta3 * rms_c3 ! B->B
+          if (bcoupling) then
+             alm_TGC(3, l, 0) = alm_TGC(3, l, 0) + zeta2 * rms_c2 ! E->B
+          endif
+
+          !           ------ m > 0 ------
+          do m = 1,l
+             zeta2_r = rand_gauss(rng_handle) * hsqrt2
+             zeta2_i = rand_gauss(rng_handle) * hsqrt2
+             zeta3_r = rand_gauss(rng_handle) * hsqrt2
+             zeta3_i = rand_gauss(rng_handle) * hsqrt2
+             zeta2   = CMPLX(zeta2_r, zeta2_i, kind=KALM)
+             zeta3   = CMPLX(zeta3_r, zeta3_i, kind=KALM)
+             alm_TGC(2, l, m) = alm_TGC(2, l, m) + zeta2 * rms_g2
+             alm_TGC(3, l, m) = alm_TGC(3, l, m) + zeta3 * rms_c3
+             if (bcoupling) then
+                alm_TGC(3, l, m) = alm_TGC(3, l, m) + zeta2 * rms_c2
+             endif
           enddo
        enddo
     endif
