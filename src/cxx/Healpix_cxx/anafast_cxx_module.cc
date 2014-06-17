@@ -109,7 +109,7 @@ template<typename T> void anafast_cxx (paramfile &params)
       mapT.Add(T(-avg));
       }
 
-    tsize nmod = mapT.replaceUndefWith0()+mapT.replaceUndefWith0()
+    tsize nmod = mapT.replaceUndefWith0()+mapQ.replaceUndefWith0()
                 +mapU.replaceUndefWith0();
     if (nmod!=0)
       cout << "WARNING: replaced " << nmod <<
