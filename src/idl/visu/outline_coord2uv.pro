@@ -123,6 +123,8 @@ pro outline_coord2uv, outline, coord_out, eul_mat, outline_uv, projection=projec
 ;       2007-05-14: test for ambiguous tag name in outline structure
 ;       2011-01-12: calls SYMCAT if 9 <= ABS(psym) <= 46
 ;       2013-02-08: replaced SYMCAT with CGSYMCAT
+;       2014-06-23: allow different sub-structure to use different customized
+;         symbols (via CGSYMCAT when PSYM in [9,46])
 ;-
 
 ; outline : from astro coordinate to uv plan
@@ -199,10 +201,10 @@ for i=0,n_outlines-1 do begin
         invalid_tags[iw] = 0
     endif
     ocuv_assert_scalar,sym_type,'PSYM', error=err_assert
-    if (abs(sym_type) ge 9 && abs(sym_type) le 46) then begin
-        mysign = (sym_type lt 0) ? -1 : 1
-        sym_type = mysign * cgsymcat(abs(sym_type)) ; call usersym and set sym_type to 8 or -8
-    endif
+;     if (abs(sym_type) ge 9 && abs(sym_type) le 46) then begin
+;         mysign = (sym_type lt 0) ? -1 : 1
+;         sym_type = mysign * cgsymcat(abs(sym_type)) ; call usersym and set sym_type to 8 or -8
+;     endif
     
     ssize = 1
     iw = index_word(names,'SYM',err=errword)
@@ -324,7 +326,9 @@ if (keyword_set(show)) then begin
     n_outlines= n_tags(outline_uv)
     for i=0,n_outlines-1 do begin
         c1 = outline_uv.(i)
-        oplot_sphere, c1.U, c1.V, line_type=c1.T, _extra = oplot_kw, psym=c1.ST, symsize=c1.SS
+        psym_type = c1.ST
+        if (psym_type ge 9 && psym_type le 46) then  psym_type = cgsymcat(psym_type) ; call usersym and set psym_type to 8
+        oplot_sphere, c1.U, c1.V, line_type=c1.T, _extra = oplot_kw, psym=psym_type, symsize=c1.SS
     endfor
 endif
 
