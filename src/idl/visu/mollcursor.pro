@@ -87,12 +87,6 @@ ila = strlen(strtrim(lat_name ,2))
 if (ilo eq 2) then long_name = '  '+strtrim(long_name,2)
 if (ilo eq 3) then long_name = ' '+strtrim(long_name,2)
 if (ila eq 3) then  lat_name = ' '+strtrim( lat_name,2)
-; coordinate = decode_coord(coord_out)
-; long_name = 'Long' & lat_name = 'Lat' ; for galactic and ecliptic
-; if (coord_out eq 'Q') then begin ; for equatorial
-;     long_name = '  RA'
-;     lat_name  = ' Dec'
-; endif
 
 svalue = '         Pixel Value'
 if (do_polamplitude) then svalue = '      Pol. amplitude'
