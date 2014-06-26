@@ -25,7 +25,7 @@
  */
 
 /*
- *  Copyright (C) 2003-2010 Max-Planck-Society
+ *  Copyright (C) 2003-2014 Max-Planck-Society
  *  Author: Martin Reinecke
  */
 
@@ -42,6 +42,7 @@
 #include "levels_facilities.h"
 #include "lsconstants.h"
 #include "announce.h"
+#include "planck_rng.h"
 
 using namespace std;
 
@@ -56,6 +57,12 @@ template<typename T> void alm2map_cxx (paramfile &params)
   string outfile = params.template find<string>("outfile");
   int nside = params.template find<int>("nside");
   double fwhm = arcmin2rad*params.template find<double>("fwhm_arcmin",0);
+  int cw_lmin=-1, cw_lmax=-1;
+  if (params.param_present("cw_lmin"))
+    {
+    cw_lmin = params.template find<int>("cw_lmin");
+    cw_lmax = params.template find<int>("cw_lmax");
+    }
 
   arr<double> temp, pol;
   get_pixwin (params,nlmax,nside,temp,pol);
@@ -66,6 +73,7 @@ template<typename T> void alm2map_cxx (paramfile &params)
     Alm<xcomplex<T> > alm;
     read_Alm_from_fits(infile,alm,nlmax,nmmax,2);
     if (fwhm>0) smoothWithGauss (alm, fwhm);
+    if (cw_lmin>=0) applyCosineWindow(alm, cw_lmin, cw_lmax);
     Healpix_Map<T> map(nside,RING,SET_NSIDE),
                    mapdth(nside,RING,SET_NSIDE),
                    mapdph(nside,RING,SET_NSIDE);
@@ -80,11 +88,13 @@ template<typename T> void alm2map_cxx (paramfile &params)
     }
 
   bool polarisation = params.template find<bool>("polarisation");
+  bool do_regnoise = params.param_present("regnoiseT");
   if (!polarisation)
     {
     Alm<xcomplex<T> > alm;
     read_Alm_from_fits(infile,alm,nlmax,nmmax,2);
     if (fwhm>0) smoothWithGauss (alm, fwhm);
+    if (cw_lmin>=0) applyCosineWindow(alm, cw_lmin, cw_lmax);
     Healpix_Map<T> map(nside,RING,SET_NSIDE);
     alm.ScaleL(temp);
 
@@ -92,6 +102,13 @@ template<typename T> void alm2map_cxx (paramfile &params)
     alm(0,0) = 0;
     alm2map(alm,map);
     map.Add(T(offset));
+    if (do_regnoise)
+      {
+      planck_rng rng(params.template find<int>("rand_seed",42));
+      double rms = params.template find<double>("regnoiseT");
+      for (int i=0; i<map.Npix(); ++i)
+        map[i] += rms*rng.rand_gauss();
+      }
     write_Healpix_map_to_fits (outfile,map,planckType<T>());
     }
   else
@@ -99,6 +116,7 @@ template<typename T> void alm2map_cxx (paramfile &params)
     Alm<xcomplex<T> > almT, almG, almC;
     read_Alm_from_fits(infile,almT,almG,almC,nlmax,nmmax,2);
     if (fwhm>0) smoothWithGauss (almT, almG, almC, fwhm);
+    if (cw_lmin>=0) applyCosineWindow(almT, almG, almC, cw_lmin, cw_lmax);
     Healpix_Map<T> mapT(nside,RING,SET_NSIDE), mapQ(nside,RING,SET_NSIDE),
                    mapU(nside,RING,SET_NSIDE);
     almT.ScaleL(temp);
@@ -108,6 +126,18 @@ template<typename T> void alm2map_cxx (paramfile &params)
     almT(0,0) = 0;
     alm2map_pol(almT,almG,almC,mapT,mapQ,mapU);
     mapT.Add(T(offset));
+    if (do_regnoise)
+      {
+      planck_rng rng(params.template find<int>("rand_seed",42));
+      double rmsT  = params.template find<double>("regnoiseT"),
+             rmsQU = params.template find<double>("regnoiseQU");
+      for (int i=0; i<mapT.Npix(); ++i)
+        {
+        mapT[i] += rmsT *rng.rand_gauss();
+        mapQ[i] += rmsQU*rng.rand_gauss();
+        mapU[i] += rmsQU*rng.rand_gauss();
+        }
+      }
     write_Healpix_map_to_fits (outfile,mapT,mapQ,mapU,planckType<T>());
     }
   }

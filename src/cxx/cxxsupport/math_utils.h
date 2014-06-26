@@ -25,7 +25,7 @@
 /*! \file math_utils.h
  *  Various convenience mathematical functions.
  *
- *  Copyright (C) 2002-2013 Max-Planck-Society
+ *  Copyright (C) 2002-2014 Max-Planck-Society
  *  \author Martin Reinecke
  */
 
@@ -191,6 +191,9 @@ template<typename T, typename Iter> inline void interpol_helper
 
 /*! \} */
 
+template<typename T> inline bool multiequal (const T &a, const T &b)
+  { return (a==b); }
+
 template<typename T> inline bool multiequal (const T &a, const T &b, const T &c)
   { return (a==b) && (a==c); }
 
@@ -222,5 +225,15 @@ template<typename T> class kahan_adder
       }
     T result() const { return sum; }
   };
+
+template<typename Iter> bool checkNan (Iter begin, Iter end)
+  {
+  while (begin!=end)
+    {
+    if (*begin != *begin) return true;
+    ++begin;
+    }
+  return false;
+  }
 
 #endif

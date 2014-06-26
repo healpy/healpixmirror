@@ -25,7 +25,7 @@
  */
 
 /*! \file alm_powspec_tools.h
- *  Copyright (C) 2003, 2004, 2005 Max-Planck-Society
+ *  Copyright (C) 2003-2014 Max-Planck-Society
  *  \author Martin Reinecke
  */
 
@@ -90,6 +90,21 @@ template<typename T> void smoothWithGauss
    Alm<xcomplex<T> > &almG,
    Alm<xcomplex<T> > &almC,
    double fwhm);
+
+/*! Applies a function to \a alm that is 1 for all \c l<=lmin, 0 for all
+    \c l>=lmax, and \c 0.5*(1+cos((l-lmin)/(lmax-lmin)*pi)) in between.
+    \relates Alm  */
+template<typename T> void applyCosineWindow
+  (Alm<xcomplex<T> > &alm, int lmin, int lmax);
+
+template<typename T> inline void applyCosineWindow
+  (Alm<xcomplex<T> > &almT, Alm<xcomplex<T> > &almG, Alm<xcomplex<T> > &almC,
+  int lmin, int lmax)
+  {
+  applyCosineWindow(almT,lmin,lmax);
+  applyCosineWindow(almG,lmin,lmax);
+  applyCosineWindow(almC,lmin,lmax);
+  }
 
 /*! Rotates \a alm through the Euler angles \a psi, \a theta and \a phi.
     The Euler angle convention  is right handed, rotations are active.

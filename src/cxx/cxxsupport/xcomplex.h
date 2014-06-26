@@ -91,6 +91,13 @@ template<typename T> class xcomplex
     void Set (const T &re_, const T &im_)
       { re = re_; im = im_; }
 
+    /*! Returns \c true if both real and imaginary part compare equal. */
+    bool operator==(const xcomplex &other) const
+      { return (re==other.re) && (im==other.im); }
+    /*! Returns \c true if either real or imaginary part compare unequal. */
+    bool operator!=(const xcomplex &other) const
+      { return (re!=other.re) || (im!=other.im); }
+
     /*! Sets the number to \a orig. */
     xcomplex &operator= (const xcomplex &orig)
       { re=orig.re; im=orig.im; return *this; }
