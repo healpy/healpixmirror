@@ -1845,11 +1845,8 @@
        return
     endif
 
-    jr_min = ringphi(1, 1)
-    jr_max = ringphi(1, ngr)
-    nj = jr_max - jr_min + 1
-    do j=0, nj-1
-       ir = jr_min + j             ! current ring, in [1, nl4-1]
+    do j=0, ngr-1
+       ir = ringphi(1, j+1)             ! current ring, in [1, nl4-1]
        call pixels_per_ring(nside, ir, nr, kshift, npc)
        my_low = ringphi(2, j+1)
        if (my_low >= 0) then
@@ -1920,6 +1917,7 @@
 ! 2011-10-18: improve fudge radius determination.
 ! New algorithm for Inclusive case: test boundary of edge pixels on each ring
 !    2013-04-02: bug correction in query_disc in inclusive mode
+!    2014-07-07: bug correction in discedge2fulldisc
     !=======================================================================
 #ifdef DOI8B
   subroutine query_disc_8( nside, vector0, radius, listpix, nlist, nest, inclusive)

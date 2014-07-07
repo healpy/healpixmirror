@@ -122,6 +122,7 @@ endif else begin
     ringphi[0,2] = ip_hi [good]
 endelse
 
+
 ; if (n_non_empty eq 0) then begin
 ;     ngr = 0
 ;     ringphi = [-1L,-1L,-1L]
@@ -155,10 +156,9 @@ pixels_per_ring, nside, npr, kshift, npc
 nl4 = 4L*nside
 ramp = lindgen(nl4)
 
-jr_min = min(ringphi[*,0], max=jr_max)
-nj = jr_max - jr_min + 1L
+nj = n_elements(ringphi[*,0])
 for j=0L, nj-1 do begin
-    ir = jr_min + j             ; current ring, in [1, nl4-1]
+    ir = ringphi[j,0]             ; current ring, in [1, nl4-1]
     nr = npr[ir]                ; number of pixels available on this ring
     my_low = ringphi[j,1]
     if (my_low ge 0) then begin
@@ -374,6 +374,7 @@ pro query_disc, nside, vector0, radius_in, listpix, nlist, deg = deg, inclusive=
 ;          by testing border of edge pixels (sampled at larger Nside)
 ;     2013-01-14: avoid crashes is some configurations with empty Listpix list,
 ;            systematically returns Listpix=[-1], Nlist=0 in case of problem
+;     2014-07-07: bug correction in discedge2fulldisc (reported by F. Atrio-Barandella)
 ;-
 
 tstart = systime(1)
