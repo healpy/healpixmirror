@@ -1267,6 +1267,18 @@ IdentifyCParallCompiler () {
     fi
 }
 # -----------------------------------------------------------------
+ExtendCFLAGS () {
+tmp=$CFLAGS
+for i in $1 ; do
+    match=0
+    for j in $tmp ; do
+	[ "$i" = "$j" ] && match=1
+    done
+    [ "$match" = "0" ] && tmp="$tmp $i"
+done
+CFLAGS=$tmp
+}
+# -----------------------------------------------------------------
 
 IdentifyCCompiler () {
     ngcc=`$CC --version 2>&1   | ${GREP} '(GCC)'     | ${WC} -l` # gcc
@@ -1276,22 +1288,22 @@ IdentifyCCompiler () {
     npath=`$CC -v 2>&1         | ${GREP} -i ekopath  | ${WC} -l` # pathscale EKOPath
     if [ $ngcc != 0 ] ; then
 	echo "$CC: GCC compiler"
-	CFLAGS="-O3 -std=c99"
+	ExtendCFLAGS "-O3 -std=c99"
     elif [ $nicc != 0 ] ; then
 	echo "$CC: Intel C compiler"
-	CFLAGS="-O3 -std=c99"
+	ExtendCFLAGS "-O3 -std=c99"
     elif [ $nclang != 0 ] ; then
 	echo "$CC: clang C compiler"
-	CFLAGS="-O3 -std=c99"
+	ExtendCFLAGS "-O3 -std=c99"
     elif [ $npgc != 0 ] ; then
 	echo "$CC: Portland Group C compiler"
-	CFLAGS="-O3"
+	ExtendCFLAGS "-O3"
     elif [ $npath != 0 ] ; then
 	echo "$CC: Pathscale EKOPath C compiler"
-	CFLAGS="-O3"
+	ExtendCFLAGS "-O3"
     else
 	echo "$CC: unknown C compiler"
-	CFLAGS="-O"
+	ExtendCFLAGS "-O"
     fi
 }
 # -----------------------------------------------------------------
