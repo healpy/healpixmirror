@@ -73,6 +73,7 @@ pro bin_llcl, llcl_in, ubin, l_out, llcl_out, dllcl, uniform=uniform, deltal=del
 ;  2007-05-31: added /flatten and /help
 ;  2008-03-03: ignore bins beyond data lmax, truncate last valid bin if necessary.
 ;  2013-03-15: correctly deals with optional Dllcl argument
+;  2014-07-21: correction of a mistyped call to MESSAGE mostly showing up under GDL
 ;-
 
 
@@ -138,7 +139,7 @@ endif else begin
     nbins = nb-1
     good = where(bin lt lmax, ng)
     if (ng eq 0)  then begin
-        message,info,'l-range of binning does not intersect that of data'
+        message,/info,'l-range of binning does not intersect that of data'
         return
     endif
     l = findgen(lmax+1)
