@@ -25,7 +25,7 @@
  */
 
 /*
- *  Copyright (C) 2003-2011 Max-Planck-Society
+ *  Copyright (C) 2003-2014 Max-Planck-Society
  *  Author: Martin Reinecke
  */
 
@@ -97,7 +97,7 @@ void pro_mollw (const Healpix_Map<float> &map, double lon0, double lat0,
   double xc=(xsize-1)/2., yc=(ysize-1)/2.;
 
   rotmatrix rot;
-  rot.Make_CPAC_Euler_Matrix(0,-lat0,-lon0);
+  rot.Make_CPAC_Euler_Matrix(lon0,-lat0,0);
 
   minv=1e30;
   maxv=-1e30;
