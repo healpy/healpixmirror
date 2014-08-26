@@ -25,7 +25,11 @@
 ;  For more information about HEALPix see http://healpix.sourceforge.net
 ;
 ; -----------------------------------------------------------------------------
-function euler_matrix_new,a1,a2,a3,X=x,Y=y,ZYX=zyx,DEG=deg
+function euler_matrix_new, a1, a2, a3, $
+  DEG=deg, $
+  HELP=help, $
+  X=x, Y=y, ZYX=zyx
+
 ;+
 ; NAME:
 ;         EULER_MATRIX_NEW
@@ -36,7 +40,7 @@ function euler_matrix_new,a1,a2,a3,X=x,Y=y,ZYX=zyx,DEG=deg
 ;         correct bugs present in Euler_Matrix
 ;        
 ; CALLING SEQUENCE:
-;         result = euler_matrix_new (a1, a2, a3 [,X, Y, ZYX, DEG ])
+;         result = euler_matrix_new (a1, a2, a3 [, DEG=, HELP=, X=, Y=, ZYX= ])
 ; 
 ; INPUTS:
 ;         a1, a2, a3 = Euler angles, scalar
@@ -47,24 +51,26 @@ function euler_matrix_new,a1,a2,a3,X=x,Y=y,ZYX=zyx,DEG=deg
 ;        the default is x
 ;
 ; KEYWORD PARAMETERS:
-;       DEG : if set the angle are measured in degree
+;       DEG : if set, the angles are measured in degrees
+;
+;       HELP: if set, the documentation header is printed
 ;
 ; 	X : 	rotation a1 around original Z 
 ;     		rotation a2 around interm   X 
 ;     		rotation a3 around final    Z
-;	DEFAULT,  classical mechanics convention
+;	 DEFAULT,  classical mechanics convention
 ;
 ;
 ; 	Y : 	rotation a1 around original Z
 ;     		rotation a2 around interm   Y
 ;     		rotation a3 around final    Z
-;	quantum mechanics convention
+;	 quantum mechanics convention
 ;
 ;
 ; 	ZYX : 	rotation a1 around original Z
 ;     		rotation a2 around interm   Y
 ;     		rotation a3 around final    X
-;	aeronautics convention
+;	 aeronautics convention
 ;
 ;       * these last three keywords are obviously mutually exclusive *
 ;
@@ -72,13 +78,18 @@ function euler_matrix_new,a1,a2,a3,X=x,Y=y,ZYX=zyx,DEG=deg
 ;       result is a 3x3 matrix
 ;
 ; USAGE: if vec is an Nx3 array containing N 3D vectors,
-;    vec # euler_matrix_new(a1,a2,a3,/Y) will be the rotated vectors
+;    vec2 = vec # euler_matrix_new(a1,a2,a3,/Y) will be the rotated vectors
+;
+;    alternatively
+;   
+;    vec2 = rotate_coord(vec, euler_matrix=euler_matrix_new(a1,a2,a3,/Y) )
+;        will also produce the rotated vectors
 ;
 ;
 ; MODIFICATION HISTORY:
 ;	March 2002, EH, Caltech, rewritting of euler_matrix
-;       Dec   2012, Paddy Leahy, Manchester: use double precision d2r
-;       if needed.
+;       Dec   2012, Paddy Leahy, Manchester: use double precision d2r if needed.
+;       2014-08: EH, HELP keyword added
 ;
 ;  convention   euler_matrix_new           euler_matrix
 ;      X:       M_new(a,b,c,/X)  =  M_old(-a,-b,-c,/X) = Transpose( M_old(c, b, a,/X))
@@ -87,9 +98,16 @@ function euler_matrix_new,a1,a2,a3,X=x,Y=y,ZYX=zyx,DEG=deg
 ;
 ;-
 
+routine = 'euler_matrix_new'
+
+if keyword_set(help) then begin
+    doc_library,routine
+    return,-1
+endif
+
 if (n_params() ne 3) then begin
     message,'  Invalid number of arguments ',/noprefix,/inform
-    message,' Syntax : result = euler_matrix_new(a1,a2,a3,[X=,Y=,ZYX=,Deg=])',/noprefix,/noname
+    message,' Syntax : result = '+routine+'(a1, a2, a3, [HELP=, DEG=, X=, Y=, ZYX=])',/noprefix,/noname
 endif
 
 t_k = 0

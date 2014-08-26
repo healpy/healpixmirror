@@ -26,36 +26,58 @@ matrix parametrized by three angles and three axes of rotation.
 \end{facility}
 
 \begin{IDLformat}
-{matrix = \FACNAME(a1, a2, a3 [, X=, Y=, ZYX=, DEG=]) }
+{%
+\mylink{idl:euler_matrix_new:matrix}{matrix} = \FACNAME(%
+\mylink{idl:euler_matrix_new:a1}{a1}, %
+\mylink{idl:euler_matrix_new:a2}{a2}, %
+\mylink{idl:euler_matrix_new:a3}{a3} [,% 
+\mylink{idl:euler_matrix_new:deg}{DEG=}, % 
+\mylink{idl:euler_matrix_new:help}{HELP=}, % 
+\mylink{idl:euler_matrix_new:x}{X=}, %
+\mylink{idl:euler_matrix_new:y}{Y=}, %
+\mylink{idl:euler_matrix_new:z}{ZYX=}%
+]) }
 \end{IDLformat}
 
 \begin{qualifiers}
   \begin{qulist}{} %%%% NOTE the ``extra'' brace here %%%%
-    \item[matrix] a 3x3 array containing the Euler matrix
-    \item[a1] input, float scalar, 
+    \item[matrix] \mytarget{idl:euler_matrix_new:matrix} 
+      a 3x3 array containing the Euler matrix
+    \item[a1] \mytarget{idl:euler_matrix_new:a1} 
+      input, float scalar, 
     angle of the first rotation, expressed in radians,
     unless DEG (see below) is set
-    \item[a2] angle of the second rotation, same units as a1
-    \item[a3] angle of the third rotation, same units as a1
+    \item[a2] \mytarget{idl:euler_matrix_new:a2} 
+      angle of the second rotation, same units as a1
+    \item[a3] \mytarget{idl:euler_matrix_new:a3} 
+      angle of the third rotation, same units as a1
   \end{qulist}
 \end{qualifiers}
     
 \begin{keywords}
   \begin{kwlist}{} %%% extra brace
-    \item[DEG=] if set, the angles are in degrees instead of radians
-    \item[X=] if set, uses the classical mechanics convention (ZXZ):\\
+    \item[DEG=] \mytarget{idl:euler_matrix_new:deg} 
+      if set, the angles are in degrees instead of radians
+
+    \item[HELP=] \mytarget{idl:euler_matrix_new:help} 
+      if set, the routine prints its documentation header and exits
+
+    \item[X=] \mytarget{idl:euler_matrix_new:x} 
+      if set, uses the classical mechanics convention (ZXZ):\\
 	rotation a1 around original Z axis, \\
 	rotation a2 around intermediate X axis, \\
         rotation a3 around final Z axis \\
         (see Goldstein for more details). \\
 	\default{this convention is used}
 
-    \item[Y=] if set, uses the quantum mechanics convention (ZYZ):\\
+    \item[Y=] \mytarget{idl:euler_matrix_new:y} 
+      if set, uses the quantum mechanics convention (ZYZ):\\
 	rotation a1 around original Z axis, \\
 	rotation a2 around intermediate Y axis, \\
         rotation a3 around final Z axis.
 
-    \item[ZYX=] if set, uses the aeronautics convention (ZYX):\\
+    \item[ZYX=] \mytarget{idl:euler_matrix_new:zyx} 
+      if set, uses the aeronautics convention (ZYX):\\
 	rotation a1 around original Z axis, \\
 	rotation a2 around intermediate Y axis, \\
         rotation a3 around final X axis.

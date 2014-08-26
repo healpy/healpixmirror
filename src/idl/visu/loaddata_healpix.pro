@@ -582,9 +582,9 @@ if (~keyword_set(silent)) then print,'plot coord : ',decode_coord(coord_out)+' c
 do_conv = (coord_in NE coord_out)
 
 ; ---- extra rotation ----
-if defined(rot_ang) then rot_ang = ([rot_ang,0.,0.])(0:2) else rot_ang = [0., 0., 0.]
-; eul_mat = euler_matrix(-rot_ang(0), -rot_ang(1), -rot_ang(2), /Deg, /ZYX)
-eul_mat = euler_matrix_new(rot_ang(0), -rot_ang(1), rot_ang(2), /Deg, /ZYX)
+if defined(rot_ang) then rot_ang = ([rot_ang,0.,0.])[0:2] else rot_ang = [0., 0., 0.]
+; rot_ang[1] is delta-latitude instead of expected delta-colatitude, hence a minus sign in the Euler matrix
+eul_mat = euler_matrix_new(rot_ang[0], -rot_ang[1], rot_ang[2], /Deg, /ZYX)
 do_rot = (TOTAL(ABS(rot_ang)) GT 1.e-5)
 
 ; ---- resolution parameter ----

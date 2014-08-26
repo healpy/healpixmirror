@@ -27,23 +27,37 @@ or by an arbitrary rotation.
 \end{facility}
 
 \begin{IDLformat}
-{Outvec = \FACNAME( Invec [, Inco=, Outco=, Euler\_Matrix=, Stokes\_Parameters=] )}
+{%
+\mylink{idl:rotate_coord:outvec}{Outvec} = \FACNAME(%
+\mylink{idl:rotate_coord:invec}{Invec} [, 
+\mylink{idl:rotate_coord:help}{/Help}, %
+\mylink{idl:rotate_coord:euler_matrix}{Euler\_Matrix=}, %
+\mylink{idl:rotate_coord:inco}{Inco=}, %
+\mylink{idl:rotate_coord:outco}{Outco=}, % 
+\mylink{idl:rotate_coord:stokes_parameters}{Stokes\_Parameters=}%
+] )}
 \end{IDLformat}
 
 \begin{qualifiers}
   \begin{qulist}{} %%%% NOTE the ``extra'' brace here %%%%
-    \item[Invec]  input,  array of size (n,3) : set of 3D position vectors
-    \item[Outvec] output, array of size (n,3) : rotated 3D vectors
-    \item[Inco=]   input, character string (either 'Q' or 'C': equatorial,
-    'G': galactic or 'E': ecliptic) describing the input coordinate system 
-    \item[Outco=]  input, character string (see above) describing the output
-          coordinate system.\\
-    Can not be used together with Euler\_Matrix
-    \item[Euler\_Matrix=] input, array of size (3,3). Euler Matrix
+    \item[Invec] \mytarget{idl:rotate_coord:invec}
+      input,  array of size (n,3) : set of 3D position vectors
+    \item[Outvec] \mytarget{idl:rotate_coord:outvec}
+     output, array of size (n,3) : rotated 3D vectors
+    \item[Euler\_Matrix=] \mytarget{idl:rotate_coord:euler_matrix}
+       input, array of size (3,3). Euler Matrix
        describing the rotation to apply to vectors.
        \default{unity : no rotation}.\\
        Can not be used together with a change in coordinates.
-    \item[Stokes\_Parameters=] input and output, array of size (n, 2) :
+    \item[Inco=] \mytarget{idl:rotate_coord:inco}
+       input, character string (either 'Q' or 'C': equatorial,
+    'G': galactic or 'E': ecliptic) describing the input coordinate system 
+    \item[Outco=] \mytarget{idl:rotate_coord:outco}
+        input, character string (see above) describing the output
+          coordinate system.\\
+    Can not be used together with Euler\_Matrix
+    \item[Stokes\_Parameters=]\mytarget{idl:rotate_coord:stokes_parameters}
+       input and output, array of size (n, 2) :
       values of the Q and U Stokes parameters on the sphere for each of
       the input position vector. Q and U are defined wrt the local
       parallel and meridian and are therefore transformed in a non
@@ -51,10 +65,12 @@ or by an arbitrary rotation.
   \end{qulist}
 \end{qualifiers}
 
-% \begin{keywords}
-%   \begin{kwlist}{} %%% extra brace
-%   \end{kwlist}
-% \end{keywords}  
+\begin{keywords}
+  \begin{kwlist}{} %%% extra brace
+    \item[/Help] \mytarget{idl:rotate_coord:help}
+     if set, the documentation header is printed and the routine exits	
+  \end{kwlist}
+\end{keywords}  
 
 \begin{codedescription}
 {\thedocid \ is a generalisation of the Astro library routine {\tt skyconv}. It allows
