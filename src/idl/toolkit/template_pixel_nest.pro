@@ -70,6 +70,7 @@ pro template_pixel_nest, nside, ipix, itplt, reflexion
 ;         NEST2RING, RING2NEST
 ;         SAME_SHAPE_PIXELS_NEST, SAME_SHAPE_PIXELS_RING
 ;         TEMPLATE_PIXEL_NEST,    TEMPLATE_PIXEL_RING
+;         NSIDE2NTEMPLATES
 ;
 ; MODIFICATION HISTORY:
 ;         2004-10, EH, v1.0

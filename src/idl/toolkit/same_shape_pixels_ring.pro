@@ -42,7 +42,8 @@ pro same_shape_pixels_ring, nside, template, list, reflexion, nreplications=nrep
 ; INPUTS:
 ;         Nside    : scalar, integer, Healpix resolution parameter
 ;         Template : scalar, integer, index of the pixel template
-;           should be in [0, (1 + Nside*(Nside+6))/4 - 1]
+;           should be in [0, (1 + Nside*(Nside+6))/4 - 1] 
+;           (see Nside2Ntemplates)
 ;
 ; KEYWORD PARAMETERS:
 ;         Nreplications: on output, number of pixels having the same shape as template
@@ -74,7 +75,8 @@ pro same_shape_pixels_ring, nside, template, list, reflexion, nreplications=nrep
 ; RELATED ROUTINES:
 ;         NEST2RING, RING2NEST
 ;         SAME_SHAPE_PIXELS_NEST, SAME_SHAPE_PIXELS_RING
-;         TEMPLATE_PIXEL_NEST,    TEMPLATE_PIXEL_RING
+;         TEMPLATE_PIXEL_NEST,    TEMPLATE_PIXEL_RING,
+;         NSIDE2NTEMPLATES
 ;
 ; MODIFICATION HISTORY:
 ;         2004-09, EH, v1.0
