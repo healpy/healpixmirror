@@ -22,7 +22,7 @@
   </target>
   <target name="compile" depends="init" description="Compile the Java code">
     <echo>building </echo>
-    <javac destdir="${classes}" source="1.5" includeAntRuntime="false"
+    <javac destdir="${classes}" source="1.6" target="1.6" includeAntRuntime="false"
       srcdir="${src}" debug="on">
       <compilerarg value="-Xlint"/>
       <classpath refid="classpath" />
@@ -73,7 +73,7 @@
   </target>
   <target name="docs" description="Create the Javadocs">
     <javadoc destdir="${docs}" failonerror="true" use="true"
-      additionalparam='-breakiterator -quiet -tag copyright:a:"Copyright:" -link http://docs.oracle.com/javase/1.5.0/docs/api'
+      additionalparam='-breakiterator -quiet -tag copyright:a:"Copyright:" -link http://docs.oracle.com/javase/1.7.0/docs/api'
       classpathref="classpath">
       <packageset dir="${src}" defaultexcludes="yes">
         <exclude name="**/test/**" />

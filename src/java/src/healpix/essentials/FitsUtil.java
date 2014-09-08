@@ -61,7 +61,7 @@ public class FitsUtil
     FitsFactory.setUseAsciiTables(false);
     BasicHDU bhdu = (new Fits(filename)).getHDU(hdu-1);
     Header head = bhdu.getHeader();
-    head.setLongStringsEnabled(true);
+    Header.setLongStringsEnabled(true);
 
     Scheme scheme = getScheme(head);
     int nside = Integer.parseInt(getKey(head,"Nside"));
@@ -91,7 +91,7 @@ public class FitsUtil
     FitsFactory.setUseAsciiTables(false);
     BasicHDU bhdu = (new Fits(filename)).getHDU(hdu-1);
     Header head = bhdu.getHeader();
-    head.setLongStringsEnabled(true);
+    Header.setLongStringsEnabled(true);
 
     Scheme scheme = getScheme(head);
     int nside = Integer.parseInt(getKey(head,"Nside"));

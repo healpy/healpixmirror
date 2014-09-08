@@ -32,7 +32,7 @@ public class HealpixMapDouble extends HealpixBase
   {
   private double[] data;
 
-  public static final double undef=(double)(-1.6375e30);
+  public static final double undef=-1.6375e30;
 
   public HealpixMapDouble() throws Exception
     { this(1,Scheme.NESTED); }
@@ -204,7 +204,7 @@ public class HealpixMapDouble extends HealpixBase
             sum += orig.data[opix];
             }
           }
-      data[m] = (hits<minhits) ? undef : (double) (sum/hits);
+      data[m] = (hits<minhits) ? undef : (sum/hits);
       }
     }
   /** Imports the map "orig" to this object, adjusting pixel ordering
