@@ -22,7 +22,7 @@ package healpix.essentials;
 
 /** Collection of utility functions.
 
-    @copyright 2011 Max-Planck-Society
+    @copyright 2011-2014 Max-Planck-Society
     @author Martin Reinecke */
 public class HealpixUtils
   {
@@ -32,16 +32,11 @@ public class HealpixUtils
 
   /** Integer base 2 logarithm.
       @param arg
-      @return the largest integer {@code n} that fulfills {@code 2^n<=arg}. */
+      @return the largest integer {@code n} that fulfills {@code 2^n<=arg}.
+      For negative arguments and zero, 0 is returned. */
   static public int ilog2(long arg)
     {
-    int res=0;
-    while (arg > 0x0000FFFF) { res+=16; arg>>>=16; }
-    if (arg > 0x000000FF) { res|=8; arg>>>=8; }
-    if (arg > 0x0000000F) { res|=4; arg>>>=4; }
-    if (arg > 0x00000003) { res|=2; arg>>>=2; }
-    if (arg > 0x00000001) { res|=1; }
-    return res;
+    return 63-Long.numberOfLeadingZeros(Math.max(arg,1L));
     }
 
   /** Integer square root.
@@ -87,4 +82,7 @@ public class HealpixUtils
     { return Math.abs(a-b) < (epsilon*Math.abs(b)); }
   static public boolean approx (double a, double b, double epsilon)
     { return Math.abs(a-b) < (epsilon*Math.abs(b)); }
+
+  static public int uniq2order (long uniq)
+    { return ilog2(uniq>>>2)>>>1; }
   }

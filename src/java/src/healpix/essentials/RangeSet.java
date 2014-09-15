@@ -27,7 +27,7 @@ import java.util.NoSuchElementException;
     This code was inspired by Jan Kotek's "LongRangeSet" class, but has been
     completely reimplemented.
 
-    @copyright 2011, 2012 Max-Planck-Society
+    @copyright 2011-2014 Max-Planck-Society
     @author Martin Reinecke */
 public class RangeSet implements Externalizable
   {
@@ -240,24 +240,21 @@ public class RangeSet implements Externalizable
       a and b. */
   public void setToDifference (RangeSet a, RangeSet b)
     { generalUnion (a,b,true,false,this); }
-  /** After this operation, the RangeSet contains the union of itself and
-      other. */
+  /** Return the union of this RangeSet and other. */
   public RangeSet union (RangeSet other)
     {
     RangeSet res=new RangeSet();
     generalUnion (this,other,false,false,res);
     return res;
     }
-  /** After this operation, the RangeSet contains the intersection of itself and
-      other. */
+  /** Return the intersection of this RangeSet and other. */
   public RangeSet intersection (RangeSet other)
     {
     RangeSet res=new RangeSet();
     generalUnion (this,other,true,true,res);
     return res;
     }
-  /** After this operation, the RangeSet contains the difference of itself and
-      other. */
+  /** Return the difference of this RangeSet and other. */
   public RangeSet difference (RangeSet other)
     {
     RangeSet res=new RangeSet();
@@ -404,10 +401,18 @@ public class RangeSet implements Externalizable
       [a;b[. */
   public void add (long a, long b)
     { addRemove(a,b,1); }
+  /** After this operation, the RangeSet contains the union of itself and
+      [a;a+1[. */
+  public void add (long a)
+    { addRemove(a,a+1,1); }
   /** After this operation, the RangeSet contains the difference of itself and
       [a;b[. */
   public void remove (long a, long b)
     { addRemove(a,b,0); }
+  /** After this operation, the RangeSet contains the difference of itself and
+      [a;a+1[. */
+  public void remove (long a)
+    { addRemove(a,a+1,0); }
 
   /** Creates an array cointainig all the numbers in the RangeSet.
       Not recommended, because the arrays can become prohibitively large.
@@ -460,6 +465,17 @@ public class RangeSet implements Externalizable
         return ret;
         }
       };
+    }
+
+  public byte[] toByteArray() throws Exception
+    {
+    return Compressor.interpol_encode (r, 0, sz);
+    }
+  public void fromByteArray (byte[] data) throws Exception
+    {
+    r=Compressor.interpol_decode(data);
+    sz=r.length;
+    checkConsistency();
     }
 
   public void writeExternal(ObjectOutput out) throws IOException
