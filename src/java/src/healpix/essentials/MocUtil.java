@@ -62,9 +62,7 @@ public class MocUtil
       else // single value
         ru.add(Long.parseLong(tok[i])+ofs);
       }
-    Moc res = new Moc();
-    res.fromUniq(ru);
-    return res;
+    return Moc.fromUniq(ru);
     }
   private static String mocToStringGeneral(Moc moc, boolean json)
     {
@@ -155,9 +153,7 @@ public class MocUtil
     RangeSet ru = new RangeSet();
     for (int i=0; i<data.length; ++i)
       ru.append(data[i]);
-    Moc moc = new Moc();
-    moc.fromUniq(ru);
-    return moc;
+    return Moc.fromUniq(ru);
     }
   public static void mocToFits(Moc moc, String filename) throws Exception
     {

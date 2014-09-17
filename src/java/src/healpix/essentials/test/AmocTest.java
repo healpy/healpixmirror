@@ -25,7 +25,7 @@ import healpix.essentials.RangeSet;
 import junit.framework.TestCase;
 import java.io.*;
 
-public class MocTest extends TestCase
+public class AmocTest extends TestCase
   {
   public void testSimple() throws Exception
     {
@@ -34,35 +34,24 @@ public class MocTest extends TestCase
     moc.addPixelRange(0,6,7);
     moc.addPixelRange(2,4,17);
     moc.addPixelRange(10,3000000,3000001);
-    
-    Moc xtmp = new Moc(moc);
-    xtmp.invert();
-    xtmp.invert();
-    assertEquals("inconsistency",moc,xtmp);
-    xtmp = MocUtil.mocFromString("0/4, 6 2/ 4 -16 10/3000000");
-    assertEquals("inconsistency",moc,xtmp);
-    xtmp = MocUtil.mocFromString("0/6 2/ 5 2/4 2/6- 16 0/4  10/3000000");
-    assertEquals("inconsistency",moc,xtmp);
-    xtmp = MocUtil.mocFromString
-      ("{\"0\":[6] , \"2\": [5 ], \"2\":[  4,6,7,8,9,10,11,12,13,14,15,16], \"0\":[4],  \"10\":[3000000]}");
-    assertEquals("inconsistency",moc,xtmp);
+
+    assertEquals("inconsistency",moc,moc.complement().complement());
+    assertEquals("inconsistency",moc,MocUtil.mocFromString("0/4, 6 2/ 4 -16 10/3000000"));
+    assertEquals("inconsistency",moc,MocUtil.mocFromString("0/6 2/ 5 2/4 2/6- 16 0/4  10/3000000"));
+    assertEquals("inconsistency",moc,MocUtil.mocFromString
+      ("{\"0\":[6] , \"2\": [5 ], \"2\":[  4,6,7,8,9,10,11,12,13,14,15,16], \"0\":[4],  \"10\":[3000000]}"));
     assertEquals("inconcistency",moc,MocUtil.mocFromString(MocUtil.mocToStringASCII(moc)));
     assertEquals("inconcistency",moc,MocUtil.mocFromString(MocUtil.mocToStringJSON(moc)));
-    xtmp.fromUniq(moc.toUniq());
-    assertEquals("inconsistency",moc,xtmp);
+    assertEquals("inconsistency",moc,Moc.fromUniq(moc.toUniq()));
     assertEquals("inconcistency",moc.maxOrder(),10);
-    xtmp=new Moc(moc);
-    xtmp.degradeToOrder(8,false);
-    assertTrue("inconsistency",moc.containsAll(xtmp));
-    assertFalse("inconsistency",xtmp.containsAll(moc));
-    assertTrue("inconsistency",xtmp.containsAny(moc));
-    xtmp=new Moc(moc);
-    xtmp.degradeToOrder(8,true);
-    assertFalse("inconsistency",moc.containsAll(xtmp));
-    assertTrue("inconsistency",xtmp.containsAll(xtmp));
-    xtmp=new Moc();
-    xtmp.fromByteArray(moc.toByteArray());
-    assertEquals("inconsistency",moc,xtmp);
+    Moc xtmp = moc.degradedToOrder(8,false);
+    assertTrue("inconsistency",moc.contains(xtmp));
+    assertFalse("inconsistency",xtmp.contains(moc));
+    assertTrue("inconsistency",xtmp.overlaps(moc));
+    xtmp=moc.degradedToOrder(8,true);
+    assertFalse("inconsistency",moc.contains(xtmp));
+    assertTrue("inconsistency",xtmp.contains(xtmp));
+    assertEquals("inconsistency",moc,Moc.fromByteArray(moc.toByteArray()));
     MocUtil.mocToFits(moc,"/tmp/moctest.fits");
     xtmp=MocUtil.mocFromFits("/tmp/moctest.fits");
     assertEquals("inconsistency",moc,xtmp);

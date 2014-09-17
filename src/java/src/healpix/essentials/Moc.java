@@ -26,13 +26,20 @@ package healpix.essentials;
     @author Martin Reinecke */
 public class Moc
   {
-  private final int maxorder=29;
+  private final static int maxorder=29;
   private RangeSet rs;
 
   public Moc()
     { rs=new RangeSet(); }
   public Moc(Moc other)
     { rs=new RangeSet(other.rs); }
+
+  static private Moc fromNewRangeSet(RangeSet rngset)
+    {
+    Moc res = new Moc();
+    res.rs = rngset;
+    return res;
+    }
 
   public int maxOrder()
     {
@@ -42,23 +49,21 @@ public class Moc
     return maxorder-(Long.numberOfTrailingZeros(combo)>>>1);
     }
 
-  public void degradeToOrder (int order, boolean keepPartialCells)
+  public Moc degradedToOrder (int order, boolean keepPartialCells)
     {
     int shift=2*(maxorder-order);
     long ofs=(1L<<shift)-1;
+    long mask = ~ofs;
+    long adda = keepPartialCells ? 0L : ofs,
+         addb = keepPartialCells ? ofs : 0L;
     RangeSet rs2=new RangeSet();
     for (int i=0; i<rs.size(); ++i)
       {
-      long a=rs.ivbegin(i), b=rs.ivend(i);
-      if (keepPartialCells)
-        b+=ofs;
-      else
-        a+=ofs;
-      a=(a>>>shift)<<shift;
-      b=(b>>>shift)<<shift;
+      long a=(rs.ivbegin(i)+adda)&mask;
+      long b=(rs.ivend  (i)+addb)&mask;
       if (b>a) rs2.append(a,b);
       }
-    rs=rs2;
+    return fromNewRangeSet(rs2);
     }
 
   public void addPixelRange (int order, long p1, long p2)
@@ -66,22 +71,21 @@ public class Moc
     int shift=2*(maxorder-order);
     rs.add(p1<<shift,p2<<shift);
     }
-  public void merge (Moc other)
-    { rs = rs.union(other.rs); }
-  public void intersect (Moc other)
-    { rs = rs.intersection(other.rs); }
-  public void subtract (Moc other)
-    { rs = rs.difference(other.rs); }
-  public void invert()
+  public Moc union (Moc other)
+    { return fromNewRangeSet(rs.union(other.rs)); }
+  public Moc intersection (Moc other)
+    { return fromNewRangeSet(rs.intersection(other.rs)); }
+  public Moc subtraction (Moc other)
+    { return fromNewRangeSet(rs.difference(other.rs)); }
+  public Moc complement()
     {
-    RangeSet full = new RangeSet();
-    full.append(0,12*(1L<<(2*maxorder)));
-    rs = full.difference(rs);
+    RangeSet full = new RangeSet(new long[0L,12*(1L<<(2*maxorder))]);
+    return fromNewRangeSet(full.minus(rs));
     }
-  public boolean containsAll(Moc other)
-    { return rs.containsAll(other.rs); }
-  public boolean containsAny(Moc other)
-    { return rs.containsAny(other.rs); }
+  public boolean contains(Moc other) // FIXME: needs optimization!
+    { return rs.contains(other.rs); }
+  public boolean overlaps(Moc other) // FIXME: needs optimization!
+    { return rs.overlaps(other.rs); }
   public RangeSet toUniq() // should be tuned!
     {
     RangeSet r2 = new RangeSet(rs);
@@ -107,9 +111,9 @@ public class Moc
       }
     return res;
     }
-  public void fromUniq (RangeSet ru) // should be tuned!
+  public static Moc fromUniq (RangeSet ru) // should be tuned!
     {
-    rs.clear();
+    RangeSet r= new RangeSet();
     RangeSet rtmp = new RangeSet();
     int lastorder=0;
     int shift=2*maxorder;
@@ -119,7 +123,7 @@ public class Moc
         int order = HealpixUtils.uniq2order(j);
         if (order!=lastorder)
           {
-          rs=rs.union(rtmp);
+          r=r.union(rtmp);
           rtmp.clear();
           lastorder=order;
           shift=2*(maxorder-order);
@@ -127,16 +131,17 @@ public class Moc
         long pix = j-(1L<<(2*order+2));
         rtmp.append (pix<<shift,(pix+1)<<shift);
         }
-    rs=rs.union(rtmp);
+    r=r.union(rtmp);
+    return fromNewRangeSet(r);
     }
 
   public byte[] toByteArray() throws Exception
     {
     return rs.toByteArray();
     }
-  public void fromByteArray(byte[] data) throws Exception
+  public static Moc fromByteArray(byte[] data) throws Exception
     {
-    rs.fromByteArray(data);
+    return fromNewRangeSet(RangeSet.fromByteArray(data));
     }
 
   public boolean equals(Object obj)

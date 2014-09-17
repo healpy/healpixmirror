@@ -19,7 +19,6 @@
  */
 
 package healpix.essentials;
-import java.io.*;
 import java.util.NoSuchElementException;
 
 /** Class for dealing with sets of integer ranges.
@@ -29,10 +28,8 @@ import java.util.NoSuchElementException;
 
     @copyright 2011-2014 Max-Planck-Society
     @author Martin Reinecke */
-public class RangeSet implements Externalizable
+public class RangeSet
   {
-  private static final long serialVersionUID = -4778909346616313978L;
-
   /** Interface describing an iterator for going through all values in
       a RangeSet object. */
   public interface ValueIterator {
@@ -73,13 +70,6 @@ public class RangeSet implements Externalizable
   /** Construct new object from another RangeSet
       @param other */
   public RangeSet(RangeSet other)
-    {
-    sz=other.sz;
-    r = new long[sz];
-    System.arraycopy(other.r,0,r,0,sz);
-    }
-
-  public void setTo(RangeSet other)
     {
     sz=other.sz;
     r = new long[sz];
@@ -195,22 +185,15 @@ public class RangeSet implements Externalizable
     }
   /** Internal helper function for constructing unions, intersections
       and differences of two RangeSets. */
-  private static void generalUnion (RangeSet a, RangeSet b,
-    boolean flip_a, boolean flip_b, RangeSet c)
+  private static RangeSet generalUnion (RangeSet a, RangeSet b,
+    boolean flip_a, boolean flip_b)
     {
-    c.clear();
     if (a.isEmpty())
-      {
-      if (flip_a) return; // full range
-      c.setTo(b); // only b
-      return;
-      }
+      return flip_a ? new RangeSet() : new RangeSet(b);
     if (b.isEmpty())
-      {
-      if (flip_b) return; // full range
-      c.setTo(a); // only a
-      return;
-      }
+      return flip_b ? new RangeSet() : new RangeSet(a);
+    RangeSet res = new RangeSet();
+
     boolean state_a=flip_a, state_b=flip_b, state_res=state_a||state_b;
     int ia=0, ea=a.sz, ib=0, eb=b.sz;
     boolean runa = ia!=ea, runb = ib!=eb;
@@ -225,42 +208,19 @@ public class RangeSet implements Externalizable
       if (adv_a) { state_a=!state_a; ++ia; runa = ia!=ea; }
       if (adv_b) { state_b=!state_b; ++ib; runb = ib!=eb; }
       if ((state_a||state_b)!=state_res)
-        { c.pushv(val); state_res = !state_res; }
+        { res.pushv(val); state_res = !state_res; }
       }
+    return res;
     }
-  /** After this operation, the RangeSet contains the union of RangeSets a
-      and b. */
-  public void setToUnion (RangeSet a, RangeSet b)
-    { generalUnion (a,b,false,false,this); }
-  /** After this operation, the RangeSet contains the intersection of RangeSets
-      a and b. */
-  public void setToIntersection (RangeSet a, RangeSet b)
-    { generalUnion (a,b,true,true,this); }
-  /** After this operation, the RangeSet contains the difference of RangeSets
-      a and b. */
-  public void setToDifference (RangeSet a, RangeSet b)
-    { generalUnion (a,b,true,false,this); }
   /** Return the union of this RangeSet and other. */
   public RangeSet union (RangeSet other)
-    {
-    RangeSet res=new RangeSet();
-    generalUnion (this,other,false,false,res);
-    return res;
-    }
+    { return generalUnion (this,other,false,false); }
   /** Return the intersection of this RangeSet and other. */
   public RangeSet intersection (RangeSet other)
-    {
-    RangeSet res=new RangeSet();
-    generalUnion (this,other,true,true,res);
-    return res;
-    }
+    { return generalUnion (this,other,true,true); }
   /** Return the difference of this RangeSet and other. */
   public RangeSet difference (RangeSet other)
-    {
-    RangeSet res=new RangeSet();
-    generalUnion (this,other,true,false,res);
-    return res;
-    }
+    { return generalUnion (this,other,true,false); }
 
   /** Returns an internal representation of the interval a number belongs to.
       @param val number whose interval is requested
@@ -284,28 +244,40 @@ public class RangeSet implements Externalizable
   public boolean contains (long a)
     { return ((iiv(a)&1)==0); }
   /** Returns true if all numbers [a;b[ are contained in the set, else false. */
-  public boolean containsAll (long a,long b)
+  public boolean contains (long a,long b)
     {
     int res=iiv(a);
     if ((res&1)!=0) return false;
     return (b<=r[res+1]);
     }
+  @Deprecated
+  public boolean containsAll (long a,long b)
+    { return contains(a,b); }
   /** Returns true if any of the numbers [a;b[ are contained in the set,
       else false. */
-  public boolean containsAny (long a,long b)
+  public boolean overlaps (long a,long b)
     {
     int res=iiv(a);
     if ((res&1)==0) return true;
     if (res==sz-1) return false; // beyond the end of the set
     return (r[res+1]<b);
     }
+  @Deprecated
+  public boolean containsAny (long a,long b)
+    { return overlaps(a,b); }
   /** Returns true if the set completely contains "other", else false. */
-  public boolean containsAll (RangeSet other)
+  public boolean contains (RangeSet other)
     { return generalAllOrNothing(this,other,false,true); }
+  @Deprecated
+  public boolean containsAll (RangeSet other)
+    { return contains(other); }
   /** Returns true if there is overlap between the set and "other",
       else false. */
-  public boolean containsAny (RangeSet other)
+  public boolean overlaps (RangeSet other)
     { return !generalAllOrNothing(this,other,true,true); }
+  @Deprecated
+  public boolean containsAny (RangeSet other)
+    { return overlaps(other); }
   /** Returns true the object represents an identical set of ranges as obj. */
   public boolean equals(Object obj) {
     if (this == obj)
@@ -317,18 +289,6 @@ public class RangeSet implements Externalizable
     for (int i=0; i<sz; ++i)
       if (other.r[i]!=r[i]) return false;
     return true;
-    }
-
-  public int hashCode()
-    {
-    int result = 0;
-    for (int i=0;i<sz;i++)
-      {
-      int elementHash = (int)(r[i] ^ (r[i] >>> 32));
-      result = 31 * result + elementHash;
-      }
-    result = 31 * result + sz;
-    return result;
     }
 
   /** @return total number of values (not ranges) in the set. */
@@ -400,11 +360,11 @@ public class RangeSet implements Externalizable
   /** After this operation, the RangeSet contains the union of itself and
       [a;b[. */
   public void add (long a, long b)
-    { addRemove(a,b,1); }
+    { if ((sz==0)||(a>=r[sz-1])) append(a,b); else addRemove(a,b,1); }
   /** After this operation, the RangeSet contains the union of itself and
       [a;a+1[. */
   public void add (long a)
-    { addRemove(a,a+1,1); }
+    { if ((sz==0)||(a>=r[sz-1])) append(a,a+1); else addRemove(a,a+1,1); }
   /** After this operation, the RangeSet contains the difference of itself and
       [a;b[. */
   public void remove (long a, long b)
@@ -471,78 +431,8 @@ public class RangeSet implements Externalizable
     {
     return Compressor.interpol_encode (r, 0, sz);
     }
-  public void fromByteArray (byte[] data) throws Exception
+  public static RangeSet fromByteArray (byte[] data) throws Exception
     {
-    r=Compressor.interpol_decode(data);
-    sz=r.length;
-    checkConsistency();
-    }
-
-  public void writeExternal(ObjectOutput out) throws IOException
-    {
-    out.writeInt(sz);
-    long last = 0;
-    for (long i:r)
-      {
-//write packed differences between values, this way it occupies less space
-      long diff = i - last;
-      packLong(out, diff);
-      last = i;
-      }
-    }
-
-  public void readExternal(ObjectInput in)
-    throws IOException, ClassNotFoundException
-    {
-    if(sz>0) throw new IOException("RangeSet already contains data!");
-    sz = in.readInt();
-    if((sz<0)||((sz&1)!=0)) throw new Error();
-    r = new long[sz];
-    long last = 0;
-    for (int i =0; i<sz; i++)
-      r[i] = last = last + unpackLong(in);
-    }
-
-  /** Pack non-negative long value into output stream.
-    * It will occupy 1-9 bytes depending on value (lower values occupy
-    * less space)
-    *
-    * @param os
-    * @param value
-    * @throws IOException
-    *
-    * Originally developed for Kryo by Nathan Sweet.
-    * Modified for JDBM by Jan Kotek
-    */
-  static private void packLong(DataOutput os, long value) throws IOException
-    {
-    while ((value & ~0x7FL) != 0)
-      {
-      os.write((((int) value & 0x7F) | 0x80));
-      value >>>= 7;
-      }
-    os.write((byte) value);
-    }
-
-  /** Unpack positive long value from the input stream.
-    *
-    * @param is The input stream.
-    * @return The long value.
-    * @throws java.io.IOException
-    *
-    * Originally developed for Kryo by Nathan Sweet.
-    * Modified for JDBM by Jan Kotek
-    */
-  static private long unpackLong(DataInput is) throws IOException
-    {
-    long result = 0;
-    for (int offset=0; offset<64; offset+=7)
-      {
-      long b = is.readUnsignedByte();
-      result |= (b & 0x7F) << offset;
-      if ((b & 0x80) == 0)
-        return result;
-      }
-    throw new Error("Malformed long.");
+    return new RangeSet(Compressor.interpol_decode(data));
     }
   }
