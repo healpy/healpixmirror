@@ -256,15 +256,10 @@ public class RangeSetTest extends TestCase {
         }
     assertFalse(it.hasNext());
     }
-/*
-  public void testSerialize() throws IOException, ClassNotFoundException {
-      RangeSet r = new RangeSet(new long[]{10,20,30,40,50,51});
-      ByteArrayOutputStream s = new ByteArrayOutputStream();
-      new ObjectOutputStream(s).writeObject(r);
 
-      RangeSet r2 = (RangeSet) new ObjectInputStream(new ByteArrayInputStream(s.toByteArray())).readObject();
-
-      assertEquals(r,r2);
+  public void testCompress() throws Exception
+    {
+    RangeSet r = new RangeSet(new long[]{10,20,30,40,50,51});
+    assertEquals(r,RangeSet.fromByteArray(r.toByteArray()));
   }
-*/
 }

@@ -198,9 +198,13 @@ public class RangeSet
     while (iva<a.sz)
       {
       if (iva==-1)
+        {
         if ((b.iiv(a.r[0]-1)!=-1)||(!flip_b)) return false;
+        }
       else if (iva==a.sz-1)
+        {
         if ((b.iiv(a.r[iva])!=b.sz-1)||(!flip_b)) return false;
+        }
       else
         {
         int ivb=b.iiv(a.r[iva]);
@@ -511,11 +515,7 @@ public class RangeSet
     }
 
   public byte[] toByteArray() throws Exception
-    {
-    return Compressor.interpol_encode (r, 0, sz);
-    }
+    { return Compressor.interpol_encode (r, 0, sz); }
   public static RangeSet fromByteArray (byte[] data) throws Exception
-    {
-    return new RangeSet(Compressor.interpol_decode(data));
-    }
+    { return new RangeSet(Compressor.interpol_decode(data)); }
   }
