@@ -79,8 +79,8 @@ public class Moc
     { return fromNewRangeSet(rs.difference(other.rs)); }
   public Moc complement()
     {
-    RangeSet full = new RangeSet(new long[0L,12*(1L<<(2*maxorder))]);
-    return fromNewRangeSet(full.minus(rs));
+    RangeSet full = new RangeSet(new long[]{0L,12L*(1L<<(2*maxorder))});
+    return fromNewRangeSet(full.difference(rs));
     }
   public boolean contains(Moc other) // FIXME: needs optimization!
     { return rs.contains(other.rs); }

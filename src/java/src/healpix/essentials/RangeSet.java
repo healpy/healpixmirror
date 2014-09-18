@@ -158,13 +158,19 @@ public class RangeSet
   private void pushv(long v)
     { ensureCapacity(sz+1); r[sz++]=v; }
 
-  private static boolean generalAllOrNothing (RangeSet a, RangeSet b,
+  private static int strategy (int sza, int szb)
+    {
+    final double fct1 = 1.;
+    final double fct2 = 1.;
+    double cost1 = fct1 * (sza+szb);
+    double cost2 = fct2 * sza * Math.max(1.,Math.log((double)szb)/Math.log(2.));
+    double cost3 = fct2 * szb * Math.max(1.,Math.log((double)sza)/Math.log(2.));
+    return (cost1<cost2) ? ((cost1<cost3) ? 1 : 3) : ((cost2<cost3) ? 2 : 3);
+    }
+
+  private static boolean generalAllOrNothing1 (RangeSet a, RangeSet b,
     boolean flip_a, boolean flip_b)
     {
-    if (a.isEmpty())
-      return flip_a ? true : b.isEmpty();
-    if (b.isEmpty())
-      return flip_b ? true : a.isEmpty();
     boolean state_a=flip_a, state_b=flip_b, state_res=state_a||state_b;
     int ia=0, ea=a.sz, ib=0, eb=b.sz;
     boolean runa = ia!=ea, runb = ib!=eb;
@@ -183,15 +189,51 @@ public class RangeSet
       }
     return true;
     }
-  /** Internal helper function for constructing unions, intersections
-      and differences of two RangeSets. */
-  private static RangeSet generalUnion (RangeSet a, RangeSet b,
+
+  private static boolean generalAllOrNothing2 (RangeSet a, RangeSet b,
+    boolean flip_a, boolean flip_b)
+    {
+    int iva=-1;
+    if (flip_a) ++iva;
+    while (iva<a.sz)
+      {
+      if (iva==-1)
+        if ((b.iiv(a.r[0]-1)!=-1)||(!flip_b)) return false;
+      else if (iva==a.sz-1)
+        if ((b.iiv(a.r[iva])!=b.sz-1)||(!flip_b)) return false;
+      else
+        {
+        int ivb=b.iiv(a.r[iva]);
+        if (ivb!=b.iiv(a.r[iva+1]-1)) return false;
+        boolean state_b = flip_b;
+        if (((ivb+1)&1)!=0) state_b=!state_b;
+        if (!state_b) return false;
+        }
+      iva+=2;
+      }
+    return true;
+    }
+
+  private static boolean generalAllOrNothing (RangeSet a, RangeSet b,
     boolean flip_a, boolean flip_b)
     {
     if (a.isEmpty())
-      return flip_a ? new RangeSet() : new RangeSet(b);
+      return flip_a ? true : b.isEmpty();
     if (b.isEmpty())
-      return flip_b ? new RangeSet() : new RangeSet(a);
+      return flip_b ? true : a.isEmpty();
+    int strat = strategy (a.size(), b.size());
+    if (strat==1)
+      return generalAllOrNothing1(a,b,flip_a,flip_b);
+    if (strat==2)
+      return generalAllOrNothing2(a,b,flip_a,flip_b);
+    return generalAllOrNothing2(b,a,flip_b,flip_a);
+    }
+
+  /** Internal helper function for constructing unions, intersections
+      and differences of two RangeSets. */
+  private static RangeSet generalUnion1 (RangeSet a, RangeSet b,
+    boolean flip_a, boolean flip_b)
+    {
     RangeSet res = new RangeSet();
 
     boolean state_a=flip_a, state_b=flip_b, state_res=state_a||state_b;
@@ -212,6 +254,47 @@ public class RangeSet
       }
     return res;
     }
+  /** Internal helper function for constructing unions, intersections
+      and differences of two RangeSets. */
+  private static RangeSet generalUnion2 (RangeSet a, RangeSet b,
+    boolean flip_a, boolean flip_b)
+    {
+    RangeSet res = new RangeSet();
+    int iva=-1;
+    if (flip_a) ++iva;
+    while (iva<a.sz)
+      {
+      int ivb = (iva==-1) ? -1 : b.iiv(a.r[iva]);
+      int ivbstop = (iva==a.sz-1) ? b.sz-1 : b.iiv(a.r[iva+1]-1);
+      boolean state_b = flip_b;
+      if (((ivb+1)&1)!=0) state_b=!state_b;
+      if (iva>-1)
+        if (!state_b) res.pushv(a.r[iva]);
+      while(ivb<ivbstop)
+        {
+        ++ivb; state_b=!state_b; res.pushv(b.r[ivb]);
+        }
+      if (iva<a.sz-1)
+        if (!state_b) res.pushv(a.r[iva+1]);
+      iva+=2;
+      }
+    return res;
+    }
+  private static RangeSet generalUnion (RangeSet a, RangeSet b,
+    boolean flip_a, boolean flip_b)
+    {
+    if (a.isEmpty())
+      return flip_a ? new RangeSet() : new RangeSet(b);
+    if (b.isEmpty())
+      return flip_b ? new RangeSet() : new RangeSet(a);
+    int strat = strategy (a.size(), b.size());
+    if (strat==1)
+      return generalUnion1(a,b,flip_a,flip_b);
+    if (strat==2)
+      return generalUnion2(a,b,flip_a,flip_b);
+    return generalUnion2(b,a,flip_b,flip_a);
+    }
+
   /** Return the union of this RangeSet and other. */
   public RangeSet union (RangeSet other)
     { return generalUnion (this,other,false,false); }
