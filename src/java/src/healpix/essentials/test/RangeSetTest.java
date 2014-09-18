@@ -260,6 +260,6 @@ public class RangeSetTest extends TestCase {
   public void testCompress() throws Exception
     {
     RangeSet r = new RangeSet(new long[]{10,20,30,40,50,51});
-    assertEquals(r,RangeSet.fromByteArray(r.toByteArray()));
+    assertEquals(r,RangeSet.fromCompressed(r.toCompressed()));
   }
 }

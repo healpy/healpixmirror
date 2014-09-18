@@ -22,6 +22,8 @@ package healpix.essentials;
 import java.io.ByteArrayOutputStream;
 
 /** Class for compressing/uncompressing monotonous integer sequences.
+    Implementation inspired by Moffat and Stuiver 2000: "Binary Interpolative
+    Coding for Effective Index Compression", Information Retrieval 3, 25
 
     @copyright 2014 Max-Planck-Society
     @author Martin Reinecke */
@@ -136,6 +138,8 @@ public class Compressor
     interpol_encode2(data,m,r,obs,shift);
     }
 
+  /** Return a byte array representing the compressed sequence
+      [data[begin]; data[end-1]] */
   public static byte[] interpol_encode (long[] data, int begin, int end)
     throws Exception
     {
@@ -188,6 +192,7 @@ public class Compressor
     interpol_decode2(data,m,r,ibs,shift);
     }
 
+  /** Return an array containing the number sequence decompressed from data. */
   public static long[] interpol_decode (byte[] data) throws Exception
     {
     ibitstream ibs=new ibitstream(data);

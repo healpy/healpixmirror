@@ -51,7 +51,7 @@ public class AmocTest extends TestCase
     xtmp=moc.degradedToOrder(8,true);
     assertFalse("inconsistency",moc.contains(xtmp));
     assertTrue("inconsistency",xtmp.contains(xtmp));
-    assertEquals("inconsistency",moc,Moc.fromByteArray(moc.toByteArray()));
+    assertEquals("inconsistency",moc,Moc.fromCompressed(moc.toCompressed()));
     MocUtil.mocToFits(moc,"/tmp/moctest.fits");
     xtmp=MocUtil.mocFromFits("/tmp/moctest.fits");
     assertEquals("inconsistency",moc,xtmp);

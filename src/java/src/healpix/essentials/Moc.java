@@ -135,14 +135,10 @@ public class Moc
     return fromNewRangeSet(r);
     }
 
-  public byte[] toByteArray() throws Exception
-    {
-    return rs.toByteArray();
-    }
-  public static Moc fromByteArray(byte[] data) throws Exception
-    {
-    return fromNewRangeSet(RangeSet.fromByteArray(data));
-    }
+  public byte[] toCompressed() throws Exception
+    { return rs.toCompressed(); }
+  public static Moc fromCompressed(byte[] data) throws Exception
+    { return fromNewRangeSet(RangeSet.fromCompressed(data)); }
 
   public boolean equals(Object obj)
     {
