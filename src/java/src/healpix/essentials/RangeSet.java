@@ -313,7 +313,7 @@ public class RangeSet
   /** Returns an internal representation of the interval a number belongs to.
       @param val number whose interval is requested
       @return interval number, starting with -1 (smaller
-      than all numbers in the RangeSet, 0 (first "on" interval), 2 (first
+      than all numbers in the RangeSet, 0 (first "on" interval), 1 (first
       "off" interval etc.) */
   private int iiv (long val)
     {
