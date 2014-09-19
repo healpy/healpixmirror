@@ -48,7 +48,7 @@ public class RangeSet
   /** Current number of active entries. */
   protected int sz;
 
-  /** Construct new object with space for 8 entries (4 ranges). */
+  /** Construct new object with initial space for 4 ranges. */
   public RangeSet() { this(8); }
   /** Construct new object with a given initial number of entries.
       @param cap number of initially reserved entries. */
@@ -177,12 +177,10 @@ public class RangeSet
     boolean runa = ia!=ea, runb = ib!=eb;
     while(runa||runb)
       {
-      boolean adv_a=false, adv_b=false;
-      long va=0,vb=0;
-      if (runa) va = a.r[ia];
-      if (runb) vb = b.r[ib];
-      if (runa && (!runb || (va<=vb))) adv_a=true;
-      if (runb && (!runa || (vb<=va))) adv_b=true;
+      long va = runa ? a.r[ia] : 0L,
+	   vb = runb ? b.r[ib] : 0L;
+      boolean adv_a = runa && (!runb || (va<=vb)),
+              adv_b = runb && (!runa || (vb<=va));
       if (adv_a) { state_a=!state_a; ++ia; runa = ia!=ea; }
       if (adv_b) { state_b=!state_b; ++ib; runb = ib!=eb; }
       if ((state_a||state_b)!=state_res)
@@ -199,19 +197,14 @@ public class RangeSet
     while (iva<a.sz)
       {
       if (iva==-1)
-        {
-        if ((b.iiv(a.r[0]-1)!=-1)||(!flip_b)) return false;
-        }
+        { if ((b.iiv(a.r[0]-1)!=-1)||(!flip_b)) return false; }
       else if (iva==a.sz-1)
-        {
-        if ((b.iiv(a.r[iva])!=b.sz-1)||(!flip_b)) return false;
-        }
+        { if ((b.iiv(a.r[iva])!=b.sz-1)||(!flip_b)) return false; }
       else
         {
         int ivb=b.iiv(a.r[iva]);
         if (ivb!=b.iiv(a.r[iva+1]-1)) return false;
-        boolean state_b = flip_b;
-        if (((ivb+1)&1)!=0) state_b=!state_b;
+        boolean state_b = flip_b^((ivb&1)==0);
         if (!state_b) return false;
         }
       iva+=2;
@@ -246,12 +239,11 @@ public class RangeSet
     boolean runa = ia!=ea, runb = ib!=eb;
     while(runa||runb)
       {
-      boolean adv_a=false, adv_b=false;
-      long val=0,va=0,vb=0;
-      if (runa) va = a.r[ia];
-      if (runb) vb = b.r[ib];
-      if (runa && (!runb || (va<=vb))) { adv_a=true; val=va; }
-      if (runb && (!runa || (vb<=va))) { adv_b=true; val=vb; }
+      long va = runa ? a.r[ia] : 0L,
+           vb = runb ? b.r[ib] : 0L;
+      boolean adv_a = runa && (!runb || (va<=vb)),
+              adv_b = runb && (!runa || (vb<=va));
+      long val = adv_a ? va : vb;
       if (adv_a) { state_a=!state_a; ++ia; runa = ia!=ea; }
       if (adv_b) { state_b=!state_b; ++ib; runb = ib!=eb; }
       if ((state_a||state_b)!=state_res)
@@ -271,16 +263,11 @@ public class RangeSet
       {
       int ivb = (iva==-1) ? -1 : b.iiv(a.r[iva]);
       int ivbstop = (iva==a.sz-1) ? b.sz-1 : b.iiv(a.r[iva+1]-1);
-      boolean state_b = flip_b;
-      if (((ivb+1)&1)!=0) state_b=!state_b;
-      if (iva>-1)
-        if (!state_b) res.pushv(a.r[iva]);
+      boolean state_b = flip_b^((ivb&1)==0);
+      if ((iva>-1) && (!state_b)) res.pushv(a.r[iva]);
       while(ivb<ivbstop)
-        {
-        ++ivb; state_b=!state_b; res.pushv(b.r[ivb]);
-        }
-      if (iva<a.sz-1)
-        if (!state_b) res.pushv(a.r[iva+1]);
+        { ++ivb; state_b=!state_b; res.pushv(b.r[ivb]); }
+      if ((iva<a.sz-1)&&(!state_b)) res.pushv(a.r[iva+1]);
       iva+=2;
       }
     return res;
