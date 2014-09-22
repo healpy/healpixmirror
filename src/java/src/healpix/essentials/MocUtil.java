@@ -18,7 +18,11 @@
  */
 package healpix.essentials;
 
+import java.io.OutputStream;
 import java.io.FileOutputStream;
+import java.io.DataOutputStream;
+import java.io.InputStream;
+import java.io.FileInputStream;
 
 import nom.tam.fits.BasicHDU;
 import nom.tam.fits.BinaryTable;
@@ -34,6 +38,10 @@ import nom.tam.util.BufferedDataOutputStream;
     @author Martin Reinecke */
 public class MocUtil
   {
+  /** Parses a string following either the basic ASCII or JSON syntax given in
+      the MOC standard document, and converts it into a MOC.
+      The string need not obey the rules for a well-formed moc given in the
+      document. */ 
   public static Moc mocFromString(String in)
     {
     in=in.replaceAll("[,]+"," ");
@@ -112,20 +120,25 @@ public class MocUtil
     if (json) res+="}";
     return res;
     }
+  /** Converts the Moc to its basic ASCII representation as described in the MOC
+      standard document. The result is well-formed. */ 
   public static String mocToStringASCII (Moc moc)
     {
     return mocToStringGeneral(moc,false);
     }
+  /** Converts the Moc to its JSON representation as described in the MOC
+      standard document. The result is well-formed. */ 
   public static String mocToStringJSON(Moc moc)
     {
     return mocToStringGeneral(moc,true);
     }
 
-  public static Moc mocFromFits(String filename) throws Exception
+  /** Converts the contents of a FITS input stream to a MOC. */ 
+  public static Moc mocFromFits(InputStream inp) throws Exception
     {
     FitsFactory.setUseHierarch(true);
     FitsFactory.setUseAsciiTables(false);
-    BasicHDU bhdu = (new Fits(filename)).getHDU(1);
+    BasicHDU bhdu = (new Fits(inp)).getHDU(1);
     Header head = bhdu.getHeader();
     Header.setLongStringsEnabled(true);
 
@@ -155,7 +168,17 @@ public class MocUtil
       ru.append(data[i]);
     return Moc.fromUniq(ru);
     }
-  public static void mocToFits(Moc moc, String filename) throws Exception
+  /** Converts the contents of a FITS file to a MOC. */ 
+  public static Moc mocFromFits(String filename) throws Exception
+    {
+    FileInputStream inp = new FileInputStream(filename);
+    Moc moc = mocFromFits(inp);
+    inp.close();
+    return moc;
+    }
+
+  /** Writes the provided Moc to the stream in FITS format. */ 
+  public static void mocToFits(Moc moc, OutputStream out) throws Exception
     {
     FitsFactory.setUseHierarch(true);
     FitsFactory.setUseAsciiTables(false);
@@ -190,11 +213,14 @@ public class MocUtil
     bhdu.addValue("COORDSYS", "C", "mandated by MOC standard");
     bhdu.addValue("MOCORDER", moc.maxOrder(), "MOC resolution (best order)");
 
-    FileOutputStream fos = new FileOutputStream(filename);
-    BufferedDataOutputStream s = new BufferedDataOutputStream(fos);
-
-    f.write(s);
-    s.flush();
-    s.close();
+    f.write(new DataOutputStream(out));
+    out.flush();
+    }
+  /** Writes the provided Moc to the specified file in FITS format. */ 
+  public static void mocToFits(Moc moc, String filename) throws Exception
+    {
+    FileOutputStream out = new FileOutputStream(filename);
+    mocToFits(moc,out);
+    out.close();
     }
   }

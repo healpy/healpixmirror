@@ -29,8 +29,10 @@ public class Moc
   private final static int maxorder=29;
   private RangeSet rs;
 
+  /** Creates a new, empty Moc. */
   public Moc()
     { rs=new RangeSet(); }
+  /** Creates a new Moc, which is identical to "other". */
   public Moc(Moc other)
     { rs=new RangeSet(other.rs); }
 
@@ -41,6 +43,8 @@ public class Moc
     return res;
     }
 
+  /** Returns the maximum HEALPix order necessary to describe the Moc exactly.
+      */
   public int maxOrder()
     {
     long combo=0;
@@ -49,6 +53,10 @@ public class Moc
     return maxorder-(Long.numberOfTrailingZeros(combo)>>>1);
     }
 
+  /** Returns a Moc with degraded resolution.
+      @param order the maximum HEALPix order used for the result
+      @param keepPartialCells if true, partially filled cells will be included
+        in the output Moc; if false, they will be ignored. */
   public Moc degradedToOrder (int order, boolean keepPartialCells)
     {
     int shift=2*(maxorder-order);
@@ -66,6 +74,10 @@ public class Moc
     return fromNewRangeSet(rs2);
     }
 
+  /** Adds a range of pixels at a given HEALPix order to the Moc.
+      @param order the HEALPix order of the added pixels
+      @param p1 the first pixel of the range
+      @param p2 the one-after-last pixel of the range */
   public void addPixelRange (int order, long p1, long p2)
     {
     int shift=2*(maxorder-order);
