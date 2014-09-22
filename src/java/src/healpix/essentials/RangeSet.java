@@ -104,6 +104,26 @@ public class RangeSet
   public void trimSize()
     { resize(sz); }
 
+  /** Returns an internal representation of the interval a number belongs to.
+      @param val number whose interval is requested
+      @return interval number, starting with -1 (smaller
+      than all numbers in the RangeSet), 0 (first "on" interval), 1 (first
+      "off" interval etc.), up to (and including) sz-1 (larger than all numbers
+      in the RangeSet). */
+  private int iiv (long val)
+    {
+    int count=sz, first=0;
+    while (count>0)
+      {
+      int step=count>>>1, it = first+step;
+      if (r[it]<=val)
+        { first=++it; count-=step+1; }
+      else
+        count=step;
+      }
+    return first-1;
+    }
+
   /** Append a single-value range to the object.
       @param val value to append */
   public void append(long val)
@@ -196,14 +216,14 @@ public class RangeSet
     if (flip_a) ++iva;
     while (iva<a.sz)
       {
-      if (iva==-1)
-        { if ((b.iiv(a.r[0]-1)!=-1)||(!flip_b)) return false; }
-      else if (iva==a.sz-1)
-        { if ((b.iiv(a.r[iva])!=b.sz-1)||(!flip_b)) return false; }
+      if (iva==-1) // implies that flip_a==false
+        { if ((!flip_b)||(b.r[0]<a.r[0])) return false; }
+      else if (iva==a.sz-1) // implies that flip_a==false
+        { if ((!flip_b)||(b.r[b.sz-1]>a.r[a.sz-1])) return false; }
       else
         {
         int ivb=b.iiv(a.r[iva]);
-        if (ivb!=b.iiv(a.r[iva+1]-1)) return false;
+        if ((ivb!=b.sz-1)&&(b.r[ivb+1]<a.r[iva+1])) return false;
         boolean state_b = flip_b^((ivb&1)==0);
         if (!state_b) return false;
         }
@@ -262,10 +282,9 @@ public class RangeSet
     while (iva<a.sz)
       {
       int ivb = (iva==-1) ? -1 : b.iiv(a.r[iva]);
-      int ivbstop = (iva==a.sz-1) ? b.sz-1 : b.iiv(a.r[iva+1]-1);
       boolean state_b = flip_b^((ivb&1)==0);
       if ((iva>-1) && (!state_b)) res.pushv(a.r[iva]);
-      while(ivb<ivbstop)
+      while((ivb<b.sz-1)&&((iva==a.sz-1)||(b.r[ivb+1]<a.r[iva+1])))
         { ++ivb; state_b=!state_b; res.pushv(b.r[ivb]); }
       if ((iva<a.sz-1)&&(!state_b)) res.pushv(a.r[iva+1]);
       iva+=2;
@@ -297,24 +316,6 @@ public class RangeSet
   public RangeSet difference (RangeSet other)
     { return generalUnion (this,other,true,false); }
 
-  /** Returns an internal representation of the interval a number belongs to.
-      @param val number whose interval is requested
-      @return interval number, starting with -1 (smaller
-      than all numbers in the RangeSet, 0 (first "on" interval), 1 (first
-      "off" interval etc.) */
-  private int iiv (long val)
-    {
-    int count=sz, first=0;
-    while (count>0)
-      {
-      int step=count>>>1, it = first+step;
-      if (r[it]<=val)
-        { first=++it; count-=step+1; }
-      else
-        count=step;
-      }
-    return first-1;
-    }
   /** Returns true if a is contained in the set, else false. */
   public boolean contains (long a)
     { return ((iiv(a)&1)==0); }
