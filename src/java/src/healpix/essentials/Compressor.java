@@ -198,7 +198,7 @@ public class Compressor
     ibitstream ibs=new ibitstream(data);
     int maxbits=(int)ibs.get(8);
     if (maxbits==0) return new long[0];
-    int shift=(int)ibs.get(8); 
+    int shift=(int)ibs.get(8);
     long[] v=new long[(int)ibs.get(maxbits)];
     v[0]=ibs.get(maxbits)<<shift;
     if (v.length==1) return v;

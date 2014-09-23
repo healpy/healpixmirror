@@ -168,4 +168,3 @@ public class Vec3
     return result;
     }
   }
-
