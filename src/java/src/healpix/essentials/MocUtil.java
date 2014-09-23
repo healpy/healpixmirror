@@ -41,20 +41,20 @@ public class MocUtil
   /** Parses a string following either the basic ASCII or JSON syntax given in
       the MOC standard document, and converts it into a MOC.
       The string need not obey the rules for a well-formed moc given in the
-      document. */ 
+      document. */
   public static Moc mocFromString(String in)
     {
-    in=in.replaceAll("[,]+"," ");
-    in=in.replaceAll("[\\[\\]{}\"]+","");
-    in=in.replaceAll("\\s*[:/]\\s*","/ ");
-    in=in.replaceAll("\\s*-\\s*","-");
-    in=in.replaceAll("[\\s]+"," ");
-    String[] tok = in.split(" ");
+    in=in.replaceAll(",+"," "); // replace commas with spaces
+    in=in.replaceAll("[\\[\\]{}\"]+",""); // get rid of useless characters
+    in=in.replaceAll("\\s*[:/]\\s*","/ "); // stick order indicator to order
+    in=in.replaceAll("\\s*-\\s*","-"); // fuse ranges into one token
+    String[] tok = in.split("[\\s]+"); // split at whitespace
     RangeSet ru = new RangeSet();
     int order=0;
     long ofs=0;
     for (int i=0; i<tok.length; ++i)
       {
+      if (tok[i].isEmpty()) continue;
       if (tok[i].contains("/")) // new order
         {
         tok[i]=tok[i].split("/")[0];
@@ -75,8 +75,8 @@ public class MocUtil
   private static String mocToStringGeneral(Moc moc, boolean json)
     {
     RangeSet ru = moc.toUniq();
-    String res = new String();
-    if (json) res+="{";
+    StringBuilder s = new StringBuilder();
+    if (json) s.append("{");
     boolean firstOrder=true;
     int omax = moc.maxOrder();
     for (int o=0; o<=omax; ++o)
@@ -87,53 +87,56 @@ public class MocUtil
       rt=rt.intersection(ru);
       boolean prefix=false;
       if (!rt.isEmpty())
-	{
+        {
         for (int iv=0; iv<rt.size(); ++iv)
           {
           long a=rt.ivbegin(iv)-offset,
                b=rt.ivend(iv)-offset;
           if (!prefix)
             {
-            if (!firstOrder) res+= json ? ", " : " ";
+            if (!firstOrder) s.append(json ? ", " : " ");
             firstOrder=false;
-            res+=json ? "\""+o+"\":[" : o+"/";
+            if (json)
+              s.append("\"").append(o).append("\":[");
+            else
+              s.append(o).append("/");
             prefix=true;
             }
           else
-            res+=",";
+            s.append(",");
           if (json)
-	    {
+            {
             for (long i=a;i<b-1;++i)
-            res+=i+",";
-            res+=(b-1);
+              s.append(i).append(",");
+            s.append(b-1);
             }
           else
-	    {
-            res+=a;
-            if (b>a+1) res+="-"+(b-1);
+            {
+            s.append(a);
+            if (b>a+1) s.append("-").append(b-1);
             }
           }
         }
       if (json&&prefix)
-        res+="]";
+        s.append("]");
       }
-    if (json) res+="}";
-    return res;
+    if (json) s.append("}");
+    return s.toString();
     }
   /** Converts the Moc to its basic ASCII representation as described in the MOC
-      standard document. The result is well-formed. */ 
+      standard document. The result is well-formed. */
   public static String mocToStringASCII (Moc moc)
     {
     return mocToStringGeneral(moc,false);
     }
   /** Converts the Moc to its JSON representation as described in the MOC
-      standard document. The result is well-formed. */ 
+      standard document. The result is well-formed. */
   public static String mocToStringJSON(Moc moc)
     {
     return mocToStringGeneral(moc,true);
     }
 
-  /** Converts the contents of a FITS input stream to a MOC. */ 
+  /** Converts the contents of a FITS input stream to a MOC. */
   public static Moc mocFromFits(InputStream inp) throws Exception
     {
     FitsFactory.setUseHierarch(true);
@@ -168,7 +171,7 @@ public class MocUtil
       ru.append(data[i]);
     return Moc.fromUniq(ru);
     }
-  /** Converts the contents of a FITS file to a MOC. */ 
+  /** Converts the contents of a FITS file to a MOC. */
   public static Moc mocFromFits(String filename) throws Exception
     {
     FileInputStream inp = new FileInputStream(filename);
@@ -177,7 +180,7 @@ public class MocUtil
     return moc;
     }
 
-  /** Writes the provided Moc to the stream in FITS format. */ 
+  /** Writes the provided Moc to the stream in FITS format. */
   public static void mocToFits(Moc moc, OutputStream out) throws Exception
     {
     FitsFactory.setUseHierarch(true);
@@ -216,7 +219,7 @@ public class MocUtil
     f.write(new DataOutputStream(out));
     out.flush();
     }
-  /** Writes the provided Moc to the specified file in FITS format. */ 
+  /** Writes the provided Moc to the specified file in FITS format. */
   public static void mocToFits(Moc moc, String filename) throws Exception
     {
     FileOutputStream out = new FileOutputStream(filename);

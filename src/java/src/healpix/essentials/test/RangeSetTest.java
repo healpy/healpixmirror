@@ -22,8 +22,24 @@ package healpix.essentials.test;
 import healpix.essentials.RangeSet;
 import junit.framework.TestCase;
 import java.io.*;
+import java.util.Random;
 
 public class RangeSetTest extends TestCase {
+
+  private static RangeSet randomRangeSet(int num, long start, int dist)
+    {
+    Random rng = new Random();
+    RangeSet rs = new RangeSet (2*num);
+    long curval=start;
+    for (int i=0; i<num; ++i)
+      {
+      long v1=curval+1+rng.nextInt(dist);
+      long v2=v1+1+rng.nextInt(dist);
+      rs.append(v1,v2);
+      curval=v2;
+      }
+    return rs;
+    }
 
   public void testAppend()
     {
@@ -261,5 +277,30 @@ public class RangeSetTest extends TestCase {
     {
     RangeSet r = new RangeSet(new long[]{10,20,30,40,50,51});
     assertEquals(r,RangeSet.fromCompressed(r.toCompressed()));
+    }
+
+  private static void rsOps(RangeSet a, RangeSet b)
+    {
+    assertFalse(b.overlaps(a.difference(b)));
+    assertTrue(a.union(b).nval()>=a.nval());
+    assertTrue(a.union(b).nval()>=b.nval());
+    assertTrue(a.intersection(b).nval()<=a.nval());
+    assertTrue(a.intersection(b).nval()<=b.nval());
+    assertTrue(a.union(b).contains(a));
+    assertTrue(a.union(b).contains(b));
+    }
+
+  public static void testOps() throws Exception
+    {
+    int niter = 100;
+    for (int iter=0; iter<niter; ++iter)
+      {
+      RangeSet a = randomRangeSet(1000, 0, 100);
+      RangeSet b = randomRangeSet(1000, 0, 100);
+      RangeSet c = randomRangeSet(10, 10000, 100);
+      rsOps(a,b);
+      rsOps(a,c);
+      rsOps(c,a);
+      }
+    }
   }
-}
