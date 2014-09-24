@@ -1,3 +1,0 @@
-Nest:23 = Ring:14 Nside is2
-Finished  ::Tue Feb 01 12:02:50 CET 2011
-

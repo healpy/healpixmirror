@@ -1,42 +1,31 @@
-
-
-Healpix java package written by William O'Mullane (womullan AT sciops.esa.int)
-and Emmanuel Joliet (ejoliet AT sciops.esa.int)
-
-
-installation of Healpix java
+Installation of Healpix Java
 ----------------------------
 requires a Java Development Kit and a build tools such as Ant
-(see below Notes on installing java, and on junit)
+(see below Notes on installing Java, and on junit)
 % ant 
 
 for information on the build targets available:
 % ant -p
 
 
-documentation
+Documentation
 -------------
 preinstalled in <HEALPIX>/doc/html/java/index.html
 
 % ant docs
 will generate
-<HEALPIX>/src/java/healpixdocs/index.html
+<HEALPIX>/src/java/doc/index.html
 from the source files
 
 -----------------------------------------------------------------
 
 
-installing java
+Installing Java
 ===============
 
-see
-home.bredband.no/gaulyk/java/tutorial/javaredhat.html
-or
-www2.educ.umu.se/~bjorn/linux/howto/Java-HOWTO.html
-
-Java Development Kit (JDK aka SDK): required to compile any java code
+Java Development Kit (JDK aka SDK): required to compile any Java code
 ---------------------------------
-http://java.sun.com/j2se
+http://www.oracle.com/technetwork/java/index.html
 
 Java based build tool: Ant (equivalent to make)
 --------------------------
@@ -45,24 +34,14 @@ http://ant.apache.org/bindownload.cgi
 It is also available thru fink for MacOS
 
 
-about junit
+About Junit
 ===========
-junit.jar is required for java Healpix library installation.
+junit.jar is required for Java Healpix library installation.
 It is shipped with Healpix and available in 
-<HEALPIX>/src/java/lib ;
-just make sure that this path (or a path to any other junit.jar)
+<HEALPIX>/src/java/lib/
+Just make sure that this path (or a path to any other junit.jar)
 is included in your CLASSPATH environment variable.
 
-
-Java3d
-=======
-There is a 3D viewer based on Java3d. This viewer and related tests require
-Java3d to be installed.  you can get Java 3d from 
-https://java3d.dev.java.net/binary-builds.html
-
------------------------------------------------------------------
-
-README updated Feb 2011 by EH.
-Please contact healpix AT jpl.nasa.gov for any question on the code or its installation.
-
-
+README updated Sep 2014 by MR.
+Please contact healpix-support AT lists.sourceforge.net AT jpl.nasa.gov for any
+questions on the code or its installation.
