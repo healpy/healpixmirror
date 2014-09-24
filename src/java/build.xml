@@ -5,7 +5,7 @@
   <property name="dist" value="${basedir}/dist"/>
   <property name="src" value="${basedir}/src"/>
   <property name="docs" value="${basedir}/doc"/>
-  <property name="junit.reports" value="${basedir}/reports/junit"/>
+  <property name="junit.reports" value="${basedir}/reports"/>
   <path id="classpath">
     <pathelement location="${classes}"/>
     <fileset dir="${lib}" includes="nom.tam.fits*.jar junit*.jar"/>
@@ -19,6 +19,7 @@
     <delete dir="${classes}"/>
     <delete dir="${junit.reports}"/>
     <delete dir="${docs}"/>
+    <delete dir="${junit.reports}"/>
   </target>
   <target name="compile" depends="init" description="Compile the Java code">
     <echo>building </echo>
