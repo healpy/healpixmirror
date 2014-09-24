@@ -43,14 +43,14 @@ public class RangeSet
     public long next() { throw new NoSuchElementException(); }
     };
 
-  /** Sorted list of entries. */
+  /** Sorted list of interval boundaries. */
   protected long[] r;
   /** Current number of active entries. */
   protected int sz;
 
   /** Construct new object with initial space for 4 ranges. */
   public RangeSet() { this(8); }
-  /** Construct new object with a given initial number of entries.
+  /** Construct new object with a given initial capacity.
       @param cap number of initially reserved entries. */
   public RangeSet(int cap)
     {
@@ -103,13 +103,16 @@ public class RangeSet
   /** Shrinks the array for the entries to minimum size. */
   public void trimSize()
     { resize(sz); }
+  /** Shrinks the array for the entries to minimum size, if it is more than
+      twice the minimum size */
+  public void trimIfTooLarge()
+    { if (r.length-sz>=sz) resize(sz); }
 
   /** Returns an internal representation of the interval a number belongs to.
       @param val number whose interval is requested
-      @return interval number, starting with -1 (smaller
-      than all numbers in the RangeSet), 0 (first "on" interval), 1 (first
-      "off" interval etc.), up to (and including) sz-1 (larger than all numbers
-      in the RangeSet). */
+      @return interval number, starting with -1 (smaller than all numbers in the
+      RangeSet), 0 (first "on" interval), 1 (first "off" interval etc.), up to
+      (and including) sz-1 (larger than all numbers in the RangeSet). */
   private int iiv (long val)
     {
     int count=sz, first=0;
@@ -213,8 +216,7 @@ public class RangeSet
   private static boolean generalAllOrNothing2 (RangeSet a, RangeSet b,
     boolean flip_a, boolean flip_b)
     {
-    int iva=-1;
-    if (flip_a) ++iva;
+    int iva = flip_a ? 0 : -1;
     while (iva<a.sz)
       {
       if (iva==-1) // implies that flip_a==false
@@ -225,8 +227,7 @@ public class RangeSet
         {
         int ivb=b.iiv(a.r[iva]);
         if ((ivb!=b.sz-1)&&(b.r[ivb+1]<a.r[iva+1])) return false;
-        boolean state_b = flip_b^((ivb&1)==0);
-        if (!state_b) return false;
+        if (flip_b==((ivb&1)==0)) return false;
         }
       iva+=2;
       }
@@ -241,11 +242,9 @@ public class RangeSet
     if (b.isEmpty())
       return flip_b ? true : a.isEmpty();
     int strat = strategy (a.size(), b.size());
-    if (strat==1)
-      return generalAllOrNothing1(a,b,flip_a,flip_b);
-    if (strat==2)
-      return generalAllOrNothing2(a,b,flip_a,flip_b);
-    return generalAllOrNothing2(b,a,flip_b,flip_a);
+    return (strat==1) ? generalAllOrNothing1(a,b,flip_a,flip_b) :
+             ((strat==2) ? generalAllOrNothing2(a,b,flip_a,flip_b)
+                         : generalAllOrNothing2(b,a,flip_b,flip_a));
     }
 
   /** Internal helper function for constructing unions, intersections
@@ -277,8 +276,7 @@ public class RangeSet
     boolean flip_a, boolean flip_b)
     {
     RangeSet res = new RangeSet();
-    int iva=-1;
-    if (flip_a) ++iva;
+    int iva = flip_a ? 0 : -1;
     while (iva<a.sz)
       {
       int ivb = (iva==-1) ? -1 : b.iiv(a.r[iva]);
@@ -299,11 +297,9 @@ public class RangeSet
     if (b.isEmpty())
       return flip_b ? new RangeSet() : new RangeSet(a);
     int strat = strategy (a.size(), b.size());
-    if (strat==1)
-      return generalUnion1(a,b,flip_a,flip_b);
-    if (strat==2)
-      return generalUnion2(a,b,flip_a,flip_b);
-    return generalUnion2(b,a,flip_b,flip_a);
+    return (strat==1) ? generalUnion1(a,b,flip_a,flip_b) :
+             ((strat==2) ? generalUnion2(a,b,flip_a,flip_b)
+                         : generalUnion2(b,a,flip_b,flip_a));
     }
 
   /** Return the union of this RangeSet and other. */

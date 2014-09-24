@@ -26,9 +26,9 @@ import java.util.Random;
 
 public class RangeSetTest extends TestCase {
 
-  private static RangeSet randomRangeSet(int num, long start, int dist)
+  private static RangeSet randomRangeSet(Random rng, int num, long start,
+    int dist)
     {
-    Random rng = new Random();
     RangeSet rs = new RangeSet (2*num);
     long curval=start;
     for (int i=0; i<num; ++i)
@@ -279,7 +279,7 @@ public class RangeSetTest extends TestCase {
     assertEquals(r,RangeSet.fromCompressed(r.toCompressed()));
     }
 
-  private static void rsOps(RangeSet a, RangeSet b)
+  private static void rsOps(RangeSet a, RangeSet b) throws Exception
     {
     assertFalse(b.overlaps(a.difference(b)));
     assertTrue(a.union(b).nval()>=a.nval());
@@ -288,16 +288,23 @@ public class RangeSetTest extends TestCase {
     assertTrue(a.intersection(b).nval()<=b.nval());
     assertTrue(a.union(b).contains(a));
     assertTrue(a.union(b).contains(b));
+    assertFalse(a.difference(b).overlaps(b));
+    assertFalse(b.difference(a).overlaps(a));
+    assertEquals(a.union(b).nval(),a.nval()+b.nval()-a.intersection(b).nval());
+    assertEquals(a.union(b).difference(a.intersection(b)).nval(),
+                 a.union(b).nval()-a.intersection(b).nval());
+    assertEquals(a,RangeSet.fromCompressed(a.toCompressed()));
     }
 
   public static void testOps() throws Exception
     {
     int niter = 100;
+    Random rng = new Random(42);
     for (int iter=0; iter<niter; ++iter)
       {
-      RangeSet a = randomRangeSet(1000, 0, 100);
-      RangeSet b = randomRangeSet(1000, 0, 100);
-      RangeSet c = randomRangeSet(10, 10000, 100);
+      RangeSet a = randomRangeSet(rng, 1000, 0, 100);
+      RangeSet b = randomRangeSet(rng, 1000, 0, 100);
+      RangeSet c = randomRangeSet(rng, 10, 10000, 100);
       rsOps(a,b);
       rsOps(a,c);
       rsOps(c,a);

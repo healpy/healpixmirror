@@ -43,5 +43,5 @@ Just make sure that this path (or a path to any other junit.jar)
 is included in your CLASSPATH environment variable.
 
 README updated Sep 2014 by MR.
-Please contact healpix-support AT lists.sourceforge.net AT jpl.nasa.gov for any
-questions on the code or its installation.
+Please contact healpix-support AT lists.sourceforge.net for any questions on the
+code or its installation.

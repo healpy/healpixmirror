@@ -23,7 +23,7 @@
   </target>
   <target name="compile" depends="init" description="Compile the Java code">
     <echo>building </echo>
-    <javac destdir="${classes}" source="1.6" target="1.6" includeAntRuntime="false"
+    <javac destdir="${classes}" includeAntRuntime="false"
       srcdir="${src}" debug="on">
       <compilerarg value="-Xlint"/>
       <classpath refid="classpath" />
