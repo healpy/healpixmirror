@@ -16,5 +16,10 @@ time $BINPATH/map2tga test4.fits test5.tga -bar -title "Synthesized Map (Nside=3
 time $BINPATH/median_filter_cxx test.fits '!test5.fits' 60 && \
 time $BINPATH/map2tga test5.fits test6.tga -bar -title "Median-filtered map (1 degree)" && \
 time $BINPATH/smoothing_cxx nlmax=512 infile=test.fits outfile=\!test7.fits polarisation=true fwhm_arcmin=300 && \
-time $BINPATH/alice2 -in test7.fits -nside 256 -ell 100 -xsz 1024 -out test_alice
+time $BINPATH/alice2 -in test7.fits -nside 256 -ell 100 -xsz 1024 -out test_alice && \
+time $BINPATH/alice3 kernel_steps=50 steps=100 in=test7.fits nside=256 ell=100 out=\!test_alice3 && \
+time $BINPATH/map2tga test_alice3_background.fits testa1.tga -pal 0 -bar -interpol -title "Alice background texture" && \
+time $BINPATH/map2tga test_alice3_texture.fits testa2.tga -pal 0 -bar -interpol -title "Alice convolved texture" && \
+time $BINPATH/map2tga test_alice3_mod_texture.fits testa3.tga -pal 0 -bar -interpol -title "Alice modulated convolved texture"
+
 #xv test.tga test2.tga test3.tga test4.tga test5.tga test6.tga test_alice*.tga

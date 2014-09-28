@@ -8,7 +8,7 @@ class HealpixSkyMap: public SkyMap
   private:
     Healpix_Map<float> map;
   public:
-    HealpixSkyMap(int nside) : map(nside, RING,SET_NSIDE) {}
+    HealpixSkyMap(int nside) : map(nside, RING,SET_NSIDE) { map.fill(0.); }
     virtual double get_pixel(int i) const {return map[i];}
     virtual void set_pixel(int i, double val) {map[i]=val;}
     virtual void add_to_pixel(int i, double val) {map[i]+=val;}

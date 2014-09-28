@@ -11,6 +11,7 @@ class SkyMap
   public:
     rotmatrix d_mat; /* for rotating the projection */
     bool d_rotate; /* flag for doing rotation */
+    SkyMap() : d_rotate(false) {}
     virtual ~SkyMap() {}
     virtual double get_pixel(int i) const = 0;
     virtual void set_pixel(int i, double val) = 0;

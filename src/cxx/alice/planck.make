@@ -6,7 +6,7 @@ OD:=$(BLDROOT)/$(PKG)
 FULL_INCLUDE+= -I$(SD)
 
 HDR_$(PKG):=$(SD)/*.h
-CXXBIN:=generateTexture alice2 alice_test
+CXXBIN:=generateTexture alice2 alice3 alice_test
 CXXBIN:=$(CXXBIN:%=$(BINDIR)/%)
 
 OBJ:=PolarizationHolder.o TextureHolder.o SoSSkyMap.o MollweideSkyMap.o color.o
@@ -22,6 +22,7 @@ $(ALLOBJ): $(ODEP) | $(OD)_mkdir
 
 $(BINDIR)/generateTexture: $(OD)/generateTexture.o $(BDEP)
 $(BINDIR)/alice2: $(OD)/alice2.o $(BDEP)
+$(BINDIR)/alice3: $(OD)/alice3.o $(BDEP)
 $(BINDIR)/alice_test: $(OD)/alice_test.o $(BDEP)
 
 all_cxxbin+=$(CXXBIN)
