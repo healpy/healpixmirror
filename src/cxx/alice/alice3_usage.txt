@@ -1,0 +1,25 @@
+Usage:
+  alice3 ...
+  where ... indicates any combination of the optional parameters below.
+
+  examples:
+    alice3 in=wmap_ilc_3yr_v2_r6_sim.fits nside=512 ell=300 out=test
+
+  [in=<fits file>] FITS file containing the Q and U polarization
+  components in the second and third columns.
+
+  [out=<string>] string used as a prefix for output files
+
+  [texture=<fits file>] optional input background texture
+
+  [nside=<int>] nside of all generated maps
+
+  [ell=<int>] ell value at which background texture has power
+
+  [steps=<int>] number of steps to use for each line of the convolution
+
+  [step_arcmin=<float>] arcminutes for each step in the convolution
+
+  [polmin=<float>] minimum value for the polarization magnitude
+
+  [polmax=<float>] maximum value for the polarization magnitude

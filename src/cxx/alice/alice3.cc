@@ -26,7 +26,7 @@ int lic_function(Healpix_Map<float> &hitcount, Healpix_Map<float> &texture,
   arr<pointing> curve(steps);
 
   texture.fill(0.);
-  int num_curves=0, k;
+  int num_curves=0;
 
   for(int i=0; i<texture.Npix(); i++)
     {
