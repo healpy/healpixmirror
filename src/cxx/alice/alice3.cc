@@ -10,15 +10,16 @@
 #include "arr.h"
 #include "fitshandle.h"
 #include "PolarizationHolder.h"
-#include "TextureHolder.h"
 #include "alice_utils.h"
 #include "vec3.h"
 #include "string_utils.h"
+#include "alm.h"
+#include "alm_healpix_tools.h"
 
 using namespace std;
 
 int lic_function(Healpix_Map<float> &hitcount, Healpix_Map<float> &texture,
-  const PolarizationHolder &ph, const TextureHolder &th, int steps,
+  const PolarizationHolder &ph, const Healpix_Map<float> &th, int steps,
   int kernel_steps, double step_radian)
   {
   arr<double> kernel(kernel_steps), convolution, rawtexture;
@@ -34,7 +35,9 @@ int lic_function(Healpix_Map<float> &hitcount, Healpix_Map<float> &texture,
       {
       num_curves++;
       runge_kutta_2(texture.pix2vec(i), ph, step_radian, curve);
-      pointings_to_textures(curve, th, rawtexture);
+      rawtexture.alloc(curve.size());
+      for (tsize i=0; i<curve.size(); i++)
+        rawtexture[i] = th.interpolated_value(curve[i]);
       convolve(kernel, rawtexture, convolution);
       for (tsize j=0; j<convolution.size(); j++)
         {
@@ -63,15 +66,30 @@ int main(int argc, const char** argv)
         polmax = params.find<float>("polmax",1e30);
   string out = params.find<string>("out");
 
-  TextureHolder th;
+  Healpix_Map<float> th(nside,RING,SET_NSIDE);
   if (params.param_present("texture"))
-    th.load(params.find<string>("texture"));
+    read_Healpix_map_from_fits(params.find<string>("texture"),th);
   else
     {
+    planck_rng rng;
     if (params.param_present("ell"))
-      th.setToEllNoise(nside, params.find<int>("ell"));
+      {
+      int ell = params.find<int>("ell");
+      if (ell<0) ell=2*nside;
+      Alm<xcomplex<float> > a(ell,ell);
+      a.SetToZero();
+      cout << "Background texture using ell = " << ell << endl;
+
+      a(ell,0).Set(rng.rand_gauss(),0.);
+      for (int m=0; m<=ell; m++)
+        a(ell,m).Set(rng.rand_gauss(),rng.rand_gauss());
+      alm2map(a, th);
+      }
     else
-      th.setToWhiteNoise(nside);
+      {
+      for (int i=0; i<th.Npix(); i++)
+        th[i] = rng.rand_uni() - 0.5;
+      }
     }
 
   Healpix_Map<float> hit(nside,RING,SET_NSIDE),
@@ -83,7 +101,7 @@ int main(int argc, const char** argv)
     pointing p = mag.pix2ang(i);
 
     mag[i]=min(polmax,max(polmin,ph.getQUMagnitude(p)));
-    tex[i] = th.getTexture(p);
+    tex[i] = th.interpolated_value(p);
     }
 
   write_Healpix_map_to_fits(out+"_background.fits",tex,PLANCK_FLOAT32);
