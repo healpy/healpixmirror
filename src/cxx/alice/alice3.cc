@@ -91,33 +91,33 @@ int main(int argc, const char** argv)
       th.setToWhiteNoise(nside);
     }
 
-  HealpixSkyMap *hitcount = new HealpixSkyMap(nside),
-         *texture = new HealpixSkyMap(nside),
-         *magnitude = new HealpixSkyMap(nside);
+  HealpixSkyMap hitcount(nside),
+                texture(nside),
+                magnitude(nside);
 
-  for (int i=0; i<magnitude->max_pixel(); i++)
-    if (magnitude->is_valid_pixel(i))
+  for (int i=0; i<magnitude.max_pixel(); i++)
+    if (magnitude.is_valid_pixel(i))
       {
-      pointing p = magnitude->deproject(i);
+      pointing p = magnitude.deproject(i);
       p.normalize();
 
       float temp = ph.getQUMagnitude(p);
       if (polmax != 123456.0) temp = (temp > polmax) ? polmax : temp;
       if (polmin != 123456.0) temp = (temp < polmin) ? polmin : temp;
-      magnitude->set_pixel(i, temp);
+      magnitude.set_pixel(i, temp);
 
-      texture->set_pixel(i, th.getTexture(p));
+      texture.set_pixel(i, th.getTexture(p));
       }
 
-  write_Healpix_map_to_fits(out+"_background.fits",texture->getMap(),
+  write_Healpix_map_to_fits(out+"_background.fits",texture.getMap(),
     PLANCK_FLOAT32);
 
-  int num_curves = lic_function(*hitcount, *texture, ph, th,
+  int num_curves = lic_function(hitcount, texture, ph, th,
     steps, kernel_steps, step_radian);
 
-  Healpix_Map<float> tex(texture->getMap()),
-                     mag(magnitude->getMap()),
-                     hit(hitcount->getMap());
+  Healpix_Map<float> tex(texture.getMap()),
+                     mag(magnitude.getMap()),
+                     hit(hitcount.getMap());
                      
   for (tsize i=0; i<tex.Npix(); ++i)
     tex[i]/=hit[i];
@@ -137,9 +137,9 @@ int main(int argc, const char** argv)
   int num_pix = 0;
   float hitmin, hitmax;
 
-  hitcount->minmax(hitmin, hitmax);
-  for (int i=0; i<=hitcount->max_pixel(); i++)
-    if (hitcount->is_valid_pixel(i)) num_pix++;
+  hitcount.minmax(hitmin, hitmax);
+  for (int i=0; i<=hitcount.max_pixel(); i++)
+    if (hitcount.is_valid_pixel(i)) num_pix++;
   cout << endl;
   cout << "number of curves calculated = " << num_curves << endl;
   float foo = float(num_pix) / num_curves;
