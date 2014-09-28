@@ -18,9 +18,6 @@ class TextureHolder
     float getTexture(const pointing& p) const
       { return d_texture.interpolated_value(p); }
 
-    double getTextureDouble(const pointing &p) const
-      { return double(d_texture.interpolated_value(p)); }
-
     // Fiddling with this by hand shouldn't be necessary.
     // It ends up in NEST ordering, but that shouldn't matter.
     Healpix_Map<float> d_texture;

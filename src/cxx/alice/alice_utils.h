@@ -1,6 +1,7 @@
 #ifndef ALICE_UTILS_H
 #define ALICE_UTILS_H
 
+#include <cmath>
 #include "vec3.h"
 #include "announce.h"
 #include "rotmatrix.h"
@@ -12,7 +13,7 @@
   on the unit sphere */
 void get_north_east(const vec3 &location, vec3 &north, vec3 &east)
   {
-  if (fabs(location.x) + fabs(location.y) > 0.0)
+  if (std::abs(location.x) + std::abs(location.y) > 0.0)
     east = vec3(-location.y,location.x,0).Norm();
   else
     east.Set(1.0,0,0);
@@ -112,8 +113,8 @@ void pointings_to_textures(arr< pointing > &curve, const TextureHolder &th,
                           arr< double > &textures)
   {
   textures.alloc(curve.size());
-  for(tsize i = 0; i < curve.size(); i++)
-    textures[i] = th.getTextureDouble(curve[i]);
+  for(tsize i = 0; i<curve.size(); i++)
+    textures[i] = th.getTexture(curve[i]);
   }
 
 /*! Create a sinusoidal kernel. */
