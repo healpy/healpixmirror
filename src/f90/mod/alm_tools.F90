@@ -1393,21 +1393,26 @@ contains
     !
     ! July 2003, EH : replicate temperature beam for polarization when reading
     !  standard ASCII file
+    ! Sep 2014, EH: accept ASCII files with 1,2 or 3 columns (on top of multipoles)
+    !    read all requested columns from FITS file
+    !  FITSIO extended file syntax (eg file.fits[col 1]) must be used to select row(s)
+    ! missing columns will be copied from existing ones
     !==========================================================================
-!     use fitstools, only : getsize_fits, fits2cl
-    use fitstools, only : fits2cl
+    use fitstools, only : getsize_fits, fits2cl
     real(kind=DP),                   intent(in)  :: fwhm_arcmin
     real(kind=DP), dimension(0:,1:), intent(out) :: gb
     integer(kind=I4B),               intent(in)  :: lmax
     character(len=*),      optional, intent(in)  :: beam_file
 
-    character(len=256) :: new_beam_file
+    character(len=FILENAMELEN) :: new_beam_file
     logical(kind=lgt) :: extfile, found_unix
-    integer(kind=i4b) :: type, nl, nd, lunit, il, i, l100
+    integer(kind=i4b) :: type, nl, nd, lunit, il, i, l100, iline, junk, nc
     character(len=80), dimension(1:180) :: header
     character(len=1600) :: str
     character(len=80) :: card
     real(dp) :: bref
+    real(dp), dimension(1:3) :: buffer
+    character(len=*), parameter :: code = 'generate_beam'
     !==========================================================================
     ! test if name of external is given and valid
     extfile = .false.
@@ -1446,12 +1451,47 @@ contains
        if (type < 0) then 
           ! ordinary ascii file ?
           lunit = 32
+          iline = 0 ! line index
           open(unit=lunit,file=new_beam_file,status='old', &
                &          form='formatted',action='read')
           do
+             iline = iline+1
              read(lunit,'(a)', end=100, err=100) str
-             if (str(1:1) /= '#') then
-                read(str,*) il, gb(il,1)
+             if (len_trim(str)>0 .and. str(1:1) /= '#') then
+                buffer = 0_dp
+
+                ! try 3 columns
+3               continue
+                read(str,*, err=2, end=2) il, buffer(1:3)
+                nc = 3
+                goto 99
+
+                ! try 2 columns
+2               continue
+                read(str,*, err=1, end=1) il, buffer(1:2)
+                nc = 2
+                goto 99
+
+                ! try 1 column
+1               continue
+                read(str,*, err=666, end=666) il, buffer(1)
+                nc = 1
+                goto 99
+
+                ! failure
+666             continue
+                print*, 'ERROR in '//code
+                print*, 'Unable to parse ASCII file '//trim(new_beam_file)
+                print*, 'at line '//trim(adjustl(string(iline)))//' containing '
+                print*, trim(str)
+                print*, 'Expected format :'
+                print*, ' Multipole,  column_1 [, column_2, column_3]'
+                print*, ' with OPTIONAL colum_2 and column_3'
+                call fatal_error
+
+                ! record data, keep going until end of file
+99              continue
+                gb(il, 1:nd) = buffer(1:nd)
                 if (il == nl-1) exit
              endif
           enddo
@@ -1462,9 +1502,11 @@ contains
              print 9000,'          The larger multipoles will be set to 0'
           endif
 
+
        else if (type == 1) then
           ! FITS file with ascii or binary table
           call fits2cl(new_beam_file, gb, nl-1_i4b, nd, header, fmissval=0.0_dp)
+          junk = getsize_fits(new_beam_file, nmaps=nc)
        else
           print 9000,' the file '//trim(new_beam_file) &
                &            //' is of unknown type.'
@@ -1472,14 +1514,29 @@ contains
        endif
 
        ! if Grad absent, replicate Temperature; if Curl absent, replicate Grad
-       l100 = min(100, nl-1)
-       bref = 1.e-4*sum(abs(gb(0:l100,1)))
-       do i=2,nd
-          if ( sum(abs(gb(0:l100,i))) <  bref ) then
-             print 9002,' column #',i,' empty, fill in with column #',i-1
+       if (nc < nd) then
+          print*,'Not enough columns found in '//trim(new_beam_file)
+          print*,'Expected '//trim(adjustl(string(nd)))//', found '//trim(adjustl(string(nc)))
+          do i=nc+1, nd
+             print 9000,' column #'//trim(adjustl(string(i))) &
+                  &                //' empty, fill in with column #' &
+                  &                //trim(adjustl(string(i-1)))
              gb(:,i) = gb(:,i-1)
-          endif
-       enddo
+          enddo
+       else
+          print*,'Read '//trim(adjustl(string(nd)))//' columns from '//trim(new_beam_file)
+          print*,'(out of '//trim(adjustl(string(nc)))//')'
+       endif
+
+!        ! if Grad absent, replicate Temperature; if Curl absent, replicate Grad
+!        l100 = min(100, nl-1)
+!        bref = 1.e-4*sum(abs(gb(0:l100,1)))
+!        do i=2,nd
+!           if ( sum(abs(gb(0:l100,i))) <  bref ) then
+!              print 9002,' column #',i,' empty, fill in with column #',i-1
+!              gb(:,i) = gb(:,i-1)
+!           endif
+!        enddo
 
     else
        ! gaussian beam
