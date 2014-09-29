@@ -17,8 +17,9 @@
 \end{facility}
 
 \begin{f90format}
-{fwhm\_arcmin, lmax, beam [, beam\_file]}
+{fwhm\_arcmin, lmax, beam \optional{[, beam\_file]}}
 \end{f90format}
+\aboutoptional
 
 \begin{arguments}
 {
@@ -28,22 +29,48 @@
 fwhm\_arcmin & DP & IN & fwhm size of the gaussian beam in arcminutes. \\
 lmax & I4B & IN & maximum $\ell$ value of the window function.   \\
 beam(0:lmax,1:p) & DP & OUT & beam window function generated. The second index runs form 1:1 for temperature only, and 1:3 for polarisation. In the latter case, 1=T, 2=E, 3=B.\\
-beam\_file(LEN=\filenamelen) \hskip 5cm (OPTIONAL)& CHR & IN & name of the file containing
+\optional{beam\_file}(LEN=\filenamelen) (\nobreak{OPTIONAL})& CHR & IN & name of the file containing
 the (non necessarily gaussian) window function $B_\ell$ of a circular beam. If present, it will override
-the argument {\tt fwhm\_arcmin}.
+the argument {\tt fwhm\_arcmin}. If fewer columns than requested are found in
+the file, missing colums will duplicate the existing ones (based on the
+assumption that $B_\ell$ is the same in T, E and B). Supports the {\tt fitsio} 'Extended Filename
+Syntax' (see \htmlref{examples below}{sub:ex:generate_beam}).
 \end{tabular}
 }
 \end{arguments}
 
+% \begin{examples}{1}
+% {
+% call generate\_beam(5.0\_dp, 1024, beam)  \\
+% }
+% {%
+% Generates the window function of a gaussian beam of FWHM = 5 arcmin, for $\ell
+% \leq 1024$.
+% }
+% \end{examples}
+
 \begin{example}
 {
-call generate\_beam(5.0\_dp, 1024, beam)  \\
+use \htmlref{healpix\_modules}{sub:healpix_modules} \\
+real(dp), dimension(0:1024, 1:3) :: gb0, b1, b2, b3\\
+call generate\_beam(5.0\_dp, 1024, gb0)\\
+call generate\_beam(0\_dp, 1024, b1, beam\_file='file.fits')\\
+call generate\_beam(0\_dp, 1024, b2, beam\_file='file.fits[col 1]')\\
+call generate\_beam(0\_dp, 1024, b3, beam\_file='file.fits[col 1; 2=0; 3=0]')\\
 }
-{
-Generates the window function of a gaussian beam of FWHM = 5 arcmin, for $\ell
+{%
+{\tt gb0} will contain the window function of a gaussian beam of FWHM = 5 arcmin, for $\ell
 \leq 1024$.
+{\tt b1} will contain the first 3 columns of {\tt file.fits}; {\tt b2} will be
+based on a virtual FITS file containg only the first column of {\tt file.fits},
+and we will have {\tt b2(:,3) = b2(:,2) = b2(:,1)}; finally {\tt b3} will read a
+virtual FITS file in which the first column is the same as in {\tt file.fits},
+while the column 2 and 3 are set to 0. Therefore {\tt b3(:,3) = b3(:,2) = 0}.
+\label{sub:ex:generate_beam}
 }
 \end{example}
+
+
 
 \begin{modules}
   \begin{sulist}{} %%%% NOTE the ``extra'' brace here %%%%

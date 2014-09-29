@@ -22,12 +22,16 @@
 
 \begin{arguments}
 {
-\begin{tabular}{p{0.3\hsize} p{0.05\hsize} p{0.05\hsize} p{0.5\hsize}} \hline  
-\textbf{name~\&~dimensionality} & \textbf{kind} & \textbf{in/out} & \textbf{description} \\ \hline
+\begin{tabular}{p{0.28\hsize} p{0.05\hsize} p{0.07\hsize} p{0.5\hsize}} \hline  
+\textbf{name~\&~dim.} & \textbf{kind} & \textbf{in/out} & \textbf{description} \\ \hline
                    &   &   &                           \\ %%% for presentation
 var & I8B & OUT & number of pixels or time samples in the chosen extension of
                    the FITS file \\
 filename(LEN=*) & CHR & IN & filename of the FITS-file containing \healpix map(s). \\
+\end{tabular}
+\begin{tabular}{p{0.28\hsize} p{0.05\hsize} p{0.07\hsize} p{0.5\hsize}} \hline  
+\textbf{name~\&~dim.} & \textbf{kind} & \textbf{in/out} & \textbf{description} \\ \hline
+                   &   &   &                           \\ %%% for presentation
 \optional{nmaps} (OPTIONAL) & I4B & OUT & number of maps in the extension. \\
 \optional{ordering} (OPTIONAL) & I4B & OUT & pixel ordering, 0=unknown, 1=RING, 2=NESTED \\
 \optional{obs\_npix} (OPTIONAL) & I4B & OUT & number of non blanck pixels. It is set to -1 if it can not be determined from header
@@ -46,18 +50,18 @@ information alone\\
              3  : binary table : with explicit pixel indexing (generally cut sky)
                    (var $\le$ 12 * nside * nside) \\
            999  : unable to determine the type }\\
-\optional{polarisation} (OPTIONAL)  & I4B & OUT & 
+\optional{polarisation} (\nobreak{OPTIONAL})  & I4B & OUT & 
 		\parbox[t]{\hsize}{presence of polarisation data in the file\\
              $<$0 : can not find out\\
               0 : no polarisation\\
               1 : contains polarisation (Q,U or G,C)} \\
-\optional{fwhm\_arcmin} (OPTIONAL) & DP & OUT & returns the beam FWHM read from FITS header, 
+\optional{fwhm\_arcmin} (\nobreak{OPTIONAL}) & DP & OUT & returns the beam FWHM read from FITS header, 
                             translated from Deg (hopefully) to arcmin.
                          Returns a negative value if not found. \\
-\optional{beam\_leg}(LEN=*) (OPTIONAL) & CHR & OUT & filename of beam or
+\optional{beam\_leg}(LEN=*) (\nobreak{OPTIONAL}) & CHR & OUT & filename of beam or
              filtering window function applied to data
 	     (FITS keyword BEAM\_LEG). Returns a empty string if not found. \\
-\optional{coordsys}(LEN=20) (OPTIONAL) & CHR & OUT & string describing the pixelation
+\optional{coordsys}(LEN=20) (\nobreak{OPTIONAL}) & CHR & OUT & string describing the pixelation
                    astrophysical coordinates. 
 		'G' = Galactic, 'E' = ecliptic, 'C' = celestial = equatorial. 
 		Returns a empty string if not found. \\
