@@ -16,6 +16,7 @@
     <mkdir dir="${docs}"/>
   </target>
   <target name="clean" depends="" description="Clean the build">
+    <delete dir="${dist}"/>
     <delete dir="${classes}"/>
     <delete dir="${junit.reports}"/>
     <delete dir="${docs}"/>

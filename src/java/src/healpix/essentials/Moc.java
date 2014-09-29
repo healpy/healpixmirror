@@ -83,21 +83,32 @@ public class Moc
     int shift=2*(maxorder-order);
     rs.add(p1<<shift,p2<<shift);
     }
+  /** Returns a new Moc that contains the union of this Moc and "other". */
   public Moc union (Moc other)
     { return fromNewRangeSet(rs.union(other.rs)); }
+  /** Returns a new Moc that contains the intersection of this Moc and "other".
+      */
   public Moc intersection (Moc other)
     { return fromNewRangeSet(rs.intersection(other.rs)); }
+  /** Returns a new Moc that contains all parts of this Moc that are not
+      contained in "other". */
   public Moc subtraction (Moc other)
     { return fromNewRangeSet(rs.difference(other.rs)); }
+  /** Returns the complement of this Moc. */
   public Moc complement()
     {
     RangeSet full = new RangeSet(new long[]{0L,12L*(1L<<(2*maxorder))});
     return fromNewRangeSet(full.difference(rs));
     }
+  /** @return true, if "other" is a subset of this Moc, else false. */
   public boolean contains(Moc other) // FIXME: needs optimization!
     { return rs.contains(other.rs); }
+  /** @return true, if the intersection of this Moc and "other" is not empty. */
   public boolean overlaps(Moc other) // FIXME: needs optimization!
     { return rs.overlaps(other.rs); }
+  /** @return A RangeSet containing all HEALPix pixels (in NUNIQ order) covered
+      by this Moc. The result is well-formed in the sense that every pixel is
+      given at its lowest possible HEALPix order. */
   public RangeSet toUniq() // should be tuned!
     {
     RangeSet r2 = new RangeSet(rs);
@@ -123,6 +134,8 @@ public class Moc
       }
     return res;
     }
+  /** @return A Moc built from the RangeSet of NUNIQ HEALPix pixels given in
+      "ru". "ru" need not be well-formed. */
   public static Moc fromUniq (RangeSet ru) // should be tuned!
     {
     RangeSet r= new RangeSet();
@@ -147,8 +160,11 @@ public class Moc
     return fromNewRangeSet(r);
     }
 
+  /** @return A compressed representation of the Moc obtained by interpolative
+      coding. */
   public byte[] toCompressed() throws Exception
     { return rs.toCompressed(); }
+  /** @return A Moc built from the compressed representation given in "data". */
   public static Moc fromCompressed(byte[] data) throws Exception
     { return fromNewRangeSet(RangeSet.fromCompressed(data)); }
 
