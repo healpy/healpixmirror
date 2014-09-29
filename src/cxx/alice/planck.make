@@ -10,7 +10,7 @@ CXXBIN:=generateTexture alice2 alice3 alice_test
 CXXBIN:=$(CXXBIN:%=$(BINDIR)/%)
 
 OBJ:=PolarizationHolder.o TextureHolder.o SoSSkyMap.o MollweideSkyMap.o color.o
-ALLOBJ:=$(OBJ) generateTexture.o alice2.o alice_test.o
+ALLOBJ:=$(OBJ) generateTexture.o alice2.o alice3.o alice_test.o
 OBJ:=$(OBJ:%=$(OD)/%)
 ALLOBJ:=$(ALLOBJ:%=$(OD)/%)
 

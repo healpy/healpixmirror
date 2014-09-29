@@ -96,11 +96,13 @@ int main(int argc, const char** argv)
                      tex(nside,RING,SET_NSIDE),
                      mag(nside,RING,SET_NSIDE);
 
+  hit.fill(0.);
+
   for (int i=0; i<mag.Npix(); i++)
     {
     pointing p = mag.pix2ang(i);
 
-    mag[i]=min(polmax,max(polmin,ph.getQUMagnitude(p)));
+    mag[i] = min(polmax,max(polmin,ph.getQUMagnitude(p)));
     tex[i] = th.interpolated_value(p);
     }
 
