@@ -60,7 +60,7 @@ int main(int argc, const char** argv)
 
   int nside = params.find<int>("nside");
   int steps = params.find<int>("steps",100);
-  double step_radian=10.*arcmin2rad;
+  double step_radian=arcmin2rad*params.find<double>("step_arcmin",10.);
   int kernel_steps = params.find<int>("kernel_steps",50);
   float polmin = params.find<float>("polmin",-1e30),
         polmax = params.find<float>("polmax",1e30);
