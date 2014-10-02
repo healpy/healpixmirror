@@ -25,7 +25,7 @@
 /*! \file ls_image.h
  *  Classes for creation and output of image files
  *
- *  Copyright (C) 2003-2012 Max-Planck-Society
+ *  Copyright (C) 2003-2014 Max-Planck-Society
  *  \author Martin Reinecke, David Larson
  */
 
@@ -79,6 +79,12 @@ class Palette
       {
       fv.push_back(f);
       cv.push_back(c);
+      }
+    void addb (uint8 f, uint8 r,uint8 g, uint8 b)
+      {
+      const float s = float(1./255.);
+      fv.push_back(f*s);
+      cv.push_back(Colour(r*s,g*s,b*s));
       }
     /*! Sets the palette to the predefined palette \a num. */
     void setPredefined(int num);

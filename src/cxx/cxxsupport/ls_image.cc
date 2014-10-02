@@ -25,7 +25,7 @@
 /*
  *  Classes for creation and output of image files
  *
- *  Copyright (C) 2003-2012 Max-Planck-Society
+ *  Copyright (C) 2003-2014 Max-Planck-Society
  *  Author: Martin Reinecke
  */
 
@@ -64,6 +64,38 @@ void Palette::setPredefined (int num)
       add(0.7f,Colour(1,1,0));
       add(0.9f,Colour(1,.33f,0));
       add(1,Colour(.5f,0,0));
+      break;
+    case 10: // Planck colours 1
+      addb(  0,  0,  0,255);
+      addb( 42,  0,112,255);
+      addb( 85,  0,221,255);
+      addb(127,255,237,217);
+      addb(170,255,180,  0);
+      addb(212,255, 75,  0);
+      addb(255,100,  0,  0);
+      break;
+    case 11: // Planck colours 2
+      addb(  0,  0,  0,255);
+      addb( 13, 10, 20,255);
+      addb( 26, 30,184,255);
+      addb( 38, 80,235,255);
+      addb( 52,191,239,250);
+      addb( 65,228,240,245);
+      addb( 76,241,241,212);
+      addb( 77,241,241,212);
+      addb( 88,245,240,175);
+      addb(101,248,235,130);
+      addb(114,250,204, 38);
+      addb(127,243,153, 13);
+      addb(140,204, 77,  0);
+      addb(153,165, 32, 32);
+      addb(166,114,  0, 32);
+      addb(179,128,128,153);
+      addb(192,179,179,204);
+      addb(205,204,204,230);
+      addb(218,230,230,242);
+      addb(231,242,242,250);
+      addb(255,252,252,255);
       break;
     default:
       planck_fail("Palette #"+dataToString(num)+" not yet supported.");
