@@ -122,7 +122,7 @@ do_polamplitude = (polarization[0] eq 1)
 do_poldirection = (polarization[0] eq 2)
 do_polvector    = (polarization[0] eq 3)
 ;-------------------------------------------------
-in_gdl = is_gdl()
+in_gdl = 0 ;is_gdl()
 in_idl = ~in_gdl
 ;if (do_ps) then 
 test_preview
@@ -434,7 +434,6 @@ if (projtype eq 6) then begin
     endif
 endif
 ;====================================================
-
 do_shade = (do_orth && defined(shademap))
 ; set color table and character size
 ct          = defined(colt)     ? colt     : 33
@@ -444,6 +443,11 @@ be_verbose  = ~keyword_set(silent)
 
 ; alter the color table
 ; -----------------------
+; save the color and background before playing with the color table
+my_background = !p.background
+my_color      = !p.color
+back      = REPLICATE(BYTE(!P.BACKGROUND),xsize,(ysize*cbar_dy*w_dx_dy)>1)
+
 if (be_verbose) then print,'... computing the color table ...'
 if (do_true) then begin
     loadct, 0, /silent
@@ -484,11 +488,8 @@ TVLCT,red,green,blue
 ; open the device
 ; ---------------------
 old_device=!d.name
-my_background = !p.background
-my_color = !p.color
 if (be_verbose) then print,'... here it is.'
 titlewindow = proj_big+' projection : ' + title_display
-back      = REPLICATE(BYTE(!P.BACKGROUND),xsize,(ysize*cbar_dy*w_dx_dy)>1)
 use_z_buffer = 0 ; set it to 0 (for postscript) 2010-03-18
 if (do_ps) then begin
     ; 2009-11-04: 'ps' in GDL does not support: COLOR, BITS, XSIZE, ...
@@ -537,13 +538,19 @@ endif else begin ; X, png, gif or jpeg output
     ;to_patch = ((!d.n_colors GT 256) && do_image && in_idl)
     n_colors = !d.n_colors
     if (in_gdl && (!d.name eq 'X' || !d.name eq 'WIN')) then begin ; work-around for GDL0.9.2 bug (!d.n_colors gets correct only after first call to WINDOW)
-        device,get_visual_depth=gvd
+        device, window_state=ws0
+        device, get_visual_depth=gvd, window_state=ws1
+        junk = where(ws1-ws0 eq 1, njunk) 
+        if (njunk eq 1)  then wdelete, junk[0] ; GDL 0.9.5 bug: spurious window created
         n_colors = 2L^gvd
     endif
+    ;;;;help,n_colors
     to_patch = (n_colors GT 256 && do_image)
     if (in_gdl) then begin
         if (use_z_buffer) then device else device,decomposed=0 ; in GDL0.9.2, decomposed is only available (but ignored) when device='X', or unvalid when device='Z'
-        if (to_patch) then loadct,0,/silent ; emulate decomposed
+        ;if (to_patch) then loadct,0,/silent ; emulate decomposed
+        device, decomposed = to_patch ; does it work for GDL 0.9.5 ?
+        ;;;;;;device, decomposed = 0 ; does it work for GDL 0.9.5 ?
     endif else begin
         device, decomposed = use_z_buffer || to_patch
     endelse
@@ -575,6 +582,16 @@ endelse
 ; -------------------------------------------------------------
 ; make the plot
 ; -------------------------------------------------------------
+; window,/free
+; print,!p.background
+; print,!p.color
+; tvlct,/get,rgb
+; print,rgb[0:5,0:2]
+; plot,[1,2],title='Done'
+; return
+; print,!p.background,!p.color,red[0:3],green[0:3],blue[0:3]
+; print,back[0:4,0:4]
+
 myplot={urange:[umin,umax],vrange:[vmin,vmax],position:[w_xll,w_yll,w_xur,w_yur],xstyle:5,ystyle:5}
 plot, /nodata, myplot.urange, myplot.vrange, pos=myplot.position, XSTYLE=myplot.xstyle, YSTYLE=myplot.ystyle
 ; Set the background when doing a plot in Z buffer
@@ -666,7 +683,7 @@ endif
 ;  the color bar
 if (~(keyword_set(nobar) || do_poldirection || do_true)) then begin
     color_bar_out = BYTE(CONGRID(color_bar,xsize*cbar_dx)) # REPLICATE(1.,(ysize*cbar_dy*w_dx_dy)>1)
-    back(xsize*cbar_xll,0) = color_bar_out
+    back[xsize*cbar_xll,0] = color_bar_out
     TV, back,0,cbar_yll,/normal,xsize = 1.
     ; For Totor <<<<<<<<<<<<<<<<<<<<<<<<<
 ;     plot, /nodata, [tmin,tmax],[0,1],pos=[cbar_xll,cbar_yll,cbar_xur,cbar_yur],/noerase
