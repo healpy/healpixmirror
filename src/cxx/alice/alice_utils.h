@@ -1,3 +1,34 @@
+/*
+ *  This file is part of Healpix_cxx.
+ *
+ *  Healpix_cxx is free software; you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation; either version 2 of the License, or
+ *  (at your option) any later version.
+ *
+ *  Healpix_cxx is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with Healpix_cxx; if not, write to the Free Software
+ *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+ *
+ *  For more information about HEALPix, see http://healpix.sourceforge.net
+ */
+
+/*
+ *  Healpix_cxx is being developed at the Max-Planck-Institut fuer Astrophysik
+ *  and financially supported by the Deutsches Zentrum fuer Luft- und Raumfahrt
+ *  (DLR).
+ */
+
+/*! \file alice_utils.h
+ *  Copyright (C) 2005-2014 David Larson, Max-Planck-Society
+ *  \author David Larson \author Martin Reinecke
+ */
+
 #ifndef ALICE_UTILS_H
 #define ALICE_UTILS_H
 
@@ -6,7 +37,6 @@
 #include "announce.h"
 #include "rotmatrix.h"
 #include "PolarizationHolder.h"
-#include "TextureHolder.h"
 #include "lsconstants.h"
 
 /*! Returns vectors north and east, given a normalized vector location
@@ -18,13 +48,13 @@ void get_north_east(const vec3 &location, vec3 &north, vec3 &east)
   else
     east.Set(1.0,0,0);
   north = crossprod(location, east);
-}
+  }
 
 /*! Returns a normalized direction parallel to and orthogonal to the
   the polarization given by q and u at a location on the unit sphere.
   Healpix conventions for q and u are used.  */
 void get_qu_direction(const vec3 &location, double q, double u,
-                      vec3 &direction, vec3 &orthogonal)
+  vec3 &direction, vec3 &orthogonal)
   {
   vec3 north, east;
   get_north_east(location, north, east);
@@ -39,7 +69,7 @@ void get_qu_direction(const vec3 &location, double q, double u,
    old_axis.  The axis around which one rotates to get to the
    new_location is also returned.  */
 void get_step(const vec3 &location, double q, double u, double theta,
-              const vec3 &old_axis, vec3 &new_location, vec3 &new_axis)
+  const vec3 &old_axis, vec3 &new_location, vec3 &new_axis)
   {
   vec3 dummy;
   rotmatrix rot;
@@ -55,10 +85,11 @@ void get_step(const vec3 &location, double q, double u, double theta,
   must be correct as input, and they are updated at the end of this
   function.  */
 void runge_kutta_step(const vec3 &old_location, const PolarizationHolder &ph,
-                      double &q, double &u, double theta, const vec3 &old_axis,
-                      vec3 &new_location, vec3 &new_axis, pointing &p)
+  double &q, double &u, double theta, const vec3 &old_axis, vec3 &new_location,
+  vec3 &new_axis, pointing &p)
   {
   // Take a half-theta step and get new values of Q and U.
+  // theta*=3*sqrt(q*q+u*u);
   get_step(old_location, q, u, theta/2.0, old_axis, new_location, new_axis);
   p = pointing(new_location);
   ph.getQU(p, q, u);
@@ -75,7 +106,7 @@ void runge_kutta_step(const vec3 &old_location, const PolarizationHolder &ph,
   subroutine returns an array of pointings extending in both
   directions from the starting location.  */
 void runge_kutta_2(const vec3 &location, const PolarizationHolder &ph,
-                   double theta, arr< pointing > &pointings)
+  double theta, arr< pointing > &pointings)
   {
   double q, u;
   int i = pointings.size();
@@ -106,15 +137,6 @@ void runge_kutta_2(const vec3 &location, const PolarizationHolder &ph,
     old_location = new_location;
     pointings[i] = p;
     }
-  }
-
-/*! Get an array of texture values from an array of pointings */
-void pointings_to_textures(arr< pointing > &curve, const TextureHolder &th,
-                          arr< double > &textures)
-  {
-  textures.alloc(curve.size());
-  for(tsize i = 0; i<curve.size(); i++)
-    textures[i] = th.getTexture(curve[i]);
   }
 
 /*! Create a sinusoidal kernel. */

@@ -1,7 +1,33 @@
-// ALICE = Amazing Line Integral Convolution Executable
-// Programmer: David Larson
-// Date: January 29, 2006
-// (Code originally written last fall.)
+/*
+ *  This file is part of Healpix_cxx.
+ *
+ *  Healpix_cxx is free software; you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation; either version 2 of the License, or
+ *  (at your option) any later version.
+ *
+ *  Healpix_cxx is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with Healpix_cxx; if not, write to the Free Software
+ *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+ *
+ *  For more information about HEALPix, see http://healpix.sourceforge.net
+ */
+
+/*
+ *  Healpix_cxx is being developed at the Max-Planck-Institut fuer Astrophysik
+ *  and financially supported by the Deutsches Zentrum fuer Luft- und Raumfahrt
+ *  (DLR).
+ */
+
+/*! \file alice3.cc
+ *  Copyright (C) 2005-2014 David Larson, Max-Planck-Society
+ *  \author David Larson \author Martin Reinecke
+ */
 
 #include <iostream>
 #include "paramfile.h"
@@ -15,6 +41,7 @@
 #include "string_utils.h"
 #include "alm.h"
 #include "alm_healpix_tools.h"
+#include "planck_rng.h"
 
 using namespace std;
 
@@ -110,7 +137,7 @@ int main(int argc, const char** argv)
 
   int num_curves = lic_function(hit, tex, ph, th, steps, kernel_steps,
     step_radian);
-   
+
   for (tsize i=0; i<tex.Npix(); ++i)
     tex[i]/=hit[i];
   float tmin,tmax,mmin,mmax;
@@ -118,12 +145,12 @@ int main(int argc, const char** argv)
   mag.minmax(mmin,mmax);
   for (tsize i=0; i<tex.Npix(); ++i)
     {
-    mag[i]=(tex[i]-tmin)*(mag[i]-mmin);
-    tex[i]=1.0-0.95*(tex[i]-tmin)/(tmax-tmin);
+    mag[i]*=(tex[i]-tmin);
+    tex[i]=1.0-(tex[i]-tmin)/(tmax-tmin);
     }
   mag.minmax(mmin,mmax);
   for (tsize i=0; i<mag.Npix(); ++i)
-    mag[i]=1.0-0.95*(mag[i]-mmin)/(mmax-mmin);
+    mag[i]=1.0-(mag[i]-mmin)/(mmax-mmin);
   write_Healpix_map_to_fits(out+"_texture.fits",tex,PLANCK_FLOAT32);
   write_Healpix_map_to_fits(out+"_mod_texture.fits",mag,PLANCK_FLOAT32);
   }
