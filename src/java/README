@@ -41,7 +41,8 @@ It is shipped with Healpix and available in
 <HEALPIX>/src/java/lib/
 Just make sure that this path (or a path to any other junit.jar)
 is included in your CLASSPATH environment variable.
+Alternatively you can use ant's "-lib" option:
+  ant -lib lib/junit*.jar test
 
-README updated Sep 2014 by MR.
 Please contact healpix-support AT lists.sourceforge.net for any questions on the
 code or its installation.
