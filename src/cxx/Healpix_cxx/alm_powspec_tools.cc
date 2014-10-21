@@ -288,11 +288,11 @@ template<typename T> void applyCosineWindow
   planck_assert((lmin>=0)&&(lmax>lmin),"bad lmin/lmax");
   arr<double> cw(alm.Lmax()+1);
   for (int i=0; i<int(cw.size()); ++i)
-  if (i<lmin) 
+  if (i<lmin)
     cw[i]=1;
-  else if (i<lmax) 
+  else if (i<lmax)
     cw[i]=(1+cos(pi*(i-lmin)/double(lmax-lmin)))/2;
-  else 
+  else
     cw[i]=0;
 
   alm.ScaleL(cw);
