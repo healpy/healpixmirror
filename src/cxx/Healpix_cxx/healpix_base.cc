@@ -25,7 +25,7 @@
  */
 
 /*
- *  Copyright (C) 2003-2012 Max-Planck-Society
+ *  Copyright (C) 2003-2014 Max-Planck-Society
  *  Author: Martin Reinecke
  */
 
@@ -767,16 +767,19 @@ template<typename I> I T_Healpix_Base<I>::ring2nest (I pix) const
 template<typename I> inline I T_Healpix_Base<I>::nest_peano_helper
   (I pix, int dir) const
   {
-  int face = pix>>(2*order_);
+  int face = (pix>>(2*order_));
   I result = 0;
-  uint8 path = peano_face2path[dir][face];
-
-  for (int shift=2*order_-2; shift>=0; shift-=2)
+  int state = ((peano_face2path[dir][face]<<4))|(dir<<7);
+  int shift=2*order_-4;
+  for (; shift>=0; shift-=4)
     {
-    uint8 spix = uint8((pix>>shift) & 0x3);
-    result <<= 2;
-    result |= peano_subpix[dir][path][spix];
-    path=peano_subpath[dir][path][spix];
+    state=peano_arr2[(state&0xF0) | ((pix>>shift)&0xF)];
+    result = (result<<4) | (state&0xF);
+    }
+  if (shift==-2)
+    {
+    state=peano_arr[((state>>2)&0xFC) | (pix&0x3)];
+    result = (result<<2) | (state&0x3);
     }
 
   return result + (I(peano_face2face[dir][face])<<(2*order_));

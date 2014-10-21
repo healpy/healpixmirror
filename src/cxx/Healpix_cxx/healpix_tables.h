@@ -25,7 +25,7 @@
  */
 
 /*! \file healpix_tables.h
- *  Copyright (C) 2011 Max-Planck-Society
+ *  Copyright (C) 2011-2014 Max-Planck-Society
  *  \author Martin Reinecke
  */
 
@@ -51,8 +51,8 @@ class Healpix_Tables
 
     static const int jrll[], jpll[];
 
-    static const uint8 peano_subpix[2][8][4], peano_subpath[2][8][4],
-                       peano_face2path[2][12], peano_face2face[2][12];
+    static const uint8 peano_face2path[2][12], peano_face2face[2][12],
+                       peano_arr[],peano_arr2[];
 
     static const int nb_xoffset[], nb_yoffset[],
                      nb_facearray[][12], nb_swaparray[][3];
