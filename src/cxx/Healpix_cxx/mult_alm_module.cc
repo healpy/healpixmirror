@@ -25,7 +25,7 @@
  */
 
 /*
- *  Copyright (C) 2003-2011 Max-Planck-Society
+ *  Copyright (C) 2003-2014 Max-Planck-Society
  *  Author: Martin Reinecke
  */
 
@@ -60,6 +60,12 @@ template<typename T> void mult_alm (paramfile &params)
   planck_assert (fwhm_in>=0,"fwhm_arcmin_in must be >= 0");
   double fwhm_out = arcmin2rad*params.template find<double>("fwhm_arcmin_out",0);
   planck_assert (fwhm_out>=0,"fwhm_arcmin_out must be >= 0");
+  int cw_lmin=-1, cw_lmax=-1;
+  if (params.param_present("cw_lmin"))
+    {
+    cw_lmin = params.template find<int>("cw_lmin");
+    cw_lmax = params.template find<int>("cw_lmax");
+    }
 
   string datadir;
   if ((nside_pixwin_in>0) || (nside_pixwin_out>0))
@@ -102,6 +108,7 @@ template<typename T> void mult_alm (paramfile &params)
       alm.ScaleL (temp);
       }
     if (fwhm_out>0) smoothWithGauss (alm, fwhm_out);
+    if (cw_lmin>=0) applyCosineWindow(alm, cw_lmin, cw_lmax);
     write_Alm_to_fits (outfile,alm,nlmax,nmmax,planckType<T>());
     }
   else
@@ -116,7 +123,7 @@ template<typename T> void mult_alm (paramfile &params)
       {
       read_pixwin(datadir,nside_pixwin_in,temp,pol);
       for (int l=0; l<=nlmax; ++l)
-        { temp[l] = 1/temp[l]; if (pol[l]!=0) pol[l] = 1/pol[l]; }
+        { temp[l] = 1/temp[l]; if (pol[l]!=0.) pol[l] = 1/pol[l]; }
       almT.ScaleL(temp); almG.ScaleL(pol); almC.ScaleL(pol);
       }
     if (cl_in!="")
@@ -129,6 +136,7 @@ template<typename T> void mult_alm (paramfile &params)
     if (cl_out!="")
       planck_fail ("power spectra not (yet) supported with polarisation");
     if (fwhm_out>0) smoothWithGauss (almT, almG, almC, fwhm_out);
+    if (cw_lmin>=0) applyCosineWindow(almT, almG, almC, cw_lmin, cw_lmax);
     write_Alm_to_fits (outfile,almT,almG,almC,nlmax,nmmax,planckType<T>());
     }
   }
