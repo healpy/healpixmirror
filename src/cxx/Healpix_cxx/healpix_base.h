@@ -25,7 +25,7 @@
  */
 
 /*! \file healpix_base.h
- *  Copyright (C) 2003-2012 Max-Planck-Society
+ *  Copyright (C) 2003-2014 Max-Planck-Society
  *  \author Martin Reinecke
  */
 
@@ -199,6 +199,18 @@ template<typename I> class T_Healpix_Base: public Healpix_Tables
         res.set_z_phi (z, phi);
         return res;
         }
+      }
+    /*! Returns the pixel number for this T_Healpix_Base corresponding to the
+        pixel number \a pix in \a b.
+        \note \a b.Nside()\%Nside() must be 0. */
+    I pixel_import (I pix, const T_Healpix_Base &b) const
+      {
+      I ratio = b.nside_/nside_;
+      planck_assert(nside_*ratio==b.nside_,"bad nside ratio");
+      int x, y, f;
+      b.pix2xyf(pix, x, y, f);
+      x/=ratio; y/=ratio;
+      return xyf2pix(x, y, f);
       }
 
     template<typename I2> void query_disc_internal (pointing ptg, double radius,
