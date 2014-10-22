@@ -1,6 +1,7 @@
 /*! \mainpage HEALPix C++ documentation
   <ul>
   <li>\ref components "Programming interface"
+  <li>\ref uselib "How to use the library in your own codes"
   <li>\ref facilities "Facilities"
   </ul>
  */
@@ -26,6 +27,18 @@
    - for \ref healpix_map_fitsio_group "HEALPix Maps"
    - for \ref alm_fitsio_group "spherical harmonic coefficients"
    - for \ref powspec_fitsio_group "power spectra"
+*/
+
+/*! \page uselib Using Healpix C++ in your own codes
+
+  In order to use the Healpix library in your own C++ codes, you have to do two
+  things:
+   - \c #include the appropriate header files in your sources. From this
+     documentation it should be evident which ones you have to include for a
+     specific task.
+   - Specify the required libraries when linking your executable. For this
+     release of the software, this should be (order is important!):
+     \verbatim-lhealpix_cxx -lcxxsupport -lsharp -lfftpack -lc_utils -lcfitsio\endverbatim
 */
 
 /*! \page facilities HEALPix C++ facilities
