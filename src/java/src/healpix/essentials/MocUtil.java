@@ -18,29 +18,17 @@
  */
 package healpix.essentials;
 
-import java.io.OutputStream;
-import java.io.FileOutputStream;
-import java.io.DataOutputStream;
-import java.io.InputStream;
-import java.io.FileInputStream;
-
-import nom.tam.fits.BasicHDU;
-import nom.tam.fits.BinaryTable;
-import nom.tam.fits.BinaryTableHDU;
-import nom.tam.fits.Fits;
-import nom.tam.fits.FitsFactory;
-import nom.tam.fits.Header;
-import nom.tam.util.BufferedDataOutputStream;
+import java.io.*;
+import nom.tam.fits.*;
 
 /** Moc I/O routines.
-
     @copyright 2014 Max-Planck-Society
     @author Martin Reinecke */
 public class MocUtil
   {
   /** Parses a string following either the basic ASCII or JSON syntax given in
       the MOC standard document, and converts it into a MOC.
-      The string need not obey the rules for a well-formed moc given in the
+      The string need not obey the rules for a well-formed MOC given in the
       document. */
   public static Moc mocFromString(String in)
     {
@@ -88,7 +76,7 @@ public class MocUtil
       boolean prefix=false;
       if (!rt.isEmpty())
         {
-        for (int iv=0; iv<rt.size(); ++iv)
+        for (int iv=0; iv<rt.nranges(); ++iv)
           {
           long a=rt.ivbegin(iv)-offset,
                b=rt.ivend(iv)-offset;
@@ -126,15 +114,11 @@ public class MocUtil
   /** Converts the Moc to its basic ASCII representation as described in the MOC
       standard document. The result is well-formed. */
   public static String mocToStringASCII (Moc moc)
-    {
-    return mocToStringGeneral(moc,false);
-    }
+    { return mocToStringGeneral(moc,false); }
   /** Converts the Moc to its JSON representation as described in the MOC
       standard document. The result is well-formed. */
   public static String mocToStringJSON(Moc moc)
-    {
-    return mocToStringGeneral(moc,true);
-    }
+    { return mocToStringGeneral(moc,true); }
 
   /** Converts the contents of a FITS input stream to a MOC. */
   public static Moc mocFromFits(InputStream inp) throws Exception

@@ -21,7 +21,6 @@
 package healpix.essentials;
 
 /** Support for MOC algorithms.
-
     @copyright 2014 Max-Planck-Society
     @author Martin Reinecke */
 public class Moc
@@ -35,6 +34,15 @@ public class Moc
   /** Creates a new Moc, which is identical to "other". */
   public Moc(Moc other)
     { rs=new RangeSet(other.rs); }
+  /** Creates a new Moc from the range set of NESTED pixels at the given order.
+      */
+  public Moc(RangeSet rs2, int order)
+    {
+    rs=new RangeSet(rs2.nranges());
+    int shift=2*(maxorder-order);
+    for (int i=0; i<rs2.nranges(); ++i)
+      rs.append(rs2.ivbegin(i)<<shift,rs2.ivend(i)<<shift);
+    }
 
   static private Moc fromNewRangeSet(RangeSet rngset)
     {
@@ -48,7 +56,7 @@ public class Moc
   public int maxOrder()
     {
     long combo=0;
-    for (int i=0; i<rs.size(); ++i)
+    for (int i=0; i<rs.nranges(); ++i)
       combo|=rs.ivbegin(i)|rs.ivend(i);
     return maxorder-(Long.numberOfTrailingZeros(combo)>>>1);
     }
@@ -65,7 +73,7 @@ public class Moc
     long adda = keepPartialCells ? 0L : ofs,
          addb = keepPartialCells ? ofs : 0L;
     RangeSet rs2=new RangeSet();
-    for (int i=0; i<rs.size(); ++i)
+    for (int i=0; i<rs.nranges(); ++i)
       {
       long a=(rs.ivbegin(i)+adda)&mask;
       long b=(rs.ivend  (i)+addb)&mask;
@@ -122,7 +130,7 @@ public class Moc
       long ofs=(1L<<shift)-1;
       long ofs2 = 1L<<(2*o+2);
       r3.clear();
-      for (int iv=0; iv<r2.size(); ++iv)
+      for (int iv=0; iv<r2.nranges(); ++iv)
         {
         long a=(r2.ivbegin(iv)+ofs)>>>shift,
              b=r2.ivend(iv)>>>shift;
@@ -142,7 +150,7 @@ public class Moc
     RangeSet rtmp = new RangeSet();
     int lastorder=0;
     int shift=2*maxorder;
-    for (int i=0; i<ru.size(); ++i)
+    for (int i=0; i<ru.nranges(); ++i)
       for (long j=ru.ivbegin(i); j<ru.ivend(i); ++j)
         {
         int order = HealpixUtils.uniq2order(j);
@@ -177,4 +185,7 @@ public class Moc
     Moc other = (Moc) obj;
     return rs.equals(other.rs);
     }
+
+  public int nranges()
+    { return rs.nranges(); }
   }

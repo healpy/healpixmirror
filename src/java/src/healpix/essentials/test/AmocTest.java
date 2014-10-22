@@ -19,12 +19,11 @@
  */
 package healpix.essentials.test;
 
-import healpix.essentials.Moc;
-import healpix.essentials.MocUtil;
-import healpix.essentials.RangeSet;
+import healpix.essentials.*;
 import junit.framework.TestCase;
 import java.io.*;
 import java.util.Random;
+import java.util.Arrays;
 
 public class AmocTest extends TestCase
   {
@@ -72,6 +71,46 @@ public class AmocTest extends TestCase
     MocUtil.mocToFits(moc,out);
     ByteArrayInputStream inp = new ByteArrayInputStream(out.toByteArray());
     assertEquals("inconsistency",moc,MocUtil.mocFromFits(inp));
+    }
+
+  public void testPeano() throws Exception
+    {
+    HealpixBase base = new HealpixBase (8192,Scheme.NESTED);
+    RangeSet lrs=base.queryDisc(new Pointing(new Vec3(1,0,0)),Constants.halfpi/9.);
+    Moc moc=new Moc(lrs,13);
+    RangeSet rs=moc.toUniq();
+    long[] arr=new long[(int)rs.nval()];
+    int parr=0;
+    RangeSet.ValueIterator it = rs.valueIterator();
+    while (it.hasNext())
+      {
+      long upix=it.next();
+      int order=HealpixUtils.uniq2order(upix);
+      long shift=1L<<(2*order+2);
+      arr[parr++]=HealpixUtils.nest2peano(upix-shift,order)+shift;
+      }
+    Arrays.sort(arr);
+    RangeSet rsu=new RangeSet();
+    for (int i=0; i<arr.length; ++i)
+      rsu.append(arr[i]);
+    Moc pmoc=Moc.fromUniq(rsu);
+    rs.clear();
+    arr=new long[(int)rsu.nval()];
+    parr=0;
+    it = rsu.valueIterator();
+    while (it.hasNext())
+      {
+      long upix=it.next();
+      int order=HealpixUtils.uniq2order(upix);
+      long shift=1L<<(2*order+2);
+      arr[parr++]=HealpixUtils.peano2nest(upix-shift,order)+shift;
+      }
+    Arrays.sort(arr);
+    rs=new RangeSet();
+    for (int i=0; i<arr.length; ++i)
+      rs.append(arr[i]);
+    Moc moc2=Moc.fromUniq(rs);
+    assertEquals(moc,moc2);
     }
 
   public void testOps() throws Exception

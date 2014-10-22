@@ -49,13 +49,13 @@ public class RangeSet
   protected int sz;
 
   /** Construct new object with initial space for 4 ranges. */
-  public RangeSet() { this(8); }
-  /** Construct new object with a given initial capacity.
-      @param cap number of initially reserved entries. */
+  public RangeSet() { this(4); }
+  /** Construct new object with initial capacity for a given number of ranges.
+      @param cap number of initially reserved ranges. */
   public RangeSet(int cap)
     {
     if (cap<0) throw new IllegalArgumentException("capacity must be positive");
-    r = new long[cap];
+    r = new long[cap<<1];
     sz=0;
     }
   /** Construct new object from an array of longs.
@@ -159,7 +159,7 @@ public class RangeSet
     }
 
   /** @return number of ranges in the set. */
-  public int size()
+  public int nranges()
     { return sz>>>1; }
 
   /** @return true if no entries are stored, else false. */
@@ -241,7 +241,7 @@ public class RangeSet
       return flip_a ? true : b.isEmpty();
     if (b.isEmpty())
       return flip_b ? true : a.isEmpty();
-    int strat = strategy (a.size(), b.size());
+    int strat = strategy (a.nranges(), b.nranges());
     return (strat==1) ? generalAllOrNothing1(a,b,flip_a,flip_b) :
              ((strat==2) ? generalAllOrNothing2(a,b,flip_a,flip_b)
                          : generalAllOrNothing2(b,a,flip_b,flip_a));
@@ -296,7 +296,7 @@ public class RangeSet
       return flip_a ? new RangeSet() : new RangeSet(b);
     if (b.isEmpty())
       return flip_b ? new RangeSet() : new RangeSet(a);
-    int strat = strategy (a.size(), b.size());
+    int strat = strategy (a.nranges(), b.nranges());
     return (strat==1) ? generalUnion1(a,b,flip_a,flip_b) :
              ((strat==2) ? generalUnion2(a,b,flip_a,flip_b)
                          : generalUnion2(b,a,flip_b,flip_a));

@@ -29,7 +29,7 @@ public class RangeSetTest extends TestCase {
   private static RangeSet randomRangeSet(Random rng, int num, long start,
     int dist)
     {
-    RangeSet rs = new RangeSet (2*num);
+    RangeSet rs = new RangeSet(num);
     long curval=start;
     for (int i=0; i<num; ++i)
       {
@@ -264,7 +264,7 @@ public class RangeSetTest extends TestCase {
     {
     RangeSet b = new RangeSet(new long[]{20,31,40,51});
     RangeSet.ValueIterator it =b.valueIterator();
-    for (int i=0; i<b.size(); ++i)
+    for (int i=0; i<b.nranges(); ++i)
       for (long j=b.ivbegin(i); j<b.ivend(i); ++j)
         {
         assertTrue(it.hasNext());

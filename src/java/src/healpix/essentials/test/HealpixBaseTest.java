@@ -229,7 +229,7 @@ public class HealpixBaseTest extends TestCase {
         RangeSet rs = base.queryDisc(ptg,rad);
         Vec3 vptg = new Vec3(ptg);
         double cosrad=Math.cos(rad);
-        for (int i=0; i<rs.size(); ++i)
+        for (int i=0; i<rs.nranges(); ++i)
           for (long j=rs.ivbegin(i); j<rs.ivend(i); ++j)
             map[(int)j]=true;
         for (int i=0; i<base.getNpix(); ++i)
@@ -237,7 +237,7 @@ public class HealpixBaseTest extends TestCase {
           boolean inside = vmap[i].dot(vptg)>cosrad;
           assertFalse ("query_disc_strict problem",inside^map[i]);
           }
-        for (int i=0; i<rs.size(); ++i)
+        for (int i=0; i<rs.nranges(); ++i)
           for (long j=rs.ivbegin(i); j<rs.ivend(i); ++j)
             map[(int)j]=false;
         }

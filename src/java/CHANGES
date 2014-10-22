@@ -31,3 +31,10 @@ compared to the HealpixIndex, Healpix and PixTools classes:
 - the code base is thread-safe in the following sense:
   * HealpixProc methods can be called concurrently
   * HealpixBase methods can be called concurrently on different objects
+
+
+Changes after version 3.11:
+===========================
+
+RangeSet.size() -> RangeSet.nranges()
+Rangset(int) constructor has new semantics; see documentation!
