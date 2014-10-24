@@ -23,8 +23,8 @@ package healpix.essentials;
 import java.util.Arrays;
 
 /** Class representing a full HEALPix map containing float values.
-    This class is conceptually very similar the the Healpix_Map<float> class
-    of Healpix_cxx.
+    This class is conceptually very similar the the Healpix_Map&lt;float&gt;
+    class of Healpix_cxx.
 
     @copyright 2011,2012 Max-Planck-Society
     @author Martin Reinecke */

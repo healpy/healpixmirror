@@ -23,8 +23,8 @@ package healpix.essentials;
 import java.util.Arrays;
 
 /** Class representing a full HEALPix map containing double values.
-    This class is conceptually very similar the the Healpix_Map<double> class
-    of Healpix_cxx.
+    This class is conceptually very similar the the Healpix_Map&lt;double&gt;
+    class of Healpix_cxx.
 
     @copyright 2011,2012 Max-Planck-Society
     @author Martin Reinecke */
