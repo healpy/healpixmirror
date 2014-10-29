@@ -155,7 +155,7 @@ template<typename I> inline int ilog2_nonnull (I arg)
   }
 
 /*! Returns the number of bits needed to encode a value in the range
-    [0; \a arg] */
+    [0; \a arg[ */
 template<typename I> int nbits(I arg)
   {
   if (arg<=1) return 0;
