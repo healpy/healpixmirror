@@ -25,6 +25,42 @@
 ;  For more information about HEALPix see http://healpix.sourceforge.net
 ;
 ; -----------------------------------------------------------------------------
+function parse_planck_colorstring, color, colshift
+; -----------------------
+;   number   -> number
+;  'number'  -> number
+;  'planckN' -> colshift + N
+;  'other'   -> Error !
+;
+; ------------------------
+
+if size(/tname, color) eq 'STRING' then begin
+    col = strupcase(strcompress(color,/remove_all)); upper case, no blank
+    case col of
+        'PLANCK1':  color_out = colshift+1
+        'PLANCK2':  color_out = colshift+2
+        '+PLANCK1': color_out = colshift+1
+        '+PLANCK2': color_out = colshift+2
+        '-PLANCK1': color_out = -(colshift+1)
+        '-PLANCK2': color_out = -(colshift+2)
+        else: begin
+            On_IOError, bad
+            reads,format='(d)', col, color_out
+        end
+    endcase
+endif else begin
+    color_out = color
+endelse
+
+return, color_out
+
+bad:
+color_out=0
+message_patch,'Unknown color provided: '+color, level=-1
+
+end
+; -----------------------------------------------------------------------------
+
 pro proj2out, planmap, Tmax, Tmin, color_bar, dx, title_display, sunits, $
               coord_out, do_rot, eul_mat, planvec, vector_scale, $
               CHARSIZE=charsize, COLT=colt, CROP=crop, GIF = gif, GRATICULE = graticule, $
@@ -462,10 +498,19 @@ endif else begin
         color_names = '' ; seems necessary on some (?) IDL version
         loadct, get_names = color_names
         nmax_col = n_elements(color_names)-1
-        if (abs(ct) le nmax_col) then begin
-            LOADCT, abs(ct), /SILENT
+        colshift = 1000
+        ct = parse_planck_colorstring(ct, colshift)
+        absct = abs(ct)
+        if (absct le nmax_col) then begin
+            LOADCT, absct, /SILENT
         endif else begin
-            if (be_verbose) then print,'... color table '+strtrim(abs(ct),2)+' unknown, using current color table instead ...'
+            absct_test = absct-colshift
+            if (absct_test eq 1 || absct_test eq 2) then begin
+                planck_colors, absct_test, get=planck_rgb
+                tvlct, planck_rgb
+            endif else begin
+                if (be_verbose) then print,'... color table '+strtrim(abs(ct),2)+' unknown, using current color table instead ...'
+            endelse
         endelse
     endelse
     tvlct,red,green,blue,/get

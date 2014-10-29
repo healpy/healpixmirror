@@ -26,6 +26,7 @@ dvi   := $(docs:.tex=.dvi)
 ps    := $(dvi:.dvi=.ps)
 gz    := $(dvi:.dvi=.ps.gz)
 pdf   := $(docs:.tex=.pdf) pdf_index.pdf
+vpdf  := $(pdf:.pdf=.vpdf)
 html  := $(docs:.tex=.html)
 incs  := hpxversion.tex idlversion.tex gdlversion.tex hpxwebsite.tex healpix_src_url.tex
 
@@ -37,10 +38,16 @@ RED_COLOR=\x1b[31;01m
 BLUE_COLOR=\x1b[34;11m
 endif
 
+
 pdf: $(pdf)
 	cp $(pdf) ../../healpix-dynamicPages/pdf
 
 html: $(html) main.html
+
+idl.vpdf:
+	\rm -f idl.pdf
+	make idl.pdf
+	open idl.pdf
 
 $(pdf): %.pdf : %.tex healpix.sty $(incs)
 	@echo "$(GREEN_COLOR)==================================$(NO_COLOR)"

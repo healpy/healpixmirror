@@ -34,21 +34,23 @@ PRO INDEX2LM, index, l, m
 ; PURPOSE:
 ;       to convert the integer index value into the corresponding
 ;       l,m mode indices in the spherical harmonic basis.
+;       index = l(l+1) + m + 1
 ;
 ; CALLING SEQUENCE:
 ;       INDEX2LM, index, l, m
 ; 
 ; INPUTS:
-;       index = (long) integer or integer array
+;       index = (long) integer array
 ;
 ; OUTPUTS:
-;       l     = (long) integer or integer array
-;       m     = (long) integer or integer array
+;       l     = long integer array
+;       m     = long integer array
 ;
 ; MODIFICATION HISTORY:
 ;       May 1999: written by A.J. Banday (MPA)    
 ;       June 1999: now works for large l. BDW
 ;       May 2005: now *really* works for large l, EH
+;       Sep 2014: cosmetic changes
 ;
 ;-
 

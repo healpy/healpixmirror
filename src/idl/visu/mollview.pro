@@ -176,6 +176,8 @@ pro mollview, file_in, select_in, $
 ;              -Indexes [0,40] are reserved for standard IDL color tables, while
 ;               [41,255] are used for user defined color tables read from disc (created and
 ;               written to disc with MODIFYCT), if any.
+;              -Indexes 1001 (or 'planck1', case insensitive) and 1002 (or 'planck2')
+;               are reserved for Planck color tables 1 and 2 (see Planck_colors routine)
 ;              -If the index does not match any existing table, or if it is
 ;              above 255, the current
 ;               table (modifiable with TVLCT, XLOADCT, XPALETTE, ... 

@@ -87,31 +87,47 @@ IDL directory tree to your {\tt IDL\_PATH}. In order to utilise
 this feature, the user should invoke IDL using the
 commands {\tt hidl} or {\tt hidlde} which are aliases defined in the
 \healpix profile created during the installation process 
-for the package.
+for the package (see \linklatexhtml{the Installation Document}{install.pdf}{install.html}).
 
 \subsection{Using \healpix IDL together with other IDL libraries}
 Many users want to use \healpix IDL routines at the same time as other (home made
-or third party) IDL routines. There are several ways to achieve this.
-
-Before starting {\tt hidl} or {\tt hidlde}, (re)define the environment variable {\tt \$IDL\_PATH} so that it looks like:
+or third party) IDL routines. There are several ways to achieve this:\\
+%
+{\em -- with {\tt hidl}:}\\
+before starting {\tt hidl} or {\tt hidlde}, (re)define the environment variable {\tt \$IDL\_PATH} so that it looks like:
 ``{\tt +}{\it /path/to/my/idl/routines}{\tt :+}{\it /path/to/other/idl/routines}:{\tt
 <IDL\_DEFAULT>}''
 (where {\tt
 <IDL\_DEFAULT>} should be typed literally and the {\tt +}{\it /path} means that
 subdirectories of {\em path} will be searched recursively). For example, if
 young Albert types in Bourne shell:\\
-{\tt export IDL\_PATH=``+/home/aeinstein/brownian:<IDL\_DEFAULT>''}\\
+{\tt export IDL\_PATH=}``{\tt +/home/aeinstein/brownian:<IDL\_DEFAULT>}''\\
 {\tt hidl}\\
-he will start an IDL session in which \healpix IDL routines and all those located
-in subdirectories of {\tt /home/aeinstein/brownian} are accessible.
+he will start an IDL session in which the \healpix IDL routines are accessible, followed by all those located
+in subdirectories of {\tt /home/aeinstein/brownian}, followed by the standard
+IDL routines. If {\tt .pro} files of the same name are avaible at the different locations, the first
+one encountered will prevail;\\
+%
+{\em -- without {\tt hidl}:}\\
+before starting IDL, the environment variables {\tt \$IDL\_PATH} and {\tt
+\$IDL\_STARTUP} must be defined. For instance, to emulate under ({\tt ba}){\tt
+sh} the behavior of {\tt hidl} shown above, the same (bolder) Albert will type:\\
+{\tt export IDL\_PATH=}``{\tt +\$\{HEALPIX\}/src/idl:+/home/aeinstein/brownian:<IDL\_DEFAULT>}''\\
+{\tt export IDL\_STARTUP=}``{\tt +\$\{HEALPIX\}/src/idl/HEALPix\_startup}''\\
+{\tt idl}
+
+
+
 
 \subsection{Using GDL instead of IDL}
 See \linklatexhtml{the Installation Document}{install.pdf}{install.html} for more information on this issue.
 
 %%%%%%
+\newpage
 %%%%\include{startup_idl}
 \input startup_idl
 %%%%%%%
+\newpage
 
 \section{Changes between releases 3.11 and \hpxversion}
 
@@ -123,11 +139,19 @@ Harmonics coefficients ($a_{lm}$).
 current color table to one used in Planck 2013 publications.
 
 \item \htmlref{{\tt cartview, gnomview, mollview,
-orthview}}{idl:mollview}: addition of  
+orthview}}{idl:mollview}: 
+\begin{itemize} 
+\item addition of  
 \mylink{idl:mollview:bad_color}{{\tt BAD\_COLOR}},
 \mylink{idl:mollview:bg_color}{{\tt BG\_COLOR}} and
 \mylink{idl:mollview:fg_color}{{\tt FG\_COLOR}} keywords to change the color of the
 missing pixels, background and foreground labels and lines.
+\item support for 
+\mylink{idl:mollview:colt}{{\tt colt='planck1'}} and 
+\mylink{idl:mollview:colt}{{\tt colt='planck2'}} to use the Planck color tables
+defined in \htmlref{{\tt planck\_colors}}{{idl:planck_colors}}
+\end{itemize}
+
 
 \item Bugs correction in 
 \mylink{idl:bin_llcl}{{\tt bin\_llcl}},

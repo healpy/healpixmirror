@@ -64,11 +64,9 @@ pro planck_colors, option, get=get, help=help, show=show
 ;
 ;   planck_colors, 1, /show ; defines and shows color table 1
 ;
-;   planck_colors, 1        ; defines color table 1
-;   mollview, cmb, col=256  ; and applies it to a CMB map
+;   mollview, cmb, col='-planck1'  ; applies reversed color table 1 to a CMB map
 ;
-;   planck_colors, 2        ; defines color table 2
-;   mollview, m217, col=256 ; and applies it to a frequency map
+;   mollview, m217, col='planck2' ; applies color table 2 to a frequency map
 ;
 ; SIDE EFFECTS:
 ;   modify current color table using TVLCT
