@@ -639,19 +639,21 @@ is desired, the included line must be removed from your system profile,
 allowing the corrected version to be added.  
 
 \section{Pkg-config files}
-Starting with \healpix 3.12, {\tt pkgconfig} ({\tt .pc}) files are generated
+\label{sec:pkg-config}
+Starting with \healpix 3.12, {\tt pkg-config} ({\tt .pc}) files are generated
 during the configuration of the 
 C, C++ and F90 packages, and are initially located respectively in
 {\tt \$\{HEALPIX\}/lib/chealpix.pc},
-{\tt \$\{HEALPIX\}/lib}{\em suffix}{\tt /healpix.pc} and 
-{\em install\_lib\_directory}{\tt /pkgconfig/healpix\_cxx.pc}.
+{\em install\_lib\_directory}{\tt /pkgconfig/healpix\_cxx.pc}
+and 
+{\tt \$\{HEALPIX\}/lib}{\em suffix}{\tt /healpix.pc}.
 If the 
 \htmladdnormallink{{\tt pkg-config} software}{http://en.wikipedia.org/wiki/Pkg-config} 
 is available on your system (see 
 \htmladdnormallink{http://www.freedesktop.org/wiki/Software/pkg-config/}{%
 http://www.freedesktop.org/wiki/Software/pkg-config/} to download, install and
 use it) and if the location of
-the \healpix {\tt pkgconfig} files above are known to it (either by moving/copying them
+the \healpix {\tt pkg-config} files above are known to it (either by moving/copying them
 to one of the standard locations returned by \\
 {\tt pkg-config --variable pc\_path pkg-config}\\
 or by customizing the environment variable {\tt PKG\_CONFIG\_PATH}\footnote{a
@@ -1056,6 +1058,12 @@ transparent in the output PNG file.
 % \subsubsection[Java]{Java}
 % \subsubsection[Python]{Python}
 \subsubsection[General]{General}
+	\begin{itemize}
+	\item Generation of {\tt pkg-config} files during the configuration of the
+C, C++ and F90 packages. 
+See Section~\ref{sec:pkg-config} of 
+\linklatexhtml{''\healpix\ Installation''}{install.pdf}{install.htm} for details.
+	\end{itemize}
 \subsubsection[C]{\linklatexhtml{C}{csub.pdf}{csub.htm}}
 \subsubsection[C++]{C++}
 \subsubsection[Fortran]{%
@@ -1063,31 +1071,39 @@ transparent in the output PNG file.
 	\linklatexhtml{subroutines}{subroutines.pdf}{subroutines.htm}}
 \begin{itemize}
 	\item \healpix-F90 routines and facilities can now also be compiled with
-the free Fortran95 compiler \textbf{g95} (\htmladdnormallink{http://www.g95.org/}{http://www.g95.org/})
-	\item a separate {\tt build} directory is used to store the objects,
+the free Fortran95 compiler \textbf{g95}
+(\htmladdnormallink{http://www.g95.org/}{http://www.g95.org/}).
+See Section~\ref{sec:freef90compilers} of \linklatexhtml{''\healpix\ Installation''}{install.pdf}{install.htm} for details.
+	\item A separate {\tt build} directory is used to store the objects,
 modules, ... produced during the compilation of the source codes
 \end{itemize}
 \subsubsection[IDL]{\linklatexhtml{IDL}{idl.pdf}{idl.htm}}
 \begin{itemize}
-\item addition of \htmlref{{\tt ialteralm}}{{idl:ialteralm}} to modify Spherical
-Harmonics coefficients ($a_{lm}$).
+ \item addition of \htmlref{{\tt ialteralm}}{{idl:ialteralm}} to modify
+  Spherical Harmonics coefficients ($a_{lm}$).
 
-\item addition of \htmlref{{\tt planck\_colors}}{{idl:planck_colors}} to modify
-current color table to one used in Planck 2013 publications.
+  \item addition of \htmlref{{\tt planck\_colors}}{{idl:planck_colors}} to
+  modify current color table to one used in Planck 2013 publications.
 
-\item \htmlref{{\tt cartview, gnomview, mollview,
-orthview}}{idl:mollview}: addition of  
-\mylink{idl:mollview:bad_color}{{\tt BAD\_COLOR}},
-\mylink{idl:mollview:bg_color}{{\tt BG\_COLOR}} and
-\mylink{idl:mollview:fg_color}{{\tt FG\_COLOR}} keywords to change the color of the
-missing pixels, background and foreground labels and lines.
-
+  \item \htmlref{{\tt cartview, gnomview, mollview, orthview}}{idl:mollview}: 
+  \begin{itemize} 
+    \item addition of  
+    \mylink{idl:mollview:bad_color}{{\tt BAD\_COLOR}},
+    \mylink{idl:mollview:bg_color}{{\tt BG\_COLOR}} and
+    \mylink{idl:mollview:fg_color}{{\tt FG\_COLOR}} keywords to change the color of the
+    missing pixels, background and foreground labels and lines.
+    \item support for 
+    \mylink{idl:mollview:colt}{{\tt COLT='planck1'}} and 
+    \mylink{idl:mollview:colt}{{\tt COLT='planck2'}} to use the Planck color tables
+    defined in \htmlref{{\tt planck\_colors}}{{idl:planck_colors}}
+  \end{itemize}
 \end{itemize}
+
 \subsubsection[Java]{Java}
 \subsubsection[Python]{Python}
 \begin{itemize}
 	\item switch to \htmladdnormallink{{\tt healpy
-1.7.0}}{https://github.com/healpy/healpy/releases} 
+1.8.1}}{https://github.com/healpy/healpy/releases} 
 	\begin{itemize}
 		\item fixes bugs in monopole removal, 
 		\item adds orthographic projection,
