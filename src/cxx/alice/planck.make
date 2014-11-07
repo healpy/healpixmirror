@@ -5,7 +5,7 @@ OD:=$(BLDROOT)/$(PKG)
 
 FULL_INCLUDE+= -I$(SD)
 
-HDR_$(PKG):=$(SD)/*.h
+HDR_$(PKG):=
 CXXBIN:=alice3
 CXXBIN:=$(CXXBIN:%=$(BINDIR)/%)
 

@@ -45,28 +45,6 @@
 
 using namespace std;
 
-/*! Returns vectors north and east, given a normalized vector location
-  on the unit sphere */
-void get_north_east(const vec3 &location, vec3 &north, vec3 &east)
-  {
-  if (abs(location.x) + abs(location.y) > 0.0)
-    east = vec3(-location.y,location.x,0).Norm();
-  else
-    east.Set(1.0,0,0);
-  north = crossprod(location, east);
-  }
-
-/*! Returns a normalized direction parallel to the
-  polarization given by q and u at a location on the unit sphere.
-  Healpix conventions for q and u are used.  */
-vec3 get_qu_direction(const vec3 &location, double q, double u)
-  {
-  vec3 north, east;
-  get_north_east(location, north, east);
-  double angle = safe_atan2(u, q) / 2.0;
-  return (north * -cos(angle)) + (east * sin(angle));
-  }
-
 class PolarizationHolder
   {
   private:
@@ -105,7 +83,12 @@ class PolarizationHolder
       int i=Q.vec2pix(loc);
       double q=Q[i],u=U[i];
 #endif
-      return get_qu_direction(loc,q,u);
+      vec3 east(1,0,0);
+      if (abs(loc.x)+abs(loc.y) > 0.0)
+        east = vec3(-loc.y,loc.x,0).Norm();
+      vec3 north = crossprod(loc, east);
+      double angle = 0.5*safe_atan2(u,q);
+      return north*(-cos(angle)) + east*sin(angle);
       }
 
     // Return the magnitude of the polarization at some pointing.
