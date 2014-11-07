@@ -30,19 +30,163 @@
  */
 
 #include <iostream>
+#include "announce.h"
 #include "paramfile.h"
 #include "healpix_map_fitsio.h"
 #include "lsconstants.h"
 #include "arr.h"
 #include "fitshandle.h"
-#include "alice_utils.h"
 #include "vec3.h"
 #include "string_utils.h"
 #include "alm.h"
 #include "alm_healpix_tools.h"
 #include "planck_rng.h"
+#include "healpix_map.h"
 
 using namespace std;
+
+/*! Returns vectors north and east, given a normalized vector location
+  on the unit sphere */
+void get_north_east(const vec3 &location, vec3 &north, vec3 &east)
+  {
+  if (abs(location.x) + abs(location.y) > 0.0)
+    east = vec3(-location.y,location.x,0).Norm();
+  else
+    east.Set(1.0,0,0);
+  north = crossprod(location, east);
+  }
+
+/*! Returns a normalized direction parallel to the
+  polarization given by q and u at a location on the unit sphere.
+  Healpix conventions for q and u are used.  */
+vec3 get_qu_direction(const vec3 &location, double q, double u)
+  {
+  vec3 north, east;
+  get_north_east(location, north, east);
+  double angle = safe_atan2(u, q) / 2.0;
+  return (north * -cos(angle)) + (east * sin(angle));
+  }
+
+class PolarizationHolder
+  {
+  private:
+    Healpix_Map<float> Q, U;
+
+  public:
+    // Load a polarized fits file, with Q and U as the second
+    // and third columns (the standard form).
+    void load(const std::string &filename)
+      {
+      read_Healpix_map_from_fits(filename, Q, 2, 2);
+      read_Healpix_map_from_fits(filename, U, 3, 2);
+#if 0
+      Healpix_Map<float> mag(Q);
+      for (int i=0; i<Q.Npix(); ++i)
+        mag[i]=sqrt(Q[i]*Q[i] + U[i]*U[i]);
+      float mmin,mmax;
+      mag.minmax(mmin,mmax);
+      for (int i=0; i<Q.Npix(); ++i)
+        {
+        Q[i]/=mmax;
+        U[i]/=mmax;
+        }
+#endif
+      }
+
+    vec3 getQUDir(const vec3 &loc) const
+      {
+#if 1
+      fix_arr<int,4> pix;
+      fix_arr<double,4> wgt;
+      Q.get_interpol(loc,pix,wgt);
+      double q=0,u=0;
+      for (tsize i=0;i<4;++i) {q+=Q[pix[i]]*wgt[i];u+=U[pix[i]]*wgt[i]; }
+#else
+      int i=Q.vec2pix(loc);
+      double q=Q[i],u=U[i];
+#endif
+      return get_qu_direction(loc,q,u);
+      }
+
+    // Return the magnitude of the polarization at some pointing.
+    float getQUMagnitude(const pointing& p) const
+      {
+      float q = Q.interpolated_value(p);
+      float u = U.interpolated_value(p);
+      return sqrt(q*q + u*u);
+      }
+  };
+
+/*! Steps from loc in direction dir for an angle theta and updates loc and dir. */
+void get_step(const PolarizationHolder &ph, vec3 &loc, vec3 &dir, double theta)
+  {
+  loc=(loc+dir*theta).Norm();
+  vec3 tdir=ph.getQUDir(loc);
+  dir = (dotprod(dir,tdir)<0) ? -tdir : tdir;
+  }
+
+/*! Performs one Runge-Kutta second order step. Updates loc and dir. */
+void runge_kutta_step(vec3 &loc, vec3 &dir, const PolarizationHolder &ph,
+  double theta)
+  {
+  // Take a half-theta step
+  vec3 tloc=loc;
+  get_step(ph, tloc, dir, theta/2.0);
+
+  // Then take a full step with the new direction
+  get_step(ph, loc, dir, theta);
+  }
+
+/*! Second order Runge-Kutta integration on the sphere.  Given a
+  starting location, a qu map of the sky, and a step size theta, this
+  subroutine returns an array of vectors extending in both
+  directions from the starting location.  */
+void runge_kutta_2(const vec3 &location, const PolarizationHolder &ph,
+  double theta, arr<vec3> &locs)
+  {
+  vec3 first_dir=ph.getQUDir(location);
+  vec3 dir = first_dir;
+  vec3 loc = location;
+
+  locs[locs.size()/2] = loc;
+
+  for(int i = 1 + locs.size()/2; i<int(locs.size()); i++)
+    {
+    runge_kutta_step(loc, dir, ph, theta);
+    locs[i] = loc;
+    }
+
+  dir = -first_dir;
+  loc = location;
+  for(int i = -1 + locs.size()/2; i>=0; i--)
+    {
+    runge_kutta_step(loc, dir, ph, theta);
+    locs[i] = loc;
+    }
+  }
+
+/*! Create a sinusoidal kernel. */
+void make_kernel(arr<double> &kernel)
+  {
+  for(tsize i=0; i<kernel.size(); i++)
+    {
+    double sinx = sin(pi*(i+1) / (kernel.size()+1));
+    kernel[i] = sinx*sinx;
+    }
+  }
+
+/*! Convolve an array with a kernel. */
+void convolve(const arr<double> &kernel, const arr<double> &raw, arr<double> &convolution)
+  {
+  convolution.alloc(raw.size()-kernel.size()+1);
+  for(tsize i=0; i<convolution.size(); i++)
+    {
+    double total=0;
+    for (tsize j=0; j<kernel.size(); j++)
+      total += kernel[j] * raw[i+j];
+    convolution[i] = total;
+    }
+  }
 
 int lic_function(Healpix_Map<float> &hitcount, Healpix_Map<float> &texture,
   const PolarizationHolder &ph, const Healpix_Map<float> &th, int steps,
@@ -50,7 +194,7 @@ int lic_function(Healpix_Map<float> &hitcount, Healpix_Map<float> &texture,
   {
   arr<double> kernel(kernel_steps), convolution, rawtexture;
   make_kernel(kernel);
-  arr<pointing> curve(steps);
+  arr<vec3> curve(steps);
 
   texture.fill(0.);
   int num_curves=0;
@@ -67,7 +211,7 @@ int lic_function(Healpix_Map<float> &hitcount, Healpix_Map<float> &texture,
       convolve(kernel, rawtexture, convolution);
       for (tsize j=0; j<convolution.size(); j++)
         {
-        int k = texture.ang2pix(curve[j+kernel.size()/2]);
+        int k = texture.vec2pix(curve[j+kernel.size()/2]);
         texture[k] += convolution[j];
         hitcount[k] += 1.;
         }

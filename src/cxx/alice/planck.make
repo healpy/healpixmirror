@@ -6,10 +6,10 @@ OD:=$(BLDROOT)/$(PKG)
 FULL_INCLUDE+= -I$(SD)
 
 HDR_$(PKG):=$(SD)/*.h
-CXXBIN:=alice3 alice_test
+CXXBIN:=alice3
 CXXBIN:=$(CXXBIN:%=$(BINDIR)/%)
 
-ALLOBJ:=alice3.o alice_test.o
+ALLOBJ:=alice3.o
 ALLOBJ:=$(ALLOBJ:%=$(OD)/%)
 
 
@@ -19,6 +19,5 @@ BDEP:=$(LIB_Healpix_cxx) $(LIB_cxxsupport) $(LIB_libsharp) $(LIB_libfftpack) $(L
 $(ALLOBJ): $(ODEP) | $(OD)_mkdir
 
 $(BINDIR)/alice3: $(OD)/alice3.o $(BDEP)
-$(BINDIR)/alice_test: $(OD)/alice_test.o $(BDEP)
 
 all_cxxbin+=$(CXXBIN)
