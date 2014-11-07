@@ -35,7 +35,6 @@
 #include "lsconstants.h"
 #include "arr.h"
 #include "fitshandle.h"
-#include "PolarizationHolder.h"
 #include "alice_utils.h"
 #include "vec3.h"
 #include "string_utils.h"

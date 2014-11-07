@@ -36,8 +36,9 @@
 #include "vec3.h"
 #include "announce.h"
 #include "rotmatrix.h"
-#include "PolarizationHolder.h"
 #include "lsconstants.h"
+#include "healpix_map.h"
+#include "healpix_map_fitsio.h"
 
 /*! Returns vectors north and east, given a normalized vector location
   on the unit sphere */
@@ -62,6 +63,48 @@ void get_qu_direction(const vec3 &location, double q, double u,
   direction = (north * -cos(angle)) + (east * sin(angle));
   orthogonal = crossprod(location, direction);
   }
+
+class PolarizationHolder
+  {
+  private:
+    Healpix_Map<float> Q, U;
+
+  public:
+    // Load a polarized fits file, with Q and U as the second
+    // and third columns (the standard form).
+    void load(const std::string &filename)
+      {
+      read_Healpix_map_from_fits(filename, Q, 2, 2);
+      read_Healpix_map_from_fits(filename, U, 3, 2);
+#if 0
+      Healpix_Map<float> mag(Q);
+      for (int i=0; i<Q.Npix(); ++i)
+        mag[i]=sqrt(Q[i]*Q[i] + U[i]*U[i]);
+      float mmin,mmax;
+      mag.minmax(mmin,mmax);
+      for (int i=0; i<Q.Npix(); ++i)
+        {
+        Q[i]/=mmax;
+        U[i]/=mmax;
+        }
+#endif
+      }
+
+    // Return the polarization at some pointing.
+    template<typename T> void getQU(const pointing& p, T &q, T &u) const
+      {
+      q = T(Q.interpolated_value(p));
+      u = T(U.interpolated_value(p));
+      }
+
+    // Return the magnitude of the polarization at some pointing.
+    float getQUMagnitude(const pointing& p) const
+      {
+      float q = Q.interpolated_value(p);
+      float u = U.interpolated_value(p);
+      return sqrt(q*q + u*u);
+      }
+  };
 
 /*! Returns a new_location, an angle theta away from the old location,
    in the direction of the polarization given by q and u, and in the
