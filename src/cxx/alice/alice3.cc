@@ -71,18 +71,19 @@ class PolarizationHolder
 #endif
       }
 
-    vec3 getQUDir(const vec3 &loc) const
+    void getQU(const pointing &p, float &q, float &u) const
       {
-#if 1
       fix_arr<int,4> pix;
       fix_arr<double,4> wgt;
-      Q.get_interpol(loc,pix,wgt);
-      double q=0,u=0;
+      Q.get_interpol(p,pix,wgt);
+      q=u=0.f;
       for (tsize i=0;i<4;++i) {q+=Q[pix[i]]*wgt[i];u+=U[pix[i]]*wgt[i]; }
-#else
-      int i=Q.vec2pix(loc);
-      double q=Q[i],u=U[i];
-#endif
+      }
+
+    vec3 getQUDir(const vec3 &loc) const
+      {
+      float q,u;
+      getQU(loc,q,u);
       vec3 east(1,0,0);
       if (abs(loc.x)+abs(loc.y) > 0.0)
         east = vec3(-loc.y,loc.x,0).Norm();
@@ -94,8 +95,8 @@ class PolarizationHolder
     // Return the magnitude of the polarization at some pointing.
     float getQUMagnitude(const pointing& p) const
       {
-      float q = Q.interpolated_value(p);
-      float u = U.interpolated_value(p);
+      float q,u;
+      getQU(p,q,u);
       return sqrt(q*q + u*u);
       }
   };
