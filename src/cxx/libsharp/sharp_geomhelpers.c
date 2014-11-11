@@ -114,7 +114,7 @@ static void gauss_legendre_tbl(int n, double *x, double *w)
 #pragma omp parallel
 {
   int i;
-#pragma omp for schedule(dynamic,100) 
+#pragma omp for schedule(dynamic,100)
   for (i=1; i<=m; ++i)
     {
     double x0 = cos(pi * ((i<<2)-1) * t1) * t0;
