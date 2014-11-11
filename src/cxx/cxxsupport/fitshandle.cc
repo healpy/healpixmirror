@@ -402,7 +402,7 @@ void fitshandle::insert_asctab (const vector<fitscolumn> &cols,
     strcpy (ttype[m], cols[m].name().c_str());
     strcpy (tunit[m], cols[m].unit().c_str());
     ostringstream x;
-    if (cols[m].type()!=TSTRING)
+    if (cols[m].type()!=PLANCK_STRING)
       {
       planck_assert (cols[m].repcount()==1,"bad repcount for ASCII table");
       x << type2asciiform(cols[m].type());
