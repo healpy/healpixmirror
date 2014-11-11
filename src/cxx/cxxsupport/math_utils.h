@@ -133,11 +133,11 @@ template<typename I> inline int ilog2 (I arg)
     return 8*sizeof(long long)-1-__builtin_clzll(arg);
 #endif
   int res=0;
-  while (arg > 0x0000FFFF) { res+=16; arg>>=16; }
-  if (arg > 0x000000FF) { res|=8; arg>>=8; }
-  if (arg > 0x0000000F) { res|=4; arg>>=4; }
-  if (arg > 0x00000003) { res|=2; arg>>=2; }
-  if (arg > 0x00000001) { res|=1; }
+  while (arg > 0xFFFF) { res+=16; arg>>=16; }
+  if (arg > 0x00FF) { res|=8; arg>>=8; }
+  if (arg > 0x000F) { res|=4; arg>>=4; }
+  if (arg > 0x0003) { res|=2; arg>>=2; }
+  if (arg > 0x0001) { res|=1; }
   return res;
   }
 
@@ -152,6 +152,18 @@ template<typename I> inline int ilog2_nonnull (I arg)
     return 8*sizeof(long long)-1-__builtin_clzll(arg);
 #endif
   return ilog2 (arg);
+  }
+
+template<typename I> inline int trailingZeros(I arg)
+  {
+  if (arg==0) return sizeof(I)<<3;
+  int res=0;
+  while ((arg&0xFFFF)==0) { res+=16; arg>>=16; }
+  if ((arg&0x00FF)==0) { res|=8; arg>>=8; }
+  if ((arg&0x000F)==0) { res|=4; arg>>=4; }
+  if ((arg&0x0003)==0) { res|=2; arg>>=2; }
+  if ((arg&0x0001)==0) { res|=1; }
+  return res;
   }
 
 /*! Returns the number of bits needed to encode a value in the range

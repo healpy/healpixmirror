@@ -38,6 +38,10 @@
 #include "arr.h"
 #include "rangeset.h"
 
+template<typename I> struct Orderhelper__ {};
+template<> struct Orderhelper__<int> {enum{omax=13};};
+template<> struct Orderhelper__<int64> {enum{omax=29};};
+
 /*! Functionality related to the HEALPix pixelisation. */
 template<typename I> class T_Healpix_Base: public Healpix_Tables
   {
@@ -85,7 +89,7 @@ template<typename I> class T_Healpix_Base: public Healpix_Tables
     typedef I (T_Healpix_Base::*swapfunc)(I pix) const;
 
   public:
-    static const int order_max;
+    enum {order_max=Orderhelper__<I>::omax};
 
     /*! Calculates the map order from its \a N_side parameter.
         Returns -1 if \a nside is not a power of 2.

@@ -35,9 +35,6 @@
 
 using namespace std;
 
-template<> const int T_Healpix_Base<int  >::order_max=13;
-template<> const int T_Healpix_Base<int64>::order_max=29;
-
 template<typename I> int T_Healpix_Base<I>::nside2order (I nside)
   {
   planck_assert (nside>I(0), "invalid value for Nside");
@@ -511,7 +508,7 @@ template<typename I> void T_Healpix_Base<I>::query_multidisc_general
   else // scheme_ == NEST
     {
     int oplus=inclusive ? 2 : 0;
-    int omax=min(order_max,order_+oplus); // the order up to which we test
+    int omax=min<int>(order_max,order_+oplus); // the order up to which we test
 
     // TODO: ignore all disks with radius>=pi
 

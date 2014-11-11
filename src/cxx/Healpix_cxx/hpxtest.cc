@@ -25,7 +25,7 @@
  */
 
 /*
- *  Copyright (C) 2004-2012 Max-Planck-Society
+ *  Copyright (C) 2004-2014 Max-Planck-Society
  *  Author: Martin Reinecke
  */
 
@@ -59,6 +59,8 @@ Candidates for testing the validity of the Healpix routines:
 #include "geom_utils.h"
 #include "walltimer.h"
 #include "announce.h"
+#include "compress_utils.h"
+#include "moc.h"
 
 using namespace std;
 
@@ -83,8 +85,7 @@ template<typename I> string bname()
   { return string("(basetype: ")+type2typename<I>()+")"; }
 
 
-template<typename I> rangeset<I> randomRangeSet(int num,
-  I start, int dist)
+template<typename I> rangeset<I> randomRangeSet(int num, I start, int dist)
   {
   rangeset<I> rs;
   I curval=start;
@@ -96,6 +97,19 @@ template<typename I> rangeset<I> randomRangeSet(int num,
     curval=v2;
     }
   return rs;
+  }
+template<typename I> Moc<I> randomMoc(int num, I start, int dist)
+  {
+  Moc<I> moc;
+  I curval=start+(I(1)<<(2*Moc<I>::maxorder));
+  for (int i=0; i<num; ++i)
+    {
+    I v1=curval+1+(rng.int_rand_uni()%dist);
+    I v2=v1+1+(rng.int_rand_uni()%dist);
+    moc.addPixelRange(Moc<I>::maxorder,v1,v2);
+    curval=v2;
+    }
+  return moc;
   }
 
 template<typename I> rangeset<I> makeRS(const string &input)
@@ -349,6 +363,75 @@ template<typename I> void check_rangeset()
     }
   }
   }
+template<typename I> void check_Moc()
+  {
+  cout << "testing MOC " << bname<I>() << endl;
+  Moc<I> moc;
+  moc.addPixelRange(0,4,5);
+  moc.addPixelRange(0,6,7);
+  moc.addPixelRange(2,4,17);
+  moc.addPixelRange(10,3000000,3000001);
+
+  planck_assert(moc==moc.complement().complement(),"error");
+  planck_assert(moc==Moc<I>::fromUniq(moc.toUniq()),"error");
+  planck_assert(moc.maxOrder()==10,"error");
+  Moc<I> xtmp = moc.degradedToOrder(8,false);
+  planck_assert(moc.contains(xtmp),"error");
+  planck_assert(!xtmp.contains(moc),"error");
+  planck_assert(xtmp.overlaps(moc),"error");
+  xtmp=moc.degradedToOrder(8,true);
+  planck_assert(!moc.contains(xtmp),"error");
+  planck_assert(xtmp.contains(moc),"error");
+  planck_assert(xtmp.overlaps(moc),"error");
+  planck_assert(moc==Moc<I>::fromCompressed(moc.toCompressed()),"error");
+#if 0
+  assertEquals("inconsistency",moc,MocUtil.mocFromString(" 0/4, 6 2/ \t 4 -16 10/3000000 \t\n "));
+  assertEquals("inconsistency",moc,MocUtil.mocFromString("0/6 2/ 5 2/4 2/6- 16 0/4  10/3000000"));
+  assertEquals("inconsistency",moc,MocUtil.mocFromString
+    ("{\"0\":[6] , \"2\": [5 ], \"2\":[  4,6,7,8,9,10,11,12,13,14,15,16], \"0\":[4],  \"10\":[3000000]}"));
+  assertEquals("inconsistency",moc,MocUtil.mocFromString(MocUtil.mocToStringASCII(moc)));
+  assertEquals("inconsistency",moc,MocUtil.mocFromString(MocUtil.mocToStringJSON(moc)));
+  ByteArrayOutputStream out= new ByteArrayOutputStream();
+  MocUtil.mocToFits(moc,out);
+  ByteArrayInputStream inp = new ByteArrayInputStream(out.toByteArray());
+  assertEquals("inconsistency",moc,MocUtil.mocFromFits(inp));
+#endif
+  {
+  tsize niter = 100;
+  Moc<I> full; full.addPixelRange(0,0,12);
+  Moc<I> empty;
+  for (tsize iter=0; iter<niter; ++iter)
+    {
+    Moc<I> a = randomMoc<I>(1000, 0, 100);
+    planck_assert(a.complement().complement()==a,"error");
+    planck_assert(!a.overlaps(a.complement()),"error");
+    planck_assert(a.op_or(a.complement())==full,"error");
+    planck_assert(a.op_and(a.complement())==empty,"error");
+    }
+  }
+  }
+template<typename I> void check_compress()
+  {
+  cout << "testing interpolation coding " << bname<I>() << endl;
+  planck_assert(trailingZeros(4)==2,"error");
+  planck_assert(trailingZeros(5)==0,"error");
+  planck_assert(trailingZeros(int64(1)<<48)==48,"error");
+  for (tsize x=0; x<100; ++x)
+    {
+    rangeset<I> a = randomRangeSet<I>(1000, 0, 100);
+    rangeset<I> b;
+    for (tsize i=0; i<a.nranges(); ++i)
+      b.append(a.ivbegin(i)<<6,a.ivend(i)<<6);
+    const vector<I> &v=b.data();
+    obitstream obs;
+    interpol_encode(v.begin(),v.end(),obs);
+    vector<uint8> comp=obs.state();
+    vector<I> v2;
+    ibitstream ibs(comp);
+    interpol_decode(v2,ibs);
+    planck_assert(v==v2,"data mismatch");
+    }
+  }
 
 template<typename I> void check_ringnestring()
   {
@@ -589,7 +672,7 @@ void check_query_disc_strict (Healpix_Ordering_Scheme scheme)
 template<typename I>void check_query_disc()
   {
   cout << "checking query_disc() " << bname<I>() << endl;
-  int omax=min(20,T_Healpix_Base<I>::order_max);
+  int omax=min<int>(20,T_Healpix_Base<I>::order_max);
   for (int order=0; order<=omax; ++order)
     {
     T_Healpix_Base<I> rbase (order,RING), nbase (order,NEST);
@@ -630,7 +713,7 @@ template<typename I>void check_query_disc()
 template<typename I>void check_query_polygon()
   {
   cout << "checking query_polygon() " << bname<I>() << endl;
-  int omax=min(20,T_Healpix_Base<I>::order_max);
+  int omax=min<int>(20,T_Healpix_Base<I>::order_max);
   for (int order=0; order<=omax; ++order)
     {
     T_Healpix_Base<I> rbase (order,RING), nbase (order,NEST);
@@ -1178,6 +1261,12 @@ int main(int argc, const char **argv)
   {
   module_startup ("hpxtest",argc,argv,1,"");
   perftest();
+  check_compress<int>();
+  check_compress<unsigned>();
+  check_compress<int64>();
+  check_compress<uint64>();
+  check_Moc<int>();
+  check_Moc<int64>();
   check_rangeset<int>();
   check_rangeset<int64>();
   check_isqrt();

@@ -206,8 +206,21 @@ template<typename T> class rangeset
     void reserve(tsize n) { r.reserve(2*n); }
     /*! Returns the current number of ranges. */
     tsize nranges() const { return r.size()>>1; }
+    tsize size() const { return nranges(); }
+    bool empty() const { return r.empty(); }
     /*! Returns the current vector of ranges. */
     const rtype &data() const { return r; }
+    void checkConsistency() const
+      {
+      planck_assert((r.size()&1)==0,"invalid number of entries");
+      for (tsize i=1; i<r.size(); ++i)
+        planck_assert(r[i]>r[i-1],"inconsistent entries");
+      }
+    void setData (const rtype &inp)
+      {
+      r=inp;
+      checkConsistency();
+      }
 
     /*! Returns the first value of range \a i. */
     const T &ivbegin (tdiff i) const { return r[2*i]; }
