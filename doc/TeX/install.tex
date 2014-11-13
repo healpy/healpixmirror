@@ -1047,7 +1047,7 @@ transparent in the output PNG file.
 \section{Appendix I: Recent Changes and New Features}
 \label{sec:newfeatures}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% BEGIN LATEST CHANGES %%%%%%%%%%%%%
-\subsection{Bug corrections and Improvements in Version \hpxversion}
+\subsection{Bug corrections and Improvements in Version \hpxversion}%(2014-12)
 % \subsubsection[General]{General}
 % \subsubsection[C]{\linklatexhtml{C}{csub.pdf}{csub.htm}}
 % \subsubsection[C++]{C++}
@@ -1059,32 +1059,59 @@ transparent in the output PNG file.
 % \subsubsection[Python]{Python}
 \subsubsection[General]{General}
 	\begin{itemize}
-	\item Generation of {\tt pkg-config} files during the configuration of the
-C, C++ and F90 packages. 
+	\item Generation of 
+\htmladdnormallink{{\tt pkg-config}}{http://en.wikipedia.org/wiki/Pkg-config} 
+files during the configuration of the C, C++ and F90 packages. 
+% BeginSkip
 See Section~\ref{sec:pkg-config} of 
-\linklatexhtml{''\healpix\ Installation''}{install.pdf}{install.htm} for details.
+\linklatexhtml{''\healpix\ Installation''}{install.pdf}{install.htm} for
+details.
+% EndSkip
 	\end{itemize}
 \subsubsection[C]{\linklatexhtml{C}{csub.pdf}{csub.htm}}
+\begin{itemize}
+\item Improved {\tt autotools} support
+\end{itemize}
+
 \subsubsection[C++]{C++}
+\begin{itemize}
+\item deprecation of {\tt alice2}, replaced by {\tt alice3}
+\item automatic workaround for bugs in older versions of GNU {\tt g++} compiler
+ (bug reports 
+\htmladdnormallink{37}{http://sourceforge.net/p/healpix/bugs/37}, 
+\htmladdnormallink{45}{http://sourceforge.net/p/healpix/bugs/45}, 
+\htmladdnormallink{48}{http://sourceforge.net/p/healpix/bugs/48}, 
+\htmladdnormallink{51}{http://sourceforge.net/p/healpix/bugs/51})
+\item workaround for possible bug in Intel {\tt icc} 14.0 compiler
+\item bug fix in Mollweide projection in {\tt map2tga} when not looking at (0,0)
+\item {\tt autotools} updates
+\end{itemize}
+
 \subsubsection[Fortran]{%
 	Fortran 90 \linklatexhtml{facilities}{facilities.pdf}{facilities.htm} and
 	\linklatexhtml{subroutines}{subroutines.pdf}{subroutines.htm}}
 \begin{itemize}
-	\item \healpix-F90 routines and facilities can now also be compiled with
+	\item \healpixns-F90 routines and facilities can now also be compiled with
 the free Fortran95 compiler \textbf{g95}
 (\htmladdnormallink{http://www.g95.org/}{http://www.g95.org/}).
-See Section~\ref{sec:freef90compilers} of \linklatexhtml{''\healpix\ Installation''}{install.pdf}{install.htm} for details.
+% BeginSkip
+See Section~\ref{sec:freef90compilers} of \linklatexhtml{''\healpix\
+Installation''}{install.pdf}{install.htm} for details.
+% EndSkip
 	\item A separate {\tt build} directory is used to store the objects,
 modules, ... produced during the compilation of the source codes
+	\item \textbf{??? How about different parsing of B(l) files in {\tt synfast, smoothing, ...} ???}
+	\item \textbf{??? Long string keywords ???}
 \end{itemize}
+
 \subsubsection[IDL]{\linklatexhtml{IDL}{idl.pdf}{idl.htm}}
 \begin{itemize}
  \item addition of \htmlref{{\tt ialteralm}}{{idl:ialteralm}} to modify
   Spherical Harmonics coefficients ($a_{lm}$).
-
+%
   \item addition of \htmlref{{\tt planck\_colors}}{{idl:planck_colors}} to
   modify current color table to one used in Planck 2013 publications.
-
+%
   \item \htmlref{{\tt cartview, gnomview, mollview, orthview}}{idl:mollview}: 
   \begin{itemize} 
     \item addition of  
@@ -1100,7 +1127,12 @@ modules, ... produced during the compilation of the source codes
 \end{itemize}
 
 \subsubsection[Java]{Java}
+% \begin{itemize}
+% \item explicit deprecation warnings in the source codes
+% \end{itemize}
+
 \subsubsection[Python]{Python}
+
 \begin{itemize}
 	\item switch to \htmladdnormallink{{\tt healpy
 1.8.1}}{https://github.com/healpy/healpy/releases} 
@@ -1112,26 +1144,42 @@ modules, ... produced during the compilation of the source codes
 \end{itemize}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% END LATEST CHANGES %%%%%%%%%%%%%
-\subsection{Bug corrections and Improvements in Version 3.11 (2013-04)} 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%----------------------------------------------------
+\section{Appendix II: Older changes}
 
-\subsubsection[General]{General}
+{\mytiny{%
+
+\tinysubsection*{Bug corrections and Improvements in Version 3.11 (2013-04)} 
+
+\tinysubsubsection*{General}
 \label{sec:general3p11}
 \begin{itemize}
+	\setlength{\itemsep}{0pt}
+	\setlength{\parsep}{0pt}
 	\item \htmladdnormallink{{\tt
 libsharp}}{http://sourceforge.net/projects/libsharp}
 C library used for Spherical Harmonics Transforms 
 in Fortran and C++ since \healpix\ 3.10
 can now be compiled with {\em any} {\tt gcc} version.
 \end{itemize}
-\subsubsection[C++]{C++}
+
+\tinysubsubsection*{C++}
 \begin{itemize}
+	\setlength{\itemsep}{0pt}
+	\setlength{\parsep}{0pt}
 	\item See General section above
 \end{itemize}
 %
-\subsubsection[Fortran]{%
-	Fortran 90 \linklatexhtml{facilities}{facilities.pdf}{facilities.htm} and
+\tinysubsubsection*{%
+Fortran 90 \linklatexhtml{facilities}{facilities.pdf}{facilities.htm} and
 	\linklatexhtml{subroutines}{subroutines.pdf}{subroutines.htm}}
 \begin{itemize}
+	\setlength{\itemsep}{0pt}
+	\setlength{\parsep}{0pt}
 	\item bug correction in \htmlref{{\tt query\_disc}}{sub:query_disc} 
 	routine in {\tt inclusive} mode
 	\item bug correction in \htmlref{{\tt alm2map\_spin}}{sub:alm2map_spin} 
@@ -1139,29 +1187,35 @@ can now be compiled with {\em any} {\tt gcc} version.
 	\item See General section above
 \end{itemize}
 %
-\subsubsection[IDL]{\linklatexhtml{IDL}{idl.pdf}{idl.htm}}
+\tinysubsubsection*{\linklatexhtml{IDL}{idl.pdf}{idl.htm}}
 \begin{itemize}
+	\setlength{\itemsep}{0pt}
+	\setlength{\parsep}{0pt}
 	\item \htmlref{{\tt ang2pix\_ring}}{{idl:pix_tools}} and
 		\htmlref{{\tt pix2ang\_nest}}{{idl:pix_tools}}
 		routines now accept scalar arguments
 \end{itemize}
 %	
-% \subsubsection[Java]{Java}
-% \subsubsection[Python]{Python}
+% \tinysubsubsection[Java]{Java}
+% \tinysubsubsection[Python]{Python}
 
-\subsection{Bug corrections and Improvements in Version 3.10 (2013-03)}
-\subsubsection[General]{General}
+\tinysubsection*{Bug corrections and Improvements in Version 3.10 (2013-03)}
+\tinysubsubsection*{General}
 N/A%
-\subsubsection[C]{\linklatexhtml{C}{csub.pdf}{csub.htm}}
+\tinysubsubsection*{\linklatexhtml{C}{csub.pdf}{csub.htm}}
 %
 \begin{itemize}
+	\setlength{\itemsep}{0pt}
+	\setlength{\parsep}{0pt}
 \item experimental GNU autotools support (undocumented); the standard
 configuration script remains available
 \end{itemize}
 
 
-\subsubsection[C++]{C++}
+\tinysubsubsection*{C++}
 \begin{itemize}
+	\setlength{\itemsep}{0pt}
+	\setlength{\parsep}{0pt}
 \item Spherical Harmonics Transform library {\tt libpsht} replaced by \htmladdnormallink{{\tt
 libsharp}}{http://sourceforge.net/projects/libsharp}
 (\htmladdnormallink{Reinecke \& Seljebotn, 2013}{http://arxiv.org/abs/1303.4945}). \\
@@ -1176,10 +1230,12 @@ configuration script remains available
 \end{itemize}
 
 %
-\subsubsection[Fortran]{%
+\tinysubsubsection*{%
 	Fortran 90 \linklatexhtml{facilities}{facilities.pdf}{facilities.htm} and
 	\linklatexhtml{subroutines}{subroutines.pdf}{subroutines.htm}}
 \begin{itemize}
+	\setlength{\itemsep}{0pt}
+	\setlength{\parsep}{0pt}
 %
 	\item all Fortran facilities now support most of {\tt cfitsio}'s ``\htmladdnormallink{Extended File
 Name Syntax}{http://heasarc.gsfc.nasa.gov/docs/software/fitsio/filters.html}'' features,
@@ -1209,20 +1265,22 @@ gcc releases above}).
 \end{itemize}
 
 %
-\subsubsection[IDL]{\linklatexhtml{IDL}{idl.pdf}{idl.htm}}
+\tinysubsubsection*{\linklatexhtml{IDL}{idl.pdf}{idl.htm}}
 \begin{itemize}
+	\setlength{\itemsep}{0pt}
+	\setlength{\parsep}{0pt}
 	\item bug corrections: 
 	\htmlref{{\tt query\_disc}}{{idl:query_disc}}: correct handling of empty disc; 
 	\htmlref{{\tt bin\_llcl}}{{idl:bin_llcl}}: correct handling of optional argument.
-
+%
 	\item double precision of input now preserved in
 	\htmlref{{\tt gaussbeam}}{{idl:gaussbeam}} and 
 	\htmlref{{\tt euler\_matrix\_new}}{{idl:euler_matrix_new}}.
-
+%
 	\item \htmlref{{\tt fits2cl}}{idl:fits2cl}: addition of 
 	{\tt /PLANCK1} keyword
 	to read best fit $C(l)$ model to Planck 2013 + external data.
-
+%
 	\item it is now possible to read a specific FITS file extension identified by its
 	(0-based) number or its case-insensitive EXTNAME value with the {\tt Extension}
 	keyword added to 
@@ -1231,7 +1289,7 @@ gcc releases above}).
 	\htmlref{{\tt read\_fits\_map}}{{idl:read_fits_map}},
 	\htmlref{{\tt read\_fits\_s}}{{idl:read_fits_s}} and 
 	\htmlref{{\tt read\_tqu}}{{idl:read_tqu}}.
-
+%
 	\item update of the required
 	\htmladdnormallink{{\tt IDL-astron} library}{http://idlastro.gsfc.nasa.gov/homepage.html}
 	routines, and their supporting \htmladdnormallink{\tt Coyote}{http://www.idlcoyote.com}
@@ -1239,10 +1297,12 @@ gcc releases above}).
 \end{itemize}
 
 %
-\subsubsection[Java]{Java}
+\tinysubsubsection*{Java}
 N/A%
-\subsubsection[Python]{Python}
+\tinysubsubsection*{Python}
 \begin{itemize}
+	\setlength{\itemsep}{0pt}
+	\setlength{\parsep}{0pt}
 	\item	switch to {\tt healpy 1.5.0}: addition of 
 \htmladdnormallink{{\tt
 gauss\_beam}}{https://healpy.readthedocs.org/en/1.5.0/generated/healpy.sphtfunc.gauss_beam.html}
@@ -1250,29 +1310,27 @@ to generate Gaussian beam window function.
 \end{itemize}
 
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%----------------------------------------------------
-\section{Appendix II: Older changes}
 
-{\mytiny{%
 \tinysubsection*{Bug corrections and Improvements in Version 3.0 (2012-11)} % 2012-11-27?
 
-\tinysubsubsection{General}
+\tinysubsubsection*{General}
 Introduction of the script {\tt healpix\_doc} for easy access to the \healpix
 PDF and HTML documentation.
 
 \tinysubsubsection*{\linklatexhtml{C}{csub.pdf}{csub.htm}}
 \begin{itemize}
+	\setlength{\itemsep}{0pt}
+	\setlength{\parsep}{0pt}
 	\item Interface has remained unchanged, but the code has been replaced by a C port
 of the relevant Healpix C++ functions, resulting in significant speedups.
 	\item Additional functions are provided which support Nside values up to $2^{29}$.
 They have the same name as the traditional functions, with a ``64'' suffix appended.
 \end{itemize}
-\tinysubsubsection{C++}
+
+\tinysubsubsection*{C++}
 \begin{itemize}
+	\setlength{\itemsep}{0pt}
+	\setlength{\parsep}{0pt}
 	\item Query routines:
  \mytargetb{install:cpp:query}{query\_polygon()} and query\_polygon\_inclusive() added.
 Query routines now return lists of pixel ranges instead of lists of pixels,
@@ -1297,13 +1355,16 @@ Facilities now check input maps for undefined pixels before calling map2alm().
  If undefined pixels are found, a warning is printed, and the pixels are set
  to zero. udgrade\_cxx refuses downgrading of polarised maps (which would produce
  unphysical results)
-
+%
 \item Bug fixes: accuracy of pix2ang near the poles at high resolutions has been improved.
-
+%
 \item Configuration: optional autoconf support
-
+%
 \item Interface changes:
+%
 \begin{itemize}
+	\setlength{\itemsep}{0pt}
+	\setlength{\parsep}{0pt}
 \item Healpix\_Base::query\_*(): new interface
 \item cxxutils.h has been split up into
  announce.h (dealing with module banners), 
@@ -1321,6 +1382,8 @@ Fortran 90 \linklatexhtml{facilities}{facilities.pdf}{facilities.htm} and
 \linklatexhtml{subroutines}{subroutines.pdf}{subroutines.htm}
 }
 \begin{itemize}
+	\setlength{\itemsep}{0pt}
+	\setlength{\parsep}{0pt}
 	\item Compressed and/or remote (ftp or http) FITS files can now be
 read. CFITSIO 3.14 or more is now required;
 	\item introduction of the 
@@ -1360,6 +1423,8 @@ analyzed;
 
 \tinysubsubsection*{\linklatexhtml{IDL}{idl.pdf}{idl.htm}}
 \begin{itemize}
+	\setlength{\itemsep}{0pt}
+	\setlength{\parsep}{0pt}
 	\item New routines to go from circular beam profile to transfer function
 (\htmlref{{\tt beam2bl}}{idl:beam2bl}), 
 and back (\htmlref{{\tt bl2beam}}{idl:bl2beam}); 
@@ -1393,7 +1458,7 @@ polarization is now user-controlled  via
 {\tt POLARIZATION}
 keyword. The {\tt COLT} keyword now
 allows the use of an interactively modified color table.
-
+%
 	\item \htmlref{\tt orthview}{idl:orthview} now accepts
 {\tt STAGGER} keyword to overplot staggered
 spheres (with a twist) in order to detect periodic boundary conditions on the
@@ -1408,6 +1473,8 @@ maps
 
 \tinysubsubsection*{Java}
 \begin{itemize}
+	\setlength{\itemsep}{0pt}
+	\setlength{\parsep}{0pt}
 	\item Core functionality has been reimplemented from scratch in the form of the
 "healpix.essentials" package. It is strongly recommended to use this package
 directly in future projects making use of Java HEALPix.
@@ -1423,6 +1490,8 @@ data conversion.
 	\item New features and improvements introduced with the HealpixBase class, compared
 to the HealpixIndex, Healpix and PixTools classes:
 \begin{itemize}
+	\setlength{\itemsep}{0pt}
+	\setlength{\parsep}{0pt}
 \item close similarities with Healpix\_Base\_T class from Healpix C++, which allows
  simultaneous development and bug fixes for both.
 \item support for arbitrary positive Nside values in RING scheme; no longer limited
@@ -1444,6 +1513,8 @@ as the C++ implementation (see \mylink{install:cpp:query}{above}).
 
 \tinysubsubsection*{Python}
 \begin{itemize}
+	\setlength{\itemsep}{0pt}
+	\setlength{\parsep}{0pt}
 	\item the 
 \linklatexhtml{{\tt{healpy}}}{%
 https://github.com/healpy/healpy}{%
@@ -1456,6 +1527,8 @@ package (C. Rosset, A. Zonca et al.) is now part of \healpix
 
 \tinysubsubsection*{C++}
 \begin{itemize}
+	\setlength{\itemsep}{0pt}
+	\setlength{\parsep}{0pt}
 	\item Faster Spherical Harmonic Transforms thanks to {\tt libpsht} routines
 	\item Support for spin-weighted Spherical Harmonic Transforms at the library level
 	\item Support for 6-component power spectra in {\tt anafast\_cxx}
@@ -1469,6 +1542,8 @@ package (C. Rosset, A. Zonca et al.) is now part of \healpix
 
 \tinysubsubsection*{\linklatexhtml{Fortran 90}{subroutines.pdf}{subroutines.htm}}
 \begin{itemize}
+	\setlength{\itemsep}{0pt}
+	\setlength{\parsep}{0pt}
 	\item Faster Spherical Harmonics Transforms thanks to {\tt libpsht} routines
 	\item $\nside > 8192$ now supported by most routines and facilities
 	\item Slightly faster pixel/coordinates conversion routines (eg {\tt
@@ -1479,6 +1554,8 @@ ang2pix\_*}, {\tt vec2pix\_*}, ...)
 
 \tinysubsubsection*{\linklatexhtml{IDL}{idl.pdf}{idl.htm}}
 \begin{itemize}
+	\setlength{\itemsep}{0pt}
+	\setlength{\parsep}{0pt}
 	\item {\tt fits2cl}: addition of the WMAP1 and WMAP5 keywords to read
 	best fit $C(l)$ model to WMAP 1st and 5yr data respectively,
 	\item  {\tt cartview, gnomview, mollview, orthview}:
@@ -1487,6 +1564,8 @@ ang2pix\_*}, {\tt vec2pix\_*}, ...)
 
 \tinysubsubsection*{Java}
 \begin{itemize}
+	\setlength{\itemsep}{0pt}
+	\setlength{\parsep}{0pt}
 	\item  bugs correction in {\tt query\_disc}
 \end{itemize}
 
@@ -1495,6 +1574,8 @@ ang2pix\_*}, {\tt vec2pix\_*}, ...)
 
 \tinysubsubsection*{\linklatexhtml{Fortran 90}{subroutines.pdf}{subroutines.htm}}
 \begin{itemize}
+	\setlength{\itemsep}{0pt}
+	\setlength{\parsep}{0pt}
 	\item {\tt remove\_dipole}: removed confusing warning messages about
 unused masks and weights.
 \end{itemize}
@@ -1502,8 +1583,12 @@ unused masks and weights.
 
 \tinysubsubsection*{\linklatexhtml{IDL}{idl.pdf}{idl.htm}}
 \begin{itemize}
+	\setlength{\itemsep}{0pt}
+	\setlength{\parsep}{0pt}
 	\item {\tt cartview, gnomview, mollview, orthview}:
         \begin{itemize} 
+	\setlength{\itemsep}{0pt}
+	\setlength{\parsep}{0pt}
 		\item export of projected map into a FITS file ({\tt FITS} keyword), or an
 IDL array ({\tt MAP\_OUT} option) now available with all viewing routines,
 		\item added {\tt CHARTHICK} support; accept array of {\tt
@@ -1535,6 +1620,8 @@ BAD\_DATA} keyword added to FITS header;
 %
 \tinysubsubsection*{Fortran90}
  \begin{itemize}
+	\setlength{\itemsep}{0pt}
+	\setlength{\parsep}{0pt}
 	\item
 	correction of a numerical bug in {\tt alm2map\_der} routine that was
 affecting
@@ -1549,8 +1636,12 @@ Cardiff University). See
 %
 \tinysubsubsection*{IDL}
  \begin{itemize}
+	\setlength{\itemsep}{0pt}
+	\setlength{\parsep}{0pt}
 	\item {\tt cartview, gnomview, mollview, orthview}:
         \begin{itemize}
+	\setlength{\itemsep}{0pt}
+	\setlength{\parsep}{0pt}
 		\item {\tt OUTLINE=}, {\tt GRATICULE=}, {\tt IGRATICULE=} work
 again with virtual windows ({\tt WINDOW}$<0$)
 		\item {\tt YPOS=} and {\tt RETAIN=} keywords active again
@@ -1570,8 +1661,12 @@ accept lower case values; {\tt /SILENT} keyword added.
 %
 \tinysubsubsection*{Java}
 \begin{itemize}
+	\setlength{\itemsep}{0pt}
+	\setlength{\parsep}{0pt}
 	\item 64 bit java-\healpix, supports $\nside$ up to $ = 2^{29}$ = 536870912
 	\begin{itemize}
+	\setlength{\itemsep}{0pt}
+	\setlength{\parsep}{0pt}
 		\item now fully implemented
 		\item much faster pixel queries (eg {\tt query\_disc})
 	\end{itemize}

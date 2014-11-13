@@ -49,6 +49,11 @@ idl.vpdf:
 	make idl.pdf
 	open idl.pdf
 
+install.vpdf:
+	\rm -f install.pdf
+	make install.pdf
+	open install.pdf
+
 $(pdf): %.pdf : %.tex healpix.sty $(incs)
 	@echo "$(GREEN_COLOR)==================================$(NO_COLOR)"
 	@echo "$(GREEN_COLOR)              $@                  $(NO_COLOR)"
