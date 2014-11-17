@@ -15,7 +15,26 @@ analyzes a (polarised) \healpix {\em RING ordered} map and returns
 its $a_{lm}$ coefficients for temperature (and polarisation) up to a specified
 multipole, and use precomputed harmonics if those
 are provided, but it also can also perform an iterative (Jacobi) determination of the $a_{lm}$, and
-apply a pixel mask if one is provided.}
+apply a pixel mask if one is provided.\\
+\newcommand{\bA}{\textbf{A}}
+\newcommand{\bS}{\textbf{S}}
+\newcommand{\ba}{\textbf{a}}
+\newcommand{\bm}{\textbf{m}}
+\newcommand{\bw}{\textbf{w}}
+Denoting $\bA$ and $\bS$ the 
+analysis  (\htmlref{map2alm}{sub:map2alm}) and
+synthesis (\htmlref{alm2map}{sub:alm2map})
+operators and  $\ba, \bm$ and $\bw$, the $a_{lm}$, map and pixel mask vectors, the
+Jacobi iterative process reads 
+\begin{equation}
+	\ba^{(n)} = \ba^{(n-1)} + \bA. \left( \bw.\bm - \bw . \bS .\ba^{(n-1)} \right),
+\end{equation}
+with
+\begin{equation}
+	\ba^{(0)} = \bA.\bw.\bm.
+\end{equation}
+
+}
 {\modAlmTools}
 \end{facility}
 
@@ -24,9 +43,10 @@ apply a pixel mask if one is provided.}
 plm, mask]}
 \end{f90format}
 
+%\newpage
 \begin{arguments}
 {
-\begin{tabular}{p{0.4\hsize} p{0.05\hsize} p{0.05\hsize} p{0.40\hsize}} \hline  
+\begin{tabular}{p{0.38\hsize} p{0.05\hsize} p{0.07\hsize} p{0.40\hsize}} \hline  
 \textbf{name~\&~dimensionality} & \textbf{kind} & \textbf{in/out} & \textbf{description} \\ \hline
                    &   &   &                           \\ %%% for presentation
 nsmax & I4B & IN & the $N_{side}$ value of the map to analyse. \\
@@ -42,9 +62,7 @@ good compromise. \\
 map\_TQU(0:12*nsmax**2-1, 1:p) & SP/ DP & INOUT & input map. $p$ is 1 or 3
 depending if temperature (T) only or temperature and polarisation (T, Q, U) are
 to be analysed. It will be altered on output if a mask is provided.\\
-\end{tabular}
-
-\begin{tabular}{p{0.4\hsize} p{0.05\hsize} p{0.05\hsize} p{0.40\hsize}}   \hline  
+%
 alm\_TGC(1:p, 0:nlmax, 0:nmmax) & SPC/ DPC & OUT & The $a_{lm}$ values output
 from the analysis. 
 $p$ is 1 or 3 depending on whether polarisation is included or not. In the former
@@ -66,6 +84,9 @@ plm(0:,1:p), \hskip 6cm OPTIONAL & DP & IN & If this
 optional matrix is passed, precomputed scalar (and tensor) $P_{lm}(\theta)$ are
 used instead of recursion. \\
 %
+\end{tabular}
+
+\begin{tabular}{p{0.38\hsize} p{0.05\hsize} p{0.07\hsize} p{0.40\hsize}}   \hline  
 mask(0:12*nsmax**2-1,1:q), \hskip 6cm OPTIONAL & SP/ DP & IN & pixel mask,
 assumed to have the same resolution (and RING ordering) as the map. The map {\tt
 map\_TQU} is

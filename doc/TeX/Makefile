@@ -8,7 +8,7 @@ DVIFLAGS :=
 PDFFLAGS :=
 LATEX2HTML := latex2html
 # LATEX2HTML := ~/bin/latex2html
-VERSION =  $(shell grep newcommand hpxversion.tex | sed "s/[a-z{}\\]*//g")
+VERSION =  $(shell grep newcommand hpxversion.tex | grep hpxversion | sed "s/[a-z{}\\]*//g")
 HTMLDIR := ../../healpix-dynamicPages/html/
 ADDRESS := -address "Version $(VERSION), `date +%Y-%m-%d`" -info 1
 #L2HFLAGS := -dir $(HTMLDIR) -up_url main.htm -up_title "Main Page" -math -html_version 4.0 -bottom_navigation -short_extn -white -local_icons -noexternal_images -toc_depth 8 $(ADDRESS) # -debug -verbosity 2  -show_section_numbers 
@@ -54,6 +54,11 @@ install.vpdf:
 	make install.pdf
 	open install.pdf
 
+subroutines.vpdf:
+	\rm -f subroutines.pdf
+	make subroutines.pdf
+	open subroutines.pdf
+
 $(pdf): %.pdf : %.tex healpix.sty $(incs)
 	@echo "$(GREEN_COLOR)==================================$(NO_COLOR)"
 	@echo "$(GREEN_COLOR)              $@                  $(NO_COLOR)"
@@ -79,6 +84,7 @@ main.html:
 	cp main.html $(HTMLDIR)/index.htm
 	cp main.html $(HTMLDIR)/index.html
 #	cp fig/backsmall3balls.gif $(HTMLDIR)
+	@echo "created$(BLUE_COLOR) $(HTMLDIR)main.htm $(NO_COLOR)"
 
 install.html: $(style) healpix.perl cssfile
 	@echo "$(GREEN_COLOR)==================================$(NO_COLOR)"
@@ -90,6 +96,7 @@ install.html: $(style) healpix.perl cssfile
 	-$(EQNFIX) $(HTMLDIR)/install
 	mv -f $(HTMLDIR)/WARNINGS $(HTMLDIR)/WARNINGS_install
 	ln -sf $(CSSFILE) $(HTMLDIR)/install.css
+	@echo "created$(BLUE_COLOR) $(HTMLDIR)install.htm $(NO_COLOR)"
 
 intro.html: $(style) healpix.perl cssfile
 	@echo "$(GREEN_COLOR)==================================$(NO_COLOR)"
@@ -100,6 +107,8 @@ intro.html: $(style) healpix.perl cssfile
 	-$(EQNFIX) $(HTMLDIR)/intro > /dev/null
 	mv -f $(HTMLDIR)/WARNINGS $(HTMLDIR)/WARNINGS_intro
 	ln -sf $(CSSFILE) $(HTMLDIR)/intro.css
+	@echo "created$(BLUE_COLOR) $(HTMLDIR)intro.htm $(NO_COLOR)"
+
 
 idl.html: $(style) healpix.perl cssfile
 	@echo "$(GREEN_COLOR)==================================$(NO_COLOR)"
@@ -110,6 +119,7 @@ idl.html: $(style) healpix.perl cssfile
 	-$(EQNFIX) $(HTMLDIR)/idl
 	mv -f $(HTMLDIR)/WARNINGS $(HTMLDIR)/WARNINGS_idl
 	ln -sf $(CSSFILE) $(HTMLDIR)/idl.css
+	@echo "created$(BLUE_COLOR) $(HTMLDIR)idl.htm $(NO_COLOR)"
 
 
 subroutines.html: $(style) healpix.perl cssfile
@@ -121,6 +131,8 @@ subroutines.html: $(style) healpix.perl cssfile
 	-$(EQNFIX) $(HTMLDIR)/subroutines
 	mv -f $(HTMLDIR)/WARNINGS $(HTMLDIR)/WARNINGS_subroutines
 	ln -sf $(CSSFILE) $(HTMLDIR)/subroutines.css
+	@echo "created$(BLUE_COLOR) $(HTMLDIR)subroutines.htm $(NO_COLOR)"
+
 
 facilities.html: $(style) healpix.perl cssfile
 	@echo "$(GREEN_COLOR)==================================$(NO_COLOR)"
@@ -131,6 +143,8 @@ facilities.html: $(style) healpix.perl cssfile
 	-$(EQNFIX) $(HTMLDIR)/facilities
 	mv -f $(HTMLDIR)/WARNINGS $(HTMLDIR)/WARNINGS_facilities
 	ln -sf $(CSSFILE) $(HTMLDIR)/facilities.css
+	@echo "created$(BLUE_COLOR) $(HTMLDIR)facilities.htm $(NO_COLOR)"
+
 
 csub.html: $(style) healpix.perl cssfile
 	@echo "$(GREEN_COLOR)==================================$(NO_COLOR)"
@@ -141,6 +155,8 @@ csub.html: $(style) healpix.perl cssfile
 	-$(EQNFIX) $(HTMLDIR)/csub
 	mv -f $(HTMLDIR)/WARNINGS $(HTMLDIR)/WARNINGS_csub
 	ln -sf $(CSSFILE) $(HTMLDIR)/csub.css
+	@echo "created$(BLUE_COLOR) $(HTMLDIR)csub.htm $(NO_COLOR)"
+
 
 clean: 
 	$(RM) *.aux *.log *.toc *.blg *.bbl *.lof *.lot *.kf *.out ; \
