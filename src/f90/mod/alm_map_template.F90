@@ -4830,6 +4830,8 @@
     nullify(p_map_1, p_plm_1) ! for sanity
     ! -------------------------------------
     ! start iterative (Jacobi) analysis
+    ! a^(n) = a^(n-1) + A w ( m - S a^(n-1) )
+    ! a^(0) = A w m
     ! -------------------------------------
     do iter = 0, iter_order
        ! map -> alm

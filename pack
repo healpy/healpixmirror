@@ -3,8 +3,9 @@
 #=============================
 #  script to pack a release
 #
-#  cd /tmp
-#  svn co  [-r BRANCH] https://svn.code.sf.net/p/healpix/code/trunk Healpix_[VERSION]
+#  cd /tmp; svn co  [-r BRANCH] https://svn.code.sf.net/p/healpix/code/trunk Healpix_[VERSION]
+#   or
+#  ./getit
 #
 #  cd Healpix_[VERSION]
 #  ./pack
@@ -179,7 +180,7 @@ echoRed (){
 #---------------
 
 revision=`svnversion . | sed "s|[A-Z]*||g"`
-echo "Revison=${revision}"
+echo "Revision=${revision}"
 setTopDefaults
 echo "This script will destroy several files and subdirectories"
 echoLn "Are you sure you want to proceed ? [NO/yes] "
@@ -198,8 +199,8 @@ do_split=0
 # [ "$answer" == "yes" ] && do_split=1
 
 
-echoGrn "getting healpy (python) directory"
-gettingHealpy
+#echoGrn "getting healpy (python) directory"
+#gettingHealpy
 
 echoRed "removing CVS directories..."
 find . -type d -name CVS -exec \rm -rf {} \;

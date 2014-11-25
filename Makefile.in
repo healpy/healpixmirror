@@ -66,6 +66,7 @@ C_INCDIR =
 C_AR     = 
 #
 # Where you have the cfitsio installation
+C_WITHOUT_CFITSIO = 
 C_CFITSIO_INCDIR = 
 C_CFITSIO_LIBDIR = 
 C_WLRPATH = 
@@ -73,8 +74,11 @@ C_WLRPATH =
 # Libraries to install (static, shared, dynamic)
 C_ALL =
 
-C_MKFLAGS = CC="$(C_CC)" PIC="$(C_PIC)" OPT="$(C_OPT)" LIBDIR="$(C_LIBDIR)" INCDIR="$(C_INCDIR)" AR="$(C_AR)" \
-	CFITSIO_INCDIR="$(C_CFITSIO_INCDIR)" CFITSIO_LIBDIR="$(C_CFITSIO_LIBDIR)" RM="$(RM)" WLRPATH="$(C_WLRPATH)"
+C_MKFLAGS = CC="$(C_CC)" PIC="$(C_PIC)" OPT="$(C_OPT)" \
+	LIBDIR="$(C_LIBDIR)" INCDIR="$(C_INCDIR)" AR="$(C_AR)" \
+	WITHOUT_CFITSIO="$(C_WITHOUT_CFITSIO)" CFITSIO_INCDIR="$(C_CFITSIO_INCDIR)" \
+	CFITSIO_LIBDIR="$(C_CFITSIO_LIBDIR)" WLRPATH="$(C_WLRPATH)" \
+	RM="$(RM)" 
 
 # ------------------------------ variables for C++ --------------------------
 

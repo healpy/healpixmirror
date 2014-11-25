@@ -2,13 +2,16 @@
 #
 #
 
-healpytag="1.5.0"
-githealpy=0 # 1: uses GIT, 0: uses tar.gz
-healpixbranch="trunk"
-#healpixbranch="branches/branch_v300r365"
-#
+healpytag="1.8.1"
+healpygit=0 # 1: uses GIT, 0: uses tar.gz
 healpyrepo="https://github.com/healpy/healpy.git"
-healpyarchive="https://github.com/healpy/healpy/archive/"
+#healpyarchive="https://github.com/healpy/healpy/archive/"
+healpyarchive="https://pypi.python.org/packages/source/h/healpy/"
+               https://pypi.python.org/packages/source/h/healpy/healpy-1.8.1.tar.gz
+
+healpixbranch="trunk"
+healpixbranch_cxx="branches/branch_v310r461"
+healpixbranch_java="branches/branch_v310r461"
 healpixrepo="svn://svn.code.sf.net/p/healpix/code/" # read-only
 #healpixrepo="https://healpix.svn.sourceforge.net/svnroot/healpix/"
 #
@@ -24,6 +27,8 @@ VERSION=$version
 echo "Version: ${VERSION}    in ${WRKDIR}"
 echo "healpy:   ${healpyrepo}   ${healpytag}"
 echo "healpix:  ${healpixrepo}${healpixbranch}"
+echo "    C++:  ${healpixrepo}${healpixbranch_cxx}"
+echo "   java:  ${healpixrepo}${healpixbranch_java}"
 printf "Do you want to proceed (y/n) [n]: "
 read answer
 doit=0
@@ -36,15 +41,26 @@ if [ ${doit} = 1 ] ; then
     \rm -rf             ${WRKDIR}/healpy
 
     cd ${WRKDIR}
-    svn co    ${healpixrepo}${healpixbranch} Healpix_${VERSION}
+    svn co     ${healpixrepo}${healpixbranch}               Healpix_${VERSION}
+    if [ ${healpixbranch_cxx} != ${healpixbranch} ] ; then
+	echo "-------------------- C++ ------------------"
+	\rm -rf Healpix_${VERSION}/src/cxx
+	svn co ${healpixrepo}${healpixbranch_cxx}/src/cxx   Healpix_${VERSION}/src/cxx
+    fi
+    if [ ${healpixbranch_java} != ${healpixbranch} ] ; then
+	echo "-------------------- Java ------------------"
+	\rm -rf Healpix_${VERSION}/src/java
+	svn co ${healpixrepo}${healpixbranch_java}/src/java Healpix_${VERSION}/src/java
+    fi
 
-    if [ ${githealpy} = 1 ] ; then
+    echo "---------------------- Healpy ----------------"
+    if [ ${healpygit} = 1 ] ; then
 	git clone ${healpyrepo}  healpy 
 	cd healpy 
 	git checkout ${healpytag} 
 	git branch
     else
-	wget ${healpyarchive}${healpytag}.tar.gz -O healpy-${healpytag}.tar.gz
+	wget ${healpyarchive}healpy-${healpytag}.tar.gz  --no-check-certificate -O healpy-${healpytag}.tar.gz
 	tar -xvzpf healpy-${healpytag}.tar.gz
 	mv healpy-${healpytag} healpy
     fi
@@ -54,12 +70,22 @@ if [ ${doit} = 1 ] ; then
     cp -pr healpy Healpix_${VERSION}/src
     cd Healpix_${VERSION}/src/healpy
 
-#     \rm -rf hpbeta .git* 
-#     ln -s ../cxx hpbeta 
-    \rm -rf healpixcxx .git*
-    mkdir -p healpixcxx/src
-    cd healpixcxx/src
-    ln -s ../../../cxx .
+    \rm -rf .git*
+    
+    if [ -d healpixsubmodule/src/cxx/autotools ] ; then # version 1.7* and above
+	cd  healpixsubmodule/src/cxx/autotools
+	\ln -sf ../../../../../cxx .
+	for dir in Healpix_cxx c_utils cxxsupport libfftpack libsharp ; do
+	    echo ${dir}
+	    \rm -r ${dir}
+	    \ln -sf cxx/${dir} .
+	done
+    elif [ -d healpixcxx ] ; then # deprecated
+	\rm -rf healpixcxx .git*
+	mkdir -p healpixcxx/src
+	cd healpixcxx/src
+	ln -s ../../../cxx .
+    fi
 
     cd ${WRKDIR}
 fi

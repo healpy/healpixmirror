@@ -225,41 +225,48 @@ askCUserMisc () {
     echoLn "enter archive creation (and indexing) command ($C_AR): "
     read answer
     [ "x$answer" != "x" ] && C_AR=$answer
-    
-    echoLn "enter full name of cfitsio library (lib${LIBFITS}.a): "
+
+    echoLn "do you want the HEALPix/C library to include CFITSIO-related functions ? (Y|n): "
     read answer
-    [ "x$answer" != "x" ] && LIBFITS=`${BASENAME} $answer ".a" | ${SED} "s/^lib//"`
+    if [ "x$answer" == "x" -o "x$answer" == "xY" -o "x$answer" == "xy" -o "x$answer" == "x1" ]; then
+	C_WITHOUT_CFITSIO=0
+	echoLn "enter full name of cfitsio library (lib${LIBFITS}.a): "
+	read answer
+	[ "x$answer" != "x" ] && LIBFITS=`${BASENAME} $answer ".a" | ${SED} "s/^lib//"`
 
-    findFITSLib $LIBDIR $FITSDIR
-    echoLn "enter location of cfitsio library ($FITSDIR): "
-    read answer
-    [ "x$answer" != "x" ] && FITSDIR=$answer
-    fullPath FITSDIR
+	findFITSLib $LIBDIR $FITSDIR
+	echoLn "enter location of cfitsio library ($FITSDIR): "
+	read answer
+	[ "x$answer" != "x" ] && FITSDIR=$answer
+	fullPath FITSDIR
 
-    [ "x$WLRPATH" != "x" ] && WLRPATH="${WLRPATH}${FITSDIR}"
+	[ "x$WLRPATH" != "x" ] && WLRPATH="${WLRPATH}${FITSDIR}"
 
-    lib="${FITSDIR}/lib${LIBFITS}.a"
-    if [ ! -r $lib ]; then
-	echo "error: fits library $lib not found"
-	crashAndBurn
+	lib="${FITSDIR}/lib${LIBFITS}.a"
+	if [ ! -r $lib ]; then
+	    echo "error: fits library $lib not found"
+	    crashAndBurn
+	fi
+	guess1=${FITSDIR}
+	guess2=`${DIRNAME} ${guess1}`
+	guess3="${guess2}/include"
+
+	findFITSInclude $INCDIR ${guess1} ${guess2} ${guess3} $FITSINC
+	echoLn "enter location of cfitsio header fitsio.h ($FITSINC): "
+	read answer
+	[ "x$answer" != "x" ] && FITSINC=$answer
+	fullPath FITSINC
+
+	inc="${FITSINC}/fitsio.h"
+	if [ ! -r $inc ]; then
+	    echo "error: cfitsio include file $inc not found"
+	    crashAndBurn
+	fi
+    else
+	C_WITHOUT_CFITSIO=1
     fi
-    guess1=${FITSDIR}
-    guess2=`${DIRNAME} ${guess1}`
-    guess3="${guess2}/include"
 
-    findFITSInclude $INCDIR ${guess1} ${guess2} ${guess3} $FITSINC
-    echoLn "enter location of cfitsio header fitsio.h ($FITSINC): "
-    read answer
-    [ "x$answer" != "x" ] && FITSINC=$answer
-    fullPath FITSINC
-
-    inc="${FITSINC}/fitsio.h"
-    if [ ! -r $inc ]; then
-	echo "error: cfitsio include file $inc not found"
-	crashAndBurn
-    fi
-
-    echoLn "A static library is produced by default. Do you also want a shared library ?"
+    echoLn "A static library is produced by default. Do you also want a shared library ? "
     if [ ${DO_C_SHARED} -eq 1 ]; then
 	echoLn "(Y|n) "
 	read answer
@@ -295,6 +302,7 @@ editCMakefile () {
 	${SED} "s|^C_INCDIR.*$|C_INCDIR      = $INCDIR|"   |\
 	${SED} "s|^C_LIBDIR.*$|C_LIBDIR      = $LIBDIR|"   |\
 	${SED} "s|^C_AR.*$|C_AR        = $C_AR|"   |\
+	${SED} "s|^C_WITHOUT_CFITSIO.*$|C_WITHOUT_CFITSIO = $C_WITHOUT_CFITSIO|" |\
 	${SED} "s|^C_CFITSIO_INCDIR.*$|C_CFITSIO_INCDIR = $FITSINC|" |\
 	${SED} "s|^C_CFITSIO_LIBDIR.*$|C_CFITSIO_LIBDIR = $FITSDIR|" |\
 	${SED} "s|^C_WLRPATH.*$|C_WLRPATH = $WLRPATH|" |\
@@ -314,22 +322,22 @@ writeCpkgconfigFile (){
     pkgconfigFile=${HEALPIX}/lib/chealpix.pc
     echo
     echo "Writing pkgconfig file: ${pkgconfigFile}"
-    ${CAT}<<EOF > ${pkgconfigFile}
-# HEALPix/C pkg-config file
 
-prefix=${HEALPIX}
-libdir=\${prefix}/lib
-includedir=\${prefix}/include
-
-Name: chealpix
-Description: C library for HEALPix (Hierarchical Equal-Area iso-Latitude) pixelisation of the sphere
-Version: ${HPX_VERSION}
-URL: http://healpix.sourceforge.net
-Requires: cfitsio 
-Libs: -L\${libdir} -lchealpix
-Cflags: -I\${includedir} ${PIC}
-
-EOF
+    echo "# HEALPix/C pkg-config file"         > ${pkgconfigFile}
+    echo " "                                   >> ${pkgconfigFile}
+    echo "prefix=${HEALPIX}"                   >> ${pkgconfigFile}
+    echo "libdir=\${prefix}/lib"               >> ${pkgconfigFile}
+    echo "includedir=\${prefix}/include"       >> ${pkgconfigFile}
+    echo " "                                   >> ${pkgconfigFile}
+    echo "Name: chealpix"                      >> ${pkgconfigFile}
+    echo "Description: C library for HEALPix (Hierarchical Equal-Area iso-Latitude) pixelisation of the sphere" >> ${pkgconfigFile}
+    echo "Version: ${HPX_VERSION}"             >> ${pkgconfigFile}
+    echo "URL: http://healpix.sourceforge.net" >> ${pkgconfigFile}
+    if [ ${C_WITHOUT_CFITSIO} -eq 0 ] ; then
+	echo "Requires: cfitsio"               >> ${pkgconfigFile}
+    fi
+    echo "Libs: -L\${libdir} -lchealpix"       >> ${pkgconfigFile}
+    echo "Cflags: -I\${includedir} ${PIC}"     >> ${pkgconfigFile}
 
     ${CAT} ${pkgconfigFile}
     echo "           -------------- "
@@ -549,6 +557,8 @@ Healpy_config () {  # for healpy 1.7.0
     PYTHON='python'
     tmpfile=to_be_removed
     HPY_SETUP='setup.py' # default setup
+    HPY_SETUP2='setup2.py' # backup setup
+    HPY_DIR='src/healpy/'
 
     # ask for python command
     echoLn "Enter python command [$PYTHON] "
@@ -570,7 +580,6 @@ Healpy_config () {  # for healpy 1.7.0
     fi
 
     # special treatement for MacOSX
-    HPY_SETUP2='setup2.py' # backup setup
     if [ "${OS}" = "Darwin" ]; then
 	# find out compiler and options used by python (and therefore healpy in setup.py)
 	HPY_CC=`${PYTHON}   -c "from distutils.sysconfig import get_config_var ; print get_config_var('CC')"`
@@ -582,8 +591,11 @@ int main(){
 }
 EOF
 	${HPY_CC} -E ${HPY_OPTS} ${tmpfile}.c -o ${tmpfile}.p  1>${DEVNULL} 2>&1
-	# if test fails, use back up setup.py
+	# if test fails, create back up setup2.py and make sure it will be used
 	if [ ! -e ${tmpfile}.p ] ; then
+	    cat ${HPY_DIR}${HPY_SETUP} | \
+		sed "s|'--disable-shared',|'--disable-shared', '--disable-dependency-tracking',|g" > \
+		${HPY_DIR}${HPY_SETUP2}
 	    HPY_SETUP=${HPY_SETUP2}
 	fi
 	# clean up
@@ -1885,6 +1897,7 @@ writeF90pkgconfigFile (){
     echo "Writing pkgconfig file: ${pkgconfigFile}"
     ${CAT}<<EOF > ${pkgconfigFile}
 # HEALPix/F90 pkg-config file
+# compiled with ${FC}
 
 prefix=${HEALPIX}
 suffix=${DIRSUFF}
