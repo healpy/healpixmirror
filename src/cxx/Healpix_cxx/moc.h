@@ -33,6 +33,7 @@
 #define HEALPIX_MOC_H
 
 #include "healpix_base.h"
+#include "compress_utils.h"
 
 template<typename I> class Moc
   {
@@ -50,6 +51,7 @@ template<typename I> class Moc
       }
 
   public:
+    const rangeset<I> &Rs() { return rs; }
     tsize maxOrder() const
       {
       I combo=0;
@@ -78,6 +80,13 @@ template<typename I> class Moc
       int shift=2*(maxorder-order);
       rs.add(p1<<shift,p2<<shift);
       }
+    void appendPixelRange (int order, I p1, I p2)
+      {
+      int shift=2*(maxorder-order);
+      rs.append(p1<<shift,p2<<shift);
+      }
+    void appendPixel (int order, I p)
+      { appendPixelRange(order,p,p+1); }
     /*! Returns a new Moc that contains the union of this Moc and \a other. */
     Moc op_or (const Moc &other) const
       { return fromNewRangeSet(rs.op_or(other.rs)); }

@@ -145,6 +145,24 @@ template<typename T> class rangeset
         ((strat==2) ? generalUnion2(a,b,flip_a,flip_b)
                     : generalUnion2(b,a,flip_b,flip_a));
       }
+    void generalXor (const rangeset &a, const rangeset &b)
+      {
+      clear();
+      bool state_a=false, state_b=false, state_res=state_a||state_b;
+      tsize ia=0, ea=a.r.size(), ib=0, eb=b.r.size();
+      bool runa = ia!=ea, runb = ib!=eb;
+      while(runa||runb)
+        {
+        T va = runa ? a.r[ia] : T(0),
+          vb = runb ? b.r[ib] : T(0);
+        bool adv_a = runa && (!runb || (va<=vb)),
+             adv_b = runb && (!runa || (vb<=va));
+        if (adv_a) { state_a=!state_a; ++ia; runa = ia!=ea; }
+        if (adv_b) { state_b=!state_b; ++ib; runb = ib!=eb; }
+        if ((state_a^state_b)!=state_res)
+          { r.push_back(adv_a ? va : vb); state_res = !state_res; }
+        }
+      }
 
     static bool generalAllOrNothing1 (const rangeset &a, const rangeset &b,
       bool flip_a, bool flip_b)
@@ -319,6 +337,15 @@ template<typename T> class rangeset
           res.push_back(m);
       }
 
+    /*! Returns a vector containing all elements of the rangeset in ascending
+        order. */
+    std::vector<T> toVector() const
+      {
+      std::vector<T> res;
+      toVector(res);
+      return res;
+      }
+
     rangeset op_or (const rangeset &other) const
       {
       rangeset res;
@@ -335,6 +362,12 @@ template<typename T> class rangeset
       {
       rangeset res;
       res.generalUnion (*this,other,true,false);
+      return res;
+      }
+    rangeset op_xor (const rangeset &other) const
+      {
+      rangeset res;
+      res.generalXor (*this,other);
       return res;
       }
 

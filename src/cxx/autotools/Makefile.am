@@ -72,7 +72,8 @@ src_cxxsupport = \
   cxxsupport/vec3.h \
   cxxsupport/walltimer.h \
   cxxsupport/wigner.h \
-  cxxsupport/xcomplex.h
+  cxxsupport/xcomplex.h \
+  cxxsupport/compress_utils.h
 src_healpix_cxx= \
   Healpix_cxx/alm.cc \
   Healpix_cxx/alm.h \
@@ -106,7 +107,11 @@ src_healpix_cxx= \
   Healpix_cxx/smoothing_cxx_module.cc \
   Healpix_cxx/syn_alm_cxx_module.cc \
   Healpix_cxx/udgrade_cxx_module.cc \
-  Healpix_cxx/udgrade_harmonic_cxx_module.cc
+  Healpix_cxx/udgrade_harmonic_cxx_module.cc \
+  Healpix_cxx/moc_fitsio.h \
+  Healpix_cxx/moc_fitsio.cc \
+  Healpix_cxx/moc_query.h \
+  Healpix_cxx/moc_query.cc
 
 EXTRA_DIST = \
   libfftpack/fftpack_inc.c \
@@ -145,7 +150,11 @@ include_HEADERS = \
   Healpix_cxx/healpix_map_fitsio.h \
   Healpix_cxx/healpix_tables.h \
   Healpix_cxx/powspec.h \
-  Healpix_cxx/powspec_fitsio.h
+  Healpix_cxx/powspec_fitsio.h \
+  Healpix_cxx/moc.h \
+  Healpix_cxx/moc_fitsio.h \
+  Healpix_cxx/moc_query.h
+
 libhealpix_cxx_la_SOURCES = $(src_c_utils) $(src_libfftpack) $(src_libsharp) $(src_cxxsupport) $(src_healpix_cxx)
 libhealpix_cxx_la_LIBADD = $(CFITSIO_LIBS)
 

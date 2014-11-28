@@ -23,7 +23,7 @@
  */
 
 /*
- *  Copyright (C) 2011 Max-Planck-Society
+ *  Copyright (C) 2011-2014 Max-Planck-Society
  *  \author Martin Reinecke
  */
 
@@ -64,7 +64,7 @@ void find_enclosing_circle (const arr<vec3> &point, vec3 &center,
   double &cosrad)
   {
   tsize np=point.size();
-  planck_assert(np>=3,"too few points");
+  planck_assert(np>=2,"too few points");
   center = (point[0]+point[1]).Norm();
   cosrad = dotprod(point[0],center);
   for (tsize i=2; i<np; ++i)

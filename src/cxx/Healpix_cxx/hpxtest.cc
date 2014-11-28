@@ -61,6 +61,7 @@ Candidates for testing the validity of the Healpix routines:
 #include "announce.h"
 #include "compress_utils.h"
 #include "moc.h"
+#include "moc_fitsio.h"
 
 using namespace std;
 
@@ -140,6 +141,7 @@ template<typename I> void rsOps(const rangeset<I> &a, const rangeset<I> &b)
     "error");
   planck_assert(a.op_or(b).op_andnot(a.op_and(b)).nval()==
                 a.op_or(b).nval()-a.op_and(b).nval(),"error");
+  planck_assert(a.op_xor(b)==a.op_andnot(b).op_or(b.op_andnot(a)),"error");
   }
 template<typename I> void check_rangeset()
   {
@@ -407,6 +409,12 @@ template<typename I> void check_Moc()
     planck_assert(!a.overlaps(a.complement()),"error");
     planck_assert(a.op_or(a.complement())==full,"error");
     planck_assert(a.op_and(a.complement())==empty,"error");
+#if 0
+    write_Moc_to_fits("!healpixtestmoctmp",a);
+    Moc<I> b;
+    read_Moc_from_fits("healpixtestmoctmp",b);
+    planck_assert(a==b,"FITS problem");
+#endif
     }
   }
   }
@@ -690,7 +698,7 @@ template<typename I>void check_query_disc()
         rangeset<I> psi;
         rbase.query_disc_inclusive(ptg,rad,psi,fct);
         if (!psi.contains(pslast))
-          cout << "  PROBLEM: pixel sets inconsistent" << endl;
+          cout << "  PROBLEM: RING pixel sets inconsistent" << endl;
         swap(pslast,psi);
         }
       I nval = pixset.nval();
@@ -701,7 +709,7 @@ template<typename I>void check_query_disc()
         rangeset<I> psi;
         nbase.query_disc_inclusive(ptg,rad,psi,fct);
         if (!psi.contains(pslast))
-          cout << "  PROBLEM: pixel sets inconsistent" << endl;
+          cout << "  PROBLEM: NEST pixel sets inconsistent" << endl;
         swap(pslast,psi);
         }
       if (nval!=pixset.nval())

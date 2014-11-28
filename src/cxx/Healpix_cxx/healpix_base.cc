@@ -77,7 +77,7 @@ template<typename I, typename I2> inline void check_pixel (int o, int order_,
       int sdist=2*(order_-o); // the "bit-shift distance" between map orders
       pixset.append(pix<<sdist,(pix+1)<<sdist); // output all subpixels
       }
-    else // (zone>=1)
+    else // (1<=zone<=2)
       for (int i=0; i<4; ++i)
         stk.push_back(make_pair(4*pix+3-i,o+1)); // add children
     }
@@ -88,7 +88,7 @@ template<typename I, typename I2> inline void check_pixel (int o, int order_,
       pixset.append(pix>>(2*(o-order_))); // output the parent pixel at order_
       stk.resize(stacktop); // unwind the stack
       }
-    else // (zone>=1): pixel center in safety range
+    else // (zone==1): pixel center in safety range
       {
       if (o<omax) // check sublevels
         for (int i=0; i<4; ++i) // add children in reverse order
@@ -1265,13 +1265,16 @@ template<typename I> double T_Healpix_Base<I>::max_pixrad() const
 template<typename I> double T_Healpix_Base<I>::max_pixrad(I ring) const
   {
   if (ring>=2*nside_) ring=4*nside_-ring;
-  double z=ring2z(ring), z_up=(ring>1) ? ring2z(ring-1) : 1.;
+  double z=ring2z(ring), z_up=ring2z(ring-1);
   vec3 mypos, uppos;
   uppos.set_z_phi(z_up,0);
   if (ring<=nside_)
     {
     mypos.set_z_phi(z,pi/(4*ring));
-    return v_angle(mypos,uppos);
+    double v1=v_angle(mypos,uppos);
+    if (ring!=1) return v1;
+    uppos.set_z_phi(ring2z(ring+1),pi/(4*(min(nside_,ring+1))));
+    return max(v1,v_angle(mypos,uppos));
     }
   mypos.set_z_phi(z,0);
   double vdist=v_angle(mypos,uppos);

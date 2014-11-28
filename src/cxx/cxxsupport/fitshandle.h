@@ -25,7 +25,7 @@
 /*! \file fitshandle.h
  *  Declaration of the FITS I/O helper class used by LevelS
  *
- *  Copyright (C) 2002-2011 Max-Planck-Society
+ *  Copyright (C) 2002-2014 Max-Planck-Society
  *  \author Martin Reinecke
  */
 
@@ -223,6 +223,11 @@ class fitshandle
     template<typename T> void read_column
       (int colnum, arr<T> &data, int64 offset=0) const
       { read_column_raw (colnum, &(data[0]), data.size(), offset); }
+    /*! Fills \a data with elements from column \a colnum,
+        starting at offset \a offset in the column. */
+    template<typename T> void read_column
+      (int colnum, std::vector<T> &data, int64 offset=0) const
+      { read_column_raw (colnum, &(data[0]), data.size(), offset); }
     /*! Reads the element \a #offset from column \a colnum into \a data. */
     template<typename T> void read_column
       (int colnum, T &data, int64 offset=0) const
@@ -233,6 +238,14 @@ class fitshandle
       (int colnum, arr<T> &data) const
       {
       data.alloc(safe_cast<tsize>(nelems(colnum)));
+      read_column (colnum, data);
+      }
+    /*! Reads the whole column \a colnum into \a data (which is resized
+       accordingly). */
+    template<typename T> void read_entire_column
+      (int colnum, std::vector<T> &data) const
+      {
+      data.resize(safe_cast<tsize>(nelems(colnum)));
       read_column (colnum, data);
       }
 
@@ -247,6 +260,11 @@ class fitshandle
         column \a colnum, starting at offset \a offset in the column. */
     template<typename T> void write_column
       (int colnum, const arr<T> &data, int64 offset=0)
+      { write_column_raw (colnum, &(data[0]), data.size(), offset); }
+    /*! Copies all elements from \a data to the
+        column \a colnum, starting at offset \a offset in the column. */
+    template<typename T> void write_column
+      (int colnum, const std::vector<T> &data, int64 offset=0)
       { write_column_raw (colnum, &(data[0]), data.size(), offset); }
     /*! Copies \a data to the column \a colnum, at the position \a offset. */
     template<typename T> void write_column
