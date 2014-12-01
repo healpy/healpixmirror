@@ -110,15 +110,24 @@ floating point reals. The following points should be noted: \label{page:ioprec}
 
 \newpage
 
+%--------------------------------------------
+%-------------------------------------------- CHANGES
+%--------------------------------------------
 \section[Changes between releases 3.00 and \hpxversion]{%
 Changes between releases 3.00 and \hpxversion}
 \subsection{Version \hpxversion}
 \begin{itemize}
-	\item \healpix-F90 routines and facilities can now also be compiled with
-the free Fortran95 compiler \textbf{g95}
-(\htmladdnormallink{http://www.g95.org/}{http://www.g95.org/})
-	\item a separate {\tt build} directory is used to store the objects,
+	\item \healpixns-F90 routines and facilities can now also be compiled with
+the free Fortran95 compiler \textbf{g95} (\htmladdnormallink{www.g95.org}{http://www.g95.org/})
+ 	\item a separate {\tt build} directory is used to store the objects,
 modules, ... produced during the compilation of the source codes
+	\item improved handling of long FITS keywords, now producing FITS files
+fully compatible with the
+\htmladdnormallink{\tt PyFITS}{http://www.stsci.edu/institute/software_hardware/pyfits} 
+and 
+{\tt Astropy} (\htmladdnormallink{www.astropy.org}{http://www.astropy.org/})
+{\tt Python} libraries
+	\item \textbf{??? How about different parsing of B(l) files in {\tt synfast, smoothing, ...} ???}
 \end{itemize}
 
 \subsection{Version 3.11}
@@ -232,6 +241,9 @@ has been added.
   page~\pageref{page:ioprec})
 \end{itemize}
 }}%%%%%%%%%%%%%%%%%%
+%--------------------------------------------
+%-------------------------------------------- END of CHANGES
+%--------------------------------------------
 
 \newpage
 

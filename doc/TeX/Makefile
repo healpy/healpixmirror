@@ -44,6 +44,12 @@ pdf: $(pdf)
 
 html: $(html) main.html
 
+#
+facilities.vpdf:
+	\rm -f facilities.pdf
+	make facilities.pdf
+	open facilities.pdf
+
 idl.vpdf:
 	\rm -f idl.pdf
 	make idl.pdf
@@ -58,6 +64,7 @@ subroutines.vpdf:
 	\rm -f subroutines.pdf
 	make subroutines.pdf
 	open subroutines.pdf
+#
 
 $(pdf): %.pdf : %.tex healpix.sty $(incs)
 	@echo "$(GREEN_COLOR)==================================$(NO_COLOR)"

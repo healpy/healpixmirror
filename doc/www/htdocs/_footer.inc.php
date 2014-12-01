@@ -17,8 +17,8 @@
 -->
 			
 <h3>Site Search</h3>	
-<!-- Google HTML for Search
-Read more at http://www.askdavetaylor.com/how_can_i_add_a_google_search_box_to_my_web_site.html#pi7uw7S71w8KhJtm.99
+<!-- Google HTML for Search -->
+<!-- Read more at http://www.askdavetaylor.com/how_can_i_add_a_google_search_box_to_my_web_site.html#pi7uw7S71w8KhJtm.99 -->
 <form action="http://www.google.com/search" class="searchform" method="get" target="_blank">
    <table width=100% border="0" cellpadding="0" cellspacing="0">
    <tr align="center"><td colspan="2">
@@ -37,9 +37,9 @@ Read more at http://www.askdavetaylor.com/how_can_i_add_a_google_search_box_to_m
    </td></tr>
 </table>
 </form>		
--->
 
-<!-- Atomz HTML for Search -->
+<!-- Atomz HTML for Search
+   Atomz was stopped in April 2014
 <form method="get" action="http://search.atomz.com/search/" target="_blank">
    <table width=100% border="0" cellpadding="0" cellspacing="0">
    <tr align="center"><td colspan="2">
@@ -57,7 +57,7 @@ Read more at http://www.askdavetaylor.com/how_can_i_add_a_google_search_box_to_m
    </td></tr>
 </table>
 </form>
-			
+ -->			
 						
 <!-- sidebar ends -->		
 </div>
