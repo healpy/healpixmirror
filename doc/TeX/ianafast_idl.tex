@@ -10,7 +10,7 @@
 \abstract{This document describes the \healpix IDL facility \thedocid.}
 
 \begin{facility}
-{This IDL facility provides an interface to 'anafast' F90 and 'anafast\_cxx' C++
+{This IDL facility provides an interface to '\htmlref{anafast}{fac:anafast}' F90 and 'anafast\_cxx' C++
 facilities. It can be used to produce the Spherical Harmonics coefficients
 ($a_{lm}$ of a \healpix map (or pair of maps) and/or the resulting auto (or
 cross) power spectra $C(l)$.}
@@ -46,7 +46,7 @@ file or a memory array
               -- a binpath starting with ./ is interpreted as relative to current directory\\
               -- all other binpathes are relative to \$HEALPIX
 
-\item[/cxx] if set, the C++ back-end anafast\_cxx is invoked instead of F90 anafast,
+\item[/cxx] if set, the C++ back-end anafast\_cxx is invoked instead of F90 \htmlref{anafast}{fac:anafast},
            AND the parameter file is written accordingly
 
 \item[/double]    if set, I/O is done in double precision \default {single precision I/O}
@@ -70,7 +70,7 @@ file or a memory array
    NESTED scheme (does not apply to FITS file), see also /ring and Ordering
 
 \item[nlmax=]   maximum multipole of analysis, *required* for C++ anafast\_cxx,
-      optional for F90 anafast
+      optional for F90 \htmlref{anafast}{fac:anafast}
 
 \item[nmmax=]   maximum degree m, only valid for C++ anafast\_cxx \default {nlmax}
 
@@ -116,7 +116,7 @@ be plotted
 \end{keywords}  
 
 \begin{codedescription}
-{\thedocid\ is an interface to 'anafast' F90 and 'anafast\_cxx' C++
+{\thedocid\ is an interface to '\htmlref{anafast}{fac:anafast}' F90 and 'anafast\_cxx' C++
 facilities. It
 requires some disk space on which to write the parameter file and the other
 temporary files. Most data can be provided/generated as an external FITS
@@ -128,13 +128,13 @@ file, or as a memory array.}
 \begin{related}
   \begin{sulist}{} %%%% NOTE the ``extra'' brace here %%%%
     \item[idl] version \idlversion or more is necessary to run \thedocid.
-    \item[anafast] F90 facility called by \thedocid.
+    \item[\htmlref{anafast}{fac:anafast}] F90 facility called by \thedocid.
     \item[anafast\_cxx] C++ called by \thedocid.
-    \item[\htmlref{ialteralm}{idl:ialteralm}] IDL Interface to F90 alteralm
-%    \item[\htmlref{ianafast}{idl:ianafast}] IDL Interface to F90 anafast and C++ anafast\_cxx
-    \item[\htmlref{iprocess\_mask}{idl:iprocess_mask}] IDL Interface to F90 process\_mask
-    \item[\htmlref{ismoothing}{idl:ismoothing}] IDL Interface to F90 smoothing
-    \item[\htmlref{isynfast}{idl:isynfast}] IDL Interface to F90 synfast
+    \item[\htmlref{ialteralm}{idl:ialteralm}] IDL Interface to F90 \htmlref{alteralm}{fac:alteralm}
+%    \item[\htmlref{ianafast}{idl:ianafast}] IDL Interface to F90 \htmlref{anafast}{fac:anafast} and C++ anafast\_cxx
+    \item[\htmlref{iprocess\_mask}{idl:iprocess_mask}] IDL Interface to F90 \htmlref{process\_mask}{fac:process_mask}
+    \item[\htmlref{ismoothing}{idl:ismoothing}] IDL Interface to F90 \htmlref{smoothing}{fac:smoothing}
+    \item[\htmlref{isynfast}{idl:isynfast}] IDL Interface to F90 \htmlref{synfast}{fac:synfast}
   \end{sulist}
 \end{related}
 

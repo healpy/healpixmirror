@@ -20,13 +20,15 @@ EQNFIX := ./eqnfix.sh
 CSSFILE := common.css
 COLORS = 1
 
-docs  := intro.tex facilities.tex subroutines.tex idl.tex csub.tex install.tex # install.* must be last
+# put last the ones referring to the others
+docs  := intro.tex csub.tex idl.tex subroutines.tex facilities.tex install.tex
 style := healpix.sty # healrut.sty
 dvi   := $(docs:.tex=.dvi)
 ps    := $(dvi:.dvi=.ps)
 gz    := $(dvi:.dvi=.ps.gz)
-pdf   := $(docs:.tex=.pdf) pdf_index.pdf
-vpdf  := $(pdf:.pdf=.vpdf)
+pdf   := $(docs:.tex=.pdf)   pdf_index.pdf
+cross := $(docs:.tex=.cross) pdf_index.cross
+vpdf  := $(docs:.tex=.vpdf)
 html  := $(docs:.tex=.html)
 incs  := hpxversion.tex idlversion.tex gdlversion.tex hpxwebsite.tex healpix_src_url.tex
 
@@ -38,34 +40,25 @@ RED_COLOR=\x1b[31;01m
 BLUE_COLOR=\x1b[34;11m
 endif
 
-
+# all PDF
 pdf: $(pdf)
 	cp $(pdf) ../../healpix-dynamicPages/pdf
+	@echo "$(RED_COLOR)Type   make crossref   to get the cross-references right$(NO_COLOR)"
 
+# reprocess all PDF to get cross-ref right
+crossref: $(cross)
+	cp $(pdf) ../../healpix-dynamicPages/pdf
+
+# all HTML
 html: $(html) main.html
 
-#
-facilities.vpdf:
-	\rm -f facilities.pdf
-	make facilities.pdf
-	open facilities.pdf
+# force individual PDF (re)creation and open it
+$(vpdf): %.vpdf : %.pdf
+	\rm -f $<
+	make $<
+	open $<
 
-idl.vpdf:
-	\rm -f idl.pdf
-	make idl.pdf
-	open idl.pdf
-
-install.vpdf:
-	\rm -f install.pdf
-	make install.pdf
-	open install.pdf
-
-subroutines.vpdf:
-	\rm -f subroutines.pdf
-	make subroutines.pdf
-	open subroutines.pdf
-#
-
+# individual PDF
 $(pdf): %.pdf : %.tex healpix.sty $(incs)
 	@echo "$(GREEN_COLOR)==================================$(NO_COLOR)"
 	@echo "$(GREEN_COLOR)              $@                  $(NO_COLOR)"
@@ -73,6 +66,11 @@ $(pdf): %.pdf : %.tex healpix.sty $(incs)
 	-$(PDFTEX) $(PDFLLAGS) $< 
 	-$(PDFTEX) $(PDFLLAGS) $< >/dev/null
 	-$(PDFTEX) $(PDFLLAGS) $< >/dev/null
+	-$(PDFTEX) $(PDFLLAGS) $< >/dev/null
+
+# cross-reference pass on PDF
+$(cross): %.cross : %.tex healpix.sty $(incs)
+	@echo "$(GREEN_COLOR)regenerating    $*.pdf    for cross-referencing$(NO_COLOR)"
 	-$(PDFTEX) $(PDFLLAGS) $< >/dev/null
 
 .PHONY: main.html
@@ -122,6 +120,7 @@ idl.html: $(style) healpix.perl cssfile
 	@echo "$(GREEN_COLOR)            IDL.HTML              $(NO_COLOR)"
 	@echo "$(GREEN_COLOR)==================================$(NO_COLOR)"
 	mkdir -p $(HTMLDIR)
+	-cp $(HTMLDIR)/*labels.pl /tmp
 	-$(LATEX2HTML) $(L2HFLAGS) -split 4 -prefix idl       -t "HEALPix/IDL subroutines"   idl
 	-$(EQNFIX) $(HTMLDIR)/idl
 	mv -f $(HTMLDIR)/WARNINGS $(HTMLDIR)/WARNINGS_idl
@@ -134,6 +133,7 @@ subroutines.html: $(style) healpix.perl cssfile
 	@echo "$(GREEN_COLOR)      SUBROUTINES.HTML            $(NO_COLOR)"
 	@echo "$(GREEN_COLOR)==================================$(NO_COLOR)"
 	mkdir -p $(HTMLDIR)
+	-cp $(HTMLDIR)/*labels.pl /tmp
 	-$(LATEX2HTML) $(L2HFLAGS) -split 4 -prefix subroutines -t "HEALPix/F90 subroutines" subroutines
 	-$(EQNFIX) $(HTMLDIR)/subroutines
 	mv -f $(HTMLDIR)/WARNINGS $(HTMLDIR)/WARNINGS_subroutines
@@ -146,6 +146,7 @@ facilities.html: $(style) healpix.perl cssfile
 	@echo "$(GREEN_COLOR)        FACILITIES.HTML           $(NO_COLOR)"
 	@echo "$(GREEN_COLOR)==================================$(NO_COLOR)"
 	mkdir -p $(HTMLDIR)
+	-cp $(HTMLDIR)/*labels.pl /tmp
 	-$(LATEX2HTML) $(L2HFLAGS) -split 4 -prefix facilities -t "HEALPix/F90 facilities"  facilities
 	-$(EQNFIX) $(HTMLDIR)/facilities
 	mv -f $(HTMLDIR)/WARNINGS $(HTMLDIR)/WARNINGS_facilities

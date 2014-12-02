@@ -10,7 +10,7 @@
 \abstract{This document describes the \healpix IDL facility \thedocid.}
 
 \begin{facility}
-{This IDL facility provides an interface to F90 'process\_mask' facility. For a
+{This IDL facility provides an interface to F90 '\htmlref{process\_mask}{fac:process_mask}' facility. For a
 given input binary mask, it can determine the angular distance in Radians of each valid (1 valued)
 pixel to the closest invalid (0 valued) pixel, with the option of ignoring small
 clusters of invalid pixels. The distance map can then be used to generate an
@@ -95,7 +95,7 @@ temporary files are not discarded at the end of the run
 \end{keywords}  
 
 \begin{codedescription}
-{\thedocid\ is an interface to 'process\_mask' F90 facility. It
+{\thedocid\ is an interface to '\htmlref{process\_mask}{fac:process_mask}' F90 facility. It
 requires some disk space on which to write the parameter file and the other
 temporary files. Most data can be provided/generated as an external FITS
 file, or as a memory array.}
@@ -107,10 +107,11 @@ file, or as a memory array.}
   \begin{sulist}{} %%%% NOTE the ``extra'' brace here %%%%
     \item[idl] version \idlversion or more is necessary to run \thedocid.
     \item[process\_mask] F90 facility called by \thedocid.
-    \item[\htmlref{ialteralm}{idl:ialteralm}] IDL Interface to F90 alteralm
-    \item[\htmlref{ianafast}{idl:ianafast}] IDL Interface to F90 anafast and C++ anafast\_cxx
-    \item[\htmlref{ismoothing}{idl:ismoothing}] IDL Interface to F90 smoothing
-    \item[\htmlref{isynfast}{idl:isynfast}] IDL Interface to F90 synfast
+    \item[\htmlref{ialteralm}{idl:ialteralm}] IDL Interface to F90 \htmlref{alteralm}{fac:alteralm}
+    \item[\htmlref{ianafast}{idl:ianafast}] IDL Interface to F90 \htmlref{anafast}{fac:anafast} and C++ anafast\_cxx
+%    \item[\htmlref{iprocess\_mask}{idl:iprocess_mask}] IDL Interface to F90 \htmlref{process\_mask}{fac:process_mask}
+    \item[\htmlref{ismoothing}{idl:ismoothing}] IDL Interface to F90 \htmlref{smoothing}{fac:smoothing}
+    \item[\htmlref{isynfast}{idl:isynfast}] IDL Interface to F90 \htmlref{synfast}{fac:synfast}
   \end{sulist}
 \end{related}
 

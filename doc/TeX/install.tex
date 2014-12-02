@@ -58,7 +58,7 @@
 %%%%http://tex.stackexchange.com/questions/41539/does-hyperref-work-between-two-files
 %% add xr-hyper (part of hyperref) to used packages, *BEFORE* hyperref (or html)
 \newcommand{\facname}{} % must be here because it is in idl.tex
-\newcommand{\FACNAME}{}
+\newcommand{\FACNAME}{} % must be here because it is in idl.tex
 \externaldocument{csub}
 \externaldocument{idl}
 \externaldocument{facilities}
@@ -1108,7 +1108,13 @@ fully compatible with the
 and 
 {\tt Astropy} (\htmladdnormallink{www.astropy.org}{http://www.astropy.org/})
 {\tt Python} libraries
-	\item \textbf{??? How about different parsing of B(l) files in {\tt synfast, smoothing, ...} ???}
+	\item improved FITS file parsing in 
+\htmlref{{\tt generate\_beam}}{sub:generate_beam},
+affecting the external $B(l)$ reading in the F90 facilities 
+\htmlref{{\tt alteralm}}{fac:alteralm}, 
+\htmlref{{\tt synfast}}{fac:synfast}, 
+\htmlref{{\tt sky\_ng\_sim}}{fac:sky_ng_sim}, 
+\htmlref{{\tt smoothing}}{fac:smoothing}.
 \end{itemize}
 
 \subsubsection[IDL]{\linklatexhtml{IDL}{idl.pdf}{idl.htm}}

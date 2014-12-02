@@ -261,6 +261,7 @@ mkdir -p ${docautodir}/html
 \rm -f ${docautodir}/html/*
 cd doc/TeX
 make pdf
+make crossref
 make html > /dev/null
 cd $here
 
