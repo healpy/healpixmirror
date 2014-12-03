@@ -46,7 +46,7 @@ pdf: $(pdf)
 	@echo "$(RED_COLOR)Type   make crossref   to get the cross-references right$(NO_COLOR)"
 
 # reprocess all PDF to get cross-ref right
-crossref: $(cross)
+crossref: $(pdf) $(cross)
 	cp $(pdf) ../../healpix-dynamicPages/pdf
 
 # all HTML
@@ -67,10 +67,12 @@ $(pdf): %.pdf : %.tex healpix.sty $(incs)
 	-$(PDFTEX) $(PDFLLAGS) $< >/dev/null
 	-$(PDFTEX) $(PDFLLAGS) $< >/dev/null
 	-$(PDFTEX) $(PDFLLAGS) $< >/dev/null
+	@echo "$(GREEN_COLOR)          $@  done                $(NO_COLOR)\n"
 
 # cross-reference pass on PDF
 $(cross): %.cross : %.tex healpix.sty $(incs)
 	@echo "$(GREEN_COLOR)regenerating    $*.pdf    for cross-referencing$(NO_COLOR)"
+	-$(PDFTEX) $(PDFLLAGS) $< >/dev/null
 	-$(PDFTEX) $(PDFLLAGS) $< >/dev/null
 
 .PHONY: main.html

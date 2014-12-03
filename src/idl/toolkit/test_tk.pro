@@ -165,9 +165,9 @@ detect_tk_error, nside, pixel, pixel2, error, legend='ERROR:   R -> V -> A -> N 
 t1 = systime(1)
 
 if (error eq 0) then begin
-    print, ' -----------------'
-    print, '   TEST PASSED'
-    print, ' -----------------'
+    print, ' -----------------------'
+    print, '   TEST PASSED ('+snside+')'
+    print, ' -----------------------'
     print, 'Time [s]: ', t1-t0
 endif
 

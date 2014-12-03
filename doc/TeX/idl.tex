@@ -142,12 +142,13 @@ See \linklatexhtml{the Installation Document}{install.pdf}{install.html} for mor
 \section{Changes between releases 3.11 and \hpxversion}
 
 \begin{itemize}
+%
 \item addition of \htmlref{{\tt ialteralm}}{{idl:ialteralm}} to modify Spherical
 Harmonics coefficients ($a_{lm}$).
-
+%
 \item addition of \htmlref{{\tt planck\_colors}}{{idl:planck_colors}} to modify
 current color table to one used in Planck 2013 publications.
-
+%
 \item \htmlref{{\tt cartview, gnomview, mollview,
 orthview}}{idl:mollview}: 
 \begin{itemize} 
@@ -161,19 +162,23 @@ missing pixels, background and foreground labels and lines.
 \mylink{idl:mollview:colt}{{\tt COLT='planck2'}} to use the Planck color tables
 defined in \htmlref{{\tt planck\_colors}}{{idl:planck_colors}}
 \end{itemize}
-
-
+%
 \item Bugs correction in 
 \mylink{idl:bin_llcl}{{\tt bin\_llcl}},
 \mylink{idl:query_disc}{{\tt query\_disc}}.
-
+%
+\item update of the required
+    \htmladdnormallink{{\tt IDL-astron} library}{http://idlastro.gsfc.nasa.gov/homepage.html}
+    routines, and their supporting \htmladdnormallink{\tt Coyote}{http://www.idlcoyote.com}
+    routines (2014-11-10).
+%
 \end{itemize}
 
 \section{Changes between releases 3.00 and 3.11}
 %Several routines have been added or improved since version 3.00, as listed below.
 
 \begin{itemize}
-
+%
 \item Latest edition (version 3.11)
 \begin{itemize}
 	\item %
@@ -181,21 +186,20 @@ defined in \htmlref{{\tt planck\_colors}}{{idl:planck_colors}}
 		\htmlref{{\tt pix2ang\_nest}}{{idl:pix_tools}} routines
 		now accept scalar arguments
 \end{itemize}
-
-
+%
 \item Previous edition (version 3.10)
 \begin{itemize}
 	\item bug corrections: 
 	\htmlref{{\tt query\_disc}}{{idl:query_disc}}: correct handling of empty disc; 
 	\htmlref{{\tt bin\_llcl}}{{idl:bin_llcl}}: correct handling of optional argument.
-
+%
 	\item double precision of input now preserved in
 	\htmlref{{\tt gaussbeam}}{{idl:gaussbeam}} and 
 	\htmlref{{\tt euler\_matrix\_new}}{{idl:euler_matrix_new}}.
-
+%
 	\item \htmlref{{\tt fits2cl}}{idl:fits2cl}: addition of \mylink{idl:fits2cl:planck1}{{\tt /PLANCK1}} keyword
 to read best fit $C(l)$ model to Planck 2013 + external data.
-
+%
 	\item it is now possible to read a specific FITS file extension identified by its
 	(0-based) number or its case-insensitive EXTNAME value with the {\tt Extension}
 	keyword added to 
@@ -204,7 +208,7 @@ to read best fit $C(l)$ model to Planck 2013 + external data.
 	\htmlref{{\tt read\_fits\_map}}{{idl:read_fits_map}},
 	\htmlref{{\tt read\_fits\_s}}{{idl:read_fits_s}} and 
 	\htmlref{{\tt read\_tqu}}{{idl:read_tqu}}.
-
+%
 	\item update of the required
 	\htmladdnormallink{{\tt IDL-astron} library}{http://idlastro.gsfc.nasa.gov/homepage.html}
 	routines, and their supporting \htmladdnormallink{\tt Coyote}{http://www.idlcoyote.com}
