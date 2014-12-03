@@ -17,7 +17,7 @@ pro tbinfo,h,tb_str, errmsg = errmsg, NOSCALE= noscale
 ;       .width - width of the field in bytes, integer vector
 ;       .idltype - idltype of field, byte vector
 ;               7 - string, 4- real*4, 3-integer*4, 5-real*8
-;       .numval - repeat count, longword vector
+;       .numval - repeat count, 64 bit longword vector
 ;       .tunit - string unit numbers, string vector
 ;       .tnull - integer null value for the field, stored as a string vector
 ;                 so that an empty string indicates that TNULL is not present
@@ -60,6 +60,7 @@ pro tbinfo,h,tb_str, errmsg = errmsg, NOSCALE= noscale
 ;          of elements, added ERRMSG    W. Landsman        July 2006
 ;       Treat logical as character string 'T' or 'F' W. Landsman  October 2006
 ;       Added NOSCALE keyword  W. Landsman   March 2007
+;       Make .numval 64 bit for very large tables  W. Landsman   April 2014
 ;-
 ;----------------------------------------------------------------------------
  On_error,2
@@ -75,18 +76,18 @@ pro tbinfo,h,tb_str, errmsg = errmsg, NOSCALE= noscale
  tfields = sxpar( h, 'TFIELDS', COUNT = N_TFields)
  if N_TFields EQ 0 then begin    ;Legal Binary Table Header?
         errmsg = 'Invalid FITS binary table header. keyword TFIELDS is missing'
-	if not save_err then message,errmsg else return
+	if ~save_err then message,errmsg else return
    endif	    
 
  if tfields EQ 0 then begin     ;Any fields in table?
         errmsg = 'No Columns in FITS binary table, keyword TFIELDS = 0'
-	if not save_err then message,errmsg else return
+	if ~save_err then message,errmsg else return
   endif	    
  
 ; Create output arrays with default values
 
  idltype = intarr(tfields) & tnull = idltype
- numval = lonarr(tfields) & tbcol = numval & width = numval & maxval = numval
+ numval = lon64arr(tfields) & tbcol = numval & width = numval & maxval = numval
  tunit = replicate('',tfields) & ttype = tunit & tdisp = tunit & tnull = tunit
 
  type = sxpar(h,'TTYPE*', COUNT = N_ttype)
@@ -94,8 +95,7 @@ pro tbinfo,h,tb_str, errmsg = errmsg, NOSCALE= noscale
 
  tform = strtrim( sxpar(h,'tform*', COUNT = N_tform), 2)     ; column format
  if N_tform EQ 0 then $
-        message,'Invalid FITS table header -- keyword TFORM not present'
-
+        message,'Invalid FITS table header -- keyword TFORM not present
  tform =  strupcase(strtrim(tform,2))
                                                 
  unit = strtrim(sxpar(h, 'TUNIT*', COUNT = N_tunit),2)     ;physical units
@@ -104,7 +104,7 @@ pro tbinfo,h,tb_str, errmsg = errmsg, NOSCALE= noscale
  null = sxpar(h, 'TNULL*', COUNT = N_tnull)      ;null data value
  if N_tnull GT 0 then tnull[0] = null
 
- if not keyword_set(noscale) then begin
+ if ~keyword_set(noscale) then begin
   tscal = ptrarr(tfields,/all)
   tzero = ptrarr(tfields,/all)
   index = strtrim(indgen(tfields)+1,2)
@@ -133,8 +133,8 @@ NEXT_CHAR:
         if ichar GE len[i] then message, $
            'Invalid format specification for keyword TFORM ' + strtrim(i+1)
         char = strupcase( strmid(tform[i],ichar,1) )
-        if ( (char GE '0') and ( char LE '9')) then begin
-                ichar = ichar + 1
+        if ( (char GE '0') && ( char LE '9')) then begin
+                ichar++
                 goto, NEXT_CHAR
         endif
 

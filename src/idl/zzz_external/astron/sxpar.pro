@@ -97,7 +97,7 @@ function SXPAR, hdr, name, abort, COUNT=matches, COMMENT = comments, $
 ;       both are too widely used to drop either one.
 ;
 ; PROCEDURES CALLED:
-;       GETTOK(), VALID_NUM()
+;       cgErrorMsg(), GETTOK(), VALID_NUM()
 ; MODIFICATION HISTORY:
 ;       DMS, May, 1983, STPAR Written.
 ;       D. Lindler Jan 90 added ABORT input parameter
@@ -120,9 +120,10 @@ function SXPAR, hdr, name, abort, COUNT=matches, COMMENT = comments, $
 ;       W.Landsman Aug 2008  Use vector form of VALID_NUM()
 ;       W. Landsman Jul 2009  Eliminate internal recursive call
 ;       W. Landsman Apr 2012  Require vector numbers be greater than 0
+;       W. Landsman Apr 2014  Don't convert Long64 numbers to double
+;       W. Landsman Nov 2014  Use cgErrorMsg rather than On_error,2
 ;-
 ;----------------------------------------------------------------------
- On_error,2
  compile_opt idl2
 
  if N_params() LT 2 then begin
@@ -131,14 +132,22 @@ function SXPAR, hdr, name, abort, COUNT=matches, COMMENT = comments, $
      print,'   Output Keywords:   COUNT=,  COMMENT= '
      return, -1
  endif 
-
+ 
+ 
+ 
  VALUE = 0
  if N_params() LE 2 then begin
       abort_return = 0
       abort = 'FITS Header'
  end else abort_return = 1
- if abort_return then On_error,1 else On_error,2
-
+ if abort_return then On_error,1 else begin
+      Catch, theError
+      if theError NE 0 then begin
+           Catch,/Cancel
+	   void = cgErrorMsg(/quiet)
+	   return,-1
+	   endif
+   endelse
 ;       Check for valid header
 
 ;Check header for proper attributes.
@@ -164,7 +173,7 @@ function SXPAR, hdr, name, abort, COUNT=matches, COMMENT = comments, $
 ;  Otherwise, extend NAME with blanks to eight characters.
 
     endif else begin  
-                while strlen(nam) LT 8 do nam = nam + ' ' ;Make 8 chars long
+                while strlen(nam) LT 8 do nam += ' ' ;Make 8 chars long
                 vector = 0      
     endelse
 
@@ -219,14 +228,14 @@ function SXPAR, hdr, name, abort, COUNT=matches, COMMENT = comments, $
                   endap = strpos(test, "'", next_char)      ;Ending apostrophe  
                   if endap LT 0 then $ 
                             MESSAGE,'Value of '+name+' invalid in '+abort
-                  value = value + strmid( test, next_char, endap-next_char )  
+                  value += strmid( test, next_char, endap-next_char )  
 
 ;  Test to see if the next character is also an apostrophe.  If so, then the
 ;  string isn't completed yet.  Apostrophes in the text string are signalled as
 ;  two apostrophes in a row.
 
                  if strmid( test, endap+1, 1) EQ "'" then begin    
-                    value = value + "'"
+                    value += "'"
                     next_char = endap+2         
                     goto, NEXT_APOST
                  endif      
@@ -304,9 +313,9 @@ NOT_COMPLEX:
                        endif else begin                   ;Long integer
                             lmax = 2.0d^31 - 1.0d
                             lmin = -2.0d^31      ;Typo fixed Feb 2010
-                            value = double(value)
+                            value = long64(value)
                             if (value GE lmin) && (value LE lmax) then $
-                                value = long(value)
+                                value = long(value) 
                        endelse
 
 GOT_VALUE:

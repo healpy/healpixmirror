@@ -63,6 +63,7 @@ PRO wcs_check_ctype, ctype, projection_type, coord_type
 ;
 ;       1.0     Jul 2013 Extracted from WCSXY2SPH & WCSSPH2XY
 ;       1.1     Aug 2013 Now does actually stop if error detected.
+;       1.2     Jan 2014 Recognize when RA, DEC reversed, W. Landsman
 ;-
 COMPILE_OPT IDL2, hidden
 ON_ERROR, 1
@@ -94,9 +95,14 @@ IF N_elements( ctype ) GE 1 THEN BEGIN
             coord_form1 = 3
             coord_type = STRMID(coord,0,2)
         END
+	'C-': BEGIN
+	     coord_form1 = 1
+	     bad_coord = coord NE 'DEC-'
+	     coord_type = 'C'
+	     END
         ELSE: bad_coord = 1B
     ENDCASE
-    
+   
     IF bad_coord THEN BEGIN
         MESSAGE, 'Unrecognised first coordinate type:' +  coord, /continue
         MESSAGE, 'Should be ''RA--'' or ''xLON'' or ''xxLN'''
@@ -116,6 +122,12 @@ IF N_elements( ctype ) GE 1 THEN BEGIN
                 coord_form2 = 1
                 coord_head2='C'
             END
+	    '--': BEGIN
+            coord_form2 = 1
+            bad_coord = coord NE 'RA--'
+            coord_head2 = 'C'
+             END
+
             'AT': BEGIN
                 bad_coord = STRMID(coord,1,3) NE 'LAT'
                 coord_head2 = STRMID(coord,0,1)

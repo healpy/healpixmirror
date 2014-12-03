@@ -23,7 +23,9 @@ pro fits_read,file_or_fcb,data,header,group_par,noscale=noscale, $
 ;               more efficient for the user to call FITS_OPEN and leave the
 ;               file open until all extensions are read. FPACK 
 ;               ( http://heasarc.gsfc.nasa.gov/fitsio/fpack/ ) compressed FITS 
-;               files can be read provided that the FPACK software is installed.  
+;               files can be read provided that the FPACK software is installed.
+;               Both Gzip compressed (.gz) and Unix compressed (*.Z) files can
+;               be read, although there is a performance penalty..
 ;
 ; OUTPUTS:
 ;       DATA - data array.  If /NOSCALE is specified, BSCALE and BZERO
@@ -154,13 +156,13 @@ pro fits_read,file_or_fcb,data,header,group_par,noscale=noscale, $
 ;
 ;               FITS_OPEN, 'myfile.fits', fcb
 ;               image_number = 6
-;               ns = fcb.axis(0,4)
-;               nl = fcb.axis(1,4)
+;               ns = fcb.axis[0,4]
+;               nl = fcb.axis[1,4]
 ;               i1 = (ns*nl)*(image_number-1)
 ;               i2 = i2 + ns*nl-1
 ;               FITS_READ,fcb,image,header,first=i1,last=i2
 ;               image = reform(image,ns,nl,/overwrite)
-;               FITS_CLOSE
+;               FITS_CLOSE, fcb
 ;
 ; PROCEDURES USED:
 ;       FITS_CLOSE, FITS_OPEN
@@ -194,6 +196,8 @@ pro fits_read,file_or_fcb,data,header,group_par,noscale=noscale, $
 ;       Make sure FIRST is long64 when computing position W.L. October 2009
 ;       Read FPACK compressed files, W.L.  December 2010
 ;       Don't assume FCB has a FCOMPRESS tag  W.L./Satori UeNO   September 2012
+;       Make sure opened pipes are closed if fcb not left open W.L. April 2012
+;       Fix bug with /data_only introduced Dec 2010      W. L. April 2014
 ;-
 ;
 ;-----------------------------------------------------------------------------
@@ -235,7 +239,7 @@ pro fits_read,file_or_fcb,data,header,group_par,noscale=noscale, $
 ;
         fcbtype = size(file_or_fcb,/type)
         fcbsize = n_elements(file_or_fcb)
-        if (fcbsize ne 1) or ((fcbtype ne 7) and (fcbtype ne 8)) then begin
+        if (fcbsize ne 1) || ((fcbtype ne 7) && (fcbtype ne 8)) then begin
                 message = 'Invalid Filename or FCB supplied'
                 goto,error_exit
         end
@@ -399,7 +403,7 @@ pro fits_read,file_or_fcb,data,header,group_par,noscale=noscale, $
                         hpdu[0:n1-2], $
                         'BEGIN EXTENSION HEADER ----------------------------', $
                         'END     ']
-                n0 = n0 + n1 + 1
+                n0 += n1 + 1
             end
 ;
 ; add extension header
@@ -452,7 +456,7 @@ read_data:
 ; starting data position
 ;
 
-	skip = fcb.start_data[enum] - position
+	skip = data_only EQ 0 ? fcb.start_data[enum] - position : 0
         position = fcb.start_data[enum]
 ;
 ; find correct group
@@ -543,9 +547,12 @@ read_data:
 done:   
         if fcompress then begin 
 	        free_lun,fcb.unit 
-		ff = strmid(fcb.filename,1,strlen(fcb.filename)-2)	
-		spawn,ff,unit=unit,/sh, stderr = stderr		
-		fcb.unit = unit
+		ff = strmid(fcb.filename,1,strlen(fcb.filename)-2)
+;Rewind the file to the beginning, if it might be used again			
+		if fcbtype NE 7 then begin 
+		 spawn,ff,unit=unit,/sh, stderr = stderr		
+		 fcb.unit = unit
+		endif
         endif else $		
         if fcbtype eq 7 then fits_close,fcb else file_or_fcb.last_extension=enum
         !err = 1

@@ -5,6 +5,9 @@ PRO DAYCNV, XJD, YR, MN, DAY, HR
 ; PURPOSE:
 ;       Converts Julian dates to Gregorian calendar dates
 ;
+; EXPLANATION:
+;       Duplicates the functionality of the intrinsic JUL2GREG procedure
+;       which was introduced in V8.2.1
 ; CALLING SEQUENCE:
 ;       DAYCNV, XJD, YR, MN, DAY, HR
 ;

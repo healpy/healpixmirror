@@ -81,6 +81,7 @@ function tbget, hdr_or_tbstr, tab, field, rows, nulls, NOSCALE = noscale, $
 ;       Add an i = i[0] for V6.0 compatibility  W. Landsman  August 2003
 ;       Use faster BYTEORDER byteswapping  W. Landsman April 2006
 ;       Free pointers if FITS header supplied W. Landsman March 2007
+;       Use V6.0 notation W. Landsman  April 2014
 ;-
 ;------------------------------------------------------------------
  On_error,2
@@ -121,7 +122,7 @@ function tbget, hdr_or_tbstr, tab, field, rows, nulls, NOSCALE = noscale, $
  
  ELSE: begin
       i = field[0]-1
-      if (i LT 0 ) or (i GT tfields) then $
+      if (i LT 0 ) || (i GT tfields) then $
             message,'Field number must be between 1 and ' +strtrim(tfields,2)
       end
 
@@ -157,12 +158,11 @@ function tbget, hdr_or_tbstr, tab, field, rows, nulls, NOSCALE = noscale, $
  if row[0] LT 0 then nrow = nrows else  begin
      nrow = N_elements(row)
                                               ; check for valid row numbers
-     if (min(row) LT 0) or (max(row) GT (nrows-1)) then $
+     if (min(row) LT 0) || (max(row) GT (nrows-1)) then $
         message,'ERROR - Invalid row number: FITS table contains '+ $
         strtrim(nrows,2) + ' rows'
  endelse 
 ; get column
-
 
  if row[0] LT 0 then $                                 ;All rows?
         d = tab[tbcol:tbcol + numval*width-1,*]  $
@@ -221,12 +221,12 @@ function tbget, hdr_or_tbstr, tab, field, rows, nulls, NOSCALE = noscale, $
  endcase
 
 
- if not keyword_set(NOSCALE) then begin
+ if ~keyword_set(NOSCALE) then begin
     if tag_exist(tb_str,'TSCAL') then begin
         tscale = *tb_str.tscal[i]
         tzero = *tb_str.tzero[i]
-        unsgn_int = (tzero EQ 32768) and (tscale EQ 1)
-        unsgn_lng = (tzero EQ 2147483648) and (tscale EQ 1)
+        unsgn_int = (tzero EQ 32768) && (tscale EQ 1)
+        unsgn_lng = (tzero EQ 2147483648) && (tscale EQ 1)
         if unsgn_int then d = uint(d) - uint(32768) $
         else if unsgn_lng then d = ulong(d) - ulong(2147483648) else $
         if ( (tscale NE 1.0) or (tzero NE 0.0) ) then $
@@ -244,7 +244,7 @@ function tbget, hdr_or_tbstr, tab, field, rows, nulls, NOSCALE = noscale, $
 
 ; Extract correct rows if vector supplied
 
- if size(hdr_or_tbstr,/TYPE) NE 8 and (not keyword_set(NOSCALE)) then begin
+ if size(hdr_or_tbstr,/TYPE) NE 8 && (~keyword_set(NOSCALE)) then begin
        ptr_free, tb_str.tscal
        ptr_free, tb_str.tzero
  endif       

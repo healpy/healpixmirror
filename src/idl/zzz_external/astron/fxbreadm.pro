@@ -119,7 +119,7 @@
 ;                 column read, 1 meaning success and 0 meaning failure.
 ;
 ; Calls       : 
-;       IEEE_TO_HOST, FXPAR(), WHERENAN()
+;       FXPAR(), WHERENAN()
 ; Common      : 
 ;       Uses common block FXBINTABLE--see "fxbintable.pro" for more
 ;       information.
@@ -169,6 +169,7 @@
 ;   Read 64bit integer columns, E. Hivon, Mar 2008
 ;   Add support for columns with TNULLn keywords, C. Markwardt, Apr 2010
 ;   Add support for files larger than 2 GB, C. Markwardt, 2012-04-17
+;   Use V6 notation, remove IEEE_TO_HOST  W. Landsman Mar 2014
 ;
 ;-
 ;
@@ -202,9 +203,9 @@ PRO FXBREADM_CONV, BB, DD, CTYPE, PERROW, NROWS, $
   COUNT = 0L
   CASE 1 OF
       ;; Integer types
-      (CTYPE EQ 2 OR CTYPE EQ 3 or ctype eq 14): BEGIN
-          IF NOT KEYWORD_SET(NOIEEE) OR KEYWORD_SET(VARICOL) THEN $
-            IEEE_TO_HOST, DD 
+      (CTYPE EQ 2 || CTYPE EQ 3 || ctype eq 14): BEGIN
+          IF ~KEYWORD_SET(NOIEEE) || KEYWORD_SET(VARICOL) THEN $
+            SWAP_ENDIAN_INPLACE, DD, /SWAP_IF_LITTLE 
           ;; Check for TNULL values
           ;; We will convert to NAN values later (or if the user
           ;; requested a different value we will use that)
@@ -215,10 +216,10 @@ PRO FXBREADM_CONV, BB, DD, CTYPE, PERROW, NROWS, $
       END
 
       ;; Floating and complex types
-      (CTYPE GE 4 OR CTYPE LE 6 OR CTYPE EQ 9): BEGIN
-          IF NOT KEYWORD_SET(NOIEEE) THEN BEGIN
+      (CTYPE GE 4 || CTYPE LE 6 || CTYPE EQ 9): BEGIN
+          IF ~KEYWORD_SET(NOIEEE) THEN BEGIN
               IF N_ELEMENTS(NANVALUE) GT 0 THEN W=WHERENAN(DD,COUNT)
-              IEEE_TO_HOST, DD
+              SWAP_ENDIAN_INPLACE, DD, /SWAP_IF_LITTLE
           ENDIF
       END
 
@@ -231,9 +232,9 @@ PRO FXBREADM_CONV, BB, DD, CTYPE, PERROW, NROWS, $
 ;  If the parameters TZERO and TSCAL are non-trivial, then adjust the array by
 ;  these values.
 ;
-  IF ((NOT KEYWORD_SET(NOIEEE) AND NOT KEYWORD_SET(NOSCALE)) AND $
-      (NOT KEYWORD_SET(VARICOL)) AND $
-      (N_ELEMENTS(TZERO) EQ 1 AND N_ELEMENTS(TSCAL) EQ 1)) THEN BEGIN
+  IF ((~KEYWORD_SET(NOIEEE) && ~KEYWORD_SET(NOSCALE)) && $
+      (~KEYWORD_SET(VARICOL)) && $
+      (N_ELEMENTS(TZERO) EQ 1 && N_ELEMENTS(TSCAL) EQ 1)) THEN BEGIN
 
       IF KEYWORD_SET(DF) THEN BEGIN
           ;; Default to float
@@ -241,7 +242,6 @@ PRO FXBREADM_CONV, BB, DD, CTYPE, PERROW, NROWS, $
           TZERO = FLOAT(TZERO)
       ENDIF
 
-      FORWARD_FUNCTION UINT, ULONG
       IF CTYPE EQ 2 AND TSCAL[0] EQ 1 AND TZERO[0] EQ 32768 THEN BEGIN
           ;; SPECIAL CASE: Unsigned 16-bit integer
           DD = UINT(DD) - UINT(32768)
@@ -250,7 +250,7 @@ PRO FXBREADM_CONV, BB, DD, CTYPE, PERROW, NROWS, $
           ;; SPECIAL CASE: Unsigned 32-bit integer
           DD = ULONG(DD) - ULONG(2147483648)
       ENDIF ELSE BEGIN
-          IF (TSCAL[0] NE 0) AND (TSCAL[0] NE 1) THEN DD = TSCAL[0]*DD
+          IF (TSCAL[0] NE 0) && (TSCAL[0] NE 1) THEN DD = TSCAL[0]*DD
           IF TZERO[0] NE 0 THEN DD = DD + TZERO[0]
       ENDELSE
   ENDIF
@@ -258,7 +258,7 @@ PRO FXBREADM_CONV, BB, DD, CTYPE, PERROW, NROWS, $
 ;
 ;  Store NANVALUE everywhere where the data corresponded to IEEE NaN.
 ;
-  IF COUNT GT 0 AND N_ELEMENTS(NANVALUE) GT 0 THEN DD[W] = NANVALUE
+  IF COUNT GT 0 && N_ELEMENTS(NANVALUE) GT 0 THEN DD[W] = NANVALUE
   
 END
 
@@ -405,10 +405,10 @@ PRO FXBREADM, UNIT, COL, $
                         VIRTUAL[I] = 1
                         FOUND[I] = 1
                     ENDIF
-                ENDIF ELSE IF NOT FOUND[I] THEN BEGIN
+                ENDIF ELSE IF ~FOUND[I] THEN BEGIN
                     IF NOTFOUND EQ '' THEN NOTFOUND = MYCOL[I] $
                     ELSE NOTFOUND = NOTFOUND +', ' + MYCOL[I]
-                    NNOTFOUND = NNOTFOUND + 1
+                    NNOTFOUND++
                 ENDIF
 
             ENDFOR
@@ -436,7 +436,7 @@ PRO FXBREADM, UNIT, COL, $
 ;  Step through each column index
         MESSAGE = ''
         FOR I = 0, NUMCOLS-1 DO BEGIN
-            IF NOT FOUND[I] THEN GOTO, LOOP_END_COLCHECK
+            IF ~FOUND[I] THEN GOTO, LOOP_END_COLCHECK
             IF VIRTUAL[I] THEN GOTO, LOOP_END_COLCHECK
 
             IF (ICOL[I] LT 0) OR (ICOL[I] GE TFIELDS[ILUN]) THEN BEGIN
@@ -553,7 +553,7 @@ PRO FXBREADM, UNIT, COL, $
         NROWS = ROW2-ROW1+1
         FOR I = 0L, NUMCOLS-1 DO BEGIN
 
-            IF NOT FOUND[I] THEN GOTO, LOOP_END_DIMS
+            IF ~FOUND[I] THEN GOTO, LOOP_END_DIMS
             ;;  Data type of the input.
             IF VIRTUAL[I] THEN BEGIN
                 ; Virtual column: read from keyword itself
@@ -585,7 +585,7 @@ PRO FXBREADM, UNIT, COL, $
                 COLDIM[I,0:(NDIMS-1)] = DIMS
                 IF NROWS GT 1 THEN BEGIN
                     COLDIM[I,NDIMS] = NROWS
-                    COLNDIM[I] = COLNDIM[I]+1
+                    COLNDIM[I]++
                 ENDIF
 
             ENDELSE
@@ -683,7 +683,7 @@ PRO FXBREADM, UNIT, COL, $
 ;  Loop through the data in chunks
 ;
         WHILE NROWS GT 0 DO BEGIN
-        J = J + 1
+        J++
         NR  = NROWS < BUFFROWS
         OFFSET1 = NAXIS1[ILUN]*POS
 
@@ -705,7 +705,7 @@ PRO FXBREADM, UNIT, COL, $
         FOR I = 0, NUMCOLS-1 DO BEGIN
            
             ;; Extract the proper rows and columns
-            IF NOT FOUND[I] THEN GOTO, LOOP_END_STORE
+            IF ~FOUND[I] THEN GOTO, LOOP_END_STORE
             IF VIRTUAL[I]   THEN GOTO, LOOP_END_STORE
 
             ;; Extract the data from the byte array and convert it

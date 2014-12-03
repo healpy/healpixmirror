@@ -97,9 +97,10 @@ pro putast, hdr, astr, crpix, crval, ctype, EQUINOX=equinox, $
 ;       PUTAST does not delete astrometry parameters already present in the 
 ;       header, unless they are explicity overwritten.   
 ;
-;       As of April 2012, PUTAST will add SIP 
-;      ( http://fits.gsfc.nasa.gov/registry/sip.html ) distortion parameters to
-;       a FITS header if present in the astrometry structure.  
+;       If present in the astrometry structure, PUTAST will add SIP 
+;      ( http://fits.gsfc.nasa.gov/registry/sip.html ) or TPV 
+;       ( http://fits.gsfc.nasa.gov/registry/tpvwcs.html ) distortion parameters
+;       to a FITS header.  
 ; PROMPTS:
 ;       If only a header is supplied, the user will be prompted for a plate 
 ;       scale, the X and Y coordinates of a reference pixel, the RA and
@@ -142,6 +143,9 @@ pro putast, hdr, astr, crpix, crval, ctype, EQUINOX=equinox, $
 ;         than structure supplied  W.L.  January 2013 
 ;       Allow for version 2 astrometry structure J. P. Leahy July 2013
 ;       Bug fix in interactive use JPL Aug 2013.
+;       Support IRAF TNX projection  M. Sullivan U. of Southamptom March 2014
+;       PV1_3, PV1_4 keywords take precedence over LONPOLE, LATPOLE keywords
+;                   WL, August 2014
 ;-
 
  compile_opt idl2
@@ -378,20 +382,29 @@ RD_CEN:
      sxaddpar, hdr, 'CRVAL'+ax[1]+alt, double(crval[1]), comm[1], 'HISTORY'
      hist = ' World Coordinate System parameters written'
   endif
- 
-    if N_elements(longpole) EQ 1 then $
-        sxaddpar, hdr, 'LONPOLE' +alt ,double(longpole), $
+
+; 
+    if N_elements(longpole) EQ 1 then begin
+        astr.pv1[3] = longpole
+        test = sxpar(hdr,'LONPOLE',count=N_lonpole)
+        if N_lonpole EQ 1 then $
+            sxaddpar, hdr, 'LONPOLE' +alt ,double(longpole), $
 	 ' Native longitude of ' +coord + ' pole', 'HISTORY', /SaveC
+    endif 
  
-    if N_elements(latpole) EQ 1 then $
-        sxaddpar, hdr, 'LATPOLE' +alt ,double(latpole), $
-	 ' ' + coord + ' latitude of native pole', 'HISTORY',/SaveC 
+    if N_elements(latpole) EQ 1 then begin
+       astr.pv1[4] = latpole
+       test = sxpar(hdr,'LATPOLE',count=N_latpole)
+        if N_latpole EQ 1 then $
+         sxaddpar, hdr, 'LATPOLE' +alt ,double(latpole), $
+          ' Native latitude of ' +coord + ' pole', 'HISTORY', /SaveC
+    endif	 
 
     Npv2 = N_elements(pv2)
     if Npv2 GT 0 then begin
          ctyp = strmid(ctype[0],5,3)
 ; List of WCS types for which no PV2 values should be written	 
-         no_pv2 = ['TAN','ARC','STG','CAR','MER','SFL','PAR','MOL','AIT', $
+         no_pv2 = ['TPV','TNX','TAN','ARC','STG','CAR','MER','SFL','PAR','MOL','AIT', $
 	           'PC0','TSC','CSC','QSC' ]
 	 if total(no_pv2 EQ ctyp,/int) EQ 0 then begin
 	       pv2str = 'PV2_' 	   
@@ -407,9 +420,14 @@ RD_CEN:
     endif
      
     IF astr2 THEN BEGIN
-        pv1str = 'PV'+(astr.reverse ? ax[1] : ax[0])+'_' ; Longitude axis PV 
-        FOR i=0,4 DO SXADDPAR, hdr, pv1str + STRTRIM(i,2)+alt, $
-                     astr.pv1[i], ' Projection parameters', 'HISTORY', /SaveC
+       ctyp = strmid(ctype[0],5,3)
+; List of WCS types for which no PV1 values should be written	 
+       no_pv1 = ['TPV','TNX','TAN']
+       if total(no_pv1 EQ ctyp,/int) EQ 0 then begin
+          pv1str = 'PV'+(astr.reverse ? ax[1] : ax[0])+'_' ; Longitude axis PV 
+          FOR i=0,4 DO SXADDPAR, hdr, pv1str + STRTRIM(i,2)+alt, $
+            astr.pv1[i], ' Projection parameters', 'HISTORY', /SaveC
+       ENDIF
         IF FINITE(astr.mjdobs) THEN SXADDPAR, hdr, 'MJD-OBS', astr.mjdobs, $
           ' Modified Julian day of observations', 'HISTORY', /SaveC
         IF astr.dateobs NE 'UNKNOWN' THEN SXADDPAR, hdr, 'DATE-OBS', $
@@ -420,26 +438,47 @@ RD_CEN:
     
 ;Add SIP distortion parameters if present  
 
-  if size(astr,/tname) EQ 'STRUCT' && tag_exist(astr,'DISTORT') then $
+    if size(astr,/tname) EQ 'STRUCT' && tag_exist(astr,'DISTORT') then begin
        if astr.distort.name EQ 'SIP' then begin 
 ; First remove any SIP parameters in the FITS header.
-       nord = sxpar(hdr, 'A_Order',Count = N)
-       if (N GT 0) && (nord GT 0) then begin 
-            key = ''
-            for i=0,nord do begin
-	       for j=0,nord-i do begin
-               if i+j NE 0 then $
-	          key = [key, strtrim(i,2) + '_' + strtrim(j,2)]
-		  endfor
-		  endfor
-		  key = key[1:*]
-		  oldkey = ['A_' + key, 'B_' + key, 'AP_' + key,'BP_'+key]
-		  sxdelpar,oldkey, hdr
-       endif		  
-       add_distort, hdr, astr
+          nord = sxpar(hdr, 'A_Order',Count = N)
+          if (N GT 0) && (nord GT 0) then begin 
+             key = ''
+             for i=0,nord do begin
+                for j=0,nord-i do begin
+                   if i+j NE 0 then $
+                     key = [key, strtrim(i,2) + '_' + strtrim(j,2)]
+                endfor
+             endfor
+             key = key[1:*]
+             oldkey = ['A_' + key, 'B_' + key, 'AP_' + key,'BP_'+key]
+             sxdelpar,oldkey, hdr
+          endif
+          add_distort, hdr, astr
+       ENDIF ELSE IF astr.distort.name EQ 'TNX' then BEGIN
+
+          ;; remove any existing WAT keywords
+          w=WHERE(STREGEX(hdr,'^WAT2_',/BOOLEAN,/FOLD),count,COMPLEMENT=w1)
+          IF(count GT 0)THEN hdr=hdr[w1]
+          w=WHERE(STREGEX(hdr,'^WAT1_',/BOOLEAN,/FOLD),count,COMPLEMENT=w1)
+          IF(count GT 0)THEN hdr=hdr[w1]
+          w=WHERE(STREGEX(hdr,'^WAT0_',/BOOLEAN,/FOLD),count,COMPLEMENT=w1)
+          IF(count GT 0)THEN hdr=hdr[w1]
+          ;; and add in the new ones
+          add_distort, hdr, astr
+       ENDIF ELSE IF astr.distort.name EQ 'TPV' then BEGIN
+
+          FOR i=0,N_ELEMENTS(astr.pv1)-1 DO BEGIN
+             SXADDPAR, hdr, 'PV1_'+STRTRIM(i,2)+alt, astr.pv1[i]
+          ENDFOR
+          FOR i=0,N_ELEMENTS(astr.pv2)-1 DO BEGIN
+             SXADDPAR, hdr, 'PV2_'+STRTRIM(i,2)+alt, astr.pv2[i]
+          ENDFOR
+          
+       ENDIF
     endif
-
- sxaddhist,'PUTAST: ' + strmid(systime(),4,20) + hist,hdr
-
- return
+    
+    sxaddhist,'PUTAST: ' + strmid(systime(),4,20) + hist,hdr
+    
+    return
  end

@@ -43,7 +43,7 @@
 ;			IF ERRMSG NE '' THEN ...
 ;
 ; Calls       : 
-;	CHECK_FITS, GET_DATE, HOST_TO_IEEE, FXADDPAR, FXPAR
+;	CHECK_FITS, GET_DATE, FXADDPAR, FXPAR
 ; Common      : 
 ;	None.
 ; Restrictions: 
@@ -103,10 +103,12 @@
 ;               Remove !ERR in call to CHECK_FITS, Use ARG_PRESENT()
 ;       Version 5, William Thompson, GSFC, 22 September 2004
 ;               Recognize unsigned integer types
-;       Version 5.1 W. Landsman 14 November 204 
+;       Version 5.1 W. Landsman 14 November 2004 
 ;               Allow for need for 64bit number of bytes
 ;       Version 6, Craig Markwardt, GSFC, 30 May 2005
 ;               Ability to append to existing files
+;       Version 7, W. Landsman GSFC, Mar 2014
+;               Remove HOST_TO_IEEE, Use V6.0 notation
 ; Version     : 
 ;	Version 6, 30 May 2005
 ;-
@@ -128,7 +130,7 @@
 	    IF (FXPAR(HEADER,'NAXIS') NE 0) THEN BEGIN
 		MESSAGE = 'NAXIS should be zero for no primary data array'
 		GOTO, HANDLE_ERROR
-	    END ELSE IF (NOT FXPAR(HEADER,'EXTEND')) THEN BEGIN
+	    END ELSE IF (~FXPAR(HEADER,'EXTEND')) THEN BEGIN
 		MESSAGE = 'EXTEND should be true for no primary data array'
 		GOTO, HANDLE_ERROR
 	    ENDIF
@@ -142,7 +144,7 @@
         SZ = SIZE(DATA)
         TYPE = SZ[SZ[0]+1]
         IF N_PARAMS() EQ 3 THEN NEWDATA = DATA
-	IF NOT KEYWORD_SET(NOUPDATE) THEN BEGIN
+	IF ~KEYWORD_SET(NOUPDATE) THEN BEGIN
 	    BZERO  = FXPAR(HEADER,'BZERO')
 	    BSCALE = FXPAR(HEADER,'BSCALE')
 	    GET_DATE,DTE
@@ -156,11 +158,11 @@
 ;  stored in the file.
 ;
             BZERO0 = 0
-            IF (TYPE EQ 12) AND (NOT KEYWORD_SET(NOUPDATE)) THEN BEGIN
+            IF (TYPE EQ 12) && (~KEYWORD_SET(NOUPDATE)) THEN BEGIN
                 BZERO0 = '8000'X
                 NEWDATA = FIX(TEMPORARY(NEWDATA) - BZERO)
             ENDIF
-            IF (TYPE EQ 13) AND (NOT KEYWORD_SET(NOUPDATE)) THEN BEGIN
+            IF (TYPE EQ 13) && (~KEYWORD_SET(NOUPDATE)) THEN BEGIN
                 BZERO0 = '80000000'X
                 NEWDATA = LONG(TEMPORARY(NEWDATA) - BZERO)
             ENDIF
@@ -269,7 +271,7 @@
 ;  If necessary, then byte-swap the data before writing it out.  Also, replace
 ;  any values corresponding data dropout with IEEE NaN.
 ;
-	    IF (N_ELEMENTS(NANVALUE) EQ 1) AND (TYPE GE 4) AND	$
+	    IF (N_ELEMENTS(NANVALUE) EQ 1) && (TYPE GE 4) &&	$
 		    (TYPE LE 6) THEN BEGIN
 		W = WHERE(DATA EQ NANVALUE, COUNT)
 		CASE TYPE OF
@@ -280,7 +282,7 @@
 		ENDCASE
 	    END ELSE COUNT = 0
 ;
-	    HOST_TO_IEEE, NEWDATA
+	    SWAP_ENDIAN_INPLACE, NEWDATA, /SWAP_IF_LITTLE
 	    IF COUNT GT 0 THEN NEWDATA[W] = NAN
 ;
 	    WRITEU,UNIT,NEWDATA

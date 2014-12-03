@@ -55,7 +55,9 @@ function strn, number, LENGTH = length, PADTYPE = padtype, PADCHAR = padchar, $
 ;	Ma7 92 Work correctly for byte values (W. Landsman)
 ;	19-NOV-92 Added Patch to work around IDL 2.4.0 bug which caused an
 ;	error when STRN('(123)') was encountered.            (E. Deutsch)
-;	Converted to IDL V5.0   W. Landsman   September 1997
+;;       Handles array input, M. Sullivan March 2014
+;       Use V6.0 notation W. Landsman April 2014
+;       Fix problem with vector strings of different length WL Aug 2014
 ;-
  On_error,2
   if ( N_params() LT 1 ) then begin
@@ -70,26 +72,29 @@ function strn, number, LENGTH = length, PADTYPE = padtype, PADCHAR = padchar, $
   padc = byte(padchar)
   pad = string(replicate(padc[0],200))
 
-  ss=size(number) & PRN=1 & if (ss[1] eq 7) then PRN=0
-  if ( Format EQ '') then tmp = strtrim( string(number, PRINT=PRN),2) $
-    else tmp = strtrim( string( number, FORMAT=Format, PRINT=PRN),2)
-
-  if (N_elements(length) eq 0) then length=strlen(tmp)
-
-  if (strlen(tmp) gt length) then tmp=strmid(tmp,0,length)
-
-  if (strlen(tmp) lt length) and (padtype eq 0) then begin
-    tmp = tmp+strmid(pad,0,length-strlen(tmp))
-    endif
-
-  if (strlen(tmp) lt length) and (padtype eq 1) then begin
-    tmp = strmid(pad,0,length-strlen(tmp))+tmp
-    endif
-
-  if (strlen(tmp) lt length) and (padtype eq 2) then begin
-    padln=length-strlen(tmp) & padfr=padln/2 & padend=padln-padfr
-    tmp=strmid(pad,0,padfr)+tmp+strmid(pad,0,padend)
-    endif
-
-  return,tmp
+  tmp=STRARR(N_ELEMENTS(number))
+  FOR i=0L,N_ELEMENTS(number)-1 DO BEGIN
+     ss=size(number[i]) & PRN=1 & if (ss[1] eq 7) then PRN=0
+     if ( Format EQ '') then tmp[i] = strtrim( string(number[i], PRINT=PRN),2) $
+     else tmp[i] = strtrim( string( number[i], FORMAT=Format, PRINT=PRN),2)
+     
+     if (N_elements(length) eq 0) then len=strlen(tmp[i]) else len = length
+     
+     if (strlen(tmp[i]) gt len) then tmp[i]=strmid(tmp[i],0,len)
+  
+     if (strlen(tmp[i]) lt len) && (padtype eq 0) then begin
+        tmp[i] += strmid(pad,0,len-strlen(tmp[i]))
+     endif
+     
+     if (strlen(tmp[i]) lt len) && (padtype eq 1) then begin
+        tmp[i] = strmid(pad,0,len-strlen(tmp[i]))+tmp[i]
+     endif
+     
+     if (strlen(tmp[i]) lt len) && (padtype eq 2) then begin
+        padln=len-strlen(tmp[i]) & padfr=padln/2 & padend=padln-padfr
+        tmp[i]=strmid(pad,0,padfr)+tmp[i]+strmid(pad,0,padend)
+     endif
+  endfor
+;;Return an array if passed an array, or not if not
+  IF ( SIZE(number,/DIMENSION) EQ 0 ) THEN RETURN,tmp[0] ELSE RETURN,tmp
 end
