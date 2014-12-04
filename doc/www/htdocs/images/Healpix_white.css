@@ -171,9 +171,7 @@ td {
 	font: inherit; /* same as parent level */
 }
 
-/* table.tablelist td {font-size: 100%;}*/
-/* ul.tablelist li {font-size: 100%; } */
-.tablelist {	font-size: 100%; }
+.tablelist {font-size: 100%; }
 
 /* end - table */
 

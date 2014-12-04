@@ -207,9 +207,11 @@ testDocLocation(){
 
     # test final value of $docdir
     if [ ! -d ${docdir} ]; then
-	echo "Can not find HEALPIX documentation"
+	echo "Can not find local HEALPIX documentation"
 	echo "(expected to be in \${HEALPIX}/doc/ or in \${HEALPIXDOC}/)"
 	exit 1
+# 	echo "Will try to use remote HEALPIX documentation"
+# 	docdir="http://healpix.sourceforge.net/doc"
     fi
 }
 # ======================================================================

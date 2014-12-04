@@ -1,10 +1,10 @@
-Healpix _HPV_ Installation
+HEALPix _HPV_ Installation
 =========================
 
-Healpix _HPV_ contains 5 independent packages (Fortran90, IDL, C, C++ and java) 
+HEALPix _HPV_ contains 6 independent packages (Fortran90, IDL, C, C++, java and python) 
 whose installation procedure is summarized below.
 
-Every effort has been made to make the installation and usage of Healpix easy and straightforward.
+Every effort has been made to make the installation and usage of HEALPix easy and straightforward.
 However we highly recommend the user to read the documentation
 (type:
    healpix_doc
@@ -23,6 +23,7 @@ compiled and tested with the commands
 
 the 'configure' script lets you pick which package(s) you want to configure.
 Type 'configure -h' for more information on that script online options.
+
 
 Installing the F90 package
 --------------------------
@@ -52,13 +53,13 @@ Configuring the IDL package
 
 The 
    ./configure [-L]
-script *must* be run to ensure that the Healpix IDL routines will be available
+script *must* be run to ensure that the HEALPix IDL routines will be available
 and to select the softwares used to visualize the images (Postscript and Png) 
 created by those routines.
 Then the
   hidl
   hidlde
-commands will give you access to IDL augmented of Healpix routines.
+commands will give you access to IDL augmented of HEALPix routines.
 
 For more information on the IDL package type
   healpix_doc, /html
@@ -69,8 +70,6 @@ from within IDL
 or see
   doc/html/idl.htm
   doc/pdf/idl.pdf
-
-
 
 
 Installing the C package
@@ -96,8 +95,7 @@ For more information on the C package see
 Installing the C++ package
 --------------------------
 
-To install the C++ package, a cfitsio tar ball (of the form cfitisio*.tar.gz) 
-must be available, then do
+To install the C++ package, do
 
    ./configure [-L]
    make cpp-all
@@ -125,6 +123,22 @@ For more information on the java package see
 or 
   src/java/healpixdocs/index.html
 
+
+Installing the python package (healpy)
+--------------------------------------
+
+To install healpy, do
+
+   ./configure [-L]
+   make healpy-all
+   make healpy-test
+
+For more information on healpy, see
+   src/healpy/README.rst
+or
+   http://healpy.readthedocs.org/en
+
+
 =========================================
 
 
@@ -138,7 +152,7 @@ or type
    healpix_doc
 
 
-For questions/comments/suggestions on Healpix: 
+For questions/comments/suggestions on HEALPix: 
   healpix-support AT lists.sourceforge.net
 
 

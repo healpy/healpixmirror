@@ -106,7 +106,7 @@ Wavelets on the Sphere:
 </li>
 
 <li>
-<a href="http://galprop.stanford.edu/index.php">GALPROP</a>: Numerical code for calculating the propagation of relativistic charged particles and the diffuse emissions they produce (now compatible with HEALPix 3.11)
+<a href="http://galprop.stanford.edu/index.php">GALPROP</a>: Numerical code for calculating the propagation of relativistic charged particles and the diffuse emissions they produce (now compatible with HEALPix 3.11 and later)
 </li>
 
 <li>

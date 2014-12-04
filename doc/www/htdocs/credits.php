@@ -46,8 +46,10 @@
               the first large release of the HEALPix software (Version 1.10).
               <br>
               <br>
-              The following releases of the HEALPix software (Versions 1.20 to 2.2) and the current one (Version 3.0) benefited
+              The following releases of the HEALPix software (Versions 1.20 to 3.11) and the current one (Version 3.20) benefited
               from:
+		<ul>
+		<li>
 		the continuing dedicated effort of E. Hivon, 
 		<u>Martin Reinecke</u> (MPA), and A. J. Banday, 
 		the work of 
@@ -69,15 +71,25 @@
 		<u>Paddy Leahy</u> (<a href="http://phweb.ph.man.ac.uk/">Manchester University</a>),
 
 		<u>Graca Rocha</u> (<a href="http://www.ipac.caltech.edu/">IPAC</a>),
-               the inclusion of <u>Cyrille Rosset</u>&#039;s 
-		(<a href="http://www.apc.univ-paris7.fr/APC_CS/en">APC</a>) and <u>Andrea Zonca</u>&#039;s 
-		(<a href="http://www.ucsb.edu/">UCSB</a>)
+		</li>
+		<li>
+               the inclusion of 
+		<u>Cyrille Rosset</u>&#039;s
+		(<a href="http://www.apc.univ-paris7.fr/APC_CS/en">APC</a>),  
+		<u>Andrea Zonca</u>&#039;s
+		(<a href="http://www.ucsb.edu/">UCSB</a>), and
+		<u>Leo Singer</u>&#039;s
+		(<a href="www.caltech.edu">Caltech</a>)
 		healpy package,
-
+		</li>
+		<li>
               and numerous contributions
               made by HEALPix users (see the
 
               <a href="#acknowledgments">Acknowledgments</a>).
+		</li>
+		</ul>
+
 
 </p>
 <a name="team"></a>
@@ -113,8 +125,14 @@
 		C, C++ and Java developments;
 		</li>
 
+		<!---
 		<li>
 		C. Rosset: Python developments;
+		</li>
+		--->
+
+		<li>
+		L. Singer: Python developments;
 		</li>
 
 		<li>
@@ -161,6 +179,7 @@
                       <li>    Michela Botti   			</li>
 		      <li>    Anthony 		Challinor 	</li>
                       <li>    St&eacute;phane Colombi   	</li>
+		      <li>    Alain Coulais			</li>
                       <li>    Giancarlo de Gasperis   		</li>
 		      <li>    Clive Dickinson     		</li>
                       <li>    Herv&eacute; Dole   		</li>
@@ -174,6 +193,7 @@
 		      <li>    Reijo 		Keskitalo 	</li>
                       <li>    Alex Kim   			</li>
                       <li>    Ted Kisner   			</li>
+		      <li>    Masakazu A.R. Kobayashi		</li>
                     </ul>
                 </td>
 
@@ -185,16 +205,17 @@
 
                 <td width="350" valign="top">
                     <ul>
-		      <li>    Masakazu A.R. Kobayashi		</li>
 		      <li>    Eiichiro Komatsu			</li>
 		      <li>    Wayne Landsman			</li>
                       <li>    Guy Le Meur   			</li>
 		      <li>    Samuel 		Leach		</li>
-                      <li>    Anthony Lewis   			</li>
+                      <li>    Antony Lewis   			</li>
                       <li>    Davide Maino   			</li>
+		      <li>    Jean-Baptiste Marquette		</li>
 		      <li>    Marc-Antoine Miville-Deschenes  	</li>
                       <li>    Serge Monkewitz   		</li>
                       <li>    Paolo Natoli   			</li>
+		      <li>    Chris North			</li>
                       <li>    Clive Page   			</li>
                       <li>    Tim Pearson   			</li>
                       <li>    William Pence   			</li>
@@ -202,6 +223,7 @@
                       <li>    Torsti Poutanen   		</li>
                       <li>    Simon Prunet   			</li>
                       <li>    Benoit Revenu   			</li>
+		      <li>    Christophe Ringeval		</li>
 		      <li>    Cyrille 		Rosset		</li>
                       <li>    Rosa Ruiloba   			</li>
                       <li>    David N. Spergel   		</li>
