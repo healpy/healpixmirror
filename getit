@@ -7,11 +7,17 @@ healpygit=0 # 1: uses GIT, 0: uses tar.gz
 healpyrepo="https://github.com/healpy/healpy.git"
 #healpyarchive="https://github.com/healpy/healpy/archive/"
 healpyarchive="https://pypi.python.org/packages/source/h/healpy/"
-               https://pypi.python.org/packages/source/h/healpy/healpy-1.8.1.tar.gz
-
-healpixbranch="trunk"
-healpixbranch_cxx="branches/branch_v310r461"
-healpixbranch_java="branches/branch_v310r461"
+##               https://pypi.python.org/packages/source/h/healpy/healpy-1.8.1.tar.gz
+mixed=1
+if [ "$mixed" == "1" ]; then
+    healpixbranch="trunk"
+    healpixbranch_cxx="branches/branch_v310r461"
+    healpixbranch_java="branches/branch_v310r461"
+else
+    healpixbranch="branches/branch_v320rXXX"
+    healpixbranch_cxx=${healpixbranch}
+    healpixbranch_java=${healpixbranch}
+fi
 healpixrepo="svn://svn.code.sf.net/p/healpix/code/" # read-only
 #healpixrepo="https://healpix.svn.sourceforge.net/svnroot/healpix/"
 #
@@ -25,10 +31,10 @@ read answer
 VERSION=$version
 
 echo "Version: ${VERSION}    in ${WRKDIR}"
-echo "healpy:   ${healpyrepo}   ${healpytag}"
+echo "healpy:   ${healpyrepo}   ${healpytag"
 echo "healpix:  ${healpixrepo}${healpixbranch}"
-echo "    C++:  ${healpixrepo}${healpixbranch_cxx}"
-echo "   java:  ${healpixrepo}${healpixbranch_java}"
+[ ${healpixbranch_cxx} != ${healpixbranch} ] && echo "    C++:  ${healpixrepo}${healpixbranch_cxx}"
+[ ${healpixbranch_java} != ${healpixbranch} ] && echo "   java:  ${healpixrepo}${healpixbranch_java}"
 printf "Do you want to proceed (y/n) [n]: "
 read answer
 doit=0
