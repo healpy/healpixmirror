@@ -28,7 +28,8 @@ updateVersion () {
   echoLn "Enter version number ($current) "
   read answer
   [ "x$answer" != "x" ] && version="$answer"
-  verstex=`echo $version | sed "s|\.|\\\\\\_|g"`
+  #verstex=`echo $version | sed "s|\.|\\\\\\_|g"`
+  verstex=`echo $version | sed "s|\.|\\\\\\\\\\\\\\\\\\\\\\\\\\\_|g"`
   echo $version $verstex $reldate
 
   # update configure script
@@ -92,14 +93,14 @@ updateVersion () {
   mv $tmpfile $infile
 
   # update C++ code version
-  infile='src/cxx/cxxsupport/announce.cc'
-  echoBlu "editing ${infile}"
-  cat $infile | sed 's|string version =.*$|string version =\"v$version\";|g' > $tmpfile
-  mv $tmpfile $infile
-  infile='src/cxx/autotools/configure.ac'
-  echoBlu "editing ${infile}"
-  cat $infile | sed "s|AC_INIT.*|AC_INIT([healpix_cxx], [$version])|g" > $tmpfile
-  mv $tmpfile $infile
+#   infile='src/cxx/cxxsupport/announce.cc'
+#   echoBlu "editing ${infile}"
+#   cat $infile | sed 's|string version =.*$|string version =\"v$version\";|g' > $tmpfile
+#   mv $tmpfile $infile
+#   infile='src/cxx/autotools/configure.ac'
+#   echoBlu "editing ${infile}"
+#   cat $infile | sed "s|AC_INIT.*|AC_INIT([healpix_cxx], [$version])|g" > $tmpfile
+#   mv $tmpfile $infile
 
   # update test/*.par files (2013-09)
   echoBlu "editing  test/*.par  files"
@@ -305,6 +306,8 @@ echoRed "removing $p directory..."
 
 echoRed "removing C++ make_release..."
 \rm -rf src/cxx/autotools/make_release
+\rm -rf src/cxx/make_release # 2014-12-04
+
 
 for p in getit hand_editions.sh; do
     echo "removing ${p} ..."
