@@ -14,7 +14,7 @@ if [ "$mixed" = "1" ]; then
     healpixbranch_cxx="branches/branch_v310r461"
     healpixbranch_java="branches/branch_v310r461"
 else
-    healpixbranch="branches/branch_v320rXXX"
+    healpixbranch="branches/branch_v320r670"
     healpixbranch_cxx=${healpixbranch}
     healpixbranch_java=${healpixbranch}
 fi
