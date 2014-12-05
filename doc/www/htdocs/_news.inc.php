@@ -7,7 +7,7 @@
 
 <h2>Data Releases</h2>
 <p>
-  2013-03-21: <a href="http://pla.esac.esa.int/pla/index.html">Planck first (2013) data release</a><br />
+  2013-03-21: <a href="http://www.cosmos.esa.int/web/planck/planck-legacy-archive">Planck first (2013) data release</a><br />
   2012-12-20: <a href="http://lambda.gsfc.nasa.gov/product/map/current/">WMAP final (9 year) data release</a><br />
 </p>
 

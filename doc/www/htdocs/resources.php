@@ -5,7 +5,11 @@
 <br>
 <ul>
 <li>
-The <a href="http://www.rssd.esa.int/index.php?project=Planck">Planck</a> satellite full sky maps, <a href="http://www.sciops.esa.int/index.php?project=PLANCK&page=Planck_Published_Papers">observed at 30 to 857 GHz with unprecedented accuracy</a>, and their decomposition in cosmological and astrophysical components are available in HEALPix format from ESA <a href="http://www.sciops.esa.int/index.php?project=planck&page=Planck_Legacy_Archive">Planck Legacy Archive</a>, and NASA <a href="http://irsa.ipac.caltech.edu/">Infrared Science Archive</a>
+The <a href="http://www.cosmos.esa.int/web/planck">Planck</a> satellite full sky maps, 
+<a href="http://www.cosmos.esa.int/web/planck/publications">observed at 30 to 857 GHz with unprecedented accuracy</a>, 
+and their decomposition in cosmological and astrophysical components are available in HEALPix format from ESA 
+<a href="http://www.cosmos.esa.int/web/planck/planck-legacy-archive">Planck Legacy Archive</a>, 
+and NASA <a href="http://irsa.ipac.caltech.edu/">Infrared Science Archive</a>
 </li>
 
 <li>
@@ -21,7 +25,9 @@ data, including DMR, DIRBE, and FIRAS
     </li>
 
 <li>
-The Haslam and <a href="http://lambda.gsfc.nasa.gov/product/iras/" >IRAS</a> maps
+The radio and infrared <a href="http://lambda.gsfc.nasa.gov/product/foreground/f_products.cfm">foregrounds</a> maps
+including CO, Dust, Synchrotron, H-alpha and HI, as well as
+<a href="http://lambda.gsfc.nasa.gov/product/iras/">IRAS</a> maps
 </li>
 <!--
 <li>
@@ -33,7 +39,7 @@ The <a href="http://www.drao-ofr.hia-iha.nrc-cnrc.gc.ca/26msurvey/data.html"
 <li>
 The Schlegel, Finkbeiner, and Davis
     (<a href="http://lanl.arxiv.org/abs/astro-ph/9710327" >astro-ph/9710327</a>,
-     <a href="http://www.journals.uchicago.edu/ApJ/journal/contents/ApJ/v500n2.html" >ApJ. 500, p.525</a>),
+     <a href="http://adsabs.harvard.edu/abs/1998ApJ...500..525S" >ApJ. 500, p.525</a>),
     combined
     <a href="http://astro.berkeley.edu/davis/dust/index.html" >COBE/DIRBE-IRAS/SISSA dust emission map</a>
 </li>
@@ -84,7 +90,7 @@ python wrapper to HEALPix (now included in HEALPix package)
   </li>
 
 <li>
-<a href="http://prof.planck.fr/article141.html" > PolSPICE</a>: 
+<a href="http://www2.iap.fr/users/hivon/software/PolSpice" > PolSPICE</a>: 
 Temperature+Polarization power spectrum extraction tool dealing with the effects the
 cut-sky, beam smoothing, noise contamination, ...
     </li>
@@ -95,10 +101,10 @@ cut-sky, beam smoothing, noise contamination, ...
 
 <li>
 Wavelets on the Sphere: 
-<a href="http://jstarck.free.fr/isap.html">iSAP</a>, 
+<a href="http://www.cosmostat.org//isap.html">iSAP</a>, 
     <a href="http://irfu.cea.fr/en/Phocea/Vie_des_labos/Ast/ast_visu.php?id_ast=895">MRS</a>,
     <a href="http://www.s2let.org/">S2LET</a>, 
-    <a href="http://www.apc.univ-paris7.fr/Downloads/adamis/spherelab/spherelab.html">SphereLab</a>
+    <a href="https://gitorious.org/spherelib">spherelib (previously SphereLab)</a>
 </li>
 
 <li>
@@ -106,7 +112,7 @@ Wavelets on the Sphere:
 </li>
 
 <li>
-<a href="http://galprop.stanford.edu/index.php">GALPROP</a>: Numerical code for calculating the propagation of relativistic charged particles and the diffuse emissions they produce (now compatible with HEALPix 3.11 and later)
+<a href="http://galprop.stanford.edu/index.php">GALPROP</a>: Numerical code for calculating the propagation of relativistic charged particles and the diffuse emissions they produce (now compatible with HEALPix 3.11 and newer)
 </li>
 
 <li>
@@ -141,7 +147,7 @@ Misc
 <a href="http://en.wikipedia.org/wiki/Healpix" >Wikipedia Page on HEALPix</a>
 </li>
 <li>
-	HEALPix on <a href="https://www.ohloh.net/p/healpix">Ohloh</a> and
+	HEALPix on <a href="https://www.openhub.net/p/healpix">Ohloh</a> and
 <a href="http://www.digplanet.com/wiki/HEALPix#">digplanet</a>
 </li>
 </ul>
