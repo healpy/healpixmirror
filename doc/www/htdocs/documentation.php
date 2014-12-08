@@ -5,179 +5,58 @@
 >pdf</a> and can be browsed in <a href="html/main.htm">html</a>
 
               
+<?php
+function doc_entry($de_title, $de_htmlfile, $de_pdffile, $de_gatag)
+# create entry of (optional PDF file) and html file
+{echo '<tr>   ';
+ echo ' <td width="285"> ' . $de_title . "</td> \n" ;
+ if (strlen($de_pdffile) > 0) {
+   echo ' <td width="75" align="center">';
+   echo '     <a href="' . $de_pdffile . '" target="_top"';
+   echo '       onClick="_ga(\'send\', \'event\', \'PDF\', \'Download\', \'' . $de_gatag . '\');" ';
+   echo '     >pdf</a> ';
+   echo '   <br> ';
+   echo "  (" . number_format(filesize($de_pdffile)/1024/1024,2) . " MiB)" ;
+   echo " </td> \n" ;
+ } else {
+   echo ' <td width="75" align="center">    &nbsp;     </td> ' . "\n";
+ }
+ echo ' <td width="75" align="center">' ;
+ echo '     <a href="' . $de_htmlfile .'" target="_top">html</a> ' ;
+ echo '    <br><br> ';
+ echo " </td> </tr> \n";
+}
+?>
+
 <table cellSpacing=0 cellPadding=0 border=0 width=585>
 
-    <tr>
-<td width="285">
-    The HEALPix Primer 
-    </td>
-
-<td width="75" align="center">
-    <a href="pdf/intro.pdf" target="_top"
-  onClick="_ga('send', 'event', 'PDF', 'Download', 'PDF Introduction');"
->pdf</a>
-<br>
-(448 KB)
-  </td>
-<td width="75" align="center">
-    <a href="html/intro.htm" target="_top">html</a>
-<br><br>
-</td>
-
+<!--  begin list -->
+<?php doc_entry("The HEALPIX primer", "html/intro.htm", "pdf/intro.pdf", "PDF Introduction") ?>
 <tr><td> &nbsp; </td></tr>
 
-<tr>
-<td width="285">
-    HEALPix Facility Installation Guidelines 
-    </td>
-
-<td width="75" align="center">
-    <a href="pdf/install.pdf" target="_top"
-  onClick="_ga('send', 'event', 'PDF', 'Download', 'PDF Installation');"
->pdf</a>
-<br>
-(256 KB)
-  </td>
-<td width="75" align="center">
-    <a href="html/install.htm" target="_top">html</a>
-<br><br>
-</td>
-</tr>
-
+<?php doc_entry("HEALPIX Facility Installation Guidelines", "html/install.htm", "pdf/install.pdf", "PDF Installation") ?>
 <tr><td> &nbsp; </td></tr>
 
-<tr>
-<td width="285">
-    HEALPix Fortran90 Facilities User Guidelines 
-    </td>
-
-<td width="75" align="center">
-    <a href="pdf/facilities.pdf" target="_top"
-  onClick="_ga('send', 'event', 'PDF', 'Download', 'PDF F90 Facilities');"
->pdf</a>
-<br>
-(528 KB)
-  </td>
-<td width="75" align="center">
-    <a href="html/facilities.htm" target="_top">html</a>
-<br><br>
-</td>
-</tr>
-
+<?php doc_entry("HEALPIX Fortran90 Facilities User Guidelines", "html/facilities.htm", "pdf/facilities.pdf", "PDF F90 Facilities") ?>
 <tr><td> &nbsp; </td></tr>
 
-<tr>
-<td width="285">
-    HEALPix Fortran90 Subroutines Overview 
-    </td>
-
-<td width="75" align="center">
-    <a href="pdf/subroutines.pdf" target="_top"
-  onClick="_ga('send', 'event', 'PDF', 'Download', 'PDF F90 Subroutines');"
->pdf</a>
-<br>
-(880 KB)
-  </td>
-<td width="75" align="center">
-    <a href="html/subroutines.htm" target="_top">html</a>
-<br><br>
-</td>
-</tr>
-
+<?php doc_entry("HEALPIX Fortran90 Subroutines Overview", "html/subroutines.htm", "pdf/subroutines.pdf", "PDF F90 Subroutines") ?>
 <tr><td> &nbsp; </td></tr>
 
-<tr>
-<td width="285">
-    HEALPix IDL Facilities Overview 
-    </td>
-
-<td width="75" align="center">
-    <a href="pdf/idl.pdf" target="_top"
-  onClick="_ga('send', 'event', 'PDF', 'Download', 'PDF IDL Facilities');"
->pdf</a>
-<br>
-(1256 KB)
-  </td>
-<td width="75" align="center">
-    <a href="html/idl.htm" target="_top">html</a>
-<br><br>
-</td>
-</tr>
-
+<?php doc_entry("HEALPIX IDL Facilities Overview", "html/idl.htm", "pdf/idl.pdf", "PDF IDL Facilities") ?>
 <tr><td> &nbsp; </td></tr>
 
-<tr>
-<td width="285">
-    HEALPix C Subroutines Overview 
-    </td>
-
-<td width="75" align="center">
-    <a href="pdf/csub.pdf" target="_top"
-  onClick="_ga('send', 'event', 'PDF', 'Download', 'PDF C subroutines');"
->pdf</a>
-<br>
-(120 KB)
-  </td>
-<td width="75" align="center">
-    <a href="html/csub.htm" target="_top">html</a>
-<br><br>
-</td>
-</tr>
-
+<?php doc_entry("HEALPIX C Subroutines Overview", "html/csub.htm", "pdf/csub.pdf", "PDF C Subroutines Overview") ?>
 <tr><td> &nbsp; </td></tr>
 
-
-<tr>
-<td width="285">
-    HEALPix C++ Facilities and Subroutines Overview 
-    </td>
-
-<td width="75" align="center">
-    &nbsp;
-</td>
-
-<td width="75" align="center">
-    <a href="html/index_cxx.htm" target="_top">html</a>
-<br><br>
-</td>
-
-</tr>
-
+<?php doc_entry("HEALPIX C++ Facilities and Subroutines Overview", "html/index_cxx.htm", "", "") ?>
 <tr><td> &nbsp; </td></tr>
 
-<tr>
-<td width="285">
-    HEALPix Java Overview 
-    </td>
-
-<td width="75" align="center">
-    &nbsp;
-</td>
-
-<td width="75" align="center">
-    <a href="html/java/index.html" target="_top">html</a>
-<br><br>
-</td>
-
-</tr>
-
+<?php doc_entry("HEALPix Java Overview", "html/java/index.html", "", "") ?>
 <tr><td> &nbsp; </td></tr>
 
-<tr>
-<td width="285">
-    HEALPix Python Overview (healpy) 
-  </td>
-
-<td width="75" align="center">
-    &nbsp;
-</td>
-
-<td width="75" align="center">
-    <a href="http://healpy.readthedocs.org/en/1.5.0/" target="_top">html</a>
-<br><br>
-</td>
-
-</tr>
+<?php doc_entry("HEALPix Python Overview (healpy)", "http://healpy.readthedocs.org/en", "", "") ?>
+<!--   end list -->
 
 </table>
 </p>
