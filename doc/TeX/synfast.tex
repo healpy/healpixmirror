@@ -53,11 +53,12 @@ in \healpix v2.20. }
       `' (empty string),  mo map is synthesized but the $a_{lm}$ generated can be output.
     \item[{outfile\_alms = }] Defines the FITS file in which to output $a_{lm}$ used
       for the simulation (default= `')
-     \item[{simul\_type = }] Defines the simulation type, 1=temperature only,
-       2=temperature+polarisation, 3=temperature and its first spatial derivatives,
-       4=temperature and its first and second spatial derivatives, 5=temperature
-       and polarisation, and their first and second derivatives, 6=same as 5
-       plus the second derivatives of (T,Q,U).
+     \item[{simul\_type = }] Defines the simulation type, 1=temperature only (1 field),
+       2=temperature+polarisation (3 fields), 3=temperature and its first
+spatial derivatives (3 fields),
+       4=temperature and its first and second spatial derivatives (6 fields), 5=temperature
+       and polarisation, and their first derivatives (9 fields), 6=same as 5
+       plus the second derivatives of (T,Q,U) (18 fields).
 (default= 1).
     \item[{nsmax = }] Defines the resolution of the map.
 (default= 32)

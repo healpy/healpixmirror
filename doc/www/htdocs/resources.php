@@ -108,7 +108,7 @@ Wavelets on the Sphere:
 </li>
 
 <li>
-<a href="http://guilhem.lavaux.free.fr/wordpress/?page_id=172">FLINTS</a>: interpolation algorithm of fields sampled on a sphere
+<a href="http://www2.iap.fr/users/lavaux/software/flints.html">FLINTS</a>: interpolation algorithm of fields sampled on a sphere
 </li>
 
 <li>
