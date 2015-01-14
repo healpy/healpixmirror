@@ -25,7 +25,7 @@
  */
 
 /*! \file alice3.cc
- *  Copyright (C) 2005-2014 David Larson, Max-Planck-Society
+ *  Copyright (C) 2005-2015 David Larson, Max-Planck-Society
  *  \author David Larson \author Martin Reinecke
  */
 
@@ -225,7 +225,7 @@ int main(int argc, const char** argv)
     read_Healpix_map_from_fits(params.find<string>("texture"),th);
   else
     {
-    planck_rng rng;
+      planck_rng rng(params.find<int>("rand_seed",42));
     if (params.param_present("ell"))
       {
       int ell = params.find<int>("ell");

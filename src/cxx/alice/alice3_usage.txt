@@ -12,6 +12,15 @@ Usage:
   components in the second and third columns.
 
   [out=<string>] string used as a prefix for output files
+  alice3 generates three different output FITS files:
+  <out>_background.fits: the texture before the LI convolution
+  <out>_texture.fits: the texture after LI convolution
+  <out>_mod_texture.fits: the convolved texture, modulated with
+    polarization intensity
+  By default the code will exit with an error instead of overwriting
+  an existing FITS file! If you want to override this behaviour,
+  prepend your prefix with an exclamation mark (which may need to be
+  protected from shell expansion by a leading backslash).
 
   [texture=<fits file>] optional input background texture
   if left empty, a texture is generated using the "ell" parametsr
@@ -22,6 +31,9 @@ Usage:
   if ell==-1, use ell=2*nside
   if not supplied at all, use a Healpix map with given Nside containing white
     noise
+
+  [rand_seed=<int>] seed for the random number generator
+  (default=42). Only used when a texture is generated internally.
 
   [steps=<int>] number of steps to use for each line of the convolution
   (default: 100)
