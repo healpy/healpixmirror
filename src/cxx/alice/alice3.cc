@@ -190,8 +190,8 @@ int lic_function(Healpix_Map<float> &hitcount, Healpix_Map<float> &texture,
       num_curves++;
       runge_kutta_2(texture.pix2vec(i), ph, step_radian, curve);
       rawtexture.alloc(curve.size());
-      for (tsize i=0; i<curve.size(); i++)
-        rawtexture[i] = th.interpolated_value(curve[i]);
+      for (tsize i2=0; i2<curve.size(); i2++)
+        rawtexture[i2] = th.interpolated_value(curve[i2]);
       convolve(kernel, rawtexture, convolution);
       for (tsize j=0; j<convolution.size(); j++)
         {
@@ -262,21 +262,20 @@ int main(int argc, const char** argv)
 
   write_Healpix_map_to_fits(out+"_background.fits",tex,PLANCK_FLOAT32);
 
-  int num_curves = lic_function(hit, tex, ph, th, steps, kernel_steps,
-    step_radian);
+  lic_function(hit, tex, ph, th, steps, kernel_steps, step_radian);
 
-  for (tsize i=0; i<tex.Npix(); ++i)
+  for (int i=0; i<tex.Npix(); ++i)
     tex[i]/=hit[i];
   float tmin,tmax,mmin,mmax;
   tex.minmax(tmin,tmax);
   mag.minmax(mmin,mmax);
-  for (tsize i=0; i<tex.Npix(); ++i)
+  for (int i=0; i<tex.Npix(); ++i)
     {
     mag[i]*=(tex[i]-tmin);
     tex[i]=1.0-(tex[i]-tmin)/(tmax-tmin);
     }
   mag.minmax(mmin,mmax);
-  for (tsize i=0; i<mag.Npix(); ++i)
+  for (int i=0; i<mag.Npix(); ++i)
     mag[i]=1.0-(mag[i]-mmin)/(mmax-mmin);
   write_Healpix_map_to_fits(out+"_texture.fits",tex,PLANCK_FLOAT32);
   write_Healpix_map_to_fits(out+"_mod_texture.fits",mag,PLANCK_FLOAT32);
