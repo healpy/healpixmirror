@@ -253,6 +253,7 @@ pro mollview, file_in, select_in, $
 ;         ** gnomview : default =  5, gmin =  0 **
 ;         ** mollview : default = 45, gmin = 10 **
 ;         ** orthview : default = 45, gmin = 10 **
+;         The graticule lines thickness is controlled with !P.THICK
 ;
 ;       HALF_SKY: if set, only shows only one half of the sky 
 ;          (centered on (0,0) or on the location parametrized by Rot) instead of the full sky
@@ -366,6 +367,7 @@ pro mollview, file_in, select_in, $
 ;           - 'COORD' coordinate system (either, 'C', 'G', or 'E') of the contour
 ;           - 'RA'  or longitude coordinates (array)
 ;           - 'DEC' or lattitude coordinates (array of same size)
+;           and can optionally contain the fields
 ;           - 'LINE[STYLE]' : +2 : black dashes
 ;                           +1 : black dots
 ;                            0 : black solid [default]
@@ -379,7 +381,8 @@ pro mollview, file_in, select_in, $
 ;                        connected, by arcs of geodesics.
 ;                    if >0, only the vertices are shown
 ;                    (default = 0)
-;           - 'SYM[SIZE]' symbol size (same meaning as SYMSIZE in IDL)
+;           - 'SYM[SIZE]' symbol size (same meaning as SYMSIZE in IDL), (default = 1)
+;          The line and symbol thickness are controlled (indirectly) via !P.THICK.
 ;          Outline can be either a single structure, or an array of structures,
 ;          or a structure of structures
 ;

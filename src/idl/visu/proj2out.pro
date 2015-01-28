@@ -558,7 +558,8 @@ if (do_ps) then begin
         DEVICE, /LANDSCAPE, XSIZE=hxsize, YSIZE=hxsize/du_dv*w_dx_dy, XOFFSET=0, YOFFSET=hxsize+yoffset
     endif
     TVLCT,red,green,blue
-    thick_dev = 2. ; device dependent thickness factor
+;    thick_dev = 2. ; device dependent thickness factor
+    thick_dev = (!P.THICK ne 0) ? 2.*!P.THICK : 2. ; device dependent thickness factor
 endif else begin ; X, png, gif or jpeg output
     idl_window = defined(window_user) ? window_user : 32 ; idl_window = 32 or window_user
     free_window    =  (idl_window gt 31) ; random  window if idl_window > 31
@@ -620,7 +621,8 @@ endif else begin ; X, png, gif or jpeg output
         endif
     endelse
     if (in_idl) then TVLCT,red,green,blue
-    thick_dev = 1. ; device dependent thickness factor
+    ;thick_dev = 1. ; device dependent thickness factor
+    thick_dev = (!P.THICK ne 0) ? 1.*!P.THICK : 1. ; device dependent thickness factor
 endelse
 !p.background = my_background
 !p.color = my_color

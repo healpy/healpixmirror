@@ -253,17 +253,19 @@ for i=0,n_outlines-1 do begin
             pcont_type = cont_type
             psym_type = 0
             rf = 20
+            np_out = rf*np_in + 1
         endif else begin
             pcont_type = 0
             psym_type = abs(sym_type)
-            rf = 1.             ; no interpolation when plotting vertices
+            rf = 1             ; no interpolation when plotting vertices
+            np_out = rf*np_in
         endelse
-        if (n_elements(cont_vec1[*,0]) gt 1) then begin
-            cont_x = interpol(cont_vec1[*,0], rf*np_in) ; linear interpolation in X
-            cont_y = interpol(cont_vec1[*,1], rf*np_in) ; .. Y
-            cont_z = interpol(cont_vec1[*,2], rf*np_in) ; .. Z
+        if (np_in gt 1) then begin
+            cont_x = interpol(cont_vec1[*,0], np_out) ; linear interpolation in X
+            cont_y = interpol(cont_vec1[*,1], np_out) ; .. Y
+            cont_z = interpol(cont_vec1[*,2], np_out) ; .. Z
         endif else begin
-            one_tmp = replicate(1, rf*np_in)
+            one_tmp = replicate(1, np_out)
             cont_x = cont_vec1[0,0] * one_tmp
             cont_y = cont_vec1[0,1] * one_tmp
             cont_z = cont_vec1[0,2] * one_tmp
