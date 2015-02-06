@@ -8,8 +8,8 @@
 The <a href="http://www.cosmos.esa.int/web/planck">Planck</a> satellite full sky maps, 
 <a href="http://www.cosmos.esa.int/web/planck/publications">observed at 30 to 857 GHz with unprecedented accuracy</a>, 
 and their decomposition in cosmological and astrophysical components are available in HEALPix format from ESA 
-<a href="http://www.cosmos.esa.int/web/planck/planck-legacy-archive">Planck Legacy Archive</a>, 
-and NASA <a href="http://irsa.ipac.caltech.edu/">Infrared Science Archive</a>
+<a href="http://www.cosmos.esa.int/web/planck/pla">Planck Legacy Archive</a>, 
+and NASA <a href="http://irsa.ipac.caltech.edu/Missions/planck.html">Infrared Science Archive</a>
 </li>
 
 <li>
@@ -147,7 +147,7 @@ Misc
 <a href="http://en.wikipedia.org/wiki/Healpix" >Wikipedia Page on HEALPix</a>
 </li>
 <li>
-	HEALPix on <a href="https://www.openhub.net/p/healpix">Ohloh</a> and
+	HEALPix on <a href="https://www.openhub.net/p/healpix">BlackDuck (previously Ohloh)</a> and
 <a href="http://www.digplanet.com/wiki/HEALPix#">digplanet</a>
 </li>
 </ul>
