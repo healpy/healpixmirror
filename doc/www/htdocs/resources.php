@@ -21,8 +21,13 @@ The
 
 <li>
 The <a href="http://lambda.gsfc.nasa.gov/product/cobe/" >COBE</a>
-data, including DMR, DIRBE, and FIRAS
-    </li>
+data, including DMR and FIRAS
+</li>
+
+<li>
+The Extended Sky Emission Repository of <a href="http://cade.irap.omp.eu/dokuwiki/doku.php?id=welcome">CADE</a>
+which includes <a href="http://cade.irap.omp.eu/dokuwiki/doku.php?id=cobe">COBE/DIRBE</a> and many other surveys
+</li>
 
 <li>
 The radio and infrared <a href="http://lambda.gsfc.nasa.gov/product/foreground/f_products.cfm">foregrounds</a> maps
@@ -113,6 +118,10 @@ Wavelets on the Sphere:
 
 <li>
 <a href="http://galprop.stanford.edu/index.php">GALPROP</a>: Numerical code for calculating the propagation of relativistic charged particles and the diffuse emissions they produce (now compatible with HEALPix 3.11 and newer)
+</li>
+
+<li>
+The <a href="http://www.apc.univ-paris7.fr/~delabrou/PSM/psm.html">Planck Sky Model</a> to simulate the IR and submm sky
 </li>
 
 <li>
