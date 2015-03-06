@@ -4693,6 +4693,7 @@
     ! 2008-11-06: adjust w8ring_in 2nd dimension to actual w8ring
     ! 2008-11-27: patch to ignore dimension of non presen optional array (plm)
     ! 2008-12-03: use pointer toward map and plm section (avoid stack overloading)
+    ! 2015-03-06: replaced implicit loop with explicit one because of ifort 15.0.2
   !=======================================================================
 
     use statistics, only: tstats, compute_statistics
@@ -4710,7 +4711,7 @@
     real(DP), dimension(1:2*nsmax,3) :: w8ring_in
     integer(I4B) :: n_maps, n_alms, n_pols, n_masks, n_plms, n_w8_2
     integer(I4B) :: iter, status, polar, i, lbm
-    integer(I4B) :: npixtot
+    integer(I4B) :: npixtot, p
     integer(I8B) :: n1_plm
     real(kind=DP), dimension(1:3) :: rms
     logical(LGT) :: do_mask
@@ -4803,7 +4804,10 @@
     ! -------------------------------------
     if (do_mask) then
        do i=1,n_pols
-          map_TQU(0:,i) = map_TQU(0:,i) * mask(lbm:, min(i, n_masks))
+         ! map_TQU(0:,i) = map_TQU(0:,i) * mask(lbm:, min(i, n_masks))
+          do p=0, npixtot-1 ! explicit loop because of ifort 15.0.2 2015-03-06
+             map_TQU(p,i) = map_TQU(p,i) * mask(lbm+p, min(i, n_masks))
+          enddo
        enddo
     endif
 
