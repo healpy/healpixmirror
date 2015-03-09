@@ -25,7 +25,7 @@
  */
 
 /*
- *  Copyright (C) 2014 Max-Planck-Society
+ *  Copyright (C) 2014-2015 Max-Planck-Society
  *  Author: Martin Reinecke
  */
 
@@ -42,10 +42,7 @@ template<typename T> void read_Moc_from_fits
   inp.goto_hdu (2);
   vector<T> data;
   inp.read_entire_column(1,data);
-  rangeset<T> rs;
-  for (tsize i=0; i<data.size(); ++i)
-    rs.append(data[i]);
-  moc=Moc<T>::fromUniq(rs);
+  moc=Moc<T>::fromUniq(data);
   }
 
 template void read_Moc_from_fits
@@ -57,7 +54,7 @@ template<typename T> void write_Moc_to_fits
   (const std::string &outfile, const Moc<T> &moc)
   {
   PDT outtype=PLANCK_INT16;
-  vector<T> data=moc.toUniq().toVector();
+  vector<T> data=moc.toUniq();
   if (data.size()>0)
     {
     if (data.back()>0x7fff) outtype=PLANCK_INT32;

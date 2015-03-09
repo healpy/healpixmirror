@@ -30,6 +30,7 @@
  */
 
 #include "moc_query.h"
+#include "geom_utils.h"
 #include "lsconstants.h"
 
 using namespace std;
@@ -143,9 +144,9 @@ template<typename I> class querulator
           {
           int res=zmax;
           double crad=dotprod(pv,comp[myloc].center);
-          if (crad<crmax(o,myloc)) res=0;
-          else if (crad<cr[myloc]) res=1;
-          else if (crad<crmin(o,myloc)) res=2;
+          if (crad<=crmax(o,myloc)) res=0;
+          else if (crad<=cr[myloc]) res=1;
+          else if (crad<=crmin(o,myloc)) res=2;
           return max(zmin,min(zmax,res));
           }
         }
@@ -174,8 +175,8 @@ template<typename I> class querulator
         for (tsize i=0; i<comp.size(); ++i)
           if (comp[i].op==NONE) // it's a cap
             {
-            crmax(o,i) = (comp[i].radius+dr>pi) ? -1. : cos(comp[i].radius+dr);
-            crmin(o,i) = (comp[i].radius-dr<0.) ?  1. : cos(comp[i].radius-dr);
+            crmax(o,i) = (comp[i].radius+dr>=pi) ? -1.01 : cos(comp[i].radius+dr);
+            crmin(o,i) = (comp[i].radius-dr<=0.) ?  1.01 : cos(comp[i].radius-dr);
             }
         }
       }
@@ -226,3 +227,128 @@ template Moc<int> mocQueryInclusive (int order, int omax,
   const vector<MocQueryComponent> &comp);
 template Moc<int64> mocQueryInclusive (int order, int omax,
   const vector<MocQueryComponent> &comp);
+
+bool isEar(tsize i, const vector<vec3> &vv, const vector<vec3> &normal, const vector<bool> &convex)
+  {
+  if (!convex[i]) return false;
+  tsize nv=normal.size();
+  tsize pred=(i+nv-1)%nv, succ=(i+1)%nv;
+  vec3 ab=normal[i],bc=crossprod(vv[succ],vv[pred]).Norm(),ca=normal[pred];
+  for (tsize j=(succ+1)%nv; j!=pred; j=(j+1)%nv)
+    if ((dotprod(vv[j],ab)>0)
+      &&(dotprod(vv[j],bc)>0)
+      &&(dotprod(vv[j],ca)>0))
+      return false;
+  return true;
+  }
+
+// vertices are assumed to be normalized
+void processVertices(vector<vec3> &vv, vector<vec3> &normal,
+  vector<bool> &convex, vector<bool> &ear)
+  {
+  tsize nv=vv.size();
+  do
+    {
+    nv=vv.size();
+    for (tsize i=0; i<vv.size(); ++i)
+      {
+      tsize succ=(i+1)%vv.size();
+      double v_ang = v_angle(vv[i],vv[succ]);
+      if (v_ang<1e-8) // vertices are very close
+        {
+        vv.erase(vv.begin()+i);
+        break;
+        }
+      if (v_ang>pi-1e-8) // vertices almost antipodal
+        {
+        planck_fail("degenerate polygon edge");
+        break;
+        }
+      tsize pred=(i+vv.size()-1)%vv.size();
+      vec3 npred=crossprod(vv[pred],vv[i]),
+           nsucc=crossprod(vv[i],vv[succ]);
+      double n_ang = v_angle(npred,nsucc);
+      if (n_ang<1e-8) // vertices almost on a straight line
+        {
+        vv.erase(vv.begin()+i);
+        break;
+        }
+      if (n_ang>pi-1e-8) // very thin polygon spike
+        {
+        vv.erase(vv.begin()+i);
+        break;
+        }
+      }
+    } while (nv!=vv.size());
+
+  normal.resize(nv);
+  convex.resize(nv);
+  ear.resize(nv);
+  for (tsize i=0; i<nv;++i)
+    normal[i]=crossprod(vv[i],vv[(i+1)%nv]).Norm();
+  for (tsize i=0; i<nv;++i)
+    convex[i]=dotprod(normal[i],vv[(i+nv-1)%nv])>0;
+  for (tsize i=0; i<nv;++i)
+    ear[i]=isEar(i,vv,normal,convex);
+  }
+
+vector<MocQueryComponent> prepPolygon (const vector<vec3> &vertex)
+  {
+  planck_assert(vertex.size()>=3,"not enough vertices in polygon");
+  vector<vec3> vv(vertex.size());
+  for (tsize i=0; i<vertex.size(); ++i)
+    vv[i]=vertex[i].Norm();
+  vector<vec3> normal;
+  vector<bool> convex, ear;
+
+  processVertices(vv,normal,convex,ear);
+  vector<MocQueryComponent> comp;
+
+  tsize nconvex=0;
+  for (tsize i=0; i<vv.size(); ++i)
+    if (convex[i]) ++nconvex;
+  if (nconvex==vv.size()) // fully convex polygon
+    {
+    for (tsize i=0; i<vv.size(); ++i)
+      comp.push_back(MocQueryComponent(normal[i],halfpi));
+    for (tsize i=1; i<vv.size(); ++i)
+      comp.push_back(MocQueryComponent(AND));
+    return comp;
+    }
+  if (nconvex==0) // complement of a fully convex polygon??
+    {
+    for (tsize i=0; i<vv.size(); ++i)
+      comp.push_back(MocQueryComponent(-normal[i],halfpi));
+    for (tsize i=1; i<vv.size(); ++i)
+      comp.push_back(MocQueryComponent(AND));
+    comp.push_back(MocQueryComponent(NOT));
+    return comp;
+    }
+
+  int earcount=0;
+  while (vv.size()>2) // try to clip ears
+    {
+    tsize nvlast=vv.size();
+    for (tsize i=0; i<vv.size();++i)
+      {
+      tsize pred=(i+vv.size()-1)%vv.size(), succ=(i+1)%vv.size();
+
+      if (ear[i])
+        {
+        comp.push_back(MocQueryComponent(normal[i],halfpi));
+        comp.push_back(MocQueryComponent(crossprod(vv[succ],vv[pred]).Norm(),halfpi));
+        comp.push_back(MocQueryComponent(AND));
+        comp.push_back(MocQueryComponent(normal[pred],halfpi));
+        comp.push_back(MocQueryComponent(AND));
+        ++earcount;
+        vv.erase(vv.begin()+i);
+        processVertices(vv,normal,convex,ear);
+        break;
+        }
+      }
+    planck_assert(vv.size()<nvlast,"failed to clip an ear");
+    }
+  for (int i=0; i<earcount-1; ++i)
+    comp.push_back(MocQueryComponent(OR));
+  return comp;
+  }

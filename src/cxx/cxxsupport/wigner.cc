@@ -25,7 +25,7 @@
 /*! \file wigner.cc
  *  Several C++ classes for calculating Wigner matrices
  *
- *  Copyright (C) 2009-2011 Max-Planck-Society
+ *  Copyright (C) 2009-2015 Max-Planck-Society
  *  \author Martin Reinecke and others (see individual classes)
  */
 
@@ -273,7 +273,7 @@ wignergen_scalar::wignergen_scalar (int lmax_, const arr<double> &thetas,
     mlo(-1234567890), mhi(-1234567890),
     fx(lmax+2), result(lmax+1)
   {
-  planck_assert(lmax>0,"lmax too small");
+  planck_assert(lmax>=0,"lmax too small");
   logsum[0] = 0.;
   for (tsize m=1; m<logsum.size(); ++m)
     logsum[m] = logsum[m-1]+log(static_cast<long double>(m));

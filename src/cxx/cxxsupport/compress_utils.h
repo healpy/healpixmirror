@@ -25,7 +25,7 @@
 /*! \file compress_utils.h
  *  Support for compression of integer arrays.
  *
- *  Copyright (C) 2013-2014 Max-Planck-Society
+ *  Copyright (C) 2013-2015 Max-Planck-Society
  *  \author Martin Reinecke
  */
 
@@ -113,28 +113,6 @@ class ibitstream
       }
   };
 
-template<typename Iter> void interpol_encode2 (Iter l, Iter r, obitstream &obs,
-  int shift)
-  {
-  if (r-l<=1) return;
-  Iter m=l+(r-l)/2;
-
-  typedef std::iterator_traits<Iter> traits;
-  typedef typename traits::value_type T;
-  T nval = ((*r-*l)>>shift) - (r-l) + 1;
-  if (nval<=1) return;
-
-  uint8 nb = nbits(nval);
-  T val = ((*m)>>shift)-(((*l)>>shift)+(m-l));
-  T nshort=(T(1)<<nb)-nval;
-  if (val<nshort)
-    obs.put(val,nb-1);
-  else
-    obs.put(val+nshort,nb);
-  interpol_encode2(l,m,obs,shift);
-  interpol_encode2(m,r,obs,shift);
-  }
-
 template<typename T,bool> struct notNegativeHelper__
   { notNegativeHelper__(const T &) {} };
 template<typename T> struct notNegativeHelper__<T,true>
@@ -145,6 +123,35 @@ template<typename T> struct notNegativeHelper__<T,true>
 template<typename T> void assertNotNegative(const T &val)
   { notNegativeHelper__<T,std::numeric_limits<T>::is_signed> dummy(val); }
 
+template<typename Iter> void interpol_encode2 (Iter l, Iter r, obitstream &obs,
+  int shift)
+  {
+  if (r-l<=1) return;
+  typedef std::iterator_traits<Iter> traits;
+  typedef typename traits::value_type T;
+
+  Iter m=l+(r-l)/2;
+  T nval = ((*r-*l)>>shift) - (r-l) + 1;
+  if (nval<=1) return;
+
+  uint8 nb = 1+ilog2(nval-1);
+  T val = ((*m)>>shift)-(((*l)>>shift)+(m-l));
+  T nshort=(T(1)<<nb)-nval;
+#if 0
+  // optional rotation
+  T nrot=nval-(nshort>>1);
+  if (val>=nrot)
+    val-=nrot;
+  else
+    val+=(nval-nrot);
+#endif
+  if (val<nshort)
+    obs.put(val,nb-1);
+  else
+    obs.put(val+nshort,nb);
+  interpol_encode2(l,m,obs,shift);
+  interpol_encode2(m,r,obs,shift);
+  }
 
 template<typename Iter> void interpol_encode (Iter l, Iter r, obitstream &obs)
   {
@@ -165,7 +172,7 @@ template<typename Iter> void interpol_encode (Iter l, Iter r, obitstream &obs)
   int shift = trailingZeros(combo);
   T maxnum=(*(r-1))>>shift;
   if (T(r-l)>maxnum) maxnum=T(r-l);
-  uint8 maxbits=nbits(maxnum);
+  uint8 maxbits=1+ilog2(maxnum);
   obs.put(maxbits,8);
   obs.put(shift,8);
   obs.put(r-l,maxbits);
@@ -179,20 +186,28 @@ template<typename Iter> void interpol_decode2 (Iter l, Iter r, ibitstream &ibs,
   int shift)
   {
   if (r-l<=1) return;
-  Iter m=l+(r-l)/2;
-
   typedef std::iterator_traits<Iter> traits;
   typedef typename traits::value_type T;
+
+  Iter m=l+(r-l)/2;
   T nval = ((*r-*l)>>shift) - (r-l) + 1;
   T val=0;
 
   if (nval>1)
     {
-    uint8 nb = nbits(nval);
+    uint8 nb = 1+ilog2(nval-1);
     T nshort=(T(1)<<nb)-nval;
     val=ibs.get<T>(nb-1);
     if (val>=nshort)
       val=(val<<1)+ ibs.get<T>(1) - nshort;
+#if 0
+    // optional rotation
+    T nrot=nval-(nshort>>1);
+    if (val<(nval-nrot))
+      val+=nrot;
+    else
+      val-=(nval-nrot);
+#endif
     }
   *m=*l+(((m-l)+val)<<shift);
 

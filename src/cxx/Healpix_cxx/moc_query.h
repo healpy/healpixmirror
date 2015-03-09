@@ -56,4 +56,6 @@ template<typename I> Moc<I> mocQuery (int order,
 template<typename I> Moc<I> mocQueryInclusive (int order, int omax,
   const std::vector<MocQueryComponent> &comp);
 
+std::vector<MocQueryComponent> prepPolygon (const std::vector<vec3> &vertex);
+
 #endif

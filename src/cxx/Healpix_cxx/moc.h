@@ -25,7 +25,7 @@
  */
 
 /*! \file moc.h
- *  Copyright (C) 2014 Max-Planck-Society
+ *  Copyright (C) 2014-2015 Max-Planck-Society
  *  \author Martin Reinecke
  */
 
@@ -94,6 +94,8 @@ template<typename I> class Moc
         \a other. */
     Moc op_and (const Moc &other) const
       { return fromNewRangeSet(rs.op_and(other.rs)); }
+    Moc op_xor (const Moc &other) const
+      { return fromNewRangeSet(rs.op_xor(other.rs)); }
     /*! Returns a new Moc that contains all parts of this Moc that are not
         contained in \a other. */
     Moc op_andnot (const Moc &other) const
@@ -111,12 +113,39 @@ template<typename I> class Moc
         empty. */
     bool overlaps(const Moc &other) const
       { return rs.overlaps(other.rs); }
-    /** Returns a rangeset containing all HEALPix pixels (in NUNIQ order)
+
+    /** Returns a vector containing all HEALPix pixels (in ascending NUNIQ order)
         covered by this Moc. The result is well-formed in the sense that every
         pixel is given at its lowest possible HEALPix order. */
-    rangeset<I> toUniq() const
+    std::vector<I> toUniq() const
       {
-      rangeset<I> r2(rs), r3, res;
+      std::vector<I> res;
+      std::vector<std::vector<I> > buf(maxorder+1);
+      for (tsize i=0; i<rs.nranges(); ++i)
+        {
+        I start=rs.ivbegin(i), end=rs.ivend(i);
+        while(start!=end)
+          {
+          int logstep=std::min<int>(maxorder,trailingZeros(start)>>1);
+          logstep=std::min(logstep,ilog2(end-start)>>1);
+          buf[maxorder-logstep].push_back(start);
+          start+=I(1)<<(2*logstep);
+          }
+        }
+      for (int o=0; o<=maxorder; ++o)
+        {
+        I ofs=I(1)<<(2*o+2);
+        int shift=2*(maxorder-o);
+        for (tsize j=0; j<buf[o].size(); ++j)
+          res.push_back((buf[o][j]>>shift)+ofs);
+        }
+      return res;
+      }
+#if 0
+    std::vector<I> toUniq_old() const
+      {
+      std::vector<I> res;
+      rangeset<I> r2(rs), r3;
       for (int o=0; o<=maxorder; ++o)
         {
         if (r2.empty()) return res;
@@ -130,32 +159,71 @@ template<typename I> class Moc
           I a=(r2.ivbegin(iv)+ofs)>>shift,
             b=r2.ivend(iv)>>shift;
           r3.append(a<<shift, b<<shift);
-          res.append(a+ofs2,b+ofs2);
+          for (I i=a; i<b; ++i) res.push_back(i+ofs2);
           }
         if (!r3.empty())
           r2 = r2.op_andnot(r3);
         }
       return res;
       }
-    static Moc fromUniq (const rangeset<I> &ru)
+    static Moc fromUniq_bad (const std::vector<I> &vu)
+      {
+      struct pix_o
+        {
+        I pix; int o;
+        pix_o(I pix_, int o_) : pix(pix_), o(o_) {}
+        bool operator<(const pix_o &other) const { return pix>other.pix; }
+        };
+      using namespace std;
+      rangeset<I> res;
+      vector<queue<I> > buf(maxorder+1);
+      for (tsize i=0; i<vu.size(); ++i)
+        {
+        int o=ilog2(vu[i]>>2)>>1;
+        I pix=vu[i]-(I(1)<<(2*o+2));
+        pix<<=2*(maxorder-o);
+        buf[o].push(pix);
+        }
+      priority_queue<pix_o> q;
+      for (int o=0; o<=maxorder; ++o)
+        if (!buf[o].empty())
+          {
+          q.push(pix_o(buf[o].front(),o));
+          buf[o].pop();
+          }
+      while(!q.empty())
+        {
+        I pix=q.top().pix;
+        int o=q.top().o;
+        q.pop();
+        if (!buf[o].empty())
+          {
+          q.push(pix_o(buf[o].front(),o));
+          buf[o].pop();
+          }
+        res.append(pix,pix+(I(1)<<(2*(maxorder-o))));
+        }
+      return fromNewRangeSet(res);
+      }
+#endif
+    static Moc fromUniq (const std::vector<I> &vu)
       {
       rangeset<I> r, rtmp;
       int lastorder=0;
       int shift=2*maxorder;
-      for (tsize i=0; i<ru.nranges(); ++i)
-        for (I j=ru.ivbegin(i); j<ru.ivend(i); ++j)
+      for (tsize i=0; i<vu.size(); ++i)
+        {
+        int order = ilog2(vu[i]>>2)>>1;
+        if (order!=lastorder)
           {
-          int order = ilog2(j>>2)>>1;
-          if (order!=lastorder)
-            {
-            r=r.op_or(rtmp);
-            rtmp.clear();
-            lastorder=order;
-            shift=2*(maxorder-order);
-            }
-          I pix = j-(I(1)<<(2*order+2));
-          rtmp.append (pix<<shift,(pix+1)<<shift);
+          r=r.op_or(rtmp);
+          rtmp.clear();
+          lastorder=order;
+          shift=2*(maxorder-order);
           }
+        I pix = vu[i]-(I(1)<<(2*order+2));
+        rtmp.append (pix<<shift,(pix+1)<<shift);
+        }
       r=r.op_or(rtmp);
       return fromNewRangeSet(r);
       }

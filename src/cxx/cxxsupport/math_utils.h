@@ -25,7 +25,7 @@
 /*! \file math_utils.h
  *  Various convenience mathematical functions.
  *
- *  Copyright (C) 2002-2014 Max-Planck-Society
+ *  Copyright (C) 2002-2015 Max-Planck-Society
  *  \author Martin Reinecke
  */
 
@@ -157,6 +157,14 @@ template<typename I> inline int ilog2_nonnull (I arg)
 template<typename I> inline int trailingZeros(I arg)
   {
   if (arg==0) return sizeof(I)<<3;
+#ifdef __GNUC__
+  if (sizeof(I)<=sizeof(int))
+    return __builtin_ctz(arg);
+  if (sizeof(I)==sizeof(long))
+    return __builtin_ctzl(arg);
+  if (sizeof(I)==sizeof(long long))
+    return __builtin_ctzll(arg);
+#endif
   int res=0;
   while ((arg&0xFFFF)==0) { res+=16; arg>>=16; }
   if ((arg&0x00FF)==0) { res|=8; arg>>=8; }
@@ -164,14 +172,6 @@ template<typename I> inline int trailingZeros(I arg)
   if ((arg&0x0003)==0) { res|=2; arg>>=2; }
   if ((arg&0x0001)==0) { res|=1; }
   return res;
-  }
-
-/*! Returns the number of bits needed to encode a value in the range
-    [0; \a arg[ */
-template<typename I> int nbits(I arg)
-  {
-  if (arg<=1) return 0;
-  return 1+ilog2(arg-1);
   }
 
 /*! Returns \a atan2(y,x) if \a x!=0 or \a y!=0; else returns 0. */
