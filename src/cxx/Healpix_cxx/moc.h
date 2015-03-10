@@ -99,7 +99,7 @@ template<typename I> class Moc
     /*! Returns a new Moc that contains all parts of this Moc that are not
         contained in \a other. */
     Moc op_andnot (const Moc &other) const
-      { return fromNewRangeSet(rs.difference(other.rs)); }
+      { return fromNewRangeSet(rs.op_andnot(other.rs)); }
     /*! Returns the complement of this Moc. */
     Moc complement() const
       {
