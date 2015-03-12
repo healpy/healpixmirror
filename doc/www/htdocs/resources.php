@@ -74,6 +74,7 @@ theoretical spectra of CMB anisotropy. The HEALPix synfast
 program reads in the output of these applications to allow one to
 generate random realizations of the observable CMB sky
 </li>
+
 <li>
 The 
 <a href="http://cosmologist.info/lenspix" >
@@ -82,8 +83,20 @@ software can be used to simulate lensed polarized CMB maps in HEALPix format usi
 </li>
 
 <li>
+The <a href="http://www.apc.univ-paris7.fr/~delabrou/PSM/psm.html">Planck Sky Model</a> 
+to simulate the IR and submm sky
+</li>
+
+<li>
+<a href="http://galprop.stanford.edu/index.php">GALPROP</a>: 
+Numerical code for calculating the propagation of relativistic charged particles 
+and the diffuse emissions they produce (now compatible with HEALPix 3.11 and newer)
+</li>
+
+<li>
 Visualization tools supporting HEALPix maps in FITS format:
-<a href="http://aladin.u-strasbg.fr/">Aladin&nbsp;Sky&nbsp;Atlas</a> (which can overlay any astronomical map or catalog), 
+<a href="http://aladin.u-strasbg.fr/">Aladin&nbsp;Sky&nbsp;Atlas</a> 
+(which can overlay any astronomical map or catalog), 
 <a href="http://helios.av.it.pt/projects/healpixviewer">HealpixViewer</a>,
 <a href="http://www.ast.cam.ac.uk/~vlad/univiewer/index.html">Univiewer</a>,
 <a href="http://lambda.gsfc.nasa.gov/toolbox/tb_skyviewer_ov.cfm">SkyViewer</a>
@@ -92,16 +105,27 @@ Visualization tools supporting HEALPix maps in FITS format:
 <li>
 <a href="https://github.com/healpy/healpy">Healpy</a>: 
 python wrapper to HEALPix (now included in HEALPix package)
-  </li>
+</li>
+
+<li>
+<a href="http://www.apc.univ-paris7.fr/APC_CS/Recherche/Adamis/MIDAS09/software/s2hat/s2hat.html">S2Hat</a>:
+Scalable Spherical Harmonics transforms
+</li>
 
 <li>
 <a href="http://www2.iap.fr/users/hivon/software/PolSpice" > PolSPICE</a>: 
-Temperature+Polarization power spectrum extraction tool dealing with the effects the
-cut-sky, beam smoothing, noise contamination, ...
-    </li>
+Temperature+Polarization angular power spectrum extraction tool dealing with the effects of
+cut-sky, beam smoothing, noise contamination...
+</li>
 
 <li>
-<a href="http://www2.iap.fr/users/sousbie/web/html/indexd41d.html?"> DisPerSE</a>: Automatic identification of persistent structures in 2D & 3D
+<a href="http://lcdm.astro.illinois.edu/code/aps.html">APS</a>:
+Quadratic estimator of the galaxy angular power spectrum
+</li>
+
+<li>
+<a href="http://www2.iap.fr/users/sousbie/web/html/indexd41d.html?"> DisPerSE</a>: 
+Automatic identification of persistent structures in 2D & 3D
 </li>
 
 <li>
@@ -113,15 +137,8 @@ Wavelets on the Sphere:
 </li>
 
 <li>
-<a href="http://www2.iap.fr/users/lavaux/software/flints.html">FLINTS</a>: interpolation algorithm of fields sampled on a sphere
-</li>
-
-<li>
-<a href="http://galprop.stanford.edu/index.php">GALPROP</a>: Numerical code for calculating the propagation of relativistic charged particles and the diffuse emissions they produce (now compatible with HEALPix 3.11 and newer)
-</li>
-
-<li>
-The <a href="http://www.apc.univ-paris7.fr/~delabrou/PSM/psm.html">Planck Sky Model</a> to simulate the IR and submm sky
+<a href="http://www2.iap.fr/users/lavaux/software/flints.html">FLINTS</a>: 
+interpolation algorithm of fields sampled on a sphere
 </li>
 
 <li>
