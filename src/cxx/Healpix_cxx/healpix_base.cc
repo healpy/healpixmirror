@@ -25,7 +25,7 @@
  */
 
 /*
- *  Copyright (C) 2003-2014 Max-Planck-Society
+ *  Copyright (C) 2003-2015 Max-Planck-Society
  *  Author: Martin Reinecke
  */
 
@@ -215,38 +215,45 @@ template<typename I> template<typename I2>
       double z=ring2z(iz);
       double x = (cosrbig-z*z0)*xa;
       double ysq = 1-z*z-x*x;
-      double dphi = (ysq<=0) ? pi-1e-15 : atan2(sqrt(ysq),x);
-      I nr, ipix1;
-      bool shifted;
-      get_ring_info_small(iz,ipix1,nr,shifted);
-      double shift = shifted ? 0.5 : 0.;
-
-      I ipix2 = ipix1 + nr - 1; // highest pixel number in the ring
-
-      I ip_lo = ifloor<I>(nr*inv_twopi*(ptg.phi-dphi) - shift)+1;
-      I ip_hi = ifloor<I>(nr*inv_twopi*(ptg.phi+dphi) - shift);
-
-      if (fct>1)
+      double dphi=-1;
+      if (ysq<=0) // no intersection, ring completely inside or outside
+        dphi = (fct==1) ? 0: pi-1e-15;
+      else
+        dphi = atan2(sqrt(ysq),x);
+      if (dphi>0)
         {
-        while ((ip_lo<=ip_hi) && check_pixel_ring
-               (*this,b2,ip_lo,nr,ipix1,fct,z0,ptg.phi,cosrsmall,cpix))
-          ++ip_lo;
-        while ((ip_hi>ip_lo) && check_pixel_ring
-               (*this,b2,ip_hi,nr,ipix1,fct,z0,ptg.phi,cosrsmall,cpix))
-          --ip_hi;
-        }
+        I nr, ipix1;
+        bool shifted;
+        get_ring_info_small(iz,ipix1,nr,shifted);
+        double shift = shifted ? 0.5 : 0.;
 
-      if (ip_lo<=ip_hi)
-        {
-        if (ip_hi>=nr)
-          { ip_lo-=nr; ip_hi-=nr; }
-        if (ip_lo<0)
+        I ipix2 = ipix1 + nr - 1; // highest pixel number in the ring
+
+        I ip_lo = ifloor<I>(nr*inv_twopi*(ptg.phi-dphi) - shift)+1;
+        I ip_hi = ifloor<I>(nr*inv_twopi*(ptg.phi+dphi) - shift);
+
+        if (fct>1)
           {
-          pixset.append(ipix1,ipix1+ip_hi+1);
-          pixset.append(ipix1+ip_lo+nr,ipix2+1);
+          while ((ip_lo<=ip_hi) && check_pixel_ring
+                (*this,b2,ip_lo,nr,ipix1,fct,z0,ptg.phi,cosrsmall,cpix))
+            ++ip_lo;
+          while ((ip_hi>ip_lo) && check_pixel_ring
+                (*this,b2,ip_hi,nr,ipix1,fct,z0,ptg.phi,cosrsmall,cpix))
+            --ip_hi;
           }
-        else
-          pixset.append(ipix1+ip_lo,ipix1+ip_hi+1);
+
+        if (ip_lo<=ip_hi)
+          {
+          if (ip_hi>=nr)
+            { ip_lo-=nr; ip_hi-=nr; }
+          if (ip_lo<0)
+            {
+            pixset.append(ipix1,ipix1+ip_hi+1);
+            pixset.append(ipix1+ip_lo+nr,ipix2+1);
+            }
+          else
+            pixset.append(ipix1+ip_lo,ipix1+ip_hi+1);
+          }
         }
       }
     if ((rlat2>=pi) && (irmax+1<4*nside_)) // south pole in the disk
