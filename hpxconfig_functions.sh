@@ -85,7 +85,7 @@ echoLn () {
 }
 #-------------
 findFITSLib () {
-    for dir in $* /usr/lib /usr/lib64 /usr/local/lib /usr/local/lib64 /usr/local/lib/cfitsio /usr/local/lib64/cftisio /usr/local/src/cfitsio ${HOME}/lib ${HOME}/lib64 ./src/cxx/${HEALPIX_TARGET}/lib/ /softs/cfitsio/3.24/lib /usr/common/usg/cfitsio/3.26/lib ; do
+    for dir in $* /usr/lib /usr/lib64 /usr/local/lib /usr/local/lib64 /usr/local/lib/cfitsio /usr/local/lib64/cftisio /usr/local/src/cfitsio ${HOME}/lib ${HOME}/lib64 ./src/cxx/${HEALPIX_TARGET}/lib/ /softs/cfitsio/3.3*/lib /softs/cfitsio/3.2*/lib /usr/common/usg/cfitsio/3.3*/lib ; do
 	if [ -r "${dir}/lib${LIBFITS}.a" -o -r "${dir}/lib${LIBFITS}.so" -o -r "${dir}/lib${LIBFITS}.dylib" ] ; then
 	    FITSDIR=$dir
 	    break
@@ -645,7 +645,7 @@ askPS () {
 
     echo
     echo  "Please indicate the Postscript previewer you want to use "
-    echo  " (eg: gs, ghostview, gv, ggv, kghostview)"
+    echo  " (eg: gs, ghostview, gv, ggv, kghostview, evince)"
     echoLn "Enter choice [$ps_com]        "
     read answer
     [ "x$answer" != "x" ] && ps_com="$answer"
@@ -662,6 +662,17 @@ askPS () {
     else
 	ps_scom=$ps_com
     fi
+}
+#-------------
+askPDF () {
+
+    echo
+    echo  "Please indicate the PDF previewer you want to use "
+    echo  " (eg: gv, xpdf, kpdf, open)"
+    echoLn "Enter choice [$pdf_com]        "
+    read answer
+    [ "x$answer" != "x" ] && pdf_com="$answer"
+    pdf_scom=$pdf_com
 }
 #-------------
 askGif () {
@@ -699,6 +710,8 @@ papersize = '$papersize'
 media = '$media'
 ps_com = '$ps_com'
 ps_scom = '$ps_scom'
+pdf_com = '$pdf_com'
+pdf_scom = '$pdf_scom'
 gif_com  = '$gif_com'
 gif_scom = '$gif_scom'
 settings = 'user'
@@ -776,6 +789,7 @@ setIdlDefaults () {
     gif_com="netscape"
     [ "${OS}" = "Linux" ]   && gif_com="display"
     [ "${OS}" = "Darwin" ]  && gif_com="open"
+    [ "${OS}" = "Darwin" ]  && pdf_com="open"
     previewfile=$HEALPIX/src/idl/visu/idl_default_previewer.pro
    
 #     # if IDL_PATH is undefined, then set it to +IDL_DIR
@@ -797,6 +811,7 @@ idl_config () {
     askPaperSize
     askPS
     askGif
+    askPDF
     generateProIdlFile
     generateConfIdlFile
     [ $NOPROFILEYET = 1 ] && installProfile
@@ -812,6 +827,7 @@ idl_config () {
 #   checkF90Fitsio: check that CFITSIO library contains Fortran wrapper
 #   checkF90FitsioLink: check that CFITSIO library links to Fortran test code
 #   checkF90FitsioVersion: check that CFITSIO library is recent enough
+#   checkCParall: check that C compiler supports OpenMP
 #   GuessF90Compiler: tries to guess compiler from operating system
 #####   askFFT: ask user for his choice of fft, find fftw library
 #   askOpenMP: ask user for compilation of OpenMP source files
@@ -1209,9 +1225,9 @@ ${CAT} > ${tmpfile}${suffix} << EOF
 EOF
  case $FTYPE in
   xlf)
-    $FC -qsuffix=f=f90 -c ${tmpfile}${suffix} -o ${tmpfile}.o  2>&1 ${DEVNULL} ;;
+    $FC -qsuffix=f=f90 -c ${tmpfile}${suffix} -o ${tmpfile}.o  > ${DEVNULL} 2>&1 ;;
   *)
-    $FC -c ${tmpfile}${suffix} -o ${tmpfile}.o  2>&1 ${DEVNULL} ;;
+    $FC -c ${tmpfile}${suffix} -o ${tmpfile}.o  > ${DEVNULL} 2>&1 ;;
  esac
 
     stwo=`${NM} ${tmpfile}.o | ${GREP} sub1__ | ${WC} -l`
@@ -1254,6 +1270,33 @@ EOF
 
 }
 # -----------------------------------------------------------------
+checkCParall () {
+# check that C compiler actually support parallel (OpenMP) compilation
+tmpfile=to_be_removed
+suffix=.c
+
+${CAT} > ${tmpfile}${suffix} <<EOF
+#include <omp.h>
+#include <stdio.h>
+int main() {
+#pragma omp parallel
+printf("Hello from thread %d, nthreads %d\n", omp_get_thread_num(), omp_get_num_threads());
+}
+EOF
+
+${CC} ${PRCFLAGS} -c ${tmpfile}${suffix} -o ${tmpfile}.o  >  ${DEVNULL} 2>&1
+if [ ! -s ${tmpfile}.o ]; then
+    echo
+    echo "compiler "
+    echo "   ${CC} ${PRCFLAGS} "
+    echo "does not support OpenMP compilation !"
+    ${RM} ${tmpfile}.*
+    crashAndBurn
+fi
+${RM} ${tmpfile}.*
+
+}
+# -----------------------------------------------------------------
 IdentifyCParallCompiler () {
 # add OpenMP flag for C compiler (currently only gcc and icc)
 #    clang support to be added soon
@@ -1267,6 +1310,8 @@ IdentifyCParallCompiler () {
 	PRCFLAGS='-openmp' # -openmp-report0
     elif [ $ngcc != 0 ] ; then
 	PRCFLAGS='-fopenmp'
+    elif [ $nclang != 0 ] ; then
+	PRCFLAGS='-fopenmp'
     elif [ $npgc != 0 ] ; then
 	PRCFLAGS='-mp'
     elif [ $npath != 0 ] ; then
@@ -1277,6 +1322,7 @@ IdentifyCParallCompiler () {
 	read answer
 	[ "x$answer" != "x" ] && PRCFLAGS="$answer"
     fi
+    checkCParall
 }
 # -----------------------------------------------------------------
 ExtendCFLAGS () {

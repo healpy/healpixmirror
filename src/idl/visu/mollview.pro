@@ -62,6 +62,7 @@ pro mollview, file_in, select_in, $
               OFFSET = offset, $
               ONLINE = online, $
               OUTLINE = outline, $
+              PDF = pdf, $
               PNG = png, $
               POLARIZATION = polarization, $
               PREVIEW = preview, $
@@ -240,7 +241,7 @@ pro mollview, file_in, select_in, $
 ;	      if set to 1            : output the plot in plot_XXX.gif
 ;                with XXX = azimequid, cartesian, gnomic, mollweide or orthographic
 ;	      if set to a file name  : output the plot in that file 
-;             (see also : CROP, JPEG, PNG, PS and PREVIEW)
+;             (see also : CROP, JPEG, PNG, PDF, PS and PREVIEW)
 ;
 ;       GLSIZE : character size of the graticule labels in units of CHARSIZE
 ;             default: 0 (ie, no labeling of graticules)
@@ -301,7 +302,7 @@ pro mollview, file_in, select_in, $
 ;	      if set to 1            : output the plot in plot_XXX.jpeg
 ;                with XXX = azimequid, cartesian, gnomic, mollweide or orthographic
 ;	      if set to a file name  : output the plot in that file 
-;             (see also : CROP, GIF, PNG, PS and PREVIEW)
+;             (see also : CROP, GIF, PDF, PNG, PS and PREVIEW)
 ;
 ; 	LOG: display the log of map (see also : HIST)
 ;         only applies to pixel with signal > 0.
@@ -386,12 +387,19 @@ pro mollview, file_in, select_in, $
 ;          Outline can be either a single structure, or an array of structures,
 ;          or a structure of structures
 ;
+;	PDF : string containing the name of a PDF output
+;             if set to 0 or not set : output to screen
+;	      if set to 1            : output the plot in plot_XXX.pdf
+;                with XXX = azimequid, cartesian, gnomic, mollweide or orthographic
+;	      if set to a file name  : output the plot in that file 
+;               (see: CROP, GIF, JPEG, PNG, PREVIEW and PS)
+;
 ;	PNG : string containing the name of a .PNG output
 ;	      if set to 0 or not set : no .PNG done
 ;	      if set to 1            : output the plot in plot_XXX.png
 ;                with XXX = azimequid, cartesian, gnomic, mollweide or orthographic
 ;	      if set to a file name  : output the plot in that file 
-;             (see also : CROP, GIF, JPEG, PNG, PS and PREVIEW)
+;             (see also : CROP, GIF, JPEG, PDF, PNG, PS and PREVIEW)
 ;
 ;       POLARIZATION: 
 ;         if set to 0, no polarization information is plotted.
@@ -414,11 +422,12 @@ pro mollview, file_in, select_in, $
 ;             (default=1), while the third one controls the distance between
 ;             vectors (default=1). Non positive values are replaced by 1.
 ;
-;	PREVIEW : if set, there is a 'ghostview' preview of the postscript file (see : PS)
-;                    or a 'xv' preview of the gif or png file (see: CROP, GIF,
-;                    JPEG, PNG and PS)
+;	PREVIEW : if set, there is a preview of the GIF, JPG, PDF, PostScript,
+;	         PNG file being produced  
+;                    (see: CROP, GIF, JPEG, PDF, PNG and PS)
 ;
-;	PS :  if set to 0 or not set : output to screen
+;	PS :  string containing the name of a PS output
+;             if set to 0 or not set : output to screen
 ;	      if set to 1            : output the plot in plot_XXX.ps
 ;                with XXX = azimequid, cartesian, gnomic, mollweide or orthographic
 ;	      if set to a file name  : output the plot in that file 
@@ -609,7 +618,7 @@ if (n_params() lt 1 or n_params() gt 2) then begin
     print,'              NESTED=, NOBAR=, NOLABELS=, '
     print,'              NO_DIPOLE, NO_MONOPLE, '
     print,'              OFFSET=, ONLINE=, OUTLINE=,'
-    print,'              PNG=, POLARIZATION=, PREVIEW=, '
+    print,'              PDF=, PNG=, POLARIZATION=, PREVIEW=, '
     print,'              PS=, PXSIZE=, PYSIZE=, QUADCUBE= ,'
     print,'              RETAIN=, ROT=,  '
     print,'              SAVE=, SILENT=, SUBTITLE=, '
@@ -667,7 +676,7 @@ proj2out, $
   POLARIZATION=polarization, OUTLINE=outline, /MOLL, FLIP=flip, COORD_IN=coord_in, IGRATICULE=igraticule, $
   HBOUND = hbound, WINDOW = window, EXECUTE=execute, SILENT=silent, GLSIZE=glsize, $
   IGLSIZE=iglsize, RETAIN=retain, TRUECOLORS=truecolors, TRANSPARENT=transparent, CHARTHICK=charthick, $
-  JPEG=jpeg, BAD_COLOR=bad_color, BG_COLOR=bg_color, FG_COLOR=fg_color
+  JPEG=jpeg, BAD_COLOR=bad_color, BG_COLOR=bg_color, FG_COLOR=fg_color, PDF=pdf
 
 
 w_num = !d.window

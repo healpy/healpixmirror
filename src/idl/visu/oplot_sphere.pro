@@ -26,6 +26,9 @@
 ;
 ; -----------------------------------------------------------------------------
 pro oplot_line_with_label, u, v, linelabel=linelabel, putlabel=putlabel, flush=flush, lines=line_type, _extra = oplot_kw, charsize=charsize
+; , labrot=labrot, fixminus=fixminus
+
+; note on oplot: linestyle in _extra prevails silently over explicit linestyle
 
 lensegment = n_elements(u)
 minseglen = 20
@@ -48,11 +51,13 @@ if (do_label) then begin
         du = u[middle+step]-u[middle-step]
         ;angle = atan(dv/du) * !radeg ; angle in degree
         angle = atan(dv,du) * !radeg ; angle in degree
-        if (angle lt -89.9) then angle = angle + 180.
-        if (angle gt  89.9) then angle = angle - 180.
+        if (angle lt -89.9)    then angle += 180.
+        if (angle gt  89.9)    then angle -= 180.
+        ; if keyword_set(labrot) then angle += 180.
         ; offset label position to be level with line
         xlab = u[middle] + 0.3*chsize * cos((angle-90.)*!dtor)
         ylab = v[middle] + 0.3*chsize * sin((angle-90.)*!dtor)
+        ; if keyword_set(fixminus) then linelabel = StrJoin(StrSplit(linelabel, '-', /Regex, /Extract, /Preserve_Null), '!M-!X')
         xyouts, xlab, ylab, linelabel, align=0.5,orientation=angle, noclip=0,charsize=chars
     endif else begin
         ; if label too big, drop it and only plot line

@@ -377,6 +377,7 @@ The resulting FITS file can be read in IDL with eg. map={\tt readfits}({\em file
 	Note that the graticule will rotate with the sphere if Rot is set.
 	To outline only the equator set graticule=[360,90].
 	The automatic labeling of the graticule is controlled by {\tt Glsize}\\
+	The graticule line thickness is controlled via !P.THICK.\\
 	\default {0 [no graticule]} \\
 	\seealso \mylink{idl:mollview:igraticule}{Igraticule}, \mylink{idl:mollview:rot}{Rot}, \mylink{idl:mollview:coord}{Coord}, \mylink{idl:mollview:glsize}{Glsize}
 	}\\
@@ -571,10 +572,12 @@ Unobserved pixels, and pixels outside the sphere, take value \htmlref{{\tt
        containing the description of one (or several) outline(s) to
       be overplotted on the final map.\\
            For each contour or point list, the corresponding (sub)structure should
-	contain the following fields :  \\
+	contain the following fields:  \\
             -- 'COORD' coordinate system (either, 'C', 'G', or 'E') of the contour\\
             -- 'RA' RA/longitude coordinates of the contour vertices (array or scalar) \\
-            -- 'DEC' Dec/latitude coordinates of the contour vertices (array or scalar)\\
+            -- 'DEC' Dec/latitude coordinates of the contour vertices (array or
+scalar)\\
+	and can optionally contain the fields: \\
 	    -- 'LINE[STYLE]' (optional, scalar) {\bf +2}: black dashes, {\bf
 +1}: black dots, {\bf 0}: black solid (default), {\bf -1}: black dots on white background, {\bf -2}: black dashes on
 	white background\\
@@ -585,8 +588,9 @@ Unobserved pixels, and pixels outside the sphere, take value \htmlref{{\tt
                         connected by arcs of geodesics;
                     if $>0$, only the vertices are shown
                     \default {0} \\
-            -- 'SYM[SIZE]' (optional, scalar) vertice symbol size (same meaning as SYMSIZE in IDL)
-
+            -- 'SYM[SIZE]' (optional, scalar) vertice symbol size (same meaning
+as SYMSIZE in IDL), \default {1}\\
+	The line and symbol thickness can be controlled (indirectly) via !P.THICK.\\
 	Notes: when applicable, the vertices are connected by segments of geodesics. To
 	obtain a better looking outline, increase the number of vertices
 	provided. The outline does not have to be closed. The procedure will NOT

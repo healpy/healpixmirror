@@ -8,7 +8,7 @@ healpyrepo="https://github.com/healpy/healpy.git"
 #healpyarchive="https://github.com/healpy/healpy/archive/"
 healpyarchive="https://pypi.python.org/packages/source/h/healpy/"
 ##               https://pypi.python.org/packages/source/h/healpy/healpy-1.8.1.tar.gz
-mixed=1
+mixed=0
 if [ "$mixed" = "1" ]; then
     healpixbranch="trunk"
     healpixbranch_cxx="branches/branch_v310r461"

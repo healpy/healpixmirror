@@ -63,6 +63,7 @@ pro orthview, file_in, select_in, $
               OFFSET = offset, $
               ONLINE = online, $
               OUTLINE = outline, $
+              PDF = pdf, $
               PNG = png, $
               POLARIZATION = polarization, $
               PREVIEW = preview, $
@@ -130,7 +131,7 @@ if (n_params() lt 1 or n_params() gt 2) then begin
     print,'              NESTED=, NOBAR=, NOLABELS=, '
     print,'              NO_DIPOLE=, NO_MONOPOLE=, '
     print,'              OFFSET=, ONLINE=, OUTLINE=,'
-    print,'              PNG=, POLARIZATION=, PREVIEW=, '
+    print,'              PDF=, PNG=, POLARIZATION=, PREVIEW=, '
     print,'              PS=, PXSIZE=, PYSIZE=, QUADCUBE= ,'
     print,'              RETAIN=, ROT=,  '
     print,'              SAVE=, SHADED=, SILENT=, STAGGER=, SUBTITLE=, '
@@ -192,7 +193,8 @@ proj2out, $
   POLARIZATION=polarization, OUTLINE=outline, /ORTH, FLIP=flip, HALF_SKY=half_sky, COORD_IN=coord_in, $
   IGRATICULE=igraticule, HBOUND = hbound, WINDOW = window, SILENT=silent, GLSIZE=glsize, IGLSIZE=iglsize, $
   SHADEMAP=shademap, EXECUTE=execute, RETAIN=retain, TRUECOLORS=truecolors, TRANSPARENT=transparent, $
-  CHARTHICK=charthick, STAGGER=stagger, JPEG=jpeg, BAD_COLOR=bad_color, BG_COLOR=bg_color, FG_COLOR=fg_color
+  CHARTHICK=charthick, STAGGER=stagger, JPEG=jpeg, BAD_COLOR=bad_color, BG_COLOR=bg_color, FG_COLOR=fg_color, $
+  PDF=pdf
 
 w_num = !d.window
 ; restore original color table and PLOTS settings

@@ -75,7 +75,8 @@ pro proj2out, planmap, Tmax, Tmin, color_bar, dx, title_display, sunits, $
               IGRATICULE = igraticule, HBOUND = hbound, DIAMONDS = diamonds, WINDOW = window_user, $
               TRANSPARENT = transparent, EXECUTE=execute, SILENT=silent, GLSIZE=glsize, IGLSIZE=iglsize, $
               SHADEMAP=SHADEMAP, RETAIN=retain, TRUECOLORS=truecolors, CHARTHICK=charthick, $
-              STAGGER=stagger, AZEQ=azeq, JPEG=jpeg, BAD_COLOR=bad_color, BG_COLOR=bg_color, FG_COLOR=fg_color
+              STAGGER=stagger, AZEQ=azeq, JPEG=jpeg, BAD_COLOR=bad_color, BG_COLOR=bg_color, FG_COLOR=fg_color, $
+              PDF=pdf
 
 ;===============================================================================
 ;+
@@ -100,7 +101,7 @@ pro proj2out, planmap, Tmax, Tmin, color_bar, dx, title_display, sunits, $
 ;              ORTHOGRAPHIC=orthographic, $
 ;              FLIP=flip, HALF_SKY=half_sky,COORD_IN=coord_in, IGRATICULE=,
 ;              HBOUND=, DIAMONDS =, WINDOW =, TRANSPARENT=, EXECUTE=, SILENT=
-;              GLSIZE=, IGLSIZE=, SHADEMAP=, STAGGER=, AZEQ=, JPEG=
+;              GLSIZE=, IGLSIZE=, SHADEMAP=, STAGGER=, AZEQ=, JPEG=, PDF=
 ;
 ;   for more information, see Gnomview.pro Mollview.pro
 ;
@@ -127,6 +128,7 @@ pro proj2out, planmap, Tmax, Tmin, color_bar, dx, title_display, sunits, $
 ;                  supports CHARTHICK
 ;   Jan 2012, EH, turns off GRAT, IGRAT, HBOUND, OUTLINE when STAGGER is set
 ;                 added support of AZEQ and JPEG
+;   Dec 2014, EH, added PDF
 ;
 ;
 ; 2 problems with write_png,...,/transparent in GDL:
@@ -138,6 +140,17 @@ pro proj2out, planmap, Tmax, Tmin, color_bar, dx, title_display, sunits, $
 ;-
 ;===============================================================================
 
+do_gif  = keyword_set(gif)
+do_png  = keyword_set(png)
+do_jpeg = keyword_set(jpeg)
+do_ps   = keyword_set(ps)
+do_pdf  = keyword_set(pdf)
+if (do_gif + do_png + do_jpeg + do_ps + do_pdf gt 1) then begin
+    message,'Choose either GIF, JPEG, PDF, PNG or PS output'
+endif
+do_image = (do_gif || do_png || do_jpeg)
+do_print = (do_ps || do_pdf)
+
 identify_projection, projtype, projection=projection, mollweide=mollweide, gnomic=gnomic, cartesian=cartesian, orthographic=orthographic,  diamonds = diamonds, azeq=azeq
 do_gnom = 0
 do_moll = 0
@@ -145,11 +158,6 @@ do_cart = 0
 do_orth = 0
 do_azeq = 0
 do_fullsky = 0 ; dummy, only matters for orthview
-do_gif = keyword_set(gif)
-do_png = keyword_set(png)
-do_ps  = keyword_set(ps)
-do_jpeg  = keyword_set(jpeg)
-do_image = (do_gif || do_png || do_jpeg)
 do_true = keyword_set(truecolors)
 do_crop = keyword_set(crop)
 
@@ -160,10 +168,9 @@ do_polvector    = (polarization[0] eq 3)
 ;-------------------------------------------------
 in_gdl = 0 ;is_gdl()
 in_idl = ~in_gdl
-;if (do_ps) then 
 test_preview
 @idl_default_previewer ; defines the paper size
-if (do_ps and undefined(papersize)) then papersize = 'a4'
+if (do_print and undefined(papersize)) then papersize = 'a4'
 
 xsize = (size(planmap))(1)
 ysize = (size(planmap))(2)
@@ -211,7 +218,7 @@ if (projtype eq 2) then begin
 ; location of title and subtitle
     x_title = 0.5 & y_title = 0.95
     x_subtl = 0.5 & y_subtl = 0.915
-    if (do_ps) then begin
+    if (do_print) then begin
 ; default X dimension of hardcopy (cm)
         hxsize_def = 15.
 ; offset along the long axis of the page
@@ -260,7 +267,7 @@ if (projtype eq 1) then begin
 ; location of title and subtitle
     x_title = 0.5 & y_title = 0.95
     x_subtl = 0.5 & y_subtl = 0.905
-    if (do_ps) then begin
+    if (do_print) then begin
 ; default X dimension of hardcopy (cm)
         hxsize_def = 26.
 ; offset along the long axis of the page
@@ -309,7 +316,7 @@ if (projtype eq 5) then begin
 ; location of title and subtitle
     x_title = 0.5 & y_title = 0.95
     x_subtl = 0.5 & y_subtl = 0.905
-    if (do_ps) then begin
+    if (do_print) then begin
 ; default X dimension of hardcopy (cm)
         hxsize_def = 26.
 ; offset along the long axis of the page
@@ -360,7 +367,7 @@ if (projtype eq 4) then begin
 ; location of title and subtitle
     x_title = 0.5 & y_title = 0.95
     x_subtl = 0.5 & y_subtl = 0.905
-    if (do_ps) then begin
+    if (do_print) then begin
 ; default X dimension of hardcopy (cm)
         hxsize_def = 26.
 ; offset along the long axis of the page
@@ -410,7 +417,7 @@ if (projtype eq 3) then begin
 ; location of title and subtitle
     x_title = 0.5 & y_title = 0.95
     x_subtl = 0.5 & y_subtl = 0.915
-    if (do_ps) then begin
+    if (do_print) then begin
 ; default X dimension of hardcopy (cm)
         hxsize_def = 15.
 ; offset along the long axis of the page
@@ -460,7 +467,7 @@ if (projtype eq 6) then begin
 ; location of title and subtitle
     x_title = 0.5 & y_title = 0.95
     x_subtl = 0.5 & y_subtl = 0.915
-    if (do_ps) then begin
+    if (do_print) then begin
 ; default X dimension of hardcopy (cm)
         hxsize_def = 15.
 ; offset along the long axis of the page
@@ -536,13 +543,21 @@ old_device=!d.name
 if (be_verbose) then print,'... here it is.'
 titlewindow = proj_big+' projection : ' + title_display
 use_z_buffer = 0 ; set it to 0 (for postscript) 2010-03-18
-if (do_ps) then begin
+if (do_print) then begin
     ; 2009-11-04: 'ps' in GDL does not support: COLOR, BITS, XSIZE, ...
     if DEFINED(hxsize) then hxsize = (hxsize > 3) < 200 else hxsize = hxsize_def
-    if ((size(ps))(1) ne 7) then file_ps = 'plot_'+proj_small+'.ps' else file_ps = ps
+    if (do_ps) then begin
+        if (size(ps,/tname) ne 'STRING')  then file_ps = 'plot_'+proj_small+'.ps' else file_ps = ps[0]
+    endif
+    if (do_pdf) then begin
+        if (size(pdf,/tname) ne 'STRING') then file_pdf = 'plot_'+proj_small+'.pdf' else file_pdf = pdf[0]
+        file_ps = file_pdf+'TEMP.ps'
+    endif
     SET_plot,'ps'
     do_portrait = 0
     do_landscape = 0
+    device,encapsulated=0 ; make sure NOT to be encapsulated, since it would screw up the landscape mode,
+                          ; and the BBox is fine in non-encapsulated mode anyway  (2014-12-16)
     DEVICE, FILE=file_ps, /COLOR, BITS = 8 ; opens the file that will receive the PostScript plot
     if (do_gnom || (do_orth && ~do_fullsky)) then begin
         do_portrait = 1
@@ -661,9 +676,9 @@ if (do_shade && ~do_image) then begin
     image3d[*,*,0] = uint( (256. * red  [image] * shademap) < 65535.)
     image3d[*,*,1] = uint( (256. * green[image] * shademap) < 65535.)
     image3d[*,*,2] = uint( (256. * blue [image] * shademap) < 65535.)
-    if (do_ps) then loadct,0,/silent ; must be in grey-scale for TrueColor PS output
+    if (do_print) then loadct,0,/silent ; must be in grey-scale for TrueColor PS output
     TV, bytscl(image3d),w_xll,w_yll,/normal,xsize=1.,true=3
-    if (do_ps) then tvlct,red,green,blue ; revert to custom color table
+    if (do_print) then tvlct,red,green,blue ; revert to custom color table
     image3d = 0
 ; endif else if (do_true  && ~do_image) then begin
 endif else if (do_true) then begin
@@ -673,9 +688,9 @@ endif else if (do_true) then begin
     image3d[*,*,0] = red  [planmap[*,*,0]]
     image3d[*,*,1] = green[planmap[*,*,1]]
     image3d[*,*,2] = blue [planmap[*,*,2]]
-;;;    if (do_ps) then loadct,0,/silent; must be in grey-scale for TrueColor PS output
+;;;    if (do_print) then loadct,0,/silent; must be in grey-scale for TrueColor PS output
     tv, image3d, w_xll,w_yll,/normal,xsize=1.,true=3
-;;;    if (do_ps) then tvlct,red,green,blue ; revert to custom color table
+;;;    if (do_print) then tvlct,red,green,blue ; revert to custom color table
     image3d = 0
 endif else begin
     TV, planmap,w_xll,w_yll,/normal,xsize=1.
@@ -982,15 +997,28 @@ if do_image then begin
 endif
 
 
-if (do_ps) then begin
+if (do_print) then begin
     device,/close
     set_plot,old_device
-    if (be_verbose) then print,'PS file is in '+file_ps
-    if (keyword_set(preview)) then begin
-        test_preview, found_preview ;, /crash
-        if (found_preview gt 0) then begin
-            resolve_routine,'preview_file',/compile_full_file,/either
-            preview_file, file_ps, /ps, landscape=do_landscape
+    if (do_ps) then begin
+        if (be_verbose) then print,'PS file is in '+file_ps
+        if (keyword_set(preview)) then begin
+            test_preview, found_preview ;, /crash
+            if (found_preview gt 0) then begin
+                resolve_routine,'preview_file',/compile_full_file,/either
+                preview_file, file_ps, /ps, landscape=do_landscape
+            endif
+        endif
+    endif 
+    if (do_pdf) then begin
+        cgPS2PDF, file_ps, file_pdf, /delete_ps, pagetype=papersize, /showcmd
+        if (be_verbose) then print,'PDF file is in '+file_pdf
+        if (keyword_set(preview)) then begin
+            test_preview, found_preview ;, /crash
+            if (found_preview gt 0) then begin
+                resolve_routine,'preview_file',/compile_full_file,/either
+                preview_file, file_pdf, /pdf
+            endif
         endif
     endif
 endif else if (use_z_buffer) then begin

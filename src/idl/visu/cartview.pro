@@ -60,6 +60,7 @@ PRO cartview, file_in, select_in, $
               OFFSET=offset, $
               ONLINE = online, $
               OUTLINE = outline, $
+              PDF = pdf, $
               PNG = png, $
               POLARIZATION = polarization, $
               PREVIEW = preview, $
@@ -123,7 +124,7 @@ if (n_params() lt 1 or n_params() gt 2) then begin
     print,'              MAX=, MIN=, NESTED=, NOBAR=, NOLABELS=, NOPOSITION = '
 ;    print,'              NO_DIPOLE, NO_MONOPLE, '
     print,'              OFFSET=, ONLINE=, OUTLINE=,'
-    print,'              PNG=,'
+    print,'              PDF=, PNG=,'
     print,'              POLARIZATION=, PREVIEW=, '
     print,'              PS=, PXSIZE=, PYSIZE=, QUADCUBE= ,'
     print,'              RESO_ARCMIN=, RETAIN=, ROT=, '
@@ -184,7 +185,7 @@ proj2out, $
   POLARIZATION=polarization, OUTLINE=outline, /CART, FLIP=flip, COORD_IN=coord_in, IGRATICULE=igraticule, $
   HBOUND = hbound, WINDOW = window, TRANSPARENT = transparent, EXECUTE=execute, $
   SILENT=silent, GLSIZE = glsize, IGLSIZE = iglsize, RETAIN=retain, TRUECOLORS=truecolors, CHARTHICK=charthick, $
-  JPEG=jpeg, BAD_COLOR=bad_color, BG_COLOR=bg_color, FG_COLOR=fg_color
+  JPEG=jpeg, BAD_COLOR=bad_color, BG_COLOR=bg_color, FG_COLOR=fg_color, PDF=pdf
 
 w_num = !d.window
 ; restore original color table and PLOTS settings

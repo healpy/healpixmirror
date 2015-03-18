@@ -91,7 +91,7 @@ find_in_path, prevdef,finalpath,count,crash_on_error=crash
 if (count eq 0) then begin
 ;     message,/info,prevdef+' not found,'
 ;     message,/info,'can not preview file.'
-    message,/info,"PS/PNG/GIF file can not be previewed, because user's settings are missing."
+    message,/info,"PDF/PS/PNG/GIF file can not be previewed, because user's settings are missing."
     message,/info,'Run ./configure in Healpix main directory'
 endif
 

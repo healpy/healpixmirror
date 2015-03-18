@@ -61,6 +61,7 @@ pro init_healpix, verbose=verbose
 ; 2009-09-09: v2.12: introduced !hpx* variables used by HFI-L2
 ; 2009-09-14: v2.12e, correct typo
 ; 2009-10-07: v2.12f, add !healpix.path.doc.(*) sub-structure
+; 2015-03-17: v2.20,  add !healpix.path.src sub-structure
 ;-
 
 ; system variable name
@@ -80,6 +81,7 @@ target    = getenv('HEALPIX_TARGET')
 if strtrim(target,2) eq '' then target = 'generic_gcc'
 
 hpx_path_data     = defined_sysvar('!hpx_path_data')    ? !hpx_path_data    : set_default_hpx_path('HEALPIX',['data'])
+hpx_path_src      = defined_sysvar('!hpx_path_src')     ? !hpx_path_src     : set_default_hpx_path('HEALPIX',['src'])
 hpx_path_test     = defined_sysvar('!hpx_path_test')    ? !hpx_path_test    : set_default_hpx_path('HEALPIX',['test'])
 hpx_path_doc_html = defined_sysvar('!hpx_path_doc_html')? !hpx_path_doc_html: set_default_hpx_path('HEALPIX',['doc','html'])
 hpx_path_doc_pdf  = defined_sysvar('!hpx_path_doc_pdf') ? !hpx_path_doc_pdf : set_default_hpx_path('HEALPIX',['doc','pdf'])
@@ -117,7 +119,7 @@ endif
 
 stc_bin  = {cxx:hpx_path_bin_cxx,   f90:hpx_path_bin_f90}
 stc_doc  = {html:hpx_path_doc_html, pdf:hpx_path_doc_pdf}
-stc_path = {bin:stc_bin, data: hpx_path_data, doc:stc_doc, test: hpx_path_test}
+stc_path = {bin:stc_bin, data: hpx_path_data, doc:stc_doc, src:hpx_path_src, test: hpx_path_test}
 
 
 ; list of possible Nside's
@@ -136,6 +138,7 @@ comment = ['This system variable contains some information on Healpix :', $
            healpix_sysvar+'.PATH.BIN.F90  =     Fortran90',$
            healpix_sysvar+'.PATH.DATA = path to data subdirectory,',$
            healpix_sysvar+'.PATH.DOC  = path to doc subdirectories (.html, .pdf),',$
+           healpix_sysvar+'.PATH.SRC  = path to src subdirectory,',$
            healpix_sysvar+'.PATH.TEST = path to test subdirectory,',$
            healpix_sysvar+'.NSIDE     = list of all valid values of Nside parameter,',$
            healpix_sysvar+'.BAD_VALUE = value of flag given to missing pixels in FITS files,',$

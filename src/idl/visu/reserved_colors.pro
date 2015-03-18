@@ -17,6 +17,23 @@ end
 
 pro reserved_colors, red, green, blue, bad_color=bad_color, bg_color=bg_color, fg_color=fg_color, idx_bwg=idx_bwg
 
+routine = 'reserved_colors'
+syntax1 = routine+' RGB,     bad_color=, bg_color=, fg_color=, idx_bwg='
+syntax2 = routine+' R, G, B, bad_color=, bg_color=, fg_color=, idx_bwg='
+
+np = n_params()
+if (np ne 1 && np ne 3) then begin
+    print,'expected either 1 or 3 arguments:'
+    print,syntax1
+    print,syntax2
+    return
+endif
+if np eq 1 then begin
+    rgb = red
+    red   = rgb[*,0]
+    green = rgb[*,1]
+    blue  = rgb[*,2]
+endif
 
 ; set up some specific definitions
 ; reserve first colors for Black, White and Neutral grey
@@ -31,7 +48,11 @@ myrgb = rgb
 if defined(bad_color) then myrgb[idx_grey , 0:2]= process_reserved_colors( rgb, color=bad_color)
 if defined(bg_color)  then myrgb[idx_white, 0:2]= process_reserved_colors( rgb, color=bg_color )
 if defined(fg_color)  then myrgb[idx_black, 0:2]= process_reserved_colors( rgb, color=fg_color )
-red = myrgb[*,0] & green = myrgb[*,1] & blue = myrgb[*,2]
+if np eq 1 then begin
+    rgb = myrbg
+endif else begin
+    red = myrgb[*,0] & green = myrgb[*,1] & blue = myrgb[*,2]
+endelse
 
 
 return
