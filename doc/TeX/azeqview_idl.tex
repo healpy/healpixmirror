@@ -27,7 +27,7 @@
  of
 \healpix and COBE Quad-Cube maps in an IDL environment. 
 It also offers the possibility to
-generate GIF, JPEG, PNG and Postscript color-coded images of the projected map.
+generate GIF, JPEG, PDF, PNG and Postscript color-coded images of the projected map.
 The projected (but not color-coded) data can also be output in FITS files and
 IDL arrays.}
 {src/idl/visu/azeqview.pro}
@@ -52,16 +52,9 @@ IDL arrays.}
   \end{kwlist}
 \end{keywords}
 
-
+\renewcommand{\projfullname}{an azimuthal equidistant}
 \begin{codedescription}
-{\thedocid\ reads in a \healpix sky map in FITS format and generates an
-azimuthal equidistant projection of it, that can be visualized on the screen or
-exported in a GIF, JPEG, PNG or Postscript file. azeqview allows the selection of
-the coordinate system, point of projection, map size, color table, color bar inclusion,
-linear or log scaling, histogram equalised
-color scaling, maximum and 
-minimum range for the plot, plot-title {\it etc}. It also allows the representation of the
-polarization field. }
+{\input{mollview_description_idl}}
 \end{codedescription}
 
 %\include{mollview_idl_related}

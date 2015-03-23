@@ -174,6 +174,7 @@ if (do_print and undefined(papersize)) then papersize = 'a4'
 
 xsize = (size(planmap))(1)
 ysize = (size(planmap))(2)
+w_pos = (do_crop) ? [0.00, 0.00, 1.00, 1.00] : [0.00, 0.10, 1.00, 0.90]
 
 if (projtype eq 2) then begin
 ;  ---- Gnomonic specific definitions for the plot ----
@@ -182,7 +183,6 @@ if (projtype eq 2) then begin
     proj_big   = 'Gnomic'
     do_gnom    = 1
 
-;     du_dv = 1.                  ; aspect ratio
     du_dv = xsize/float(ysize)                  ; aspect ratio
     fudge = 1.00                ; 
     xc = (xsize-1)/2. & delta_x = (xsize-1 - xc)
@@ -191,8 +191,8 @@ if (projtype eq 2) then begin
     umin = - dx * xc * fudge & umax = dx * xc * fudge
     vmin = - dx * yc * fudge & vmax = dx * yc * fudge
 ; position of the rectangle in the final window
-    w_xll = 0.00 & w_xur = 1.00 & w_dx = w_xur - w_xll
-    w_yll = 0.10 & w_yur = 0.90 & w_dy = w_yur - w_yll
+    w_xll = w_pos[0] & w_xur = w_pos[2] & w_dx = w_xur - w_xll
+    w_yll = w_pos[1] & w_yur = w_pos[3] & w_dy = w_yur - w_yll
     w_dx_dy = w_dx / w_dy       ; 1.4
 ; color bar, position, dimension
     cbar_dx = 1./3.
@@ -205,9 +205,6 @@ if (projtype eq 2) then begin
     cring_dx = 1./15.
     cring_dy = 1./15.
     cring_xll = .025
-; cring_xur = .025 + cring_dx
-; cring_yur = w_yll
-; cring_yll = cring_yur - cring_dy
     cring_yll = .025
 ; location of astro. coordinate
     x_aspos = 0.5
@@ -223,8 +220,6 @@ if (projtype eq 2) then begin
         hxsize_def = 15.
 ; offset along the long axis of the page
         yoffset = (papersize eq 'a4') ? 2 : 1
-;yoffset = 2  ; Europe (A4)
-;yoffset = 1                 ; US (letter)
     endif
 endif
 
@@ -243,8 +238,8 @@ if (projtype eq 1) then begin
     umin = - du_dv * fudge & umax = du_dv * fudge
     vmin = - fudge         & vmax =         fudge
 ; position of the egg in the final window
-    w_xll = 0.0 & w_xur = 1.0 & w_dx = w_xur - w_xll
-    w_yll = 0.1 & w_yur = 0.9 & w_dy = w_yur - w_yll
+    w_xll = w_pos[0] & w_xur = w_pos[2] & w_dx = w_xur - w_xll
+    w_yll = w_pos[1] & w_yur = w_pos[3] & w_dy = w_yur - w_yll
     w_dx_dy = w_dx / w_dy       ; 1./.8
 ; color bar, position, dimension
     cbar_dx = 1./3.
@@ -257,9 +252,6 @@ if (projtype eq 1) then begin
     cring_dx = 1./10.
     cring_dy = 1./10.
     cring_xll = .025
-; cring_xur = .025 + cring_dx
-; cring_yur = w_yll
-; cring_yll = cring_yur - cring_dy
     cring_yll = .025
 ; location of pol vector scale
     vscal_x = 0.05
@@ -272,8 +264,6 @@ if (projtype eq 1) then begin
         hxsize_def = 26.
 ; offset along the long axis of the page
         yoffset = (papersize eq 'a4') ? 2 : 1
-    ;yoffset = 2  ; Europe (A4)
-    ;yoffset = 1                 ; US (letter)
     endif
 endif
 
@@ -292,8 +282,8 @@ if (projtype eq 5) then begin
     umin = - du_dv * fudge & umax = du_dv * fudge
     vmin = - fudge         & vmax =         fudge
 ; position of the egg in the final window
-    w_xll = 0.0 & w_xur = 1.0 & w_dx = w_xur - w_xll
-    w_yll = 0.1 & w_yur = 0.9 & w_dy = w_yur - w_yll
+    w_xll = w_pos[0] & w_xur = w_pos[2] & w_dx = w_xur - w_xll
+    w_yll = w_pos[1] & w_yur = w_pos[3] & w_dy = w_yur - w_yll
     w_dx_dy = w_dx / w_dy       ; 1./.8
 ; color bar, position, dimension
     cbar_dx = 1./3.
@@ -306,9 +296,6 @@ if (projtype eq 5) then begin
     cring_dx = 1./10.
     cring_dy = 1./10.
     cring_xll = .025
-; cring_xur = .025 + cring_dx
-; cring_yur = w_yll
-; cring_yll = cring_yur - cring_dy
     cring_yll = .025
 ; location of pol vector scale
     vscal_x = 0.05
@@ -321,8 +308,6 @@ if (projtype eq 5) then begin
         hxsize_def = 26.
 ; offset along the long axis of the page
         yoffset = (papersize eq 'a4') ? 2 : 1
-    ;yoffset = 2  ; Europe (A4)
-    ;yoffset = 1                 ; US (letter)
     endif
 endif
 
@@ -343,8 +328,8 @@ if (projtype eq 4) then begin
     umin = - du_dv * fudge & umax = du_dv * fudge
     vmin = - fudge         & vmax =         fudge
 ; position of the disc in the final window
-    w_xll = 0.0 & w_xur = 1.0 & w_dx = w_xur - w_xll
-    w_yll = 0.1 & w_yur = 0.9 & w_dy = w_yur - w_yll
+    w_xll = w_pos[0] & w_xur = w_pos[2] & w_dx = w_xur - w_xll
+    w_yll = w_pos[1] & w_yur = w_pos[3] & w_dy = w_yur - w_yll
     w_dx_dy = w_dx / w_dy       ; 1./.8
 ; color bar, position, dimension
     cbar_dx = 1./3.
@@ -357,9 +342,6 @@ if (projtype eq 4) then begin
     cring_dx = 1./10.
     cring_dy = 1./10.
     cring_xll = .025
-; cring_xur = .025 + cring_dx
-; cring_yur = w_yll
-; cring_yll = cring_yur - cring_dy
     cring_yll = .025
 ; location of pol vector scale
     vscal_x = 0.05
@@ -372,8 +354,6 @@ if (projtype eq 4) then begin
         hxsize_def = 26.
 ; offset along the long axis of the page
         yoffset = (papersize eq 'a4') ? 2 : 1
-    ;yoffset = 2  ; Europe (A4)
-    ;yoffset = 1                 ; US (letter)
     endif
 endif
 
@@ -393,8 +373,8 @@ if (projtype eq 3) then begin
     umin = - dx * xc * fudge & umax = dx * xc * fudge
     vmin = - dx * yc * fudge & vmax = dx * yc * fudge
 ; position of the rectangle in the final window
-    w_xll = 0.00 & w_xur = 1.00 & w_dx = w_xur - w_xll
-    w_yll = 0.10 & w_yur = 0.90 & w_dy = w_yur - w_yll
+    w_xll = w_pos[0] & w_xur = w_pos[2] & w_dx = w_xur - w_xll
+    w_yll = w_pos[1] & w_yur = w_pos[3] & w_dy = w_yur - w_yll
     w_dx_dy = w_dx / w_dy       ; 1.4
 ; color bar, position, dimension
     cbar_dx = 1./3.
@@ -422,8 +402,6 @@ if (projtype eq 3) then begin
         hxsize_def = 15.
 ; offset along the long axis of the page
         yoffset = (papersize eq 'a4') ? 2 : 1
-    ;yoffset = 2  ; Europe (A4)
-    ;yoffset = 1                 ; US (letter)
     endif
 endif
 
@@ -443,8 +421,8 @@ if (projtype eq 6) then begin
     umin = - dx * xc * fudge & umax = dx * xc * fudge
     vmin = - dx * yc * fudge & vmax = dx * yc * fudge
 ; position of the rectangle in the final window
-    w_xll = 0.00 & w_xur = 1.00 & w_dx = w_xur - w_xll
-    w_yll = 0.10 & w_yur = 0.90 & w_dy = w_yur - w_yll
+    w_xll = w_pos[0] & w_xur = w_pos[2] & w_dx = w_xur - w_xll
+    w_yll = w_pos[1] & w_yur = w_pos[3] & w_dy = w_yur - w_yll
     w_dx_dy = w_dx / w_dy       ; 1.4
 ; color bar, position, dimension
     cbar_dx = 1./3.
@@ -472,8 +450,6 @@ if (projtype eq 6) then begin
         hxsize_def = 15.
 ; offset along the long axis of the page
         yoffset = (papersize eq 'a4') ? 2 : 1
-    ;yoffset = 2  ; Europe (A4)
-    ;yoffset = 1                 ; US (letter)
     endif
 endif
 ;====================================================
@@ -546,6 +522,7 @@ use_z_buffer = 0 ; set it to 0 (for postscript) 2010-03-18
 if (do_print) then begin
     ; 2009-11-04: 'ps' in GDL does not support: COLOR, BITS, XSIZE, ...
     if DEFINED(hxsize) then hxsize = (hxsize > 3) < 200 else hxsize = hxsize_def
+    hysize = hxsize / du_dv * w_dx_dy
     if (do_ps) then begin
         if (size(ps,/tname) ne 'STRING')  then file_ps = 'plot_'+proj_small+'.ps' else file_ps = ps[0]
     endif
@@ -561,16 +538,16 @@ if (do_print) then begin
     DEVICE, FILE=file_ps, /COLOR, BITS = 8 ; opens the file that will receive the PostScript plot
     if (do_gnom || (do_orth && ~do_fullsky)) then begin
         do_portrait = 1
-        DEVICE, /PORTRAIT,  XSIZE=hxsize, YSIZE=hxsize/du_dv*w_dx_dy, XOFFSET=4, YOFFSET=2
+        DEVICE, /PORTRAIT,  XSIZE=hxsize, YSIZE=hysize, XOFFSET=4, YOFFSET=2
     endif
     if (do_moll || (do_orth && do_fullsky)) then begin
         do_landscape = 1
-        DEVICE, /LANDSCAPE, XSIZE=hxsize, YSIZE=hxsize/du_dv*w_dx_dy, XOFFSET=4, YOFFSET=hxsize+yoffset
+        DEVICE, /LANDSCAPE, XSIZE=hxsize, YSIZE=hysize, XOFFSET=4, YOFFSET=hxsize+yoffset
     endif
     if (do_cart || do_azeq) then begin
         do_landscape = 1
-;         DEVICE, /LANDSCAPE, XSIZE=hxsize, YSIZE=hxsize/du_dv*w_dx_dy, XOFFSET=4, YOFFSET=hxsize+yoffset
-        DEVICE, /LANDSCAPE, XSIZE=hxsize, YSIZE=hxsize/du_dv*w_dx_dy, XOFFSET=0, YOFFSET=hxsize+yoffset
+;         DEVICE, /LANDSCAPE, XSIZE=hxsize, YSIZE=hysize, XOFFSET=4, YOFFSET=hxsize+yoffset
+        DEVICE, /LANDSCAPE, XSIZE=hxsize, YSIZE=hysize, XOFFSET=0, YOFFSET=hxsize+yoffset
     endif
     TVLCT,red,green,blue
 ;    thick_dev = 2. ; device dependent thickness factor
@@ -656,8 +633,8 @@ endelse
 
 myplot={urange:[umin,umax],vrange:[vmin,vmax],position:[w_xll,w_yll,w_xur,w_yur],xstyle:5,ystyle:5}
 plot, /nodata, myplot.urange, myplot.vrange, pos=myplot.position, XSTYLE=myplot.xstyle, YSTYLE=myplot.ystyle
-; Set the background when doing a plot in Z buffer
-if (use_z_buffer) then begin
+; if (use_z_buffer) then begin; Set the background when doing a plot in Z buffer
+if (do_image) then begin; set the background when doing PNG/GIF/JPG
     l64ysize = long64(ysize*w_dx_dy)
     if ~do_true then begin 
         tv, replicate(!p.background, xsize, l64ysize)
@@ -698,7 +675,7 @@ endelse
 hpxv11 = 0
 
 ; the polarisation color ring
-if (do_poldirection) then begin
+if (~do_crop && do_poldirection) then begin
     npring = xsize*cring_dx
     one = replicate(1.,npring)
     yy  = one # (findgen(npring) - npring/2)
@@ -743,7 +720,7 @@ if (do_polvector) then begin
 endif
 
 ;  the color bar
-if (~(keyword_set(nobar) || do_poldirection || do_true)) then begin
+if (~(do_crop || keyword_set(nobar) || do_poldirection || do_true)) then begin
     color_bar_out = BYTE(CONGRID(color_bar,xsize*cbar_dx)) # REPLICATE(1.,(ysize*cbar_dy*w_dx_dy)>1)
     back[xsize*cbar_xll,0] = color_bar_out
     TV, back,0,cbar_yll,/normal,xsize = 1.
@@ -753,7 +730,7 @@ if (~(keyword_set(nobar) || do_poldirection || do_true)) then begin
 endif
 
 ;  the color bar labels
-if (~(keyword_set(nobar) || keyword_set(nolabels) || do_true || do_poldirection)) then begin
+if (~(do_crop || keyword_set(nobar) || keyword_set(nolabels) || do_true || do_poldirection)) then begin
     format = '(g10.2)'
     if ((Tmax - Tmin) ge 50 and MAX(ABS([Tmax,Tmin])) le 1.e5) then format='(i8)'
     if ((Tmax - Tmin) ge 5  and MAX(ABS([Tmax,Tmin])) le 1.e2) then format='(f6.1)'
@@ -766,7 +743,7 @@ if (~(keyword_set(nobar) || keyword_set(nolabels) || do_true || do_poldirection)
 endif
 
 ; the polarisation vector scale
-if (~keyword_set(nobar)  && do_polvector) then begin
+if (~do_crop && ~keyword_set(nobar)  && do_polvector) then begin
     vp_plot = 5*pol_rescale[0] /pgparam[0]; length of ruler on plot
     vp_phys = 5*vector_scale[0]/pgparam[0] ; 'physical' length of ruler
     plots, vscal_x*[1,1], vscal_y+[0, vp_plot]*w_dy, /normal
@@ -777,11 +754,13 @@ if (~keyword_set(nobar)  && do_polvector) then begin
 endif
 
 ;  the title
-if (~ keyword_set(titleplot)) then title= '!6'+title_display else title='!6'+titleplot
-XYOUTS, x_title, y_title ,title, align=0.5, /normal, chars=1.6*charsfactor, charthick=mycharthick
+if (~do_crop) then begin
+    if (~ keyword_set(titleplot)) then title= '!6'+title_display else title='!6'+titleplot
+    XYOUTS, x_title, y_title ,title, align=0.5, /normal, chars=1.6*charsfactor, charthick=mycharthick
+endif
 
 ;  the subtitle
-if (keyword_set(subtitle)) then begin
+if (~do_crop && keyword_set(subtitle)) then begin
     XYOUTS, x_subtl, y_subtl ,'!6 '+subtitle, align=0.5, /normal, chars=1.6*.75*charsfactor, charthick=mycharthick
 endif
 
@@ -789,7 +768,7 @@ endif
 
 if (do_gnom) then begin
 ;  astronomical position of central point
-    if (not keyword_set(noposition)) then begin
+    if (~do_crop && ~keyword_set(noposition)) then begin
         if (undefined(rot_ang)) then rot_ang = [0.,0.,0.] else rot_ang = ([rot_ang,0,0])(0:2)
         rot_0 = STRTRIM(STRING(rot_ang(0),form='(f6.1)'),2)
         rot_1 = STRTRIM(STRING(rot_ang(1),form='(f6.1)'),2)
@@ -922,51 +901,28 @@ if do_image then begin
             if (itr/2 and 1) then transp_colors[idx_white] = 0B ; turn white into transparent
         endif
     endif
-    if do_crop then begin
-        y_crop_low = round(w_yll * n_elements(image[0,*])) & y_crop_hi  = y_crop_low + ysize - 1
-        cropped = image[*,y_crop_low:y_crop_hi]
-        if do_gif then write_gif,file_image,cropped,red,green,blue
-        if do_png then begin
-            if (do_shade || do_true) then begin
-                write_png, file_image, image3d[*,*,y_crop_low:y_crop_hi]
+    ; write GIF/JPG/PNG
+    if do_gif then write_gif,file_image, image,red,green,blue
+    if do_png then begin
+        if (do_shade || do_true) then begin
+            write_png, file_image, image3d
+        endif else begin
+            if (keyword_set(transparent)) then begin
+                mytransp = (in_idl) ? transp_colors  : 0 ; transp_colors[image]
+                write_png,file_image, image,red,green,blue, transparent=mytransp
             endif else begin
-                if (keyword_set(transparent)) then begin
-                    mytransp = (in_idl) ? transp_colors  :  0 ; transp_colors[cropped]
-                    write_png,file_image,cropped,red,green,blue, transparent=mytransp
-                endif else begin
-                    write_png,file_image,cropped,red,green,blue
-                endelse
+                write_png,file_image, image,red,green,blue
             endelse
-        endif
-        if do_jpeg then begin
-            if (do_shade || do_true) then begin
-                write_jpg_custom, file_image, image3d[*,*,y_crop_low:y_crop_hi], true=1, quality=jquality
-            endif else begin
-                write_jpg_custom, file_image, cropped, red, green, blue,                 quality=jquality
-            endelse
-        endif
-    endif else begin ; uncropped
-        if do_gif then write_gif,file_image, image,red,green,blue
-        if do_png then begin
-            if (do_shade || do_true) then begin
-                write_png, file_image, image3d
-            endif else begin
-                if (keyword_set(transparent)) then begin
-                    mytransp = (in_idl) ? transp_colors  : 0 ; transp_colors[image]
-                    write_png,file_image, image,red,green,blue, transparent=mytransp
-                endif else begin
-                    write_png,file_image, image,red,green,blue
-                endelse
-            endelse
-        endif
-        if do_jpeg then begin
-            if (do_shade || do_true) then begin
-                write_jpg_custom, file_image, image3d,             true=1, quality=jquality
-            endif else begin
-                write_jpg_custom, file_image, image,red,green,blue,        quality=jquality
-            endelse
-        endif
-    endelse
+        endelse
+    endif
+    if do_jpeg then begin
+        if (do_shade || do_true) then begin
+            write_jpg_custom, file_image, image3d,             true=1, quality=jquality
+        endif else begin
+            write_jpg_custom, file_image, image,red,green,blue,        quality=jquality
+        endelse
+    endif
+    ; back to X window
     if (to_patch && ~use_z_buffer) then begin 
         if (in_gdl) then begin
 ; unresolved GDL0.9.2 bug: if a window is already open for a given color table
@@ -1011,7 +967,8 @@ if (do_print) then begin
         endif
     endif 
     if (do_pdf) then begin
-        cgPS2PDF, file_ps, file_pdf, /delete_ps, pagetype=papersize, /showcmd
+        ;cgPS2PDF, file_ps, file_pdf, /delete_ps, pagetype=papersize, /showcmd
+        epstopdf, file_ps, file_pdf, /delete_ps, /silent
         if (be_verbose) then print,'PDF file is in '+file_pdf
         if (keyword_set(preview)) then begin
             test_preview, found_preview ;, /crash

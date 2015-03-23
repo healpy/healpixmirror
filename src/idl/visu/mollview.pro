@@ -199,9 +199,9 @@ pro mollview, file_in, select_in, $
 ;               original system assumed to be Galactic unless indicated otherwise in the file)
 ;                  see also : Rot
 ;
-;       CROP : if set the image file (gif, png) only contains the mollweide map and
-;               not the title, color bar, ...
-;               (see also : GIF, PNG)
+;       CROP : if set, the image produced (gif, jpeg, pdf, png, ps, X) only
+;               contains the projected map and not the title, color bar, ...
+;               (see also : GIF, JPEG, PDF, PNG, PS)
 ;
 ;       EXECUTE: character string containing an IDL command to be executed in
 ;                the plotting window

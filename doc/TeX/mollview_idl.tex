@@ -42,7 +42,7 @@
 {This IDL facility provides a means to visualise a full sky Mollweide projection of
 \healpix and COBE Quad-Cube maps in an IDL environment. 
 It also offers the possibility to
-generate GIF, JPEG, PNG and Postscript color-coded images of the projected map. 
+generate GIF, JPEG, PDF, PNG and Postscript color-coded images of the projected map. 
 The projected (but not color-coded) data can also be output in FITS files and
 IDL arrays.}
 {src/idl/visu/mollview.pro}
@@ -250,11 +250,13 @@ See \mylink{idl:mollview:example6}{Example \#6} \latexhtml{on page~\pageref{page
 
 
 {/CROP}\mytarget{idl:mollview:crop}  & \mylink{idl:mollview:routines}{all}  & \parbox[t]{\hsize}{
-		if set the GIF/JPEG/PNG file only contains the map and
+		if set, the image produced (in GIF/JPEG/PDF/PNG/PS and on screen) only contains the projected map and
                no title, color bar, ... \\
                 \seealso \mylink{idl:mollview:gif}{Gif},
 			\mylink{idl:mollview:jpeg}{Jpeg}, 
-			\mylink{idl:mollview:png}{Png}}\\
+			\mylink{idl:mollview:pdf}{Pdf},
+			\mylink{idl:mollview:png}{Png},
+			\mylink{idl:mollview:ps}{Ps}}\\
 
 
 {EXECUTE=}\mytarget{idl:mollview:execute}  & \mylink{idl:mollview:routines}{all}  & \parbox[t]{\hsize}{
@@ -333,8 +335,11 @@ The resulting FITS file can be read in IDL with eg. map={\tt readfits}({\em file
 
 {GIF=}\mytarget{idl:mollview:gif}  & \mylink{idl:mollview:routines}{all}  & \parbox[t]{\hsize}{
 		string containing the name of a .GIF output \\
-	      if set to 1            : output the plot in plot\_[projection].gif \\
-	      if set to a file name  : output the plot in that file \\
+	      if set to 1            : outputs the plot in 
+{\tt plot\_}{\em projection}{\tt .gif}, where {\em projection} is either
+{\tt azimequid}, {\tt cartesian}, {\tt gnomic}, {\tt mollweide} 
+or {\tt orthographic}, \\
+	      if set to a file name  : outputs the plot in that file \\
 	Please note that the resulting GIF image might not always look
 	      as expected. The reason for this is a problem with
 	      'backing store' in the IDL-routine TVRD. Please read the IDL
@@ -342,9 +347,10 @@ The resulting FITS file can be read in IDL with eg. map={\tt readfits}({\em file
 	\default {no .GIF done} \\              
 	\seealso \mylink{idl:mollview:crop}{Crop}, 			
 		\mylink{idl:mollview:jpeg}{Jpeg}, 
+		\mylink{idl:mollview:pdf}{Pdf}, 
 		\mylink{idl:mollview:png}{Png}, 
-		\mylink{idl:mollview:ps}{Ps}, 
-		\mylink{idl:mollview:preview}{Preview}
+		\mylink{idl:mollview:preview}{Preview},
+		\mylink{idl:mollview:ps}{Ps}
 		and \mylink{idl:mollview:retain}{Retain}}\\
 
 %%%%%%%%%%%%%%%%%
@@ -449,7 +455,10 @@ boundaries with solid lines.
 
 {JPEG=}\mytarget{idl:mollview:jpeg}  & \mylink{idl:mollview:routines}{all}  & \parbox[t]{\hsize}{
 		string containing the name of a {\em lossless} .JPEG output file\\
-	      if set to 1            : output the plot in plot\_[projection].jpeg \\
+	      if set to 1            : outputs the plot in 
+{\tt plot\_}{\em projection}{\tt .jpeg}, where {\em projection} is either
+{\tt azimequid}, {\tt cartesian}, {\tt gnomic}, {\tt mollweide} 
+or {\tt orthographic}, \\
 	      if set to a file name  : output the plot in that file \\
 % 	Please note that the resulting JPEG image might not always look
 % 	      as expected. The reason for this is problems with
@@ -462,7 +471,8 @@ boundaries with solid lines.
 \mylink{idl:mollview:gif}{Gif}, 
 \mylink{idl:mollview:map_out}{Map\_out}, 
 \mylink{idl:mollview:png}{Png}, 
-\mylink{idl:mollview:preview}{Preview}
+\mylink{idl:mollview:preview}{Preview},
+\mylink{idl:mollview:pdf}{Pdf}, 
 \mylink{idl:mollview:ps}{Ps}, 
 and \mylink{idl:mollview:retain}{Retain}}\\
 
@@ -473,15 +483,6 @@ and \mylink{idl:mollview:retain}{Retain}}\\
 	emission templates; for arbitrary maps, use /ASINH instead.	 \\
 	\seealso \mylink{idl:mollview:asinh}{Asinh}, \mylink{idl:mollview:factor}{Factor}, \mylink{idl:mollview:hist_equal}{Hist\_Equal}, \mylink{idl:mollview:offset}{Offset}}\\
 
-%%%%%%%%%%%%%%%%%
-\end{tabular}
-\mollbacktotop
-%-----------------------------------------------------------
-\begin{tabular}{p{\sizeone} p{\sizetwo} p{\sizethr}}
-\hline  
-\textbf{name} & \textbf{routines} & \textbf{\ description} \\ \hline
-%                   &   &                            \\ %%% for presentation
-%%%%%%%%%%%%%%%%%
 
 {MAP\_OUT=}\mytarget{idl:mollview:map_out} & \mylink{idl:mollview:routines}{all}& \parbox[t]{\hsize}{
 	variable that will contain the projected map on output.\\
@@ -497,6 +498,16 @@ when applicable, its orientation and coordinates by
 Unobserved pixels, and pixels outside the sphere, take value \htmlref{{\tt
 !healpix.bad\_value}}{idl:init_healpix} ($=-1.6375\,10^{30}$).\\
 	\seealso \mylink{idl:mollview:fits}{Fits}}\\
+
+%%%%%%%%%%%%%%%%%
+\end{tabular}
+\mollbacktotop
+%-----------------------------------------------------------
+\begin{tabular}{p{\sizeone} p{\sizetwo} p{\sizethr}}
+\hline  
+\textbf{name} & \textbf{routines} & \textbf{\ description} \\ \hline
+%                   &   &                            \\ %%% for presentation
+%%%%%%%%%%%%%%%%%
 
 {MAX=}\mytarget{idl:mollview:max}  & \mylink{idl:mollview:routines}{all}  & \parbox[t]{\hsize}{
 	Set the maximum value for the plotted signal \\ \default{is to use the actual signal
@@ -538,6 +549,15 @@ Unobserved pixels, and pixels outside the sphere, take value \htmlref{{\tt
 {/NOPOSITION}\mytarget{idl:mollview:noposition} & \mylink{idl:mollview:routines}{--G--} & if set, the astronomical location of the map
         central point is not indicated \\
  
+
+{OFFSET=}\mytarget{idl:mollview:offset} & \mylink{idl:mollview:routines}{all}& \parbox[t]{\hsize}{scalar additive factor to be applied to the valid data \\
+	the data plotted is of the form Factor*(data + Offset) \\
+	This does not affect the flagged pixels \\
+	can be used together with ASINH or LOG \\
+	When used with TRUECOLORS, OFFSET can be a 3-element vector. \\
+        \seealso : \mylink{idl:mollview:asinh}{ASINH}, \mylink{idl:mollview:factor}{Factor}, \mylink{idl:mollview:log}{LOG}, \mylink{idl:mollview:truecolors}{TRUECOLORS} \\
+	\default {0.0} } \\
+	
 %%%%%%%%%%%%%%%%%
 \end{tabular}
 \mollbacktotop
@@ -548,23 +568,6 @@ Unobserved pixels, and pixels outside the sphere, take value \htmlref{{\tt
 %                   &   &                            \\ %%% for presentation
 %%%%%%%%%%%%%%%%%
 
-{OFFSET=}\mytarget{idl:mollview:offset} & \mylink{idl:mollview:routines}{all}& \parbox[t]{\hsize}{scalar additive factor to be applied to the valid data \\
-	the data plotted is of the form Factor*(data + Offset) \\
-	This does not affect the flagged pixels \\
-	can be used together with ASINH or LOG \\
-	When used with TRUECOLORS, OFFSET can be a 3-element vector. \\
-        \seealso : \mylink{idl:mollview:asinh}{ASINH}, \mylink{idl:mollview:factor}{Factor}, \mylink{idl:mollview:log}{LOG}, \mylink{idl:mollview:truecolors}{TRUECOLORS} \\
-	\default {0.0} } \\
-	
-% {/ONLINE}  & \mylink{idl:mollview:routines}{all}  & \parbox[t]{\hsize}{
-% 		if set, the argument File can be either an array containing a \healpix map,
-% 		or an IDL structure describing a \healpix map, instead of an external filename 
-% 		(useful when the data to be plotted are already
-%     		available in memory)
-% 		Note: in order to preserve the integrity of the input data, 
-% 		the content of File is replicated before being possibly altered by the map making process, 
-% 		therefore this option will requires more memory than reading the data from directly disc, and is not recommended
-% 		to visualize data sets of size comparable to that of the computer memory. \\ can not be used with /SAVE}\\
 
 
 {OUTLINE=}\mytarget{idl:mollview:outline} & \mylink{idl:mollview:routines}{all}&  \parbox[t]{\hsize}{
@@ -597,6 +600,23 @@ as SYMSIZE in IDL), \default {1}\\
 	attempt to close the outline.\\Several outlines can be overplotted at
 once by gathering the respective structures into one meta-structure or an array.\\ \seealso{\mylink{idl:mollview:coord}{Coord}, \mylink{idl:mollview:graticule}{Graticule}}} \\
  
+
+{PDF=}\mytarget{idl:mollview:pdf}  & \mylink{idl:mollview:routines}{all}  &  \parbox[t]{\hsize}{
+	      string containing the name of a .PNG output \\
+	      if set to 0            : no PDF output \\
+	      if set to 1            : outputs the plot in 
+{\tt plot\_}{\em projection}{\tt .pdf}, where {\em projection} is either
+{\tt azimequid}, {\tt cartesian}, {\tt gnomic}, {\tt mollweide} 
+or {\tt orthographic}, \\
+	      if set to a file name  : outputs the plot in that file \\
+		\default 0 \\
+               \seealso 
+\mylink{idl:mollview:preview}{Preview}, 
+\mylink{idl:mollview:gif}{Gif}, 
+\mylink{idl:mollview:jpeg}{Jpeg}, 
+\mylink{idl:mollview:png}{Png},
+\mylink{idl:mollview:ps}{Ps}}\\
+
 %%%%%%%%%%%%%%%%%
 \end{tabular}
 \mollbacktotop
@@ -609,8 +629,11 @@ once by gathering the respective structures into one meta-structure or an array.
 
 {PNG=}\mytarget{idl:mollview:png}  & \mylink{idl:mollview:routines}{all}  & \parbox[t]{\hsize}{
 		string containing the name of a .PNG output \\
-	      if set to 1            : output the plot in plot\_[projection].png \\
-	      if set to a file name  : output the plot in that file \\
+	      if set to 1            : outputs the plot in 
+{\tt plot\_}{\em projection}{\tt .png}, where {\em projection} is either
+{\tt azimequid}, {\tt cartesian}, {\tt gnomic}, {\tt mollweide} 
+or {\tt orthographic}, \\
+	      if set to a file name  : outputs the plot in that file \\
 	Please note that the resulting PNG image might not always look
 	      as expected. The reason for this is problems with
 	      'backing store' in the IDL-routine TVRD. Please read the IDL
@@ -622,7 +645,8 @@ once by gathering the respective structures into one meta-structure or an array.
 \mylink{idl:mollview:gif}{Gif}, 
 \mylink{idl:mollview:jpeg}{Jpeg}, 
 \mylink{idl:mollview:map_out}{Map\_out}, 
-\mylink{idl:mollview:preview}{Preview}
+\mylink{idl:mollview:preview}{Preview},
+\mylink{idl:mollview:pdf}{Pdf}, 
 \mylink{idl:mollview:ps}{Ps}, 
 and \mylink{idl:mollview:retain}{Retain}}\\
 
@@ -678,20 +702,23 @@ and \mylink{idl:mollview:retain}{Retain}}\\
 	        postscript file or a 'xv' preview of the gif file\\
 	 \seealso \mylink{idl:mollview:gif}{Gif}, 
 		\mylink{idl:mollview:jpeg}{Jpeg}, 
-		\mylink{idl:mollview:png}{Png} 
+		\mylink{idl:mollview:pdf}{Pdf},
+		\mylink{idl:mollview:png}{Png},
 		and \mylink{idl:mollview:ps}{Ps}}\\
 
-
 {PS=}\mytarget{idl:mollview:ps}  & \mylink{idl:mollview:routines}{all}  &  \parbox[t]{\hsize}{
-	      if set to 0            : no postscript output \\
-	      if set to 1            : output the plot in plot\_cartesian.ps, plot\_gnomic.ps,
-	      plot\_mollweide.ps or plot\_orthographic.ps respectively \\
-	      if set to a file name  : output the plot in that file \\
+	      if set to 0            : no PostScript output \\
+	      if set to 1            : outputs the plot 
+{\tt plot\_}{\em projection}{\tt .ps}, where {\em projection} is either
+{\tt azimequid}, {\tt cartesian}, {\tt gnomic}, {\tt mollweide} 
+or {\tt orthographic}, \\
+	      if set to a file name  : outputs the plot in that file \\
 		\default 0 \\
                \seealso 
 \mylink{idl:mollview:preview}{Preview}, 
 \mylink{idl:mollview:gif}{Gif}, 
 \mylink{idl:mollview:jpeg}{Jpeg}, 
+\mylink{idl:mollview:pdf}{Pdf},
 \mylink{idl:mollview:png}{Png}}\\
 
 
@@ -706,6 +733,7 @@ output map\\
 \mylink{idl:mollview:gif}{GIF}, 
 \mylink{idl:mollview:jpeg}{JPEG}, 
 \mylink{idl:mollview:map_out}{MAP\_OUT}, 
+\mylink{idl:mollview:pdf}{PDF},
 \mylink{idl:mollview:png}{PNG}, 
 \mylink{idl:mollview:ps}{PS}.}\\
 
@@ -721,6 +749,7 @@ output map\\
 \mylink{idl:mollview:gif}{GIF}, 
 \mylink{idl:mollview:jpeg}{JPEG}, 
 \mylink{idl:mollview:map_out}{MAP\_OUT}, 
+\mylink{idl:mollview:pdf}{PDF},
 \mylink{idl:mollview:png}{PNG}, 
 \mylink{idl:mollview:ps}{PS}.}\\
 
@@ -801,6 +830,16 @@ white or \mylink{idl:mollview:bg_color}{BG\_COLOR})\\
 If set to 3, both the grey and white pixels will look transparent.\\
 Active only in conjunction with \mylink{idl:mollview:png}{PNG}}\\
 
+{TRUECOLORS=}\mytarget{idl:mollview:truecolors} & \mylink{idl:mollview:routines}{all}& \parbox[t]{\hsize}{
+if the input data is of the form [Npix,3], then the 3 fields
+            are respectively understood as {Red, Green, Blue} True-Color
+channels, and the \mylink{idl:mollview:colt}{color table} is ignored.\\
+-- If set to 1, the mapping field-intensity to color is done for the 3 channels at once. (\seealso \mylink{idl:mollview:factor}{Factor}, \mylink{idl:mollview:offset}{Offset})\\
+-- If set to 2, that mapping is done for each channel separately (in that case, \mylink{idl:mollview:min}{MIN}
+and \mylink{idl:mollview:max}{MAX} keywords are ignored). 
+}\\
+
+
 %%%%%%%%%%%%%%%%%
 \end{tabular}
 \mollbacktotop
@@ -810,15 +849,6 @@ Active only in conjunction with \mylink{idl:mollview:png}{PNG}}\\
 \textbf{name} & \textbf{routines} & \textbf{\ description} \\ \hline
 %                   &   &                            \\ %%% for presentation
 %%%%%%%%%%%%%%%%%
-
-{TRUECOLORS=}\mytarget{idl:mollview:truecolors} & \mylink{idl:mollview:routines}{all}& \parbox[t]{\hsize}{
-if the input data is of the form [Npix,3], then the 3 fields
-            are respectively understood as {Red, Green, Blue} True-Color
-channels, and the \mylink{idl:mollview:colt}{color table} is ignored.\\
--- If set to 1, the mapping field-intensity to color is done for the 3 channels at once. (\seealso \mylink{idl:mollview:factor}{Factor}, \mylink{idl:mollview:offset}{Offset})\\
--- If set to 2, that mapping is done for each channel separately (in that case, \mylink{idl:mollview:min}{MIN}
-and \mylink{idl:mollview:max}{MAX} keywords are ignored). 
-}\\
 
 {UNITS=}\mytarget{idl:mollview:units}  & \mylink{idl:mollview:routines}{all}  & \parbox[t]{\hsize}{
 		String containing the units, to be put on the right
@@ -867,15 +897,9 @@ in the same window \\
 \end{keywords_mollview}
 %***************************************************************
 
+\renewcommand{\projfullname}{{a Mollweide}}
 \begin{codedescription}
-{\thedocid \ reads in a \healpix sky map in FITS format and generates a
-Mollweide projection of it, that can be visualized on the screen or
-exported in a PNG, JPEG or Postscript file.\thedocid \  allows the selection of
-the coordinate system, map size, color table, color bar inclusion,
-linear or log scaling, histogram equalised
-color scaling, maximum and 
-minimum range for the plot, plot-title {\it etc}. It also allows the representation of the
-polarization field. }
+{\input{mollview_description_idl}}
 \end{codedescription}
 
 
@@ -887,12 +911,12 @@ polarization field. }
 \begin{related}
   \begin{sulist}{} %%%% NOTE the ``extra'' brace here %%%%
   \item[idl] version \idlversion or more is necessary to run \thedocid
-  \item[ghostview] ghostview or a similar facility is required to view
-	  the Postscript image generated by \thedocid.
-  \item[xv] xv or a similar facility is required to view the
+  \item[gv, ghostview] gv, ghostview or a similar facility is required to view
+	  the Postscript or PDF images generated by \thedocid.
+  \item[display, xv] display, xv or a similar facility is required to view the
             GIF/JPEG/PNG image generated by \thedocid \ (a browser can also 
             be used).
-  \item[synfast, smoothing] These F90 \healpix facilities will generate the FITS format 
+  \item[\htmlref{synfast}{fac:synfast}, \htmlref{smoothing}{fac:smoothing}] These F90 \healpix facilities will generate the FITS format 
             sky maps to be input to \thedocid.
   \item[\htmlref{isynfast}{idl:isynfast}, \htmlref{ismoothing}{idl:ismoothing}] These IDL routines will generate the FITS format 
             sky maps to be input to \thedocid.
