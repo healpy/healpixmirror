@@ -182,7 +182,7 @@ public class RangeSetTest extends TestCase {
                  new RangeSet(new long[]{}).intersection
                  (new RangeSet(new long[]{20,31,40,51})));
     }
-  public void testSubstract()
+  public void testDifference()
     {
     assertEquals(new RangeSet(new long[]{20,31,40,45}),
                  new RangeSet(new long[]{20,31,40,51}).difference
@@ -195,7 +195,7 @@ public class RangeSetTest extends TestCase {
                  (new RangeSet(new long[]{})));
     }
 
-  public void testContainsAll()
+  public void testContainsRS()
     {
     RangeSet b = new RangeSet(new long[]{20,31,40,51});
 
@@ -214,7 +214,7 @@ public class RangeSetTest extends TestCase {
     assertFalse(b.contains(45,56));
     assertFalse(b.contains(60,71));
     }
-  public void testContainsAll2()
+  public void testContainsRS2()
     {
     RangeSet b = new RangeSet(new long[]{20,31,40,51});
 
@@ -227,7 +227,7 @@ public class RangeSetTest extends TestCase {
     assertFalse(b.contains(new RangeSet(new long[]{0,1})));
     assertFalse(b.contains(new RangeSet(new long[]{0,20,31,40,51,100})));
     }
-  public void testContainsAny()
+  public void testOverlaps()
     {
     RangeSet b = new RangeSet(new long[]{20,31,40,51});
 
@@ -246,7 +246,7 @@ public class RangeSetTest extends TestCase {
     assertTrue(b.overlaps(45,56));
     assertFalse(b.overlaps(60,71));
     }
-  public void testContainsAny2()
+  public void testOverlaps2()
     {
     RangeSet b = new RangeSet(new long[]{20,31,40,51});
 
