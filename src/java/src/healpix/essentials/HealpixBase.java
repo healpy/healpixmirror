@@ -818,38 +818,44 @@ public class HealpixBase extends HealpixTables
 
         double x = (cosrbig-z*z0)*xa;
         double ysq = 1-z*z-x*x;
-        double dphi = (ysq<=0) ? Math.PI-1e-15 :
-                                 FastMath.atan2(Math.sqrt(ysq),x);
-        RingInfoSmall info =get_ring_info_small(iz);
-        long ipix1 = info.startpix, nr=info.ringpix, ipix2=ipix1+nr-1;
-        double shift = info.shifted ? 0.5 : 0.;
-
-        long ip_lo = (long)Math.floor
-          (nr*Constants.inv_twopi*(ptg.phi-dphi) - shift)+1;
-        long ip_hi = (long)Math.floor
-          (nr*Constants.inv_twopi*(ptg.phi+dphi) - shift);
-
-        if (fct>1)
+        double dphi=-1;
+        if (ysq<=0) // no intersection, ring completely inside or outside
+          dphi = (fct==1) ? 0: Math.PI-1e-15;
+        else
+          dphi = FastMath.atan2(Math.sqrt(ysq),x);
+        if (dphi>0)
           {
-          while ((ip_lo<=ip_hi) && checkPixelRing
-                (b2,ip_lo,nr,ipix1,fct,czphi,cosrsmall,cpix))
-            ++ip_lo;
-          while ((ip_hi>ip_lo) && checkPixelRing
-                (b2,ip_hi,nr,ipix1,fct,czphi,cosrsmall,cpix))
-            --ip_hi;
-          }
+          RingInfoSmall info =get_ring_info_small(iz);
+          long ipix1 = info.startpix, nr=info.ringpix, ipix2=ipix1+nr-1;
+          double shift = info.shifted ? 0.5 : 0.;
 
-        if (ip_lo<=ip_hi)
-          {
-          if (ip_hi>=nr)
-            { ip_lo-=nr; ip_hi-=nr; }
-          if (ip_lo<0)
+          long ip_lo = (long)Math.floor
+            (nr*Constants.inv_twopi*(ptg.phi-dphi) - shift)+1;
+          long ip_hi = (long)Math.floor
+            (nr*Constants.inv_twopi*(ptg.phi+dphi) - shift);
+
+          if (fct>1)
             {
-            pixset.append(ipix1,ipix1+ip_hi+1);
-            pixset.append(ipix1+ip_lo+nr,ipix2+1);
+            while ((ip_lo<=ip_hi) && checkPixelRing
+                  (b2,ip_lo,nr,ipix1,fct,czphi,cosrsmall,cpix))
+              ++ip_lo;
+            while ((ip_hi>ip_lo) && checkPixelRing
+                  (b2,ip_hi,nr,ipix1,fct,czphi,cosrsmall,cpix))
+              --ip_hi;
             }
-          else
-            pixset.append(ipix1+ip_lo,ipix1+ip_hi+1);
+
+          if (ip_lo<=ip_hi)
+            {
+            if (ip_hi>=nr)
+              { ip_lo-=nr; ip_hi-=nr; }
+            if (ip_lo<0)
+              {
+              pixset.append(ipix1,ipix1+ip_hi+1);
+              pixset.append(ipix1+ip_lo+nr,ipix2+1);
+              }
+            else
+              pixset.append(ipix1+ip_lo,ipix1+ip_hi+1);
+            }
           }
         }
 
