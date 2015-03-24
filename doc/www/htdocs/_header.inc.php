@@ -21,6 +21,7 @@
 
 ?>
   <meta name="description" content="Hierarchical Equal Area Iso Latitude pixelation of the sphere (HEALPix); Data Analysis, Simulations and Visualization on the Sphere" />
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta http-equiv="content-type" content="application/xhtml+xml; charset=UTF-8" />
   <link rel="stylesheet" href="images/Healpix.css" type="text/css" />
 
