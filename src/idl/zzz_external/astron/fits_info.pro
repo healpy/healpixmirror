@@ -106,6 +106,7 @@ pro fits_info, filename, SILENT=silent,TEXTOUT=textout, N_ext=n_ext, extname=ext
 ;       Increased nmax (max number of extensions) from 400 to 2000   Sept 2012
 ;       Correctly fills EXTNAME when SILENT is set    EH   Jan 2013
 ;       Turned ptr to long64 in order to read very large files EH Dec 2013
+;       Replaced 2880 with 2880LL to work on very large files  EH Mar 2015
 ;-
  On_error,2
  compile_opt idl2
@@ -165,7 +166,7 @@ pro fits_info, filename, SILENT=silent,TEXTOUT=textout, N_ext=n_ext, extname=ext
      hdr = bytarr(80, 36, /NOZERO)
      N_hdrblock = 1
      readu, lun1, hdr
-     ptr += 2880
+     ptr += 2880LL
      hd = string( hdr > 32b)
      
 ;                               Get values of BITPIX, NAXIS etc.
@@ -224,7 +225,7 @@ pro fits_info, filename, SILENT=silent,TEXTOUT=textout, N_ext=n_ext, extname=ext
      hdr = bytarr(80, 36, /NOZERO)
      while (end_rec[0] EQ -1) && (~eof(lun1) ) do begin
          readu,lun1,hdr
-         ptr = ptr + 2880L
+         ptr = ptr + 2880LL
          hd1 = string( hdr > 32b)
          end_rec = where( strtrim(strmid(hd1,0,8),2) EQ  'END')
          n_hdrblock++ 
@@ -269,8 +270,8 @@ pro fits_info, filename, SILENT=silent,TEXTOUT=textout, N_ext=n_ext, extname=ext
 ; Check for EOF
 ; Skip the headers and data records
 
-     ptr += nrec*2880L
-     if compress[nf] then mrd_skip,lun1,nrec*2880L else point_lun,lun1,ptr
+     ptr += nrec*2880LL
+     if compress[nf] then mrd_skip,lun1,nrec*2880LL else point_lun,lun1,ptr
      if ~eof(lun1) then goto, START
 ;
      END_OF_FILE:  
