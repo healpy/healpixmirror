@@ -19,7 +19,7 @@
  */
 
 package healpix.essentials;
-import java.util.Vector;
+import java.util.ArrayList;
 
 /** Support for MOC queries.
     @copyright 2015 Max-Planck-Society
@@ -79,7 +79,7 @@ public class MocQuery
 
     private int order, omax;
     private boolean inclusive;
-    private Vector<MocQueryComponent> comp;
+    private ArrayList<MocQueryComponent> comp;
     private HealpixBase base[];
     private double cr[], crmin[][], crmax[][];
 
@@ -197,17 +197,17 @@ public class MocQuery
       }
 
     public querulator (int order_, int omax_, boolean inclusive_,
-      Vector<MocQueryComponent> comp_) throws Exception
+      ArrayList<MocQueryComponent> comp_) throws Exception
       {
       order=order_;
       omax=omax_;
       inclusive=inclusive_;
-      comp=(Vector<MocQueryComponent>)comp_.clone();
+      comp=(ArrayList<MocQueryComponent>)comp_.clone();
       base=new HealpixBase[omax+1];
       cr=new double[comp.size()];
       crmin=new double [omax+1][comp.size()];
       crmax=new double [omax+1][comp.size()];
-      HealpixUtils.check(comp.size()>=1,"bad query component vector");
+      HealpixUtils.check(comp.size()>=1,"bad query component ArrayList");
       HealpixUtils.check(order<=omax,"order>omax");
       if (!inclusive) HealpixUtils.check(order==omax,"inconsistency");
       HealpixUtils.check(omax<=HealpixBase.order_max,"omax too high");
@@ -255,15 +255,15 @@ public class MocQuery
       }
     }
 
-  static public Moc doMocQuery (int order, Vector<MocQueryComponent> comp)
+  static public Moc doMocQuery (int order, ArrayList<MocQueryComponent> comp)
     throws Exception
     {
     querulator quer=new querulator(order,order,false,comp);
     return quer.result();
     }
 
-  static private boolean isEar(int i, Vector<Vec3> vv, Vector<Vec3> normal,
-    Vector<Boolean> convex)
+  static private boolean isEar(int i, ArrayList<Vec3> vv, ArrayList<Vec3> normal,
+    ArrayList<Boolean> convex)
     {
     if (!convex.get(i)) return false;
     int nv=normal.size();
@@ -280,8 +280,8 @@ public class MocQuery
     }
 
   // vertices are assumed to be normalized
-  private static void processVertices(Vector<Vec3> vv, Vector<Vec3> normal,
-    Vector<Boolean> convex, Vector<Boolean> ear) throws Exception
+  private static void processVertices(ArrayList<Vec3> vv, ArrayList<Vec3> normal,
+    ArrayList<Boolean> convex, ArrayList<Boolean> ear) throws Exception
     {
     int nv=vv.size();
     do
@@ -329,18 +329,18 @@ public class MocQuery
       ear.add(isEar(i,vv,normal,convex));
     }
 
-  static public Vector<MocQueryComponent> prepPolygon (Vector<Vec3> vertex)
+  static public ArrayList<MocQueryComponent> prepPolygon (ArrayList<Vec3> vertex)
     throws Exception
     {
     HealpixUtils.check(vertex.size()>=3,"not enough vertices in polygon");
-    Vector<Vec3> vv = new Vector<Vec3>(vertex.size());
+    ArrayList<Vec3> vv = new ArrayList<Vec3>(vertex.size());
     for (int i=0; i<vertex.size(); ++i)
       vv.add(vertex.get(i).norm());
-    Vector<Vec3> normal = new Vector<Vec3>();
-    Vector<Boolean> convex = new Vector<Boolean>(), ear = new Vector<Boolean>();
+    ArrayList<Vec3> normal = new ArrayList<Vec3>();
+    ArrayList<Boolean> convex = new ArrayList<Boolean>(), ear = new ArrayList<Boolean>();
 
     processVertices(vv,normal,convex,ear);
-    Vector<MocQueryComponent> comp = new Vector<MocQueryComponent>();
+    ArrayList<MocQueryComponent> comp = new ArrayList<MocQueryComponent>();
 
     int nconvex=0;
     for (int i=0; i<vv.size(); ++i)
@@ -392,7 +392,7 @@ public class MocQuery
     return comp;
     }
 
-  static public Moc queryGeneralPolygon (Vector<Vec3> vertex, int order)
+  static public Moc queryGeneralPolygon (ArrayList<Vec3> vertex, int order)
     throws Exception
     { return doMocQuery (order, MocQuery.prepPolygon(vertex)); }
   }
