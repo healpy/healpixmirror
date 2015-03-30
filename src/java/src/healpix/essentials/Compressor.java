@@ -186,7 +186,7 @@ public class Compressor
       if (val>=nshort)
         val=(val<<1)+ ibs.get(1) - nshort;
       }
-    data[m]=((data[l]>>>shift)+(m-l)+val)<<shift;
+    data[m]=data[l]+(((m-l)+val)<<shift);
 
     interpol_decode2(data,l,m,ibs,shift);
     interpol_decode2(data,m,r,ibs,shift);
