@@ -21,7 +21,7 @@
 package healpix.essentials;
 
 /** Support for MOC algorithms.
-    @copyright 2014 Max-Planck-Society
+    @copyright 2014-2015 Max-Planck-Society
     @author Martin Reinecke */
 public class Moc
   {
@@ -91,6 +91,8 @@ public class Moc
     int shift=2*(maxorder-order);
     rs.add(p1<<shift,p2<<shift);
     }
+  public void addPixel (int order, long p)
+    { addPixelRange(order, p, p+1); }
   /** Returns a new Moc that contains the union of this Moc and "other". */
   public Moc union (Moc other)
     { return fromNewRangeSet(rs.union(other.rs)); }
@@ -117,7 +119,7 @@ public class Moc
   /** @return A RangeSet containing all HEALPix pixels (in NUNIQ order) covered
       by this Moc. The result is well-formed in the sense that every pixel is
       given at its lowest possible HEALPix order. */
-  public RangeSet toUniq() // should be tuned!
+  public RangeSet toUniqRS() // should be tuned!
     {
     RangeSet r2 = new RangeSet(rs);
     RangeSet r3 = new RangeSet();
@@ -142,9 +144,12 @@ public class Moc
       }
     return res;
     }
+  public long[] toUniq() // should be tuned!
+    { return toUniqRS().toArray(); }
+
   /** @return A Moc built from the RangeSet of NUNIQ HEALPix pixels given in
       "ru". "ru" need not be well-formed. */
-  public static Moc fromUniq (RangeSet ru) // should be tuned!
+  public static Moc fromUniqRS (RangeSet ru) // should be tuned!
     {
     RangeSet r= new RangeSet();
     RangeSet rtmp = new RangeSet();
@@ -166,6 +171,11 @@ public class Moc
         }
     r=r.union(rtmp);
     return fromNewRangeSet(r);
+    }
+
+  public static Moc fromUniq (long []u) // should be tuned!
+    {
+    return fromUniqRS(RangeSet.fromArray(u));
     }
 
   /** @return A compressed representation of the Moc obtained by interpolative

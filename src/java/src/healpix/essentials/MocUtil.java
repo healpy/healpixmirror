@@ -22,7 +22,7 @@ import java.io.*;
 import nom.tam.fits.*;
 
 /** Moc I/O routines.
-    @copyright 2014 Max-Planck-Society
+    @copyright 2014-2015 Max-Planck-Society
     @author Martin Reinecke */
 public class MocUtil
   {
@@ -58,11 +58,11 @@ public class MocUtil
       else // single value
         ru.add(Long.parseLong(tok[i])+ofs);
       }
-    return Moc.fromUniq(ru);
+    return Moc.fromUniqRS(ru);
     }
   private static String mocToStringGeneral(Moc moc, boolean json)
     {
-    RangeSet ru = moc.toUniq();
+    RangeSet ru = moc.toUniqRS();
     StringBuilder s = new StringBuilder();
     if (json) s.append("{");
     boolean firstOrder=true;
@@ -153,7 +153,7 @@ public class MocUtil
     RangeSet ru = new RangeSet();
     for (int i=0; i<data.length; ++i)
       ru.append(data[i]);
-    return Moc.fromUniq(ru);
+    return Moc.fromUniqRS(ru);
     }
   /** Converts the contents of a FITS file to a MOC. */
   public static Moc mocFromFits(String filename) throws Exception
@@ -171,7 +171,7 @@ public class MocUtil
     FitsFactory.setUseAsciiTables(false);
     Fits f = new Fits();
     Object[] table = new Object[1];
-    long[] data=moc.toUniq().toArray();
+    long[] data=moc.toUniq();
     long maxval=0;
     if (data.length>0) maxval=data[data.length-1];
     if (maxval<=0x7fff)

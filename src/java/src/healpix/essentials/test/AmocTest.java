@@ -65,7 +65,7 @@ public class AmocTest extends TestCase
     assertTrue("inconsistency",xtmp.overlaps(moc));
     xtmp=moc.degradedToOrder(8,true);
     assertFalse("inconsistency",moc.contains(xtmp));
-    assertTrue("inconsistency",xtmp.contains(xtmp));
+    assertTrue("inconsistency",xtmp.contains(moc));
     assertEquals("inconsistency",moc,Moc.fromCompressed(moc.toCompressed()));
     ByteArrayOutputStream out= new ByteArrayOutputStream();
     MocUtil.mocToFits(moc,out);
@@ -78,38 +78,25 @@ public class AmocTest extends TestCase
     HealpixBase base = new HealpixBase (8192,Scheme.NESTED);
     RangeSet lrs=base.queryDisc(new Pointing(new Vec3(1,0,0)),Constants.halfpi/9.);
     Moc moc=new Moc(lrs,13);
-    RangeSet rs=moc.toUniq();
-    long[] arr=new long[(int)rs.nval()];
-    int parr=0;
-    RangeSet.ValueIterator it = rs.valueIterator();
-    while (it.hasNext())
+
+     long[] arr=moc.toUniq();
+    for (int i=0; i<arr.length; ++i)
       {
-      long upix=it.next();
-      int order=HealpixUtils.uniq2order(upix);
+      int order=HealpixUtils.uniq2order(arr[i]);
       long shift=1L<<(2*order+2);
-      arr[parr++]=HealpixUtils.nest2peano(upix-shift,order)+shift;
+      arr[i]=HealpixUtils.nest2peano(arr[i]-shift,order)+shift;
       }
     Arrays.sort(arr);
-    RangeSet rsu=new RangeSet();
+    Moc pmoc=Moc.fromUniq(arr);
+    arr=pmoc.toUniq();
     for (int i=0; i<arr.length; ++i)
-      rsu.append(arr[i]);
-    Moc pmoc=Moc.fromUniq(rsu);
-    rs.clear();
-    arr=new long[(int)rsu.nval()];
-    parr=0;
-    it = rsu.valueIterator();
-    while (it.hasNext())
       {
-      long upix=it.next();
-      int order=HealpixUtils.uniq2order(upix);
+      int order=HealpixUtils.uniq2order(arr[i]);
       long shift=1L<<(2*order+2);
-      arr[parr++]=HealpixUtils.peano2nest(upix-shift,order)+shift;
+      arr[i]=HealpixUtils.peano2nest(arr[i]-shift,order)+shift;
       }
     Arrays.sort(arr);
-    rs=new RangeSet();
-    for (int i=0; i<arr.length; ++i)
-      rs.append(arr[i]);
-    Moc moc2=Moc.fromUniq(rs);
+    Moc moc2=Moc.fromUniq(arr);
     assertEquals(moc,moc2);
     }
 

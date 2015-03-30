@@ -26,7 +26,7 @@ import java.util.NoSuchElementException;
     This code was inspired by Jan Kotek's "LongRangeSet" class, but has been
     completely reimplemented.
 
-    @copyright 2011-2014 Max-Planck-Society
+    @copyright 2011-2015 Max-Planck-Society
     @author Martin Reinecke */
 public class RangeSet
   {
@@ -60,13 +60,13 @@ public class RangeSet
     }
   /** Construct new object from an array of longs.
       @param data */
-  public RangeSet(long[] data)
-    {
-    sz=data.length;
-    r = new long[sz];
-    System.arraycopy(data,0,r,0,sz);
-    checkConsistency();
-    }
+   public RangeSet(long[] data)
+     {
+     sz=data.length;
+     r = new long[sz];
+     System.arraycopy(data,0,r,0,sz);
+     checkConsistency();
+     }
   /** Construct new object from another RangeSet
       @param other */
   public RangeSet(RangeSet other)
@@ -455,6 +455,12 @@ public class RangeSet
     for (int i=0; i<sz; i+=2)
       for (long j=r[i]; j<r[i+1]; ++j)
         res[ofs++]=j;
+    return res;
+    }
+  public static RangeSet fromArray(long[]v){
+    RangeSet res = new RangeSet();
+    for (int i=0; i<v.length; i++)
+      res.append(v[i]);
     return res;
     }
 
