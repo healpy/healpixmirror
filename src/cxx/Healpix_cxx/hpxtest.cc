@@ -65,6 +65,15 @@ Candidates for testing the validity of the Healpix routines:
 
 using namespace std;
 
+#define UNITTESTS
+
+#ifdef UNITTESTS
+int errcount=0;
+#define FAIL(a) {a; if (++errcount>100) planck_fail("unit test errors");}
+#else
+#define FAIL(a) a;
+#endif
+
 const int nsamples = 1000000;
 
 planck_rng rng;
@@ -451,7 +460,7 @@ template<typename I> void check_ringnestring()
       {
       I pix = I(rng.rand_uni()*base.Npix());
       if (base.ring2nest(base.nest2ring(pix))!=pix)
-        cout << "  PROBLEM: order = " << order << ", pixel = " << pix << endl;
+        FAIL(cout<<"  PROBLEM: order = "<<order<<", pixel = "<<pix<<endl)
       }
     }
   }
@@ -466,7 +475,7 @@ template<typename I> void check_nestpeanonest()
       {
       I pix = I(rng.rand_uni()*base.Npix());
       if (base.peano2nest(base.nest2peano(pix))!=pix)
-        cout << "  PROBLEM: order = " << order << ", pixel = " << pix << endl;
+        FAIL(cout<<"  PROBLEM: order = "<<order<<", pixel = "<<pix<<endl)
       }
     }
   }
@@ -484,10 +493,10 @@ template<typename I> void check_pixzphipix()
       I pix = I(rng.rand_uni()*base1.Npix());
       base1.pix2zphi(pix,z,phi);
       if (base1.zphi2pix(z,phi)!=pix)
-        cout << "  PROBLEM: order = " << order << ", pixel = " << pix << endl;
+        FAIL(cout<<"  PROBLEM: order = "<<order<<", pixel = "<<pix<<endl)
       base2.pix2zphi(pix,z,phi);
       if (base2.zphi2pix(z,phi)!=pix)
-        cout << "  PROBLEM: order = " << order << ", pixel = " << pix << endl;
+        FAIL(cout<<"  PROBLEM: order = "<<order<<", pixel = "<<pix<<endl)
       }
     }
   for (I nside=3; nside<(I(1)<<omax); nside+=nside/2+1)
@@ -499,7 +508,7 @@ template<typename I> void check_pixzphipix()
       I pix = I(rng.rand_uni()*base.Npix());
       base.pix2zphi(pix,z,phi);
       if (base.zphi2pix(z,phi)!=pix)
-        cout << "  PROBLEM: nside = " << nside << ", pixel = " << pix << endl;
+        FAIL(cout<<"  PROBLEM: nside = "<<nside<<", pixel = "<<pix<<endl)
       }
     }
   }
@@ -518,12 +527,12 @@ template<typename I> void check_zphipixzphi()
       random_zphi (z,phi);
       base1.pix2zphi(base1.zphi2pix(z,phi),z2,phi2);
       if (cosdist_zphi(z,phi,z2,phi2)<mincos)
-        cout << "  PROBLEM: order = " << order
-             << ", zphi = " << z << ", " << phi << endl;
+        FAIL(cout << "  PROBLEM: order = " << order
+                  << ", zphi = " << z << ", " << phi << endl)
       base2.pix2zphi(base2.zphi2pix(z,phi),z2,phi2);
       if (cosdist_zphi(z,phi,z2,phi2)<mincos)
-        cout << "  PROBLEM: order = " << order
-             << ", zphi = " << z << ", " << phi << endl;
+        FAIL(cout << "  PROBLEM: order = " << order
+                  << ", zphi = " << z << ", " << phi << endl)
       }
     }
   for (int nside=3; nside<(I(1)<<omax); nside+=nside/2+1)
@@ -536,8 +545,8 @@ template<typename I> void check_zphipixzphi()
       random_zphi (z,phi);
       base.pix2zphi(base.zphi2pix(z,phi),z2,phi2);
       if (cosdist_zphi(z,phi,z2,phi2)<mincos)
-        cout << "  PROBLEM: nside = " << nside
-             << ", zphi = " << z << ", " << phi << endl;
+        FAIL(cout << "  PROBLEM: nside = " << nside
+                  << ", zphi = " << z << ", " << phi << endl)
       }
     }
   }
@@ -553,9 +562,9 @@ template<typename I> void check_pixangpix()
       {
       I pix = I(rng.rand_uni()*base1.Npix());
       if (base1.ang2pix(base1.pix2ang(pix))!=pix)
-        cout << "  PROBLEM: order = " << order << ", pixel = " << pix << endl;
+        FAIL(cout<<"  PROBLEM: order = "<<order<<", pixel = "<<pix<<endl)
       if (base2.ang2pix(base2.pix2ang(pix))!=pix)
-        cout << "  PROBLEM: order = " << order << ", pixel = " << pix << endl;
+        FAIL(cout<<"  PROBLEM: order = "<<order<<", pixel = "<<pix<<endl)
       }
     }
   for (I nside=3; nside<(I(1)<<omax); nside+=nside/2+1)
@@ -565,7 +574,7 @@ template<typename I> void check_pixangpix()
       {
       I pix = I(rng.rand_uni()*base.Npix());
       if (base.ang2pix(base.pix2ang(pix))!=pix)
-        cout << "  PROBLEM: nside = " << nside << ", pixel = " << pix << endl;
+        FAIL(cout<<"  PROBLEM: nside = "<<nside<<", pixel = "<<pix<<endl)
       }
     }
   }
@@ -599,9 +608,9 @@ template<typename I> void check_neighbors()
         else
           {
           if (v_angle(base.pix2vec(nb[n]),pixpt)>maxang)
-            cout << " PROBLEM: order = " << order << ", pix = " << pix << endl;
+            FAIL(cout<<"  PROBLEM: order = "<<order<<", pix = "<<pix<<endl)
           if ((n>0) && (nb[n]==nb[n-1]))
-            cout << " PROBLEM: order = " << order << ", pix = " << pix << endl;
+            FAIL(cout<<"  PROBLEM: order = "<<order<<", pix = "<<pix<<endl)
           }
         }
       planck_assert((check<=1)||((order==0)&&(check<=2)),"too few neighbors");
@@ -619,7 +628,7 @@ template<typename I> void check_neighbors()
       base.neighbors(pix,nb);
       for (int n=0; n<8; ++n)
         if ((nb[n]>=0) && (v_angle(base.pix2vec(nb[n]),pixpt)>maxang))
-          cout << "  PROBLEM: nside = " << nside << ", pix = " << pix << endl;
+          FAIL(cout<<"  PROBLEM: nside = "<<nside<<", pix = "<<pix<<endl)
       }
     }
   }
@@ -636,7 +645,7 @@ void check_swap_scheme()
     map.swap_scheme();
     for (int m=0; m<map.Npix(); ++m)
       if (map[m]!=(m&0xFF))
-        cout << "  PROBLEM: order = " << order << ", pix = " << m << endl;
+        FAIL(cout<<"  PROBLEM: order = "<<order<<", pix = "<<m<<endl)
     }
   }
 
@@ -662,7 +671,7 @@ void check_issue_229 (Healpix_Ordering_Scheme scheme)
     {
     bool inside = dotprod(vmap[i],vptg)>cosrad;
     if (inside^map[i])
-      cout << "  PROBLEM: issue 229" << endl;
+      FAIL(cout << "  PROBLEM: issue 229" << endl)
     }
   }
 
@@ -694,7 +703,7 @@ void check_query_disc_strict (Healpix_Ordering_Scheme scheme)
         {
         bool inside = dotprod(vmap[i],vptg)>cosrad;
         if (inside^map[i])
-          cout << "  PROBLEM: order = " << order << ", ptg = " << ptg << endl;
+          FAIL(cout<<"  PROBLEM: order = "<<order<<", ptg = "<<ptg<<endl)
         }
       for (tsize j=0; j<pixset.nranges(); ++j)
         for (int i=pixset.ivbegin(j); i<pixset.ivend(j); ++i)
@@ -724,7 +733,7 @@ template<typename I>void check_query_disc()
         rangeset<I> psi;
         rbase.query_disc_inclusive(ptg,rad,psi,fct);
         if (!psi.contains(pslast))
-          cout << "  PROBLEM: RING pixel sets inconsistent" << endl;
+          cout << "  Potential problem: RING pixel sets inconsistent" << endl;
         swap(pslast,psi);
         }
       I nval = pixset.nval();
@@ -735,12 +744,12 @@ template<typename I>void check_query_disc()
         rangeset<I> psi;
         nbase.query_disc_inclusive(ptg,rad,psi,fct);
         if (!psi.contains(pslast))
-          cout << "  PROBLEM: NEST pixel sets inconsistent" << endl;
+          FAIL(cout << "  PROBLEM: NEST pixel sets inconsistent" << endl)
         swap(pslast,psi);
         }
       if (nval!=pixset.nval())
-        cout << "  PROBLEM: number of pixels different: "
-             << nval << " vs. " << pixset.nval() << endl;
+        FAIL(cout << "  PROBLEM: number of pixels different: "
+                  << nval << " vs. " << pixset.nval() << endl)
       }
     }
   }
@@ -761,18 +770,18 @@ template<typename I>void check_query_polygon()
       I nval = pixset.nval();
       nbase.query_polygon(corner,pixset);
       if (nval!=pixset.nval())
-        cout << "  PROBLEM: number of pixels different: "
-             << nval << " vs. " << pixset.nval() << endl;
+        FAIL(cout << "  PROBLEM: number of pixels different: "
+                  << nval << " vs. " << pixset.nval() << endl)
       rbase.query_polygon_inclusive(corner,pixset,4);
       I nv1=pixset.nval();
       nbase.query_polygon_inclusive(corner,pixset,4);
       I nv2=pixset.nval();
       if (nv1<nv2)
-        cout << "  PROBLEM: inclusive(RING)<inclusive(NEST): "
-             << nv1 << " vs. " << nv2 << endl;
+        FAIL(cout << "  PROBLEM: inclusive(RING)<inclusive(NEST): "
+                  << nv1 << " vs. " << nv2 << endl)
       if (nv2<nval)
-        cout << "  PROBLEM: inclusive(NEST)<non-inclusive: "
-             << nv2 << " vs. " << nval << endl;
+        FAIL(cout << "  PROBLEM: inclusive(NEST)<non-inclusive: "
+                  << nv2 << " vs. " << nval << endl)
       }
     }
   }
@@ -785,7 +794,7 @@ void helper_oop (int order)
   map3.Import(map2);
   for (int m=0; m<map.Npix(); ++m)
     if (!approx(map[m],map3[m],1e-12))
-      cout << "PROBLEM: order = " << order << endl;
+      FAIL(cout << "PROBLEM: order = " << order << endl)
   }
 void helper_udgrade (int order, Healpix_Ordering_Scheme s1,
   Healpix_Ordering_Scheme s2)
@@ -796,7 +805,7 @@ void helper_udgrade (int order, Healpix_Ordering_Scheme s1,
   map3.Import(map2);
   for (int m=0; m<map.Npix(); ++m)
     if (!approx(map[m],map3[m],1e-12))
-      cout << "PROBLEM: order = " << order << endl;
+      FAIL(cout << "PROBLEM: order = " << order << endl)
   }
 void helper_udgrade2 (int nside)
   {
@@ -807,7 +816,7 @@ void helper_udgrade2 (int nside)
   map3.Import(map2);
   for (int m=0; m<map.Npix(); ++m)
     if (!approx(map[m],map3[m],1e-12))
-      cout << "PROBLEM: nside = " << nside << endl;
+      FAIL(cout << "PROBLEM: nside = " << nside << endl)
   }
 
 void check_import()
@@ -838,7 +847,7 @@ void check_average()
     map2.Import(map);
     double avg=map.average(), avg2=map2.average();
     if (!approx(avg,avg2,1e-10))
-      cout << "PROBLEM: order = " << order << " " << avg/avg2-1 << endl;
+      FAIL(cout << "PROBLEM: order = " << order << " " << avg/avg2-1 << endl)
     }
   for (int nside=3; nside<1000; nside += nside/2+1)
     {
@@ -848,7 +857,7 @@ void check_average()
     map2.Import(map);
     double avg=map.average(), avg2=map2.average();
     if (!approx(avg,avg2,1e-10))
-      cout << "PROBLEM: nside = " << nside << " " << avg/avg2-1 << endl;
+      FAIL(cout << "PROBLEM: nside = " << nside << " " << avg/avg2-1 << endl)
     }
   }
 
@@ -893,9 +902,9 @@ void check_alm (const Alm<xcomplex<double> >&oalm,
     for (int l=m; l<=alm.Lmax(); ++l)
       {
       if (!abs_approx(oalm(l,m).re,alm(l,m).re,epsilon))
-        cout << "Problemr " << l << " " << m << endl;
+        FAIL(cout << "Problemr " << l << " " << m << endl)
       if (!abs_approx(oalm(l,m).im,alm(l,m).im,epsilon))
-        cout << "Problemi " << l << " " << m <<  endl;
+        FAIL(cout << "Problemi " << l << " " << m <<  endl)
       }
   }
 
@@ -968,8 +977,8 @@ void check_isqrt()
   {
   cout << "testing whether isqrt() works reliably" << endl;
   uint64 val=uint64(0xF234)<<16, valsq=val*val;
-  if (isqrt(valsq)!=val) cout << "PROBLEM1" << endl;
-  if (isqrt(valsq-1)!=val-1) cout << "PROBLEM2" << endl;
+  if (isqrt(valsq)!=val) FAIL(cout << "PROBLEM1" << endl)
+  if (isqrt(valsq-1)!=val-1) FAIL(cout << "PROBLEM2" << endl)
   }
 
 void check_pix2ang_acc()
@@ -979,7 +988,7 @@ void check_pix2ang_acc()
     {
     Healpix_Base2 base(m,RING);
     if (base.pix2ang(1).theta==0.)
-      cout << "PROBLEM: order " << m << endl;
+      FAIL(cout << "PROBLEM: order " << m << endl)
     }
   }
 
@@ -1333,4 +1342,7 @@ int main(int argc, const char **argv)
   check_query_disc<int64>();
   check_query_polygon<int>();
   check_query_polygon<int64>();
+#ifdef UNITTESTS
+  if (errcount>0) planck_fail("unit test errors");
+#endif
   }
