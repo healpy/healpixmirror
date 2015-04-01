@@ -77,11 +77,12 @@ public class MocQuery
         { return s==0; }
       }
 
-    private int order, omax;
+    private int order, omax, ncomp;
     private boolean inclusive;
-    private ArrayList<MocQueryComponent> comp;
     private HealpixBase base[];
     private double cr[], crmin[][], crmax[][];
+    private MocQueryOp op[];
+    private Vec3 center[];
 
     private pstack stk; // stack for pixel numbers and their orders
     private long pix;
@@ -140,8 +141,8 @@ public class MocQuery
     void correctLoc() throws Exception
       {
       int myloc=loc--;
-      HealpixUtils.check((myloc>=0)&&(myloc<comp.size()),"inconsistency");
-      switch (comp.get(myloc).op)
+      HealpixUtils.check((myloc>=0)&&(myloc<ncomp),"inconsistency");
+      switch (op[myloc])
         {
         case AND:
         case OR:
@@ -160,8 +161,8 @@ public class MocQuery
       {
       if (zmin==zmax) { correctLoc(); return zmin; } // short-circuit
       int myloc=loc--;
-      HealpixUtils.check((myloc>=0)&&(myloc<comp.size()),"inconsistency");
-      switch (comp.get(myloc).op)
+      HealpixUtils.check((myloc>=0)&&(myloc<ncomp),"inconsistency");
+      switch (op[myloc])
         {
         case AND:
           {
@@ -185,7 +186,7 @@ public class MocQuery
         case NONE:
           {
           int res=zmax;
-          double crad=pv.dot(comp.get(myloc).center);
+          double crad=pv.dot(center[myloc]);
           if (crad<=crmax[o][myloc]) res=0;
           else if (crad<=cr[myloc]) res=1;
           else if (crad<=crmin[o][myloc]) res=2;
@@ -197,35 +198,42 @@ public class MocQuery
       }
 
     public querulator (int order_, int omax_, boolean inclusive_,
-      ArrayList<MocQueryComponent> comp_) throws Exception
+      ArrayList<MocQueryComponent> comp) throws Exception
       {
       order=order_;
       omax=omax_;
+      ncomp=comp.size();
       inclusive=inclusive_;
-      comp=(ArrayList<MocQueryComponent>)comp_.clone();
       base=new HealpixBase[omax+1];
-      cr=new double[comp.size()];
-      crmin=new double [omax+1][comp.size()];
-      crmax=new double [omax+1][comp.size()];
-      HealpixUtils.check(comp.size()>=1,"bad query component ArrayList");
+      cr=new double[ncomp];
+      crmin=new double [omax+1][ncomp];
+      crmax=new double [omax+1][ncomp];
+      HealpixUtils.check(ncomp>=1,"bad query component ArrayList");
       HealpixUtils.check(order<=omax,"order>omax");
       if (!inclusive) HealpixUtils.check(order==omax,"inconsistency");
       HealpixUtils.check(omax<=HealpixBase.order_max,"omax too high");
 
-      for (int i=0; i<comp.size(); ++i)
-        if (comp.get(i).op==MocQueryOp.NONE) // it's a cap
+      op=new MocQueryOp[ncomp];
+      center=new Vec3[ncomp];
+      for (int i=0; i<ncomp; ++i)
+        {
+        op[i]=comp.get(i).op;
+        center[i]=comp.get(i).center;
+        if (op[i]==MocQueryOp.NONE) // it's a cap
           cr[i]=Math.cos(comp.get(i).radius);
+        }
       for (o=0; o<=omax; ++o) // prepare data at the required orders
         {
         base[o] = new HealpixBase(1<<o,Scheme.NESTED);
         double dr=base[o].maxPixrad(); // safety distance
-        for (int i=0; i<comp.size(); ++i)
-          if (comp.get(i).op==MocQueryOp.NONE) // it's a cap
+        for (int i=0; i<ncomp; ++i)
+          if (op[i]==MocQueryOp.NONE) // it's a cap
             {
-            crmax[o][i] = (comp.get(i).radius+dr>=Math.PI) ?
-              -1.01 : Math.cos(comp.get(i).radius+dr);
-            crmin[o][i] = (comp.get(i).radius-dr<=0.) ?
-               1.01 : Math.cos(comp.get(i).radius-dr);
+            double r=comp.get(i).radius;
+            crmax[o][i] = (r+dr>=Math.PI) ?
+              -1.01 : Math.cos(r+dr);
+            crmin[o][i] = (r-dr<=0.) ?
+               1.01 : Math.cos(r-dr);
             }
         }
       stk=new pstack(12+3*omax); // reserve maximum size to avoid reallocation
@@ -246,7 +254,7 @@ public class MocQuery
         stk.pop();
         pv = base[o].pix2vec(pix);
 
-        loc=comp.size()-1;
+        loc=ncomp-1;
         int zone=getZone(0,3);
         check_pixel (zone, pixset);
         HealpixUtils.check(loc==-1,"stack not used up");
