@@ -167,12 +167,9 @@ public class Vec3
 
   public int hashCode()
     {
-    long temp = x != +0.0d ? Double.doubleToLongBits(x) : 0L;
-    int result = (int) (temp ^ (temp >>> 32));
-    temp = y != +0.0d ? Double.doubleToLongBits(y) : 0L;
-    result = 31 * result + (int) (temp ^ (temp >>> 32));
-    temp = z != +0.0d ? Double.doubleToLongBits(z) : 0L;
-    result = 31 * result + (int) (temp ^ (temp >>> 32));
+    int result = Double.valueOf(x).hashCode();
+    result = 31 * result + Double.valueOf(y).hashCode();
+    result = 31 * result + Double.valueOf(z).hashCode();
     return result;
     }
   }

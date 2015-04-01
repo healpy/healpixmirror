@@ -101,10 +101,8 @@ public class Pointing
 
   public int hashCode()
     {
-    long temp = theta != +0.0d ? Double.doubleToLongBits(theta) : 0L;
-    int result = (int) (temp ^ (temp >>> 32));
-    temp = phi != +0.0d ? Double.doubleToLongBits(phi) : 0L;
-    result = 31 * result + (int) (temp ^ (temp >>> 32));
+    int result = Double.valueOf(theta).hashCode();
+    result = 31 * result + Double.valueOf(phi).hashCode();
     return result;
     }
   }

@@ -362,6 +362,13 @@ public class RangeSet
       if (other.r[i]!=r[i]) return false;
     return true;
     }
+  public int hashCode()
+    {
+    int result = Integer.valueOf(sz).hashCode();
+    for (int i=0; i<sz; ++i)
+      result = 31 * result + Long.valueOf(r[sz]).hashCode();
+    return result;
+    }
 
   /** @return total number of values (not ranges) in the set. */
   public long nval()

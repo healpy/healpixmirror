@@ -195,6 +195,8 @@ public class Moc
     Moc other = (Moc) obj;
     return rs.equals(other.rs);
     }
+  public int hashCode()
+    { return rs.hashCode(); }
 
   public int nranges()
     { return rs.nranges(); }
