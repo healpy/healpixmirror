@@ -1,4 +1,4 @@
-LS_OPTFLAGS:= -O3 -ffast-math -fomit-frame-pointer -fno-tree-vectorize -fno-tree-fre
+LS_OPTFLAGS:= -O3 -ffast-math -fomit-frame-pointer -march=native -fno-tree-vectorize -fno-tree-fre
 LS_DEBUGFLAGS:= -g
 LS_OMPFLAGS:= -fopenmp
 LS_PROFILEFLAGS:= #-pg
