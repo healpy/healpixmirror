@@ -51,6 +51,10 @@ public class Moc
     return res;
     }
 
+  /** Returns the internal range set. */
+  public RangeSet getRangeSet()
+    { return new RangeSet(rs); }
+
   /** Returns the maximum HEALPix order necessary to describe the Moc exactly.
       */
   public int maxOrder()
