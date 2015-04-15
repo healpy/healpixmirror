@@ -47,7 +47,7 @@ public class MocQuery
       }
     }
 
-  static private class querulator
+  static private class queryHelper
     {
     private final class pstack
       {
@@ -81,6 +81,7 @@ public class MocQuery
     private boolean inclusive;
     private HealpixBase base[];
     private double cr[], crmin[][], crmax[][];
+    private int shortcut[];
     private MocQueryOp op[];
     private Vec3 center[];
 
@@ -157,11 +158,10 @@ public class MocQuery
           break;
         }
       }
-    int getZone (int zmin, int zmax) throws Exception
+    int getZone (int zmin, int zmax)
       {
-      if (zmin==zmax) { correctLoc(); return zmin; } // short-circuit
+      if (zmin==zmax) { loc=shortcut[loc]; return zmin; } // short-circuit
       int myloc=loc--;
-      HealpixUtils.check((myloc>=0)&&(myloc<ncomp),"inconsistency");
       switch (op[myloc])
         {
         case AND:
@@ -193,11 +193,10 @@ public class MocQuery
           return Math.max(zmin,Math.min(zmax,res));
           }
         }
-      HealpixUtils.check(false,"must not get here");
-      return -1;
+      return -1; // unreachable
       }
 
-    public querulator (int order_, int omax_, boolean inclusive_,
+    public queryHelper (int order_, int omax_, boolean inclusive_,
       ArrayList<MocQueryComponent> comp) throws Exception
       {
       order=order_;
@@ -237,6 +236,14 @@ public class MocQuery
             }
         }
       stk=new pstack(12+3*omax); // reserve maximum size to avoid reallocation
+
+      shortcut=new int[ncomp];
+      for (int i=0; i<ncomp; ++i)
+        {
+        loc=i;
+        correctLoc();
+        shortcut[i]=loc;
+        }
       }
     Moc result() throws Exception
       {
@@ -265,139 +272,127 @@ public class MocQuery
 
   static public Moc doMocQuery (int order, ArrayList<MocQueryComponent> comp)
     throws Exception
+    { return (new queryHelper(order,order,false,comp)).result(); }
+
+  static private double isLeft (Vec3 a, Vec3 b, Vec3 c)
     {
-    querulator quer=new querulator(order,order,false,comp);
-    return quer.result();
+    return (a.cross(b)).dot(c);
     }
 
-  static private boolean isEar(int i, ArrayList<Vec3> vv, ArrayList<Vec3> normal,
-    ArrayList<Boolean> convex)
+  static private int[] getHull (Vec3 vert[], int P[])
+    throws Exception
     {
-    if (!convex.get(i)) return false;
-    int nv=normal.size();
-    int pred=(i+nv-1)%nv, succ=(i+1)%nv;
-    Vec3 ab=new Vec3(normal.get(i)),
-         bc=vv.get(succ).cross(vv.get(pred)).norm(),
-         ca=new Vec3(normal.get(pred));
-    for (int j=(succ+1)%nv; j!=pred; j=(j+1)%nv)
-      if ((vv.get(j).dot(ab)>0)
-        &&(vv.get(j).dot(bc)>0)
-        &&(vv.get(j).dot(ca)>0))
-        return false;
-    return true;
+    // initialize a deque D[] from bottom to top so that the
+    // 1st three vertices of P[] are a ccw triangle
+    int n = P.length;
+    int D[] = new int[2*n+1];
+    int bot = n-2, top = bot+3;    // initial bottom and top deque indices
+    D[bot] = D[top] = P[2];      // 3rd vertex is at both bot and top
+    if (isLeft(vert[P[0]], vert[P[1]], vert[P[2]]) > 0)
+      {
+      D[bot+1] = P[0];
+      D[bot+2] = P[1];           // ccw vertices are: 2,0,1,2
+      }
+    else
+      {
+      D[bot+1] = P[1];
+      D[bot+2] = P[0];           // ccw vertices are: 2,1,0,2
+      }
+
+    // compute the hull on the deque D[]
+    for (int i=3; i<n; i++)
+      {   // process the rest of vertices
+      // test if next vertex is inside the deque hull
+      if ((isLeft(vert[D[bot]], vert[D[bot+1]], vert[P[i]]) > 0) &&
+          (isLeft(vert[D[top-1]], vert[D[top]], vert[P[i]]) > 0) )
+        continue;         // skip an interior vertex
+
+      // incrementally add an exterior vertex to the deque hull
+      // get the rightmost tangent at the deque bot
+      while (isLeft(vert[D[bot]], vert[D[bot+1]], vert[P[i]]) <= 0)
+        ++bot;                 // remove bot of deque
+      D[--bot] = P[i];         // insert P[i] at bot of deque
+
+      // get the leftmost tangent at the deque top
+      while (isLeft(vert[D[top-1]], vert[D[top]], vert[P[i]]) <= 0)
+        --top;                 // pop top of deque
+      D[++top] = P[i];           // push P[i] onto top of deque
+      }
+
+    // transcribe deque D[] to the output hull array H[]
+    int nout = top-bot;
+    int res[] = new int[nout];
+    for (int h=0; h<nout; h++)
+      res[h] = D[bot + h +1];
+
+    return res;
     }
 
-  // vertices are assumed to be normalized
-  private static void processVertices(ArrayList<Vec3> vv, ArrayList<Vec3> normal,
-    ArrayList<Boolean> convex, ArrayList<Boolean> ear) throws Exception
+  static public ArrayList<MocQueryComponent> prepPolyHelper (Vec3 vv[],
+    int P[], ArrayList<MocQueryComponent> comp)
+    throws Exception
     {
-    int nv=vv.size();
+    int hull[]=getHull(vv,P);
+    // add convex hull
+    for (int i=0; i<hull.length; ++i)
+      comp.add(new MocQueryComponent
+        (vv[hull[i]].cross(vv[hull[(i+1)%hull.length]]).norm(),0.5*Math.PI));
+    for (int i=1; i<hull.length; ++i)
+      comp.add(new MocQueryComponent(MocQueryOp.AND));
+
+    // sync both sequences at the first point of the convex hull
+    int ihull=0, ipoly=0, nhull=hull.length, npoly=P.length;
+    while (hull[ihull]!=P[ipoly]) ++ipoly;
+
+    // iterate over the pockets between the polygon and its convex hull
     do
       {
-      nv=vv.size();
-      for (int i=0; i<vv.size(); ++i)
+      int ihull_next = (ihull+1)%nhull,
+          ipoly_next = (ipoly+1)%npoly;
+      if (hull[ihull_next]==P[ipoly_next]) // no pocket found
+        { ihull=ihull_next; ipoly=ipoly_next; }
+      else // query pocket
         {
-        int succ=(i+1)%vv.size();
-        double v_ang = vv.get(i).angle(vv.get(succ));
-        if (v_ang<1e-8) // vertices are very close
+        int nvpocket=2; // number of vertices for this pocket
+        while (P[ipoly_next]!=hull[ihull_next])
           {
-          vv.remove(i);
-          break;
+          ipoly_next = (ipoly_next+1)%npoly;
+          ++nvpocket;
           }
-        if (v_ang>Math.PI-1e-8) // vertices almost antipodal
+        int ppocket[] = new int[nvpocket];
+        int idx=0;
+        int ipoly_bw=ipoly_next;
+        while (P[ipoly_bw]!=hull[ihull])
           {
-          HealpixUtils.check(false,"degenerate polygon edge");
-          break;
+          ppocket[idx++]=P[ipoly_bw];
+          ipoly_bw=(ipoly_bw+npoly-1)%npoly;
           }
-        int pred=(i+vv.size()-1)%vv.size();
-        Vec3 npred=vv.get(pred).cross(vv.get(i)),
-             nsucc=vv.get(i).cross(vv.get(succ));
-        double n_ang = npred.angle(nsucc);
-        if (n_ang<1e-8) // vertices almost on a straight line
-          {
-          vv.remove(i);
-          break;
-          }
-        if (n_ang>Math.PI-1e-8) // very thin polygon spike
-          {
-          vv.remove(i);
-          break;
-          }
+        ppocket[idx]=hull[ihull];
+        // process pocket recursively
+        comp=prepPolyHelper (vv, ppocket, comp);
+        comp.add(new MocQueryComponent(MocQueryOp.NOT));
+        comp.add(new MocQueryComponent(MocQueryOp.AND));
+        ihull=ihull_next;
+        ipoly=ipoly_next;
         }
-      } while (nv!=vv.size());
+      } while (ihull!=0);
 
-    normal.clear();
-    convex.clear();
-    ear.clear();
-    for (int i=0; i<nv;++i)
-      normal.add(vv.get(i).cross(vv.get((i+1)%nv)).norm());
-    for (int i=0; i<nv;++i)
-      convex.add(normal.get(i).dot(vv.get((i+nv-1)%nv))>0);
-    for (int i=0; i<nv;++i)
-      ear.add(isEar(i,vv,normal,convex));
+    return comp;
     }
 
   static public ArrayList<MocQueryComponent> prepPolygon (ArrayList<Vec3> vertex)
     throws Exception
     {
     HealpixUtils.check(vertex.size()>=3,"not enough vertices in polygon");
-    ArrayList<Vec3> vv = new ArrayList<Vec3>(vertex.size());
+    Vec3 vv[] = new Vec3[vertex.size()];
     for (int i=0; i<vertex.size(); ++i)
-      vv.add(vertex.get(i).norm());
-    ArrayList<Vec3> normal = new ArrayList<Vec3>();
-    ArrayList<Boolean> convex = new ArrayList<Boolean>(), ear = new ArrayList<Boolean>();
+      vv[i]=vertex.get(i).norm();
 
-    processVertices(vv,normal,convex,ear);
+    int[] P=new int[vv.length];
+    for (int i=0; i<P.length; ++i)
+      P[i]=i;
     ArrayList<MocQueryComponent> comp = new ArrayList<MocQueryComponent>();
-
-    int nconvex=0;
-    for (int i=0; i<vv.size(); ++i)
-      if (convex.get(i)) ++nconvex;
-    if (nconvex==vv.size()) // fully convex polygon
-      {
-      for (int i=0; i<vv.size(); ++i)
-        comp.add(new MocQueryComponent(normal.get(i),0.5*Math.PI));
-      for (int i=1; i<vv.size(); ++i)
-        comp.add(new MocQueryComponent(MocQueryOp.AND));
-      return comp;
-      }
-    if (nconvex==0) // complement of a fully convex polygon??
-      {
-      for (int i=0; i<vv.size(); ++i)
-        comp.add(new MocQueryComponent(normal.get(i).flipped(),0.5*Math.PI));
-      for (int i=1; i<vv.size(); ++i)
-        comp.add(new MocQueryComponent(MocQueryOp.AND));
-      comp.add(new MocQueryComponent(MocQueryOp.NOT));
-      return comp;
-      }
-
-    int earcount=0;
-    while (vv.size()>2) // try to clip ears
-      {
-      int nvlast=vv.size();
-      for (int i=0; i<vv.size();++i)
-        {
-        int pred=(i+vv.size()-1)%vv.size(), succ=(i+1)%vv.size();
-
-        if (ear.get(i))
-          {
-          comp.add(new MocQueryComponent(normal.get(i),0.5*Math.PI));
-          comp.add(new MocQueryComponent(vv.get(succ).cross
-            (vv.get(pred)).norm(),0.5*Math.PI));
-          comp.add(new MocQueryComponent(MocQueryOp.AND));
-          comp.add(new MocQueryComponent(normal.get(pred),0.5*Math.PI));
-          comp.add(new MocQueryComponent(MocQueryOp.AND));
-          ++earcount;
-          vv.remove(i);
-          processVertices(vv,normal,convex,ear);
-          break;
-          }
-        }
-      HealpixUtils.check(vv.size()<nvlast,"failed to clip an ear");
-      }
-    for (int i=0; i<earcount-1; ++i)
-      comp.add(new MocQueryComponent(MocQueryOp.OR));
-    return comp;
+    return prepPolyHelper(vv,P,comp);
     }
 
   static public Moc queryGeneralPolygon (ArrayList<Vec3> vertex, int order)
