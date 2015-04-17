@@ -94,13 +94,14 @@ pro preview_file, file, ps=ps, gif=gif, png=png, jpeg=jpeg, landscape=landscape,
 papersize = 'a4'
 media = ' '
 ps_scom = 'gv'
-ps_com = ps_scom
+ps_com  = ps_scom
+pdf_com = ps_scom
 gif_scom = 'display'
 gif_com = gif_scom
 settings = 'factory' ; that's how it feels
 
 comments=["-----------------------------------------------------------------------------",$
-          "You can choose the facilities used to visualize Postscript, PNG, GIF, JPEG files",$
+          "You can choose the facilities used to visualize PDF, Postscript, PNG, GIF, JPEG files",$
           "and the hard copy paper size,",$
           "by running the configure script in the main Healpix directory.",$
 ;          "           (no need to restart IDL ;-)",$

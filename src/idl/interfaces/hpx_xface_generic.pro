@@ -41,6 +41,7 @@ pro hpx_xface_generic, fullpath, param_file, usrpath, init=init, run=run, silent
 ; 2009-04-30: deal with tmpdir, using IDL_TMPDIR as default
 ; 2009-09-09: uses !healpix.path.* sub-structure
 ; 2013-05-02: do not use /SH keyword with SPAWN under Windows
+; 2015-04-17: add /allow_nonexistent to file_delete
 ;-
 
 do_init = keyword_set(init)
@@ -116,7 +117,7 @@ endif
 
 if (do_clean) then begin
 ;     for i=0,n_elements(to_remove)-1 do spawn,/sh,'\rm '+to_remove[i]
-    file_delete,to_remove
+    file_delete,to_remove, /allow_nonexistent
 endif
 
 
