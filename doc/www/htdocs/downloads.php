@@ -54,7 +54,7 @@ an empty email with only &quot;<tt>subscribe</tt>&quot; on the Subject line.
 <p>		
 <A name="top"></A>
 The recommended channel for obtaining and installing the latest HEALPix software is to download the <em>source</em> package from the <a href="http://sourceforge.net/projects/healpix/">SourceForge Download page</a> under the GNU General Public License, version2 <a href="http://www.gnu.org/licenses/gpl-2.0.html">(GPLv2)</a>, and follow the <a href="documentation.php">installation directions</a>.<br>
-Prepackaged or precompiled HEALPix packages can also be found in various places, with variable delays, for e.g. MacOSX (<a href="http://www.macports.org/ports.php?by=name&substr=healpix">MacPorts</a>) and Linux (<a href="http://fr2.rpmfind.net/linux/rpm2html/search.php?query=healpix&submit=Search+...">RPM</a>) systems, under the <a href="http://www.gnu.org/licenses/gpl-2.0.html">same licensing scheme</a>.
+Prepackaged or precompiled HEALPix packages can also be found in various places, with variable delays, for e.g. MacOSX (<a href="http://www.macports.org/ports.php?by=name&substr=healpix">MacPorts</a>, <a href="http://braumeister.org/repos/Homebrew/homebrew-science/formula/healpix">HomeBrew</a>) and Linux (<a href="http://fr2.rpmfind.net/linux/rpm2html/search.php?query=healpix&submit=Search+...">RPM</a>) systems, under the <a href="http://www.gnu.org/licenses/gpl-2.0.html">same licensing scheme</a>.
 </p>
 
 <p>
