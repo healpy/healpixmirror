@@ -35,26 +35,30 @@
 using namespace std;
 
 template<typename T> void read_Moc_from_fits
-  (const std::string &filename, Moc<T> &moc)
+  (const std::string &filename, Moc<T> &moc, bool peano)
   {
   fitshandle inp;
   inp.open (filename);
   inp.goto_hdu (2);
   vector<T> data;
   inp.read_entire_column(1,data);
+  if (peano)
+    Moc<T>::uniq_nest2peano(data);
   moc=Moc<T>::fromUniq(data);
   }
 
 template void read_Moc_from_fits
-  (const std::string &filename, Moc<int> &moc);
+  (const std::string &filename, Moc<int> &moc, bool peano);
 template void read_Moc_from_fits
-  (const std::string &filename, Moc<int64> &moc);
+  (const std::string &filename, Moc<int64> &moc, bool peano);
 
 template<typename T> void write_Moc_to_fits
-  (const std::string &outfile, const Moc<T> &moc)
+  (const std::string &outfile, const Moc<T> &moc, bool peano)
   {
   PDT outtype=PLANCK_INT16;
   vector<T> data=moc.toUniq();
+  if (peano)
+    Moc<T>::uniq_peano2nest(data);
   if (data.size()>0)
     {
     if (data.back()>0x7fff) outtype=PLANCK_INT32;
@@ -73,6 +77,6 @@ template<typename T> void write_Moc_to_fits
   }
   
 template void write_Moc_to_fits
-  (const std::string &outfile, const Moc<int> &moc);
+  (const std::string &outfile, const Moc<int> &moc, bool peano);
 template void write_Moc_to_fits
-  (const std::string &outfile, const Moc<int64> &moc);
+  (const std::string &outfile, const Moc<int64> &moc, bool peano);

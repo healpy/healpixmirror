@@ -114,9 +114,9 @@ template<typename I> class Moc
     bool overlaps(const Moc &other) const
       { return rs.overlaps(other.rs); }
 
-    /** Returns a vector containing all HEALPix pixels (in ascending NUNIQ order)
-        covered by this Moc. The result is well-formed in the sense that every
-        pixel is given at its lowest possible HEALPix order. */
+    /** Returns a vector containing all HEALPix pixels (in ascending NUNIQ
+        order) covered by this Moc. The result is well-formed in the sense that
+        every pixel is given at its lowest possible HEALPix order. */
     std::vector<I> toUniq() const
       {
       std::vector<I> res;
@@ -141,71 +141,7 @@ template<typename I> class Moc
         }
       return res;
       }
-#if 0
-    std::vector<I> toUniq_old() const
-      {
-      std::vector<I> res;
-      rangeset<I> r2(rs), r3;
-      for (int o=0; o<=maxorder; ++o)
-        {
-        if (r2.empty()) return res;
 
-        int shift = 2*(maxorder-o);
-        I ofs=(I(1)<<shift)-1;
-        I ofs2 = I(1)<<(2*o+2);
-        r3.clear();
-        for (tsize iv=0; iv<r2.nranges(); ++iv)
-          {
-          I a=(r2.ivbegin(iv)+ofs)>>shift,
-            b=r2.ivend(iv)>>shift;
-          r3.append(a<<shift, b<<shift);
-          for (I i=a; i<b; ++i) res.push_back(i+ofs2);
-          }
-        if (!r3.empty())
-          r2 = r2.op_andnot(r3);
-        }
-      return res;
-      }
-    static Moc fromUniq_bad (const std::vector<I> &vu)
-      {
-      struct pix_o
-        {
-        I pix; int o;
-        pix_o(I pix_, int o_) : pix(pix_), o(o_) {}
-        bool operator<(const pix_o &other) const { return pix>other.pix; }
-        };
-      using namespace std;
-      rangeset<I> res;
-      vector<queue<I> > buf(maxorder+1);
-      for (tsize i=0; i<vu.size(); ++i)
-        {
-        int o=ilog2(vu[i]>>2)>>1;
-        I pix=vu[i]-(I(1)<<(2*o+2));
-        pix<<=2*(maxorder-o);
-        buf[o].push(pix);
-        }
-      priority_queue<pix_o> q;
-      for (int o=0; o<=maxorder; ++o)
-        if (!buf[o].empty())
-          {
-          q.push(pix_o(buf[o].front(),o));
-          buf[o].pop();
-          }
-      while(!q.empty())
-        {
-        I pix=q.top().pix;
-        int o=q.top().o;
-        q.pop();
-        if (!buf[o].empty())
-          {
-          q.push(pix_o(buf[o].front(),o));
-          buf[o].pop();
-          }
-        res.append(pix,pix+(I(1)<<(2*(maxorder-o))));
-        }
-      return fromNewRangeSet(res);
-      }
-#endif
     static Moc fromUniq (const std::vector<I> &vu)
       {
       rangeset<I> r, rtmp;
@@ -226,6 +162,55 @@ template<typename I> class Moc
         }
       r=r.op_or(rtmp);
       return fromNewRangeSet(r);
+      }
+
+    static void uniq_nest2peano(std::vector<I> &vu)
+      {
+      using namespace std;
+      if (vu.empty()) return;
+
+      tsize start=0;
+      int order=-1;
+      T_Healpix_Base<I> base;
+      I offset=0;
+      for (tsize j=0; j<vu.size(); ++j)
+        {
+        int neworder=ilog2(vu[j]>>2)>>1;
+        if (neworder>order)
+          {
+          sort(vu.begin()+start,vu.begin()+j);
+          order=neworder;
+          start=j;
+          base.Set(order,NEST);
+          offset=I(1)<<(2*order+2);
+          }
+        vu[j]=base.nest2peano(vu[j]-offset)+offset;
+        }
+      sort(vu.begin()+start,vu.end());
+      }
+    static void uniq_peano2nest(std::vector<I> &vu)
+      {
+      using namespace std;
+      if (vu.empty()) return;
+
+      tsize start=0;
+      int order=-1;
+      T_Healpix_Base<I> base;
+      I offset=0;
+      for (tsize j=0; j<vu.size(); ++j)
+        {
+        int neworder=ilog2(vu[j]>>2)>>1;
+        if (neworder>order)
+          {
+          sort(vu.begin()+start,vu.begin()+j);
+          order=neworder;
+          start=j;
+          base.Set(order,NEST);
+          offset=I(1)<<(2*order+2);
+          }
+        vu[j]=base.peano2nest(vu[j]-offset)+offset;
+        }
+      sort(vu.begin()+start,vu.end());
       }
 
     std::vector<uint8> toCompressed() const
@@ -253,6 +238,8 @@ template<typename I> class Moc
 
     tsize nranges() const
       { return rs.nranges(); }
+    I nval() const
+      { return rs.nval(); }
   };
 
 #endif

@@ -25,7 +25,7 @@
  */
 
 /*! \file moc_query.h
- *  Copyright (C) 2014 Max-Planck-Society
+ *  Copyright (C) 2014-2015 Max-Planck-Society
  *  \author Martin Reinecke
  */
 

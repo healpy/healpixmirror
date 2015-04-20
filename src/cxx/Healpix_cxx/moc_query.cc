@@ -25,7 +25,7 @@
  */
 
 /*! \file moc_query.cc
- *  Copyright (C) 2014 Max-Planck-Society
+ *  Copyright (C) 2014-2015 Max-Planck-Society
  *  \author Martin Reinecke
  */
 
@@ -37,7 +37,7 @@ using namespace std;
 
 namespace {
 
-template<typename I> class querulator
+template<typename I> class queryHelper
   {
   private:
     int order, omax;
@@ -115,6 +115,7 @@ template<typename I> class querulator
         case NONE:;
         }
       }
+
     int getZone (int &loc, int zmin, int zmax)
       {
       if (zmin==zmax) { correctLoc(loc); return zmin; } // short-circuit
@@ -154,7 +155,7 @@ template<typename I> class querulator
       }
 
   public:
-    querulator (int order_, int omax_, bool inclusive_,
+    queryHelper (int order_, int omax_, bool inclusive_,
       const vector<MocQueryComponent> &comp_)
       : order(order_), omax(omax_), inclusive(inclusive_), comp(comp_),
         base(omax+1), cr(comp.size()), crmin(omax+1,comp.size()),
@@ -206,91 +207,129 @@ template<typename I> class querulator
       }
   };
 
+double isLeft (const vec3 &a, const vec3 &b, const vec3 &c)
+  { return dotprod(crossprod(a,b),c); }
+
+// adapted from code available at http://geomalgorithms.com/a12-_hull-3.html
+// Original copyright notice follows:
+// Copyright 2001 softSurfer, 2012 Dan Sunday
+// This code may be freely used and modified for any purpose
+// providing that this copyright notice is included with it.
+// SoftSurfer makes no warranty for this code, and cannot be held
+// liable for any real or imagined damage resulting from its use.
+// Users of this code must verify correctness for their application.
+vector<int> getHull (const vector<vec3> vert, const vector<int> &P)
+  {
+  // initialize a deque D[] from bottom to top so that the
+  // 1st three vertices of P[] are a ccw triangle
+  int n = P.size();
+  arr<int> D(2*n+1);
+  int bot = n-2, top = bot+3;    // initial bottom and top deque indices
+  D[bot] = D[top] = P[2];      // 3rd vertex is at both bot and top
+  if (isLeft(vert[P[0]], vert[P[1]], vert[P[2]]) > 0)
+    {
+    D[bot+1] = P[0];
+    D[bot+2] = P[1];           // ccw vertices are: 2,0,1,2
+    }
+  else
+    {
+    D[bot+1] = P[1];
+    D[bot+2] = P[0];           // ccw vertices are: 2,1,0,2
+    }
+
+  // compute the hull on the deque D[]
+  for (int i=3; i<n; i++)
+    {   // process the rest of vertices
+    // test if next vertex is inside the deque hull
+    if ((isLeft(vert[D[bot]], vert[D[bot+1]], vert[P[i]]) > 0) &&
+        (isLeft(vert[D[top-1]], vert[D[top]], vert[P[i]]) > 0) )
+      continue;         // skip an interior vertex
+
+    // incrementally add an exterior vertex to the deque hull
+    // get the rightmost tangent at the deque bot
+    while (isLeft(vert[D[bot]], vert[D[bot+1]], vert[P[i]]) <= 0)
+      ++bot;                 // remove bot of deque
+    D[--bot] = P[i];         // insert P[i] at bot of deque
+
+    // get the leftmost tangent at the deque top
+    while (isLeft(vert[D[top-1]], vert[D[top]], vert[P[i]]) <= 0)
+      --top;                 // pop top of deque
+    D[++top] = P[i];         // push P[i] onto top of deque
+    }
+
+  // transcribe deque D[] to the output hull array H[]
+  int nout = top-bot;
+  vector<int> res(nout);
+  for (int h=0; h<nout; h++)
+    res[h] = D[bot + h +1];
+
+  return res;
+  }
+
+void prepPolyHelper (const vector<vec3> &vv, const vector<int> &P,
+  vector<MocQueryComponent> &comp)
+  {
+  vector<int> hull=getHull(vv,P);
+  // add convex hull
+  for (tsize i=0; i<hull.size(); ++i)
+    comp.push_back(MocQueryComponent
+      (crossprod(vv[hull[i]],vv[hull[(i+1)%hull.size()]]).Norm(),0.5*pi));
+  for (tsize i=1; i<hull.size(); ++i)
+    comp.push_back(MocQueryComponent(AND));
+
+  // sync both sequences at the first point of the convex hull
+  int ihull=0, ipoly=0, nhull=hull.size(), npoly=P.size();
+  while (hull[ihull]!=P[ipoly]) ++ipoly;
+
+  // iterate over the pockets between the polygon and its convex hull
+  do
+    {
+    int ihull_next = (ihull+1)%nhull,
+        ipoly_next = (ipoly+1)%npoly;
+    if (hull[ihull_next]==P[ipoly_next]) // no pocket found
+      { ihull=ihull_next; ipoly=ipoly_next; }
+    else // query pocket
+      {
+      int nvpocket=2; // number of vertices for this pocket
+      while (P[ipoly_next]!=hull[ihull_next])
+        {
+        ipoly_next = (ipoly_next+1)%npoly;
+        ++nvpocket;
+        }
+      vector<int> ppocket(nvpocket);
+      int idx=0;
+      int ipoly_bw=ipoly_next;
+      while (P[ipoly_bw]!=hull[ihull])
+        {
+        ppocket[idx++]=P[ipoly_bw];
+        ipoly_bw=(ipoly_bw+npoly-1)%npoly;
+        }
+      ppocket[idx]=hull[ihull];
+      // process pocket recursively
+      prepPolyHelper (vv, ppocket, comp);
+      comp.push_back(MocQueryComponent(NOT));
+      comp.push_back(MocQueryComponent(AND));
+      ihull=ihull_next;
+      ipoly=ipoly_next;
+      }
+    } while (ihull!=0);
+  }
+
 } // unnamed namespace
 
 template<typename I> Moc<I> mocQuery (int order,
   const vector<MocQueryComponent> &comp)
-  {
-  querulator<I> quer(order,order,false,comp);
-  return quer.result();
-  }
+  { return queryHelper<I>(order,order,false,comp).result(); }
 template Moc<int> mocQuery (int order, const vector<MocQueryComponent> &comp);
 template Moc<int64> mocQuery (int order, const vector<MocQueryComponent> &comp);
 
 template<typename I> Moc<I> mocQueryInclusive (int order, int omax,
   const vector<MocQueryComponent> &comp)
-  {
-  querulator<I> quer(order,omax,true,comp);
-  return quer.result();
-  }
+  { return queryHelper<I>(order,omax,true,comp).result(); }
 template Moc<int> mocQueryInclusive (int order, int omax,
   const vector<MocQueryComponent> &comp);
 template Moc<int64> mocQueryInclusive (int order, int omax,
   const vector<MocQueryComponent> &comp);
-
-bool isEar(tsize i, const vector<vec3> &vv, const vector<vec3> &normal, const vector<bool> &convex)
-  {
-  if (!convex[i]) return false;
-  tsize nv=normal.size();
-  tsize pred=(i+nv-1)%nv, succ=(i+1)%nv;
-  vec3 ab=normal[i],bc=crossprod(vv[succ],vv[pred]).Norm(),ca=normal[pred];
-  for (tsize j=(succ+1)%nv; j!=pred; j=(j+1)%nv)
-    if ((dotprod(vv[j],ab)>0)
-      &&(dotprod(vv[j],bc)>0)
-      &&(dotprod(vv[j],ca)>0))
-      return false;
-  return true;
-  }
-
-// vertices are assumed to be normalized
-void processVertices(vector<vec3> &vv, vector<vec3> &normal,
-  vector<bool> &convex, vector<bool> &ear)
-  {
-  tsize nv=vv.size();
-  do
-    {
-    nv=vv.size();
-    for (tsize i=0; i<vv.size(); ++i)
-      {
-      tsize succ=(i+1)%vv.size();
-      double v_ang = v_angle(vv[i],vv[succ]);
-      if (v_ang<1e-8) // vertices are very close
-        {
-        vv.erase(vv.begin()+i);
-        break;
-        }
-      if (v_ang>pi-1e-8) // vertices almost antipodal
-        {
-        planck_fail("degenerate polygon edge");
-        break;
-        }
-      tsize pred=(i+vv.size()-1)%vv.size();
-      vec3 npred=crossprod(vv[pred],vv[i]),
-           nsucc=crossprod(vv[i],vv[succ]);
-      double n_ang = v_angle(npred,nsucc);
-      if (n_ang<1e-8) // vertices almost on a straight line
-        {
-        vv.erase(vv.begin()+i);
-        break;
-        }
-      if (n_ang>pi-1e-8) // very thin polygon spike
-        {
-        vv.erase(vv.begin()+i);
-        break;
-        }
-      }
-    } while (nv!=vv.size());
-
-  normal.resize(nv);
-  convex.resize(nv);
-  ear.resize(nv);
-  for (tsize i=0; i<nv;++i)
-    normal[i]=crossprod(vv[i],vv[(i+1)%nv]).Norm();
-  for (tsize i=0; i<nv;++i)
-    convex[i]=dotprod(normal[i],vv[(i+nv-1)%nv])>0;
-  for (tsize i=0; i<nv;++i)
-    ear[i]=isEar(i,vv,normal,convex);
-  }
 
 vector<MocQueryComponent> prepPolygon (const vector<vec3> &vertex)
   {
@@ -298,57 +337,11 @@ vector<MocQueryComponent> prepPolygon (const vector<vec3> &vertex)
   vector<vec3> vv(vertex.size());
   for (tsize i=0; i<vertex.size(); ++i)
     vv[i]=vertex[i].Norm();
-  vector<vec3> normal;
-  vector<bool> convex, ear;
 
-  processVertices(vv,normal,convex,ear);
+  vector<int> P(vv.size());
+  for (tsize i=0; i<P.size(); ++i)
+    P[i]=i;
   vector<MocQueryComponent> comp;
-
-  tsize nconvex=0;
-  for (tsize i=0; i<vv.size(); ++i)
-    if (convex[i]) ++nconvex;
-  if (nconvex==vv.size()) // fully convex polygon
-    {
-    for (tsize i=0; i<vv.size(); ++i)
-      comp.push_back(MocQueryComponent(normal[i],halfpi));
-    for (tsize i=1; i<vv.size(); ++i)
-      comp.push_back(MocQueryComponent(AND));
-    return comp;
-    }
-  if (nconvex==0) // complement of a fully convex polygon??
-    {
-    for (tsize i=0; i<vv.size(); ++i)
-      comp.push_back(MocQueryComponent(-normal[i],halfpi));
-    for (tsize i=1; i<vv.size(); ++i)
-      comp.push_back(MocQueryComponent(AND));
-    comp.push_back(MocQueryComponent(NOT));
-    return comp;
-    }
-
-  int earcount=0;
-  while (vv.size()>2) // try to clip ears
-    {
-    tsize nvlast=vv.size();
-    for (tsize i=0; i<vv.size();++i)
-      {
-      tsize pred=(i+vv.size()-1)%vv.size(), succ=(i+1)%vv.size();
-
-      if (ear[i])
-        {
-        comp.push_back(MocQueryComponent(normal[i],halfpi));
-        comp.push_back(MocQueryComponent(crossprod(vv[succ],vv[pred]).Norm(),halfpi));
-        comp.push_back(MocQueryComponent(AND));
-        comp.push_back(MocQueryComponent(normal[pred],halfpi));
-        comp.push_back(MocQueryComponent(AND));
-        ++earcount;
-        vv.erase(vv.begin()+i);
-        processVertices(vv,normal,convex,ear);
-        break;
-        }
-      }
-    planck_assert(vv.size()<nvlast,"failed to clip an ear");
-    }
-  for (int i=0; i<earcount-1; ++i)
-    comp.push_back(MocQueryComponent(OR));
+  prepPolyHelper(vv,P,comp);
   return comp;
   }

@@ -41,10 +41,10 @@
 /*! \{ */
 
 template<typename T> void read_Moc_from_fits
-  (const std::string &filename, Moc<T> &moc);
+  (const std::string &filename, Moc<T> &moc, bool peano=false);
 
 template<typename T> void write_Moc_to_fits
-  (const std::string &outfile, const Moc<T> &moc);
+  (const std::string &outfile, const Moc<T> &moc, bool peano=false);
 
 /*! \} */
 
