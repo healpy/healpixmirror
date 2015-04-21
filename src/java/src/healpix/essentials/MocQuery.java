@@ -279,6 +279,14 @@ public class MocQuery
     return (a.cross(b)).dot(c);
     }
 
+  // adapted from code available at http://geomalgorithms.com/a12-_hull-3.html
+  // Original copyright notice follows:
+  // Copyright 2001 softSurfer, 2012 Dan Sunday
+  // This code may be freely used and modified for any purpose
+  // providing that this copyright notice is included with it.
+  // SoftSurfer makes no warranty for this code, and cannot be held
+  // liable for any real or imagined damage resulting from its use.
+  // Users of this code must verify correctness for their application.
   static private int[] getHull (Vec3 vert[], int P[])
     throws Exception
     {
@@ -316,7 +324,7 @@ public class MocQuery
       // get the leftmost tangent at the deque top
       while (isLeft(vert[D[top-1]], vert[D[top]], vert[P[i]]) <= 0)
         --top;                 // pop top of deque
-      D[++top] = P[i];           // push P[i] onto top of deque
+      D[++top] = P[i];         // push P[i] onto top of deque
       }
 
     // transcribe deque D[] to the output hull array H[]
