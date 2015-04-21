@@ -33,7 +33,7 @@ public class MocQuery
     public MocQueryOp op;
     public Vec3 center;
     public double radius;
-    public int ncomp;
+    public int nops;
     public MocQueryComponent(MocQueryOp op_) throws Exception
       {
       op= op_;
@@ -43,31 +43,31 @@ public class MocQuery
         case AND:
         case OR:
         case XOR:
-          ncomp=2;
+          nops=2;
           break;
         case NOT:
-          ncomp=1;
+          nops=1;
           break;
         case NONE:
-          ncomp=0;
+          nops=0;
           break;
         }
       }
-    public MocQueryComponent(MocQueryOp op_, int ncomp_) throws Exception
+    public MocQueryComponent(MocQueryOp op_, int nops_) throws Exception
       {
       op= op_;
-      ncomp=ncomp_;
+      nops=nops_;
       switch (op)
         {
         case AND:
         case OR:
-          HealpixUtils.check(ncomp>=2,"bad ncomp");
+          HealpixUtils.check(nops>=2,"bad nops");
           break;
         case XOR:
-          HealpixUtils.check(ncomp==2,"bad ncomp");
+          HealpixUtils.check(nops==2,"bad nops");
           break;
         case NOT:
-          HealpixUtils.check(ncomp==1,"bad ncomp");
+          HealpixUtils.check(nops==1,"bad nops");
           break;
         case NONE:
           HealpixUtils.check(false,"bad operator");
@@ -80,7 +80,7 @@ public class MocQuery
       center = new Vec3(cnt);
       center.normalize();
       radius = rad;
-      ncomp=0;
+      nops=0;
       }
     }
 
@@ -248,7 +248,7 @@ public class MocQuery
       for (int i=0; i<ncomp; ++i)
         {
         op[i]=comp.get(i).op;
-        nops[i]=comp.get(i).ncomp;
+        nops[i]=comp.get(i).nops;
         center[i]=comp.get(i).center;
         if (op[i]==MocQueryOp.NONE) // it's a cap
           cr[i]=Math.cos(comp.get(i).radius);
