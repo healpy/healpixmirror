@@ -44,6 +44,7 @@ template<typename I> class queryHelper
     bool inclusive;
     vector<MocQueryComponent> comp;
     vector<T_Healpix_Base<I> > base;
+    vector<int> shortcut;
     arr<double> cr;
     arr2<double> crmin;
     arr2<double> crmax;
@@ -102,36 +103,34 @@ template<typename I> class queryHelper
         }
       }
 
-    void correctLoc(int &loc)
+    void correctLoc(int &loc) const
       {
       int myloc=loc--;
       planck_assert((myloc>=0)&&(myloc<int(comp.size())),"inconsistency");
-      switch (comp[myloc].op)
-        {
-        case AND: case OR: case XOR:
-          correctLoc(loc);
-        case NOT:
-          correctLoc(loc);
-        case NONE:;
-        }
+      for (int i=0; i<comp[myloc].nops; ++i)
+        correctLoc(loc);
       }
 
-    int getZone (int &loc, int zmin, int zmax)
+    int getZone (int &loc, int zmin, int zmax) const
       {
-      if (zmin==zmax) { correctLoc(loc); return zmin; } // short-circuit
+      if (zmin==zmax) { loc=shortcut[loc]; return zmin; } // short-circuit
       int myloc=loc--;
-      planck_assert((myloc>=0)&&(myloc<int(comp.size())),"inconsistency");
+//      planck_assert((myloc>=0)&&(myloc<int(comp.size())),"inconsistency");
       switch (comp[myloc].op)
         {
         case AND:
           {
-          int z1=getZone(loc,zmin,zmax);
-          return getZone(loc,zmin,z1);
+          int z1=zmax;
+          for (int i=0; i<comp[myloc].nops; ++i)
+            z1 = getZone(loc,zmin,z1);
+          return z1;
           }
         case OR:
           {
-          int z1=getZone(loc,zmin,zmax);
-          return getZone(loc,z1,zmax);
+          int z1=zmin;
+          for (int i=0; i<comp[myloc].nops; ++i)
+            z1 = getZone(loc,z1,zmax);
+          return z1;
           }
         case XOR:
           {
@@ -158,8 +157,8 @@ template<typename I> class queryHelper
     queryHelper (int order_, int omax_, bool inclusive_,
       const vector<MocQueryComponent> &comp_)
       : order(order_), omax(omax_), inclusive(inclusive_), comp(comp_),
-        base(omax+1), cr(comp.size()), crmin(omax+1,comp.size()),
-        crmax(omax+1,comp.size())
+        base(omax+1), shortcut(comp.size()), cr(comp.size()),
+        crmin(omax+1,comp.size()), crmax(omax+1,comp.size())
       {
       planck_assert(comp.size()>=1,"bad query component vector");
       planck_assert(order<=omax,"order>omax");
@@ -176,9 +175,16 @@ template<typename I> class queryHelper
         for (tsize i=0; i<comp.size(); ++i)
           if (comp[i].op==NONE) // it's a cap
             {
-            crmax(o,i) = (comp[i].radius+dr>=pi) ? -1.01 : cos(comp[i].radius+dr);
-            crmin(o,i) = (comp[i].radius-dr<=0.) ?  1.01 : cos(comp[i].radius-dr);
+            crmax(o,i) = (comp[i].radius+dr>=pi) ? -1.01:cos(comp[i].radius+dr);
+            crmin(o,i) = (comp[i].radius-dr<=0.) ?  1.01:cos(comp[i].radius-dr);
             }
+        }
+
+      for (tsize i=0; i<comp.size(); ++i)
+        {
+        int loc=int(i);
+        correctLoc(loc);
+        shortcut[i]=loc;
         }
       }
     Moc<I> result()
@@ -218,7 +224,7 @@ double isLeft (const vec3 &a, const vec3 &b, const vec3 &c)
 // SoftSurfer makes no warranty for this code, and cannot be held
 // liable for any real or imagined damage resulting from its use.
 // Users of this code must verify correctness for their application.
-vector<int> getHull (const vector<vec3> vert, const vector<int> &P)
+vector<int> getHull (const vector<vec3> &vert, const vector<int> &P)
   {
   // initialize a deque D[] from bottom to top so that the
   // 1st three vertices of P[] are a ccw triangle
@@ -270,18 +276,13 @@ void prepPolyHelper (const vector<vec3> &vv, const vector<int> &P,
   vector<MocQueryComponent> &comp)
   {
   vector<int> hull=getHull(vv,P);
-  // add convex hull
-  for (tsize i=0; i<hull.size(); ++i)
-    comp.push_back(MocQueryComponent
-      (crossprod(vv[hull[i]],vv[hull[(i+1)%hull.size()]]).Norm(),0.5*pi));
-  for (tsize i=1; i<hull.size(); ++i)
-    comp.push_back(MocQueryComponent(AND));
 
   // sync both sequences at the first point of the convex hull
   int ihull=0, ipoly=0, nhull=hull.size(), npoly=P.size();
   while (hull[ihull]!=P[ipoly]) ++ipoly;
 
   // iterate over the pockets between the polygon and its convex hull
+  int npockets=0;
   do
     {
     int ihull_next = (ihull+1)%nhull,
@@ -290,6 +291,7 @@ void prepPolyHelper (const vector<vec3> &vv, const vector<int> &P,
       { ihull=ihull_next; ipoly=ipoly_next; }
     else // query pocket
       {
+      ++npockets;
       int nvpocket=2; // number of vertices for this pocket
       while (P[ipoly_next]!=hull[ihull_next])
         {
@@ -307,12 +309,25 @@ void prepPolyHelper (const vector<vec3> &vv, const vector<int> &P,
       ppocket[idx]=hull[ihull];
       // process pocket recursively
       prepPolyHelper (vv, ppocket, comp);
-      comp.push_back(MocQueryComponent(NOT));
-      comp.push_back(MocQueryComponent(AND));
       ihull=ihull_next;
       ipoly=ipoly_next;
       }
     } while (ihull!=0);
+
+  if (npockets>1) 
+    comp.push_back(MocQueryComponent(OR,npockets));
+  if (npockets>0) 
+    comp.push_back(MocQueryComponent(NOT));
+
+  // add convex hull
+  for (tsize i=0; i<hull.size(); ++i)
+    comp.push_back(MocQueryComponent
+      (crossprod(vv[hull[i]],vv[hull[(i+1)%hull.size()]]).Norm(),0.5*pi));
+
+  if (npockets>0) 
+    comp.push_back(MocQueryComponent(AND,hull.size()+1));
+  else
+    comp.push_back(MocQueryComponent(AND,hull.size()));
   }
 
 } // unnamed namespace

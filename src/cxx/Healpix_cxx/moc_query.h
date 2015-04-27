@@ -41,13 +41,51 @@ class MocQueryComponent
   {
   public:
     MocQueryOp op;
+    int nops;
     vec3 center;
     double radius;
     MocQueryComponent(MocQueryOp op_)
       : op(op_)
-      { planck_assert(op_!=NONE,"bad operator"); }
+      {
+      planck_assert(op_!=NONE,"bad operator");
+      switch (op)
+        {
+        case AND:
+        case OR:
+        case XOR:
+          nops=2;
+          break;
+        case NOT:
+          nops=1;
+          break;
+        case NONE:
+          nops=0;
+          break;
+        }
+      }
+    MocQueryComponent(MocQueryOp op_, int nops_)
+      {
+      op= op_;
+      nops=nops_;
+      switch (op)
+        {
+        case AND:
+        case OR:
+          planck_assert(nops>=2,"bad nops");
+          break;
+        case XOR:
+          planck_assert(nops==2,"bad nops");
+          break;
+        case NOT:
+          planck_assert(nops==1,"bad nops");
+          break;
+        case NONE:
+          planck_fail("bad operator");
+          break;
+        }
+      }
     MocQueryComponent(const vec3 &cnt, double rad)
-      : op (NONE), center(cnt.Norm()), radius(rad) {}
+      : op (NONE), nops(0), center(cnt.Norm()), radius(rad) {}
   };
 
 template<typename I> Moc<I> mocQuery (int order,
@@ -57,5 +95,13 @@ template<typename I> Moc<I> mocQueryInclusive (int order, int omax,
   const std::vector<MocQueryComponent> &comp);
 
 std::vector<MocQueryComponent> prepPolygon (const std::vector<vec3> &vertex);
+
+template<typename I> inline Moc<I> mocQuery (int order,
+  const std::vector<vec3> &vertex)
+  { return mocQuery<I>(order, prepPolygon(vertex)); }
+
+template<typename I> inline Moc<I> mocQueryInclusive (int order, int omax,
+  const std::vector<vec3> &vertex)
+  { return mocQueryInclusive<I>(order, omax, prepPolygon(vertex)); }
 
 #endif
