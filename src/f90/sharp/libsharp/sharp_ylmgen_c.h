@@ -36,13 +36,13 @@
 extern "C" {
 #endif
 
-enum { sharp_minscale=0, sharp_limscale=1, sharp_maxscale=1 };
-static const double sharp_fbig=0x1p+800,sharp_fsmall=0x1p-800;
-static const double sharp_ftol=0x1p-60;
-static const double sharp_fbighalf=0x1p+400;
+enum { hpsharp_minscale=0, hpsharp_limscale=1, hpsharp_maxscale=1 };
+static const double hpsharp_fbig=0x1p+800,hpsharp_fsmall=0x1p-800;
+static const double hpsharp_ftol=0x1p-60;
+static const double hpsharp_fbighalf=0x1p+400;
 
-typedef struct { double f[2]; } sharp_ylmgen_dbl2;
-typedef struct { double f[3]; } sharp_ylmgen_dbl3;
+typedef struct { double f[2]; } hpsharp_ylmgen_dbl2;
+typedef struct { double f[3]; } hpsharp_ylmgen_dbl3;
 
 typedef struct
   {
@@ -55,13 +55,13 @@ typedef struct
 
 /* used if s==0 */
   double *mfac;
-  sharp_ylmgen_dbl2 *rf;
+  hpsharp_ylmgen_dbl2 *rf;
 
 /* used if s!=0 */
   int sinPow, cosPow, preMinus_p, preMinus_m;
   double *prefac;
   int *fscale;
-  sharp_ylmgen_dbl3 *fx;
+  hpsharp_ylmgen_dbl3 *fx;
 
 /* internal usage only */
 /* used if s==0 */
@@ -70,28 +70,28 @@ typedef struct
 /* used if s!=0 */
   double *flm1, *flm2, *inv;
   int mlo, mhi;
-  } sharp_Ylmgen_C;
+  } hpsharp_Ylmgen_C;
 
 /*! Creates a generator which will calculate helper data for Y_lm calculation
     up to \a l=l_max and \a m=m_max. */
-void sharp_Ylmgen_init (sharp_Ylmgen_C *gen, int l_max, int m_max, int spin);
+void hpsharp_Ylmgen_init (hpsharp_Ylmgen_C *gen, int l_max, int m_max, int spin);
 
 /*! Deallocates a generator previously initialised by Ylmgen_init(). */
-void sharp_Ylmgen_destroy (sharp_Ylmgen_C *gen);
+void hpsharp_Ylmgen_destroy (hpsharp_Ylmgen_C *gen);
 
 /*! Prepares the object for the calculation at \a m. */
-void sharp_Ylmgen_prepare (sharp_Ylmgen_C *gen, int m);
+void hpsharp_Ylmgen_prepare (hpsharp_Ylmgen_C *gen, int m);
 
 /*! Returns a pointer to an array with \a lmax+1 entries containing
     normalisation factors that must be applied to Y_lm values computed for
     \a spin. The array must be deallocated (using free()) by the user. */
-double *sharp_Ylmgen_get_norm (int lmax, int spin);
+double *hpsharp_Ylmgen_get_norm (int lmax, int spin);
 
 /*! Returns a pointer to an array with \a lmax+1 entries containing
     normalisation factors that must be applied to Y_lm values computed for
     first derivatives. The array must be deallocated (using free()) by the
     user. */
-double *sharp_Ylmgen_get_d1norm (int lmax);
+double *hpsharp_Ylmgen_get_d1norm (int lmax);
 
 #ifdef __cplusplus
 }

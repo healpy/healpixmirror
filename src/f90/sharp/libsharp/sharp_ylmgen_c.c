@@ -36,12 +36,12 @@
 
 static inline void normalize (double *val, int *scale, double xfmax)
   {
-  while (fabs(*val)>xfmax) { *val*=sharp_fsmall; ++*scale; }
+  while (fabs(*val)>xfmax) { *val*=hpsharp_fsmall; ++*scale; }
   if (*val!=0.)
-    while (fabs(*val)<xfmax*sharp_fsmall) { *val*=sharp_fbig; --*scale; }
+    while (fabs(*val)<xfmax*hpsharp_fsmall) { *val*=hpsharp_fbig; --*scale; }
   }
 
-void sharp_Ylmgen_init (sharp_Ylmgen_C *gen, int l_max, int m_max, int spin)
+void hpsharp_Ylmgen_init (hpsharp_Ylmgen_C *gen, int l_max, int m_max, int spin)
   {
   const double inv_sqrt4pi = 0.2820947917738781434740397257803862929220;
 
@@ -51,19 +51,19 @@ void sharp_Ylmgen_init (sharp_Ylmgen_C *gen, int l_max, int m_max, int spin)
   UTIL_ASSERT(m_max>=spin,"incorrect m_max: must be >= spin");
   UTIL_ASSERT(l_max>=m_max,"incorrect l_max: must be >= m_max");
   gen->s = spin;
-  UTIL_ASSERT((sharp_minscale<=0)&&(sharp_maxscale>0),
+  UTIL_ASSERT((hpsharp_minscale<=0)&&(hpsharp_maxscale>0),
     "bad value for min/maxscale");
-  gen->cf=RALLOC(double,sharp_maxscale-sharp_minscale+1);
-  gen->cf[-sharp_minscale]=1.;
-  for (int m=-sharp_minscale-1; m>=0; --m)
-    gen->cf[m]=gen->cf[m+1]*sharp_fsmall;
-  for (int m=-sharp_minscale+1; m<(sharp_maxscale-sharp_minscale+1); ++m)
-    gen->cf[m]=gen->cf[m-1]*sharp_fbig;
+  gen->cf=RALLOC(double,hpsharp_maxscale-hpsharp_minscale+1);
+  gen->cf[-hpsharp_minscale]=1.;
+  for (int m=-hpsharp_minscale-1; m>=0; --m)
+    gen->cf[m]=gen->cf[m+1]*hpsharp_fsmall;
+  for (int m=-hpsharp_minscale+1; m<(hpsharp_maxscale-hpsharp_minscale+1); ++m)
+    gen->cf[m]=gen->cf[m-1]*hpsharp_fbig;
 
   gen->m = -1;
   if (spin==0)
     {
-    gen->rf = RALLOC(sharp_ylmgen_dbl2,gen->lmax+1);
+    gen->rf = RALLOC(hpsharp_ylmgen_dbl2,gen->lmax+1);
     gen->mfac = RALLOC(double,gen->mmax+1);
     gen->mfac[0] = inv_sqrt4pi;
     for (int m=1; m<=gen->mmax; ++m)
@@ -79,7 +79,7 @@ void sharp_Ylmgen_init (sharp_Ylmgen_C *gen, int l_max, int m_max, int spin)
   else
     {
     gen->m=gen->mlo=gen->mhi=-1234567890;
-    ALLOC(gen->fx,sharp_ylmgen_dbl3,gen->lmax+2);
+    ALLOC(gen->fx,hpsharp_ylmgen_dbl3,gen->lmax+2);
     for (int m=0; m<gen->lmax+2; ++m)
       gen->fx[m].f[0]=gen->fx[m].f[1]=gen->fx[m].f[2]=0.;
     ALLOC(gen->inv,double,gen->lmax+1);
@@ -101,7 +101,7 @@ void sharp_Ylmgen_init (sharp_Ylmgen_C *gen, int l_max, int m_max, int spin)
       {
       fac[m]=fac[m-1]*sqrt(m);
       facscale[m]=facscale[m-1];
-      normalize(&fac[m],&facscale[m],sharp_fbighalf);
+      normalize(&fac[m],&facscale[m],hpsharp_fbighalf);
       }
     for (int m=0; m<=gen->mmax; ++m)
       {
@@ -109,10 +109,10 @@ void sharp_Ylmgen_init (sharp_Ylmgen_C *gen, int l_max, int m_max, int spin)
       if (mhi<mlo) SWAP(mhi,mlo,int);
       double tfac=fac[2*mhi]/fac[mhi+mlo];
       int tscale=facscale[2*mhi]-facscale[mhi+mlo];
-      normalize(&tfac,&tscale,sharp_fbighalf);
+      normalize(&tfac,&tscale,hpsharp_fbighalf);
       tfac/=fac[mhi-mlo];
       tscale-=facscale[mhi-mlo];
-      normalize(&tfac,&tscale,sharp_fbighalf);
+      normalize(&tfac,&tscale,hpsharp_fbighalf);
       gen->prefac[m]=tfac;
       gen->fscale[m]=tscale;
       }
@@ -121,7 +121,7 @@ void sharp_Ylmgen_init (sharp_Ylmgen_C *gen, int l_max, int m_max, int spin)
     }
   }
 
-void sharp_Ylmgen_destroy (sharp_Ylmgen_C *gen)
+void hpsharp_Ylmgen_destroy (hpsharp_Ylmgen_C *gen)
   {
   DEALLOC(gen->cf);
   if (gen->s==0)
@@ -142,7 +142,7 @@ void sharp_Ylmgen_destroy (sharp_Ylmgen_C *gen)
     }
   }
 
-void sharp_Ylmgen_prepare (sharp_Ylmgen_C *gen, int m)
+void hpsharp_Ylmgen_prepare (hpsharp_Ylmgen_C *gen, int m)
   {
   if (m==gen->m) return;
   UTIL_ASSERT(m>=0,"incorrect m");
@@ -197,7 +197,7 @@ void sharp_Ylmgen_prepare (sharp_Ylmgen_C *gen, int m)
     }
   }
 
-double *sharp_Ylmgen_get_norm (int lmax, int spin)
+double *hpsharp_Ylmgen_get_norm (int lmax, int spin)
   {
   const double pi = 3.141592653589793238462643383279502884197;
   double *res=RALLOC(double,lmax+1);
@@ -221,7 +221,7 @@ double *sharp_Ylmgen_get_norm (int lmax, int spin)
   return res;
   }
 
-double *sharp_Ylmgen_get_d1norm (int lmax)
+double *hpsharp_Ylmgen_get_d1norm (int lmax)
   {
   const double pi = 3.141592653589793238462643383279502884197;
   double *res=RALLOC(double,lmax+1);

@@ -42,7 +42,7 @@
 
 typedef struct
   {
-  sharp_jobtype type;
+  hpsharp_jobtype type;
   int spin;
   int add_output;
   int nmaps, nalm;
@@ -52,14 +52,14 @@ typedef struct
   complex double *phase;
   double *norm_l;
   complex double *almtmp;
-  const sharp_geom_info *ginfo;
-  const sharp_alm_info *ainfo;
+  const hpsharp_geom_info *ginfo;
+  const hpsharp_alm_info *ainfo;
   double time;
   int ntrans;
   unsigned long long opcnt;
-  } sharp_job;
+  } hpsharp_job;
 
-int sharp_get_nv_max (void);
-int sharp_nv_oracle (sharp_jobtype type, int spin, int ntrans);
+int hpsharp_get_nv_max (void);
+int hpsharp_nv_oracle (hpsharp_jobtype type, int spin, int ntrans);
 
 #endif

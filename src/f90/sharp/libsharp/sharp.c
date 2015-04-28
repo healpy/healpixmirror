@@ -110,12 +110,12 @@ static void ringhelper_update (ringhelper *self, int nph, int mmax, double phi0)
 
 static int ringinfo_compare (const void *xa, const void *xb)
   {
-  const sharp_ringinfo *a=xa, *b=xb;
+  const hpsharp_ringinfo *a=xa, *b=xb;
   return (a->sth < b->sth) ? -1 : (a->sth > b->sth) ? 1 : 0;
   }
 static int ringpair_compare (const void *xa, const void *xb)
   {
-  const sharp_ringpair *a=xa, *b=xb;
+  const hpsharp_ringpair *a=xa, *b=xb;
   if (a->r1.nph==b->r1.nph)
     return (a->r1.phi0 < b->r1.phi0) ? -1 :
       ((a->r1.phi0 > b->r1.phi0) ? 1 :
@@ -123,10 +123,10 @@ static int ringpair_compare (const void *xa, const void *xb)
   return (a->r1.nph<b->r1.nph) ? -1 : 1;
   }
 
-void sharp_make_general_alm_info (int lmax, int nm, int stride, const int *mval,
-  const ptrdiff_t *mstart, sharp_alm_info **alm_info)
+void hpsharp_make_general_alm_info (int lmax, int nm, int stride, const int *mval,
+  const ptrdiff_t *mstart, hpsharp_alm_info **alm_info)
   {
-  sharp_alm_info *info = RALLOC(sharp_alm_info,1);
+  hpsharp_alm_info *info = RALLOC(hpsharp_alm_info,1);
   info->lmax = lmax;
   info->nm = nm;
   info->mval = RALLOC(int,nm);
@@ -140,35 +140,35 @@ void sharp_make_general_alm_info (int lmax, int nm, int stride, const int *mval,
   *alm_info = info;
   }
 
-void sharp_make_alm_info (int lmax, int mmax, int stride,
-  const ptrdiff_t *mstart, sharp_alm_info **alm_info)
+void hpsharp_make_alm_info (int lmax, int mmax, int stride,
+  const ptrdiff_t *mstart, hpsharp_alm_info **alm_info)
   {
   int *mval=RALLOC(int,mmax+1);
   for (int i=0; i<=mmax; ++i)
     mval[i]=i;
-  sharp_make_general_alm_info (lmax, mmax+1, stride, mval, mstart, alm_info);
+  hpsharp_make_general_alm_info (lmax, mmax+1, stride, mval, mstart, alm_info);
   DEALLOC(mval);
   }
 
-ptrdiff_t sharp_alm_index (const sharp_alm_info *self, int l, int mi)
+ptrdiff_t hpsharp_alm_index (const hpsharp_alm_info *self, int l, int mi)
   { return self->mvstart[mi]+self->stride*l; }
 
-void sharp_destroy_alm_info (sharp_alm_info *info)
+void hpsharp_destroy_alm_info (hpsharp_alm_info *info)
   {
   DEALLOC (info->mval);
   DEALLOC (info->mvstart);
   DEALLOC (info);
   }
 
-void sharp_make_geom_info (int nrings, const int *nph, const ptrdiff_t *ofs,
+void hpsharp_make_geom_info (int nrings, const int *nph, const ptrdiff_t *ofs,
   const int *stride, const double *phi0, const double *theta,
-  const double *wgt, sharp_geom_info **geom_info)
+  const double *wgt, hpsharp_geom_info **geom_info)
   {
-  sharp_geom_info *info = RALLOC(sharp_geom_info,1);
-  sharp_ringinfo *infos = RALLOC(sharp_ringinfo,nrings);
+  hpsharp_geom_info *info = RALLOC(hpsharp_geom_info,1);
+  hpsharp_ringinfo *infos = RALLOC(hpsharp_ringinfo,nrings);
 
   int pos=0;
-  info->pair=RALLOC(sharp_ringpair,nrings);
+  info->pair=RALLOC(hpsharp_ringpair,nrings);
   info->npairs=0;
   *geom_info = info;
 
@@ -183,7 +183,7 @@ void sharp_make_geom_info (int nrings, const int *nph, const ptrdiff_t *ofs,
     infos[m].stride = stride[m];
     infos[m].nph = nph[m];
     }
-  qsort(infos,nrings,sizeof(sharp_ringinfo),ringinfo_compare);
+  qsort(infos,nrings,sizeof(hpsharp_ringinfo),ringinfo_compare);
   while (pos<nrings)
     {
     info->pair[info->npairs].r1=infos[pos];
@@ -205,10 +205,10 @@ void sharp_make_geom_info (int nrings, const int *nph, const ptrdiff_t *ofs,
     }
   DEALLOC(infos);
 
-  qsort(info->pair,info->npairs,sizeof(sharp_ringpair),ringpair_compare);
+  qsort(info->pair,info->npairs,sizeof(hpsharp_ringpair),ringpair_compare);
   }
 
-void sharp_destroy_geom_info (sharp_geom_info *geom_info)
+void hpsharp_destroy_geom_info (hpsharp_geom_info *geom_info)
   {
   DEALLOC (geom_info->pair);
   DEALLOC (geom_info);
@@ -217,7 +217,7 @@ void sharp_destroy_geom_info (sharp_geom_info *geom_info)
 /* This currently requires all m values from 0 to nm-1 to be present.
    It might be worthwhile to relax this criterion such that holes in the m
    distribution are permissible. */
-static int sharp_get_mmax (int *mval, int nm)
+static int hpsharp_get_mmax (int *mval, int nm)
   {
   int *mcheck=RALLOC(int,nm);
   SET_ARRAY(mcheck,0,nm,0);
@@ -233,7 +233,7 @@ static int sharp_get_mmax (int *mval, int nm)
   }
 
 static void ringhelper_phase2ring (ringhelper *self,
-  const sharp_ringinfo *info, void *data, int mmax, const dcmplx *phase,
+  const hpsharp_ringinfo *info, void *data, int mmax, const dcmplx *phase,
   int pstride, int flags)
   {
   int nph = info->nph;
@@ -284,7 +284,7 @@ static void ringhelper_phase2ring (ringhelper *self,
   }
 
 static void ringhelper_ring2phase (ringhelper *self,
-  const sharp_ringinfo *info, const void *data, int mmax, dcmplx *phase,
+  const hpsharp_ringinfo *info, const void *data, int mmax, dcmplx *phase,
   int pstride, int flags)
   {
   int nph = info->nph;
@@ -317,7 +317,7 @@ static void ringhelper_ring2phase (ringhelper *self,
   }
 
 static void ringhelper_pair2phase (ringhelper *self, int mmax,
-  const sharp_ringpair *pair, const void *data, dcmplx *phase1, dcmplx *phase2,
+  const hpsharp_ringpair *pair, const void *data, dcmplx *phase1, dcmplx *phase2,
   int pstride, int flags)
   {
   ringhelper_ring2phase (self,&(pair->r1),data,mmax,phase1,pstride,flags);
@@ -327,14 +327,14 @@ static void ringhelper_pair2phase (ringhelper *self, int mmax,
 
 static void ringhelper_phase2pair (ringhelper *self, int mmax,
   const dcmplx *phase1, const dcmplx *phase2, int pstride,
-  const sharp_ringpair *pair, void *data, int flags)
+  const hpsharp_ringpair *pair, void *data, int flags)
   {
   ringhelper_phase2ring (self,&(pair->r1),data,mmax,phase1,pstride,flags);
   if (pair->r2.nph>0)
     ringhelper_phase2ring (self,&(pair->r2),data,mmax,phase2,pstride,flags);
   }
 
-static void fill_map (const sharp_geom_info *ginfo, void *map, double value,
+static void fill_map (const hpsharp_geom_info *ginfo, void *map, double value,
   int flags)
   {
   for (int j=0;j<ginfo->npairs;++j)
@@ -358,20 +358,20 @@ static void fill_map (const sharp_geom_info *ginfo, void *map, double value,
     }
   }
 
-static void fill_alm (const sharp_alm_info *ainfo, void *alm, dcmplx value,
+static void fill_alm (const hpsharp_alm_info *ainfo, void *alm, dcmplx value,
   int flags)
   {
   if (flags&SHARP_DP)
     for (int mi=0;mi<ainfo->nm;++mi)
       for (int l=ainfo->mval[mi];l<=ainfo->lmax;++l)
-        ((dcmplx *)alm)[sharp_alm_index(ainfo,l,mi)] = value;
+        ((dcmplx *)alm)[hpsharp_alm_index(ainfo,l,mi)] = value;
   else
     for (int mi=0;mi<ainfo->nm;++mi)
       for (int l=ainfo->mval[mi];l<=ainfo->lmax;++l)
-        ((fcmplx *)alm)[sharp_alm_index(ainfo,l,mi)] = (fcmplx)value;
+        ((fcmplx *)alm)[hpsharp_alm_index(ainfo,l,mi)] = (fcmplx)value;
   }
 
-static void init_output (sharp_job *job)
+static void init_output (hpsharp_job *job)
   {
   if (job->flags&SHARP_ADD) return;
   if (job->type == SHARP_MAP2ALM)
@@ -382,14 +382,14 @@ static void init_output (sharp_job *job)
       fill_map (job->ginfo,job->map[i],0.,job->flags);
   }
 
-static void alloc_phase (sharp_job *job, int nm, int ntheta)
+static void alloc_phase (hpsharp_job *job, int nm, int ntheta)
   { job->phase=RALLOC(dcmplx,2*job->ntrans*job->nmaps*nm*ntheta); }
 
-static void dealloc_phase (sharp_job *job)
+static void dealloc_phase (hpsharp_job *job)
   { DEALLOC(job->phase); }
 
 //FIXME: set phase to zero if not SHARP_MAP2ALM?
-static void map2phase (sharp_job *job, int mmax, int llim, int ulim)
+static void map2phase (hpsharp_job *job, int mmax, int llim, int ulim)
   {
   if (job->type != SHARP_MAP2ALM) return;
   int pstride = 2*job->ntrans*job->nmaps;
@@ -409,13 +409,13 @@ static void map2phase (sharp_job *job, int mmax, int llim, int ulim)
 } /* end of parallel region */
   }
 
-static void alloc_almtmp (sharp_job *job, int lmax)
+static void alloc_almtmp (hpsharp_job *job, int lmax)
   { job->almtmp=RALLOC(dcmplx,job->ntrans*job->nalm*(lmax+1)); }
 
-static void dealloc_almtmp (sharp_job *job)
+static void dealloc_almtmp (hpsharp_job *job)
   { DEALLOC(job->almtmp); }
 
-static void alm2almtmp (sharp_job *job, int lmax, int mi)
+static void alm2almtmp (hpsharp_job *job, int lmax, int mi)
   {
   if (job->type!=SHARP_MAP2ALM)
     {
@@ -453,7 +453,7 @@ static void alm2almtmp (sharp_job *job, int lmax, int mi)
               job->ntrans*job->nalm*(lmax+1),0.);
   }
 
-static void almtmp2alm (sharp_job *job, int lmax, int mi)
+static void almtmp2alm (hpsharp_job *job, int lmax, int mi)
   {
   if (job->type != SHARP_MAP2ALM) return;
   ptrdiff_t ofs=job->ainfo->mvstart[mi];
@@ -486,7 +486,7 @@ static void almtmp2alm (sharp_job *job, int lmax, int mi)
     }
   }
 
-static void phase2map (sharp_job *job, int mmax, int llim, int ulim)
+static void phase2map (hpsharp_job *job, int mmax, int llim, int ulim)
   {
   if (job->type == SHARP_MAP2ALM) return;
   int pstride = 2*job->ntrans*job->nmaps;
@@ -507,16 +507,16 @@ static void phase2map (sharp_job *job, int mmax, int llim, int ulim)
 } /* end of parallel region */
   }
 
-static void sharp_execute_job (sharp_job *job)
+static void hpsharp_execute_job (hpsharp_job *job)
   {
   double timer=wallTime();
   job->opcnt=0;
   int lmax = job->ainfo->lmax,
-      mmax=sharp_get_mmax(job->ainfo->mval, job->ainfo->nm);
+      mmax=hpsharp_get_mmax(job->ainfo->mval, job->ainfo->nm);
 
   job->norm_l = (job->type==SHARP_ALM2MAP_DERIV1) ?
-     sharp_Ylmgen_get_d1norm (lmax) :
-     sharp_Ylmgen_get_norm (lmax, job->spin);
+     hpsharp_Ylmgen_get_d1norm (lmax) :
+     hpsharp_Ylmgen_get_norm (lmax, job->spin);
 
 /* clear output arrays if requested */
   init_output (job);
@@ -552,10 +552,10 @@ static void sharp_execute_job (sharp_job *job)
 
 #pragma omp parallel
 {
-    sharp_job ljob = *job;
+    hpsharp_job ljob = *job;
     ljob.opcnt=0;
-    sharp_Ylmgen_C generator;
-    sharp_Ylmgen_init (&generator,lmax,mmax,ljob.spin);
+    hpsharp_Ylmgen_C generator;
+    hpsharp_Ylmgen_init (&generator,lmax,mmax,ljob.spin);
     alloc_almtmp(&ljob,lmax);
 
 #pragma omp for schedule(dynamic,1)
@@ -564,13 +564,13 @@ static void sharp_execute_job (sharp_job *job)
 /* alm->alm_tmp where necessary */
       alm2almtmp (&ljob, lmax, mi);
 
-      inner_loop (&ljob, ispair, cth, sth, llim, ulim, &generator, mi, idx);
+      hpsharp_inner_loop (&ljob, ispair, cth, sth, llim, ulim, &generator, mi, idx);
 
 /* alm_tmp->alm where necessary */
       almtmp2alm (&ljob, lmax, mi);
       }
 
-    sharp_Ylmgen_destroy(&generator);
+    hpsharp_Ylmgen_destroy(&generator);
     dealloc_almtmp(&ljob);
 
 #pragma omp critical
@@ -591,9 +591,9 @@ static void sharp_execute_job (sharp_job *job)
   job->time=wallTime()-timer;
   }
 
-static void sharp_build_job_common (sharp_job *job, sharp_jobtype type,
-  int spin, void *alm, void *map, const sharp_geom_info *geom_info,
-  const sharp_alm_info *alm_info, int ntrans, int flags)
+static void hpsharp_build_job_common (hpsharp_job *job, hpsharp_jobtype type,
+  int spin, void *alm, void *map, const hpsharp_geom_info *geom_info,
+  const hpsharp_alm_info *alm_info, int ntrans, int flags)
   {
   UTIL_ASSERT((ntrans>0)&&(ntrans<=SHARP_MAXTRANS),
     "bad number of simultaneous transforms");
@@ -612,7 +612,7 @@ static void sharp_build_job_common (sharp_job *job, sharp_jobtype type,
   job->ainfo = alm_info;
   job->flags = flags;
   if ((job->flags&SHARP_NVMAX)==0)
-    job->flags|=sharp_nv_oracle (type, spin, ntrans);
+    job->flags|=hpsharp_nv_oracle (type, spin, ntrans);
   job->time = 0.;
   job->opcnt = 0;
   job->ntrans = ntrans;
@@ -620,28 +620,28 @@ static void sharp_build_job_common (sharp_job *job, sharp_jobtype type,
   job->map=map;
   }
 
-void sharp_execute (sharp_jobtype type, int spin, void *alm, void *map,
-  const sharp_geom_info *geom_info, const sharp_alm_info *alm_info, int ntrans,
+void hpsharp_execute (hpsharp_jobtype type, int spin, void *alm, void *map,
+  const hpsharp_geom_info *geom_info, const hpsharp_alm_info *alm_info, int ntrans,
   int flags, double *time, unsigned long long *opcnt)
   {
-  sharp_job job;
-  sharp_build_job_common (&job, type, spin, alm, map, geom_info, alm_info,
+  hpsharp_job job;
+  hpsharp_build_job_common (&job, type, spin, alm, map, geom_info, alm_info,
     ntrans, flags);
 
-  sharp_execute_job (&job);
+  hpsharp_execute_job (&job);
   if (time!=NULL) *time = job.time;
   if (opcnt!=NULL) *opcnt = job.opcnt;
   }
 
-void sharp_set_chunksize_min(int new_chunksize_min)
+void hpsharp_set_chunksize_min(int new_chunksize_min)
   { chunksize_min=new_chunksize_min; }
-void sharp_set_nchunks_max(int new_nchunks_max)
+void hpsharp_set_nchunks_max(int new_nchunks_max)
   { nchunks_max=new_nchunks_max; }
 
-int sharp_get_nv_max (void)
+int hpsharp_get_nv_max (void)
 { return 6; }
 
-static int sharp_oracle (sharp_jobtype type, int spin, int ntrans)
+static int hpsharp_oracle (hpsharp_jobtype type, int spin, int ntrans)
   {
   int lmax=127;
   int mmax=(lmax+1)/2;
@@ -651,8 +651,8 @@ static int sharp_oracle (sharp_jobtype type, int spin, int ntrans)
   spin = (spin!=0) ? 2 : 0;
 
   ptrdiff_t npix=(ptrdiff_t)nrings*ppring;
-  sharp_geom_info *tinfo;
-  sharp_make_gauss_geom_info (nrings, ppring, 0., 1, ppring, &tinfo);
+  hpsharp_geom_info *tinfo;
+  hpsharp_make_gauss_geom_info (nrings, ppring, 0., 1, ppring, &tinfo);
 
   ptrdiff_t nalms = ((mmax+1)*(mmax+2))/2 + (mmax+1)*(lmax-mmax);
   int ncomp = ntrans*((spin==0) ? 1 : 2);
@@ -661,8 +661,8 @@ static int sharp_oracle (sharp_jobtype type, int spin, int ntrans)
   ALLOC2D(map,double,ncomp,npix);
   SET_ARRAY(map[0],0,npix*ncomp,0.);
 
-  sharp_alm_info *alms;
-  sharp_make_triangular_alm_info(lmax,mmax,1,&alms);
+  hpsharp_alm_info *alms;
+  hpsharp_make_triangular_alm_info(lmax,mmax,1,&alms);
 
   dcmplx **alm;
   ALLOC2D(alm,dcmplx,ncomp,nalms);
@@ -671,14 +671,14 @@ static int sharp_oracle (sharp_jobtype type, int spin, int ntrans)
   double time=1e30;
   int nvbest=-1;
 
-  for (int nv=1; nv<=sharp_get_nv_max(); ++nv)
+  for (int nv=1; nv<=hpsharp_get_nv_max(); ++nv)
     {
     double time_acc=0.;
     double jtime;
     int ntries=0;
     do
       {
-      sharp_execute(type,spin,&alm[0],&map[0],tinfo,alms,ntrans,nv|SHARP_DP,
+      hpsharp_execute(type,spin,&alm[0],&map[0],tinfo,alms,ntrans,nv|SHARP_DP,
         &jtime,NULL);
 
       if (jtime<time) { time=jtime; nvbest=nv; }
@@ -691,12 +691,12 @@ static int sharp_oracle (sharp_jobtype type, int spin, int ntrans)
   DEALLOC2D(map);
   DEALLOC2D(alm);
 
-  sharp_destroy_alm_info(alms);
-  sharp_destroy_geom_info(tinfo);
+  hpsharp_destroy_alm_info(alms);
+  hpsharp_destroy_geom_info(tinfo);
   return nvbest;
   }
 
-int sharp_nv_oracle (sharp_jobtype type, int spin, int ntrans)
+int hpsharp_nv_oracle (hpsharp_jobtype type, int spin, int ntrans)
   {
   static const int maxtr = 6;
   static int nv_opt[6][2][3] = {
@@ -713,10 +713,10 @@ int sharp_nv_oracle (sharp_jobtype type, int spin, int ntrans)
   ntrans=IMIN(ntrans,maxtr);
 
   if (nv_opt[ntrans-1][spin!=0][type]==0)
-    nv_opt[ntrans-1][spin!=0][type]=sharp_oracle(type,spin,ntrans);
+    nv_opt[ntrans-1][spin!=0][type]=hpsharp_oracle(type,spin,ntrans);
   return nv_opt[ntrans-1][spin!=0][type];
   }
 
 #ifdef USE_MPI
-#include "sharp_mpi.c"
+#include "hpsharp_mpi.c"
 #endif

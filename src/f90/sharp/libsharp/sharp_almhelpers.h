@@ -41,14 +41,14 @@ extern "C" {
 /*! Initialises an a_lm data structure according to the scheme used by
     Healpix_cxx.
     \ingroup almgroup */
-void sharp_make_triangular_alm_info (int lmax, int mmax, int stride,
-  sharp_alm_info **alm_info);
+void hpsharp_make_triangular_alm_info (int lmax, int mmax, int stride,
+  hpsharp_alm_info **alm_info);
 
 /*! Initialises an a_lm data structure according to the scheme used by
     Fortran Healpix
     \ingroup almgroup */
-void sharp_make_rectangular_alm_info (int lmax, int mmax, int stride,
-  sharp_alm_info **alm_info);
+void hpsharp_make_rectangular_alm_info (int lmax, int mmax, int stride,
+  hpsharp_alm_info **alm_info);
 
 #ifdef __cplusplus
 }

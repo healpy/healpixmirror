@@ -32,10 +32,10 @@
 #include "sharp_almhelpers.h"
 #include "c_utils.h"
 
-void sharp_make_triangular_alm_info (int lmax, int mmax, int stride,
-  sharp_alm_info **alm_info)
+void hpsharp_make_triangular_alm_info (int lmax, int mmax, int stride,
+  hpsharp_alm_info **alm_info)
   {
-  sharp_alm_info *info = RALLOC(sharp_alm_info,1);
+  hpsharp_alm_info *info = RALLOC(hpsharp_alm_info,1);
   info->lmax = lmax;
   info->nm = mmax+1;
   info->mval = RALLOC(int,mmax+1);
@@ -50,10 +50,10 @@ void sharp_make_triangular_alm_info (int lmax, int mmax, int stride,
   *alm_info = info;
   }
 
-void sharp_make_rectangular_alm_info (int lmax, int mmax, int stride,
-  sharp_alm_info **alm_info)
+void hpsharp_make_rectangular_alm_info (int lmax, int mmax, int stride,
+  hpsharp_alm_info **alm_info)
   {
-  sharp_alm_info *info = RALLOC(sharp_alm_info,1);
+  hpsharp_alm_info *info = RALLOC(hpsharp_alm_info,1);
   info->lmax = lmax;
   info->nm = mmax+1;
   info->mval = RALLOC(int,mmax+1);

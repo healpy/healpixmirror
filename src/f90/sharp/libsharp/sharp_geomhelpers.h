@@ -41,15 +41,15 @@ extern "C" {
 /*! Creates a geometry information describing a HEALPix map with an
     Nside parameter \a nside.
     \ingroup geominfogroup */
-void sharp_make_healpix_geom_info (int nside, int stride,
-  sharp_geom_info **geom_info);
+void hpsharp_make_healpix_geom_info (int nside, int stride,
+  hpsharp_geom_info **geom_info);
 
 /*! Creates a geometry information describing a HEALPix map with an
     Nside parameter \a nside. \a weight contains the relative ring
     weights and must have \a 2*nside entries.
     \ingroup geominfogroup */
-void sharp_make_weighted_healpix_geom_info (int nside, int stride,
-  const double *weight, sharp_geom_info **geom_info);
+void hpsharp_make_weighted_healpix_geom_info (int nside, int stride,
+  const double *weight, hpsharp_geom_info **geom_info);
 
 /*! Creates a geometry information describing a Gaussian map with \a nrings
     iso-latitude rings and \a nphi pixels per ring. The azimuth of the first
@@ -58,8 +58,8 @@ void sharp_make_weighted_healpix_geom_info (int nside, int stride,
     difference between the two start pixels in consecutive iso-latitude rings
     is \a stride_lat.
     \ingroup geominfogroup */
-void sharp_make_gauss_geom_info (int nrings, int nphi, double phi0,
-  int stride_lon, int stride_lat, sharp_geom_info **geom_info);
+void hpsharp_make_gauss_geom_info (int nrings, int nphi, double phi0,
+  int stride_lon, int stride_lat, hpsharp_geom_info **geom_info);
 
 /*! Creates a geometry information describing an ECP map with \a nrings
     iso-latitude rings and \a nphi pixels per ring. The azimuth of the first
@@ -73,8 +73,8 @@ void sharp_make_gauss_geom_info (int nrings, int nphi, double phi0,
       is \a 0.5*(pi/nrings) and the colatitude of the last ring is
       \a pi-0.5*(pi/nrings). There are no pixel centers at the poles.
     \ingroup geominfogroup */
-void sharp_make_ecp_geom_info (int nrings, int nphi, double phi0,
-  int stride_lon, int stride_lat, sharp_geom_info **geom_info);
+void hpsharp_make_ecp_geom_info (int nrings, int nphi, double phi0,
+  int stride_lon, int stride_lat, hpsharp_geom_info **geom_info);
 
 /*! Creates a geometry information describing an ECP map with \a nrings
     iso-latitude rings and \a nphi pixels per ring. The azimuth of the first
@@ -88,8 +88,8 @@ void sharp_make_ecp_geom_info (int nrings, int nphi, double phi0,
       is \a 0 and that of the last ring is \a pi.
     \note This is the grid used by Huffenberger & Wandelt 2010.
     \ingroup geominfogroup */
-void sharp_make_hw_geom_info (int nrings, int ppring, double phi0,
-  int stride_lon, int stride_lat, sharp_geom_info **geom_info);
+void hpsharp_make_hw_geom_info (int nrings, int ppring, double phi0,
+  int stride_lon, int stride_lat, hpsharp_geom_info **geom_info);
 
 /*! Creates a geometry information describing an ECP map with \a nrings
     iso-latitude rings and \a nphi pixels per ring. The azimuth of the first
@@ -103,8 +103,8 @@ void sharp_make_hw_geom_info (int nrings, int ppring, double phi0,
       is \a pi/(nrings+1) and that of the last ring is \a pi-pi/(nrings+1).
     \note This is the grid used by Huffenberger & Wandelt 2010.
     \ingroup geominfogroup */
-void sharp_make_fejer2_geom_info (int nrings, int ppring, double phi0,
-  int stride_lon, int stride_lat, sharp_geom_info **geom_info);
+void hpsharp_make_fejer2_geom_info (int nrings, int ppring, double phi0,
+  int stride_lon, int stride_lat, hpsharp_geom_info **geom_info);
 
 /*! Creates a geometry information describing a map with \a nrings
     iso-latitude rings and \a nphi pixels per ring. The azimuth of the first
@@ -119,8 +119,8 @@ void sharp_make_fejer2_geom_info (int nrings, int ppring, double phi0,
     \note This is the grid introduced by McEwen & Wiaux 2011.
     \note This function does \e not define any quadrature weights.
     \ingroup geominfogroup */
-void sharp_make_mw_geom_info (int nrings, int ppring, double phi0,
-  int stride_lon, int stride_lat, sharp_geom_info **geom_info);
+void hpsharp_make_mw_geom_info (int nrings, int ppring, double phi0,
+  int stride_lon, int stride_lat, hpsharp_geom_info **geom_info);
 
 #ifdef __cplusplus
 }

@@ -35,17 +35,17 @@
 #include "c_utils.h"
 #include "ls_fft.h"
 
-void sharp_make_healpix_geom_info (int nside, int stride,
-  sharp_geom_info **geom_info)
+void hpsharp_make_healpix_geom_info (int nside, int stride,
+  hpsharp_geom_info **geom_info)
   {
   double *weight=RALLOC(double,2*nside);
   SET_ARRAY(weight,0,2*nside,1);
-  sharp_make_weighted_healpix_geom_info (nside, stride, weight, geom_info);
+  hpsharp_make_weighted_healpix_geom_info (nside, stride, weight, geom_info);
   DEALLOC(weight);
   }
 
-void sharp_make_weighted_healpix_geom_info (int nside, int stride,
-  const double *weight, sharp_geom_info **geom_info)
+void hpsharp_make_weighted_healpix_geom_info (int nside, int stride,
+  const double *weight, hpsharp_geom_info **geom_info)
   {
   const double pi=3.141592653589793238462643383279502884197;
   ptrdiff_t npix=(ptrdiff_t)nside*nside*12;
@@ -90,7 +90,7 @@ void sharp_make_weighted_healpix_geom_info (int nside, int stride,
     weight_[m]=4.*pi/npix*weight[northring-1];
     }
 
-  sharp_make_geom_info (nrings, nph, ofs, stride_, phi0, theta, weight_,
+  hpsharp_make_geom_info (nrings, nph, ofs, stride_, phi0, theta, weight_,
     geom_info);
 
   DEALLOC(theta);
@@ -159,8 +159,8 @@ static void gauss_legendre_tbl(int n, double* x, double* w)
     }
   }
 
-void sharp_make_gauss_geom_info (int nrings, int nphi, double phi0,
-  int stride_lon, int stride_lat, sharp_geom_info **geom_info)
+void hpsharp_make_gauss_geom_info (int nrings, int nphi, double phi0,
+  int stride_lon, int stride_lat, hpsharp_geom_info **geom_info)
   {
   const double pi=3.141592653589793238462643383279502884197;
 
@@ -182,7 +182,7 @@ void sharp_make_gauss_geom_info (int nrings, int nphi, double phi0,
     weight[m]*=2*pi/nphi;
     }
 
-  sharp_make_geom_info (nrings, nph, ofs, stride_, phi0_, theta, weight,
+  hpsharp_make_geom_info (nrings, nph, ofs, stride_, phi0_, theta, weight,
     geom_info);
 
   DEALLOC(theta);
@@ -194,8 +194,8 @@ void sharp_make_gauss_geom_info (int nrings, int nphi, double phi0,
   }
 
 /* Weights from Waldvogel 2006: BIT Numerical Mathematics 46, p. 195 */
-void sharp_make_ecp_geom_info (int nrings, int ppring, double phi0,
-  int stride_lon, int stride_lat, sharp_geom_info **geom_info)
+void hpsharp_make_ecp_geom_info (int nrings, int ppring, double phi0,
+  int stride_lon, int stride_lat, hpsharp_geom_info **geom_info)
   {
   const double pi=3.141592653589793238462643383279502884197;
 
@@ -229,7 +229,7 @@ void sharp_make_ecp_geom_info (int nrings, int ppring, double phi0,
     weight[m]=weight[nrings-1-m]=weight[m]*2*pi/(nrings*nph[m]);
     }
 
-  sharp_make_geom_info (nrings, nph, ofs, stride_, phi0_, theta, weight,
+  hpsharp_make_geom_info (nrings, nph, ofs, stride_, phi0_, theta, weight,
     geom_info);
 
   DEALLOC(theta);
@@ -241,8 +241,8 @@ void sharp_make_ecp_geom_info (int nrings, int ppring, double phi0,
   }
 
 /* Weights from Waldvogel 2006: BIT Numerical Mathematics 46, p. 195 */
-void sharp_make_hw_geom_info (int nrings, int ppring, double phi0,
-  int stride_lon, int stride_lat, sharp_geom_info **geom_info)
+void hpsharp_make_hw_geom_info (int nrings, int ppring, double phi0,
+  int stride_lon, int stride_lat, hpsharp_geom_info **geom_info)
   {
   const double pi=3.141592653589793238462643383279502884197;
 
@@ -278,7 +278,7 @@ void sharp_make_hw_geom_info (int nrings, int ppring, double phi0,
     weight[m]=weight[nrings-1-m]=weight[m]*2*pi/(n*nph[m]);
     }
 
-  sharp_make_geom_info (nrings, nph, ofs, stride_, phi0_, theta, weight,
+  hpsharp_make_geom_info (nrings, nph, ofs, stride_, phi0_, theta, weight,
     geom_info);
 
   DEALLOC(theta);
@@ -290,8 +290,8 @@ void sharp_make_hw_geom_info (int nrings, int ppring, double phi0,
   }
 
 /* Weights from Waldvogel 2006: BIT Numerical Mathematics 46, p. 195 */
-void sharp_make_fejer2_geom_info (int nrings, int ppring, double phi0,
-  int stride_lon, int stride_lat, sharp_geom_info **geom_info)
+void hpsharp_make_fejer2_geom_info (int nrings, int ppring, double phi0,
+  int stride_lon, int stride_lat, hpsharp_geom_info **geom_info)
   {
   const double pi=3.141592653589793238462643383279502884197;
 
@@ -326,7 +326,7 @@ void sharp_make_fejer2_geom_info (int nrings, int ppring, double phi0,
     weight[m]=weight[nrings-1-m]=weight[m]*2*pi/(n*nph[m]);
     }
 
-  sharp_make_geom_info (nrings, nph, ofs, stride_, phi0_, theta, weight,
+  hpsharp_make_geom_info (nrings, nph, ofs, stride_, phi0_, theta, weight,
     geom_info);
 
   DEALLOC(theta);
@@ -337,8 +337,8 @@ void sharp_make_fejer2_geom_info (int nrings, int ppring, double phi0,
   DEALLOC(stride_);
   }
 
-void sharp_make_mw_geom_info (int nrings, int ppring, double phi0,
-  int stride_lon, int stride_lat, sharp_geom_info **geom_info)
+void hpsharp_make_mw_geom_info (int nrings, int ppring, double phi0,
+  int stride_lon, int stride_lat, hpsharp_geom_info **geom_info)
   {
   const double pi=3.141592653589793238462643383279502884197;
 
@@ -358,7 +358,7 @@ void sharp_make_mw_geom_info (int nrings, int ppring, double phi0,
     stride_[m]=stride_lon;
     }
 
-  sharp_make_geom_info (nrings, nph, ofs, stride_, phi0_, theta, NULL,
+  hpsharp_make_geom_info (nrings, nph, ofs, stride_, phi0_, theta, NULL,
     geom_info);
 
   DEALLOC(theta);

@@ -40,7 +40,7 @@ typedef union
 
 static void Z(alm2map_kernel) (const Tb cth, Z(Tbrij) * restrict p1,
   Z(Tbrij) * restrict p2, Tb lam_1, Tb lam_2,
-  const sharp_ylmgen_dbl2 * restrict rf, const dcmplx * restrict alm,
+  const hpsharp_ylmgen_dbl2 * restrict rf, const dcmplx * restrict alm,
   int l, int lmax)
   {
 #if (njobs>1)
@@ -126,7 +126,7 @@ static void Z(alm2map_kernel) (const Tb cth, Z(Tbrij) * restrict p1,
 
 static void Z(map2alm_kernel) (const Tb cth, const Z(Tbrij) * restrict p1,
   const Z(Tbrij) * restrict p2, Tb lam_1, Tb lam_2,
-  const sharp_ylmgen_dbl2 * restrict rf, dcmplx * restrict alm, int l, int lmax)
+  const hpsharp_ylmgen_dbl2 * restrict rf, dcmplx * restrict alm, int l, int lmax)
   {
   while (l<lmax)
     {
@@ -169,7 +169,7 @@ static void Z(map2alm_kernel) (const Tb cth, const Z(Tbrij) * restrict p1,
   }
 
 static void Z(calc_alm2map) (const Tb cth, const Tb sth,
-  const sharp_Ylmgen_C *gen, sharp_job *job, Z(Tbrij) * restrict p1,
+  const hpsharp_Ylmgen_C *gen, hpsharp_job *job, Z(Tbrij) * restrict p1,
   Z(Tbrij) * restrict p2, int *done)
   {
   int l,lmax=gen->lmax;
@@ -181,9 +181,9 @@ static void Z(calc_alm2map) (const Tb cth, const Tb sth,
 
   Tb corfac;
   Y(getCorfac)(scale,&corfac,gen->cf);
-  const sharp_ylmgen_dbl2 * restrict rf = gen->rf;
+  const hpsharp_ylmgen_dbl2 * restrict rf = gen->rf;
   const dcmplx * restrict alm=job->almtmp;
-  int full_ieee = Y(TballGe)(scale,sharp_minscale);
+  int full_ieee = Y(TballGe)(scale,hpsharp_minscale);
   while (!full_ieee)
     {
     for (int j=0; j<njobs; ++j)
@@ -217,7 +217,7 @@ static void Z(calc_alm2map) (const Tb cth, const Tb sth,
     if (Y(rescale)(&lam_1,&lam_2,&scale))
       {
       Y(getCorfac)(scale,&corfac,gen->cf);
-      full_ieee = Y(TballGe)(scale,sharp_minscale);
+      full_ieee = Y(TballGe)(scale,hpsharp_minscale);
       }
     }
   if (l>lmax) { *done=1; return; }
@@ -227,7 +227,7 @@ static void Z(calc_alm2map) (const Tb cth, const Tb sth,
   }
 
 static void Z(calc_map2alm) (const Tb cth, const Tb sth,
-  const sharp_Ylmgen_C *gen, sharp_job *job, const Z(Tbrij) * restrict p1,
+  const hpsharp_Ylmgen_C *gen, hpsharp_job *job, const Z(Tbrij) * restrict p1,
   const Z(Tbrij) * restrict p2, int *done)
   {
   int lmax=gen->lmax;
@@ -238,11 +238,11 @@ static void Z(calc_map2alm) (const Tb cth, const Tb sth,
   if (l>lmax) { *done=1; return; }
   job->opcnt += (lmax+1-l) * (4+4*njobs)*VLEN*nvec;
 
-  const sharp_ylmgen_dbl2 * restrict rf = gen->rf;
+  const hpsharp_ylmgen_dbl2 * restrict rf = gen->rf;
   Tb corfac;
   Y(getCorfac)(scale,&corfac,gen->cf);
   dcmplx * restrict alm=job->almtmp;
-  int full_ieee = Y(TballGe)(scale,sharp_minscale);
+  int full_ieee = Y(TballGe)(scale,hpsharp_minscale);
   while (!full_ieee)
     {
     for (int j=0; j<njobs; ++j)
@@ -278,7 +278,7 @@ static void Z(calc_map2alm) (const Tb cth, const Tb sth,
     if (Y(rescale)(&lam_1,&lam_2,&scale))
       {
       Y(getCorfac)(scale,&corfac,gen->cf);
-      full_ieee = Y(TballGe)(scale,sharp_minscale);
+      full_ieee = Y(TballGe)(scale,hpsharp_minscale);
       }
     }
 
@@ -372,7 +372,7 @@ static inline void Z(saddstep2) (const Z(Tbquj) * restrict px,
 
 static void Z(alm2map_spin_kernel) (Tb cth, Z(Tbquj) * restrict p1,
   Z(Tbquj) * restrict p2, Tb rec1p, Tb rec1m, Tb rec2p, Tb rec2m,
-  const sharp_ylmgen_dbl3 * restrict fx, const dcmplx * restrict alm, int l,
+  const hpsharp_ylmgen_dbl3 * restrict fx, const dcmplx * restrict alm, int l,
   int lmax)
   {
   while (l<lmax)
@@ -410,7 +410,7 @@ static void Z(alm2map_spin_kernel) (Tb cth, Z(Tbquj) * restrict p1,
 
 static void Z(map2alm_spin_kernel) (Tb cth, const Z(Tbquj) * restrict p1,
   const Z(Tbquj) * restrict p2, Tb rec1p, Tb rec1m, Tb rec2p, Tb rec2m,
-  const sharp_ylmgen_dbl3 * restrict fx, dcmplx * restrict alm, int l, int lmax)
+  const hpsharp_ylmgen_dbl3 * restrict fx, dcmplx * restrict alm, int l, int lmax)
   {
   while (l<lmax)
     {
@@ -440,8 +440,8 @@ static void Z(map2alm_spin_kernel) (Tb cth, const Z(Tbquj) * restrict p1,
     Z(saddstep2)(p1, p2, &rec2p, &rec2m, &alm[2*njobs*l]);
   }
 
-static void Z(calc_alm2map_spin) (const Tb cth, const sharp_Ylmgen_C *gen,
-  sharp_job *job, Z(Tbquj) * restrict p1, Z(Tbquj) * restrict p2, int *done)
+static void Z(calc_alm2map_spin) (const Tb cth, const hpsharp_Ylmgen_C *gen,
+  hpsharp_job *job, Z(Tbquj) * restrict p1, Z(Tbquj) * restrict p2, int *done)
   {
   int l, lmax=gen->lmax;
   Tb rec1p, rec1m, rec2p, rec2m, scalem, scalep;
@@ -451,13 +451,13 @@ static void Z(calc_alm2map_spin) (const Tb cth, const sharp_Ylmgen_C *gen,
    { *done=1; return; }
   job->opcnt += (lmax+1-l) * (12+16*njobs)*VLEN*nvec;
 
-  const sharp_ylmgen_dbl3 * restrict fx = gen->fx;
+  const hpsharp_ylmgen_dbl3 * restrict fx = gen->fx;
   Tb corfacp,corfacm;
   Y(getCorfac)(scalep,&corfacp,gen->cf);
   Y(getCorfac)(scalem,&corfacm,gen->cf);
   const dcmplx * restrict alm=job->almtmp;
-  int full_ieee = Y(TballGe)(scalep,sharp_minscale)
-               && Y(TballGe)(scalem,sharp_minscale);
+  int full_ieee = Y(TballGe)(scalep,hpsharp_minscale)
+               && Y(TballGe)(scalem,hpsharp_minscale);
   while (!full_ieee)
     {
     Z(saddstep)(p1, p2,
@@ -472,8 +472,8 @@ static void Z(calc_alm2map_spin) (const Tb cth, const sharp_Ylmgen_C *gen,
       {
       Y(getCorfac)(scalep,&corfacp,gen->cf);
       Y(getCorfac)(scalem,&corfacm,gen->cf);
-      full_ieee = Y(TballGe)(scalep,sharp_minscale)
-               && Y(TballGe)(scalem,sharp_minscale);
+      full_ieee = Y(TballGe)(scalep,hpsharp_minscale)
+               && Y(TballGe)(scalem,hpsharp_minscale);
       }
     }
 
@@ -486,8 +486,8 @@ static void Z(calc_alm2map_spin) (const Tb cth, const sharp_Ylmgen_C *gen,
     rec1p, rec1m, rec2p, rec2m, fx, alm, l, lmax);
   }
 
-static void Z(calc_map2alm_spin) (Tb cth, const sharp_Ylmgen_C * restrict gen,
-  sharp_job *job, const Z(Tbquj) * restrict p1, const Z(Tbquj) * restrict p2,
+static void Z(calc_map2alm_spin) (Tb cth, const hpsharp_Ylmgen_C * restrict gen,
+  hpsharp_job *job, const Z(Tbquj) * restrict p1, const Z(Tbquj) * restrict p2,
   int *done)
   {
   int l, lmax=gen->lmax;
@@ -497,13 +497,13 @@ static void Z(calc_map2alm_spin) (Tb cth, const sharp_Ylmgen_C * restrict gen,
   if (l>lmax) { *done=1; return; }
   job->opcnt += (lmax+1-l) * (12+16*njobs)*VLEN*nvec;
 
-  const sharp_ylmgen_dbl3 * restrict fx = gen->fx;
+  const hpsharp_ylmgen_dbl3 * restrict fx = gen->fx;
   Tb corfacp,corfacm;
   Y(getCorfac)(scalep,&corfacp,gen->cf);
   Y(getCorfac)(scalem,&corfacm,gen->cf);
   dcmplx * restrict alm=job->almtmp;
-  int full_ieee = Y(TballGe)(scalep,sharp_minscale)
-               && Y(TballGe)(scalem,sharp_minscale);
+  int full_ieee = Y(TballGe)(scalep,hpsharp_minscale)
+               && Y(TballGe)(scalem,hpsharp_minscale);
   while (!full_ieee)
     {
     Tb t1=Y(Tbprod)(rec2p,corfacp), t2=Y(Tbprod)(rec2m,corfacm);
@@ -518,8 +518,8 @@ static void Z(calc_map2alm_spin) (Tb cth, const sharp_Ylmgen_C * restrict gen,
       {
       Y(getCorfac)(scalep,&corfacp,gen->cf);
       Y(getCorfac)(scalem,&corfacm,gen->cf);
-      full_ieee = Y(TballGe)(scalep,sharp_minscale)
-               && Y(TballGe)(scalem,sharp_minscale);
+      full_ieee = Y(TballGe)(scalep,hpsharp_minscale)
+               && Y(TballGe)(scalem,hpsharp_minscale);
       }
     }
 
@@ -552,7 +552,7 @@ static inline void Z(saddstep_d) (Z(Tbquj) * restrict px,
 
 static void Z(alm2map_deriv1_kernel) (Tb cth, Z(Tbquj) * restrict p1,
   Z(Tbquj) * restrict p2, Tb rec1p, Tb rec1m, Tb rec2p, Tb rec2m,
-  const sharp_ylmgen_dbl3 * restrict fx, const dcmplx * restrict alm, int l,
+  const hpsharp_ylmgen_dbl3 * restrict fx, const dcmplx * restrict alm, int l,
   int lmax)
   {
   while (l<lmax)
@@ -583,8 +583,8 @@ static void Z(alm2map_deriv1_kernel) (Tb cth, Z(Tbquj) * restrict p1,
     Z(saddstep_d)(p1, p2, rec2p, rec2m, &alm[njobs*l]);
   }
 
-static void Z(calc_alm2map_deriv1) (const Tb cth, const sharp_Ylmgen_C *gen,
-  sharp_job *job, Z(Tbquj) * restrict p1, Z(Tbquj) * restrict p2, int *done)
+static void Z(calc_alm2map_deriv1) (const Tb cth, const hpsharp_Ylmgen_C *gen,
+  hpsharp_job *job, Z(Tbquj) * restrict p1, Z(Tbquj) * restrict p2, int *done)
   {
   int l, lmax=gen->lmax;
   Tb rec1p, rec1m, rec2p, rec2m, scalem, scalep;
@@ -594,13 +594,13 @@ static void Z(calc_alm2map_deriv1) (const Tb cth, const sharp_Ylmgen_C *gen,
    { *done=1; return; }
   job->opcnt += (lmax+1-l) * (12+8*njobs)*VLEN*nvec;
 
-  const sharp_ylmgen_dbl3 * restrict fx = gen->fx;
+  const hpsharp_ylmgen_dbl3 * restrict fx = gen->fx;
   Tb corfacp,corfacm;
   Y(getCorfac)(scalep,&corfacp,gen->cf);
   Y(getCorfac)(scalem,&corfacm,gen->cf);
   const dcmplx * restrict alm=job->almtmp;
-  int full_ieee = Y(TballGe)(scalep,sharp_minscale)
-               && Y(TballGe)(scalem,sharp_minscale);
+  int full_ieee = Y(TballGe)(scalep,hpsharp_minscale)
+               && Y(TballGe)(scalem,hpsharp_minscale);
   while (!full_ieee)
     {
     Z(saddstep_d)(p1, p2, Y(Tbprod)(rec2p,corfacp), Y(Tbprod)(rec2m,corfacm),
@@ -615,8 +615,8 @@ static void Z(calc_alm2map_deriv1) (const Tb cth, const sharp_Ylmgen_C *gen,
       {
       Y(getCorfac)(scalep,&corfacp,gen->cf);
       Y(getCorfac)(scalem,&corfacm,gen->cf);
-      full_ieee = Y(TballGe)(scalep,sharp_minscale)
-               && Y(TballGe)(scalem,sharp_minscale);
+      full_ieee = Y(TballGe)(scalep,hpsharp_minscale)
+               && Y(TballGe)(scalem,hpsharp_minscale);
       }
     }
 
@@ -631,13 +631,13 @@ static void Z(calc_alm2map_deriv1) (const Tb cth, const sharp_Ylmgen_C *gen,
 
 #define VZERO(var) do { memset(&(var),0,sizeof(var)); } while(0)
 
-static void Z(inner_loop) (sharp_job *job, const int *ispair,
+static void Z(hpsharp_inner_loop) (hpsharp_job *job, const int *ispair,
   const double *cth_, const double *sth_, int llim, int ulim,
-  sharp_Ylmgen_C *gen, int mi, const int *idx)
+  hpsharp_Ylmgen_C *gen, int mi, const int *idx)
   {
   const int nval=nvec*VLEN;
   const int m = job->ainfo->mval[mi];
-  sharp_Ylmgen_prepare (gen, m);
+  hpsharp_Ylmgen_prepare (gen, m);
 
   switch (job->type)
     {

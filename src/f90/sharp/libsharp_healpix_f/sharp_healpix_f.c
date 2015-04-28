@@ -4,8 +4,8 @@
 #include "sharp_almhelpers.h"
 #include "ls_cfortran.h"
 
-static void sharp_make_healpix_geom_info_2 (int nside, double *wgt,
-  double z1, double z2, sharp_geom_info **geom_info)
+static void hpsharp_make_healpix_geom_info_2 (int nside, double *wgt,
+  double z1, double z2, hpsharp_geom_info **geom_info)
   {
   const double pi=3.141592653589793238462643383279502884197;
   ptrdiff_t npix=(ptrdiff_t)nside*nside*12;
@@ -66,7 +66,7 @@ static void sharp_make_healpix_geom_info_2 (int nside, double *wgt,
     }
     }
 
-  sharp_make_geom_info (m, nph, ofs, stride, phi0, theta, weight, geom_info);
+  hpsharp_make_geom_info (m, nph, ofs, stride, phi0, theta, weight, geom_info);
 
   DEALLOC(theta);
   DEALLOC(weight);
