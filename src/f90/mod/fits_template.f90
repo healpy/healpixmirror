@@ -1824,19 +1824,19 @@ subroutine input_map8_KLOAD(filename, map, npixtot, nmaps, fmissval, header, uni
     !
     !     Designed to deal with Huge file, (n_elements > 2^31)
     !
-    !     OPTIONNAL NEW PARAMETERS:
-    !     firstpix : position in the file of the first element to be written (start at 0) 
+    !     OPTIONAL NEW PARAMETERS:
+    !     firstpix : position in the file of the first element to be written (starts at 0) 
     !                default value =0
-    !                8 bytes integer
+    !                8-byte integer
     !                if NE 0 then suppose that the file already exists
     !
-    !     repeat   : lenght of vector per unit rows and colomns of the first binary extension
+    !     repeat   : length of vector per unit rows and columns of the first binary extension
     !                default value = 12000 (\equiv 1 mn of PLANCK/HFI data)
-    !                4 byte integer
+    !                4-byte integer
     ! 
     !     OTHER PARAMETERS
-    !     unchanged as compare to the standard write_bintab of the HEALPIX package except 
-    !     npix which is a 8 bytes integer
+    !     unchanged with respect to the standard write_bintab of the HEALPIX package except 
+    !     npix which is an 8-byte integer
     !
     !     Adapted from write_bintab
     !                                           E.H. & O.D. @ IAP 07/02
@@ -1847,6 +1847,7 @@ subroutine input_map8_KLOAD(filename, map, npixtot, nmaps, fmissval, header, uni
     ! 
     ! 2002-07-08 : bugs correction by E.H. 
     !    (uniform use of firstpix_tmp, introduction of firstpix_chunk)
+    ! 2015-04-28: better handling of repeat (suggested by R. Keskitalo)
     !==========================================================================================
 
     USE healpix_types
@@ -1861,10 +1862,11 @@ subroutine input_map8_KLOAD(filename, map, npixtot, nmaps, fmissval, header, uni
     CHARACTER(LEN=*),  INTENT(IN)           :: filename
     INTEGER(I4B)    , INTENT(IN)     , OPTIONAL :: extno
 
-    INTEGER(I4B) :: status,unit,blocksize,bitpix,naxis,naxes(1),repeat_tmp,repeat_fits
+    INTEGER(I4B) :: status,unit,blocksize,bitpix,naxis,naxes(1),repeat_fits
     INTEGER(I4B) :: i,npix_32
     LOGICAL(LGT) :: simple,extend
     CHARACTER(LEN=80) :: comment, ch
+    integer(I8B) :: repeat_tmp
 
     INTEGER(I4B), PARAMETER :: MAXDIM = MAXDIM_TOP !number of columns in the extension
     INTEGER(I4B)      :: nrows,tfields,varidat
@@ -1874,10 +1876,15 @@ subroutine input_map8_KLOAD(filename, map, npixtot, nmaps, fmissval, header, uni
     CHARACTER(LEN=2)  :: stn
     INTEGER(I4B)      :: itn  
 
+    real(KMAP), dimension(:), allocatable :: padding
+    integer(I8B) :: lastpix
+    integer(I4B) :: lengap
+
     INTEGER(I4B)      :: extno_i
     character(len=filenamelen) :: sfilename
     INTEGER(I8B) :: q,iq,npix_tmp,firstpix_tmp,firstpix_chunk, i0, i1
     character(len=1) :: pform
+    character(len=*), parameter :: code='write_bintabh'
     !-----------------------------------------------------------------------
 
     if (KMAP == SP) pform = 'E'
@@ -1957,18 +1964,21 @@ subroutine input_map8_KLOAD(filename, map, npixtot, nmaps, fmissval, header, uni
        CALL ftcrhd(unit, status)
 
        !     writes required keywords
-       nrows    = npix / repeat_tmp ! naxis1
+       ! if (npix < repeat_tmp) repeat_tmp = npix ! 2015-04-28
+
+       ! nrows    = npix / repeat_tmp + 1 ! naxis1
+       nrows    = (npix - 1_i8b) / repeat_tmp + 1_i4b ! 2015-04-28
        tfields  = ntod
        WRITE(ch,'(i8)') repeat_tmp
 !       tform(1:ntod)  = TRIM(ADJUSTL(ch))//pform ! does not work with Ifort, EH, 2006-04-04
        ch = TRIM(ADJUSTL(ch))//pform
        tform(1:ntod)  = ch
 
-       IF (npix .LT. repeat_tmp) THEN
-          nrows = npix
-          ch = '1'//pform
-          tform(1:ntod) = ch
-       ENDIF
+!        IF (npix .LT. repeat_tmp) THEN  ! 2015-04-28
+!           nrows = npix
+!           ch = '1'//pform
+!           tform(1:ntod) = ch
+!        ENDIF
        ttype(1:ntod) = 'simulation'   ! will be updated
        tunit(1:ntod) = ''      ! optional, will not appear
 
@@ -2017,8 +2027,21 @@ subroutine input_map8_KLOAD(filename, map, npixtot, nmaps, fmissval, header, uni
        CALL ftbnfm(tform(1),datacode,repeat_fits,width,status)
 
        IF (repeat_tmp .NE. repeat_fits) THEN
-          WRITE(*,*) 'WARNING routine write_bintabh'
-          WRITE(*,*) 'Inexact repeat value. Use the one read in the file'
+          if (present(repeat)) then 
+             write(*,'(a,i0.0,a,i0.0,a)') &
+                  & code//'> WARNING: user provided REPEAT value (',&
+                  & repeat_tmp, &
+                  & ') inconsistent with value read from file (',&
+                  & repeat_fits, &  
+                  & ').'
+             write(*,'(a)') code//'> The latter will be used.'
+          else
+             write(*,'(a,i0.0,a)') &
+                  & code//'> WARNING: REPEAT value read from file (', &
+                  & repeat_fits, &
+                  & ') will be used.'
+          endif
+          repeat_tmp = repeat_fits
        ENDIF
 
     ENDIF
@@ -2027,7 +2050,7 @@ subroutine input_map8_KLOAD(filename, map, npixtot, nmaps, fmissval, header, uni
     IF (npix .LT. nchunk_max) THEN ! data is small enough to be written in one chunk
 
        frow = (firstpix_tmp)/repeat_tmp + 1
-       felem = firstpix_tmp-(frow-1)*repeat_tmp+1
+       felem = firstpix_tmp-(frow-1)*repeat_tmp + 1
        npix_32 = npix 
 
        DO colnum = 1, ntod
@@ -2043,12 +2066,12 @@ subroutine input_map8_KLOAD(filename, map, npixtot, nmaps, fmissval, header, uni
           ELSE
              npix_tmp = npix - iq*nchunk_max
           ENDIF
-          firstpix_chunk = firstpix_tmp + iq*nchunk_max
-          frow  = (firstpix_chunk)/repeat_tmp+1
-          felem =  firstpix_chunk-(frow-1)*repeat_tmp+1 
-          npix_32 = npix_tmp
-          i0 = firstpix_chunk - firstpix_tmp
+          i0 = iq*nchunk_max
           i1 = i0 + npix_tmp - 1_i8b
+          firstpix_chunk = firstpix_tmp + i0
+          frow  = (firstpix_chunk)/repeat_tmp + 1
+          felem =  firstpix_chunk-(frow-1)*repeat_tmp + 1
+          npix_32 = npix_tmp
           DO colnum = 1, ntod
              call f90ftpcl_(unit, colnum, frow, felem, npix_32, &
                   &          tod(i0:i1, colnum), status)
@@ -2056,6 +2079,23 @@ subroutine input_map8_KLOAD(filename, map, npixtot, nmaps, fmissval, header, uni
        ENDDO
 
     ENDIF
+
+    ! pad entry if necessary ! 2015-04-28
+    lastpix = firstpix_tmp + npix  ! number of pixels written above
+    lengap = modulo(lastpix, repeat_tmp) ! remaining gap
+    if (lengap > 0) then
+       firstpix_tmp = lastpix
+       npix_32 = repeat_tmp - lengap
+       frow    = (firstpix_tmp)/repeat_tmp + 1
+       felem   =  firstpix_tmp-(frow-1)*repeat_tmp + 1
+       allocate(padding(0:npix_32-1))
+       if (KMAP == SP) padding(:) = HPX_SBADVAL
+       if (KMAP == DP) padding(:) = HPX_DBADVAL
+       do colnum = 1, ntod
+          call f90ftpcl_(unit, colnum, frow, felem, npix_32, padding, status)
+       enddo
+       deallocate(padding)
+    endif
 
     ! ----------------------
     ! close and exit

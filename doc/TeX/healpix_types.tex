@@ -70,7 +70,7 @@ MAX\_I1B & integer & 127 & largest number accessible to integers of kind {\tt I1
 MAX\_I2B & integer & $32767$ &
 same as above for {\tt I2B} integers\\
 MAX\_I4B & integer & $2^{31}-1 \simeq 2.1\ 10^9$& same as above for {\tt I4B} integers \\
-MAX\_I8B & I8B & $2^{63}-1 \simeq 9.2\ 10^{18}$& same as above for {\tt I4B} integers \\
+MAX\_I8B & I8B & $2^{63}-1 \simeq 9.2\ 10^{18}$& same as above for {\tt I8B} integers \\
 MAX\_SP & SP & $\simeq 3.40\ 10^{38}$ & same as above for {\tt SP} floating-point\\
 MAX\_DP & DP & $\simeq 1.80\ 10^{308}$ & same as above for {\tt DP} floating-point\\
 \hline
@@ -86,7 +86,7 @@ name & kind & value & definition \\
 \hline
 QUARTPI & DP & $\pi/4$ & \\
 HALFPI & DP & $\pi/2$ & \\
-PI & DP & $\pi$ & \\
+PI & DP & $\pi \simeq 3.14159\ldots$ & \\
 TWOPI & DP & $2\pi$ & \\
 FOURPI & DP & $4\pi$ & \\
 SQRT2 & DP & $\sqrt{2}$ & \\
@@ -106,11 +106,11 @@ and \healpix specific definitions, \\
 \begin{tabularx}{\linewidth}{lcc X}
 name & type or kind & value & definition \\
 \hline
-HPX\_SBADVAL & SP & $-1.6375\ 10^{30}$ & default sentinel value given to missing
+\mytarget{sub:healpix_types:hpx_sbadval}HPX\_SBADVAL & SP & $-1.6375\ 10^{30}$ & default sentinel value given to missing
 pixels in single precision data sets \\
-HPX\_DBADVAL & DP & $-1.6375\ 10^{30}$ & same as above for double precision data
+\mytarget{sub:healpix_types:hpx_dbadval}HPX\_DBADVAL & DP & $-1.6375\ 10^{30}$ & same as above for double precision data
 sets\\
-FILENAMELEN & integer & 1024 & default length in character of file names. \\
+\mytargetb{sub:healpix_types:filenamelen}{FILENAMELEN} & integer & 1024 & default length in character of file names. \\
 HEALPIX\_VERSION & character & ``\hpxversion'' & current \healpix package version.\\
 %% HPX\_MXL0 & I4B & $40$ & parameter $m_0$ of $(l,m)$ range of spherical harmonics computed. \\
 %% HPX\_MXL1 & DP & $1.35$ & parameter $r$ in equation above\\

@@ -33,8 +33,18 @@
 \newcommand{\myhtmlimage}[1]{ }
 \newcommand{\aboutoptional}{Arguments appearing in \optional{italic} are
 optional.}
+
+% command for external link
 \newcommand{\linklatexhtml}[3]{% \linklatexhtml{name}{latex_target}{html_target}
 \latexhtml{\htmladdnormallink{#1}{#2}}{\htmladdnormallink{#1}{#3}}}
+% commands for arbitrary link
+\newcommand{\mylink}[2]{% \mylink{link_id}{link_text}
+\latexhtml{\hyperlink{#1}{#2}}{\hyperref{#2}{}{}{#1}}}
+\newcommand{\mytarget}[1]{% \mytarget{link_id}
+\latexhtml{\hypertarget{#1}{}}{\label{#1}}}
+\newcommand{\mytargetb}[2]{% \mytargett{link_id}{target_txt}
+\latexhtml{\hbox{{#2}\hypertarget{#1}{}}}{\label{#1}{#2}}}
+
 % to make sure that in html, the &=& in eqnarray appears normally,
 % replace &=& with &\myequal& hereafter
 \newcommand{\myequal}{=}
