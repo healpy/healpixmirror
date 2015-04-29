@@ -2028,18 +2028,19 @@ subroutine input_map8_KLOAD(filename, map, npixtot, nmaps, fmissval, header, uni
 
        IF (repeat_tmp .NE. repeat_fits) THEN
           if (present(repeat)) then 
-             write(*,'(a,i0.0,a,i0.0,a)') &
-                  & code//'> WARNING: user provided REPEAT value (',&
-                  & repeat_tmp, &
-                  & ') inconsistent with value read from file (',&
-                  & repeat_fits, &  
+             write(*,'(a)') code//'> WARNING: In file '//trim(sfilename)
+             write(*,'(a)') &
+                  & code//'>  user provided REPEAT value (' // &
+                  & trim(adjustl(string(repeat_tmp)))       // &
+                  & ') differs from value read from file (' // &
+                  & trim(adjustl(string(repeat_fits)))      // &  
                   & ').'
              write(*,'(a)') code//'> The latter will be used.'
-          else
-             write(*,'(a,i0.0,a)') &
-                  & code//'> WARNING: REPEAT value read from file (', &
-                  & repeat_fits, &
-                  & ') will be used.'
+!           else
+!              write(*,'(a,i0.0,a)') &
+!                   & code//'> WARNING: REPEAT value read from file (', &
+!                   & repeat_fits, &
+!                   & ') will be used.'
           endif
           repeat_tmp = repeat_fits
        ENDIF

@@ -217,12 +217,17 @@ various environment variables and aliases to make the use of the
 
 The \healpix \textbf{Fortran 90}, \textbf{C++}, \textbf{C} and \textbf{Python} distributions also
 require the publicly available CFITSIO library. Note that the 
-\textbf{Fortran 90} routines require version 3.14 or more (post March 2009) of CFITSIO
+\textbf{Fortran 90} routines require 
+%version 3.14 or more (post March 2009) 
+version 3.20 or more (post August 2009) 
+of CFITSIO
 
 \begin{tabular}{p{0.3\hsize} p{0.6\hsize}} \hline  
   \textbf{Software Package} & \textbf{Source} \\ \hline
                             &                          \\ %%% for presentation
-  CFITSIO V 3.14 or more            & \htmladdnormallink{{\tt
+%  CFITSIO V 3.14 or more 
+  CFITSIO V 3.20 or more 
+           & \htmladdnormallink{{\tt
                          http://heasarc.gsfc.nasa.gov/fitsio/}}
 			{http://heasarc.gsfc.nasa.gov/fitsio/}
                             \\ 
@@ -1047,7 +1052,7 @@ transparent in the output PNG file.
 \section{Appendix I: Recent Changes and New Features}
 \label{sec:newfeatures}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% BEGIN LATEST CHANGES %%%%%%%%%%%%%
-\subsection{Bug corrections and Improvements in Version \hpxversion}%(2014-12)
+\subsection{Bug corrections and Improvements in Version \hpxversion}%(2015-??)
 % \subsubsection[General]{General}
 % \subsubsection[C]{\linklatexhtml{C}{csub.pdf}{csub.htm}}
 % \subsubsection[C++]{C++}
@@ -1057,7 +1062,31 @@ transparent in the output PNG file.
 % \subsubsection[IDL]{\linklatexhtml{IDL}{idl.pdf}{idl.htm}}
 % \subsubsection[Java]{Java}
 % \subsubsection[Python]{Python}
+
 \subsubsection[General]{General}
+\subsubsection[C]{\linklatexhtml{C}{csub.pdf}{csub.htm}}
+\subsubsection[C++]{C++}
+\subsubsection[Fortran]{%
+	Fortran 90 \linklatexhtml{facilities}{facilities.pdf}{facilities.htm} and
+	\linklatexhtml{subroutines}{subroutines.pdf}{subroutines.htm}}
+CFITSIO 3.20 or more is now required
+\subsubsection[IDL]{\linklatexhtml{IDL}{idl.pdf}{idl.htm}}
+\subsubsection[Java]{Java}
+\subsubsection[Python]{Python}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% END LATEST CHANGES %%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%----------------------------------------------------
+\section{Appendix II: Older changes}
+
+{\mytiny{%
+
+\tinysubsection{Bug corrections and Improvements in Version 3.20 (2014-12)} %2014-12-05
+
+\tinysubsubsection[General]{General}
 	\begin{itemize}
 	\item Generation of 
 \htmladdnormallink{{\tt pkg-config}}{http://en.wikipedia.org/wiki/Pkg-config} 
@@ -1068,14 +1097,14 @@ See Section~\ref{sec:pkg-config} of
 details.
 % EndSkip
 	\end{itemize}
-\subsubsection[C]{\linklatexhtml{C}{csub.pdf}{csub.htm}}
+\tinysubsubsection[C]{\linklatexhtml{C}{csub.pdf}{csub.htm}}
 \begin{itemize}
 \item Top {\tt configure} script now proposes compilation with {\em or} without
 CFITSIO-related functions
 \item Improved {\tt autotools} support
 \end{itemize}
 
-\subsubsection[C++]{C++}
+\tinysubsubsection[C++]{C++}
 \begin{itemize}
 \item automatic workaround for bugs in older versions of GNU {\tt g++} compiler
  (bug reports 
@@ -1089,7 +1118,7 @@ CFITSIO-related functions
 \item deprecation warnings in {\tt alice2}, soon to be replaced
 \end{itemize}
 
-\subsubsection[Fortran]{%
+\tinysubsubsection[Fortran]{%
 	Fortran 90 \linklatexhtml{facilities}{facilities.pdf}{facilities.htm} and
 	\linklatexhtml{subroutines}{subroutines.pdf}{subroutines.htm}}
 \begin{itemize}
@@ -1117,7 +1146,7 @@ affecting the external $B(l)$ reading in the F90 facilities
 \htmlref{{\tt smoothing}}{fac:smoothing}.
 \end{itemize}
 
-\subsubsection[IDL]{\linklatexhtml{IDL}{idl.pdf}{idl.htm}}
+\tinysubsubsection[IDL]{\linklatexhtml{IDL}{idl.pdf}{idl.htm}}
 \begin{itemize}
  \item addition of \htmlref{{\tt ialteralm}}{{idl:ialteralm}} to modify
   Spherical Harmonics coefficients ($a_{lm}$).
@@ -1148,12 +1177,12 @@ affecting the external $B(l)$ reading in the F90 facilities
     routines (2014-11-10).
 \end{itemize}
 
-\subsubsection[Java]{Java}
+\tinysubsubsection[Java]{Java}
 \begin{itemize}
 \item explicit deprecation warnings in the source codes
 \end{itemize}
 
-\subsubsection[Python]{Python}
+\tinysubsubsection[Python]{Python}
 %
 \begin{itemize}
 	\item switch to \htmladdnormallink{{\tt healpy
@@ -1165,15 +1194,7 @@ affecting the external $B(l)$ reading in the F90 facilities
 	\end{itemize}
 \end{itemize}
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% END LATEST CHANGES %%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%----------------------------------------------------
-\section{Appendix II: Older changes}
-
-{\mytiny{%
+%-----------
 
 \tinysubsection*{Bug corrections and Improvements in Version 3.11 (2013-04)} 
 

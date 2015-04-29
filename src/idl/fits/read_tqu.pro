@@ -101,7 +101,7 @@ if (keyword_set(help)) then begin
     return
 endif
 
-syntax = 'SYNTAX : READ_TQU, fitsfile, TQU, [Extension=, Hdr=, Xhdr=, Help=, NSIDE=, ORDERING=, COORDSYS=]'
+syntax = 'SYNTAX: READ_TQU, fitsfile, TQU, [Extension=, Hdr=, Xhdr=, Help=, NSIDE=, ORDERING=, COORDSYS=]'
 if n_params() eq 0 then begin
     print,syntax,form='(a)'
     return
@@ -116,7 +116,7 @@ if (not file_test(fitsfile)) then message,'file '+fitsfile+' not found'
 ; run astrolib routine to set up non-standard system variables
 init_astrolib
 
-fits_info, fitsfile, /silent, n_ext = n_ext
+fits_info, fitsfile, /silent, n_ext = n_ext, extname=extnames
 
 xtname = ''
 if undefined(extension_id) then begin
@@ -164,7 +164,20 @@ for i = x0,xf do begin
             tqu = fltarr(npix,nmaps,n_ext)
         endif else begin
             if (npix ne npix_old or nmaps ne nmaps_old) then begin
-                message,'Extensions are not consistent in '+fitsfile
+;                message,'Extensions are not consistent in '+fitsfile
+                print,' ERROR: '
+                message,/info,fitsfile+' contains '+strtrim(n_ext,2)+' extensions which can not be merged into a single array because of their different format'
+                message,/info,'Specify the extension you want to read by providing its 0-based index or its name. Available choices are: '
+                for k=1,(n_ext<5) do begin
+                    print, k-1, "  '"+strtrim(extnames[k],2)+"'",form="(i5,a)"
+                endfor
+                if (n_ext gt 5) then begin
+                    print, '  ...    ....'
+                    k = n_ext
+                    print, k-1,"  '"+strtrim(extnames[k],2)+"'",form="(i5,a)"
+                endif
+                print,syntax,form='(a)'
+                message,'Aborting.'
             endif
         endelse
         tqu[0,0,i] = tmp
@@ -173,7 +186,8 @@ for i = x0,xf do begin
     endelse
 
     if (nmaps ne 3) then begin
-        print,' WARNING : ',nmaps,' maps available in extension ',exten,' of '+fitsfile
+        print,' WARNING: '+strtrim(nmaps,2)+' maps available in extension '+ $
+              strtrim(exten,2)+" ('"+strtrim(extnames[exten+1],2)+"')"+' of '+fitsfile
         print,'      Expected 3'
     endif
 

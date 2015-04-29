@@ -68,7 +68,7 @@ filename(LEN=\filenamelen) & CHR & IN & The array is written into a FITS file wi
 use \htmlref{healpix\_types}{sub:healpix_types} \\
 use fitstools, only : \thedocid \\
 character(len=80), dimension(1:128) :: hdr \\
-real(SP), dimension(0:59,1) :: tod \\
+real(SP), dimension(0:49,1) :: tod \\
 character(len=\mylink{sub:healpix_types:filenamelen}{FILENAMELEN}) :: fname='tod.fits' \\
 hdr(:) = ' ' \\
 tod(:,1) = 1. \\

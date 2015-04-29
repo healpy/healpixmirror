@@ -1026,7 +1026,8 @@ EOF
     # compile and link
     ${FC} ${FFLAGS}  ${tmpfile}${suffix} -o ${tmpfile}.x -L${FITSDIR} -l${LIBFITS} ${WLRPATH_}
 
-    CFITSIOVREQ="3.14"            # required  version of CFITSIO
+    #CFITSIOVREQ="3.14"            # required  version of CFITSIO (in Healpix 3.00)
+    CFITSIOVREQ="3.20"            # required  version of CFITSIO (in Healpix 3.30)
     # run if executable
     if [ -x ${tmpfile}.x ]; then
 	CFITSIOVERSION=`${tmpfile}.x` # available version of CFITSIO 
