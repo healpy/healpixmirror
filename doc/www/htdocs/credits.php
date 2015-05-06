@@ -184,6 +184,7 @@
 		      <li>    Clive Dickinson     		</li>
                       <li>    Herv&eacute; Dole   		</li>
                       <li>    Olivier Dor&eacute;  	 	</li>
+		      <li>    Franz Elsner			</li>
                       <li>    Hans Kristian Eriksen   		</li>
                       <li>    Pablo Fosalba	   		</li>
                       <li>    Ken Ganga   			</li>
