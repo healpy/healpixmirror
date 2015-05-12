@@ -365,9 +365,9 @@ tailored to the user environment.
                          will also configure the IDL routines\\
 {\tt \% make}           & builds all the facilities \\
 {\tt \% make test}      & tests all the facility previously compiled \\
-{\tt \% make clean}     & removes object files \\
+{\tt \% make clean}     & removes object ({\tt *.o}) files \\
 %%%%%{\tt \% make vclean}    & 
-{\tt \% make tidy}      & removes object files, executables and libraries \\
+{\tt \% make tidy}      & removes object files, module files ({\tt *.mod}), executables and libraries \\
 {\tt \% make distclean} & same as above and restores the directories to the state of the 
                           original distribution \\
 %% {\tt \% ./config\_preview} & configure the IDL previewer
@@ -620,6 +620,10 @@ include files;
 will return the \healpix directory to its original 'distribution' state by discarding the same
 files as above, as well as the executable and library directories and the top
 level Makefile.
+
+As a consequence, {\tt make clean} can be used after a successful compilation and installation in order to remove now useless intermediate files while keeping the codes functional, 
+while
+{\tt make tidy} should be used between successive (failed) attempts with different compilers, compiler versions or compiler options, to avoid any conflict between new and pre-existing files.
 
 % \section{Upgrading from 2.0 to 2.1}
 

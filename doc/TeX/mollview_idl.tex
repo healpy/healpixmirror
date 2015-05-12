@@ -477,6 +477,20 @@ or {\tt orthographic}, \\
 and \mylink{idl:mollview:retain}{Retain}}\\
 
 
+{/LATEX}\mytarget{idl:mollview:latex}  & \mylink{idl:mollview:routines}{all}  & \parbox[t]{\hsize}{
+if set, enables \LaTeX\ handling of character strings such as 
+\mylink{idl:mollview:titleplot}{Titleplot},
+\mylink{idl:mollview:subtitle}{Subtitle} and 
+\mylink{idl:mollview:units}{Units}\\
+        - for \mylink{idl:mollview:ps}{PS} or 
+          \mylink{idl:mollview:pdf}{PDF} outputs, these strings (and the \mylink{idl:mollview:glsize}{graticule labels}) will be processed 
+           by genuine \LaTeX\ and inserted in the final PS or PDF file using {\tt psfrag} package
+          (requires \LaTeX\ and its {\tt geometry}, {\tt graphicx}, {\tt psfrag} and {\tt color} packages)\\
+        - otherwise (for X, \mylink{idl:mollview:png}{PNG}, \mylink{idl:mollview:jpeg}{JPEG} or \mylink{idl:mollview:gif}{GIF} outputs) LaTeX is partially emulated with {\tt TeXtoIDL} routines shipped with \healpix
+          (no extra requirements)	\\
+	\default{0, no LaTeX handling}	
+}\\
+
 {/LOG}\mytarget{idl:mollview:log}  & \mylink{idl:mollview:routines}{all}  & \parbox[t]{\hsize}{
 		display the log of map. This is intended for
  	application to positive definite maps only, eg. Galactic foreground
@@ -814,11 +828,15 @@ Currently {\bf can not} be used with
 }\\
 
 {SUBTITLE=}\mytarget{idl:mollview:subtitle}  & \mylink{idl:mollview:routines}{all}  & \parbox[t]{\hsize}{
-		String containing the subtitle to the plot\\ \seealso \mylink{idl:mollview:titleplot}{Titleplot}}\\
+		String containing the subtitle to the plot\\ 
+\seealso \mylink{idl:mollview:titleplot}{Titleplot},
+\mylink{idl:mollview:latex}{Latex}}\\
 
 {TITLEPLOT=}\mytarget{idl:mollview:titleplot}  & \mylink{idl:mollview:routines}{all}  & \parbox[t]{\hsize}{
 		String containing the title of the plot, 
-     		if not set the title will be File\\ \seealso \mylink{idl:mollview:subtitle}{Subtitle}}\\
+     		if not set the title will be File\\ 
+\seealso \mylink{idl:mollview:subtitle}{Subtitle},
+\mylink{idl:mollview:latex}{Latex}}\\
 
 {TRANSPARENT=}\mytarget{idl:mollview:transparent}  & \mylink{idl:mollview:routines}{all}  & \parbox[t]{\hsize}{
 		If set to 1, the input data pixels with value \htmlref{{\tt
@@ -853,7 +871,8 @@ and \mylink{idl:mollview:max}{MAX} keywords are ignored).
 {UNITS=}\mytarget{idl:mollview:units}  & \mylink{idl:mollview:routines}{all}  & \parbox[t]{\hsize}{
 		String containing the units, to be put on the right
 		hand side of the color bar, overrides the value read from the input file,
-		if any\\ \seealso \mylink{idl:mollview:nobar}{Nobar}, \mylink{idl:mollview:nolabels}{Nolabels}}\\
+		if any\\ \seealso \mylink{idl:mollview:nobar}{Nobar}, \mylink{idl:mollview:nolabels}{Nolabels},
+\mylink{idl:mollview:latex}{Latex}}\\
 
 {WINDOW=}\mytarget{idl:mollview:window}  & \mylink{idl:mollview:routines}{all}  & \parbox[t]{\hsize}{
                  IDL window index (integer)\\
