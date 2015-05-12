@@ -36,6 +36,8 @@
 #             proposes -fPIC compilation of F90 code
 # 2013-04-18: work-around for GCC 4.4 bug
 # 2013-07-26: F90: add output location of modules ($MODDIR). Hacked from CMake.
+# 2014-11-25: propose cfitsio-free compilation of C package
+# 2015-05-12: correct bashism (==) introduced above (problematic for dash and zsh)
 #=====================================
 #=========== General usage ===========
 #=====================================
@@ -228,7 +230,7 @@ askCUserMisc () {
 
     echoLn "do you want the HEALPix/C library to include CFITSIO-related functions ? (Y|n): "
     read answer
-    if [ "x$answer" == "x" -o "x$answer" == "xY" -o "x$answer" == "xy" -o "x$answer" == "x1" ]; then
+    if [ "x$answer" = "x" -o "x$answer" = "xY" -o "x$answer" = "xy" -o "x$answer" = "x1" ]; then
 	C_WITHOUT_CFITSIO=0
 	echoLn "enter full name of cfitsio library (lib${LIBFITS}.a): "
 	read answer
