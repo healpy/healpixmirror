@@ -50,6 +50,7 @@ pro mollview, file_in, select_in, $
               IGLSIZE = iglsize, $
               IGRATICULE=igraticule, $
               JPEG=jpeg, $
+              LATEX=latex, $
               LOG = log, $
               MAP_OUT = map_out, $
               MAX = max_set, $
@@ -101,7 +102,7 @@ pro mollview, file_in, select_in, $
 ;                       HALF_SKY =, HBOUND =, HELP =, HIST_EQUAL=, HXSIZE=, $
 ;                       IGLSIZE=, IGRATICULE=, $
 ;                       JPEG=, $
-;                       LOG=, $
+;                       LATEX=, LOG=, $
 ;                       MAP_OUT=, MAX=, MIN=, $ 
 ;                       NESTED=, NOBAR=, NOLABELS=, NOPOSITION =, $
 ;                       NO_DIPOLE=, NO_MONOPOLE=, $
@@ -303,6 +304,14 @@ pro mollview, file_in, select_in, $
 ;                with XXX = azimequid, cartesian, gnomic, mollweide or orthographic
 ;	      if set to a file name  : output the plot in that file 
 ;             (see also : CROP, GIF, PDF, PNG, PS and PREVIEW)
+;
+;       LATEX: if set, enables LaTeX handling of character strings such as TITLEPLOT, SUBTITLE and UNITS
+;        - for PS or PDF outputs, these strings (and the graticule labels) will be processed 
+;           by genuine LaTeX and inserted in the final PS or PDF file using psfrag package
+;          (requires LaTeX and its geometry, graphicx, psfrag and color packages)
+;        - otherwise (for X, PNG, JPEG or GIF output) LaTeX is partially emulated with TeXtoIDL routines
+;          shipped with HEALPix (no extra requirements)
+;         default: 0 (not set)
 ;
 ; 	LOG: display the log of map (see also : HIST)
 ;         only applies to pixel with signal > 0.
@@ -676,7 +685,7 @@ proj2out, $
   POLARIZATION=polarization, OUTLINE=outline, /MOLL, FLIP=flip, COORD_IN=coord_in, IGRATICULE=igraticule, $
   HBOUND = hbound, WINDOW = window, EXECUTE=execute, SILENT=silent, GLSIZE=glsize, $
   IGLSIZE=iglsize, RETAIN=retain, TRUECOLORS=truecolors, TRANSPARENT=transparent, CHARTHICK=charthick, $
-  JPEG=jpeg, BAD_COLOR=bad_color, BG_COLOR=bg_color, FG_COLOR=fg_color, PDF=pdf
+  JPEG=jpeg, BAD_COLOR=bad_color, BG_COLOR=bg_color, FG_COLOR=fg_color, PDF=pdf, LATEX=latex
 
 
 w_num = !d.window

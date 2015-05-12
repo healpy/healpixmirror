@@ -25,7 +25,12 @@
 ;  For more information about HEALPix see http://healpix.sourceforge.net
 ;
 ; -----------------------------------------------------------------------------
-pro oplot_graticule, graticule, eul_mat, projection=projection, mollweide=mollweide, gnomic=gnomic, cartesian=cartesian, orthographic=orthographic, flip = flip, _extra = oplot_kw, half_sky=half_sky, coordsys=coordsys, charsize=charsize, reso_rad=reso_rad
+pro oplot_graticule, graticule, eul_mat, $
+                     projection=projection, $
+                     mollweide=mollweide, gnomic=gnomic, cartesian=cartesian, orthographic=orthographic, $
+                     flip = flip, _extra = oplot_kw, $
+                     half_sky=half_sky, coordsys=coordsys, charsize=charsize, reso_rad=reso_rad, $
+                     latex=latex, ltxstc=ltxstc
 ;+
 ; NAME:
 ;       OPLOT_GRATICULE
@@ -157,7 +162,7 @@ case projtype of
                 bad = where(good-shift(good,1) ne 1, nbad)
                 if (nbad gt 1) then good = shift(good, bad[1])
 ;                oplot, flipconv * u, v, _extra = oplot_kw
-               if (ng gt 1) then oplot_sphere, flipconv *u[good], v[good], _extra = oplot_kw, linelabel=linelabel,/flush, charsize=charsize
+               if (ng gt 1) then oplot_sphere, flipconv *u[good], v[good], _extra = oplot_kw, linelabel=linelabel,/flush, charsize=charsize, latex=latex, ltxstc=ltxstc
             endif
         endfor
     endfor
@@ -179,7 +184,8 @@ end
             if (do_rot) then vv = vv # transpose(eul_mat)
 
             vec2moll, vv, u, v
-            oplot_sphere, -flipconv * u, v, _extra = oplot_kw, linelabel=linelabel, charsize=charsize
+            oplot_sphere, -flipconv * u, v, _extra = oplot_kw, linelabel=linelabel, charsize=charsize, $
+                          latex=latex, ltxstc=ltxstc
 ;;            oplot_sphere, flipconv * u, v, _extra = oplot_kw
         endfor
     endfor
@@ -213,7 +219,8 @@ end
                     u = vv[k,1]
                     v = vv[k,2]
                     ;oplot_sphere, flipconv*(u+c0)*sign, v, _extra = oplot_kw
-                    oplot_sphere,  flipconv*(u+c0)*sign, v, _extra = oplot_kw, linelabel=linelabel, charsize=charsize
+                    oplot_sphere,  flipconv*(u+c0)*sign, v, _extra = oplot_kw, linelabel=linelabel, charsize=charsize, $
+                                   latex=latex, ltxstc=ltxstc
                 endif ; nk>0
             endfor ; loop on sign
         endfor
@@ -247,7 +254,7 @@ end
                                 ; reorder points to have one continuous segment across the plot
             bad = where(good-shift(good,1) ne 1, nbad)
             if (nbad gt 1) then good = shift(good, bad[1])
-            if (ng gt 1) then oplot_sphere, flipconv *phi[good], theta[good], _extra = oplot_kw, linelabel=linelabel,charsize=charsize
+            if (ng gt 1) then oplot_sphere, flipconv *phi[good], theta[good], _extra = oplot_kw, linelabel=linelabel,charsize=charsize, latex=latex, ltxstc=ltxstc
         endfor
     endfor
 end

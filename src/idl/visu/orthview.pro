@@ -51,6 +51,7 @@ pro orthview, file_in, select_in, $
               IGLSIZE = iglsize, $
               IGRATICULE=igraticule, $
               JPEG=jpeg, $
+              LATEX=latex, $
               LOG = log, $
               MAP_OUT = map_out, $
               MAX = max_set, $
@@ -126,7 +127,7 @@ if (n_params() lt 1 or n_params() gt 2) then begin
     print,'              HIST_EQUAL=, HXSIZE=,  '
     print,'              IGLSIZE=, IGRATICULE=,'
     print,'              JPEG=,'
-    print,'              LOG=, '
+    print,'              LATEX=, LOG=, '
     print,'              MAP_OUT=, MAX=, MIN=, '
     print,'              NESTED=, NOBAR=, NOLABELS=, '
     print,'              NO_DIPOLE=, NO_MONOPOLE=, '
@@ -194,7 +195,7 @@ proj2out, $
   IGRATICULE=igraticule, HBOUND = hbound, WINDOW = window, SILENT=silent, GLSIZE=glsize, IGLSIZE=iglsize, $
   SHADEMAP=shademap, EXECUTE=execute, RETAIN=retain, TRUECOLORS=truecolors, TRANSPARENT=transparent, $
   CHARTHICK=charthick, STAGGER=stagger, JPEG=jpeg, BAD_COLOR=bad_color, BG_COLOR=bg_color, FG_COLOR=fg_color, $
-  PDF=pdf
+  PDF=pdf, LATEX=latex
 
 w_num = !d.window
 ; restore original color table and PLOTS settings

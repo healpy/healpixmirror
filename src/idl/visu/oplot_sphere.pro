@@ -25,7 +25,9 @@
 ;  For more information about HEALPix see http://healpix.sourceforge.net
 ;
 ; -----------------------------------------------------------------------------
-pro oplot_line_with_label, u, v, linelabel=linelabel, putlabel=putlabel, flush=flush, lines=line_type, _extra = oplot_kw, charsize=charsize
+pro oplot_line_with_label, u, v, $
+  linelabel=linelabel, putlabel=putlabel, flush=flush, lines=line_type, _extra = oplot_kw, charsize=charsize, $
+  latex=latex, ltxstc=ltxstc
 ; , labrot=labrot, fixminus=fixminus
 
 ; note on oplot: linestyle in _extra prevails silently over explicit linestyle
@@ -58,7 +60,8 @@ if (do_label) then begin
         xlab = u[middle] + 0.3*chsize * cos((angle-90.)*!dtor)
         ylab = v[middle] + 0.3*chsize * sin((angle-90.)*!dtor)
         ; if keyword_set(fixminus) then linelabel = StrJoin(StrSplit(linelabel, '-', /Regex, /Extract, /Preserve_Null), '!M-!X')
-        xyouts, xlab, ylab, linelabel, align=0.5,orientation=angle, noclip=0,charsize=chars
+        xyouts_latex, xlab, ylab, linelabel, align=0.5,orientation=angle, noclip=0,charsize=chars, $
+                      latex=latex, ltxstc=ltxstc
     endif else begin
         ; if label too big, drop it and only plot line
         oplot, u, v, _extra = oplot_kw, lines=line_type
@@ -73,7 +76,9 @@ end
 
 ;=============================================
 
-pro oplot_sphere, u, v,  line_type=line_type, _extra = oplot_kw, linelabel=linelabel, flush=flush, charsize=charsize
+pro oplot_sphere, u, v,  $
+                  line_type=line_type, _extra = oplot_kw, linelabel=linelabel, flush=flush, charsize=charsize, $
+                  latex=latex, ltxstc=ltxstc
 
 if undefined(line_type) then line_type = 0
 
@@ -90,7 +95,9 @@ if (nbad eq 0) then begin
         oplot, u, v, _extra = oplot_kw, col=1 ; white background
         oplot, u, v, _extra = oplot_kw, col=0, lines=abs(line_type)
     endif else begin
-        oplot_line_with_label, u, v, linelabel=linelabel, _extra = oplot_kw, lines=line_type, putlabel=1,flush=flush,charsize=charsize
+        oplot_line_with_label, u, v, linelabel=linelabel, _extra = oplot_kw, lines=line_type, $
+          putlabel=1,flush=flush,charsize=charsize, $
+          latex=latex, ltxstc=ltxstc
     endelse
 endif else begin
 ;    bad = [0,bad,n_elements(u)-1]
@@ -106,7 +113,9 @@ endif else begin
                 oplot, u1, v1, _extra = oplot_kw, col=0, lines=abs(line_type)
             endif else begin
                 putlabel = (~already)
-                oplot_line_with_label, u1, v1, linelabel=linelabel, _extra = oplot_kw, lines=line_type, putlabel=putlabel, flush=flush, charsize=charsize
+                oplot_line_with_label, u1, v1, linelabel=linelabel, _extra = oplot_kw, lines=line_type, $
+                  putlabel=putlabel, flush=flush, charsize=charsize, $
+                  latex=latex, ltxstc=ltxstc
                 already = 1
             endelse        
         endif

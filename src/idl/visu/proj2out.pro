@@ -24,6 +24,7 @@
 ;
 ;  For more information about HEALPix see http://healpix.sourceforge.net
 ;
+;  mollview,findgen(12),fact=1.e6,units='$\mu$K',pdf='/tmp/moll.pdf',/preview,silent=1,sub='sub',/grat,glsize=1,title='title {\bf title} tit2'
 ; -----------------------------------------------------------------------------
 function parse_planck_colorstring, color, colshift
 ; -----------------------
@@ -76,7 +77,7 @@ pro proj2out, planmap, Tmax, Tmin, color_bar, dx, title_display, sunits, $
               TRANSPARENT = transparent, EXECUTE=execute, SILENT=silent, GLSIZE=glsize, IGLSIZE=iglsize, $
               SHADEMAP=SHADEMAP, RETAIN=retain, TRUECOLORS=truecolors, CHARTHICK=charthick, $
               STAGGER=stagger, AZEQ=azeq, JPEG=jpeg, BAD_COLOR=bad_color, BG_COLOR=bg_color, FG_COLOR=fg_color, $
-              PDF=pdf
+              PDF=pdf, LATEX=latex
 
 ;===============================================================================
 ;+
@@ -101,7 +102,7 @@ pro proj2out, planmap, Tmax, Tmin, color_bar, dx, title_display, sunits, $
 ;              ORTHOGRAPHIC=orthographic, $
 ;              FLIP=flip, HALF_SKY=half_sky,COORD_IN=coord_in, IGRATICULE=,
 ;              HBOUND=, DIAMONDS =, WINDOW =, TRANSPARENT=, EXECUTE=, SILENT=
-;              GLSIZE=, IGLSIZE=, SHADEMAP=, STAGGER=, AZEQ=, JPEG=, PDF=
+;              GLSIZE=, IGLSIZE=, SHADEMAP=, STAGGER=, AZEQ=, JPEG=, PDF=, LATEX=
 ;
 ;   for more information, see Gnomview.pro Mollview.pro
 ;
@@ -129,6 +130,7 @@ pro proj2out, planmap, Tmax, Tmin, color_bar, dx, title_display, sunits, $
 ;   Jan 2012, EH, turns off GRAT, IGRAT, HBOUND, OUTLINE when STAGGER is set
 ;                 added support of AZEQ and JPEG
 ;   Dec 2014, EH, added PDF
+;   May 2015, EH, added LATEX
 ;
 ;
 ; 2 problems with write_png,...,/transparent in GDL:
@@ -460,6 +462,11 @@ charsfactor = defined(charsize) ? charsize : 1.0
 mycharthick = defined(charthick)? charthick : 1.0
 be_verbose  = ~keyword_set(silent)
 
+; latex support
+ltxstc = 0
+do_latex = keyword_set(latex)
+prefont = (do_latex && do_print) ? '' : '!6'
+
 ; alter the color table
 ; -----------------------
 ; save the color and background before playing with the color table
@@ -736,10 +743,12 @@ if (~(do_crop || keyword_set(nobar) || keyword_set(nolabels) || do_true || do_po
     if ((Tmax - Tmin) ge 5  and MAX(ABS([Tmax,Tmin])) le 1.e2) then format='(f6.1)'
     strmin = STRING(Tmin,format=format)
     strmax = STRING(Tmax,format=format)
-    XYOUTS, cbar_xll, cbar_yll,'!6'+STRTRIM(strmin,2)+' ',$
-            ALIGN=1.,/normal, chars=1.3*charsfactor, charthick=mycharthick
-    XYOUTS, cbar_xur, cbar_yll,'!6 '+STRTRIM(strmax,2)+' '+sunits,$
-            ALIGN=0.,/normal, chars=1.3*charsfactor, charthick=mycharthick
+    xyouts_latex, cbar_xll, cbar_yll,prefont+STRTRIM(strmin,2)+' ',$
+                  ALIGN=1.,/normal, chars=1.3*charsfactor, charthick=mycharthick, $
+                  latex=do_latex, ltxstc=ltxstc
+    xyouts_latex, cbar_xur, cbar_yll,prefont+' '+STRTRIM(strmax,2)+' '+sunits,$
+                  ALIGN=0.,/normal, chars=1.3*charsfactor, charthick=mycharthick, $
+                  latex=do_latex, ltxstc=ltxstc
 endif
 
 ; the polarisation vector scale
@@ -750,18 +759,25 @@ if (~do_crop && ~keyword_set(nobar)  && do_polvector) then begin
     format = '(g10.2)'
     if (vp_phys lt 1.e3 && vp_phys ge 10)    then format = '(f5.1)'
     if (vp_phys lt 10   && vp_phys gt 1.e-1) then format = '(f4.2)'
-    xyouts, vscal_x, vscal_y + .5*(vp_plot)*w_dy, '!6  '+strtrim(string(vp_phys,form=format),2)+' '+sunits,ALIGN=0.,/normal, chars=1.1*charsfactor, charthick=mycharthick
+    xyouts_latex, vscal_x, vscal_y + .5*(vp_plot)*w_dy, $
+            prefont+'  '+strtrim(string(vp_phys,form=format),2)+' '+sunits,$
+            ALIGN=0.,/normal, chars=1.1*charsfactor, charthick=mycharthick, $
+            latex=do_latex, ltxstc=ltxstc
 endif
 
 ;  the title
 if (~do_crop) then begin
-    if (~ keyword_set(titleplot)) then title= '!6'+title_display else title='!6'+titleplot
-    XYOUTS, x_title, y_title ,title, align=0.5, /normal, chars=1.6*charsfactor, charthick=mycharthick
+    if (~ keyword_set(titleplot)) then title= prefont+title_display else title=prefont+titleplot
+    xyouts_latex, x_title, y_title ,title, $
+            align=0.5, /normal, chars=1.6*charsfactor, charthick=mycharthick, $
+            latex=do_latex, ltxstc=ltxstc
 endif
 
 ;  the subtitle
 if (~do_crop && keyword_set(subtitle)) then begin
-    XYOUTS, x_subtl, y_subtl ,'!6 '+subtitle, align=0.5, /normal, chars=1.6*.75*charsfactor, charthick=mycharthick
+    xyouts_latex, x_subtl, y_subtl ,prefont+' '+subtitle, $
+            align=0.5, /normal, chars=1.6*.75*charsfactor, charthick=mycharthick, $
+            latex=do_latex, ltxstc=ltxstc
 endif
 
 ; ---------- projection dependent ------------------
@@ -772,21 +788,10 @@ if (do_gnom) then begin
         if (undefined(rot_ang)) then rot_ang = [0.,0.,0.] else rot_ang = ([rot_ang,0,0])(0:2)
         rot_0 = STRTRIM(STRING(rot_ang(0),form='(f6.1)'),2)
         rot_1 = STRTRIM(STRING(rot_ang(1),form='(f6.1)'),2)
-        XYOUTS,x_aspos,y_aspos,'('+rot_0+', '+rot_1+') '+decode_coord(coord_out),/normal,align=0.5
+        xyouts_latex,x_aspos,y_aspos,'('+rot_0+', '+rot_1+') '+decode_coord(coord_out),$
+               /normal,align=0.5, $
+               latex=do_latex, ltxstc=ltxstc
     endif
-
-; ; cross in the middle of plot
-; plots,0,0,ps=1,syms=5,thick=4
-; phi = findgen(31)/30.*2*!pi
-; x_circle = cos(phi)
-; y_circle = sin(phi)
-; radius = tan(1.*!dtor/2.) ; radius = fwhm/2
-; xyouts,0.7*umax,-0.8*vmax,'100 GHz'
-; oplot,0.92*umax+radius*x_circle,-0.8*vmax+radius*y_circle,thick=3
-; radius = tan(1./1.5*!dtor/2.)
-; xyouts,0.7*umax,-0.9*vmax,'150 GHz'
-; oplot,0.92*umax+radius*x_circle,-0.9*vmax+radius*y_circle,thick=3
-
 endif
 
 ; do not plot graticules, outlines or pixel boundaries in stagger mode (orthview)
@@ -801,14 +806,19 @@ endif else begin
     if (KEYWORD_SET(graticule)) then begin
         grattwice =1
         glabelsize = charsfactor * (keyword_set(glsize) ? glsize : 0 )
-        oplot_graticule, graticule, eul_mat, projection=proj_small, flip = flip, thick = 1.*thick_dev, color = !p.color, half_sky=half_sky, linestyle=0, charsize=glabelsize, reso_rad=dx
+        oplot_graticule, graticule, eul_mat, projection=proj_small, flip = flip, thick = 1.*thick_dev, $
+                         color = !p.color, half_sky=half_sky, linestyle=0, charsize=glabelsize, reso_rad=dx, $
+                         latex=do_latex, ltxstc=ltxstc
     endif 
 
 ;  the graticule in input coordinates
     if (KEYWORD_SET(igraticule)) then begin
         lines_ig = 2*grattwice  ; either 0 or 2
         iglabelsize = charsfactor * (keyword_set(iglsize) ? iglsize : 0 )
-        oplot_graticule, igraticule, eul_mat, projection=proj_small, flip = flip, thick = 1.*thick_dev, color = !p.color, half_sky=half_sky, linestyle=lines_ig, coordsys=[coord_in,coord_out], charsize=iglabelsize, reso_rad=dx
+        oplot_graticule, igraticule, eul_mat, projection=proj_small, flip = flip, thick = 1.*thick_dev, $
+                         color = !p.color, half_sky=half_sky, linestyle=lines_ig, charsize=iglabelsize, reso_rad=dx, $
+                         coordsys=[coord_in,coord_out],  $
+                         latex=do_latex, ltxstc=ltxstc
     endif 
 
 ; outlines on the map
@@ -837,7 +847,7 @@ if keyword_set(execute) then begin
 endif
 
 ; -----------------------------------------------
-;       output the PS/GIF/PNG/JPG
+;       output the PDF/PS/GIF/PNG/JPG
 ; -----------------------------------------------
 
 ;  gif/png/jpg output
@@ -956,6 +966,12 @@ endif
 if (do_print) then begin
     device,/close
     set_plot,old_device
+    if do_latex then begin
+        nlts = ltxstc.n
+        hpx_latexify, file_ps, ltxstc.tag[0:nlts-1], ltxstc.tex[0:nlts-1], ltxstc.scale[0:nlts-1], $
+                      width  = do_portrait ? hxsize : hysize, $
+                      height = do_portrait ? hysize : hxsize
+    endif
     if (do_ps) then begin
         if (be_verbose) then print,'PS file is in '+file_ps
         if (keyword_set(preview)) then begin
