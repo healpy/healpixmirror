@@ -21,6 +21,15 @@
  o ./obsolete_astron/ : routines from the Astron library which are now considered
    obsolete, but may still be needed by Healpix (or by user-developped applications).
 
+ o ./epstopdf/ : Perl script to turn (encapsulated) PostScript file into PDF
+     and its documentation
+     see ./epstopdf/README  for details
+   (added 2015-03)
+
+ o ./textoidl/ : IDL routines to emulate a subset of TeX commands in IDL
+     see ./textoidl/README  for details
+   (added 2015-05)
+
 
  2000-03-03
  updated 2007-05-15
@@ -148,3 +157,7 @@ CGSNAPSHOT, SETDEFAULTVALUE
  2014-12-02
 
 ----------------
+
+7 routines added in coyote:
+  CGPS2RASTER CGHASIMAGEMAGICK CGPICKFILE CGPSDIMS CGWINDOW_GETDEFS CGSOURCEDIR UNDEFINE
+ 2015-05-13
