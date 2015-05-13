@@ -484,9 +484,17 @@ if set, enables \LaTeX\ handling of character strings such as
 \mylink{idl:mollview:units}{Units}\\
         - for \mylink{idl:mollview:ps}{PS} or 
           \mylink{idl:mollview:pdf}{PDF} outputs, these strings (and the \mylink{idl:mollview:glsize}{graticule labels}) will be processed 
-           by genuine \LaTeX\ and inserted in the final PS or PDF file using {\tt psfrag} package
-          (requires \LaTeX\ and its {\tt geometry}, {\tt graphicx}, {\tt psfrag} and {\tt color} packages)\\
-        - otherwise (for X, \mylink{idl:mollview:png}{PNG}, \mylink{idl:mollview:jpeg}{JPEG} or \mylink{idl:mollview:gif}{GIF} outputs) LaTeX is partially emulated with {\tt TeXtoIDL} routines shipped with \healpix
+           by genuine \LaTeX\ and inserted in the final PS or PDF file using {\it psfrag} package
+          (requires the ubiquitous \htmladdnormallink{\tt latex}{https://www.ctan.org/starter} and its 
+\htmladdnormallink{\it color}{https://www.ctan.org/pkg/color},
+\htmladdnormallink{\it geometry}{https://www.ctan.org/pkg/geometry}, 
+\htmladdnormallink{\it graphicx}{https://www.ctan.org/pkg/graphicx} and
+\htmladdnormallink{\it psfrag}{https://www.ctan.org/pkg/psfrag}
+packages as well as \htmladdnormallink{\tt dvips}{https://www.ctan.org/pkg/dvips}).
+Note that \htmladdnormallink{\tt cgPStoRASTER}{http://www.idlcoyote.com/programs/cgps2raster.pro} 
+and/or \htmladdnormallink{ImageMagick {\tt convert}}{http://www.imagemagick.org/script/index.php} 
+can be used to turn a PS or PDF file into high resolution GIF, JPEG or PNG file.\\
+        - otherwise (for X, \mylink{idl:mollview:png}{PNG}, \mylink{idl:mollview:jpeg}{JPEG} or \mylink{idl:mollview:gif}{GIF} outputs) LaTeX is partially emulated with \htmladdnormallink{\tt TeXtoIDL}{http://physics.mnstate.edu/craig/textoidl/} routines now shipped with \healpix
           (no extra requirements)	\\
 	\default{0, no LaTeX handling}	
 }\\
@@ -497,6 +505,16 @@ if set, enables \LaTeX\ handling of character strings such as
 	emission templates; for arbitrary maps, use /ASINH instead.	 \\
 	\seealso \mylink{idl:mollview:asinh}{Asinh}, \mylink{idl:mollview:factor}{Factor}, \mylink{idl:mollview:hist_equal}{Hist\_Equal}, \mylink{idl:mollview:offset}{Offset}}\\
 
+
+%%%%%%%%%%%%%%%%%
+\end{tabular}
+\mollbacktotop
+%-----------------------------------------------------------
+\begin{tabular}{p{\sizeone} p{\sizetwo} p{\sizethr}}
+\hline  
+\textbf{name} & \textbf{routines} & \textbf{\ description} \\ \hline
+%                   &   &                            \\ %%% for presentation
+%%%%%%%%%%%%%%%%%
 
 {MAP\_OUT=}\mytarget{idl:mollview:map_out} & \mylink{idl:mollview:routines}{all}& \parbox[t]{\hsize}{
 	variable that will contain the projected map on output.\\
@@ -513,15 +531,6 @@ Unobserved pixels, and pixels outside the sphere, take value \htmlref{{\tt
 !healpix.bad\_value}}{idl:init_healpix} ($=-1.6375\,10^{30}$).\\
 	\seealso \mylink{idl:mollview:fits}{Fits}}\\
 
-%%%%%%%%%%%%%%%%%
-\end{tabular}
-\mollbacktotop
-%-----------------------------------------------------------
-\begin{tabular}{p{\sizeone} p{\sizetwo} p{\sizethr}}
-\hline  
-\textbf{name} & \textbf{routines} & \textbf{\ description} \\ \hline
-%                   &   &                            \\ %%% for presentation
-%%%%%%%%%%%%%%%%%
 
 {MAX=}\mytarget{idl:mollview:max}  & \mylink{idl:mollview:routines}{all}  & \parbox[t]{\hsize}{
 	Set the maximum value for the plotted signal \\ \default{is to use the actual signal
@@ -564,14 +573,6 @@ Unobserved pixels, and pixels outside the sphere, take value \htmlref{{\tt
         central point is not indicated \\
  
 
-{OFFSET=}\mytarget{idl:mollview:offset} & \mylink{idl:mollview:routines}{all}& \parbox[t]{\hsize}{scalar additive factor to be applied to the valid data \\
-	the data plotted is of the form Factor*(data + Offset) \\
-	This does not affect the flagged pixels \\
-	can be used together with ASINH or LOG \\
-	When used with TRUECOLORS, OFFSET can be a 3-element vector. \\
-        \seealso : \mylink{idl:mollview:asinh}{ASINH}, \mylink{idl:mollview:factor}{Factor}, \mylink{idl:mollview:log}{LOG}, \mylink{idl:mollview:truecolors}{TRUECOLORS} \\
-	\default {0.0} } \\
-	
 %%%%%%%%%%%%%%%%%
 \end{tabular}
 \mollbacktotop
@@ -582,7 +583,14 @@ Unobserved pixels, and pixels outside the sphere, take value \htmlref{{\tt
 %                   &   &                            \\ %%% for presentation
 %%%%%%%%%%%%%%%%%
 
-
+{OFFSET=}\mytarget{idl:mollview:offset} & \mylink{idl:mollview:routines}{all}& \parbox[t]{\hsize}{scalar additive factor to be applied to the valid data \\
+	the data plotted is of the form Factor*(data + Offset) \\
+	This does not affect the flagged pixels \\
+	can be used together with ASINH or LOG \\
+	When used with TRUECOLORS, OFFSET can be a 3-element vector. \\
+        \seealso : \mylink{idl:mollview:asinh}{ASINH}, \mylink{idl:mollview:factor}{Factor}, \mylink{idl:mollview:log}{LOG}, \mylink{idl:mollview:truecolors}{TRUECOLORS} \\
+	\default {0.0} } \\
+	
 
 {OUTLINE=}\mytarget{idl:mollview:outline} & \mylink{idl:mollview:routines}{all}&  \parbox[t]{\hsize}{
 	IDL structure, structure of structures, or array of structures, 
@@ -615,6 +623,16 @@ as SYMSIZE in IDL), \default {1}\\
 once by gathering the respective structures into one meta-structure or an array.\\ \seealso{\mylink{idl:mollview:coord}{Coord}, \mylink{idl:mollview:graticule}{Graticule}}} \\
  
 
+%%%%%%%%%%%%%%%%%
+\end{tabular}
+\mollbacktotop
+%-----------------------------------------------------------
+\begin{tabular}{p{\sizeone} p{\sizetwo} p{\sizethr}}
+\hline  
+\textbf{name} & \textbf{routines} & \textbf{\ description} \\ \hline
+%                   &   &                            \\ %%% for presentation
+%%%%%%%%%%%%%%%%%
+
 {PDF=}\mytarget{idl:mollview:pdf}  & \mylink{idl:mollview:routines}{all}  &  \parbox[t]{\hsize}{
 	      string containing the name of a .PNG output \\
 	      if set to 0            : no PDF output \\
@@ -631,15 +649,6 @@ or {\tt orthographic}, \\
 \mylink{idl:mollview:png}{Png},
 \mylink{idl:mollview:ps}{Ps}}\\
 
-%%%%%%%%%%%%%%%%%
-\end{tabular}
-\mollbacktotop
-%-----------------------------------------------------------
-\begin{tabular}{p{\sizeone} p{\sizetwo} p{\sizethr}}
-\hline  
-\textbf{name} & \textbf{routines} & \textbf{\ description} \\ \hline
-%                   &   &                            \\ %%% for presentation
-%%%%%%%%%%%%%%%%%
 
 {PNG=}\mytarget{idl:mollview:png}  & \mylink{idl:mollview:routines}{all}  & \parbox[t]{\hsize}{
 		string containing the name of a .PNG output \\
@@ -663,6 +672,16 @@ or {\tt orthographic}, \\
 \mylink{idl:mollview:pdf}{Pdf}, 
 \mylink{idl:mollview:ps}{Ps}, 
 and \mylink{idl:mollview:retain}{Retain}}\\
+
+%%%%%%%%%%%%%%%%%
+\end{tabular}
+\mollbacktotop
+%-----------------------------------------------------------
+\begin{tabular}{p{\sizeone} p{\sizetwo} p{\sizethr}}
+\hline  
+\textbf{name} & \textbf{routines} & \textbf{\ description} \\ \hline
+%                   &   &                            \\ %%% for presentation
+%%%%%%%%%%%%%%%%%
 
 {POLARIZATION=}\mytarget{idl:mollview:polarization} & \mylink{idl:mollview:routines}{all}& \parbox[t]{\hsize}{
 	if set to
