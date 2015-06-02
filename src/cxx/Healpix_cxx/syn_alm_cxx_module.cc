@@ -25,7 +25,7 @@
  */
 
 /*
- *  Copyright (C) 2003-2011 Max-Planck-Society
+ *  Copyright (C) 2003-2015 Max-Planck-Society
  *  Author: Martin Reinecke
  */
 
@@ -56,9 +56,10 @@ template<typename T> void syn_alm_cxx (paramfile &params)
   int rand_seed = params.template find<int>("rand_seed");
   double fwhm = arcmin2rad*params.template find<double>("fwhm_arcmin",0.);
   bool polarisation = params.template find<bool>("polarisation");
+  bool full_ps = params.template find<bool>("full_ps",false);
 
   PowSpec powspec;
-  int nspecs = polarisation ? 4 : 1;
+  int nspecs = polarisation ? (full_ps ? 6 : 4 ) : 1;
   read_powspec_from_fits (infile, powspec, nspecs, nlmax);
   powspec.smoothWithGauss(fwhm);
 

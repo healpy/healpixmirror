@@ -23,6 +23,12 @@ polarisation (bool):
   if false, only the intensity a_lm are generated,
   if true, T, G and C a_lm are generated
 
+if (polarisation)
+  full_ps (bool, default=false):
+    if false, only TT, GG, CC and TG components of the spectrum are used
+    if true, also TC and GC components are used
+endif
+
 double_precision (bool, default=false):
   if false, the a_lm are created in single precision,
   otherwise in double precision.

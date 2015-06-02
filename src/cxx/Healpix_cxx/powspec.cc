@@ -25,7 +25,7 @@
  */
 
 /*
- *  Copyright (C) 2003-2011 Max-Planck-Society
+ *  Copyright (C) 2003-2015 Max-Planck-Society
  *  Author: Martin Reinecke
  */
 
@@ -139,7 +139,6 @@ void PowSpec::Set(arr<double> &tt_new, arr<double> &gg_new, arr<double> &cc_new,
 
 void PowSpec::smoothWithGauss (double fwhm)
   {
-  planck_assert (num_specs<=4, "not yet implemented for num_specs>4");
   double sigma = fwhm*fwhm2sigma;
   double fact_pol = exp(2*sigma*sigma);
   for (tsize l=0; l<tt_.size(); ++l)
@@ -152,6 +151,11 @@ void PowSpec::smoothWithGauss (double fwhm)
       gg_[l] *= f2*f2;
       cc_[l] *= f2*f2;
       tg_[l] *= f1*f2;
+      if (num_specs>4)
+        {
+        tc_[l] *= f1*f2;
+        gc_[l] *= f2*f2;
+        }
       }
     }
   }

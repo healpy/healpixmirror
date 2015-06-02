@@ -25,7 +25,7 @@
  */
 
 /*
- *  Copyright (C) 2003-2014 Max-Planck-Society
+ *  Copyright (C) 2003-2015 Max-Planck-Society
  *  Author: Martin Reinecke
  */
 
@@ -69,7 +69,7 @@ template void create_alm (const PowSpec &powspec,
 
 
 template<typename T> void create_alm_pol
-  (const PowSpec &powspec,
+  (const PowSpec &ps,
    Alm<xcomplex<T> > &almT,
    Alm<xcomplex<T> > &almG,
    Alm<xcomplex<T> > &almC,
@@ -79,55 +79,74 @@ template<typename T> void create_alm_pol
   int mmax = almT.Mmax();
   const double hsqrt2 = 1/sqrt(2.);
 
+  bool full = ps.Num_specs()==6;
+
   for (int l=0; l<=lmax; ++l)
     {
-    double rms_tt=0, rms_g1=0;
-    if (powspec.tt(l) != 0)
+    double rms_tt=0, rms_g1=0, rms_c1=0;
+    if (ps.tt(l) > 0)
       {
-      rms_tt = sqrt(powspec.tt(l));
-      rms_g1 = powspec.tg(l)/rms_tt;
+      rms_tt = sqrt(ps.tt(l));
+      rms_g1 = ps.tg(l)/rms_tt;
+      if (full) rms_c1 = ps.tc(l)/rms_tt;
       }
 
     double zeta1_r = rng.rand_gauss();
     almT(l,0) = T(zeta1_r * rms_tt);
     almG(l,0) = T(zeta1_r * rms_g1);
+    almC(l,0) = T(zeta1_r * rms_c1);
     for (int m=1; m<=min(l,mmax); ++m)
       {
       zeta1_r = rng.rand_gauss()*hsqrt2;
       double zeta1_i = rng.rand_gauss()*hsqrt2;
       almT(l,m).Set (T(zeta1_r*rms_tt), T(zeta1_i*rms_tt));
       almG(l,m).Set (T(zeta1_r*rms_g1), T(zeta1_i*rms_g1));
+      almC(l,m).Set (T(zeta1_r*rms_c1), T(zeta1_i*rms_c1));
       }
     }
 
   for (int l=0; l<=lmax; ++l)
     {
-    double rms_g2 = 0;
-    double rms_cc = 0;
-    if (powspec.tt(l) != 0)
+    double rms_g2=0, rms_c2=0, rms_c3=0;
+    if (ps.tt(l) > 0)
       {
-      rms_g2 = powspec.gg(l) - (powspec.tg(l)/powspec.tt(l))*powspec.tg(l);
-      if (rms_g2 <= 0)
+      rms_g2 = ps.gg(l) - (ps.tg(l)/ps.tt(l))*ps.tg(l);
+      if (rms_g2<=0)
         {
-        planck_assert (abs(rms_g2) <= 1e-8*abs(powspec.gg(l)),
+        planck_assert (abs(rms_g2) <= 1e-8*abs(ps.gg(l)),
           "Inconsistent TT, GG and TG spectra at l="+dataToString(l));
         rms_g2 = 0;
         }
-      rms_g2 = sqrt(rms_g2);
-      rms_cc = sqrt(powspec.cc(l));
+      double rms_c1 = full ? (ps.tc(l) / sqrt(ps.tt(l))) : 0.;
+      if (rms_g2>0)
+        {
+        rms_g2 = sqrt(rms_g2);
+        if (full) rms_c2 = (ps.gc(l) - ps.tc(l) * (ps.tg(l)/ps.tt(l))) / rms_g2;
+        }
+      rms_c3 = ps.cc(l) - rms_c1*rms_c1 - rms_c2*rms_c2; 
+      if (rms_c3<=0)
+        {
+        planck_assert (abs(rms_c3) <= 1e-8*abs(ps.cc(l)),
+          "Inconsistent spectra at l="+dataToString(l));
+        rms_c3 = 0;
+        }
+      rms_c3 = sqrt(rms_c3);
       }
-    almG(l,0) += T(rng.rand_gauss()*rms_g2);
-    almC(l,0)  = T(rng.rand_gauss()*rms_cc);
+    double zeta2_r = rng.rand_gauss();
+    double zeta3_r = rng.rand_gauss();
+    almG(l,0) += T(zeta2_r*rms_g2);
+    almC(l,0) += T(zeta3_r*rms_c3 + zeta2_r*rms_c2);
 
     for (int m=1; m<=min(l,mmax); ++m)
       {
-      double zeta2_r = rng.rand_gauss()*hsqrt2;
+      zeta2_r = rng.rand_gauss()*hsqrt2;
       double zeta2_i = rng.rand_gauss()*hsqrt2;
-      double zeta3_r = rng.rand_gauss()*hsqrt2;
+      zeta3_r = rng.rand_gauss()*hsqrt2;
       double zeta3_i = rng.rand_gauss()*hsqrt2;
 
       almG(l,m) += xcomplex<T> (T(zeta2_r*rms_g2),T(zeta2_i*rms_g2));
-      almC(l,m).Set (T(zeta3_r*rms_cc),T(zeta3_i*rms_cc));
+      almC(l,m) += xcomplex<T> (T(zeta3_r*rms_c3),T(zeta3_i*rms_c3))
+                  +xcomplex<T> (T(zeta2_r*rms_c2),T(zeta2_i*rms_c2));
       }
     }
   }
