@@ -111,6 +111,8 @@ endif
 success = 0
 myoptions  = keyword_set(showcmd)             ? ' --debug '        : ' '
 myoptions += size(/tname,options) eq 'STRING' ? ' '+options[0]+' ' : ' '
+;myoptions += " --gsopts=-c <</Orientation 1>> setpagedevice " ;-c <</Orientation 1>> setpagedevice "
+;myoptions += " --gsopts=--debug --debug " ;-c <</Orientation 1>> setpagedevice "
 if (bin_path ne '') then begin
     command =  bin_path[0]+' '+ps_file[0]+myoptions+' --outfile='+pdf_file[0]
     file_delete, pdf_file[0], /quiet

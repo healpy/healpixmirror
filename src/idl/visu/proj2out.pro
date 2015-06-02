@@ -77,7 +77,7 @@ pro proj2out, planmap, Tmax, Tmin, color_bar, dx, title_display, sunits, $
               TRANSPARENT = transparent, EXECUTE=execute, SILENT=silent, GLSIZE=glsize, IGLSIZE=iglsize, $
               SHADEMAP=SHADEMAP, RETAIN=retain, TRUECOLORS=truecolors, CHARTHICK=charthick, $
               STAGGER=stagger, AZEQ=azeq, JPEG=jpeg, BAD_COLOR=bad_color, BG_COLOR=bg_color, FG_COLOR=fg_color, $
-              PDF=pdf, LATEX=latex
+              PDF=pdf, LATEX=latex, PFONTS=pfonts
 
 ;===============================================================================
 ;+
@@ -102,7 +102,7 @@ pro proj2out, planmap, Tmax, Tmin, color_bar, dx, title_display, sunits, $
 ;              ORTHOGRAPHIC=orthographic, $
 ;              FLIP=flip, HALF_SKY=half_sky,COORD_IN=coord_in, IGRATICULE=,
 ;              HBOUND=, DIAMONDS =, WINDOW =, TRANSPARENT=, EXECUTE=, SILENT=
-;              GLSIZE=, IGLSIZE=, SHADEMAP=, STAGGER=, AZEQ=, JPEG=, PDF=, LATEX=
+;              GLSIZE=, IGLSIZE=, SHADEMAP=, STAGGER=, AZEQ=, JPEG=, PDF=, LATEX=, PFONTS=
 ;
 ;   for more information, see Gnomview.pro Mollview.pro
 ;
@@ -152,6 +152,14 @@ if (do_gif + do_png + do_jpeg + do_ps + do_pdf gt 1) then begin
 endif
 do_image = (do_gif || do_png || do_jpeg)
 do_print = (do_ps || do_pdf)
+
+; set fonts
+pfont_old = !p.font
+prefont_default = '!6'
+if keyword_set(pfonts) then begin
+    !p.font = pfonts[0]
+    if (n_elements(pfonts) ge 2) then prefont_default = '!'+strtrim(long(pfonts[1]),2)
+endif
 
 identify_projection, projtype, projection=projection, mollweide=mollweide, gnomic=gnomic, cartesian=cartesian, orthographic=orthographic,  diamonds = diamonds, azeq=azeq
 do_gnom = 0
@@ -464,8 +472,10 @@ be_verbose  = ~keyword_set(silent)
 
 ; latex support
 ltxstc = 0
-do_latex = keyword_set(latex)
-prefont = (do_latex && do_print) ? '' : '!6'
+do_latex = keyword_set(latex) ; 0 or 1
+my_latex = do_latex ? latex : 0 ; 0, 1 or 2
+my_latex = my_latex < 2 > 0
+prefont = (my_latex eq 2 && do_print) ? '' : prefont_default
 
 ; alter the color table
 ; -----------------------
@@ -745,10 +755,10 @@ if (~(do_crop || keyword_set(nobar) || keyword_set(nolabels) || do_true || do_po
     strmax = STRING(Tmax,format=format)
     xyouts_latex, cbar_xll, cbar_yll,prefont+STRTRIM(strmin,2)+' ',$
                   ALIGN=1.,/normal, chars=1.3*charsfactor, charthick=mycharthick, $
-                  latex=do_latex, ltxstc=ltxstc
+                  latex=my_latex, ltxstc=ltxstc
     xyouts_latex, cbar_xur, cbar_yll,prefont+' '+STRTRIM(strmax,2)+' '+sunits,$
                   ALIGN=0.,/normal, chars=1.3*charsfactor, charthick=mycharthick, $
-                  latex=do_latex, ltxstc=ltxstc
+                  latex=my_latex, ltxstc=ltxstc
 endif
 
 ; the polarisation vector scale
@@ -762,7 +772,7 @@ if (~do_crop && ~keyword_set(nobar)  && do_polvector) then begin
     xyouts_latex, vscal_x, vscal_y + .5*(vp_plot)*w_dy, $
             prefont+'  '+strtrim(string(vp_phys,form=format),2)+' '+sunits,$
             ALIGN=0.,/normal, chars=1.1*charsfactor, charthick=mycharthick, $
-            latex=do_latex, ltxstc=ltxstc
+            latex=my_latex, ltxstc=ltxstc
 endif
 
 ;  the title
@@ -770,14 +780,14 @@ if (~do_crop) then begin
     if (~ keyword_set(titleplot)) then title= prefont+title_display else title=prefont+titleplot
     xyouts_latex, x_title, y_title ,title, $
             align=0.5, /normal, chars=1.6*charsfactor, charthick=mycharthick, $
-            latex=do_latex, ltxstc=ltxstc
+            latex=my_latex, ltxstc=ltxstc
 endif
 
 ;  the subtitle
 if (~do_crop && keyword_set(subtitle)) then begin
     xyouts_latex, x_subtl, y_subtl ,prefont+' '+subtitle, $
             align=0.5, /normal, chars=1.6*.75*charsfactor, charthick=mycharthick, $
-            latex=do_latex, ltxstc=ltxstc
+            latex=my_latex, ltxstc=ltxstc
 endif
 
 ; ---------- projection dependent ------------------
@@ -790,7 +800,7 @@ if (do_gnom) then begin
         rot_1 = STRTRIM(STRING(rot_ang(1),form='(f6.1)'),2)
         xyouts_latex,x_aspos,y_aspos,'('+rot_0+', '+rot_1+') '+decode_coord(coord_out),$
                /normal,align=0.5, $
-               latex=do_latex, ltxstc=ltxstc
+               latex=my_latex, ltxstc=ltxstc
     endif
 endif
 
@@ -808,7 +818,7 @@ endif else begin
         glabelsize = charsfactor * (keyword_set(glsize) ? glsize : 0 )
         oplot_graticule, graticule, eul_mat, projection=proj_small, flip = flip, thick = 1.*thick_dev, $
                          color = !p.color, half_sky=half_sky, linestyle=0, charsize=glabelsize, reso_rad=dx, $
-                         latex=do_latex, ltxstc=ltxstc
+                         latex=my_latex, ltxstc=ltxstc
     endif 
 
 ;  the graticule in input coordinates
@@ -818,7 +828,7 @@ endif else begin
         oplot_graticule, igraticule, eul_mat, projection=proj_small, flip = flip, thick = 1.*thick_dev, $
                          color = !p.color, half_sky=half_sky, linestyle=lines_ig, charsize=iglabelsize, reso_rad=dx, $
                          coordsys=[coord_in,coord_out],  $
-                         latex=do_latex, ltxstc=ltxstc
+                         latex=my_latex, ltxstc=ltxstc
     endif 
 
 ; outlines on the map
@@ -966,12 +976,13 @@ endif
 if (do_print) then begin
     device,/close
     set_plot,old_device
-    if do_latex then begin
+    if (my_latex eq 2) then begin
         nlts = ltxstc.n
         hpx_latexify, file_ps, ltxstc.tag[0:nlts-1], ltxstc.tex[0:nlts-1], ltxstc.scale[0:nlts-1], $
                       width  = do_portrait ? hxsize : hysize, $
                       height = do_portrait ? hysize : hxsize
     endif
+    ;;;;;; cgfixps, file_ps,/a4 ; in test
     if (do_ps) then begin
         if (be_verbose) then print,'PS file is in '+file_ps
         if (keyword_set(preview)) then begin
@@ -985,6 +996,7 @@ if (do_print) then begin
     if (do_pdf) then begin
         ;cgPS2PDF, file_ps, file_pdf, /delete_ps, pagetype=papersize, /showcmd
         epstopdf, file_ps, file_pdf, /delete_ps, /silent
+        ;epstopdf, file_ps, file_pdf, /delete_ps, silent=0, /showcmd ;, options='--autorotate=All'
         if (be_verbose) then print,'PDF file is in '+file_pdf
         if (keyword_set(preview)) then begin
             test_preview, found_preview ;, /crash
@@ -1000,5 +1012,6 @@ endif else if (use_z_buffer) then begin
 endif
 
 
+!p.font = pfont_old
 return
 end

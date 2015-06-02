@@ -64,6 +64,7 @@ pro mollview, file_in, select_in, $
               ONLINE = online, $
               OUTLINE = outline, $
               PDF = pdf, $
+              PFONTS = pfonts, $
               PNG = png, $
               POLARIZATION = polarization, $
               PREVIEW = preview, $
@@ -104,10 +105,10 @@ pro mollview, file_in, select_in, $
 ;                       JPEG=, $
 ;                       LATEX=, LOG=, $
 ;                       MAP_OUT=, MAX=, MIN=, $ 
-;                       NESTED=, NOBAR=, NOLABELS=, NOPOSITION =, $
+;                       NESTED=, NOBAR=, NOLABELS=, NOPOSITION=, $
 ;                       NO_DIPOLE=, NO_MONOPOLE=, $
 ;                       OFFSET =, ONLINE=, OUTLINE=, $
-;                       PNG=, POLARIZATION=, PREVIEW=,$
+;                       PFONTS=, PNG=, POLARIZATION=, PREVIEW=,$
 ;                       PS=, PXSIZE=, PYSIZE=, $
 ;                       QUADCUBE= , $
 ;                       RESO_ARCMIN= , ROT=, $
@@ -305,11 +306,13 @@ pro mollview, file_in, select_in, $
 ;	      if set to a file name  : output the plot in that file 
 ;             (see also : CROP, GIF, PDF, PNG, PS and PREVIEW)
 ;
-;       LATEX: if set, enables LaTeX handling of character strings such as TITLEPLOT, SUBTITLE and UNITS
-;        - for PS or PDF outputs, these strings (and the graticule labels) will be processed 
-;           by genuine LaTeX and inserted in the final PS or PDF file using psfrag package
-;          (requires LaTeX and its geometry, graphicx, psfrag and color packages)
-;        - otherwise (for X, PNG, JPEG or GIF output) LaTeX is partially emulated with TeXtoIDL routines
+;       LATEX: if set to 1 or 2, enables LaTeX handling of character strings 
+;         such as TITLEPLOT, SUBTITLE and UNITS
+;        - if set to 2, together with PS or PDF outputs, these strings (and the graticule labels) 
+;          will be processed by genuine LaTeX and inserted in the final PS or PDF file 
+;         using psfrag package
+;          (requires LaTeX and its color, geometry, graphicx and psfrag packages)
+;        - if set to 1, whatever the output is, LaTeX is partially emulated with TeXtoIDL routines
 ;          shipped with HEALPix (no extra requirements)
 ;         default: 0 (not set)
 ;
@@ -625,9 +628,9 @@ if (n_params() lt 1 or n_params() gt 2) then begin
     print,'              LOG=, '
     print,'              MAP_OUT=, MAX=, MIN=, '
     print,'              NESTED=, NOBAR=, NOLABELS=, '
-    print,'              NO_DIPOLE, NO_MONOPLE, '
+    print,'              NO_DIPOLE=, NO_MONOPLE=, '
     print,'              OFFSET=, ONLINE=, OUTLINE=,'
-    print,'              PDF=, PNG=, POLARIZATION=, PREVIEW=, '
+    print,'              PDF=, PFONTS=, PNG=, POLARIZATION=, PREVIEW=, '
     print,'              PS=, PXSIZE=, PYSIZE=, QUADCUBE= ,'
     print,'              RETAIN=, ROT=,  '
     print,'              SAVE=, SILENT=, SUBTITLE=, '
@@ -685,7 +688,8 @@ proj2out, $
   POLARIZATION=polarization, OUTLINE=outline, /MOLL, FLIP=flip, COORD_IN=coord_in, IGRATICULE=igraticule, $
   HBOUND = hbound, WINDOW = window, EXECUTE=execute, SILENT=silent, GLSIZE=glsize, $
   IGLSIZE=iglsize, RETAIN=retain, TRUECOLORS=truecolors, TRANSPARENT=transparent, CHARTHICK=charthick, $
-  JPEG=jpeg, BAD_COLOR=bad_color, BG_COLOR=bg_color, FG_COLOR=fg_color, PDF=pdf, LATEX=latex
+  JPEG=jpeg, BAD_COLOR=bad_color, BG_COLOR=bg_color, FG_COLOR=fg_color, PDF=pdf, $
+  LATEX=latex, PFONTS=pfonts
 
 
 w_num = !d.window

@@ -62,6 +62,7 @@ PRO gnomview, file_in, select_in, $
               ONLINE = online, $
               OUTLINE = outline, $
               PDF = pdf, $
+              PFONTS = pfonts, $
               PNG = png, $
               POLARIZATION = polarization, $
               PREVIEW = preview, $
@@ -126,9 +127,9 @@ if (n_params() lt 1 or n_params() gt 2) then begin
     print,'              JPEG=, '
     print,'              LATEX=, LOG=, '
     print,'              MAP_OUT=, MAX=, MIN=, '
-    print,'              NESTED=, NOBAR=, NOLABELS=, NOPOSITION = '
+    print,'              NESTED=, NOBAR=, NOLABELS=, NOPOSITION= '
     print,'              OFFSET=, ONLINE=, OUTLINE=,'
-    print,'              PDF=, PNG=,'
+    print,'              PDF=, PFONTS=, PNG=,'
     print,'              POLARIZATION=, PREVIEW=, '
     print,'              PS=, PXSIZE=, PYSIZE=, QUADCUBE= ,'
     print,'              RESO_ARCMIN=, RETAIN =, ROT=, '
@@ -188,7 +189,8 @@ proj2out, $
   HBOUND = hbound, WINDOW = window, EXECUTE=execute, SILENT=silent, GLSIZE=glsize, $
   IGLSIZE=iglsize, RETAIN=retain, TRUECOLORS=truecolors, TRANSPARENT=transparent, $
   CHARTHICK=charthick, JPEG=jpeg, BAD_COLOR=bad_color, BG_COLOR=bg_color, FG_COLOR=fg_color, PDF=pdf, $
-  LATEX=latex
+  LATEX=latex, PFONTS=pfonts
+
 
 w_num = !d.window
 ; restore original color table and PLOTS settings
