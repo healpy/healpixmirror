@@ -477,13 +477,13 @@ or {\tt orthographic}, \\
 and \mylink{idl:mollview:retain}{Retain}}\\
 
 
-{/LATEX}\mytarget{idl:mollview:latex}  & \mylink{idl:mollview:routines}{all}  & \parbox[t]{\hsize}{
-if set, enables \LaTeX\ handling of character strings such as 
+{LATEX=}\mytarget{idl:mollview:latex}  & \mylink{idl:mollview:routines}{all}  & \parbox[t]{\hsize}{
+if set to 1 or 2, enables \LaTeX\ handling of character strings such as 
 \mylink{idl:mollview:titleplot}{Titleplot},
 \mylink{idl:mollview:subtitle}{Subtitle} and 
 \mylink{idl:mollview:units}{Units}\\
-        - for \mylink{idl:mollview:ps}{PS} or 
-          \mylink{idl:mollview:pdf}{PDF} outputs, these strings (and the \mylink{idl:mollview:glsize}{graticule labels}) will be processed 
+        - if set to 2 {\em with} \mylink{idl:mollview:ps}{PS} or 
+          \mylink{idl:mollview:pdf}{PDF} outputs, those strings (and the \mylink{idl:mollview:glsize}{graticule labels}) will be processed 
            by genuine \LaTeX\ and inserted in the final PS or PDF file using {\it psfrag} package
           (requires the ubiquitous \htmladdnormallink{\tt latex}{https://www.ctan.org/starter} and its 
 \htmladdnormallink{\it color}{https://www.ctan.org/pkg/color},
@@ -491,11 +491,21 @@ if set, enables \LaTeX\ handling of character strings such as
 \htmladdnormallink{\it graphicx}{https://www.ctan.org/pkg/graphicx} and
 \htmladdnormallink{\it psfrag}{https://www.ctan.org/pkg/psfrag}
 packages as well as \htmladdnormallink{\tt dvips}{https://www.ctan.org/pkg/dvips}).
+In this case, the 
+\mylink{idl:mollview:pfonts}{Pfonts} settings will be ignored.
 Note that \htmladdnormallink{\tt cgPStoRASTER}{http://www.idlcoyote.com/programs/cgps2raster.pro} 
 and/or \htmladdnormallink{ImageMagick {\tt convert}}{http://www.imagemagick.org/script/index.php} 
 can be used to turn a PS or PDF file into high resolution GIF, JPEG or PNG file.\\
-        - otherwise (for X, \mylink{idl:mollview:png}{PNG}, \mylink{idl:mollview:jpeg}{JPEG} or \mylink{idl:mollview:gif}{GIF} outputs) LaTeX is partially emulated with \htmladdnormallink{\tt TeXtoIDL}{http://physics.mnstate.edu/craig/textoidl/} routines now shipped with \healpix
-          (no extra requirements)	\\
+        - if set to 1 and whatever output
+(%
+\mylink{idl:mollview:gif}{GIF}, 
+\mylink{idl:mollview:jpeg}{JPEG},
+\mylink{idl:mollview:pdf}{PDF}, 
+\mylink{idl:mollview:png}{PNG}, 
+\mylink{idl:mollview:ps}{PS}, or X)
+LaTeX is partially emulated with \htmladdnormallink{\tt TeXtoIDL}{http://physics.mnstate.edu/craig/textoidl/} routines now shipped with \healpix
+          (no extra requirements)	
+In this case, \mylink{idl:mollview:pfonts}{Pfonts} settings can be used.\\
 	\default{0, no LaTeX handling}	
 }\\
 
@@ -634,7 +644,7 @@ once by gathering the respective structures into one meta-structure or an array.
 %%%%%%%%%%%%%%%%%
 
 {PDF=}\mytarget{idl:mollview:pdf}  & \mylink{idl:mollview:routines}{all}  &  \parbox[t]{\hsize}{
-	      string containing the name of a .PNG output \\
+	      string containing the name of a .PDF output \\
 	      if set to 0            : no PDF output \\
 	      if set to 1            : outputs the plot in 
 {\tt plot\_}{\em projection}{\tt .pdf}, where {\em projection} is either
@@ -649,6 +659,32 @@ or {\tt orthographic}, \\
 \mylink{idl:mollview:png}{Png},
 \mylink{idl:mollview:ps}{Ps}}\\
 
+
+{PFONTS=}\mytarget{idl:mollview:pfonts}  & \mylink{idl:mollview:routines}{all}  &  \parbox[t]{\hsize}{
+2-element vector of integers [$p_0$, $p_1$] selecting the default IDL font of character strings such as the
+\mylink{idl:mollview:subtitle}{Subtitle},
+\mylink{idl:mollview:title}{Title} and
+\mylink{idl:mollview:units}{Units}.\\
+$p_0$ must be in $\{-1,0,1\}$ and selects the origin of the fonts among
+-1: \htmladdnormallink{Hershey Vector}{http://www.exelisvis.com/docs/Using_Hershey_Vector_Fon.html},
+0:  \htmladdnormallink{Device Specific}{http://www.exelisvis.com/docs/using_device_fonts.html} and
+1:  \htmladdnormallink{True Type}{http://www.exelisvis.com/docs/using_truetype_fonts.html} Fonts.
+\\
+$p_1$ must be in $\{2,\ldots,20\}$ and selects the starting font of the character strings as described
+\htmladdnormallink{here}{http://www.exelisvis.com/docs/Embedded_Formatting_Comm.html}. 
+The font can be changed within each string with embedded formatting commands, as discussed on
+\htmladdnormallink{\small \tt 
+http://www.exelisvis.com/docs/Fonts\_and\_Colors.html}{%
+http://www.exelisvis.com/docs/Fonts_and_Colors.html}.\\
+\default{[-1,6], corresponding to the Hershey vector font of type 'Complex Roman', and is equivalent to typing
+{\tt !p.font=-1} and prepending the
+\mylink{idl:mollview:subtitle}{Subtitle},
+\mylink{idl:mollview:title}{Title} and
+\mylink{idl:mollview:units}{Units} 
+strings with {\tt '!6'}}.\\
+Note that PFONTS will be ignored if \mylink{idl:mollview:latex}{Latex}=2 {\em and} 
+\mylink{idl:mollview:pdf}{PDF} or \mylink{idl:mollview:ps}{PS} are set.
+}\\
 
 {PNG=}\mytarget{idl:mollview:png}  & \mylink{idl:mollview:routines}{all}  & \parbox[t]{\hsize}{
 		string containing the name of a .PNG output \\

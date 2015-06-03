@@ -141,7 +141,24 @@ See \linklatexhtml{the Installation Document}{install.pdf}{install.html} for mor
 %%%%%%%
 \newpage
 
-\section{Changes between releases 3.11 and \hpxversion}
+\section{Changes between releases 3.20 and \hpxversion}
+
+\begin{itemize}
+
+\item \htmlref{{\tt cartview, gnomview, mollview,
+orthview}}{idl:mollview}: 
+\begin{itemize}
+\item addition of \mylink{idl:mollview:pdf}{{\tt PDF}} keyword for production of Adobe PDF outputs,
+\item addition of \mylink{idl:mollview:latex}{{\tt LATEX}} keyword for genuine 
+ or emulated \LaTeX\ processing of character strings,
+\item addition of \mylink{idl:mollview:pfonts}{{\tt PFONTS}} keyword to select 
+origin and type of character font.
+\end{itemize}
+
+
+\end{itemize}
+
+\section{Changes between releases 3.11 and 3.20}
 
 \begin{itemize}
 %
@@ -176,10 +193,16 @@ defined in \htmlref{{\tt planck\_colors}}{{idl:planck_colors}}
 %
 \end{itemize}
 
-\section{Changes between releases 3.00 and 3.11}
+\section{Previous changes}
+\subsubsection{Changes between releases 3.00 and 3.11}
+%--------------------------------
+{\footnotesize{%
+\begin{itemize}
+%--------------------------------
+
 %Several routines have been added or improved since version 3.00, as listed below.
 
-\begin{itemize}
+%\begin{itemize}
 %
 \item Latest edition (version 3.11)
 \begin{itemize}
@@ -217,8 +240,8 @@ to read best fit $C(l)$ model to Planck 2013 + external data.
 	routines (2013-02-08).
 \end{itemize}
 \end{itemize}
+}}%end of {\footnotesize{
 
-\section{Previous changes}
 \subsubsection{Changes between releases 2.20 and 3.00}
 %--------------------------------
 {\footnotesize{%
@@ -273,7 +296,7 @@ maps
 	\item update of {\tt astron} library routines (01-Feb-2012).
 \end{itemize}
 \end{itemize}
-}}% end of footnotesize
+%%}}% end of footnotesize
 
 \subsubsection{Changes between release 2.0 and 2.20}
 Several routines have been added or improved since version 2.0, as listed below.
@@ -283,6 +306,8 @@ addressing).\\
 Using 64 bit integers available since version 5.2 of IDL the maximum resolution parameter Nside supported has increased
 from $2^{13}=8192$ to $2^{29}=536870912$, corresponding to $3.46\ 10^{18}$
 pixels on the sphere.
+
+}}%end of {\footnotesize{
 
 %\begin{itemize}
 

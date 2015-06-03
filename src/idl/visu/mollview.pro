@@ -312,8 +312,10 @@ pro mollview, file_in, select_in, $
 ;          will be processed by genuine LaTeX and inserted in the final PS or PDF file 
 ;         using psfrag package
 ;          (requires LaTeX and its color, geometry, graphicx and psfrag packages)
+;           PFONTS settings will be ignored
 ;        - if set to 1, whatever the output is, LaTeX is partially emulated with TeXtoIDL routines
 ;          shipped with HEALPix (no extra requirements)
+;           Can be used with PFONTS
 ;         default: 0 (not set)
 ;
 ; 	LOG: display the log of map (see also : HIST)
@@ -405,6 +407,22 @@ pro mollview, file_in, select_in, $
 ;                with XXX = azimequid, cartesian, gnomic, mollweide or orthographic
 ;	      if set to a file name  : output the plot in that file 
 ;               (see: CROP, GIF, JPEG, PNG, PREVIEW and PS)
+;
+;      PFONTS:  2-element vector of integers [p0, p1] selecting the default IDL font 
+;              of character strings such as theSubtitle, Title and Units.
+;          p_0 must be in {-1,0,1} and selects the origin of the fonts among
+;              -1:  Hershey Vector, 
+;               0:  Device Specific, 
+;               1:  True Type Fonts.
+;          p_1 must be in {2,...,20} and selects the starting font of the character strings.
+;              The font can be changed within each string with embedded formatting commands, 
+;              as discussed on http://www.exelisvis.com/docs/Fonts_and_Colors.html.
+;          default=[-1,6], corresponding to the Hershey vector font of type 'Complex Roman', 
+;            and is equivalent to typing
+;             !p.font=-1
+;            and prepending the Subtitle, Title and Units strings with '!6'.
+;          Note that PFONTS will be ignored if Latex=2 *and* PDF or PS are set.
+;
 ;
 ;	PNG : string containing the name of a .PNG output
 ;	      if set to 0 or not set : no .PNG done
@@ -584,9 +602,10 @@ pro mollview, file_in, select_in, $
 ;              Min-Max for LOG, use Z buffer when window<0, added RETAIN keyword
 ;       Oct-09:  added /TRUECOLORS to all routines and MAP_OUT= to Gnomview
 ;       Apr-10:  accept array of structures in Outline; added MAP_OUT= to
-;       Cartview and Mollview
+;          Cartview and Mollview
 ;       Jan-12: added STAGGER to orthview; created azeqview; added JPEG to all
 ;       Sep-13: added BAD_COLOR, BG_COLOR, FG_COLOR
+;       2015:   added PDF, LATEX and PFONTS
 ;-
 
 defsysv, '!healpix', exists = exists

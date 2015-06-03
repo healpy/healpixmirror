@@ -288,7 +288,7 @@ cpp-void:
 healpy-all:
 	@cd src/healpy; \
 	python $(HPY_SETUP) build ; \
-	python $(HPY_SETUP) install --user ; \
+	python $(HPY_SETUP) install --user --prefix=; \
 	cd ../..
 
 healpy-test: healpy-all
