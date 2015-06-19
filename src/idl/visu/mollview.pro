@@ -335,7 +335,8 @@ pro mollview, file_in, select_in, $
 ;
 ;	NESTED: specify that the online file is ordered in the nested scheme
 ;
-; 	NOBAR : if set, no color bar is present
+; 	NOBAR : if set, the color bar (or the color wheel used for POLARIZATION=2)
+;                     is hidden
 ;
 ;	NOLABELS : if set, no color bar label (min and max) is present
 ;

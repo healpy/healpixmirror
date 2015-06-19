@@ -131,6 +131,7 @@ pro proj2out, planmap, Tmax, Tmin, color_bar, dx, title_display, sunits, $
 ;                 added support of AZEQ and JPEG
 ;   Dec 2014, EH, added PDF
 ;   May 2015, EH, added LATEX
+;   Jun 2015, EH, setting NOBAR removes color bar *and* polarization direction color ring
 ;
 ;
 ; 2 problems with write_png,...,/transparent in GDL:
@@ -692,7 +693,7 @@ endelse
 hpxv11 = 0
 
 ; the polarisation color ring
-if (~do_crop && do_poldirection) then begin
+if (~keyword_set(nobar) && ~do_crop && do_poldirection) then begin
     npring = xsize*cring_dx
     one = replicate(1.,npring)
     yy  = one # (findgen(npring) - npring/2)
