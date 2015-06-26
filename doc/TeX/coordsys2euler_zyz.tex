@@ -16,7 +16,14 @@ coordinate systems. This angles can then be used in rotate\_alm}
 \end{facility}
 
 \begin{f90format}
-{iepoch, oepoch, isys, osys, psi, theta, phi}
+{\mylink{sub:coordsys2euler_zyz:iepoch}{iepoch}%
+, \mylink{sub:coordsys2euler_zyz:oepoch}{oepoch}%
+, \mylink{sub:coordsys2euler_zyz:isys}{isys}%
+, \mylink{sub:coordsys2euler_zyz:osys}{osys}%
+, \mylink{sub:coordsys2euler_zyz:psi}{psi}%
+, \mylink{sub:coordsys2euler_zyz:theta}{theta}%
+, \mylink{sub:coordsys2euler_zyz:phi}{phi}%
+}
 \end{f90format}
 
 \begin{arguments}
@@ -24,14 +31,14 @@ coordinate systems. This angles can then be used in rotate\_alm}
 \begin{tabular}{p{0.26\hsize} p{0.05\hsize} p{0.09\hsize} p{0.50\hsize}} \hline  
 \textbf{name~\&~dimensionality} & \textbf{kind} & \textbf{in/out} & \textbf{description} \\ \hline
                    &   &   &                           \\ %%% for presentation
-iepoch & DP & IN & epoch of the input astronomical coordinate system.\\
-oepoch & DP & IN & epoch of the output astronomical coordinate system.\\
-isys(len=*) & CHR & IN & input coordinate system, should be one of 'E'=Ecliptic, 'G'=Galactic, 'C'/'Q'=Celestial/eQuatorial.\\
-osys(len=*) & CHR & IN & output coordinate system, same choice as above.\\
-psi	& DP & OUT & first Euler angle: rotation $\psi$ about the z-axis. \\
-theta	& DP & OUT & second Euler angle: rotation $\theta$ about the original
+iepoch\mytarget{sub:coordsys2euler_zyz:iepoch} & DP & IN & epoch of the input astronomical coordinate system.\\
+oepoch\mytarget{sub:coordsys2euler_zyz:oepoch} & DP & IN & epoch of the output astronomical coordinate system.\\
+isys\mytarget{sub:coordsys2euler_zyz:isys}(len=*) & CHR & IN & input coordinate system, should be one of 'E'=Ecliptic, 'G'=Galactic, 'C'/'Q'=Celestial/eQuatorial.\\
+osys\mytarget{sub:coordsys2euler_zyz:osys}(len=*) & CHR & IN & output coordinate system, same choice as above.\\
+psi\mytarget{sub:coordsys2euler_zyz:psi}	& DP & OUT & first Euler angle: rotation $\psi$ about the z-axis. \\
+theta\mytarget{sub:coordsys2euler_zyz:theta}	& DP & OUT & second Euler angle: rotation $\theta$ about the original
 (unrotated) y-axis; \\
-phi	& DP & OUT & third Euler angle: rotation $\varphi$ about the original (unrotated) z-axis;
+phi\mytarget{sub:coordsys2euler_zyz:phi}	& DP & OUT & third Euler angle: rotation $\varphi$ about the original (unrotated) z-axis;
 \end{tabular}
 }
 \end{arguments}

@@ -15,7 +15,14 @@
 \end{facility}
 
 \begin{f90format}
-{nside, theta1, theta2, listpix, nlist [, nest, inclusive]}
+{\mylink{sub:query_strip:nside}{nside}%
+, \mylink{sub:query_strip:theta1}{theta1}%
+, \mylink{sub:query_strip:theta2}{theta2}%
+, \mylink{sub:query_strip:listpix}{listpix}%
+, \mylink{sub:query_strip:nlist}{nlist}%
+ [, \mylink{sub:query_strip:nest}{nest}%
+, \mylink{sub:query_strip:inclusive}{inclusive}%
+]}
 \end{f90format}
 
 \begin{arguments}
@@ -23,18 +30,18 @@
 \begin{tabular}{p{0.28\hsize} p{0.05\hsize} p{0.1\hsize} p{0.47\hsize}} \hline  
 \textbf{name\&dimensionality} & \textbf{kind} & \textbf{in/out} & \textbf{description} \\ \hline
                    &   &   &                           \\ %%% for presentation
-nside & I4B & IN & the $\nside$ parameter of the map. \\
-theta1 & DP & IN & colatitude lower bound in radians measured from North Pole
+nside\mytarget{sub:query_strip:nside} & I4B & IN & the $\nside$ parameter of the map. \\
+theta1\mytarget{sub:query_strip:theta1} & DP & IN & colatitude lower bound in radians measured from North Pole
                    (between 0 and $\pi$). \\
-theta2 & DP & IN & colatitude upper bound in radians measured from North Pole (between 0 and $\pi$). If
+theta2\mytarget{sub:query_strip:theta2} & DP & IN & colatitude upper bound in radians measured from North Pole (between 0 and $\pi$). If
                    theta1$<$ theta2, the pixels lying in [theta1,theta2]
                    are output, otherwise, the pixel lying in [0,
                    theta2] and those lying in [theta1, $\pi$] are output.\\
-listpix(0:*) & I4B/ I8B & OUT & the index for all pixels enclosed in the
+listpix\mytarget{sub:query_strip:listpix}(0:*) & I4B/ I8B & OUT & the index for all pixels enclosed in the
                    strip(s). Make sure that the size of the array is big enough to contain all pixels. \\ 
-nlist & I4B/ I8B & OUT & The number of pixels listed in {\tt listpix}. \\
-nest\ \ (OPTIONAL) & I4B & IN &  The pixel indices are in the NESTED numbering scheme if nest=1, and in RING scheme otherwise. \\
-inclusive\ \ (OPTIONAL) & I4B & IN & If set to 1, all the pixels overlapping
+nlist\mytarget{sub:query_strip:nlist} & I4B/ I8B & OUT & The number of pixels listed in {\tt listpix}. \\
+nest\mytarget{sub:query_strip:nest}\ \ (OPTIONAL) & I4B & IN &  The pixel indices are in the NESTED numbering scheme if nest=1, and in RING scheme otherwise. \\
+inclusive\mytarget{sub:query_strip:inclusive}\ \ (OPTIONAL) & I4B & IN & If set to 1, all the pixels overlapping
                    (even partially)
                    with the strip are listed; otherwise only those whose
                    center lies within the strip are listed. \\

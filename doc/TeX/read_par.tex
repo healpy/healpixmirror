@@ -19,7 +19,12 @@
 \end{facility}
 
 \begin{f90format}
-{ filename, nside, lmax, tfields \optional{[, mmax]} }
+{ \mylink{sub:read_par:filename}{filename}%
+, \mylink{sub:read_par:nside}{nside}%
+, \mylink{sub:read_par:lmax}{lmax}%
+, \mylink{sub:read_par:tfields}{tfields}%
+ \optional{[, \mylink{sub:read_par:mmax}{mmax}%
+]} }
 \end{f90format}
 
 \begin{arguments}
@@ -27,11 +32,11 @@
 \begin{tabular}{p{0.35\hsize} p{0.05\hsize} p{0.05\hsize} p{0.45\hsize}} \hline  
 \textbf{name~\&~dimensionality} & \textbf{kind} & \textbf{in/out} & \textbf{description} \\ \hline
                    &   &   &                           \\ %%% for presentation
-filename(LEN=\filenamelen) & CHR & IN & filename of the FITS file. \\
-nside & I4B & OUT & `NSIDE' keyword value from the FITS header.\\
-lmax & I4B & OUT & `MAX-LPOL' keyword value from the FITS header. \\
-tfields & I4B & OUT & `TFIELDS' keyword value from the FITS header. \\ 
-\optional{mmax} (OPTIONAL) & I4B & OUT & `MAX-MPOL' keyword value from the FITS header. \\
+filename\mytarget{sub:read_par:filename}(LEN=\filenamelen) & CHR & IN & filename of the FITS file. \\
+nside\mytarget{sub:read_par:nside} & I4B & OUT & `NSIDE' keyword value from the FITS header.\\
+lmax\mytarget{sub:read_par:lmax} & I4B & OUT & `MAX-LPOL' keyword value from the FITS header. \\
+tfields\mytarget{sub:read_par:tfields} & I4B & OUT & `TFIELDS' keyword value from the FITS header. \\ 
+\optional{mmax\mytarget{sub:read_par:mmax}} (OPTIONAL) & I4B & OUT & `MAX-MPOL' keyword value from the FITS header. \\
 \end{tabular}
 }
 \end{arguments}

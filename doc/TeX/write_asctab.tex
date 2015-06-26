@@ -15,7 +15,13 @@
 \end{facility}
 
 \begin{f90format}
-{clout, lmax, ncl, header, nlheader, filename}
+{\mylink{sub:write_asctab:clout}{clout}%
+, \mylink{sub:write_asctab:lmax}{lmax}%
+, \mylink{sub:write_asctab:ncl}{ncl}%
+, \mylink{sub:write_asctab:header}{header}%
+, \mylink{sub:write_asctab:nlheader}{nlheader}%
+, \mylink{sub:write_asctab:filename}{filename}%
+}
 \end{f90format}
 
 \begin{arguments}
@@ -23,12 +29,12 @@
 \begin{tabular}{p{0.4\hsize} p{0.05\hsize} p{0.1\hsize} p{0.35\hsize}} \hline  
 \textbf{name~\&~dimensionality} & \textbf{kind} & \textbf{in/out} & \textbf{description} \\ \hline
                    &   &   &                           \\ %%% for presentation
-filename(LEN=\filenamelen) & CHR & IN & the FITS file to which the power spectrum is written. \\
-lmax & I4B & IN & Maximum $\ell$ value to be written. \\
-ncl & I4B & IN & 1 for temperature coeffecients only, 4 for polarisation. \\
-clout(0:lmax,1:ncl) & SP/ DP & IN & the powerspectrum to be saved in the file.\\
-nlheader & I4B & IN & number of header lines to write to the file. \\
-header(LEN=80) (1:nlheader) & CHR & IN & the header to the FITS-file. \\ 
+filename\mytarget{sub:write_asctab:filename}(LEN=\filenamelen) & CHR & IN & the FITS file to which the power spectrum is written. \\
+lmax\mytarget{sub:write_asctab:lmax} & I4B & IN & Maximum $\ell$ value to be written. \\
+ncl\mytarget{sub:write_asctab:ncl} & I4B & IN & 1 for temperature coeffecients only, 4 for polarisation. \\
+clout\mytarget{sub:write_asctab:clout}(0:lmax,1:ncl) & SP/ DP & IN & the powerspectrum to be saved in the file.\\
+nlheader\mytarget{sub:write_asctab:nlheader} & I4B & IN & number of header lines to write to the file. \\
+header\mytarget{sub:write_asctab:header}(LEN=80) (1:nlheader) & CHR & IN & the header to the FITS-file. \\ 
 \end{tabular}
 }
 \end{arguments}

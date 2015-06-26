@@ -15,7 +15,11 @@ other routines that read keywords of different kinds.}
 \end{facility}
 
 \begin{f90format}
-{header, kwd, value, comment}
+{\mylink{sub:get_card:header}{header}%
+, \mylink{sub:get_card:kwd}{kwd}%
+, \mylink{sub:get_card:value}{value}%
+, \mylink{sub:get_card:comment}{comment}%
+}
 \end{f90format}
 
 \begin{arguments}
@@ -23,9 +27,9 @@ other routines that read keywords of different kinds.}
 \begin{tabular}{p{0.4\hsize} p{0.05\hsize} p{0.1\hsize} p{0.35\hsize}} \hline  
 \textbf{name~\&~dimensionality} & \textbf{kind} & \textbf{in/out} & \textbf{description} \\ \hline
                    &   &   &                           \\ %%% for presentation
-header(LEN=80) DIMENSION(:) & CHR & IN & The header to read the keyword from. \\
-kwd(LEN=8) & CHR & IN & the FITS keyword to read (NOT case sensitive). \\
-value & any & OUT & the value read for the keyword. 
+header\mytarget{sub:get_card:header}(LEN=80) DIMENSION(:) & CHR & IN & The header to read the keyword from. \\
+kwd\mytarget{sub:get_card:kwd}(LEN=8) & CHR & IN & the FITS keyword to read (NOT case sensitive). \\
+value\mytarget{sub:get_card:value} & any & OUT & the value read for the keyword. 
 The type of the fortran variable 'value' (double, real, integer, logical or
                    character) should match the type under which the
                    value is written in the FITS file, except if
@@ -33,7 +37,7 @@ The type of the fortran variable 'value' (double, real, integer, logical or
                    keyword value, or if 'value' if real or double, in which case
                    it can read any numerical value. Note that long string values
 (more than 68 characters in length) are supported.\\
-comment(LEN=*) & CHR & OUT & comment read for the keyword. \\ 
+comment\mytarget{sub:get_card:comment}(LEN=*) & CHR & OUT & comment read for the keyword. \\ 
 \end{tabular}
 }
 \end{arguments}

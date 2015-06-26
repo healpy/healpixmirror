@@ -16,7 +16,15 @@ as well as cut sky maps}
 \end{facility}
 
 \begin{f90format}
-{filename, map, npixtot, nmaps \optional{[, fmissval, header, units, extno]}}
+{\mylink{sub:input_map:filename}{filename}%
+, \mylink{sub:input_map:map}{map}%
+, \mylink{sub:input_map:npixtot}{npixtot}%
+, \mylink{sub:input_map:nmaps}{nmaps}%
+ \optional{[, \mylink{sub:input_map:fmissval}{fmissval}%
+, \mylink{sub:input_map:header}{header}%
+, \mylink{sub:input_map:units}{units}%
+, \mylink{sub:input_map:extno}{extno}%
+]}}
 \end{f90format}
 \aboutoptional
 
@@ -25,21 +33,21 @@ as well as cut sky maps}
 \begin{tabular}{p{0.3\hsize} p{0.05\hsize} p{0.05\hsize} p{0.5\hsize}} \hline  
 \textbf{name~\&~dimensionality} & \textbf{kind} & \textbf{in/out} & \textbf{description} \\ \hline
                    &   &   &                           \\ %%% for presentation
-filename(len=\filenamelen) & CHR & IN & FITS file to be read from,
+filename\mytarget{sub:input_map:filename}(len=\filenamelen) & CHR & IN & FITS file to be read from,
                    containing a full sky or cut sky map \\
-map(0:npixtot-1,1:nmaps)    & SP/ DP & OUT & full sky map(s) constructed
+map\mytarget{sub:input_map:map}(0:npixtot-1,1:nmaps)    & SP/ DP & OUT & full sky map(s) constructed
                    from the data present in the file, missing pixels are filled
                    with fmissval \\
-npixtot                    & I4B/ I8B & IN & number of pixels in the full sky map \\
-nmaps     & I4B & IN &  number of maps in the file  \\
+npixtot\mytarget{sub:input_map:npixtot}                    & I4B/ I8B & IN & number of pixels in the full sky map \\
+nmaps\mytarget{sub:input_map:nmaps}     & I4B & IN &  number of maps in the file  \\
                    &   &   &                           \\ %%% for presentation
-\optional{fmissval}  & SP/ DP & IN &  value to be given to missing pixels,
+\optional{fmissval\mytarget{sub:input_map:fmissval}}  & SP/ DP & IN &  value to be given to missing pixels,
 \default{0}%
 %its default value is 0 
 \\
-\optional{header}(LEN=80)(1:)     & CHR & OUT &   FITS extension header \\
-\optional{units}(LEN=20)(1:nmaps)  & CHR & OUT &  maps units \\
-\optional{extno}  & I4B & IN & extension number to read the data from
+\optional{header\mytarget{sub:input_map:header}}(LEN=80)(1:)     & CHR & OUT &   FITS extension header \\
+\optional{units\mytarget{sub:input_map:units}}(LEN=20)(1:nmaps)  & CHR & OUT &  maps units \\
+\optional{extno\mytarget{sub:input_map:extno}}  & I4B & IN & extension number to read the data from
                    (0 based).\default{0} (the first extension is read) 
 \end{tabular}
 }

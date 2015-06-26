@@ -68,23 +68,20 @@ for shortfile in $files; do
 	nidl=`match $file "_idl"`
 	if [ "$nidl" = "0" ] ; then
 	    nf=`testF90Function $file`
-	    outfile=$file# overwrite!
+	    outfile=$file  # overwrite!
+	    type="F90"
+	    desc_b="begin{arguments}"
+	    desc_e="end{arguments}"
+	    pretarg="sub"
+
 	    if [ $nf -eq 0 ] ; then
 	        # for F90 subroutines
-		type="F90"
 		form_b="begin{f90format}"
 		form_e="end{f90format}"
-		desc_b="begin{arguments}"
-		desc_e="end{arguments}"
-		pretarg="sub"
 	    else
 	        # for F90 functions
-		type="F90"
 		form_b="begin{f90function}"
 		form_e="end{f90function}"
-		desc_b="begin{arguments}"
-		desc_e="end{arguments}"
-		pretarg="sub"
 	    fi
 	else
 	    # for IDL subroutines

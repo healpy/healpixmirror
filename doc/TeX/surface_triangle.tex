@@ -16,7 +16,11 @@ three vertices}
 \end{facility}
 
 \begin{f90format}
-{v1, v2, v3, surface}
+{\mylink{sub:surface_triangle:v1}{v1}%
+, \mylink{sub:surface_triangle:v2}{v2}%
+, \mylink{sub:surface_triangle:v3}{v3}%
+, \mylink{sub:surface_triangle:surface}{surface}%
+}
 \end{f90format}
 
 \begin{arguments}
@@ -24,10 +28,10 @@ three vertices}
 \begin{tabular}{p{0.25\hsize} p{0.05\hsize} p{0.1\hsize} p{0.5\hsize}} \hline 
 \textbf{name\&dimensionality} & \textbf{kind} & \textbf{in/out} & \textbf{description} \\ \hline
                    &   &   &                           \\ %%% for presentation
-v1(3) & DP & IN & cartesian vector pointing at the triangle first vertex. \\
-v2(3) & DP & IN & cartesian vector pointing at the triangle second vertex. \\
-v3(3) & DP & IN & cartesian vector pointing at the triangle third vertex. \\
-surface & DP & OUT & surface of the triangle in steradians.
+v1\mytarget{sub:surface_triangle:v1}(3) & DP & IN & cartesian vector pointing at the triangle first vertex. \\
+v2\mytarget{sub:surface_triangle:v2}(3) & DP & IN & cartesian vector pointing at the triangle second vertex. \\
+v3\mytarget{sub:surface_triangle:v3}(3) & DP & IN & cartesian vector pointing at the triangle third vertex. \\
+surface\mytarget{sub:surface_triangle:surface} & DP & OUT & surface of the triangle in steradians.
 \end{tabular}
 }
 \end{arguments}

@@ -18,7 +18,14 @@
 \end{facility}
 
 \begin{f90format}
-{nsmax, nlmax, nmmax, datain, nph, dataout, kphi0}
+{\mylink{sub:ring_analysis:nsmax}{nsmax}%
+, \mylink{sub:ring_analysis:nlmax}{nlmax}%
+, \mylink{sub:ring_analysis:nmmax}{nmmax}%
+, \mylink{sub:ring_analysis:datain}{datain}%
+, \mylink{sub:ring_analysis:nph}{nph}%
+, \mylink{sub:ring_analysis:dataout}{dataout}%
+, \mylink{sub:ring_analysis:kphi0}{kphi0}%
+}
 \end{f90format}
 
 \begin{arguments}
@@ -26,13 +33,13 @@
 \begin{tabular}{p{0.4\hsize} p{0.05\hsize} p{0.1\hsize} p{0.35\hsize}} \hline  
 \textbf{name~\&~dimensionality} & \textbf{kind} & \textbf{in/out} & \textbf{description} \\ \hline
                    &   &   &                           \\ %%% for presentation
-nsmax & I4B & IN & $\nside$ of the map. \\
-nlmax & I4B & IN & Maximum $\ell$ of the analysis.\\
-nmmax & I4B & IN & Maximum $m$ of the analysis.\\
-nph & I4B & IN & The number of points on the ring. \\ 
-datain(0:nph-1) & DP & IN & Function values on the ring. \\
-dataout(0:nmmax) & DPC & OUT & Fourier components, replicated to $Nmmax$.\\
-kphi0 & I4B & IN & 0 if the first pixel on the ring is  at
+nsmax\mytarget{sub:ring_analysis:nsmax} & I4B & IN & $\nside$ of the map. \\
+nlmax\mytarget{sub:ring_analysis:nlmax} & I4B & IN & Maximum $\ell$ of the analysis.\\
+nmmax\mytarget{sub:ring_analysis:nmmax} & I4B & IN & Maximum $m$ of the analysis.\\
+nph\mytarget{sub:ring_analysis:nph} & I4B & IN & The number of points on the ring. \\ 
+datain\mytarget{sub:ring_analysis:datain}(0:nph-1) & DP & IN & Function values on the ring. \\
+dataout\mytarget{sub:ring_analysis:dataout}(0:nmmax) & DPC & OUT & Fourier components, replicated to $Nmmax$.\\
+kphi0\mytarget{sub:ring_analysis:kphi0} & I4B & IN & 0 if the first pixel on the ring is  at
                    $\phi=0$; 1 otherwise. \\
 \end{tabular}
 }

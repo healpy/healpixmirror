@@ -24,7 +24,13 @@ The routines accept both single and double precision arrays for alm\_TGC and
 \end{facility}
 
 \begin{f90format}
-{nsmax, nlmax, nmmax, alm\_TGC, map\_TQU [, plm]}
+{\mylink{sub:alm2map:nsmax}{nsmax}%
+, \mylink{sub:alm2map:nlmax}{nlmax}%
+, \mylink{sub:alm2map:nmmax}{nmmax}%
+, \mylink{sub:alm2map:alm_TGC}{alm\_TGC}%
+, \mylink{sub:alm2map:map_TQU}{map\_TQU}%
+ [, \mylink{sub:alm2map:plm}{plm}%
+]}
 \end{f90format}
 
 \begin{arguments}
@@ -32,29 +38,29 @@ The routines accept both single and double precision arrays for alm\_TGC and
 \begin{tabular}{p{0.4\hsize} p{0.05\hsize} p{0.1\hsize} p{0.35\hsize}} \hline  
 \textbf{name~\&~dimensionality} & \textbf{kind} & \textbf{in/out} & \textbf{description} \\ \hline
                    &   &   &                           \\ %%% for presentation
-nsmax & I4B & IN & the $N_{side}$ value of the map to synthesize. \\
-nlmax & I4B & IN & the maximum $\ell$ value used for the $a_{lm}$. \\
-nmmax & I4B & IN & the maximum $m$ value used for the $a_{lm}$. \\
-alm\_TGC(1:p, 0:nlmax, 0:nmmax) & SPC or DPC & IN & The $a_{lm}$ values to make
+nsmax\mytarget{sub:alm2map:nsmax} & I4B & IN & the $N_{side}$ value of the map to synthesize. \\
+nlmax\mytarget{sub:alm2map:nlmax} & I4B & IN & the maximum $\ell$ value used for the $a_{lm}$. \\
+nmmax\mytarget{sub:alm2map:nmmax} & I4B & IN & the maximum $m$ value used for the $a_{lm}$. \\
+alm\_TGC\mytarget{sub:alm2map:alm_TGC}(1:p, 0:nlmax, 0:nmmax) & SPC or DPC & IN & The $a_{lm}$ values to make
                    the map from. $p$ is 3 or 1 depending on wether polarisation is
                    respectively included or not. In the former case, the first
                    index runs from 1 to 3 corresponding to (T,E,B). \\
 \end{tabular}
 
 \begin{tabular}{p{0.4\hsize} p{0.05\hsize} p{0.1\hsize} p{0.35\hsize}}  \hline  
-map\_TQU(0:12*nsmax**2-1)      & SP or DP & OUT & if only a temperature map is
+map\_TQU\mytarget{sub:alm2map:map_TQU}(0:12*nsmax**2-1)      & SP or DP & OUT & if only a temperature map is
 to be synthesized, the map-array should be passed with this rank.  \\ 
-map\_TQU(0:12*nsmax**2-1, 1:3) & SP or DP & OUT & if both temperature an 
+map\_TQU\mytarget{sub:alm2map:map_TQU}(0:12*nsmax**2-1, 1:3) & SP or DP & OUT & if both temperature an 
 polarisation maps are to be synthesized, the map array should have this rank, 
 where the second index is (1,2,3) corresponding to (T,Q,U). \\ 
-plm(0:n\_plm-1), \hskip 3cm OPTIONAL & DP & IN & If this optional matrix is passed with
+plm\mytarget{sub:alm2map:plm}(0:n\_plm-1), \hskip 3cm OPTIONAL & DP & IN & If this optional matrix is passed with
 this rank, precomputed $P_{lm}(\theta)$ are used instead of recursion. (
 n\_plm = nsmax*(nmmax+1)*(2*nlmax-nmmax+2)
 \\ 
-plm(0:n\_plm-1,1:3), \hskip 3cm OPTIONAL & DP & IN & If this optional matrix is 
+plm\mytarget{sub:alm2map:plm}(0:n\_plm-1,1:3), \hskip 3cm OPTIONAL & DP & IN & If this optional matrix is 
 passed with this rank, precomputed $P_{lm}(\theta)$ AND precomputed tensor
 harmonics are used instead of recursion. (n\_plm =
-nsmax*(nmmax+1)*(2*nlmax-nmmax+2) 
+nsmax\mytarget{sub:alm2map:nsmax}*(nmmax+1)*(2*nlmax-nmmax+2) 
 \end{tabular}
 }
 \end{arguments}

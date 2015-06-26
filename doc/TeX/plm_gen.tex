@@ -16,7 +16,11 @@
 \end{facility}
 
 \begin{f90format}
-{nsmax, nlmax, nmmax, plm}
+{\mylink{sub:plm_gen:nsmax}{nsmax}%
+, \mylink{sub:plm_gen:nlmax}{nlmax}%
+, \mylink{sub:plm_gen:nmmax}{nmmax}%
+, \mylink{sub:plm_gen:plm}{plm}%
+}
 \end{f90format}
 
 \begin{arguments}
@@ -24,10 +28,10 @@
 \begin{tabular}{p{0.4\hsize} p{0.05\hsize} p{0.1\hsize} p{0.35\hsize}} \hline  
 \textbf{name~\&~dimensionality} & \textbf{kind} & \textbf{in/out} & \textbf{description} \\ \hline
                    &   &   &                           \\ %%% for presentation
-nsmax & I4B & IN & The $\nside$ value for which to compute the $\lambda_{\ell m}$. \\
-nlmax & I4B & IN & The maximum multipole order $\ell$ of the generated $\lambda_{lm}$. \\
-nmmax & I4B & IN & The maximum degree $m$ of the generated $\lambda_{lm}$. \\
-plm(0:n\_plm-1, 1:p) & DP & OUT & The $\lambda_{lm}$ values, either for temperature only
+nsmax\mytarget{sub:plm_gen:nsmax} & I4B & IN & The $\nside$ value for which to compute the $\lambda_{\ell m}$. \\
+nlmax\mytarget{sub:plm_gen:nlmax} & I4B & IN & The maximum multipole order $\ell$ of the generated $\lambda_{lm}$. \\
+nmmax\mytarget{sub:plm_gen:nmmax} & I4B & IN & The maximum degree $m$ of the generated $\lambda_{lm}$. \\
+plm\mytarget{sub:plm_gen:plm}(0:n\_plm-1, 1:p) & DP & OUT & The $\lambda_{lm}$ values, either for temperature only
                    ($p=1$) or temperature and polarisation ($p=3$). The number
                     of $\lambda_{\ell m}$ is n\_plm =
                     nsmax*(nmmax+1)*(2*nlmax-nmmax+2). They are stored in the

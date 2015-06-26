@@ -18,7 +18,10 @@ the MPI communicator.  }
 \end{facility}
 
 \begin{f90format}
-{comm, alms, map}
+{\mylink{sub:mpi_alm2map_simple:comm}{comm}%
+, \mylink{sub:mpi_alm2map_simple:alms}{alms}%
+, \mylink{sub:mpi_alm2map_simple:map}{map}%
+}
 \end{f90format}
 
 \begin{arguments}
@@ -26,11 +29,11 @@ the MPI communicator.  }
 \begin{tabular}{p{0.4\hsize} p{0.05\hsize} p{0.05\hsize} p{0.40\hsize}} \hline  
 \textbf{name~\&~dimensionality} & \textbf{kind} & \textbf{in/out} & \textbf{description} \\ \hline
                    &   &   &                           \\ %%% for presentation
-comm & I4B & IN & MPI communicator. \\
-alms(1:nmaps,0:lmax,0:nmax) & SPC or DPC & IN & Input alms. If
+comm\mytarget{sub:mpi_alm2map_simple:comm} & I4B & IN & MPI communicator. \\
+alms\mytarget{sub:mpi_alm2map_simple:alms}(1:nmaps,0:lmax,0:nmax) & SPC or DPC & IN & Input alms. If
 nmaps=1, only temperature information is included; if nmaps=3,
 polarization information is included \\ 
-map(0:npix,1:nmaps) & SP or DP & OUT & Output map. nmaps must match 
+map\mytarget{sub:mpi_alm2map_simple:map}(0:npix,1:nmaps) & SP or DP & OUT & Output map. nmaps must match 
 that of the input alms array.\\
 \end{tabular}
 }

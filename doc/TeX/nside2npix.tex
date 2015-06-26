@@ -17,7 +17,8 @@ to resolution parameter $\nside$.
 \end{facility}
 
 \begin{f90function}
-{nside}
+{\mylink{sub:nside2npix:nside}{nside}%
+}
 \end{f90function}
 
 \begin{arguments}
@@ -25,7 +26,7 @@ to resolution parameter $\nside$.
 \begin{tabular}{p{0.3\hsize} p{0.05\hsize} p{0.1\hsize} p{0.45\hsize}} \hline  
 \textbf{name~\&~dimensionality} & \textbf{kind} & \textbf{in/out} & \textbf{description} \\ \hline
                    &   &   &                           \\ %%% for presentation
-nside & I4B & IN & the $\nside$ parameter of the map. \\
+nside\mytarget{sub:nside2npix:nside} & I4B & IN & the $\nside$ parameter of the map. \\
 var & I8B & OUT & the number of pixels $\npix$ of the map. If $\nside$ is valid (a power of 2 in
 $\{1,\ldots,2^{28}=268435456\}$), $\npix=12\nside^2$ is returned; if not, an error message is
 issued and -1 is returned.\\

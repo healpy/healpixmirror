@@ -16,7 +16,11 @@
 \end{facility}
 
 \begin{f90format}
-{map, header, filename \optional{[,extno]}}
+{\mylink{sub:output_map:map}{map}%
+, \mylink{sub:output_map:header}{header}%
+, \mylink{sub:output_map:filename}{filename}%
+ \optional{[,\mylink{sub:output_map:extno}{extno}%
+]}}
 \end{f90format}
 
 \begin{arguments}
@@ -24,12 +28,12 @@
 \begin{tabular}{p{0.3\hsize} p{0.05\hsize} p{0.08\hsize} p{0.5\hsize}} \hline  
 \textbf{name~\&~dimensionality} & \textbf{kind} & \textbf{in/out} & \textbf{description} \\ \hline
                    &   &   &                           \\ %%% for presentation
-map(0:,1:) 		& SP/ DP 	& IN & full sky map(s) to be output \\
-header(LEN=80)(1:) 	& CHR 	& IN & string array containing the
+map\mytarget{sub:output_map:map}(0:,1:) 		& SP/ DP 	& IN & full sky map(s) to be output \\
+header\mytarget{sub:output_map:header}(LEN=80)(1:) 	& CHR 	& IN & string array containing the
                    FITS header to be included in the file \\
-filename(LEN=*) & CHR & IN & filename of the FITS-file to
+filename\mytarget{sub:output_map:filename}(LEN=*) & CHR & IN & filename of the FITS-file to
                    contain \healpix map(s). \\
-\optional{extno} \hskip 4cm & I4B & IN & extension number in which to write the data (0
+\optional{extno\mytarget{sub:output_map:extno}} \hskip 4cm & I4B & IN & extension number in which to write the data (0
                    based). \default 0
 \end{tabular}
 }

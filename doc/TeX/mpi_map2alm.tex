@@ -19,7 +19,9 @@ the MPI communicator.
 \end{facility}
 
 \begin{f90format}
-{map, alms}
+{\mylink{sub:mpi_map2alm:map}{map}%
+, \mylink{sub:mpi_map2alm:alms}{alms}%
+}
 \end{f90format}
 
 \begin{arguments}
@@ -27,10 +29,10 @@ the MPI communicator.
 \begin{tabular}{p{0.4\hsize} p{0.05\hsize} p{0.05\hsize} p{0.40\hsize}} \hline  
 \textbf{name~\&~dimensionality} & \textbf{kind} & \textbf{in/out} & \textbf{description} \\ \hline
                    &   &   &                           \\ %%% for presentation
-map(0:npix,1:nmaps) & SP or DP & IN & map to analyse. If
+map\mytarget{sub:mpi_map2alm:map}(0:npix,1:nmaps) & SP or DP & IN & map to analyse. If
 nmaps=1, only temperature information is included; if nmaps=3,
 polarization information is included \\
-alms(1:nmaps,0:lmax,0:nmax) & SPC or DPC & OUT & output alms. nmaps must
+alms\mytarget{sub:mpi_map2alm:alms}(1:nmaps,0:lmax,0:nmax) & SPC or DPC & OUT & output alms. nmaps must
 equal that of the input map\\
 \end{tabular}
 }

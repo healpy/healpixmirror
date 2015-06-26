@@ -18,7 +18,8 @@ to resolution parameter $\nside$. Each template pixel has a different shape that
 \end{facility}
 
 \begin{f90function}
-{nside}
+{\mylink{sub:nside2ntemplates:nside}{nside}%
+}
 \end{f90function}
 
 \begin{arguments}
@@ -26,7 +27,7 @@ to resolution parameter $\nside$. Each template pixel has a different shape that
 \begin{tabular}{p{0.3\hsize} p{0.05\hsize} p{0.1\hsize} p{0.45\hsize}} \hline  
 \textbf{name~\&~dimensionality} & \textbf{kind} & \textbf{in/out} & \textbf{description} \\ \hline
                    &   &   &                           \\ %%% for presentation
-nside & I4B & IN & the $\nside$ parameter. \\
+nside\mytarget{sub:nside2ntemplates:nside} & I4B & IN & the $\nside$ parameter. \\
 var & I8B & OUT & the number of template pixels $\ntemplate$.\\
 \end{tabular}
 }

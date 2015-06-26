@@ -14,7 +14,12 @@
 \end{facility}
 
 \begin{f90format}
-{header, kwd, value \optional{[, comment, update]} }
+{\mylink{sub:add_card:header}{header}%
+, \mylink{sub:add_card:kwd}{kwd}%
+, \mylink{sub:add_card:value}{value}%
+ \optional{[, \mylink{sub:add_card:comment}{comment}%
+, \mylink{sub:add_card:update}{update}%
+]} }
 \end{f90format}
 \aboutoptional
 
@@ -23,19 +28,19 @@
 \begin{tabular}{p{0.4\hsize} p{0.05\hsize} p{0.1\hsize} p{0.35\hsize}} \hline  
 \textbf{name~\&~dimensionality} & \textbf{kind} & \textbf{in/out} & \textbf{description} \\ \hline
                    &   &   &                           \\ %%% for presentation
-header(LEN=80) DIMENSION(:) & CHR & INOUT & The header to write the keyword to. \\
-kwd(LEN=*) & CHR & IN & the FITS keyword to write. Should be shorter
+header\mytarget{sub:add_card:header}(LEN=80) DIMENSION(:) & CHR & INOUT & The header to write the keyword to. \\
+kwd\mytarget{sub:add_card:kwd}(LEN=*) & CHR & IN & the FITS keyword to write. Should be shorter
                    or equal to 8 characters.\\
-value & any & IN & the value (double, real, integer, logical or
+value\mytarget{sub:add_card:value} & any & IN & the value (double, real, integer, logical or
                    character string) to give to the keyword. Note that long string values
 (more than 68 characters in length) are supported.\\
-\optional{comment(LEN=*)} & CHR & IN & comment to the keyword. \\ 
+\optional{comment\mytarget{sub:add_card:comment}(LEN=*)} & CHR & IN & comment to the keyword. \\ 
 \end{tabular}
 \begin{tabular}{p{0.4\hsize} p{0.05\hsize} p{0.1\hsize} p{0.35\hsize}} \hline  
 \textbf{name~\&~dimensionality} & \textbf{kind} & \textbf{in/out} & \textbf{description} \\ \hline
                    &   &   &                           \\ %%% for presentation
-\optional{update} & LGT & IN & if set to {\tt .true.}, the first occurence of the keyword {\tt
-kwd} in {\tt header} will be updated (and all other occurences removed); otherwise, the keyword will be appended at
+\optional{update\mytarget{sub:add_card:update}} & LGT & IN & if set to {\tt .true.}, the first occurence of the keyword {\tt
+kwd\mytarget{sub:add_card:kwd}} in {\tt header} will be updated (and all other occurences removed); otherwise, the keyword will be appended at
 the end (and any previous occurence removed). If the keyword is either 'HISTORY'
 or 'COMMENT', {\tt update} is ignored and the keyword is peacefully appended at the end of the header.\\ 
 \end{tabular}

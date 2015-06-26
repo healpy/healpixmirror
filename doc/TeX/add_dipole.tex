@@ -15,7 +15,13 @@
 \end{facility}
 
 \begin{f90format}
-{nside, map, ordering, degree, multipoles \optional{[, fmissval]}}
+{\mylink{sub:add_dipole:nside}{nside}%
+, \mylink{sub:add_dipole:map}{map}%
+, \mylink{sub:add_dipole:ordering}{ordering}%
+, \mylink{sub:add_dipole:degree}{degree}%
+, \mylink{sub:add_dipole:multipoles}{multipoles}%
+ \optional{[, \mylink{sub:add_dipole:fmissval}{fmissval}%
+]}}
 \end{f90format}
 \aboutoptional
 
@@ -24,17 +30,17 @@
 \begin{tabular}{p{0.32\hsize} p{0.05\hsize} p{0.08\hsize} p{0.45\hsize}} \hline  
 \textbf{name~\&~dimensionality} & \textbf{kind} & \textbf{in/out} & \textbf{description} \\ \hline
                    &   &   &                           \\ %%% for presentation
-nside & I4B & IN & value of $\nside$ resolution parameter for input map\\
-map(0:12*nside*nside-1) & SP/ DP & INOUT & \healpix map to which the monopole and dipole will be
+nside\mytarget{sub:add_dipole:nside} & I4B & IN & value of $\nside$ resolution parameter for input map\\
+map\mytarget{sub:add_dipole:map}(0:12*nside*nside-1) & SP/ DP & INOUT & \healpix map to which the monopole and dipole will be
                    added. Those are added to {\em all unflagged pixels}. \\
-ordering & I4B & IN & \healpix\ scheme 1:RING, 2: NESTED \\
-degree & I4B & IN & multipoles to add. It is either 0 (nothing done),
+ordering\mytarget{sub:add_dipole:ordering} & I4B & IN & \healpix\ scheme 1:RING, 2: NESTED \\
+degree\mytarget{sub:add_dipole:degree} & I4B & IN & multipoles to add. It is either 0 (nothing done),
                    1 (monopole only) or 2 (monopole and dipole) \\
-multipoles(0:degree*degree-1) & DP & IN & values of monopole and
+multipoles\mytarget{sub:add_dipole:multipoles}(0:degree*degree-1) & DP & IN & values of monopole and
                    dipole to add.  The monopole is described as a scalar in the same
                    units as the input map, the dipole as a 3D cartesian vector, 
 		   in the same units. \\
-\optional{fmissval}  & SP/ DP & IN & value used to flag bad pixel on input
+\optional{fmissval\mytarget{sub:add_dipole:fmissval}}  & SP/ DP & IN & value used to flag bad pixel on input
                    \default{-1.6375e30}. Pixels with that value are left unchanged.\\
 \end{tabular}
 }

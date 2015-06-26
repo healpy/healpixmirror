@@ -15,7 +15,15 @@
 \end{facility}
 
 \begin{f90format}
-{plm, nplm, nhar, header, nlheader, filename, nsmax, nlmax}
+{\mylink{sub:write_plm:plm}{plm}%
+, \mylink{sub:write_plm:nplm}{nplm}%
+, \mylink{sub:write_plm:nhar}{nhar}%
+, \mylink{sub:write_plm:header}{header}%
+, \mylink{sub:write_plm:nlheader}{nlheader}%
+, \mylink{sub:write_plm:filename}{filename}%
+, \mylink{sub:write_plm:nsmax}{nsmax}%
+, \mylink{sub:write_plm:nlmax}{nlmax}%
+}
 \end{f90format}
 
 \begin{arguments}
@@ -23,14 +31,14 @@
 \begin{tabular}{p{0.4\hsize} p{0.05\hsize} p{0.05\hsize} p{0.40\hsize}} \hline  
 \textbf{name\&dimensionality} & \textbf{kind} & \textbf{in/out} & \textbf{description} \\ \hline
                    &   &   &                           \\ %%% for presentation
-plm(0:nplm-1,1:nhar) & DP & IN & the array with the precomputed $P_{lm}(\theta)$ values.\\
-nplm & I4B & IN & Number of $P_{lm}$ values to store.\\
-nhar & I4B & IN & 1 for scalar $P_{lm}$ only and 3 for tensor harmonics. \\
-header(LEN=80) (1:nlheader) & CHR & IN & The header for the FITS-file. \\
-nlheader & I4B & IN & number of header lines to write to the file. \\
-filename(LEN=\filenamelen) & CHR & IN & the precomputed $P_{lm}(\theta)$ values are written to this file. \\
-nsmax & I4B & IN & $N_{side}$ for the precomputed $P_{lm}\!\!$ s. \\
-nlmax & I4B & IN & maximum $\ell$  value for the precomputed $P_{lm}\!\!$ s. \\
+plm\mytarget{sub:write_plm:plm}(0:nplm-1,1:nhar) & DP & IN & the array with the precomputed $P_{lm}(\theta)$ values.\\
+nplm\mytarget{sub:write_plm:nplm} & I4B & IN & Number of $P_{lm}$ values to store.\\
+nhar\mytarget{sub:write_plm:nhar} & I4B & IN & 1 for scalar $P_{lm}$ only and 3 for tensor harmonics. \\
+header\mytarget{sub:write_plm:header}(LEN=80) (1:nlheader) & CHR & IN & The header for the FITS-file. \\
+nlheader\mytarget{sub:write_plm:nlheader} & I4B & IN & number of header lines to write to the file. \\
+filename\mytarget{sub:write_plm:filename}(LEN=\filenamelen) & CHR & IN & the precomputed $P_{lm}(\theta)$ values are written to this file. \\
+nsmax\mytarget{sub:write_plm:nsmax} & I4B & IN & $N_{side}$ for the precomputed $P_{lm}\!\!$ s. \\
+nlmax\mytarget{sub:write_plm:nlmax} & I4B & IN & maximum $\ell$  value for the precomputed $P_{lm}\!\!$ s. \\
 \end{tabular}
 }
 \end{arguments}

@@ -23,7 +23,9 @@
 \end{facility}
 
 \begin{f90format}
-{subcall, map}
+{\mylink{sub:convert_inplace:subcall}{subcall}%
+, \mylink{sub:convert_inplace:map}{map}%
+}
 \end{f90format}
 
 \begin{arguments}
@@ -31,9 +33,9 @@
 \begin{tabular}{p{0.4\hsize} p{0.05\hsize} p{0.1\hsize} p{0.35\hsize}} \hline  
 \textbf{name~\&~dimensionality} & \textbf{kind} & \textbf{in/out} & \textbf{description} \\ \hline
                    &   &   &                           \\ %%% for presentation
-subcall & --- & IN & routine to be called by convert\_inplace\_real. Set this to \htmlref{ring2nest}{sub:pix_tools} or \htmlref{nest2ring}{sub:pix_tools} dependent on wether the conversion is RING to NESTED or vice versa. \\
-map(0:npix-1) & I4B/ SP/ DP & INOUT & mono-dimensional full sky map to be converted, the routine finds the size itself. \\
-map(0:npix-1,1:nd) & I4B/ SP/ DP & INOUT & bi-dimensional (nd$>0$) full sky map to be
+subcall\mytarget{sub:convert_inplace:subcall} & --- & IN & routine to be called by convert\_inplace\_real. Set this to \htmlref{ring2nest}{sub:pix_tools} or \htmlref{nest2ring}{sub:pix_tools} dependent on wether the conversion is RING to NESTED or vice versa. \\
+map\mytarget{sub:convert_inplace:map}(0:npix-1) & I4B/ SP/ DP & INOUT & mono-dimensional full sky map to be converted, the routine finds the size itself. \\
+map\mytarget{sub:convert_inplace:map}(0:npix-1,1:nd) & I4B/ SP/ DP & INOUT & bi-dimensional (nd$>0$) full sky map to be
                    converted, the routine finds both dimensions
                    itself. Processing a bidimensional map with nd$>1$ should be
                    faster than each of the nd 1D-maps consecutively.\\

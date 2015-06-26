@@ -14,7 +14,9 @@
 \end{facility}
 
 \begin{f90format}
-{header1, header2}
+{\mylink{sub:merge_headers:header1}{header1}%
+, \mylink{sub:merge_headers:header2}{header2}%
+}
 \end{f90format}
 
 \begin{arguments}
@@ -22,8 +24,8 @@
 \begin{tabular}{p{0.4\hsize} p{0.05\hsize} p{0.1\hsize} p{0.35\hsize}} \hline  
 \textbf{name\&dimensionality} & \textbf{kind} & \textbf{in/out} & \textbf{description} \\ \hline
                    &   &   &                           \\ %%% for presentation
-header1(LEN=80) DIMENSION(:) & CHR & IN & First header. \\
-header2(LEN=80) DIMENSION(:) & CHR & INOUT & Second header. On output,
+header1\mytarget{sub:merge_headers:header1}(LEN=80) DIMENSION(:) & CHR & IN & First header. \\
+header2\mytarget{sub:merge_headers:header2}(LEN=80) DIMENSION(:) & CHR & INOUT & Second header. On output,
                    will contain the concatenation of (in that order) header2 and
                    header1. If header2 is too short to allow the
                    merging the output will be truncated\\

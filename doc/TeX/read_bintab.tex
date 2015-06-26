@@ -15,7 +15,16 @@
 \end{facility}
 
 \begin{f90format}
-{filename, map, npixtot, nmaps, nullval, anynull \optional{[,header, units, extno]}}
+{\mylink{sub:read_bintab:filename}{filename}%
+, \mylink{sub:read_bintab:map}{map}%
+, \mylink{sub:read_bintab:npixtot}{npixtot}%
+, \mylink{sub:read_bintab:nmaps}{nmaps}%
+, \mylink{sub:read_bintab:nullval}{nullval}%
+, \mylink{sub:read_bintab:anynull}{anynull}%
+ \optional{[,\mylink{sub:read_bintab:header}{header}%
+, \mylink{sub:read_bintab:units}{units}%
+, \mylink{sub:read_bintab:extno}{extno}%
+]}}
 \end{f90format}
 \aboutoptional
 
@@ -24,20 +33,20 @@
 \begin{tabular}{p{0.4\hsize} p{0.05\hsize} p{0.05\hsize} p{0.40\hsize}} \hline  
 \textbf{name~\&d~imensionality} & \textbf{kind} & \textbf{in/out} & \textbf{description} \\ \hline
                    &   &   &                           \\ %%% for presentation
-filename(LEN=\filenamelen) & CHR & IN & filename of FITS-file containing the map(s). \\
-npixtot & I4B & IN & Number of pixels to be read from map.\\
+filename\mytarget{sub:read_bintab:filename}(LEN=\filenamelen) & CHR & IN & filename of FITS-file containing the map(s). \\
+npixtot\mytarget{sub:read_bintab:npixtot} & I4B & IN & Number of pixels to be read from map.\\
 nmap & I4B & IN & number of maps to be read, 1 for temperature only, and 3 for (T,Q,U). \\
-map(0:npixtot-1,1:nmap) & SP/ DP & OUT & the map read from the FITS-file.\\
-nullval & SP/ DP & OUT & value of missing pixels in the map. \\
-anynull & LGT & OUT & {\tt .TRUE.}, if there are missing pixels, and {\tt .FALSE.}
+map\mytarget{sub:read_bintab:map}(0:npixtot-1,1:nmap) & SP/ DP & OUT & the map read from the FITS-file.\\
+nullval\mytarget{sub:read_bintab:nullval} & SP/ DP & OUT & value of missing pixels in the map. \\
+anynull\mytarget{sub:read_bintab:anynull} & LGT & OUT & {\tt .TRUE.}, if there are missing pixels, and {\tt .FALSE.}
                    otherwise. \\
-\optional{header}(LEN=80)(1:)\hskip 3cm (OPTIONAL) & CHR & OUT & character string array
+\optional{header\mytarget{sub:read_bintab:header}}(LEN=80)(1:)\hskip 3cm (OPTIONAL) & CHR & OUT & character string array
                    containing the FITS header read from the file. Its
                    dimension has to be defined prior to calling the
                    routine \\
-\optional{units}(LEN=*)(1:nmaps) & CHR & OUT & character string array
+\optional{units\mytarget{sub:read_bintab:units}}(LEN=*)(1:nmaps) & CHR & OUT & character string array
                    containing the physical units of each map read \\
-\optional{extno} & I4B & IN & extension number to read the data from
+\optional{extno\mytarget{sub:read_bintab:extno}} & I4B & IN & extension number to read the data from
                    (0 based).\default 0 (the first extension is read) 
 \end{tabular}
 }

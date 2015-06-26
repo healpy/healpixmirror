@@ -17,7 +17,12 @@ $C_{12}(\ell) = \sum_{m=-\ell}^{\ell} a_{1,\ell m}
 \end{facility}
 
 \begin{f90format}
-{nlmax, nmmax, alm1, \optional{[alm2,]} cl}
+{\mylink{sub:alm2cl:nlmax}{nlmax}%
+, \mylink{sub:alm2cl:nmmax}{nmmax}%
+, \mylink{sub:alm2cl:alm1}{alm1}%
+, \optional{[\mylink{sub:alm2cl:alm2}{alm2}%
+,]} \mylink{sub:alm2cl:cl}{cl}%
+}
 \end{f90format}
 \aboutoptional
 
@@ -26,16 +31,16 @@ $C_{12}(\ell) = \sum_{m=-\ell}^{\ell} a_{1,\ell m}
 \begin{tabular}{p{0.35\hsize} p{0.05\hsize} p{0.1\hsize} p{0.40\hsize}} \hline  
 \textbf{name~\&~dimensionality} & \textbf{kind} & \textbf{in/out} & \textbf{description} \\ \hline
                    &   &   &                           \\ %%% for presentation
-nlmax & I4B & IN & the maximum $\ell$ value used for the $a_{\ell m}$. \\
-nmmax & I4B & IN & the maximum $m$ value used for the $a_{\ell m}$. \\
-alm1(1:p, 0:nlmax, 0:nmmax) & SPC/ DPC & IN & First set of $a_{\ell m}$ values. $p$
+nlmax\mytarget{sub:alm2cl:nlmax} & I4B & IN & the maximum $\ell$ value used for the $a_{\ell m}$. \\
+nmmax\mytarget{sub:alm2cl:nmmax} & I4B & IN & the maximum $m$ value used for the $a_{\ell m}$. \\
+alm1\mytarget{sub:alm2cl:alm1}(1:p, 0:nlmax, 0:nmmax) & SPC/ DPC & IN & First set of $a_{\ell m}$ values. $p$
                    is 3 or 1 depending on wether polarisation is included or
                    not. In the former case, the first index runs from 1 to 3 corresponding to (T,E,B). \\
-\optional{alm2}(1:p, 0:nlmax, 0:nmmax) & SPC/ DPC & IN & Second set of $a_{\ell m}$
+\optional{alm2\mytarget{sub:alm2cl:alm2}}(1:p, 0:nlmax, 0:nmmax) & SPC/ DPC & IN & Second set of $a_{\ell m}$
                    values.  \\
 %% \end{tabular}
 %% \begin{tabular}{p{0.4\hsize} p{0.05\hsize} p{0.1\hsize} p{0.35\hsize}} \hline  
-cl(0:nlmax,1:d) & SP/ DP & OUT & resulting auto or cross power spectra. 
+cl\mytarget{sub:alm2cl:cl}(0:nlmax,1:d) & SP/ DP & OUT & resulting auto or cross power spectra. 
                    If both {\tt alm1} and {\tt alm2} are present, {\tt cl} will
                    be their cross power spectrum. If only {\tt alm1} is present,
                    {\tt cl} will be its power spectrum. 

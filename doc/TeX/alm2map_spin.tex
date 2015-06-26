@@ -55,7 +55,13 @@ $s=0$, $\ _{0}a^+_{lm} = -a^T_{lm}$, $\ _{0}a^-_{lm} = 0$, $\ {_0}S^+ = T$, $\ {
 \end{facility}
 
 \begin{f90format}
-{nsmax, nlmax, nmmax, spin, alm, map}
+{\mylink{sub:alm2map_spin:nsmax}{nsmax}%
+, \mylink{sub:alm2map_spin:nlmax}{nlmax}%
+, \mylink{sub:alm2map_spin:nmmax}{nmmax}%
+, \mylink{sub:alm2map_spin:spin}{spin}%
+, \mylink{sub:alm2map_spin:alm}{alm}%
+, \mylink{sub:alm2map_spin:map}{map}%
+}
 \end{f90format}
 
 \begin{arguments}
@@ -63,14 +69,14 @@ $s=0$, $\ _{0}a^+_{lm} = -a^T_{lm}$, $\ _{0}a^-_{lm} = 0$, $\ {_0}S^+ = T$, $\ {
 \begin{tabular}{p{0.35\hsize} p{0.05\hsize} p{0.1\hsize} p{0.40\hsize}} \hline  
 \textbf{name~\&~dimensionality} & \textbf{kind} & \textbf{in/out} & \textbf{description} \\ \hline
                    &   &   &                           \\ %%% for presentation
-nsmax & I4B & IN & the $N_{side}$ value of the map to synthesize. \\
-nlmax & I4B & IN & the maximum $\ell$ value used for the $a_{lm}$. \\
-nmmax & I4B & IN & the maximum $m$ value used for the $a_{lm}$. \\
-spin & I4B & IN & spin $s$ of the maps to be generated (only its absolute value
+nsmax\mytarget{sub:alm2map_spin:nsmax} & I4B & IN & the $N_{side}$ value of the map to synthesize. \\
+nlmax\mytarget{sub:alm2map_spin:nlmax} & I4B & IN & the maximum $\ell$ value used for the $a_{lm}$. \\
+nmmax\mytarget{sub:alm2map_spin:nmmax} & I4B & IN & the maximum $m$ value used for the $a_{lm}$. \\
+spin\mytarget{sub:alm2map_spin:spin} & I4B & IN & spin $s$ of the maps to be generated (only its absolute value
 is relevant). \\
-alm(1:2, 0:nlmax, 0:nmmax) & SPC/ DPC & IN & The ${_{|s|}}a^+_{lm}$ and ${_{|s|}}a^-_{lm}$ values to make the map
+alm\mytarget{sub:alm2map_spin:alm}(1:2, 0:nlmax, 0:nmmax) & SPC/ DPC & IN & The ${_{|s|}}a^+_{lm}$ and ${_{|s|}}a^-_{lm}$ values to make the map
                    from.\\
-map(0:12*nsmax**2-1, 1:2) & SP/ DP & OUT & ${_{|s|}}S^+$ and ${_{|s|}}S^-$ output maps
+map\mytarget{sub:alm2map_spin:map}(0:12*nsmax**2-1, 1:2) & SP/ DP & OUT & ${_{|s|}}S^+$ and ${_{|s|}}S^-$ output maps
 \end{tabular}
 }
 \end{arguments}

@@ -17,8 +17,26 @@ coefficients.}
 \end{facility}
 
 \begin{f90format}
-{header, dtype, \optional{[append, nside, order, ordering, coordsys, creator, version,
-randseed, beam\_leg, fwhm\_degree, units, nlmax, polar, nmmax, bcross, deriv]} }
+{\mylink{sub:write_minimal_header:header}{header}%
+, \mylink{sub:write_minimal_header:dtype}{dtype}%
+, \optional{[\mylink{sub:write_minimal_header:append}{append}%
+, \mylink{sub:write_minimal_header:nside}{nside}%
+, \mylink{sub:write_minimal_header:order}{order}%
+, \mylink{sub:write_minimal_header:ordering}{ordering}%
+, \mylink{sub:write_minimal_header:coordsys}{coordsys}%
+, \mylink{sub:write_minimal_header:creator}{creator}%
+, \mylink{sub:write_minimal_header:version}{version}%
+,
+\mylink{sub:write_minimal_header:randseed}{randseed}%
+, \mylink{sub:write_minimal_header:beam_leg}{beam\_leg}%
+, \mylink{sub:write_minimal_header:fwhm_degree}{fwhm\_degree}%
+, \mylink{sub:write_minimal_header:units}{units}%
+, \mylink{sub:write_minimal_header:nlmax}{nlmax}%
+, \mylink{sub:write_minimal_header:polar}{polar}%
+, \mylink{sub:write_minimal_header:nmmax}{nmmax}%
+, \mylink{sub:write_minimal_header:bcross}{bcross}%
+, \mylink{sub:write_minimal_header:deriv}{deriv}%
+]} }
 \end{f90format}
 \aboutoptional
 
@@ -27,68 +45,68 @@ randseed, beam\_leg, fwhm\_degree, units, nlmax, polar, nmmax, bcross, deriv]} }
 \begin{tabular}{p{0.30\hsize} p{0.05\hsize} p{0.08\hsize} p{0.49\hsize}} \hline  
 \textbf{name~\&~dimensionality} & \textbf{kind} & \textbf{in/out} & \textbf{description} \\ \hline
                    &   &   &                           \\ %%% for presentation
-header(LEN=80) \hskip 5cm DIMENSION(:) & CHR & INOUT & The FITS header to fill in. \\
+header\mytarget{sub:write_minimal_header:header}(LEN=80) \hskip 5cm DIMENSION(:) & CHR & INOUT & The FITS header to fill in. \\
 %
-dtype(LEN=*)     & CHR & IN    & data to be put in the FITS file, must be
+dtype\mytarget{sub:write_minimal_header:dtype}(LEN=*)     & CHR & IN    & data to be put in the FITS file, must be
 one of 'ALM', 'CL', 'MAP', 'CUTMAP' (case un-sensitive). \\
 %
-\optional{append} & LGT & IN &
+\optional{append\mytarget{sub:write_minimal_header:append}} & LGT & IN &
 if set to TRUE, the keywords will be appended to the content of {\tt header}
 instead of written from scrath \\
 %
-\optional{nside} & I4B & IN & 
+\optional{nside\mytarget{sub:write_minimal_header:nside}} & I4B & IN & 
 map resolution parameter;
 required for dtype='MAP' and dtype='CUTMAP' \\
 %
-\optional{order  } & I4B & IN & 
+\optional{order\mytarget{sub:write_minimal_header:order}  } & I4B & IN & 
 map ordering, either 1 (=ring) or 2
 (=nested); see {\tt ordering}\\
 %
-\optional{ordering(LEN=*)} & CHR & IN & 
+\optional{order\mytarget{sub:write_minimal_header:order}ing(LEN=*)} & CHR & IN & 
 map ordering, either 'RING' or 
 'NESTED' (case un-sensitive); 
 either {\tt order} or {\tt ordering} is required for dtype='MAP' and dtype='CUTMAP'\\
 %
-\optional{coordsys(LEN=*)} & CHR & IN & 
+\optional{coordsys\mytarget{sub:write_minimal_header:coordsys}(LEN=*)} & CHR & IN & 
 map coordinate system;
 Valid choices are 'G' = Galactic, 'E' = Ecliptic,  'C'/'Q' = Celestial =
 eQuatorial \\
 %
-\optional{creator(LEN=*)} & CHR & IN & 
+\optional{creator\mytarget{sub:write_minimal_header:creator}(LEN=*)} & CHR & IN & 
 name of software generating the
 data set\\
 %
-\optional{version(LEN=*)} & CHR & IN & 
-version of {\tt creator} software\\
+\optional{version\mytarget{sub:write_minimal_header:version}(LEN=*)} & CHR & IN & 
+version\mytarget{sub:write_minimal_header:version} of {\tt creator} software\\
 %
-\optional{randseed} & I4B & IN & 
+\optional{randseed\mytarget{sub:write_minimal_header:randseed}} & I4B & IN & 
 random number generator seed used to generate the data\\
 %
-\optional{beam\_leg(LEN=*)} & CHR & IN & 
+\optional{beam\_leg\mytarget{sub:write_minimal_header:beam_leg}(LEN=*)} & CHR & IN & 
 File containing Legendre transform of symmetric beam\\
 %
-\optional{fwhm\_degree} & DP & IN & 
+\optional{fwhm\_degree\mytarget{sub:write_minimal_header:fwhm_degree}} & DP & IN & 
 FWHM in degrees of gaussian symmetric beam (FITS keyword: {\tt FWHM})\\
 %
-\optional{units(LEN=*)} & CHR & IN & 
+\optional{units\mytarget{sub:write_minimal_header:units}(LEN=*)} & CHR & IN & 
 physical units of the data set (FITS keyword: {\tt TUNIT*}) \\
 %
-\optional{nlmax     } & I4B & IN & 
+\optional{nlmax\mytarget{sub:write_minimal_header:nlmax}     } & I4B & IN & 
 maximum multipole order $l$ of the data set (FITS keyword: {\tt MAX-LPOL})\\
 %
-\optional{polar     } & LGT & IN &
+\optional{polar\mytarget{sub:write_minimal_header:polar}     } & LGT & IN &
 if set to {\tt .TRUE.}, the file to be written contains polarized data \\
 %
-\optional{nmmax     } & I4B & IN & 
+\optional{nmmax\mytarget{sub:write_minimal_header:nmmax}     } & I4B & IN & 
 maximum degree $m$ of data set (FITS keyword: {\tt MAX-MPOL}) \\
 %
-\optional{bcross    } & LGT & IN &
+\optional{bcross\mytarget{sub:write_minimal_header:bcross}    } & LGT & IN &
 if set to {\tt .TRUE.}, the magnetic cross terms power spectra (TB and EB) are
 included;
 only applies to dtype='CL' \\
 %
-\optional{deriv     } & I4B & IN & 
-order of derivatives to included in FITS file (0, 1 or 2); 
+\optional{deriv\mytarget{sub:write_minimal_header:deriv}     } & I4B & IN & 
+order\mytarget{sub:write_minimal_header:order} of derivatives to included in FITS file (0, 1 or 2); 
 only applies to dtype='MAP'
 
 \end{tabular}

@@ -39,8 +39,18 @@ with
 \end{facility}
 
 \begin{f90format}
-{nsmax, nlmax, nmmax, iter\_order, map\_TQU, alm\_TGC [, zbounds, w8ring\_TQU ,
-plm, mask]}
+{\mylink{sub:map2alm_iterative:nsmax}{nsmax}%
+, \mylink{sub:map2alm_iterative:nlmax}{nlmax}%
+, \mylink{sub:map2alm_iterative:nmmax}{nmmax}%
+, \mylink{sub:map2alm_iterative:iter_order}{iter\_order}%
+, \mylink{sub:map2alm_iterative:map_TQU}{map\_TQU}%
+, \mylink{sub:map2alm_iterative:alm_TGC}{alm\_TGC}%
+ [, \mylink{sub:map2alm_iterative:zbounds}{zbounds}%
+, \mylink{sub:map2alm_iterative:w8ring_TQU}{w8ring\_TQU}%
+ ,
+\mylink{sub:map2alm_iterative:plm}{plm}%
+, \mylink{sub:map2alm_iterative:mask}{mask}%
+]}
 \end{f90format}
 
 %\newpage
@@ -49,26 +59,26 @@ plm, mask]}
 \begin{tabular}{p{0.38\hsize} p{0.05\hsize} p{0.07\hsize} p{0.40\hsize}} \hline  
 \textbf{name~\&~dimensionality} & \textbf{kind} & \textbf{in/out} & \textbf{description} \\ \hline
                    &   &   &                           \\ %%% for presentation
-nsmax & I4B & IN & the $N_{side}$ value of the map to analyse. \\
-nlmax & I4B & IN & the maximum $\ell$ value for the analysis. \\
-nmmax & I4B & IN & the maximum $m$ value for the analysis. \\
+nsmax\mytarget{sub:map2alm_iterative:nsmax} & I4B & IN & the $N_{side}$ value of the map to analyse. \\
+nlmax\mytarget{sub:map2alm_iterative:nlmax} & I4B & IN & the maximum $\ell$ value for the analysis. \\
+nmmax\mytarget{sub:map2alm_iterative:nmmax} & I4B & IN & the maximum $m$ value for the analysis. \\
 %
-iter\_order & I4B & IN & the order of Jacobi iteration. Increasing that order
+iter\_order\mytarget{sub:map2alm_iterative:iter_order} & I4B & IN & the order of Jacobi iteration. Increasing that order
 improves the accuracy of the final $a_{lm}$ but increases the computation time $
 T_{\rm CPU} \propto 1 + 2 \times $iter\_order. 
-iter\_order $=0$ is a straight analysis, while iter\_order $=3$ is usually a
+iter\_order\mytarget{sub:map2alm_iterative:iter_order} $=0$ is a straight analysis, while iter\_order $=3$ is usually a
 good compromise. \\
 %
-map\_TQU(0:12*nsmax**2-1, 1:p) & SP/ DP & INOUT & input map. $p$ is 1 or 3
+map\_TQU\mytarget{sub:map2alm_iterative:map_TQU}(0:12*nsmax**2-1, 1:p) & SP/ DP & INOUT & input map. $p$ is 1 or 3
 depending if temperature (T) only or temperature and polarisation (T, Q, U) are
 to be analysed. It will be altered on output if a mask is provided.\\
 %
-alm\_TGC(1:p, 0:nlmax, 0:nmmax) & SPC/ DPC & OUT & The $a_{lm}$ values output
+alm\_TGC\mytarget{sub:map2alm_iterative:alm_TGC}(1:p, 0:nlmax, 0:nmmax) & SPC/ DPC & OUT & The $a_{lm}$ values output
 from the analysis. 
 $p$ is 1 or 3 depending on whether polarisation is included or not. In the former
 case, the first index is (1,2,3) corresponding to (T,E,B). \\
 %
-zbounds(1:2), \hskip 6cm OPTIONAL  & DP & IN & section of the map on which to perform the $a_{lm}$
+zbounds\mytarget{sub:map2alm_iterative:zbounds}(1:2), \hskip 6cm OPTIONAL  & DP & IN & section of the map on which to perform the $a_{lm}$
                    analysis, expressed in terms of $z=\sin({\rm latitude}) =
                    \cos(\theta).$ If zbounds(1)$<$zbounds(2), the analysis is
                    performed {\em on} the strip zbounds(1)$<z<$zbounds(2); if not,
@@ -76,20 +86,20 @@ zbounds(1:2), \hskip 6cm OPTIONAL  & DP & IN & section of the map on which to pe
                    zbounds(2)$<z<$zbounds(1). If absent, the whole map is
 analyzed\\
 %
-w8ring\_TQU(1:2*nsmax,1:p), \hskip 6cm OPTIONAL  & DP & IN & ring weights for
+w8ring\_TQU\mytarget{sub:map2alm_iterative:w8ring_TQU}(1:2*nsmax,1:p), \hskip 6cm OPTIONAL  & DP & IN & ring weights for
 quadrature corrections. p is 1 for a temperature analysis and 3 for (T,Q,U). If absent, the
 ring weights are all set to 1.\\
 %
-plm(0:,1:p), \hskip 6cm OPTIONAL & DP & IN & If this
+plm\mytarget{sub:map2alm_iterative:plm}(0:,1:p), \hskip 6cm OPTIONAL & DP & IN & If this
 optional matrix is passed, precomputed scalar (and tensor) $P_{lm}(\theta)$ are
 used instead of recursion. \\
 %
 \end{tabular}
 
 \begin{tabular}{p{0.38\hsize} p{0.05\hsize} p{0.07\hsize} p{0.40\hsize}}   \hline  
-mask(0:12*nsmax**2-1,1:q), \hskip 6cm OPTIONAL & SP/ DP & IN & pixel mask,
+mask\mytarget{sub:map2alm_iterative:mask}(0:12*nsmax**2-1,1:q), \hskip 6cm OPTIONAL & SP/ DP & IN & pixel mask,
 assumed to have the same resolution (and RING ordering) as the map. The map {\tt
-map\_TQU} is
+map\_TQU\mytarget{sub:map2alm_iterative:map_TQU}} is
 multiplied by that mask before being analyzed, and will therefore be altered on
 output. 
 $q$ should be in $\{1,2,3\}$. If $p=q=3$, then each of

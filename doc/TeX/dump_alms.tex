@@ -15,7 +15,13 @@
 \end{facility}
 
 \begin{f90format}
-{filename, alms, nlmax, header, nlheader, extno}
+{\mylink{sub:dump_alms:filename}{filename}%
+, \mylink{sub:dump_alms:alms}{alms}%
+, \mylink{sub:dump_alms:nlmax}{nlmax}%
+, \mylink{sub:dump_alms:header}{header}%
+, \mylink{sub:dump_alms:nlheader}{nlheader}%
+, \mylink{sub:dump_alms:extno}{extno}%
+}
 \end{f90format}
 
 \begin{arguments}
@@ -23,13 +29,13 @@
 \begin{tabular}{p{0.4\hsize} p{0.05\hsize} p{0.1\hsize} p{0.35\hsize}} \hline  
 \textbf{name~\&~dimensionality} & \textbf{kind} & \textbf{in/out} & \textbf{description} \\ \hline
                    &   &   &                           \\ %%% for presentation
-filename(LEN=\filenamelen) & CHR & IN & filename for the FITS-file to store the $a_{lm}$ in. \\
-nlmax & I4B & IN & maximum $\ell$ value to store. \\
-alms(0:nlmax,0:nlmax) & SPC/ DPC & IN & array with $a_{lm}$, in the format used
+filename\mytarget{sub:dump_alms:filename}(LEN=\filenamelen) & CHR & IN & filename for the FITS-file to store the $a_{lm}$ in. \\
+nlmax\mytarget{sub:dump_alms:nlmax} & I4B & IN & maximum $\ell$ value to store. \\
+alms\mytarget{sub:dump_alms:alms}(0:nlmax,0:nlmax) & SPC/ DPC & IN & array with $a_{lm}$, in the format used
 by eg. \htmlref{map2alm}{sub:map2alm}, so {\tt alms(l,m)} corresponds to  $a_{lm}$  \\
-extno & I4B & IN & extension number. If 0 is specified, a FITS file is created and $a_{lm}$ is stored in the first FITS extension as temperature $a_{lm}$. If 1 or 2 is specified, an already existing file is opened and a 2nd or 3rd extension is created, treating $a_{lm}$ as $a_{lm}^E$ or $a_{lm}^B$. \\
-nlheader & I4B & IN & number of header lines to write to the file. \\
-header(LEN=80) (1:nlheader) & CHR & IN & the header to the FITS-file. \\ 
+extno\mytarget{sub:dump_alms:extno} & I4B & IN & extension number. If 0 is specified, a FITS file is created and $a_{lm}$ is stored in the first FITS extension as temperature $a_{lm}$. If 1 or 2 is specified, an already existing file is opened and a 2nd or 3rd extension is created, treating $a_{lm}$ as $a_{lm}^E$ or $a_{lm}^B$. \\
+nlheader\mytarget{sub:dump_alms:nlheader} & I4B & IN & number of header lines to write to the file. \\
+header\mytarget{sub:dump_alms:header}(LEN=80) (1:nlheader) & CHR & IN & the header to the FITS-file. \\ 
 \end{tabular}
 }
 \end{arguments}

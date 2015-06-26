@@ -15,7 +15,13 @@ system to another.}
 \end{facility}
 
 \begin{f90format}
-{ivector, iepoch, oepoch, isys, osys, ovector}
+{\mylink{sub:xcc_v_convert:ivector}{ivector}%
+, \mylink{sub:xcc_v_convert:iepoch}{iepoch}%
+, \mylink{sub:xcc_v_convert:oepoch}{oepoch}%
+, \mylink{sub:xcc_v_convert:isys}{isys}%
+, \mylink{sub:xcc_v_convert:osys}{osys}%
+, \mylink{sub:xcc_v_convert:ovector}{ovector}%
+}
 \end{f90format}
 
 \begin{arguments}
@@ -23,13 +29,13 @@ system to another.}
 \begin{tabular}{p{0.26\hsize} p{0.05\hsize} p{0.09\hsize} p{0.50\hsize}} \hline  
 \textbf{name~\&~dimensionality} & \textbf{kind} & \textbf{in/out} & \textbf{description} \\ \hline
                    &   &   &                           \\ %%% for presentation
-ivector(1:3) & DP & IN & 3D coordinate vector of one astronomical object, 
+ivector\mytarget{sub:xcc_v_convert:ivector}(1:3) & DP & IN & 3D coordinate vector of one astronomical object, 
  in the input coordinate system.\\
-iepoch & DP & IN & epoch of the input astronomical coordinate system.\\
-oepoch & DP & IN & epoch of the output astronomical coordinate system.\\
-isys(len=*) & CHR & IN & input coordinate system, should be one of 'E'=Ecliptic, 'G'=Galactic, 'C'/'Q'=Celestial/eQuatorial.\\
-osys(len=*) & CHR & IN & output coordinate system, same choice as above.\\
-ovector(1:3) & DP & IN & 3D coordinate vector of the same object, 
+iepoch\mytarget{sub:xcc_v_convert:iepoch} & DP & IN & epoch of the input astronomical coordinate system.\\
+oepoch\mytarget{sub:xcc_v_convert:oepoch} & DP & IN & epoch of the output astronomical coordinate system.\\
+isys\mytarget{sub:xcc_v_convert:isys}(len=*) & CHR & IN & input coordinate system, should be one of 'E'=Ecliptic, 'G'=Galactic, 'C'/'Q'=Celestial/eQuatorial.\\
+osys\mytarget{sub:xcc_v_convert:osys}(len=*) & CHR & IN & output coordinate system, same choice as above.\\
+ovector\mytarget{sub:xcc_v_convert:ovector}(1:3) & DP & IN & 3D coordinate vector of the same object, 
  in the output coordinate system.\\
 \end{tabular}
 }

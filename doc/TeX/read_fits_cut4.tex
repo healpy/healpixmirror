@@ -16,7 +16,16 @@ FITS file follows the one used for Boomerang98 and is adapted from COBE/DMR}
 \end{facility}
 
 \begin{f90format}
-{filename, np, pixel, \optional{[signal, n\_obs, serror, header, units, extno]}}
+{\mylink{sub:read_fits_cut4:filename}{filename}%
+, \mylink{sub:read_fits_cut4:np}{np}%
+, \mylink{sub:read_fits_cut4:pixel}{pixel}%
+, \optional{[\mylink{sub:read_fits_cut4:signal}{signal}%
+, \mylink{sub:read_fits_cut4:n_obs}{n\_obs}%
+, \mylink{sub:read_fits_cut4:serror}{serror}%
+, \mylink{sub:read_fits_cut4:header}{header}%
+, \mylink{sub:read_fits_cut4:units}{units}%
+, \mylink{sub:read_fits_cut4:extno}{extno}%
+]}}
 \end{f90format}
 \aboutoptional
 
@@ -25,18 +34,18 @@ FITS file follows the one used for Boomerang98 and is adapted from COBE/DMR}
 \begin{tabular}{p{0.3\hsize} p{0.05\hsize} p{0.05\hsize} p{0.5\hsize}} \hline  
 \textbf{name\&dimensionality} & \textbf{kind} & \textbf{in/out} & \textbf{description} \\ \hline
                    &   &   &                           \\ %%% for presentation
-filename(LEN=\filenamelen) & CHR & IN & FITS file to be read from,
+filename\mytarget{sub:read_fits_cut4:filename}(LEN=\filenamelen) & CHR & IN & FITS file to be read from,
                    containing a cut sky map \\
-np               & I4B & IN & number of pixels to be read from the file \\
-pixel(0:np-1)    & I4B & OUT & index of observed (or valid) pixels \\
-\optional{signal}(0:np-1)\hskip 2cm  (OPTIONAL)     & SP & OUT & value of signal in each observed pixel\\
-\optional{n\_obs}(0:np-1)     & I4B & OUT & number of observation per pixel \\
-\optional{serror}(0:np-1)     & SP  & OUT & {\em rms} of signal in pixel. (For white noise,
+np\mytarget{sub:read_fits_cut4:np}               & I4B & IN & number of pixels to be read from the file \\
+pixel\mytarget{sub:read_fits_cut4:pixel}(0:np-1)    & I4B & OUT & index of observed (or valid) pixels \\
+\optional{signal\mytarget{sub:read_fits_cut4:signal}}(0:np-1)\hskip 2cm  (OPTIONAL)     & SP & OUT & value of signal in each observed pixel\\
+\optional{n\_obs\mytarget{sub:read_fits_cut4:n_obs}}(0:np-1)     & I4B & OUT & number of observation per pixel \\
+\optional{serror\mytarget{sub:read_fits_cut4:serror}}(0:np-1)     & SP  & OUT & {\em rms} of signal in pixel. (For white noise,
                    this would be $\myhtmlimage{}\propto 1/\sqrt{{\rm n\_obs}}$) \\
-\optional{header}(LEN=80)(1:)    & CHR & OUT &   FITS extension header \\
-\optional{units}(LEN=20)       & CHR & OUT &  maps units (applies only to
+\optional{header\mytarget{sub:read_fits_cut4:header}}(LEN=80)(1:)    & CHR & OUT &   FITS extension header \\
+\optional{units\mytarget{sub:read_fits_cut4:units}}(LEN=20)       & CHR & OUT &  maps units (applies only to
                    Signal and Serror, which are assumed to have the same units) \\
-\optional{extno}  & I4B & IN & extension number (0 based) for which map
+\optional{extno\mytarget{sub:read_fits_cut4:extno}}  & I4B & IN & extension number (0 based) for which map
              is read. Default = 0 (first extension). 
 \end{tabular}
 }

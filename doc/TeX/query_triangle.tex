@@ -15,7 +15,15 @@
 \end{facility}
 
 \begin{f90format}
-{nside, v1, v2, v3, listpix, nlist [, nest, inclusive]}
+{\mylink{sub:query_triangle:nside}{nside}%
+, \mylink{sub:query_triangle:v1}{v1}%
+, \mylink{sub:query_triangle:v2}{v2}%
+, \mylink{sub:query_triangle:v3}{v3}%
+, \mylink{sub:query_triangle:listpix}{listpix}%
+, \mylink{sub:query_triangle:nlist}{nlist}%
+ [, \mylink{sub:query_triangle:nest}{nest}%
+, \mylink{sub:query_triangle:inclusive}{inclusive}%
+]}
 \end{f90format}
 
 \begin{arguments}
@@ -23,14 +31,14 @@
 \begin{tabular}{p{0.28\hsize} p{0.05\hsize} p{0.1\hsize} p{0.47\hsize}} \hline 
 \textbf{name\&dimensionality} & \textbf{kind} & \textbf{in/out} & \textbf{description} \\ \hline
                    &   &   &                           \\ %%% for presentation
-nside & I4B & IN & the $\nside$ parameter of the map. \\
-v1(3) & DP & IN & cartesian vector pointing at the triangle first vertex. \\
-v2(3) & DP & IN & cartesian vector pointing at the triangle second vertex. \\
-v3(3) & DP & IN & cartesian vector pointing at the triangle third vertex. \\
-listpix(0:*) & I4B/ I8B & OUT & the index for all pixels enclosed in the triangle. Make sure that the size of the array is big enough to contain all pixels. \\ 
-nlist & I4B/ I8B & OUT & The number of pixels listed in {\tt listpix}. \\
-nest\ \ (OPTIONAL) & I4B & IN &  The pixel indices are in the NESTED numbering scheme if nest=1, and in RING scheme otherwise. \\
-inclusive\ \ (OPTIONAL) & I4B & IN & If set to 1, all the pixels overlapping
+nside\mytarget{sub:query_triangle:nside} & I4B & IN & the $\nside$ parameter of the map. \\
+v1\mytarget{sub:query_triangle:v1}(3) & DP & IN & cartesian vector pointing at the triangle first vertex. \\
+v2\mytarget{sub:query_triangle:v2}(3) & DP & IN & cartesian vector pointing at the triangle second vertex. \\
+v3\mytarget{sub:query_triangle:v3}(3) & DP & IN & cartesian vector pointing at the triangle third vertex. \\
+listpix\mytarget{sub:query_triangle:listpix}(0:*) & I4B/ I8B & OUT & the index for all pixels enclosed in the triangle. Make sure that the size of the array is big enough to contain all pixels. \\ 
+nlist\mytarget{sub:query_triangle:nlist} & I4B/ I8B & OUT & The number of pixels listed in {\tt listpix}. \\
+nest\mytarget{sub:query_triangle:nest}\ \ (OPTIONAL) & I4B & IN &  The pixel indices are in the NESTED numbering scheme if nest=1, and in RING scheme otherwise. \\
+inclusive\mytarget{sub:query_triangle:inclusive}\ \ (OPTIONAL) & I4B & IN & If set to 1, all the pixels overlapping
                    (even partially)
                    with the triangle are listed, otherwise only those whose
                    center lies within the triangle are listed. \\

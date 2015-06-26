@@ -19,7 +19,12 @@ the MPI communicator.
 \end{facility}
 
 \begin{f90format}
-{comm, map, alms, [zbounds], [w8ring]}
+{\mylink{sub:mpi_map2alm_simple:comm}{comm}%
+, \mylink{sub:mpi_map2alm_simple:map}{map}%
+, \mylink{sub:mpi_map2alm_simple:alms}{alms}%
+, [\mylink{sub:mpi_map2alm_simple:zbounds}{zbounds}%
+], [\mylink{sub:mpi_map2alm_simple:w8ring}{w8ring}%
+]}
 \end{f90format}
 
 \begin{arguments}
@@ -27,14 +32,14 @@ the MPI communicator.
 \begin{tabular}{p{0.4\hsize} p{0.05\hsize} p{0.05\hsize} p{0.40\hsize}} \hline  
 \textbf{name~\&~dimensionality} & \textbf{kind} & \textbf{in/out} & \textbf{description} \\ \hline
                    &   &   &                           \\ %%% for presentation
-comm & I4B & IN & MPI communicator. \\
-map(0:npix-1,1:nmaps) & SP or DP & IN & input map. If
+comm\mytarget{sub:mpi_map2alm_simple:comm} & I4B & IN & MPI communicator. \\
+map\mytarget{sub:mpi_map2alm_simple:map}(0:npix-1,1:nmaps) & SP or DP & IN & input map. If
 nmaps=1, only temperature information is included; if nmaps=3,
 polarization information is included\\
-alms(1:nmaps,0:lmax,0:nmax) & SPC or DPC & IN & output alms. 
+alms\mytarget{sub:mpi_map2alm_simple:alms}(1:nmaps,0:lmax,0:nmax) & SPC or DPC & IN & output alms. 
 nmaps must
 equal that of the input map\\
-zbounds(1:2) & DP & IN & section of the map on which to perform the $a_{lm}$
+zbounds\mytarget{sub:mpi_map2alm_simple:zbounds}(1:2) & DP & IN & section of the map on which to perform the $a_{lm}$
                    analysis, expressed in terms of $z=\sin({\rm latitude}) =
                    \cos(\theta)$. If zbounds(1)$<$zbounds(2), the analysis is
                    performed {\em on} the strip zbounds(1)$<z<$zbounds(2); if not,
@@ -42,7 +47,7 @@ zbounds(1:2) & DP & IN & section of the map on which to perform the $a_{lm}$
                    zbounds(2)$<z<$zbounds(1). (OPTIONAL) \\
 \end{tabular}
 \begin{tabular}{p{0.4\hsize} p{0.05\hsize} p{0.05\hsize} p{0.40\hsize}} \hline  
-w8ring\_TQU(1:2*nsmax, 1:p) & DP & IN & ring weights for quadrature corrections. If ring weights are not used, this array should be 1 everywhere. p is 1 for a temperature analysis and 3 for (T,Q,U). (OPTIONAL)\\
+w8ring\mytarget{sub:mpi_map2alm_simple:w8ring}\_TQU(1:2*nsmax, 1:p) & DP & IN & ring weights for quadrature corrections. If ring weights are not used, this array should be 1 everywhere. p is 1 for a temperature analysis and 3 for (T,Q,U). (OPTIONAL)\\
 \end{tabular}
 }
 \end{arguments}

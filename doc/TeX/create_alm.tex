@@ -20,8 +20,20 @@ and a pixel window read from an external file.}
 \end{facility}
 
 \begin{f90format}
-{nsmax, nlmax, nmmax, polar, filename, rng\_handle, fwhm\_arcmin, alm\_TGC, header \optional{[,
-windowfile, units, beam\_file]}}
+{\mylink{sub:create_alm:nsmax}{nsmax}%
+, \mylink{sub:create_alm:nlmax}{nlmax}%
+, \mylink{sub:create_alm:nmmax}{nmmax}%
+, \mylink{sub:create_alm:polar}{polar}%
+, \mylink{sub:create_alm:filename}{filename}%
+, \mylink{sub:create_alm:rng_handle}{rng\_handle}%
+, \mylink{sub:create_alm:fwhm_arcmin}{fwhm\_arcmin}%
+, \mylink{sub:create_alm:alm_TGC}{alm\_TGC}%
+, \mylink{sub:create_alm:header}{header}%
+ \optional{[,
+\mylink{sub:create_alm:windowfile}{windowfile}%
+, \mylink{sub:create_alm:units}{units}%
+, \mylink{sub:create_alm:beam_file}{beam\_file}%
+]}}
 \end{f90format}
 \aboutoptional
 
@@ -30,13 +42,13 @@ windowfile, units, beam\_file]}}
 \begin{tabular}{p{0.4\hsize} p{0.05\hsize} p{0.1\hsize} p{0.35\hsize}} \hline  
 \textbf{name~\&~dimensionality} & \textbf{kind} & \textbf{in/out} & \textbf{description} \\ \hline
                    &   &   &                           \\ %%% for presentation
-nsmax & I4B & IN & $\nside$ of the map to be synthetized from the $a_{\ell m}$
+nsmax\mytarget{sub:create_alm:nsmax} & I4B & IN & $\nside$ of the map to be synthetized from the $a_{\ell m}$
                    created by this routine. \\ 
-nlmax & I4B & IN & maximum $\ell$ value to be considered (MAX=$4\nside$
+nlmax\mytarget{sub:create_alm:nlmax} & I4B & IN & maximum $\ell$ value to be considered (MAX=$4\nside$
 if {\tt windowfile} is provided).   \\
-nmmax & I4B & IN & maximum $m$ value for the $a_{\ell m}$.   \\
+nmmax\mytarget{sub:create_alm:nmmax} & I4B & IN & maximum $m$ value for the $a_{\ell m}$.   \\
 %
-polar & I4B & IN & if set to 0, only Temperature (scalar) $a_{\ell m}$ are
+polar\mytarget{sub:create_alm:polar} & I4B & IN & if set to 0, only Temperature (scalar) $a_{\ell m}$ are
 generated. If set to 1, 'conventional' polarization is added. If set to 2, and if
 the relevant information is in {\tt filename}, polarization is generated
 assuming non-zero correlation of Curl (B) modes with Temperature (T) and Gradient
@@ -46,7 +58,7 @@ assuming non-zero correlation of Curl (B) modes with Temperature (T) and Gradien
 \begin{tabular}{p{0.4\hsize} p{0.05\hsize} p{0.1\hsize} p{0.35\hsize}} \hline  
 %--------------------------------
 %
-filename(LEN=\filenamelen) & CHR & IN & name of FITS file containing power
+filename\mytarget{sub:create_alm:filename}(LEN=\filenamelen) & CHR & IN & name of FITS file containing power
 spectra in the order TT, [EE, BB, TE, [TB, EB]] (terms in brackets are optional) \\
 %% iseed & I4B & INOUT & seed for generation of gaussian distributed random numbers
 %%                    to the $a_{\ell m}$. 
@@ -54,29 +66,29 @@ spectra in the order TT, [EE, BB, TE, [TB, EB]] (terms in brackets are optional)
 %%                    random number generator. On exit iseed will be positive
 %%                    definite. If set to a positive value, the information contained in {\tt
 %%                    rng\_handle} will be used to carry on an existing random sequence.\\
-rng\_handle & \htmlref{planck\_rng}{sub:planck_rng} & \hskip 2cm INOUT & structure containing
+rng\_handle\mytarget{sub:create_alm:rng_handle} & \htmlref{planck\_rng}{sub:planck_rng} & \hskip 2cm INOUT & structure containing
 information necessary to continue a random sequence
 initiated {\em previously} with the 
 subroutine \htmlref{{\tt rand\_init}}{sub:rand_init}. Consecutive calls to \thedocid {} can be made after a
 single invocation to \htmlref{{\tt rand\_init}}{sub:rand_init}.\\
 %
-fwhm\_arcmin & SP/ DP & IN & FWHM size of the gaussian beam in arcminutes. \\
+fwhm\_arcmin\mytarget{sub:create_alm:fwhm_arcmin} & SP/ DP & IN & FWHM size of the gaussian beam in arcminutes. \\
 %
-alm\_TGC(1:p,0:nlmax,0:nmmax) & SPC/ DPC & OUT & complex $a_{\ell m}$ values
+alm\_TGC\mytarget{sub:create_alm:alm_TGC}(1:p,0:nlmax,0:nmmax) & SPC/ DPC & OUT & complex $a_{\ell m}$ values
 generated from the powerspectrum in the FITS-file. The first index here runs
 form 1:1 for temperature only, and 1:3 for polarisation. In the latter case,
 1=T, 2=E, 3=B. \\
 %
-header(LEN=80),dimension(60) & CHR & OUT & part of header  which
+header\mytarget{sub:create_alm:header}(LEN=80),dimension(60) & CHR & OUT & part of header  which
 will be included in the FITS-file containing the
 map  synthesised from the $a_{\ell m}$  which create\_alm generates. \\
 %
-\optional{windowfile}(LEN=\filenamelen) & CHR & IN & full filename specification
+\optional{windowfile\mytarget{sub:create_alm:windowfile}}(LEN=\filenamelen) & CHR & IN & full filename specification
 of the FITS file with the pixel window function (defined for $\ell\le4 \nside$) \\
 %
-\optional{units}(LEN=80),dimension(1:) & CHR & OUT & physical units of the created
+\optional{units\mytarget{sub:create_alm:units}}(LEN=80),dimension(1:) & CHR & OUT & physical units of the created
 $a_{\ell m}$ (square-root of the input power spectrum units). \\
-\optional{beam\_file}(LEN=\filenamelen) & CHR & IN & name of the file containing
+\optional{beam\_file\mytarget{sub:create_alm:beam_file}}(LEN=\filenamelen) & CHR & IN & name of the file containing
 the (non necessarily gaussian) window function $B_\ell$ of a circular beam. If present, it will override
 the argument {\tt fwhm\_arcmin}. \\
 \end{tabular}

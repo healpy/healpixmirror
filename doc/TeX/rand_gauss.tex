@@ -17,7 +17,8 @@
 \end{facility}
 
 \begin{f90function}
-{rng\_handle}
+{\mylink{sub:rand_gauss:rng_handle}{rng\_handle}%
+}
 \end{f90function}
 
 \begin{arguments}
@@ -25,7 +26,7 @@
 \begin{tabular}{p{0.3\hsize} p{0.15\hsize} p{0.1\hsize} p{0.35\hsize}} \hline  
 \textbf{name~\&~dimensionality} & \textbf{kind} & \textbf{in/out} & \textbf{description} \\ \hline
                    &   &   &                           \\ %%% for presentation
-rng\_handle & planck\_rng & INOUT & structure of type {\tt planck\_rng}
+rng\_handle\mytarget{sub:rand_gauss:rng_handle} & planck\_rng & INOUT & structure of type {\tt planck\_rng}
                    containing on all information necessary to continue same
                    random sequence. \\ 
 var & DP & OUT & number belonging to a pseudo-random normal deviate.

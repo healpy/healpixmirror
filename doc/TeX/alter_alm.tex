@@ -19,7 +19,14 @@
 \end{facility}
 
 \begin{f90format}
-{nsmax, nlmax, nmmax, fwhm\_arcmin, alm\_TGC [, beam\_file, window]}
+{\mylink{sub:alter_alm:nsmax}{nsmax}%
+, \mylink{sub:alter_alm:nlmax}{nlmax}%
+, \mylink{sub:alter_alm:nmmax}{nmmax}%
+, \mylink{sub:alter_alm:fwhm_arcmin}{fwhm\_arcmin}%
+, \mylink{sub:alter_alm:alm_TGC}{alm\_TGC}%
+ [, \mylink{sub:alter_alm:beam_file}{beam\_file}%
+, \mylink{sub:alter_alm:window}{window}%
+]}
 \end{f90format}
 
 \begin{arguments}
@@ -27,22 +34,22 @@
 \begin{tabular}{p{0.36\hsize} p{0.05\hsize} p{0.09\hsize} p{0.40\hsize}} \hline  
 \textbf{name~\&~dimensionality} & \textbf{kind} & \textbf{in/out} & \textbf{description} \\ \hline
                    &   &   &                           \\ %%% for presentation
-nsmax & I4B & IN & $\nside$ resolution parameter of the map associated with the $a_{lm}$
+nsmax\mytarget{sub:alter_alm:nsmax} & I4B & IN & $\nside$ resolution parameter of the map associated with the $a_{lm}$
                    considered. Currently has no effect on the routine. \\ 
-nlmax & I4B & IN & maximum $\ell$ value for the $a_{\ell m}$.   \\
-nmmax & I4B & IN & maximum $m$ value for the $a_{\ell m}$.   \\
-fwhm\_arcmin & SP/ DP & IN & fwhm size of the gaussian beam in arcminutes. \\
-alm\_TGC(1:p,0:nlmax,0:nmmax) & SPC/ DPC & INOUT & complex $a_{\ell m}$ values
+nlmax\mytarget{sub:alter_alm:nlmax} & I4B & IN & maximum $\ell$ value for the $a_{\ell m}$.   \\
+nmmax\mytarget{sub:alter_alm:nmmax} & I4B & IN & maximum $m$ value for the $a_{\ell m}$.   \\
+fwhm\_arcmin\mytarget{sub:alter_alm:fwhm_arcmin} & SP/ DP & IN & fwhm size of the gaussian beam in arcminutes. \\
+alm\_TGC\mytarget{sub:alter_alm:alm_TGC}(1:p,0:nlmax,0:nmmax) & SPC/ DPC & INOUT & complex $a_{\ell m}$ values
                    to be altered.  The first index here runs from 1:1 for
                    temperature only, and 1:3 for polarisation. In the latter
                    case,  1=T, 2=E, 3=B. \\
 \end{tabular}
 \begin{tabular}{p{0.36\hsize} p{0.05\hsize} p{0.09\hsize} p{0.40\hsize}} \hline  
-beam\_file(LEN=\filenamelen) \hskip 2cm (OPTIONAL)& CHR & IN & name of the file
+beam\_file\mytarget{sub:alter_alm:beam_file}(LEN=\filenamelen) \hskip 2cm (OPTIONAL)& CHR & IN & name of the file
                    containing the (non necessarily gaussian) window function
                    $B_\ell$  of a circular beam. If present, it will override
                    the argument {\tt fwhm\_arcmin}.  \\
-window(0:nlw,1:d) \hskip 5cm (OPTIONAL)& SP/ DP & IN & arbitrary window by which to multiply the
+window\mytarget{sub:alter_alm:window}(0:nlw,1:d) \hskip 5cm (OPTIONAL)& SP/ DP & IN & arbitrary window by which to multiply the
                    $a_{\ell m}$. If present, it overrides both {\tt fwhm\_arcmin}
                    and {\tt beam\_file}. If nlw $<$ nlmax, the $a_{\ell m}$ with
                    $\ell \in \{$nlw+1,nlmax$\}$ are set to 0, and a warning is issued. If $d<p$ the

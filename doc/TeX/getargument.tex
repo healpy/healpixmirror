@@ -15,7 +15,9 @@ a given command line argument.}
 \end{facility}
 
 \begin{f90format}
-{index, value}
+{\mylink{sub:getargument:index}{index}%
+, \mylink{sub:getargument:value}{value}%
+}
 \end{f90format}
 
 \begin{arguments}
@@ -23,9 +25,9 @@ a given command line argument.}
 \begin{tabular}{p{0.3\hsize} p{0.05\hsize} p{0.1\hsize} p{0.45\hsize}} \hline  
 \textbf{name~\&~dimensionality} & \textbf{kind} & \textbf{in/out} & \textbf{description} \\ \hline
                    &   &   &                           \\ %%% for presentation
-index & I4B & IN & index of the command line argument (where the first argument
+index\mytarget{sub:getargument:index} & I4B & IN & index of the command line argument (where the first argument
                    has index 1) \\
-value & CHR & OUT & value of the argument 
+value\mytarget{sub:getargument:value} & CHR & OUT & value of the argument 
 \end{tabular}}
 \end{arguments}
 

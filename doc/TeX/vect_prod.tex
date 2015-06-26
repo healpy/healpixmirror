@@ -15,7 +15,10 @@
 \end{facility}
 
 \begin{f90format}
-{v1, v2, v3}
+{\mylink{sub:vect_prod:v1}{v1}%
+, \mylink{sub:vect_prod:v2}{v2}%
+, \mylink{sub:vect_prod:v3}{v3}%
+}
 \end{f90format}
 
 \begin{arguments}
@@ -23,9 +26,9 @@
 \begin{tabular}{p{0.3\hsize} p{0.05\hsize} p{0.1\hsize} p{0.45\hsize}} \hline 
 \textbf{name~\&~dimensionality} & \textbf{kind} & \textbf{in/out} & \textbf{description} \\ \hline
                    &   &   &                           \\ %%% for presentation
-v1(3) & DP & IN & cartesian vector ${\bf v}_1$. \\
-v2(3) & DP & IN & cartesian vector ${\bf v}_2$. \\
-v3(3) & DP & OUT & cartesian vector ${\bf v}_3 = {\bf v}_1 \times {\bf v}_2$ \\
+v1\mytarget{sub:vect_prod:v1}(3) & DP & IN & cartesian vector ${\bf v}_1$. \\
+v2\mytarget{sub:vect_prod:v2}(3) & DP & IN & cartesian vector ${\bf v}_2$. \\
+v3\mytarget{sub:vect_prod:v3}(3) & DP & OUT & cartesian vector ${\bf v}_3 = {\bf v}_1 \times {\bf v}_2$ \\
 \end{tabular}
 }
 \end{arguments}

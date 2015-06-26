@@ -21,7 +21,9 @@ architecture, but requires extra memory to store a temporary map in. }
 \end{facility}
 
 \begin{f90format}
-{nside, map}
+{\mylink{sub:convert_ring2nest:nside}{nside}%
+, \mylink{sub:convert_ring2nest:map}{map}%
+}
 \end{f90format}
 
 \begin{arguments}
@@ -29,9 +31,9 @@ architecture, but requires extra memory to store a temporary map in. }
 \begin{tabular}{p{0.4\hsize} p{0.05\hsize} p{0.1\hsize} p{0.35\hsize}} \hline  
 \textbf{name~\&~dimensionality} & \textbf{kind} & \textbf{in/out} & \textbf{description} \\ \hline
                    &   &   &                           \\ %%% for presentation
-nside & I4B & IN & the $\nside$ parameter of the map to be converted. \\
-map(0:12*nside**2-1) & I4B/ SP/ DP & INOUT & mono-dimensional full sky map to be converted to RING scheme. \\
-map(0:12*nside**2-1,1:nd) & I4B/ SP/ DP & INOUT & bi-dimensional full sky map to
+nside\mytarget{sub:convert_ring2nest:nside} & I4B & IN & the $\nside$ parameter of the map to be converted. \\
+map\mytarget{sub:convert_ring2nest:map}(0:12*nside**2-1) & I4B/ SP/ DP & INOUT & mono-dimensional full sky map to be converted to RING scheme. \\
+map\mytarget{sub:convert_ring2nest:map}(0:12*nside**2-1,1:nd) & I4B/ SP/ DP & INOUT & bi-dimensional full sky map to
                    be converted to RING scheme. The routine finds the second
                    dimension (nd) by itself. Processing a bidimensional map with
 {\tt nd}$>1$ should be

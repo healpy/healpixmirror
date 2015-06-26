@@ -17,7 +17,11 @@
 \end{facility}
 
 \begin{f90format}
-{fwhm\_arcmin, lmax, beam \optional{[, beam\_file]}}
+{\mylink{sub:generate_beam:fwhm_arcmin}{fwhm\_arcmin}%
+, \mylink{sub:generate_beam:lmax}{lmax}%
+, \mylink{sub:generate_beam:beam}{beam}%
+ \optional{[, \mylink{sub:generate_beam:beam_file}{beam\_file}%
+]}}
 \end{f90format}
 \aboutoptional
 
@@ -26,10 +30,10 @@
 \begin{tabular}{p{0.4\hsize} p{0.05\hsize} p{0.1\hsize} p{0.35\hsize}} \hline  
 \textbf{name~\&~dimensionality} & \textbf{kind} & \textbf{in/out} & \textbf{description} \\ \hline
                    &   &   &                           \\ %%% for presentation
-fwhm\_arcmin & DP & IN & fwhm size of the gaussian beam in arcminutes. \\
-lmax & I4B & IN & maximum $\ell$ value of the window function.   \\
-beam(0:lmax,1:p) & DP & OUT & beam window function generated. The second index runs form 1:1 for temperature only, and 1:3 for polarisation. In the latter case, 1=T, 2=E, 3=B.\\
-\optional{beam\_file}(LEN=\filenamelen) (\nobreak{OPTIONAL})& CHR & IN & name of the file containing
+fwhm\_arcmin\mytarget{sub:generate_beam:fwhm_arcmin} & DP & IN & fwhm size of the gaussian beam in arcminutes. \\
+lmax\mytarget{sub:generate_beam:lmax} & I4B & IN & maximum $\ell$ value of the window function.   \\
+beam\mytarget{sub:generate_beam:beam}(0:lmax,1:p) & DP & OUT & beam window function generated. The second index runs form 1:1 for temperature only, and 1:3 for polarisation. In the latter case, 1=T, 2=E, 3=B.\\
+\optional{beam\mytarget{sub:generate_beam:beam}\_file}(LEN=\filenamelen) (\nobreak{OPTIONAL})& CHR & IN & name of the file containing
 the (non necessarily gaussian) window function $B_\ell$ of a circular beam. If present, it will override
 the argument {\tt fwhm\_arcmin}. If fewer columns than requested are found in
 the file, missing colums will duplicate the existing ones (based on the

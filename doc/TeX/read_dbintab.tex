@@ -15,7 +15,14 @@
 \end{facility}
 
 \begin{f90format}
-{filename, map, npixtot, nmaps, nullval, anynull, units}
+{\mylink{sub:read_dbintab:filename}{filename}%
+, \mylink{sub:read_dbintab:map}{map}%
+, \mylink{sub:read_dbintab:npixtot}{npixtot}%
+, \mylink{sub:read_dbintab:nmaps}{nmaps}%
+, \mylink{sub:read_dbintab:nullval}{nullval}%
+, \mylink{sub:read_dbintab:anynull}{anynull}%
+, \mylink{sub:read_dbintab:units}{units}%
+}
 \end{f90format}
 
 \begin{arguments}
@@ -23,13 +30,13 @@
 \begin{tabular}{p{0.4\hsize} p{0.05\hsize} p{0.1\hsize} p{0.35\hsize}} \hline  
 \textbf{name~\&~dimensionality} & \textbf{kind} & \textbf{in/out} & \textbf{description} \\ \hline
                    &   &   &                           \\ %%% for presentation
-filename(LEN=\filenamelen) & CHR & IN & filename of FITS-file containing the double precision array. \\
-npixtot & I4B & IN & Number of values to be read from the file.\\
-nmaps & I4B & IN & number of 1-dim. arrays, 1 for scalar $P_{lm}\!\!$ s and pixel windows, 3 for scalar and tensor $P_{lm}\!\!$ s. \\
-map(0:npixtot-1,1:nmaps) & DP & OUT & the array read from the FITS-file.\\
-nullval & DP & OUT & value of missing pixels in the array. \\
-anynull & LGT & OUT & TRUE, if there are missing pixels, and FALSE otherwise. \\
-units(len=20)(1:nmaps) & CHR & OUT & respective physical units of the maps in the FITS file.
+filename\mytarget{sub:read_dbintab:filename}(LEN=\filenamelen) & CHR & IN & filename of FITS-file containing the double precision array. \\
+npixtot\mytarget{sub:read_dbintab:npixtot} & I4B & IN & Number of values to be read from the file.\\
+nmaps\mytarget{sub:read_dbintab:nmaps} & I4B & IN & number of 1-dim. arrays, 1 for scalar $P_{lm}\!\!$ s and pixel windows, 3 for scalar and tensor $P_{lm}\!\!$ s. \\
+map\mytarget{sub:read_dbintab:map}(0:npixtot-1,1:nmaps) & DP & OUT & the array read from the FITS-file.\\
+nullval\mytarget{sub:read_dbintab:nullval} & DP & OUT & value of missing pixels in the array. \\
+anynull\mytarget{sub:read_dbintab:anynull} & LGT & OUT & TRUE, if there are missing pixels, and FALSE otherwise. \\
+units\mytarget{sub:read_dbintab:units}(len=20)(1:nmaps) & CHR & OUT & respective physical units of the maps in the FITS file.
 \end{tabular}
 }
 \end{arguments}

@@ -15,7 +15,10 @@
 \end{facility}
 
 \begin{f90function}
-{data [,~badval, even]}
+{\mylink{sub:median:data}{data}%
+ [,~\mylink{sub:median:badval}{badval}%
+, \mylink{sub:median:even}{even}%
+]}
 \end{f90function}
 
 \begin{arguments}
@@ -26,11 +29,11 @@
 var & SP/ DP & OUT & median of the data set, defined as the middle number (or
                    the average of the 2 middle numbers) once the valid data points are
                    sorted in monotonous order\\
-data(:) & SP/ DP & IN & data set \\
-badval \hskip 3cm (OPTIONAL) & SP/ DP & IN & sentinel value given to bad data points. Data points with this
+data\mytarget{sub:median:data}(:) & SP/ DP & IN & data set \\
+badval\mytarget{sub:median:badval} \hskip 3cm (OPTIONAL) & SP/ DP & IN & sentinel value given to bad data points. Data points with this
                    value will be ignored during calculation of the median. If
                    not set, all points will be considered. {\bf Do not set to 0!}.\\
-even \hskip 4cm (OPTIONAL) & LGT & IN & if set to {\tt .true.} and the number of
+even\mytarget{sub:median:even} \hskip 4cm (OPTIONAL) & LGT & IN & if set to {\tt .true.} and the number of
                    valid data points is even, will output the average of the 2
                    middle points (which doubles the calculation time). If the
                    number of points is odd, the single middle point is output

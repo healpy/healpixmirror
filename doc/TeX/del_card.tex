@@ -14,7 +14,9 @@
 \end{facility}
 
 \begin{f90format}
-{header, kwds}
+{\mylink{sub:del_card:header}{header}%
+, \mylink{sub:del_card:kwds}{kwds}%
+}
 \end{f90format}
 
 \begin{arguments}
@@ -22,12 +24,12 @@
 \begin{tabular}{p{0.4\hsize} p{0.05\hsize} p{0.1\hsize} p{0.35\hsize}} \hline  
 \textbf{name~\&~dimensionality} & \textbf{kind} & \textbf{in/out} & \textbf{description} \\ \hline
                    &   &   &                           \\ %%% for presentation
-header(LEN=80)(1:nlheader) & CHR & INOUT & The header to remove the keyword(s)
+header\mytarget{sub:del_card:header}(LEN=80)(1:nlheader) & CHR & INOUT & The header to remove the keyword(s)
                    from. The routines finds out the header size.\\
-kwds(LEN=20)(1:nkws) & CHR & IN & list of FITS keywords to
+kwds\mytarget{sub:del_card:kwds}(LEN=20)(1:nkws) & CHR & IN & list of FITS keywords to
                    remove. The routine accepts either a vector a keywords or a
                    single one in a scalar variable\\
-kwds(LEN=20)  & CHR & IN & the one FITS keyword to
+kwds\mytarget{sub:del_card:kwds}(LEN=20)  & CHR & IN & the one FITS keyword to
                    remove.\\
 \end{tabular}
 }

@@ -16,7 +16,13 @@
 \end{facility}
 
 \begin{f90format}
-{in\_map, radius, med\_map \hfill [,~nest, fmissval, fill\_holes]}
+{\mylink{sub:medfiltmap:in_map}{in\_map}%
+, \mylink{sub:medfiltmap:radius}{radius}%
+, \mylink{sub:medfiltmap:med_map}{med\_map}%
+ \hfill [,~\mylink{sub:medfiltmap:nest}{nest}%
+, \mylink{sub:medfiltmap:fmissval}{fmissval}%
+, \mylink{sub:medfiltmap:fill_holes}{fill\_holes}%
+]}
 \end{f90format}
 
 \begin{arguments}
@@ -24,19 +30,19 @@
 \begin{tabular}{p{0.30\hsize} p{0.05\hsize} p{0.05\hsize} p{0.50\hsize}} \hline  
 \textbf{name~\&~dimensionality} & \textbf{kind} & \textbf{in/out} & \textbf{description} \\ \hline
                    &   &   &                           \\ %%% for presentation
-in\_map(0:npix-1) & SP/ DP & IN & Full sky \healpix map to filter. {\tt npix}
+in\_map\mytarget{sub:medfiltmap:in_map}(0:npix-1) & SP/ DP & IN & Full sky \healpix map to filter. {\tt npix}
                    should be valid \healpix pixel number. \\
-radius & DP & IN & Radius in RADIANS of the disk on which the median is
+radius\mytarget{sub:medfiltmap:radius} & DP & IN & Radius in RADIANS of the disk on which the median is
                    computed. \\
-med\_map(0:npix-1) & SP/ DP & OUT & Median filtered map: each pixel is the
+med\_map\mytarget{sub:medfiltmap:med_map}(0:npix-1) & SP/ DP & OUT & Median filtered map: each pixel is the
                    median of the input map valid neighboring pixels contained
                    within a distance {\tt radius} \\
-nest \hskip 1cm OPTIONAL & I4B & IN & set to 1 if the map ordering is NESTED, set to 0 if
+nest\mytarget{sub:medfiltmap:nest} \hskip 1cm OPTIONAL & I4B & IN & set to 1 if the map ordering is NESTED, set to 0 if
                    it is RING. \\
-fmissval \hskip 1cm OPTIONAL & SP/ DP & IN & sentinel value given to missing or
+fmissval\mytarget{sub:medfiltmap:fmissval} \hskip 1cm OPTIONAL & SP/ DP & IN & sentinel value given to missing or
                    non-valid pixels. Default: {\tt HPX\_SBADVAL} or {\tt
                    HPX\_DBADVAL} $ = -1.6375\ 10^{30}$ \\
-fill\_holes \hskip 1cm OPTIONAL & LGT & IN & if set to {\tt .true.} will replace
+fill\_holes\mytarget{sub:medfiltmap:fill_holes} \hskip 1cm OPTIONAL & LGT & IN & if set to {\tt .true.} will replace
                    non-valid pixels by median of neighbors; if set to {\tt .false.}
                    will leave non-valid pixels unchanged. Default: {\tt .false.}
 \end{tabular}

@@ -15,7 +15,14 @@
 \end{facility}
 
 \begin{f90format}
-{nsmax, nlmax, nmmax, datain, nph, dataout, kphi0}
+{\mylink{sub:ring_synthesis:nsmax}{nsmax}%
+, \mylink{sub:ring_synthesis:nlmax}{nlmax}%
+, \mylink{sub:ring_synthesis:nmmax}{nmmax}%
+, \mylink{sub:ring_synthesis:datain}{datain}%
+, \mylink{sub:ring_synthesis:nph}{nph}%
+, \mylink{sub:ring_synthesis:dataout}{dataout}%
+, \mylink{sub:ring_synthesis:kphi0}{kphi0}%
+}
 \end{f90format}
 
 \begin{arguments}
@@ -23,13 +30,13 @@
 \begin{tabular}{p{0.4\hsize} p{0.05\hsize} p{0.1\hsize} p{0.35\hsize}} \hline  
 \textbf{name~\&~dimensionality} & \textbf{kind} & \textbf{in/out} & \textbf{description} \\ \hline
                    &   &   &                           \\ %%% for presentation
-nsmax & I4B & IN & $\nside$ of the map.  \\
-nlmax & I4B & IN & Maximum $\ell$ of the analysis. \\
-nmmax & I4B & IN & Maximum $m$ of the analysis. \\
-nph & I4B & IN & The number of points on the ring. \\ 
-datain(0:nmmax) & DPC & IN & Fourier components as computed from the $a_{lm}$. \\
-dataout(0:nph-1) & DP & OUT & Synthesized function values on the ring. \\
-kphi0 & I4B & IN &  0 if the first pixel on the ring is  at
+nsmax\mytarget{sub:ring_synthesis:nsmax} & I4B & IN & $\nside$ of the map.  \\
+nlmax\mytarget{sub:ring_synthesis:nlmax} & I4B & IN & Maximum $\ell$ of the analysis. \\
+nmmax\mytarget{sub:ring_synthesis:nmmax} & I4B & IN & Maximum $m$ of the analysis. \\
+nph\mytarget{sub:ring_synthesis:nph} & I4B & IN & The number of points on the ring. \\ 
+datain\mytarget{sub:ring_synthesis:datain}(0:nmmax) & DPC & IN & Fourier components as computed from the $a_{lm}$. \\
+dataout\mytarget{sub:ring_synthesis:dataout}(0:nph-1) & DP & OUT & Synthesized function values on the ring. \\
+kphi0\mytarget{sub:ring_synthesis:kphi0} & I4B & IN &  0 if the first pixel on the ring is  at
                    $\phi=0$; 1 otherwise. \\
 \end{tabular}
 }

@@ -15,7 +15,9 @@
 \end{facility}
 
 \begin{f90function}
-{filename[, extnum]}
+{\mylink{sub:number_of_alms:filename}{filename}%
+[, \mylink{sub:number_of_alms:extnum}{extnum}%
+]}
 \end{f90function}
 
 \begin{arguments}
@@ -23,9 +25,9 @@
 \begin{tabular}{p{0.4\hsize} p{0.05\hsize} p{0.1\hsize} p{0.35\hsize}} \hline  
 \textbf{name~\&~dimensionality} & \textbf{kind} & \textbf{in/out} & \textbf{description} \\ \hline
                    &   &   &                           \\ %%% for presentation
-filename(LEN=\filenamelen) & CHR & IN & filename of the FITS-file containing
+filename\mytarget{sub:number_of_alms:filename}(LEN=\filenamelen) & CHR & IN & filename of the FITS-file containing
                    $a_{\ell m}$. \\
-extnum & I4B & OUT & number of extensions in the file \\
+extnum\mytarget{sub:number_of_alms:extnum} & I4B & OUT & number of extensions in the file \\
 \end{tabular}
 }
 \end{arguments}

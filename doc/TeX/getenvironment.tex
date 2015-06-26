@@ -15,7 +15,9 @@ an environment variable.}
 \end{facility}
 
 \begin{f90format}
-{name, value}
+{\mylink{sub:getenvironment:name}{name}%
+, \mylink{sub:getenvironment:value}{value}%
+}
 \end{f90format}
 
 \begin{arguments}
@@ -23,8 +25,8 @@ an environment variable.}
 \begin{tabular}{p{0.3\hsize} p{0.05\hsize} p{0.1\hsize} p{0.45\hsize}} \hline  
 \textbf{name~\&~dimensionality} & \textbf{kind} & \textbf{in/out} & \textbf{description} \\ \hline
                    &   &   &                           \\ %%% for presentation
-name & CHR & IN & name of the environment variable \\
-value & CHR & OUT & value of the environment variable 
+name\mytarget{sub:getenvironment:name} & CHR & IN & name of the environment variable \\
+value\mytarget{sub:getenvironment:value} & CHR & OUT & value of the environment variable 
 \end{tabular}}
 \end{arguments}
 

@@ -15,7 +15,9 @@ on its argument {\tt data}.}
 \end{facility}
 
 \begin{f90format}
-{data, backward}
+{\mylink{sub:real_fft:data}{data}%
+, \mylink{sub:real_fft:backward}{backward}%
+}
 \end{f90format}
 
 \begin{arguments}
@@ -23,10 +25,10 @@ on its argument {\tt data}.}
 \begin{tabular}{p{0.3\hsize} p{0.05\hsize} p{0.1\hsize} p{0.45\hsize}} \hline  
 \textbf{name~\&~dimensionality} & \textbf{kind} & \textbf{in/out} & \textbf{description} \\ \hline
                    &   &   &                           \\ %%% for presentation
-data(:) & XXX & INOUT &
+data\mytarget{sub:real_fft:data}(:) & XXX & INOUT &
   array containing the input and output data.
   Can be of type real(sp) or real(dp) \\
-backward & LGT & IN & Optional argument. If present and true, perform backward transformation, else forward 
+backward\mytarget{sub:real_fft:backward} & LGT & IN & Optional argument. If present and true, perform backward transformation, else forward 
 \end{tabular}}
 \end{arguments}
 

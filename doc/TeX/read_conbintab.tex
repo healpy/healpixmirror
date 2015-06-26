@@ -20,7 +20,12 @@
 \end{facility}
 
 \begin{f90format}
-{filename, alms, nalms [, units, extno]}
+{\mylink{sub:read_conbintab:filename}{filename}%
+, \mylink{sub:read_conbintab:alms}{alms}%
+, \mylink{sub:read_conbintab:nalms}{nalms}%
+ [, \mylink{sub:read_conbintab:units}{units}%
+, \mylink{sub:read_conbintab:extno}{extno}%
+]}
 \end{f90format}
 
 \begin{arguments}
@@ -28,17 +33,17 @@
 \begin{tabular}{p{0.39\hsize} p{0.05\hsize} p{0.06\hsize} p{0.40\hsize}} \hline  
 \textbf{name\&dimensionality} & \textbf{kind} & \textbf{in/out} & \textbf{description} \\ \hline
                    &   &   &                           \\ %%% for presentation
-filename(LEN=\filenamelen) & CHR & IN & filename of FITS file containing $a_{lm}$. \\
-nalms & I4B & IN & Number of  $a_{lm}$  values to read from the file. \\
-alms(0:nalms-1,1:6) & SP/ DP & OUT & the $a_{lm}$ read from the file. alms(i,1)
+filename\mytarget{sub:read_conbintab:filename}(LEN=\filenamelen) & CHR & IN & filename of FITS file containing $a_{lm}$. \\
+nalms\mytarget{sub:read_conbintab:nalms} & I4B & IN & Number of  $a_{lm}$  values to read from the file. \\
+alms\mytarget{sub:read_conbintab:alms}(0:nalms-1,1:6) & SP/ DP & OUT & the $a_{lm}$ read from the file. alms(i,1)
                    and alms(i,2) contain the $\ell$ and $m$ values for the ith
                    $a_{lm}$ . alms(i,3) and alms(i,4) contain the real and
                    imaginary value of the ith  $a_{lm}$ . Finally, the
                    standard deviation for the ith  $a_{lm}$  is contained in
                    alms(i,5) (real) and alms(i,6) (imaginary). \\
-units(len=20)(1:) \hskip 6cm (OPTIONAL)& CHR & OUT & character string containing the units of the
+units\mytarget{sub:read_conbintab:units}(len=20)(1:) \hskip 6cm (OPTIONAL)& CHR & OUT & character string containing the units of the
                    $a_{\ell m}$ \\
-extno \hskip 8cm (OPTIONAL) & I4B & IN & extension (0 based) of the FITS file to be read
+extno\mytarget{sub:read_conbintab:extno} \hskip 8cm (OPTIONAL) & I4B & IN & extension (0 based) of the FITS file to be read
 
 \end{tabular}
 }

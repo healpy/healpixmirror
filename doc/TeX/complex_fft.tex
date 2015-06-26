@@ -15,7 +15,9 @@ on its argument {\tt data}.}
 \end{facility}
 
 \begin{f90format}
-{data, backward}
+{\mylink{sub:complex_fft:data}{data}%
+, \mylink{sub:complex_fft:backward}{backward}%
+}
 \end{f90format}
 
 \begin{arguments}
@@ -23,11 +25,11 @@ on its argument {\tt data}.}
 \begin{tabular}{p{0.3\hsize} p{0.05\hsize} p{0.1\hsize} p{0.45\hsize}} \hline  
 \textbf{name\&dimensionality} & \textbf{kind} & \textbf{in/out} & \textbf{description} \\ \hline
                    &   &   &                           \\ %%% for presentation
-data(:) & XXX & INOUT &
+data\mytarget{sub:complex_fft:data}(:) & XXX & INOUT &
   array containing the input and output data. It can be of type
   real(sp), real(dp), complex(spc) or complex(dpc). If it is of type real,
   it is interpreted as an array of size(data)/2 complex variables.  \\
-backward & LGT & IN & Optional argument. If present and true, perform backward transformation, else forward \\
+backward\mytarget{sub:complex_fft:backward} & LGT & IN & Optional argument. If present and true, perform backward transformation, else forward \\
 \end{tabular}}
 \end{arguments}
 

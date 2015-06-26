@@ -18,7 +18,14 @@ The data can be read into a single or double precision array.}
 \end{facility}
 
 \begin{f90format}
-{filename, tod, npix, ntods \optional{[, header, firstpix, fmissval]}}
+{\mylink{sub:input_tod:filename}{filename}%
+, \mylink{sub:input_tod:tod}{tod}%
+, \mylink{sub:input_tod:npix}{npix}%
+, \mylink{sub:input_tod:ntods}{ntods}%
+ \optional{[, \mylink{sub:input_tod:header}{header}%
+, \mylink{sub:input_tod:firstpix}{firstpix}%
+, \mylink{sub:input_tod:fmissval}{fmissval}%
+]}}
 \end{f90format}
 
 \begin{arguments}
@@ -26,17 +33,17 @@ The data can be read into a single or double precision array.}
 \begin{tabular}{p{0.3\hsize} p{0.05\hsize} p{0.05\hsize} p{0.5\hsize}} \hline  
 \textbf{name~\&~dimensionality} & \textbf{kind} & \textbf{in/out} & \textbf{description} \\ \hline
                    &   &   &                           \\ %%% for presentation
-filename (LEN = \filenamelen) & CHR & IN & FITS file to be read from \\
-tod(0:npix-1,1:ntods)    & SP/ DP & OUT & array constructed
+filename\mytarget{sub:input_tod:filename} (LEN = \filenamelen) & CHR & IN & FITS file to be read from \\
+tod\mytarget{sub:input_tod:tod}(0:npix-1,1:ntods)    & SP/ DP & OUT & array constructed
                    from the data present in the file (from the sample {\tt
                    firstpix} to {\tt firstpix + npix} - 1. Missing pixels or time
                    samples are filled with {\tt fmissval}. \\
-npix      & I8B & IN & number of pixels or samples to be read. See Note below. \\
-ntods     & I4B & IN &  number of columns to read  \\
-\optional{header}(LEN=80)(1:) \ (OPTIONAL)    & CHR & OUT &   FITS extension header \\
-\optional{firstpix}  & I8B & IN & first pixel (or time sample) to read from
+npix\mytarget{sub:input_tod:npix}      & I8B & IN & number of pixels or samples to be read. See Note below. \\
+ntods\mytarget{sub:input_tod:ntods}     & I4B & IN &  number of columns to read  \\
+\optional{header\mytarget{sub:input_tod:header}}(LEN=80)(1:) \ (OPTIONAL)    & CHR & OUT &   FITS extension header \\
+\optional{firstpix\mytarget{sub:input_tod:firstpix}}  & I8B & IN & first pixel (or time sample) to read from
                    (0 based). \default 0. See Note below. \\
-\optional{fmissval}  & SP/ DP & IN &  value to be given to missing pixels, its default
+\optional{fmissval\mytarget{sub:input_tod:fmissval}}  & SP/ DP & IN &  value to be given to missing pixels, its default
                    value is 0. Should be of the same type as {\tt tod}.
 \end{tabular}
 {\bf Note :} Indices and number of data elements larger than

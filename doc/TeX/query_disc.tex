@@ -16,7 +16,14 @@ center. The output indices can be either in the RING or NESTED scheme}
 \end{facility}
 
 \begin{f90format}
-{nside, vector0, radius, listpix, nlist [, nest, inclusive]}
+{\mylink{sub:query_disc:nside}{nside}%
+, \mylink{sub:query_disc:vector0}{vector0}%
+, \mylink{sub:query_disc:radius}{radius}%
+, \mylink{sub:query_disc:listpix}{listpix}%
+, \mylink{sub:query_disc:nlist}{nlist}%
+ [, \mylink{sub:query_disc:nest}{nest}%
+, \mylink{sub:query_disc:inclusive}{inclusive}%
+]}
 \end{f90format}
 
 \begin{arguments}
@@ -24,14 +31,14 @@ center. The output indices can be either in the RING or NESTED scheme}
 \begin{tabular}{p{0.28\hsize} p{0.05\hsize} p{0.1\hsize} p{0.47\hsize}} \hline 
 \textbf{name~\&~dimensionality} & \textbf{kind} & \textbf{in/out} & \textbf{description} \\ \hline
                    &   &   &                           \\ %%% for presentation
-nside & I4B & IN & the $\nside$ parameter of the map. \\
-vector0(3) & DP & IN & cartesian vector pointing at the disc center. \\
-radius & DP & IN & disc radius in radians. \\
-listpix(0:*) & I4B/ I8B & OUT & the index for all pixels within {\tt radius}. Make sure that the size of the array is big enough to contain all pixels. \\ 
-nlist & I4B/ I8B & OUT & The number of pixels listed in {\tt listpix}. \\
-nest\ \ (OPTIONAL) & I4B & IN &  The pixel indices are in the NESTED numbering
+nside\mytarget{sub:query_disc:nside} & I4B & IN & the $\nside$ parameter of the map. \\
+vector0\mytarget{sub:query_disc:vector0}(3) & DP & IN & cartesian vector pointing at the disc center. \\
+radius\mytarget{sub:query_disc:radius} & DP & IN & disc radius in radians. \\
+listpix\mytarget{sub:query_disc:listpix}(0:*) & I4B/ I8B & OUT & the index for all pixels within {\tt radius}. Make sure that the size of the array is big enough to contain all pixels. \\ 
+nlist\mytarget{sub:query_disc:nlist} & I4B/ I8B & OUT & The number of pixels listed in {\tt listpix}. \\
+nest\mytarget{sub:query_disc:nest}\ \ (OPTIONAL) & I4B & IN &  The pixel indices are in the NESTED numbering
                    scheme if nest=1, and in RING scheme otherwise. \\
-inclusive\ \ (OPTIONAL) & I4B & IN & If set to 1, all the pixels overlapping
+inclusive\mytarget{sub:query_disc:inclusive}\ \ (OPTIONAL) & I4B & IN & If set to 1, all the pixels overlapping
                    (even partially)
                    with the disc are listed, otherwise only those whose
                    center lies within the disc are listed. \\

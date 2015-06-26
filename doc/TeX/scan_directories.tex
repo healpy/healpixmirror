@@ -17,7 +17,10 @@
 \end{facility}
 
 \begin{f90function}
-{directories, filename, fullpath}
+{\mylink{sub:scan_directories:directories}{directories}%
+, \mylink{sub:scan_directories:filename}{filename}%
+, \mylink{sub:scan_directories:fullpath}{fullpath}%
+}
 \end{f90function}
 
 \begin{arguments}
@@ -25,13 +28,13 @@
 \begin{tabular}{p{0.3\hsize} p{0.05\hsize} p{0.1\hsize} p{0.45\hsize}} \hline  
 \textbf{name\&dimensionality} & \textbf{kind} & \textbf{in/out} & \textbf{description} \\ \hline
                    &   &   &                           \\ %%% for presentation
-directories & CHR & IN & contains the set of directories (up to 20), separated by an ASCII
+directories\mytarget{sub:scan_directories:directories} & CHR & IN & contains the set of directories (up to 20), separated by an ASCII
                    character of value $<$ 32  (see {\tt{\htmlref{concatnl}{sub:concatnl}}}). During the
                    search, it is assumed that the
                    given directories and filename can be separated by nothing,
                    a $/$ (slash) or a $\backslash$ (backslash)\\
-filename & CHR & IN & the file to be found. \\
-fullpath & CHR & OUT & returns the full path to the first occurrence of the
+filename\mytarget{sub:scan_directories:filename} & CHR & IN & the file to be found. \\
+fullpath\mytarget{sub:scan_directories:fullpath} & CHR & OUT & returns the full path to the first occurrence of the
                    file among the directories provided. Empty if the file is not
                    found. The search is not recursive.  \\
 var & LGT & OUT & set to true if the file is found, to false otherwise.\\

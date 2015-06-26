@@ -20,7 +20,12 @@ operations scales like $\ell^3_{\rm max}$.}
 \end{facility}
 
 \begin{f90format}
-{lmax, alm\_TGC, psi, theta, phi}
+{\mylink{sub:rotate_alm:lmax}{lmax}%
+, \mylink{sub:rotate_alm:alm_TGC}{alm\_TGC}%
+, \mylink{sub:rotate_alm:psi}{psi}%
+, \mylink{sub:rotate_alm:theta}{theta}%
+, \mylink{sub:rotate_alm:phi}{phi}%
+}
 \end{f90format}
 
 \begin{arguments}
@@ -29,7 +34,7 @@ operations scales like $\ell^3_{\rm max}$.}
 \textbf{name~\&~dimensionality} & \textbf{kind} & \textbf{in/out} & \textbf{description} \\ \hline
                    &   &   &                           \\ %%% for presentation
 nlmax & I4B & IN & maximum $\ell$ value for the $a_{\ell m}$.\\
-alm\_TGC(1:p,0:nlmax,0:nlmax) & SPC/ DPC & INOUT & complex $a_{\ell m}$ values
+alm\_TGC\mytarget{sub:rotate_alm:alm_TGC}(1:p,0:nlmax,0:nlmax) & SPC/ DPC & INOUT & complex $a_{\ell m}$ values
                    before and after rotation of the coordinate system.  
 	The first index here runs from 1:1 for
                    temperature only, and 1:3 for polarisation. In the latter
@@ -37,16 +42,16 @@ alm\_TGC(1:p,0:nlmax,0:nlmax) & SPC/ DPC & INOUT & complex $a_{\ell m}$ values
 % \end{tabular}
 % \begin{tabular}{p{0.36\hsize} p{0.05\hsize} p{0.09\hsize} p{0.40\hsize}}
 %                    \hline  
-psi	& DP & IN & first rotation: angle $\psi$ about the z-axis.
+psi\mytarget{sub:rotate_alm:psi}	& DP & IN & first rotation: angle $\psi$ about the z-axis.
 All angles are in radians and should lie in [-2$\pi$,2$\pi$], the rotations are
 active and the referential system is assumed to be right handed, the routine
 \htmlref{coordsys2euler\_zyz}{sub:coordsys2euler_zyz} can be used to generate
 the Euler angles
 $\psi, \theta, \varphi$ for rotation between standard astronomical coordinate
 systems; \\
-theta	& DP & IN & second rotation: angle $\theta$ about the original
+theta\mytarget{sub:rotate_alm:theta}	& DP & IN & second rotation: angle $\theta$ about the original
 (unrotated) y-axis; \\
-phi	& DP & IN & third rotation: angle $\varphi$ about the original (unrotated) z-axis;
+phi\mytarget{sub:rotate_alm:phi}	& DP & IN & third rotation: angle $\varphi$ about the original (unrotated) z-axis;
 \end{tabular}
 }
 \end{arguments}

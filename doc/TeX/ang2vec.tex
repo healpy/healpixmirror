@@ -19,7 +19,10 @@ $x = \sin\theta\cos\phi\myhtmlimage{}$, $y=\sin\theta\sin\phi\myhtmlimage{}$, $z
 \end{facility}
 
 \begin{f90format}
-{theta, phi, vector}
+{\mylink{sub:ang2vec:theta}{theta}%
+, \mylink{sub:ang2vec:phi}{phi}%
+, \mylink{sub:ang2vec:vector}{vector}%
+}
 \end{f90format}
 
 
@@ -28,10 +31,10 @@ $x = \sin\theta\cos\phi\myhtmlimage{}$, $y=\sin\theta\sin\phi\myhtmlimage{}$, $z
 \begin{tabular}{p{0.3\hsize} p{0.05\hsize} p{0.1\hsize} p{0.45\hsize}} \hline  
 \textbf{name~\&~dimensionality} & \textbf{kind} & \textbf{in/out} & \textbf{description} \\ \hline
                    &   &   &                           \\ %%% for presentation
-theta & DP & IN & colatitude in radians measured southward from north pole (in
+theta\mytarget{sub:ang2vec:theta} & DP & IN & colatitude in radians measured southward from north pole (in
     $[0,\ \pi]\myhtmlimage{}$). \\
-phi   & DP & IN & longitude in radians measured eastward (in $[0,\ 2\pi]\myhtmlimage{}$).\\
-vector(3) & DP & OUT & three dimensional cartesian position vector
+phi\mytarget{sub:ang2vec:phi}   & DP & IN & longitude in radians measured eastward (in $[0,\ 2\pi]\myhtmlimage{}$).\\
+vector\mytarget{sub:ang2vec:vector}(3) & DP & OUT & three dimensional cartesian position vector
                    $(x,y,z)$ normalised to unity. The north pole is $(0,0,1)$
 \end{tabular}
 }

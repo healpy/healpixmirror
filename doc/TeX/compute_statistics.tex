@@ -17,7 +17,10 @@
 \end{facility}
 
 \begin{f90format}
-{data ,stats \optional{[,~badval]}}
+{\mylink{sub:compute_statistics:data}{data}%
+ ,\mylink{sub:compute_statistics:stats}{stats}%
+ \optional{[,~\mylink{sub:compute_statistics:badval}{badval}%
+]}}
 \end{f90format}
 \aboutoptional
 
@@ -26,8 +29,8 @@
 \begin{tabular}{p{0.30\hsize} p{0.05\hsize} p{0.05\hsize} p{0.50\hsize}} \hline  
 \textbf{name~\&~dimensionality} & \textbf{kind} & \textbf{in/out} & \textbf{description} \\ \hline
                    &   &   &                           \\ %%% for presentation
-data(:) & SP/ DP & IN & data set $\{x_i\}$\\
-stats   & tstats & OUT & structure containing the statistics of the
+data\mytarget{sub:compute_statistics:data}(:) & SP/ DP & IN & data set $\{x_i\}$\\
+stats\mytarget{sub:compute_statistics:stats}   & tstats & OUT & structure containing the statistics of the
                    data. The respective fields (stats\%{\em field}) are:\\
 \myskip ntot & I8B & -- & total number of data points \\
 \myskip nvalid & I8B & -- & number $n$ of valid data points \\
@@ -39,7 +42,7 @@ stats   & tstats & OUT & structure containing the statistics of the
 \myskip skew & DP & -- & skewness factor $s = \sum(x_i-m)^3 / (n\sigma^3)$\\
 \myskip kurt & DP & -- & kurtosis factor $k = \sum(x_i-m)^4 / (n\sigma^4) - 3$\\
 \ & \ & \ & \\
-\optional{badval} \hskip 3cm (OPTIONAL) & SP/ DP & IN & sentinel value given to bad data points. Data points with this
+\optional{badval\mytarget{sub:compute_statistics:badval}} \hskip 3cm (OPTIONAL) & SP/ DP & IN & sentinel value given to bad data points. Data points with this
                    value will be ignored during calculation of the statistics. If
                    not set, all points will be considered. {\bf Do not set to 0!}.
 \end{tabular}

@@ -21,7 +21,14 @@ affecting the calculation of polarisation derivatives on past versions of this r
 \end{facility}
 
 \begin{f90format}
-{nsmax, nlmax, nmmax, alm, map, der1 [, der2]}
+{\mylink{sub:alm2map_der:nsmax}{nsmax}%
+, \mylink{sub:alm2map_der:nlmax}{nlmax}%
+, \mylink{sub:alm2map_der:nmmax}{nmmax}%
+, \mylink{sub:alm2map_der:alm}{alm}%
+, \mylink{sub:alm2map_der:map}{map}%
+, \mylink{sub:alm2map_der:der1}{der1}%
+ [, \mylink{sub:alm2map_der:der2}{der2}%
+]}
 \end{f90format}
 
 \begin{arguments}
@@ -29,22 +36,22 @@ affecting the calculation of polarisation derivatives on past versions of this r
 \begin{tabular}{p{0.35\hsize} p{0.05\hsize} p{0.1\hsize} p{0.40\hsize}} \hline  
 \textbf{name~\&~dimensionality} & \textbf{kind} & \textbf{in/out} & \textbf{description} \\ \hline
                    &   &   &                           \\ %%% for presentation
-nsmax & I4B & IN & the $N_{side}$ value of the map to synthesize. \\
-nlmax & I4B & IN & the maximum $\ell$ value used for the $a_{lm}$. \\
-nmmax & I4B & IN & the maximum $m$ value used for the $a_{lm}$. \\
-alm(1:p, 0:nlmax, 0:nmmax) & SPC/ DPC & IN & The $a_{lm}$ values to make the map
+nsmax\mytarget{sub:alm2map_der:nsmax} & I4B & IN & the $N_{side}$ value of the map to synthesize. \\
+nlmax\mytarget{sub:alm2map_der:nlmax} & I4B & IN & the maximum $\ell$ value used for the $a_{lm}$. \\
+nmmax\mytarget{sub:alm2map_der:nmmax} & I4B & IN & the maximum $m$ value used for the $a_{lm}$. \\
+alm\mytarget{sub:alm2map_der:alm}(1:p, 0:nlmax, 0:nmmax) & SPC/ DPC & IN & The $a_{lm}$ values to make the map
                    from. p is either 1 (temperature only) or 3 (temperature+polarisation).\\
 %% \end{tabular}
 %% \begin{tabular}{p{0.4\hsize} p{0.05\hsize} p{0.1\hsize} p{0.35\hsize}}  \hline  
-map(0:12*nsmax**2-1) \hskip 3cm {\em or\ \ }(0:12*nsmax**2-1,1:3)      & SP/ DP & OUT & temperature
-map $T(p)$ or temperature + polarisation maps $T(p)$, $Q(p)$, $U(p)$ to be synthesized.  \\ 
-der1(0:12*nsmax**2-1, 1:2*p) & SP/ DP & OUT &  contains on output the first
+map\mytarget{sub:alm2map_der:map}(0:12*nsmax**2-1) \hskip 3cm {\em or\ \ }(0:12*nsmax**2-1,1:3)      & SP/ DP & OUT & temperature
+map\mytarget{sub:alm2map_der:map} $T(p)$ or temperature + polarisation maps $T(p)$, $Q(p)$, $U(p)$ to be synthesized.  \\ 
+der1\mytarget{sub:alm2map_der:der1}(0:12*nsmax**2-1, 1:2*p) & SP/ DP & OUT &  contains on output the first
 derivatives of T: $\left({\partial T}/{\partial \theta}, {\partial T}/{\partial \phi}/\sin\theta \right)\myhtmlimage{}
 $ or the interleaved derivatives of T, Q, and U: $\left({\partial T}/{\partial
   \theta}, {\partial Q}/{\partial \theta}, {\partial U}/{\partial \theta};\right.\myhtmlimage{}$
 $\left.{\partial T}/{\partial \phi}/\sin\theta, \ldots \right)\myhtmlimage{}
 $\\ 
-der2(0:12*nsmax**2-1,1:3*p), \hskip 3cm OPTIONAL & SP/ DP & OUT & If this optional
+der2\mytarget{sub:alm2map_der:der2}(0:12*nsmax**2-1,1:3*p), \hskip 3cm OPTIONAL & SP/ DP & OUT & If this optional
 matrix is passed with this rank, it will contain on output the second derivatives
 $\left({\partial^2 T}/{\partial \theta^2}, {\partial^2 T}/{\partial
   \theta\partial\phi}/\sin\theta,\right.\myhtmlimage{}$ 

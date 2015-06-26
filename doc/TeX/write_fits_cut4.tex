@@ -19,8 +19,21 @@ information relative to the Stokes parameters I, Q and U are placed in extension
 \end{facility}
 
 \begin{f90format}
-{filename, np, pixel, signal, n\_obs, serror \optional{[, header, coord, nside, order,
-units, extno, polarisation]}}
+{\mylink{sub:write_fits_cut4:filename}{filename}%
+, \mylink{sub:write_fits_cut4:np}{np}%
+, \mylink{sub:write_fits_cut4:pixel}{pixel}%
+, \mylink{sub:write_fits_cut4:signal}{signal}%
+, \mylink{sub:write_fits_cut4:n_obs}{n\_obs}%
+, \mylink{sub:write_fits_cut4:serror}{serror}%
+ \optional{[, \mylink{sub:write_fits_cut4:header}{header}%
+, \mylink{sub:write_fits_cut4:coord}{coord}%
+, \mylink{sub:write_fits_cut4:nside}{nside}%
+, \mylink{sub:write_fits_cut4:order}{order}%
+,
+\mylink{sub:write_fits_cut4:units}{units}%
+, \mylink{sub:write_fits_cut4:extno}{extno}%
+, \mylink{sub:write_fits_cut4:polarisation}{polarisation}%
+]}}
 \end{f90format}
 \aboutoptional
 
@@ -29,22 +42,22 @@ units, extno, polarisation]}}
 \begin{tabular}{p{0.3\hsize} p{0.05\hsize} p{0.05\hsize} p{0.5\hsize}} \hline  
 \textbf{name\&dimensionality} & \textbf{kind} & \textbf{in/out} & \textbf{description} \\ \hline
                    &   &   &                           \\ %%% for presentation
-filename(LEN=\filenamelen) & CHR & IN & FITS file to be read from,
+filename\mytarget{sub:write_fits_cut4:filename}(LEN=\filenamelen) & CHR & IN & FITS file to be read from,
                    containing a cut sky map \\
-np           & I4B & IN & number of pixels to be written in the file \\
-pixel(0:np-1)    & I4B & IN & index of observed (or valid) pixels \\
-signal(0:np-1)    & SP & IN & value of signal in each observed pixel\\
-n\_obs(0:np-1)   & I4B & IN & number of observation per pixel \\
-serror(0:np-1)   & SP  & IN & {\em rms} of signal in pixel, for white noise,
+np\mytarget{sub:write_fits_cut4:np}           & I4B & IN & number of pixels to be written in the file \\
+pixel\mytarget{sub:write_fits_cut4:pixel}(0:np-1)    & I4B & IN & index of observed (or valid) pixels \\
+signal\mytarget{sub:write_fits_cut4:signal}(0:np-1)    & SP & IN & value of signal in each observed pixel\\
+n\_obs\mytarget{sub:write_fits_cut4:n_obs}(0:np-1)   & I4B & IN & number of observation per pixel \\
+serror\mytarget{sub:write_fits_cut4:serror}(0:np-1)   & SP  & IN & {\em rms} of signal in pixel, for white noise,
                    this is $\propto 1/\sqrt{{\rm n\_obs}}$. \\
 %%%%%If Serror is present N\_Obs should also be present \\
-\optional{header}(LEN=80)(1:) \ (OPTIONAL)    & CHR & IN &   FITS extension header \\
-\optional{coord}(LEN=1)       & CHR & IN &   astrophysical coordinates ('C' or 'Q'
+\optional{header\mytarget{sub:write_fits_cut4:header}}(LEN=80)(1:) \ (OPTIONAL)    & CHR & IN &   FITS extension header \\
+\optional{coord\mytarget{sub:write_fits_cut4:coord}}(LEN=1)       & CHR & IN &   astrophysical coordinates ('C' or 'Q'
                    Celestial/eQuatorial, 'G' for Galactic, 'E' for Ecliptic)\\
-\optional{nside}    & I4B & IN &   \healpix resolution parameter of data set \\
-\optional{order}     & I4B & IN &   \healpix ordering scheme, 1: RING, 2: NESTED \\
-\optional{header}(LEN=80)    & CHR & IN &   FITS header to be included in the FITS file\\
-\optional{units}(LEN=20) & CHR & IN &  maps units (applies only to Signal and
+\optional{nside\mytarget{sub:write_fits_cut4:nside}}    & I4B & IN &   \healpix resolution parameter of data set \\
+\optional{order\mytarget{sub:write_fits_cut4:order}}     & I4B & IN &   \healpix ordering scheme, 1: RING, 2: NESTED \\
+\optional{header\mytarget{sub:write_fits_cut4:header}}(LEN=80)    & CHR & IN &   FITS header to be included in the FITS file\\
+\optional{units\mytarget{sub:write_fits_cut4:units}}(LEN=20) & CHR & IN &  maps units (applies only to Signal and
                    Serror)\\
 \optional{extension}     & I4B & IN & (0 based) extension number in which to write data. \default{0}.
 	  If set to 0 (or not set) {\em a new file is written from scratch}.
@@ -56,7 +69,7 @@ Order and Coord \\
 \optional{polarisaton} & I4B & IN & if set to a non zero value, specifies that file will contain the I, Q and U polarisation
            Stokes parameter in extensions 0, 1 and 2 respectively, and sets the
 FITS header keywords accordingly. If not set, the keywords found in {\tt
-header} will prevail.\\
+header\mytarget{sub:write_fits_cut4:header}} will prevail.\\
 \  & \ & \ & Note: the information relative to Nside, Order and Coord {\em has} to be
                    given, either thru these keyword or via the FITS Header. \\
 \end{tabular}

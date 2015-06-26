@@ -18,7 +18,14 @@ depending on the {\tt nest} keyword.}
 \end{facility}
 
 \begin{f90format}
-{nside, iz, phi0, dphi, listir, nir, nest}
+{\mylink{sub:in_ring:nside}{nside}%
+, \mylink{sub:in_ring:iz}{iz}%
+, \mylink{sub:in_ring:phi0}{phi0}%
+, \mylink{sub:in_ring:dphi}{dphi}%
+, \mylink{sub:in_ring:listir}{listir}%
+, \mylink{sub:in_ring:nir}{nir}%
+, \mylink{sub:in_ring:nest}{nest}%
+}
 \end{f90format}
 
 \begin{arguments}
@@ -26,13 +33,13 @@ depending on the {\tt nest} keyword.}
 \begin{tabular}{p{0.4\hsize} p{0.05\hsize} p{0.1\hsize} p{0.35\hsize}} \hline  
 \textbf{name~\&~dimensionality} & \textbf{kind} & \textbf{in/out} & \textbf{description} \\ \hline
                    &   &   &                           \\ %%% for presentation
-nside & I4B & IN & the $N_{side}$ parameter of the map. \\
-iz & I4B & IN & ring number, counted southwards from the north pole. \\
-phi0 & DP & IN & central $\phi$ position in the slice. \\
-dphi & DP & IN & defines the size of the slice. The slice has length $2\times dphi$ along the ring with center at $phi0$. \\ 
-listir(0:4*nside-1) & I4B/ I8B & OUT & The pixel indexes in the slice. \\
-nir & I4B & OUT & the number of pixels in the slice. {\tt nir}$\le 4\nside$\\
-nest\ \ (OPTIONAL) & I4B & IN &  The pixel indexes are in the NESTED numbering
+nside\mytarget{sub:in_ring:nside} & I4B & IN & the $N_{side}$ parameter of the map. \\
+iz\mytarget{sub:in_ring:iz} & I4B & IN & ring number, counted southwards from the north pole. \\
+phi0\mytarget{sub:in_ring:phi0} & DP & IN & central $\phi$ position in the slice. \\
+dphi\mytarget{sub:in_ring:dphi} & DP & IN & defines the size of the slice. The slice has length $2\times dphi$ along the ring with center at $phi0$. \\ 
+listir\mytarget{sub:in_ring:listir}(0:4*nside-1) & I4B/ I8B & OUT & The pixel indexes in the slice. \\
+nir\mytarget{sub:in_ring:nir} & I4B & OUT & the number of pixels in the slice. {\tt nir}$\le 4\nside$\\
+nest\mytarget{sub:in_ring:nest}\ \ (OPTIONAL) & I4B & IN &  The pixel indexes are in the NESTED numbering
 scheme if {\tt nest}=1, and in RING scheme otherwise. \\
 \end{tabular}
 }

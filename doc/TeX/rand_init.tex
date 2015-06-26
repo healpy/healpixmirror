@@ -21,7 +21,12 @@ Please refer to the ``Comment on Random Number Generator''
 \end{facility}
 
 \begin{f90format}
-{rng\_handle, [seed1, seed2, seed3, seed4]}
+{\mylink{sub:rand_init:rng_handle}{rng\_handle}%
+, [\mylink{sub:rand_init:seed1}{seed1}%
+, \mylink{sub:rand_init:seed2}{seed2}%
+, \mylink{sub:rand_init:seed3}{seed3}%
+, \mylink{sub:rand_init:seed4}{seed4}%
+]}
 \end{f90format}
 
 \begin{arguments}
@@ -29,14 +34,14 @@ Please refer to the ``Comment on Random Number Generator''
 \begin{tabular}{p{0.3\hsize} p{0.15\hsize} p{0.1\hsize} p{0.35\hsize}} \hline  
 \textbf{name~\&~dimensionality} & \textbf{kind} & \textbf{in/out} & \textbf{description} \\ \hline
                    &   &   &                           \\ %%% for presentation
-rng\_handle & planck\_rng & OUT & structure of type {\tt planck\_rng}
+rng\_handle\mytarget{sub:rand_init:rng_handle} & planck\_rng & OUT & structure of type {\tt planck\_rng}
                    containing on output all information necessary to continue same random sequence. \\ 
-seed1 (OPTIONAL)& I4B & IN & first seed of the random sequence. Can be of arbitray
+seed1\mytarget{sub:rand_init:seed1} (OPTIONAL)& I4B & IN & first seed of the random sequence. Can be of arbitray
                    sign. If set to
                    zero or not provided will be replaced internally by a non-zero hard coded value.   \\
-seed2 (OPTIONAL)& I4B & IN & second seed. Same properties as above  \\
-seed3 (OPTIONAL)& I4B & IN & third seed. Same as above.  \\
-seed4 (OPTIONAL)& I4B & IN & fourth seed. Same as above.  \\
+seed2\mytarget{sub:rand_init:seed2} (OPTIONAL)& I4B & IN & second seed. Same properties as above  \\
+seed3\mytarget{sub:rand_init:seed3} (OPTIONAL)& I4B & IN & third seed. Same as above.  \\
+seed4\mytarget{sub:rand_init:seed4} (OPTIONAL)& I4B & IN & fourth seed. Same as above.  \\
 \end{tabular}
 }
 \end{arguments}

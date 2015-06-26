@@ -16,7 +16,9 @@
 \end{facility}
 
 \begin{f90function}
-{nside, z}
+{\mylink{sub:ring_num:nside}{nside}%
+, \mylink{sub:ring_num:z}{z}%
+}
 \end{f90function}
 
 \begin{arguments}
@@ -24,8 +26,8 @@
 \begin{tabular}{p{0.4\hsize} p{0.05\hsize} p{0.1\hsize} p{0.35\hsize}} \hline  
 \textbf{name\&dimensionality} & \textbf{kind} & \textbf{in/out} & \textbf{description} \\ \hline
                    &   &   &                           \\ %%% for presentation
-nside & I4B & IN & the $\nside$ parameter of the map. \\
-z & DP & IN & the z coordinate to find the ring number for. \\
+nside\mytarget{sub:ring_num:nside} & I4B & IN & the $\nside$ parameter of the map. \\
+z\mytarget{sub:ring_num:z} & DP & IN & the z coordinate to find the ring number for. \\
 
 \end{tabular}
 }

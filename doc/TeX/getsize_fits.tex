@@ -15,8 +15,21 @@
 \end{facility}
 
 \begin{f90function}
-{filename \optional{[, nmaps, ordering, obs\_npix, nside, mlpol, type, polarisation,
-    fwhm\_arcmin, beam\_leg, coordsys, polcconv, extno]}}
+{\mylink{sub:getsize_fits:filename}{filename}%
+ \optional{[, \mylink{sub:getsize_fits:nmaps}{nmaps}%
+, \mylink{sub:getsize_fits:ordering}{ordering}%
+, \mylink{sub:getsize_fits:obs_npix}{obs\_npix}%
+, \mylink{sub:getsize_fits:nside}{nside}%
+, \mylink{sub:getsize_fits:mlpol}{mlpol}%
+, \mylink{sub:getsize_fits:type}{type}%
+, \mylink{sub:getsize_fits:polarisation}{polarisation}%
+,
+    \mylink{sub:getsize_fits:fwhm_arcmin}{fwhm\_arcmin}%
+, \mylink{sub:getsize_fits:beam_leg}{beam\_leg}%
+, \mylink{sub:getsize_fits:coordsys}{coordsys}%
+, \mylink{sub:getsize_fits:polcconv}{polcconv}%
+, \mylink{sub:getsize_fits:extno}{extno}%
+]}}
 \end{f90function}
 \aboutoptional
 
@@ -27,19 +40,19 @@
                    &   &   &                           \\ %%% for presentation
 var & I8B & OUT & number of pixels or time samples in the chosen extension of
                    the FITS file \\
-filename(LEN=*) & CHR & IN & filename of the FITS-file containing \healpix map(s). \\
+filename\mytarget{sub:getsize_fits:filename}(LEN=*) & CHR & IN & filename of the FITS-file containing \healpix map(s). \\
 \end{tabular}
 \begin{tabular}{p{0.28\hsize} p{0.05\hsize} p{0.07\hsize} p{0.5\hsize}} \hline  
 \textbf{name~\&~dim.} & \textbf{kind} & \textbf{in/out} & \textbf{description} \\ \hline
                    &   &   &                           \\ %%% for presentation
-\optional{nmaps} (OPTIONAL) & I4B & OUT & number of maps in the extension. \\
-\optional{ordering} (OPTIONAL) & I4B & OUT & pixel ordering, 0=unknown, 1=RING, 2=NESTED \\
-\optional{obs\_npix} (OPTIONAL) & I4B & OUT & number of non blanck pixels. It is set to -1 if it can not be determined from header
+\optional{nmaps\mytarget{sub:getsize_fits:nmaps}} (OPTIONAL) & I4B & OUT & number of maps in the extension. \\
+\optional{ordering\mytarget{sub:getsize_fits:ordering}} (OPTIONAL) & I4B & OUT & pixel ordering, 0=unknown, 1=RING, 2=NESTED \\
+\optional{obs\_npix\mytarget{sub:getsize_fits:obs_npix}} (OPTIONAL) & I4B & OUT & number of non blanck pixels. It is set to -1 if it can not be determined from header
 information alone\\
-\optional{nside} (OPTIONAL)  & I4B & OUT & Healpix resolution parameter Nside. Returns a negative value if not found.  \\
-\optional{mlpol} (OPTIONAL)  & I4B & OUT & maximum multipole used to generate the map
+\optional{nside\mytarget{sub:getsize_fits:nside}} (OPTIONAL)  & I4B & OUT & Healpix resolution parameter Nside. Returns a negative value if not found.  \\
+\optional{mlpol\mytarget{sub:getsize_fits:mlpol}} (OPTIONAL)  & I4B & OUT & maximum multipole used to generate the map
                    (for simulated map). Returns a negative value if not found.\\
-\optional{type} (OPTIONAL)  & I4B & OUT & 
+\optional{type\mytarget{sub:getsize_fits:type}} (OPTIONAL)  & I4B & OUT & 
              \parbox[t]{\hsize}{Healpix/FITS file type\\
              $<$0 : file not found, or not valid\\
              0  : image only fits file, deprecated Healpix format
@@ -50,24 +63,24 @@ information alone\\
              3  : binary table : with explicit pixel indexing (generally cut sky)
                    (var $\le$ 12 * nside * nside) \\
            999  : unable to determine the type }\\
-\optional{polarisation} (\nobreak{OPTIONAL})  & I4B & OUT & 
+\optional{polarisation\mytarget{sub:getsize_fits:polarisation}} (\nobreak{OPTIONAL})  & I4B & OUT & 
 		\parbox[t]{\hsize}{presence of polarisation data in the file\\
              $<$0 : can not find out\\
               0 : no polarisation\\
               1 : contains polarisation (Q,U or G,C)} \\
-\optional{fwhm\_arcmin} (\nobreak{OPTIONAL}) & DP & OUT & returns the beam FWHM read from FITS header, 
+\optional{fwhm\_arcmin\mytarget{sub:getsize_fits:fwhm_arcmin}} (\nobreak{OPTIONAL}) & DP & OUT & returns the beam FWHM read from FITS header, 
                             translated from Deg (hopefully) to arcmin.
                          Returns a negative value if not found. \\
-\optional{beam\_leg}(LEN=*) (\nobreak{OPTIONAL}) & CHR & OUT & filename of beam or
+\optional{beam\_leg\mytarget{sub:getsize_fits:beam_leg}}(LEN=*) (\nobreak{OPTIONAL}) & CHR & OUT & filename of beam or
              filtering window function applied to data
 	     (FITS keyword BEAM\_LEG). Returns a empty string if not found. \\
-\optional{coordsys}(LEN=20) (\nobreak{OPTIONAL}) & CHR & OUT & string describing the pixelation
+\optional{coordsys\mytarget{sub:getsize_fits:coordsys}}(LEN=20) (\nobreak{OPTIONAL}) & CHR & OUT & string describing the pixelation
                    astrophysical coordinates. 
 		'G' = Galactic, 'E' = ecliptic, 'C' = celestial = equatorial. 
 		Returns a empty string if not found. \\
-\optional{polcconv} (OPTIONAL) & I4B & OUT & polarisation coordinate convention (see
+\optional{polcconv\mytarget{sub:getsize_fits:polcconv}} (OPTIONAL) & I4B & OUT & polarisation coordinate convention (see
              Healpix primer for details) 0=unknown, 1=COSMO, 2=IAU \\
-\optional{extno} (OPTIONAL)  & I4B & IN & extension number (0 based) for which information
+\optional{extno\mytarget{sub:getsize_fits:extno}} (OPTIONAL)  & I4B & IN & extension number (0 based) for which information
              is provided. Default = 0 (first extension). 
 \end{tabular}
 }

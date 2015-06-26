@@ -15,7 +15,8 @@
 \end{facility}
 
 \begin{f90function}
-{filename}
+{\mylink{sub:getnumext_fits:filename}{filename}%
+}
 \end{f90function}
 
 \begin{arguments}
@@ -26,7 +27,7 @@
 var & I4B & OUT & number of extensions in the FITS file (excluding the primary
                    unit). According to the current format, \healpix files have
                    at least one extension. \\
-filename(LEN=\filenamelen) & CHR & IN & filename of the FITS file. \\
+filename\mytarget{sub:getnumext_fits:filename}(LEN=\filenamelen) & CHR & IN & filename of the FITS file. \\
 \end{tabular}
 }
 \end{arguments}

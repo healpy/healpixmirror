@@ -18,7 +18,10 @@ co-polarized beam (eg, Challinor et al 2000, astro-ph/0008228)}
 \end{facility}
 
 \begin{f90format}
-{fwhm\_arcmin, lmax, beam}
+{\mylink{sub:gaussbeam:fwhm_arcmin}{fwhm\_arcmin}%
+, \mylink{sub:gaussbeam:lmax}{lmax}%
+, \mylink{sub:gaussbeam:beam}{beam}%
+}
 \end{f90format}
 
 \begin{arguments}
@@ -26,9 +29,9 @@ co-polarized beam (eg, Challinor et al 2000, astro-ph/0008228)}
 \begin{tabular}{p{0.35\hsize} p{0.05\hsize} p{0.05\hsize} p{0.45\hsize}} \hline  
 \textbf{name~\&~dimensionality} & \textbf{kind} & \textbf{in/out} & \textbf{description} \\ \hline
                    &   &   &                           \\ %%% for presentation
-fwhm\_arcmin & DP & IN & FWHM of the gaussian beam in arcminutes. \\
-lmax & I4B & IN & maximum $\ell$ value of the window function.   \\
-beam(0:lmax,1:p) & DP & OUT & beam window function generated. The second index runs form 1:1 for temperature only, and 1:3 for polarisation. In the latter case, 1=T, 2=E, 3=B.\\
+fwhm\_arcmin\mytarget{sub:gaussbeam:fwhm_arcmin} & DP & IN & FWHM of the gaussian beam in arcminutes. \\
+lmax\mytarget{sub:gaussbeam:lmax} & I4B & IN & maximum $\ell$ value of the window function.   \\
+beam\mytarget{sub:gaussbeam:beam}(0:lmax,1:p) & DP & OUT & beam window function generated. The second index runs form 1:1 for temperature only, and 1:3 for polarisation. In the latter case, 1=T, 2=E, 3=B.\\
 \end{tabular}
 }
 \end{arguments}

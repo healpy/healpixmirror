@@ -19,7 +19,10 @@ $x = \sin\theta\cos\phi\myhtmlimage{}$, $y=\sin\theta\sin\phi\myhtmlimage{}$, $z
 \end{facility}
 
 \begin{f90format}
-{vector, theta, phi}
+{\mylink{sub:vec2ang:vector}{vector}%
+, \mylink{sub:vec2ang:theta}{theta}%
+, \mylink{sub:vec2ang:phi}{phi}%
+}
 \end{f90format}
 
 
@@ -28,11 +31,11 @@ $x = \sin\theta\cos\phi\myhtmlimage{}$, $y=\sin\theta\sin\phi\myhtmlimage{}$, $z
 \begin{tabular}{p{0.3\hsize} p{0.05\hsize} p{0.1\hsize} p{0.45\hsize}} \hline  
 \textbf{name\&dimensionality} & \textbf{kind} & \textbf{in/out} & \textbf{description} \\ \hline
                    &   &   &                           \\ %%% for presentation
-vector(3) & DP & IN & three dimensional cartesian position vector
+vector\mytarget{sub:vec2ang:vector}(3) & DP & IN & three dimensional cartesian position vector
                    $(x,y,z)$. The north pole is $(0,0,1)$\\
-theta & DP & OUT & colatitude in radians measured southward from north pole (in
+theta\mytarget{sub:vec2ang:theta} & DP & OUT & colatitude in radians measured southward from north pole (in
     [0,$\pi$]). \\
-phi   & DP & OUT & longitude in radians measured eastward (in [0, $2\pi$]).\\
+phi\mytarget{sub:vec2ang:phi}   & DP & OUT & longitude in radians measured eastward (in [0, $2\pi$]).\\
 \end{tabular}
 }
 \end{arguments}

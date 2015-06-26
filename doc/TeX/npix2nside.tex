@@ -18,7 +18,8 @@ pixels over the full sky.
 \end{facility}
 
 \begin{f90function}
-{npix}
+{\mylink{sub:npix2nside:npix}{npix}%
+}
 \end{f90function}
 
 \begin{arguments}
@@ -26,7 +27,7 @@ pixels over the full sky.
 \begin{tabular}{p{0.3\hsize} p{0.05\hsize} p{0.1\hsize} p{0.45\hsize}} \hline  
 \textbf{name~\&~dimensionality} & \textbf{kind} & \textbf{in/out} & \textbf{description} \\ \hline
                    &   &   &                           \\ %%% for presentation
-npix & I4B/ I8B & IN & the number $\npix$ of pixels over the whole sky. \\
+npix\mytarget{sub:npix2nside:npix} & I4B/ I8B & IN & the number $\npix$ of pixels over the whole sky. \\
 var & I4B & OUT & the parameter $\nside$. If $\npix$ is valid (12 times a power of 2 in
 $\{1,\ldots,2^{28}\}$), $\nside=\sqrt{\npix/12}$ is returned; if not, an error message is
 issued and -1 is returned.\\

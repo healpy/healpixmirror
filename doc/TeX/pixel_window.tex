@@ -27,7 +27,10 @@ Unless specified otherwise, the $\wpix$ are read from the files
 \end{facility}
 
 \begin{f90format}
-{pixlw, nside [, windowfile]}
+{\mylink{sub:pixel_window:pixlw}{pixlw}%
+, \mylink{sub:pixel_window:nside}{nside}%
+ [, \mylink{sub:pixel_window:windowfile}{windowfile}%
+]}
 \end{f90format}
 
 \begin{arguments}
@@ -35,16 +38,16 @@ Unless specified otherwise, the $\wpix$ are read from the files
 \begin{tabular}{p{0.30\hsize} p{0.05\hsize} p{0.05\hsize} p{0.50\hsize}} \hline  
 \textbf{name~\&~dimensionality} & \textbf{kind} & \textbf{in/out} & \textbf{description} \\ \hline
                    &   &   &                           \\ %%% for presentation
-pixlw(0:lmax,1:p) & DP & OUT & pixel window function(s) $\wpix$ generated. The first index
+pixlw\mytarget{sub:pixel_window:pixlw}(0:lmax,1:p) & DP & OUT & pixel window function(s) $\wpix$ generated. The first index
                    must be $\ell_{\rm max}\leq 4\nside$. The second index runs from 1:1 for
                    temperature only, and 1:3 for polarisation. In the latter
                    case, 1=T, 2=E, 3=B.\\
-nside & I4B & IN & \healpix\ $\nside$ resolution parameter. Unless {\tt
+nside\mytarget{sub:pixel_window:nside} & I4B & IN & \healpix\ $\nside$ resolution parameter. Unless {\tt
                    windowfile} is set, the file associated
                    with $\nside$ and shipped with the package is read by
                    default. If {\tt nside} = 0, the pixel is assumed infinitely
                    small and {\tt pixlw} is returned with value 1.\\
-windowfile \hskip 2cm
+windowfile\mytarget{sub:pixel_window:windowfile} \hskip 2cm
 (OPTIONAL) & CHR & IN & FITS file containing the pixel window to be read instead
                    of the default.
 \end{tabular}

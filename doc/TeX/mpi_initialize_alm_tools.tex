@@ -30,7 +30,15 @@ for polarization calculations.
 \end{facility}
 
 \begin{f90format}
-{comm, [nsmax], [nlmax], [nmmax], [zbounds], [polarization], [precompute\_plms], [w8ring]}
+{\mylink{sub:mpi_initialize_alm_tools:comm}{comm}%
+, [\mylink{sub:mpi_initialize_alm_tools:nsmax}{nsmax}%
+], [\mylink{sub:mpi_initialize_alm_tools:nlmax}{nlmax}%
+], [\mylink{sub:mpi_initialize_alm_tools:nmmax}{nmmax}%
+], [\mylink{sub:mpi_initialize_alm_tools:zbounds}{zbounds}%
+], [\mylink{sub:mpi_initialize_alm_tools:polarization}{polarization}%
+], [\mylink{sub:mpi_initialize_alm_tools:precompute_plms}{precompute\_plms}%
+], [\mylink{sub:mpi_initialize_alm_tools:w8ring}{w8ring}%
+]}
 \end{f90format}
 
 \begin{arguments}
@@ -38,24 +46,24 @@ for polarization calculations.
 \begin{tabular}{p{0.4\hsize} p{0.05\hsize} p{0.05\hsize} p{0.40\hsize}} \hline  
 \textbf{name~\&~dimensionality} & \textbf{kind} & \textbf{in/out} & \textbf{description} \\ \hline
                    &   &   &                           \\ %%% for presentation
-comm  & I4B & IN & MPI communicator. \\
-nsmax & I4B & IN & the $N_{side}$ value of the HEALPix map. (OPTIONAL) \\
-nlmax & I4B & IN & the maximum $\ell$ value used for the $a_{lm}$. (OPTIONAL) \\
-nmmax & I4B & IN & the maximum $m$ value used for the $a_{lm}$. (OPTIONAL) \\
+comm\mytarget{sub:mpi_initialize_alm_tools:comm}  & I4B & IN & MPI communicator. \\
+nsmax\mytarget{sub:mpi_initialize_alm_tools:nsmax} & I4B & IN & the $N_{side}$ value of the HEALPix map. (OPTIONAL) \\
+nlmax\mytarget{sub:mpi_initialize_alm_tools:nlmax} & I4B & IN & the maximum $\ell$ value used for the $a_{lm}$. (OPTIONAL) \\
+nmmax\mytarget{sub:mpi_initialize_alm_tools:nmmax} & I4B & IN & the maximum $m$ value used for the $a_{lm}$. (OPTIONAL) \\
 \end{tabular}
 \begin{tabular}{p{0.4\hsize} p{0.05\hsize} p{0.05\hsize} p{0.40\hsize}} \hline  
-zbounds(1:2) & DP & IN & section of the map on which to perform the $a_{lm}$
+zbounds\mytarget{sub:mpi_initialize_alm_tools:zbounds}(1:2) & DP & IN & section of the map on which to perform the $a_{lm}$
                    analysis, expressed in terms of $z=\sin({\rm latitude}) =
                    \cos(\theta)$. If zbounds(1)$<$zbounds(2), the analysis is
                    performed {\em on} the strip zbounds(1)$<z<$zbounds(2); if not,
                    it is performed {\em outside} of the strip
                    zbounds(2)$<z<$zbounds(1). (OPTIONAL) \\
-polarization & LGT & IN & if polarization is required, this should be
+polarization\mytarget{sub:mpi_initialize_alm_tools:polarization} & LGT & IN & if polarization is required, this should be
 set to true, else it should be set to false. (OPTIONAL) \\
-precompute\_plms & I4B & IN & 0 = do not pre-compute any $P_{\ell
+precompute\_plms\mytarget{sub:mpi_initialize_alm_tools:precompute_plms} & I4B & IN & 0 = do not pre-compute any $P_{\ell
 m}$'s; 1 = pre-compute $P_{\ell m}^\textrm{T}$; 2 = pre-compute
 $P_{\ell m}^\textrm{T}$ and $P_{\ell m}^\textrm{P}$.  (OPTIONAL)\\
-w8ring\_TQU(1:2*nsmax, 1:p) & DP & IN & ring weights for quadrature corrections. If ring weights are not used, this array should be 1 everywhere. p is 1 for a temperature analysis and 3 for (T,Q,U). (OPTIONAL)\\
+w8ring\mytarget{sub:mpi_initialize_alm_tools:w8ring}\_TQU(1:2*nsmax, 1:p) & DP & IN & ring weights for quadrature corrections. If ring weights are not used, this array should be 1 everywhere. p is 1 for a temperature analysis and 3 for (T,Q,U). (OPTIONAL)\\
 \end{tabular}
 }
 \end{arguments}

@@ -33,7 +33,14 @@ located on the inner boundary of {\em invalid} regions
 \end{facility}
 
 \begin{f90format}
-{nside, mask, nholes, nph,  \optional{[tags, sizeholes, listpix]}}
+{\mylink{sub:size_holes_nest:nside}{nside}%
+, \mylink{sub:size_holes_nest:mask}{mask}%
+, \mylink{sub:size_holes_nest:nholes}{nholes}%
+, \mylink{sub:size_holes_nest:nph}{nph}%
+,  \optional{[\mylink{sub:size_holes_nest:tags}{tags}%
+, \mylink{sub:size_holes_nest:sizeholes}{sizeholes}%
+, \mylink{sub:size_holes_nest:listpix}{listpix}%
+]}}
 \end{f90format}
 \aboutoptional
 
@@ -42,23 +49,23 @@ located on the inner boundary of {\em invalid} regions
 \begin{tabular}{p{0.25\hsize} p{0.05\hsize} p{0.08\hsize} p{0.50\hsize}} \hline  
 \textbf{name~\&~dim.} & \textbf{kind} & \textbf{in/out} & \textbf{description} \\ \hline
                    &   &   &                           \\ %%% for presentation
-nside & I4B & IN & The $N_{side}$ value of the input mask. \\
-mask(0:Npix-1) & I4B & IN & Input binary NESTED-ordered mask. Npix =
+nside\mytarget{sub:size_holes_nest:nside} & I4B & IN & The $N_{side}$ value of the input mask. \\
+mask\mytarget{sub:size_holes_nest:mask}(0:Npix-1) & I4B & IN & Input binary NESTED-ordered mask. Npix =
 12*nside*nside\\
-nholes & I4B & OUT & Number of holes found \\
-nph & I4B & OUT & Number of pixels in holes 
+nholes\mytarget{sub:size_holes_nest:nholes} & I4B & OUT & Number of holes found \\
+nph\mytarget{sub:size_holes_nest:nph} & I4B & OUT & Number of pixels in holes 
 \\
-\optional{tags}(0:Npix-1) \hskip 2cm  (OPTIONAL) & I4B & OUT & Pointer allocated by \thedocid, containing
+\optional{tags\mytarget{sub:size_holes_nest:tags}}(0:Npix-1) \hskip 2cm  (OPTIONAL) & I4B & OUT & Pointer allocated by \thedocid, containing
 a sky map in which {\em invalid} pixels belonging to the largest hole have
 value -1, those belonging to the second largest hole have value -2, and so on,
 while valid pixels keep value +1.
 \\
-\optional{sizeholes}(0:nholes-1) &I4B & OUT & Pointer allocated by \thedocid,
+\optional{sizeholes\mytarget{sub:size_holes_nest:sizeholes}}(0:nholes-1) &I4B & OUT & Pointer allocated by \thedocid,
 containing on output the respective size of each hole (in decreasing order).
 Eg, {\tt sizeholes}(0) is the number of pixels in the largest hole (taking value -1 in
 {\tt tags}).
 \\
-\optional{listpix}(0:nholes+nph) & I4B & OUT & Pointer allocated by \thedocid,
+\optional{listpix\mytarget{sub:size_holes_nest:listpix}}(0:nholes+nph) & I4B & OUT & Pointer allocated by \thedocid,
 containing on output the indexed list of pixels in each hole. Pixels located in the first (and largest)
 hole are given by {\tt listpix(listpix(0):listpix(1)-1)}
 \end{tabular}
