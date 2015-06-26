@@ -19,50 +19,49 @@ cross) power spectra $C(l)$.}
 
 \begin{IDLformat}
 {IANAFAST%
-,  \mylink{idl:ianafast_idl:map1_in}{map1\_in}%
- [, \mylink{idl:ianafast_idl:cl_out}{cl\_out}%
+,  \mylink{idl:ianafast:map1_in}{map1\_in}%
+ [, \mylink{idl:ianafast:cl_out}{cl\_out}%
 ,
-       \mylink{idl:ianafast_idl:alm1_out}{alm1\_out=}%
-, \mylink{idl:ianafast_idl:alm2_out}{alm2\_out=}%
-, \mylink{idl:ianafast_idl:binpath}{binpath=}%
-, \mylink{idl:ianafast_idl:cxx}{cxx=}%
-, \mylink{idl:ianafast_idl:double}{double=}%
-, \mylink{idl:ianafast_idl:help}{help=}%
-, \mylink{idl:ianafast_idl:healpix_data}{healpix\_data=}%
-, \mylink{idl:ianafast_idl:iter_order}{iter\_order=}%
-, \mylink{idl:ianafast_idl:keep_tmp_files}{keep\_tmp\_files=}%
+       \mylink{idl:ianafast:alm1_out}{alm1\_out=}%
+, \mylink{idl:ianafast:alm2_out}{alm2\_out=}%
+, \mylink{idl:ianafast:binpath}{binpath=}%
+, \mylink{idl:ianafast:cxx}{cxx=}%
+, \mylink{idl:ianafast:double}{double=}%
+, \mylink{idl:ianafast:help}{help=}%
+, \mylink{idl:ianafast:healpix_data}{healpix\_data=}%
+, \mylink{idl:ianafast:iter_order}{iter\_order=}%
+, \mylink{idl:ianafast:keep_tmp_files}{keep\_tmp\_files=}%
 , 
-       \mylink{idl:ianafast_idl:map2_in}{map2\_in=}%
-, \mylink{idl:ianafast_idl:maskfile}{maskfile=}%
-, \mylink{idl:ianafast_idl:nested}{nested=}%
-, \mylink{idl:ianafast_idl:nlmax}{nlmax=}%
-, \mylink{idl:ianafast_idl:nmmax}{nmmax=}%
-, \mylink{idl:ianafast_idl:ordering}{ordering=}%
-}%
-, \mylink{idl:ianafast_idl:plmfile}{plmfile=}%
-, \mylink{idl:ianafast_idl:polarisation}{polarisation=}%
+       \mylink{idl:ianafast:map2_in}{map2\_in=}%
+, \mylink{idl:ianafast:maskfile}{maskfile=}%
+, \mylink{idl:ianafast:nested}{nested=}%
+, \mylink{idl:ianafast:nlmax}{nlmax=}%
+, \mylink{idl:ianafast:nmmax}{nmmax=}%
+, \mylink{idl:ianafast:ordering}{ordering=}%
+, \mylink{idl:ianafast:plmfile}{plmfile=}%
+, \mylink{idl:ianafast:polarisation}{polarisation=}%
 , 
-       \mylink{idl:ianafast_idl:regression}{regression=}%
-, \mylink{idl:ianafast_idl:ring}{ring=}%
-, \mylink{idl:ianafast_idl:show_cl}{show\_cl=}%
-, \mylink{idl:ianafast_idl:simul_type}{simul\_type=}%
-, \mylink{idl:ianafast_idl:silent}{silent=}%
-, \mylink{idl:ianafast_idl:theta_cut_deg}{theta\_cut\_deg=}%
-, \mylink{idl:ianafast_idl:tmpdir}{tmpdir=}%
+       \mylink{idl:ianafast:regression}{regression=}%
+, \mylink{idl:ianafast:ring}{ring=}%
+, \mylink{idl:ianafast:show_cl}{show\_cl=}%
+, \mylink{idl:ianafast:simul_type}{simul\_type=}%
+, \mylink{idl:ianafast:silent}{silent=}%
+, \mylink{idl:ianafast:theta_cut_deg}{theta\_cut\_deg=}%
+, \mylink{idl:ianafast:tmpdir}{tmpdir=}%
 , 
-       \mylink{idl:ianafast_idl:weighted}{weighted=}%
-, \mylink{idl:ianafast_idl:won}{won=}%
-, \mylink{idl:ianafast_idl:w8file}{w8file=}%
-, \mylink{idl:ianafast_idl:w8dir}{w8dir=}%
+       \mylink{idl:ianafast:weighted}{weighted=}%
+, \mylink{idl:ianafast:won}{won=}%
+, \mylink{idl:ianafast:w8file}{w8file=}%
+, \mylink{idl:ianafast:w8dir}{w8dir=}%
 ]}
 \end{IDLformat}
 
 \begin{qualifiers}
   \begin{qulist}{} %%%% NOTE the ``extra'' brace here %%%%
-   \item[map1\_in\mytarget{idl:ianafast_idl:map1_in}%
+   \item[map1\_in\mytarget{idl:ianafast:map1_in}%
 ] required input: 1st input map, can be a FITS file, or a memory array containing the
         map to analyze
-    \item[cl\_out\mytarget{idl:ianafast_idl:cl_out}%
+    \item[cl\_out\mytarget{idl:ianafast:cl_out}%
 ] optional output: auto or cross power spectrum $C(l)$, can be a FITS
 file or a memory array
   \end{qulist}
@@ -70,107 +69,107 @@ file or a memory array
 
 \begin{keywords}
   \begin{kwlist}{} %%% extra brace
-\item[alm1\_out\mytarget{idl:ianafast_idl:alm1_out}%
+\item[alm1\_out\mytarget{idl:ianafast:alm1_out}%
 =]   output alm of 1st map, must be a FITS file          \default {alm not kept}
 
-\item[alm2\_out\mytarget{idl:ianafast_idl:alm2_out}%
+\item[alm2\_out\mytarget{idl:ianafast:alm2_out}%
 =]   output alm of 2nd map (if any, must be a FITS file) \default {alm not kept}
 
-\item[binpath\mytarget{idl:ianafast_idl:binpath}%
+\item[binpath\mytarget{idl:ianafast:binpath}%
 =] full path to back-end routine \default {\$HEXE/anafast, then \$HEALPIX/bin/anafast 
                 or \$HEALPIX/src/cxx/\$HEALPIX\_TARGET\-/bin/anafast\_cxx, then \$HEALPIX/src/cxx/generic\_gcc\-/bin/anafast\_cxx if cxx is set}\\
               -- a binpath starting with / (or $\backslash$), $~$ or \$ is interpreted as absolute\\
               -- a binpath starting with ./ is interpreted as relative to current directory\\
               -- all other binpathes are relative to \$HEALPIX
 
-\item[/cxx\mytarget{idl:ianafast_idl:cxx}%
+\item[/cxx\mytarget{idl:ianafast:cxx}%
 ] if set, the C++ back-end anafast\_cxx is invoked instead of F90 \htmlref{anafast}{fac:anafast},
            AND the parameter file is written accordingly
 
-\item[/double\mytarget{idl:ianafast_idl:double}%
+\item[/double\mytarget{idl:ianafast:double}%
 ]    if set, I/O is done in double precision \default {single precision I/O}
 
-\item[/help\mytarget{idl:ianafast_idl:help}%
+\item[/help\mytarget{idl:ianafast:help}%
 ]      if set, prints extended help
 
-\item[healpix\_data\mytarget{idl:ianafast_idl:healpix_data}%
+\item[healpix\_data\mytarget{idl:ianafast:healpix_data}%
 =] directory with Healpix precomputed files (only for C++ back\_end when weighted=1)
      \default {\$HEALPIX/data}
 
-\item[iter\_order\mytarget{idl:ianafast_idl:iter_order}%
+\item[iter\_order\mytarget{idl:ianafast:iter_order}%
 =] order of iteration in the analysis \default {0}
 
-\item[/keep\_tmp\_files\mytarget{idl:ianafast_idl:keep_tmp_files}%
+\item[/keep\_tmp\_files\mytarget{idl:ianafast:keep_tmp_files}%
 ] if set, temporary files are not discarded at the end of the
                   run
 
-\item[map2\_in\mytarget{idl:ianafast_idl:map2_in}%
+\item[map2\_in\mytarget{idl:ianafast:map2_in}%
 =] 2nd input map (FITS file or array), if provided, Cl\_out will
   contain the cross power spectra of the 2 maps \default {no 2nd map}
 
-\item[maskfile\mytarget{idl:ianafast_idl:maskfile}%
+\item[maskfile\mytarget{idl:ianafast:maskfile}%
 =] pixel mask (FITS file or array)   \default {no mask}
 
-\item[/nested\mytarget{idl:ianafast_idl:nested}%
+\item[/nested\mytarget{idl:ianafast:nested}%
 =] if set, signals that *all* maps and mask read online are in
    NESTED scheme (does not apply to FITS file), see also /ring and Ordering
 
-\item[nlmax\mytarget{idl:ianafast_idl:nlmax}%
+\item[nlmax\mytarget{idl:ianafast:nlmax}%
 =]   maximum multipole of analysis, *required* for C++ anafast\_cxx,
       optional for F90 \htmlref{anafast}{fac:anafast}
 
-\item[nmmax\mytarget{idl:ianafast_idl:nmmax}%
+\item[nmmax\mytarget{idl:ianafast:nmmax}%
 =]   maximum degree m, only valid for C++ anafast\_cxx \default {nlmax}
 
-\item[ordering\mytarget{idl:ianafast_idl:ordering}%
+\item[ordering\mytarget{idl:ianafast:ordering}%
 =] either 'RING' or 'NESTED', ordering of online maps and masks,
  see /nested and /ring
 
-\item[plmfile\mytarget{idl:ianafast_idl:plmfile}%
+\item[plmfile\mytarget{idl:ianafast:plmfile}%
 =] FITS file containing precomputed Spherical Harmonics (deprecated) \default {no file}
 
-\item[/polarisation\mytarget{idl:ianafast_idl:polarisation}%
+\item[/polarisation\mytarget{idl:ianafast:polarisation}%
 ] if set analyze temperature + polarization (same as simul\_type = 2)
 
-\item[regression\mytarget{idl:ianafast_idl:regression}%
+\item[regression\mytarget{idl:ianafast:regression}%
 =] 0, 1 or 2, regress out best fit monopole and/or dipole before
     alm analysis
   \default {0, analyze raw map} 
 
-\item[/ring\mytarget{idl:ianafast_idl:ring}%
+\item[/ring\mytarget{idl:ianafast:ring}%
 ] see /nested and ordering above
 
-\item[/show\_cl\mytarget{idl:ianafast_idl:show_cl}%
+\item[/show\_cl\mytarget{idl:ianafast:show_cl}%
 ] if set, and {\tt cl\_out} is defined, the produced $l (l+1) C(l)/2\pi$ will
 be plotted
 
-\item[simul\_type\mytarget{idl:ianafast_idl:simul_type}%
+\item[simul\_type\mytarget{idl:ianafast:simul_type}%
 =] 1 or 2, analyze temperature only or temperature + polarization
 
-\item[/silent\mytarget{idl:ianafast_idl:silent}%
+\item[/silent\mytarget{idl:ianafast:silent}%
 ]    if set, works silently
 
-\item[theta\_cut\_deg\mytarget{idl:ianafast_idl:theta_cut_deg}%
+\item[theta\_cut\_deg\mytarget{idl:ianafast:theta_cut_deg}%
 =] cut around the equatorial plane 
 
-\item[tmpdir\mytarget{idl:ianafast_idl:tmpdir}%
+\item[tmpdir\mytarget{idl:ianafast:tmpdir}%
 =]      directory in which are written temporary files 
 \default {IDL\_TMPDIR (see IDL documentation)}
 
-\item[/weighted\mytarget{idl:ianafast_idl:weighted}%
+\item[/weighted\mytarget{idl:ianafast:weighted}%
 ]     same as won
     \default {apply weighting}
 
-\item[/won\mytarget{idl:ianafast_idl:won}%
+\item[/won\mytarget{idl:ianafast:won}%
 ]     if set, a weighting scheme is used to improve the quadrature
     \default {apply weighting}
 
-\item[w8file\mytarget{idl:ianafast_idl:w8file}%
+\item[w8file\mytarget{idl:ianafast:w8file}%
 =]    FITS file containing weights 
      \default {determined automatically by back-end routine}.
    Do not set this keyword unless you really know what you are doing
 
-\item[w8dir\mytarget{idl:ianafast_idl:w8dir}%
+\item[w8dir\mytarget{idl:ianafast:w8dir}%
 =]     directory where the weights are to be found 
         \default {determined automatically by back-end routine}
 

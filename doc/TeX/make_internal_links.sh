@@ -17,15 +17,21 @@ listArguments () {
 		  sed "s| ||g"   | sed "s|,|\n|g" | \
 		  sed "s|\\\\facname||g" | sed "s|\\\\FACNAME||g" | \
 		  sed "s|\\\\thedocid||g" | sed "s|\\\\tt||g" | \
-		  sed "s/|/ /g"
+		  sed "s/|/ /g" | sed "s|~||g" | sed "s|\\\\hfill||g"
 
 }
 
 
-testFile () {
+countLinks () {
     file=$1
     np=`grep mylink $file | wc -l`
     echo $np
+}
+
+testF90Function () {
+    file=$1
+    nf=`grep f90function $file | wc -l`
+    echo $nf
 }
 
 
@@ -52,19 +58,34 @@ for shortfile in $files; do
 
     file="${shortfile%.*}.tex" # make sure .tex suffix is present
     echo $file
+    outfile=`echo $file | sed "s|.tex|_2.tex|"`
 
-    np=`testFile $file`
-    if [ $np -eq 0 ] ; then
+    np=`countLinks $file`
+    ### [[ "$file" = "write_bintabh.tex" ]] && np=0
+
+    if [ $np -eq 0 ] ; then # unprocessed file
 
 	nidl=`match $file "_idl"`
 	if [ "$nidl" = "0" ] ; then
-	    # for F90 subroutines
-	    type="F90"
-	    form_b="begin{f90format}"
-	    form_e="end{f90format}"
-	    desc_b="begin{arguments}"
-	    desc_e="end{arguments}"
-	    pretarg="sub"
+	    nf=`testF90Function $file`
+	    outfile=$file# overwrite!
+	    if [ $nf -eq 0 ] ; then
+	        # for F90 subroutines
+		type="F90"
+		form_b="begin{f90format}"
+		form_e="end{f90format}"
+		desc_b="begin{arguments}"
+		desc_e="end{arguments}"
+		pretarg="sub"
+	    else
+	        # for F90 functions
+		type="F90"
+		form_b="begin{f90function}"
+		form_e="end{f90function}"
+		desc_b="begin{arguments}"
+		desc_e="end{arguments}"
+		pretarg="sub"
+	    fi
 	else
 	    # for IDL subroutines
 	    type="IDL"
@@ -79,8 +100,8 @@ for shortfile in $files; do
         # --------------------
         mylist=`listArguments $file ${form_b} ${form_e}`
         rad=`echo $file | sed "s|.tex||"` 
+	rad=`echo $rad | sed 's|_idl$||'` # remove trailing _idl
         wrkfile="/tmp/wrkfile_${rad}.txt"
-        outfile=`echo $file | sed "s|.tex|_2.tex|"`
         
         #echo $mylist
         echo '---------------------------------------------------'
@@ -126,6 +147,7 @@ for shortfile in $files; do
     
     else
         echo "$file already processed."
+	[[ ${outfile} != ${file} ]] && cp ${file} ${outfile}
     fi
 
 done

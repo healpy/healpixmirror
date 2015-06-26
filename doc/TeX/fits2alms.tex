@@ -19,7 +19,14 @@ One can read temperature $a_{lm}$ or temperature and polarisation, $a^T_{lm}$, $
 \end{facility}
 
 \begin{f90format}
-{filename, nalms, alms, ncl, header, nlheader, next}
+{\mylink{sub:fits2alms:filename}{filename}%
+, \mylink{sub:fits2alms:nalms}{nalms}%
+, \mylink{sub:fits2alms:alms}{alms}%
+, \mylink{sub:fits2alms:ncl}{ncl}%
+, \mylink{sub:fits2alms:header}{header}%
+, \mylink{sub:fits2alms:nlheader}{nlheader}%
+, \mylink{sub:fits2alms:next}{next}%
+}
 \end{f90format}
 
 \begin{arguments}
@@ -27,22 +34,22 @@ One can read temperature $a_{lm}$ or temperature and polarisation, $a^T_{lm}$, $
 \begin{tabular}{p{0.39\hsize} p{0.05\hsize} p{0.06\hsize} p{0.40\hsize}} \hline  
 \textbf{name~\&~dimensionality} & \textbf{kind} & \textbf{in/out} & \textbf{description} \\ \hline
                    &   &   &                           \\ %%% for presentation
-filename(LEN=\filenamelen) & CHR & IN & filename of the FITS-file to read the $a_{lm}$ from. \\
-nalms & I4B & IN & number of $a_{lm}$ to read. \\
-ncl & I4B & IN & number of columns to read in the FITS file. If an standard
+filename\mytarget{sub:fits2alms:filename}(LEN=\filenamelen) & CHR & IN & filename of the FITS-file to read the $a_{lm}$ from. \\
+nalms\mytarget{sub:fits2alms:nalms} & I4B & IN & number of $a_{lm}$ to read. \\
+ncl\mytarget{sub:fits2alms:ncl} & I4B & IN & number of columns to read in the FITS file. If an standard
                deviation is to be read, this number is 5, otherwise it is 3. \\ 
-next & I4B & IN & the number of extensions to read. 1 for temperature only, 3
+next\mytarget{sub:fits2alms:next} & I4B & IN & the number of extensions to read. 1 for temperature only, 3
                    for temperature and polarisation. \\ 
 \end{tabular}
 \begin{tabular}{p{0.4\hsize} p{0.05\hsize} p{0.05\hsize} p{0.40\hsize}} \hline  
-alms(1:nalms,1:(ncl+1),1:next) & SP/ DP & OUT & the $a_{lm}$ to read from the
+alms\mytarget{sub:fits2alms:alms}(1:nalms,1:(ncl+1),1:next) & SP/ DP & OUT & the $a_{lm}$ to read from the
           file. alms(i,1,j) and alms(i,2,j) contain the $\ell$ and $m$ values
           for the ith  $a_{lm}$  (j=1,2,3 for (T,E,B)). alms(i,3,j) and
           alms(i,4,j) contain the real and imaginary value of the ith
           $a_{lm}$. Finally, the   standard deviation for the ith  $a_{lm}$  is
           contained in alms(i,5,j) (real) and alms(i,6,j) (imaginary). \\  
-nlheader & I4B & IN & number of header lines to read from the file. \\
-header(LEN=80) (1:nlheader, 1:next) & CHR & OUT & the header(s) read from the FITS-file. \\ 
+nlheader\mytarget{sub:fits2alms:nlheader} & I4B & IN & number of header lines to read from the file. \\
+header\mytarget{sub:fits2alms:header}(LEN=80) (1:nlheader, 1:next) & CHR & OUT & the header(s) read from the FITS-file. \\ 
 \end{tabular}
 }
 \end{arguments}
