@@ -22,7 +22,7 @@ elements.}
 
 \rule{\hsize}{0.7mm}
 \textsc{\large{\textbf{FUNCTIONS: }}}\hfill\newline
-{\tt cnt = long\_count(mask1)} 
+{\tt \mylink{sub:long_intrinsic:cnt}{cnt} = long\_count(\mylink{sub:long_intrinsic:mask1}{mask1})} 
 
  \begin{tabular}{@{}p{0.3\hsize}@{\hspace{1ex}}
                         p{0.7\hsize}@{}} & returns the I8B integer value that is
@@ -30,8 +30,10 @@ the number of elements of the logical array {\tt mask1} that have the value {\tt
 true}. 
      \end{tabular}\\
 
-{\tt sz = long\_size(array1 [,dim])} \\
-{\tt sz = long\_size(array2 [,dim])} 
+{\tt \mylink{sub:long_intrinsic:sz}{sz} = long\_size(\mylink{sub:long_intrinsic:array1}{array1} 
+[,\mylink{sub:long_intrinsic:dim}{dim}])} \\
+{\tt \mylink{sub:long_intrinsic:sz}{sz} = long\_size(\mylink{sub:long_intrinsic:array2}{array2} 
+[,\mylink{sub:long_intrinsic:dim}{dim}])} 
 
  \begin{tabular}{@{}p{0.3\hsize}@{\hspace{1ex}}
                         p{0.7\hsize}@{}} & returns the I8B integer value that is
@@ -47,12 +49,12 @@ extent along the dimension {\tt dim} if the scalar integer {\tt dim} is provided
 \begin{tabular}{p{0.30\hsize} p{0.05\hsize} p{0.08\hsize} p{0.47\hsize}} \hline  
 \textbf{name~\&~dimensionality} & \textbf{kind} & \textbf{in/out} & \textbf{description} \\ \hline
                    &   &   &                           \\ %%% for presentation
-cnt & I8B & OUT & number of elements with value {\tt true} \\
-sz & I8B & OUT & size or extent of array \\
-mask1(:) & LGT & IN & 1D logical array \\
-array1(:) & I4B/ I8B/ SP/ DP & IN & 1D integer or real array \\
-array2(:,:) & I4B/ I8B/ SP/ DP & IN & 2D integer or real array \\
-dim\ \ \ (OPTIONAL) & I4B & IN & dimension (starting at 1) along which the array
+cnt \mytarget{sub:long_intrinsic:cnt} & I8B & OUT & number of elements with value {\tt true} \\
+sz \mytarget{sub:long_intrinsic:sz} & I8B & OUT & size or extent of array \\
+mask1(:) \mytarget{sub:long_intrinsic:mask1} & LGT & IN & 1D logical array \\
+array1(:) \mytarget{sub:long_intrinsic:array1}& I4B/ I8B/ SP/ DP & IN & 1D integer or real array \\
+array2(:,:) \mytarget{sub:long_intrinsic:array2} & I4B/ I8B/ SP/ DP & IN & 2D integer or real array \\
+dim \mytarget{sub:long_intrinsic:dim}\ \ \ (OPTIONAL) & I4B & IN & dimension (starting at 1) along which the array
 extent is measured.
 \end{tabular}
 }

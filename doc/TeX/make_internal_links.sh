@@ -14,7 +14,10 @@ listArguments () {
 		  sed "s|\\\\optional||g" | \
 		  sed "s|\[||g"  | sed "s|\]||g" | \
 		  sed "s|{||g"   | sed "s|}||g"  | \
-		  sed "s| ||g"   | sed "s|,|\n|g"
+		  sed "s| ||g"   | sed "s|,|\n|g" | \
+		  sed "s|\\\\facname||g" | sed "s|\\\\FACNAME||g" | \
+		  sed "s|\\\\thedocid||g" | sed "s|\\\\tt||g" | \
+		  sed "s/|/ /g"
 
 }
 
@@ -28,7 +31,7 @@ testFile () {
 
 match () {
 # emulates Linux `expr match $1 $2` in MacOS
-if [ $1 =~ $2 ] ; then
+if [[ $1 =~ $2 ]] ; then
  echo ${#BASH_REMATCH}
 else
  echo 0
@@ -42,10 +45,14 @@ if [ ${#} -gt 0 ]; then
     files=$*
 fi
 
-type="F90"
 
 magic='MYLINK{ABCdefGHI123'
-for file in $files; do
+for shortfile in $files; do
+    echo $shortfile
+
+    file="${shortfile%.*}.tex" # make sure .tex suffix is present
+    echo $file
+
     np=`testFile $file`
     if [ $np -eq 0 ] ; then
 
@@ -83,28 +90,35 @@ for file in $files; do
         for name in $mylist ; do
             tag=`echo $name | sed "s|\\\\\\_|_|g"`
 	    tag=`echo $tag | sed "s|/||" | sed "s|=||"` # remove / and =    (for IDL)
-            name2=`echo $tag | sed 's|_|\\\\\\\\\\_|g'`
+            name2=`echo $tag | sed 's|_|\\\\\\\\\\_|g'` # name with \_ but without /,=
             target="\\\\mytarget{${pretarg}:${rad}:${tag}}"
             #link="\\\\mylink{${pretarg}:${rad}:${tag}}{$name}"
             link="\\\\mylink{${pretarg}:${rad}:${tag}}"
 	    slink="\\\\mylink{${pretarg}:${rad}"
-            echo "$name \t\t $link \t\t $target $name"
+	    name1=`echo $name | sed "s|\\\\\\_|_|g"`
+	    name1=`echo $name1 | sed 's|_|\\\\\\\\\\_|g'` # name with \_,/,=
             # in format section :  replace name with   link name
+            # in description section :  replace name with  name target
             #sed -i "/${form_b}/,/${form_e}/s|"${name2}"|${link}{"${name2}"}%\n|" $wrkfile
-            sed -i "/${form_b}/,/${form_e}/s|"${name2}"|${magic}:${tag}}{"${name2}"}%\n|" $wrkfile
-            # description section :  replace name with  target name
             #sed -i "/${desc_b}/,/${desc_e}/s|^"${name2}"|${target} "${name2}"|g"  $wrkfile
             #sed -i "/${desc_b}/,/${desc_e}/s|\\\\optional{"${name2}"}|${target} \\\\optional{"${name2}"}|g"  $wrkfile
-            # description section :  replace name with  name target
 	    if [ "$type" = "F90" ] ; then
+		echo "$name \t\t $link \t\t $target \t\t "$name2
+		sed -i "/${form_b}/,/${form_e}/s|"${name2}"|${magic}:${tag}}{"${name2}"}%\n|" $wrkfile
 		sed -i "/${desc_b}/,/${desc_e}/s|^"${name2}"|"${name2}"${target}|g"  $wrkfile
 		sed -i "/${desc_b}/,/${desc_e}/s|\\\\optional{"${name2}"|\\\\optional{"${name2}"${target}|g"  $wrkfile
 	    fi
 	    if [ "$type" = "IDL" ] ; then
+		echo "$name \t\t $link \t\t $target \t\t "$name1" "$name2
+		sed -i "/${form_b}/,/${form_e}/s|"${name1}"|${magic}:${tag}}{"${name1}"}%\n|" $wrkfile
 		sed -i "/${desc_b1}/,/${desc_e1}/s|^"${name2}"|"${name2}"${target}|g"  $wrkfile
 		sed -i "/${desc_b2}/,/${desc_e2}/s|^"${name2}"|"${name2}"${target}|g"  $wrkfile
-		sed -i "/${desc_b1}/,/${desc_e1}/s|\\\\item\["${name2}"\]|\\\\item\["${name2}"\] ${target}%\n|g"  $wrkfile
-		sed -i "/${desc_b2}/,/${desc_e2}/s|\\\\item\["${name2}"\]|\\\\item\["${name2}"\] ${target}%\n|g"  $wrkfile
+		sed -i "/${desc_b1}/,/${desc_e1}/s|\\\\item\["${name2}"|\\\\item\["${name2}"${target}%\n|g"  $wrkfile
+		sed -i "/${desc_b2}/,/${desc_e2}/s|\\\\item\["${name2}"|\\\\item\["${name2}"${target}%\n|g"  $wrkfile
+		sed -i "/${desc_b1}/,/${desc_e1}/s|^/"${name2}"|/"${name2}"${target}|g"  $wrkfile
+		sed -i "/${desc_b2}/,/${desc_e2}/s|^/"${name2}"|/"${name2}"${target}|g"  $wrkfile
+		sed -i "/${desc_b1}/,/${desc_e1}/s|\\\\item\[/"${name2}"|\\\\item\[/"${name2}"${target}%\n|g"  $wrkfile
+		sed -i "/${desc_b2}/,/${desc_e2}/s|\\\\item\[/"${name2}"|\\\\item\[/"${name2}"${target}%\n|g"  $wrkfile
 	    fi
         done
 	sed -i "/${form_b}/,/${form_e}/s|${magic}|${slink}|" $wrkfile
@@ -117,4 +131,5 @@ for file in $files; do
 done
 
 # ./make_internal_links.sh add_card.tex add_dipole.tex alm2cl.tex create_alm.tex
+# ./make_internal_links.sh ang2vec bin_llcl
 exit
