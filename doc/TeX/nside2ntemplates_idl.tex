@@ -25,20 +25,26 @@ to resolution parameter Nside. Each template pixel has a different shape that
 \end{facility}
 
 \begin{IDLformat}
-{Ntemplates=\FACNAME(Nside [,ERROR=])}
+{\mylink{idl:nside2ntemplates:Ntemplates}{Ntemplates=}%
+\FACNAME(\mylink{idl:nside2ntemplates:Nside}{Nside}%
+ [,\mylink{idl:nside2ntemplates:ERROR}{ERROR=}%
+])}
 \end{IDLformat}
 
 \begin{qualifiers}
   \begin{qulist}{} %%%% NOTE the ``extra'' brace here %%%%
-    \item[Nside] \healpix resolution parameter (scalar integer),
+    \item[Nside\mytarget{idl:nside2ntemplates:Nside}%
+] \healpix resolution parameter (scalar integer),
          should be a valid Nside (power of 2 in $\{1,\ldots,8192\}$)
-    \item[Ntemplates] number of templates
+    \item[Ntemplates\mytarget{idl:nside2ntemplates:Ntemplates}%
+] number of templates
   \end{qulist}
 \end{qualifiers}
 
 \begin{keywords}
   \begin{kwlist}{} %%% extra brace
-    \item[ERROR =] error flag, set to 1 on output if Nside is NOT valid, or
+    \item[ERROR\mytarget{idl:nside2ntemplates:ERROR}%
+ =] error flag, set to 1 on output if Nside is NOT valid, or
     stays to 0 otherwise.
   \end{kwlist}
 \end{keywords}  

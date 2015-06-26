@@ -28,17 +28,32 @@ information relative to the Stokes parameters I, Q and U are placed in extension
 \end{facility}
 
 \begin{IDLformat}
-{\FACNAME, File, Pixel, Signal [, N\_Obs, Serror, 
-COORDSYS=, 
-EXTENSION=, 
-HDR=,
-/NESTED, 
-NSIDE=, 
-ORDERING=, 
-/POLARISATION,
-/RING,
-UNITS=,
-XHDR=]
+{\FACNAME, \mylink{idl:write_fits_cut4:File}{File}%
+, \mylink{idl:write_fits_cut4:Pixel}{Pixel}%
+, \mylink{idl:write_fits_cut4:Signal}{Signal}%
+ [, \mylink{idl:write_fits_cut4:N_Obs}{N\_Obs}%
+, \mylink{idl:write_fits_cut4:Serror}{Serror}%
+, 
+\mylink{idl:write_fits_cut4:COORDSYS}{COORDSYS=}%
+, 
+\mylink{idl:write_fits_cut4:EXTENSION}{EXTENSION=}%
+, 
+\mylink{idl:write_fits_cut4:HDR}{HDR=}%
+,
+\mylink{idl:write_fits_cut4:NESTED}{/NESTED}%
+, 
+\mylink{idl:write_fits_cut4:NSIDE}{NSIDE=}%
+, 
+\mylink{idl:write_fits_cut4:ORDERING}{ORDERING=}%
+, 
+\mylink{idl:write_fits_cut4:POLARISATION}{/POLARISATION}%
+,
+\mylink{idl:write_fits_cut4:RING}{/RING}%
+,
+\mylink{idl:write_fits_cut4:UNITS}{UNITS=}%
+,
+X\mylink{idl:write_fits_cut4:HDR}{HDR=}%
+]
 }
 \end{IDLformat}
 
@@ -90,7 +105,8 @@ XHDR=]
 		  All extensions of the same file should use the same ORDERING,
 		  NSIDE and COORDSYS.
 
-    	\item[HDR=] 	
+    	\item[HDR\mytarget{idl:write_fits_cut4:HDR}%
+=] 	
 		(optional), \\
 		String array containing the information to be put in
 		the primary header. 
@@ -130,7 +146,8 @@ FITS header keywords accordingly
 		string describing the physical units of the data set (only applies
 		to Signal and Serror)
 
-    	\item[XHDR=] 	
+    	\item[XHDR\mytarget{idl:write_fits_cut4:XHDR}%
+=] 	
 		(optional), \\
 		String array containing the information to be put in
 		the extension header. 

@@ -30,24 +30,33 @@ the correct format to be ingested by the \healpix simulation facility
 \end{facility}
 
 \begin{IDLformat}
-{BL2FITS, bl\_array, fitsfile, [HDR = , /HELP, XHDR =]}
+{{BL2FITS}%
+, \mylink{idl:bl2fits:bl_array}{bl\_array}%
+, \mylink{idl:bl2fits:fitsfile}{fitsfile}%
+, [HDR = , \mylink{idl:bl2fits:HELP}{/HELP}%
+, XHDR =]}
 \end{IDLformat}
 
 \begin{qualifiers}
   \begin{qulist}{} %%%% NOTE the ``extra'' brace here %%%%
-    \item[bl\_array] real or double array of Bl coefficients to be written to
+    \item[bl\_array\mytarget{idl:bl2fits:bl_array}%
+] real or double array of Bl coefficients to be written to
       file. This has dimension (lmax+1,$n$) with $1\le n \le 3$, given in the sequence T E B.
-    \item[fitsfile] String containing the name of the file to be written.
+    \item[fitsfile\mytarget{idl:bl2fits:fitsfile}%
+] String containing the name of the file to be written.
   \end{qulist}
 \end{qualifiers}
 
 \begin{keywords}
   \begin{kwlist}{} %%% extra brace
-    \item[HDR =] String array containing the (non-trivial) primary header
+    \item[HDR\mytarget{idl:bl2fits:HDR}%
+ =] String array containing the (non-trivial) primary header
       for the FITS file. 
-    \item[/HELP] If set, a help message is printed out, no file is written
+    \item[/HELP\mytarget{idl:bl2fits:HELP}%
+] If set, a help message is printed out, no file is written
 
-    \item[XHDR =] String array containing the (non-trivial) extension header
+    \item[XHDR\mytarget{idl:bl2fits:XHDR}%
+ =] String array containing the (non-trivial) extension header
       for the FITS file. 
 
   \end{kwlist}

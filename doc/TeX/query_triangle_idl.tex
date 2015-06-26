@@ -25,30 +25,46 @@ a sperical triangle defined by its vertices
 \end{facility}
 
 \begin{IDLformat}
-{\facname, Nside, Vector1, Vector2, Vector3, Listpix, [Nlist, NESTED=, INCLUSIVE=]}
+{\facname, \mylink{idl:query_triangle:Nside}{Nside}%
+, \mylink{idl:query_triangle:Vector1}{Vector1}%
+, \mylink{idl:query_triangle:Vector2}{Vector2}%
+, \mylink{idl:query_triangle:Vector3}{Vector3}%
+, \mylink{idl:query_triangle:Listpix}{Listpix}%
+, [\mylink{idl:query_triangle:Nlist}{Nlist}%
+, \mylink{idl:query_triangle:NESTED}{NESTED=}%
+, \mylink{idl:query_triangle:INCLUSIVE}{INCLUSIVE=}%
+]}
 \end{IDLformat}
 
 \begin{qualifiers}
   \begin{qulist}{} %%%% NOTE the ``extra'' brace here %%%%
-    \item[Nside] \healpix resolution parameter used to index the pixel list (scalar integer)
-    \item[Vector1] 3D cartesian position vector of the triangle first  vertex
-    \item[Vector2] 3D cartesian position vector of the triangle second vertex
-    \item[Vector3] 3D cartesian position vector of the triangle third  vertex
+    \item[Nside\mytarget{idl:query_triangle:Nside}%
+] \healpix resolution parameter used to index the pixel list (scalar integer)
+    \item[Vector1\mytarget{idl:query_triangle:Vector1}%
+] 3D cartesian position vector of the triangle first  vertex
+    \item[Vector2\mytarget{idl:query_triangle:Vector2}%
+] 3D cartesian position vector of the triangle second vertex
+    \item[Vector3\mytarget{idl:query_triangle:Vector3}%
+] 3D cartesian position vector of the triangle third  vertex
           NB : the norm of Vector* does not have to be one, what is
           considered is the intersection of the sphere with the line of
           direction Vector*.
-    \item[Listpix] on output: list of ordered index for the pixels found 
+    \item[Listpix\mytarget{idl:query_triangle:Listpix}%
+] on output: list of ordered index for the pixels found 
     in the triangle. The RING numbering scheme is used unless the keyword {\tt NESTED} is set.
      (=-1 if the triangle is too small and no pixel is found)
-    \item[Nlist] on output: number of pixels in Listpix (=0 if no pixel is found).
+    \item[Nlist\mytarget{idl:query_triangle:Nlist}%
+] on output: number of pixels in Listpix (=0 if no pixel is found).
   \end{qulist}
 \end{qualifiers}
 
 \begin{keywords}
   \begin{kwlist}{} %%% extra brace
-    \item[NESTED =] if set, the output list uses the NESTED numbering scheme
+    \item[NESTED\mytarget{idl:query_triangle:NESTED}%
+ =] if set, the output list uses the NESTED numbering scheme
     instead of the default RING
-    \item[INCLUSIVE = ] if set, all the pixels overlapping (even partially)
+    \item[INCLUSIVE\mytarget{idl:query_triangle:INCLUSIVE}%
+ = ] if set, all the pixels overlapping (even partially)
                    with the triangle are listed, otherwise only those whose
                    center lies within the triangle are listed
   \end{kwlist}

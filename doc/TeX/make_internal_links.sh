@@ -15,9 +15,10 @@ listArguments () {
 		  sed "s|\[||g"  | sed "s|\]||g" | \
 		  sed "s|{||g"   | sed "s|}||g"  | \
 		  sed "s| ||g"   | sed "s|,|\n|g" | \
-		  sed "s|\\\\facname||g" | sed "s|\\\\FACNAME||g" | \
+		  sed "s|\\\\facname| |g" | sed "s|\\\\FACNAME| |g" | \
 		  sed "s|\\\\thedocid||g" | sed "s|\\\\tt||g" | \
-		  sed "s/|/ /g" | sed "s|~||g" | sed "s|\\\\hfill||g"
+		  sed "s/|/ /g" | sed "s|~||g" | sed "s|\\\\hfill||g" | \
+	          sed "s|(||g" | sed "s|)||g" 
 
 }
 
@@ -54,11 +55,11 @@ fi
 
 magic='MYLINK{ABCdefGHI123'
 for shortfile in $files; do
-    echo $shortfile
 
     file="${shortfile%.*}.tex" # make sure .tex suffix is present
     echo $file
-    outfile=`echo $file | sed "s|.tex|_2.tex|"`
+    #outfile=`echo $file | sed "s|.tex|_2.tex|"`
+    outfile=$file
 
     np=`countLinks $file`
     ### [[ "$file" = "write_bintabh.tex" ]] && np=0
@@ -67,8 +68,8 @@ for shortfile in $files; do
 
 	nidl=`match $file "_idl"`
 	if [ "$nidl" = "0" ] ; then
+	    # for F90 functions/subroutines
 	    nf=`testF90Function $file`
-	    outfile=$file  # overwrite!
 	    type="F90"
 	    desc_b="begin{arguments}"
 	    desc_e="end{arguments}"
@@ -143,7 +144,7 @@ for shortfile in $files; do
         cp -f $wrkfile $outfile
     
     else
-        echo "$file already processed."
+        echo "$file $outfile $type already processed."
 	[[ ${outfile} != ${file} ]] && cp ${file} ${outfile}
     fi
 

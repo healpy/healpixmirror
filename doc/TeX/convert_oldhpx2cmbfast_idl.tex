@@ -26,21 +26,28 @@ from Healpix 1.1 convention to Healpix 1.2 (which is the same as CMBFAST).
 \end{facility}
 
 \begin{IDLformat}
-{CONVERT\_OLDHPX2CMBFAST, file\_in, [file\_out, NO\_RENORM= ]}
+{{CONVERT\_OLDHPX2CMBFAST}%
+, \mylink{idl:convert_oldhpx2cmbfast:file_in}{file\_in}%
+, [\mylink{idl:convert_oldhpx2cmbfast:file_out}{file\_out}%
+, \mylink{idl:convert_oldhpx2cmbfast:NO_RENORM}{NO\_RENORM=}%
+ ]}
 \end{IDLformat}
 
 \begin{qualifiers}
   \begin{qulist}{} %%%% NOTE the ``extra'' brace here %%%%
-    \item[file\_in] String containing the name of the FITS file with the power
+    \item[file\_in\mytarget{idl:convert_oldhpx2cmbfast:file_in}%
+] String containing the name of the FITS file with the power
     spectra to be read.
-    \item[file\_out] (OPTIONAL) String containing the name of the file to be
+    \item[file\_out\mytarget{idl:convert_oldhpx2cmbfast:file_out}%
+] (OPTIONAL) String containing the name of the file to be
     written after renormalization. If absent, {\tt file\_in} will be used for output
   \end{qulist}
 \end{qualifiers}
 
 \begin{keywords}
   \begin{kwlist}{} %%% extra brace
-    \item[NO\_RENORM =] if set, the renormalization is not done.
+    \item[NO\_RENORM\mytarget{idl:convert_oldhpx2cmbfast:NO_RENORM}%
+ =] if set, the renormalization is not done.
       but the keyword POLNORM = CMBFAST is added to the FITS header
    (useful if the FITS file is already in CMBFAST format).
   \end{kwlist}

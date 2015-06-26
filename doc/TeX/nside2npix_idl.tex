@@ -26,21 +26,27 @@ to resolution parameter Nside.
 \end{facility}
 
 \begin{IDLformat}
-{Npix=\FACNAME(Nside [,ERROR=])}
+{\mylink{idl:nside2npix:Npix}{Npix=}%
+\FACNAME(\mylink{idl:nside2npix:Nside}{Nside}%
+ [,\mylink{idl:nside2npix:ERROR}{ERROR=}%
+])}
 \end{IDLformat}
 
 \begin{qualifiers}
   \begin{qulist}{} %%%% NOTE the ``extra'' brace here %%%%
-    \item[Nside] \healpix resolution parameter (scalar integer),
+    \item[Nside\mytarget{idl:nside2npix:Nside}%
+] \healpix resolution parameter (scalar integer),
          should be a valid Nside (power of 2 $ \le 2^{29}$)
-    \item[Npix] number of pixels, Npix = 12*Nside$^2$ if Nside is a valid
+    \item[Npix\mytarget{idl:nside2npix:Npix}%
+] number of pixels, Npix = 12*Nside$^2$ if Nside is a valid
     resolution parameter or -1 otherwise
   \end{qulist}
 \end{qualifiers}
 
 \begin{keywords}
   \begin{kwlist}{} %%% extra brace
-    \item[ERROR =] error flag, set to 1 on output if Nside is NOT valid, or
+    \item[ERROR\mytarget{idl:nside2npix:ERROR}%
+ =] error flag, set to 1 on output if Nside is NOT valid, or
     stays to 0 otherwise.
   \end{kwlist}
 \end{keywords}  

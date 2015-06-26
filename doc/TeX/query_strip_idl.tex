@@ -25,33 +25,49 @@ a latitude strip defined by its bounds
 \end{facility}
 
 \begin{IDLformat}
-{\facname, Nside, Theta1, Theta2, Listpix, [Nlist, NESTED=, INCLUSIVE=, HELP=]}
+{\facname, \mylink{idl:query_strip:Nside}{Nside}%
+, \mylink{idl:query_strip:Theta1}{Theta1}%
+, \mylink{idl:query_strip:Theta2}{Theta2}%
+, \mylink{idl:query_strip:Listpix}{Listpix}%
+, [\mylink{idl:query_strip:Nlist}{Nlist}%
+, \mylink{idl:query_strip:NESTED}{NESTED=}%
+, \mylink{idl:query_strip:INCLUSIVE}{INCLUSIVE=}%
+, \mylink{idl:query_strip:HELP}{HELP=}%
+]}
 \end{IDLformat}
 
 \begin{qualifiers}
   \begin{qulist}{} %%%% NOTE the ``extra'' brace here %%%%
-    \item[Nside] \healpix resolution parameter used to index the pixel list (scalar integer)
-    \item[Theta1] colatitude lower bound in radians measured from North Pole
+    \item[Nside\mytarget{idl:query_strip:Nside}%
+] \healpix resolution parameter used to index the pixel list (scalar integer)
+    \item[Theta1\mytarget{idl:query_strip:Theta1}%
+] colatitude lower bound in radians measured from North Pole
                    (between 0 and $\pi$).
-    \item[Theta2] colatitude upper bound in radians measured from North Pole (between 0 and $\pi$). If
+    \item[Theta2\mytarget{idl:query_strip:Theta2}%
+] colatitude upper bound in radians measured from North Pole (between 0 and $\pi$). If
                    theta1$<$ theta2, the pixels lying in [theta1,theta2]
                    are output, otherwise, the pixel lying in [0,
                    theta2] and those lying in [theta1, $\pi$] are output.\\
-    \item[Listpix] on output: list of ordered index for the pixels found 
+    \item[Listpix\mytarget{idl:query_strip:Listpix}%
+] on output: list of ordered index for the pixels found 
     in the strip. The RING numbering scheme is used unless the keyword {\tt NESTED} is set.
      (=-1 if the strip is too small and no pixel is found)
-    \item[Nlist] on output: number of pixels in Listpix (=0 if no pixel is found).
+    \item[Nlist\mytarget{idl:query_strip:Nlist}%
+] on output: number of pixels in Listpix (=0 if no pixel is found).
   \end{qulist}
 \end{qualifiers}
 
 \begin{keywords}
   \begin{kwlist}{} %%% extra brace
-    \item[NESTED =] if set, the output list uses the NESTED numbering scheme
+    \item[NESTED\mytarget{idl:query_strip:NESTED}%
+ =] if set, the output list uses the NESTED numbering scheme
     instead of the default RING
-    \item[INCLUSIVE = ] if set, all the pixels overlapping (even partially)
+    \item[INCLUSIVE\mytarget{idl:query_strip:INCLUSIVE}%
+ = ] if set, all the pixels overlapping (even partially)
                    with the strip are listed, otherwise only those whose
                    center lies within the strip are listed
-    \item[/HELP ] if set, the routine prints its documentation header and exits.
+    \item[/HELP\mytarget{idl:query_strip:HELP}%
+ ] if set, the routine prints its documentation header and exits.
   \end{kwlist}
 \end{keywords}  
 

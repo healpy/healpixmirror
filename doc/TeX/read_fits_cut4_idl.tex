@@ -27,8 +27,19 @@ each Stokes parameter is stored in a different extension of the same FITS file.}
 \end{facility}
 
 \begin{IDLformat}
-{\FACNAME, File, Pixel, Signal [, N\_Obs, Serror, EXTENSION=, HDR=, XHDR=, NSIDE=,
-    ORDERING=, COORDSYS=]
+{\FACNAME, \mylink{idl:read_fits_cut4:File}{File}%
+, \mylink{idl:read_fits_cut4:Pixel}{Pixel}%
+, \mylink{idl:read_fits_cut4:Signal}{Signal}%
+ [, \mylink{idl:read_fits_cut4:N_Obs}{N\_Obs}%
+, \mylink{idl:read_fits_cut4:Serror}{Serror}%
+, \mylink{idl:read_fits_cut4:EXTENSION}{EXTENSION=}%
+, \mylink{idl:read_fits_cut4:HDR}{HDR=}%
+, \mylink{idl:read_fits_cut4:XHDR}{XHDR=}%
+, \mylink{idl:read_fits_cut4:NSIDE}{NSIDE=}%
+,
+    \mylink{idl:read_fits_cut4:ORDERING}{ORDERING=}%
+, \mylink{idl:read_fits_cut4:COORDSYS}{COORDSYS=}%
+]
 }
 \end{IDLformat}
 
@@ -55,17 +66,20 @@ each Stokes parameter is stored in a different extension of the same FITS file.}
 
 \begin{keywords}
   \begin{kwlist}{} %%% extra brace
-    	\item[EXTENSION =] 	
+    	\item[EXTENSION\mytarget{idl:read_fits_cut4:EXTENSION}%
+ =] 	
 		(IN, optional), \\
 		0 based number of extension to read. Extension 0 contains the
 temperature information, while extensions 1 and 2 contain respectively the Q
 and U Stokes parameters related information. \default{0} 
 
-    	\item[HDR =] 	
+    	\item[HDR\mytarget{idl:read_fits_cut4:HDR}%
+ =] 	
 		(OUT, optional), \\
 		String array containing the primary header. 
 
-    	\item[XHDR =] 	
+    	\item[XHDR\mytarget{idl:read_fits_cut4:XHDR}%
+ =] 	
 		(OUT, optional), \\
 		String array containing the extension header. 
 

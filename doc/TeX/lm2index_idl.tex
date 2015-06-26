@@ -18,14 +18,21 @@ alm2fits routine for instance)}
 \end{facility}
 
 \begin{IDLformat}
-{LM2INDEX, l, m, index}
+{LM2INDEX, 
+\mylink{idl:lm2index:l}{l}, 
+\mylink{idl:lm2index:m}{m}, 
+\mylink{idl:lm2index:index}{index}
+}
 \end{IDLformat}
 
 \begin{qualifiers}
   \begin{qulist}{} %%%% NOTE the ``extra'' brace here %%%%
-    \item[l] Long array containing on INPUT the order $\ell$. 
-    \item[m] Long array containing on INPUT the degree $m$. 
-    \item[index] Long array containing on OUTPUT the index \hfill\newline
+    \item[l\mytarget{idl:lm2index:l}%
+] Long array containing on INPUT the order $\ell$. 
+    \item[m\mytarget{idl:lm2index:m}%
+] Long array containing on INPUT the degree $m$. 
+    \item[index\mytarget{idl:lm2index:index}%
+] Long array containing on OUTPUT the index \hfill\newline
                  $i$ = $\ell^2$ + $\ell$ + $m$ + 1.
   \end{qulist}
 \end{qualifiers}

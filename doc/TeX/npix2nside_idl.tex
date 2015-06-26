@@ -26,21 +26,27 @@ pixels over the full sky.
 \end{facility}
 
 \begin{IDLformat}
-{Nside=\FACNAME(Npix [,ERROR=])}
+{\mylink{idl:npix2nside:Nside}{Nside=}%
+\FACNAME(\mylink{idl:npix2nside:Npix}{Npix}%
+ [,\mylink{idl:npix2nside:ERROR}{ERROR=}%
+])}
 \end{IDLformat}
 
 \begin{qualifiers}
   \begin{qulist}{} %%%% NOTE the ``extra'' brace here %%%%
-    \item[Npix] number of pixels over the full sky (scalar integer),
+    \item[Npix\mytarget{idl:npix2nside:Npix}%
+] number of pixels over the full sky (scalar integer),
          should be a valid Npix 
 	($N_{\rm pix} = 12N_{\rm side}^2$ with $N_{\rm side}$ power of 2 in $\{1,\ldots,2^{29}\}$)
-    \item[Nside] on output: resolution parameter if Npix is valid, -1 otherwise
+    \item[Nside\mytarget{idl:npix2nside:Nside}%
+] on output: resolution parameter if Npix is valid, -1 otherwise
   \end{qulist}
 \end{qualifiers}
 
 \begin{keywords}
   \begin{kwlist}{} %%% extra brace
-    \item[ERROR =] error flag, set to 1 on output if Npix is NOT valid, or
+    \item[ERROR\mytarget{idl:npix2nside:ERROR}%
+ =] error flag, set to 1 on output if Npix is NOT valid, or
     stays to 0 otherwise.
   \end{kwlist}
 \end{keywords}  

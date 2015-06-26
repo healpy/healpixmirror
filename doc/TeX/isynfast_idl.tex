@@ -17,56 +17,95 @@ $a_{lm}$ or simulate maps from $C(l)$ and constraining $a_{lm}$.}
 \end{facility}
 
 \begin{IDLformat}
-{ISYNFAST, cl\_in [, map\_out,
-      alm\_in=,  alm\_out=, apply\_windows=, beam\_file=, binpath=, double=, fwhm\_arcmin=, help=,
-      iseed=, keep\_tmp\_files=, lmax=, nlmax=, nside=, nsmax=, plmfile=,
-      simul\_type=, silent=, tmpdir=, windowfile=, winfiledir=]}
+{ISYNFAST%
+, \mylink{idl:isynfast:cl_in}{cl\_in}%
+ [, \mylink{idl:isynfast:map_out}{map\_out}%
+,
+      \mylink{idl:isynfast:alm_in}{alm\_in=}%
+,  \mylink{idl:isynfast:alm_out}{alm\_out=}%
+, \mylink{idl:isynfast:apply_windows}{apply\_windows=}%
+, \mylink{idl:isynfast:beam_file}{beam\_file=}%
+, \mylink{idl:isynfast:binpath}{binpath=}%
+, \mylink{idl:isynfast:double}{double=}%
+, \mylink{idl:isynfast:fwhm_arcmin}{fwhm\_arcmin=}%
+, \mylink{idl:isynfast:help}{help=}%
+,
+      \mylink{idl:isynfast:iseed}{iseed=}%
+, \mylink{idl:isynfast:keep_tmp_files}{keep\_tmp\_files=}%
+, \mylink{idl:isynfast:lmax}{lmax=}%
+, \mylink{idl:isynfast:nlmax}{nlmax=}%
+, \mylink{idl:isynfast:nside}{nside=}%
+, \mylink{idl:isynfast:nsmax}{nsmax=}%
+, \mylink{idl:isynfast:plmfile}{plmfile=}%
+,
+      \mylink{idl:isynfast:simul_type}{simul\_type=}%
+, \mylink{idl:isynfast:silent}{silent=}%
+, \mylink{idl:isynfast:tmpdir}{tmpdir=}%
+, \mylink{idl:isynfast:windowfile}{windowfile=}%
+, \mylink{idl:isynfast:winfiledir}{winfiledir=}%
+]}
 \end{IDLformat}
 
 \begin{qualifiers}
   \begin{qulist}{} %%%% NOTE the ``extra'' brace here %%%%
-   \item[cl\_in] input power spectrum, can be a FITS file, or a memory array containing the
+   \item[cl\_in\mytarget{idl:isynfast:cl_in}%
+] input power spectrum, can be a FITS file, or a memory array containing the
         $C(l)$, used to generate a map or a set of gaussian alm \\
    If empty quotes ('') or a zero (0) are provided, it will be interpreted as "No input C(l)", in
    which case some input alm's (alm\_in) are required.
-    \item[map\_out] optional output: {\em RING ordered} map synthetised from the power spectrum or from constraining alm
+    \item[map\_out\mytarget{idl:isynfast:map_out}%
+] optional output: {\em RING ordered} map synthetised from the power spectrum or from constraining alm
   \end{qulist}
 \end{qualifiers}
 
 \begin{keywords}
   \begin{kwlist}{} %%% extra brace
- \item[alm\_in=]    optional input (constraining) alm (must be a FITS file)           \default {no alm}
+ \item[alm\_in\mytarget{idl:isynfast:alm_in}%
+=]    optional input (constraining) alm (must be a FITS file)           \default {no alm}
 
- \item[alm\_out=]   contains on output the effective alm (must be a FITS file)
+ \item[alm\_out\mytarget{idl:isynfast:alm_out}%
+=]   contains on output the effective alm (must be a FITS file)
 
- \item[/apply\_windows] if set, beam and pixel windows are applied to input alm\_in
+ \item[/apply\_windows\mytarget{idl:isynfast:apply_windows}%
+] if set, beam and pixel windows are applied to input alm\_in
 (if any)
 
- \item[beam\_file=] beam window function, either a FITS file or an array
+ \item[beam\_file\mytarget{idl:isynfast:beam_file}%
+=] beam window function, either a FITS file or an array
 
- \item[binpath=] full path to back-end routine \default {\$HEXE/synfast, then \$HEALPIX/bin/synfast}\\
+ \item[binpath\mytarget{idl:isynfast:binpath}%
+=] full path to back-end routine \default {\$HEXE/synfast, then \$HEALPIX/bin/synfast}\\
               -- a binpath starting with / (or $\backslash$), $~$ or \$ is interpreted as absolute\\
               -- a binpath starting with ./ is interpreted as relative to current directory\\
               -- all other binpathes are relative to \$HEALPIX
 
- \item[/double]    if set, I/O is done in double precision \default {single precision I/O}
+ \item[/double\mytarget{idl:isynfast:double}%
+]    if set, I/O is done in double precision \default {single precision I/O}
 
- \item[fwhm\_arcmin=] gaussian beam FWHM in arcmin \default {0}
+ \item[fwhm\_arcmin\mytarget{idl:isynfast:fwhm_arcmin}%
+=] gaussian beam FWHM in arcmin \default {0}
 
- \item[/help]      if set, prints extended help
+ \item[/help\mytarget{idl:isynfast:help}%
+]      if set, prints extended help
 
- \item[iseed=] integer seed of radom sequence \default {0}
+ \item[iseed\mytarget{idl:isynfast:iseed}%
+=] integer seed of radom sequence \default {0}
 
- \item[/keep\_tmp\_files] if set, temporary files are not discarded at the end of the
+ \item[/keep\_tmp\_files\mytarget{idl:isynfast:keep_tmp_files}%
+] if set, temporary files are not discarded at the end of the
                    run
 
- \item[lmax=, nlmax=]   maximum multipole simulation \default {2*$N_{\rm side}$}
+ \item[lmax\mytarget{idl:isynfast:lmax}%
+=, nlmax=]   maximum multipole simulation \default {2*$N_{\rm side}$}
 
- \item[nside=, nsmax=]  Healpix resolution parameter $N_{\rm side}$
+ \item[nside\mytarget{idl:isynfast:nside}%
+=, nsmax=]  Healpix resolution parameter $N_{\rm side}$
 
- \item[plmfile=] FITS file containing precomputed Spherical Harmonics (deprecated) \default {no file}
+ \item[plmfile\mytarget{idl:isynfast:plmfile}%
+=] FITS file containing precomputed Spherical Harmonics (deprecated) \default {no file}
 
- \item[simul\_type=] 
+ \item[simul\_type\mytarget{idl:isynfast:simul_type}%
+=] 
         1) Temperature only \\
         2) Temperature + polarisation \\
         3) Temperature + 1st derivatives \\
@@ -75,16 +114,20 @@ $a_{lm}$ or simulate maps from $C(l)$ and constraining $a_{lm}$.}
         6) T+P + 1st \& 2nd derivates
 	\default {2: T+P}
 
- \item[/silent]    if set, works silently
+ \item[/silent\mytarget{idl:isynfast:silent}%
+]    if set, works silently
 
- \item[tmpdir=]      directory in which are written temporary files 
+ \item[tmpdir\mytarget{idl:isynfast:tmpdir}%
+=]      directory in which are written temporary files 
  \default {IDL\_TMPDIR (see IDL documentation)}
 
- \item[windowfile=]    FITS file containing pixel window 
+ \item[windowfile\mytarget{idl:isynfast:windowfile}%
+=]    FITS file containing pixel window 
         \default {determined automatically by back-end routine}.
       Do not set this keyword unless you really know what you are doing
 
-  \item[winfiledir=]     directory where the pixel windows are to be found 
+  \item[winfiledir\mytarget{idl:isynfast:winfiledir}%
+=]     directory where the pixel windows are to be found 
         \default {determined automatically by back-end routine}.
       Do not set this keyword unless you really know what you are doing
 

@@ -16,17 +16,24 @@
 
 \end{facility}
 
+
 \begin{IDLformat}
-{INDEX2LM, index, l, m}
+{INDEX2LM, 
+\mylink{idl:index2lm:index}{index}, 
+\mylink{idl:index2lm:l}{l}, 
+\mylink{idl:index2lm:m}{m}}
 \end{IDLformat}
 
 \begin{qualifiers}
   \begin{qulist}{} %%%% NOTE the ``extra'' brace here %%%%
-    \item[index] Long array containing on INPUT the index \hfill\newline
+    \item[index\mytarget{idl:index2lm:index}%
+] Long array containing on INPUT the index \hfill\newline
                  $i$ = $\ell^2$ + $\ell$ + $m$ + 1.
-    \item[l] Long array containing on OUTPUT the order $\ell$. It has the same
+    \item[l\mytarget{idl:index2lm:l}%
+] Long array containing on OUTPUT the order $\ell$. It has the same
     size as {\tt index}.
-    \item[m] Long array containing on OUTPUT the degree $m$. It has the same
+    \item[m\mytarget{idl:index2lm:m}%
+] Long array containing on OUTPUT the degree $m$. It has the same
     size as {\tt index}.
   \end{qulist}
 \end{qualifiers}

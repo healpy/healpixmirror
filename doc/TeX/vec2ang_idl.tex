@@ -26,22 +26,29 @@ on the sphere.
 \end{facility}
 
 \begin{IDLformat}
-{\FACNAME, Vector, Theta, Phi [, ASTRO=]}
+{\FACNAME, \mylink{idl:vec2ang:Vector}{Vector}%
+, \mylink{idl:vec2ang:Theta}{Theta}%
+, \mylink{idl:vec2ang:Phi}{Phi}%
+ [, \mylink{idl:vec2ang:ASTRO}{ASTRO=}%
+]}
 \end{IDLformat}
 
 \begin{qualifiers}
   \begin{qulist}{} %%%% NOTE the ``extra'' brace here %%%%
-    \item[Vector] input, array, \\
+    \item[Vector\mytarget{idl:vec2ang:Vector}%
+] input, array, \\
 	three dimensional cartesian position vector
                    $(x,y,z)$ (not necessarily normalised). The north pole is $(0,0,1)$. 
 	The coordinates are ordered as follows
                    $x(0),\ldots,x(n-1),\ y(0),\ldots,y(n-1),\ z(0),\ldots,z(n-1)$
-    \item[Theta] output, vector, \\
+    \item[Theta\mytarget{idl:vec2ang:Theta}%
+] output, vector, \\
 	vector, colatitude in radians measured southward from north pole in
     [0,$\pi$] (mathematical coordinates).\\
        If ASTRO is set, Theta is the latitude in degrees measured 
        northward from the equator, in [-90, 90] (astronomical coordinates).
-    \item[Phi] output, vector, \\
+    \item[Phi\mytarget{idl:vec2ang:Phi}%
+] output, vector, \\
 	longitude in radians measured eastward, in [0, $2\pi$] (mathematical coordinates).\\
  	If ASTRO is set, Phi is the longitude in degree measured eastward, in
     [0,360] (astronomical coordinates).
@@ -50,7 +57,8 @@ on the sphere.
 
 \begin{keywords}
   \begin{kwlist}{} %%% extra brace
-    \item[ASTRO =] if set Theta and Phi are the latitude and longitude in
+    \item[ASTRO\mytarget{idl:vec2ang:ASTRO}%
+ =] if set Theta and Phi are the latitude and longitude in
     degrees (astronomical coordinates) instead of the colatitude and longitude
     in radians (mathematical coordinates).
   \end{kwlist}

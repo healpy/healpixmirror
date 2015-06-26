@@ -27,13 +27,15 @@ gaussian axisymmetric beam of given FWHM.
 \end{facility}
 
 \begin{IDLformat}
-{beam=\FACNAME(Fwhm, Lmax [, Dim])}
+{beam=\FACNAME(Fwhm, \mylink{idl:gaussbeam:Lmax}{Lmax}%
+ [, Dim])}
 \end{IDLformat}
 
 \begin{qualifiers}
   \begin{qulist}{} %%%% NOTE the ``extra'' brace here %%%%
     \item[Fwhm] Full Width Half Maximum of the gaussian beam, in arcmin (scalar real)
-    \item[Lmax] the window function is computed for the multipoles $\ell$ in \{0,...,Lmax\}
+    \item[Lmax\mytarget{idl:gaussbeam:Lmax}%
+] the window function is computed for the multipoles $\ell$ in \{0,...,Lmax\}
     \item[Dim] scalar integer, optional. \\
      If absent or set to 0 or 1,
           the output has size (Lmax+1) and is the temperature beam;\\

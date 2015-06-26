@@ -26,14 +26,16 @@ Healpix pixel of resolution Nside.}
 \end{facility}
 
 \begin{IDLformat}
-{wpix=\FACNAME(Nside [, Dim, Directory])}
+{wpix=\FACNAME(Nside [, \mylink{idl:healpixwindow:Dim}{Dim}%
+, Directory])}
 \end{IDLformat}
 
 \begin{qualifiers}
   \begin{qulist}{} %%%% NOTE the ``extra'' brace here %%%%
     \item[Nside] resolution parameter
     \item[Wpix] the pixel window function, computed for the multipoles $\ell$ in \{0,...,4Nside\}
-    \item[Dim] scalar integer, optional. \\
+    \item[Dim\mytarget{idl:healpixwindow:Dim}%
+] scalar integer, optional. \\
      If absent or set to 0 or 1,
           the output has size (4 Nside+1) and is the temperature
     window function;\\

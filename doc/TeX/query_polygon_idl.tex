@@ -25,28 +25,42 @@ a sperical polygon defined by its vertices
 \end{facility}
 
 \begin{IDLformat}
-{\facname, Nside, Vlist, Listpix, [Nlist, HELP=, NESTED=, INCLUSIVE=]}
+{\facname, \mylink{idl:query_polygon:Nside}{Nside}%
+, \mylink{idl:query_polygon:Vlist}{Vlist}%
+, \mylink{idl:query_polygon:Listpix}{Listpix}%
+, [\mylink{idl:query_polygon:Nlist}{Nlist}%
+, \mylink{idl:query_polygon:HELP}{HELP=}%
+, \mylink{idl:query_polygon:NESTED}{NESTED=}%
+, \mylink{idl:query_polygon:INCLUSIVE}{INCLUSIVE=}%
+]}
 \end{IDLformat}
 
 \begin{qualifiers}
   \begin{qulist}{} %%%% NOTE the ``extra'' brace here %%%%
-    \item[Nside] \healpix resolution parameter used to index the pixel list (scalar integer)
-    \item[Vlist] 3D cartesian position vector of the polygon vertices. Array of
+    \item[Nside\mytarget{idl:query_polygon:Nside}%
+] \healpix resolution parameter used to index the pixel list (scalar integer)
+    \item[Vlist\mytarget{idl:query_polygon:Vlist}%
+] 3D cartesian position vector of the polygon vertices. Array of
     dimension (n,3) where n is the number of vertices
-    \item[Listpix] on output: list of ordered index for the pixels found 
+    \item[Listpix\mytarget{idl:query_polygon:Listpix}%
+] on output: list of ordered index for the pixels found 
     in the polygon. The RING numbering scheme is used unless the keyword {\tt NESTED} is set.
      (=-1 if the polygon is too small and no pixel is found)
-    \item[Nlist] on output: number of pixels in Listpix (=0 if no pixel is found).
+    \item[Nlist\mytarget{idl:query_polygon:Nlist}%
+] on output: number of pixels in Listpix (=0 if no pixel is found).
   \end{qulist}
 \end{qualifiers}
 
 \begin{keywords}
   \begin{kwlist}{} %%% extra brace
-    \item[HELP=] if set, the documentation header is printed out and the
+    \item[HELP\mytarget{idl:query_polygon:HELP}%
+=] if set, the documentation header is printed out and the
 routine exits
-    \item[NESTED =] if set, the output list uses the NESTED numbering scheme
+    \item[NESTED\mytarget{idl:query_polygon:NESTED}%
+ =] if set, the output list uses the NESTED numbering scheme
     instead of the default RING
-    \item[INCLUSIVE = ] if set, all the pixels overlapping (even partially)
+    \item[INCLUSIVE\mytarget{idl:query_polygon:INCLUSIVE}%
+ = ] if set, all the pixels overlapping (even partially)
                    with the polygon are listed, otherwise only those whose
                    center lies within the polygon are listed
   \end{kwlist}
