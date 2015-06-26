@@ -18,7 +18,16 @@ Ordered Data set (tod).}
 \end{facility}
 
 \begin{f90format}
-{tod, npix, ntod, header, nlheader, filename, \optional{[extno, firstpix, repeat]}}
+{\mylink{sub:write_bintabh:tod}{tod}%
+, \mylink{sub:write_bintabh:npix}{npix}%
+, \mylink{sub:write_bintabh:ntod}{ntod}%
+, \mylink{sub:write_bintabh:header}{header}%
+, \mylink{sub:write_bintabh:nlheader}{nlheader}%
+, \mylink{sub:write_bintabh:filename}{filename}%
+, \optional{[\mylink{sub:write_bintabh:extno}{extno}%
+, \mylink{sub:write_bintabh:firstpix}{firstpix}%
+, \mylink{sub:write_bintabh:repeat}{repeat}%
+]}}
 \end{f90format}
 \aboutoptional
 
@@ -27,22 +36,22 @@ Ordered Data set (tod).}
 \begin{tabular}{p{0.35\hsize} p{0.05\hsize} p{0.08\hsize} p{0.45\hsize}} \hline  
 \textbf{name~\&~dimensionality} & \textbf{kind} & \textbf{in/out} & \textbf{description} \\ \hline
                    &   &   &                           \\ %%% for presentation
-tod(0:npix-1,1:ntod) & SP/ DP & IN & The map or tod
+tod\mytarget{sub:write_bintabh:tod}(0:npix-1,1:ntod) & SP/ DP & IN & The map or tod
   to write to the FITS file. It will be written in the file at the location
                    corresponding to pixels (or time samples)
                    {\tt firstpix} to {\tt firtpix + npix} -1.\\
-npix & I8B & IN & Number of pixels or time samples in the map or TOD. See Note below.\\
-ntod & I4B & IN & Number of maps or tods to be written. Each of them will be in a different column of the FITS binary table.\\
-header(LEN=80) (1:nlheader) & CHR & IN & The header for the FITS file. \\
-nlheader & I4B & IN & number of header lines to write to the file. \\
-filename(LEN=\filenamelen) & CHR & IN & The array is written into a FITS file with this filename. \\
-\optional{extno} & I4B & IN & extension number in which to write the data (0
+npix\mytarget{sub:write_bintabh:npix} & I8B & IN & Number of pixels or time samples in the map or TOD. See Note below.\\
+ntod\mytarget{sub:write_bintabh:ntod} & I4B & IN & Number of maps or tods to be written. Each of them will be in a different column of the FITS binary table.\\
+header\mytarget{sub:write_bintabh:header}(LEN=80) (1:nlheader) & CHR & IN & The header for the FITS file. \\
+nlheader\mytarget{sub:write_bintabh:nlheader} & I4B & IN & number of header lines to write to the file. \\
+filename\mytarget{sub:write_bintabh:filename}(LEN=\filenamelen) & CHR & IN & The array is written into a FITS file with this filename. \\
+\optional{extno\mytarget{sub:write_bintabh:extno}} & I4B & IN & extension number in which to write the data (0
                    based).  \default 0 \\
-\optional{firstpix} & I8B & IN & 0 Location in the FITS file of the first
+\optional{firstpix\mytarget{sub:write_bintabh:firstpix}} & I8B & IN & 0 Location in the FITS file of the first
                    pixel (or time sample) to be written (0 based). \default 
                    0. See Note below.
                    \\
-\optional{repeat} & I4B & IN & \parbox[t]{0.99\hsize}{ 
+\optional{repeat\mytarget{sub:write_bintabh:repeat}} & I4B & IN & \parbox[t]{0.99\hsize}{ 
 		Length of the element vector used in the binary
                    table. \default{1024 if {\tt npix} $\propto 1024$; 12000 if
                    {\tt npix} $> 12000$ and 1 otherwise}. \\
