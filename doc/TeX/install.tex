@@ -26,14 +26,21 @@
 \newcommand{\healpixsupport}{\healpixwebpage/support.php}
 \renewcommand{\contentsname}{{TABLE OF CONTENTS}}
 
+% command for external link
 \newcommand{\linklatexhtml}[3]{% \linklatexhtml{name}{latex_target}{html_target}
 \latexhtml{\htmladdnormallink{#1}{#2}}{\htmladdnormallink{#1}{#3}}}
+% commands for arbitrary link
 \newcommand{\mylink}[2]{% \mylink{link_id}{link_text}
 \latexhtml{\hyperlink{#1}{#2}}{\hyperref{#2}{}{}{#1}}}
-\newcommand{\mytarget}[1]{% \mytarget{link_id}
-\latexhtml{\hypertarget{#1}{}}{\label{#1}}}
-\newcommand{\mytargetb}[2]{% \mytargett{link_id}{target_txt}
-\latexhtml{\hbox{{#2}\hypertarget{#1}{}}}{\label{#1}{#2}}}
+% commands for targets 
+% http://tex.stackexchange.com/questions/17057/hypertarget-seems-to-aim-a-line-too-low
+\makeatletter
+     \newcommand{\nop}[1]{\Hy@raisedlink{\hypertarget{#1}{}}}
+\makeatother
+\newcommand{\mytarget}[1]{\nop{#1}}%    \mytarget{id}
+\begin{htmlonly}
+ \newcommand{\mytarget}[1]{\label{#1}}
+\end{htmlonly}
 % \newcommand{\crossref}[3]{% \crossref{text}{latex_target}{html_target}
 % \latexhtml{\htmlref{#1}{#2}}{%
 % \htmladdnormallink{#1}{#3}}}
@@ -1266,7 +1273,7 @@ configuration script remains available
 \item Spherical Harmonics Transform library {\tt libpsht} replaced by \htmladdnormallink{{\tt
 libsharp}}{http://sourceforge.net/projects/libsharp}
 (\htmladdnormallink{Reinecke \& Seljebotn, 2013}{http://arxiv.org/abs/1303.4945}). \\
-{\em \mytargetb{install:cpp:gccreleases}{Note} that 
+{\em \mytarget{install:cpp:gccreleases}{Note} that 
 some \htmladdnormallink{{\tt gcc} versions}{http://gcc.gnu.org/releases.html}
 (4.4.1 to 4.4.6) crash with an internal compiler error during compilation of {\tt libsharp}}. 
 The problem has been fixed in {\tt gcc} 4.4.7, 4.5.*, 4.6.*, 4.7.* and
@@ -1379,7 +1386,7 @@ They have the same name as the traditional functions, with a ``64'' suffix appen
 	\setlength{\itemsep}{0pt}
 	\setlength{\parsep}{0pt}
 	\item Query routines:
- \mytargetb{install:cpp:query}{query\_polygon()} and query\_polygon\_inclusive() added.
+ \mytarget{install:cpp:query}{query\_polygon()} and query\_polygon\_inclusive() added.
 Query routines now return lists of pixel ranges instead of lists of pixels,
  which is much more economic.
 Inclusive query routines: tradeoff between performance and number of false

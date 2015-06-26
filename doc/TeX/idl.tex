@@ -35,10 +35,15 @@
 % commands for arbitrary link
 \newcommand{\mylink}[2]{% \mylink{link_id}{link_text}
 \latexhtml{\hyperlink{#1}{#2}}{\hyperref{#2}{}{}{#1}}}
-\newcommand{\mytarget}[1]{% \mytarget{link_id}
-\latexhtml{\hypertarget{#1}{}}{\label{#1}}}
-\newcommand{\mytargetb}[2]{% \mytargett{link_id}{target_txt}
-\latexhtml{\hbox{{#2}\hypertarget{#1}{}}}{\label{#1}{#2}}}
+% commands for targets 
+% http://tex.stackexchange.com/questions/17057/hypertarget-seems-to-aim-a-line-too-low
+\makeatletter
+     \newcommand{\nop}[1]{\Hy@raisedlink{\hypertarget{#1}{}}}
+\makeatother
+\newcommand{\mytarget}[1]{\nop{#1}}%    \mytarget{id}
+\begin{htmlonly}
+ \newcommand{\mytarget}[1]{\label{#1}}
+\end{htmlonly}
 
 % to be able to use \renewcommand later on:
 \newcommand{\facname}{}

@@ -10,9 +10,9 @@
 \abstract{This document describes the \healpix Fortran90 subroutine CREATE\_ALM.}
 
 \begin{facility}
-{This routine generates scalar (and tensor) $a_{lm}$ for a temperature (and
+{This routine generates scalar (and tensor) $a_{\ell m}$ for a temperature (and
   polarisation) power spectrum read from an input FITS
-file. The $a_{lm}$ are gaussian distributed with a zero mean, and their
+file. The $a_{\ell m}$ are gaussian distributed with a zero mean, and their
   amplitude is multiplied with the $\ell$-space window function of a gaussian
   beam characterized by its FWHM or an arbitrary circular beam
 and a pixel window read from an external file.}
@@ -54,11 +54,11 @@ spectra in the order TT, [EE, BB, TE, [TB, EB]] (terms in brackets are optional)
 %%                    random number generator. On exit iseed will be positive
 %%                    definite. If set to a positive value, the information contained in {\tt
 %%                    rng\_handle} will be used to carry on an existing random sequence.\\
-rng\_handle & planck\_rng & \hskip 2cm INOUT & structure containing
+rng\_handle & \htmlref{planck\_rng}{sub:planck_rng} & \hskip 2cm INOUT & structure containing
 information necessary to continue a random sequence
 initiated {\em previously} with the 
-subroutine {\tt rand\_init}. Consecutive calls to \thedocid can be made after a
-single invocation to {\tt rand\_init}.\\
+subroutine \htmlref{{\tt rand\_init}}{sub:rand_init}. Consecutive calls to \thedocid {} can be made after a
+single invocation to \htmlref{{\tt rand\_init}}{sub:rand_init}.\\
 %
 fwhm\_arcmin & SP/ DP & IN & FWHM size of the gaussian beam in arcminutes. \\
 %
@@ -90,21 +90,22 @@ use rngmod, only: rand\_init, planck\_rng \\
 type(planck\_rng) :: rng\_handle \\
 \\
 call rand\_init(rng\_handle, -1) \\
-call create\_alm(64, 128, 128, 1, 'cl.fits', rng\_handle, 5.0, alm\_TGC, header, 'data/pixel\_window\_n0064.fits')  \\
+call create\_alm(64, 128, 128, 1, 'cl.fits', rng\_handle, 5.0, alm\_TGC, \&\\
+ \&  header, 'data/pixel\_window\_n0064.fits')  \\
 }
 {
-Creates scalar and tensor $a_{lm}$ from the power spectrum given in the file
-`cl.fits'. The map to be created from these $a_{lm}$ is assumed to have
+Creates scalar and tensor $a_{\ell m}$ from the power spectrum given in the file
+`cl.fits'. The map to be created from these $a_{\ell m}$ is assumed to have
 $N_{side}=64$. $C_l$s from the power spectrum are used up to an $\ell$ value of
 128. 
-Corresponding $a_{lm}$ values up to l=128 and m=128 are created as gaussian distributed
+Corresponding $a_{\ell m}$ values up to l=128 and m=128 are created as gaussian distributed
 complex numbers. Their are drawn from a sequence of pseudo-random numbers
 initiated with a seed of -1. 
-The produced $a_{lm}$ are convolved with a gaussian beam of FWHM 5 arcminutes
+The produced $a_{\ell m}$ are convolved with a gaussian beam of FWHM 5 arcminutes
 and a pixel window read from 'data/pixel\_window\_n0064.fits'. It is assumed that after the return
 from this routine, a map is generated from the created
-$a_{lm}$. For this purpose, {\tt header} is updated with FITS format information
-describing the origin and history of these $a_{lm}$.
+$a_{\ell m}$. For this purpose, {\tt header} is updated with FITS format information
+describing the origin and history of these $a_{\ell m}$.
 }
 \end{example}
 
@@ -141,9 +142,9 @@ describing the origin and history of these $a_{lm}$.
   \item[\htmlref{rand\_init}{sub:rand_init}] subroutine to initiate a random number sequence. 
   \item[synfast] executable using \thedocid\ to synthesize CMB maps from a given
   power spectrum.
-  \item[\htmlref{alm2map}{sub:alm2map}] Routine to transform a set of $a_{lm}$ created by \thedocid\ to a \healpix map.
+  \item[\htmlref{alm2map}{sub:alm2map}] Routine to transform a set of $a_{\ell m}$ created by \thedocid\ to a \healpix map.
   \item[\htmlref{alms2fits}{sub:alms2fits}, \htmlref{dump\_alms}{sub:dump_alms}]
-  Routines to save a set of $a_{lm}$ in a FITS file.  
+  Routines to save a set of $a_{\ell m}$ in a FITS file.  
   \end{sulist}
 \end{related}
 

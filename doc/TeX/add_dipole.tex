@@ -15,8 +15,9 @@
 \end{facility}
 
 \begin{f90format}
-{nside, map, ordering, degree, multipoles [, fmissval]}
+{nside, map, ordering, degree, multipoles \optional{[, fmissval]}}
 \end{f90format}
+\aboutoptional
 
 \begin{arguments}
 {
@@ -33,7 +34,7 @@ multipoles(0:degree*degree-1) & DP & IN & values of monopole and
                    dipole to add.  The monopole is described as a scalar in the same
                    units as the input map, the dipole as a 3D cartesian vector, 
 		   in the same units. \\
-fmissval  \hskip 4cm (OPTIONAL) & SP/ DP & IN & value used to flag bad pixel on input
+\optional{fmissval}  & SP/ DP & IN & value used to flag bad pixel on input
                    \default{-1.6375e30}. Pixels with that value are left unchanged.\\
 \end{tabular}
 }

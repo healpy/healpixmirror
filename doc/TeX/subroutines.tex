@@ -40,10 +40,15 @@ optional.}
 % commands for arbitrary link
 \newcommand{\mylink}[2]{% \mylink{link_id}{link_text}
 \latexhtml{\hyperlink{#1}{#2}}{\hyperref{#2}{}{}{#1}}}
-\newcommand{\mytarget}[1]{% \mytarget{link_id}
-\latexhtml{\hypertarget{#1}{}}{\label{#1}}}
-\newcommand{\mytargetb}[2]{% \mytargett{link_id}{target_txt}
-\latexhtml{\hbox{{#2}\hypertarget{#1}{}}}{\label{#1}{#2}}}
+% commands for targets 
+% http://tex.stackexchange.com/questions/17057/hypertarget-seems-to-aim-a-line-too-low
+\makeatletter
+     \newcommand{\nop}[1]{\Hy@raisedlink{\hypertarget{#1}{}}}
+\makeatother
+\newcommand{\mytarget}[1]{\nop{#1}}%    \mytarget{id}
+\begin{htmlonly}
+ \newcommand{\mytarget}[1]{\label{#1}}
+\end{htmlonly}
 
 % to make sure that in html, the &=& in eqnarray appears normally,
 % replace &=& with &\myequal& hereafter
@@ -488,7 +493,7 @@ smoothing\_getpar (initially in {\tt utilities} module).
 \include{in_ring}
 \include{input_map}
 \include{input_tod}
-\include{long_intrinsic}
+\include{long_intrinsic} % special format
 \include{map2alm}
 \include{map2alm_iterative}
 \include{map2alm_spin}
@@ -512,9 +517,9 @@ smoothing\_getpar (initially in {\tt utilities} module).
 \include{nside2ntemplates}
 \include{number_of_alms}
 \include{output_map}
-\include{parse_xxx}
+\include{parse_xxx} % special format
 \include{pixel_window}
-\include{pix_tools}
+\include{pix_tools} % special format
 \include{planck_rng}
 \include{plm_gen}
 \include{query_disc}
@@ -536,12 +541,12 @@ smoothing\_getpar (initially in {\tt utilities} module).
 \include{ring_num}
 \include{ring_synthesis}
 \include{rotate_alm}
-\include{same_shape_pixels_xxx}
+\include{same_shape_pixels_xxx}% special format
 \include{scan_directories}
 \include{size_holes_nest}
 \include{string}
 \include{surface_triangle}
-\include{template_pixel_xxx}
+\include{template_pixel_xxx}% special format
 \include{udgrade_nest}
 \include{udgrade_ring}
 \include{vec2ang}

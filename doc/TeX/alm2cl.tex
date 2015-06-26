@@ -17,20 +17,21 @@ $C_{12}(\ell) = \sum_{m=-\ell}^{\ell} a_{1,\ell m}
 \end{facility}
 
 \begin{f90format}
-{nlmax, nmmax, alm1, [alm2,] cl}
+{nlmax, nmmax, alm1, \optional{[alm2,]} cl}
 \end{f90format}
+\aboutoptional
 
 \begin{arguments}
 {
 \begin{tabular}{p{0.35\hsize} p{0.05\hsize} p{0.1\hsize} p{0.40\hsize}} \hline  
 \textbf{name~\&~dimensionality} & \textbf{kind} & \textbf{in/out} & \textbf{description} \\ \hline
                    &   &   &                           \\ %%% for presentation
-nlmax & I4B & IN & the maximum $\ell$ value used for the $a_{lm}$. \\
-nmmax & I4B & IN & the maximum $m$ value used for the $a_{lm}$. \\
-alm1(1:p, 0:nlmax, 0:nmmax) & SPC/ DPC & IN & First set of $a_{lm}$ values. $p$
+nlmax & I4B & IN & the maximum $\ell$ value used for the $a_{\ell m}$. \\
+nmmax & I4B & IN & the maximum $m$ value used for the $a_{\ell m}$. \\
+alm1(1:p, 0:nlmax, 0:nmmax) & SPC/ DPC & IN & First set of $a_{\ell m}$ values. $p$
                    is 3 or 1 depending on wether polarisation is included or
                    not. In the former case, the first index runs from 1 to 3 corresponding to (T,E,B). \\
-alm2(1:p, 0:nlmax, 0:nmmax) \hskip 3cm (OPTIONAL) & SPC/ DPC & IN & Second set of $a_{lm}$
+\optional{alm2}(1:p, 0:nlmax, 0:nmmax) & SPC/ DPC & IN & Second set of $a_{\ell m}$
                    values.  \\
 %% \end{tabular}
 %% \begin{tabular}{p{0.4\hsize} p{0.05\hsize} p{0.1\hsize} p{0.35\hsize}} \hline  
@@ -39,10 +40,10 @@ cl(0:nlmax,1:d) & SP/ DP & OUT & resulting auto or cross power spectra.
                    be their cross power spectrum. If only {\tt alm1} is present,
                    {\tt cl} will be its power spectrum. 
 		   If $d=1$, only the temperature spectrum
-                   $C_l^T$ will
-                   be output. If $d=4$ and $p=3$, the output will be $C_l^T$, $C_l^E$,
-                   $C_l^B$, $C_l^{T\times E}$, and if $d\geq 6$ and $p=3$, $C_l^{T\times
-                   B}$  $C_l^{E\times B}$ will also be output.
+                   $C_{\ell}^T$ will
+                   be output. If $d=4$ and $p=3$, the output will be $C_{\ell}^T$, $C_{\ell}^E$,
+                   $C_{\ell}^B$, $C_{\ell}^{T\times E}$, and if $d\geq 6$ and $p=3$, $C_{\ell}^{T\times
+                   B}$  $C_{\ell}^{E\times B}$ will also be output.
 \end{tabular}
 }
 \end{arguments}

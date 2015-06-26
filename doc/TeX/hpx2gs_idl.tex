@@ -59,7 +59,7 @@ p{\sizethrg}}
 \hline  
 %\textbf{name}  & \textbf{description} \\ \hline
 %                    &   &                            \\ %%% for presentation
-\mytargetb{idl:hpx2gs:file}{File}    & \parbox[t]{0.95\hsize}{Required\\
+File \mytarget{idl:hpx2gs:file}    & \parbox[t]{0.95\hsize}{Required\\
                     name of a FITS file containing 
                the \healpix\ map in an extension or in the image field, \\
           {\em or}\  \  name of an {\em online} variable (either array or
@@ -68,7 +68,7 @@ structure) containing the \healpix\ map (See note below);\\
                the \healpix\ map stored under the variable  {\tt data} \\
 	\nodefault}\\ 
 
-\mytargetb{idl:hpx2gs:select}{Select}    & \parbox[t]{0.95\hsize}{Optional\\
+Select \mytarget{idl:hpx2gs:select}    & \parbox[t]{0.95\hsize}{Optional\\
 		  column of the BIN FITS table to be plotted, can be either  \\
                 -- a name : value given in TTYPEi of the FITS file \\
                         NOT case sensitive and can be truncated, \\
@@ -83,7 +83,7 @@ structure) containing the \healpix\ map (See note below);\\
 
 \begin{keywords}
   \begin{kwlist}{} %%%% NOTE the ``extra'' brace here %%%%
-\item [\mytargetb{idl:hpx2gs:coord_in}{COORD\_IN} =] 1-character scalar, describing the input data coordinate system:\\
+\item [COORD\_IN= \mytarget{idl:hpx2gs:coord_in}] 1-character scalar, describing the input data coordinate system:\\
                 either 'C' or 'Q' : Celestial2000 = eQuatorial,\\
                        'E'        : Ecliptic,\\
                        'G'        : Galactic.\\
@@ -92,29 +92,29 @@ structure) containing the \healpix\ map (See note below);\\
 assumed to be celestial.\\
              The data will be rotated so that the output coordinates are Celestial, as expected by Google Sky
 
-\item [\mytargetb{idl:hpx2gs:help}{/HELP}]  Prints out the documentation header 
+\item [{/HELP} \mytarget{idl:hpx2gs:help}]  Prints out the documentation header 
 
-\item [\mytargetb{idl:hpx2gs:kml}{KML} =] Name of the KML file to be created (if the {\tt .kml} suffix is missing,
+\item [{KML=} \mytarget{idl:hpx2gs:kml}] Name of the KML file to be created (if the {\tt .kml} suffix is missing,
      it will be added automatically)
      \default {{\tt 'hpx2googlesky.kml'}}
 
-\item [\mytargetb{idl:hpx2gs:png}{PNG} =] Name of the PNG overlay file to be created. Only to be used if you want the
+\item [{PNG=} \mytarget{idl:hpx2gs:png}] Name of the PNG overlay file to be created. Only to be used if you want the
      filename to be different from the default 
 	(\default{ same as KML file, with a {\tt .png} suffix instead
      of {\tt .kml}})
 
-\item [\mytargetb{idl:hpx2gs:reso_arcmin}{RESO\_ARCMIN} =] Pixel angular size in arcmin (at the equator) of the cartesian
+\item [{RESO\_ARCMIN=} \mytarget{idl:hpx2gs:reso_arcmin}] Pixel angular size in arcmin (at the equator) of the cartesian
      map generated \default{30}
 
-\item [\mytargetb{idl:hpx2gs:subtitle}{SUBTITLE} =] information on the data, 
+\item [{SUBTITLE=} \mytarget{idl:hpx2gs:subtitle}] information on the data, 
 will appear in KML file {\tt GroundOverlay
      description} field
 
-\item [\mytargetb{idl:hpx2gs:titleplot}{TITLEPLOT} =] information on the data, 
+\item [{TITLEPLOT=} \mytarget{idl:hpx2gs:titleplot}] information on the data, 
 will appear in KML file {\tt GroundOverlay
      name} field
 
-\item [\mytargetb{idl:hpx2gs:other_keywords}{}
+\item [\mytarget{idl:hpx2gs:other_keywords}
 \mylink{idl:mollview:asinh}{/ASINH}, ]
 \item [\mylink{idl:mollview:colt}{COLT}=,
 \mylink{idl:mollview:factor}{FACTOR}=,
