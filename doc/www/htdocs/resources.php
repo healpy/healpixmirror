@@ -160,9 +160,16 @@ Published articles using HEALPix:
 First HEALPix paper: <a href="http://adsabs.harvard.edu/cgi-bin/nph-bib_query?bibcode=2005ApJ...622..759G&amp;db_key=AST&amp;high=41069202cf02947">K.M. G&oacute;rski et al., 2005, ApJ, 622, p759</a>
 </li>
 <li>HEALPix 
-on <a href="http://inspirebeta.net/search?ln=en&p=FIND+C+ASTRO-PH%2F9812350+or+refersto%3Arecid%3A659804+or+fulltext%3Ahealpix&f=&action_search=Search&sf=&so=d&rm=&rg=25&sc=0&of=hb">INSPIRE</a>,
-																				   <a href="http://adsabs.harvard.edu/cgi-bin/nph-ref_query?bibcode=2005ApJ...622..759G&amp;refs=CITATIONS&amp;db_key=AST">ADS</a>,
-																				   <a href="http://scholar.google.com/scholar?q=healpix&btnG=&hl=en&as_sdt=0%2C5">Google Scholar</a>
+on <a href="http://inspirebeta.net/search?ln=en&p=FIND+C+ASTRO-PH%2F9812350+or+refersto%3Arecid%3A659804+or+fulltext%3Ahealpix&f=&action_search=Search&sf=&so=d&rm=&rg=25&sc=0&of=hb">INSPIRE (HEP &amp; Cosmology)</a>,
+
+																				   <a href="http://adsabs.harvard.edu/cgi-bin/nph-ref_query?bibcode=2005ApJ...622..759G&amp;refs=CITATIONS&amp;db_key=AST">ADS Classic</a>
+
+&amp;
+																				<a href="http://adslabs.org/adsabs/search/?q=full%3A%22healpix%22&month_from=&year_from=&month_to=&year_to=&db_f=&nr=&bigquery=&re_sort_type=DATE&re_sort_dir=desc">ADS 2.0</a> (Astrophysics)
+
+and
+																			   <a href="http://scholar.google.com/scholar?scisbd=2&q=healpix&hl=en&as_sdt=0,5">Google Scholar (Multidisciplinary)</a>
+
 </li>
 </ul>
 </p>

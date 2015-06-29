@@ -50,8 +50,8 @@ in \healpix v2.20. }
     synfast can run even if only {\tt almsfile} is provided.
     \item[{outfile = }] Defines the output (RING ordered) map file,
 (default= map.fits). Note that {\tt outfile} is now optional: if it set to 
-      `' (empty string),  mo map is synthesized but the $a_{lm}$ generated can be output.
-    \item[{outfile\_alms = }] Defines the FITS file in which to output $a_{lm}$ used
+      `' (empty string),  mo map is synthesized but the $a_{\ell m}$ generated can be output.
+    \item[{outfile\_alms = }] Defines the FITS file in which to output $a_{\ell m}$ used
       for the simulation (default= `')
      \item[{simul\_type = }] Defines the simulation type, 1=temperature only (1 field),
        2=temperature+polarisation (3 fields), 3=temperature and its first
@@ -69,7 +69,7 @@ pixel window functions
 are precomputed and provided up to this limit.
 (default= 64)
       \item[{iseed = }] Defines the random seed to be used 
-for the generation of $a_{lm}$s from the power spectrum.
+for the generation of $a_{\ell m}$s from the power spectrum.
 (default= -1)
     \item[{fwhm\_arcmin = }] Defines the FWHM size in arcminutes 
 of the simulated Gaussian beam.
@@ -82,25 +82,25 @@ of the simulated Gaussian beam.
     {\tt fhwm\_arcmin} given above. (default=`')
 %
      \item[{almsfile = }] Defines the input filename for a file
-    containing $a_{lm}$s for constrained realisations. 
+    containing $a_{\ell m}$s for constrained realisations. 
 (default= `'). If {\tt apply\_windows} is {\em false} 
-those $a_{lm}$s are used as they are, without being multiplied
+those $a_{\ell m}$s are used as they are, without being multiplied
 by the beam or pixel window function (with the assumption that they already have the
     correct window functions). If {\tt apply\_windows} is {\em true}, the beam and
-    pixel window functions chosen above are applied to the constraining $a_{lm}$ (with the
+    pixel window functions chosen above are applied to the constraining $a_{\ell m}$ (with the
     assumption that those are free of beam and pixel window function). The code
     does not check the validity of these asumptions; if none is true, use the
     \htmlref{alteralm}{fac:alteralm} facility to modify or remove
-    the window functions contained in the constraining $a_{lm}$.
+    the window functions contained in the constraining $a_{\ell m}$.
 %
-     \item[{apply\_windows=}] Determines how the constraining $a_{lm}$  read from
+     \item[{apply\_windows=}] Determines how the constraining $a_{\ell m}$  read from
      {\tt almsfile} are
      treated with respect to window functions; see above for details. 
      y, yes, t, true, .true. and 1 are considered as {\em true}, while n, no, f,
      false, .false. and 0 are considered as {\em false}, (default = .false.).
 %
      \item[{plmfile = }] Defines the input  filename for a file
-    containing  precomputed Legendre polynomials $P_{lm}$.
+    containing  precomputed Legendre polynomials $P_{\ell m}$.
 (default= `')
      \item[{windowfile = }] Defines the input filename  for the pixel
     smoothing windows 
@@ -113,12 +113,12 @@ by the beam or pixel window function (with the assumption that they already have
 \begin{codedescription}
 {%
 Synfast reads the power spectrum from a file in  ascii FITS
-format. This can contain either just the temperature power spectrum $C^T_l$s or 
-temperature and polarisation power spectra: $C^T_l$, $C^E_l$, $C^B_l$
-and $C^{T\times E}_l$. If {\tt simul\_type = 2} synfast generates 
+format. This can contain either just the temperature power spectrum $C^T_{\ell}$s or 
+temperature and polarisation power spectra: $C^T_{\ell}$, $C^E_{\ell}$, $C^B_{\ell}$
+and $C^{T\times E}_{\ell}$ (see \mylink{fac:synfast:note1}{Note 1, below}). If {\tt simul\_type = 2} synfast generates 
 Q and U maps as well as the temperature map. The output map(s)
 is (are) saved in a FITS file. 
-The $C_l$s are used up to the specified 
+The $C_{\ell}$s are used up to the specified 
 $\ell_{lmax}$, which can not exceed $4\times$ nsmax. If {\tt simul\_type = 3} or
 {\tt 4} the first derivatives of the temperature field or the first and second derivatives respectively
 are output as well as the temperature itself: $T(p)$, $\left({\partial T}/{\partial \theta}, {\partial T}/{\partial \phi}/\sin\theta \right)\myhtmlimage{}
@@ -134,7 +134,7 @@ $, $\left({\partial^2 T}/{\partial \theta^2},\ldots; {\partial^2 T}/{\partial
   \theta\partial\phi}/\sin\theta,\ldots ;\right.\myhtmlimage{}$ 
 $\left.{\partial^2 T}/{\partial \phi^2}/\sin^2\theta \ldots \right)\myhtmlimage{}$
 
-The random sequence seed for generation of $a_{lm}$ from the
+The random sequence seed for generation of $a_{\ell m}$ from the
 power spectrum should be non-zero integer. If 0 is provided, a seed is generated
 randomly by the code, based on the current date and time.
 The map can be convolved with a gaussian beam for which a beamsize can
@@ -149,17 +149,17 @@ and its {\tt data} subdirectory is scanned. Failing this, the location of these
 files must be specified (using winfiledir). In the interactive mode this is
 requested only when necessary (see Notes on default directories on page~\pageref{page:defdir}).
 
-If some of the $a_{lm}$ in the simulations are constrained eg. from observations, a FITS file
-with these $a_{lm}$ can be read. This FITS file contains 
-the $a_{lm}$ for certain $\ell$ and $m$ values
-and also the standard deviation for these $a_{lm}$. The sky
+If some of the $a_{\ell m}$ in the simulations are constrained eg. from observations, a FITS file
+with these $a_{\ell m}$ can be read. This FITS file contains 
+the $a_{\ell m}$ for certain $\ell$ and $m$ values
+and also the standard deviation for these $a_{\ell m}$. The sky
 realisation which synfast produces will be statistically consistent
-with the constraining $a_{lm}$.
+with the constraining $a_{\ell m}$.
 
 The code can also be used
-to generate a set of $a_{lm}$ matching the input power spectra, beam size and
-pixel size with or without actually synthesizing the map. Those $a_{lm}$ can be
-used as an input (constraining $a_{lm}$) to another synfast run.
+to generate a set of $a_{\ell m}$ matching the input power spectra, beam size and
+pixel size with or without actually synthesizing the map. Those $a_{\ell m}$ can be
+used as an input (constraining $a_{\ell m}$) to another synfast run.
 %---------------------------------
 \\
 \latexonly{{{\bf ...}}}
@@ -170,10 +170,10 @@ used as an input (constraining $a_{lm}$) to another synfast run.
 {
 %---------------------------------
 Spherical harmonics values in the synthesis are obtained from a
-recurrence on associated Legendre polynomials $P_{lm}(\theta)$. 
+recurrence on associated Legendre polynomials $P_{\ell m}(\theta)$. 
 This recurrence consumed most of the CPU time used by \thedocid\ up to version
 2.15. We have therefore included an option to load precomputed values for the
-$P_{lm}(\theta)$ from a file generated by the \healpix facility
+$P_{\ell m}(\theta)$ from a file generated by the \healpix facility
 \htmlref{plmgen}{fac:plmgen}. Since the introduction of accelerated spherical
 harmonic transforms in \healpix v2.20, this feature is obsolete and should no
 longer be used. 
@@ -189,6 +189,9 @@ polarization convention and the interface with CMBFAST. If the
 keyword is not found, {\em no attempt will be made} to renormalize the power
 spectrum. 
 If the keyword is present, it will be inherited by the simulated map.
+
+\mytarget{fac:synfast:note1}{\bf Note 1:} to allow the generation of maps (and $a_{\ell m}$) with $C^{T\times B}_{\ell} \ne 0$ and/or $C^{E\times B}_{\ell} \ne 0$,
+see the subroutine \htmlref{{\tt create\_alm}}{sub:create_alm}.
 }
 \end{cd_contd}
 
@@ -216,9 +219,9 @@ subroutine generates or reads the $B(\ell)$ window function used in \thedocid
   output map.
   \item[\htmlref{alteralm}{fac:alteralm}] This \healpix Fortran facility can be
   used to implement the beam and pixel window functions on the constraining
-  $a_lm$s ({\tt almsfile} file).
+  $a_{\ell m}$s ({\tt almsfile} file).
   \item[\htmlref{anafast}{fac:anafast}] This \healpix Fortran facility can analyse a \healpix map and 
-     	       save the $a_{lm}$ and $C_l$s to be read by synfast.
+     	       save the $a_{\ell m}$ and $C_{\ell}$s to be read by synfast.
   \item[\htmlref{plmgen}{fac:plmgen}] This \healpix Fortran facility can be used to generate precomputed Legendre polynomials.
 		
   \end{sulist}
@@ -260,7 +263,7 @@ In this example, the file contains the following qualifiers:\hfill\newline
 \fileparam{infile = cl.fits}
 \fileparam{outfile = map.fits}
 
-Synfast reads in the $C_l$ power spectrum in 'cl.fits' up to $l=64$, and
+Synfast reads in the $C_{\ell}$ power spectrum in 'cl.fits' up to $l=64$, and
 produces the (RING ordered) map
 'map.fits' which has $N_{\rm side}=32$.
 The map is convolved with a beam of FWHM 420.0 arcminutes. The $iseed=-1$ sets
@@ -276,7 +279,7 @@ Since \hfill\newline
 \fileparam{windowfile }
 were omitted, they take their default values (empty strings). 
 This means that no file for constrained realisation or precomputed
-Legendre polynomials are read, the $a_{lm}$ generated in the process are not
+Legendre polynomials are read, the $a_{\ell m}$ generated in the process are not
 output, and synfast attempts to find the pixel
 window files in the default directories (see page~\pageref{page:defdir}).
 }
@@ -286,13 +289,13 @@ window files in the default directories (see page~\pageref{page:defdir}).
   \begin{relist}
     \item Initial release (\healpix 0.90)
     \item Optional non-interactive operation. Proper FITS file
-    support. Improved reccurence algorithm for $P_{lm}(\theta)$ which can compute to higher $\ell$ values. Improved pixel windows averaged over
+    support. Improved reccurence algorithm for $P_{\ell m}(\theta)$ which can compute to higher $\ell$ values. Improved pixel windows averaged over
     actual HEALPix pixels. New functionality: constrained realisations, precomputed
-    $P_{lm}$. (\healpix 1.00)
+    $P_{\ell m}$. (\healpix 1.00)
     \item New functionality: constrained realisations and pixel
     windows are now available for polarization as well. Arbitrary
     circular beams can be used. New parser (\healpix 1.20)
-    \item New functionnality: the generated $a_{lm}$ can be output, and the map
+    \item New functionnality: the generated $a_{\ell m}$ can be output, and the map
     synthesis itself can be skipped. First and second derivatives of the
     temperature field can be produced on demand.
     \item New functionnality: First and second derivatives of the

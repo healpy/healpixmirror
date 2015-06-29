@@ -154,9 +154,27 @@ $\mathbf{\phi}$ & The azimuthal angle on the sphere, $\phi\in[0,2\pi[$.\\
 %--------------------------------------------
 %-------------------------------------------- CHANGES
 %--------------------------------------------
-\section[Changes between releases 3.00 and \hpxversion]{Changes between releases 3.00 and
+\section[Changes between releases 3.20 and \hpxversion]{Changes between releases 3.20 and
 \hpxversion}
-\subsection{Version \hpxversion}
+%--------------------------------------------
+\begin{itemize}
+	\item CFITSIO version 3.20 (August 2009) or more now required
+	\item improved 
+\mylink{sub:write_bintabh:repeat}{{\tt repeat}}
+behavior in \htmlref{{\tt write\_bintabh}}{sub:write_bintabh} routine
+	\item edited \htmlref{{\tt map2alm\_iterative}}{sub:map2alm_iterative} 
+to avoid a bug in Intel Ifort 15.0.2
+\end{itemize}
+
+%--------------------------------------------
+\section{Older Changes}
+%--------------------------------------------
+
+{\mysmaller%
+\subsection[Changes between releases 3.00 and 3.20]{Changes between releases 3.00 and
+3.20}
+\subsubsection{Version 3.20} % Dec 2014
+\label{sub:new3p20}
 \begin{itemize}
 	\item \healpixns-F90 routines and facilities can now also be compiled with
 the free Fortran95 compiler \textbf{g95} (\htmladdnormallink{www.g95.org}{http://www.g95.org/})
@@ -179,7 +197,7 @@ affecting the external $B(l)$ reading in the F90 facilities
 \htmlref{{\tt smoothing}}{fac:smoothing}.
 \end{itemize}
 
-\subsection{Version 3.11}
+\subsubsection{Version 3.11} % Apr 2013
 \label{sub:new3p11}
 \begin{itemize}
 	\item {\tt libsharp} C routines used for Spherical Harmonics Transforms 
@@ -191,7 +209,7 @@ affecting the external $B(l)$ reading in the F90 facilities
 	routine, which had its {\tt spin} value set to 2
 \end{itemize}
 
-\subsection{Version 3.10}
+\subsubsection{Version 3.10} % Mar 2013
 \label{sub:new3p10}
 \begin{itemize}
 	\item Support for {\tt cfitsio} ''Extended File Name Syntax'', and usage of {\tt
@@ -205,11 +223,6 @@ To {\em revert} to the original F90 implementation of these routines, the prepro
 variable {\tt DONT\_USE\_SHARP} must be set during compilation.}.
 \end{itemize}
 
-%--------------------------------------------
-%--------------------------------------------
-\section{Older Changes}
-%--------------------------------------------
-{\mysmaller%
 \subsection[Changes between releases 2.20 and 3.00]{Changes between releases 2.20
 and 3.00}
 \label{sub:new3p00}

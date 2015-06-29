@@ -30,8 +30,21 @@
 \newcommand{\myhtmlimage}[1]{ }
 \renewcommand{\contentsname}{{TABLE OF CONTENTS}}
 
+% command for external link
 \newcommand{\linklatexhtml}[3]{% \linklatexhtml{name}{latex_target}{html_target}
 \latexhtml{\htmladdnormallink{#1}{#2}}{\htmladdnormallink{#1}{#3}}}
+% commands for arbitrary link
+\newcommand{\mylink}[2]{% \mylink{link_id}{link_text}
+\latexhtml{\hyperlink{#1}{#2}}{\hyperref{#2}{}{}{#1}}}
+% commands for targets 
+% http://tex.stackexchange.com/questions/17057/hypertarget-seems-to-aim-a-line-too-low
+\makeatletter
+     \newcommand{\nop}[1]{\Hy@raisedlink{\hypertarget{#1}{}}}
+\makeatother
+\newcommand{\mytarget}[1]{\nop{#1}}%    \mytarget{id}
+\begin{htmlonly}
+ \newcommand{\mytarget}[1]{\label{#1}}
+\end{htmlonly}
 
 \sloppy
 \setcounter{secnumdepth}{0}
@@ -128,9 +141,22 @@ floating point reals. The following points should be noted: \label{page:ioprec}
 %--------------------------------------------
 %-------------------------------------------- CHANGES
 %--------------------------------------------
-\section[Changes between releases 3.00 and \hpxversion]{%
-Changes between releases 3.00 and \hpxversion}
+\section[Changes between releases 3.20 and \hpxversion]{%
+Changes between releases 3.20 and \hpxversion}
 \subsection{Version \hpxversion}
+\begin{itemize}
+	\item CFITSIO version 3.20 (August 2009) or more now required
+	%\item improved \htmlref{{\tt repeat}}{sub:write_bintabh} behavior in \htmlref{{\tt write\_bintabh}}{sub:write_bintabh} routine
+	%\item patched \htmlref{{\tt map2alm\_iterative}}{sub:map2alm_iterative} for a bug in Intel Ifort 15.0.2
+\end{itemize}
+
+{\footnotesize{%
+%%%%%%%%%%%%%%%%%%%
+\section[Older Changes]{Older Changes}
+
+\subsection[Changes between releases 3.00 and 3.20]{%
+Changes between releases 3.00 and 3.20}
+\subsubsection{Version 3.20}
 \begin{itemize}
 	\item \healpixns-F90 routines and facilities can now also be compiled with
 the free Fortran95 compiler \textbf{g95} (\htmladdnormallink{www.g95.org}{http://www.g95.org/})
@@ -151,14 +177,14 @@ affecting the external $B(l)$ reading in the F90 facilities
 \htmlref{{\tt smoothing}}{fac:smoothing}.
 \end{itemize}
 
-\subsection{Version 3.11}
+\subsubsection{Version 3.11}
 \begin{itemize}
 	\item {\tt libsharp} C routines used for Spherical Harmonics Transforms 
 and introduced in \healpix\ 3.10
 can now be compiled with any {\tt gcc} version.
 \end{itemize}
 
-\subsection{Version 3.10}
+\subsubsection{Version 3.10}
 \begin{itemize}
 %
 	\item all Fortran facilities now support most of {\tt cfitsio}'s ``\htmladdnormallink{Extended File
@@ -194,9 +220,6 @@ newer versions and was not present in versions 4.2.* and 4.3.*.
 %
 \end{itemize}
 
-{\footnotesize{%
-%%%%%%%%%%%%%%%%%%%
-\section[Older Changes]{Older Changes}
 \subsection[Changes between releases 2.20 and 3.00]{%
 Changes between releases 2.20 and 3.00}
 \begin{itemize}
