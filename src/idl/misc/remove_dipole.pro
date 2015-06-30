@@ -322,6 +322,8 @@ endif else begin
 
    ; use SVD to invert matrix M and solve, A is inverse of Single Value
    ; Decomposition of M
+   ; 2015-06-30: corrected substitute for SVSOL in GDL case (only makes a difference for non-symmetric matrix)
+    ndim = 4
     SVDC, Matrix, w, U, V, /double ; w contains (positive) eigenvalues
     w_threshold = max(abs(w)) * 1.0d-06
     if (is_gdl()) then begin ; GDL: no SVSOL, no DIAG_MATRIX
@@ -329,15 +331,17 @@ endif else begin
         Wp = dblarr(nw,nw)
         large = where(abs(w) GT w_threshold, count) ; find large eigenvalues
         if (count gt 0) then Wp[large, large] = 1.d0/w[large] ; only invert those
-        C = transpose(U) # ( Wp # (V # Vector))
+        ;;;;;;;;C = transpose(U) # ( Wp # (V # Vector))
+        C = transpose(V) # ( Wp # (U # Vector)) ; should be faster than expected (U ## Wp ## Transpose(V)) # Vector
         if (do_cov) then begin
-            for i=0,3 do covariance[*,i] = transpose(U) # ( Wp # (V # identity[*,i]))
+            ;;;;;;for i=0,3 do covariance[*,i] = transpose(U) # ( Wp # (V # identity[*,i]))
+            for i=0,ndim-1 do covariance[*,i] = transpose(V) # ( Wp # (U # identity[*,i]))
         endif
     endif else begin
         w = w * ( abs(w) gt w_threshold) ; set low eigenvalues to zero
         C = SVSOL( U, w, V, Vector, /double)
         if (do_cov) then begin
-            for i=0,3 do covariance[*,i] = SVSOL( U, w, V, identity[*,i], /double)
+            for i=0,ndim-1 do covariance[*,i] = SVSOL( U, w, V, identity[*,i], /double)
         endif
     endelse
     ; force symmetry of covariance matrix
