@@ -1066,24 +1066,51 @@ transparent in the output PNG file.
 \subsection{Bug corrections and Improvements in Version \hpxversion}%(2015-??)
 % \subsubsection[General]{General}
 % \subsubsection[C]{\linklatexhtml{C}{csub.pdf}{csub.htm}}
-% \subsubsection[C++]{C++}
+% \subsubsection[C++]{\htmladdnormallink{C++}{http://healpix.sourceforge.net/html/index_cxx.htm}}
 % \subsubsection[Fortran]{%
 % 	Fortran 90 \linklatexhtml{facilities}{facilities.pdf}{facilities.htm} and
 % 	\linklatexhtml{subroutines}{subroutines.pdf}{subroutines.htm}}
 % \subsubsection[IDL]{\linklatexhtml{IDL}{idl.pdf}{idl.htm}}
-% \subsubsection[Java]{Java}
-% \subsubsection[Python]{Python}
+% \subsubsection[Java]{\htmladdnormallink{Java}{http://healpix.sourceforge.net/html/java/index.html}}
+% \subsubsection[Python]{\htmladdnormallink{Python}{http://healpy.readthedocs.org/en/latest/}}
 
 \subsubsection[General]{General}
 \subsubsection[C]{\linklatexhtml{C}{csub.pdf}{csub.htm}}
-\subsubsection[C++]{C++}
+\subsubsection[C++]{\htmladdnormallink{C++}{http://healpix.sourceforge.net/html/index_cxx.htm}}
 \subsubsection[Fortran]{%
 	Fortran 90 \linklatexhtml{facilities}{facilities.pdf}{facilities.htm} and
 	\linklatexhtml{subroutines}{subroutines.pdf}{subroutines.htm}}
-CFITSIO 3.20 or more is now required
+	\begin{itemize}
+	\item CFITSIO version 3.20 (August 2009) or more now required
+	\item improved 
+\mylink{sub:write_bintabh:repeat}{{\tt repeat}}
+behavior in \htmlref{{\tt write\_bintabh}}{sub:write_bintabh} routine
+	\item edited \htmlref{{\tt map2alm\_iterative}}{sub:map2alm_iterative} 
+routine to avoid a bug specific to Intel's Ifort 15.0.2
+	\end{itemize}
 \subsubsection[IDL]{\linklatexhtml{IDL}{idl.pdf}{idl.htm}}
-\subsubsection[Java]{Java}
-\subsubsection[Python]{Python}
+\begin{itemize}
+%
+\item \htmlref{{\tt cartview, gnomview, mollview,
+orthview}}{idl:mollview} visualization routines:
+\begin{itemize}
+ \item addition of \mylink{idl:mollview:pdf}{{\tt PDF}} keyword for production of Adobe PDF outputs;
+ \item addition of \mylink{idl:mollview:latex}{{\tt LATEX}} keyword for genuine 
+ or emulated \LaTeX\ processing of character strings;
+ \item addition of \mylink{idl:mollview:pfonts}{{\tt PFONTS}} keyword to select 
+origin and type of character font;
+ \item the \mylink{idl:mollview:crop}{{\tt CROP}} keyword now has the same behavior for all output media (GIF, JPEG, PDF, PNG, PS, ... and X);  % 
+  the \mylink{idl:mollview:nobar}{{\tt NOBAR}} keyword now removes the color bar {\em or} the polarization color wheel, as applicable.
+\end{itemize}
+%
+\item update of the required
+    \htmladdnormallink{{\tt IDL-astron} library}{http://idlastro.gsfc.nasa.gov/homepage.html}
+    routines, and their supporting \htmladdnormallink{\tt Coyote}{http://www.idlcoyote.com}
+    routines (2015-04-27).
+%
+\end{itemize}
+\subsubsection[Java]{\htmladdnormallink{Java}{http://healpix.sourceforge.net/html/java/index.html}}
+\subsubsection[Python]{\htmladdnormallink{Python}{http://healpy.readthedocs.org/en/latest/}}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% END LATEST CHANGES %%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

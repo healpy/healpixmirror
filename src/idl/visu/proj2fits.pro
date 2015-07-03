@@ -45,6 +45,7 @@ pro proj2fits, map, FITSFile, $
 ;  Feb 2000, EH, replaced today() by today_fits()
 ;  Jan 2007, EH: header variable (head_out) must be undefined for better results
 ;  May 2010, EH: turned into proj2fits. Uses WCS routines
+;  Jul 2015, EH: forced EQUINOX value to 2000.0
 ;-
 
 routine = 'proj2fits'
@@ -109,7 +110,7 @@ ang_rad = my_rot_ang * DDtoR
 ; default
 longpole = 180.d0
 latpole  = 0.0d0
-; polar projections (TAN/gnom, SIN/orth)
+; polar projections (TAN/gnom, SIN/orth, ARC/azeq)
 longpole1 = 180.d0 - my_rot_ang[2]
 ; cylindrical projections (MOL, CAR)
 longpole2 = atan(cos(ang_rad[1])*sin(ang_rad[2]), sin(ang_rad[1])) / DDtoR
@@ -141,6 +142,11 @@ case projtype of
             message_patch,'FITS output of orthographic map only possible with HALF_SKY',level=-2
         endif
     end
+    5: begin
+        ctype = 'ARC'
+        longpole = longpole1
+        proj_small = 'azimequid'
+    end
     default: begin
         message,'Unknown projection type'
     end
@@ -164,13 +170,23 @@ SXADDPAR,head_out,'BUNIT',  bunit
 
 delt_deg = keyword_set(flip) ? [1,1] : [-1,1]
 ; WCS keywords
+print, flon, flat
+; wcs_check_ctype, ctype, _projtype, _coord_type
+
+equinox = 2000.0d ; added 2015-07-02
+;;radecsys = 'FK5'
 make_astr, astr, $
            ctype = ctype $     ; projection type
            , delt  = delt_deg*(reso_arcmin/60.d0) $ ; resolution (Degrees/pixel)
            , crpix = [n1+1.,n2+1.]*0.5d0 $ ; index of center pixel (1-based)
            , crval = my_rot_ang[0:1] $ ; long-lat location of center (Degrees)
            , longpole = longpole $
-           , latpole  = latpole
+           , latpole  = latpole $
+           , equinox  = equinox
+           ;;;;;; , radecsys = radecsys $
+
+; xy2ad, astr.crpix[0]-1, astr.crpix[1]-1, astr, _ra0_, _dec0_
+; print, _ra0_, _dec0_
 
 putast, head_out, astr, cd_type=0
 

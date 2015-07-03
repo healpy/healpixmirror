@@ -137,9 +137,18 @@
 ;        Removed cgColor_Color24 module in favor of using Coyote Library routine cgColor24. 5 Jan 2013. DWF.
 ;        The keyword ROW was being ignored if multiple colors were specified with TRIPLE keyword. Fixed. 10 July 2013. DWF.
 ;        Another fix to handle Windows 8 computers that report their window size incorrectly. 21 Oct 2013. DWF.
+;        Added 12 colors suggested by Paul Krummel for people with color blindness. See the last line in 
+;              Figure 3 of `this reference <http://www.sron.nl/~pault/>`. 16 Jan 2015. DWF.
+;        Getting reports that Mac computers are now reporting inaccurate draw widget sizes (similar to Windows
+;              computers). So, I changed the algorithm for picking the "opposite" or "background" color.
+;              Previously, I read the color from the open graphics window. Now, I only do that if you ask for
+;              the "OPPOSITE" or "BACKGROUND" color. Otherwise, I assume the background color is "white". If you 
+;              do ask for the color, I read the open graphics window at a location 5 pixels removed from what
+;              is "supposed" to be the upper-right corner of the window (often reported incorrectly). If I have
+;              any problems reading this pixel, I report the background color as "white". 27 Feb 2015. DWF.
 ;        
 ; :Copyright:
-;     Copyright (c) 2009-2013, Fanning Software Consulting, Inc.
+;     Copyright (c) 2009-2015, Fanning Software Consulting, Inc.
 ;-
 ;
 ;+
@@ -202,6 +211,10 @@
 ;           YGB1      YGB2      YGB3      YGB4      YGB5      YGB6      YGB7      YGB8
 ;           RYB1      RYB2      RYB3      RYB4      RYB5      RYB6      RYB7      RYB8
 ;           TG1        TG2       TG3       TG4       TG5       TG6       TG7       TG8
+;           
+;        Here are color names for colors appropriate for color blind users::
+;        
+;           CG1 CG2 CG3 CG4 CG5 CG6 CG7 CG8 CG9 CG10 CG11 CG12
 ;            
 ;        The color name "OPPOSITE" is also available. It chooses a color "opposite" to the 
 ;        color of the pixel in the upper-right corner of the display, if a window is open.
@@ -405,41 +418,44 @@ FUNCTION cgColor, theColour, colorIndex, $
     ; Make sure the color is compressed and uppercase.   
     theColor = StrUpCase(StrCompress(StrTrim(theColor,2), /Remove_All))
     
-    ; Get the pixel value of the "opposite" color. This is the pixel color
-    ; opposite the pixel color in the upper right corner of the display.
-    ; Because Windows versions of IDL (through at least IDL 8.2.1) report
-    ; the size of draw widget windows inaccurately until you make them the
-    ; current graphics window, I back off from the very corner pixel by two
-    ; pixels to read Windows windows.
-    IF ((!D.Window GE 0) && ((!D.Flags AND 256) NE 0)) || (!D.Name EQ 'Z') THEN BEGIN
-       IF StrUpCase(!Version.OS_Family) EQ 'WINDOWS' THEN BEGIN
-        
-          ; Windows computers appear to be complete screwed up with respect to
-          ; reporting the correct window size. Now Windows 8 appears to be
-          ; reporting something completely different from Windows 7. I'm
-          ; going to Catch any errors I have here, and choose the lower-left
-          ; pixel, rather than the upper-right pixel. This should not be a 
-          ; problem, since the problem comes from draw widgets that are not
-          ; yet the current graphics window.
-          Catch, theError
-          IF theError NE 0 THEN BEGIN
-             opixel = cgSnapShot(0, 0, 1, 1)
-          ENDIF
-          IF N_Elements(opixel) EQ 0 THEN opixel = cgSnapshot(!D.X_Size-3, !D.Y_Size-3, 1, 1)
-          Catch, /Cancel
-       ENDIF ELSE BEGIN
-          opixel = cgSnapshot(!D.X_Size-1, !D.Y_Size-1, 1, 1)
-       ENDELSE
-       IF N_Elements(opixel) NE 3 THEN BEGIN
-            IF (!D.Name NE 'NULL') THEN TVLCT, rrr, ggg, bbb, /Get
-            opixel = [rrr[opixel], ggg[opixel], bbb[opixel]]
-       ENDIF
+    ; If needed, get the pixel value of the "opposite" color (also called "background").
+    ; This is the pixel color opposite the pixel color in the upper-right corner of the
+    ; display. Unfortunately, Windows versions of IDL (though at least IDL 8.2.1),
+    ; and now some Macintosh versions of IDL, report the size of draw widgets which are
+    ; not yet the current graphics window inaccurately. So, I can't tell exactly which
+    ; pixel to read, since it depends on the size of the window.
+    ;
+    ; The solution I am going to try now is to ONLY read this pixel if I need to, and if
+    ; I try to read it, I am going to catch any reading errors. If I get an error,
+    ; I am going to make the "background" color "white" and the "opposite" color "black".
+    ; The pixel I am going to read, an an attempt to avoid problems is a pixel five pixels
+    ; into what I *think* is the end of the window.
+    index = Where(theColor EQ 'OPPOSITE' OR theColor EQ 'BACKGROUND', bgcount)
+    IF bgcount GT 0 THEN BEGIN 
+        IF ((!D.Window GE 0) && ((!D.Flags AND 256) NE 0)) || (!D.Name EQ 'Z') THEN BEGIN
+           Catch, theError
+           IF theError NE 0 THEN BEGIN
+              opixel =  [255B, 255B, 255B]
+           ENDIF
+           IF N_Elements(opixel) EQ 0 THEN opixel = cgSnapshot(!D.X_Size-5, !D.Y_Size-5, 1, 1)
+           Catch, /Cancel
+           IF N_Elements(opixel) NE 3 THEN BEGIN
+              IF (!D.Name NE 'NULL') THEN TVLCT, rrr, ggg, bbb, /Get
+              opixel = [rrr[opixel], ggg[opixel], bbb[opixel]]
+           ENDIF
+            
+           bgcolor = opixel
+           opixel = 255 - bgcolor
+        ENDIF ELSE BEGIN
+           bgcolor = [255B,255B,255B] ; White
+           opixel = [0B, 0B, 0B]      ; Black
+        ENDELSE
     ENDIF ELSE BEGIN
-       IF (!D.Name EQ 'PS') THEN opixel = [255,255,255] ELSE opixel = [0,0,0]
+       bgcolor = [255B,255B,255B] ; White
+       opixel = [0B, 0B, 0B]      ; Black
     ENDELSE
-    IF N_Elements(opixel) EQ 0 THEN opixel = [0,0,0]
-    bgcolor = opixel
-    opixel = 255 - opixel
+    
+    
     
     ; Read the first color as bytes. If none of the bytes are less than 48
     ; or greater than 57, then this is a "number" string and you should
@@ -678,6 +694,14 @@ FUNCTION cgColor, theColour, colorIndex, $
            rvalue = [ rvalue,  84,    163,   197,   220,   105,    51,    13,     0 ]
            gvalue = [ gvalue,  48,    103,   141,   188,   188,   149,   113,    81 ]
            bvalue = [ bvalue,   5,     26,    60,   118,   177,   141,   105,    71 ]
+           colors = [ colors, 'CG1', 'CG2', 'CG3', 'CG4', 'CG5', 'CG6', 'CG7', 'CG8']
+           rvalue = [ rvalue,  51,    102,   136,    68,    17,   153,   221,    102 ]
+           gvalue = [ gvalue,  34,    153,   204,   170,   119,   153,   204,     17]
+           bvalue = [ bvalue, 136,    204,   238,   153,    51,    51,   119,      0 ]
+           colors = [ colors, 'CG9', 'CG10', 'CG11', 'CG12']
+           rvalue = [ rvalue,  204,    170,   136,   170 ]
+           gvalue = [ gvalue,  102,     68,    34,   68 ]
+           bvalue = [ bvalue,  119,    102,    85,   153 ]           
            colors = [ colors, 'OPPOSITE', 'BACKGROUND']
            rvalue = [ rvalue,  opixel[0],  bgcolor[0]]
            gvalue = [ gvalue,  opixel[1],  bgcolor[1]]

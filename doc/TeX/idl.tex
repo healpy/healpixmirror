@@ -149,23 +149,32 @@ See \linklatexhtml{the Installation Document}{install.pdf}{install.html} for mor
 \section{Changes between releases 3.20 and \hpxversion}
 
 \begin{itemize}
-
+%
 \item \htmlref{{\tt cartview, gnomview, mollview,
-orthview}}{idl:mollview}: 
+orthview}}{idl:mollview} visualization routines:
 \begin{itemize}
-\item addition of \mylink{idl:mollview:pdf}{{\tt PDF}} keyword for production of Adobe PDF outputs,
-\item addition of \mylink{idl:mollview:latex}{{\tt LATEX}} keyword for genuine 
- or emulated \LaTeX\ processing of character strings,
-\item addition of \mylink{idl:mollview:pfonts}{{\tt PFONTS}} keyword to select 
-origin and type of character font.
+ \item addition of \mylink{idl:mollview:pdf}{{\tt PDF}} keyword for production of Adobe PDF outputs;
+ \item addition of \mylink{idl:mollview:latex}{{\tt LATEX}} keyword for genuine 
+ or emulated \LaTeX\ processing of character strings;
+ \item addition of \mylink{idl:mollview:pfonts}{{\tt PFONTS}} keyword to select 
+origin and type of character font;
+ \item the \mylink{idl:mollview:crop}{{\tt CROP}} keyword now has the same behavior for all output media (GIF, JPEG, PDF, PNG, PS, ... and X);  % 
+  the \mylink{idl:mollview:nobar}{{\tt NOBAR}} keyword now removes the color bar {\em or} the polarization color wheel, as applicable; correct EQUINOX date in header of output \mylink{idl:mollview:fits}{FITS} map.
+\end{itemize}
+%
+\item update of the required
+    \htmladdnormallink{{\tt IDL-astron} library}{http://idlastro.gsfc.nasa.gov/homepage.html}
+    routines, and their supporting \htmladdnormallink{\tt Coyote}{http://www.idlcoyote.com}
+    routines (2015-04-27).
+%
 \end{itemize}
 
-
-\end{itemize}
-
-\section{Changes between releases 3.11 and 3.20}
-
+\section{Previous changes}
+\subsubsection{Changes between releases 3.11 and 3.20}
+%--------------------------------
+{\footnotesize{%
 \begin{itemize}
+%--------------------------------
 %
 \item addition of \htmlref{{\tt ialteralm}}{{idl:ialteralm}} to modify Spherical
 Harmonics coefficients ($a_{lm}$).
@@ -197,8 +206,8 @@ defined in \htmlref{{\tt planck\_colors}}{{idl:planck_colors}}
     routines (2014-11-10).
 %
 \end{itemize}
+}}% end of footnotesize
 
-\section{Previous changes}
 \subsubsection{Changes between releases 3.00 and 3.11}
 %--------------------------------
 {\footnotesize{%

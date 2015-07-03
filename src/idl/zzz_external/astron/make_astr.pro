@@ -140,7 +140,7 @@ pro make_astr,astr, CD=cd, DELTA = cdelt, CRPIX = crpix, CRVAL = crval, $
  form = [REPLICATE(0,N_ELEMENTS(lat0)),REPLICATE(1,N_ELEMENTS(lat1)), $
          REPLICATE(2,N_ELEMENTS(lat2))]
  good = WHERE(lat GE 0, ngood)
- IF ngood GT 1 THEN MESSAGE, 'Both axis types are latitude"
+ IF ngood GT 1 THEN MESSAGE, 'Both axis types are latitude'
  lat  = ngood EQ 1 ? lat[good] : -1
  lat_form = ngood EQ 1 ? form[good] : -1 
  
