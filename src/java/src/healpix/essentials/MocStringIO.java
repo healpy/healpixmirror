@@ -19,12 +19,11 @@
 package healpix.essentials;
 
 import java.io.*;
-import nom.tam.fits.*;
 
-/** Moc I/O routines.
+/** Moc string I/O routines.
     @copyright 2014-2015 Max-Planck-Society
     @author Martin Reinecke */
-public class MocUtil
+public class MocStringIO
   {
   /** Parses a string following either the basic ASCII or JSON syntax given in
       the MOC standard document, and converts it into a MOC.
@@ -119,95 +118,4 @@ public class MocUtil
       standard document. The result is well-formed. */
   public static String mocToStringJSON(Moc moc)
     { return mocToStringGeneral(moc,true); }
-
-  /** Converts the contents of a FITS input stream to a MOC. */
-  public static Moc mocFromFits(InputStream inp) throws Exception
-    {
-    FitsFactory.setUseHierarch(true);
-    FitsFactory.setUseAsciiTables(false);
-    BasicHDU bhdu = (new Fits(inp)).getHDU(1);
-    Header head = bhdu.getHeader();
-    Header.setLongStringsEnabled(true);
-
-    Object tmp = ((BinaryTable)bhdu.getData()).getFlattenedColumn(0);
-    long[] data=null;
-    if (tmp instanceof long[])
-      data = (long[])tmp;
-    else if (tmp instanceof int[])
-      {
-      int[] tmp2 = (int[])tmp;
-      data = new long[tmp2.length];
-      for (int i=0; i<tmp2.length; ++i)
-        data[i] = (long)tmp2[i];
-      }
-    else if (tmp instanceof short[])
-      {
-      short[] tmp2 = (short[])tmp;
-      data = new long[tmp2.length];
-      for (int i=0; i<tmp2.length; ++i)
-        data[i] = (long)tmp2[i];
-      }
-    else
-      HealpixUtils.check(false,"unsupported data format");
-
-    RangeSet ru = new RangeSet();
-    for (int i=0; i<data.length; ++i)
-      ru.append(data[i]);
-    return Moc.fromUniqRS(ru);
-    }
-  /** Converts the contents of a FITS file to a MOC. */
-  public static Moc mocFromFits(String filename) throws Exception
-    {
-    FileInputStream inp = new FileInputStream(filename);
-    Moc moc = mocFromFits(inp);
-    inp.close();
-    return moc;
-    }
-
-  /** Writes the provided Moc to the stream in FITS format. */
-  public static void mocToFits(Moc moc, OutputStream out) throws Exception
-    {
-    FitsFactory.setUseHierarch(true);
-    FitsFactory.setUseAsciiTables(false);
-    Fits f = new Fits();
-    Object[] table = new Object[1];
-    long[] data=moc.toUniq();
-    long maxval=0;
-    if (data.length>0) maxval=data[data.length-1];
-    if (maxval<=0x7fff)
-      {
-      short[] dtmp = new short[data.length];
-      for (int i=0; i<data.length; ++i)
-        dtmp[i]=(short)data[i];
-      table[0]=dtmp;
-      }
-    else if (maxval<=0x7FFFFFFF)
-      {
-      int[] dtmp = new int[data.length];
-      for (int i=0; i<data.length; ++i)
-        dtmp[i]=(int)data[i];
-      table[0]=dtmp;
-      }
-    else
-      table[0] = data;
-
-    f.addHDU(Fits.makeHDU(table));
-    BinaryTableHDU bhdu = (BinaryTableHDU) f.getHDU(1);
-
-    bhdu.setColumnName(0, "PIXEL", "");
-    bhdu.addValue("PIXTYPE", "HEALPIX", "HEALPix magic value");
-    bhdu.addValue("ORDERING", "NUNIQ", "NUNIQ coding method");
-    bhdu.addValue("COORDSYS", "C", "mandated by MOC standard");
-    bhdu.addValue("MOCORDER", moc.maxOrder(), "MOC resolution (best order)");
-
-    f.write(new DataOutputStream(out));
-    out.flush();
-    }
-  /** Writes the provided Moc to the specified file in FITS format. */
-  public static void mocToFits(Moc moc, String filename) throws Exception
-    {
-    FileOutputStream out = new FileOutputStream(filename);
-    mocToFits(moc,out);
-    out.close();
-    }
   }

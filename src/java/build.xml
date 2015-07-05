@@ -6,9 +6,13 @@
   <property name="src" value="${basedir}/src"/>
   <property name="docs" value="${basedir}/doc"/>
   <property name="junit.reports" value="${basedir}/reports"/>
-  <path id="classpath">
+  <path id="cpfits">
     <pathelement location="${classes}"/>
-    <fileset dir="${lib}" includes="nom.tam.fits*.jar junit*.jar"/>
+    <fileset dir="${lib}" includes="nom.tam.fits*.jar"/>
+  </path>
+  <path id="cpjunit">
+    <pathelement location="${classes}"/>
+    <fileset dir="${lib}" includes="junit*.jar"/>
   </path>
   <target name="init" description="Initialize the build">
     <mkdir dir="${classes}"/>
@@ -25,17 +29,34 @@
   <target name="compile" depends="init" description="Compile the Java code">
     <echo>building </echo>
     <javac destdir="${classes}" includeAntRuntime="false"
-      srcdir="${src}" debug="on">
+      srcdir="${src}" excludes="**/test/**" debug="on">
       <compilerarg value="-Xlint"/>
-      <classpath refid="classpath" />
+      <classpath refid="cpfits" />
     </javac>
   </target>
-  <target name="test" depends="compile" description="Test the Java code">
+  <target name="compile-nofits" depends="init" description="Compile the Java code without FITS support">
+    <echo>building </echo>
+    <javac destdir="${classes}" includeAntRuntime="false"
+      srcdir="${src}" excludes="**/test/**,**/*Fits*" debug="on">
+      <compilerarg value="-Xlint"/>
+    </javac>
+  </target>
+  <target name="testcompile" depends="init,compile" description="Compile the Java tests">
+    <echo>building </echo>
+    <javac destdir="${classes}" includeAntRuntime="false"
+      srcdir="${src}" includes="**/test/**" debug="on">
+      <compilerarg value="-Xlint"/>
+      <classpath refid="cpfits" />
+      <classpath refid="cpjunit" />
+    </javac>
+  </target>
+  <target name="test" depends="compile,testcompile" description="Test the Java code">
     <delete dir="${junit.reports}"/>
     <mkdir dir="${junit.reports}"/>
     <junit errorProperty="junit.failed" failureProperty="junit.failed" fork="yes"
       maxmemory="1g" printsummary="withOutAndErr" showoutput="yes">
-      <classpath refid="classpath" />
+      <classpath refid="cpfits" />
+      <classpath refid="cpjunit" />
       <formatter type="xml" usefile="true" />
       <batchtest todir="${junit.reports}">
         <fileset dir="${classes}" includes="**/test/*Test.class" excludes="**/test/*PerfTest.class" />
@@ -49,12 +70,12 @@
     </junitreport>
     <fail message="Test Cases Failed" if="junit.failed"/>
   </target>
-  <target name="perftest" depends="compile" description="Measure the performance of the Java code">
+  <target name="perftest" depends="compile,testcompile" description="Measure the performance of the Java code">
     <delete dir="${junit.reports}"/>
     <mkdir dir="${junit.reports}"/>
     <junit errorProperty="junit.failed" failureProperty="junit.failed" fork="yes"
       maxmemory="1g" printsummary="withOutAndErr" showoutput="yes">
-      <classpath refid="classpath" />
+      <classpath refid="cpjunit" />
       <formatter type="xml" usefile="true" />
       <batchtest todir="${junit.reports}">
         <fileset dir="${classes}" includes="**/test/*PerfTest.class" />
@@ -73,10 +94,15 @@
       <fileset dir="${classes}" excludes="**/test/**" />
     </jar>
   </target>
+  <target name="dist-nofits" depends="clean,compile-nofits" description="Build the JAR file without testing and FITS support">
+    <jar destfile="${dist}/jhealpix_nofits.jar">
+      <fileset dir="${classes}" excludes="**/test/**" />
+    </jar>
+  </target>
   <target name="docs" description="Create the Javadocs">
     <javadoc destdir="${docs}" failonerror="true" use="true"
       additionalparam='-breakiterator -quiet -tag copyright:a:"Copyright:" -link http://docs.oracle.com/javase/1.7.0/docs/api'
-      classpathref="classpath">
+      classpathref="cpfits">
       <packageset dir="${src}" defaultexcludes="yes">
         <exclude name="**/test/**" />
       </packageset>

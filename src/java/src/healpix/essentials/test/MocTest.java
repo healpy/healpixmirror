@@ -55,12 +55,12 @@ public class MocTest extends TestCase
     moc.addPixelRange(10,3000000,3000001);
 
     assertEquals("inconsistency",moc,moc.complement().complement());
-    assertEquals("inconsistency",moc,MocUtil.mocFromString(" 0/4, 6 2/ \t 4 -16 10/3000000 \t\n "));
-    assertEquals("inconsistency",moc,MocUtil.mocFromString("0/6 2/ 5 2/4 2/6- 16 0/4  10/3000000"));
-    assertEquals("inconsistency",moc,MocUtil.mocFromString
+    assertEquals("inconsistency",moc,MocStringIO.mocFromString(" 0/4, 6 2/ \t 4 -16 10/3000000 \t\n "));
+    assertEquals("inconsistency",moc,MocStringIO.mocFromString("0/6 2/ 5 2/4 2/6- 16 0/4  10/3000000"));
+    assertEquals("inconsistency",moc,MocStringIO.mocFromString
       ("{\"0\":[6] , \"2\": [5 ], \"2\":[  4,6,7,8,9,10,11,12,13,14,15,16], \"0\":[4],  \"10\":[3000000]}"));
-    assertEquals("inconsistency",moc,MocUtil.mocFromString(MocUtil.mocToStringASCII(moc)));
-    assertEquals("inconsistency",moc,MocUtil.mocFromString(MocUtil.mocToStringJSON(moc)));
+    assertEquals("inconsistency",moc,MocStringIO.mocFromString(MocStringIO.mocToStringASCII(moc)));
+    assertEquals("inconsistency",moc,MocStringIO.mocFromString(MocStringIO.mocToStringJSON(moc)));
     assertEquals("inconsistency",moc,Moc.fromUniq(moc.toUniq()));
     assertEquals("inconsistency",moc.maxOrder(),10);
     Moc xtmp = moc.degradedToOrder(8,false);
@@ -71,10 +71,6 @@ public class MocTest extends TestCase
     assertFalse("inconsistency",moc.contains(xtmp));
     assertTrue("inconsistency",xtmp.contains(moc));
     assertEquals("inconsistency",moc,Moc.fromCompressed(moc.toCompressed()));
-    ByteArrayOutputStream out= new ByteArrayOutputStream();
-    MocUtil.mocToFits(moc,out);
-    ByteArrayInputStream inp = new ByteArrayInputStream(out.toByteArray());
-    assertEquals("inconsistency",moc,MocUtil.mocFromFits(inp));
     }
 
   public void testPeano() throws Exception
@@ -107,8 +103,8 @@ public class MocTest extends TestCase
   public void testOps() throws Exception
     {
     int niter = 100;
-    Moc full = MocUtil.mocFromString("0/0-11");
-    Moc empty = MocUtil.mocFromString("");
+    Moc full = MocStringIO.mocFromString("0/0-11");
+    Moc empty = MocStringIO.mocFromString("");
     for (int iter=0; iter<niter; ++iter)
       {
       Moc a = randomMoc(1000, 0, 100);
