@@ -29,7 +29,7 @@ import java.util.Arrays;
 
     @copyright 2015 Max-Planck-Society
     @author Martin Reinecke */
-public class AmocTest extends TestCase
+public class MocTest extends TestCase
   {
   private static Moc randomMoc(int num, long start, int dist)
     {
