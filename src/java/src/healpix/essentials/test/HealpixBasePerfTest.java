@@ -24,7 +24,10 @@ import java.text.DecimalFormat;
 
 import healpix.essentials.*;
 
-/** @author Martin Reinecke */
+/** Benchmarks for the HealpixBase class
+
+    @copyright 2014 Max-Planck-Society
+    @author Martin Reinecke */
 public class HealpixBasePerfTest extends TestCase
   {
   static private final DecimalFormat form = new DecimalFormat("##0.00");

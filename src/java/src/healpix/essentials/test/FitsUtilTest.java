@@ -25,6 +25,10 @@ import junit.framework.TestCase;
 import java.util.UUID;
 import java.io.File;
 
+/** Tests for the FitsUtil class
+
+    @copyright 2014 Max-Planck-Society
+    @author Martin Reinecke */
 public class FitsUtilTest extends TestCase
   {
   public void testHPmapf() throws Exception

@@ -24,7 +24,10 @@ import java.util.Random;
 
 import healpix.essentials.*;
 
-/** @author Martin Reinecke */
+/** Tests for the Fxyf class
+
+    @copyright 2015 Max-Planck-Society
+    @author Martin Reinecke */
 public class FxyfTest extends TestCase {
 
   public void testFxyf() throws Exception

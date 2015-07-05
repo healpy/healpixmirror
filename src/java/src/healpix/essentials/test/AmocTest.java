@@ -25,6 +25,10 @@ import java.io.*;
 import java.util.Random;
 import java.util.Arrays;
 
+/** Tests for the Moc class
+
+    @copyright 2015 Max-Planck-Society
+    @author Martin Reinecke */
 public class AmocTest extends TestCase
   {
   private static Moc randomMoc(int num, long start, int dist)

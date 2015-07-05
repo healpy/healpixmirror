@@ -25,7 +25,10 @@ import java.text.DecimalFormat;
 
 import healpix.essentials.*;
 
-/** @author Martin Reinecke */
+/** Tests for the HealpixProc class
+
+    @copyright 2014 Max-Planck-Society
+    @author Martin Reinecke */
 public class HealpixProcTest extends TestCase {
 
   static private final int nsamples=10000; // influences number of correctness tests

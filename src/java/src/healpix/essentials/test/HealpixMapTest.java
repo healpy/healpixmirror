@@ -25,7 +25,10 @@ import java.text.DecimalFormat;
 
 import healpix.essentials.*;
 
-/** @author Martin Reinecke */
+/** Tests for the HealpixMap class
+
+    @copyright 2014 Max-Planck-Society
+    @author Martin Reinecke */
 public class HealpixMapTest extends TestCase {
 
   public void test_swapScheme()throws Exception

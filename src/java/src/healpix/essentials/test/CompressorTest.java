@@ -24,6 +24,10 @@ import junit.framework.TestCase;
 import java.io.*;
 import java.util.Random;
 
+/** Tests for the linear interpolative coding compression
+
+    @copyright 2015 Max-Planck-Society
+    @author Martin Reinecke */
 public class CompressorTest extends TestCase {
 
   public void testCompressDecompress() throws Exception

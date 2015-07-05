@@ -24,6 +24,10 @@ import junit.framework.TestCase;
 import java.io.*;
 import java.util.Random;
 
+/** Tests for the RangeSet class
+
+    @copyright 2014 Max-Planck-Society
+    @author Martin Reinecke */
 public class RangeSetTest extends TestCase {
 
   private static RangeSet randomRangeSet(Random rng, int num, long start,

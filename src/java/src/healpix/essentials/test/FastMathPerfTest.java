@@ -4,10 +4,10 @@ import junit.framework.TestCase;
 import java.text.DecimalFormat;
 import static healpix.essentials.FastMath.*;
 
-/** A class to perform correctness and speed tests for the FastMath class
- *
- * @author Naoki Shibata
- */
+/** FastMath benchmarking code
+
+    @copyright 2014 Max-Planck-Society
+    @author Martin Reinecke */
 public class FastMathPerfTest extends TestCase
   {
   static private final DecimalFormat form = new DecimalFormat("##0.00");
