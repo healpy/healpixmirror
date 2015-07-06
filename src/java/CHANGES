@@ -37,4 +37,12 @@ Changes after version 3.11:
 ===========================
 
 RangeSet.size() -> RangeSet.nranges()
-Rangset(int) constructor has new semantics; see documentation!
+RangeSet(int) constructor has new semantics; see documentation!
+
+Changes after version 3.20:
+===========================
+
+- deprecated parts of the library have been removed
+- MOC support (see http://ivoa.net/documents/MOC/ for high-level description)
+- queries for arbitrary polygons (using MOC)
+- new targets in build.xml which allow compilation without external JARs

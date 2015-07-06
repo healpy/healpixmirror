@@ -1,6 +1,6 @@
 #!/bin/sh
 
-NAME=HealpixJava-3.12pre
+NAME=HealpixJava-3.3alpha4
 URL=https://healpix.svn.sourceforge.net/svnroot/healpix/trunk/src/java
 REV=HEAD
 
