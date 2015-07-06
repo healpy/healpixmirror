@@ -94,7 +94,12 @@
       <fileset dir="${classes}" excludes="**/test/**" />
     </jar>
   </target>
-  <target name="dist-nofits" depends="clean,compile-nofits" description="Build the JAR file without testing and FITS support">
+  <target name="dist-notest" depends="clean,compile" description="Build the JAR file without testing">
+    <jar destfile="${dist}/jhealpix.jar">
+      <fileset dir="${classes}" excludes="**/test/**" />
+    </jar>
+  </target>
+  <target name="dist-nofits-notest" depends="clean,compile-nofits" description="Build the JAR file without testing and FITS support">
     <jar destfile="${dist}/jhealpix_nofits.jar">
       <fileset dir="${classes}" excludes="**/test/**" />
     </jar>
