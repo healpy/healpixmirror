@@ -309,12 +309,7 @@ public class MocQuery
   static public Moc doMocQueryInclusive (int order, int omax,
     ArrayList<MocQueryComponent> comp)
     throws Exception
-    {
-    HealpixUtils.check ((omax>=order) && (omax<=HealpixBase.order_max),
-      "invalid omax");
-
-    return (new queryHelper(order,omax,true,comp)).result();
-    }
+    { return (new queryHelper(order,omax,true,comp)).result(); }
 
   static private double isLeft (Vec3 a, Vec3 b, Vec3 c)
     {
@@ -378,6 +373,32 @@ public class MocQuery
     return res;
     }
 
+  static private int [] zapDegenerateVertices(Vec3 vv[], int P[])
+    {
+    int []tmp=new int[P.length];
+    int n = tmp.length;
+    for (int i=0; i<n; ++i)
+      tmp[i]=P[i];
+    int j=0;
+    while (j<n)
+      {
+      if (Math.abs(vv[tmp[(j+n-1)%n]].cross(vv[tmp[j]]).norm().
+        dot(vv[tmp[(j+1)%n]]))<1e-10)
+        {
+        --n;
+        for (int i=j; i<n; ++i)
+          vv[i]=vv[i+1];
+        }
+      else
+        ++j;
+      }
+    int[] res=new int[n];
+    for (int i=0; i<n; ++i)
+      res[i]=tmp[i];
+
+    return res;
+    }
+
   static public ArrayList<MocQueryComponent> prepPolyHelper (Vec3 vv[],
     int P[], ArrayList<MocQueryComponent> comp)
     throws Exception
@@ -415,7 +436,7 @@ public class MocQuery
           }
         ppocket[idx]=hull[ihull];
         // process pocket recursively
-        comp=prepPolyHelper (vv, ppocket, comp);
+        comp=prepPolyHelper (vv, zapDegenerateVertices(vv,ppocket), comp);
         ihull=ihull_next;
         ipoly=ipoly_next;
         }
@@ -451,7 +472,7 @@ public class MocQuery
     for (int i=0; i<P.length; ++i)
       P[i]=i;
     ArrayList<MocQueryComponent> comp = new ArrayList<MocQueryComponent>();
-    return prepPolyHelper(vv,P,comp);
+    return prepPolyHelper(vv,zapDegenerateVertices(vv,P),comp);
     }
 
   static public Moc queryGeneralPolygon (ArrayList<Vec3> vertex, int order)
