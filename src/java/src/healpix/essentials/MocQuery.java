@@ -306,6 +306,16 @@ public class MocQuery
     throws Exception
     { return (new queryHelper(order,order,false,comp)).result(); }
 
+  static public Moc doMocQueryInclusive (int order, int omax,
+    ArrayList<MocQueryComponent> comp)
+    throws Exception
+    {
+    HealpixUtils.check ((omax>=order) && (omax<=HealpixBase.order_max),
+      "invalid omax");
+
+    return (new queryHelper(order,omax,true,comp)).result();
+    }
+
   static private double isLeft (Vec3 a, Vec3 b, Vec3 c)
     {
     return (a.cross(b)).dot(c);
@@ -447,4 +457,8 @@ public class MocQuery
   static public Moc queryGeneralPolygon (ArrayList<Vec3> vertex, int order)
     throws Exception
     { return doMocQuery (order, MocQuery.prepPolygon(vertex)); }
+  static public Moc queryGeneralPolygonInclusive (ArrayList<Vec3> vertex,
+    int order, int omax)
+    throws Exception
+    { return doMocQueryInclusive (order, omax, MocQuery.prepPolygon(vertex)); }
   }
