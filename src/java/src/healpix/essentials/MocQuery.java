@@ -373,37 +373,12 @@ public class MocQuery
     return res;
     }
 
-  static private int [] zapDegenerateVertices(Vec3 vv[], int P[])
-    {
-    int []tmp=new int[P.length];
-    int n = tmp.length;
-    for (int i=0; i<n; ++i)
-      tmp[i]=P[i];
-    int j=0;
-    while (j<n)
-      {
-      if (Math.abs(vv[tmp[(j+n-1)%n]].cross(vv[tmp[j]]).norm().
-        dot(vv[tmp[(j+1)%n]]))<1e-10)
-        {
-        --n;
-        for (int i=j; i<n; ++i)
-          vv[i]=vv[i+1];
-        }
-      else
-        ++j;
-      }
-    int[] res=new int[n];
-    for (int i=0; i<n; ++i)
-      res[i]=tmp[i];
-
-    return res;
-    }
-
   static public ArrayList<MocQueryComponent> prepPolyHelper (Vec3 vv[],
-    int P[], ArrayList<MocQueryComponent> comp)
+    int P[], ArrayList<MocQueryComponent> comp, boolean doLast)
     throws Exception
     {
     int hull[]=getHull(vv,P);
+    boolean addHull[]=new boolean[hull.length];
 
     // sync both sequences at the first point of the convex hull
     int ihull=0, ipoly=0, nhull=hull.length, npoly=P.length;
@@ -411,15 +386,18 @@ public class MocQuery
 
     // iterate over the pockets between the polygon and its convex hull
     int npockets=0;
-    do
+    if (P.length==3)
+      for (int i=0; i<3; i++) addHull[i]=true;
+    else
+      {
+      do
       {
       int ihull_next = (ihull+1)%nhull,
           ipoly_next = (ipoly+1)%npoly;
       if (hull[ihull_next]==P[ipoly_next]) // no pocket found
-        { ihull=ihull_next; ipoly=ipoly_next; }
+        { addHull[ihull]=true; ihull=ihull_next; ipoly=ipoly_next; }
       else // query pocket
         {
-        ++npockets;
         int nvpocket=2; // number of vertices for this pocket
         while (P[ipoly_next]!=hull[ihull_next])
           {
@@ -436,26 +414,33 @@ public class MocQuery
           }
         ppocket[idx]=hull[ihull];
         // process pocket recursively
-        comp=prepPolyHelper (vv, zapDegenerateVertices(vv,ppocket), comp);
+        ++npockets;
+        comp=prepPolyHelper (vv, ppocket, comp, false);
         ihull=ihull_next;
         ipoly=ipoly_next;
         }
       } while (ihull!=0);
-
+    }
     if (npockets>1) 
       comp.add(new MocQueryComponent(MocQueryOp.OR,npockets));
     if (npockets>0) 
       comp.add(new MocQueryComponent(MocQueryOp.NOT));
 
+    if (!doLast)
+      addHull[hull.length-1]=false;
+
     // add convex hull
     for (int i=0; i<hull.length; ++i)
-      comp.add(new MocQueryComponent
-        (vv[hull[i]].cross(vv[hull[(i+1)%hull.length]]).norm(),0.5*Math.PI));
+      if (addHull[i])
+        comp.add(new MocQueryComponent
+          (vv[hull[i]].cross(vv[hull[(i+1)%hull.length]]).norm(),0.5*Math.PI));
 
-    if (npockets>0) 
-      comp.add(new MocQueryComponent(MocQueryOp.AND,hull.length+1));
-    else
-      comp.add(new MocQueryComponent(MocQueryOp.AND,hull.length));
+    int num_and = 0;
+    for (int i=0; i<hull.length; ++i)
+      if (addHull[i]) ++num_and;
+    if (npockets>0) ++num_and;
+    if (num_and>1) 
+      comp.add(new MocQueryComponent(MocQueryOp.AND,num_and));
 
     return comp;
     }
@@ -472,7 +457,7 @@ public class MocQuery
     for (int i=0; i<P.length; ++i)
       P[i]=i;
     ArrayList<MocQueryComponent> comp = new ArrayList<MocQueryComponent>();
-    return prepPolyHelper(vv,zapDegenerateVertices(vv,P),comp);
+    return prepPolyHelper(vv,P,comp,true);
     }
 
   static public Moc queryGeneralPolygon (ArrayList<Vec3> vertex, int order)
