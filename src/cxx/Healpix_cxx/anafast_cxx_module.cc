@@ -25,7 +25,7 @@
  */
 
 /*
- *  Copyright (C) 2003-2013 Max-Planck-Society
+ *  Copyright (C) 2003-2015 Max-Planck-Society
  *  Author: Martin Reinecke
  */
 
@@ -67,17 +67,17 @@ template<typename T> void anafast_cxx (paramfile &params)
     Healpix_Map<T> map;
     read_Healpix_map_from_fits(infile,map,1,2);
 
+    tsize nmod = map.replaceUndefWith0();
+    if (nmod!=0)
+      cout << "WARNING: replaced " << nmod <<
+              " undefined map pixels with a value of 0" << endl;
+
     double avg=0.;
     if (remove_mono)
       {
       avg=map.average();
       map.Add(T(-avg));
       }
-
-    tsize nmod = map.replaceUndefWith0();
-    if (nmod!=0)
-      cout << "WARNING: replaced " << nmod <<
-              " undefined map pixels with a value of 0" << endl;
 
     arr<double> weight;
     get_ring_weights (params,map.Nside(),weight);
@@ -102,18 +102,18 @@ template<typename T> void anafast_cxx (paramfile &params)
     Healpix_Map<T> mapT, mapQ, mapU;
     read_Healpix_map_from_fits(infile,mapT,mapQ,mapU,2);
 
+    tsize nmod = mapT.replaceUndefWith0()+mapQ.replaceUndefWith0()
+                +mapU.replaceUndefWith0();
+    if (nmod!=0)
+      cout << "WARNING: replaced " << nmod <<
+              " undefined map pixels with a value of 0" << endl;
+
     double avg=0.;
     if (remove_mono)
       {
       avg=mapT.average();
       mapT.Add(T(-avg));
       }
-
-    tsize nmod = mapT.replaceUndefWith0()+mapQ.replaceUndefWith0()
-                +mapU.replaceUndefWith0();
-    if (nmod!=0)
-      cout << "WARNING: replaced " << nmod <<
-              " undefined map pixels with a value of 0" << endl;
 
     arr<double> weight;
     get_ring_weights (params,mapT.Nside(),weight);
