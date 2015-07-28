@@ -66,11 +66,11 @@
 		<u>David Larson</u> 
 		(<a href="http://www.jhu.edu/">Johns Hopkins University, JHU</a>),
 
-		<u>Emmanuel Joliet</u> (ESAC),
+		<u>Emmanuel Joliet</u> (<a href="http://www.ipac.caltech.edu/">IPAC</a>),
 
 		<u>Paddy Leahy</u> (<a href="http://www.manchester.ac.uk">Manchester University</a>),
 
-		<u>Graca Rocha</u> (<a href="http://www.ipac.caltech.edu/">IPAC</a>),
+		<u>Graca Rocha</u> (JPL),
 		</li>
 		<li>
                the inclusion of 
