@@ -813,7 +813,7 @@ contains
   subroutine dsvdcmp(a,m,n,mp,np,w,v)
     integer(i4b), intent(in):: m,mp,n,np
     real(dp), intent(inout) ::  a(mp,np),v(np,np),w(np)
-    integer ierr
+    integer(i4b) :: ierr
     real(dp) rv1(np),u(mp,np)
 
     call svd(mp,m,n,a,w,.true.,u,.true.,v,ierr,rv1)

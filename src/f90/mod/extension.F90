@@ -39,13 +39,14 @@ module extension
   ! exit_with_status : verbose and clean exit, added by M.R.
   ! 2005-08: edited for Gfortran
   ! 2013-05-07: G95-compatible
+  ! 2015-07-31: G95-compatible
   
 #ifdef NAG
   USE f90_unix, ONLY : iargc, getarg, exit
 #endif
 !VF  USE dflib, ONLY : nargs, getarg
 
-  USE healpix_types, ONLY : I4B
+  USE healpix_types, ONLY : I4B, I8B
   IMPLICIT none
 
 #if ((!defined(NAG)) && (!defined(GFORTRAN)))
@@ -66,6 +67,15 @@ end interface
 !  integer(kind=I4B), private :: arg_shift = 0
 !VF  integer(kind=I4B), private :: arg_shift = 1
 
+#ifdef NO64BITS
+  interface exit_with_status
+     module procedure exit_with_status
+  end interface
+#else
+  interface exit_with_status
+     module procedure exit_with_status, exit_with_status_8
+  end interface
+#endif
   private
   public :: getEnvironment, getArgument, nArguments, exit_with_status
 
@@ -85,11 +95,13 @@ end interface
     ! ===========================================================
     subroutine getarg(num, res)
     ! ===========================================================
-       integer, intent(in) :: num
+       !integer, intent(in) :: num ! G95, 2015-07-30
+       integer(i4b), intent(in) :: num
        character(len=*), intent(out) :: res
-       integer l, err
+       integer num1, l, err
        ! ===========================================================
-       call get_command_argument(num,res,l,err)
+       num1 = num
+       call get_command_argument(num1,res,l,err)
     end subroutine
 
 #endif
@@ -136,21 +148,41 @@ end interface
       return
     end subroutine getArgument
 
+
+
+! i4b and i8b versions of exit_with_status   ! G95 2015-07-30
     ! ===========================================================
     subroutine exit_with_status (code, msg)
       ! ===========================================================
-      integer, intent(in) :: code
+      integer(i4b), intent(in) :: code
       character (len=*), intent(in), optional :: msg
       ! ===========================================================
-
       if (present(msg)) print *,trim(msg)
       print *,'program exits with exit code ', code
-
 #if (defined (RS6000))
       call exit_ (code)
 #else
       call exit (code)
 #endif
     end subroutine exit_with_status
+
+#ifndef NO64BITS
+    ! ===========================================================
+    subroutine exit_with_status_8 (code, msg)
+      ! ===========================================================
+      integer(i8b), intent(in) :: code
+      character (len=*), intent(in), optional :: msg
+      ! ===========================================================
+      if (present(msg)) print *,trim(msg)
+      print *,'program exits with exit code ', code
+#if (defined (RS6000))
+      call exit_ (code)
+#else
+      call exit (code)
+#endif
+    end subroutine exit_with_status_8
+#endif
+
+
 
 end module extension

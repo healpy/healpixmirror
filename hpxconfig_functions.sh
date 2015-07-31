@@ -38,6 +38,7 @@
 # 2013-07-26: F90: add output location of modules ($MODDIR). Hacked from CMake.
 # 2014-11-25: propose cfitsio-free compilation of C package
 # 2015-05-12: correct bashism (==) introduced above (problematic for dash and zsh)
+# 2015-07-31: improved g95 support; updated support address
 #=====================================
 #=========== General usage ===========
 #=====================================
@@ -1159,8 +1160,9 @@ askOpenMP () {
 	    FFLAGS="$FFLAGS $PRFLAGS"
 ##	    PARALL="_omp" # no need for a different source file
 	else
-	    echo "Healpix+OpenMP not tested for  \"$FCNAME\" under \"$OS\" "
-	    echo "Contact healpix at jpl.nasa.gov if you already used OpenMP in this configuration."
+	    echo "WARNING: Healpix+OpenMP not tested for  \"$FCNAME\" under \"$OS\" "
+	    echo "Contact us (http://healpix.sf.net/support.php) "
+	    echo "if you already used OpenMP in this configuration."
 	    echo "Will perform serial implementation of C and F90 routines instead."
 	fi
 
@@ -1476,7 +1478,9 @@ IdentifyF90Compiler () {
 		FFLAGS="$FFLAGS -DGFORTRAN -DG95 -w -ffree-form -fno-second-underscore"
 		OFLAGS="-O3"
 		CC="gcc"
+		CFLAGS="$CFLAGS -DgFortran" # to combine C and F90
 		FI8FLAG="-i8" # change default INTEGER to 64 bits
+		[ $OS = "Linux" ] && WLRPATH="-Wl,-R"
 		MODDIR="-fmod=" # output location of modules
 		DO_F90_SHARED=1
 	elif [ $ngfortran != 0 ] ; then
