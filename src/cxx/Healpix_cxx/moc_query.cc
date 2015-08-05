@@ -273,9 +273,10 @@ vector<int> getHull (const vector<vec3> &vert, const vector<int> &P)
   }
 
 void prepPolyHelper (const vector<vec3> &vv, const vector<int> &P,
-  vector<MocQueryComponent> &comp)
+  vector<MocQueryComponent> &comp, bool doLast)
   {
   vector<int> hull=getHull(vv,P);
+  vector<bool> addHull(hull.size());
 
   // sync both sequences at the first point of the convex hull
   int ihull=0, ipoly=0, nhull=hull.size(), npoly=P.size();
@@ -283,51 +284,61 @@ void prepPolyHelper (const vector<vec3> &vv, const vector<int> &P,
 
   // iterate over the pockets between the polygon and its convex hull
   int npockets=0;
-  do
+  if (P.size()==3) // really P.size(), not vv.size()?
+    for (int i=0; i<3; i++) addHull[i]=true;
+  else
     {
-    int ihull_next = (ihull+1)%nhull,
-        ipoly_next = (ipoly+1)%npoly;
-    if (hull[ihull_next]==P[ipoly_next]) // no pocket found
-      { ihull=ihull_next; ipoly=ipoly_next; }
-    else // query pocket
+    do
       {
-      ++npockets;
-      int nvpocket=2; // number of vertices for this pocket
-      while (P[ipoly_next]!=hull[ihull_next])
+      int ihull_next = (ihull+1)%nhull,
+          ipoly_next = (ipoly+1)%npoly;
+      if (hull[ihull_next]==P[ipoly_next]) // no pocket found
+        { addHull[ihull]=true; ihull=ihull_next; ipoly=ipoly_next; }
+      else // query pocket
         {
-        ipoly_next = (ipoly_next+1)%npoly;
-        ++nvpocket;
+        int nvpocket=2; // number of vertices for this pocket
+        while (P[ipoly_next]!=hull[ihull_next])
+          {
+          ipoly_next = (ipoly_next+1)%npoly;
+          ++nvpocket;
+          }
+        vector<int> ppocket(nvpocket);
+        int idx=0;
+        int ipoly_bw=ipoly_next;
+        while (P[ipoly_bw]!=hull[ihull])
+          {
+          ppocket[idx++]=P[ipoly_bw];
+          ipoly_bw=(ipoly_bw+npoly-1)%npoly;
+          }
+        ppocket[idx]=hull[ihull];
+        // process pocket recursively
+        ++npockets;
+        prepPolyHelper (vv, ppocket, comp, false);
+        ihull=ihull_next;
+        ipoly=ipoly_next;
         }
-      vector<int> ppocket(nvpocket);
-      int idx=0;
-      int ipoly_bw=ipoly_next;
-      while (P[ipoly_bw]!=hull[ihull])
-        {
-        ppocket[idx++]=P[ipoly_bw];
-        ipoly_bw=(ipoly_bw+npoly-1)%npoly;
-        }
-      ppocket[idx]=hull[ihull];
-      // process pocket recursively
-      prepPolyHelper (vv, ppocket, comp);
-      ihull=ihull_next;
-      ipoly=ipoly_next;
-      }
-    } while (ihull!=0);
-
+      } while (ihull!=0);
+    }
   if (npockets>1) 
     comp.push_back(MocQueryComponent(OR,npockets));
   if (npockets>0) 
     comp.push_back(MocQueryComponent(NOT));
 
+  if (!doLast)
+    addHull.back()=false;
+
   // add convex hull
   for (tsize i=0; i<hull.size(); ++i)
-    comp.push_back(MocQueryComponent
-      (crossprod(vv[hull[i]],vv[hull[(i+1)%hull.size()]]).Norm(),0.5*pi));
+    if (addHull[i])
+      comp.push_back(MocQueryComponent
+        (crossprod(vv[hull[i]],vv[hull[(i+1)%hull.size()]]).Norm(),0.5*pi));
 
-  if (npockets>0) 
-    comp.push_back(MocQueryComponent(AND,hull.size()+1));
-  else
-    comp.push_back(MocQueryComponent(AND,hull.size()));
+  int num_and = 0;
+  for (tsize i=0; i<hull.size(); ++i)
+    if (addHull[i]) ++num_and;
+  if (npockets>0) ++num_and;
+  if (num_and>1) 
+    comp.push_back(MocQueryComponent(AND,num_and));
   }
 
 } // unnamed namespace
@@ -357,6 +368,6 @@ vector<MocQueryComponent> prepPolygon (const vector<vec3> &vertex)
   for (tsize i=0; i<P.size(); ++i)
     P[i]=i;
   vector<MocQueryComponent> comp;
-  prepPolyHelper(vv,P,comp);
+  prepPolyHelper(vv,P,comp,true);
   return comp;
   }
