@@ -58,7 +58,7 @@ final class CircleFinder
   public CircleFinder (Vec3[] point) throws Exception
     {
     int np=point.length;
-    HealpixUtils.check(np>=3,"too few points");
+    HealpixUtils.check(np>=2,"too few points");
     center = point[0].add(point[1]); center.normalize();
     cosrad = point[0].dot(center);
     for (int i=2; i<np; ++i)
