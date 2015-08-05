@@ -391,36 +391,36 @@ public class MocQuery
     else
       {
       do
-      {
-      int ihull_next = (ihull+1)%nhull,
-          ipoly_next = (ipoly+1)%npoly;
-      if (hull[ihull_next]==P[ipoly_next]) // no pocket found
-        { addHull[ihull]=true; ihull=ihull_next; ipoly=ipoly_next; }
-      else // query pocket
         {
-        int nvpocket=2; // number of vertices for this pocket
-        while (P[ipoly_next]!=hull[ihull_next])
+        int ihull_next = (ihull+1)%nhull,
+            ipoly_next = (ipoly+1)%npoly;
+        if (hull[ihull_next]==P[ipoly_next]) // no pocket found
+          { addHull[ihull]=true; ihull=ihull_next; ipoly=ipoly_next; }
+        else // query pocket
           {
-          ipoly_next = (ipoly_next+1)%npoly;
-          ++nvpocket;
+          int nvpocket=2; // number of vertices for this pocket
+          while (P[ipoly_next]!=hull[ihull_next])
+            {
+            ipoly_next = (ipoly_next+1)%npoly;
+            ++nvpocket;
+            }
+          int ppocket[] = new int[nvpocket];
+          int idx=0;
+          int ipoly_bw=ipoly_next;
+          while (P[ipoly_bw]!=hull[ihull])
+            {
+            ppocket[idx++]=P[ipoly_bw];
+            ipoly_bw=(ipoly_bw+npoly-1)%npoly;
+            }
+          ppocket[idx]=hull[ihull];
+          // process pocket recursively
+          ++npockets;
+          comp=prepPolyHelper (vv, ppocket, comp, false);
+          ihull=ihull_next;
+          ipoly=ipoly_next;
           }
-        int ppocket[] = new int[nvpocket];
-        int idx=0;
-        int ipoly_bw=ipoly_next;
-        while (P[ipoly_bw]!=hull[ihull])
-          {
-          ppocket[idx++]=P[ipoly_bw];
-          ipoly_bw=(ipoly_bw+npoly-1)%npoly;
-          }
-        ppocket[idx]=hull[ihull];
-        // process pocket recursively
-        ++npockets;
-        comp=prepPolyHelper (vv, ppocket, comp, false);
-        ihull=ihull_next;
-        ipoly=ipoly_next;
-        }
-      } while (ihull!=0);
-    }
+        } while (ihull!=0);
+      }
     if (npockets>1) 
       comp.add(new MocQueryComponent(MocQueryOp.OR,npockets));
     if (npockets>0) 
