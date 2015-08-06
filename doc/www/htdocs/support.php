@@ -25,6 +25,11 @@ document.write('<a href='+p1+p2+p3+n1+n2+'&#64;'+dn1+'&#46;'+dn2+'&#46;'+dn3+'>'
 --></script><noscript><em>[Enable javascript in your browser to see the email address]</em></noscript>
 (archived <a href="http://sourceforge.net/p/healpix/mailman/healpix-support/?style=threaded">here</a>)
 </p>
+<p>
+To help us provide some support, please read 
+<a href="https://sourceforge.net/p/healpix/wiki/Reporting%20installation%20problems/">that page</a> 
+before reporting a problem.
+</p>
 
 <h3>Search HEALPix code</h3>
 <div class="ohloh" style="margin-top:0px">

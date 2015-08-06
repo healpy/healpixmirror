@@ -309,6 +309,9 @@ for i=0,n_outlines-1 do begin
                     nkeep = n_elements(u_cont)
                 endelse
             end
+            else: begin
+                message,'Unsupported projection: '+projection
+            end
         endcase
                                 ; store (U,V) in structure
         if (nkeep gt 0) then begin

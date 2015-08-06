@@ -46,6 +46,7 @@ pro proj2fits, map, FITSFile, $
 ;  Jan 2007, EH: header variable (head_out) must be undefined for better results
 ;  May 2010, EH: turned into proj2fits. Uses WCS routines
 ;  Jul 2015, EH: forced EQUINOX value to 2000.0
+;  Aug 2015, EH: make sure putast.pro writes LONPOLE+LATPOLE or PV1_3+PV1_4 in output FITS header
 ;-
 
 routine = 'proj2fits'
@@ -110,12 +111,13 @@ ang_rad = my_rot_ang * DDtoR
 ; default
 longpole = 180.d0
 latpole  = 0.0d0
-; polar projections (TAN/gnom, SIN/orth, ARC/azeq)
+; polar projections (TAN/gnom, SIN/orth, ARC/azeq);   Native(0,0) = Pole
 longpole1 = 180.d0 - my_rot_ang[2]
-; cylindrical projections (MOL, CAR)
+; cylindrical projections (MOL, CAR);  Native(0,0) = Equator
 longpole2 = atan(cos(ang_rad[1])*sin(ang_rad[2]), sin(ang_rad[1])) / DDtoR
 latpole2  = asin(cos(ang_rad[1])*cos(ang_rad[2])) / DDtoR
 
+; print,projtype
 case projtype of
     1: begin
         ctype = 'MOL'
@@ -142,16 +144,17 @@ case projtype of
             message_patch,'FITS output of orthographic map only possible with HALF_SKY',level=-2
         endif
     end
-    5: begin
+    6: begin
         ctype = 'ARC'
         longpole = longpole1
         proj_small = 'azimequid'
     end
-    default: begin
+    else: begin
         message,'Unknown projection type'
     end
 endcase
-ctype = [flon, flat]+ctype
+;;help, longpole1, longpole
+ctype1 = [flon, flat]+ctype
 OutFile = (DATATYPE(FITSFile) ne 'STR') ? 'plot_'+proj_small+'.fits' : FITSFile
 
 ; date
@@ -167,16 +170,26 @@ SXADDPAR,head_out,'NAXIS2', n2
 SXADDPAR,head_out,'DATE',   fdate,' Creation date (CCYY-MM-DD) of FITS header'
 ;;SXADDPAR,head_out,'BAD_DATA',bad_data,' value for missing data',form='(e15.8)'
 SXADDPAR,head_out,'BUNIT',  bunit
+sxaddpar,head_out,'COMMENT','----------------------------------------'
+sxaddpar,head_out,'COMMENT','    WCS keywords                        '
+sxaddpar,head_out,'COMMENT','----------------------------------------'
+if (ctype eq 'TAN') then begin ; added 2015-08-05
+; PUTAST.pro features (as of Oct 6, 2014):
+;  - gnomic projection: add LONPOLE and LATPOLE slots that will be updated by the routine
+;  - other projections: PV1_3 and PV1_4 will be written instead by the routine
+    sxaddpar,head_Out,'LONPOLE',longpole,' [Deg] Native longitude of '+scoord+' pole'
+    sxaddpar,head_Out,'LATPOLE',latpole ,' [Deg] Native latitude  of '+scoord+' pole'
+endif
 
 delt_deg = keyword_set(flip) ? [1,1] : [-1,1]
 ; WCS keywords
-print, flon, flat
-; wcs_check_ctype, ctype, _projtype, _coord_type
+; print, flon, flat
+; wcs_check_ctype, ctype1, _projtype, _coord_type
 
 equinox = 2000.0d ; added 2015-07-02
 ;;radecsys = 'FK5'
 make_astr, astr, $
-           ctype = ctype $     ; projection type
+           ctype = ctype1 $     ; projection type
            , delt  = delt_deg*(reso_arcmin/60.d0) $ ; resolution (Degrees/pixel)
            , crpix = [n1+1.,n2+1.]*0.5d0 $ ; index of center pixel (1-based)
            , crval = my_rot_ang[0:1] $ ; long-lat location of center (Degrees)
@@ -185,14 +198,12 @@ make_astr, astr, $
            , equinox  = equinox
            ;;;;;; , radecsys = radecsys $
 
-; xy2ad, astr.crpix[0]-1, astr.crpix[1]-1, astr, _ra0_, _dec0_
-; print, _ra0_, _dec0_
-
 putast, head_out, astr, cd_type=0
 
+sxaddpar,head_out,'COMMENT','----------------------------------------',after='HISTORY'
 ; data related keywords
-if defined(mindata) then SXADDPAR,head_out,'DATAMIN',mindata
-if defined(maxdata) then SXADDPAR,head_out,'DATAMAX',maxdata
+if defined(mindata) then SXADDPAR,head_out,'DATAMIN',mindata, ' Data minimum value'
+if defined(maxdata) then SXADDPAR,head_out,'DATAMAX',maxdata, ' Data maximum value'
 
 SXADDPAR,head_out,'HISTORY',' '
 SXADDPAR,head_out,'HISTORY', proj_small+' projection, '+scoord+' coordinates'
