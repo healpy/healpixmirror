@@ -73,7 +73,10 @@ src_cxxsupport = \
   cxxsupport/walltimer.h \
   cxxsupport/wigner.h \
   cxxsupport/xcomplex.h \
-  cxxsupport/compress_utils.h
+  cxxsupport/compress_utils.h \
+  cxxsupport/colour.h \
+  cxxsupport/linear_map.h \
+  cxxsupport/sort_utils.h
 src_healpix_cxx= \
   Healpix_cxx/alm.cc \
   Healpix_cxx/alm.h \
