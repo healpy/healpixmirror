@@ -25,7 +25,7 @@
  */
 
 /*
- *  Copyright (C) 2003-2011 Max-Planck-Society
+ *  Copyright (C) 2003-2015 Max-Planck-Society
  *  Author: Martin Reinecke
  */
 
@@ -120,7 +120,7 @@ template<typename T> void read_Alm_from_fits
       planck_assert(m>=0,"negative m encountered");
       planck_assert(l>=m, "wrong l,m combination");
       if ((l<=lmax) && (m<=mmax))
-        alms(l,m).Set (re[i], im[i]);
+        alms(l,m) = xcomplex<T> (re[i], im[i]);
       }
     }
   }
@@ -173,7 +173,7 @@ template<typename T> void write_Alm_to_fits
       {
       index[i] = l*l + l + m + 1;
       if ((l<=lm) && (m<=mm))
-        { re[i] = alms(l,m).re; im[i] = alms(l,m).im; }
+        { re[i] = alms(l,m).real(); im[i] = alms(l,m).imag(); }
       else
         { re[i] = 0; im[i] = 0; }
       ++m;
@@ -210,7 +210,7 @@ template<typename T> void write_compressed_Alm_to_fits
   int n_alms = 0;
   for (int m=0; m<=mmax; ++m)
     for (int l=m; l<=lmax; ++l)
-      if (alms(l,m).norm()>0) ++n_alms;
+      if (norm(alms(l,m))>0) ++n_alms;
 
   int l=0, m=0;
   int real_lmax=0, real_mmax=0;
@@ -222,14 +222,14 @@ template<typename T> void write_compressed_Alm_to_fits
     re.alloc(ppix); im.alloc(ppix);
     for (tsize i=0; i<ppix; ++i)
       {
-      while (alms(l,m).norm()==0)
+      while (norm(alms(l,m))==0)
         {
         ++m;
         if ((m>l) || (m>mmax)) { ++l; m=0; }
         }
       index[i] = l*l + l + m + 1;
-      re[i] = alms(l,m).re;
-      im[i] = alms(l,m).im;
+      re[i] = alms(l,m).real();
+      im[i] = alms(l,m).imag();
       if (l>real_lmax) real_lmax=l;
       if (m>real_mmax) real_mmax=m;
       ++m;

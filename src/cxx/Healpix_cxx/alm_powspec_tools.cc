@@ -57,7 +57,7 @@ template<typename T> void create_alm
       {
       zeta1_r = rng.rand_gauss()*hsqrt2;
       double zeta1_i = rng.rand_gauss()*hsqrt2;
-      alm(l,m).Set (T(zeta1_r*rms_tt), T(zeta1_i*rms_tt));
+      alm(l,m) = xcomplex<T>(T(zeta1_r*rms_tt), T(zeta1_i*rms_tt));
       }
     }
   }
@@ -99,9 +99,9 @@ template<typename T> void create_alm_pol
       {
       zeta1_r = rng.rand_gauss()*hsqrt2;
       double zeta1_i = rng.rand_gauss()*hsqrt2;
-      almT(l,m).Set (T(zeta1_r*rms_tt), T(zeta1_i*rms_tt));
-      almG(l,m).Set (T(zeta1_r*rms_g1), T(zeta1_i*rms_g1));
-      almC(l,m).Set (T(zeta1_r*rms_c1), T(zeta1_i*rms_c1));
+      almT(l,m) = xcomplex<T>(T(zeta1_r*rms_tt), T(zeta1_i*rms_tt));
+      almG(l,m) = xcomplex<T>(T(zeta1_r*rms_g1), T(zeta1_i*rms_g1));
+      almC(l,m) = xcomplex<T>(T(zeta1_r*rms_c1), T(zeta1_i*rms_c1));
       }
     }
 
@@ -173,10 +173,11 @@ template<typename T> void extract_crosspowspec
   arr<double> tt(alm1.Lmax()+1);
   for (int l=0; l<=alm1.Lmax(); ++l)
     {
-    tt[l] = alm1(l,0).re*alm2(l,0).re;
+    tt[l] = alm1(l,0).real()*alm2(l,0).real();
     int limit = min(l,alm1.Mmax());
     for (int m=1; m<=limit; ++m)
-      tt[l] += 2 * (alm1(l,m).re*alm2(l,m).re + alm1(l,m).im*alm2(l,m).im);
+      tt[l] += 2 * (alm1(l,m).real()*alm2(l,m).real()
+                  + alm1(l,m).imag()*alm2(l,m).imag());
     tt[l] /= (2*l+1);
     }
   powspec.Set(tt);
@@ -219,21 +220,27 @@ template<typename T> void extract_crosspowspec
               tc(lmax+1), gc(lmax+1);
   for (int l=0; l<=lmax; ++l)
     {
-    tt[l] = almT1(l,0).re*almT2(l,0).re;
-    gg[l] = almG1(l,0).re*almG2(l,0).re;
-    cc[l] = almC1(l,0).re*almC2(l,0).re;
-    tg[l] = almT1(l,0).re*almG2(l,0).re;
-    tc[l] = almT1(l,0).re*almC2(l,0).re;
-    gc[l] = almG1(l,0).re*almC2(l,0).re;
+    tt[l] = almT1(l,0).real()*almT2(l,0).real();
+    gg[l] = almG1(l,0).real()*almG2(l,0).real();
+    cc[l] = almC1(l,0).real()*almC2(l,0).real();
+    tg[l] = almT1(l,0).real()*almG2(l,0).real();
+    tc[l] = almT1(l,0).real()*almC2(l,0).real();
+    gc[l] = almG1(l,0).real()*almC2(l,0).real();
     int limit = min(l,almT1.Mmax());
     for (int m=1; m<=limit; ++m)
       {
-      tt[l] += 2 * (almT1(l,m).re*almT2(l,m).re + almT1(l,m).im*almT2(l,m).im);
-      gg[l] += 2 * (almG1(l,m).re*almG2(l,m).re + almG1(l,m).im*almG2(l,m).im);
-      cc[l] += 2 * (almC1(l,m).re*almC2(l,m).re + almC1(l,m).im*almC2(l,m).im);
-      tg[l] += 2 * (almT1(l,m).re*almG2(l,m).re + almT1(l,m).im*almG2(l,m).im);
-      tc[l] += 2 * (almT1(l,m).re*almC2(l,m).re + almT1(l,m).im*almC2(l,m).im);
-      gc[l] += 2 * (almG1(l,m).re*almC2(l,m).re + almG1(l,m).im*almC2(l,m).im);
+      tt[l] += 2 * (almT1(l,m).real()*almT2(l,m).real()
+                  + almT1(l,m).imag()*almT2(l,m).imag());
+      gg[l] += 2 * (almG1(l,m).real()*almG2(l,m).real()
+                  + almG1(l,m).imag()*almG2(l,m).imag());
+      cc[l] += 2 * (almC1(l,m).real()*almC2(l,m).real()
+                  + almC1(l,m).imag()*almC2(l,m).imag());
+      tg[l] += 2 * (almT1(l,m).real()*almG2(l,m).real()
+                  + almT1(l,m).imag()*almG2(l,m).imag());
+      tc[l] += 2 * (almT1(l,m).real()*almC2(l,m).real()
+                  + almT1(l,m).imag()*almC2(l,m).imag());
+      gc[l] += 2 * (almG1(l,m).real()*almC2(l,m).real()
+                  + almG1(l,m).imag()*almC2(l,m).imag());
       }
     tt[l] /= (2*l+1);
     gg[l] /= (2*l+1);
@@ -342,8 +349,8 @@ template<typename T> void rotate_alm (Alm<xcomplex<T> > &alm,
   arr<xcomplex<double> > exppsi(lmax+1), expphi(lmax+1);
   for (int m=0; m<=lmax; ++m)
     {
-    exppsi[m].Set (cos(psi*m),-sin(psi*m));
-    expphi[m].Set (cos(phi*m),-sin(phi*m));
+    exppsi[m] = dcomplex(cos(psi*m),-sin(psi*m));
+    expphi[m] = dcomplex(cos(phi*m),-sin(phi*m));
     }
 
   wigner_d_risbo_openmp rec(lmax,theta);
@@ -365,14 +372,14 @@ template<typename T> void rotate_alm (Alm<xcomplex<T> > &alm,
     bool flip = true;
     for (int mm=1; mm<=l; ++mm)
       {
-      xcomplex<double> t1 = xcomplex<double>(alm(l,mm))*exppsi[mm];
+      dcomplex t1 = dcomplex(alm(l,mm))*exppsi[mm];
       bool flip2 = ((mm+lo)&1) ? true : false;
       for (int m=lo; m<hi; ++m)
         {
         double d1 = flip2 ? -d[l-mm][l-m] : d[l-mm][l-m];
         double d2 = flip  ? -d[l-mm][l+m] : d[l-mm][l+m];
         double f1 = d1+d2, f2 = d1-d2;
-        almtmp[m].re += t1.re*f1; almtmp[m].im += t1.im*f2;
+        almtmp[m]+=dcomplex(t1.real()*f1,t1.imag()*f2);
         flip2 = !flip2;
         }
       flip = !flip;
@@ -401,8 +408,8 @@ template<typename T> void rotate_alm (Alm<xcomplex<T> > &almT,
   arr<xcomplex<double> > exppsi(lmax+1), expphi(lmax+1);
   for (int m=0; m<=lmax; ++m)
     {
-    exppsi[m].Set (cos(psi*m),-sin(psi*m));
-    expphi[m].Set (cos(phi*m),-sin(phi*m));
+    exppsi[m] = dcomplex(cos(psi*m),-sin(psi*m));
+    expphi[m] = dcomplex(cos(phi*m),-sin(phi*m));
     }
 
   wigner_d_risbo_openmp rec(lmax,theta);
@@ -428,18 +435,18 @@ template<typename T> void rotate_alm (Alm<xcomplex<T> > &almT,
     bool flip = true;
     for (int mm=1; mm<=l; ++mm)
       {
-      xcomplex<double> t1T = xcomplex<double>(almT(l,mm))*exppsi[mm];
-      xcomplex<double> t1G = xcomplex<double>(almG(l,mm))*exppsi[mm];
-      xcomplex<double> t1C = xcomplex<double>(almC(l,mm))*exppsi[mm];
+      dcomplex t1T = dcomplex(almT(l,mm))*exppsi[mm];
+      dcomplex t1G = dcomplex(almG(l,mm))*exppsi[mm];
+      dcomplex t1C = dcomplex(almC(l,mm))*exppsi[mm];
       bool flip2 = ((mm+lo)&1) ? true : false;
       for (int m=lo; m<hi; ++m)
         {
         double d1 = flip2 ? -d[l-mm][l-m] : d[l-mm][l-m];
         double d2 = flip  ? -d[l-mm][l+m] : d[l-mm][l+m];
         double f1 = d1+d2, f2 = d1-d2;
-        almtmpT[m].re += t1T.re*f1; almtmpT[m].im += t1T.im*f2;
-        almtmpG[m].re += t1G.re*f1; almtmpG[m].im += t1G.im*f2;
-        almtmpC[m].re += t1C.re*f1; almtmpC[m].im += t1C.im*f2;
+        almtmpT[m]+=dcomplex(t1T.real()*f1,t1T.imag()*f2);
+        almtmpG[m]+=dcomplex(t1G.real()*f1,t1G.imag()*f2);
+        almtmpC[m]+=dcomplex(t1C.real()*f1,t1C.imag()*f2);
         flip2 = !flip2;
         }
       flip = !flip;

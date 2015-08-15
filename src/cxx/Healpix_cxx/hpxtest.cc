@@ -868,17 +868,17 @@ void random_alm (Alm<xcomplex<double> >&almT, Alm<xcomplex<double> >&almG,
 
   for (int l=0; l<=lmax; ++l)
     {
-    almT(l,0).re=rng.rand_gauss(); almT(l,0).im=0.;
-    almG(l,0).re=rng.rand_gauss(); almG(l,0).im=0.;
-    almC(l,0).re=rng.rand_gauss(); almC(l,0).im=0.;
+    almT(l,0)=dcomplex(rng.rand_gauss(),0.);
+    almG(l,0)=dcomplex(rng.rand_gauss(),0.);
+    almC(l,0)=dcomplex(rng.rand_gauss(),0.);
     }
 
   for (int m=1; m<=mmax; ++m)
     for (int l=m; l<=lmax; ++l)
       {
-      almT(l,m).re=rng.rand_gauss(); almT(l,m).im=rng.rand_gauss();
-      almG(l,m).re=rng.rand_gauss(); almG(l,m).im=rng.rand_gauss();
-      almC(l,m).re=rng.rand_gauss(); almC(l,m).im=rng.rand_gauss();
+      almT(l,m).real(rng.rand_gauss()); almT(l,m).imag(rng.rand_gauss());
+      almG(l,m).real(rng.rand_gauss()); almG(l,m).imag(rng.rand_gauss());
+      almC(l,m).real(rng.rand_gauss()); almC(l,m).imag(rng.rand_gauss());
       }
   almG(0,0)=almC(0,0)=almG(1,0)=almC(1,0)=almG(1,1)=almC(1,1)=0;
   }
@@ -888,11 +888,11 @@ void random_alm (Alm<xcomplex<double> >&alm, int lmax, int mmax)
   alm.Set(lmax,mmax);
 
   for (int l=0; l<=lmax; ++l)
-    { alm(l,0).re=rng.rand_gauss(); alm(l,0).im=0.; }
+    { alm(l,0)=dcomplex(rng.rand_gauss(),0.); }
 
   for (int m=1; m<=mmax; ++m)
     for (int l=m; l<=lmax; ++l)
-      { alm(l,m).re=rng.rand_gauss(); alm(l,m).im=rng.rand_gauss(); }
+      { alm(l,m).real(rng.rand_gauss()); alm(l,m).imag(rng.rand_gauss()); }
   }
 
 void check_alm (const Alm<xcomplex<double> >&oalm,
@@ -901,9 +901,9 @@ void check_alm (const Alm<xcomplex<double> >&oalm,
   for (int m=0; m<=alm.Mmax(); ++m)
     for (int l=m; l<=alm.Lmax(); ++l)
       {
-      if (!abs_approx(oalm(l,m).re,alm(l,m).re,epsilon))
+      if (!abs_approx(oalm(l,m).real(),alm(l,m).real(),epsilon))
         FAIL(cout << "Problemr " << l << " " << m << endl)
-      if (!abs_approx(oalm(l,m).im,alm(l,m).im,epsilon))
+      if (!abs_approx(oalm(l,m).imag(),alm(l,m).imag(),epsilon))
         FAIL(cout << "Problemi " << l << " " << m <<  endl)
       }
   }

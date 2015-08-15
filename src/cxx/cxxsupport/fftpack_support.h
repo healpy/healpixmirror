@@ -23,7 +23,7 @@
  */
 
 /*
- *  Copyright (C) 2004-2011 Max-Planck-Society
+ *  Copyright (C) 2004-2015 Max-Planck-Society
  *  \author Martin Reinecke
  */
 
@@ -73,14 +73,14 @@ class cfft
       { complex_plan_forward(plan,data); }
     void backward (double *data)
       { complex_plan_backward(plan,data); }
-    void forward (xcomplex<double> *data)
-      { complex_plan_forward(plan,&(data->re)); }
-    void backward (xcomplex<double> *data)
-      { complex_plan_backward(plan,&(data->re)); }
-    void forward (arr<xcomplex<double> >&data)
-      { forward(&(data[0].re)); }
-    void backward (arr<xcomplex<double> >&data)
-      { backward(&(data[0].re)); }
+    void forward (dcomplex *data)
+      { complex_plan_forward(plan,reinterpret_cast<double *>(data)); }
+    void backward (dcomplex *data)
+      { complex_plan_backward(plan,reinterpret_cast<double *>(data)); }
+    void forward (arr<dcomplex> &data)
+      { forward(reinterpret_cast<double *>(&data[0])); }
+    void backward (arr<dcomplex> &data)
+      { backward(reinterpret_cast<double *>(&data[0])); }
   };
 
 class rfft
@@ -126,10 +126,10 @@ class rfft
       { forward_fftpack(&(data[0])); }
     void backward_fftpack (arr<double> &data)
       { backward_fftpack(&(data[0])); }
-    void forward_c (arr<xcomplex<double> >&data)
-      { real_plan_forward_c(plan,&(data[0].re)); }
-    void backward_c (arr<xcomplex<double> >&data)
-      { real_plan_backward_c(plan,&(data[0].re)); }
+    void forward_c (arr<dcomplex> &data)
+      { real_plan_forward_c(plan,reinterpret_cast<double *>(&data[0])); }
+    void backward_c (arr<dcomplex> &data)
+      { real_plan_backward_c(plan,reinterpret_cast<double *>(&data[0])); }
   };
 
 #endif

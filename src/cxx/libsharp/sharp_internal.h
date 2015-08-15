@@ -38,7 +38,7 @@
 
 #include "sharp.h"
 
-#define SHARP_MAXTRANS 1
+#define SHARP_MAXTRANS 100
 
 typedef struct
   {

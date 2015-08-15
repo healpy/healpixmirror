@@ -33,6 +33,7 @@
 #define PLANCK_ALLOC_UTILS_H
 
 #include <cstdlib>
+#include <cstddef>
 #include "datatypes.h"
 
 template <typename T> class normalAlloc__
@@ -45,7 +46,11 @@ template <typename T> class normalAlloc__
 template <typename T, int align> class alignAlloc__
   {
   private:
-    enum { max_nat_align = sizeof(void *) }; // C++11: alignof(std::max_align_t)
+//#if (__cplusplus>=201103L)
+//    enum { max_nat_align = alignof(std::max_align_t) };
+//#else
+    enum { max_nat_align = sizeof(void *) };
+//#endif
 
   public:
     static T *alloc(tsize sz)

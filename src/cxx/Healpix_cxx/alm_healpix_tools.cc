@@ -25,7 +25,7 @@
  */
 
 /*
- *  Copyright (C) 2003-2012 Max-Planck-Society
+ *  Copyright (C) 2003-2015 Max-Planck-Society
  *  Author: Martin Reinecke
  */
 
@@ -60,7 +60,7 @@ template<typename T> void map2alm (const Healpix_Map<T> &map,
   sharp_cxxjob<T> job;
   job.set_weighted_Healpix_geometry (map.Nside(),&weight[0]);
   job.set_triangular_alm_info (alm.Lmax(), alm.Mmax());
-  job.map2alm(&map[0], &alm(0,0).re, add_alm);
+  job.map2alm(&map[0], &alm(0,0), add_alm);
   }
 
 template void map2alm (const Healpix_Map<float> &map,
@@ -111,7 +111,7 @@ template<typename T> void map2alm_iter2 (const Healpix_Map<T> &map,
       errmeasure = max(errmeasure,min(err*x_err_abs,rel*x_err_rel));
       map2[m] = map[m]-map2[m];
       }
-cout << errmeasure << endl;
+//cout << errmeasure << endl;
     if (errmeasure<1) break;
     }
   }
@@ -140,7 +140,7 @@ template<typename T> void map2alm_spin
   sharp_cxxjob<T> job;
   job.set_weighted_Healpix_geometry (map1.Nside(),&weight[0]);
   job.set_triangular_alm_info (alm1.Lmax(), alm1.Mmax());
-  job.map2alm_spin(&map1[0],&map2[0],&alm1(0,0).re,&alm2(0,0).re,spin,add_alm);
+  job.map2alm_spin(&map1[0],&map2[0],&alm1(0,0),&alm2(0,0),spin,add_alm);
   }
 
 template void map2alm_spin
@@ -177,7 +177,7 @@ template<typename T> void map2alm_spin_iter2
       errmeasure = max(errmeasure,min(err/err_abs,rel/err_rel));
       map2b[m] = map2[m]-map2b[m];
       }
-cout << errmeasure << endl;
+//cout << errmeasure << endl;
     if (errmeasure<1) break;
     }
   }
@@ -212,8 +212,8 @@ template<typename T> void map2alm_pol
   sharp_cxxjob<T> job;
   job.set_weighted_Healpix_geometry (mapT.Nside(),&weight[0]);
   job.set_triangular_alm_info (almT.Lmax(), almT.Mmax());
-  job.map2alm(&mapT[0], &almT(0,0).re, add_alm);
-  job.map2alm_spin(&mapQ[0],&mapU[0],&almG(0,0).re,&almC(0,0).re,2,add_alm);
+  job.map2alm(&mapT[0], &almT(0,0), add_alm);
+  job.map2alm_spin(&mapQ[0],&mapU[0],&almG(0,0),&almC(0,0),2,add_alm);
   }
 
 template void map2alm_pol
@@ -316,7 +316,7 @@ template<typename T> void map2alm_pol_iter2
       errmeasure = max(errmeasure,min(err/err_abs,rel/err_rel));
       mapU2[m] = mapU[m]-mapU2[m];
       }
-cout << errmeasure << endl;
+//cout << errmeasure << endl;
     if (errmeasure<1) break;
     }
   }
@@ -339,7 +339,7 @@ template<typename T> void alm2map (const Alm<xcomplex<T> > &alm,
   sharp_cxxjob<T> job;
   job.set_Healpix_geometry (map.Nside());
   job.set_triangular_alm_info (alm.Lmax(), alm.Mmax());
-  job.alm2map(&alm(0,0).re, &map[0], false);
+  job.alm2map(&alm(0,0), &map[0], false);
   }
 
 template void alm2map (const Alm<xcomplex<double> > &alm,
@@ -361,7 +361,7 @@ template<typename T> void alm2map_spin
   sharp_cxxjob<T> job;
   job.set_Healpix_geometry (map1.Nside());
   job.set_triangular_alm_info (alm1.Lmax(), alm1.Mmax());
-  job.alm2map_spin(&alm1(0,0).re,&alm2(0,0).re,&map1[0],&map2[0],spin,false);
+  job.alm2map_spin(&alm1(0,0),&alm2(0,0),&map1[0],&map2[0],spin,false);
   }
 
 template void alm2map_spin
@@ -390,8 +390,8 @@ template<typename T> void alm2map_pol
   sharp_cxxjob<T> job;
   job.set_Healpix_geometry (mapT.Nside());
   job.set_triangular_alm_info (almT.Lmax(), almT.Mmax());
-  job.alm2map(&almT(0,0).re, &mapT[0], false);
-  job.alm2map_spin(&almG(0,0).re, &almC(0,0).re, &mapQ[0], &mapU[0], 2, false);
+  job.alm2map(&almT(0,0), &mapT[0], false);
+  job.alm2map_spin(&almG(0,0), &almC(0,0), &mapQ[0], &mapU[0], 2, false);
   }
 
 template void alm2map_pol (const Alm<xcomplex<double> > &almT,
@@ -423,8 +423,8 @@ template<typename T> void alm2map_der1
   sharp_cxxjob<T> job;
   job.set_Healpix_geometry (map.Nside());
   job.set_triangular_alm_info (alm.Lmax(), alm.Mmax());
-  job.alm2map(&alm(0,0).re, &map[0], false);
-  job.alm2map_der1(&alm(0,0).re, &mapdth[0], &mapdph[0], false);
+  job.alm2map(&alm(0,0), &map[0], false);
+  job.alm2map_der1(&alm(0,0), &mapdth[0], &mapdph[0], false);
   }
 
 template void alm2map_der1 (const Alm<xcomplex<double> > &alm,

@@ -84,8 +84,8 @@ template<typename T> void degrade_pol (const Healpix_Map<T> &q1,
           sum += val*mul;
           }
         }
-    q2[m] = T((hits<minhits) ? Healpix_undef : sum.re/hits);
-    u2[m] = T((hits<minhits) ? Healpix_undef : sum.im/hits);
+    q2[m] = T((hits<minhits) ? Healpix_undef : sum.real()/hits);
+    u2[m] = T((hits<minhits) ? Healpix_undef : sum.imag()/hits);
     }
 }
   }

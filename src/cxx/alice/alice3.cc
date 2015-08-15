@@ -225,7 +225,7 @@ int main(int argc, const char** argv)
     read_Healpix_map_from_fits(params.find<string>("texture"),th);
   else
     {
-      planck_rng rng(params.find<int>("rand_seed",42));
+    planck_rng rng(params.find<int>("rand_seed",42));
     if (params.param_present("ell"))
       {
       int ell = params.find<int>("ell");
@@ -234,9 +234,9 @@ int main(int argc, const char** argv)
       a.SetToZero();
       cout << "Background texture using ell = " << ell << endl;
 
-      a(ell,0).Set(rng.rand_gauss(),0.);
+      a(ell,0)=fcomplex(rng.rand_gauss(),0.);
       for (int m=0; m<=ell; m++)
-        a(ell,m).Set(rng.rand_gauss(),rng.rand_gauss());
+        { a(ell,m).real(rng.rand_gauss()); a(ell,m).imag(rng.rand_gauss()); }
       alm2map(a, th);
       }
     else
