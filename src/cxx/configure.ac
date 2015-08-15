@@ -81,7 +81,7 @@ case $CCTYPE in
     fi
     ;;
   icc)
-    CCFLAGS="-O3 -ip -Wbrief -Wall -vec-report0 -openmp-report0 -wd383,981,1419,1572"
+    CCFLAGS="-O3 -ip -Wbrief -Wall -openmp-report0 -wd383,981,1419,1572"
     ;;
   *)
     CCFLAGS="-O2"
@@ -111,7 +111,7 @@ case $CXXTYPE in
     fi
     ;;
   icpc)
-    CXXCFLAGS="-O3 -ip -Wbrief -Wall -vec-report0 -openmp-report0 -wd383,444,981,1572"
+    CXXCFLAGS="-O3 -ip -Wbrief -Wall -openmp-report0 -wd383,444,981,1572"
     ;;
   *)
     CXXCFLAGS="-O2"
