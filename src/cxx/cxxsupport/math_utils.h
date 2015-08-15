@@ -230,10 +230,12 @@ template<typename T> class kahan_adder
 
     void add (const T &val)
       {
-      T y=val-c;
-      T t=sum+y;
-      c=(t-sum)-y;
+      volatile T tc=c; // volatile to disable over-eager optimizers
+      volatile T y=val-tc;
+      volatile T t=sum+y;
+      tc=(t-sum)-y;
       sum=t;
+      c=tc;
       }
     T result() const { return sum; }
   };

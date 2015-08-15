@@ -362,7 +362,7 @@ template<typename I> void check_rangeset()
   planck_assert(!b.overlaps(makeRS<I>("0 20 31 40 51 100")),"error");
   }
   {
-  const int niter = 100;
+  const int niter = 1000;
   for (int iter=0; iter<niter; ++iter)
     {
     rangeset<I> a = randomRangeSet<I>(1000, 0, 100);
@@ -680,6 +680,7 @@ void check_query_disc_strict (Healpix_Ordering_Scheme scheme)
   cout << "testing whether all pixels found by query_disc() really" << endl
        << "lie inside the disk (and vice versa)" << endl;
   cout << "Ordering scheme: " << (scheme==RING ? "RING" : "NEST") << endl;
+  rng.seed(42);
   for (int order=0; order<=5; ++order)
     {
     Healpix_Map<bool> map (order,scheme);
@@ -715,6 +716,7 @@ void check_query_disc_strict (Healpix_Ordering_Scheme scheme)
 template<typename I>void check_query_disc()
   {
   cout << "checking query_disc() " << bname<I>() << endl;
+  rng.seed(48);
   int omax=min<int>(20,T_Healpix_Base<I>::order_max);
   for (int order=0; order<=omax; ++order)
     {
@@ -756,6 +758,7 @@ template<typename I>void check_query_disc()
 template<typename I>void check_query_polygon()
   {
   cout << "checking query_polygon() " << bname<I>() << endl;
+  rng.seed(42);
   int omax=min<int>(20,T_Healpix_Base<I>::order_max);
   for (int order=0; order<=omax; ++order)
     {
@@ -846,7 +849,7 @@ void check_average()
       map[m] = rng.rand_uni()+0.01;
     map2.Import(map);
     double avg=map.average(), avg2=map2.average();
-    if (!approx(avg,avg2,1e-10))
+    if (!approx(avg,avg2,1e-13))
       FAIL(cout << "PROBLEM: order = " << order << " " << avg/avg2-1 << endl)
     }
   for (int nside=3; nside<1000; nside += nside/2+1)
@@ -856,7 +859,7 @@ void check_average()
       map[m] = rng.rand_uni()+0.01;
     map2.Import(map);
     double avg=map.average(), avg2=map2.average();
-    if (!approx(avg,avg2,1e-10))
+    if (!approx(avg,avg2,1e-13))
       FAIL(cout << "PROBLEM: nside = " << nside << " " << avg/avg2-1 << endl)
     }
   }
