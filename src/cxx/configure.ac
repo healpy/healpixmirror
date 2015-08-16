@@ -60,6 +60,14 @@ AC_ARG_ENABLE(debug,
      ENABLE_DEBUG=yes
    fi])
 
+ENABLE_NATIVE=no
+AC_ARG_ENABLE(
+    [native-optimizations],
+    [AS_HELP_STRING([--enable-native-optimizations], [Enable non-portable optimizations for your own CPU by compiling with -march=native @<:@default=no@:>@])],
+  [if test "$enableval" = yes; then
+     ENABLE_NATIVE=yes
+   fi])
+
 case $CCTYPE in
   gcc)
     CCFLAGS="-O3 -ffast-math -fomit-frame-pointer -fno-tree-vectorize"
@@ -76,12 +84,17 @@ case $CCTYPE in
     changequote(,)
     gcc43=`echo $GCCVERSION | grep -c '4\.[3456789]'`
     changequote([,])
-    if test $gcc43 -gt 0; then
-      CCFLAGS="$CCFLAGS -march=native"
+    if test $ENABLE_NATIVE = yes; then
+      if test $gcc43 -gt 0; then
+        CCFLAGS="$CCFLAGS -march=native"
+      fi
     fi
     ;;
   icc)
     CCFLAGS="-O3 -Wbrief -Wall -openmp-report0 -wd383,981,1419,1572"
+    if test $ENABLE_NATIVE = yes; then
+      CCFLAGS="$CCFLAGS -xHOST"
+    fi
     ;;
   *)
     CCFLAGS="-O2"
@@ -106,12 +119,17 @@ case $CXXTYPE in
     changequote(,)
     gxx43=`echo $GXXVERSION | grep -c '4\.[3456789]'`
     changequote([,])
-    if test $gxx43 -gt 0; then
-      CXXCFLAGS="$CXXCFLAGS -march=native"
+    if test $ENABLE_NATIVE = yes; then
+      if test $gxx43 -gt 0; then
+        CXXCFLAGS="$CXXCFLAGS -march=native"
+      fi
     fi
     ;;
   icpc)
     CXXCFLAGS="-O3 -Wbrief -Wall -openmp-report0 -wd383,444,981,1572"
+    if test $ENABLE_NATIVE = yes; then
+      CXXCFLAGS="$CXXCFLAGS -xHOST"
+    fi
     ;;
   *)
     CXXCFLAGS="-O2"

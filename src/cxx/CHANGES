@@ -1,3 +1,11 @@
+Changes since 3.20:
+- switch from custom xcomplex class to std::complex
+- support for multi-order coverages (MOC)
+- allow generation of a_lm from 6-component power spectra
+- moved from alice2 to alice3, which produces Healpix maps as output.
+  These can be visualized more flexibly with external tools.
+- rangeset class has been redesigned
+
 Changes since v3.11:
 - use Kahan summation in some situations to improve numerical accuracy
 
