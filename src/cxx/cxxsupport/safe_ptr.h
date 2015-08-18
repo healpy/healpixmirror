@@ -25,12 +25,19 @@
 /*! \file safe_ptr.h
  *  Pointer wrapper for better exception safety and leakage prevention
  *
- *  Copyright (C) 2005, 2008 Max-Planck-Society
+ *  Copyright (C) 2005-2015 Max-Planck-Society
  *  \author Martin Reinecke
  */
 
 #ifndef PLANCK_SAFE_PTR_H
 #define PLANCK_SAFE_PTR_H
+
+#if (__cplusplus>=201103L)
+
+#include <memory>
+template<typename T> using safe_ptr = std::unique_ptr<T>;
+
+#else
 
 #include "error_handling.h"
 
@@ -49,7 +56,7 @@ template <typename T> class safe_ptr
     safe_ptr (T *p2) : p(p2), set(true) {}
     ~safe_ptr() { delete p; }
 
-    void operator= (T *p2)
+    void reset (T *p2)
       {
       planck_assert (!set, "safe_ptr: already set");
       set = true;
@@ -63,10 +70,15 @@ template <typename T> class safe_ptr
       set=false;
       }
 
+    T * get() const
+      { return p; }
+
     operator T*() { return p; }
     operator const T*() const { return p; }
     T *operator->() { return p; }
     const T *operator->() const { return p; }
   };
+
+#endif
 
 #endif

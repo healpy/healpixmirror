@@ -203,6 +203,18 @@ template<typename T, typename Iter> inline void interpol_helper
 
 /*! \} */
 
+#if (__cplusplus>=201103L)
+
+template<typename T>
+inline bool multiequal (const T &a, const T &b)
+  { return (a==b); }
+
+template<typename T, typename... Args>
+inline bool multiequal (const T &a, const T &b, Args... args)
+  { return (a==b) && multiequal (a, args...); }
+
+#else
+
 template<typename T> inline bool multiequal (const T &a, const T &b)
   { return (a==b); }
 
@@ -220,6 +232,8 @@ template<typename T> inline bool multiequal (const T &a, const T &b, const T &c,
 template<typename T> inline bool multiequal (const T &a, const T &b, const T &c,
   const T &d, const T &e, const T &f)
   { return (a==b) && (a==c) && (a==d) && (a==e) && (a==f); }
+
+#endif
 
 template<typename T> class kahan_adder
   {

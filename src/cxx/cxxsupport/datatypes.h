@@ -69,6 +69,24 @@ template <int sz, typename T1, typename T2=char, typename T3=char>
      typename sizeChooserHelper__<T3,sizeof(T3)==sz>::TYPE >::TYPE TYPE;
   };
 
+#if (__cplusplus>=201103L)
+
+#include <cstdint>
+
+typedef int8_t int8;
+typedef uint8_t uint8;
+
+typedef int16_t int16;
+typedef uint16_t uint16;
+
+typedef int32_t int32;
+typedef uint32_t uint32;
+
+typedef int64_t int64;
+typedef uint64_t uint64;
+
+#else
+
 typedef signed char int8;
 typedef unsigned char uint8;
 
@@ -86,6 +104,8 @@ typedef sizeChooser__<8, long, long long>::TYPE
   int64;
 typedef sizeChooser__<8, unsigned long, unsigned long long>::TYPE
   uint64;
+
+#endif
 
 typedef sizeChooser__<4, float, double>::TYPE
   float32;

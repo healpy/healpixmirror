@@ -25,7 +25,7 @@
  */
 
 /*
- *  Copyright (C) 2003-2014 Max-Planck-Society
+ *  Copyright (C) 2003-2015 Max-Planck-Society
  *  Author: Martin Reinecke
  */
 
@@ -213,10 +213,10 @@ int map2tga_module (int argc, const char **argv)
       dict["pro"]="gno";
       dict.erase("gnomonic");
       }
-    params = new paramfile(dict,false);
+    params.reset(new paramfile(dict,false));
     }
   else
-    params = new paramfile(argv[1]);
+    params.reset(new paramfile(argv[1]));
 
   string infile = params->find<string>("infile");
   string outfile = params->find<string>("outfile");
