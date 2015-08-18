@@ -129,8 +129,7 @@
 ;       May 1999: written by A.J. Banday (MPA)         
 ;       Oct 2001, EH : can now deal with 6 columns,
 ;                      added silent keyword
-;       Dec 2002, EH : can deal with Planck format (1st column is
-;       multipole),
+;       Dec 2002, EH : can deal with Planck format (1st column is multipole),
 ;                      added multipoles output variable
 ;       Mar 2003, EH : added SHOW keyword
 ;       Aug 2004, EH : added HELP keyword, updated header
@@ -145,6 +144,7 @@
 ;       May 2011: EH, added WMAP7 keyword
 ;       Feb 2013: EH, added EXTNAME keyword
 ;       Mar 2013: EH, added PLANCK1 keyword
+;       Aug 2015: EH, can read files with 9 columns
 ;
 ; requires the THE IDL ASTRONOMY USER'S LIBRARY 
 ; that can be found at http://idlastro.gsfc.nasa.gov/homepage.html
@@ -292,12 +292,12 @@ if (read_cl) then begin
     nrows = info(1)             ; # of entries for l-range: nrows = lmax+1
     ncols = n_elements(tag_names(tmpout)) - nextra
 
-    if ( (ncols ne 1) and (ncols ne 4) and (ncols ne 6)) then begin
+    if ( (ncols ne 1) and (ncols ne 4) and (ncols ne 6) and (ncols ne 9)) then begin
 ;         print,' Input file does not conform to expected structure'
 ;         print,code+' expects either 1, 4 or 6 columns,      found ',ncols
 ;         goto, Exit
         print,'WARNING: Input file does not conform to structure expected for C(l) file'
-        print,'WARNING: '+code+' expects either 1, 4 or 6 columns,      found ',ncols
+        print,'WARNING: '+code+' expects either 1, 4, 6 or 9 columns,      found ',ncols
 ;        goto, Exit
     endif
 
@@ -412,7 +412,9 @@ if (keyword_set(show) or keyword_set(rshow)) then begin
     screen_size = get_screen_size()
     xs = 800<screen_size[0]
     ys = ((ncols+1)/2)*400 < screen_size[1]
-    grid=[2<ncols,(ncols+1)/2]
+    ; grid=[2<ncols,(ncols+1)/2]
+    n1 = long(sqrt(ncols*1.))
+    grid = [n1, (ncols+n1-1)/n1]
 
     ; data to plot and labels
     l = multipoles
