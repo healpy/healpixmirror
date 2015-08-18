@@ -346,24 +346,29 @@ template<typename T> class rangeset
       return res;
       }
 
+    /*! Returns the union of this rangeset and \a other. */
     rangeset op_or (const rangeset &other) const
       {
       rangeset res;
       res.generalUnion (*this,other,false,false);
       return res;
       }
+    /*! Returns the intersection of this rangeset and \a other. */
     rangeset op_and (const rangeset &other) const
       {
       rangeset res;
       res.generalUnion (*this,other,true,true);
       return res;
       }
+    /*! Returns the part of this rangeset which is not in \a other. */
     rangeset op_andnot (const rangeset &other) const
       {
       rangeset res;
       res.generalUnion (*this,other,true,false);
       return res;
       }
+    /*! Returns the parts of this rangeset and \a other, which are not in
+        both rangesets. */
     rangeset op_xor (const rangeset &other) const
       {
       rangeset res;
