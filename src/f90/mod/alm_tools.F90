@@ -118,6 +118,10 @@ module alm_tools
   interface alm2cl
      module procedure alm2cl2_s, alm2cl2_d, alm2cl1_s, alm2cl1_d
   end interface
+
+  interface sub_alm2cl
+     module procedure sub_alm2cl_s, sub_alm2cl_d
+  end interface
  
   interface rotate_alm
      module procedure rotate_alm_s, rotate_alm_d

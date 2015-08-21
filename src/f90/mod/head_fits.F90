@@ -851,28 +851,30 @@ contains
        &, nmmax &            ! relevant for 'alm'
        &, bcross &           ! relevant for 'cl'
        &, deriv &            ! relevant for 'map'
+       &, asym_cl &          ! relevant for 'cl'
 )
   !===================================================================
     
     implicit none
     character(len=*), intent(inout), dimension(:) :: header
-    character(len=*), intent(in) :: dtype
-    integer(i4b), intent(in), optional :: order, randseed, deriv
+    character(len=*), intent(in)           :: dtype
+    integer(i4b),     intent(in), optional :: order, randseed, deriv
 !    integer(i4b), intent(in), optional :: extension
-    integer(i4b), intent(in), optional :: nside, nlmax, nmmax
-    logical(LGT), intent(in), optional :: append, polar, bcross
+    integer(i4b),     intent(in), optional :: nside, nlmax, nmmax
+    logical(LGT),     intent(in), optional :: append, polar, bcross, asym_cl
     character(len=*), intent(in), optional :: creator, version, coordsys, ordering
     character(len=*), intent(in), optional :: beam_leg
 !     character(len=*), intent(in), dimension(1:), optional :: units
     character(len=*), intent(in), optional :: units
-    real(dp), intent(in), optional :: fwhm_degree
+    real(dp),         intent(in), optional :: fwhm_degree
 
     integer(i4b) :: ext, it, iq, iu, my_deriv
     character(len=80) :: my_coordsys
     character(len=80), dimension(1:20) :: my_units
     character(len=8) :: my_ordering
     character(len=FILENAMELEN) :: udtype, my_beam_leg
-    logical(LGT) :: do_full, do_alm, do_cl, do_cut, do_polar, do_bcross, do_reset
+    logical(LGT) :: do_full, do_alm, do_cl, do_cut, do_polar, &
+         & do_bcross, do_reset, do_asym
 
     character(len=*), parameter :: code = 'write_minimal_header'
     !--------------------------------------------------------------------------------
@@ -939,6 +941,10 @@ contains
     do_bcross = .false.
     if (present(bcross)) then
        do_bcross = bcross
+    endif
+    do_asym = .false.
+    if (present(asym_cl)) then
+       do_asym = asym_cl
     endif
     my_deriv = 0
     if (present(deriv)) my_deriv = deriv
@@ -1033,6 +1039,7 @@ contains
        call add_card(header)
        call add_card(header,"POLAR",do_polar," Polarisation included (True/False)")
        call add_card(header,"BCROSS",do_bcross," Magnetic cross terms included (True/False)")
+       call add_card(header,"ASYMCL",do_asym," Asymmetric pol cross terms (XY vs YX) included")
        call add_card(header)
        if (present(nside)) call add_card(header,"NSIDE",nside," Resolution Parameter of Input Map")
        call add_card(header,"COORDSYS",my_coordsys," Input Map Coordinate system")
@@ -1053,18 +1060,41 @@ contains
           call add_card(header,"TUNIT3", my_units(1),"power spectrum units")
           call add_card(header)
           !
-          call add_card(header,"TTYPE4", "G-T","Gradient-Temperature (=CROSS) terms")
+          !call add_card(header,"TTYPE4", "G-T","Gradient-Temperature (=CROSS) terms")
+          call add_card(header,"TTYPE4", "TG","Temperature1 X Gradient2 terms")
           call add_card(header,"TUNIT4", my_units(1),"power spectrum units")
           call add_card(header)
           !
           if (do_bcross) then
-             call add_card(header,"TTYPE5", "C-T","Curl-Temperature terms")
+             !call add_card(header,"TTYPE5", "C-T","Curl-Temperature terms")
+             call add_card(header,"TTYPE5", "TC","Temperature1 X Curl2 terms")
              call add_card(header,"TUNIT5", my_units(1),"power spectrum units")
              call add_card(header)
            !
-             call add_card(header,"TTYPE6", "C-G","Curl-Gradient terms")
+             !call add_card(header,"TTYPE6", "C-G","Curl-Gradient terms")
+             call add_card(header,"TTYPE6", "GC","Gradient1 x Curl2 terms")
              call add_card(header,"TUNIT6", my_units(1),"power spectrum units")
              call add_card(header)
+           !
+             if (do_asym) then
+                call add_card(header,"TTYPE7", "GT","Gradient1 x Temperature2 terms")
+                call add_card(header,"TUNIT7", my_units(1),"power spectrum units")
+                call add_card(header)
+
+                call add_card(header,"TTYPE8", "CT","Curl1 x Temperature2 terms")
+                call add_card(header,"TUNIT8", my_units(1),"power spectrum units")
+                call add_card(header)
+
+                call add_card(header,"TTYPE9", "CG","Curl1 x Gradient2 terms")
+                call add_card(header,"TUNIT9", my_units(1),"power spectrum units")
+                call add_card(header)
+             endif
+          else
+             if (do_asym) then
+                call add_card(header,"TTYPE5", "GT","Gradient1 x Temperature2 terms")
+                call add_card(header,"TUNIT5", my_units(1),"power spectrum units")
+                call add_card(header)
+             endif
           endif
           !
           call add_card(header,"COMMENT","The polarisation power spectra have the same definition as in CMBFAST")

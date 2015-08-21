@@ -5726,20 +5726,54 @@
   end subroutine create_alm_KLOAD
 
   !========================================================
-  subroutine alm2cl2_KLOAD(nlmax, nmmax, alm1, alm2, cl)
-  !========================================================
-    ! computes C(l) from a_lm, in the order
-    ! TT, [EE, TE, BB, [TB, EB]]
-    !=======================================================
-    integer(I4B),                      intent(in) :: nlmax, nmmax
+  subroutine sub_alm2cl_KLOAD(alm1, i1, alm2, i2, cl, i3)
+    !========================================================
+    integer(I4B),                        intent(in) :: i1, i2, i3
     complex(KALMC), dimension(1:,0:,0:), intent(in) :: alm1, alm2
-    real(KALM)    , dimension(0:, 1: ),  intent(out):: cl
-    ! 
-    integer(I4B) :: l, ncl, na1, na2, mm
-    complex(DPC)     :: dc
+    real(KALM),     dimension(0:,1:),    intent(out):: cl
+
+    integer(I4B) :: nlmax, nmmax, l, mm, j1, j2, j3
+    complex(DPC) :: dc
     real(DP), parameter :: two = 2.000000000000000000_dp
     real(DP), parameter :: one = 1.000000000000000000_dp
-    logical(LGT) :: polarisation, bcoupling
+    !========================================================
+
+    nlmax = min( size(alm1, 2), size(alm2, 2), size(cl, 1)) - 1
+    nmmax = min( size(alm1, 3), size(alm2, 3)) - 1
+    j1 = size(alm1, 1)
+    j2 = size(alm2, 1)
+    j3 = size(cl,   2)
+
+    if (i1 > j1 .or. i2 > j2 .or. i3 > j3) then
+       call fatal_error('invalid index in alm -> C(l)')
+    endif
+    do l = 0, nlmax
+       mm = min(l, nmmax)
+       dc =          sum(      alm1(i1,l,1:mm)*conjg(alm2(i2,l,1:mm)))
+       dc = (dc + conjg(dc)) + alm1(i1,l,0)   *      alm2(i2,l,0)
+       cl(l,i3) = real(dc, kind=DP) / (two*l + one)
+    enddo
+
+    return
+  end subroutine sub_alm2cl_KLOAD
+  !========================================================
+  subroutine alm2cl2_KLOAD(nlmax, nmmax, alm1, alm2, cl, symmetric)
+  !========================================================
+    ! computes C(l) from a_lm1, a_lm2, in the order
+    ! TT, [EE, TE, BB, [TB, EB, [ET, BT, BE]]]
+    ! TE= alm1_T * alm2_E 
+    ! unless symmetric is set : TE = (alm1_T * alm2_E + alm1_E * alm2_T)/2
+    !=======================================================
+    integer(I4B),                        intent(in) :: nlmax, nmmax
+    complex(KALMC), dimension(1:,0:,0:), intent(in) :: alm1, alm2
+    real(KALM)    , dimension(0:, 1: ),  intent(out):: cl
+    logical(LGT),   optional,            intent(in) :: symmetric
+    ! 
+    integer(I4B) :: ncl, na1, na2, k1, k2
+    real(DP), parameter :: half = 0.500000000000000000_dp
+    logical(LGT) :: polarisation, bcoupling, do_sym, asympol
+
+    real(KALM), allocatable, dimension(:,:) :: cl_work
     !========================================================
 
     ncl = size(cl, 2)
@@ -5747,59 +5781,59 @@
     na2 = size(alm2, 1)
     polarisation = (na1 >= 3 .and. na2 >= 3 .and. ncl >=4)
     bcoupling    = (ncl >=6) .and. polarisation
+    asympol      = (ncl >=9) .and. polarisation
+    do_sym = .false.
     cl = 0.0_KALM
+    if (present(symmetric)) do_sym = symmetric
+    if (polarisation .and. do_sym) then
+       print*,'Symmetric TE C(l)'
+    endif
+    if (polarisation) then
+       allocate(cl_work(0:nlmax, 1:2))
+    endif
 
     ! TT power spectrum
-    do l = 0, nlmax
-       mm = min(l, nmmax)
-       dc =          sum(      alm1(1,l,1:mm)*conjg(alm2(1,l,1:mm)))
-       dc = (dc + conjg(dc)) + alm1(1,l,0)   *      alm2(1,l,0)
-       cl(l,1) = real(dc, kind=DP) / (two*l + one)
-    enddo
+    k1 = 1_i4b
+    call sub_alm2cl(alm1, k1, alm2, k1, cl, k1)
 
     if (polarisation) then
        ! GG or EE power spectrum
-       do l = 0, nlmax
-          mm = min(l, nmmax)
-          dc =          sum(      alm1(2,l,1:mm)*conjg(alm2(2,l,1:mm)))
-          dc = (dc + conjg(dc)) + alm1(2,l,0)   *      alm2(2,l,0)
-          cl(l,2) = real(dc, kind=DP) / (two*l + one)
-       enddo
+       k1 = 2_i4b
+       call sub_alm2cl(alm1, k1, alm2, k1, cl, k1)
        
        ! CC or BB power spectrum
-       do l = 0, nlmax
-          mm = min(l, nmmax)
-          dc =          sum(      alm1(3,l,1:mm)*conjg(alm2(3,l,1:mm)))
-          dc = (dc + conjg(dc)) + alm1(3,l,0)   *      alm2(3,l,0)
-          cl(l,3) = real(dc, kind=DP) / (two*l + one)
-       enddo
+       k1 = 3_i4b
+       call sub_alm2cl(alm1, k1, alm2, k1, cl, k1)
        
        ! TG or TE power spectrum
-       do l = 0, nlmax
-          mm = min(l, nmmax)
-          dc =          sum(      alm1(1,l,1:mm)*conjg(alm2(2,l,1:mm)))
-          dc = (dc + conjg(dc)) + alm1(1,l,0)   *      alm2(2,l,0)
-          cl(l,4) = real(dc, kind=DP) / (two*l + one)
-       enddo
+       call sub_alm2cl(alm1, 1_i4b, alm2, 2_i4b, cl_work, 1_i4b)
+       call sub_alm2cl(alm1, 2_i4b, alm2, 1_i4b, cl_work, 2_i4b)
+       k1 = 4  ;   k2 = k1 +3
+                    cl(0:,k1) =  cl_work(0:,1)
+       if (asympol) cl(0:,k2) =                cl_work(0:,2)
+       if (do_sym ) cl(0:,k1) = (cl_work(0:,1)+cl_work(0:,2)) * half
+
+       if (bcoupling) then
+          ! TC or TB power spectrum
+          call sub_alm2cl(alm1, 1_i4b, alm2, 3_i4b, cl_work, 1_i4b)
+          call sub_alm2cl(alm1, 3_i4b, alm2, 1_i4b, cl_work, 2_i4b)
+          k1 = 5  ;   k2 = k1 +3
+                       cl(0:,k1) =  cl_work(0:,1)
+          if (asympol) cl(0:,k2) =                cl_work(0:,2)
+          if (do_sym ) cl(0:,k1) = (cl_work(0:,1)+cl_work(0:,2)) * half
+
+
+          ! GC or EB power spectrum
+          call sub_alm2cl(alm1, 2_i4b, alm2, 3_i4b, cl_work, 1_i4b)
+          call sub_alm2cl(alm1, 3_i4b, alm2, 2_i4b, cl_work, 2_i4b)
+          k1 = 6  ;   k2 = k1 +3
+                       cl(0:,k1) =  cl_work(0:,1)
+          if (asympol) cl(0:,k2) =                cl_work(0:,2)
+          if (do_sym ) cl(0:,k1) = (cl_work(0:,1)+cl_work(0:,2)) * half
+       endif
     endif 
 
-    if (bcoupling) then
-       ! TC or TB power spectrum
-       do l = 0, nlmax
-          mm = min(l, nmmax)
-          dc =          sum(      alm1(1,l,1:mm)*conjg(alm2(3,l,1:mm)))
-          dc = (dc + conjg(dc)) + alm1(1,l,0)   *      alm2(3,l,0)
-          cl(l,5) = real(dc, kind=DP) / (two*l + one)
-       enddo
-       
-       ! GC or EB power spectrum
-       do l = 0, nlmax
-          mm = min(l, nmmax)
-          dc =          sum(      alm1(2,l,1:mm)*conjg(alm2(3,l,1:mm)))
-          dc = (dc + conjg(dc)) + alm1(2,l,0)   *      alm2(3,l,0)
-          cl(l,6) = real(dc, kind=DP) / (two*l + one)
-       enddo
-    endif
+    if (allocated(cl_work)) deallocate(cl_work)
 
     return
   end subroutine alm2cl2_KLOAD
@@ -5813,70 +5847,12 @@
     complex(KALMC), dimension(1:,0:,0:), intent(in) :: alm1
     real(KALM)    , dimension(0:, 1: ),  intent(out):: cl
     ! 
-    integer(I4B) :: l, ncl, na1, na2, mm
-    complex(DPC)     :: dc
-    real(DP), parameter :: two = 2.000000000000000000_dp
-    real(DP), parameter :: one = 1.000000000000000000_dp
-    logical(LGT) :: polarisation, bcoupling
+    integer(I4B) :: ncl
     !========================================================
 
     ncl = size(cl, 2)
-    na1 = size(alm1, 1)
-    polarisation = (na1 >= 3 .and. ncl >=4)
-    bcoupling    = (ncl >=6) .and. polarisation
     cl = 0.0_KALM
-
-    ! TT power spectrum
-    do l = 0, nlmax
-       mm = min(l, nmmax)
-       dc =          sum(      alm1(1,l,1:mm)*conjg(alm1(1,l,1:mm)))
-       dc = (dc + conjg(dc)) + alm1(1,l,0)   *      alm1(1,l,0)
-       cl(l,1) = real(dc, kind=DP) / (two*l + one)
-    enddo
-
-    if (polarisation) then
-       ! GG or EE power spectrum
-       do l = 0, nlmax
-          mm = min(l, nmmax)
-          dc =          sum(      alm1(2,l,1:mm)*conjg(alm1(2,l,1:mm)))
-          dc = (dc + conjg(dc)) + alm1(2,l,0)   *      alm1(2,l,0)
-          cl(l,2) = real(dc, kind=DP) / (two*l + one)
-       enddo
-       
-       ! CC or BB power spectrum
-       do l = 0, nlmax
-          mm = min(l, nmmax)
-          dc =          sum(      alm1(3,l,1:mm)*conjg(alm1(3,l,1:mm)))
-          dc = (dc + conjg(dc)) + alm1(3,l,0)   *      alm1(3,l,0)
-          cl(l,3) = real(dc, kind=DP) / (two*l + one)
-       enddo
-       
-       ! TG or TE power spectrum
-       do l = 0, nlmax
-          mm = min(l, nmmax)
-          dc =          sum(      alm1(1,l,1:mm)*conjg(alm1(2,l,1:mm)))
-          dc = (dc + conjg(dc)) + alm1(1,l,0)   *      alm1(2,l,0)
-          cl(l,4) = real(dc, kind=DP) / (two*l + one)
-       enddo
-    endif 
-
-    if (bcoupling) then
-       ! TC or TB power spectrum
-       do l = 0, nlmax
-          mm = min(l, nmmax)
-          dc =          sum(      alm1(1,l,1:mm)*conjg(alm1(3,l,1:mm)))
-          dc = (dc + conjg(dc)) + alm1(1,l,0)   *      alm1(3,l,0)
-          cl(l,5) = real(dc, kind=DP) / (two*l + one)
-       enddo
-       
-       ! GC or EB power spectrum
-       do l = 0, nlmax
-          mm = min(l, nmmax)
-          dc =          sum(      alm1(2,l,1:mm)*conjg(alm1(3,l,1:mm)))
-          dc = (dc + conjg(dc)) + alm1(2,l,0)   *      alm1(3,l,0)
-          cl(l,6) = real(dc, kind=DP) / (two*l + one)
-       enddo
-    endif
+    call alm2cl(nlmax, nmmax, alm1, alm1, cl)
 
     return
   end subroutine alm2cl1_KLOAD

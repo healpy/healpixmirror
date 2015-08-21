@@ -121,7 +121,7 @@
   character(len=100)                  :: chline, chline1
   character(len=20)                   :: coordsys, coordsys2
 !  character(len=5)                    :: sstr
-  LOGICAL(kind=LGT) :: bad, ok, polarisation, bcoupling, do_mask, twomaps
+  LOGICAL(kind=LGT) :: bad, ok, polarisation, bcoupling, do_mask, twomaps, asym_cl
 !   character(len=*), PARAMETER :: code = "ANAFAST"
   character(len=*), parameter :: VERSION = HEALPIX_VERSION
   character(len=80), dimension(1:3,1:2)   :: units_map
@@ -661,7 +661,9 @@
 
   ncl = 1
   if (polarisation) ncl = 4
-  if (bcoupling) ncl = 6
+  if (polarisation .and. bcoupling)    ncl = 6
+  asym_cl = polarisation .and. bcoupling .and. twomaps
+  if (asym_cl) ncl = 9
   allocate(clout(0:nlmax,1:ncl))
 
   if (twomaps) then
@@ -685,9 +687,9 @@
 
 !     units_pow(1) = "'"//trim(units_pow(1))//"'" ! add quotes to keep words together
      call write_minimal_header(header,'cl', &
-          creator = CODE, version = VERSION, polar=polarisation, &
-          nlmax = nlmax, bcross = bcoupling, nside = nsmax, coordsys = coordsys, &
-          units = units_pow(1) )
+          creator = CODE, version = VERSION, &
+          polar = polarisation, bcross = bcoupling, asym_cl = asym_cl, &
+          nlmax = nlmax, nside = nsmax, coordsys = coordsys, units = units_pow(1) )
      if (twomaps) then
         call add_card(header,"EXTNAME","'ANALYSED CROSS POWER SPECTRUM'",update=.true.)
      else

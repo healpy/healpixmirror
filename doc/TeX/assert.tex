@@ -3,7 +3,7 @@
 \sloppy
 
 \title{\healpix Fortran Subroutines Overview}
-\docid{assert,assert\_alloc, assert\_directory\_present,~$\ldots$} \section[assert, assert\_alloc, assert\_directory\_present, assert\_not\_present, assert\_present]{ }
+\docid{assert,assert\_alloc, assert\_directory\_present,~$\ldots$} \section[assert, assert\_alloc, assert\_directory\_present, assert\_present, fatal\_error]{ }
 \label{sub:assert}
 \docrv{Version 2.0}
 \author{Eric Hivon}
@@ -26,7 +26,7 @@
                         {\tt test} is false, issues a standard error message
                         (unless {\tt msg} is provided) and stops the code execution with the status
                         {\tt errcode} (or 1 by default). \\
-     \end{tabular}\\\\
+     \end{tabular}\\
 
 {\tt call assert\_alloc(status, code, array)} 
 
@@ -35,7 +35,7 @@
                         not, issues an error message indicating a problem during memory allocation
                         of 
                         {\tt array} in program {\tt code}, and stops the code execution.\\
-     \end{tabular}\\\\
+     \end{tabular}\\
 
 
 {\tt call assert\_directory\_present(directory)} 
@@ -43,22 +43,31 @@
  \begin{tabular}{@{}p{0.3\hsize}@{\hspace{1ex}}
                         p{0.7\hsize}@{}} & issues an error message and stops the code execution if
                         the directory named {\tt directory} can not be found\\
-     \end{tabular}\\\\
+     \end{tabular}\\
 
-
-{\tt call assert\_present(filename)} 
-
- \begin{tabular}{@{}p{0.3\hsize}@{\hspace{1ex}}
-                        p{0.7\hsize}@{}} & issues an error message and stops the code execution if
-                        the file named {\tt filename} can not be found.\\
-     \end{tabular}\\\\
 
 {\tt call assert\_not\_present(filename)} 
 
  \begin{tabular}{@{}p{0.3\hsize}@{\hspace{1ex}}
                         p{0.7\hsize}@{}} & issues an error message and stops the code execution if
                         a file with name {\tt filename} already exists.\\
-     \end{tabular}\\\\
+     \end{tabular}\\
+
+{\tt call assert\_present(filename)} 
+
+ \begin{tabular}{@{}p{0.3\hsize}@{\hspace{1ex}}
+                        p{0.7\hsize}@{}} & issues an error message and stops the code execution if
+                        the file named {\tt filename} can not be found.\\
+     \end{tabular}\\
+
+{\tt call fatal\_error([msg])} 
+
+{\tt call fatal\_error} 
+
+ \begin{tabular}{@{}p{0.3\hsize}@{\hspace{1ex}}
+                        p{0.7\hsize}@{}} & issue an (optional user defined) error message and stop the code execution.\\
+     \end{tabular}\\
+
 
 \vskip 3cm
 %-------------------------------
