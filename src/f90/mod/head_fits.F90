@@ -1061,37 +1061,37 @@ contains
           call add_card(header)
           !
           !call add_card(header,"TTYPE4", "G-T","Gradient-Temperature (=CROSS) terms")
-          call add_card(header,"TTYPE4", "TG","Temperature1 X Gradient2 terms")
+          call add_card(header,"TTYPE4", "TG","Temperature X Gradient cross terms")
           call add_card(header,"TUNIT4", my_units(1),"power spectrum units")
           call add_card(header)
           !
           if (do_bcross) then
              !call add_card(header,"TTYPE5", "C-T","Curl-Temperature terms")
-             call add_card(header,"TTYPE5", "TC","Temperature1 X Curl2 terms")
+             call add_card(header,"TTYPE5", "TC","Temperature X Curl cross terms")
              call add_card(header,"TUNIT5", my_units(1),"power spectrum units")
              call add_card(header)
            !
              !call add_card(header,"TTYPE6", "C-G","Curl-Gradient terms")
-             call add_card(header,"TTYPE6", "GC","Gradient1 x Curl2 terms")
+             call add_card(header,"TTYPE6", "GC","Gradient x Curl cross terms")
              call add_card(header,"TUNIT6", my_units(1),"power spectrum units")
              call add_card(header)
            !
              if (do_asym) then
-                call add_card(header,"TTYPE7", "GT","Gradient1 x Temperature2 terms")
+                call add_card(header,"TTYPE7", "GT","Gradient1 x Temperature2 cross terms")
                 call add_card(header,"TUNIT7", my_units(1),"power spectrum units")
                 call add_card(header)
 
-                call add_card(header,"TTYPE8", "CT","Curl1 x Temperature2 terms")
+                call add_card(header,"TTYPE8", "CT","Curl1 x Temperature2 cross terms")
                 call add_card(header,"TUNIT8", my_units(1),"power spectrum units")
                 call add_card(header)
 
-                call add_card(header,"TTYPE9", "CG","Curl1 x Gradient2 terms")
+                call add_card(header,"TTYPE9", "CG","Curl1 x Gradient2 cross terms")
                 call add_card(header,"TUNIT9", my_units(1),"power spectrum units")
                 call add_card(header)
              endif
           else
              if (do_asym) then
-                call add_card(header,"TTYPE5", "GT","Gradient1 x Temperature2 terms")
+                call add_card(header,"TTYPE5", "GT","Gradient1 x Temperature2 cross terms")
                 call add_card(header,"TUNIT5", my_units(1),"power spectrum units")
                 call add_card(header)
              endif

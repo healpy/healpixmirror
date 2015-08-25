@@ -102,6 +102,7 @@ PRO CL2FITS, cl_array, fitsfile, HDR = hdr, HELP = help, XHDR = xhdr, CMBFAST = 
 ;       May 2007. EH: added beamwindow
 ;       Oct 2008. EH: prints out 'BL2FITS' in /beamwindow mode
 ;       Jan 2009: calls init_astrolib
+;       Aug 2015: can write files with 9 columns
 ;-
 
 code = 'CL2FITS'
@@ -178,8 +179,8 @@ if (do_beam) then begin
         goto, Exit
     endif
 endif else begin
-    if (nsigs ne 6 and nsigs ne 4 and nsigs ne 1) then begin
-        print,code+': Input array must have dimensions (lmax+1,1) or (lmax+1,4) or (lmax+1,6)'
+    if (nsigs ne 9 and nsigs ne 6 and nsigs ne 4 and nsigs ne 1) then begin
+        print,code+': Input array must have dimensions (lmax+1,d) with d=1,4,6 or 9'
         print,'  No file written'
         goto, Exit
     endif
@@ -213,10 +214,19 @@ if (do_beam) then begin
     ttype_cm = [' Temperature B(l)',' Gradient (=ELECTRIC) polarisation B(l)',$
                 ' Curl (=MAGNETIC) polarisation B(l)']
 endif else begin
-    ttype_kw = ['TEMPERATURE','GRADIENT','CURL','G-T','C-T','C-G']
+;    ttype_kw = ['TEMPERATURE','GRADIENT','CURL','G-T','C-T','C-G']
+    ttype_kw = ['TEMPERATURE','GRADIENT','CURL', 'TG','TC','GC', 'GT','CT','CG']
     ttype_cm = [' Temperature C(l)',' Gradient (=ELECTRIC) polarisation C(l)',$
-                ' Curl (=MAGNETIC) polarisation C(l)',' Gradient-Temperature cross terms', $
-                ' Curl-Temperature cross terms', ' Curl-Gradient terms']
+                ' Curl (=MAGNETIC) polarisation C(l)', $
+;                 ' Gradient-Temperature cross terms', $
+;                 ' Curl-Temperature cross terms', $
+;                 ' Curl-Gradient terms']
+                ' Temperature X Gradient cross terms', $
+                ' Temperature X Curl cross terms', $
+                ' Gradient X Curl cross terms', $
+                ' Gradient1 X Temperature2 cross terms', $
+                ' Curl1 X Tempeture2 cross terms', $
+                ' Curl1 X Gradient2 cross terms' ]
 endelse
 
 for i = 0,nsigs-1 do begin
@@ -237,14 +247,14 @@ ft = ['F','T']
 polar_flag = (nsigs ge 4) || (do_beam && (nsigs gt 1)) ; 0 or 1
 sxaddpar,xthdr,'MAX-LPOL', lmax,          ' Maximum L multipole'
 sxaddpar,xthdr,'POLAR',    ft[polar_flag],' Polarisation included (True/False)'
-sxaddpar,xthdr,'BCROSS',   ft[nsigs eq 6],' Magnetic cross terms included (True/False)'
-
-six = ['1','2','3','4','5','6']
+sxaddpar,xthdr,'BCROSS',   ft[nsigs ge 6],' Magnetic cross terms included (True/False)'
+sxaddpar,xthdr,'ASYMCL',   ft[nsigs ge 9],' Asymmetric pol cross terms (XY vs YX) included'
+nine = ['1','2','3','4','5','6','7','8','9']
 ; add the user defined header at the end of routine generated one
 if (STRMID(xhdr(0),0,1) NE ' ') then begin
     ; remove "trivial" keywords from user defined header
     trivial = ['XTENSION','EXTNAME','BITPIX','NAXIS','NAXIS1','NAXIS2','PCOUNT','GCOUNT', $
-               'TFIELDS','TTYPE'+six,'TBCOL'+six,'TFORM'+six]
+               'TFIELDS','TTYPE'+nine,'TBCOL'+nine,'TFORM'+nine]
     xhdr1 = xhdr
     sxdelpar,xhdr1,trivial
     iend = WHERE( STRUPCASE(STRMID(xthdr,0,8)) EQ 'END     ', nend)
