@@ -33,6 +33,7 @@ output from the \healpix facility \textbf{anafast}.
 \mylink{idl:fits2cl:llfactor}{LLFACTOR=}, 
 \mylink{idl:fits2cl:multipoles}{MULTIPOLES=},  
 \mylink{idl:fits2cl:planck1}{/PLANCK1=}, 
+%\mylink{idl:fits2cl:planck2}{/PLANCK2=}, 
 \mylink{idl:fits2cl:rshow}{/RSHOW}, 
 \mylink{idl:fits2cl:show}{/SHOW}, 
 \mylink{idl:fits2cl:silent}{/SILENT=}, 
@@ -48,9 +49,11 @@ output from the \healpix facility \textbf{anafast}.
     \item[cl\_array] \mytarget{idl:fits2cl:cl_array}%
       real array of $C_\ell$ coefficients read or computed from the
       file. The output dimension depends on the contents of the file. 
-	This has dimension either (lmax+1,6) given in the sequence T E B
+	This has dimension either (lmax+1,9) given in the sequence T E B
+      TxE TxB ExB ExT BxT BxE {\bf or}
+       (lmax+1,6) given in the sequence T E B
       TxE TxB ExB {\bf or} (lmax+1,4) for T E B TxE {\bf or} (lmax+1) for T
-    alone. 
+    alone. \\
      The convention for the power spectrum is that it is not
       normalised by the Harrison-Zeldovich (flat) spectrum.
 %
@@ -59,6 +62,7 @@ output from the \healpix facility \textbf{anafast}.
     file contains either $C(l)$ power spectra or $a_{l m}$ coefficients. In either
     cases, $C(l)$ is returned. If {\tt fitsfile} is not set, then
 \mylink{idl:fits2cl:planck1}{\tt /PLANCK1},
+%\mylink{idl:fits2cl:planck2}{\tt /PLANCK2},
 \mylink{idl:fits2cl:wmap1}{\tt /WMAP1},
 \mylink{idl:fits2cl:wmap5}{\tt /WMAP5} or
 \mylink{idl:fits2cl:wmap7}{\tt /WMAP7} 
@@ -97,9 +101,14 @@ must be set.
            If set, and \mylink{idl:fits2cl:fitsfile}{\tt fitsfile} 
            is not provided, then a Planck 2013+external data best fit
           model
-(\htmlref{!healpix}{idl:init_healpix}.path.test+\-'planck2013ext\_lcdm\_cl\_v1.fits') 
-          defined up to lmax=4500, is read.\\
-          See !healpix.path.test+'README' for details
+%
+%     \item[/PLANCK2] \mytarget{idl:fits2cl:planck2}%
+%            If set, and \mylink{idl:fits2cl:fitsfile}{\tt fitsfile} 
+%            is not provided, then a Planck 2015+external data best fit
+%           model
+% (\htmlref{!healpix}{idl:init_healpix}.path.test+\-'??') 
+%           defined up to lmax=??, is read.\\
+%           See !healpix.path.test+'README' for details
 %
     \item[/RSHOW] \mytarget{idl:fits2cl:rshow}%
 	If set, the raw power spectra $C(l)$ read from the file are plotted

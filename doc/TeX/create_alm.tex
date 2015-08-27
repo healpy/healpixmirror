@@ -48,8 +48,8 @@ nlmax\mytarget{sub:create_alm:nlmax} & I4B & IN & maximum $\ell$ value to be con
 if {\tt windowfile} is provided).   \\
 nmmax\mytarget{sub:create_alm:nmmax} & I4B & IN & maximum $m$ value for the $a_{\ell m}$.   \\
 %
-polar\mytarget{sub:create_alm:polar} & I4B & IN & if set to 0, only Temperature (scalar) $a_{\ell m}$ are
-generated. If set to 1, 'conventional' polarization is added. If set to 2, and if
+polar\mytarget{sub:create_alm:polar} & I4B & IN & \textbf{if set to 0}, only Temperature (scalar) $a_{\ell m}$ are
+generated. \textbf{If set to 1}, 'conventional' polarization is added. \textbf{If set to 2}, and if
 the relevant information is in {\tt filename}, polarization is generated
 assuming non-zero correlation of Curl (B) modes with Temperature (T) and Gradient
 (E) modes. Note that the \htmlref{\tt synfast}{fac:synfast} facility calls \thedocid\ with {\tt polar}=0 {\em or} {\tt polar}=1\\

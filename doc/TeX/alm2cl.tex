@@ -10,9 +10,21 @@
 
 \begin{facility}
 {This routine computes the auto (or cross) power spectra of a one (or two) sets of spherical harmonics
-  coefficients $a_{\ell m}$.
-$C_{12}^{XY}(\ell) = \sum_{m=-\ell}^{\ell} a_{1,\ell m}^X
-  a_{2,\ell m}^{Y*} / (2 \ell +1) \myhtmlimage{}$ }
+  coefficients $a_{\ell m}$,
+\begin{equation}
+C_{12}^{XY}(\ell) = \frac{1}{2 \ell +1}
+\sum_{m=-\ell}^{\ell} a_{1,\ell m}^X
+  a_{2,\ell m}^{Y*},
+\end{equation}
+with $X$ and $Y$ belonging to $T,E,B$. \\
+If requested, for $X \ne Y$, symmetrized power spectra
+\begin{equation}
+  C_{\{12\}}^{\{XY\}}(\ell) \equiv \frac{C_{12}^{XY}(\ell)+C_{12}^{YX}(\ell)}{2} = \frac{C_{12}^{XY}(\ell)+C_{21}^{XY}(\ell)}{2}
+\end{equation}
+are output.
+
+
+}
 {\modAlmTools}
 \end{facility}
 
@@ -55,9 +67,9 @@ cl\mytarget{sub:alm2cl:cl}(0:nlmax,1:d) & SP/ DP & OUT & resulting auto or cross
   If set to {\tt .true.} when $d\geq4$, $p=3$ and \mylink{sub:alm2cl:alm2}{\tt alm2} 
   is present then a symmetrized version of the cross spectra 
   will be output in {\tt cl}, namely $C_{\ell}^{TT}$, $C_{\ell}^{EE}$, $C_{\ell}^{BB}$,
-      $\left( C_{\ell}^{TE}+C_{\ell}^{ET} \right)/2$, 
-      $\left( C_{\ell}^{TB}+C_{\ell}^{BT} \right)/2$ and
-      $\left( C_{\ell}^{EB}+C_{\ell}^{BE} \right)/2$.
+      $(C_{\ell}^{TE}+C_{\ell}^{ET})/2$, 
+      $(C_{\ell}^{TB}+C_{\ell}^{BT})/2$ and
+      $(C_{\ell}^{EB}+C_{\ell}^{BE})/2$.
 	\default{{\tt .false.} (un-symmetrized output)}
 \end{tabular}
 }
