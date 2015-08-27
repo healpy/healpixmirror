@@ -11,8 +11,8 @@
 \begin{facility}
 {This routine computes the auto (or cross) power spectra of a one (or two) sets of spherical harmonics
   coefficients $a_{\ell m}$.
-$C_{12}(\ell) = \sum_{m=-\ell}^{\ell} a_{1,\ell m}
-  a_{2,\ell m}^* / (2 \ell +1) \myhtmlimage{}$ }
+$C_{12}^{XY}(\ell) = \sum_{m=-\ell}^{\ell} a_{1,\ell m}^X
+  a_{2,\ell m}^{Y*} / (2 \ell +1) \myhtmlimage{}$ }
 {\modAlmTools}
 \end{facility}
 
@@ -22,6 +22,7 @@ $C_{12}(\ell) = \sum_{m=-\ell}^{\ell} a_{1,\ell m}
 , \mylink{sub:alm2cl:alm1}{alm1}%
 , \optional{[\mylink{sub:alm2cl:alm2}{alm2}%
 ,]} \mylink{sub:alm2cl:cl}{cl}%
+, \optional{[\mylink{sub:alm2cl:symmetric}{symmetric}]}%
 }
 \end{f90format}
 \aboutoptional
@@ -33,23 +34,31 @@ $C_{12}(\ell) = \sum_{m=-\ell}^{\ell} a_{1,\ell m}
                    &   &   &                           \\ %%% for presentation
 nlmax\mytarget{sub:alm2cl:nlmax} & I4B & IN & the maximum $\ell$ value used for the $a_{\ell m}$. \\
 nmmax\mytarget{sub:alm2cl:nmmax} & I4B & IN & the maximum $m$ value used for the $a_{\ell m}$. \\
-alm1\mytarget{sub:alm2cl:alm1}(1:p, 0:nlmax, 0:nmmax) & SPC/ DPC & IN & First set of $a_{\ell m}$ values. $p$
-                   is 3 or 1 depending on wether polarisation is included or
-                   not. In the former case, the first index runs from 1 to 3 corresponding to (T,E,B). \\
-\optional{alm2\mytarget{sub:alm2cl:alm2}}(1:p, 0:nlmax, 0:nmmax) & SPC/ DPC & IN & Second set of $a_{\ell m}$
-                   values.  \\
+alm1\mytarget{sub:alm2cl:alm1}(1:p, 0:nlmax, 0:nmmax) & SPC/ DPC & IN & 
+ First set of $a_{\ell m}$ values.
+ $p$ is 3 or 1 depending on wether polarisation is included or
+ not. In the former case, the first index runs from 1 to 3 corresponding to (T,E,B). \\
+\optional{alm2\mytarget{sub:alm2cl:alm2}}(1:p, 0:nlmax, 0:nmmax) & SPC/ DPC & IN & 
+   Second set of $a_{\ell m}$ values.  \\
 %% \end{tabular}
 %% \begin{tabular}{p{0.4\hsize} p{0.05\hsize} p{0.1\hsize} p{0.35\hsize}} \hline  
 cl\mytarget{sub:alm2cl:cl}(0:nlmax,1:d) & SP/ DP & OUT & resulting auto or cross power spectra. 
-                   If both {\tt alm1} and {\tt alm2} are present, {\tt cl} will
-                   be their cross power spectrum. If only {\tt alm1} is present,
-                   {\tt cl} will be its power spectrum. 
-		   If $d=1$, only the temperature spectrum
-                   $C_{\ell}^T$ will
-                   be output. If $d=4$ and $p=3$, the output will be $C_{\ell}^T$, $C_{\ell}^E$,
-                   $C_{\ell}^B$, $C_{\ell}^{T\times E}$, if $d\geq 6$ and $p=3$, $C_{\ell}^{T\times
-                   B}$  $C_{\ell}^{E\times B}$ will also be output, and if $d\geq 9$ and $p=3$, $C_{\ell}^{E\times T}$, $C_{\ell}^{B\times
-                   T}$  and $C_{\ell}^{B\times E}$ will be included.
+  If both {\tt alm1} and {\tt alm2} are present, {\tt cl} will be their cross power spectrum. 
+  If only {\tt alm1} is present,{\tt cl} will be its power spectrum. 
+  If $d=1$, only the temperature spectrum $C_{\ell}^{TT}$ will be output. 
+  If $d=4$ and $p=3$, the output will be $C_{\ell}^{TT}$, $C_{\ell}^{EE}$, $C_{\ell}^{BB}$ 
+      and $C_{\ell}^{TE}$.
+  If $d\geq 6$ and $p=3$, $C_{\ell}^{TB}$ and  $C_{\ell}^{EB}$ will also be output, 
+  and if $d\geq 9$, $p=3$, and \mylink{sub:alm2cl:symmetric}{\tt symmetric} is not set, 
+  $C_{\ell}^{ET}$, $C_{\ell}^{BT}$  and $C_{\ell}^{BE}$ will be included.\\
+\optional{symmetric\mytarget{sub:alm2cl:symmetric}} & LGT & IN &
+  If set to {\tt .true.} when $d\geq4$, $p=3$ and \mylink{sub:alm2cl:alm2}{\tt alm2} 
+  is present then a symmetrized version of the cross spectra 
+  will be output in {\tt cl}, namely $C_{\ell}^{TT}$, $C_{\ell}^{EE}$, $C_{\ell}^{BB}$,
+      $\left( C_{\ell}^{TE}+C_{\ell}^{ET} \right)/2$, 
+      $\left( C_{\ell}^{TB}+C_{\ell}^{BT} \right)/2$ and
+      $\left( C_{\ell}^{EB}+C_{\ell}^{BE} \right)/2$.
+	\default{{\tt .false.} (un-symmetrized output)}
 \end{tabular}
 }
 \end{arguments}
@@ -59,11 +68,13 @@ cl\mytarget{sub:alm2cl:cl}(0:nlmax,1:d) & SP/ DP & OUT & resulting auto or cross
 lmax = 128 ; mmax = lmax \\
 call alm2cl(lmax, mmax, alm1, cl\_auto)  \\
 call alm2cl(lmax, mmax, alm1, alm2, cl\_cross)  \\
+call alm2cl(lmax, mmax, alm1, alm2, cl\_sym, symmetric=.true.)  \\
 }
 {
 {\tt cl\_auto} will contain the (auto) power spectrum of the $a_{\ell m}$ coefficients {\tt alm1} up to $\ell = 128$,
-while {\tt cl\_cross} will be the cross power spectra of the two sets of $a_{\ell m}$ coefficients {\tt
-  alm1} and {\tt alm2}.
+{\tt cl\_cross} will be the cross power spectra of the two sets of $a_{\ell m}$ coefficients {\tt
+  alm1} and {\tt alm2}, 
+while {\tt cl\_sym} will be a symmetrized version of {\tt cl\_cross}.
 }
 \end{example}
 
