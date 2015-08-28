@@ -90,7 +90,8 @@ export HEALPIX_TARGET EXTERNAL_CFITSIO CFITSIO_EXT_LIB CFITSIO_EXT_INC
 
 # ------------------------------ variables for Python healpy --------------------------
 
-HPY_SETUP=
+HPY_SETUP  =
+HPY_PYTHON =
 # ------------------------------- global rules -------------------------
 
 all: $(ALL)
@@ -287,18 +288,18 @@ cpp-void:
 
 healpy-all:
 	@cd src/healpy; \
-	python $(HPY_SETUP) build ; \
-	python $(HPY_SETUP) install --user --prefix=; \
+	$(HPY_PYTHON) $(HPY_SETUP) build ; \
+	$(HPY_PYTHON) $(HPY_SETUP) install --user --prefix=; \
 	cd ../..
 
 healpy-test: healpy-all
 	@cd /tmp ; \
-	python -c "import pylab; import healpy; import numpy ; hpv=healpy.__version__ ; print '\n\n Welcome to Healpy %s! \n\n'%(hpv); healpy.mollview(numpy.arange(12),title='Healpy %s'%(hpv)); pylab.show()" ; \
+	$(HPY_PYTHON) -c "import pylab; import healpy; import numpy ; hpv=healpy.__version__ ; print '\n\n Welcome to Healpy %s! \n\n'%(hpv); healpy.mollview(numpy.arange(12),title='Healpy %s'%(hpv)); pylab.show()" ; \
 	cd $(HEALPIX)
 
 healpy-clean:
 	@cd src/healpy ; \
-	python $(HPY_SETUP) clean --all ; \
+	$(HPY_PYTHON) $(HPY_SETUP) clean --all ; \
 	cd ../..
 
 healpy-tidy: healpy-clean

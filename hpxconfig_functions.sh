@@ -557,19 +557,19 @@ Cpp_config () {
 #-------------
 Healpy_config () {  # for healpy 1.7.0
 
-    PYTHON='python'
+    HPY_PYTHON='python'
     tmpfile=to_be_removed
     HPY_SETUP='setup.py' # default setup
     HPY_SETUP2='setup2.py' # backup setup
     HPY_DIR='src/healpy/'
 
     # ask for python command
-    echoLn "Enter python command [$PYTHON] "
+    echoLn "Enter python command [$HPY_PYTHON] "
     read answer
-    [ "x$answer" != "x" ] && PYTHON="$answer"
+    [ "x$answer" != "x" ] && HPY_PYTHON="$answer"
 
     # test python version number
-    ${PYTHON} --version 1> ${tmpfile} 2>&1
+    ${HPY_PYTHON} --version 1> ${tmpfile} 2>&1
     python_version=`${CAT} ${tmpfile} | ${AWK} '{print \$NF}'` # current version
     python_reqrd="2.4" # minimal version supported
     p_v1=`echo ${python_version} | ${AWK} '{print $1*10}'`
@@ -585,8 +585,8 @@ Healpy_config () {  # for healpy 1.7.0
     # special treatement for MacOSX
     if [ "${OS}" = "Darwin" ]; then
 	# find out compiler and options used by python (and therefore healpy in setup.py)
-	HPY_CC=`${PYTHON}   -c "from distutils.sysconfig import get_config_var ; print get_config_var('CC')"`
-	HPY_OPTS=`${PYTHON} -c "from distutils.sysconfig import get_config_var ; print get_config_var('CFLAGS')"`
+	HPY_CC=`${HPY_PYTHON}   -c "from distutils.sysconfig import get_config_var ; print get_config_var('CC')"`
+	HPY_OPTS=`${HPY_PYTHON} -c "from distutils.sysconfig import get_config_var ; print get_config_var('CFLAGS')"`
 
 	# test these options on a C code
 ${CAT} > ${tmpfile}.c <<EOF
@@ -618,6 +618,7 @@ editHealpyMakefile () {
     mv -f Makefile Makefile_tmp
     ${CAT} Makefile_tmp |\
 	${SED} "s|^HPY_SETUP.*$|HPY_SETUP    = ${HPY_SETUP}|" |\
+	${SED} "s|^HPY_PYTHON.*$|HPY_PYTHON   = ${HPY_PYTHON}|" |\
 	${SED} "s|^ALL\(.*\) healpy-void\(.*\)|ALL\1 healpy-all \2|" |\
 	${SED} "s|^TESTS\(.*\) healpy-void\(.*\)|TESTS\1 healpy-test \2|" |\
 	${SED} "s|^CLEAN\(.*\) healpy-void\(.*\)|CLEAN\1 healpy-clean \2|" |\
