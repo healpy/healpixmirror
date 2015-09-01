@@ -1155,11 +1155,11 @@ askOpenMP () {
 
 	# deal with C and F90 flags
 	IdentifyCParallCompiler
-	if [ "x$PRCFLAGS" != "x"  -a "x$PRFLAGS" != "x" ] ; then
-	    # openMP must be supported by the F90 and C compilers
-	    CFLAGS="$CFLAGS $PRCFLAGS"
+	if [ "x$PRFLAGS" != "x" ] ; then
 	    FFLAGS="$FFLAGS $PRFLAGS"
-##	    PARALL="_omp" # no need for a different source file
+	    if [ "x$PRCFLAGS" != "x"  ] ; then
+		CFLAGS="$CFLAGS $PRCFLAGS"
+	    fi
 	else
 	    echo "WARNING: Healpix+OpenMP not tested for  \"$FCNAME\" under \"$OS\" "
 	    echo "Contact us (http://healpix.sf.net/support.php) "
@@ -1293,19 +1293,21 @@ EOF
 ${CC} ${PRCFLAGS} -c ${tmpfile}${suffix} -o ${tmpfile}.o  >  ${DEVNULL} 2>&1
 if [ ! -s ${tmpfile}.o ]; then
     echo
-    echo "compiler "
+    echo "WARNING: the C compiler "
     echo "   ${CC} ${PRCFLAGS} "
-    echo "does not support OpenMP compilation !"
+    echo "  does not support OpenMP."
+    echo "  The code will not be as fast as it could be on multiprocessor architectures."
+    PRCFLAGS=""
     ${RM} ${tmpfile}.*
-    crashAndBurn
+    #crashAndBurn
 fi
 ${RM} ${tmpfile}.*
 
 }
 # -----------------------------------------------------------------
 IdentifyCParallCompiler () {
-# add OpenMP flag for C compiler (currently only gcc and icc)
-#    clang support to be added soon
+# add OpenMP flag for C compiler (currently only gcc, icc and clang-omp)
+# http://openmp.org/wp/openmp-compilers/
     nicc=`$CC -V 2>&1          | ${GREP} -i intel | ${WC} -l`
     ngcc=`$CC --version 2>&1   | ${GREP} -i 'GCC' | ${WC} -l`
     nclang=`$CC --version 2>&1 | ${GREP}  'clang' | ${WC} -l`

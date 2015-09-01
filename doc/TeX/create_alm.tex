@@ -39,23 +39,23 @@ and a pixel window read from an external file.}
 
 \begin{arguments}
 {
-\begin{tabular}{p{0.4\hsize} p{0.05\hsize} p{0.1\hsize} p{0.35\hsize}} \hline  
+\begin{tabular}{p{0.37\hsize} p{0.05\hsize} p{0.1\hsize} p{0.38\hsize}} \hline  
 \textbf{name~\&~dimensionality} & \textbf{kind} & \textbf{in/out} & \textbf{description} \\ \hline
                    &   &   &                           \\ %%% for presentation
 nsmax\mytarget{sub:create_alm:nsmax} & I4B & IN & $\nside$ of the map to be synthetized from the $a_{\ell m}$
                    created by this routine. \\ 
 nlmax\mytarget{sub:create_alm:nlmax} & I4B & IN & maximum $\ell$ value to be considered (MAX=$4\nside$
-if {\tt windowfile} is provided).   \\
+if \mylink{sub:create_alm:windowfile}{{\tt windowfile}} is provided).   \\
 nmmax\mytarget{sub:create_alm:nmmax} & I4B & IN & maximum $m$ value for the $a_{\ell m}$.   \\
 %
 polar\mytarget{sub:create_alm:polar} & I4B & IN & \textbf{if set to 0}, only Temperature (scalar) $a_{\ell m}$ are
-generated. \textbf{If set to 1}, 'conventional' polarization is added. \textbf{If set to 2}, and if
+generated using TT spectrum. \textbf{If set to 1}, 'conventional' polarization is added, based on EE, BB and TE spectra. \textbf{If set to 2}, and if
 the relevant information is in {\tt filename}, polarization is generated
 assuming non-zero correlation of Curl (B) modes with Temperature (T) and Gradient
-(E) modes. Note that the \htmlref{\tt synfast}{fac:synfast} facility calls \thedocid\ with {\tt polar}=0 {\em or} {\tt polar}=1\\
+(E) modes (TB and EB cross-spectra). Note that the \htmlref{\tt synfast}{fac:synfast} facility calls \thedocid\ with {\tt polar}=0 {\em or} {\tt polar}=1\\
 %
 filename\mytarget{sub:create_alm:filename}(LEN=\filenamelen) & CHR & IN & name of FITS file containing power
-spectra in the order TT, [EE, BB, TE, [TB, EB]] (terms in brackets are optional) \\
+spectra in the order TT, [EE, BB, TE, [TB, EB]] (terms in brackets are optional, see \mylink{sub:create_alm:polar}{{\tt polar}}) \\
 %% iseed & I4B & INOUT & seed for generation of gaussian distributed random numbers
 %%                    to the $a_{\ell m}$. 
 %%                    Set to a negative integer to (re-)initialise the
@@ -71,13 +71,13 @@ single invocation to \htmlref{{\tt rand\_init}}{sub:rand_init}.\\
 fwhm\_arcmin\mytarget{sub:create_alm:fwhm_arcmin} & SP/ DP & IN & FWHM size of the gaussian beam in arcminutes. \\
 %
 alm\_TGC\mytarget{sub:create_alm:alm_TGC}(1:p,0:nlmax,0:nmmax) & SPC/ DPC & OUT & complex $a_{\ell m}$ values
-generated from the powerspectrum in the FITS-file. The first index here runs
+generated from the power spectrum in the FITS file. The first index here runs
 form 1:1 for temperature only, and 1:3 for polarisation. In the latter case,
 1=T, 2=E, 3=B. \\
 %
 %--------------------------------
 \end{tabular} 
-\begin{tabular}{p{0.4\hsize} p{0.05\hsize} p{0.1\hsize} p{0.35\hsize}} \hline  
+\begin{tabular}{p{0.37\hsize} p{0.05\hsize} p{0.1\hsize} p{0.38\hsize}} \hline  
 \textbf{name~\&~dimensionality} & \textbf{kind} & \textbf{in/out} & \textbf{description} \\ \hline
                    &   &   &                           \\ %%% for presentation
 %--------------------------------
@@ -92,7 +92,7 @@ of the FITS file with the pixel window function (defined for $\ell\le4 \nside$) 
 $a_{\ell m}$ (square-root of the input power spectrum units). \\
 \optional{beam\_file\mytarget{sub:create_alm:beam_file}}(LEN=\filenamelen) & CHR & IN & name of the file containing
 the (non necessarily gaussian) window function $B_\ell$ of a circular beam. If present, it will override
-the argument {\tt fwhm\_arcmin}. \\
+the argument \mylink{sub:create_alm:fwhm_arcmin}{{\tt fwhm\_arcmin}}. \\
 \end{tabular}
 }
 \end{arguments}
