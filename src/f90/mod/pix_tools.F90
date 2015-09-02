@@ -57,6 +57,7 @@ module pix_tools
 !    2012-08-27: correction of a bug affecting neighbours_nest and next_in_line_nest at Nside>8192
 !    2013-04-02: bug correction in query_disc in inclusive mode
 !    2013-05-07: G95-compatible
+!    2015-09-02: added nest2uniq, uniq2nest
 !==================================================================
   ! subroutine query_strip                          Done (To be Tested) depends on in_ring
   ! subroutine query_polygon                        Done (To be Tested) depends on isort
@@ -314,6 +315,12 @@ module pix_tools
   interface discedge2fulldisc
      module procedure discedge2fulldisc
   end interface
+  interface nest2uniq
+     module procedure nest2uniq
+  end interface
+  interface uniq2nest
+     module procedure uniq2nest
+  end interface
 #else
   interface npix2nside
      module procedure npix2nside, npix2nside_8
@@ -399,6 +406,12 @@ module pix_tools
   interface discedge2fulldisc
      module procedure discedge2fulldisc, discedge2fulldisc_8
   end interface
+  interface nest2uniq
+     module procedure nest2uniq, nest2uniq_8
+  end interface
+  interface uniq2nest
+     module procedure uniq2nest, uniq2nest_8
+  end interface
 #endif
 
   private
@@ -440,6 +453,8 @@ module pix_tools
   public :: process_intervals, fudge_query_radius, discphirange_at_z
 
   public :: getdisc_ring  ! obsolete
+
+  public :: nest2uniq, uniq2nest
 
 
 contains

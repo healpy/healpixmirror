@@ -58,6 +58,8 @@
 !   s same_shape_pixels_ring
 !   s template_pixel_nest
 !   s same_shape_pixels_nest
+!   s uniq2nest
+!   s nest2uniq
 !
 ! 2012-03-02: make sure that both arguments of iand and modulo 
 !      are of the same type (for XL Fortran compiler)
@@ -3917,8 +3919,74 @@
 #endif
 
 
+  !=======================================================================
+  ! uniq2nest
+  !  returns the Nside and Pnest (NESTED ordering pixel index) of
+  !  input Puniq (Unique pixel indexing)
+  !   Puniq = Pnest + 4 * Nside^2
+  ! Sept 2015
+  !=======================================================================
+
+#ifdef DOI8B
+  subroutine uniq2nest_8(puniq, nside, pnest)
+    integer(i4b), parameter :: MKD = I8B
+#else
+  subroutine uniq2nest  (puniq, nside, pnest)
+    integer(i4b), parameter :: MKD = I4B
+#endif
+    integer(MKD), intent(in)  :: puniq
+    integer(I4B), intent(out) :: nside
+    integer(MKD), intent(out) :: pnest
+    integer(MKD) :: tmp_i
+    real(DP)     :: tmp_d
+
+    tmp_i = cheap_isqrt(puniq / 4_MKD)
+    tmp_d = log( real(tmp_i, kind=DP) ) / log(2.0_DP)
+    nside = 2_i4b ** int( tmp_d, kind=I4B )
+    pnest = puniq - (4_MKD * nside) * nside
+
+    return
+#ifdef DOI8B
+  end subroutine uniq2nest_8
+#else
+  end subroutine uniq2nest
+#endif
+
+  !=======================================================================
+  ! nest2uniq
+  !  returns Puniq (Unique pixel indexing)
+  !  for given Nside and Pnest (NESTED ordering pixel index) of
+  !   Puniq = Pnest + 4 * Nside^2
+  ! Sept 2015
+  !=======================================================================
+
+#ifdef DOI8B
+  subroutine nest2uniq_8(nside, pnest, puniq)
+    integer(i4b), parameter :: MKD = I8B
+#else
+  subroutine nest2uniq  (nside, pnest, puniq)
+    integer(i4b), parameter :: MKD = I4B
+#endif
+    character(len=*), parameter :: code='nest2uniq'
+    integer(I4B), intent(in)  :: nside
+    integer(MKD), intent(in)  :: pnest
+    integer(MKD), intent(out) :: puniq
+    integer(MKD) :: npix
+
+    npix = nside2npix(nside)
+    call assert(npix > 0, code//": invalid Nside")
+    puniq = pnest + (4_MKD * nside) * nside
 
 
+#ifdef DOI8B
+    end subroutine nest2uniq_8
+#else
+    end subroutine nest2uniq
+#endif
+
+  !=======================================================================
+  !=======================================================================
+  !=======================================================================
 ! #ifdef DOI8B
 !     integer(i4b), parameter :: MKD = I8B
 ! #else

@@ -55,8 +55,10 @@
 % CROSS-LINK
 %%%%http://tex.stackexchange.com/questions/41539/does-hyperref-work-between-two-files
 %% add xr-hyper (part of hyperref) to used packages, *BEFORE* hyperref (or html)
+\externaldocument{intro}
 \externaldocument{facilities}
 \begin{htmlonly}
+\externallabels{.}{/tmp/introlabels.pl}
 \externallabels{.}{/tmp/facilitieslabels.pl}
 \end{htmlonly}
 

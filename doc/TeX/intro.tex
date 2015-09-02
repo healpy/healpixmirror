@@ -1,6 +1,6 @@
 \documentclass[12pt,twoside]{article}
 %% \usepackage{healpix,psfig,html,graphicx,htmllist,makeidx,color,apalike} %heqn
-\usepackage{healpix,html,graphicx,makeidx,color,apalike} %heqn
+\usepackage{xr-hyper,healpix,html,graphicx,makeidx,color,apalike} %heqn
 %\usepackage{healpix,html,graphicx,makeidx,color,natbib} %heqn
 %%\usepackage{healpix,html,graphicx,makeidx,color,apalike,heqn}
 %\newif\ifpdf\ifx\pdfoutput\undefined\pdffalse\else\pdfoutput=1\pdftrue\fi
@@ -27,9 +27,46 @@
 \end{htmlonly}
 \newcommand{\healpixwebpage}{http://healpix.sourceforge.net}
 
+% commands for arbitrary link
+\newcommand{\mylink}[2]{% \mylink{link_id}{link_text}
+\latexhtml{\hyperlink{#1}{#2}}{\hyperref{#2}{}{}{#1}}}
+% commands for targets 
+% http://tex.stackexchange.com/questions/17057/hypertarget-seems-to-aim-a-line-too-low
+\makeatletter
+     \newcommand{\nop}[1]{\Hy@raisedlink{\hypertarget{#1}{}}}
+\makeatother
+\newcommand{\mytarget}[1]{\nop{#1}}%    \mytarget{id}
+\begin{htmlonly}
+ \newcommand{\mytarget}[1]{\label{#1}}
+\end{htmlonly}
+
+\newcommand{\npix}{{N_{\rm pix}}}
+\newcommand{\Opix}{{\Omega_{\rm pix}}}
+\newcommand{\nside}{N_{\rm side}}
+
 \sloppy
 \setcounter{secnumdepth}{10}%must be non-zero for cross-reference of Figs and Sections
 \setcounter{tocdepth}{10}
+
+
+% CROSS-LINK
+%%%%http://tex.stackexchange.com/questions/41539/does-hyperref-work-between-two-files
+%% add xr-hyper (part of hyperref) to used packages, *BEFORE* hyperref (or html)
+\newcommand{\facname}{} % must be here because it is in idl.tex
+\newcommand{\FACNAME}{} % must be here because it is in idl.tex
+\externaldocument{install}
+\externaldocument{csub}
+\externaldocument{idl}
+\externaldocument{facilities}
+\externaldocument{subroutines}
+\begin{htmlonly}
+\externallabels{.}{/tmp/installlabels.pl}
+\externallabels{.}{/tmp/csublabels.pl}
+\externallabels{.}{/tmp/idllabels.pl}
+\externallabels{.}{/tmp/facilitieslabels.pl}
+\externallabels{.}{/tmp/subroutineslabels.pl}
+\end{htmlonly}
+
 \begin{document}
 
 \title{The \healpix Primer}
@@ -321,11 +358,11 @@ base-resolution pixels.
 Moving clockwise from the upper left 
 panel the grid is hierarchically subdivided with 
 the grid resolution parameter equal to 
-$N_{side} =$ 1, 2, 4, 8, 
+$\nside =$ 1, 2, 4, 8, 
 %$N_{\rm side} = \,1,\,2,\,4,\,8$, 
 and the total number of pixels  equal to 
-$N_{pix} = 12 \times N_{side}^2$ = 12, 48, 192, 768. 
-All pixel centers are located on $N_{ring} = 4 \times N_{side} - 1$ rings of 
+$\npix = 12 \times \nside^2$ = 12, 48, 192, 768. 
+All pixel centers are located on $N_{\rm ring} = 4 \times \nside - 1$ rings of 
 constant latitude.
 Within each panel the areas of all pixels are identical.}
 \end{figure}
@@ -336,17 +373,17 @@ Within each panel the areas of all pixels are identical.}
 quadrilaterals of varying shape. The base-resolution comprises twelve pixels in three
 rings around the poles and equator. 
 
-The resolution of the grid is expressed by the parameter $N_{side}$ which defines the number
+The resolution of the grid is expressed by the parameter $\nside$ which defines the number
 of divisions along the side of a base-resolution pixel that is needed to reach a desired
 high-resolution partition.
 
-All pixel centers are placed on $ 4\times N_{side}-1$ 
+All pixel centers are placed on $ 4\times \nside-1$ 
 rings of constant latitude, 
 and are equidistant in azimuth
 (on each ring). All iso-latitude rings located between the upper and lower corners of
 the equatorial base-resolution pixels, the equatorial zone, 
 are divided into the same number of pixels: 
-$N_{eq}= 4\times N_{side}$. The remaining rings are located within the
+$N_{\rm eq}= 4\times \nside$. The remaining rings are located within the
 polar cap regions and contain a varying number of pixels, increasing 
 from ring to ring with increasing distance
 from the poles by one pixel within each quadrant. 
@@ -382,10 +419,10 @@ integer pixel number array,
 which is essential for computations involving data sets with very 
 large total pixel numbers.
 From top to bottom:
-Panel one (resolution parameter $N_{side} = 2$) and panel two ($N_{side} = 4$)
+Panel one (resolution parameter $\nside = 2$) and panel two ($\nside = 4$)
 show the RING scheme for pixel numbering, with the pixel number winding 
 down from north to south pole through the consecutive isolatitude rings.
-Panel three (resolution parameter $N_{side} = 2$) and panel four ($N_{side} = 4$)
+Panel three (resolution parameter $\nside = 2$) and panel four ($\nside = 4$)
 show the NESTED scheme for pixel numbering within which the pixel number grows
 with consecutive hierarchical subdivisions on a tree structure seeded by 
 the twelve 
@@ -393,7 +430,7 @@ base-resolution pixels.
 }
 \end{figure}
 
-
+\subsection{RING and NESTED numbering schemes}
 Specific geometrical properties allow \healpix to support two different
 numbering schemes for the pixels, as illustrated in Figure~\ref{fig:Numbering}. 
 % \htmlonly{on page~\pageref{page:Numbering}}.
@@ -419,16 +456,39 @@ applications involving  nearest-neighbour searches
 and also allows for an immediate
 construction of the fast Haar wavelet transform on \healpixns. 
 
+\subsection{The Unique Identifier scheme}
+\label{unique}
+\mytarget{intro:unique}
+As exposed above, a \healpix pixel is identified by three variables:
+its numbering scheme (RING or NESTED), 
+its resolution or size parameter $\nside = 2^k$ (where $k$ is a integer sometimes called 'order'),
+and its index $p$ lying in $[0, 12\nside^2-1]$.
+Since some applications require to mix pixels of different resolutions, it is possible
+to merge the resolution $\nside$ and index $p$ into a single unique number $u$
+\begin{eqnarray}
+	u\myhtmlimage{} &\myequal& p + 4 \nside^2, \myhtmlimage{} \label{eq:nest2uniq}
+\end{eqnarray}
+so that all pixels with $\nside=1$ have the unique indices 4 to 15, those with $\nside=2$ are in the range 16 to 63, and so on \cite{rh15}, simplifying the handling of data with heteregenous $\nside$.
+Casting the unique index $u$ into its original $\nside$ and $p$ is simply
+\begin{eqnarray}
+	\nside &\myequal& 2^{\rm{floor}\left( \log_2(u/4)/2 \right)}, \myhtmlimage{} \label{eq:ring2nest_a}\\
+	     p\myhtmlimage{} &\myequal& u - 4 \nside^2, \myhtmlimage{} \label{eq:ring2nest_b}
+\end{eqnarray}
+giving immediate access to the usual pixel based tools.\\
+This unique indexing can in principle be applied to both the RING and NESTED schemes, 
+even though the latter is likely to be more relevant for a hierarchical description of data with variable resolutions. It is for instance the basis of the NUNIQ (Nested Unique) storage scheme used for Multi-Order Coverage map (MOC) description of astronomical datasets proposed for virtual observatories \cite{moc}.\\
+Routines implementing Eqs~(\ref{eq:nest2uniq}) and (\ref{eq:ring2nest_a}, \ref{eq:ring2nest_b}) in various languages have been available since release 3.30.
+
 
 \section{The \healpix Software Package}
 
 We have developed a package of \healpix based mathematical software, consisting
-of Fortran90 and IDL source codes as well as documentation and
+of C, C++, Fortran90, IDL/GDL, Java and Python source codes as well as documentation and
 examples. Successful installation produces a set of facilities using standardised
 FITS I/O interfaces 
 (\htmladdnormallink{{\tt http://heasarc.gsfc.nasa.gov/docs/software/fitsio}}
 {http://heasarc.gsfc.nasa.gov/docs/software/fitsio}) 
-as well as two Fortran90
+as well as 
 libraries  which users can link to their own applications.
 Among the tasks performed by the  components of the 
 \healpix package  are the
@@ -457,36 +517,41 @@ projections of the whole sky or small areas of it.
 \end{itemize}
 
 The package includes documents which describe the installation
-process, the Fortran 90
-facilities, the IDL facilities and a large number of 
-subroutines contained in the library. It is
+process, the facilities available and a large number of 
+subroutines contained in the various libraries. It is
 available to the scientific community  at \htmladdnormallink{{\tt
 \healpixwebpage}}
 {\healpixwebpage}.
 
-\healpix is the format chosen by the {\bf WMAP}
+\healpix was the format chosen by the {\bf WMAP}
 collaboration 
-to be used for the production
+for the production
 of sky maps (see 
 \htmladdnormallink{{\tt 
 http://map.gsfc.nasa.gov/news/index.html}}{http://map.gsfc.nasa.gov/news/index.html})
  from the mission data. 
 
-\healpix software and format are used by the HFI and LFI consortia of {\bf Planck}
+\healpix software and format have been used by the HFI and LFI consortia of {\bf Planck}
 collaboration for the simulation, analysis and data release of {\bf Planck} data
 (see \htmladdnormallink{{\tt
-http://www.sciops.esa.int/index.php?project=planck}}%
-{http://www.sciops.esa.int/index.php?project=planck}).
+http://www.cosmos.esa.int/web/planck}}%
+{http://www.cosmos.esa.int/web/planck}).
 
-It is also being used to analyse the data provided by the balloon CMB missions
-{\bf Boomerang}
-(see \htmladdnormallink{{\tt http://cmb.PHYS.cwru.edu/boomerang/}}
-{http://cmb.PHYS.cwru.edu/boomerang/} or 
-\htmladdnormallink{{\tt http://oberon.roma1.infn.it/\-boomerang/}}
-{http://oberon.roma1.infn.it/boomerang/})
-and {\bf Archeops} (
-\htmladdnormallink{{\tt http://archeops01.free.fr/\-main\_archeops/\-index\_english.html}}
-{http://archeops01.free.fr/main_archeops/index_english.html}).
+\healpix software has been selected by the GAIA satellite mission currently surveying our Galaxy
+(see 
+\htmladdnormallink%
+{http://www.esa.int/Our\_Activities/Space\_Science/Gaia\_overview}%
+{http://www.esa.int/Our_Activities/Space_Science/Gaia_overview})
+
+% It is also being used to analyse the data provided by the balloon CMB missions
+% {\bf Boomerang}
+% (see \htmladdnormallink{{\tt http://cmb.PHYS.cwru.edu/boomerang/}}
+% {http://cmb.PHYS.cwru.edu/boomerang/} or 
+% \htmladdnormallink{{\tt http://oberon.roma1.infn.it/\-boomerang/}}
+% {http://oberon.roma1.infn.it/boomerang/})
+% and {\bf Archeops} (
+% \htmladdnormallink{{\tt http://archeops01.free.fr/\-main\_archeops/\-index\_english.html}}
+% {http://archeops01.free.fr/main_archeops/index_english.html}).
 
 \newpage
 \appendix
@@ -517,7 +582,7 @@ to estimate  $a_{\ell m}$. A straightforward estimator is
 \end{eqnarray}
 where the superscript star denotes complex  conjugation, and an equal weight was assumed for each pixel. This
 zeroth order estimator, as well as  higher order  estimators, are implemented in the
-Fortran90 facility {\tt anafast}, included in the
+Fortran90 facility \htmlref{{\tt anafast}}{fac:anafast}, included in the
 package. Publications discussing these estimators and the  generalised
 quadrature problem on the sphere (Hivon {\em et al.~}) are  in preparation.
 
@@ -537,7 +602,8 @@ These $\hat{a}_{\ell m}$ can be used to compute estimates of the angular power s
 %  \hat{C}_\ell&=&\frac{1}{2l +1}\sum_{m} \vert\hat{a}_{\ell m}\vert^2.\label{eq:hatC}
 \end{eqnarray}
 
-The \healpix package contains the Fortran90 facility {\tt synfast}
+The \healpix package contains the Fortran90 facility 
+\htmlref{{\tt synfast}}{fac:synfast}, 
 which takes as input a power spectrum $C_\ell$ and generates a realisation of
 $f(\gamma_p)$
 on the \healpix grid.  The convention for power spectrum input into
@@ -597,12 +663,15 @@ $C_{X,\ell}$, with the same convention for polarization as the one used
 internally. It will therefore match the convention adopted by \healpix in its
 version 1.2.
 
-For backward compatibility, we provide an IDL code ({\tt convert\_oldhpx2cmbfast}) 
+For backward compatibility, we provide an IDL code 
+(\htmlref{{\tt convert\_oldhpx2cmbfast}}{idl:convert_oldhpx2cmbfast}) 
 to change the normalization of existing FITS files created with CMBFAST 4.0. 
 When created with the correct normalization (with CMBFAST 4.2)
 or set to the correct normalization (using {\tt convert\_oldhpx2cmbfast}), the FITS file will include a
 specific keyword ({\tt POLNORM = CMBFAST}) in their header to identify them.
-The map simulation code {\tt synfast} will issue a warning if the input power
+The map simulation code 
+\htmlref{{\tt synfast}}{fac:synfast}
+will issue a warning if the input power
 spectrum file does not contain the keyword {\tt POLNORM}, but no attempt will
 be made to renormalize the power spectrum. If the keyword is present, it will be
 inherited by the simulated map.
@@ -1029,15 +1098,17 @@ polarisation power spectra.
 The FITS keyword {\tt POLCCONV} has been introduced in \healpix 2.0 to describe the
 polarisation coordinate convention applied to the data contained in the file. Its value is either {\tt
   COSMO} for files following the Healpix/CMB/{\em Planck} convention (default
-for sky map synthetized with Healpix routine {\tt synfast}) or {\tt IAU} for those
+for sky map synthetized with Healpix routine 
+\htmlref{{\tt synfast}}{fac:synfast}
+or {\tt IAU} for those
 following the IAU convention, as defined above. Absence of this keyword is
 interpreted as meaning {\tt COSMO}.
 
-The {\tt change\_polcconv} IDL facility is provided to add this keyword or
+The \htmlref{{\tt change\_polcconv}}{idl:change_polcconv} IDL facility is provided to add this keyword or
 change/update its value and swap the sign of the $U$ Stokes parameter, when applicable, in
 an existing FITS file.
 
-The facility {\tt anafast} will crash if the map to analyze follows the 'IAU'
+The facility \htmlref{{\tt anafast}}{fac:anafast} will crash if the map to analyze follows the 'IAU'
 convention, and issue a warning if the convention used can not be determined.
 
 
@@ -1091,9 +1162,6 @@ even though our definition of the $P_{\ell m}$ differ from his by a factor
 $(-1)^m$ ({\it a.k.a.} Condon-Shortley phase).
 
 \section{Pixel window functions}
-\newcommand{\npix}{{N_{\rm pix}}}
-\newcommand{\Opix}{{\Omega_{\rm pix}}}
-\newcommand{\nside}{{N_{\rm side}}}
 \renewcommand{\u}{{\bf{u}}}
 %\warnhtml
 
@@ -1106,7 +1174,7 @@ where $w_p$ is equal to $1/\Opix$ within the pixel, and equal to 0 outside, so
 that $\int d\u w_p(\u) = 1$.
 Eq.~(\ref{eq:alms}) then becomes
 \begin{eqnarray}
-  f(p)&\myequal&\sum_{\ell =0}^{l_{max}}\sum_{m}a_{\ell m}w_{\ell m}(p),
+  f(p)&\myequal&\sum_{\ell =0}^{\ell_{max}}\sum_{m}a_{\ell m}w_{\ell m}(p),
 \myhtmlimage{}
 \end{eqnarray}
 where
@@ -1227,6 +1295,11 @@ Ansari, R., et al, 2003, {\em Planck parameter definition document} (DRAFT
 Baumgardner, J.R. and Frederickson, P.O., 1985, SIAM J. Numerical Analysis, Vol. 22,
 No. 6, p. 1107
 %
+\bibitem[Boch et al, 2014]{moc}
+Boch, T., Donaldson, T., Durand, D., et al. 2014, 
+``MOC-HEALPix Multi-Order Coverage map'', 
+\htmladdnormallink{http://ivoa.net/documents/MOC/}{http://ivoa.net/documents/MOC/}
+
 \bibitem[Chandrasekhar (1960)]{chandra}  
 Chandrasekhar, S. 1960, in Radiative Transfer (Dover: New York) 
 
@@ -1280,6 +1353,10 @@ Kamionkowski, M., Kosowsky, A., Stebbins, A., 1997, Ph.Rev. D, 55, 7368 (KKS)
 
 \bibitem[Muciaccia, Natoli \& Vittorio (1998)]{munavi}
 Mucaccia, P.F, Natoli, P. and Vittorio, N., 1998, ApJ., 488, L63
+
+\bibitem[Reinecke \& Hivon, 2015]{rh15}
+Reinecke, M. and Hivon, E., 2015, A\&A in press, 
+\htmladdnormallink{arXiv:1505.04632v2}{http://arxiv.org/abs/1505.04632}
 
 \bibitem[Saff \& Kuijlaars (1997)]{mathint}
 Saff, E.B. and Kuijlaars, A.B.J., 1997, The Mathematical 
