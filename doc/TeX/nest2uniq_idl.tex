@@ -1,0 +1,79 @@
+
+\sloppy
+
+
+\title{\healpix IDL Facility User Guidelines}
+\docid{nest2uniq} \section[nest2uniq]{ }
+\label{idl:nest2uniq}
+\docrv{Version 1.0}
+\author{E. Hivon}
+\abstract{This document describes the \healpix facility
+  NEST2UNIQ.}
+
+\begin{facility}
+{This IDL facility turns $\nside$ and (NESTED) pixel index into the Unique Identifier  . 
+}
+{src/idl/toolkit/nest2uniq.pro}
+\end{facility}
+
+\begin{IDLformat}
+{nest2uniq, 
+\mylink{idl:nest2uniq:nside}{Nside},
+\mylink{idl:nest2uniq:pnest}{Pnest},
+\mylink{idl:nest2uniq:puniq}{Puniq} 
+[,%
+\mylink{idl:nest2uniq:help}{/HELP}]}
+\end{IDLformat}
+
+
+\begin{qualifiers}
+  \begin{qulist}{} %%%% NOTE the ``extra'' brace here %%%%
+
+\item[{Nside}] \mytarget{idl:nest2uniq:nside} (IN, scalar or vector Integer) The \healpix $\nside$ parameter(s)
+\item[{Pnest}] \mytarget{idl:nest2uniq:pnest} (IN, scalar or vector Integer) (NESTED scheme) pixel identification number(s) in the range \{0,$12\nside^2-1$\}. If \mylink{idl:nest2uniq:nside}{{\tt Nside}} is a scalar, \mylink{idl:nest2uniq:pnest}{{\tt Pnest}} can a be a scalar or a vector, if \mylink{idl:nest2uniq:nside}{{\tt Nside}} is a vector,
+\mylink{idl:nest2uniq:pnest}{{\tt Pnest}} must be a vector of the same size
+\item[{Puniq}] \mytarget{idl:nest2uniq:puniq} (OUT, same size as \mylink{idl:nest2uniq:pnest}{{\tt Pnest}}) The \healpix Unique pixel identifier(s). 
+  \end{qulist}
+\end{qualifiers}
+
+\begin{keywords}
+  \begin{kwlist}{} %%%% NOTE the ``extra'' brace here %%%%
+
+\item[{/HELP}] \mytarget{idl:nest2uniq:help} If set, a documentation header is printed out, and the routine exits
+  \end{kwlist}
+\end{keywords}
+
+
+\begin{codedescription}
+{\thedocid\ turns the parameter $\nside$ (a power of 2) and the pixel index $p$ into the Unique ID number $u = p + 4 \nside^2$. See \htmlref{''The Unique Identifier scheme''}{intro:unique} in 
+\linklatexhtml{''\healpix Introduction Document''}{intro.pdf}{intro.htm} for more details.
+}
+\end{codedescription}
+
+
+\begin{example}
+{
+\begin{tabular}{ll} %%%% use this tabular format %%%%
+nest2uniq, [1, 2, 4], [0, 0, 0], puniq\\
+print, puniq
+\end{tabular}
+}
+{
+\begin{minipage}{11cm}
+returns  \\
+   4 \hskip 1cm 16 \hskip 1cm 64 \\
+since the first pixels ($p=0$) at $\nside=$ 1, 2 and 4 are respectively the pixels with Unique ID numbers 4, 16 and 64.
+\end{minipage}
+}
+\end{example}
+
+
+\begin{related}
+  \begin{sulist}{} %%%% NOTE the ``extra'' brace here %%%%
+  \item[\htmlref{uniq2nest}{idl:uniq2nest}] Transforms Unique \healpix pixel ID number into Nside and Nested pixel number
+  \item[\htmlref{pix2xxx,...}{idl:pix_tools}] to turn NESTED pixel index into sky coordinates and back
+  \end{sulist}
+\end{related}
+
+\rule{\hsize}{2mm}
+

@@ -23,9 +23,9 @@
 %\fi
 
 %%%%%% ----- commands for HTML and PDF -----
-\newcommand{\nside}{{N_{\rm side}}}
-\newcommand{\npix}{{N_{\rm pix}}}
-\newcommand{\ntemplate}{{N_{\rm template}}}
+\newcommand{\nside}{N_{\rm side}}
+\newcommand{\npix}{N_{\rm pix}}
+\newcommand{\ntemplate}{N_{\rm template}}
 %\newcommand{\myhtmlimage}[1]{\htmlimage{#1}}
 \newcommand{\myhtmlimage}[1]{ }
 \renewcommand{\contentsname}{{TABLE OF CONTENTS}}
@@ -56,10 +56,16 @@
 %%%%http://tex.stackexchange.com/questions/41539/does-hyperref-work-between-two-files
 %% add xr-hyper (part of hyperref) to used packages, *BEFORE* hyperref (or html)
 \externaldocument{intro}
+\externaldocument{install}
+%\externaldocument{idl}
 \externaldocument{facilities}
+\externaldocument{subroutines}
 \begin{htmlonly}
 \externallabels{.}{/tmp/introlabels.pl}
+\externallabels{.}{/tmp/installlabels.pl}
+%\externallabels{.}{/tmp/idllabels.pl}
 \externallabels{.}{/tmp/facilitieslabels.pl}
+\externallabels{.}{/tmp/subroutineslabels.pl}
 \end{htmlonly}
 
 %%%%
@@ -163,6 +169,8 @@ origin and type of character font;
  \item the \mylink{idl:mollview:crop}{{\tt CROP}} keyword now has the same behavior for all output media (GIF, JPEG, PDF, PNG, PS, ... and X);  % 
   the \mylink{idl:mollview:nobar}{{\tt NOBAR}} keyword now removes the color bar {\em or} the polarization color wheel, as applicable; correct EQUINOX date in header of output \mylink{idl:mollview:fits}{FITS} map.
 \end{itemize}
+%
+\item new routines \htmlref{{\tt nest2uniq}}{idl:nest2uniq} and \htmlref{{\tt uniq2nest}}{idl:uniq2nest} for conversion of standard pixel index to/from Unique ID number
 %
 \item update of the required
     \htmladdnormallink{{\tt IDL-astron} library}{http://idlastro.gsfc.nasa.gov/homepage.html}
@@ -665,6 +673,7 @@ file containing $a_{lm}$ coefficients.
 \include{mollview_idl}
 \include{neighbours_nest_idl}
 \include{neighbours_ring_idl}
+\include{nest2uniq_idl}
 \include{npix2nside_idl}
 \include{nside2npix_idl}
 \include{nside2ntemplates_idl}
@@ -686,6 +695,7 @@ file containing $a_{lm}$ coefficients.
 \include{same_shape_pixels_xxx_idl}% special format
 \include{template_pixel_xxx_idl}% special format
 \include{ud_grade_idl}
+\include{uniq2nest_idl}
 \include{vec2ang_idl}
 \include{write_fits_cut4_idl}
 \include{write_fits_map_idl}

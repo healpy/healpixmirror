@@ -99,11 +99,17 @@ pixels) of holes found in input mask
 %% add xr-hyper (part of hyperref) to used packages, *BEFORE* hyperref (or html)
 \newcommand{\facname}{} % must be here because it is in idl.tex
 \newcommand{\FACNAME}{} % must be here because it is in idl.tex
+\externaldocument{intro}
+\externaldocument{install}
 \externaldocument{idl}
 \externaldocument{facilities}
+%\externaldocument{subroutines}
 \begin{htmlonly}
+\externallabels{.}{/tmp/introlabels.pl}
+\externallabels{.}{/tmp/installlabels.pl}
 \externallabels{.}{/tmp/idllabels.pl}
 \externallabels{.}{/tmp/facilitieslabels.pl}
+%\externallabels{.}{/tmp/subroutineslabels.pl}
 \end{htmlonly}
 
 
@@ -158,6 +164,12 @@ $\mathbf{\phi}$ & The azimuthal angle on the sphere, $\phi\in[0,2\pi[$.\\
 \hpxversion}
 %--------------------------------------------
 \begin{itemize}
+
+%
+	\item new routines \htmlref{{\tt nest2uniq}}{sub:nest2uniq} 
+	and \htmlref{{\tt uniq2nest}}{sub:uniq2nest} for conversion 
+	of standard pixel index to/from Unique ID number
+%
 	\item \htmlref{{\tt alm2cl}}{sub:alm2cl} can now produces nine spectra 
       (TT, EE, BB, TE, TB, EB, ET, BT and BE, instead of six previously) when 
       called with two sets of polarized $a_{\ell m}$ and can also symmetrize 
@@ -542,6 +554,7 @@ smoothing\_getpar (initially in {\tt utilities} module).
 \include{mpi_map2alm_slave}
 \include{narguments}
 \include{neighbours_nest}
+\include{nest2uniq}
 \include{npix2nside}
 \include{nside2npix}
 \include{nside2ntemplates}
@@ -579,6 +592,7 @@ smoothing\_getpar (initially in {\tt utilities} module).
 \include{template_pixel_xxx}% special format, TBD
 \include{udgrade_nest}
 \include{udgrade_ring}
+\include{uniq2nest}
 \include{vec2ang}
 \include{vect_prod}
 \include{write_asctab}

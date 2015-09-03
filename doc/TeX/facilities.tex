@@ -56,10 +56,16 @@
 %% add xr-hyper (part of hyperref) to used packages, *BEFORE* hyperref (or html)
 \newcommand{\facname}{} % must be here because it is in idl.tex
 \newcommand{\FACNAME}{} % must be here because it is in idl.tex
+\externaldocument{intro}
+\externaldocument{install}
 \externaldocument{idl}
+%\externaldocument{facilities}
 \externaldocument{subroutines}
 \begin{htmlonly}
+\externallabels{.}{/tmp/introlabels.pl}
+\externallabels{.}{/tmp/installlabels.pl}
 \externallabels{.}{/tmp/idllabels.pl}
+%\externallabels{.}{/tmp/facilitieslabels.pl}
 \externallabels{.}{/tmp/subroutineslabels.pl}
 \end{htmlonly}
 

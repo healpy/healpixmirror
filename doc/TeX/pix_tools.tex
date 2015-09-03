@@ -16,17 +16,17 @@
 
 \begin{arguments}
 {
-\begin{tabular}{p{0.27\hsize} p{0.05\hsize} p{0.08\hsize} p{0.50\hsize}} \hline  
+\begin{tabular}{p{0.30\hsize} p{0.05\hsize} p{0.08\hsize} p{0.47\hsize}} \hline  
 \textbf{name~\&~dimensionality} & \textbf{kind} & \textbf{in/out} & \textbf{description} \\ \hline
                    &   &   &                           \\ %%% for presentation
-nside & I4B & IN & $\nside$ parameter for the \healpix map. \\
-ipnest & I4B/ I8B & --- & pixel identification number in NESTED scheme over the range \{0,$\npix-1$\}. \\
-ipring & I4B/ I8B & --- & pixel identification number in RING scheme over the range \{0,$\npix-1$\}. \\
-theta & DP & --- & colatitude in radians measured southward from north pole in \{0,$\pi$\}. \\
-phi & DP & --- & longitude in radians, measured eastward in $[0,2\pi]$. \\ 
-vector(3) & DP & --- & three dimensional cartesian position vector
+nside\mytarget{sub:pix_tools:nside} & I4B & IN & $\nside$ parameter for the \healpix map. \\
+ipnest\mytarget{sub:pix_tools:ipnest} & I4B/ I8B & --- & pixel identification number in NESTED scheme over the range \{0,$\npix-1$\}. \\
+ipring\mytarget{sub:pix_tools:ipring} & I4B/ I8B & --- & pixel identification number in RING scheme over the range \{0,$\npix-1$\}. \\
+theta\mytarget{sub:pix_tools:theta} & DP & --- & colatitude in radians measured southward from north pole in \{0,$\pi$\}. \\
+phi\mytarget{sub:pix_tools:phi} & DP & --- & longitude in radians, measured eastward in $[0,2\pi]$. \\ 
+vector(3)\mytarget{sub:pix_tools:vector} & DP & --- & three dimensional cartesian position vector
                    $(x,y,z)$. The north pole is $(0,0,1)$. An output vector is normalised to unity. \\
-vertex(3,4) \hskip 3cm OPTIONAL & DP & OUT & three dimensional cartesian position vectors
+vertex(3,4)\mytarget{sub:pix_tools:vertex} \hskip 3cm OPTIONAL & DP & OUT & three dimensional cartesian position vectors
                    $(x,y,z)$ (normalised to unity) pointing to the 4 vertices of a given pixel. The four vertices are listed in the order North, West, South, East.
 \end{tabular}
 }
@@ -38,69 +38,65 @@ vertex(3,4) \hskip 3cm OPTIONAL & DP & OUT & three dimensional cartesian positio
 \textsc{\large{\textbf{ROUTINES: }}}\hfill\newline
 {\tt call pix2ang\_ring(nside, ipring, theta, phi)} 
 
- \begin{tabular}{@{}p{0.3\hsize}@{\hspace{1ex}}
-                        p{0.7\hsize}@{}}
-                                         & renders {\em theta} and {\em phi} coordinates of the nominal pixel center given the pixel number {\em ipring} and a map resolution parameter {\em nside}. \\
+ \begin{tabular}{@{}p{0.25\hsize}@{\hspace{1ex}} p{0.75\hsize}@{}}
+                                         & renders \mylink{sub:pix_tools:theta}{{\tt theta}} and \mylink{sub:pix_tools:phi}{{\tt phi}} coordinates of the nominal pixel center given the pixel number \mylink{sub:pix_tools:ipring}{{\tt ipring}} and a map resolution parameter \mylink{sub:pix_tools:nside}{{\tt nside}}. \\
      \end{tabular}\\\\
+%
 {\tt call pix2vec\_ring(nside, ipring, vector [,vertex])} 
 
- \begin{tabular}{@{}p{0.3\hsize}@{\hspace{1ex}}
-                        p{0.7\hsize}@{}}
-                                         & renders cartesian vector coordinates of the nominal pixel center given the pixel number {\em ipring} and a map resolution parameter {\em nside}. Optionally renders cartesian vector coordinates of the considered pixel four vertices.\\
+ \begin{tabular}{@{}p{0.25\hsize}@{\hspace{1ex}} p{0.75\hsize}@{}}
+                                         & renders cartesian vector coordinates of the nominal pixel center given the pixel number \mylink{sub:pix_tools:ipring}{{\tt ipring}} and a map resolution parameter \mylink{sub:pix_tools:nside}{{\tt nside}}. Optionally renders cartesian vector coordinates of the considered pixel four vertices.\\
      \end{tabular}\\\\
+%
 {\tt call ang2pix\_ring(nside, theta, phi, ipring)} 
 
- \begin{tabular}{@{}p{0.3\hsize}@{\hspace{1ex}}
-                        p{0.7\hsize}@{}}
-                                         & renders the pixel number {\em ipring} for a pixel which, given the map resolution parameter {\em nside}, contains the point on the sphere at angular coordinates {\em theta} and {\em phi}. \\
+ \begin{tabular}{@{}p{0.25\hsize}@{\hspace{1ex}} p{0.75\hsize}@{}}
+                                         & renders the pixel number \mylink{sub:pix_tools:ipring}{{\tt ipring}} for a pixel which, given the map resolution parameter \mylink{sub:pix_tools:nside}{{\tt nside}}, contains the point on the sphere at angular coordinates \mylink{sub:pix_tools:theta}{{\tt theta}} and \mylink{sub:pix_tools:phi}{{\tt phi}}. \\
      \end{tabular}\\\\
+%
 {\tt call vec2pix\_ring(nside, vector, ipring)} 
 
- \begin{tabular}{@{}p{0.3\hsize}@{\hspace{1ex}}
-                        p{0.7\hsize}@{}}
-                                         & renders the pixel number {\em ipring} for a pixel which, given the map resolution parameter {\em nside}, contains the point on the sphere at cartesian coordinates {\em vector}. \\
+ \begin{tabular}{@{}p{0.25\hsize}@{\hspace{1ex}} p{0.75\hsize}@{}}
+                                         & renders the pixel number \mylink{sub:pix_tools:ipring}{{\tt ipring}} for a pixel which, given the map resolution parameter \mylink{sub:pix_tools:nside}{{\tt nside}}, contains the point on the sphere at cartesian coordinates \mylink{sub:pix_tools:vector}{{\tt vector}}. \\
      \end{tabular}\\\\
-
-
+%
 {\tt call pix2ang\_nest(nside, ipnest, theta, phi)} 
 
- \begin{tabular}{@{}p{0.3\hsize}@{\hspace{1ex}}
-                        p{0.7\hsize}@{}}
-                                         & renders {\em theta} and {\em phi} coordinates of the nominal pixel center given the pixel number {\em ipnest} and a map resolution parameter {\em nside}. \\
+ \begin{tabular}{@{}p{0.25\hsize}@{\hspace{1ex}} p{0.75\hsize}@{}}
+                                         & renders \mylink{sub:pix_tools:theta}{{\tt theta}} and \mylink{sub:pix_tools:phi}{{\tt phi}} coordinates of the nominal pixel center given the pixel number \mylink{sub:pix_tools:ipnest}{{\tt ipnest}} and a map resolution parameter \mylink{sub:pix_tools:nside}{{\tt nside}}. \\
      \end{tabular}\\\\
+%
 {\tt call pix2vec\_nest(nside, ipnest, vector [,vertex])} 
 
- \begin{tabular}{@{}p{0.3\hsize}@{\hspace{1ex}}
-                        p{0.7\hsize}@{}}
-                                         & renders cartesian vector coordinates of the nominal pixel center given the pixel number {\em ipnest} and a map resolution parameter {\em nside}. Optionally renders cartesian vector coordinates of the considered pixel four vertices.\\
+ \begin{tabular}{@{}p{0.25\hsize}@{\hspace{1ex}} p{0.75\hsize}@{}}
+                                         & renders cartesian vector coordinates of the nominal pixel center given the pixel number \mylink{sub:pix_tools:ipnest}{{\tt ipnest}} and a map resolution parameter \mylink{sub:pix_tools:nside}{{\tt nside}}. Optionally renders cartesian vector coordinates of the considered pixel four vertices.\\
      \end{tabular}\\\\
+%
 {\tt call ang2pix\_nest(nside, theta, phi, ipnest)} 
 
- \begin{tabular}{@{}p{0.3\hsize}@{\hspace{1ex}}
-                        p{0.7\hsize}@{}}
-                                         & renders the pixel number {\em ipnest} for a pixel which, given the map resolution parameter {\em nside}, contains the point on the sphere at angular coordinates {\em theta} and {\em phi}. \\
+ \begin{tabular}{@{}p{0.25\hsize}@{\hspace{1ex}} p{0.75\hsize}@{}}
+                                         & renders the pixel number \mylink{sub:pix_tools:ipnest}{{\tt ipnest}} for a pixel which, given the map resolution parameter \mylink{sub:pix_tools:nside}{{\tt nside}}, contains the point on the sphere at angular coordinates \mylink{sub:pix_tools:theta}{{\tt theta}} and \mylink{sub:pix_tools:phi}{{\tt phi}}. \\
      \end{tabular}\\\\
+%
 {\tt call vec2pix\_nest(nside, vector, ipnest)} 
 
- \begin{tabular}{@{}p{0.3\hsize}@{\hspace{1ex}}
-                        p{0.7\hsize}@{}}
+ \begin{tabular}{@{}p{0.25\hsize}@{\hspace{1ex}} p{0.75\hsize}@{}}
                                          & renders the pixel number
-                        {\em ipnest} for a pixel which, given the map
-                        resolution parameter {\em nside}, contains the
+                        \mylink{sub:pix_tools:ipnest}{{\tt ipnest}} for a pixel which, given the map
+                        resolution parameter \mylink{sub:pix_tools:nside}{{\tt nside}}, contains the
                         point on the sphere at cartesian coordinates
-                        {\em vector} . \\
+                        \mylink{sub:pix_tools:vector}{{\tt vector}} . \\
      \end{tabular}\\\\
-
+%
 {\tt call nest2ring(nside, ipnest, ipring)} 
 
- \begin{tabular}{@{}p{0.3\hsize}@{\hspace{1ex}}
-                        p{0.7\hsize}@{}}
+ \begin{tabular}{@{}p{0.25\hsize}@{\hspace{1ex}} p{0.75\hsize}@{}}
                                          & performs conversion from NESTED to RING pixel number. \\
      \end{tabular}\\\\
+%
 {\tt call ring2nest(nside, ipring, ipnest)} 
 
- \begin{tabular}{@{}p{0.3\hsize}@{\hspace{1ex}}
-                        p{0.7\hsize}@{}}
+ \begin{tabular}{@{}p{0.25\hsize}@{\hspace{1ex}} p{0.75\hsize}@{}}
                                          & performs conversion from RING to NESTED pixel number. %\\
      \end{tabular}\\\\
 
@@ -117,6 +113,7 @@ vertex(3,4) \hskip 3cm OPTIONAL & DP & OUT & three dimensional cartesian positio
   \item[\htmlref{vec2ang}{sub:vec2ang}] convert $(x,y,z)$ cartesian coordinates into $(\theta,\phi)$ spherical coordinates.
   \item[\htmlref{convert\_inplace}{sub:convert_inplace}] in-place conversion  between RING and NESTED for integer/real/double maps.
   \item[\htmlref{convert\_nest2ring}{sub:convert_nest2ring}] convert from NESTED to RING scheme using a temporary array.
+    \item[\htmlref{nest2uniq}{sub:nest2uniq}, \htmlref{uniq2nest}{sub:uniq2nest}] conversion of standard pixel index to/from Unique ID number
   \end{sulist}
 \end{related}
 

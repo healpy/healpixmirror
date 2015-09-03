@@ -1,0 +1,78 @@
+
+\sloppy
+
+
+\title{\healpix IDL Facility User Guidelines}
+\docid{uniq2nest} \section[uniq2nest]{ }
+\label{idl:uniq2nest}
+\docrv{Version 1.0}
+\author{E. Hivon}
+\abstract{This document describes the \healpix facility
+  UNIQ2NEST.}
+
+\begin{facility}
+{This IDL facility turns the Unique Identifier into the corresponding $\nside$ and (NESTED) pixel index. 
+}
+{src/idl/toolkit/uniq2nest.pro}
+\end{facility}
+
+\begin{IDLformat}
+{uniq2nest, 
+\mylink{idl:uniq2nest:puniq}{Puniq}, 
+\mylink{idl:uniq2nest:nside}{Nside}, 
+\mylink{idl:uniq2nest:pnest}{Pnest} [,%
+\mylink{idl:uniq2nest:help}{/HELP}]}
+\end{IDLformat}
+
+
+\begin{qualifiers}
+  \begin{qulist}{} %%%% NOTE the ``extra'' brace here %%%%
+
+\item[{Puniq}] \mytarget{idl:uniq2nest:puniq} (IN, scalar or vector Integer) The \healpix Unique pixel identifier(s). Must be $\ge 4$.
+\item[{Nside}] \mytarget{idl:uniq2nest:nside} (OUT, same size as \mylink{idl:uniq2nest:puniq}{{\tt Puniq}}) The \healpix $\nside$ parameter(s)
+\item[{Pnest}] \mytarget{idl:uniq2nest:pnest} (OUT, same size as \mylink{idl:uniq2nest:puniq}{{\tt Puniq}}) (NESTED scheme) pixel identification number(s) over the range \{0,$12\nside^2-1$\}.
+  \end{qulist}
+\end{qualifiers}
+
+\begin{keywords}
+  \begin{kwlist}{} %%%% NOTE the ``extra'' brace here %%%%
+
+\item[{/HELP}] \mytarget{idl:uniq2nest:help} If set, a documentation header is printed out, and the routine exits
+  \end{kwlist}
+\end{keywords}
+
+
+\begin{codedescription}
+{\thedocid\ turns the Unique ID number $u = p + 4 \nside^2$, into the parameter $\nside$ (a power of 2) and the pixel index $p$. See \htmlref{''The Unique Identifier scheme''}{intro:unique} in 
+\linklatexhtml{''\healpix Introduction Document''}{intro.pdf}{intro.htm} for more details.
+}
+\end{codedescription}
+
+
+\begin{example}
+{
+\begin{tabular}{ll} %%%% use this tabular format %%%%
+uniq2nest, [4,16, 64], nside, pnest\\
+print, nside, pnest
+\end{tabular}
+}
+{
+\begin{minipage}{11cm}
+returns  \\
+   1 \hskip 1cm 2 \hskip 1cm 4 \\
+   0 \hskip 1cm 0 \hskip 1cm 0 \\
+since the pixels with Unique ID numbers 4, 16 and 64 are the first pixels ($p=0$) at $\nside=$ 1, 2 and 4 respectively.
+\end{minipage}
+}
+\end{example}
+
+
+\begin{related}
+  \begin{sulist}{} %%%% NOTE the ``extra'' brace here %%%%
+  \item[\htmlref{nest2uniq}{idl:nest2uniq}] Transforms Nside and Nested pixel number into Unique \healpix pixel ID number
+  \item[\htmlref{pix2xxx, ...}{idl:pix_tools}] to turn NESTED pixel index into sky coordinates and back
+  \end{sulist}
+\end{related}
+
+\rule{\hsize}{2mm}
+

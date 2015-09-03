@@ -1,7 +1,7 @@
 % -*- LaTeX -*-
 
 
-\renewcommand{\facname}{{nside2npix }}
+\renewcommand{\facname}{{nside2npix}}
 \renewcommand{\FACNAME}{{NSIDE2NPIX }}
 
 \sloppy
@@ -26,9 +26,9 @@ to resolution parameter Nside.
 \end{facility}
 
 \begin{IDLformat}
-{\mylink{idl:nside2npix:Npix}{Npix=}%
+{\mylink{idl:nside2npix:Npix}{Npix}=%
 \FACNAME(\mylink{idl:nside2npix:Nside}{Nside}%
- [,\mylink{idl:nside2npix:ERROR}{ERROR=}%
+ [, \mylink{idl:nside2npix:ERROR}{ERROR=}%
 ])}
 \end{IDLformat}
 
@@ -52,7 +52,7 @@ to resolution parameter Nside.
 \end{keywords}  
 
 \begin{codedescription}
-{\facname checks that the given Nside is valid (power of 2 in
+{\facname\ checks that the given Nside is valid (power of 2 in
 $\{1,\ldots,2^{29}\}$) and then computes the
 corresponding number of pixels $N_{\rm pix} = 12N_{\rm side}^2$.}
 \end{codedescription}

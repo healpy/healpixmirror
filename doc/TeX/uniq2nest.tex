@@ -1,0 +1,62 @@
+
+\sloppy
+
+
+\title{\healpix Fortran Subroutines Overview}
+\docid{uniq2nest} \section[uniq2nest]{ }
+\label{sub:uniq2nest}
+\docrv{Version 1.0}
+\author{E. Hivon}
+\abstract{This document describes the \healpix Fortran90 subroutines
+  UNIQ2NEST.}
+
+\begin{facility}
+{This F90 facility turns the Unique Identifier $u = p + 4 \nside^2$, into the parameter $\nside$ (a power of 2) and the pixel index $p$. See \htmlref{''The Unique Identifier scheme''}{intro:unique} in 
+\linklatexhtml{''\healpix Introduction Document''}{intro.pdf}{intro.htm} for more details.
+}
+{\modPixTools}
+\end{facility}
+
+\begin{f90format}
+{%
+\mylink{sub:uniq2nest:puniq}{puniq}, 
+\mylink{sub:uniq2nest:nside}{nside}, 
+\mylink{sub:uniq2nest:pnest}{pnest}}
+\end{f90format}
+
+\begin{arguments}
+{
+\begin{tabular}{p{0.10\hsize} p{0.1\hsize} p{0.1\hsize} p{0.60\hsize}} \hline  
+\textbf{name} & \textbf{kind} & \textbf{in/out} & \textbf{description} \\ \hline
+                   &   &   &                           \\ %%% for presentation
+puniq \mytarget{sub:uniq2nest:puniq} & I4B/I8B & IN & The \healpix Unique pixel identifier. Must be $\ge 4$. \\
+nside \mytarget{sub:uniq2nest:nside} & I4B      & OUT & The \healpix $\nside$ parameter. \\
+pnest \mytarget{sub:uniq2nest:pnest} & I4B/I8B & OUT & (NESTED scheme) pixel identification number over the range \{0,$12\nside^2-1$\}.
+\end{tabular}
+}
+\end{arguments}
+
+\begin{example}
+{use \htmlref{healpix\_modules}{sub:healpix_modules}\\
+integer(I4B) :: nside, pnest \\
+call uniq2nest(4, nside, pnest)\\
+print*,nside,pnest
+}
+{
+\begin{minipage}{11cm}
+returns  \\
+     1 \hskip 1cm 0 \\
+since the pixel with Unique ID number 4 is the first pixel ($p=0$) at $\nside=$ 1.
+\end{minipage}
+}
+\end{example}
+
+\begin{related}
+  \begin{sulist}{} %%%% NOTE the ``extra'' brace here %%%%
+  \item[\htmlref{nest2uniq}{sub:nest2uniq}] Transforms Nside and Nested pixel number into Unique \healpix pixel ID number
+  \item[\htmlref{pix2xxx, ...}{sub:pix_tools}] to turn NESTED pixel index into sky coordinates and back
+  \end{sulist}
+\end{related}
+
+\rule{\hsize}{2mm}
+
