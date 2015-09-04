@@ -1,6 +1,7 @@
 \documentclass[12pt,twoside]{article}
 %% \usepackage{healpix,psfig,html,graphicx,htmllist,makeidx,color,apalike} %heqn
-\usepackage{xr-hyper,healpix,html,graphicx,makeidx,color,apalike} %heqn
+%\usepackage{xr-hyper,healpix,html,graphicx,makeidx,color,apalike} %heqn
+\usepackage{xr-hyper,healpix,html,graphicx,makeidx,color,natbib} %heqn
 %\usepackage{healpix,html,graphicx,makeidx,color,natbib} %heqn
 %%\usepackage{healpix,html,graphicx,makeidx,color,apalike,heqn}
 %\newif\ifpdf\ifx\pdfoutput\undefined\pdffalse\else\pdfoutput=1\pdftrue\fi
@@ -148,24 +149,24 @@ of physical parameters of interest.
 three frequency bands, two channels each, 6144 pixels per map)
 were considered large at the time of their release.
 
-As for future CMB maps, a whole sky CMB survey  
+As for ongoing CMB maps, a whole sky CMB survey  
 at the angular resolution
 of $\sim 10'$ (FWHM), discretised with 
 a few pixels per resolution element 
 (so that the discretisation effects on the signal are  
 sub-dominant with respect to the effects of instrument's angular response),
-will require map sizes of at least 
-$N_{pix} \sim $ a few $\times 1.5\, 10^6$ pixels.
-More pixels than that will be needed to represent the Planck-HFI higher 
+require map sizes of at least 
+$\npix \sim  10^7$ pixels.
+More pixels than that are needed to represent the Planck-HFI higher 
 resolution channels.
-This estimate, $N_{pix}$, should be multiplied by  the number of frequency bands 
+This estimate, $\npix$, should be multiplied by  the number of frequency bands 
 (or, indeed, by the number of individual
 observing channels --- 74 in the case of Planck --- for the analysis work 
 to be done before the
 final coadded maps are made for each frequency band) to render 
 an approximate expected
-size of the already very compressed form of survey data which would 
-be the input to the astrophysical analysis pipeline. 
+size of the already very compressed form of survey data which is
+the input to the astrophysical analysis pipeline. 
 
 It appears to us that very careful
 attention ought to be given to devising  high resolution CMB map
@@ -452,7 +453,7 @@ base-resolution elements (curvilinear
 quadrilaterals) into a [0,1]$\times$[0,1] square exists.
 This tree structure allows one to implement efficiently all
 applications involving  nearest-neighbour searches
-\cite{whg},
+\citep{whg},
 and also allows for an immediate
 construction of the fast Haar wavelet transform on \healpixns. 
 
@@ -463,20 +464,30 @@ As exposed above, a \healpix pixel is identified by three variables:
 its numbering scheme (RING or NESTED), 
 its resolution or size parameter $\nside = 2^k$ (where $k$ is a integer sometimes called 'order'),
 and its index $p$ lying in $[0, 12\nside^2-1]$.
-Since some applications require to mix pixels of different resolutions, it is possible
+Since some applications require to process simultaneously pixels of different resolutions, it is possible
 to merge the resolution $\nside$ and index $p$ into a single unique number $u$
 \begin{eqnarray}
-	u\myhtmlimage{} &\myequal& p + 4 \nside^2, \myhtmlimage{} \label{eq:nest2uniq}
+	u_{\ } &\myequal& p + 4 \nside^2, \myhtmlimage{} \label{eq:nest2uniq}
 \end{eqnarray}
-so that all pixels with $\nside=1$ have the unique indices 4 to 15, those with $\nside=2$ are in the range 16 to 63, and so on \cite{rh15}, simplifying the handling of data with heteregenous $\nside$.
-Casting the unique index $u$ into its original $\nside$ and $p$ is simply
+so that all pixels with $\nside=1$ have the unique indices 4 to 15, 
+those with $\nside=2$ are in the range 16 to 63, and so on \citep{rh15}, 
+thus simplifying the handling of data with heteregenous $\nside$.
+Splitting the unique index $u$ into its original $\nside$ and $p$ is as simple as
 \begin{eqnarray}
 	\nside &\myequal& 2^{\rm{floor}\left( \log_2(u/4)/2 \right)}, \myhtmlimage{} \label{eq:ring2nest_a}\\
-	     p\myhtmlimage{} &\myequal& u - 4 \nside^2, \myhtmlimage{} \label{eq:ring2nest_b}
+	     p_{\ } &\myequal& u - 4 \nside^2, \myhtmlimage{} \label{eq:ring2nest_b}
 \end{eqnarray}
-giving immediate access to the usual pixel based tools.\\
-This unique indexing can in principle be applied to both the RING and NESTED schemes, 
-even though the latter is likely to be more relevant for a hierarchical description of data with variable resolutions. It is for instance the basis of the NUNIQ (Nested Unique) storage scheme used for Multi-Order Coverage map (MOC) description of astronomical datasets proposed for virtual observatories \cite{moc}.\\
+giving immediate access to the usual pixel based tools.
+
+This unique indexing could in principle be applied to both the RING and NESTED schemes, 
+even though the latter appears more relevant for a hierarchical description 
+of data with variable resolutions: since, as noted previously, a pixel with NESTED index $p$ 
+at resolution $\nside$ is subdivided in four pixels with index $4p,\, 4p+1,\, 4p+2,\, 4p+3$ 
+at resolution $2\nside$, Eq.~(\ref{eq:nest2uniq}) shows that
+a pixel with Nested-based unique identifier $u$ is subdivided in four smaller pixels 
+whose unique identifiers are $4u,\, 4u+1,\, 4u+2,\, 4u+3$.
+This Nested-based Unique identification is for instance the basis of the {\tt NUNIQ} storage scheme used for Multi-Order Coverage map (MOC) description of astronomical datasets proposed for virtual observatories \citep{moc}.
+
 Routines implementing Eqs~(\ref{eq:nest2uniq}) and (\ref{eq:ring2nest_a}, \ref{eq:ring2nest_b}) in various languages have been available since release 3.30.
 
 
@@ -738,7 +749,7 @@ what was used in previous releases is exposed in~\ref{subsub:relatoldversion}.
 The CMB radiation field is described by a $2\, \times \, 2$ 
 intensity tensor
 $I_{ij}$
-\cite{chandra}. The Stokes parameters $Q$ and $U$ are defined as 
+\citep{chandra}. The Stokes parameters $Q$ and $U$ are defined as 
 $Q=(I_{11}-I_{22})/4$ and $U=I_{12}/2$, while the temperature anisotropy 
 is given by $T=(I_{11}+I_{22})/4$. The fourth Stokes parameter $V$ that
 describes circular polarization is not necessary in standard cosmological 
@@ -761,9 +772,9 @@ To analyze the CMB temperature on the sky, it is natural to
 expand it in spherical harmonics. These are not appropriate 
 for polarization, because   
 the two combinations $Q\pm iU$ are quantities of spin $\pm 2$
-\cite{goldberg}. They 
+\citep{goldberg}. They 
 should be expanded in spin-weighted harmonics $\, _{\pm2}Y_l^m$ 
-\cite{spinlong}, \cite{longspin},
+\citep{spinlong, longspin},
 \begin{eqnarray}
   T(\vecn)&\myequal&\sum_{lm} a_{T,lm} Y_{lm}(\vecn) \nonumber \\
   (Q+iU)({\bf n})&\myequal&\sum_{lm} 
@@ -829,7 +840,7 @@ In fact $X_{1,lm}({\bf n})$ and $X_{2,lm}({\bf n})$ have the form,
 $\myhtmlimage{} {X_{1,lm}({\bf n})=\sqrt{(2l+1) / 4\pi} F_{1,lm}(\theta)\ e^{im\phi}}$
 and $\myhtmlimage{} {X_{2,lm}({\bf n})=\sqrt{(2l+1) / 4\pi} F_{2,lm}(\theta)\ e^{im\phi}}$, 
 $\myhtmlimage{} {F_{(1,2),lm}(\theta)}$ can be calculated in terms of Legendre
-polynomials \cite{kks} 
+polynomials \citep{kks} 
 \begin{eqnarray}
 F_{1,lm}(\theta)&\myequal&  N_{lm}
 \left[ -\left({l-m^2 \over \sin^2\theta} 
@@ -856,7 +867,7 @@ natural coordinate system to express the correlations is one in which
 $\veceo $ vectors at each point are tangent to the great circle
 connecting these 2 points, with the $\vecet$ vectors being perpendicular to
 the $\veceo$ vectors.  With this choice of reference frames, and using 
-the addition theorem for the spin harmonics \cite{primer},
+the addition theorem for the spin harmonics \citep{primer},
 \begin{eqnarray}
 \sum_m \;_{s_1} Y_{lm}^*({\bf n}_1) 
 \;_{s_2} Y_{lm}({\bf n}_2)&\myequal&\sqrt{2l+1 \over 4 \pi} 
@@ -864,7 +875,7 @@ the addition theorem for the spin harmonics \cite{primer},
 \label{addtheo}
 \end{eqnarray}
 
-we have \cite{kks}
+we have \citep{kks}
 \begin{eqnarray}
 \langle T_1T_2 \rangle&\myequal&\sum_l {2l+1 \over 4 \pi}
 C_{Tl} P_l(\cos \beta) \nonumber \\ 
@@ -903,7 +914,7 @@ It is also worth noting that with these conventions, the cross power $C_{Cl}$
 for scalar perturbations
 must be positive at low $\ell$, in order to produce {\em at large scales} a radial pattern of
 polarization around cold temperature spots (and a tangential pattern around hot
-spots) as it is expected from scalar perturbations \cite{crco}.
+spots) as it is expected from scalar perturbations \citep{crco}.
 
 %----------- addition, 2008-07-15 --------
 Note that Eq.~(\ref{Pexpansion2}) implies that, if the Stokes parameters are
@@ -944,7 +955,7 @@ North--South axis, and ($Q=0,U>0$) will be along a North-West to South-East axis
 \label{subsub:relatoldversion}%\warnhtml
 Even though it was stated otherwise in the documention, \healpix used a different
 convention for the polarization in its previous releases. The tensor harmonics approach
-(\cite{kks}, hereafter KKS) was used, instead of
+(\citet{kks}, hereafter KKS) was used, instead of
 the current spin weighted spherical harmonics. These two approaches differ by
 the normalisation and sign of the basis functions used, which in turns change
 the normalisation of the power spectra.
@@ -1057,7 +1068,7 @@ linear polarisation are defined such that $+Q$ is aligned with $+x$, $-Q$ with $
 bisectrix of $+x$ and $+y$. Although this definition is universally accepted, 
 some confusion may still arise from the relation of
 this local cartesian system to the global spherical one, as described below
-\cite{hamakerleahy}, and as illustrated in Fig.~\ref{fig:reftqu}. %\htmlonly{ on page~\pageref{page:reftqu}}.
+\citep{hamakerleahy}, and as illustrated in Fig.~\ref{fig:reftqu}. %\htmlonly{ on page~\pageref{page:reftqu}}.
 
 \begin{figure}[!ht]
 %% \centerline{\includegraphics[bb=1pt 1pt 600pt 500pt,clip,width=0.95\textwidth]{fig/merge_reftqu.png}}
@@ -1077,7 +1088,7 @@ Coordinate conventions for \healpix ({\em lhs} panels) and IAU ({\em rhs} panels
 \end{figure}
 
 The polarization conventions defined by the International Astronomical Union
-\cite{iau74} are summarized in \cite{hambreg}. They define at each point on the
+\citep{iau74} are summarized in \cite{hambreg}. They define at each point on the
 celestial sphere a cartesian referential with the $x$ and $y$ axes pointing
 respectively toward the North and East, and the $z$
 axis along the line of sight pointing toward the observer (ie, inwards) for a
@@ -1087,7 +1098,7 @@ On the other hand, following the mathematical and CMB litterature tradition,
 \healpix defines a cartesian referential with the $x$ and $y$ axes pointing
 respectively toward the {\em South} and East, and the $z$ axis along the line of sight
 pointing away from the observer (ie, {\em outwards}) for a right-handed
-system. The {\em Planck} CMB mission follows the same convention \cite{ansari}.
+system. The {\em Planck} CMB mission follows the same convention \citep{ansari}.
 
 The consequence of this definition discrepency is a change of sign of $U$,
 which, if not accounted for, jeopardizes the calculation of the Electric and Magnetic  CMB
@@ -1157,7 +1168,7 @@ which are given by the Rodrigues formula
 \label{eq:rodrigues}
 \end{eqnarray}
 
-Note our $Y_{\ell m}$ are identical to those of \cite{edmonds},
+Note our $Y_{\ell m}$ are identical to those of \citet{edmonds},
 even though our definition of the $P_{\ell m}$ differ from his by a factor
 $(-1)^m$ ({\it a.k.a.} Condon-Shortley phase).
 
@@ -1352,7 +1363,7 @@ IAU, 1974, Transactions of the IAU Vol. 15B (1973) 166
 Kamionkowski, M., Kosowsky, A., Stebbins, A., 1997, Ph.Rev. D, 55, 7368 (KKS)
 
 \bibitem[Muciaccia, Natoli \& Vittorio (1998)]{munavi}
-Mucaccia, P.F, Natoli, P. and Vittorio, N., 1998, ApJ., 488, L63
+Mucaccia, P.F, Natoli, P. and Vittorio, N., 1998, ApJ, 488, L63
 
 \bibitem[Reinecke \& Hivon, 2015]{rh15}
 Reinecke, M. and Hivon, E., 2015, A\&A in press, 
@@ -1370,7 +1381,7 @@ Szalay, A.S. and Brunner, R.J., 1998, astro-ph9812335, to appear in
 a special issue of the Elsevier journal "Future Generation Computer Systems"
 
 \bibitem[Tegmark (1996)]{teg}
-Tegmark, M., 1996, 470, L81
+Tegmark, M., 1996, ApJ, 470, L81
 
 \bibitem[Wandelt, Hivon \& G\'orski (1998)]{whg}
 Wandelt, B.D., Hivon, E. and G\'orski, K.M., 1998, astro-ph/9803317, in
