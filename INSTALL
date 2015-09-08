@@ -100,6 +100,10 @@ To install the C++ package, do
    ./configure [-L]
    make cpp-all
    make cpp-test
+or
+   cd src/cxx
+   ./configure
+   make
 
 See src/cxx/README.compilation
 or

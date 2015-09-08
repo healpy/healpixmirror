@@ -436,7 +436,10 @@ After compilation
 in {\tt \$\{HEALPIX\}/lib/chealpix.*}\ .
 
 \subsubsection{C++ configuration}
-The {\tt ./configure} script will 
+\label{sec:cpp_config}
+Two options are available:
+\begin{itemize}
+\item The interactive {\tt ./configure} script will 
 ask for the full path to an installed {\tt cfitsio} library to link to, and then provide a choice of
 predefined targets corresponding to different combinations of C++ compilers and
 options. Each of those targets is defined in a configuration file located in
@@ -455,6 +458,17 @@ will be set according to the choices made above.
 \\
 If the HEALPIX configuration file is sourced as described in \S~\ref{subsub:conf}, the full path to the C++
 executables will be added to the environment PATH variable.
+
+\item Starting with HEALPix 3.0, an automated ({\tt autoconf} generated) {\tt configure} script is 
+available in {\tt Healpix\_\hpxversion/src/cxx/configure}. To use it (and also make the compilation, and test it) 
+do\\
+\mycode{cd src/cxx}\\
+\mycode{./configure}\\
+\mycode{make}\\
+\mycode{make test}\\
+which will put the compilation products in {\tt Healpix\_\hpxversion/src/cxx/auto}.
+\end{itemize}
+
 
 
 \subsubsection{Fortran 90 configuration}
@@ -590,19 +604,47 @@ is not a sky map}
 Healpix\_\hpxversion/test/cl.fits}) used to generate the Fortran90 test maps
 is currently the WMAP 1yr best fit, in $(\mu$K$)^2$, and is therefore different from the one
 included in releases 1.* (that can still be found in {\tt cl\_old.fits}).
-See \htmladdnormallink{{\tt  http://lambda.gsfc.nasa.gov/}}{http://lambda.gsfc.nasa.gov/} 
-for details on WMAP and its data products.
-%
-\item the file  {\tt Healpix\_\hpxversion/test/wmap\_lcdm\_sz\_lens\_wmap5\_cl\_v3.fits}
- was added for convenience, even though
- it is currently *NOT* used for any of the simulated test maps.
+% See \htmladdnormallink{{\tt  http://lambda.gsfc.nasa.gov/}}{http://lambda.gsfc.nasa.gov/} 
+% for details on WMAP and its data products.
+\item Other input fiducial $C(\ell)$, all in $(\mu$K$)^2$ and defined on the multipole range $[0, \ell_{\rm max}]$, have been included for convenience in 
+{\tt Healpix\_\hpxversion/test/} in a \healpix compatible format.
+\\
+\begin{tabular}{l l l l} 
+\hline 
+  \textbf{File name} & \textbf{alias} & \textbf{Origin} & $\ell_{\rm max}$\\ \hline
+wmap\_lcdm\_pl\_model\_yr1\_v1.fits      & cl.fits             & 
+ \htmladdnormallink{WMAP}{http://lambda.gsfc.nasa.gov/}-1yr (2005)   & 3000 \\
+wmap\_lcdm\_sz\_lens\_wmap5\_cl\_v3.fits & cl\_wmap5.fits      & WMAP-5yr (2008)   & 2000 \\
+wmap\_lcdm\_sz\_lens\_wmap7\_cl\_v4.fits & cl\_wmap7.fits      & WMAP-7yr (2011)   & 3726 \\
+planck2013ext\_lcdm\_cl\_v1.fits         & cl\_planck1.fits    & 
+ \htmladdnormallink{Planck}{http://www.cosmos.esa.int/web/planck} 2013       & 4500 \\
+planck2015\_lcdm\_cl\_v2.fits          & cl\_planck2.fits    & Planck 2015       & 4900 \\
+\hline
+\end{tabular}
+\\
+For more information on their respective origin and underlying model see their FITS header, or
+{\tt Healpix\_\hpxversion/test/README}
 
- It has been adapted to run with \healpix  from WMAP 5yr best fit model for
-$\Lambda$-CDM + SZ + lensing with B mode = 0, in $(\mu$K$)^2$ (input file: 
-\htmladdnormallink{{\footnotesize{\tt  http://lambda.gsfc.nasa.gov/data/map/dr3/dcp/params/c\_l/wmap\_lcdm\_sz\_lens\_wmap5\_\-cl\_v3.dat}}}{http://lambda.gsfc.nasa.gov/data/map/dr3/dcp/params/c_l/wmap_lcdm_sz_lens_wmap5_cl_v3.dat}).
- For the value of the cosmological parameters, see 
- \htmladdnormallink{{\footnotesize{\tt  http://lambda.gsfc.nasa.gov/product/map/dr3/params/lcdm\_sz\_lens\_wmap5.cfm}}}{%
-http://lambda.gsfc.nasa.gov/product/map/dr3/params/lcdm_sz_lens_wmap5.cfm}
+%
+% \item the file  {\tt Healpix\_\hpxversion/test/wmap\_lcdm\_sz\_lens\_wmap5\_cl\_v3.fits}
+%  was added for convenience, even though
+%  it is currently *NOT* used for any of the simulated test maps.
+
+%  It has been adapted to run with \healpix  from WMAP 5yr best fit model for
+% $\Lambda$-CDM + SZ + lensing with B mode = 0, in $(\mu$K$)^2$ (input file: 
+% \htmladdnormallink{{\footnotesize{\tt  http://lambda.gsfc.nasa.gov/data/map/dr3/dcp/params/c\_l/wmap\_lcdm\_sz\_lens\_wmap5\_\-cl\_v3.dat}}}{http://lambda.gsfc.nasa.gov/data/map/dr3/dcp/params/c_l/wmap_lcdm_sz_lens_wmap5_cl_v3.dat}).
+%  For the value of the cosmological parameters, see 
+%  \htmladdnormallink{{\footnotesize{\tt  http://lambda.gsfc.nasa.gov/product/map/dr3/params/lcdm\_sz\_lens\_wmap5.cfm}}}{%
+% http://lambda.gsfc.nasa.gov/product/map/dr3/params/lcdm_sz_lens_wmap5.cfm}
+% %
+% \item the file  {\tt Healpix\_\hpxversion/test/wmap\_lcdm\_sz\_lens\_wmap7\_cl\_v4.fits}
+%  was added for convenience, even though
+%  it is currently *NOT* used for any of the simulated test maps.
+
+% %
+% \item Planck2013
+% %
+% \item Planck2015
 \end{itemize}
 
 In order to test the new \healpix profile set-up one can then attempt
@@ -1053,6 +1095,12 @@ transparent in the output PNG file.
 % \item The {\tt healpix\_doc} routine won't work under GDL.
 %\item The behaviour of {\tt Ximview} under GDL has not been investigated.
 \end{itemize}
+
+\subsubsection*{\healpix with GDL status update}
+Some of the caveats and limitations detailled above, and others not listed here, 
+are still present in GDL 0.9.4 (Sept 2013) and 0.9.5 (Oct 2014).
+However, they are clearly identified and actively looked at by the GDL development team and 
+should be fixed in the forthcoming GDL 0.9.6.
 
 
 %******************************************************************************
