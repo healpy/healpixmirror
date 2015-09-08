@@ -170,6 +170,9 @@ origin and type of character font;
   the \mylink{idl:mollview:nobar}{{\tt NOBAR}} keyword now removes the color bar {\em or} the polarization color wheel, as applicable; correct EQUINOX date in header of output \mylink{idl:mollview:fits}{FITS} map.
 \end{itemize}
 %
+\item \htmlref{{\tt fits2cl}}{idl:fits2cl}: addition of \mylink{idl:fits2cl:planck2}{{\tt /PLANCK2}} keyword
+to read best fit $C(l)$ model to Planck 2015 data.
+%
 \item new routines \htmlref{{\tt nest2uniq}}{idl:nest2uniq} and \htmlref{{\tt uniq2nest}}{idl:uniq2nest} for conversion of standard pixel index to/from Unique ID number. See \htmlref{''The Unique Identifier scheme''}{intro:unique} section in \linklatexhtml{''\healpix Introduction Document''}{intro.pdf}{intro.htm} for more details.
 %
 \item update of the required
@@ -532,56 +535,56 @@ the poles, {\em only} the pixels overlapping with the disc are now returned.
 given so that these routines work under Mac OS X 10.4 and 10.5.
 \end{itemize}
 \end{itemize}
-
-\subsubsection{Changes between release 1.2 and 2.0}
-Some new routines have been introduced since version 1.2, as listed below.
-Most of the routines that already existed now have extended
-capabilities.
-Those of them with improved or extended user interface are listed
-below. They all remain backward compatible (ie, they can be used with codes written
-around version 1.1 and 1.2 without any edition).
-
-\begin{itemize}
-\item New routines in version 2.0 include
-\begin{itemize}
- \item \htmlref{{\tt median\_filter}}{idl:median_filter}
- \item \htmlref{{\tt nside2templates}}{idl:nside2ntemplates},
-  \htmlref{{\tt same\_shape\_pixels\_ring}}{idl:same_shape_pixels_xxx}, 
-  \htmlref{{\tt same\_shape\_pixels\_nest}}{idl:same_shape_pixels_xxx},
-  \htmlref{{\tt template\_pixel\_ring}}{idl:template_pixel_xxx}, 
-  \htmlref{{\tt template\_pixel\_nest}}{idl:template_pixel_xxx}
- \item {\tt loaddata\_healpix}: replaces loaddata to avoid conflict with other
-  libraries
- \item \ldots
-\end{itemize}
-
-\item Routines with extended/improved user interface or new functionalities include
-\begin{itemize}
-\item \htmlref{{\tt fits2cl}}{idl:fits2cl}: addition of /RSHOW, /SHOW keywords to plot
-  power spectra while they are read; possibility to read power spectra from a
-file containing $a_{lm}$ coefficients.
-\item \htmlref{{\tt gnomview}}{idl:mollview}, \htmlref{{\tt mollview}}{idl:mollview},
-  \htmlref{{\tt orthview}}{idl:mollview}, \htmlref{{\tt cartview}}{idl:mollview}
-  faster FITS file reading (by up to a factor 6);
-  can deal with WMAP polarized maps FITS format; extension
-  of the OUTLINE keyword to plot set of points; addition of the HBOUND keyword
-  to overplot pixel boundaries; ...
-\item \htmlref{{\tt read\_tqu}}{idl:read_tqu},
-  \htmlref{{\tt read\_fits\_cut4}}{idl:read_fits_cut4},
-  \htmlref{{\tt read\_fits\_map}}{idl:read_fits_map}: 
-   addition of output keywords   NSIDE, ORDERING, COORDSYS
-\item \htmlref{{\tt reorder}}{idl:reorder}: simpler interface to ordering
-  conversion with addition of /N2R and /R2N keywords
-\item \htmlref{{write\_tqu}}{idl:write_tqu},
-\htmlref{{write\_fits\_cut4}}{idl:write_fits_cut4},
-	\htmlref{{write\_fits\_sb}}{idl:write_fits_sb}: faster FITS file writing
-(by a factor 10 or more);
-\item \ldots
-\end{itemize}
 %--------------------------------
-\end{itemize}
 }} %% end of footnotesize
 %--------------------------------
+
+% \subsubsection{Changes between release 1.2 and 2.0}
+% Some new routines have been introduced since version 1.2, as listed below.
+% Most of the routines that already existed now have extended
+% capabilities.
+% Those of them with improved or extended user interface are listed
+% below. They all remain backward compatible (ie, they can be used with codes written
+% around version 1.1 and 1.2 without any edition).
+
+% \begin{itemize}
+% \item New routines in version 2.0 include
+% \begin{itemize}
+%  \item \htmlref{{\tt median\_filter}}{idl:median_filter}
+%  \item \htmlref{{\tt nside2templates}}{idl:nside2ntemplates},
+%   \htmlref{{\tt same\_shape\_pixels\_ring}}{idl:same_shape_pixels_xxx}, 
+%   \htmlref{{\tt same\_shape\_pixels\_nest}}{idl:same_shape_pixels_xxx},
+%   \htmlref{{\tt template\_pixel\_ring}}{idl:template_pixel_xxx}, 
+%   \htmlref{{\tt template\_pixel\_nest}}{idl:template_pixel_xxx}
+%  \item {\tt loaddata\_healpix}: replaces loaddata to avoid conflict with other
+%   libraries
+%  \item \ldots
+% \end{itemize}
+
+% \item Routines with extended/improved user interface or new functionalities include
+% \begin{itemize}
+% \item \htmlref{{\tt fits2cl}}{idl:fits2cl}: addition of /RSHOW, /SHOW keywords to plot
+%   power spectra while they are read; possibility to read power spectra from a
+% file containing $a_{lm}$ coefficients.
+% \item \htmlref{{\tt gnomview}}{idl:mollview}, \htmlref{{\tt mollview}}{idl:mollview},
+%   \htmlref{{\tt orthview}}{idl:mollview}, \htmlref{{\tt cartview}}{idl:mollview}
+%   faster FITS file reading (by up to a factor 6);
+%   can deal with WMAP polarized maps FITS format; extension
+%   of the OUTLINE keyword to plot set of points; addition of the HBOUND keyword
+%   to overplot pixel boundaries; ...
+% \item \htmlref{{\tt read\_tqu}}{idl:read_tqu},
+%   \htmlref{{\tt read\_fits\_cut4}}{idl:read_fits_cut4},
+%   \htmlref{{\tt read\_fits\_map}}{idl:read_fits_map}: 
+%    addition of output keywords   NSIDE, ORDERING, COORDSYS
+% \item \htmlref{{\tt reorder}}{idl:reorder}: simpler interface to ordering
+%   conversion with addition of /N2R and /R2N keywords
+% \item \htmlref{{write\_tqu}}{idl:write_tqu},
+% \htmlref{{write\_fits\_cut4}}{idl:write_fits_cut4},
+% 	\htmlref{{write\_fits\_sb}}{idl:write_fits_sb}: faster FITS file writing
+% (by a factor 10 or more);
+% \item \ldots
+% \end{itemize}
+% \end{itemize}
 
 
 %% \section{Changes between release 1.1 and 1.2}
