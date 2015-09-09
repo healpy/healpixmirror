@@ -37,22 +37,22 @@ The parameters defined in \thedocid\ include
 \begin{tabularx}{\linewidth}{lcc X}
 name & type & value\footnote{actual value may depend on hardware or compiler} & definition \\
 \hline
-I1B & integer & 1 & number of bytes in the hardware-supported signed integers covering the range -99 to
+\mytarget{sub:healpix_types:i1b}I1B & integer & 1 & number of bytes in the hardware-supported signed integers covering the range -99 to
 99 with the least margin\\
-I2B & integer & 2 & same as above for the range -9999 to 9999 (ie, 4 digits)\\
-I4B & integer & 4 & same as above for 9 digits \\
-I8B & integer & 8 & same as above for 16 digits\footnote{may not be supported by
+\mytarget{sub:healpix_types:i2b}I2B & integer & 2 & same as above for the range -9999 to 9999 (ie, 4 digits)\\
+\mytarget{sub:healpix_types:i4b}I4B & integer & 4 & same as above for 9 digits \\
+\mytarget{sub:healpix_types:i8b}I8B & integer & 8 & same as above for 16 digits\footnote{may not be supported by
   some hardware or compiler; on those systems, the user should set the
 preprocessing variable {\tt NO64BITS} to 1 during compilation to demote
 automatically {\tt I8B} to {\tt I4B}} \\
-SP & integer & 4 & number of bytes in the hardware-supported floating-point
+\mytarget{sub:healpix_types:sp}SP & integer & 4 & number of bytes in the hardware-supported floating-point
 numbers covering the range $10^{-30}$ to $10^{30}$ with the least margin
 (hereafter single precision)\\
-DP & integer & 8 & same as above for the range $10^{-200}$ to $10^{200}$
+\mytarget{sub:healpix_types:dp}DP & integer & 8 & same as above for the range $10^{-200}$ to $10^{200}$
 (double precision)\\
-SPC & integer & 4 & number of bytes in real ({\em or} imaginary) part of single precision complex numbers\\
-DPC & integer & 8 & same as above for double precision complex numbers\\
-LGT & integer & 4 & number of bytes in logical variables \\
+\mytarget{sub:healpix_types:spc}SPC & integer & 4 & number of bytes in real ({\em or} imaginary) part of single precision complex numbers\\
+\mytarget{sub:healpix_types:dpc}DPC & integer & 8 & same as above for double precision complex numbers\\
+\mytarget{sub:healpix_types:lgt}LGT & integer & 4 & number of bytes in logical variables \\
 \hline
 \end{tabularx}
 }%
@@ -110,7 +110,7 @@ name & type or kind & value & definition \\
 pixels in single precision data sets \\
 \mytarget{sub:healpix_types:hpx_dbadval}HPX\_DBADVAL & DP & $-1.6375\ 10^{30}$ & same as above for double precision data
 sets\\
-\mytarget{sub:healpix_types:filenamelen}{FILENAMELEN} & integer & 1024 & default length in character of file names. \\
+\mytarget{sub:healpix_types:filenamelen}{FILENAMELEN} & integer & 1024 &  default length in character of file names. \\
 HEALPIX\_VERSION & character & ``\hpxversion'' & current \healpix package version.\\
 %% HPX\_MXL0 & I4B & $40$ & parameter $m_0$ of $(l,m)$ range of spherical harmonics computed. \\
 %% HPX\_MXL1 & DP & $1.35$ & parameter $r$ in equation above\\

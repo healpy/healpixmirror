@@ -3,7 +3,9 @@
 
 
 \title{\healpix IDL Facility User Guidelines}
-\docid{same\_shape\_pixels\_XXXX} \section[same\_shape\_pixels\_XXXX]{ }
+%\docid{same\_shape\_pixels\_XXXX} 
+\docid{same\_shape\_pixels\_nest \& same\_shape\_pixels\_ring} 
+\section[same\_shape\_pixels\_nest \& same\_shape\_pixels\_ring]{ }
 \label{idl:same_shape_pixels_xxx}
 \docrv{Version 1.0}
 \author{E. Hivon}
@@ -21,23 +23,35 @@
 \end{facility}
 
 \begin{IDLformat}
-{same\_shape\_pixels\_nest, Nside, Template, List\_Pixels\_Nest [, Reflexion, NREPLICATIONS=]}
+{same\_shape\_pixels\_nest, 
+\mylink{idl:same_shape_pixels_xxx:nside}{Nside}, 
+\mylink{idl:same_shape_pixels_xxx:template}{Template}, 
+\mylink{idl:same_shape_pixels_xxx:list_pixels_nest}{List\_Pixels\_Nest} [, 
+\mylink{idl:same_shape_pixels_xxx:reflexion}{Reflexion}, 
+\mylink{idl:same_shape_pixels_xxx:nreplications}{NREPLICATIONS}=]%
+}
 \end{IDLformat}
 \begin{IDLformat}
-{same\_shape\_pixels\_ring, Nside, Template, List\_Pixels\_Ring [, Reflexion, NREPLICATIONS=]}
+{same\_shape\_pixels\_ring, 
+\mylink{idl:same_shape_pixels_xxx:nside}{Nside}, 
+\mylink{idl:same_shape_pixels_xxx:template}{Template}, 
+\mylink{idl:same_shape_pixels_xxx:list_pixels_ring}{List\_Pixels\_Ring} [, 
+\mylink{idl:same_shape_pixels_xxx:reflexion}{Reflexion}, 
+\mylink{idl:same_shape_pixels_xxx:nreplications}{NREPLICATIONS}=]%
+}
 \end{IDLformat}
 
 \begin{qualifiers}
   \begin{qulist}{} %%%% NOTE the ``extra'' brace here %%%%
 
-\item[{Nside}] (IN, scalar) the \healpix $\nside$ parameter. 
-\item[{Template}] (IN, scalar) identification number of the
+\item[\mytarget{idl:same_shape_pixels_xxx:nside}{Nside}] (IN, scalar) the \healpix $\nside$ parameter. 
+\item[\mytarget{idl:same_shape_pixels_xxx:template}{Template}] (IN, scalar) identification number of the
                    template (this number is independent of the numbering scheme considered).
-\item[{List\_Pixel\_Nest}] (OUT, vector) ordered list of NESTED scheme identification numbers
+\item[\mytarget{idl:same_shape_pixels_xxx:list_pixels_nest}{List\_Pixels\_Nest}] (OUT, vector) ordered list of NESTED scheme identification numbers
   for all pixels having the same shape as the template provided
-\item[{List\_Pixel\_Ring}] (OUT, vector) ordered list of RING scheme identification numbers
+\item[\mytarget{idl:same_shape_pixels_xxx:list_pixels_ring}{List\_Pixels\_Ring}] (OUT, vector) ordered list of RING scheme identification numbers
   for all pixels having the same shape as the template provided
-\item[{Reflexion}] (OUT, OPTIONAL, vector) in \{0, 3\} encodes the transformation(s) to
+\item[\mytarget{idl:same_shape_pixels_xxx:reflexion}{Reflexion}] (OUT, OPTIONAL, vector) in \{0, 3\} encodes the transformation(s) to
                    apply to each of the returned pixels to match exactly in
                    shape and position the template provided. 0: rotation around the polar axis only,
                    1: rotation + East-West swap (ie, reflexion around meridian),
@@ -50,7 +64,7 @@
 
 \begin{keywords}
  \begin{kwlist}{}
-\item[{NREPLICATIONS}] (OUT, OPTIONAL, scalar) number of pixels having the same shape as
+\item[\mytarget{idl:same_shape_pixels_xxx:nreplications}{NREPLICATIONS}] (OUT, OPTIONAL, scalar) number of pixels having the same shape as
   the template. It is also the length of the vectors {\tt List\_Pixel\_Nest},
   {\tt List\_Pixel\_Ring} and {\tt Reflexion}. It is either 8, 16, 4$\nside$ or
   8$\nside$.

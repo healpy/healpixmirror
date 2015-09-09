@@ -12,8 +12,13 @@
 \begin{facility}
 {This routine reads a power spectrum or beam window function from a FITS ASCII
 or binary table. 
-The routine can read temperature coefficients $C_l^T$ or both temperature and 
-polarisation coefficients $C_l^T$, $C_l^E$, $C_l^B$, $C_l^{T\times E}$. If the 
+The routine can read temperature coefficients $C_\ell^{TT}$ or both temperature and 
+polarisation coefficients $C_\ell^{TT}$, $C_\ell^{EE}$, $C_\ell^{BB}$, $C_\ell^{TE}$ (and  
+$C_\ell^{TB}$, 
+$C_\ell^{EB}$, 
+$C_\ell^{ET}$, 
+$C_\ell^{BT}$, 
+$C_\ell^{BE}$ when applicable). If the 
 keyword PDMTYPE is found in the header, fits2cl assumes the table to be in the 
 special format used by {\em Planck} and will ignore the first data column. 
 If the input FITS file contains several
@@ -52,10 +57,27 @@ units\mytarget{sub:fits2cl:units}(LEN=80) (1:) & CHR & OUT & the column units re
 %\newpage
 \begin{example}
 {
-call fits2cl ('cl.fits',cl,64,4,header,units)  \\
+use \htmlref{healpix\_modules}{sub:healpix_modules}\\
+%implicit none \\
+real(\mylink{sub:healpix_types:sp}{SP}), allocatable, dimension(:,:) :: cl \\
+character(len=80), dimension(1:300) :: header \\
+character(len=80), dimension(1:100) :: units \\
+integer(\mylink{sub:healpix_types:i4b}{I4B}) :: lmax, ncl, np \\
+character(len=\mylink{sub:healpix_types:filenamelen}{filenamelen}) :: fitsfile='cl.fits' \\
+%fitsfile = 'cl.fits' \\
+np = \htmlref{getsize\_fits}{sub:getsize_fits}(fitsfile, nmaps=ncl, mlpol=lmax) \\
+allocate(cl(0:lmax, 1:ncl)) \\
+call fits2cl(fitsfile, cl, lmax, ncl, header, units)  \\
+%call fits2cl(fitsfile,cl,64,4,header,units)  \\
 }
 {
-Reads a power spectrum from the FITS file `cl.fits' and stores the result in cl(0:64,1:4) which are the $C_l$ coeffecients up to $l=64$ for ($T$, $E$, $B$, $T\times E$). The FITS header is returned in header, the column units in units.
+Reads a power spectrum from the FITS file {\tt `cl.fits'} and stores the result in 
+{\tt \mylink{sub:fits2cl:cl}{cl}(0:lmax,1:ncl)} 
+which are the \mylink{sub:fits2cl:ncl}{\tt ncl} $C_\ell$ coefficients up to 
+$\ell=$\mylink{sub:fits2cl:lmax}{\tt lmax}. 
+The FITS header is returned in \mylink{sub:fits2cl:header}{\tt header}, 
+the column units in \mylink{sub:fits2cl:units}{\tt units}.
+% Reads a power spectrum from the FITS file `cl.fits' and stores the result in cl(0:64,1:4) which are the $C_l$ coeffecients up to $l=64$ for ($T$, $E$, $B$, $T\times E$). The FITS header is returned in header, the column units in units.
 }
 \end{example}
 \begin{modules}
@@ -72,6 +94,9 @@ Reads a power spectrum from the FITS file `cl.fits' and stores the result in cl(
   from an input power spectrum.
   \item[\htmlref{write\_asctab}{sub:write_asctab}] Routine to create an ascii
   FITS file containing a power spectrum.
+  \item[\htmlref{getsize\_fits}{sub:getsize_fits}] Routine to parse FITS file header, and determine the data storage features.
+% and, for instance, determine \mylink{sub:fits2cl:lmax}{lmax} and \mylink{sub:fits2cl:ncl}{ncl}
+  \item[\htmlref{getnumext\_fits}{sub:getnumext_fits}] Routine to determine number of extensions of a FITS file.
   \end{sulist}
 \end{related}
 

@@ -80,6 +80,7 @@ $(cross): %.cross : %.tex healpix.sty $(incs)
 
 cssfile: $(CSSFILE)
 	@echo ' copying CSS file '
+	mkdir -p $(HTMLDIR)
 	cp -f $(CSSFILE) $(HTMLDIR)
 
 main.html: 
@@ -190,5 +191,10 @@ nopdf: tidy
 
 empty: nops nopdf
 	$(RM) -r $(HTMLDIR)
+
+
+
+all: empty pdf crossref html
+	@echo "$(GREEN_COLOR)        All Done !           $(NO_COLOR)"
 
 

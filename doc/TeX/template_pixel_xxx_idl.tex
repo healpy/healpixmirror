@@ -3,7 +3,8 @@
 
 
 \title{\healpix IDL Facility User Guidelines}
-\docid{template\_pixel\_xxxx} \section[template\_pixel\_xxxx]{ }
+%\docid{template\_pixel\_xxxx} \section[template\_pixel\_xxxx]{ }
+\docid{template\_pixel\_nest \& template\_pixel\_ring} \section[template\_pixel\_nest \& template\_pixel\_ring]{ }
 \label{idl:template_pixel_xxx}
 \docrv{Version 1.0}
 \author{E. Hivon}
@@ -32,10 +33,20 @@
 \end{facility}
 
 \begin{IDLformat}
-{template\_pixel\_nest, Nside, Pixel\_Nest, Template, Reflexion}
+{template\_pixel\_nest, 
+\mylink{idl:template_pixel_xxx:nside}{Nside}, 
+\mylink{idl:template_pixel_xxx:pixel_nest}{Pixel\_Nest}, 
+\mylink{idl:template_pixel_xxx:template}{Template}, 
+\mylink{idl:template_pixel_xxx:reflexion}{Reflexion}%
+}
 \end{IDLformat}
 \begin{IDLformat}
-{template\_pixel\_ring, Nside, Pixel\_Ring, Template, Reflexion}
+{template\_pixel\_ring, 
+\mylink{idl:template_pixel_xxx:nside}{Nside}, 
+\mylink{idl:template_pixel_xxx:pixel_ring}{Pixel\_Ring}, 
+\mylink{idl:template_pixel_xxx:template}{Template}, 
+\mylink{idl:template_pixel_xxx:reflexion}{Reflexion}%
+}
 \end{IDLformat}
 
 %\ mylink: to avoid automatic processing by make_internal_links.sh
@@ -43,14 +54,14 @@
 \begin{qualifiers}
   \begin{qulist}{} %%%% NOTE the ``extra'' brace here %%%%
 
-\item[{Nside}] (IN, scalar) the \healpix $\nside$ parameter. 
-\item[{Pixel\_Nest}] (IN, scalar or vector) NESTED scheme pixel identification number(s) over the range \{0,$12\nside^2-1$\}.
-\item[{Pixel\_Ring}] (IN, scalar or vector) RING scheme pixel identification number(s) over the
+\item[\mytarget{idl:template_pixel_xxx:nside}{Nside}] (IN, scalar) the \healpix $\nside$ parameter. 
+\item[\mytarget{idl:template_pixel_xxx:pixel_nest}{Pixel\_Nest}] (IN, scalar or vector) NESTED scheme pixel identification number(s) over the range \{0,$12\nside^2-1$\}.
+\item[\mytarget{idl:template_pixel_xxx:pixel_ring}{Pixel\_Ring}] (IN, scalar or vector) RING scheme pixel identification number(s) over the
                    range \{0,$12\nside^2-1$\}.
-\item[{Template}] (OUT, scalar or vector) identification number(s) of the
+\item[\mytarget{idl:template_pixel_xxx:template}{Template}] (OUT, scalar or vector) identification number(s) of the
                    template matching in shape the pixel(s) provided (the numbering
                    scheme of the pixel templates is the same for both routines). 
-\item[{Reflexion}] (OUT, scalar or vector) in \{0, 3\} encodes the transformation(s) to
+\item[\mytarget{idl:template_pixel_xxx:reflexion}{Reflexion}] (OUT, scalar or vector) in \{0, 3\} encodes the transformation(s) to
                    apply to each pixel provided to match exactly in
                    shape and position its respective template. 0: rotation around the polar axis only,
                    1: rotation + East-West swap (ie, reflexion around meridian),
