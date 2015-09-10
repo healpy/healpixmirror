@@ -104,18 +104,22 @@ contains
     logical :: file_present
     integer :: ft_flag, ft_status
     real(sp) :: version
+    real(sp) :: reqversion
 
 #ifdef NOCFITSIO
     inquire(file=trim(filename),exist=file_present)
 #else
     ft_status = 0
+    reqversion = 3.20
     call ftvers(version)
-    if (version  < (3.14-0.001)) then
+    if (version  < (reqversion-0.001)) then
        print *,'******************************************************'
        print *,'CFITSIO library (version ' &
             & //trim(string(version,format='(f6.3)')) &
             & //') is too old.'
-       print *,'Version 3.14 or more is required.'
+       print *,'Version ' &
+            & //trim(string(reqversion,format='(f6.3)')) &
+            & //' or more is required.'
        print *,'******************************************************'
     endif
     call ftexist(filename, ft_flag, ft_status)

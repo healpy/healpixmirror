@@ -26,8 +26,7 @@ coefficients.}
 , \mylink{sub:write_minimal_header:coordsys}{coordsys}%
 , \mylink{sub:write_minimal_header:creator}{creator}%
 , \mylink{sub:write_minimal_header:version}{version}%
-,
-\mylink{sub:write_minimal_header:randseed}{randseed}%
+, \mylink{sub:write_minimal_header:randseed}{randseed}%
 , \mylink{sub:write_minimal_header:beam_leg}{beam\_leg}%
 , \mylink{sub:write_minimal_header:fwhm_degree}{fwhm\_degree}%
 , \mylink{sub:write_minimal_header:units}{units}%
@@ -36,6 +35,7 @@ coefficients.}
 , \mylink{sub:write_minimal_header:nmmax}{nmmax}%
 , \mylink{sub:write_minimal_header:bcross}{bcross}%
 , \mylink{sub:write_minimal_header:deriv}{deriv}%
+, \mylink{sub:write_minimal_header:asym_cl}{asym\_cl}%
 ]} }
 \end{f90format}
 \aboutoptional
@@ -50,6 +50,11 @@ header\mytarget{sub:write_minimal_header:header}(LEN=80) \hskip 5cm DIMENSION(:)
 dtype\mytarget{sub:write_minimal_header:dtype}(LEN=*)     & CHR & IN    & data to be put in the FITS file, must be
 one of 'ALM', 'CL', 'MAP', 'CUTMAP' (case un-sensitive). \\
 %
+\end{tabular}
+%---------
+\begin{tabular}{p{0.30\hsize} p{0.05\hsize} p{0.08\hsize} p{0.49\hsize}} \hline  
+\textbf{name~\&~dimensionality} & \textbf{kind} & \textbf{in/out} & \textbf{description} \\ \hline
+                   &   &   &                           \\ %%% for presentation
 \optional{append\mytarget{sub:write_minimal_header:append}} & LGT & IN &
 if set to TRUE, the keywords will be appended to the content of {\tt header}
 instead of written from scrath \\
@@ -107,14 +112,19 @@ only applies to dtype='CL' \\
 %
 \optional{deriv\mytarget{sub:write_minimal_header:deriv}     } & I4B & IN & 
 order\mytarget{sub:write_minimal_header:order} of derivatives to included in FITS file (0, 1 or 2); 
-only applies to dtype='MAP'
-
+only applies to dtype='MAP' \\
+%
+\optional{asym\_cl\mytarget{sub:write_minimal_header:asym_cl}    } & LGT & IN &
+if set to {\tt .TRUE.}, the asymmetric power spectra (ET, BT and BE on top of TE, TB and EB)
+are included;
+only applies to dtype='CL' 
 \end{tabular}
 }
 \end{arguments}
 
 \begin{example}
 {
+use healpix\_types \\
 use head\_fits \\
 character(len=80), dimension(1:60) :: header \\
 call \thedocid(header, 'MAP', nside=256, ordering='Nested')  \\

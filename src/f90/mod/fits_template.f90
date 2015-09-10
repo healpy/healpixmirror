@@ -957,24 +957,27 @@ subroutine input_map8_KLOAD(filename, map, npixtot, nmaps, fmissval, header, uni
   end subroutine write_bintab8_KLOAD
   !=======================================================================
   subroutine write_asctab_KLOAD &
-       &  (clout, lmax, ncl, header, nlheader, filename)
+       &  (clout, lmax, ncl, header, nlheader, filename, extno)
     !=======================================================================
-  !     Create a FITS file containing an ASCII table extension with 
-  !     the measured power spectra
-  !     written by EH from writeimage and writeascii 
-  !     (fitsio cookbook package)
-  !
-  !     clout = power spectra with l in (0:lmax)
-  !     ncl = number of spectra
-  !     header = FITS header to be put on top of the file
-  !     nlheader = number of lines of the header
-  !     filename = FITS output file name
-  !=======================================================================
+    !     Create a FITS file containing an ASCII table extension with 
+    !     the measured power spectra
+    !     written by EH from writeimage and writeascii 
+    !     (fitsio cookbook package)
+    !
+    !     clout = power spectra with l in (0:lmax)
+    !     ncl = number of spectra
+    !     header = FITS header to be put on top of the file
+    !     nlheader = number of lines of the header
+    !     filename = FITS output file name
+    !
+    !     2015-09-10: EH, added extno
+    !=======================================================================
     !
     INTEGER(I4B),      INTENT(IN)           :: lmax, ncl,nlheader
-    REAL(KMAP),         INTENT(IN)           ::  clout(0:lmax,1:ncl)
+    REAL(KMAP),        INTENT(IN)           ::  clout(0:lmax,1:ncl)
     CHARACTER(LEN=80), INTENT(IN), DIMENSION(1:nlheader) :: header
     CHARACTER(LEN=*),  INTENT(IN)           :: filename
+    INTEGER(I4B)    ,  INTENT(IN), optional :: extno
 
     INTEGER(I4B) :: bitpix,naxis,naxes(1)
     LOGICAL(LGT) :: simple,extend
@@ -982,53 +985,63 @@ subroutine input_map8_KLOAD(filename, map, npixtot, nmaps, fmissval, header, uni
 
     INTEGER(I4B), PARAMETER :: MAXDIM = MAXDIM_TOP
     INTEGER(I4B) ::  status,unit,blocksize,tfields,nrows,rowlen
-    INTEGER(I4B) ::  nspace,tbcol(MAXDIM),colnum,frow,felem
+    INTEGER(I4B) ::  nspace,tbcol(MAXDIM),colnum,frow,felem,hdutype
     CHARACTER(LEN=16) :: ttype(MAXDIM),tform(MAXDIM),tunit(MAXDIM),extname
     CHARACTER(LEN=80) :: comment, card_tbcol
     CHARACTER(LEN=2) :: stn
-    INTEGER(I4B) :: itn, i
+    INTEGER(I4B) :: itn, i, extno_i
+    character(len=filenamelen) sfilename
     character(len=6)        :: form
     !=======================================================================
     if (KMAP == SP) form = 'E15.7'
     if (KMAP == DP) form = 'D24.15'
-
     status=0
-
     unit = 109
-
-    !     open the FITS file, with write access
-    !      readwrite=1
-    !      call ftopen(unit,filename,readwrite,blocksize,status)
-
     blocksize=1
-    call ftinit(unit,filename,blocksize,status)
 
-    !     -----------------------------------------------------
-    !     initialize parameters about the FITS image
-    simple=.true.
-    bitpix=32     ! integer*4
-    naxis=0       ! no image
-    naxes(1)=0
-    extend=.true. ! there is an extension
+    extno_i = 0
+    if (present(extno)) extno_i = extno
 
-    !     ----------------------
-    !     primary header
-    !     ----------------------
-    !     write the required header keywords
-    call ftphpr(unit,simple,bitpix,naxis,naxes,0_i4b,1_i4b,extend,status)
+    if (extno_i == 0) then
+       call ftinit(unit,filename,blocksize,status)
+       
+       !     -----------------------------------------------------
+       !     initialize parameters about the FITS image
+       simple=.true.
+       bitpix=32     ! integer*4
+       naxis=0       ! no image
+       naxes(1)=0
+       extend=.true. ! there is an extension
+       
+       !     ----------------------
+       !     primary header
+       !     ----------------------
+       !     write the required header keywords
+       call ftphpr(unit,simple,bitpix,naxis,naxes,0_i4b,1_i4b,extend,status)
+       
+       !     writes supplementary keywords : none
+       
+       !     write the current date
+       call ftpdat(unit,status) ! (format ccyy-mm-dd)
+       
+       !     ----------------------
+       !     image : none
+       !     ----------------------
+       
+       !     ----------------------
+       !     extension
+       !     ----------------------
+    else
+       !*********************************************
+       !     reopen an existing file and go to the end
+       !*********************************************
+       ! remove the leading '!' (if any) when reopening the same file
+       sfilename = adjustl(filename)
+       if (sfilename(1:1) == '!') sfilename = sfilename(2:filenamelen)
+       call ftopen(unit,sfilename,1_i4b,blocksize,status)
+       call ftmahd(unit,1_i4b+extno_i,hdutype,status)
 
-    !     writes supplementary keywords : none
-
-    !     write the current date
-    call ftpdat(unit,status) ! (format ccyy-mm-dd)
-
-    !     ----------------------
-    !     image : none
-    !     ----------------------
-
-    !     ----------------------
-    !     extension
-    !     ----------------------
+    endif
 
     !     append a new empty extension onto the end of the primary array
     call ftcrhd(unit,status)

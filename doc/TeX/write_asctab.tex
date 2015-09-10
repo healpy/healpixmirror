@@ -10,7 +10,7 @@
 \abstract{This document describes the \healpix Fortran90 subroutine WRITE\_ASCTAB.}
 
 \begin{facility}
-{This routine stores a power spectrum in an ascii FITS-file. The routine can store temperature coeffecients $C_l^T$ or both temperature and polarisation coeffecients $C_l^T$, $C_l^E$, $C_l^B$, $C_l^{T\times E}$.}
+{This routine stores a power spectrum in an ascii FITS-file. The routine can store temperature coeffecients $C_\ell^T$ or both temperature and polarisation coeffecients $C_\ell^T$, $C_\ell^E$, $C_\ell^B$, $C_\ell^{T\times E}$.}
 {\modFitstools}
 \end{facility}
 
@@ -21,8 +21,10 @@
 , \mylink{sub:write_asctab:header}{header}%
 , \mylink{sub:write_asctab:nlheader}{nlheader}%
 , \mylink{sub:write_asctab:filename}{filename}%
-}
+ \optional{[, \mylink{sub:write_asctab:extno}{extno}%
+]}}
 \end{f90format}
+\aboutoptional
 
 \begin{arguments}
 {
@@ -35,19 +37,28 @@ ncl\mytarget{sub:write_asctab:ncl} & I4B & IN & 1 for temperature coeffecients o
 clout\mytarget{sub:write_asctab:clout}(0:lmax,1:ncl) & SP/ DP & IN & the powerspectrum to be saved in the file.\\
 nlheader\mytarget{sub:write_asctab:nlheader} & I4B & IN & number of header lines to write to the file. \\
 header\mytarget{sub:write_asctab:header}(LEN=80) (1:nlheader) & CHR & IN & the header to the FITS-file. \\ 
+\optional{extno\mytarget{sub:write_asctab:extno}}	& I4B & IN & extension number in which to write the data (0
+                   based). \default {0}
 \end{tabular}
 }
 \end{arguments}
 
 \begin{example}
 {
-call write\_asctab (cl,64,1,header,80,'cl.fits')  \\
+use \htmlref{healpix\_modules}{sub:healpix_modules}\\
+%implicit none \\
+real(\mylink{sub:healpix_types:sp}{SP}), allocatable, dimension(:,:) :: cl \\
+character(len=80), dimension(1:100) :: header \\
+allocate(cl(0:64,1:1))\\
+call \htmlref{write\_minimal\_header}{sub:write_minimal_header}(header,'cl',nlmax=64)\\
+call write\_asctab (cl,64,1,header,100,'cl.fits')  \\
 }
 {
-Writes a powerspectrum in the array cl(0:64,1:1) to a FITS-file called `cl.fits'. The cl array contains the temperature powerspectrum $C_l^T$ up to an $\ell$ value of 64. 80 header lines are written to the file from the array header(1:80).
+Writes a power spectrum in the array cl(0:64,1:1) to a FITS-file called `cl.fits'. The cl array contains the temperature power spectrum $C_\ell^T$ up to an $\ell$ value of 64. 100 header lines are written to the file from the array header(1:100) which was previously filled the minimal required information for a power spectrum file.
 }
 \end{example}
-\newpage
+
+% \newpage
 \begin{modules}
   \begin{sulist}{} %%%% NOTE the ``extra'' brace here %%%%
   \item[\textbf{fitstools}] module, containing:
