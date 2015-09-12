@@ -322,6 +322,18 @@ public class HealpixBaseTest extends TestCase {
       }
     }
 
+  public void testSmallPoly()  throws Exception
+    {
+    System.out.println("Testing small polygon");
+    HealpixBase base = new HealpixBase(1024,Scheme.NESTED);
+    Pointing[] corner = new Pointing[4];
+    corner[0]=new Pointing(2.7190983373838,1.50840508184223);
+    corner[1]=new Pointing(2.7190980835706067,1.5084057923700163);
+    corner[2]=new Pointing(2.719101654815075,1.5084144044115078);
+    corner[3]=new Pointing(2.719101908630556,1.5084136938829422);
+    RangeSet lrs=base.queryPolygon(corner);
+    }
+
   public void test() throws Exception
     {
     int nside=256;

@@ -965,14 +965,14 @@ template<typename I> template<typename I2>
   int flip=0;
   for (tsize i=0; i<nv; ++i)
     {
-    normal[i]=crossprod(vv[i],vv[(i+1)%nv]);
+    normal[i]=crossprod(vv[i],vv[(i+1)%nv]).Norm();
     double hnd=dotprod(normal[i],vv[(i+2)%nv]);
     planck_assert(abs(hnd)>1e-10,"degenerate corner");
     if (i==0)
       flip = (hnd<0.) ? -1 : 1;
     else
       planck_assert(flip*hnd>0,"polygon is not convex");
-    normal[i]*=flip/normal[i].Length();
+    normal[i]*=flip;
     }
   arr<double> rad(ncirc,halfpi);
   if (inclusive)

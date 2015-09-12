@@ -1149,14 +1149,14 @@ public class HealpixBase extends HealpixTables
     int flip=0;
     for (int i=0; i<nv; ++i)
       {
-      normal[i]=vv[i].cross(vv[(i+1)%nv]);
+      normal[i]=vv[i].cross(vv[(i+1)%nv]).norm();
       double hnd=normal[i].dot(vv[(i+2)%nv]);
       HealpixUtils.check(Math.abs(hnd)>1e-10,"degenerate corner");
       if (i==0)
         flip = (hnd<0.) ? -1 : 1;
       else
         HealpixUtils.check(flip*hnd>0,"polygon is not convex");
-      normal[i].scale(flip/normal[i].length());
+      normal[i].scale(flip);
       }
     double[] rad = new double[ncirc];
     Arrays.fill(rad,Constants.halfpi);
