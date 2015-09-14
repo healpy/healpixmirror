@@ -785,6 +785,59 @@ EOF
     echo
 }
 #-------------
+generateConfGdlFile () {
+    echo
+    echo "* Generating $HPX_CONF_GDL"
+    echo "containing:"
+
+
+    echo "# IDL configuration for HEALPix `date`" > $HPX_CONF_GDL
+
+    case $SHELL in
+    csh|tcsh)
+	${CAT} <<EOF >>$HPX_CONF_GDL
+# back up original GDL config, or give default value
+if (\$?GDL_PATH) then
+    setenv OGDL_PATH    "\${GDL_PATH}"
+else
+    setenv OGDL_PATH#    "<GDL_DEFAULT>"
+endif
+if (\$?GDL_STARTUP) then
+    setenv OGDL_STARTUP "\${GDL_STARTUP}"
+else
+    setenv OGDL_STARTUP
+endif
+# create Healpix GDL config, and return to original config after running Healpix-enhanced GDL
+setenv HGDL_PATH  "+\${HEALPIX}/src/idl:\${OGDL_PATH}"
+setenv HGDL_STARTUP \${HEALPIX}/src/idl/HEALPix_startup
+alias  hgdl    'setenv GDL_PATH \${HGDL_PATH} ; setenv GDL_STARTUP \${HGDL_STARTUP} ; gdl   ; setenv GDL_PATH \${OGDL_PATH} ; setenv GDL_STARTUP \${OGDL_STARTUP}'
+EOF
+	;;
+    sh|ksh|bash|zsh)
+	${CAT} <<EOF >>$HPX_CONF_GDL
+# make sure GDL related variables are global
+export GDL_PATH GDL_STARTUP
+# back up original GDL config, or give default value
+OGDL_PATH="\${GDL_PATH-<GDL_DEFAULT>}"
+OGDL_STARTUP="\${GDL_STARTUP}"
+# create Healpix GDL config, and return to original config after running Healpix-enhanced GDL
+HGDL_PATH="+\${HEALPIX}/src/idl:\${OGDL_PATH}"
+HGDL_STARTUP="\${HEALPIX}/src/idl/HEALPix_startup"
+alias hgdl="GDL_PATH=\"\${HGDL_PATH}\"   ; GDL_STARTUP=\${HGDL_STARTUP} ; gdl   ; GDL_PATH=\"\${OGDL_PATH}\" ; GDL_STARTUP=\${OGDL_STARTUP} "
+EOF
+	;;
+    *)
+	echo "Shell $SHELL not supported yet."
+	${RM} $HPX_CONF_GDL
+	crashAndBurn
+	;;
+    esac
+
+    ${CAT} $HPX_CONF_GDL
+    echo
+    echo
+}
+#-------------
 setIdlDefaults () {
 
     papersize="letter"
@@ -811,6 +864,7 @@ setIdlDefaults () {
 idl_config () {
 
     HPX_CONF_IDL=$1
+    HPX_CONF_GDL=$2
     setIdlDefaults
     askPaperSize
     askPS
@@ -818,6 +872,7 @@ idl_config () {
     askPDF
     generateProIdlFile
     generateConfIdlFile
+    generateConfGdlFile
     [ $NOPROFILEYET = 1 ] && installProfile
 }
 
@@ -2045,7 +2100,8 @@ mainMenu () {
     case x$answer in
 	x1) 
 	  eval idlconffile=$HPX_CONF_IDL
-          idl_config $idlconffile;;
+	  eval gdlconffile=$HPX_CONF_GDL
+          idl_config $idlconffile $gdlconffile;;
         x2)
            C_config;;
 	x3)
@@ -2131,6 +2187,7 @@ makeTopConf(){
 HEALPIX=${HEALPIX} ; export HEALPIX 
 HPX_CONF_DIR=${HPX_CONF_DIR}
 if [ -r ${HPX_CONF_IDL} ] ; then . ${HPX_CONF_IDL} ; fi
+if [ -r ${HPX_CONF_GDL} ] ; then . ${HPX_CONF_GDL} ; fi
 if [ -r ${HPX_CONF_F90} ] ; then . ${HPX_CONF_F90} ; fi
 if [ -r ${HPX_CONF_CPP} ] ; then . ${HPX_CONF_CPP} ; fi
 if [ -r ${HPX_CONF_C} ] ;   then . ${HPX_CONF_C} ;   fi
@@ -2142,6 +2199,7 @@ EOF
 setenv HEALPIX $HEALPIX
 setenv HPX_CONF_DIR ${HPX_CONF_DIR}
 if ( -e ${HPX_CONF_IDL} ) source ${HPX_CONF_IDL}
+if ( -e ${HPX_CONF_GDL} ) source ${HPX_CONF_GDL}
 if ( -e ${HPX_CONF_F90} ) source ${HPX_CONF_F90}
 if ( -e ${HPX_CONF_CPP} ) source ${HPX_CONF_CPP}
 if ( -e ${HPX_CONF_C} )   source ${HPX_CONF_C}
@@ -2177,7 +2235,7 @@ restartFromScratch () {
     echo "Removing Main Makefile"
     ${RM} Makefile
     echo "Removing configuration files in " ${HPX_CONF_DIR}
-    for hfile in ${HPX_CONF_MAIN} ${HPX_CONF_IDL} ${HPX_CONF_F90} ${HPX_CONF_CPP} ${HPX_CONF_C} ; do
+    for hfile in ${HPX_CONF_MAIN} ${HPX_CONF_IDL} ${HPX_CONF_GDL} ${HPX_CONF_F90} ${HPX_CONF_CPP} ${HPX_CONF_C} ; do
 	eval thisfile=${hfile}
         ${RM} ${thisfile}
     done
@@ -2243,6 +2301,7 @@ setConfDir () {
 
     HPX_CONF_MAIN=$HPX_CONF_DIR/config
     HPX_CONF_IDL=\${HPX_CONF_DIR}/idl.${suffix}
+    HPX_CONF_GDL=\${HPX_CONF_DIR}/gdl.${suffix}
     HPX_CONF_F90=\${HPX_CONF_DIR}/f90.${suffix}
     HPX_CONF_CPP=\${HPX_CONF_DIR}/cpp.${suffix}
     HPX_CONF_C=\${HPX_CONF_DIR}/c.${suffix}

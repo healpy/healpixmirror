@@ -157,7 +157,7 @@ configuration which is beyond our control.
 %
  & & \\
 %
-  IDL            & This document  & 
+  IDL/GDL        & This document  & 
 \linklatexhtml{''IDL Facilities''}{idl.pdf}{idl.htm}\\
  & & \\
 %
@@ -219,7 +219,7 @@ the above Operating Systems (OS's) and using
 {\tt Makefile.in} as a template for non system-specific statements. 
 Only the basic UNIX make facility is required to build the software, although we do
 still recommend the GNU make facility (\htmladdnormallink{{\tt ftp://ftp.gnu.org/gnu/make/}}{ftp://ftp.gnu.org/gnu/make/}).
-In addition, several environment configuration files and an IDL startup file are
+In addition, several environment configuration files and an IDL/GDL startup file are
 generated. These automatically establish
 various environment variables and aliases to make the use of the
 \healpix package simpler. 
@@ -255,7 +255,7 @@ IDL V \idlversion or more          & \htmladdnormallink{{\tt
                                    &                          \\ \hline %%% for presentation
 \end{tabular}\vspace{3ex}
 while the GNU Data Language \textbf{GDL}, a {\em free} clone of IDL 6.0, can also be used (with some
-caveats, see \S\ref{sec:using_gdl}) and can be downloaded for free from
+caveats, see \S\ref{install:using_gdl}) and can be downloaded for free from
 
 \begin{tabular}{p{0.3\hsize} p{0.6\hsize}} \hline  
   \textbf{Software Package} & \textbf{Source} \\ \hline
@@ -371,7 +371,7 @@ tailored to the user environment.
 \begin{tabular}{p{0.3\hsize} p{0.60\hsize}}
 {\tt \% ./configure} {\em [-L]}    & uses {\tt Makefile.in} as a template to build 
                          the correct Makefile (from user inputs as required), it
-                         will also configure the IDL routines\\
+                         will also configure the IDL/GDL routines\\
 {\tt \% make}           & builds all the facilities \\
 {\tt \% make test}      & tests all the facility previously compiled \\
 {\tt \% make clean}     & removes object ({\tt *.o}) files \\
@@ -491,14 +491,14 @@ when using the most aggressive optimisation level available. \\
 If the HEALPIX configuration file is sourced as described in \S~\ref{subsub:conf}, the full path to the F90
 executables will be added to the environment PATH variable.
 
-\subsubsection{IDL configuration}
+\subsubsection{IDL/GDL configuration}
 You will be asked for the external applications you want to use to visualize the
-Postscript and PNG files created by IDL. \\
+Postscript and PNG files created by IDL (or GDL). \\
 If the HEALPix configuration file is
-sourced as described in \S~\ref{subsub:conf}, the aliases {\tt hidl} and {\tt hidle}
-are also defined to give you access to HEALPIX routines from IDL.\\
+sourced as described in \S~\ref{subsub:conf}, the aliases {\tt hidl}, {\tt hgdl} and {\tt hidle}
+are also defined to give you access to HEALPIX routines from IDL (or GDL).\\
 See the \linklatexhtml{\healpix IDL Document}{idl.pdf}{idl.html} for more
-information on using \healpix IDL together with other IDL libraries.
+information on using \healpix IDL/GDL together with other IDL libraries.
 
 
 \subsubsection{Java installation}
@@ -649,7 +649,7 @@ For more information on their respective origin and underlying model see their F
 
 In order to test the new \healpix profile set-up one can then attempt
 to run any C++ or F90 facility from any directory on your system. Similarly,
-IDL should be tested by invoking {\tt hidl} or {\tt hidlde}.
+IDL (resp GDL) should be tested by invoking {\tt hidl} or {\tt hidlde}  (resp {\tt hgdl}).
 
 
 
@@ -995,7 +995,8 @@ See also \htmladdnormallink{{\tt http://www.idlcoyote.com/misc\_tips/maccursor.h
 Facilities''}{idl.pdf}{idl.htm}).
 
 \subsection{Using GDL instead of IDL}
-\label{sec:using_gdl}
+\label{install:using_gdl}
+\mytarget{install:using_gdl}
 
 GNU Data Language (GDL), is a {\em free} clone of IDL 6.0 (for more information see
 \htmladdnormallink{{\tt http://gnudatalanguage.sourceforge.net}}{http://gnudatalanguage.sourceforge.net}).
@@ -1880,7 +1881,7 @@ classes to be used into other applications or from the web (applets, $\ldots$)
 % 	\end{itemize}
 % 	\item improved compatibility with 
 % \htmladdnormallink{GDL}{http://gnudatalanguage.sourceforge.net} (free IDL
-% clone). See \S\ref{sec:using_gdl} for current GDL limitations.
+% clone). See \S\ref{install:using_gdl} for current GDL limitations.
 % 	\item update of the {\tt IDL-astron} library routines, which now require IDL 6.1 or more
 % 	\item {\tt fits2alm}: new {\tt LMAX=} and {\tt LMIN=} keywords
 % 	\item {\tt fits2cl}: new {\tt LLFACTOR=}  keyword

@@ -80,6 +80,9 @@ endif else begin $
 	print,'!  WARNING: the Healpix routines are currently NOT found  !' & $
 	print,'!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!' & $
 endelse
+
+if (count gt 0 && is_gdl()) then !PROMPT = 'HGDL> '
+
 ;
 ; return to interactive mode
 
