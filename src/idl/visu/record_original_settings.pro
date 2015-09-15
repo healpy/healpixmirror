@@ -61,13 +61,14 @@ if (n_params() ne 1) then begin
 endif
 
 if (keyword_set(restore)) then begin
+    names = tag_names(orig_st)
+
     ; restore PLT settings, if stored in valid structure
     if (tag_names(orig_st.plt,/structure_name) eq '!PLT') then begin
         !p = orig_st.plt
     endif
 
     ; restore color table, if stored in valid structure
-    names = tag_names(orig_st)
     j1 = where(names eq 'RED',   n1)
     j1 = where(names eq 'GREEN', n2)
     j1 = where(names eq 'BLUE',  n3)
@@ -75,11 +76,28 @@ if (keyword_set(restore)) then begin
         tvlct, orig_st.red, orig_st.green, orig_st.blue
     endif
 
+    ; restore original device if it was changed by this routine
+    j1 = where(names eq 'DEVICE_IN',  n1)
+    j1 = where(names eq 'DEVICE_OUT', n2)
+    if ( (n1+n2) eq 2 && (n1*n2) eq 1) then begin
+        if orig_st.device_in ne orig_st.device_out then begin
+            set_plot, orig_st.device_in
+        endif
+    endif
+
 endif else begin
     my_plt = !p
     tvlct, /get, my_red, my_green, my_blue
 
-    orig_st = {plt:my_plt, red:my_red, green:my_green, blue:my_blue}
+    my_device_in = !d.name
+    my_device_out = my_device_in
+    if (my_device_in eq 'X' && getenv('DISPLAY') eq '') then begin
+        message_patch,/info,'X display requested but not properly set.',level=-1
+        message_patch,/info,'Z buffer will be used instead  (set_plot,"Z").', level=-1
+        my_device_out = 'Z'
+        set_plot, my_device_out
+    endif
+    orig_st = {device_in:my_device_in, device_out:my_device_out, plt:my_plt, red:my_red, green:my_green, blue:my_blue}
 endelse
 
 
