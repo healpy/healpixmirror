@@ -575,7 +575,8 @@ endif else begin ; X, png, gif or jpeg output
     free_window    =  (idl_window gt 31) ; random  window if idl_window > 31
     virtual_window =  (idl_window lt 0)  ; virtual window if idl_window < 0
     reuse_window   =  (~free_window && ~virtual_window && !d.window eq idl_window && !d.x_size eq long(xsize) && !d.y_size eq long(ysize*w_dx_dy))
-    use_z_buffer   = (virtual_window && do_image)
+    ;use_z_buffer   = (virtual_window && do_image)
+    use_z_buffer   = ((virtual_window || !d.name eq 'Z') && do_image)
     window_retain  = defined(retain) ? retain : 2
     if (use_z_buffer) then begin
         character_size = [!d.x_ch_size,!d.y_ch_size]

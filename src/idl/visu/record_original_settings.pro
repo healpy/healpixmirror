@@ -82,6 +82,7 @@ if (keyword_set(restore)) then begin
     if ( (n1+n2) eq 2 && (n1*n2) eq 1) then begin
         if orig_st.device_in ne orig_st.device_out then begin
             set_plot, orig_st.device_in
+            message_patch,/info,'Switching back to X windows display.', level=-1
         endif
     endif
 
@@ -92,8 +93,8 @@ endif else begin
     my_device_in = !d.name
     my_device_out = my_device_in
     if (my_device_in eq 'X' && getenv('DISPLAY') eq '') then begin
-        message_patch,/info,'X display requested but not properly set.',level=-1
-        message_patch,/info,'Z buffer will be used instead  (set_plot,"Z").', level=-1
+        message_patch,/info,'X windows display requested but not properly set (DISPLAY=)',level=-1
+        message_patch,/info,'Z buffer will be used instead (set_plot,"Z"), and X preview disabled.', level=-1
         my_device_out = 'Z'
         set_plot, my_device_out
     endif
