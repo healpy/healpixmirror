@@ -114,7 +114,10 @@ commands {\tt hidl} or {\tt hidlde} which are aliases defined in the
 \healpix profile created during the installation process 
 for the package (see \linklatexhtml{the Installation Document}{install.pdf}{install.html}).
 
+
 \subsection{Using \healpix IDL together with other IDL libraries}
+\label{idl:other_idl_libs}
+\mylink{idl:other_idl_libs}
 Many users want to use \healpix IDL routines at the same time as other (home made
 or third party) IDL routines. There are several ways to achieve this:\\
 %
@@ -141,11 +144,15 @@ sh} the behavior of {\tt hidl} shown above, the same (bolder) Albert will type:\
 {\tt export IDL\_STARTUP=}``{\tt +\$\{HEALPIX\}/src/idl/HEALPix\_startup}''\\
 {\tt idl}
 
-
-
+GDL users can do the same, replacing {\tt hidl}, {\tt IDL\_PATH} and {\tt IDL\_STARTUP} 
+with {\tt hgdl}, {\tt GDL\_PATH} and {\tt GDL\_STARTUP} respectively, 
+while {\tt <IDL\_DEFAULT>} must be replaced by the default value of {\tt \$\{GDL\_PATH\}}.\\
+Of course, {\tt \$\{HEALPIX\}/src/idl} (and all the {\tt +} signs) remain unchanged.
 
 \subsection{Using GDL instead of IDL}
 See the section ``\htmlref{Using GDL instead of IDL}{install:using_gdl}'' in \linklatexhtml{the Installation Document}{install.pdf}{install.html} for more information on this issue.
+
+
 
 %%%%%%
 \newpage
@@ -174,6 +181,9 @@ origin and type of character font;
 to read best fit $C(\ell)$ model to Planck 2015 data.
 %
 \item new routines \htmlref{{\tt nest2uniq}}{idl:nest2uniq} and \htmlref{{\tt uniq2nest}}{idl:uniq2nest} for conversion of standard pixel index to/from Unique ID number. See \htmlref{''The Unique Identifier scheme''}{intro:unique} section in \linklatexhtml{''\healpix Introduction Document''}{intro.pdf}{intro.htm} for more details.
+%
+\item a \healpix enabled GDL command ({\tt hgdl}) is defined during the 
+\htmlref{configuration process}{install:idlgdlconfig}.
 %
 \item update of the required
     \htmladdnormallink{{\tt IDL-astron} library}{http://idlastro.gsfc.nasa.gov/homepage.html}

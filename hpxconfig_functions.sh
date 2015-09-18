@@ -571,7 +571,8 @@ Healpy_config () {  # for healpy 1.7.0
     # test python version number
     ${HPY_PYTHON} --version 1> ${tmpfile} 2>&1
     python_version=`${CAT} ${tmpfile} | ${AWK} '{print \$NF}'` # current version
-    python_reqrd="2.4" # minimal version supported
+    #python_reqrd="2.4" # minimal version supported
+    python_reqrd="2.6" # minimal version supported
     p_v1=`echo ${python_version} | ${AWK} '{print $1*10}'`
     p_v2=`echo ${python_reqrd}   | ${AWK} '{print $1*10}'`
     ${RM} ${tmpfile}

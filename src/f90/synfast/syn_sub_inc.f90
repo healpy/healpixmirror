@@ -85,7 +85,7 @@
   integer(I4B) i, j, junk
   integer(I4B) iseed, ioriginseed
   integer(I4B) simul_type
-  integer(I4B) polar
+  integer(I4B) polar, polar_cl
   integer(I4B) nlheader, nalms, extnum_alms
   integer(I8B) :: n_plm
   integer(I4B) :: plm_nside, plm_lmax, plm_pol, plm_mmax
@@ -394,7 +394,9 @@
   alm_TGC = 0. ! very important
 
   if (input_cl) then
-     call create_alm(nsmax, nlmax, nmmax, polar, &
+     polar_cl =     polar  ! 0 or 1: input 1 or 4 field spectrum
+     !polar_cl = 2 * polar  ! 0 or 2; input 1 or 6 field spectrum
+     call create_alm(nsmax, nlmax, nmmax, polar_cl, &
           & infile, rng_handle, fwhm_arcmin, &
           & alm_TGC, header_PS, windowfile, units=units_alm, beam_file=beam_file)
      units_map(1:n_pols) = units_alm(1:n_pols)

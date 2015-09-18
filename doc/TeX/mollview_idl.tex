@@ -655,8 +655,8 @@ once by gathering the respective structures into one meta-structure or an array.
 or {\tt orthographic}, \\
 	      if set to a file name  : outputs the plot in that file \\
 		\default 0 \\
-The PDF file is produced from a PostScript file using the script \htmladdnormallink{{\tt epstopdf}}{http://tug.org/epstopdf/} now shipped with \healpix (and which usually requires the fairly widespread 
-\htmladdnormallink{{\tt Ghostscript}}{https://en.wikipedia.org/wiki/Ghostscript}).\\
+The PDF file is produced from a PostScript file using the script \htmladdnormallink{{\tt epstopdf}}{http://tug.org/epstopdf/} now shipped with \healpix. Note that {\tt epstopdf} usually requires a fully functional implementation of the fairly widespread {\tt gs}, aka
+\htmladdnormallink{{\tt Ghostscript}}{https://en.wikipedia.org/wiki/Ghostscript}, which may however not be available on the computation dedicated nodes of some computer clusters.\\
                \seealso 
 \mylink{idl:mollview:preview}{Preview}, 
 \mylink{idl:mollview:gif}{Gif}, 
@@ -938,7 +938,7 @@ and \mylink{idl:mollview:max}{MAX} keywords are ignored).
                  IDL window index (integer)\\
                -- if WINDOW $< 0$: virtual window: no visible window opened. Can
                  be used with \mylink{idl:mollview:png}{PNG}, \mylink{idl:mollview:jpeg}{JPEG}, 
- or \mylink{idl:mollview:gif}{GIF}, in particular is those files are
+ or \mylink{idl:mollview:gif}{GIF}, in particular if those files are
 larger than the screen. {\bf Note:} The Z buffer will be used instead of the X server,
 allowing much faster production of the image over a slow network\\
                -- if WINDOW in $[0,31]$: the specified IDL window with index WINDOW is used
@@ -946,7 +946,7 @@ allowing much faster production of the image over a slow network\\
 in the same window \\
                -- if WINDOW $> 31$: a free ($=$unused) window with a random index $> 31$ will be
                created and used. \\
-	       \default{32}		 
+	       \default{32, if X server properly set; -1, otherwise}		 
                   }\\
 
 {XPOS=}\mytarget{idl:mollview:xpos}  & \mylink{idl:mollview:routines}{all}  & \parbox[t]{\hsize}{

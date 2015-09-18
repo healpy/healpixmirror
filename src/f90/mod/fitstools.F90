@@ -2441,10 +2441,10 @@ contains
                 defpol(1:ndp,1) = (/ "GRA","E-M","POW","EE " /)
                 defpol(1:ndp,2) = (/ "CUR","B-M","POW","BB " /)    
              endif
-             if (hdutype == 2) then ! binary table -> maps
-                ndp = 4
-                defpol(1:ndp,1) = (/ "Q-P","Q_P","Q P","Q  " /)
-                defpol(1:ndp,2) = (/ "U-P","U_P","U P","U  " /)
+             if (hdutype == 2) then ! binary table -> maps or power spectra
+                ndp = 8
+                defpol(1:ndp,1) = (/ "Q-P","Q_P","Q P","Q  ","GRA","E-M","POW","EE " /)
+                defpol(1:ndp,2) = (/ "U-P","U_P","U P","U  ","CUR","B-M","POW","BB " /)
              endif
              pf(:) = .false.
              do i = 2, tfields ! do not consider first field (generally temperature)
@@ -2491,16 +2491,16 @@ contains
     if (order_val(1:4) == 'RING') ordering_in = 1
     if (order_val(1:4) == 'NEST') ordering_in = 2
 
-    if (present(nmaps)) nmaps = nmaps_in
-    if (present(mlpol)) mlpol = mlpol_in
-    if (present(obs_npix)) obs_npix = obs_npix_in
-    if (present(ordering)) ordering = ordering_in
-    if (present(nside)) nside = nside_in
-    if (present(type)) type = ftype_in
+    if (present(nmaps))       nmaps       = nmaps_in
+    if (present(mlpol))       mlpol       = mlpol_in
+    if (present(obs_npix))    obs_npix    = obs_npix_in
+    if (present(ordering))    ordering    = ordering_in
+    if (present(nside))       nside       = nside_in
+    if (present(type))        type        = ftype_in
     if (present(fwhm_arcmin)) fwhm_arcmin = fwhm_arcmin_in
-    if (present(beam_leg)) beam_leg = adjustl(beam_leg_in)
-    if (present(coordsys)) coordsys = adjustl(coordsys_in)
-    if (present(polcconv)) polcconv = polcconv_in
+    if (present(beam_leg))    beam_leg    = adjustl(beam_leg_in)
+    if (present(coordsys))    coordsys    = adjustl(coordsys_in)
+    if (present(polcconv))    polcconv    = polcconv_in
 
     return
   end function getsize_fits

@@ -287,7 +287,7 @@ The  \textbf{Python} {\tt healpy} package requires
 \begin{tabular}{p{0.3\hsize} p{0.6\hsize}} \hline  
   \textbf{Software Package} & \textbf{Source} \\ \hline
                             &                          \\ %%% for presentation
-Python 2.4 to 2.7         & \htmladdnormallink{{\tt http://www.python.org}}{http://www.python.org}
+Python 2.6, 2.7, or 3.2--3.5         & \htmladdnormallink{{\tt http://www.python.org}}{http://www.python.org}
 			\\
 Numpy 1.0.1 or more         & \htmladdnormallink{{\tt http://numpy.scipy.org}}{http://numpy.scipy.org}
 			\\
@@ -492,11 +492,13 @@ If the HEALPIX configuration file is sourced as described in \S~\ref{subsub:conf
 executables will be added to the environment PATH variable.
 
 \subsubsection{IDL/GDL configuration}
+\label{install:idlgdlconfig}
+\mytarget{install:idlgdlconfig}
 You will be asked for the external applications you want to use to visualize the
 Postscript and PNG files created by IDL (or GDL). \\
 If the HEALPix configuration file is
-sourced as described in \S~\ref{subsub:conf}, the aliases {\tt hidl}, {\tt hgdl} and {\tt hidle}
-are also defined to give you access to HEALPIX routines from IDL (or GDL).\\
+sourced as described in \S~\ref{subsub:conf}, the aliases {\tt hidl}, {\tt hidlde} (and {\tt hgdl})
+are also defined to give you access to HEALPIX routines from IDL (and GDL).\\
 See the \linklatexhtml{\healpix IDL Document}{idl.pdf}{idl.html} for more
 information on using \healpix IDL/GDL together with other IDL libraries.
 
@@ -505,17 +507,19 @@ information on using \healpix IDL/GDL together with other IDL libraries.
 The configuration and installation of the Healpix Java package is currently
 handled separately. See table~\ref{tab:allpackages} for more information.
 
-\subsubsection{Python installation}
-The {\tt ./configure} script will 
-ask for the parent directory containing the {\tt lib/libcfitsio.*} library and
-the {\tt
-include/fitsio.h} include file (therefore {\tt /usr/local} or {\tt /usr} often are the correct
-choices) and
-the environment variable CFITSIO\_EXT\_PREFIX
-will be set accordingly.\\
+\subsubsection{Python (healpy) installation}
+% The {\tt ./configure} script will 
+% ask for the parent directory containing the {\tt lib/libcfitsio.*} library and
+% the {\tt
+% include/fitsio.h} include file (therefore {\tt /usr/local} or {\tt /usr} often are the correct
+% choices) and
+% the environment variable CFITSIO\_EXT\_PREFIX
+% will be set accordingly.\\
 % The configuration and installation of the Healpix Python package (healpy) is currently
 % not handled by the {\tt configure} script: see table~\ref{tab:allpackages} for more
 % information. 
+The {\tt ./configure} script will ask for the Python command you want to use 
+(in case many coexist on your computer) and will check that its version number meets the {\tt healpy} requirements (see above).
 Note that during the compilation with {\tt make} (see below), the 
  {\tt src/healpy/setup.py} Python script will be invoked to automatically prompt a {\em fresh} compilation of the
  {\tt src/cxx/*} libraries, with all the options necessary to Python linkage, and
@@ -649,7 +653,7 @@ For more information on their respective origin and underlying model see their F
 
 In order to test the new \healpix profile set-up one can then attempt
 to run any C++ or F90 facility from any directory on your system. Similarly,
-IDL (resp GDL) should be tested by invoking {\tt hidl} or {\tt hidlde}  (resp {\tt hgdl}).
+IDL (and/or GDL) can be tested by invoking {\tt hidl} or {\tt hidlde}  (resp. {\tt hgdl}).
 
 
 
@@ -968,6 +972,9 @@ be available only when desired.
 A proper fix requires the user to ask the local system
 administrator to adjust the local IDL script.
 
+\subsection{Using \healpix IDL together with other IDL libraries}
+See the \htmlref{eponymous section}{idl:other_idl_libs} in the \linklatexhtml{``IDL Facilities Overview''}{idl.pdf}{idl.html}
+
 \subsection{Mac OS X,  X11 and IDL cursor}
 If the IDL cursor does not work correctly on X11 windows under Mac OS X, and the
 2nd and 3rd button clicks are ineffective, 
@@ -1004,7 +1011,7 @@ Both the source code and precompiled executables for various platforms are avail
 
 When used to run IDL-Healpix routines, GDL \gdlversion or more gives
 satisfactory results\footnote{All the caveats listed below have been noticed in
-GDL v0.9.2 and v0.9.3
+GDL v0.9.3
 and may be solved in subsequent versions. Please send all your questions
 {\em on} GDL directly to GDL developpers.}. The calculations agree with those done under IDL, with
 comparable computation times, but a few features are missing in the production
@@ -1034,55 +1041,58 @@ If your shell is csh or tcsh:\\
 % They will run properly under GDL.
 
 \item
-Please note that GDL must be linked with {\tt ImageMagick} during installation to produce PNG and JPEG
+Please note that GDL must be linked with 
+\htmladdnormallink{\tt ImageMagick}{http://www.imagemagick.org}
+(or \htmladdnormallink{\tt GraphicsMagick}{http://www.graphicsmagick.org/}) 
+during installation to produce PNG and JPEG
 output files.
 
 \end{enumerate}
 
-\subsubsection*{Requirements specific to GDL 0.9.2}
+% \subsubsection*{Requirements specific to GDL 0.9.2}
 
-\begin{enumerate}
-\item
-\healpix requires a few IDL routines that were not yet part of GDL 0.9.2
-Among those is
-\begin{itemize}
-\item {\tt congrid.pro},
-\end{itemize}
-which can be downloaded from
-\htmladdnormallink{{\tt http://idlastro.gsfc.nasa.gov/idl\-lib\-srch.html}}
-{http://idlastro.gsfc.nasa.gov/idllibsrch.html}. {\em Fixed in GDL v0.9.3}
+% \begin{enumerate}
+% \item
+% \healpix requires a few IDL routines that were not yet part of GDL 0.9.2
+% Among those is
+% \begin{itemize}
+% \item {\tt congrid.pro},
+% \end{itemize}
+% which can be downloaded from
+% \htmladdnormallink{{\tt http://idlastro.gsfc.nasa.gov/idl\-lib\-srch.html}}
+% {http://idlastro.gsfc.nasa.gov/idllibsrch.html}. {\em Fixed in GDL v0.9.3}
 
-\item
-Some GDL 0.9.2 routines written in IDL language were faulty, and should be replaced by working implementations.
-Among those is
-\begin{itemize}
-\item {\tt swap\_endian\_inplace.pro},
-\end{itemize}
-which should be replaced with the original IDL version found at the same
-location as above, or with the patch found in \htmladdnormallink{GDL Bugs
-monitor}{http://sourceforge.net/tracker/index.php?func=detail&aid=3454317&group_id=97659&atid=618683}.
-{\em Fixed in GDL v0.9.3}
+% \item
+% Some GDL 0.9.2 routines written in IDL language were faulty, and should be replaced by working implementations.
+% Among those is
+% \begin{itemize}
+% \item {\tt swap\_endian\_inplace.pro},
+% \end{itemize}
+% which should be replaced with the original IDL version found at the same
+% location as above, or with the patch found in \htmladdnormallink{GDL Bugs
+% monitor}{http://sourceforge.net/tracker/index.php?func=detail&aid=3454317&group_id=97659&atid=618683}.
+% {\em Fixed in GDL v0.9.3}
 
-\item
-The {\tt doc\_library} feature of IDL, invoked by many \healpix\ routines via
-the {\tt /HELP} keyword, will not work natively under GDL 0.9.2. A work-around is to install in the GDL path the IDL routines
-\begin{itemize}
-\item {\tt dl\_dos.pro},
-\item {\tt dl\_mac.pro},
-\item {\tt dl\_unix.pro},
-\item {\tt dl\_vms.pro},
-\item {\tt doc\_library.pro},
-\end{itemize}
-which can only be found in IDL packages
-({\tt \$IDL\_DIR/lib/*.pro}). 
-It is also necessary to copy the shell script {\tt \$IDL\_DIR/bin/doc\_library}
-into {\tt \$GDL\_DIR/bin/doc\_library} (ie, right next to the GDL executable). {\em Fixed in GDL v0.9.3}
-\end{enumerate}
+% \item
+% The {\tt doc\_library} feature of IDL, invoked by many \healpix\ routines via
+% the {\tt /HELP} keyword, will not work natively under GDL 0.9.2. A work-around is to install in the GDL path the IDL routines
+% \begin{itemize}
+% \item {\tt dl\_dos.pro},
+% \item {\tt dl\_mac.pro},
+% \item {\tt dl\_unix.pro},
+% \item {\tt dl\_vms.pro},
+% \item {\tt doc\_library.pro},
+% \end{itemize}
+% which can only be found in IDL packages
+% ({\tt \$IDL\_DIR/lib/*.pro}). 
+% It is also necessary to copy the shell script {\tt \$IDL\_DIR/bin/doc\_library}
+% into {\tt \$GDL\_DIR/bin/doc\_library} (ie, right next to the GDL executable). {\em Fixed in GDL v0.9.3}
+% \end{enumerate}
 
 
 \subsubsection*{Impact of GDL limitations on \healpix}
 \begin{itemize}
-\item {\tt Ximview} won't work under GDL 0.9.2 nor 0.9.3 (because it requires the
+\item {\tt Ximview} won't work under GDL 0.9.3 (because it requires the
 IDL native routine {\tt WIDGET\_DRAW})
 \item When run under GDL, the 
 \htmlref{{\tt cartview}, {\tt gnomview}, {\tt mollview} and {\tt orthview}}{idl:mollview} 
@@ -1098,10 +1108,11 @@ transparent in the output PNG file.
 \end{itemize}
 
 \subsubsection*{\healpix with GDL status update}
-Some of the caveats and limitations detailled above, and others not listed here, 
+Some of the caveats and limitations detailed above, and other not listed here, 
 are still present in GDL 0.9.4 (Sept 2013) and 0.9.5 (Oct 2014).
-However, they are clearly identified and actively looked at by the GDL development team and 
-should be fixed in the forthcoming GDL 0.9.6.
+However, they are clearly identified and actively looked at by the GDL 
+development team and most of them
+should be fixed in the forthcoming GDL 0.9.6 (expected late 2015).
 
 
 %******************************************************************************
@@ -1125,8 +1136,8 @@ should be fixed in the forthcoming GDL 0.9.6.
 % \subsubsection[Java]{\htmladdnormallink{Java}{http://healpix.sourceforge.net/html/java/index.html}}
 % \subsubsection[Python]{\htmladdnormallink{Python}{http://healpy.readthedocs.org/en/latest/}}
 
-\subsubsection[General]{General}
-\subsubsection[C]{\linklatexhtml{C}{csub.pdf}{csub.htm}}
+% \subsubsection[General]{General}
+% \subsubsection[C]{\linklatexhtml{C}{csub.pdf}{csub.htm}}
 \subsubsection[C++]{\htmladdnormallink{C++}{http://healpix.sourceforge.net/html/index_cxx.htm}}
 \begin{itemize}
 \item switch from custom {\tt xcomplex} class to {\tt std::complex};
@@ -1182,6 +1193,9 @@ origin and type of character font;
 to read best fit $C(\ell)$ model to Planck 2015 data.
 %
 \item new routines \htmlref{{\tt nest2uniq}}{idl:nest2uniq} and \htmlref{{\tt uniq2nest}}{idl:uniq2nest} for conversion of standard pixel index to/from Unique ID number. See \htmlref{''The Unique Identifier scheme''}{intro:unique} section in \linklatexhtml{''\healpix Introduction Document''}{intro.pdf}{intro.htm} for more details.
+%
+\item a \healpix enabled GDL command ({\tt hgdl}) is defined during the 
+\htmlref{configuration process}{install:idlgdlconfig}.
 %
 \item update of the required
     \htmladdnormallink{{\tt IDL-astron} library}{http://idlastro.gsfc.nasa.gov/homepage.html}
