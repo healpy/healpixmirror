@@ -167,7 +167,7 @@ data2azeq, $
   MAX=max_set, MIN=min_set, $
   RESO_ARCMIN = reso_arcmin, FITS = fits, FLIP=flip, DATA_plot = data_plot, $
   POLARIZATION=polarization, SILENT=silent, PIXEL_LIST=pixel_list, ASINH=asinh, $
-  TRUECOLORS=truecolors, DATA_TC=data_tc, MAP_OUT=map_out, HALF_SKY=half_sky
+  TRUECOLORS=truecolors, DATA_TC=data_tc, MAP_OUT=arg_present(map_out) ? map_out : -1, HALF_SKY=half_sky
 
 proj2out, $
   planmap, Tmax, Tmin, color_bar, dx, title_display, $

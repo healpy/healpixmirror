@@ -184,7 +184,8 @@ data2orth, $
   NO_DIPOLE=no_dipole, NO_MONOPOLE=no_monopole, UNITS=sunits, DATA_plot = data_plot, GAL_CUT=gal_cut, $
   POLARIZATION=polarization, HALF_SKY=half_sky, SILENT=silent, PIXEL_LIST=pixel_list, ASINH=asinh, $
   DO_SHADE=do_shade, SHADEMAP=shademap, $
-  TRUECOLORS=truecolors, DATA_TC=data_tc, MAP_OUT=map_out, ROT=rot, FITS=fits, STAGGER=stagger
+  TRUECOLORS=truecolors, DATA_TC=data_tc, MAP_OUT=arg_present(map_out) ? map_out : -1, $
+  ROT=rot, FITS=fits, STAGGER=stagger
 
 proj2out, $
   planmap, Tmax, Tmin, color_bar, 0., title_display, $

@@ -697,7 +697,7 @@ data2moll, $
   PXSIZE=pxsize, LOG=log, HIST_EQUAL=hist_equal, MAX=max_set, MIN=min_set, FLIP=flip,  $
   NO_DIPOLE=no_dipole, NO_MONOPOLE=no_monopole, UNITS=sunits, DATA_plot = data_plot, GAL_CUT=gal_cut, $
   POLARIZATION=polarization, SILENT=silent, PIXEL_LIST=pixel_list, ASINH=asinh, $
-  TRUECOLORS=truecolors, DATA_TC=data_tc, MAP_OUT = map_out, ROT=rot, FITS=fits
+  TRUECOLORS=truecolors, DATA_TC=data_tc, MAP_OUT = arg_present(map_out) ? map_out : -1, ROT=rot, FITS=fits
 
 proj2out, $
   planmap, Tmax, Tmin, color_bar, 0., title_display, $

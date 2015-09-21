@@ -44,6 +44,16 @@ endcase
 return, y
 end
 ;----------------------------------
+function my_sub_interpolate, data, x
+;
+; interpolate function that keeps working for scalar data
+;
+if n_elements(data) eq 1 then data = [data]
+y = interpolate(float(data), x)
+return, y
+end
+
+;----------------------------------
 
 function color_map, data, mindata, maxdata, Obs, $
                     color_bar = color_bar, mode = mode, minset = min_set, maxset = max_set, silent = silent
@@ -163,21 +173,22 @@ if (do_hist) then begin
 ;   histogram equalised scaling
     Tmax = maxdata & Tmin = mindata
     Bs = (Tmax-Tmin)/5000. ;MIN( [(Tmax-Tmin)/5000.,2.] )
+    if (Bs eq 0.) then Bs=1.d-30 ; robust to narrow (or zero) range maps
     if (N_No_Obs eq 0) then begin
         Phist = HISTOGRAM( data, Min=Tmin, Max=Tmax, Bin = Bs )
         Phist = total(Phist,/cumul)
         Phist[0] = 0.
-        Junk = INTERPOLATE( FLOAT(Phist), (data-Tmin)/Bs )
+        Junk = my_sub_interpolate( Phist, (data-Tmin)/Bs )
         Color = 3B + BYTSCL( Junk, Top=N_Color-4 )
     endif else begin 
         Phist = HISTOGRAM( data[Obs], Min=Tmin, Max=Tmax, Bin = Bs )
         Phist = total(Phist,/cumul)
         Phist[0] = 0.
-        Junk = INTERPOLATE( FLOAT(Phist), (data[Obs]-Tmin)/Bs )
+        Junk = my_sub_interpolate( Phist, (data[Obs]-Tmin)/Bs )
         Color[Obs] = 3B + BYTSCL( Junk, Top=N_Color-4 )
     endelse
 
-    junk2= INTERPOLATE( FLOAT(Phist), col_scl*(Tmax-Tmin)/bs )
+    junk2= my_sub_interpolate( Phist, col_scl*(Tmax-Tmin)/bs )
     color_bar = (3B + BYTSCL( junk2, TOP = N_Color-4 ))
 
 endif else begin

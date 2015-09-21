@@ -118,6 +118,7 @@ n_uv = xsize*ysize
 indlist = (n_elements(pixel_list) eq obs_npix)
 small_file = (n_uv GT obs_npix)  && ~do_map_out &&~do_fits
 ;small_file = ((n_uv GT npix)  and not do_poldirection)
+dtype = size(data,/type) eq 5 ? 5 : 4 ; double (5) or float (4) by default
 
 if (small_file) then begin
     ; file smaller than final map, make costly operation on the file
@@ -181,10 +182,10 @@ if (small_file) then begin
     Tmin = mindata & Tmax = maxdata
     planmap = MAKE_ARRAY(/BYTE, xsize, ysize, zsize, Value = !P.BACKGROUND) ; white
 endif else begin ; large file
-    planmap = MAKE_ARRAY(/FLOAT, xsize, ysize, zsize, Value = bad_data) 
+    planmap = MAKE_ARRAY(type=dtype, xsize, ysize, zsize, Value = bad_data) 
     plan_off = 0L
 endelse
-if do_polvector then planvec = MAKE_ARRAY(/FLOAT,xsize,ysize, 2, Value = bad_data) 
+if do_polvector then planvec = MAKE_ARRAY(type=dtype,xsize,ysize, 2, Value = bad_data) 
 
 ; -------------------------------------------------
 ; make the projection

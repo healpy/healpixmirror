@@ -1177,7 +1177,7 @@ routine to avoid a bug specific to Intel's Ifort 15.0.2
 \subsubsection[IDL]{\linklatexhtml{IDL}{idl.pdf}{idl.htm}}
 \begin{itemize}
 %
-\item \htmlref{{\tt cartview, gnomview, mollview,
+\item \htmlref{{\tt azeqview, cartview, gnomview, mollview,
 orthview}}{idl:mollview} visualization routines:
 \begin{itemize}
  \item addition of \mylink{idl:mollview:pdf}{{\tt PDF}} keyword for production of Adobe PDF outputs;
@@ -1186,7 +1186,9 @@ orthview}}{idl:mollview} visualization routines:
  \item addition of \mylink{idl:mollview:pfonts}{{\tt PFONTS}} keyword to select 
 origin and type of character font;
  \item the \mylink{idl:mollview:crop}{{\tt CROP}} keyword now has the same behavior for all output media (GIF, JPEG, PDF, PNG, PS, ... and X);  % 
-  the \mylink{idl:mollview:nobar}{{\tt NOBAR}} keyword now removes the color bar {\em or} the polarization color wheel, as applicable.
+  the \mylink{idl:mollview:nobar}{{\tt NOBAR}} keyword now removes the color bar {\em or} the polarization color wheel, as applicable; %
+ correct EQUINOX date in header of output \mylink{idl:mollview:fits}{FITS} map; %
+ the double precision maps and those with constant value are now correctly handled.
 \end{itemize}
 %
 \item \htmlref{{\tt fits2cl}}{idl:fits2cl}: addition of \mylink{idl:fits2cl:planck2}{{\tt /PLANCK2}} keyword

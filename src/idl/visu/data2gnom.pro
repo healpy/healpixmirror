@@ -102,6 +102,7 @@ zsize = (do_true) ? 3 : 1
 N_uv = xsize*ysize
 indlist = (n_elements(pixel_list) eq n_elements(data[*,0]))
 small_file = ((!pi*4./dx^2 GT npix_full && do_poldirection))
+dtype = size(data,/type) eq 5 ? 5 : 4 ; double (5) or float (4) by default
 
 
 if (~keyword_set(silent)) then begin
@@ -174,11 +175,11 @@ if (small_file) then begin
     if defined(Obs) then Obs = 0
     Tmin = mindata & Tmax = maxdata
     color = MAKE_ARRAY(/BYTE, xsize, ysize, zsize, Value = !P.BACKGROUND) ; white
-    grid = FLTARR(xsize, ysize)
+    grid  = MAKE_ARRAY(type=dtype, xsize, ysize)
 endif else begin ; large
-    grid = FLTARR(xsize, ysize, zsize)
+    grid  = MAKE_ARRAY(type=dtype, xsize, ysize, zsize)
 endelse
-if do_polvector then planvec = MAKE_ARRAY(/FLOAT,xsize,ysize, 2, Value = bad_data) 
+if do_polvector then planvec = MAKE_ARRAY(type=dtype,xsize,ysize, 2, Value = bad_data) 
 ; -------------------------------------------------------------
 ; makes the projection around the chosen contact point
 ; -------------------------------------------------------------
