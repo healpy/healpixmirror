@@ -812,6 +812,7 @@ endif
 setenv HGDL_PATH  "+\${HEALPIX}/src/idl:\${OGDL_PATH}"
 setenv HGDL_STARTUP \${HEALPIX}/src/idl/HEALPix_startup
 alias  hgdl    'setenv GDL_PATH \${HGDL_PATH} ; setenv GDL_STARTUP \${HGDL_STARTUP} ; gdl   ; setenv GDL_PATH \${OGDL_PATH} ; setenv GDL_STARTUP \${OGDL_STARTUP}'
+alias  hgdlde  'setenv GDL_PATH \${HGDL_PATH} ; setenv GDL_STARTUP \${HGDL_STARTUP} ; gdlde ; setenv GDL_PATH \${OGDL_PATH} ; setenv GDL_STARTUP \${OGDL_STARTUP}'
 EOF
 	;;
     sh|ksh|bash|zsh)
@@ -825,6 +826,7 @@ OGDL_STARTUP="\${GDL_STARTUP}"
 HGDL_PATH="+\${HEALPIX}/src/idl:\${OGDL_PATH}"
 HGDL_STARTUP="\${HEALPIX}/src/idl/HEALPix_startup"
 alias hgdl="GDL_PATH=\"\${HGDL_PATH}\"   ; GDL_STARTUP=\${HGDL_STARTUP} ; gdl   ; GDL_PATH=\"\${OGDL_PATH}\" ; GDL_STARTUP=\${OGDL_STARTUP} "
+alias hgdlde="GDL_PATH=\"\${HGDL_PATH}\" ; GDL_STARTUP=\${HGDL_STARTUP} ; gdlde ; GDL_PATH=\"\${OGDL_PATH}\" ; GDL_STARTUP=\${OGDL_STARTUP} "
 EOF
 	;;
     *)

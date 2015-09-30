@@ -193,8 +193,10 @@ empty: nops nopdf
 	$(RM) -r $(HTMLDIR)
 
 
+allpdf: empty pdf crossref
+	@echo "$(GREEN_COLOR)           All PDF Done !         $(NO_COLOR)"
 
 all: empty pdf crossref html
-	@echo "$(GREEN_COLOR)        All Done !           $(NO_COLOR)"
+	@echo "$(GREEN_COLOR)        All PDF+HTML Done !      $(NO_COLOR)"
 
 

@@ -43,7 +43,8 @@ foreach name ($fulllist)
 		if ($n > 0) then
 		   @ missing ++
 		   echo '--------'$name $missing'--------'
-		   grep -i "[ =(]${name}[ ,;(]" *pro | grep -v ':;' | grep -i $name
+		   #grep -i "[ =(]${name}[ ,;(]" *pro | grep -v ':;' | grep -i $name
+		   grep -i -E "[^[:alpha:]/_;]${name}[^[:alpha:]_]" *pro | grep -v ':;' | grep -i $name
 		   echo	
 		endif	
 	endif	

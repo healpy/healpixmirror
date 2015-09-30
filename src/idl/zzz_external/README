@@ -171,4 +171,17 @@ CGCOLOR CGPICKCOLORNAME CGPSDIMS CGSYMCAT FITS_INFO FXHMODIFY HEADFITS REPSTR SX
 
   2015-07-01
 
+----------------
 
+5 routines updated in astron(**)
+FXADDPAR FXPAR MAKE_ASTR REPSTR SXPAR
+
+9 routines added from coyote and astron
+CGDEFCHARSIZE CGFIXPS  CGPS_CLOSE CGPS_CONFIG CGPS_OPEN CGPSWINDOW CGWINDOW_SETDEFS JULDATE YDN2MD
+
+ (**) This version of astron requires IDL v6.4 or newer.
+      Done with version 2015-09-23
+
+  2015-09-30
+
+----------------

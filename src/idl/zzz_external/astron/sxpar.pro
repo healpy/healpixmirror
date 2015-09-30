@@ -1,5 +1,5 @@
 function SXPAR, hdr, name, abort, COUNT=matches, COMMENT = comments, $
-                                  NoContinue = NoContinue, SILENT = silent
+                IFound = number, NoContinue = NoContinue, SILENT = silent
 ;+
 ; NAME:
 ;      SXPAR
@@ -38,6 +38,11 @@ function SXPAR, hdr, name, abort, COUNT=matches, COMMENT = comments, $
 ;               parameters found by SXPAR, integer scalar
 ;
 ;       COMMENT - Array of comments associated with the returned values
+;       IFOUND - Array of found keyword indicies when Name is of the form keyword*
+;              For example, one searches for 'TUNIT*' and the FITS header contains
+;              TUNIT1, TUNIT2, TUNIT4, and TUNIT6 then IFOUND woud be returned as
+;              [1,2,4,6].    Set to zero if Name is not of the form keyword*.
+
 ;
 ; OUTPUTS:
 ;       Function value = value of parameter in header.
@@ -123,6 +128,8 @@ function SXPAR, hdr, name, abort, COUNT=matches, COMMENT = comments, $
 ;       W. Landsman Apr 2014  Don't convert Long64 numbers to double
 ;       W. Landsman Nov 2014  Use cgErrorMsg rather than On_error,2
 ;       W. Landsman Dec 2014  Return Logical as IDL Boolean in IDL 8.4 or later
+;       W. Landsman May 2015  Added IFound output keyword
+;       J. Slavin Aug 2015 Allow for 72 character par values (fixed from 71)
 ;-
 ;----------------------------------------------------------------------
  compile_opt idl2
@@ -185,6 +192,7 @@ function SXPAR, hdr, name, abort, COUNT=matches, COMMENT = comments, $
 
         histnam = (nam eq 'HISTORY ') || (nam eq 'COMMENT ') || (nam eq '') 
         keyword = strmid( hdr, 0, 8)
+	number = 0
  
         if vector then begin
             nfound = where(strpos(keyword,nam) GE 0, matches)
@@ -219,7 +227,7 @@ function SXPAR, hdr, name, abort, COUNT=matches, COMMENT = comments, $
   line = hdr[nfound]
   svalue = strtrim( strmid(line,9,71),2)
   if histnam then $
-        value = strtrim(strmid(line,8,71),2) else for i = 0,matches-1 do begin
+       value = strtrim(strmid(line,8,72),2) else for i = 0,matches-1 do begin
       if ( strmid(svalue[i],0,1) EQ "'" ) then begin   ;Is it a string?
                   test = strmid( svalue[i],1,strlen( svalue[i] )-1)
                   next_char = 0
