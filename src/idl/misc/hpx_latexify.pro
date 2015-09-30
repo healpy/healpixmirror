@@ -109,13 +109,13 @@ endif else begin
 endelse
 
 ;garbage cleanup
-;;;;;;;spawn,'cp '+filename+' '+tmprad+'_in.ps'
+;;;;;;; spawn,'cp '+filename+' '+tmprad+'_in.ps'
 if noname then begin
 	spawn, 'mv -f '+outname+' '+filename
 	outname=filename
 endif
 
-print,tmprad+['2.ps','.tex','.aux','.log','.dvi','_dvi.log']
+;;;;;;; print,tmprad+['2.ps','.tex','.aux','.log','.dvi','_dvi.log']
 file_delete, tmprad+['2.ps','.tex','.aux','.log','.dvi','_dvi.log'], allow_nonexistent=1
 
 
