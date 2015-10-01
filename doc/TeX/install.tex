@@ -678,7 +678,7 @@ level Makefile.
 
 As a consequence, {\tt make clean} can be used after a successful compilation and installation in order to remove now useless intermediate files while keeping the codes functional, 
 while
-{\tt make tidy} should be used between successive (failed) attempts with different compilers, compiler versions or compiler options, to avoid any conflict between new and pre-existing files.
+{\tt make tidy} should be used between consecutive (failed) attempts with different compilers, compiler versions or compiler options, to avoid any conflict between new and pre-existing files.
 
 % \section{Upgrading from 2.0 to 2.1}
 
@@ -1152,7 +1152,7 @@ should be fixed in the forthcoming GDL 0.9.6 (expected late 2015).
 \subsubsection[Fortran]{%
 	Fortran 90 \linklatexhtml{facilities}{facilities.pdf}{facilities.htm} and
 	\linklatexhtml{subroutines}{subroutines.pdf}{subroutines.htm}}
-	\begin{itemize}
+\begin{itemize}
 	\item \htmlref{{\tt anafast}}{fac:anafast} facility now produces nine spectra 
 	(TT, EE, BB, TE, TB, EB, ET, BT and BE), instead of six previously,
           when analyzing two polarized maps;
@@ -1172,14 +1172,15 @@ behavior in \htmlref{{\tt write\_bintabh}}{sub:write_bintabh} routine
 	\item edited \htmlref{{\tt map2alm\_iterative}}{sub:map2alm_iterative} 
 routine to avoid a bug specific to Intel's Ifort 15.0.2
 	\item CFITSIO version 3.20 (August 2009) or more now required;
-	\end{itemize}
+\end{itemize}
 
 \subsubsection[IDL]{\linklatexhtml{IDL}{idl.pdf}{idl.htm}}
 \begin{itemize}
 %
-\item \htmlref{{\tt azeqview, cartview, gnomview, mollview,
-orthview}}{idl:mollview} visualization routines:
-\begin{itemize}
+\item 
+\htmlref{{\tt azeqview, cartview, gnomview, mollview, orthview}}{idl:mollview} 
+visualization routines:
+ \begin{itemize}
  \item addition of \mylink{idl:mollview:pdf}{{\tt PDF}} keyword for production of Adobe PDF outputs;
  \item addition of \mylink{idl:mollview:latex}{{\tt LATEX}} keyword for genuine 
  or emulated \LaTeX\ processing of character strings;
@@ -1189,7 +1190,7 @@ origin and type of character font;
   the \mylink{idl:mollview:nobar}{{\tt NOBAR}} keyword now removes the color bar {\em or} the polarization color wheel, as applicable; %
  correct EQUINOX date in header of output \mylink{idl:mollview:fits}{FITS} map; %
  the double precision maps and those with constant value are now correctly handled.
-\end{itemize}
+ \end{itemize}
 %
 \item \htmlref{{\tt fits2cl}}{idl:fits2cl}: addition of \mylink{idl:fits2cl:planck2}{{\tt /PLANCK2}} keyword
 to read best fit $C(\ell)$ model to Planck 2015 data.
