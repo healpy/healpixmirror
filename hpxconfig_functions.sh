@@ -97,7 +97,7 @@ findFITSLib () {
 }
 #-------------
 findFITSInclude () {
-    for dir in $* /usr/include /usr/local/include /usr/local/src/cfitsio ${HOME}/include ${HOME}/include64 ./src/cxx/${HEALPIX_TARGET}/include/ /softs/cfitsio/3.24/include /usr/common/usg/cfitsio/3.26/include ; do
+    for dir in $* /usr/include /usr/local/include /usr/local/src/cfitsio ${HOME}/include ${HOME}/include64 ./src/cxx/${HEALPIX_TARGET}/include/ /softs/cfitsio/3.3*/include /softs/cfitsio/3.2*/include /usr/common/usg/cfitsio/3.3*/include /usr/common/usg/cfitsio/3.2*/include ; do
 	if [ -r "${dir}/fitsio.h" ] ; then
 	    FITSINC=$dir
 	    break
