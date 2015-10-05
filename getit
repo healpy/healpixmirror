@@ -7,7 +7,7 @@ healpygit=0 # 1: uses GIT, 0: uses tar.gz
 healpyrepo="https://github.com/healpy/healpy.git"
 #healpyarchive="https://github.com/healpy/healpy/archive/"
 healpyarchive="https://pypi.python.org/packages/source/h/healpy/"
-healpyarchive="http://nebula.sdsc.edu/"
+healpyarchive="/Users/hivon/healpy/"
 ##
 mixed=0
 if [ "$mixed" = "1" ]; then
@@ -72,7 +72,13 @@ if [ ${doit} = 1 ] ; then
 	git checkout ${healpytag} 
 	git branch
     else
-	wget ${healpyarchive}healpy-${healpytag}.tar.gz  --no-check-certificate -O healpy-${healpytag}.tar.gz
+	if [ "${healpyarchive:0:4}" = "http" ] ; then
+	    wget ${healpyarchive}healpy-${healpytag}.tar.gz  --no-check-certificate -O healpy-${healpytag}.tar.gz
+	else
+	    echo ${healpyarchive}healpy-${healpytag}.tar.gz
+	    ls -l ${healpyarchive}healpy-${healpytag}.tar.gz
+	    cp ${healpyarchive}healpy-${healpytag}.tar.gz .
+	fi
 	tar -xvzpf healpy-${healpytag}.tar.gz
 	mv healpy-${healpytag} healpy
     fi

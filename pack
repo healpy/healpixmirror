@@ -7,7 +7,7 @@
 #   or
 #  ./getit
 #
-#  cd Healpix_[VERSION]
+#  cd /tmp/Healpix_[VERSION]
 #  ./pack
 #
 #=============================
