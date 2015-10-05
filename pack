@@ -124,7 +124,7 @@ updateVersion () {
 
 
 gettingHealpy(){
-    HPY_VERSION=1.7.0
+    HPY_VERSION=1.9.0
     hpy_repo="https://pypi.python.org/packages/source/h/healpy"
     wrkdir=/tmp
     cd ${wrkdir}
@@ -136,14 +136,15 @@ gettingHealpy(){
     mv healpy-${HPY_VERSION} healpy
 
     cd ${wrkdir}/healpy
-    filein='setup.py'
-    fileout='setup2.py'
-    cat ${filein} | sed "s|'--disable-shared',|'--disable-shared', '--disable-dependency-tracking',|g" > ${fileout}
-    grep -H 'disable' ${filein}
-    grep -H 'disable' ${fileout}
+
+    # filein='setup.py' # done in ./configure
+    # fileout='setup2.py'
+    # cat ${filein} | sed "s|'--disable-shared',|'--disable-shared', '--disable-dependency-tracking',|g" > ${fileout}
+    # grep -H 'disable' ${filein}
+    # grep -H 'disable' ${fileout}
 
     cd healpixsubmodule/src/cxx/autotools
-    chmod ugo+x install-sh
+    # chmod ugo+x install-sh # done in 1.9.0
     \ln -sf ../../../../../cxx .
     for dir in Healpix_cxx c_utils cxxsupport libfftpack libsharp ; do
 	echo ${dir}
