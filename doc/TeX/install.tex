@@ -105,11 +105,13 @@ for those users who wish to build their own tools.
 A set of C subroutines and functions is also provided. 
 
 The distribution can be downloaded as a gzipped and tarred file,
-which can be unpacked by executing the commands \hfill\newline
+which can be unpacked by executing the commands\footnote{Microsoft Windows users can have a look at \\
+\htmladdnormallink{http://sourceforge.net/p/healpix/wiki/Windows\%20and\%20peazip/}{http://sourceforge.net/p/healpix/wiki/Windows\%20and\%20peazip/}} \hfill\newline
 %\begin{verbatim}
 {\tt \% gunzip Healpix\_\hpxversion.tar.gz}\hfill\\
 {\tt \% tar -xpf Healpix\_\hpxversion.tar}\hfill\\
 %\end{verbatim}
+
 
 \begin{figure}[!ht]
 %\centerline{\psfig{figure=fig/dir_tree.eps,width=\textwidth}}
@@ -1240,13 +1242,13 @@ for high-level description);
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%----------------------------------------------------
-\section{Appendix II: Older changes}
+\section{Appendix II: Older changes (versions 3.00 to 3.20}
 
 {\mytiny{%
 
-\tinysubsection{Bug corrections and Improvements in Version 3.20 (2014-12)} %2014-12-05
+\tinysubsection*{Bug corrections and Improvements in Version 3.20 (2014-12)} %2014-12-05
 
-\tinysubsubsection[General]{General}
+\tinysubsubsection*{General}
 	\begin{itemize}
 	\item Generation of 
 \htmladdnormallink{{\tt pkg-config}}{http://en.wikipedia.org/wiki/Pkg-config} 
@@ -1257,14 +1259,14 @@ See Section~\ref{sec:pkg-config} of
 details.
 % EndSkip
 	\end{itemize}
-\tinysubsubsection[C]{\linklatexhtml{C}{csub.pdf}{csub.htm}}
+\tinysubsubsection*{\linklatexhtml{C}{csub.pdf}{csub.htm}}
 \begin{itemize}
 \item Top {\tt configure} script now proposes compilation with {\em or} without
 CFITSIO-related functions
 \item Improved {\tt autotools} support
 \end{itemize}
 
-\tinysubsubsection[C++]{C++}
+\tinysubsubsection*{C++}
 \begin{itemize}
 \item automatic workaround for bugs in older versions of GNU {\tt g++} compiler
  (bug reports 
@@ -1278,7 +1280,7 @@ CFITSIO-related functions
 \item deprecation warnings in {\tt alice2}, soon to be replaced
 \end{itemize}
 
-\tinysubsubsection[Fortran]{%
+\tinysubsubsection*{%
 	Fortran 90 \linklatexhtml{facilities}{facilities.pdf}{facilities.htm} and
 	\linklatexhtml{subroutines}{subroutines.pdf}{subroutines.htm}}
 \begin{itemize}
@@ -1306,7 +1308,7 @@ affecting the external $B(l)$ reading in the F90 facilities
 \htmlref{{\tt smoothing}}{fac:smoothing}.
 \end{itemize}
 
-\tinysubsubsection[IDL]{\linklatexhtml{IDL}{idl.pdf}{idl.htm}}
+\tinysubsubsection*{\linklatexhtml{IDL}{idl.pdf}{idl.htm}}
 \begin{itemize}
  \item addition of \htmlref{{\tt ialteralm}}{{idl:ialteralm}} to modify
   Spherical Harmonics coefficients ($a_{lm}$).
@@ -1337,12 +1339,12 @@ affecting the external $B(l)$ reading in the F90 facilities
     routines (2014-11-10).
 \end{itemize}
 
-\tinysubsubsection[Java]{Java}
+\tinysubsubsection*{Java}
 \begin{itemize}
 \item explicit deprecation warnings in the source codes
 \end{itemize}
 
-\tinysubsubsection[Python]{Python}
+\tinysubsubsection*{Python}
 %
 \begin{itemize}
 	\item switch to \htmladdnormallink{{\tt healpy
@@ -1726,158 +1728,158 @@ package (C. Rosset, A. Zonca et al.) is now part of \healpix
 \end{itemize}
 
 
-\tinysubsection*{Bug corrections and Improvements in Versions 2.20 and 2.20a (2011-02)} % 2011-02-04
+% \tinysubsection*{Bug corrections and Improvements in Versions 2.20 and 2.20a (2011-02)} % 2011-02-04
 
-\tinysubsubsection*{C++}
-\begin{itemize}
-	\setlength{\itemsep}{0pt}
-	\setlength{\parsep}{0pt}
-	\item Faster Spherical Harmonic Transforms thanks to {\tt libpsht} routines
-	\item Support for spin-weighted Spherical Harmonic Transforms at the library level
-	\item Support for 6-component power spectra in {\tt anafast\_cxx}
-	\item The {\tt smoothing\_cxx} module allows ``unsmoothing'' a map by specifying
-              a negative FWHM value
-	\item Module {\tt median\_filter} renamed to {\tt median\_filter\_cxx} to avoid
-              name clashes with Fortran
-	\item bug fix in the nested {\tt ang2pix} functions (provided by Craig J Copi)
-	\item FITS I/O performance improvements
-\end{itemize}
-
-\tinysubsubsection*{\linklatexhtml{Fortran 90}{subroutines.pdf}{subroutines.htm}}
-\begin{itemize}
-	\setlength{\itemsep}{0pt}
-	\setlength{\parsep}{0pt}
-	\item Faster Spherical Harmonics Transforms thanks to {\tt libpsht} routines
-	\item $\nside > 8192$ now supported by most routines and facilities
-	\item Slightly faster pixel/coordinates conversion routines (eg {\tt
-ang2pix\_*}, {\tt vec2pix\_*}, ...)
-	\item improved {\tt map2gif} facility
-\end{itemize}
-
-
-\tinysubsubsection*{\linklatexhtml{IDL}{idl.pdf}{idl.htm}}
-\begin{itemize}
-	\setlength{\itemsep}{0pt}
-	\setlength{\parsep}{0pt}
-	\item {\tt fits2cl}: addition of the WMAP1 and WMAP5 keywords to read
-	best fit $C(l)$ model to WMAP 1st and 5yr data respectively,
-	\item  {\tt cartview, gnomview, mollview, orthview}:
-	larger choice of supported symbols in OUTLINE option.
-\end{itemize}
-
-\tinysubsubsection*{Java}
-\begin{itemize}
-	\setlength{\itemsep}{0pt}
-	\setlength{\parsep}{0pt}
-	\item  bugs correction in {\tt query\_disc}
-\end{itemize}
-
-%%%
-\tinysubsection*{Bug corrections and Improvements in Versions 2.15 and 2.15a (2010-06)} % 2010-06-16
-
-\tinysubsubsection*{\linklatexhtml{Fortran 90}{subroutines.pdf}{subroutines.htm}}
-\begin{itemize}
-	\setlength{\itemsep}{0pt}
-	\setlength{\parsep}{0pt}
-	\item {\tt remove\_dipole}: removed confusing warning messages about
-unused masks and weights.
-\end{itemize}
-
-
-\tinysubsubsection*{\linklatexhtml{IDL}{idl.pdf}{idl.htm}}
-\begin{itemize}
-	\setlength{\itemsep}{0pt}
-	\setlength{\parsep}{0pt}
-	\item {\tt cartview, gnomview, mollview, orthview}:
-        \begin{itemize} 
-	\setlength{\itemsep}{0pt}
-	\setlength{\parsep}{0pt}
-		\item export of projected map into a FITS file ({\tt FITS} keyword), or an
-IDL array ({\tt MAP\_OUT} option) now available with all viewing routines,
-		\item added {\tt CHARTHICK} support; accept array of {\tt
-OUTLINE} structures (if they have the same fields),
-		\item correction of a bug (in {\tt loaddata\_healpix}) that was
-affecting the behavior of these viewing routines after consecutive calls with
-very partial cut-sky {\em and then} full-sky data sets [2.15a];
-	\end{itemize}
-	\item {\tt remove\_dipole} now outputs the monopole and dipole
-covariance matrix;
-	\item {\tt write\_fits\_map, write\_tqu, write\_fits\_sb}: {\tt
-BAD\_DATA} keyword added to FITS header;
-        \item update of {\tt astron} library routines (24-May-2010) for improved WCS support.
-\end{itemize}
-
-% here \hyperref{idl.pdf}{cross}{idl:mollview:fits}{extended FITS keyword in
-% Mollview} there
-
-
-
-%%%
-%\subsection{Bug corrections and Improvements in Version 2.14} % 2010-03-04
-\tinysubsection*{Bug corrections and Improvements in Version 2.14a (2010-03)} % 2010-03-22
-%
-% \subsubsection[New General Improvements]{general}
+% \tinysubsubsection*{C++}
 % \begin{itemize}
-% 	none
+% 	\setlength{\itemsep}{0pt}
+% 	\setlength{\parsep}{0pt}
+% 	\item Faster Spherical Harmonic Transforms thanks to {\tt libpsht} routines
+% 	\item Support for spin-weighted Spherical Harmonic Transforms at the library level
+% 	\item Support for 6-component power spectra in {\tt anafast\_cxx}
+% 	\item The {\tt smoothing\_cxx} module allows ``unsmoothing'' a map by specifying
+%               a negative FWHM value
+% 	\item Module {\tt median\_filter} renamed to {\tt median\_filter\_cxx} to avoid
+%               name clashes with Fortran
+% 	\item bug fix in the nested {\tt ang2pix} functions (provided by Craig J Copi)
+% 	\item FITS I/O performance improvements
 % \end{itemize}
-%
-\tinysubsubsection*{Fortran90}
- \begin{itemize}
-	\setlength{\itemsep}{0pt}
-	\setlength{\parsep}{0pt}
-	\item
-	correction of a numerical bug in {\tt alm2map\_der} routine that was
-affecting
-	the accuracy of the Stokes parameter derivatives 
-$\partial X/\partial\theta$, 
-$\partial^2 X/(\partial\theta\partial\phi\sin\theta)$, 
-$\partial^2 X/\partial \theta^2$, 
-for $X=Q,U$ produced by {\tt synfast}  (bug detected by Wen Zhao,
-Cardiff University). See 
-\htmlref{''Fortran Facilities'' Appendix}{fac:appendix} for details.
- \end{itemize}
-%
-\tinysubsubsection*{IDL}
- \begin{itemize}
-	\setlength{\itemsep}{0pt}
-	\setlength{\parsep}{0pt}
-	\item {\tt cartview, gnomview, mollview, orthview}:
-        \begin{itemize}
-	\setlength{\itemsep}{0pt}
-	\setlength{\parsep}{0pt}
-		\item {\tt OUTLINE=}, {\tt GRATICULE=}, {\tt IGRATICULE=} work
-again with virtual windows ({\tt WINDOW}$<0$)
-		\item {\tt YPOS=} and {\tt RETAIN=} keywords active again
-		\item {\tt PS=} keyword fixed % 2.14a
-	\end{itemize}
-	\item {\tt orthview}:
-		fixed problems with {\tt /SHADE} keyword, which now
-outputs 8-byte (instead of 16-byte) PNG files
-	\item {\tt ianafast}, {\tt ismoothing}: fixed problem with processing of
-polarized maps stored in memory.
-	\item {\tt ud\_grade}: improved handling of flagged pixels on Double
-Precision input maps
-	\item {\tt remove\_dipole}: {\tt COORD\_IN=} and {\tt COORD\_OUT=} now
-accept lower case values; {\tt /SILENT} keyword added.
- \end{itemize}
 
-%
-\tinysubsubsection*{Java}
-\begin{itemize}
-	\setlength{\itemsep}{0pt}
-	\setlength{\parsep}{0pt}
-	\item 64 bit java-\healpix, supports $\nside$ up to $ = 2^{29}$ = 536870912
-	\begin{itemize}
-	\setlength{\itemsep}{0pt}
-	\setlength{\parsep}{0pt}
-		\item now fully implemented
-		\item much faster pixel queries (eg {\tt query\_disc})
-	\end{itemize}
-	\item {\tt jhealpixSmall.jar}: new smaller jar containing only main
-classes to be used into other applications or from the web (applets, $\ldots$)
-	\item {\tt Java3d}: upgrade/degrade fixed; color bar update fixed
-	\item many others minor issues and javadocs fixed
-\end{itemize}
+% \tinysubsubsection*{\linklatexhtml{Fortran 90}{subroutines.pdf}{subroutines.htm}}
+% \begin{itemize}
+% 	\setlength{\itemsep}{0pt}
+% 	\setlength{\parsep}{0pt}
+% 	\item Faster Spherical Harmonics Transforms thanks to {\tt libpsht} routines
+% 	\item $\nside > 8192$ now supported by most routines and facilities
+% 	\item Slightly faster pixel/coordinates conversion routines (eg {\tt
+% ang2pix\_*}, {\tt vec2pix\_*}, ...)
+% 	\item improved {\tt map2gif} facility
+% \end{itemize}
+
+
+% \tinysubsubsection*{\linklatexhtml{IDL}{idl.pdf}{idl.htm}}
+% \begin{itemize}
+% 	\setlength{\itemsep}{0pt}
+% 	\setlength{\parsep}{0pt}
+% 	\item {\tt fits2cl}: addition of the WMAP1 and WMAP5 keywords to read
+% 	best fit $C(l)$ model to WMAP 1st and 5yr data respectively,
+% 	\item  {\tt cartview, gnomview, mollview, orthview}:
+% 	larger choice of supported symbols in OUTLINE option.
+% \end{itemize}
+
+% \tinysubsubsection*{Java}
+% \begin{itemize}
+% 	\setlength{\itemsep}{0pt}
+% 	\setlength{\parsep}{0pt}
+% 	\item  bugs correction in {\tt query\_disc}
+% \end{itemize}
+
+% %%%
+% \tinysubsection*{Bug corrections and Improvements in Versions 2.15 and 2.15a (2010-06)} % 2010-06-16
+
+% \tinysubsubsection*{\linklatexhtml{Fortran 90}{subroutines.pdf}{subroutines.htm}}
+% \begin{itemize}
+% 	\setlength{\itemsep}{0pt}
+% 	\setlength{\parsep}{0pt}
+% 	\item {\tt remove\_dipole}: removed confusing warning messages about
+% unused masks and weights.
+% \end{itemize}
+
+
+% \tinysubsubsection*{\linklatexhtml{IDL}{idl.pdf}{idl.htm}}
+% \begin{itemize}
+% 	\setlength{\itemsep}{0pt}
+% 	\setlength{\parsep}{0pt}
+% 	\item {\tt cartview, gnomview, mollview, orthview}:
+%         \begin{itemize} 
+% 	\setlength{\itemsep}{0pt}
+% 	\setlength{\parsep}{0pt}
+% 		\item export of projected map into a FITS file ({\tt FITS} keyword), or an
+% IDL array ({\tt MAP\_OUT} option) now available with all viewing routines,
+% 		\item added {\tt CHARTHICK} support; accept array of {\tt
+% OUTLINE} structures (if they have the same fields),
+% 		\item correction of a bug (in {\tt loaddata\_healpix}) that was
+% affecting the behavior of these viewing routines after consecutive calls with
+% very partial cut-sky {\em and then} full-sky data sets [2.15a];
+% 	\end{itemize}
+% 	\item {\tt remove\_dipole} now outputs the monopole and dipole
+% covariance matrix;
+% 	\item {\tt write\_fits\_map, write\_tqu, write\_fits\_sb}: {\tt
+% BAD\_DATA} keyword added to FITS header;
+%         \item update of {\tt astron} library routines (24-May-2010) for improved WCS support.
+% \end{itemize}
+
+% % here \hyperref{idl.pdf}{cross}{idl:mollview:fits}{extended FITS keyword in
+% % Mollview} there
+
+
+
+% %%%
+% %\subsection{Bug corrections and Improvements in Version 2.14} % 2010-03-04
+% \tinysubsection*{Bug corrections and Improvements in Version 2.14a (2010-03)} % 2010-03-22
+% %
+% % \subsubsection[New General Improvements]{general}
+% % \begin{itemize}
+% % 	none
+% % \end{itemize}
+% %
+% \tinysubsubsection*{Fortran90}
+%  \begin{itemize}
+% 	\setlength{\itemsep}{0pt}
+% 	\setlength{\parsep}{0pt}
+% 	\item
+% 	correction of a numerical bug in {\tt alm2map\_der} routine that was
+% affecting
+% 	the accuracy of the Stokes parameter derivatives 
+% $\partial X/\partial\theta$, 
+% $\partial^2 X/(\partial\theta\partial\phi\sin\theta)$, 
+% $\partial^2 X/\partial \theta^2$, 
+% for $X=Q,U$ produced by {\tt synfast}  (bug detected by Wen Zhao,
+% Cardiff University). See 
+% \htmlref{''Fortran Facilities'' Appendix}{fac:appendix} for details.
+%  \end{itemize}
+% %
+% \tinysubsubsection*{IDL}
+%  \begin{itemize}
+% 	\setlength{\itemsep}{0pt}
+% 	\setlength{\parsep}{0pt}
+% 	\item {\tt cartview, gnomview, mollview, orthview}:
+%         \begin{itemize}
+% 	\setlength{\itemsep}{0pt}
+% 	\setlength{\parsep}{0pt}
+% 		\item {\tt OUTLINE=}, {\tt GRATICULE=}, {\tt IGRATICULE=} work
+% again with virtual windows ({\tt WINDOW}$<0$)
+% 		\item {\tt YPOS=} and {\tt RETAIN=} keywords active again
+% 		\item {\tt PS=} keyword fixed % 2.14a
+% 	\end{itemize}
+% 	\item {\tt orthview}:
+% 		fixed problems with {\tt /SHADE} keyword, which now
+% outputs 8-byte (instead of 16-byte) PNG files
+% 	\item {\tt ianafast}, {\tt ismoothing}: fixed problem with processing of
+% polarized maps stored in memory.
+% 	\item {\tt ud\_grade}: improved handling of flagged pixels on Double
+% Precision input maps
+% 	\item {\tt remove\_dipole}: {\tt COORD\_IN=} and {\tt COORD\_OUT=} now
+% accept lower case values; {\tt /SILENT} keyword added.
+%  \end{itemize}
+
+% %
+% \tinysubsubsection*{Java}
+% \begin{itemize}
+% 	\setlength{\itemsep}{0pt}
+% 	\setlength{\parsep}{0pt}
+% 	\item 64 bit java-\healpix, supports $\nside$ up to $ = 2^{29}$ = 536870912
+% 	\begin{itemize}
+% 	\setlength{\itemsep}{0pt}
+% 	\setlength{\parsep}{0pt}
+% 		\item now fully implemented
+% 		\item much faster pixel queries (eg {\tt query\_disc})
+% 	\end{itemize}
+% 	\item {\tt jhealpixSmall.jar}: new smaller jar containing only main
+% classes to be used into other applications or from the web (applets, $\ldots$)
+% 	\item {\tt Java3d}: upgrade/degrade fixed; color bar update fixed
+% 	\item many others minor issues and javadocs fixed
+% \end{itemize}
 % %
 % \subsubsection[C]{C}
 % %
