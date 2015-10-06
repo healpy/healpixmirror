@@ -363,13 +363,13 @@ or {\tt orthographic}, \\
 %                   &   &                            \\ %%% for presentation
 %%%%%%%%%%%%%%%%%
 
-{GLSIZE=}\mytarget{idl:mollview:glsize} & \mylink{idl:mollview:routines}{all}& \parbox[t]{\hsize}{
+{GLSIZE=}\mytarget{idl:mollview:glsize} & \mylink{idl:mollview:routines}{CGMO}& \parbox[t]{\hsize}{
 	character size of the graticule labels in units of {\tt Charsize}. \\
 	\default{0: no labeling of graticules}. \\
 	\seealso \mylink{idl:mollview:charsize}{Charsize}, \mylink{idl:mollview:graticule}{Graticule}
 	}\\
 
-{GRATICULE=}\mytarget{idl:mollview:graticule}  & \mylink{idl:mollview:routines}{all}  & \parbox[t]{\hsize}{
+{GRATICULE=}\mytarget{idl:mollview:graticule}  & \mylink{idl:mollview:routines}{CGMO}  & \parbox[t]{\hsize}{
 	if set, puts a graticule (ie, longitude and latitude grid) 
 	in the {\em output} astrophysical coordinates
 	with delta\_long = delta\_lat = gdef
@@ -434,13 +434,13 @@ boundaries with solid lines.
 		horizontal dimension (in cm) of the \mylink{idl:mollview:ps}{Postscript} printout \\
     		\default {26 cm $\simeq$ 10 in} \\               \seealso \mylink{idl:mollview:pxsize}{Pxsize}}\\
 
-{IGLSIZE=}\mytarget{idl:mollview:iglsize} & \mylink{idl:mollview:routines}{all}& \parbox[t]{\hsize}{
+{IGLSIZE=}\mytarget{idl:mollview:iglsize} & \mylink{idl:mollview:routines}{CGMO}& \parbox[t]{\hsize}{
 	character size of the input coordinates graticule labels in units of {\tt Charsize}. \\
 	\default{0: no labeling of graticules}. \\
 	\seealso \mylink{idl:mollview:charsize}{Charsize}, \mylink{idl:mollview:igraticule}{Igraticule}
 	}\\
 
-{IGRATICULE=}\mytarget{idl:mollview:igraticule}  & \mylink{idl:mollview:routines}{all}  & \parbox[t]{\hsize}{
+{IGRATICULE=}\mytarget{idl:mollview:igraticule}  & \mylink{idl:mollview:routines}{CGMO}  & \parbox[t]{\hsize}{
 	if set, puts a graticule (ie, longitude and latitude grid) 
 	in the {\em input} astrophysical coordinates.
 	See Graticule for conventions and details.
@@ -606,28 +606,29 @@ is hidden \\
 	\default {0.0} } \\
 	
 
-{OUTLINE=}\mytarget{idl:mollview:outline} & \mylink{idl:mollview:routines}{all}&  \parbox[t]{\hsize}{
+{OUTLINE=}\mytarget{idl:mollview:outline} & \mylink{idl:mollview:routines}{CGMO}&  \parbox[t]{\hsize}{
 	IDL structure, structure of structures, or array of structures, 
        containing the description of one (or several) outline(s) to
       be overplotted on the final map.\\
            For each contour or point list, the corresponding (sub)structure should
 	contain the following fields:  \\
-            -- 'COORD' coordinate system (either, 'C', 'G', or 'E') of the contour\\
-            -- 'RA' RA/longitude coordinates of the contour vertices (array or scalar) \\
-            -- 'DEC' Dec/latitude coordinates of the contour vertices (array or
+            -- 'COORD': coordinate system (either 'C'/'Q', 'G' or 'E') of the contour 
+           (same meaning as in \mylink{idl:mollview:coord}{Coord})\\
+            -- 'RA': RA/longitude coordinates of the contour vertices (array or scalar) \\
+            -- 'DEC': Dec/latitude coordinates of the contour vertices (array or
 scalar)\\
 	and can optionally contain the fields: \\
-	    -- 'LINE[STYLE]' (optional, scalar) {\bf +2}: black dashes, {\bf
+	    -- 'LINE[STYLE]': (optional, scalar) {\bf +2}: black dashes, {\bf
 +1}: black dots, {\bf 0}: black solid (default), {\bf -1}: black dots on white background, {\bf -2}: black dashes on
 	white background\\
-            -- 'PSY[M]' (optional, scalar) symbol used to represent vertices (same meaning as
+            -- 'PSY[M]': (optional, scalar) symbol used to represent vertices (same meaning as
 	    standard PSYM in IDL. If $9\leq|\rm{psym}|\leq 46$, D. Fanning's 
 \htmladdnormallink{\tt cgSYMCAT.PRO}{http://www.idlcoyote.com/programs/cgsymcat.pro} symbols 
                      definition will be used; for example, psym=9 is an open circle). If $\leq 0$, the vertices are represented with the chosen symbols, and
                         connected by arcs of geodesics;
                     if $>0$, only the vertices are shown
                     \default {0} \\
-            -- 'SYM[SIZE]' (optional, scalar) vertice symbol size (same meaning
+            -- 'SYM[SIZE]': (optional, scalar) vertice symbol size (same meaning
 as SYMSIZE in IDL), \default {1}\\
 	The line and symbol thickness can be controlled (indirectly) via !P.THICK.\\
 	Notes: when applicable, the vertices are connected by segments of geodesics. To
