@@ -9,7 +9,9 @@ PDFFLAGS :=
 LATEX2HTML := latex2html
 # LATEX2HTML := ~/bin/latex2html
 VERSION =  $(shell grep newcommand hpxversion.tex | grep hpxversion | sed "s/[a-z{}\\]*//g")
-HTMLDIR := ../../healpix-dynamicPages/html/
+DOCDIR  := ../../healpix-dynamicPages/
+HTMLDIR := $(DOCDIR)/html
+PDFDIR  := $(DOCDIR)/pdf
 ADDRESS := -address "Version $(VERSION), `date +%Y-%m-%d`" -info 1
 #L2HFLAGS := -dir $(HTMLDIR) -up_url main.htm -up_title "Main Page" -math -html_version 4.0 -bottom_navigation -short_extn -white -local_icons -noexternal_images -toc_depth 8 $(ADDRESS) # -debug -verbosity 2  -show_section_numbers 
 L2HFLAGS := -dir $(HTMLDIR) -up_url main.htm -up_title "Main Page" \
@@ -43,12 +45,14 @@ endif
 
 # all PDF
 pdf: $(pdf)
-	cp $(pdf) ../../healpix-dynamicPages/pdf
 	@echo "$(RED_COLOR)Type   make crossref   to get the cross-references right$(NO_COLOR)"
+	mkdir -p $(PDFDIR)
+	cp $(pdf) $(PDFDIR)
 
 # reprocess all PDF to get cross-ref right
 crossref: $(pdf) $(cross)
-	cp $(pdf) ../../healpix-dynamicPages/pdf
+	mkdir -p $(PDFDIR)
+	cp $(pdf) $(PDFDIR)
 
 # all HTML
 html: $(html) main.html
@@ -93,7 +97,7 @@ main.html:
 	cp main.html $(HTMLDIR)/index.htm
 	cp main.html $(HTMLDIR)/index.html
 #	cp fig/backsmall3balls.gif $(HTMLDIR)
-	@echo "created$(BLUE_COLOR) $(HTMLDIR)main.htm $(NO_COLOR)"
+	@echo "created$(BLUE_COLOR) $(HTMLDIR)/main.htm $(NO_COLOR)"
 
 install.html: $(style) healpix.perl cssfile
 	@echo "$(GREEN_COLOR)==================================$(NO_COLOR)"
@@ -106,7 +110,7 @@ install.html: $(style) healpix.perl cssfile
 	-$(IMPROVEHTML) $(HTMLDIR)/install
 	mv -f $(HTMLDIR)/WARNINGS $(HTMLDIR)/WARNINGS_install
 	ln -sf $(CSSFILE) $(HTMLDIR)/install.css
-	@echo "created$(BLUE_COLOR) $(HTMLDIR)install.htm $(NO_COLOR)"
+	@echo "created$(BLUE_COLOR) $(HTMLDIR)/install.htm $(NO_COLOR)"
 
 intro.html: $(style) healpix.perl cssfile
 	@echo "$(GREEN_COLOR)==================================$(NO_COLOR)"
@@ -118,7 +122,7 @@ intro.html: $(style) healpix.perl cssfile
 	-$(IMPROVEHTML) $(HTMLDIR)/intro
 	mv -f $(HTMLDIR)/WARNINGS $(HTMLDIR)/WARNINGS_intro
 	ln -sf $(CSSFILE) $(HTMLDIR)/intro.css
-	@echo "created$(BLUE_COLOR) $(HTMLDIR)intro.htm $(NO_COLOR)"
+	@echo "created$(BLUE_COLOR) $(HTMLDIR)/intro.htm $(NO_COLOR)"
 
 
 idl.html: $(style) healpix.perl cssfile
@@ -132,7 +136,7 @@ idl.html: $(style) healpix.perl cssfile
 	-$(IMPROVEHTML) $(HTMLDIR)/idl
 	mv -f $(HTMLDIR)/WARNINGS $(HTMLDIR)/WARNINGS_idl
 	ln -sf $(CSSFILE) $(HTMLDIR)/idl.css
-	@echo "created$(BLUE_COLOR) $(HTMLDIR)idl.htm $(NO_COLOR)"
+	@echo "created$(BLUE_COLOR) $(HTMLDIR)/idl.htm $(NO_COLOR)"
 
 
 subroutines.html: $(style) healpix.perl cssfile
@@ -146,7 +150,7 @@ subroutines.html: $(style) healpix.perl cssfile
 	-$(IMPROVEHTML) $(HTMLDIR)/subroutines
 	mv -f $(HTMLDIR)/WARNINGS $(HTMLDIR)/WARNINGS_subroutines
 	ln -sf $(CSSFILE) $(HTMLDIR)/subroutines.css
-	@echo "created$(BLUE_COLOR) $(HTMLDIR)subroutines.htm $(NO_COLOR)"
+	@echo "created$(BLUE_COLOR) $(HTMLDIR)/subroutines.htm $(NO_COLOR)"
 
 
 facilities.html: $(style) healpix.perl cssfile
@@ -160,7 +164,7 @@ facilities.html: $(style) healpix.perl cssfile
 	-$(IMPROVEHTML) $(HTMLDIR)/facilities
 	mv -f $(HTMLDIR)/WARNINGS $(HTMLDIR)/WARNINGS_facilities
 	ln -sf $(CSSFILE) $(HTMLDIR)/facilities.css
-	@echo "created$(BLUE_COLOR) $(HTMLDIR)facilities.htm $(NO_COLOR)"
+	@echo "created$(BLUE_COLOR) $(HTMLDIR)/facilities.htm $(NO_COLOR)"
 
 
 csub.html: $(style) healpix.perl cssfile
@@ -173,7 +177,7 @@ csub.html: $(style) healpix.perl cssfile
 	-$(IMPROVEHTML) $(HTMLDIR)/csub
 	mv -f $(HTMLDIR)/WARNINGS $(HTMLDIR)/WARNINGS_csub
 	ln -sf $(CSSFILE) $(HTMLDIR)/csub.css
-	@echo "created$(BLUE_COLOR) $(HTMLDIR)csub.htm $(NO_COLOR)"
+	@echo "created$(BLUE_COLOR) $(HTMLDIR)/csub.htm $(NO_COLOR)"
 
 
 clean: 
@@ -198,5 +202,9 @@ allpdf: empty pdf crossref
 
 all: empty pdf crossref html
 	@echo "$(GREEN_COLOR)        All PDF+HTML Done !      $(NO_COLOR)"
+	cd $(DOCDIR) ; \
+	tar -czpf doc_$(VERSION).tar.gz pdf html ; \
+	pwd
+	@echo "$(GREEN_COLOR)  $(DOCDIR)/doc_$(VERSION).tar.gz  written   $(NO_COLOR)"
 
 
