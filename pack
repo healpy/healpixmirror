@@ -218,7 +218,7 @@ mkdir -p doc/pdf
 
 echoGrn "installing java Documentation"
 cd src/java
-ant docs
+ant docs || exit
 cp -pr healpixdocs ${here}/doc/html/java
 \rm -r dist reports build # re-instated 2010-02-22
 \rm -r META-INF
@@ -230,7 +230,7 @@ cd $here
 echoRed "cleaning up C++..."
 cd src/cxx
 export HEALPIX_TARGET=generic_gcc
-make doc
+make doc || exit
 cd $here
 # rm -r src/cxx/doc
 mv src/cxx/doc/index.html src/cxx/doc/index_cxx.htm
@@ -262,7 +262,7 @@ mkdir -p ${docautodir}/html
 \rm -f ${docautodir}/pdf/*
 \rm -f ${docautodir}/html/*
 cd doc/TeX
-make pdf
+make pdf || exit
 make crossref
 make html > /dev/null
 cd $here
@@ -308,6 +308,9 @@ echoRed "removing $p directory..."
 echoRed "removing C++ make_release..."
 \rm -rf src/cxx/autotools/make_release
 \rm -rf src/cxx/make_release # 2014-12-04
+
+echoRed "removing java make_release..."
+\rm -rf src/java/make_release
 
 
 for p in getit hand_editions.sh; do
