@@ -219,7 +219,8 @@ mkdir -p doc/pdf
 echoGrn "installing java Documentation"
 cd src/java
 ant docs || exit
-cp -pr healpixdocs ${here}/doc/html/java
+#cp -pr healpixdocs ${here}/doc/html/java
+cp -pr doc ${here}/doc/html/java || exit
 \rm -r dist reports build # re-instated 2010-02-22
 \rm -r META-INF
 ant clean
@@ -264,7 +265,7 @@ mkdir -p ${docautodir}/html
 cd doc/TeX
 make pdf || exit
 make crossref
-make html > /dev/null
+make html > /dev/null || exit
 cd $here
 
 echoGrn "dealing with Ximview doc"
@@ -311,6 +312,9 @@ echoRed "removing C++ make_release..."
 
 echoRed "removing java make_release..."
 \rm -rf src/java/make_release
+
+echoRed "removing C make_release..."
+\rm -rf src/C/make_release
 
 
 for p in getit hand_editions.sh; do
