@@ -94,6 +94,11 @@ and the diffuse emissions they produce (now compatible with HEALPix 3.11 and new
 </li>
 
 <li>
+<a href="https://lpsc.in2p3.fr/clumpy/intro.html">CLUMPY</a>: 
+Computation of photon fluxes from dark matter annihilation or decay in galaxy haloes
+</li>
+
+<li>
 Visualization tools supporting HEALPix maps in FITS format:
 <a href="http://aladin.u-strasbg.fr/">Aladin&nbsp;Sky&nbsp;Atlas</a> 
 (which can overlay any astronomical map or catalog), 

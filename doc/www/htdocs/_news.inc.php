@@ -1,6 +1,7 @@
 <h2>HEALPix Software</h2>
 <p>
-  2014-12-05: <a href="downloads.php">HEALPix 3.20 released</a><br />
+  2015-10-08: <a href="downloads.php">HEALPix 3.30 released</a><br />
+<!--  2014-12-05: <a href="downloads.php">HEALPix 3.20 released</a><br /> -->
   2013-02-25: <a href="http://healpix.sourceforge.net">New HEALPix Web Site</a><br />
 </p>
 

@@ -152,6 +152,10 @@ as can be seen from the <a href="resources.php">Resources</a> and <a href="galle
 			Mask processing facilities
 			<!-- br -->
 			</li>
+			<li>
+			Support for multi resolution maps (aka, Multi Order Coverage maps or MOC)
+			<!-- br -->
+			</li>
 			</ul>
                 </li><!-- br -->
 		<li>

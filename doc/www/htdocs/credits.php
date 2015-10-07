@@ -8,7 +8,9 @@
 		<u>Krzysztof M. G&oacute;rski</u> at the
               <a href="http://www.tac.dk/">(now defunct) Theoretical Astrophysics Center (TAC)</a>
 
-              in Copenhagen, Denmark (he is currently at <a href="http://www.jpl.nasa.gov">Jet Propulsion Laboratory, JPL</a>).  Early development
+              in Copenhagen, Denmark (he is currently at <a href="http://www.jpl.nasa.gov">Jet Propulsion Laboratory, JPL</a>).  
+	<br>
+	     Early development
               of the HEALPix concept and initial implementation was made in
               the spring of 1997 in collaborative work of K.M. G&oacute;rski
               with <u>Eric Hivon</u> (currently at the
@@ -16,7 +18,7 @@
               <!-- <a href="http://www.caltech.edu">California Institute of Technology</a>). -->
               <a href="http://www.iap.fr/?langue=en">Institut d&#039;Astrophysique 
 									  de Paris, IAP</a>, France).
-
+	<br>
               <u>Benjamin D. Wandelt</u>, then at the TAC (now at
 	      <!-- 	
               <a href="http://illinois.edu/index.html">University of Illinois at Urbana-Champaign</a> 
@@ -24,21 +26,23 @@
               <a href="http://www.iap.fr/?langue=en">IAP</a>),
 
               has contributed critically to the further development of HEALPix
-              and related mathematical methods. <u>Frode K. Hansen</u>, then at the
+              and related mathematical methods. 
+	<br>
+		<u>Frode K. Hansen</u>, then at the
               TAC (now at
 
               <!-- <a href="http://www2.uniroma2.it/">Universita Roma II</a>), -->
-              <a href="http://www.uio.no/english/">Universitetet i Oslo</a>, UIO)
+              <a href="http://www.uio.no/english/">Universitetet i Oslo</a>, UIO),
 
               <u>Anthony J. Banday</u>
-              (then at <a href="http://www.mpa-garching.mpg.de/mpa/index-en.shtml">Max Planck Institut f&#252r; Astrophysik (MPA)</a>,
+              (then at <a href="http://www.mpa-garching.mpg.de/mpa/index-en.shtml">Max Planck Institut f&#252;r Astrophysik (MPA)</a>,
 
               Garching, Germany, now at <a href="http://www.cesr.fr/?lang=en">Centre d&#039;Etude 
 	       Spatiale du Rayonnement</a>, Toulouse, France) 
 
 	     and <u>Matthias Bartelmann</u> (then at MPA, now at
  		
-		<a href="http://www.ita.uni-heidelberg.de/index.shtml?lang=en"> Institut f&#252r; Theoretische Astrophysik</a>, 
+		<a href="http://www.ita.uni-heidelberg.de/index.shtml?lang=en"> Institut f&#252;r Theoretische Astrophysik</a>, 
  		Heidelberg, Germany)
 
 
@@ -46,7 +50,7 @@
               the first large release of the HEALPix software (Version 1.10).
               <br>
               <br>
-              The following releases of the HEALPix software (Versions 1.20 to 3.11) and the current one (Version 3.20) benefited
+              The following releases of the HEALPix software (Versions 1.20 to 3.20) and the current one (Version 3.30) benefited
               from:
 		<ul>
 		<li>
@@ -173,6 +177,7 @@
                       <li>    Marc Ashdown   			</li>
                       <li>    Carlo Baccigalupi   		</li>
 		      <li>    Karim 		Benabed   	</li> 
+		      <li>    Aur&eacute;lien 	Benoit-L&eacute;vy   	</li> 
 		      <li>    Jean-Philippe 	Bernard	  	</li>
                       <li>    Snorre Boasson   			</li>
 		      <li>    Caroline 		Bot		</li>
@@ -184,28 +189,30 @@
 		      <li>    Clive Dickinson     		</li>
                       <li>    Herv&eacute; Dole   		</li>
                       <li>    Olivier Dor&eacute;  	 	</li>
+                      <li>    Gilles Duvert	  	 	</li>
 		      <li>    Franz Elsner			</li>
                       <li>    Hans Kristian Eriksen   		</li>
                       <li>    Pablo Fosalba	   		</li>
-                      <li>    Ken Ganga   			</li>
-                      <li>    Giovanna Giardino   		</li>
-                      <li>    Jean-Christophe Hamilton   	</li>
-                      <li>    Andrew Jaffe   			</li>
+                      <li>    Silvia 		Galli   	</li>
+                      <li>    Ken 		Ganga   	</li>
+                      <li>    Tuhin 		Ghosh   	</li>
+                      <li>    Giovanna 		Giardino   	</li>
+                      <li>    Jean-Christophe 	Hamilton   	</li>
+                      <li>    Andrew 		Jaffe   	</li>
+                      <li>    Tess 		Jaffe   	</li>
 		      <li>    Reijo 		Keskitalo 	</li>
                       <li>    Alex Kim   			</li>
-                      <li>    Ted Kisner   			</li>
-		      <li>    Masakazu A.R. Kobayashi		</li>
                     </ul>
                 </td>
-
 <!--
                 <td width="1">
                   &nbsp;
                 </td>
 -->
-
                 <td width="350" valign="top">
                     <ul>
+                      <li>    Ted Kisner   			</li>
+		      <li>    Masakazu A.R. Kobayashi		</li>
 		      <li>    Eiichiro Komatsu			</li>
 		      <li>    Wayne Landsman			</li>
                       <li>    Guy Le Meur   			</li>
@@ -215,7 +222,9 @@
 		      <li>    Jean-Baptiste Marquette		</li>
 		      <li>    Marc-Antoine Miville-Deschenes  	</li>
                       <li>    Serge Monkewitz   		</li>
+                      <li>    Ji&#345;&iacute; N&aacute;dvorn&iacute;k   			</li>
                       <li>    Paolo Natoli   			</li>
+                      <li>    Fabio Noviello   			</li>
 		      <li>    Chris North			</li>
                       <li>    Clive Page   			</li>
                       <li>    Tim Pearson   			</li>
