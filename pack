@@ -212,6 +212,7 @@ find . -type d -name .svn -exec \rm -rf {} \;
 
 OS=`uname -s`
 updateVersion
+sleep 10
 
 mkdir -p doc/html
 mkdir -p doc/pdf
@@ -330,13 +331,22 @@ echoBlu $version $reldate
 echoBlu "--------------------"
 
 relsuf="${version}_${shortdate}"
-package="Healpix_${relsuf}.tar.gz"
+tar_package="Healpix_${relsuf}.tar.gz"
+zip_package="Healpix_${relsuf}.zip"
 rnfile="Healpix_${relsuf}.ReleaseNotes.txt"
 #tar_opts="-cvzpf"
 tar_opts="-czpf"
-echoBlu "creating package ../${package}"
+zip_opts="-r"
+echoBlu "creating tar package ../${tar_package}"
 cd ..
-tar ${tar_opts} ${package} `basename ${here}`
+\rm -f ${tar_package}
+tar ${tar_opts} ${tar_package} `basename ${here}`
+cd ${here}
+
+echoBlu "creating zip package ../${zip_package}"
+cd ..
+\rm -f ${zip_package}
+zip ${zip_opts} ${zip_package} `basename ${here}`
 cd ${here}
 
 if [ $do_split == 1 ] ; then
@@ -357,7 +367,8 @@ fi
 
 cd ..
 \rm -f ${rnfile}
-allsums ${package} > ${rnfile}
+allsums ${tar_package} > ${rnfile}
+allsums ${zip_package} > ${rnfile}
 echo "SVN revision: ${revision}" >> ${rnfile}
 cat $rnfile
 cd ${here}
