@@ -95,7 +95,7 @@ updateVersion () {
   # update C++ code version
   infile='src/cxx/cxxsupport/announce.cc'
   echoBlu "editing ${infile}"
-  cat $infile | sed 's|string version =.*$|string version =\"$version\";|g' > $tmpfile
+  cat $infile | sed "s|string version =.*$|string version =\"$version\";|g" > $tmpfile
   mv $tmpfile $infile
 #   infile='src/cxx/autotools/configure.ac'
 #   echoBlu "editing ${infile}"
@@ -368,7 +368,7 @@ fi
 cd ..
 \rm -f ${rnfile}
 allsums ${tar_package} > ${rnfile}
-allsums ${zip_package} > ${rnfile}
+allsums ${zip_package} >> ${rnfile}
 echo "SVN revision: ${revision}" >> ${rnfile}
 cat $rnfile
 cd ${here}
