@@ -104,14 +104,19 @@ providing both stand-alone facilities and callable subroutines as an alternative
 for those users who wish to build their own tools.
 A set of C subroutines and functions is also provided. 
 
-The distribution can be downloaded as a gzipped and tarred file,
-which can be unpacked by executing the commands\footnote{Microsoft Windows users can have a look at \\
+The distribution can be downloaded as a gzipped tarred file, {\em or} as a zipped file,
+which can respectively be unpacked by executing the commands\footnote{Microsoft Windows users can have a look at \\
 \htmladdnormallink{http://sourceforge.net/p/healpix/wiki/Windows\%20and\%20peazip/}{http://sourceforge.net/p/healpix/wiki/Windows\%20and\%20peazip/}} \hfill\newline
 %\begin{verbatim}
 {\tt \% gunzip Healpix\_\hpxversion.tar.gz}\hfill\\
 {\tt \% tar -xpf Healpix\_\hpxversion.tar}\hfill\\
+or \hfill\\
+{\tt \% tar -xzpf Healpix\_\hpxversion.tar.gz}\hfill\\
+or \hfill\\
+{\tt \% unzip Healpix\_\hpxversion.zip}\hfill\\
 %\end{verbatim}
-
+creating a directory named {\tt Healpix\_\hpxversion}\ whose structure is shown in Figure
+\ref{fig:dirtree}.
 
 \begin{figure}[!ht]
 %\centerline{\psfig{figure=fig/dir_tree.eps,width=\textwidth}}
@@ -121,15 +126,11 @@ which can be unpacked by executing the commands\footnote{Microsoft Windows users
 %\centerline{\includegraphics[bb=1pt 1pt 562pt 478pt,width=\textwidth]{fig/dir_tree.eps}\htmlimage{}}
 \centerline{\includegraphics[width=0.5\textwidth]{fig/dir_tree}}
 }
-
 \caption[Directory structure]{%
 \label{page:dirtree}
 \label{fig:dirtree} % put \label *IN* \caption !!!!!
 The directory structure for the \healpix distribution. }
 \end{figure}
-
-The unpacked distribution has a directory structure as shown in Figure
-\ref{fig:dirtree}.
 
 As with most freely available software, the distribution
 comes with caveats, the major one being that although we have attempted
