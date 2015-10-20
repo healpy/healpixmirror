@@ -879,9 +879,13 @@ void random_alm (Alm<xcomplex<double> >&almT, Alm<xcomplex<double> >&almG,
   for (int m=1; m<=mmax; ++m)
     for (int l=m; l<=lmax; ++l)
       {
-      almT(l,m).real(rng.rand_gauss()); almT(l,m).imag(rng.rand_gauss());
-      almG(l,m).real(rng.rand_gauss()); almG(l,m).imag(rng.rand_gauss());
-      almC(l,m).real(rng.rand_gauss()); almC(l,m).imag(rng.rand_gauss());
+      double t1,t2;
+      t1=rng.rand_gauss(); t2=rng.rand_gauss();
+      almT(l,m)=xcomplex<double>(t1,t2);
+      t1=rng.rand_gauss(); t2=rng.rand_gauss();
+      almG(l,m)=xcomplex<double>(t1,t2);
+      t1=rng.rand_gauss(); t2=rng.rand_gauss();
+      almC(l,m)=xcomplex<double>(t1,t2);
       }
   almG(0,0)=almC(0,0)=almG(1,0)=almC(1,0)=almG(1,1)=almC(1,1)=0;
   }
@@ -895,7 +899,11 @@ void random_alm (Alm<xcomplex<double> >&alm, int lmax, int mmax)
 
   for (int m=1; m<=mmax; ++m)
     for (int l=m; l<=lmax; ++l)
-      { alm(l,m).real(rng.rand_gauss()); alm(l,m).imag(rng.rand_gauss()); }
+      {
+      double t1,t2;
+      t1=rng.rand_gauss(); t2=rng.rand_gauss();
+      alm(l,m)=xcomplex<double>(t1,t2);
+      }
   }
 
 void check_alm (const Alm<xcomplex<double> >&oalm,
