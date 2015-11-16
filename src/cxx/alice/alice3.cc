@@ -236,7 +236,11 @@ int main(int argc, const char** argv)
 
       a(ell,0)=fcomplex(rng.rand_gauss(),0.);
       for (int m=0; m<=ell; m++)
-        { a(ell,m).real(rng.rand_gauss()); a(ell,m).imag(rng.rand_gauss()); }
+        {
+        double t1,t2;
+        t1=rng.rand_gauss(); t2=rng.rand_gauss();
+        a(ell,m)=xcomplex<float>(t1,t2);
+        }
       alm2map(a, th);
       }
     else
