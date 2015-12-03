@@ -50,6 +50,9 @@ The Schlegel, Finkbeiner, and Davis
 </li>
 
 <li>
+Unofficial low-resolution <a href="http://faun.rc.fas.harvard.edu/ameisner/wssa/healpix.html">WISE 12 micron full-sky dust maps</a>
+<li>
+
 An extensive list of 
 <a href="http://lambda.gsfc.nasa.gov/product/expt/" >
     past, current and future CMB or SZ experiments and data availability</a> on Lambda web site
@@ -105,6 +108,15 @@ Visualization tools supporting HEALPix maps in FITS format:
 <a href="http://helios.av.it.pt/projects/healpixviewer">HealpixViewer</a>,
 <a href="http://www.ast.cam.ac.uk/~vlad/univiewer/index.html">Univiewer</a>,
 <a href="http://lambda.gsfc.nasa.gov/toolbox/tb_skyviewer_ov.cfm">SkyViewer</a>
+</li>
+
+<li>
+HEALPix based <a href="http://aladin.u-strasbg.fr/hips/">Hierarchical Progressive Surveys (HiPS)</a> mechanism
+to access, visualize and browse images, catalogues and cube data
+</li>
+
+<li>
+<a href="http://www.cosmos.esa.int/web/esdc/esasky-help">ESA Sky</a> to search, retrieve, explore and visualize the entire sky as observed by ESA (and other) astronomy missions
 </li>
 
 <li>
@@ -165,15 +177,19 @@ Published articles using HEALPix:
 First HEALPix paper: <a href="http://adsabs.harvard.edu/cgi-bin/nph-bib_query?bibcode=2005ApJ...622..759G&amp;db_key=AST&amp;high=41069202cf02947">K.M. G&oacute;rski et al., 2005, ApJ, 622, p759</a>
 </li>
 <li>HEALPix 
-on <a href="http://inspirebeta.net/search?ln=en&p=FIND+C+ASTRO-PH%2F9812350+or+refersto%3Arecid%3A659804+or+fulltext%3Ahealpix&f=&action_search=Search&sf=&so=d&rm=&rg=25&sc=0&of=hb">INSPIRE (HEP &amp; Cosmology)</a>,
+on 
 
-																				   <a href="http://adsabs.harvard.edu/cgi-bin/nph-ref_query?bibcode=2005ApJ...622..759G&amp;refs=CITATIONS&amp;db_key=AST">ADS Classic</a>
+<a href="http://inspirebeta.net/search?ln=en&p=FIND+C+ASTRO-PH%2F9812350+or+refersto%3Arecid%3A659804+or+fulltext%3Ahealpix&f=&action_search=Search&sf=&so=d&rm=&rg=25&sc=0&of=hb">INSPIRE (High Energy Physics &amp; Cosmology)</a>,<br>
+
+<a href="http://adsabs.harvard.edu/cgi-bin/nph-ref_query?bibcode=2005ApJ...622..759G&amp;refs=CITATIONS&amp;db_key=AST">ADS Classic</a>
 
 &amp;
-																				<a href="http://adslabs.org/adsabs/search/?q=full%3A%22healpix%22&month_from=&year_from=&month_to=&year_to=&db_f=&nr=&bigquery=&re_sort_type=DATE&re_sort_dir=desc">ADS 2.0</a> (Astrophysics)
 
-and
-																			   <a href="http://scholar.google.com/scholar?scisbd=2&q=healpix&hl=en&as_sdt=0,5">Google Scholar (Multidisciplinary)</a>
+<a href="http://adslabs.org/adsabs/search/?q=full%3A%22healpix%22&month_from=&year_from=&month_to=&year_to=&db_f=&nr=&bigquery=&re_sort_type=DATE&re_sort_dir=desc">ADS 2.0</a> (Astrophysics)
+
+and<br>
+
+<a href="http://scholar.google.com/scholar?scisbd=2&q=healpix&hl=en&as_sdt=0,5">Google Scholar (Multidisciplinary)</a>
 
 </li>
 </ul>
