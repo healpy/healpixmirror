@@ -186,7 +186,7 @@ $y \approx 0.21 x$ when $x\ll 1$ and $y\approx \log(x)$ when $x\gg 1$. \\
         	\default {1.0} \\ 
 
 {CHARTHICK=}\mytarget{idl:mollview:charthick} & \mylink{idl:mollview:routines}{all}& character thickness (in
-\mylink{idl:mollview:titleplot}{TITLE}, \mylink{idl:mollview:subtitle}{SUBTITLE} and
+\mylink{idl:mollview:titleplot}{TITLEPLOT}, \mylink{idl:mollview:subtitle}{SUBTITLE} and
 color bar labeling). Other characters thickness (such as
 \mylink{idl:mollview:glsize}{graticule labels}), can be controlled with {\tt !P.CHARTHICK}.
                 \default {1} \\
@@ -497,8 +497,8 @@ Note that \htmladdnormallink{\tt cgPStoRASTER}{http://www.idlcoyote.com/programs
 \htmladdnormallink{ImageMagick {\tt convert}}{http://www.imagemagick.org/script/index.php}
 and/or \htmladdnormallink{GraphicsMagick {\tt gm convert}}{http://www.graphicsmagick.org/convert.html}
 can be used to turn a PS or PDF file into high resolution GIF, JPEG or PNG file.\\
-Beware that the option {\tt latex=2} may not work properly under versions 0.9.5 and older of 
-\htmlref{\tt gdl}{install:using_gdl}.\\
+%Beware that the option {\tt latex=2} may not work properly under versions 0.9.5 and older of 
+%\htmlref{\tt gdl}{install:using_gdl}.\\
         -- if set to 1, with whatever output
 (%
 \mylink{idl:mollview:gif}{GIF}, 
@@ -670,7 +670,7 @@ The PDF file is produced from a PostScript file using the script \htmladdnormall
 {PFONTS=}\mytarget{idl:mollview:pfonts}  & \mylink{idl:mollview:routines}{all}  &  \parbox[t]{\hsize}{
 2-element vector of integers [$p_0$, $p_1$] selecting the default IDL font of character strings such as the
 \mylink{idl:mollview:subtitle}{Subtitle},
-\mylink{idl:mollview:title}{Title} and
+\mylink{idl:mollview:titleplot}{Titleplot} and
 \mylink{idl:mollview:units}{Units}.\\
 $p_0$ must be in $\{-1,0,1\}$ and selects the origin of the fonts among
 -1: \htmladdnormallink{Hershey Vector}{http://www.exelisvis.com/docs/Using_Hershey_Vector_Fon.html},
@@ -686,7 +686,7 @@ http://www.exelisvis.com/docs/Fonts_and_Colors.html}.\\
 \default{[-1,6], corresponding to the Hershey vector font of type 'Complex Roman', and is equivalent to typing
 {\tt !p.font=-1} and prepending the
 \mylink{idl:mollview:subtitle}{Subtitle},
-\mylink{idl:mollview:title}{Title} and
+\mylink{idl:mollview:titleplot}{Titleplot} and
 \mylink{idl:mollview:units}{Units} 
 strings with {\tt '!6'}}.\\
 Note that PFONTS will be ignored if \mylink{idl:mollview:latex}{Latex}=2 {\em and} 
@@ -1192,7 +1192,7 @@ $\quad\quad$ \mylink{idl:mollview:colt}{colt}='planck2',
 \mylink{idl:mollview:offset}{offset}=-1.33e-4,  \$ \\
 $\quad\quad$ \mylink{idl:mollview:min}{min}=-1.e3,
 \mylink{idl:mollview:max}{max}=1.e7,
-\mylink{idl:mollview:title}{title}='Planck @ 217GHz',
+\mylink{idl:mollview:titleplot}{title}='Planck @ 217GHz',
 \mylink{idl:mollview:charsize}{charsize}=2
 \\
 \end{tabular}

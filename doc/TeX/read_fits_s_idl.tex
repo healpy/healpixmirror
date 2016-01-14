@@ -44,16 +44,16 @@
 
 \begin{qualifiers}
   \begin{qulist}{} %%%% NOTE the ``extra'' brace here %%%%
- 	\item[{File}] 
+ 	\item[{File}]  \mytarget{idl:read_fits_s:File}
           name of a FITS file containing 
                the healpix map(s) in an extension or in the image field 
 
- 	\item[{Prim\_stc}] 
+ 	\item[{Prim\_stc}]   \mytarget{idl:read_fits_s:Prim_stc}
 	variable containing on output an IDL structure with the following fields: \\
 		- primary header (tag : 0, tag name : HDR) \\
 		- primary image (if any, tag : 1, tag name : IMG)
 
-       \item[{Xten\_stc}]
+       \item[{Xten\_stc}]  \mytarget{idl:read_fits_s:Xten_stc}
 		  (optional), \\
 	variable containing on output an IDL structure with the following fields: \\
 		- extension header (tag : 0, tag name : HDR) \\
@@ -62,14 +62,14 @@
 		- data column 2 (if any, tag : 2, tag name given by TTYPE2)  \\
 		...
 
-      \item[{Columns=}]
+      \item[{COLUMNS=}]  \mytarget{idl:read_fits_s:COLUMNS}
 		(optional), \\
         list of columns to be read from a binary table 
         can be a list of integer (1 based) indexing the columns positions
         or a list of names matching the TTYPE* of the columns
         by default, all columns are read
 
-       \item[{Extension=}]
+       \item[{EXTENSION=}]  \mytarget{idl:read_fits_s:EXTENSION}
 		(optional), \\
 	extension unit to be read from FITS file: 
  either its 0-based ID number (ie, 0 for first extension {\em after} primary array) 
@@ -80,9 +80,9 @@
 
 \begin{keywords}
   \begin{kwlist}{} %%% extra brace
-	\item[{/HELP}] if set, an extensive help is displayed and no
+	\item[{/HELP}]   \mytarget{idl:read_fits_s:HELP} if set, an extensive help is displayed and no
 	file is read
-	\item[{/MERGE}]
+	\item[{/MERGE}]  \mytarget{idl:read_fits_s:MERGE}
 	if set {\tt Prim\_stc} contains : \\
 		- the concatenated primary and extension header (tag name : HDR) \\
 		- primary image (if any, tag name : IMG) \\

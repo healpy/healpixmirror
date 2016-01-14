@@ -59,14 +59,14 @@ serror\mytarget{sub:write_fits_cut4:serror}(0:np-1)   & SP  & IN & {\em rms} of 
 \optional{header\mytarget{sub:write_fits_cut4:header}}(LEN=80)    & CHR & IN &   FITS header to be included in the FITS file\\
 \optional{units\mytarget{sub:write_fits_cut4:units}}(LEN=20) & CHR & IN &  maps units (applies only to Signal and
                    Serror)\\
-\optional{extension}     & I4B & IN & (0 based) extension number in which to write data. \default{0}.
+\optional{extno}\mytarget{sub:write_fits_cut4:extno}     & I4B & IN & (0 based) extension number in which to write data. \default{0}.
 	  If set to 0 (or not set) {\em a new file is written from scratch}.
 	  If set to a value
 		  larger than 1, the corresponding extension is added or
 		  updated, as long as all previous extensions already exist.
 		  All extensions of the same file should use the same Nside,
 Order and Coord \\
-\optional{polarisaton} & I4B & IN & if set to a non zero value, specifies that file will contain the I, Q and U polarisation
+\optional{polarisaton}\mytarget{sub:write_fits_cut4:polarisation} & I4B & IN & if set to a non zero value, specifies that file will contain the I, Q and U polarisation
            Stokes parameter in extensions 0, 1 and 2 respectively, and sets the
 FITS header keywords accordingly. If not set, the keywords found in {\tt
 header\mytarget{sub:write_fits_cut4:header}} will prevail.\\

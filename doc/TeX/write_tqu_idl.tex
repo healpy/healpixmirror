@@ -45,10 +45,10 @@ in separate extensions
 
 \begin{qualifiers}
   \begin{qulist}{} %%%% NOTE the ``extra'' brace here %%%%
- 	\item[{File}] 
+ 	\item[{File}] \mytarget{idl:write_tqu:File}
           name of a FITS file in which the maps are to be written
 
-   \item[{TQU}] array of Healpix maps of size ($N_{\rm pix}$,3,{\tt n\_ext}) where $N_{\rm pix}$ is the total
+   \item[{TQU}] \mytarget{idl:write_tqu:TQU} array of Healpix maps of size ($N_{\rm pix}$,3,{\tt n\_ext}) where $N_{\rm pix}$ is the total
    number of Healpix pixels on the sky, and {\tt n\_ext} $\le$ 3.\\
      Three maps are written in each extension of the FITS file : \\
       -the temperature+polarization Stokes parameters maps (T,Q,U) in
@@ -62,7 +62,7 @@ in separate extensions
      by setting {\tt Extension} to the extension number in which to write
      (0 based) and if {\tt n\_ext} + {\tt Extension} $\le$ 3
 
-       \item[{Coordsys=}]
+       \item[{Coordsys=}] \mytarget{idl:write_tqu:Coordsys}
 		  (optional), \\
 		if set to either 'C', 'E' or 'G',  specifies that the
 		Healpix coordinate system is respectively Celestial=equatorial,
@@ -70,36 +70,36 @@ in separate extensions
 		(The relevant keyword is then added/updated in the extension
 		  header, but the map is NOT rotated)
 
-	\item[{Error=}]
+	\item[{Error=}] \mytarget{idl:write_tqu:Error}
 		(optional output), \\
 		will take value 1 if file can not be written
 
 
-       \item[{Extension=}]
+       \item[{Extension=}]\mytarget{idl:write_tqu:Extension}
 		(optional), \\
 	extension unit a which to put the data (0 based). The physical
 		interpretation of the maps is determined by the
 		extension in which they are written\\
 	\seealso TQU
 
-       \item[{Hdr=}]
+       \item[{Hdr=}]\mytarget{idl:write_tqu:Hdr}
 		  (optional), \\
 		string variable containing on input  the information to be added
 		  to the primary header. (If already present, FITS reserved
 		  keywords will be automatically updated).
 
-	\item[{Ordering=}]
+	\item[{Ordering=}] \mytarget{idl:write_tqu:Ordering}
 		  (optional), \\
 		if set to either 'ring' or 'nested' (case un-sensitive),
 		  specifies that the map is respectively in RING or NESTED
 		  ordering scheme\\
 		\seealso Nested and Ring
 
-	\item[{Units=}]
+	\item[{Units=}] \mytarget{idl:write_tqu:Units}
 		(optional), \\
 		string describing the physical units of the data set
 
-       \item[{Xhdr=}]
+       \item[{Xhdr=}] \mytarget{idl:write_tqu:Xhdr}
 		  (optional), \\
 		string variable containing on input  the information to be added
 		  to the extension headerx. (If already present, FITS reserved
@@ -112,12 +112,12 @@ in separate extensions
 
 \begin{keywords}
   \begin{kwlist}{} %%% extra brace
-	\item[{Help}] if set, an extensive help is displayed and no
+	\item[{Help}]  \mytarget{idl:write_tqu:Help} if set, an extensive help is displayed and no
 	file is written
-	\item[{Nested}] if set, specifies that the map is in the NESTED ordering
+	\item[{Nested}]  \mytarget{idl:write_tqu:Nested} if set, specifies that the map is in the NESTED ordering
 	scheme\\
 	\seealso Ordering and Ring 
-	\item[{Ring}] if set, specifies that the map is in the RING ordering
+	\item[{Ring}]  \mytarget{idl:write_tqu:Ring} if set, specifies that the map is in the RING ordering
 	scheme\\
 	\seealso Ordering and Nested
    \end{kwlist}

@@ -35,8 +35,8 @@
                    &   &   &                           \\ %%% for presentation
 filename\mytarget{sub:read_bintab:filename}(LEN=\filenamelen) & CHR & IN & filename of FITS-file containing the map(s). \\
 npixtot\mytarget{sub:read_bintab:npixtot} & I4B & IN & Number of pixels to be read from map.\\
-nmap & I4B & IN & number of maps to be read, 1 for temperature only, and 3 for (T,Q,U). \\
-map\mytarget{sub:read_bintab:map}(0:npixtot-1,1:nmap) & SP/ DP & OUT & the map read from the FITS-file.\\
+nmaps\mytarget{sub:read_bintab:nmaps}     & I4B & IN & number of maps to be read, 1 for temperature only, and 3 for (T,Q,U). \\
+map\mytarget{sub:read_bintab:map}(0:npixtot-1,1:nmaps) & SP/ DP & OUT & the map read from the FITS-file.\\
 nullval\mytarget{sub:read_bintab:nullval} & SP/ DP & OUT & value of missing pixels in the map. \\
 anynull\mytarget{sub:read_bintab:anynull} & LGT & OUT & {\tt .TRUE.}, if there are missing pixels, and {\tt .FALSE.}
                    otherwise. \\

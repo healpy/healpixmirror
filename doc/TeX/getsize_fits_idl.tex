@@ -22,7 +22,7 @@
 \end{facility}
 
 \begin{IDLformat}
-{var = \FACNAME(File, [\mylink{idl:getsize_fits:Nmaps}{Nmaps=}%
+{ \mylink{idl:getsize_fits:var}{var} = \FACNAME(File, [\mylink{idl:getsize_fits:Nmaps}{Nmaps=}%
 , \mylink{idl:getsize_fits:Nside}{Nside=}%
 , \mylink{idl:getsize_fits:Mlpol}{Mlpol=}%
 , \mylink{idl:getsize_fits:Ordering}{Ordering=}%
@@ -36,10 +36,11 @@
 
 \begin{qualifiers}
   \begin{qulistwide}{} %%%% NOTE the ``extra'' brace here %%%%
- 	\item[{File}] 
+ 	\item[{File}] \mytarget{idl:getsize_fits:File}
           name of a FITS file containing the \healpix map(s).
 
-	\item[{var}] {contains on output the number of pixels stored in a map FITS file.
+	\item[{var}] \mytarget{idl:getsize_fits:var}
+	 {contains on output the number of pixels stored in a map FITS file.
      Each pixel is counted only once 
      (even if several information is stored on each of them, see nmaps).
      Depending on the data storage format, result may be : \\
@@ -50,20 +51,20 @@
          (obs\_npix)}
 
 	
- 	\item[{Nmaps=}] contains on output the number of maps in the file
+ 	\item[{Nmaps=}]  \mytarget{idl:getsize_fits:Nmaps} contains on output the number of maps in the file
 	
 
-       \item[{Nside=}] contains on output the \healpix resolution parameter $\nside$
+       \item[{Nside=}]  \mytarget{idl:getsize_fits:Nside} contains on output the \healpix resolution parameter $\nside$
 		  
 
-       \item[{Mlpol=}] contains on output the maximum multipole used to generate the map 
+       \item[{Mlpol=}]  \mytarget{idl:getsize_fits:Mlpol} contains on output the maximum multipole used to generate the map 
 
-	\item[{Ordering=}] contains on output the pixel ordering
+	\item[{Ordering=}]  \mytarget{idl:getsize_fits:Ordering} contains on output the pixel ordering
 	scheme: either 'RING' or 'NESTED'
 		  
-	\item[{Obs\_Npix=}] contains on output the number of non blanck pixels. It is set to -1 if it can not be determined from header
+	\item[{Obs\_Npix=}]  \mytarget{idl:getsize_fits:Obs_Npix} contains on output the number of non blanck pixels. It is set to -1 if it can not be determined from header
 		
-	\item[{Type=}] {Healpix/FITS file type\\
+	\item[{Type=}] \mytarget{idl:getsize_fits:Type} {Healpix/FITS file type\\
              $<$0 : file not found, or not valid\\
              0  : image only fits file, deprecated Healpix format
                    (var $=12\nside^2$) \\
@@ -74,9 +75,9 @@
                    (var $\le 12\nside^2$) \\
            999  : unable to determine the type }
 
-	\item[{Header=}] contains on output the FITS extension header
+	\item[{Header=}]  \mytarget{idl:getsize_fits:Header} contains on output the FITS extension header
 		
-       \item[{Extension=}]
+       \item[{Extension=}] \mytarget{idl:getsize_fits:Extension}
 	extension unit to be read from FITS file: 
  either its 0-based ID number (ie, 0 for first extension {\em after} primary array) 
  or the case-insensitive value of its EXTNAME keyword.
@@ -86,7 +87,7 @@
 
 \begin{keywords}
   \begin{kwlist}{} %%% extra brace
-   \item[{HELP=}] if set, an extensive help is displayed and no
+   \item[{HELP=}] \mytarget{idl:getsize_fits:HELP}  if set, an extensive help is displayed and no
 	file is read
    \end{kwlist}
 \end{keywords}

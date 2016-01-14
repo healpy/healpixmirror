@@ -49,19 +49,19 @@ the \healpix convention}
 
 \begin{qualifiers}
   \begin{qulist}{} %%%% NOTE the ``extra'' brace here %%%%
- 	\item[{File}] 
+ 	\item[{File}]  \mytarget{idl:write_fits_map:File}
           name of a FITS file in which the map is to be written
 
- 	\item[{T\_sky}] 
+ 	\item[{T\_sky}]  \mytarget{idl:write_fits_map:T_sky}
 	variable containing the \healpix map
 
-       \item[{Header}]
+       \item[{Header}] \mytarget{idl:write_fits_map:Header}
 		  (optional), \\
 		string variable containing on input  the information to be added
 		  to the extension header. (If already present, FITS reserved
 		  keywords will be automatically updated).
 
-       \item[{Coordsys=}]
+       \item[{Coordsys=}] \mytarget{idl:write_fits_map:Coordsys}
 		  (optional), \\
 		if set to either 'C', 'E' or 'G',  specifies that the
 		Healpix coordinate system is respectively Celestial=equatorial,
@@ -69,18 +69,18 @@ the \healpix convention}
 		(The relevant keyword is then added/updated in the extension
 		  header, but the map is NOT rotated)
 
-	\item[{Error=}]
+	\item[{Error=}] \mytarget{idl:write_fits_map:Error}
 		(optional output), \\
 		will take value 1 if file can not be written
 
-	\item[{Ordering=}]
+	\item[{Ordering=}] \mytarget{idl:write_fits_map:Ordering}
 		  (optional), \\
 		if set to either 'ring' or 'nested' (case un-sensitive),
 		  specifies that the map is respectively in RING or NESTED
 		  ordering scheme\\
 		\seealso Nested and Ring
 
-	\item[{Units=}]
+	\item[{Units=}] \mytarget{idl:write_fits_map:Units}
 		(optional), \\
 		string describing the physical units of the data set
   \end{qulist}
@@ -88,12 +88,12 @@ the \healpix convention}
 
 \begin{keywords}
   \begin{kwlist}{} %%% extra brace
-	\item[{Help}] if set, an extensive help is displayed and no
+	\item[{Help}] \mytarget{idl:write_fits_map:Help} if set, an extensive help is displayed and no
 	file is written
-	\item[{Nested}] if set, specifies that the map is in the NESTED ordering
+	\item[{Nested}] \mytarget{idl:write_fits_map:Nested} if set, specifies that the map is in the NESTED ordering
 	scheme\\
 	\seealso Ordering and Ring 
-	\item[{Ring}] if set, specifies that the map is in the RING ordering
+	\item[{Ring}] \mytarget{idl:write_fits_map:Ring} if set, specifies that the map is in the RING ordering
 	scheme\\
 	\seealso Ordering and Nested
    \end{kwlist}

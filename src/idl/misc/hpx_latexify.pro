@@ -116,6 +116,7 @@ if noname then begin
 endif
 
 ;;;;;;; print,tmprad+['2.ps','.tex','.aux','.log','.dvi','_dvi.log']
+;;;print,'Files NOT deleted: ',tmprad+['2.ps','.tex','.aux','.log','.dvi','_dvi.log']
 file_delete, tmprad+['2.ps','.tex','.aux','.log','.dvi','_dvi.log'], allow_nonexistent=1
 
 

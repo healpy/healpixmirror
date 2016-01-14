@@ -20,7 +20,7 @@
 \end{facility}
 
 \begin{IDLformat}
-{\FACNAME\mylink{idl:median_filter:(InputMap}{(InputMap}%
+{\FACNAME(\mylink{idl:median_filter:InputMap}{InputMap}%
 , \mylink{idl:median_filter:Radius}{Radius}%
 , \mylink{idl:median_filter:MedianMap}{MedianMap}%
  [,\mylink{idl:median_filter:ORDERING}{ORDERING=}%
@@ -28,20 +28,20 @@
 , \mylink{idl:median_filter:NESTED}{/NESTED}%
 , \mylink{idl:median_filter:FILL_HOLES}{/FILL\_HOLES}%
 , \mylink{idl:median_filter:DEGREES}{/DEGREES}%
-, /ARCMIN])}
+, \mylink{idl:median_filter:ARCMIN}{/ARCMIN}])}
 \end{IDLformat}
 
 \begin{qualifiers}
   \begin{qulist}{} %%%% NOTE the ``extra'' brace here %%%%
-	\item[{InputMap}] (IN)
+	\item[{InputMap}] \mytarget{idl:median_filter:InputMap} (IN)
 	either an IDL array containing a full sky Healpix map to filter ('online' usage), 
         or the name of an external FITS file containing a full sky or cut sky map
 
- 	\item[{Radius}] (IN)
+ 	\item[{Radius}] \mytarget{idl:median_filter:Radius} (IN)
 	  radius of the disk on which the median is computed.
             It is in Radians, unless {\tt /DEGREES} or {\tt /ARCMIN} are set
 
- 	\item[{MedianMap}] (OUT)
+ 	\item[{MedianMap}] \mytarget{idl:median_filter:MedianMap} (OUT)
 	   either an IDL variable containing on output the filtered map,
         or the name of an external FITS file to contain the map. Should be of
 	   same type of {\tt InputMap}. Flagged pixels (ie, having the value
@@ -52,21 +52,21 @@
 
 \begin{keywords}
   \begin{kwlist}{} %%% extra brace
-    \item[{/ARCMIN}] If set, {\tt Radius} is in arcmin rather than radians
+    \item[{/ARCMIN}] \mytarget{idl:median_filter:ARCMIN} If set, {\tt Radius} is in arcmin rather than radians
 
-    \item[{/DEG}] If set, {\tt Radius} is in degrees rather than radians
+    \item[{/DEGREES}]\mytarget{idl:median_filter:DEGREES} If set, {\tt Radius} is in degrees rather than radians
 
-	\item[{/FILL\_HOLES}] If set, flagged pixels are replaced with the
+	\item[{/FILL\_HOLES}] \mytarget{idl:median_filter:FILL_HOLES} If set, flagged pixels are replaced with the
 	median of the valid pixels found within a distance {\tt Radius}. If
 	there are any.
 
- 	\item[{/NESTED}] Same as ORDERING='NESTED'
+ 	\item[{/NESTED}] \mytarget{idl:median_filter:NESTED} Same as ORDERING='NESTED'
 
- 	\item[{ORDERING=}] 
+ 	\item[{ORDERING=}] \mytarget{idl:median_filter:ORDERING}
 	  Healpix map ordering, should be either 'RING' or 'NESTED'. Only
 	  applies to 'online' usage.
 
- 	\item[{/RING}] Same as ORDERING='RING'
+ 	\item[{/RING}] \mytarget{idl:median_filter:RING} Same as ORDERING='RING'
 
    \end{kwlist}
 \end{keywords}

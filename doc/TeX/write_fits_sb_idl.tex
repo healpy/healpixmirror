@@ -51,16 +51,16 @@ binary table}
 
 \begin{qualifiers}
   \begin{qulist}{} %%%% NOTE the ``extra'' brace here %%%%
- 	\item[{File}] 
+ 	\item[{File}] \mytarget{idl:write_fits_sb:File}
           name of a FITS file in which the map is to be written
 
- 	\item[{Prim\_stc}] 
+ 	\item[{Prim\_stc}]  \mytarget{idl:write_fits_sb:Prim_Stc}
 	IDL structure containing the following fields: \\
 		- primary header \\
 		- primary image \\
 	Set it to 0 to get an empty primary unit
 
-       \item[{Xten\_stc}]
+       \item[{Xten\_stc}]  \mytarget{idl:write_fits_sb:Xten_stc}
 		  (optional), \\
 	IDL structure containing the following fields: \\
 		- extension header  \\
@@ -75,7 +75,7 @@ binary table}
 
 \begin{keywords}
   \begin{kwlist}{} %%% extra brace
-       \item[{Coordsys=}]
+       \item[{Coordsys=}]  \mytarget{idl:write_fits_sb:Coordsys}
 		  (optional), \\
 		if set to either 'C', 'E' or 'G',  specifies that the
 		Healpix coordinate system is respectively Celestial=equatorial,
@@ -83,45 +83,45 @@ binary table}
 		(The relevant keyword is then added/updated in the extension
 		  header, but the map is NOT rotated)
 
-	\item[{Ordering=}]
+	\item[{Ordering=}]  \mytarget{idl:write_fits_sb:Ordering}
 		  (optional), \\
 		if set to either 'ring' or 'nested' (case un-sensitive),
 		  specifies that the map is respectively in RING or NESTED
 		  ordering scheme\\
 		\seealso Nested and Ring
 
-	\item[{Nside=}] 
+	\item[{Nside=}]   \mytarget{idl:write_fits_sb:Nside}
 		(optional), \\
 		scalar integer, \healpix resolution parameter of the
 		data set. Must be used when the data set does not
 		cover the whole sky
 
-	\item[{Extension=}]
+	\item[{Extension=}]  \mytarget{idl:write_fits_sb:Extension}
 		(optional), \\
 		scalar integer, extension in which to write the data
 		(0 based).\\
 		\default 0
 
-	\item[{/Nested}] 
+	\item[{/Nested}]   \mytarget{idl:write_fits_sb:Nested}
 	  (optional), \\ 
 	  if set, specifies that the map is in the NESTED ordering
 	scheme\\
 	\seealso Ordering and Ring 
 
-	\item[{/Ring}] 
+	\item[{/Ring}]   \mytarget{idl:write_fits_sb:Ring}
 	  (optional), \\ 
 	  if set, specifies that the map is in the RING ordering
 	scheme\\
 	\seealso Ordering and Nested
 
-	\item[{/Partial}] 
+	\item[{/Partial}]   \mytarget{idl:write_fits_sb:Partial}
 	  (optional), \\ 
 	  if set, the data set does not cover the whole sky. In
 	that case the information on the actual map resolution should be given by the
 	qualifier Nside (see above), or included in the FITS header enclosed in
 	the Xten\_stc.
 
-	\item[{/Nothealpix}] 
+	\item[{/Nothealpix}]   \mytarget{idl:write_fits_sb:Nothealpix}
 	  (optional), \\ 
 	  if set, the data set can be arbitrary, and the
 	restriction on the number of pixels do not apply. The keywords {\tt

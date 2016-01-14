@@ -27,22 +27,24 @@ routine returns the southwestern pixel first and proceeds clockwise.}
 \end{facility}
 
 \begin{IDLformat}
-{\facname\mylink{idl:neighbours_nest:(Nside}{(Nside}%
+{\facname(\mylink{idl:neighbours_nest:Nside}{Nside}%
 , \mylink{idl:neighbours_nest:Ipix0}{Ipix0}%
 , \mylink{idl:neighbours_nest:Listpix}{Listpix}%
- [,Nneigh])}
+[,\mylink{idl:neighbours_nest:Nneigh}{Nneigh}])}
 \end{IDLformat}
 
 \begin{qualifiers}
   \begin{qulist}{} %%%% NOTE the ``extra'' brace here %%%%
-    \item[Nside] \healpix resolution parameter (scalar integer),
+    \item[Nside] \mytarget{idl:neighbours_nest:Nside}
+  \healpix resolution parameter (scalar integer),
          should be a valid Nside (power of 2)
-    \item[Ipix0\mytarget{idl:neighbours_nest:Ipix0}%
-] NESTED-scheme index of central pixel in [0,12*Nside$^2$-1]
-    \item[Listpix\mytarget{idl:neighbours_nest:Listpix}%
-] output: list of neighbouring pixel (NESTED scheme index) of
+    \item[Ipix0] \mytarget{idl:neighbours_nest:Ipix0}%
+ NESTED-scheme index of central pixel in [0,12*Nside$^2$-1]
+    \item[Listpix] \mytarget{idl:neighbours_nest:Listpix}%
+ output: list of neighbouring pixel (NESTED scheme index) of
 size {\tt Nneigh}
-    \item[Nneigh] optional output: number of neighbours of pixel {\tt \#Ipix0}. 
+    \item[Nneigh] \mytarget{idl:neighbours_nest:Nneigh}%
+ optional output: number of neighbours of pixel {\tt \#Ipix0}. 
    Usually 8, sometimes 7 (for 8 particular pixels) or 6 (if Nside=1)
   \end{qulist}
 \end{qualifiers}

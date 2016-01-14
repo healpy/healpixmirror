@@ -20,7 +20,7 @@ operations scales like $\ell^3_{\rm max}$.}
 \end{facility}
 
 \begin{f90format}
-{\mylink{sub:rotate_alm:lmax}{lmax}%
+{\mylink{sub:rotate_alm:nlmax}{nlmax}%
 , \mylink{sub:rotate_alm:alm_TGC}{alm\_TGC}%
 , \mylink{sub:rotate_alm:psi}{psi}%
 , \mylink{sub:rotate_alm:theta}{theta}%
@@ -33,7 +33,7 @@ operations scales like $\ell^3_{\rm max}$.}
 \begin{tabular}{p{0.36\hsize} p{0.05\hsize} p{0.09\hsize} p{0.40\hsize}} \hline  
 \textbf{name~\&~dimensionality} & \textbf{kind} & \textbf{in/out} & \textbf{description} \\ \hline
                    &   &   &                           \\ %%% for presentation
-nlmax & I4B & IN & maximum $\ell$ value for the $a_{\ell m}$.\\
+nlmax\mytarget{sub:rotate_alm:nlmax} & I4B & IN & maximum $\ell$ value for the $a_{\ell m}$.\\
 alm\_TGC\mytarget{sub:rotate_alm:alm_TGC}(1:p,0:nlmax,0:nlmax) & SPC/ DPC & INOUT & complex $a_{\ell m}$ values
                    before and after rotation of the coordinate system.  
 	The first index here runs from 1:1 for

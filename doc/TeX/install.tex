@@ -26,12 +26,25 @@
 \newcommand{\healpixsupport}{\healpixwebpage/support.php}
 \renewcommand{\contentsname}{{TABLE OF CONTENTS}}
 
+% in LaTeX2HTML:
+% \hyperref{HTML text}{PDF text1}{PDF text2}{label}
+% in PDFTeX:
+% \hyperref{URL}{cat}{name}{text}
+%
 % command for external link
 \newcommand{\linklatexhtml}[3]{% \linklatexhtml{name}{latex_target}{html_target}
 \latexhtml{\htmladdnormallink{#1}{#2}}{\htmladdnormallink{#1}{#3}}}
 % commands for arbitrary link
-\newcommand{\mylink}[2]{% \mylink{link_id}{link_text}
+\newcommand{\mylink}[2]{% \mylink{link_id}{link_text} (internal link)
 \latexhtml{\hyperlink{#1}{#2}}{\hyperref{#2}{}{}{#1}}}
+\newcommand{\mylinkext}[2]{% \mylink{link_id}{link_text}  (external link)
+\latexhtml{\htmlref{#2}{#1}}{\hyperref{#2}{}{}{#1}}}
+
+% \newcommand{\mylink}[2]{% \mylink{link_id}{link_text}
+% \latexhtml{\hyperlink{#1}{#2}}{\htmlref{#2}{#1}}}
+% \newcommand{\mylink}[2]{% \mylink{link_id}{link_text}
+% \latexhtml{\hyperref{#1}{}{}{#2}}{\hyperref{#2}{}{}{#1}}}
+
 % commands for targets 
 % http://tex.stackexchange.com/questions/17057/hypertarget-seems-to-aim-a-line-too-low
 \makeatletter
@@ -66,11 +79,11 @@
 %% add xr-hyper (part of hyperref) to used packages, *BEFORE* hyperref (or html)
 \newcommand{\facname}{} % must be here because it is in idl.tex
 \newcommand{\FACNAME}{} % must be here because it is in idl.tex
-\externaldocument{intro}
-\externaldocument{csub}
-\externaldocument{idl}
-\externaldocument{facilities}
-\externaldocument{subroutines}
+\externaldocument{intro}[intro.pdf]
+\externaldocument{csub}[csub.pdf]
+\externaldocument{idl}[idl.pdf]
+\externaldocument{facilities}[facilities.pdf]
+\externaldocument{subroutines}[subroutines.pdf]
 \begin{htmlonly}
 \externallabels{.}{/tmp/introlabels.pl}
 \externallabels{.}{/tmp/csublabels.pl}
@@ -121,9 +134,10 @@ creating a directory named {\tt Healpix\_\hpxversion}\ whose structure is shown 
 \begin{figure}[!ht]
 %\centerline{\psfig{figure=fig/dir_tree.eps,width=\textwidth}}
 \latexhtml{%for latex
-\centerline{\includegraphics[bb=0pt 0pt 562pt 478pt,width=\textwidth,clip]{fig/dir_tree.pdf}}
+% cf extratbb -vO image_file
+%\centerline{\includegraphics[bb=0pt 0pt 562pt 478pt,width=\textwidth,clip]{fig/dir_tree.pdf}}
+\centerline{\includegraphics[bb=0 0 506 430,width=\textwidth,clip]{fig/dir_tree.pdf}}
 }{%for html
-%\centerline{\includegraphics[bb=1pt 1pt 562pt 478pt,width=\textwidth]{fig/dir_tree.eps}\htmlimage{}}
 \centerline{\includegraphics[width=0.5\textwidth]{fig/dir_tree}}
 }
 \caption[Directory structure]{%
@@ -1013,27 +1027,26 @@ GNU Data Language (GDL), is a {\em free} clone of IDL 6.0 (for more information 
 Both the source code and precompiled executables for various platforms are available.
 
 When used to run IDL-Healpix routines, GDL \gdlversion or more gives
-satisfactory results\footnote{All the caveats listed below have been noticed in
-GDL v0.9.3
-and may be solved in subsequent versions. Please send all your questions
+very satisfactory results\footnote{All the caveats listed below have been noticed in
+GDL v0.9.6 released on Jan 2016 and may be solved in subsequent versions. Please send all your questions
 {\em on} GDL directly to GDL developpers.}. The calculations agree with those done under IDL, with
-comparable computation times, but a few features are missing in the production
+comparable computation times, but a few minor features are missing in the production
 of Postscript, GIF and PNG files, as described below.
 
-\subsubsection*{GDL Specific requirements}
+\subsubsection*{GDL+\healpix specific requirements}
 \begin{enumerate}
-\item 
-By default, GDL uses the value of the environment variable {\tt \$GDL\_DIR}, or the location of the {\tt gdl} executable, 
-as temporary storage disc space location, which may create problems in many situations.
-It is therefore recommended to set the environment variable {\tt IDL\_TMPDIR} to a more suitable location
-with unrestricted access
- (such as {\tt /tmp}, {\tt /usr/tmp} or {\tt /var/tmp}) before starting GDL.\\
-Ie, if your shell is bash, sh, ksh, or zsh:\\
-{\tt \% export IDL\_TMPDIR=/tmp}\hfill\\
-{\tt \% hgdl}\hfill\\
-If your shell is csh or tcsh:\\
-{\tt \% setenv IDL\_TMPDIR /tmp}\hfill\\
-{\tt \% hgdl}\hfill\\
+% \item 
+% By default, GDL uses the value of the environment variable {\tt \$GDL\_DIR}, or the location of the {\tt gdl} executable, 
+% as temporary storage disc space location, which may create problems in many situations.
+% It is therefore recommended to set the environment variable {\tt IDL\_TMPDIR} to a more suitable location
+% with unrestricted access
+%  (such as {\tt /tmp}, {\tt /usr/tmp} or {\tt /var/tmp}) before starting GDL.\\
+% Ie, if your shell is bash, sh, ksh, or zsh:\\
+% {\tt \% export IDL\_TMPDIR=/tmp}\hfill\\
+% {\tt \% hgdl}\hfill\\
+% If your shell is csh or tcsh:\\
+% {\tt \% setenv IDL\_TMPDIR /tmp}\hfill\\
+% {\tt \% hgdl}\hfill\\
 
 
 % These routines, coded in IDL are part of the ITTVIS library and
@@ -1048,7 +1061,8 @@ Please note that GDL must be linked with
 \htmladdnormallink{\tt ImageMagick}{http://www.imagemagick.org}
 (or \htmladdnormallink{\tt GraphicsMagick}{http://www.graphicsmagick.org/}) 
 during installation to produce PNG and JPEG
-output files.
+output files, and with \htmladdnormallink{\tt pslib}{http://pslib.sourceforge.net} to produce PostScript and PDF files (in the latter case,
+a recent version of \htmladdnormallink{\tt ghostscript}{http://www.ghostscript.com/}, i.e. 9.07 or more, is also recommended).
 
 \end{enumerate}
 
@@ -1095,27 +1109,34 @@ output files.
 
 \subsubsection*{Impact of GDL limitations on \healpix}
 \begin{itemize}
-\item {\tt Ximview} won't work under GDL 0.9.3 (because it requires the
-IDL native routine {\tt WIDGET\_DRAW})
-\item When run under GDL, the 
-\htmlref{{\tt cartview}, {\tt gnomview}, {\tt mollview} and {\tt orthview}}{idl:mollview} 
-routines won't produce Postscript outputs (because GDL's {\tt TV} routine does
-not accept the {\tt NORMAL} keyword) nor GIF outputs (because GDL's {\tt
-WRITE\_GIF} is not yet functional). \\
-But PNG and JPEG files are OK, see above.
-\item In those same routines, the {\tt TRANSPARENT} keyword will be ignored in the
-production of PNG files under GDL. For the same reasons, {\tt hpx2gs} won't mark missing pixels as
-transparent in the output PNG file.
+% \item {\tt Ximview} won't work under GDL 0.9.3 (because it requires the
+% IDL native routine {\tt WIDGET\_DRAW})
+\item When run under GDL 0.9.6, and if the requirements stated above are met, 
+the visualization routines
+\htmlref{{\tt azeqview}, {\tt cartview}, {\tt gnomview}, {\tt mollview} and {\tt orthview}}{idl:mollview} 
+will produce correct screen (X) outputs and PS, PDF, PNG and JPEG images, with the following caveats:
+\begin{itemize}
+\item they won't produce GIF files (because GDL's {\tt WRITE\_GIF} is not yet functional); 
+\item the \mylinkext{idl:mollview:transparent}{\tt transparent} keyword will be ignored in the
+production of PNG files under GDL (except when \mylinkext{idl:mollview:truecolors}{\tt TrueColors} is set and $N$x3 map is provided), and for the same reason, the \htmlref{\tt hpx2gs}{idl:hpx2gs} routine won't mark missing pixels as
+transparent in the output PNG file;
+\item  and finally, the \mylinkext{idl:mollview:pfonts}{\tt pfonts} keyword will not allow the selection of other fonts than Hershey vectorial fonts (pfonts[0]=-1).
+% \item and finally, the virtual window (\mylinkext{idl:mollview:window}{\tt window}$<0$, used for remote production of PNG images over slow network connections) won't work as expected, except in cases where
+% \mylinkext{idl:mollview:shaded}{\tt shaded} or 
+% \mylinkext{idl:mollview:truecolors}{\tt TrueColors} is set.
+\end{itemize}
+All other features work properly.
+
 % \item The {\tt healpix\_doc} routine won't work under GDL.
 %\item The behaviour of {\tt Ximview} under GDL has not been investigated.
 \end{itemize}
 
-\subsubsection*{\healpix with GDL status update (Oct 2015)}
-Some of the caveats and limitations detailed above, and other not listed here, 
-are still present in GDL 0.9.4 (Sept 2013) and 0.9.5 (Oct 2014).
-However, they have been clearly identified and actively looked at by the GDL 
-development team and most, if not all, of them
-are expected to be fixed in the forthcoming GDL 0.9.6 (scheduled for late 2015).
+% \subsubsection*{\healpix with GDL status update (Oct 2015)}
+% Some of the caveats and limitations detailed above, and other not listed here, 
+% are still present in GDL 0.9.4 (Sept 2013) and 0.9.5 (Oct 2014).
+% However, they have been clearly identified and actively looked at by the GDL 
+% development team and most, if not all, of them
+% are expected to be fixed in the forthcoming GDL 0.9.6 (scheduled for late 2015).
 
 
 %******************************************************************************
@@ -1165,12 +1186,12 @@ are expected to be fixed in the forthcoming GDL 0.9.6 (scheduled for late 2015).
       the output $C(\ell)$ if requested;
 	\item the $a_{\ell m}$ generated by 
 	\htmlref{{\tt create\_alm}}{sub:create_alm} subroutine can now take into account
- non-zero (exotic) TB and EB cross-spectra (option \mylink{sub:create_alm:polar}{{\tt polar=2}}) if the input FITS file contains the relevant information
+ non-zero (exotic) TB and EB cross-spectra (option \mylinkext{sub:create_alm:polar}{{\tt polar=2}}) if the input FITS file contains the relevant information
 	\item new routines \htmlref{{\tt nest2uniq}}{sub:nest2uniq} 
 	and \htmlref{{\tt uniq2nest}}{sub:uniq2nest} for conversion 
 	of standard pixel index to/from Unique ID number. See \htmlref{''The Unique Identifier scheme''}{intro:unique} section in \linklatexhtml{''\healpix Introduction Document''}{intro.pdf}{intro.htm} for more details.
 	\item improved 
-\mylink{sub:write_bintabh:repeat}{{\tt repeat}}
+\mylinkext{sub:write_bintabh:repeat}{{\tt repeat}}
 behavior in \htmlref{{\tt write\_bintabh}}{sub:write_bintabh} routine
 	\item edited \htmlref{{\tt map2alm\_iterative}}{sub:map2alm_iterative} 
 routine to avoid a bug specific to Intel's Ifort 15.0.2
@@ -1184,18 +1205,18 @@ routine to avoid a bug specific to Intel's Ifort 15.0.2
 \htmlref{{\tt azeqview, cartview, gnomview, mollview, orthview}}{idl:mollview} 
 visualization routines:
  \begin{itemize}
- \item addition of \mylink{idl:mollview:pdf}{{\tt PDF}} keyword for production of Adobe PDF outputs;
- \item addition of \mylink{idl:mollview:latex}{{\tt LATEX}} keyword for genuine 
+ \item addition of \mylinkext{idl:mollview:pdf}{{\tt PDF}} keyword for production of Adobe PDF outputs;
+ \item addition of \mylinkext{idl:mollview:latex}{{\tt LATEX}} keyword for genuine 
  or emulated \LaTeX\ processing of character strings;
- \item addition of \mylink{idl:mollview:pfonts}{{\tt PFONTS}} keyword to select 
+ \item addition of \mylinkext{idl:mollview:pfonts}{{\tt PFONTS}} keyword to select 
 origin and type of character font;
- \item the \mylink{idl:mollview:crop}{{\tt CROP}} keyword now has the same behavior for all output media (GIF, JPEG, PDF, PNG, PS, ... and X);  % 
-  the \mylink{idl:mollview:nobar}{{\tt NOBAR}} keyword now removes the color bar {\em or} the polarization color wheel, as applicable; %
- correct EQUINOX date in header of output \mylink{idl:mollview:fits}{FITS} map; %
+ \item the \mylinkext{idl:mollview:crop}{{\tt CROP}} keyword now has the same behavior for all output media (GIF, JPEG, PDF, PNG, PS, ... and X);  % 
+  the \mylinkext{idl:mollview:nobar}{{\tt NOBAR}} keyword now removes the color bar {\em or} the polarization color wheel, as applicable; %
+ correct EQUINOX date in header of output \mylinkext{idl:mollview:fits}{FITS} map; %
  the double precision maps and those with constant value are now correctly handled.
  \end{itemize}
 %
-\item \htmlref{{\tt fits2cl}}{idl:fits2cl}: addition of \mylink{idl:fits2cl:planck2}{{\tt /PLANCK2}} keyword
+\item \htmlref{{\tt fits2cl}}{idl:fits2cl}: addition of \mylinkext{idl:fits2cl:planck2}{{\tt /PLANCK2}} keyword
 to read best fit $C(\ell)$ model to Planck 2015 data.
 %
 \item new routines \htmlref{{\tt nest2uniq}}{idl:nest2uniq} and \htmlref{{\tt uniq2nest}}{idl:uniq2nest} for conversion of standard pixel index to/from Unique ID number. See \htmlref{''The Unique Identifier scheme''}{intro:unique} section in \linklatexhtml{''\healpix Introduction Document''}{intro.pdf}{intro.htm} for more details.
@@ -1320,19 +1341,19 @@ affecting the external $B(l)$ reading in the F90 facilities
   \item \htmlref{{\tt cartview, gnomview, mollview, orthview}}{idl:mollview}: 
   \begin{itemize} 
     \item addition of  
-    \mylink{idl:mollview:bad_color}{{\tt BAD\_COLOR}},
-    \mylink{idl:mollview:bg_color}{{\tt BG\_COLOR}} and
-    \mylink{idl:mollview:fg_color}{{\tt FG\_COLOR}} keywords to change the color of the
+    \mylinkext{idl:mollview:bad_color}{{\tt BAD\_COLOR}},
+    \mylinkext{idl:mollview:bg_color}{{\tt BG\_COLOR}} and
+    \mylinkext{idl:mollview:fg_color}{{\tt FG\_COLOR}} keywords to change the color of the
     missing pixels, background and foreground labels and lines.
     \item support for 
-    \mylink{idl:mollview:colt}{{\tt COLT='planck1'}} and 
-    \mylink{idl:mollview:colt}{{\tt COLT='planck2'}} to use the Planck color tables
+    \mylinkext{idl:mollview:colt}{{\tt COLT='planck1'}} and 
+    \mylinkext{idl:mollview:colt}{{\tt COLT='planck2'}} to use the Planck color tables
     defined in \htmlref{{\tt planck\_colors}}{{idl:planck_colors}}
   \end{itemize}
 %
 \item Bugs correction in 
-\mylink{idl:bin_llcl}{{\tt bin\_llcl}},
-\mylink{idl:query_disc}{{\tt query\_disc}}.
+\mylinkext{idl:bin_llcl}{{\tt bin\_llcl}},
+\mylinkext{idl:query_disc}{{\tt query\_disc}}.
 %
   \item update of the required
     \htmladdnormallink{{\tt IDL-astron} library}{http://idlastro.gsfc.nasa.gov/homepage.html}

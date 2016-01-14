@@ -49,24 +49,24 @@
 
 \begin{qualifiers}
   \begin{qulist}{} %%%% NOTE the ``extra'' brace here %%%%
- 	\item[{File}] 
+ 	\item[{File}]   \mytarget{idl:read_fits_map:File}
           name of a FITS file containing 
                the \healpix map in an extension or in the image field 
 
- 	\item[{T\_sky}] 
+ 	\item[{T\_sky}]  \mytarget{idl:read_fits_map:T_sky}
 	variable containing on output the \healpix map
 
-       \item[{Hdr}]
+       \item[{Hdr}] \mytarget{idl:read_fits_map:Hdr}
 		  (optional), \\
 		string variable containing on output
 		  the FITS primary header
 
-       \item[{Exthdr}]
+       \item[{Exthdr}] \mytarget{idl:read_fits_map:Exthdr}
 		  (optional), \\
 		string variable containing on output
 		  the FITS extension header
 
-  	\item[{PIXEL=}] 
+  	\item[{PIXEL=}]  \mytarget{idl:read_fits_map:PIXEL}
 		(optional), \\
                pixel number to read from or pixel range to read
                  (in the order of appearance in the file), starting from 0. \\
@@ -75,22 +75,22 @@
 		(included) \\
                if absent             : read the whole file
 
-	 \item[{NSIDE=}]
+	 \item[{NSIDE=}] \mytarget{idl:read_fits_map:NSIDE}
 		(optional), \\
 	        returns on output the \healpix resolution parameter, as read
 		from the FITS header. Set to -1 if not found
 
-	 \item[{ORDERING=}]
+	 \item[{ORDERING=}] \mytarget{idl:read_fits_map:ORDERING}
 	        (optional), \\
 	        returns on output the pixel ordering, as read from the FITS
 	        header. Either 'RING' or 'NESTED' or ' ' (if not found).
 
-	 \item[{COORDSYS=}]
+	 \item[{COORDSYS=}] \mytarget{idl:read_fits_map:COORDSYS}
 	        (optional), \\
 	        returns on output the astrophysical coordinate system used, 
 		as read from FITS header (value of keywords COORDSYS or SKYCOORD)
 
-       \item[{Extension=}]
+       \item[{EXTENSION=}] \mytarget{idl:read_fits_map:EXTENSION}
 		(optional), \\
 	extension unit to be read from FITS file: 
  either its 0-based ID number (ie, 0 for first extension {\em after} primary array) 
@@ -107,9 +107,9 @@
 
 \begin{keywords}
   \begin{kwlist}{} %%% extra brace
-   \item[{HELP=}] if set, an extensive help is displayed and no
+   \item[{HELP=}] \mytarget{idl:read_fits_map:HELP} if set, an extensive help is displayed and no
 	file is read
-  \item[{SILENT=}] if set, no message is issued during normal execution
+  \item[{SILENT=}] \mytarget{idl:read_fits_map:SILENT} if set, no message is issued during normal execution
    \end{kwlist}
 \end{keywords}
 

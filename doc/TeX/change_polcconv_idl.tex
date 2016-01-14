@@ -34,10 +34,10 @@ COSMO or IAU value.}
 
 \begin{qualifiers}
   \begin{qulist}{} %%%% NOTE the ``extra'' brace here %%%%
- 	\item[{File\_In}] 
+ 	\item[{File\_In}] \mytarget{idl:change_polcconv:File_In}
           name of a FITS file to be read
 
- 	\item[{File\_Out}] 
+ 	\item[{File\_Out}]  \mytarget{idl:change_polcconv:File_Out}
           name of a FITS file to be written, after modification of the
           polarisation coordinate convention, if applicable
 
@@ -46,33 +46,33 @@ COSMO or IAU value.}
 
 \begin{keywords}
   \begin{kwlist}{} %%% extra brace
-        \item[{/I2C}] changes from IAU to COSMO coordinate convention \\
+        \item[{/I2C}]  \mytarget{idl:change_polcconv:I2C} changes from IAU to COSMO coordinate convention \\
             -if POLCCONV is not found or found with value 'IAU', it is
              added/replaced with value 'COSMO', and the sign of the U stokes
              parameter map is changed \\
             -if POLCCONV already has value 'COSMO', File\_In is copied
             unchanged into File\_Out
 
-        \item[{/C2I}] changes from COSMO to IAU coordinate convention \\
+        \item[{/C2I}]  \mytarget{idl:change_polcconv:C2I} changes from COSMO to IAU coordinate convention \\
             -if POLCCONV is not found or found with value 'COSMO', it is
              added/replaced with value 'IAU', and the sign of the U stokes
              parameter map is changed \\
             -if POLCCONV already has value 'IAU',  File\_In is copied
             unchanged into File\_Out
 
-        \item[{/C2C}] does NOT change coordinate system \\
+        \item[{/C2C}]  \mytarget{idl:change_polcconv:C2C} does NOT change coordinate system \\
             -if POLCCONV is found with value 'IAU', program will issue error
             message and no file is written \\
             -in all other case POLCCONV is set/added with value 'COSMO', but
              data is NOT changed
 
-        \item[{/I2I}] does NOT change coordinate system \\
+        \item[{/I2I}]  \mytarget{idl:change_polcconv:I2I} does NOT change coordinate system \\
             -if POLCCONV is found with value 'COSMO', program will issue error
             message and no file is written \\
             -in all other case POLCCONV is set/added with value 'IAU', but
              data is NOT changed
 
-        \item[{/FORCE}] if set, the value of POLCCONV read from the FITS header is
+        \item[{/FORCE}]  \mytarget{idl:change_polcconv:FORCE} if set, the value of POLCCONV read from the FITS header is
           ignored.
               The sign of U is swapped (if used with /C2I or /I2C), and the
               FITS keyword is updated accordingly.

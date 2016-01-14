@@ -65,14 +65,14 @@ vertex(n,3,4)\mytarget{idl:pix_tools:vertex} & array double & optional OUT & thr
 {\tt pix2ang\_ring, nside, ipring, theta, phi} 
 
  \begin{tabular}{@{}p{0.25\hsize}@{\hspace{1ex}} p{0.75\hsize}@{}}
-                                         & renders \mylink{idl:pix_tools:theta}{{\tt theta}} and \mylink{idl:pix_tools:phi}{{\tt phi}} coordinates of the nominal pixel center given the pixel number \mylink{id:pix_tools:ipring}{{\tt ipring}} and a map resolution parameter \mylink{idl:pix_tools:nside}{{\tt nside}}. \\
+                                         & renders \mylink{idl:pix_tools:theta}{{\tt theta}} and \mylink{idl:pix_tools:phi}{{\tt phi}} coordinates of the nominal pixel center given the pixel number \mylink{idl:pix_tools:ipring}{{\tt ipring}} and a map resolution parameter \mylink{idl:pix_tools:nside}{{\tt nside}}. \\
      \end{tabular}\\\\
 %
 {\tt pix2vec\_ring, nside, ipring, vector [,vertex]} 
 
  \begin{tabular}{@{}p{0.25\hsize}@{\hspace{1ex}} p{0.75\hsize}@{}}
                                          & renders cartesian vector coordinates of
-                        the nominal pixel center given the pixel number \mylink{id:pix_tools:ipring}{{\tt ipring}}
+                        the nominal pixel center given the pixel number \mylink{idl:pix_tools:ipring}{{\tt ipring}}
                         and a map resolution parameter \mylink{idl:pix_tools:nside}{{\tt nside}}. Optionally returns 
                         the location of the 4 vertices for the pixel(s) under
                         consideration \\
@@ -81,13 +81,13 @@ vertex(n,3,4)\mytarget{idl:pix_tools:vertex} & array double & optional OUT & thr
 {\tt ang2pix\_ring, nside, theta, phi, ipring} 
 
  \begin{tabular}{@{}p{0.25\hsize}@{\hspace{1ex}} p{0.75\hsize}@{}}
-                                         & renders the pixel number \mylink{id:pix_tools:ipring}{{\tt ipring}} for a pixel which, given the map resolution parameter \mylink{idl:pix_tools:nside}{{\tt nside}}, contains the point on the sphere at angular coordinates \mylink{idl:pix_tools:theta}{{\tt theta}} and \mylink{idl:pix_tools:phi}{{\tt phi}}. \\
+                                         & renders the pixel number \mylink{idl:pix_tools:ipring}{{\tt ipring}} for a pixel which, given the map resolution parameter \mylink{idl:pix_tools:nside}{{\tt nside}}, contains the point on the sphere at angular coordinates \mylink{idl:pix_tools:theta}{{\tt theta}} and \mylink{idl:pix_tools:phi}{{\tt phi}}. \\
      \end{tabular}\\\\
 %
 {\tt vec2pix\_ring, nside, vector, ipring} 
 
  \begin{tabular}{@{}p{0.25\hsize}@{\hspace{1ex}} p{0.75\hsize}@{}}
-                                         & renders the pixel number \mylink{id:pix_tools:ipring}{{\tt ipring}} for a pixel which, given the map resolution parameter \mylink{idl:pix_tools:nside}{{\tt nside}}, contains the point on the sphere at cartesian coordinates \mylink{idl:pix_tools:vector}{{\tt vector}}. \\
+                                         & renders the pixel number \mylink{idl:pix_tools:ipring}{{\tt ipring}} for a pixel which, given the map resolution parameter \mylink{idl:pix_tools:nside}{{\tt nside}}, contains the point on the sphere at cartesian coordinates \mylink{idl:pix_tools:vector}{{\tt vector}}. \\
      \end{tabular}\\\\
 %
 {\tt pix2ang\_nest, nside, ipnest, theta, phi} 

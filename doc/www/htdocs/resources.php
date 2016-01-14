@@ -198,11 +198,14 @@ and<br>
 Misc
 <ul>
 <li>
-<a href="http://en.wikipedia.org/wiki/Healpix" >Wikipedia Page on HEALPix</a>
+<a href="http://en.wikipedia.org/wiki/Healpix">Wikipedia Page on HEALPix</a>
 </li>
 <li>
 	HEALPix on <a href="https://www.openhub.net/p/healpix">BlackDuck (previously Ohloh)</a> and
 <a href="http://www.digplanet.com/wiki/HEALPix#">digplanet</a>
+</li>
+<li>
+<a href="https://www.google.com/search?q=healpix&pws=0&biw=1395&bih=710&tbm=shop&source=lnms&sa=X&ved=0ahUKEwixwtO39-_JAhXHOBoKHQ0_CFgQ_AUICCgC&dpr=2#q=healpix&pws=0&tbm=bks&start=0">Some books mentioning HEALPix according to Google</a> (and some not)
 </li>
 </ul>
 </p>

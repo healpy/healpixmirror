@@ -45,19 +45,19 @@ each Stokes parameter is stored in a different extension of the same FITS file.}
 
 \begin{qualifiers}
   \begin{qulist}{} %%%% NOTE the ``extra'' brace here %%%%
- 	\item[{File}] 
+ 	\item[{File}]  \mytarget{idl:read_fits_cut4:File}
           name of a FITS file in which the map is to be written
 
- 	\item[{Pixel}] 
+ 	\item[{Pixel}]  \mytarget{idl:read_fits_cut4:Pixel}
 	 (OUT, LONG vector), \\ index of observed (or valid) pixels
 
- 	\item[{Signal}] 
+ 	\item[{Signal}]  \mytarget{idl:read_fits_cut4:Signal}
 	 (OUT, FLOAT vector), \\ value of signal in each observed pixel
 
- 	\item[{N\_Obs}] 
+ 	\item[{N\_Obs}]  \mytarget{idl:read_fits_cut4:N_Obs}
 	 (OUT, LONG or INT vector, Optional), \\ number of observation per pixel
 
- 	\item[{Serror}] 
+ 	\item[{Serror}]  \mytarget{idl:read_fits_cut4:Serror}
 	 (OUT, FLOAT vector, Optional), \\{\em rms} of signal in pixel. For white noise,
                    this is $\propto 1/\sqrt{{\rm n\_obs}}$
 
@@ -66,34 +66,31 @@ each Stokes parameter is stored in a different extension of the same FITS file.}
 
 \begin{keywords}
   \begin{kwlist}{} %%% extra brace
-    	\item[EXTENSION\mytarget{idl:read_fits_cut4:EXTENSION}%
- =] 	
+    	\item[EXTENSION=]\mytarget{idl:read_fits_cut4:EXTENSION}%
 		(IN, optional), \\
 		0 based number of extension to read. Extension 0 contains the
 temperature information, while extensions 1 and 2 contain respectively the Q
 and U Stokes parameters related information. \default{0} 
 
-    	\item[HDR\mytarget{idl:read_fits_cut4:HDR}%
- =] 	
+    	\item[HDR=]\mytarget{idl:read_fits_cut4:HDR}%
 		(OUT, optional), \\
 		String array containing the primary header. 
 
-    	\item[XHDR\mytarget{idl:read_fits_cut4:XHDR}%
- =] 	
+    	\item[XHDR=]\mytarget{idl:read_fits_cut4:XHDR}%
 		(OUT, optional), \\
 		String array containing the extension header. 
 
-	 \item[{NSIDE=}]
+	 \item[{NSIDE=}]  \mytarget{idl:read_fits_cut4:NSIDE}
 		(OUT, optional), \\
 	        returns on output the \healpix resolution parameter, as read
 		from the FITS header. Set to -1 if not found
 
-	 \item[{ORDERING=}]
+	 \item[{ORDERING=}] \mytarget{idl:read_fits_cut4:ORDERING}
 	        (OUT, optional), \\
 	        returns on output the pixel ordering, as read from the FITS
 	        header. Either 'RING' or 'NESTED' or ' ' (if not found).
 
-	 \item[{COORDSYS=}]
+	 \item[{COORDSYS=}] \mytarget{idl:read_fits_cut4:COORDSYS}
 	        (OUT, optional), \\
 	        returns on output the astrophysical coordinate system used, 
 		as read from FITS header (value of keywords COORDSYS or SKYCOORD)
