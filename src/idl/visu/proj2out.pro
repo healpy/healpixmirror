@@ -132,10 +132,17 @@ pro proj2out, planmap, Tmax, Tmin, color_bar, dx, title_display, sunits, $
 ;   Dec 2014, EH, added PDF
 ;   May 2015, EH, added LATEX
 ;   Jun 2015, EH, setting NOBAR removes color bar *and* polarization direction color ring
+;   Jan 2016, EH, implements workarounds of GDL 0.9.6 limitations
+;         (no DEVICE,DECOMPOSED= support, 
+;          non-informative !D.N_COLORS, 
+;          weird Z device in 8bit/pixel case,
+;          no WRITE_PNG,TRANSPARENT (see below),
+;          no WRITE_GIF,
+;          limited !P.FONT)
 ;
 ;
 ; 2 problems with write_png,...,/transparent in GDL:
-;  - it is currently (v0.9.2) not supported
+;  - it is currently (v0.9.6) not supported
 ;  - it expects a pixel mask (ie an array of the same size as the image) with
 ;    values in [0,255] setting the opacity of each pixel
 ;   while the IDL version expects a color mask (ie, a vector of size 255) with

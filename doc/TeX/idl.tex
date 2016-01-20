@@ -23,21 +23,21 @@
 %\fi
 
 
-%%%%%%%%%%%%%% to allow reference to keyword from another PDF file
-\newcounter{word}
-\makeatletter
-\newcommand*{\LBL}{%
-  \@dblarg\@LBL
-}
-\def\@LBL[#1]#2{%
-  \begingroup
-    \renewcommand*{\theword}{#2}%
-    \refstepcounter{word}%
-    \label{#1}%
-    #2%
-  \endgroup
-}
-\makeatother
+% %%%%%%%%%%%%%% to allow reference to keyword from another PDF file
+% \newcounter{word}
+% \makeatletter
+% \newcommand*{\LBL}{%
+%   \@dblarg\@LBL
+% }
+% \def\@LBL[#1]#2{%
+%   \begingroup
+%     \renewcommand*{\theword}{#2}%
+%     \refstepcounter{word}%
+%     \label{#1}%
+%     #2%
+%   \endgroup
+% }
+% \makeatother
 
 %%%%%% ----- commands for HTML and PDF -----
 \newcommand{\nside}{N_{\rm side}}
@@ -58,10 +58,12 @@
 \makeatletter
      \newcommand{\nop}[1]{\Hy@raisedlink{\hypertarget{#1}{}}}
 \makeatother
-\newcommand{\mytarget}[1]{%
+% http://tex.stackexchange.com/questions/63895/click-to-go-to-an-anchored-line
+\newcommand{\mytarget}[1]{%\mytarget{id}
 \nop{#1}%
-\LBL[#1]{}%
-}%    \mytarget{id}
+%\LBL[#1]{}%\
+\phantomsection\label{#1}%
+}%    
 \begin{htmlonly}
  \newcommand{\mytarget}[1]{\label{#1}}
 \end{htmlonly}

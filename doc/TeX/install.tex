@@ -39,6 +39,8 @@
 \latexhtml{\hyperlink{#1}{#2}}{\hyperref{#2}{}{}{#1}}}
 \newcommand{\mylinkext}[2]{% \mylink{link_id}{link_text}  (external link)
 \latexhtml{\htmlref{#2}{#1}}{\hyperref{#2}{}{}{#1}}}
+%\latexhtml{\hyperref[#1]{#2}}{\hyperref{#2}{}{}{#1}}}
+%\latexhtml{\hyperref{#2}{}{}{#1}}{\hyperref{#2}{}{}{#1}}}
 
 % \newcommand{\mylink}[2]{% \mylink{link_id}{link_text}
 % \latexhtml{\hyperlink{#1}{#2}}{\htmlref{#2}{#1}}}
@@ -1018,6 +1020,9 @@ See also \htmladdnormallink{{\tt http://www.idlcoyote.com/misc\_tips/maccursor.h
 \htmlref{{\tt mollcursor}}{idl:mollcursor} documentation in \linklatexhtml{''IDL
 Facilities''}{idl.pdf}{idl.htm}).
 
+
+\newpage%%%%%%%%%%%%
+
 \subsection{Using GDL instead of IDL}
 \label{install:using_gdl}
 \mytarget{install:using_gdl}
@@ -1034,7 +1039,26 @@ comparable computation times, but a few minor features are missing in the produc
 of Postscript, GIF and PNG files, as described below.
 
 \subsubsection*{GDL+\healpix specific requirements}
-\begin{enumerate}
+To fully enjoy GDL capabilities
+\begin{itemize}
+\item \healpix 3.30 must be installed, and {\tt Healpix\_3.30/src/idl/visu/proj2out.pro} must be replaced with the one found in ??.
+
+\item
+Besides the mandatory requirements (%
+\htmladdnormallink{\tt plplot}{http://plplot.sourceforge.net/source/index.html}, 
+\htmladdnormallink{\tt gsl}{http://www.gnu.org/software/gsl}, 
+\htmladdnormallink{\tt readline}{http://ftp.gnu.org/pub/gnu/readline/} 
+and 
+\htmladdnormallink{\tt zlib}{http://www.zlib.net/}) 
+GDL must also have been (pre-)compiled with links to
+\begin{itemize}
+\item \htmladdnormallink{\tt ImageMagick}{http://www.imagemagick.org}
+(or \htmladdnormallink{\tt GraphicsMagick}{http://www.graphicsmagick.org/}) 
+to produce PNG and JPEG output files, 
+\item \htmladdnormallink{\tt pslib}{http://pslib.sourceforge.net} to produce PostScript and PDF files (in the latter case,
+a recent version of \htmladdnormallink{\tt ghostscript}{http://www.ghostscript.com/}, i.e. 9.07 or more, is also recommended).
+\end{itemize}
+
 % \item 
 % By default, GDL uses the value of the environment variable {\tt \$GDL\_DIR}, or the location of the {\tt gdl} executable, 
 % as temporary storage disc space location, which may create problems in many situations.
@@ -1056,15 +1080,7 @@ of Postscript, GIF and PNG files, as described below.
 % {http://idlastro.gsfc.nasa.gov/idllibsrch.html}.
 % They will run properly under GDL.
 
-\item
-Please note that GDL must be linked with 
-\htmladdnormallink{\tt ImageMagick}{http://www.imagemagick.org}
-(or \htmladdnormallink{\tt GraphicsMagick}{http://www.graphicsmagick.org/}) 
-during installation to produce PNG and JPEG
-output files, and with \htmladdnormallink{\tt pslib}{http://pslib.sourceforge.net} to produce PostScript and PDF files (in the latter case,
-a recent version of \htmladdnormallink{\tt ghostscript}{http://www.ghostscript.com/}, i.e. 9.07 or more, is also recommended).
-
-\end{enumerate}
+\end{itemize}
 
 % \subsubsection*{Requirements specific to GDL 0.9.2}
 
@@ -1116,16 +1132,17 @@ the visualization routines
 \htmlref{{\tt azeqview}, {\tt cartview}, {\tt gnomview}, {\tt mollview} and {\tt orthview}}{idl:mollview} 
 will produce correct screen (X) outputs and PS, PDF, PNG and JPEG images, with the following caveats:
 \begin{itemize}
-\item they won't produce GIF files (because GDL's {\tt WRITE\_GIF} is not yet functional); 
+\item they won't produce \mylinkext{idl:mollview:gif}{GIF} files (because GDL's {\tt write\_gif} is not yet functional); 
 \item the \mylinkext{idl:mollview:transparent}{\tt transparent} keyword will be ignored in the
-production of PNG files under GDL (except when \mylinkext{idl:mollview:truecolors}{\tt TrueColors} is set and $N$x3 map is provided), and for the same reason, the \htmlref{\tt hpx2gs}{idl:hpx2gs} routine won't mark missing pixels as
+production of \mylinkext{idl:mollview:png}{PNG} files under GDL (except when \mylinkext{idl:mollview:truecolors}{\tt TrueColors} is set and $N$x3 map is provided), 
+and for the same reason, the \htmlref{\tt hpx2gs}{idl:hpx2gs} routine won't mark missing pixels as
 transparent in the output PNG file;
 \item  and finally, the \mylinkext{idl:mollview:pfonts}{\tt pfonts} keyword will not allow the selection of other fonts than Hershey vectorial fonts (pfonts[0]=-1).
 % \item and finally, the virtual window (\mylinkext{idl:mollview:window}{\tt window}$<0$, used for remote production of PNG images over slow network connections) won't work as expected, except in cases where
 % \mylinkext{idl:mollview:shaded}{\tt shaded} or 
 % \mylinkext{idl:mollview:truecolors}{\tt TrueColors} is set.
 \end{itemize}
-All other features work properly.
+All other features work properly, including the \mylinkext{idl:mollview:latex}{\tt Latex} keyword.
 
 % \item The {\tt healpix\_doc} routine won't work under GDL.
 %\item The behaviour of {\tt Ximview} under GDL has not been investigated.

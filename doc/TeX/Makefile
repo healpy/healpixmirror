@@ -53,6 +53,7 @@ pdf: $(pdf)
 crossref: $(pdf) $(cross)
 	mkdir -p $(PDFDIR)
 	cp $(pdf) $(PDFDIR)
+	grep reference *.log
 
 # all HTML
 html: $(html) main.html
@@ -74,7 +75,7 @@ $(pdf): %.pdf : %.tex healpix.sty $(incs)
 	-$(PDFTEX) $(PDFLLAGS) $< >/dev/null
 	@echo "$(GREEN_COLOR)          $@  done                $(NO_COLOR)\n"
 
-# cross-reference pass on PDF
+# cross-reference pass on each PDF
 $(cross): %.cross : %.tex healpix.sty $(incs)
 	@echo "$(GREEN_COLOR)regenerating    $*.pdf    for cross-referencing$(NO_COLOR)"
 	-$(PDFTEX) $(PDFLLAGS) $< >/dev/null
