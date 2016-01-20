@@ -132,10 +132,17 @@ pro proj2out, planmap, Tmax, Tmin, color_bar, dx, title_display, sunits, $
 ;   Dec 2014, EH, added PDF
 ;   May 2015, EH, added LATEX
 ;   Jun 2015, EH, setting NOBAR removes color bar *and* polarization direction color ring
+;   Jan 2016, EH, implements workarounds of GDL 0.9.6 limitations
+;         (no DEVICE,DECOMPOSED= support, 
+;          non-informative !D.N_COLORS, 
+;          weird Z device in 8bit/pixel case,
+;          no WRITE_PNG,TRANSPARENT (see below),
+;          no WRITE_GIF,
+;          limited !P.FONT)
 ;
 ;
 ; 2 problems with write_png,...,/transparent in GDL:
-;  - it is currently (v0.9.2) not supported
+;  - it is currently (v0.9.6) not supported
 ;  - it expects a pixel mask (ie an array of the same size as the image) with
 ;    values in [0,255] setting the opacity of each pixel
 ;   while the IDL version expects a color mask (ie, a vector of size 255) with
@@ -143,6 +150,7 @@ pro proj2out, planmap, Tmax, Tmin, color_bar, dx, title_display, sunits, $
 ;-
 ;===============================================================================
 
+debug = 0
 do_gif  = keyword_set(gif)
 do_png  = keyword_set(png)
 do_jpeg = keyword_set(jpeg)
@@ -177,7 +185,7 @@ do_polamplitude = (polarization[0] eq 1)
 do_poldirection = (polarization[0] eq 2)
 do_polvector    = (polarization[0] eq 3)
 ;-------------------------------------------------
-in_gdl = 0 ;is_gdl()
+in_gdl = is_gdl()
 in_idl = ~in_gdl
 test_preview
 @idl_default_previewer ; defines the paper size
@@ -570,6 +578,8 @@ if (do_print) then begin
     TVLCT,red,green,blue
 ;    thick_dev = 2. ; device dependent thickness factor
     thick_dev = (!P.THICK ne 0) ? 2.*!P.THICK : 2. ; device dependent thickness factor
+; GDL (0.9.6) ignores FONT argument in XYOUTS, PLOT, ..., !p.font must be set prior to calling any of those
+    if (is_gdl() && my_latex eq 2) then !p.font = 0
 endif else begin ; X, png, gif or jpeg output
     idl_window = defined(window_user) ? window_user : 32 ; idl_window = 32 or window_user
     free_window    =  (idl_window gt 31) ; random  window if idl_window > 31
@@ -581,9 +591,10 @@ endif else begin ; X, png, gif or jpeg output
     if (use_z_buffer) then begin
         character_size = [!d.x_ch_size,!d.y_ch_size]
         set_plot,'z'
-        pixel_depth = (do_true) ? 24 : 8
+        pixel_depth = (do_true || do_shade) ? 24 : 8
         if (in_gdl) then begin
-; unresolved GDL0.9.2 bug: set_character_size ignored
+; unresolved GDL0.9.2  bug: set_character_size ignored
+; bug in GDL0.9.6: set_pixel_depth not accepted in DEVICE
             device,set_resolution= [xsize, ysize*w_dx_dy], set_character_size=character_size,z_buffering=0
         endif else begin
             device,set_resolution= [xsize, ysize*w_dx_dy], set_character_size=character_size,z_buffering=0, set_pixel_depth=pixel_depth
@@ -594,20 +605,19 @@ endif else begin ; X, png, gif or jpeg output
     ;to_patch = ((!d.n_colors GT 256) && do_image  && ~do_crop)
     ;to_patch = ((!d.n_colors GT 256) && do_image && in_idl)
     n_colors = !d.n_colors
-    if (in_gdl && (!d.name eq 'X' || !d.name eq 'WIN')) then begin ; work-around for GDL0.9.2 bug (!d.n_colors gets correct only after first call to WINDOW)
+    if (in_gdl && (!d.name eq 'X' || !d.name eq 'WIN')) then begin ; work-around for GDL0.9.2-0.9.6 bug (!d.n_colors gets correct only after first call to WINDOW)
         device, window_state=ws0
         device, get_visual_depth=gvd, window_state=ws1
         junk = where(ws1-ws0 eq 1, njunk) 
-        if (njunk eq 1)  then wdelete, junk[0] ; GDL 0.9.5 bug: spurious window created
+        if (njunk eq 1)  then wdelete, junk[0] ; GDL 0.9.5-0.9.6 bug: spurious window created
         n_colors = 2L^gvd
     endif
-    ;;;;help,n_colors
     to_patch = (n_colors GT 256 && do_image)
     if (in_gdl) then begin
-        if (use_z_buffer) then device else device,decomposed=0 ; in GDL0.9.2, decomposed is only available (but ignored) when device='X', or unvalid when device='Z'
-        ;if (to_patch) then loadct,0,/silent ; emulate decomposed
-        device, decomposed = to_patch ; does it work for GDL 0.9.5 ?
-        ;;;;;;device, decomposed = 0 ; does it work for GDL 0.9.5 ?
+        ; in GDL0.9.2 to 0.9.6, decomposed is only available (but ignored) when device='X', or unvalid when device='Z'
+        ;if (use_z_buffer) then device else device,decomposed=0 
+        ;if (use_z_buffer) then device else device, decomposed = to_patch
+        if (use_z_buffer || to_patch) then loadct,0,/silent ; emulate decomposed
     endif else begin
         device, decomposed = use_z_buffer || to_patch
     endelse
@@ -631,7 +641,7 @@ endif else begin ; X, png, gif or jpeg output
             message_patch,level=-1,/info,'==========================================================='
         endif
     endelse
-    if (in_idl) then TVLCT,red,green,blue
+    ;if (in_idl) then TVLCT,red,green,blue
     ;thick_dev = 1. ; device dependent thickness factor
     thick_dev = (!P.THICK ne 0) ? 1.*!P.THICK : 1. ; device dependent thickness factor
 endelse
@@ -655,18 +665,21 @@ plot, /nodata, myplot.urange, myplot.vrange, pos=myplot.position, XSTYLE=myplot.
 ; if (use_z_buffer) then begin; Set the background when doing a plot in Z buffer
 if (do_image) then begin; set the background when doing PNG/GIF/JPG
     l64ysize = long64(ysize*w_dx_dy)
-    if ~do_true then begin 
-        tv, replicate(!p.background, xsize, l64ysize)
+    if (do_true||do_shade) then begin 
+        back3 = [red[!p.background],green[!p.background],blue[!p.background]] ## replicate(1b, xsize*l64ysize)
+        tv, reform(back3, xsize, l64ysize, 3, /overwrite),true=3
+        back3=0
     endif else begin
-        back = [red[!p.background],green[!p.background],blue[!p.background]] ## replicate(1b, xsize*l64ysize)
-        tv, reform(back, xsize, l64ysize, 3, /overwrite),true=3
-        back=0
+        if (in_gdl && use_z_buffer) then begin ; ugly patch for GDL 0.9.6
+            tv, replicate(!p.background, xsize, l64ysize, 3), true=3
+        endif else begin
+            tv, replicate(!p.background, xsize, l64ysize)
+        endelse
     endelse
 endif
 ; ---------- projection independent ------------------
 ; map itself
-if (do_shade && ~do_image) then begin
-    ; shaded for X or PS
+if (do_shade) then begin
     image = planmap
     image3d  =   make_array(/uint, xsize, ysize, 3)
     image3d[*,*,0] = uint( (256. * red  [image] * shademap) < 65535.)
@@ -676,7 +689,6 @@ if (do_shade && ~do_image) then begin
     TV, bytscl(image3d),w_xll,w_yll,/normal,xsize=1.,true=3
     if (do_print) then tvlct,red,green,blue ; revert to custom color table
     image3d = 0
-; endif else if (do_true  && ~do_image) then begin
 endif else if (do_true) then begin
                                 ; truecolors for X or PS, red, green, blue are
                                 ; only useful for the {0,1,2}={Black, white, grey}
@@ -689,7 +701,11 @@ endif else if (do_true) then begin
 ;;;    if (do_print) then tvlct,red,green,blue ; revert to custom color table
     image3d = 0
 endif else begin
-    TV, planmap,w_xll,w_yll,/normal,xsize=1.
+    if (in_gdl && use_z_buffer) then begin ; ugly patch for GDL 0.9.6
+        TV, [ [[planmap]], [[planmap]], [[planmap]] ],true=3,w_xll,w_yll,/normal,xsize=1.
+    endif else begin
+        TV, planmap,                                         w_xll,w_yll,/normal,xsize=1.
+    endelse
 endelse
 hpxv11 = 0
 
@@ -709,7 +725,11 @@ if (~keyword_set(nobar) && ~do_crop && do_poldirection) then begin
         angle = atan(xx,-yy)  * !radeg + 180. ; angle in deg in [0,360]
     endelse
     color_ring = (bytscl(angle,TOP=252) + 3B) * mask + byte((1-mask)*!P.BACKGROUND); in [3,255] in ring and !p.background outside ring
-    TV,color_ring,cring_xll,cring_yll,/normal,xsize = npring/float(xsize)
+    if (in_gdl && use_z_buffer) then begin ; ugly patch for GDL 0.9.6
+        TV,[[[color_ring]],[[color_ring]],[[color_ring]]],true=3,cring_xll,cring_yll,/normal,xsize = npring/float(xsize)
+    endif else begin
+        TV,color_ring,                                           cring_xll,cring_yll,/normal,xsize = npring/float(xsize)
+    endelse
 endif
 
 ; polarisation vector field
@@ -739,10 +759,19 @@ if (do_polvector) then begin
 endif
 
 ;  the color bar
-if (~(do_crop || keyword_set(nobar) || do_poldirection || do_true)) then begin
+if (~(do_crop || keyword_set(nobar) || do_poldirection || do_true )) then begin
     color_bar_out = BYTE(CONGRID(color_bar,xsize*cbar_dx)) # REPLICATE(1.,(ysize*cbar_dy*w_dx_dy)>1)
     back[xsize*cbar_xll,0] = color_bar_out
-    TV, back,0,cbar_yll,/normal,xsize = 1.
+    if (do_shade) then begin
+        newback3 = (do_print) ? [ [[back]], [[back]], [[back]] ] : [ [[red[back]]], [[green[back]]], [[blue[back]]] ]
+        TV, newback3,0, cbar_yll, /normal, xsize = 1., true=3
+    endif else begin
+        if (in_gdl && use_z_buffer) then begin ; ugly patch for GDL 0.9.6
+            TV, [ [[back]], [[back]], [[back]] ], true=3, 0, cbar_yll, /normal, xsize = 1.
+        endif else begin
+            TV, back,                                     0, cbar_yll, /normal, xsize = 1.
+        endelse
+    endelse
     ; For Totor <<<<<<<<<<<<<<<<<<<<<<<<<
 ;     plot, /nodata, [tmin,tmax],[0,1],pos=[cbar_xll,cbar_yll,cbar_xur,cbar_yur],/noerase
 ;     plot, /nodata, myplot.urange, myplot.vrange, pos=myplot.position, XSTYLE=myplot.xstyle, YSTYLE=myplot.ystyle, /noerase ; to ensure that mollcursor will work
@@ -878,23 +907,15 @@ if do_image then begin
     if (do_png)  then file_image = (datatype(png)  ne 'STR') ? 'plot_'+proj_small+'.png'  : png
     if (do_jpeg) then file_image = (datatype(jpeg) ne 'STR') ? 'plot_'+proj_small+'.jpeg' : jpeg
         
-    image = (do_true) ? tvrd(true=3) : tvrd() ; a single call to tvrd()
+    image = (do_true || do_shade) ? tvrd(true=1) : tvrd() ; a single call to tvrd()
     if (do_shade) then begin
-        image3d  =   make_array(/uint, 3,!d.x_size,!d.y_size)
-        allshade =   make_array(/float,  !d.x_size,!d.y_size,value=1.0)
-        allshade[w_xll*!d.x_size,w_yll*!d.y_size] = shademap
-        shademap = 0
-        image3d[0,*,*] = uint( (256. * red  [image] * allshade) < 65535.)
-        image3d[1,*,*] = uint( (256. * green[image] * allshade) < 65535.)
-        image3d[2,*,*] = uint( (256. * blue [image] * allshade) < 65535.)
-;         if (in_gdl) then image3d = bytscl(image3d) ; GDL's write_png won't deal correctly with 16bit integers
-        image3d = bytscl(image3d) ; use 8 bit integers only
-        allshade = 0
+        image3d  =   make_array(/byte, 3, !d.x_size, !d.y_size)
+        image3d[0,0,0] = image
     endif
     if (do_true) then begin
         dim3d = valid_transparent ? 4 : 3
         image3d  =   make_array(/byte, dim3d, !d.x_size, !d.y_size)
-        for i=0,2 do image3d[i,*,*] = image[*,*,i]
+        image3d[0,0,0] = image
         if (valid_transparent) then begin
             image3d[3,*,*] = 255B
             if (itr   and 1) then begin ; turn grey  into transparent
@@ -930,7 +951,9 @@ if do_image then begin
             write_png, file_image, image3d
         endif else begin
             if (keyword_set(transparent)) then begin
-                mytransp = (in_idl) ? transp_colors  : 0 ; transp_colors[image]
+                mytransp = (in_idl) ? transp_colors  : 0 ; transp_colors[image] ; no transparent support in GDL
+                ;mytransp = (in_idl) ? transp_colors  : transp_colors[image]    ; GDL same as IDL doc
+                ;mytransp = transp_colors                                       ; GDL same as IDL actual behavior
                 write_png,file_image, image,red,green,blue, transparent=mytransp
             endif else begin
                 write_png,file_image, image,red,green,blue
@@ -947,16 +970,12 @@ if do_image then begin
     ; back to X window
     if (to_patch && ~use_z_buffer) then begin 
         if (in_gdl) then begin
-; unresolved GDL0.9.2 bug: if a window is already open for a given color table
-; (selected with loadct) subsequent tvlct are ignored for that window. Only a
-; new loadct will do the job.
-            device, decomposed=0
             tvlct,red,green,blue ; revert to custom color table
         endif else begin
             device,decomposed=0     ; put back colors on X window and redo color image
         endelse
         if (do_shade || do_true) then begin
-            tv, bytscl(image3d),0,0,/normal,xsize=1.,true=1
+            tv, bytscl(image3d[0:2,*,*]),0,0,/normal,xsize=1.,true=1
         endif else begin
             tv, image
         endelse
@@ -967,8 +986,8 @@ if do_image then begin
         test_preview, found_preview ;, /crash
         if (found_preview gt 0) then begin
             resolve_routine,'preview_file',/either ; ,compile_full_file=in_idl
-            if do_gif then preview_file, file_image, /gif
-            if do_png then preview_file, file_image, /png
+            if do_gif  then preview_file, file_image, /gif
+            if do_png  then preview_file, file_image, /png
             if do_jpeg then preview_file, file_image, /jpeg
         endif
     endif
@@ -998,6 +1017,7 @@ if (do_print) then begin
     if (do_pdf) then begin
         ;cgPS2PDF, file_ps, file_pdf, /delete_ps, pagetype=papersize, /showcmd
         epstopdf, file_ps, file_pdf, /delete_ps, /silent
+        ;epstopdf, file_ps, file_pdf, delete_ps=0,/showcmd, /silent
         ;epstopdf, file_ps, file_pdf, /delete_ps, silent=0, /showcmd ;, options='--autorotate=All'
         if (be_verbose) then print,'PDF file is in '+file_pdf
         if (keyword_set(preview)) then begin
