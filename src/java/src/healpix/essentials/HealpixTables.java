@@ -20,11 +20,13 @@
 
 package healpix.essentials;
 
+import java.io.Serializable;
+
 /** Various data tables needed by the {@link HealpixBase} class.
 
     @copyright 2011, 2012 Max-Planck-Society
     @author Martin Reinecke */
-public class HealpixTables
+public class HealpixTables implements Serializable
   {
   static final protected short[] ctab={
   0,1,256,257,2,3,258,259,512,513,768,769,514,515,770,771,4,5,260,261,6,7,262,
