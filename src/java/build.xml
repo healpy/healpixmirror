@@ -8,7 +8,7 @@
   <property name="junit.reports" value="${basedir}/reports"/>
   <path id="cpfits">
     <pathelement location="${classes}"/>
-    <fileset dir="${lib}" includes="nom.tam.fits*.jar"/>
+    <fileset dir="${lib}" includes="nom-tam-fits*.jar"/>
   </path>
   <path id="cpjunit">
     <pathelement location="${classes}"/>
