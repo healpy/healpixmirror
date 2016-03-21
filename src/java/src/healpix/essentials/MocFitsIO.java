@@ -31,9 +31,9 @@ public class MocFitsIO
     {
     FitsFactory.setUseHierarch(true);
     FitsFactory.setUseAsciiTables(false);
-    BasicHDU bhdu = (new Fits(inp)).getHDU(1);
+    FitsFactory.setLongStringsEnabled(true);
+    BasicHDU<?> bhdu = (new Fits(inp)).getHDU(1);
     Header head = bhdu.getHeader();
-    Header.setLongStringsEnabled(true);
 
     Object tmp = ((BinaryTable)bhdu.getData()).getFlattenedColumn(0);
     long[] data=null;
@@ -75,6 +75,7 @@ public class MocFitsIO
     {
     FitsFactory.setUseHierarch(true);
     FitsFactory.setUseAsciiTables(false);
+    FitsFactory.setLongStringsEnabled(true);
     Fits f = new Fits();
     Object[] table = new Object[1];
     long[] data=moc.toUniq();
