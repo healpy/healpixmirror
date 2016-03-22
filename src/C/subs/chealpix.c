@@ -532,7 +532,7 @@ static void nest2xyf64 (int64_t nside, int64_t pix, int *ix, int *iy,
 static int64_t xyf2nest64 (int64_t nside, int ix, int iy, int face_num)
   {
   return (face_num*nside*nside)
-    + _pdep_u64(ix,0x5555555555555555ull) + _pdep_u64(iy,0xaaaaaaaaaaaaaaaaull;
+    + _pdep_u64(ix,0x5555555555555555ull) + _pdep_u64(iy,0xaaaaaaaaaaaaaaaaull);
   }
 
 static void nest2xyf64 (int64_t nside, int64_t pix, int *ix, int *iy,
