@@ -1,6 +1,6 @@
 /* -----------------------------------------------------------------------------
  *
- *  Copyright (C) 1997-2012 Krzysztof M. Gorski, Eric Hivon, Martin Reinecke,
+ *  Copyright (C) 1997-2016 Krzysztof M. Gorski, Eric Hivon, Martin Reinecke,
  *                          Benjamin D. Wandelt, Anthony J. Banday,
  *                          Matthias Bartelmann,
  *                          Reza Ansari & Kenneth M. Ganga
@@ -30,6 +30,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <inttypes.h>
 
 #include "chealpix.h"
 
@@ -96,7 +97,7 @@ static void test1_helper2 (long nside, long dpix)
 
 static void test1(void) {
 
-  hpint64  nside;
+  int64_t  nside;
   int i;
 
   printf("Starting C Healpix pixel routines test for normal nsides\n");
@@ -104,7 +105,7 @@ static void test1(void) {
   for (i=0; i<=13; ++i)
     {
     nside = 1LL<<i;
-    printf("Nside: %lld\n",nside);
+    printf("Nside: %" PRId64 "\n",nside);
     test1_helper1(nside,nside*nside/123456+1);
     test1_helper2(nside,nside*nside/123456+1);
     }
@@ -112,18 +113,18 @@ static void test1(void) {
   for (i=0; i<=12; ++i)
     {
     nside = (1LL<<i)+5;
-    printf("Nside: %lld\n",nside);
+    printf("Nside: %" PRId64 "\n",nside);
     test1_helper2(nside,nside*nside/123456+1);
     }
 
   printf("test completed\n\n");
 }
 
-static void test2_helper1 (hpint64 nside, hpint64 dpix)
+static void test2_helper1 (int64_t nside, int64_t dpix)
   {
   double theta, phi;
   double vec[3];
-  hpint64  ipix, npix, ip2, ip1;
+  int64_t  ipix, npix, ip2, ip1;
 
   /* Find the number of pixels in the full map */
   npix = nside2npix64(nside);
@@ -132,7 +133,7 @@ static void test2_helper1 (hpint64 nside, hpint64 dpix)
     nest2ring64(nside, ipix, &ip2);
     ring2nest64(nside,ip2,&ip1);
     if (ip1 != ipix) {
-      printf("Error0: %lld %lld %lld %lld\n",nside,ipix,ip2,ip1);
+      printf("Error0: %" PRId64 " %" PRId64 " %" PRId64 " %" PRId64 "\n",nside,ipix,ip2,ip1);
       abort();
     }
   }
@@ -140,7 +141,7 @@ static void test2_helper1 (hpint64 nside, hpint64 dpix)
     pix2ang_nest64(nside, ipix, &theta, &phi);
     ang2pix_nest64(nside, theta, phi, &ip1);
     if (ip1 != ipix) {
-      printf("Error1: %lld %lld %lld\n",nside,ipix,ip1);
+      printf("Error1: %" PRId64 " %" PRId64 " %" PRId64 "\n",nside,ipix,ip1);
       abort();
     }
   }
@@ -148,17 +149,17 @@ static void test2_helper1 (hpint64 nside, hpint64 dpix)
     pix2vec_nest64(nside, ipix, vec);
     vec2pix_nest64(nside, vec, &ip1);
     if (ip1 != ipix) {
-      printf("Error1: %lld %lld %lld\n",nside,ipix,ip1);
+      printf("Error1: %" PRId64 " %" PRId64 " %" PRId64 "\n",nside,ipix,ip1);
       abort();
     }
   }
   }
 
-static void test2_helper2 (hpint64 nside, hpint64 dpix)
+static void test2_helper2 (int64_t nside, int64_t dpix)
   {
   double theta, phi;
   double vec[3];
-  hpint64  ipix, npix, ip1;
+  int64_t  ipix, npix, ip1;
 
   /* Find the number of pixels in the full map */
   npix = nside2npix64(nside);
@@ -166,7 +167,7 @@ static void test2_helper2 (hpint64 nside, hpint64 dpix)
     pix2ang_ring64(nside, ipix, &theta, &phi);
     ang2pix_ring64(nside, theta, phi, &ip1);
     if (ip1 != ipix) {
-      printf("Error1: %lld %lld %lld\n",nside,ipix,ip1);
+      printf("Error1: %" PRId64 " %" PRId64 " %" PRId64 "\n",nside,ipix,ip1);
       abort();
     }
   }
@@ -174,7 +175,7 @@ static void test2_helper2 (hpint64 nside, hpint64 dpix)
     pix2vec_ring64(nside, ipix, vec);
     vec2pix_ring64(nside, vec, &ip1);
     if (ip1 != ipix) {
-      printf("Error1: %lld %lld %lld\n",nside,ipix,ip1);
+      printf("Error1: %" PRId64 " %" PRId64 " %" PRId64 "\n",nside,ipix,ip1);
       abort();
     }
   }
@@ -182,7 +183,7 @@ static void test2_helper2 (hpint64 nside, hpint64 dpix)
 
 static void test2(void) {
 
-  hpint64  nside;
+  int64_t  nside;
   int i;
 
   printf("Starting C Healpix pixel routines test for high nsides\n");
@@ -190,7 +191,7 @@ static void test2(void) {
   for (i=0; i<=29; ++i)
     {
     nside = 1LL<<i;
-    printf("Nside: %lld\n",nside);
+    printf("Nside: %" PRId64 "\n",nside);
     test2_helper1(nside,nside*nside/123456+1);
     test2_helper2(nside,nside*nside/123456+1);
     }
@@ -198,7 +199,7 @@ static void test2(void) {
   for (i=0; i<=28; ++i)
     {
     nside = (1LL<<i)+5;
-    printf("Nside: %lld\n",nside);
+    printf("Nside: %" PRId64 "\n",nside);
     test2_helper2(nside,nside*nside/123456+1);
     }
 

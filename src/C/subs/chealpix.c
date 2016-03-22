@@ -1,6 +1,6 @@
 /* -----------------------------------------------------------------------------
  *
- *  Copyright (C) 1997-2012 Krzysztof M. Gorski, Eric Hivon, Martin Reinecke,
+ *  Copyright (C) 1997-2016 Krzysztof M. Gorski, Eric Hivon, Martin Reinecke,
  *                          Benjamin D. Wandelt, Anthony J. Banday,
  *                          Matthias Bartelmann,
  *                          Reza Ansari & Kenneth M. Ganga
@@ -57,6 +57,8 @@ static void util_fail_ (const char *file, int line, const char *func,
   if(!(cond)) util_fail_(__FILE__,__LINE__,UTIL_FUNC_NAME__,msg)
 #define UTIL_FAIL(msg) \
   util_fail_(__FILE__,__LINE__,UTIL_FUNC_NAME__,msg)
+
+#ifdef ENABLE_FITSIO
 #define RALLOC(type,num) \
   ((type *)util_malloc_((num)*sizeof(type)))
 #define DEALLOC(ptr) \
@@ -72,6 +74,7 @@ static void *util_malloc_ (size_t sz)
   }
 static void util_free_ (void *ptr)
   { if ((ptr)!=NULL) free(ptr); }
+#endif
 
 /*! Returns the remainder of the division \a v1/v2.
     The result is non-negative.
@@ -515,12 +518,12 @@ void ring2nest(long nside, long ipring, long *ipnest)
 
 /* 64bit functions */
 
-static hpint64 imodulo64 (hpint64 v1, hpint64 v2)
-  { hpint64 v=v1%v2; return (v>=0) ? v : v+v2; }
-static long isqrt64(hpint64 v)
+static int64_t imodulo64 (int64_t v1, int64_t v2)
+  { int64_t v=v1%v2; return (v>=0) ? v : v+v2; }
+static long isqrt64(int64_t v)
   {
-  hpint64 res = sqrt(v+0.5);
-  if (v<((hpint64)(1)<<50)) return (long)res;
+  int64_t res = sqrt(v+0.5);
+  if (v<((int64_t)(1)<<50)) return (long)res;
   if (res*res>v)
     --res;
   else if ((res+1)*(res+1)<=v)
@@ -528,43 +531,43 @@ static long isqrt64(hpint64 v)
   return (long)res;
   }
 
-static hpint64 spread_bits64 (int v)
+static int64_t spread_bits64 (int v)
   {
-  return  (hpint64)(utab[ v     &0xff])
-       | ((hpint64)(utab[(v>> 8)&0xff])<<16)
-       | ((hpint64)(utab[(v>>16)&0xff])<<32)
-       | ((hpint64)(utab[(v>>24)&0xff])<<48);
+  return  (int64_t)(utab[ v     &0xff])
+       | ((int64_t)(utab[(v>> 8)&0xff])<<16)
+       | ((int64_t)(utab[(v>>16)&0xff])<<32)
+       | ((int64_t)(utab[(v>>24)&0xff])<<48);
   }
 
-static hpint64 compress_bits64 (hpint64 v)
+static int64_t compress_bits64 (int64_t v)
   {
-  hpint64 raw = v&0x5555555555555555ull;
+  int64_t raw = v&0x5555555555555555ull;
   raw|=raw>>15;
   return ctab[ raw     &0xff]      | (ctab[(raw>> 8)&0xff]<< 4)
       | (ctab[(raw>>32)&0xff]<<16) | (ctab[(raw>>40)&0xff]<<20);
   }
 
-static hpint64 xyf2nest64 (hpint64 nside, int ix, int iy, int face_num)
+static int64_t xyf2nest64 (int64_t nside, int ix, int iy, int face_num)
   {
   return (face_num*nside*nside) + spread_bits64(ix) + (spread_bits64(iy)<<1);
   }
 
-static void nest2xyf64 (hpint64 nside, hpint64 pix, int *ix, int *iy,
+static void nest2xyf64 (int64_t nside, int64_t pix, int *ix, int *iy,
   int *face_num)
   {
-  hpint64 npface_=nside*nside;
+  int64_t npface_=nside*nside;
   *face_num = pix/npface_;
   pix &= (npface_-1);
   *ix = compress_bits64(pix);
   *iy = compress_bits64(pix>>1);
   }
 
-static hpint64 xyf2ring64 (hpint64 nside_, int ix, int iy, int face_num)
+static int64_t xyf2ring64 (int64_t nside_, int ix, int iy, int face_num)
   {
-  hpint64 nl4 = 4*nside_;
-  hpint64 jr = (jrll[face_num]*nside_) - ix - iy  - 1, jp;
+  int64_t nl4 = 4*nside_;
+  int64_t jr = (jrll[face_num]*nside_) - ix - iy  - 1, jp;
 
-  hpint64 nr, kshift, n_before;
+  int64_t nr, kshift, n_before;
   if (jr<nside_)
     {
     nr = jr;
@@ -579,7 +582,7 @@ static hpint64 xyf2ring64 (hpint64 nside_, int ix, int iy, int face_num)
     }
   else
     {
-    hpint64 ncap_=2*nside_*(nside_-1);
+    int64_t ncap_=2*nside_*(nside_-1);
     nr = nside_;
     n_before = ncap_ + (jr-nside_)*nl4;
     kshift = (jr-nside_)&1;
@@ -593,17 +596,17 @@ static hpint64 xyf2ring64 (hpint64 nside_, int ix, int iy, int face_num)
 
   return n_before + jp - 1;
   }
-static void ring2xyf64 (hpint64 nside_, hpint64 pix, int *ix, int *iy,
+static void ring2xyf64 (int64_t nside_, int64_t pix, int *ix, int *iy,
   int *face_num)
   {
-  hpint64 iring, iphi, kshift, nr, tmp, irt, ipt;
-  hpint64 ncap_=2*nside_*(nside_-1);
-  hpint64 npix_=12*nside_*nside_;
-  hpint64 nl2 = 2*nside_;
+  int64_t iring, iphi, kshift, nr, tmp, irt, ipt;
+  int64_t ncap_=2*nside_*(nside_-1);
+  int64_t npix_=12*nside_*nside_;
+  int64_t nl2 = 2*nside_;
 
   if (pix<ncap_) /* North Polar cap */
     {
-    iring = (hpint64)(0.5*(1+isqrt64(1+2*pix))); /* counted from North pole */
+    iring = (int64_t)(0.5*(1+isqrt64(1+2*pix))); /* counted from North pole */
     iphi  = (pix+1) - 2*iring*(iring-1);
     kshift = 0;
     nr = iring;
@@ -618,9 +621,9 @@ static void ring2xyf64 (hpint64 nside_, hpint64 pix, int *ix, int *iy,
     }
   else if (pix<(npix_-ncap_)) /* Equatorial region */
     {
-    hpint64 ire, irm;
-    hpint64 ifm, ifp;
-    hpint64 ip = pix - ncap_;
+    int64_t ire, irm;
+    int64_t ifm, ifp;
+    int64_t ip = pix - ncap_;
     iring = (ip/(4*nside_)) + nside_; /* counted from North pole */
     iphi  = (ip%(4*nside_)) + 1;
     kshift = (iring+nside_)&1;
@@ -638,8 +641,8 @@ static void ring2xyf64 (hpint64 nside_, hpint64 pix, int *ix, int *iy,
     }
   else /* South Polar cap */
     {
-    hpint64 ip = npix_ - pix;
-    iring = (hpint64)(0.5*(1+isqrt64(2*ip-1))); /* counted from South pole */
+    int64_t ip = npix_ - pix;
+    iring = (int64_t)(0.5*(1+isqrt64(2*ip-1))); /* counted from South pole */
     iphi  = 4*iring + 1 - (ip - 2*iring*(iring-1));
     kshift = 0;
     nr = iring;
@@ -662,7 +665,7 @@ static void ring2xyf64 (hpint64 nside_, hpint64 pix, int *ix, int *iy,
   *iy =(-(ipt+irt))>>1;
   }
 
-static hpint64 ang2pix_nest_z_phi64 (hpint64 nside_, double z, double s,
+static int64_t ang2pix_nest_z_phi64 (int64_t nside_, double z, double s,
   double phi)
   {
   double za = fabs(z);
@@ -673,10 +676,10 @@ static hpint64 ang2pix_nest_z_phi64 (hpint64 nside_, double z, double s,
     {
     double temp1 = nside_*(0.5+tt);
     double temp2 = nside_*(z*0.75);
-    hpint64 jp = (hpint64)(temp1-temp2); /* index of  ascending edge line */
-    hpint64 jm = (hpint64)(temp1+temp2); /* index of descending edge line */
-    hpint64 ifp = jp/nside_;  /* in {0,4} */
-    hpint64 ifm = jm/nside_;
+    int64_t jp = (int64_t)(temp1-temp2); /* index of  ascending edge line */
+    int64_t jm = (int64_t)(temp1+temp2); /* index of descending edge line */
+    int64_t ifp = jp/nside_;  /* in {0,4} */
+    int64_t ifm = jm/nside_;
     if (ifp == ifm)           /* faces 4 to 7 */
       face_num = (ifp==4) ? 4: ifp+4;
     else if (ifp < ifm)       /* (half-)faces 0 to 3 */
@@ -698,8 +701,8 @@ static hpint64 ang2pix_nest_z_phi64 (hpint64 nside_, double z, double s,
     else
       tmp = nside_*sqrt(3*(1-za));
 
-    jp = (hpint64)(tp*tmp); /* increasing edge line index */
-    jm = (hpint64)((1.0-tp)*tmp); /* decreasing edge line index */
+    jp = (int64_t)(tp*tmp); /* increasing edge line index */
+    jm = (int64_t)((1.0-tp)*tmp); /* decreasing edge line index */
     if (jp>=nside_) jp = nside_-1; /* for points too close to the boundary */
     if (jm>=nside_) jm = nside_-1;
     if (z >= 0)
@@ -719,7 +722,7 @@ static hpint64 ang2pix_nest_z_phi64 (hpint64 nside_, double z, double s,
   return xyf2nest64(nside_,ix,iy,face_num);
   }
 
-static hpint64 ang2pix_ring_z_phi64 (hpint64 nside_, double z, double s,
+static int64_t ang2pix_ring_z_phi64 (int64_t nside_, double z, double s,
   double phi)
   {
   double za = fabs(z);
@@ -729,14 +732,14 @@ static hpint64 ang2pix_ring_z_phi64 (hpint64 nside_, double z, double s,
     {
     double temp1 = nside_*(0.5+tt);
     double temp2 = nside_*z*0.75;
-    hpint64 jp = (hpint64)(temp1-temp2); /* index of  ascending edge line */
-    hpint64 jm = (hpint64)(temp1+temp2); /* index of descending edge line */
+    int64_t jp = (int64_t)(temp1-temp2); /* index of  ascending edge line */
+    int64_t jm = (int64_t)(temp1+temp2); /* index of descending edge line */
 
     /* ring number counted from z=2/3 */
-    hpint64 ir = nside_ + 1 + jp - jm; /* in {1,2n+1} */
+    int64_t ir = nside_ + 1 + jp - jm; /* in {1,2n+1} */
     int kshift = 1-(ir&1); /* kshift=1 if ir even, 0 otherwise */
 
-    hpint64 ip = (jp+jm-nside_+kshift+1)/2; /* in {0,4n-1} */
+    int64_t ip = (jp+jm-nside_+kshift+1)/2; /* in {0,4n-1} */
     ip = imodulo64(ip,4*nside_);
 
     return nside_*(nside_-1)*2 + (ir-1)*4*nside_ + ip;
@@ -746,11 +749,11 @@ static hpint64 ang2pix_ring_z_phi64 (hpint64 nside_, double z, double s,
     double tp = tt-(int)(tt);
     double tmp = (s>-2.) ? nside_*s/sqrt((1.+za)/3.) : nside_*sqrt(3*(1-za));
 
-    hpint64 jp = (hpint64)(tp*tmp); /* increasing edge line index */
-    hpint64 jm = (hpint64)((1.0-tp)*tmp); /* decreasing edge line index */
+    int64_t jp = (int64_t)(tp*tmp); /* increasing edge line index */
+    int64_t jm = (int64_t)((1.0-tp)*tmp); /* decreasing edge line index */
 
-    hpint64 ir = jp+jm+1; /* ring number counted from the closest pole */
-    hpint64 ip = (hpint64)(tt*ir); /* in {0,4*ir-1} */
+    int64_t ir = jp+jm+1; /* ring number counted from the closest pole */
+    int64_t ip = (int64_t)(tt*ir); /* in {0,4*ir-1} */
     ip = imodulo64(ip,4*ir);
 
     if (z>0)
@@ -760,17 +763,17 @@ static hpint64 ang2pix_ring_z_phi64 (hpint64 nside_, double z, double s,
     }
   }
 
-static void pix2ang_ring_z_phi64 (hpint64 nside_, hpint64 pix,
+static void pix2ang_ring_z_phi64 (int64_t nside_, int64_t pix,
   double *z, double *s, double *phi)
   {
-  hpint64 ncap_=nside_*(nside_-1)*2;
-  hpint64 npix_=12*nside_*nside_;
+  int64_t ncap_=nside_*(nside_-1)*2;
+  int64_t npix_=12*nside_*nside_;
   double fact2_  = 4./npix_;
   *s=-5;
   if (pix<ncap_) /* North Polar cap */
     {
-    hpint64 iring = (hpint64)(0.5*(1+isqrt64(1+2*pix))); /* from N pole */
-    hpint64 iphi  = (pix+1) - 2*iring*(iring-1);
+    int64_t iring = (int64_t)(0.5*(1+isqrt64(1+2*pix))); /* from N pole */
+    int64_t iphi  = (pix+1) - 2*iring*(iring-1);
     double tmp=(iring*iring)*fact2_;
 
     *z = 1.0 - tmp;
@@ -780,21 +783,21 @@ static void pix2ang_ring_z_phi64 (hpint64 nside_, hpint64 pix,
   else if (pix<(npix_-ncap_)) /* Equatorial region */
     {
     double fact1_  = (nside_<<1)*fact2_;
-    hpint64 ip  = pix - ncap_;
-    hpint64 iring = ip/(4*nside_) + nside_; /* counted from North pole */
-    hpint64 iphi  = ip%(4*nside_) + 1;
+    int64_t ip  = pix - ncap_;
+    int64_t iring = ip/(4*nside_) + nside_; /* counted from North pole */
+    int64_t iphi  = ip%(4*nside_) + 1;
     /* 1 if iring+nside is odd, 1/2 otherwise */
     double fodd = ((iring+nside_)&1) ? 1 : 0.5;
 
-    hpint64 nl2 = 2*nside_;
+    int64_t nl2 = 2*nside_;
     *z = (nl2-iring)*fact1_;
     *phi = (iphi-fodd) * pi/nl2;
     }
   else /* South Polar cap */
     {
-    hpint64 ip = npix_ - pix;
-    hpint64 iring = (hpint64)(0.5*(1+isqrt64(2*ip-1))); /* from S pole */
-    hpint64 iphi  = 4*iring + 1 - (ip - 2*iring*(iring-1));
+    int64_t ip = npix_ - pix;
+    int64_t iring = (int64_t)(0.5*(1+isqrt64(2*ip-1))); /* from S pole */
+    int64_t iphi  = 4*iring + 1 - (ip - 2*iring*(iring-1));
 
     double tmp=(iring*iring)*fact2_;
     *z = tmp - 1.0;
@@ -803,14 +806,14 @@ static void pix2ang_ring_z_phi64 (hpint64 nside_, hpint64 pix,
     }
   }
 
-static void pix2ang_nest_z_phi64 (hpint64 nside_, hpint64 pix, double *z,
+static void pix2ang_nest_z_phi64 (int64_t nside_, int64_t pix, double *z,
   double *s, double *phi)
   {
-  hpint64 nl4 = nside_*4;
-  hpint64 npix_=12*nside_*nside_;
+  int64_t nl4 = nside_*4;
+  int64_t npix_=12*nside_*nside_;
   double fact2_ = 4./npix_;
   int face_num, ix, iy;
-  hpint64 jr, nr, kshift, jp;
+  int64_t jr, nr, kshift, jp;
   *s=-5;
 
   nest2xyf64(nside_,pix,&ix,&iy,&face_num);
@@ -849,54 +852,54 @@ static void pix2ang_nest_z_phi64 (hpint64 nside_, hpint64 pix, double *z,
   *phi = (jp-(kshift+1)*0.5)*(halfpi/nr);
   }
 
-long npix2nside64(hpint64 npix)
+long npix2nside64(int64_t npix)
   {
-  hpint64 res = isqrt64(npix/12.);
+  int64_t res = isqrt64(npix/12.);
   return (res*res*12==npix) ? (long)res : -1;
   }
 
-hpint64 nside2npix64(hpint64 nside)
+int64_t nside2npix64(int64_t nside)
   { return 12*nside*nside; }
 
-void ang2pix_ring64(hpint64 nside, double theta, double phi, hpint64 *ipix)
+void ang2pix_ring64(int64_t nside, double theta, double phi, int64_t *ipix)
   {
   UTIL_ASSERT((theta>=0)&&(theta<=pi),"theta out of range");
   double cth=cos(theta), sth=(fabs(cth)>0.99) ? sin(theta) : -5;
   *ipix=ang2pix_ring_z_phi64 (nside,cth,sth,phi);
   }
-void ang2pix_nest64(hpint64 nside, double theta, double phi, hpint64 *ipix)
+void ang2pix_nest64(int64_t nside, double theta, double phi, int64_t *ipix)
   {
   UTIL_ASSERT((theta>=0)&&(theta<=pi),"theta out of range");
   double cth=cos(theta), sth=(fabs(cth)>0.99) ? sin(theta) : -5;
   *ipix=ang2pix_nest_z_phi64 (nside,cth,sth,phi);
   }
-void vec2pix_ring64(hpint64 nside, const double *vec, hpint64 *ipix)
+void vec2pix_ring64(int64_t nside, const double *vec, int64_t *ipix)
   {
   double vlen=sqrt(vec[0]*vec[0]+vec[1]*vec[1]+vec[2]*vec[2]);
   double cth = vec[2]/vlen;
   double sth=(fabs(cth)>0.99) ? sqrt(vec[0]*vec[0]+vec[1]*vec[1])/vlen : -5;
   *ipix=ang2pix_ring_z_phi64 (nside,cth,sth,atan2(vec[1],vec[0]));
   }
-void vec2pix_nest64(hpint64 nside, const double *vec, hpint64 *ipix)
+void vec2pix_nest64(int64_t nside, const double *vec, int64_t *ipix)
   {
   double vlen=sqrt(vec[0]*vec[0]+vec[1]*vec[1]+vec[2]*vec[2]);
   double cth = vec[2]/vlen;
   double sth=(fabs(cth)>0.99) ? sqrt(vec[0]*vec[0]+vec[1]*vec[1])/vlen : -5;
   *ipix=ang2pix_nest_z_phi64 (nside,cth,sth,atan2(vec[1],vec[0]));
   }
-void pix2ang_ring64(hpint64 nside, hpint64 ipix, double *theta, double *phi)
+void pix2ang_ring64(int64_t nside, int64_t ipix, double *theta, double *phi)
   {
   double z,s;
   pix2ang_ring_z_phi64 (nside,ipix,&z,&s,phi);
   *theta= (s<-2) ? acos(z) : atan2(s,z);
   }
-void pix2ang_nest64(hpint64 nside, hpint64 ipix, double *theta, double *phi)
+void pix2ang_nest64(int64_t nside, int64_t ipix, double *theta, double *phi)
   {
   double z,s;
   pix2ang_nest_z_phi64 (nside,ipix,&z,&s,phi);
   *theta= (s<-2) ? acos(z) : atan2(s,z);
   }
-void pix2vec_ring64(hpint64 nside, hpint64 ipix, double *vec)
+void pix2vec_ring64(int64_t nside, int64_t ipix, double *vec)
   {
   double z, phi, stheta;
   pix2ang_ring_z_phi64 (nside,ipix,&z,&stheta,&phi);
@@ -905,7 +908,7 @@ void pix2vec_ring64(hpint64 nside, hpint64 ipix, double *vec)
   vec[1]=stheta*sin(phi);
   vec[2]=z;
   }
-void pix2vec_nest64(hpint64 nside, hpint64 ipix, double *vec)
+void pix2vec_nest64(int64_t nside, int64_t ipix, double *vec)
   {
   double z, phi, stheta;
   pix2ang_nest_z_phi64 (nside,ipix,&z,&stheta,&phi);
@@ -914,14 +917,14 @@ void pix2vec_nest64(hpint64 nside, hpint64 ipix, double *vec)
   vec[1]=stheta*sin(phi);
   vec[2]=z;
   }
-void nest2ring64(hpint64 nside, hpint64 ipnest, hpint64 *ipring)
+void nest2ring64(int64_t nside, int64_t ipnest, int64_t *ipring)
   {
   int ix, iy, face_num;
   if ((nside&(nside-1))!=0) { *ipring=-1; return; }
   nest2xyf64 (nside, ipnest, &ix, &iy, &face_num);
   *ipring = xyf2ring64 (nside, ix, iy, face_num);
   }
-void ring2nest64(hpint64 nside, hpint64 ipring, hpint64 *ipnest)
+void ring2nest64(int64_t nside, int64_t ipring, int64_t *ipnest)
   {
   int ix, iy, face_num;
   if ((nside&(nside-1))!=0) { *ipnest=-1; return; }

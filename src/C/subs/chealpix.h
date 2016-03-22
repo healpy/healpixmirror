@@ -1,6 +1,6 @@
 /* -----------------------------------------------------------------------------
  *
- *  Copyright (C) 1997-2012 Krzysztof M. Gorski, Eric Hivon, Martin Reinecke,
+ *  Copyright (C) 1997-2016 Krzysztof M. Gorski, Eric Hivon, Martin Reinecke,
  *                          Benjamin D. Wandelt, Anthony J. Banday,
  *                          Matthias Bartelmann,
  *                          Reza Ansari & Kenneth M. Ganga
@@ -31,6 +31,8 @@
 
 #ifndef CHEALPIX_H
 #define CHEALPIX_H
+
+#include <stdint.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -105,50 +107,45 @@ void pix2vec_ring(long nside, long ipix, double *vec);
 
 /* operations on Nside values up to 2^29 */
 
-/*! 64bit integer type
-    \note We are not using \c int64_t, since this type is not part of the C++
-    standard, and we want the header to be usable from C++. */
-typedef long long hpint64;
-
 /*! Sets \a *ipix to the pixel number in NEST scheme at resolution \a nside,
     which contains the position \a theta, \a phi. */
-void ang2pix_nest64(hpint64 nside, double theta, double phi, hpint64 *ipix);
+void ang2pix_nest64(int64_t nside, double theta, double phi, int64_t *ipix);
 /*! Sets \a *ipix to the pixel number in RING scheme at resolution \a nside,
     which contains the position \a theta, \a phi. */
-void ang2pix_ring64(hpint64 nside, double theta, double phi, hpint64 *ipix);
+void ang2pix_ring64(int64_t nside, double theta, double phi, int64_t *ipix);
 
 /*! Sets \a theta and \a phi to the angular position of the center of pixel
     \a ipix in NEST scheme at resolution \a nside. */
-void pix2ang_nest64(hpint64 nside, hpint64 ipix, double *theta, double *phi);
+void pix2ang_nest64(int64_t nside, int64_t ipix, double *theta, double *phi);
 /*! Sets \a theta and \a phi to the angular position of the center of pixel
     \a ipix in RING scheme at resolution \a nside. */
-void pix2ang_ring64(hpint64 nside, hpint64 ipix, double *theta, double *phi);
+void pix2ang_ring64(int64_t nside, int64_t ipix, double *theta, double *phi);
 
 /*! Computes the RING pixel index of pixel \a ipnest at resolution \a nside
     and returns it in \a *ipring. On error, \a *ipring is set to -1. */
-void nest2ring64(hpint64 nside, hpint64 ipnest, hpint64 *ipring);
+void nest2ring64(int64_t nside, int64_t ipnest, int64_t *ipring);
 /*! Computes the NEST pixel index of pixel \a ipring at resolution \a nside
     and returns it in \a *ipring. On error, \a *ipnest is set to -1. */
-void ring2nest64(hpint64 nside, hpint64 ipring, hpint64 *ipnest);
+void ring2nest64(int64_t nside, int64_t ipring, int64_t *ipnest);
 
 /*! Returns \a 12*nside*nside. */
-hpint64 nside2npix64(hpint64 nside);
+int64_t nside2npix64(int64_t nside);
 /*! Returns \a sqrt(npix/12) if this is an integer number, otherwise \a -1. */
-long npix2nside64(hpint64 npix);
+long npix2nside64(int64_t npix);
 
 /*! Sets \a *ipix to the pixel number in NEST scheme at resolution \a nside,
     which contains the direction described the Cartesian vector \a vec. */
-void vec2pix_nest64(hpint64 nside, const double *vec, hpint64 *ipix);
+void vec2pix_nest64(int64_t nside, const double *vec, int64_t *ipix);
 /*! Sets \a *ipix to the pixel number in RING scheme at resolution \a nside,
     which contains the direction described the Cartesian vector \a vec. */
-void vec2pix_ring64(hpint64 nside, const double *vec, hpint64 *ipix);
+void vec2pix_ring64(int64_t nside, const double *vec, int64_t *ipix);
 
 /*! Sets \a vec to the Cartesian vector pointing in the direction of the center
     of pixel \a ipix in NEST scheme at resolution \a nside. */
-void pix2vec_nest64(hpint64 nside, hpint64 ipix, double *vec);
+void pix2vec_nest64(int64_t nside, int64_t ipix, double *vec);
 /*! Sets \a vec to the Cartesian vector pointing in the direction of the center
     of pixel \a ipix in RING scheme at resolution \a nside. */
-void pix2vec_ring64(hpint64 nside, hpint64 ipix, double *vec);
+void pix2vec_ring64(int64_t nside, int64_t ipix, double *vec);
 
 /* FITS operations */
 /* --------------- */
