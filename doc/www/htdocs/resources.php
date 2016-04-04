@@ -116,7 +116,7 @@ to access, visualize and browse images, catalogues and cube data
 </li>
 
 <li>
-<a href="http://www.cosmos.esa.int/web/esdc/esasky-help">ESA Sky</a> to search, retrieve, explore and visualize the entire sky as observed by ESA (and other) astronomy missions
+<a href="http://archives.esac.esa.int/esasky-beta">ESA Sky (beta)</a> to search, retrieve, explore and visualize the entire sky as observed by ESA (and other) astronomy missions (<a href="http://www.cosmos.esa.int/web/esdc/esasky-help">help desk</a>)
 </li>
 
 <li>
@@ -181,11 +181,15 @@ on
 
 <a href="http://inspirebeta.net/search?ln=en&p=FIND+C+ASTRO-PH%2F9812350+or+refersto%3Arecid%3A659804+or+fulltext%3Ahealpix&f=&action_search=Search&sf=&so=d&rm=&rg=25&sc=0&of=hb">INSPIRE (High Energy Physics &amp; Cosmology)</a>,<br>
 
-<a href="http://adsabs.harvard.edu/cgi-bin/nph-ref_query?bibcode=2005ApJ...622..759G&amp;refs=CITATIONS&amp;db_key=AST">ADS Classic</a>
+<a href="http://adsabs.harvard.edu/cgi-bin/nph-ref_query?bibcode=2005ApJ...622..759G&amp;refs=CITATIONS&amp;db_key=AST">ADS Classic</a>,
+
+<a href="https://ui.adsabs.harvard.edu/#search/q=full%3Ahealpix&sort=date%20desc">ADS beta</a>
 
 &amp;
 
-<a href="http://adslabs.org/adsabs/search/?q=full%3A%22healpix%22&month_from=&year_from=&month_to=&year_to=&db_f=&nr=&bigquery=&re_sort_type=DATE&re_sort_dir=desc">ADS 2.0</a> (Astrophysics)
+<a href="http://adslabs.org/adsabs/search/?q=full%3A%22healpix%22&month_from=&year_from=&month_to=&year_to=&db_f=&nr=&bigquery=&re_sort_type=DATE&re_sort_dir=desc">ADS 2.0</a> 
+
+(Astrophysics)
 
 and<br>
 
