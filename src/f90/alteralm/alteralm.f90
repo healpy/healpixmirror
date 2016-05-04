@@ -33,7 +33,8 @@ module altmod
   use head_fits, only: add_card !, write_minimal_header
   use misc_utils,only: assert, assert_alloc, fatal_error, wall_clock_time, string, strupcase, brag_openmp
   use paramfile_io, only: paramfile_handle, parse_init, parse_int, &
-         parse_string, parse_double, parse_summarize, parse_check_unused, parse_finish, concatnl !, scan_directories
+         parse_string, parse_double, parse_summarize, parse_check_unused, parse_finish, concatnl, &
+         get_healpix_pixel_window_file, get_healpix_data_dir, scan_directories
   use coord_v_convert, only: coordsys2euler_zyz
   implicit none
 

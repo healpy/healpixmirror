@@ -88,6 +88,12 @@
 
   logical(LGT) :: do_alm_err, do_rot
 
+  integer(I4B)      :: ktype, nsmax
+  character(len=20) :: suffix, tag
+  character(len=FILENAMELEN) :: def_dir, def_file, usr_dir, usr_file, final_file
+  character(len=FILENAMELEN) :: windowname, windowfile, windowfile_in, windowfile_out
+  logical(LGT) :: ok
+
   type(paramfile_handle)              :: handle
 !  character(len=FILENAMELEN)          :: parafile = ''
   character(len=FILENAMELEN)          :: description
@@ -243,6 +249,57 @@
        & " (Nside HAS to be a power of 2, eg: 32, 512, ..., or 0 for no pixel)" )
   nsmax_out = parse_int(handle, 'nsmax_out', default=nsmax_in, vmin=0, descr=description)
 
+
+  !     --- check for pixel-window-files ---
+  do ktype=1,2
+     if (ktype == 1) then
+        nsmax = nsmax_in
+        suffix = '_in'
+        tag = ' (INPUT alm) '
+     endif
+     if (ktype == 2) then
+        nsmax = nsmax_out
+        suffix = '_out'
+        tag = ' (OUTPUT alm) '
+     endif
+
+     if (nsmax > 0) then
+        windowname = get_healpix_pixel_window_file(nsmax)
+        def_file = trim(windowname)
+        def_dir  = get_healpix_data_dir()
+
+22      continue
+        final_file = ''
+        ok = .false.
+        ! if interactive, try default name in default directories first
+        if (handle%interactive) ok = scan_directories(def_dir, def_file, final_file)
+        if (.not. ok) then
+           ! not found, ask the user
+           description = concatnl("",&
+                &        " Could not find "//trim(tag)//" window file", &
+                &        " Enter the directory where this file can be found:")
+           usr_dir = parse_string(handle,'winfiledir'//trim(suffix),default="''",descr=description)
+           if (trim(usr_dir) == '') usr_dir = trim(def_dir)
+           description = concatnl("",&
+                &        " Enter the name of the "//trim(tag)//" window file:")
+           usr_file = parse_string(handle,'windowfile'//trim(suffix),default=def_file,descr=description)
+           ! look for new name in user provided or default directories
+           ok   = scan_directories(usr_dir, usr_file, final_file)
+           ! if still fails, crash or ask again if interactive
+           if (.not. ok) then
+              print*,' File not found'
+              if (handle%interactive) goto 22
+              call fatal_error(code)
+           endif
+        endif
+        windowfile = final_file
+     else
+        windowfile = ''
+     endif
+     if (ktype == 1) windowfile_in  = windowfile
+     if (ktype == 2) windowfile_out = windowfile
+  enddo
+
   !     *********** multipole range ************
   !           ---------   IN   ---------
   nlmin_out = 0
@@ -319,13 +376,21 @@
   ! generate input window function (pixel & beam)
   allocate(pixel_in(0:nlmax_in, 1:npol), beam_in(0:nlmax_in, 1:npol), stat=status)
   call assert_alloc(status, CODE, "pixel_in, beam_in")
-  call pixel_window(pixel_in, nside=nsmax_in)
+  if (nsmax_in == 0) then
+     call pixel_window(pixel_in, nside=nsmax_in)
+  else
+     call pixel_window(pixel_in, windowfile=windowfile_in)
+  endif
   call generate_beam(fwhm_arcmin_in, nlmax_in, beam_in, beam_file=beam_file_in)
 
   ! generate output window function (pixel & beam)
   allocate(pixel_out(0:nlmax_out, 1:npol), beam_out(0:nlmax_out, 1:npol), stat=status)
   call assert_alloc(status, CODE, "pixel_out, beam_out")
-  call pixel_window(pixel_out, nside=nsmax_out)
+  if (nsmax_out == 0) then
+     call pixel_window(pixel_out, nside=nsmax_out)
+  else
+     call pixel_window(pixel_out, windowfile=windowfile_out)
+  endif
   call generate_beam(fwhm_arcmin_out, nlmax_out, beam_out, beam_file=beam_file_out)
 
   ! generate effective window function

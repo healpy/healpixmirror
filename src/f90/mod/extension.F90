@@ -40,6 +40,7 @@ module extension
   ! 2005-08: edited for Gfortran
   ! 2013-05-07: G95-compatible
   ! 2015-07-31: G95-compatible
+  ! 2016-05: edited for __GFORTRAN__
   
 #ifdef NAG
   USE f90_unix, ONLY : iargc, getarg, exit
@@ -49,7 +50,7 @@ module extension
   USE healpix_types, ONLY : I4B, I8B
   IMPLICIT none
 
-#if ((!defined(NAG)) && (!defined(GFORTRAN)))
+#if ((!defined(NAG)) && (!defined(GFORTRAN)) && (!defined(__GFORTRAN__)))
 interface
   function iargc()
     integer iargc
@@ -81,7 +82,7 @@ end interface
 
   contains
 
-#if (defined (GFORTRAN))
+#if (defined (GFORTRAN) || defined(__GFORTRAN__) )
 
     ! ===========================================================
     function iargc ()

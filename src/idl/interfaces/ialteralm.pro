@@ -44,7 +44,11 @@ pro ialteralm, alm_in, alm_out $
               , nsmax_in       =  nsmax_in     $
               , nsmax_out      =  nsmax_out    $
               , silent         = silent $
-              , tmpdir         = tmpdir
+              , tmpdir         = tmpdir $
+              , windowfile_in  = windowfile_in   $
+              , winfiledir_in  = winfiledir_in   $
+              , windowfile_out = windowfile_out  $
+              , winfiledir_out = winfiledir_out 
 
 ;+
 ; NAME:
@@ -62,7 +66,9 @@ pro ialteralm, alm_in, alm_out $
 ;       fwhm_arcmin_in=, fwhm_arcmin_out=, /help,
 ;       /keep_tmp_files, lmax_out=, nlmax_out=, 
 ;       nside_in=, nside_out=, nsmax_in=, nsmax_out=
-;       /silent=, tmpdir=]
+;       /silent=, tmpdir=, 
+;       windowfile_in=,  winfiledir_in=, 
+;       windowfile_out=, winfiledir_out=]
 ;
 ; INPUT:
 ;   alm_in: input alm, must be a FITS file
@@ -131,6 +137,21 @@ pro ialteralm, alm_in, alm_out $
 ;   tmpdir=     :directory in which are written temporary files 
 ;         [default: IDL_TMPDIR (see IDL documentation about IDL_TMPDIR)]
 ;
+;    windowfile_in=:    FITS file containing pixel window for nside_in
+;        [default: determined automatically by back-end routine].
+;      Do not set this keyword unless you really know what you are doing   
+;
+;    winfiledir_in=:   directory where windowfile_in is to be found 
+;        [default: determined automatically by back-end routine].
+;      Do not set this keyword unless you really know what you are doing
+;
+;    windowfile_out=:    FITS file containing pixel window for nside_out
+;        [default: determined automatically by back-end routine].
+;      Do not set this keyword unless you really know what you are doing   
+;
+;    winfiledir_out=:   directory where windowfile_out is to be found 
+;        [default: determined automatically by back-end routine].
+;      Do not set this keyword unless you really know what you are doing
 ;
 ; COMMON BLOCKS:
 ;    hxp_xface_com
@@ -164,8 +185,10 @@ syntax = [local.routine+', alm_in, alm_out,  [beam_file_in=, beam_file_out=, ',$
 '       binpath=, coord_in= , coord_out=, epoch_in=, epoch_out=,',$
 '       fwhm_arcmin_in=, fwhm_arcmin_out=, /help,',$
 '       /keep_tmp_files, lmax_out=, nlmax_out=,',$
-'       nside_in=, nside_out=, nsmax_in=, nsmax_out=',$
-'       /silent=, tmpdir=]']
+'       nside_in=, nside_out=, nsmax_in=, nsmax_out=, ',$
+'       /silent=, tmpdir=, ',$
+'       windowfile_in=,  winfiledir_in=, ',$ 
+'       windowfile_out=, winfiledir_out=]']
 
 if keyword_set(help) then begin
     doc_library,local.routine
@@ -213,6 +236,11 @@ printf,lunit,hpx_add_parameter('fwhm_arcmin_out',fwhm_arcmin_out,  /skip_if_not_
 printf,lunit,hpx_add_parameter('nsmax_in',       nsmax_in,   /skip_if_not_set)
 printf,lunit,hpx_add_parameter('nsmax_out',      nsmax_out,  /skip_if_not_set)
 printf,lunit,hpx_add_parameter('nlmax_out',      nlmax_out,  /skip_if_not_set)
+;
+printf,lunit,hpx_add_parameter('winfiledir_in', winfiledir_in, /expand, /skip_if_not_set)
+printf,lunit,hpx_add_parameter('windowfile_in', windowfile_in,          /skip_if_not_set)
+printf,lunit,hpx_add_parameter('winfiledir_out', winfiledir_out, /expand, /skip_if_not_set)
+printf,lunit,hpx_add_parameter('windowfile_out', windowfile_out,          /skip_if_not_set)
 ;
 free_lun, lunit
 

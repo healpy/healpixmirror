@@ -25,3 +25,9 @@ nsmax_out =          128
 nlmax_out =          256
 
 outfile_alms = !test_almdec.fits
+
+#winfiledir_in
+#windowfile_in
+#winfiledir_out
+#windowfile_out
+

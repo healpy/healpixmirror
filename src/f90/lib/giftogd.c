@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h> /* added 2016-05-04 */
 #include "gd.h"
 
 /* A short program which converts a .gif file into a .gd file, for

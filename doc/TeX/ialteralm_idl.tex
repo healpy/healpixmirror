@@ -58,7 +58,11 @@ where $P(\ell)$ is the pixel window function, and $B(\ell)$ is the beam window
 \mylink{idl:ialteralm:nsmax_in}{nsmax\_in},
 \mylink{idl:ialteralm:nsmax_out}{nsmax\_out},
 \mylink{idl:ialteralm:silent}{/silent},
-\mylink{idl:ialteralm:tmpdir}{tmpdir=}
+\mylink{idl:ialteralm:tmpdir}{tmpdir=},
+\mylink{idl:ialteralm:windowfile_in}{windowfile\_in},
+\mylink{idl:ialteralm:winfiledir_in}{winfiledir\_in},
+\mylink{idl:ialteralm:windowfile_out}{windowfile\_out},
+\mylink{idl:ialteralm:winfiledir_out}{winfiledir\_out}
 ]}
 \end{IDLformat}
 
@@ -138,6 +142,25 @@ HEALPix resolution parameter Nside whose
 \item[tmpdir=]      \mytarget{idl:ialteralm:tmpdir} directory in which are written temporary files 
 \default {IDL\_TMPDIR (see IDL documentation)}
 
+ \item[windowfile\_in=]  \mytarget{idl:ialteralm:windowfile_in}%
+    FITS file containing pixel window for \mylink{idl:ialteralm:nside_in}{nside\_in}
+        \default {determined automatically by back-end routine}.
+      Do not set this keyword unless you really know what you are doing
+
+  \item[winfiledir\_in=] \mytarget{idl:ialteralm:winfiledir_in}%
+     directory where \mylink{idl:ialteralm:windowfile_in}{windowfile\_in} is to be found 
+        \default {determined automatically by back-end routine}.
+      Do not set this keyword unless you really know what you are doing
+
+ \item[windowfile\_out=]  \mytarget{idl:ialteralm:windowfile_out}%
+    FITS file containing pixel window for \mylink{idl:ialteralm:nside_out}{nside\_out}
+        \default {determined automatically by back-end routine}.
+      Do not set this keyword unless you really know what you are doing
+
+  \item[winfiledir\_out=] \mytarget{idl:ialteralm:winfiledir_out}%
+     directory where \mylink{idl:ialteralm:windowfile_out}{windowfile\_out} is to be found 
+        \default {determined automatically by back-end routine}.
+      Do not set this keyword unless you really know what you are doing
 
   \end{kwlist}
 \end{keywords}  
