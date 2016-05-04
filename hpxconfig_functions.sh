@@ -39,6 +39,7 @@
 # 2014-11-25: propose cfitsio-free compilation of C package
 # 2015-05-12: correct bashism (==) introduced above (problematic for dash and zsh)
 # 2015-07-31: improved g95 support; updated support address
+# 2016-04-28: tentatively added MINGW for Windows
 #=====================================
 #=========== General usage ===========
 #=====================================
@@ -1149,6 +1150,9 @@ GuessF90Compiler () {
 	    FPP="-D"
 	    PRFLAGS="-P openmp";;
 	CYGWIN*)
+	    OFLAGS="-O"
+	    IdentifyF90Compiler;;
+	MINGW*)
 	    OFLAGS="-O"
 	    IdentifyF90Compiler;;
 	*)

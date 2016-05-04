@@ -20,6 +20,14 @@ The
 </li>
 
 <li>
+Unofficial low-resolution <a href="http://faun.rc.fas.harvard.edu/ameisner/wssa/healpix.html">WISE 12 micron full-sky dust maps</a>
+</li>
+
+<li>
+SDSS <a href="http://risa.stanford.edu/redmapper/">DR8 Depth maps</a>
+</li>
+
+<li>
 The <a href="http://lambda.gsfc.nasa.gov/product/cobe/" >COBE</a>
 data, including DMR and FIRAS
 </li>
@@ -50,9 +58,6 @@ The Schlegel, Finkbeiner, and Davis
 </li>
 
 <li>
-Unofficial low-resolution <a href="http://faun.rc.fas.harvard.edu/ameisner/wssa/healpix.html">WISE 12 micron full-sky dust maps</a>
-<li>
-
 An extensive list of 
 <a href="http://lambda.gsfc.nasa.gov/product/expt/" >
     past, current and future CMB or SZ experiments and data availability</a> on Lambda web site

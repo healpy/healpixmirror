@@ -770,22 +770,22 @@ In case of problems, see \htmladdnormallink{\tt
 
 \subsection{Free Fortran90/95 Compilers}
 \label{sec:freef90compilers}
-The {\bf free} Fortran90/95 compilers that can be used do compile \healpix include: 
+The {\bf free} Fortran90/95 compilers that can be used to compile \healpix include: 
     \begin{itemize}
       \item {\bf Intel Fortran} Compiler for Linux based computers (versions
-11.* to 15.*\footnote{problems have been reported with one of the code ({\tt sky\_ng\_sim}) when compiled with
+11.* to 16.*\footnote{problems have been reported with one of the code ({\tt sky\_ng\_sim}) when compiled with
 {\tt ifort 14.0.1.106}}) \hfill \\
          \htmladdnormallink{{\tt
-        http://software.intel.com/en-us/intel-compilers}}{http://software.intel.com/en-us/intel-compilers}
+        https://software.intel.com/en-us/fortran-compilers}}{https://software.intel.com/en-us/fortran-compilers}
         %%%%%http://www.intel.com/software/products/compilers/downloads/forlin.htm}}{http://www.intel.com/software/products/compilers/downloads/forlin.htm}
-      \item {\bf GNU Fortran 95} compiler (gfortran) included in GNU Compiler Collection {\em GCC} version 4.0.0
+      \item {\bf GNU Fortran 95} compiler ({\tt gfortran}) included in GNU Compiler Collection {\em GCC} version 4.0.0
          and up and available for Linux, Mac OSX, Windows, Sun ... platforms
          \hfill \\
           \htmladdnormallink{{\tt http://www.gnu.org/software/gcc/fortran/}}{http://www.gnu.org/software/gcc/fortran/}. \hfill \\
          GFortran binaries for all platforms can also be downloaded from  \hfill \\
           \htmladdnormallink{{\tt http://gcc.gnu.org/wiki/GFortranBinaries}}{http://gcc.gnu.org/wiki/GFortranBinaries}. \hfill \\
-         Please note that only the most recent versions of gfortran (Aug 2005
-         and later) compile HEALPix correctly, and v4.2.1 has given satisfying
+         Please note that only recent versions of {\tt gfortran} (Aug 2005
+         and later) compile HEALPix correctly, and v4.2.1 and more have given satisfying
          results so far, including native OpenMP support.
      \item {\bf G95} compiler available for Linux, Mac OSX, Windows, Sun and HP platforms with 32 and 64 bit architectures (eg, x86 and x86-64). In the latter case, the '32bit default integer' (32bit DI) version of {\tt g95} {\em must} be used.
          \hfill \\ \htmladdnormallink{{\tt http://www.g95.org}}{http://www.g95.org}
@@ -801,16 +801,29 @@ C++ and Fortran compilers. To install it under Windows, you will need to
 (see \htmladdnormallink{{\tt http://cygwin.com/}}{http://cygwin.com/}).
 In addition to the default packages, you need at least the {\tt binutils,
     coreutils, util-linux, bash, gawk, grep, make} and {\tt sed} packages, as
-    well as {\tt gcc} and {gcc-g++} packages, all available at 
-\htmladdnormallink{{\tt http://cygwin.com/packages/}}{http://cygwin.com/packages/}.
-\item Install the latest gfortran binaries for Cygwin from 
-\htmladdnormallink{{\tt http://quatramaran.ens.fr/$\tilde{}$coudert/gfortran/}}{%
-http://quatramaran.ens.fr/~coudert/gfortran/}, 
-following the instructions at 
+    well as {\tt gcc} and {\tt gcc-g++} packages, all available at 
+\htmladdnormallink{{\tt http://cygwin.com/packages/}}{http://cygwin.com/packages/}.\\
+Alternatively, install MinGW (%
+\htmladdnormallink{{\tt http://www.mingw.org/}}{http://www.mingw.org/}%
+) together with the MSYS collection of GNU utilities 
+(see \htmladdnormallink{{\tt http://www.mingw.org/wiki/msys}}{http://www.mingw.org/wiki/msys}
+and
+\htmladdnormallink{{\tt https://sourceforge.net/projects/mingw/files}}{%
+https://sourceforge.net/projects/mingw/files}).
+\item Install the latest {\tt gfortran} binaries for Cygwin and/or MinGW from, eg
+% \htmladdnormallink{{\tt http://quatramaran.ens.fr/$\tilde{}$coudert/gfortran/}}{%
+% http://quatramaran.ens.fr/~coudert/gfortran/}, 
+\hfill \\
+\htmladdnormallink{{\tt \small https://cygwin.com/cgi\--bin2/package\--grep.cgi?grep=gcc\--fortran\&arch=x86\_64}}{%
+https://cygwin.com/cgi-bin2/package-grep.cgi?grep=gcc-fortran&arch=x86_64},
+following the tips found at 
 \htmladdnormallink{{\tt http://gcc.gnu.org/wiki/GFortranBinaries}}{%
 http://gcc.gnu.org/wiki/GFortranBinaries}.
-\item Unpack the HEALPix software package
-\item Run configure as you would on other platforms
+\item Unpack the HEALPix {\tt.zip} or {\tt.tar.gz} software package
+(see 
+\htmladdnormallink{{\tt https://sourceforge.net/p/healpix/wiki/Windows and peazip}}{%
+https://sourceforge.net/p/healpix/wiki/Windows\%20and\%20peazip})
+\item Run {\tt configure} as you would on other platforms
 \item The C++ code can be compiled using HEALPIX\_TARGET=generic\_gcc
 \end{itemize}
 
