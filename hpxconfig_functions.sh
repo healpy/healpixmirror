@@ -40,6 +40,7 @@
 # 2015-05-12: correct bashism (==) introduced above (problematic for dash and zsh)
 # 2015-07-31: improved g95 support; updated support address
 # 2016-04-28: tentatively added MINGW for Windows
+# 2016-06-02: debugged gcc detection in IdentifyCCompiler
 #=====================================
 #=========== General usage ===========
 #=====================================
@@ -1409,7 +1410,8 @@ CFLAGS=$tmp
 # -----------------------------------------------------------------
 
 IdentifyCCompiler () {
-    ngcc=`$CC --version 2>&1   | ${GREP} '(GCC)'     | ${WC} -l` # gcc
+#    ngcc=`$CC --version 2>&1   | ${GREP} '(GCC)'     | ${WC} -l` # gcc
+    ngcc=`$CC --version 2>&1   | ${GREP} -i 'GCC'    | ${WC} -l` # gcc
     nicc=`$CC -V 2>&1          | ${GREP} -i intel    | ${WC} -l` # intel C compiler
     nclang=`$CC --version 2>&1 | ${GREP} clang       | ${WC} -l` # clang
     npgc=`$CC -V 2>&1          | ${GREP} -i portland | ${WC} -l` # portland C
