@@ -401,7 +401,7 @@ tailored to the user environment.
 %% {\tt \% ./config\_preview} & configure the IDL previewer
 \end{tabular}
 \end{flushright}
-These different steps are detailled below.
+These different steps are detailed below.
 
 \subsection{./configure [-L]}
 
@@ -791,41 +791,165 @@ The {\bf free} Fortran90/95 compilers that can be used to compile \healpix inclu
          \hfill \\ \htmladdnormallink{{\tt http://www.g95.org}}{http://www.g95.org}
     \end{itemize}
 
+\newpage %------------ TEMPORARY 
 \subsection{Installation under Microsoft Windows}
 \label{sec:windows}
-The installation and usage of HEALPix require many standard Unix/Linux tools
-(such as {\tt sh, make, awk, grep, sed, ls, wc, cat, more, nm, ar}) as well as C,
-C++ and Fortran compilers. To install it under Windows, you will need to
-\begin{itemize}
-\item Install Cygwin on your machine 
-(see \htmladdnormallink{{\tt http://cygwin.com/}}{http://cygwin.com/}).
-In addition to the default packages, you need at least the {\tt binutils,
-    coreutils, util-linux, bash, gawk, grep, make} and {\tt sed} packages, as
-    well as {\tt gcc} and {\tt gcc-g++} packages, all available at 
-\htmladdnormallink{{\tt http://cygwin.com/packages/}}{http://cygwin.com/packages/}.\\
-Alternatively, install MinGW (%
+Detailed instructions to install \healpix on Windows 7 using Cygwin, kindly provided by John Arballo, 
+are available in \S\ref{sec:windows_seven}, 
+while other configurations are discussed in \S\ref{sec:windows_other}.
+\subsubsection{Installation on Windows 7 with Cygwin}
+\label{sec:windows_seven}
+The three steps (installation of Cygwin, cfitsio and \healpix respectively) must be done in that order.
+
+\textbf{A: Install Cygwin}
+\begin{enumerate}
+	\setlength{\itemsep}{-1pt}
+	\setlength{\parsep}{-10pt}
+\item Go to \htmladdnormallink{{\tt https://www.cygwin.com/}}{https://www.cygwin.com/}
+and click on `Install Cygwin' in the menu on the left.
+
+\item Click on setup-x86.exe (for 32-bit installation) or setup-x86\_64.exe
+(for 64-bit installation) and then `Save File' when prompted.
+
+\item Go to your Downloads folder (or wherever you saved setup-x86*.exe) and
+double-click on the setup-x86*.exe file to run it.
+
+\item Accept all defaults, except:
+
+\begin{enumerate}
+	\setlength{\itemsep}{-1pt}
+	\setlength{\parsep}{-10pt}
+\item
+  You have to `Choose A Download Site'. (eg:
+  \htmladdnormallink{{\tt ftp://ftp.gtlib.gatech.edu}}{ftp://ftp.gtlib.gatech.edu}).
+\item
+  When prompted to `Select Packages', expand `Default' (if you see a `+'
+  to the left of it), expand `Devel', then find and add the following
+  packages (click on `Skip' for each of them so it changes to the
+  version number and a checkbox appears in the `Bin' column):\\
+ \mycode{gcc-core}\\
+ \mycode{gcc-fortran}\\
+ \mycode{gcc-g++}\\
+ \mycode{make}
+\end{enumerate}
+\end{enumerate}
+~ The installation will take a few minutes.
+
+
+\textbf{B: Install CFITSIO Library}
+\begin{enumerate}
+	\setlength{\itemsep}{-1pt}
+	\setlength{\parsep}{-10pt}
+\item
+  Get the latest source code package from NASA's HEASARC website
+  (\htmladdnormallink{http://heasarc.gsfc.nasa.gov/FTP/software/fitsio/c/cfitsio\_latest.tar.gz}{http://heasarc.gsfc.nasa.gov/FTP/software/fitsio/c/cfitsio\_latest.tar.gz}).
+  When prompted to save the file, in the Save dialog window, navigate to
+  C:\textbackslash{}cygwin64\textbackslash{}usr\textbackslash{}local
+  (assuming you accepted the defaults when installing Cygwin), click on
+  `New folder' and~ name it `src', go into that folder and `Save'.
+\item
+  Open a Cygwin terminal (via the new Desktop icon or through your Start
+  menu).
+\item
+  Enter the following commands at the '\textbf{\$}' prompt:\\
+  \mycode{\textbf{\$} cd /usr/local/src}\\ 
+  \mycode{\textbf{\$} tar zxvf cfitsio\_latest.tar.gz}\\ 
+  \mycode{\textbf{\$} cd cfitsio}\\ 
+  \mycode{\textbf{\$} ./configure --prefix=/usr}\\ 
+  \mycode{\textbf{\$} make}\\ 
+  \mycode{\textbf{\$} make install}\\ 
+  \mycode{\textbf{\$} cd ../}
+\item
+  Leave the Cygwin terminal open.
+\end{enumerate}
+
+
+\textbf{C: Install HEALPix}
+\begin{enumerate}
+	\setlength{\itemsep}{-1pt}
+	\setlength{\parsep}{-10pt}
+\item
+  Get the latest version of HEALPix from SourceForge
+  (\htmladdnormallink{https://sourceforge.net/projects/healpix/files/latest/download}{https://sourceforge.net/projects/healpix/files/latest/download}). When
+  prompted to save the file, save it in
+  C:\textbackslash{}cygwin64\textbackslash{}usr\textbackslash{}local\textbackslash{}src.
+\item
+  In Windows Explorer, navigate to
+  C:\textbackslash{}cygwin64\textbackslash{}usr\textbackslash{}local\textbackslash{}src,
+  right-click on Healpix\_*.zip and `Extract all\ldots{}'. Accept the
+  default location.
+\item
+  In the Cygwin terminal, type the following commands at the
+  '\textbf{\$}' prompt\\ (use the names of the Healpix directories for
+  the version you installed):\\ 
+	\mycode{\textbf{\$} cd Healpix\_3.30\_2015Oct08}\\ 
+	\mycode{\textbf{\$} cd Healpix\_3.30}\\ 
+	\mycode{\textbf{\$} ./configure}\\ 
+	Select an option from the menu (e.g., `2' for the C
+  package) and accept all of the defaults except that
+  the first time
+  you run configure, you'll be prompted at the end to modify your
+  home shell profile ('.profile'). Enter `y' at this prompt.\\
+  If you want to install the C++ package of \healpix (option 4), pick {\tt generic\_gcc} when prompted for a C++ configuration.\\
+  	\mycode{\textbf{\$} make}\\ 
+	\mycode{\textbf{\$} make test}\\ 
+	\mycode{\textbf{\$} make tidy}
+\end{enumerate}
+
+\subsubsection{Other Windows configurations}
+\label{sec:windows_other}
+Installation on Windows versions other than 7 should be very similar to the one detailed above.\\
+In step A above, replacing Cygwin with {\bf MinGW} (%
 \htmladdnormallink{{\tt http://www.mingw.org/}}{http://www.mingw.org/}%
 ) together with the MSYS collection of GNU utilities 
 (see \htmladdnormallink{{\tt http://www.mingw.org/wiki/msys}}{http://www.mingw.org/wiki/msys}
 and
 \htmladdnormallink{{\tt https://sourceforge.net/projects/mingw/files}}{%
-https://sourceforge.net/projects/mingw/files}).
-\item Install the latest {\tt gfortran} binaries for Cygwin and/or MinGW from, eg
-% \htmladdnormallink{{\tt http://quatramaran.ens.fr/$\tilde{}$coudert/gfortran/}}{%
-% http://quatramaran.ens.fr/~coudert/gfortran/}, 
+https://sourceforge.net/projects/mingw/files}) is also possible.
+The Unix/Linux tools required include {\tt sh, make, awk, grep, sed, ls, wc, cat, more, nm, ar},
+as well as C, C++ and Fortran compilers.\\
+The latest {\tt gfortran} binaries for Cygwin and/or MinGW can be found at, eg
 \hfill \\
 \htmladdnormallink{{\tt \small https://cygwin.com/cgi\--bin2/package\--grep.cgi?grep=gcc\--fortran\&arch=x86\_64}}{%
 https://cygwin.com/cgi-bin2/package-grep.cgi?grep=gcc-fortran&arch=x86_64},
 following the tips found at 
 \htmladdnormallink{{\tt http://gcc.gnu.org/wiki/GFortranBinaries}}{%
 http://gcc.gnu.org/wiki/GFortranBinaries}.
-\item Unpack the HEALPix {\tt.zip} or {\tt.tar.gz} software package
-(see 
-\htmladdnormallink{{\tt https://sourceforge.net/p/healpix/wiki/Windows and peazip}}{%
-https://sourceforge.net/p/healpix/wiki/Windows\%20and\%20peazip})
-\item Run {\tt configure} as you would on other platforms
-\item The C++ code can be compiled using HEALPIX\_TARGET=generic\_gcc
-\end{itemize}
+
+
+% The installation and usage of HEALPix require many standard Unix/Linux tools
+% (such as {\tt sh, make, awk, grep, sed, ls, wc, cat, more, nm, ar}) as well as C,
+% C++ and Fortran compilers. To install it under Windows, you will need to
+% \begin{itemize}
+% \item Install Cygwin on your machine 
+% (see \htmladdnormallink{{\tt http://cygwin.com/}}{http://cygwin.com/}).
+% In addition to the default packages, you need at least the {\tt binutils,
+%     coreutils, util-linux, bash, gawk, grep, make} and {\tt sed} packages, as
+%     well as {\tt gcc} and {\tt gcc-g++} packages, all available at 
+% \htmladdnormallink{{\tt http://cygwin.com/packages/}}{http://cygwin.com/packages/}.\\
+% Alternatively, install MinGW (%
+% \htmladdnormallink{{\tt http://www.mingw.org/}}{http://www.mingw.org/}%
+% ) together with the MSYS collection of GNU utilities 
+% (see \htmladdnormallink{{\tt http://www.mingw.org/wiki/msys}}{http://www.mingw.org/wiki/msys}
+% and
+% \htmladdnormallink{{\tt https://sourceforge.net/projects/mingw/files}}{%
+% https://sourceforge.net/projects/mingw/files}).
+% \item Install the latest {\tt gfortran} binaries for Cygwin and/or MinGW from, eg
+% % \htmladdnormallink{{\tt http://quatramaran.ens.fr/$\tilde{}$coudert/gfortran/}}{%
+% % http://quatramaran.ens.fr/~coudert/gfortran/}, 
+% \hfill \\
+% \htmladdnormallink{{\tt \small https://cygwin.com/cgi\--bin2/package\--grep.cgi?grep=gcc\--fortran\&arch=x86\_64}}{%
+% https://cygwin.com/cgi-bin2/package-grep.cgi?grep=gcc-fortran&arch=x86_64},
+% following the tips found at 
+% \htmladdnormallink{{\tt http://gcc.gnu.org/wiki/GFortranBinaries}}{%
+% http://gcc.gnu.org/wiki/GFortranBinaries}.
+% \item Unpack the HEALPix {\tt.zip} or {\tt.tar.gz} software package
+% (see 
+% \htmladdnormallink{{\tt https://sourceforge.net/p/healpix/wiki/Windows and peazip}}{%
+% https://sourceforge.net/p/healpix/wiki/Windows\%20and\%20peazip})
+% \item Run {\tt configure} as you would on other platforms
+% \item The C++ code can be compiled using HEALPIX\_TARGET=generic\_gcc
+% \end{itemize}
 
 \subsection{Problems with CFITSIO}
 \subsubsection*{Compilation of CFITSIO Fortran wrappers}
