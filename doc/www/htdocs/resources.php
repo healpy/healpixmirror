@@ -121,7 +121,7 @@ to access, visualize and browse images, catalogues and cube data
 </li>
 
 <li>
-<a href="http://archives.esac.esa.int/esasky-beta">ESA Sky (beta)</a> to search, retrieve, explore and visualize the entire sky as observed by ESA (and other) astronomy missions (<a href="http://www.cosmos.esa.int/web/esdc/esasky-help">help desk</a>)
+<a href="http://sky.esa.int">ESA Sky</a> to search, retrieve, explore and visualize the entire sky as observed by ESA (and other) astronomy missions (<a href="http://www.cosmos.esa.int/web/esdc/esasky-help">help desk</a>)
 </li>
 
 <li>
