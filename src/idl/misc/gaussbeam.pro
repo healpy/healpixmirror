@@ -25,7 +25,7 @@
 ;  For more information about HEALPix see http://healpix.sourceforge.net
 ;
 ; -----------------------------------------------------------------------------
-function gaussbeam, fwhm, lmax, dim
+function gaussbeam, fwhm, lmax, dim, help=help
 ;+
 ; NAME:
 ;   gaussbeam
@@ -37,7 +37,7 @@ function gaussbeam, fwhm, lmax, dim
 ; CATEGORY:
 ;
 ; CALLING SEQUENCE:
-;   result = gaussbeam(fwhm, lmax, [dim])
+;   result = gaussbeam(fwhm, lmax, [dim, HELP=])
 ; 
 ; INPUTS:
 ;   fwhm : scalar, FWHM in arcmin
@@ -53,6 +53,9 @@ function gaussbeam, fwhm, lmax, dim
 ;          the GRAD/ELECTRIC polarisation beam
 ;          the CURL/MAGNETIC polarisation beam
 ;          the TEMPERATURE*GRAD beam
+;
+;  OPTIONAL KEYWORD:
+;    HELP:  if set, a documentation header is printed out
 ;
 ; OUTPUTS:
 ;   result contains the window for l in [0,lmax]
@@ -72,11 +75,20 @@ function gaussbeam, fwhm, lmax, dim
 ;     version 1.1, EH, Caltech, 03-2000 : double precision
 ;     version 1.2, EH, Caltech, 08-2002 : added polarisation
 ;     version 1.3, EH, IAP,     01-2013: double precision Deg to Rad conversion
+;     version 1.4, EH, IAP,     08-2016: added HELP
 ;-
 
-Syntax = 'Syntax : beam = gaussbeam(fwhm, lmax [, dim])'
+routine = 'gaussbeam'
+Syntax = 'Syntax : beam = '+routine+'(fwhm, lmax [, dim, HELP=])'
+
+if keyword_set(help) then begin
+    doc_library,routine
+    return,-1
+endif
+
 if (n_params() lt 2 or n_params() gt 3) then begin
-    message,syntax
+    message,syntax,/info
+    message,'For extended help, type  x = gaussbeam(/help)'
 endif
 
 ; translates fwhm (arcmin) into sigma = rms (radians)

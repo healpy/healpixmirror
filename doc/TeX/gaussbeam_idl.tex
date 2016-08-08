@@ -27,16 +27,19 @@ gaussian axisymmetric beam of given FWHM.
 \end{facility}
 
 \begin{IDLformat}
-{beam=\FACNAME(Fwhm, \mylink{idl:gaussbeam:Lmax}{Lmax}%
- [, Dim])}
+{beam=\FACNAME(%
+	\mylink{idl:gaussbeam:fwhm}{Fwhm}, 
+	\mylink{idl:gaussbeam:lmax}{Lmax}
+ [,~\mylink{idl:gaussbeam:dim}{Dim},
+	\mylink{idl:gaussbeam:help}{HELP=}]%
+)}
 \end{IDLformat}
 
 \begin{qualifiers}
   \begin{qulist}{} %%%% NOTE the ``extra'' brace here %%%%
-    \item[Fwhm] Full Width Half Maximum of the gaussian beam, in arcmin (scalar real)
-    \item[Lmax\mytarget{idl:gaussbeam:Lmax}%
-] the window function is computed for the multipoles $\ell$ in \{0,...,Lmax\}
-    \item[Dim] scalar integer, optional. \\
+    \item[Fwhm\mytarget{idl:gaussbeam:fwhm}] Full Width Half Maximum of the gaussian beam, in arcmin (scalar real)
+    \item[Lmax\mytarget{idl:gaussbeam:lmax}] the window function is computed for the multipoles $\ell$ in \{0,...,Lmax\}
+    \item[Dim\mytarget{idl:gaussbeam:dim}] scalar integer, optional. \\
      If absent or set to 0 or 1,
           the output has size (Lmax+1) and is the temperature beam;\\
      if set to $2 \le$ Dim $\le 4$ ,
@@ -46,6 +49,8 @@ gaussian axisymmetric beam of given FWHM.
           the GRAD/ELECTRIC polarization beam\\
           the CURL/MAGNETIC polarization beam\\
           the TEMPERATURE*GRAD beam
+    \item[HELP=\mytarget{idl:gaussbeam:help}]%
+	if set, prints out the help header and exits
   \end{qulist}
 \end{qualifiers}
 
@@ -60,7 +65,8 @@ Fwhm. For a sky of underlying power spectrum $C(\ell)$ observed with beam of
 given FWHM, the measured power spectrum will be $C(\ell)_{\rm meas} = C(\ell)
 B(\ell)^2$ where $B(\ell)$ is given by gaussbeam(Fwhm,Lmax). The
 polarization beam is also provided (when Dim $>$ 1) assuming a perfectly
-co-polarized beam (eg, Challinor et al 2000, astro-ph/0008228)}
+co-polarized beam (eg, Challinor et al 2000, 
+\htmladdnormallink{astro-ph/0008228}{http://arxiv.org/abs/astro-ph/0008228v2})}
 \end{codedescription}
 
 
