@@ -41,6 +41,7 @@
 # 2015-07-31: improved g95 support; updated support address
 # 2016-04-28: tentatively added MINGW for Windows
 # 2016-06-02: debugged gcc detection in IdentifyCCompiler
+# 2016-08-10: 1st attempt to better detect python version
 #=====================================
 #=========== General usage ===========
 #=====================================
@@ -572,7 +573,8 @@ Healpy_config () {  # for healpy 1.7.0
 
     # test python version number
     ${HPY_PYTHON} --version 1> ${tmpfile} 2>&1
-    python_version=`${CAT} ${tmpfile} | ${AWK} '{print \$NF}'` # current version
+    #python_version=`${CAT} ${tmpfile} | ${AWK} '{print \$NF}'` # current version (last field)
+    python_version=`${CAT} ${tmpfile} | ${AWK} '{print \$2}'` # current version (2nd field)
     #python_reqrd="2.4" # minimal version supported
     python_reqrd="2.6" # minimal version supported
     p_v1=`echo ${python_version} | ${AWK} '{print $1*10}'`

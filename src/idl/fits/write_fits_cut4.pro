@@ -27,7 +27,7 @@
 ; -----------------------------------------------------------------------------
 pro write_fits_cut4, filename, pixel, signal, n_obs, serror, hdr=prim_header, xhdr = info_header, $
 Coordsys=coordsys, Nested=nested, Ring=ring, Ordering=ordering, Nside = nside_usr, $
-Units = units, Extension = extension_id, polarisation=polar_in
+Units = units, Extension = extension_id, polarisation=polar_in, Help=help
 ;+
 ; NAME:
 ;         write_fits_cut4
@@ -41,9 +41,9 @@ Units = units, Extension = extension_id, polarisation=polar_in
 ;        fits I/O for Healpix
 ;
 ; CALLING SEQUENCE:
-;      write_fits_cut4, Filename, Pixel, Signal, [N_obs, Serror, Hdr=, Xhdr=, 
-;                       Coordsys=, Nested=, Ring=, Ordering=, Nside =,
-;                       Units=, Extension=, Polar=]
+;      write_fits_cut4, Filename, Pixel, Signal, [N_obs, Serror, HDR=, XHDR=, 
+;                       COORDSYS=, NESTED=, RING=, ORDERING=, NSIDE =,
+;                       UNITS=, EXTENSION=, POLAR=,  HELP]]
 ;
 ; INPUTS:
 ;       Filename : STRING scalar,      
@@ -68,33 +68,35 @@ Units = units, Extension = extension_id, polarisation=polar_in
 ;         if set to a scalar constant, SERROR will be set uniformly to this constant
 ;      
 ; KEYWORD PARAMETERS:
-;       Hdr: primary header
+;       HDR=: primary header
 ;
-;       Xhdr : STRING vector 
+;       XHDR=: STRING vector 
 ;                FITS like header to be inserted in the FITS file
 ;                and containing extra information on e.g, data origin, data
 ;                processing ...
 ;
-;        Coordsys : STRING scalar, either 'C', 'G' or 'E' 
-;                   coordinate system
-;        Nested : if set, the Healpix NESTED scheme is used
-;        Ring : if set, the Healpix RING scheme is used
-;        Ordering : STRING scalar, either 'RING' or 'NESTED'
-;             the information on the ORDERING scheme has to be given to the routine, either using
-;             the keywords NESTED, RING or ORDERING, or filling in the Header
-;             with the relevant keywords
-;
-;        Nside : Healpix resolution parameter
-;             the information on the resolution NSIDE has to be given to the routine, either using
-;             the keyword NSIDE, or filling in the Header with the relevant keywords
-;
-;        Units : STRING scalar, units of both Signal and Serror
-;
-;        Extension: (0 based) extension number in which to write data
-;            default = 0
-;
-;        Polarisation: specify that file will contain the I, Q and U polarisation
-;           Stokes parameter in extensions 0, 1 and 2 respectively
+;       COORDSYS=: STRING scalar, either 'C', 'G' or 'E' 
+;                  coordinate system
+;       NESTED=: if set, the Healpix NESTED scheme is used
+;       RING=: if set, the Healpix RING scheme is used
+;       ORDERING=: STRING scalar, either 'RING' or 'NESTED'
+;            the information on the ORDERING scheme has to be given to the routine, either using
+;            the keywords NESTED, RING or ORDERING, or filling in the Header
+;            with the relevant keywords
+;       
+;       NSIDE=: Healpix resolution parameter
+;            the information on the resolution NSIDE has to be given to the routine, either using
+;            the keyword NSIDE, or filling in the Header with the relevant keywords
+;       
+;       UNITS=: STRING scalar, units of both Signal and Serror
+;       
+;       EXTENSION=: (0 based) extension number in which to write data
+;           default = 0
+;       
+;       POLARISATION=: specify that file will contain the I, Q and U polarisation
+;          Stokes parameter in extensions 0, 1 and 2 respectively
+;       
+;       HELP=: if set, an extensive help (this IDL header) is printed
 ;
 ; SIDE EFFECTS:
 ;        write a FITS file
@@ -111,14 +113,20 @@ Units = units, Extension = extension_id, polarisation=polar_in
 ;        Aug  2002 : uses Xhdr keyword to match other routines
 ;        Nov  2006: set default for Extension
 ;        Mar  2008: can deal with large nside, and double precision signal
+;        Aug  2016: added HELP keyword
 ;
 ;-
 
 
 routine = 'WRITE_FITS_CUT4'
+if (keyword_set(help)) then begin
+    doc_library,routine
+    return
+endif
+
 syntax1 = 'SYNTAX: '+routine+', filename, pixel, signal, [n_obs, serror,  '
-syntax2 = '                   Hdr=, Xhdr=, Coordsys=, Nested=, Ring=, Ordering=, Nside =, '
-syntax3 = '                   Units=, Extension=, Polarisation= ]'
+syntax2 = '                   HDR=, XHDR=, COORDSYS=, NESTED=, RING=, ORDERING=, NSIDE =, '
+syntax3 = '                   UNITS=, EXTENSION=, POLARISATION=, HELP= ]'
 if n_params() lt 3 then begin
     print,syntax1,syntax2,syntax3,format='(a)'
     if n_params() ne 0 then print,' ********* file not written ! ***********'

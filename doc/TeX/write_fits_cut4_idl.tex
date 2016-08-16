@@ -52,7 +52,9 @@ information relative to the Stokes parameters I, Q and U are placed in extension
 ,
 \mylink{idl:write_fits_cut4:UNITS}{UNITS=}%
 ,
-X\mylink{idl:write_fits_cut4:HDR}{HDR=}%
+\mylink{idl:write_fits_cut4:XHDR}{XHDR=}%
+,
+\mylink{idl:write_fits_cut4:HELP}{HELP=}%
 ]
 }
 \end{IDLformat}
@@ -110,7 +112,9 @@ X\mylink{idl:write_fits_cut4:HDR}{HDR=}%
 		String array containing the information to be put in
 		the primary header. 
 
-	\item[{/NESTED}]\mytarget{idl:write_fits_cut4:NESTED}% if set, specifies that the map is in the NESTED ordering
+	\item[{/NESTED}]\mytarget{idl:write_fits_cut4:NESTED}%
+	(optional)
+         if set, specifies that the map is in the NESTED ordering
 	scheme\\
 	\seealso Ordering and Ring 
 
@@ -149,6 +153,10 @@ FITS header keywords accordingly
 		(optional), \\
 		String array containing the information to be put in
 		the extension header. 
+
+    	\item[HELP=] \mytarget{idl:write_fits_cut4:HELP}%
+		(optional), \\
+		if set, an extensive help is displayed, and no file is written
 
    \end{kwlist}
 \end{keywords}

@@ -27,7 +27,7 @@
 ; -----------------------------------------------------------------------------
 pro read_fits_cut4, filename, pixel, signal, n_obs, serror, $
 HDR = header, XHDR = xheader, NSIDE=nside, ORDERING=ordering, COORDSYS=coordsys,$
- EXTENSION=extension_id
+ EXTENSION=extension_id, HELP=help
 ;+
 ; NAME:
 ;          read_fits_cut4
@@ -42,7 +42,7 @@ HDR = header, XHDR = xheader, NSIDE=nside, ORDERING=ordering, COORDSYS=coordsys,
 ;
 ; CALLING SEQUENCE:
 ;        read_fits_cut4, Filename, Pixel, Signal, [N_obs, Serror, 
-;        HDR=, XHDR=, NSIDE=, ORDERING=, COORDSYS=, EXTENSION=]
+;        HDR=, XHDR=, NSIDE=, ORDERING=, COORDSYS=, EXTENSION=, HELP=]
 ; 
 ; INPUTS:
 ;       Filename  : STRING scalar,      
@@ -52,7 +52,7 @@ HDR = header, XHDR = xheader, NSIDE=nside, ORDERING=ordering, COORDSYS=coordsys,
 ;       EXTENSION= number (0 based) of extension to be read
 ;
 ; OUTPUTS:
-;        Pixel   : LONG vector
+;       Pixel   : LONG vector
 ;                   index of Healpix pixel
 ;
 ;       Signal   : FLOAT vector (same length as Pixel)
@@ -66,8 +66,6 @@ HDR = header, XHDR = xheader, NSIDE=nside, ORDERING=ordering, COORDSYS=coordsys,
 ;                 statistical error on Signal in each Pixel
 ;                 = rms of individual measurement / sqrt(N_obs)
 ;      
-;
-;
 ;       HDR= : STRING vector 
 ;                contains the FITS header of the primary unit
 ;
@@ -83,6 +81,10 @@ HDR = header, XHDR = xheader, NSIDE=nside, ORDERING=ordering, COORDSYS=coordsys,
 ;       COORDSYS= astrophysical coordinate system used, as read from FITS
 ;           header (value of keywords COORDSYS or SKYCOORD)
 ;
+; KEYWORD PARAMETERS:
+;
+;       HELP=: if set, an extensive help (this IDL header) is printed
+;
 ; RESTRICTIONS:
 ;
 ; PROCEDURE:
@@ -94,11 +96,16 @@ HDR = header, XHDR = xheader, NSIDE=nside, ORDERING=ordering, COORDSYS=coordsys,
 ;        Sept 2000, EH, Caltech
 ;        Aug  2002: use HDR and XHDR keywords to match other routines
 ;        Jan 2005: added NSIDE and ORDERING as outputs
-;       Jan 2009: calls init_astrolib
+;        Jan 2009: calls init_astrolib
+;        Aug  2016: added HELP keyword
 ;-
 
 routine = 'READ_FITS_CUT4'
-syntax = 'Syntax : '+routine+', filename, pixel, signal, [n_obs, serror, HDR=, XHDR=, NSIDE=, ORDERING=, COORDSYS=, EXTENSION=]'
+if (keyword_set(help)) then begin
+    doc_library,routine
+    return
+endif
+syntax = 'Syntax : '+routine+', filename, pixel, signal, [n_obs, serror, HDR=, XHDR=, NSIDE=, ORDERING=, COORDSYS=, EXTENSION=, HELP=]'
 if N_params() LT 3 then begin
       print,syntax
       return

@@ -170,7 +170,7 @@ subroutine input_map8_KLOAD(filename, map, npixtot, nmaps, fmissval, header, uni
     CHARACTER(LEN=80)  :: units1
     CHARACTER(LEN=80),dimension(1:10)  :: unitsm
 !    CHARACTER(LEN=80),dimension(:), allocatable  :: unitsm
-    integer(I4B) :: extno_i
+    integer(I4B) :: extno_i, extno_f
     !-----------------------------------------------------------------------
 
     units1    = ' '
@@ -220,13 +220,15 @@ subroutine input_map8_KLOAD(filename, map, npixtot, nmaps, fmissval, header, uni
 !        enddo
        if (imissing > 0) write(*,'(a,1pe11.4)') 'blank value : ' ,fmissing
     else if (type_fits == 3 .and. (nmaps == 1 .or. nmaps == 3)) then
+       ! cut sky FITS file, reading 1 map (I) or 3 maps (I,Q,U), each from a different extension
        do imap = 1, nmaps
-          obs_npix = getsize_fits(filename, extno = imap-1)       
+          extno_f  = extno_i + imap - 1 ! 2016-08-16
+          obs_npix = getsize_fits(filename, extno = extno_f)       
           ! one partial map (in binary table with explicit pixel indexing)
           allocate(pixel(0:obs_npix-1), stat = status)
           allocate(signal(0:obs_npix-1), stat = status)
           call read_fits_cut4(filename, int(obs_npix,kind=i4b), &
-               &              pixel, signal, header=header, units=units1, extno=imap-1)
+               &              pixel, signal, header=header, units=units1, extno=extno_f)
           if (present(units)) units(imap) = trim(units1)
           maxpix = maxval(pixel)
           minpix = maxval(pixel)

@@ -36,9 +36,9 @@ each Stokes parameter is stored in a different extension of the same FITS file.}
 , \mylink{idl:read_fits_cut4:HDR}{HDR=}%
 , \mylink{idl:read_fits_cut4:XHDR}{XHDR=}%
 , \mylink{idl:read_fits_cut4:NSIDE}{NSIDE=}%
-,
-    \mylink{idl:read_fits_cut4:ORDERING}{ORDERING=}%
+, \mylink{idl:read_fits_cut4:ORDERING}{ORDERING=}%
 , \mylink{idl:read_fits_cut4:COORDSYS}{COORDSYS=}%
+, \mylink{idl:read_fits_cut4:HELP}{HELP=}%
 ]
 }
 \end{IDLformat}
@@ -94,6 +94,9 @@ and U Stokes parameters related information. \default{0}
 	        (OUT, optional), \\
 	        returns on output the astrophysical coordinate system used, 
 		as read from FITS header (value of keywords COORDSYS or SKYCOORD)
+
+	 \item[{HELP=}] \mytarget{idl:read_fits_cut4:HELP}
+	        (IN, optional), \\ if set, an extensive help is displayed, and no file is read
 
   \end{kwlist}
 \end{keywords}

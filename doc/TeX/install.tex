@@ -1178,10 +1178,15 @@ of Postscript, GIF and PNG files, as described below.
 \subsubsection*{GDL+\healpix specific requirements}
 To fully enjoy GDL capabilities
 \begin{itemize}
-\item \healpix 3.30 must be installed, and {\tt Healpix\_3.30/src/idl/visu/proj2out.pro} must be replaced with the one found in 
+\item \healpix \hpxversion{} or more must be installed.\\
+If \healpix 3.30 is used instead, {\tt Healpix\_3.30/src/idl/visu/proj2out.pro} must be replaced with the one found in 
 \htmladdnormallink{%
 http://sourceforge.net/p/healpix\-/code\-/HEAD\-/tree\-/branches\-/branch\_v330r807\-/src\-/idl\-/visu\-/proj2out.pro}{%
 http://sourceforge.net/p/healpix/code/HEAD/tree/branches/branch_v330r807/src/idl/visu/proj2out.pro}.
+% \item \healpix 3.30 must be installed, and {\tt Healpix\_3.30/src/idl/visu/proj2out.pro} must be replaced with the one found in 
+% \htmladdnormallink{%
+% http://sourceforge.net/p/healpix\-/code\-/HEAD\-/tree\-/branches\-/branch\_v330r807\-/src\-/idl\-/visu\-/proj2out.pro}{%
+% http://sourceforge.net/p/healpix/code/HEAD/tree/branches/branch_v330r807/src/idl/visu/proj2out.pro}.
 
 \item
 Besides the mandatory requirements (%
@@ -1306,7 +1311,7 @@ All other features work properly, including the \mylinkext{idl:mollview:latex}{\
 \section{Appendix I: Recent Changes and New Features}
 \label{sec:newfeatures}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% BEGIN LATEST CHANGES %%%%%%%%%%%%%
-\subsection{Bug corrections and Improvements in Version \hpxversion}%(2015-??)
+\subsection{Bug corrections and Improvements in Version \hpxversion}%(2016-?)
 % \subsubsection[General]{General}
 % \subsubsection[C]{\linklatexhtml{C}{csub.pdf}{csub.htm}}
 % \subsubsection[C++]{\htmladdnormallink{C++}{http://healpix.sourceforge.net/html/index_cxx.htm}}
@@ -1319,7 +1324,42 @@ All other features work properly, including the \mylinkext{idl:mollview:latex}{\
 
 % \subsubsection[General]{General}
 % \subsubsection[C]{\linklatexhtml{C}{csub.pdf}{csub.htm}}
+
+\subsubsection[General]{General}
+	\begin{itemize}
+	\item Detailed \htmlref{HOWTO}{sec:windows} for installation under Windows
+	\item Interactive {\tt configure} script now supports MINGW (for Windows), 
+		and better detects {\tt gcc} and {\tt python} versions
+	\item Improved cross-document links of PDF documentation
+	\end{itemize}
+% \subsubsection[C]{\linklatexhtml{C}{csub.pdf}{csub.htm}}
 \subsubsection[C++]{\htmladdnormallink{C++}{http://healpix.sourceforge.net/html/index_cxx.htm}}
+	Removal of C99 features introduced in Version 3.30
+\subsubsection[Fortran]{%
+ 	Fortran 90 \linklatexhtml{facilities}{facilities.pdf}{facilities.htm} and
+ 	\linklatexhtml{subroutines}{subroutines.pdf}{subroutines.htm}}
+	Bug correction of input\_map routine for reading polarized multi-HDU cut sky FITS files
+	Introduction of {\tt winfiledir\_*} and {\tt windowfile\_*} in \htmlref{{\tt alteralm}}{fac:alteralm} facility
+\subsubsection[IDL]{\linklatexhtml{IDL}{idl.pdf}{idl.htm}}
+	Improved support for GDL (see \htmlref{Using GDL instead of IDL}{install:using_gdl})
+% \subsubsection[Java]{\htmladdnormallink{Java}{http://healpix.sourceforge.net/html/java/index.html}}
+% \subsubsection[Python]{\htmladdnormallink{Python}{http://healpy.readthedocs.org/en/latest/}}
+
+% \subsubsection[General]{General}
+% \subsubsection[C]{\linklatexhtml{C}{csub.pdf}{csub.htm}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% END LATEST CHANGES %%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%----------------------------------------------------
+\section{Appendix II: Older changes (versions 3.00 to 3.30}
+
+{\mytiny{%
+
+\tinysubsection{Bug corrections and Improvements in Version 3.30}%(2015-10-08)
+\tinysubsubsection[C++]{\htmladdnormallink{C++}{http://healpix.sourceforge.net/html/index_cxx.htm}}
 \begin{itemize}
 \item support for multi-order coverages (MOC);
 \item allow generation of $a_{\ell m}$ from 6-component power spectra;
@@ -1330,7 +1370,7 @@ All other features work properly, including the \mylinkext{idl:mollview:latex}{\
 \end{itemize}
 
 
-\subsubsection[Fortran]{%
+\tinysubsubsection[Fortran]{%
 	Fortran 90 \linklatexhtml{facilities}{facilities.pdf}{facilities.htm} and
 	\linklatexhtml{subroutines}{subroutines.pdf}{subroutines.htm}}
 \begin{itemize}
@@ -1355,7 +1395,7 @@ routine to avoid a bug specific to Intel's Ifort 15.0.2
 	\item CFITSIO version 3.20 (August 2009) or more now required;
 \end{itemize}
 
-\subsubsection[IDL]{\linklatexhtml{IDL}{idl.pdf}{idl.htm}}
+\tinysubsubsection[IDL]{\linklatexhtml{IDL}{idl.pdf}{idl.htm}}
 \begin{itemize}
 %
 \item 
@@ -1388,7 +1428,7 @@ to read best fit $C(\ell)$ model to Planck 2015 data.
 %
 \end{itemize}
 
-\subsubsection[Java]{\htmladdnormallink{Java}{http://healpix.sourceforge.net/html/java/index.html}}
+\tinysubsubsection[Java]{\htmladdnormallink{Java}{http://healpix.sourceforge.net/html/java/index.html}}
 \begin{itemize}
 \item deprecated parts of the library have been removed;
 \item MOC support (see 
@@ -1401,7 +1441,7 @@ for high-level description);
 \end{itemize}
 
 
-\subsubsection[Python]{\htmladdnormallink{Python}{http://healpy.readthedocs.org/en/latest/}}
+\tinysubsubsection[Python]{\htmladdnormallink{Python}{http://healpy.readthedocs.org/en/latest/}}
 \begin{itemize}
 	\item switch to \htmladdnormallink{{\tt healpy
 1.9.0}}{https://github.com/healpy/healpy/releases} 
@@ -1415,16 +1455,7 @@ for high-level description);
 	\end{itemize}
 \end{itemize}
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% END LATEST CHANGES %%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%----------------------------------------------------
-\section{Appendix II: Older changes (versions 3.00 to 3.20}
-
-{\mytiny{%
-
+%%%%%%
 \tinysubsection*{Bug corrections and Improvements in Version 3.20 (2014-12)} %2014-12-05
 
 \tinysubsubsection*{General}

@@ -68,6 +68,7 @@ module fitstools
   !             alm related IO is still limited to l<46340
   ! 2013-12-13 : increased MAXDIM from 40 to MAXDIM_TOP
   ! 2014-05-02: fixed problem with keywords having a long string value
+  ! 2016-08-16: debugged input_map on cut4 FITS files with multi-HDU polarized data
   ! -------------------------------------------------------------
   !
   ! --------------------------- from include file (see fits_template.f90)

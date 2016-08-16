@@ -115,8 +115,8 @@
 
 \begin{codedescription}
 {\thedocid\ reads in a \healpix sky map from a FITS file, and outputs
-the variable {\tt T\_sky}, where the optional variables {\tt Hdr} 
-and {\tt Exthdr} contain
+the variable \mylink{idl:read_fits_map:T_sky}{\tt T\_sky}, where the optional variables \mylink{idl:read_fits_map:Hdr}{\tt Hdr} 
+and \mylink{idl:read_fits_map:Exthdr}{\tt Exthdr} contain
 respectively the primary and extension headers. According to \healpix
 convention, the map should be is stored as a FITS file binary table
 extension. Note:the routine \htmlref{read\_tqu}{idl:read_tqu} which requires less
@@ -130,7 +130,8 @@ memory is recommended when reading {\em large polarized} maps.}
   \item[idl] version \idlversion or more is necessary to run \thedocid
 \input{item_read_fits_idl}
     \item[sxpar] This IDL routine (included in \healpix package) can be
-  used to extract FITS keywords from the header(s) Hdr or Xhdr read with \thedocid.
+  used to extract FITS keywords from the header(s) \mylink{idl:read_fits_map:Hdr}{\tt Hdr} 
+or \mylink{idl:read_fits_map:Exthdr}{\tt Exthdr} read with \thedocid.
   \item[synfast] This \healpix facility will generate the FITS format 
             sky map that can be read by \thedocid.
   \item[\htmlref{write\_fits\_map}{idl:write_fits_map}] This \healpix IDL facility can be used to generate the FITS format 
