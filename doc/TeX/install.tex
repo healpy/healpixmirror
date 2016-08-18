@@ -1132,6 +1132,7 @@ administrator to adjust the local IDL script.
 See the \htmlref{eponymous section}{idl:other_idl_libs} in the \linklatexhtml{``IDL Facilities Overview''}{idl.pdf}{idl.html}
 
 \subsection{Mac OS X,  X11 and IDL cursor}
+\label{install:macos_idl_cursor}
 If the IDL cursor does not work correctly on X11 windows under Mac OS X, and the
 2nd and 3rd button clicks are ineffective, 
 type
@@ -1143,7 +1144,8 @@ type
 \item under Leopard (10.5.*), Snow Leopard (10.6.*) and Lion (10.7.*): \\
 { {\tt defaults write org.x.x11 wm\_click\_through -bool true}}
 \end{itemize}
-\item with Xquartz (default under Moutain Lion (10.8.*), Mavericks (10.9.*) and Yosemite (10.10.*)):\\
+\item with Xquartz (default under Moutain Lion (10.8.*), Mavericks (10.9.*) and Yosemite (10.10.*), available
+for download for El Capitan (10.11.*) and Sierra (10.12.*)):\\
 {{\tt defaults write org.macosforge.xquartz.X11 wm\_click\_through -bool true}}
 \item with MacPort's X11 (package xorg-server):\\
 {{\tt defaults write org.macports.X11 wm\_click\_through -bool true}}
@@ -1178,11 +1180,12 @@ of Postscript, GIF and PNG files, as described below.
 \subsubsection*{GDL+\healpix specific requirements}
 To fully enjoy GDL capabilities
 \begin{itemize}
-\item \healpix \hpxversion{} or more must be installed.\\
+\item \healpix \hpxversion{} or more must be installed\footnote{%
 If \healpix 3.30 is used instead, {\tt Healpix\_3.30/src/idl/visu/proj2out.pro} must be replaced with the one found in 
 \htmladdnormallink{%
 http://sourceforge.net/p/healpix\-/code\-/HEAD\-/tree\-/branches\-/branch\_v330r807\-/src\-/idl\-/visu\-/proj2out.pro}{%
 http://sourceforge.net/p/healpix/code/HEAD/tree/branches/branch_v330r807/src/idl/visu/proj2out.pro}.
+}.
 % \item \healpix 3.30 must be installed, and {\tt Healpix\_3.30/src/idl/visu/proj2out.pro} must be replaced with the one found in 
 % \htmladdnormallink{%
 % http://sourceforge.net/p/healpix\-/code\-/HEAD\-/tree\-/branches\-/branch\_v330r807\-/src\-/idl\-/visu\-/proj2out.pro}{%
@@ -1322,31 +1325,47 @@ All other features work properly, including the \mylinkext{idl:mollview:latex}{\
 % \subsubsection[Java]{\htmladdnormallink{Java}{http://healpix.sourceforge.net/html/java/index.html}}
 % \subsubsection[Python]{\htmladdnormallink{Python}{http://healpy.readthedocs.org/en/latest/}}
 
-% \subsubsection[General]{General}
-% \subsubsection[C]{\linklatexhtml{C}{csub.pdf}{csub.htm}}
-
 \subsubsection[General]{General}
 	\begin{itemize}
-	\item Detailed \htmlref{HOWTO}{sec:windows} for installation under Windows
-	\item Interactive {\tt configure} script now supports MINGW (for Windows), 
-		and better detects {\tt gcc} and {\tt python} versions
-	\item Improved cross-document links of PDF documentation
+	\item Detailed \htmlref{HOWTO}{sec:windows} for installation under Windows;
+	\item Interactive {\tt configure} script now supports MINGW environment (for Windows), 
+		and better detects {\tt gcc} and {\tt python} versions;
+	\item Improved cross-document linking in PDF documentation.
 	\end{itemize}
 % \subsubsection[C]{\linklatexhtml{C}{csub.pdf}{csub.htm}}
 \subsubsection[C++]{\htmladdnormallink{C++}{http://healpix.sourceforge.net/html/index_cxx.htm}}
-	Removal of C99 features introduced in Version 3.30
+	\begin{itemize}
+	\item Removal of C++11 features inadvertently introduced in Version 3.30 
+	(see \htmladdnormallink{\tt http://sourceforge.net/p/healpix/bugs/72}{http://sourceforge.net/p/healpix/bugs/72})
+	\end{itemize}
 \subsubsection[Fortran]{%
  	Fortran 90 \linklatexhtml{facilities}{facilities.pdf}{facilities.htm} and
  	\linklatexhtml{subroutines}{subroutines.pdf}{subroutines.htm}}
-	Bug correction of input\_map routine for reading polarized multi-HDU cut sky FITS files
-	Introduction of {\tt winfiledir\_*} and {\tt windowfile\_*} in \htmlref{{\tt alteralm}}{fac:alteralm} facility
+	\begin{itemize}
+	\item Bug correction in \htmlref{{\tt input\_map}}{sub:input_map} routine for reading of polarized multi-HDU cut sky FITS files;
+	\item Introduction of 
+\mylinkext{fac:alteralm:winfiledir_in}{{\tt winfiledir\_*}} and 
+\mylinkext{fac:alteralm:windowfile_in}{{\tt windowfile\_*}} qualifiers in \htmlref{{\tt alteralm}}{fac:alteralm} facility.
+	\end{itemize}
 \subsubsection[IDL]{\linklatexhtml{IDL}{idl.pdf}{idl.htm}}
-	Improved support for GDL (see \htmlref{Using GDL instead of IDL}{install:using_gdl})
+	\begin{itemize}
+	\item Improved support for \htmlref{GDL}{install:using_gdl} 
+%(see \htmlref{Using GDL instead of IDL}{install:using_gdl})
+	\end{itemize}
 % \subsubsection[Java]{\htmladdnormallink{Java}{http://healpix.sourceforge.net/html/java/index.html}}
-% \subsubsection[Python]{\htmladdnormallink{Python}{http://healpy.readthedocs.org/en/latest/}}
+\subsubsection[Python]{\htmladdnormallink{Python}{http://healpy.readthedocs.org/en/latest/}}
+	\begin{itemize}
+	\item Switch to 
+	\htmladdnormallink{{\tt healpy 1.9.1}}{https://github.com/healpy/healpy/releases} 
+	(\htmladdnormallink{CHANGELOG}{https://github.com/healpy/healpy/blob/master/CHANGELOG.rst})
+	\begin{itemize}
+	\item Removed C++ 11 features% <https://github.com/healpy/healpy/pull/297>
+    	\item Streamlined setup.py% <https://github.com/healpy/healpy/pull/298>
+    	\item Plotting fixes for Python 3% <https://github.com/healpy/healpy/pull/303>, <https://github.com/healpy/healpy/pull/304>
+    	\item Numpy 1.10 fix% <https://github.com/healpy/healpy/pull/305>
+	\end{itemize}
+	\end{itemize}
 
-% \subsubsection[General]{General}
-% \subsubsection[C]{\linklatexhtml{C}{csub.pdf}{csub.htm}}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% END LATEST CHANGES %%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1354,12 +1373,12 @@ All other features work properly, including the \mylinkext{idl:mollview:latex}{\
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%----------------------------------------------------
-\section{Appendix II: Older changes (versions 3.00 to 3.30}
+\section{Appendix II: Older changes (versions 3.00 to 3.30)}
 
 {\mytiny{%
 
-\tinysubsection{Bug corrections and Improvements in Version 3.30}%(2015-10-08)
-\tinysubsubsection[C++]{\htmladdnormallink{C++}{http://healpix.sourceforge.net/html/index_cxx.htm}}
+\tinysubsection*{Bug corrections and Improvements in Version 3.30 (2015-10)}%(2015-10-08)
+\tinysubsubsection*{\htmladdnormallink{C++}{http://healpix.sourceforge.net/html/index_cxx.htm}}
 \begin{itemize}
 \item support for multi-order coverages (MOC);
 \item allow generation of $a_{\ell m}$ from 6-component power spectra;
@@ -1370,7 +1389,7 @@ All other features work properly, including the \mylinkext{idl:mollview:latex}{\
 \end{itemize}
 
 
-\tinysubsubsection[Fortran]{%
+\tinysubsubsection*{%
 	Fortran 90 \linklatexhtml{facilities}{facilities.pdf}{facilities.htm} and
 	\linklatexhtml{subroutines}{subroutines.pdf}{subroutines.htm}}
 \begin{itemize}
@@ -1395,7 +1414,7 @@ routine to avoid a bug specific to Intel's Ifort 15.0.2
 	\item CFITSIO version 3.20 (August 2009) or more now required;
 \end{itemize}
 
-\tinysubsubsection[IDL]{\linklatexhtml{IDL}{idl.pdf}{idl.htm}}
+\tinysubsubsection*{\linklatexhtml{IDL}{idl.pdf}{idl.htm}}
 \begin{itemize}
 %
 \item 
@@ -1428,7 +1447,7 @@ to read best fit $C(\ell)$ model to Planck 2015 data.
 %
 \end{itemize}
 
-\tinysubsubsection[Java]{\htmladdnormallink{Java}{http://healpix.sourceforge.net/html/java/index.html}}
+\tinysubsubsection*{\htmladdnormallink{Java}{http://healpix.sourceforge.net/html/java/index.html}}
 \begin{itemize}
 \item deprecated parts of the library have been removed;
 \item MOC support (see 
@@ -1441,7 +1460,7 @@ for high-level description);
 \end{itemize}
 
 
-\tinysubsubsection[Python]{\htmladdnormallink{Python}{http://healpy.readthedocs.org/en/latest/}}
+\tinysubsubsection*{\htmladdnormallink{Python}{http://healpy.readthedocs.org/en/latest/}}
 \begin{itemize}
 	\item switch to \htmladdnormallink{{\tt healpy
 1.9.0}}{https://github.com/healpy/healpy/releases} 
@@ -1455,7 +1474,8 @@ for high-level description);
 	\end{itemize}
 \end{itemize}
 
-%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \tinysubsection*{Bug corrections and Improvements in Version 3.20 (2014-12)} %2014-12-05
 
 \tinysubsubsection*{General}
@@ -1611,8 +1631,8 @@ Fortran 90 \linklatexhtml{facilities}{facilities.pdf}{facilities.htm} and
 		routines now accept scalar arguments
 \end{itemize}
 %	
-% \tinysubsubsection[Java]{Java}
-% \tinysubsubsection[Python]{Python}
+% \tinysubsubsection*[Java]{Java}
+% \tinysubsubsection*[Python]{Python}
 
 \tinysubsection*{Bug corrections and Improvements in Version 3.10 (2013-03)}
 \tinysubsubsection*{General}

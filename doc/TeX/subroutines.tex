@@ -56,6 +56,8 @@ optional.}
 % commands for arbitrary link
 \newcommand{\mylink}[2]{% \mylink{link_id}{link_text}
 \latexhtml{\hyperlink{#1}{#2}}{\hyperref{#2}{}{}{#1}}}
+\newcommand{\mylinkext}[2]{% \mylink{link_id}{link_text}  (external link)
+\latexhtml{\htmlref{#2}{#1}}{\hyperref{#2}{}{}{#1}}}
 % commands for targets 
 % http://tex.stackexchange.com/questions/17057/hypertarget-seems-to-aim-a-line-too-low
 \makeatletter
@@ -180,6 +182,16 @@ $\mathbf{\phi}$ & The azimuthal angle on the sphere, $\phi\in[0,2\pi[$.\\
 \section[Changes between releases 3.20 and \hpxversion]{Changes between releases 3.20 and
 \hpxversion}
 %--------------------------------------------
+\subsection{Version \hpxversion}
+\begin{itemize}
+	\item Bug correction in \htmlref{{\tt input\_map}}{sub:input_map} routine for reading of polarized multi-HDU cut sky FITS files;
+	\item Introduction of 
+\mylinkext{fac:alteralm:winfiledir_in}{{\tt winfiledir\_*}} and 
+\mylinkext{fac:alteralm:windowfile_in}{{\tt windowfile\_*}} qualifiers in \htmlref{{\tt alteralm}}{fac:alteralm} facility.
+\end{itemize}
+
+
+\subsection{Version 3.30}
 \begin{itemize}
 
 %
