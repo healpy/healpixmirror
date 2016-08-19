@@ -36,11 +36,22 @@ They are chosen to have their center located at
 
 \docid{same\_shape\_pixels\_nest}
 \begin{f90format}
-{ nside, template [,~list, reflexion, nrep]}
+{%
+ \mylink{sub:same_shape_pixels_xxx:nside}{nside}, 
+ \mylink{sub:same_shape_pixels_xxx:template}{template}
+[,~\mylink{sub:same_shape_pixels_xxx:list}{list}, 
+ \mylink{sub:same_shape_pixels_xxx:reflexion}{reflexion}, 
+ \mylink{sub:same_shape_pixels_xxx:nrep}{nrep}]}
 \end{f90format}
 \docid{same\_shape\_pixels\_ring}
 \begin{f90format}
-{ nside, template [,~list, reflexion, nrep]}
+%{ nside, template [,~list, reflexion, nrep]}
+{%
+ \mylink{sub:same_shape_pixels_xxx:nside}{nside}, 
+ \mylink{sub:same_shape_pixels_xxx:template}{template}
+[,~\mylink{sub:same_shape_pixels_xxx:list}{list}, 
+ \mylink{sub:same_shape_pixels_xxx:reflexion}{reflexion}, 
+ \mylink{sub:same_shape_pixels_xxx:nrep}{nrep}]}
 \end{f90format}
 %\ mylink: to avoid automatic processing by make_internal_links.sh
 
@@ -49,16 +60,16 @@ They are chosen to have their center located at
 \begin{tabular}{p{0.28\hsize} p{0.05\hsize} p{0.1\hsize} p{0.47\hsize}} \hline  
 \textbf{name~\&~dimensionality} & \textbf{kind} & \textbf{in/out} & \textbf{description} \\ \hline
                    &   &   &                           \\ %%% for presentation
-nside & I4B & IN & the \healpix $\nside$ parameter. \\
-template & I4B/ I8B & IN & identification number of the
+nside\mytarget{sub:same_shape_pixels_xxx:nside} & I4B & IN & the \healpix $\nside$ parameter. \\
+template\mytarget{sub:same_shape_pixels_xxx:template} & I4B/ I8B & IN & identification number of the
                    template pixel (the numbering
                    scheme of the pixel templates is the same for both routines). \\
-list(0:nrep-1) \hskip 3cm OPTIONAL & I4B/ I8B & OUT & pointer containing the ordered list of NESTED/RING scheme
+list(0:nrep-1)\mytarget{sub:same_shape_pixels_xxx:list} \hskip 3cm OPTIONAL & I4B/ I8B & OUT & pointer containing the ordered list of NESTED/RING scheme
                    identification numbers (in \{0,$12\nside^2-1$\})
   of all pixels having the same shape as the template provided. The routines
                    will allocate the {\tt list} array if it is not allocated
                    upon calling. \\
-reflexion(0:nrep-1) \hskip 3cm OPTIONAL & I4B & OUT & pointer containing the transformation(s) (in
+reflexion(0:nrep-1)\mytarget{sub:same_shape_pixels_xxx:reflexion} \hskip 3cm OPTIONAL & I4B & OUT & pointer containing the transformation(s) (in
                    \{0, 3\}) to
                    apply to each of the returned pixels to match exactly in
                    shape and position its respective template. 0: rotation around the polar axis only,
@@ -67,7 +78,7 @@ reflexion(0:nrep-1) \hskip 3cm OPTIONAL & I4B & OUT & pointer containing the tra
                    Equator), 3: rotation + East-West and North-South swaps. The routines
                    will allocate the {\tt list} array if it is not allocated
                    upon calling. \\
-nrep \hskip 4cm OPTIONAL & I4B/ I8B  & OUT & number of pixels having the same template (either 8, 16, 4$\nside$ or
+nrep\mytarget{sub:same_shape_pixels_xxx:nrep} \hskip 4cm OPTIONAL & I4B/ I8B  & OUT & number of pixels having the same template (either 8, 16, 4$\nside$ or
   8$\nside$).
 \end{tabular}
 }

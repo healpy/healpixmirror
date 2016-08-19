@@ -66,7 +66,7 @@ nmmax\mytarget{sub:map2alm_iterative:nmmax} & I4B & IN & the maximum $m$ value f
 iter\_order\mytarget{sub:map2alm_iterative:iter_order} & I4B & IN & the order of Jacobi iteration. Increasing that order
 improves the accuracy of the final $a_{lm}$ but increases the computation time $
 T_{\rm CPU} \propto 1 + 2 \times $iter\_order. 
-iter\_order\mytarget{sub:map2alm_iterative:iter_order} $=0$ is a straight analysis, while iter\_order $=3$ is usually a
+iter\_order  $=0$ is a straight analysis, while iter\_order $=3$ is usually a
 good compromise. \\
 %
 map\_TQU\mytarget{sub:map2alm_iterative:map_TQU}(0:12*nsmax**2-1, 1:p) & SP/ DP & INOUT & input map. $p$ is 1 or 3
@@ -99,7 +99,7 @@ used instead of recursion. \\
 \begin{tabular}{p{0.38\hsize} p{0.05\hsize} p{0.07\hsize} p{0.40\hsize}}   \hline  
 mask\mytarget{sub:map2alm_iterative:mask}(0:12*nsmax**2-1,1:q), \hskip 6cm OPTIONAL & SP/ DP & IN & pixel mask,
 assumed to have the same resolution (and RING ordering) as the map. The map {\tt
-map\_TQU\mytarget{sub:map2alm_iterative:map_TQU}} is
+map\_TQU} is
 multiplied by that mask before being analyzed, and will therefore be altered on
 output. 
 $q$ should be in $\{1,2,3\}$. If $p=q=3$, then each of

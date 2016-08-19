@@ -78,14 +78,16 @@
 % CROSS-LINK
 %%%%http://tex.stackexchange.com/questions/41539/does-hyperref-work-between-two-files
 %% add xr-hyper (part of hyperref) to used packages, *BEFORE* hyperref (or html)
-\externaldocument{intro}
-\externaldocument{install}
-%\externaldocument{idl}
-\externaldocument{facilities}
-\externaldocument{subroutines}
+\externaldocument{intro}[intro.pdf]
+\externaldocument{install}[install.pdf]
+\externaldocument{csub}[csub.pdf]
+%\externaldocument{idl}[idl.pdf]
+\externaldocument{facilities}[facilities.pdf]
+\externaldocument{subroutines}[subroutines.pdf]
 \begin{htmlonly}
 \externallabels{.}{/tmp/introlabels.pl}
 \externallabels{.}{/tmp/installlabels.pl}
+\externallabels{.}{/tmp/csublabels.pl}
 %\externallabels{.}{/tmp/idllabels.pl}
 \externallabels{.}{/tmp/facilitieslabels.pl}
 \externallabels{.}{/tmp/subroutineslabels.pl}

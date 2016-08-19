@@ -39,8 +39,8 @@ value\mytarget{sub:add_card:value} & any & IN & the value (double, real, integer
 \begin{tabular}{p{0.4\hsize} p{0.05\hsize} p{0.1\hsize} p{0.35\hsize}} \hline  
 \textbf{name~\&~dimensionality} & \textbf{kind} & \textbf{in/out} & \textbf{description} \\ \hline
                    &   &   &                           \\ %%% for presentation
-\optional{update\mytarget{sub:add_card:update}} & LGT & IN & if set to {\tt .true.}, the first occurence of the keyword {\tt
-kwd\mytarget{sub:add_card:kwd}} in {\tt header} will be updated (and all other occurences removed); otherwise, the keyword will be appended at
+\optional{update\mytarget{sub:add_card:update}} & LGT & IN & if set to {\tt .true.}, the first occurence of the keyword \mylink{sub:add_card:kwd}{\tt
+kwd} in {\tt header} will be updated (and all other occurences removed); otherwise, the keyword will be appended at
 the end (and any previous occurence removed). If the keyword is either 'HISTORY'
 or 'COMMENT', {\tt update} is ignored and the keyword is peacefully appended at the end of the header.\\ 
 \end{tabular}

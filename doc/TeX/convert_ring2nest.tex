@@ -33,7 +33,7 @@ architecture, but requires extra memory to store a temporary map in. }
                    &   &   &                           \\ %%% for presentation
 nside\mytarget{sub:convert_ring2nest:nside} & I4B & IN & the $\nside$ parameter of the map to be converted. \\
 map\mytarget{sub:convert_ring2nest:map}(0:12*nside**2-1) & I4B/ SP/ DP & INOUT & mono-dimensional full sky map to be converted to RING scheme. \\
-map\mytarget{sub:convert_ring2nest:map}(0:12*nside**2-1,1:nd) & I4B/ SP/ DP & INOUT & bi-dimensional full sky map to
+map(0:12*nside**2-1,1:nd) & I4B/ SP/ DP & INOUT & bi-dimensional full sky map to
                    be converted to RING scheme. The routine finds the second
                    dimension (nd) by itself. Processing a bidimensional map with
 {\tt nd}$>1$ should be

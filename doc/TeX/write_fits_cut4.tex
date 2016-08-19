@@ -51,12 +51,12 @@ n\_obs\mytarget{sub:write_fits_cut4:n_obs}(0:np-1)   & I4B & IN & number of obse
 serror\mytarget{sub:write_fits_cut4:serror}(0:np-1)   & SP  & IN & {\em rms} of signal in pixel, for white noise,
                    this is $\propto 1/\sqrt{{\rm n\_obs}}$. \\
 %%%%%If Serror is present N\_Obs should also be present \\
-\optional{header\mytarget{sub:write_fits_cut4:header}}(LEN=80)(1:) \ (OPTIONAL)    & CHR & IN &   FITS extension header \\
+\optional{header\mytarget{sub:write_fits_cut4:header}}(LEN=80)(1:) \ (OPTIONAL)    & CHR & IN &   FITS extension header to be included in the FITS file\\
 \optional{coord\mytarget{sub:write_fits_cut4:coord}}(LEN=1)       & CHR & IN &   astrophysical coordinates ('C' or 'Q'
                    Celestial/eQuatorial, 'G' for Galactic, 'E' for Ecliptic)\\
 \optional{nside\mytarget{sub:write_fits_cut4:nside}}    & I4B & IN &   \healpix resolution parameter of data set \\
 \optional{order\mytarget{sub:write_fits_cut4:order}}     & I4B & IN &   \healpix ordering scheme, 1: RING, 2: NESTED \\
-\optional{header\mytarget{sub:write_fits_cut4:header}}(LEN=80)    & CHR & IN &   FITS header to be included in the FITS file\\
+%\optional{header}(LEN=80)    & CHR & IN &   FITS header to be included in the FITS file\\
 \optional{units\mytarget{sub:write_fits_cut4:units}}(LEN=20) & CHR & IN &  maps units (applies only to Signal and
                    Serror)\\
 \optional{extno}\mytarget{sub:write_fits_cut4:extno}     & I4B & IN & (0 based) extension number in which to write data. \default{0}.
@@ -68,8 +68,8 @@ serror\mytarget{sub:write_fits_cut4:serror}(0:np-1)   & SP  & IN & {\em rms} of 
 Order and Coord \\
 \optional{polarisaton}\mytarget{sub:write_fits_cut4:polarisation} & I4B & IN & if set to a non zero value, specifies that file will contain the I, Q and U polarisation
            Stokes parameter in extensions 0, 1 and 2 respectively, and sets the
-FITS header keywords accordingly. If not set, the keywords found in {\tt
-header\mytarget{sub:write_fits_cut4:header}} will prevail.\\
+FITS header keywords accordingly. If not set, the keywords found in \mylink{sub:write_fits_cut4:header}{\tt
+header} will prevail.\\
 \  & \ & \ & Note: the information relative to Nside, Order and Coord {\em has} to be
                    given, either thru these keyword or via the FITS Header. \\
 \end{tabular}

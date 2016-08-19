@@ -7,7 +7,8 @@
 % A.J. Banday, April 1999.
 
 \documentclass[12pt,twoside]{article}
-\usepackage{healpix,xr-hyper,html,graphicx,makeidx}
+\usepackage{xr-hyper,healpix,graphicx,html,makeidx} 
+%\usepackage{healpix,xr-hyper,html,graphicx,makeidx}
 \begin{htmlonly}
 \renewcommand{\ell}{l}
 %\renewcommand{\lq}{`}
@@ -58,14 +59,16 @@
 %% add xr-hyper (part of hyperref) to used packages, *BEFORE* hyperref (or html)
 \newcommand{\facname}{} % must be here because it is in idl.tex
 \newcommand{\FACNAME}{} % must be here because it is in idl.tex
-\externaldocument{intro}
-\externaldocument{install}
-\externaldocument{idl}
-%\externaldocument{facilities}
-\externaldocument{subroutines}
+\externaldocument{intro}[intro.pdf]
+\externaldocument{install}[install.pdf]
+\externaldocument{csub}[csub.pdf]
+\externaldocument{idl}[idl.pdf]
+%\externaldocument{facilities}[facilities.pdf]
+\externaldocument{subroutines}[subroutines.pdf]
 \begin{htmlonly}
 \externallabels{.}{/tmp/introlabels.pl}
 \externallabels{.}{/tmp/installlabels.pl}
+\externallabels{.}{/tmp/csublabels.pl}
 \externallabels{.}{/tmp/idllabels.pl}
 %\externallabels{.}{/tmp/facilitieslabels.pl}
 \externallabels{.}{/tmp/subroutineslabels.pl}
@@ -155,8 +158,8 @@ Changes between releases 3.20 and \hpxversion}
 \begin{itemize}
 	\item Bug correction in \htmlref{{\tt input\_map}}{sub:input_map} routine for reading of polarized multi-HDU cut sky FITS files;
 	\item Introduction of 
-\mylinkext{fac:alteralm:winfiledir_in}{{\tt winfiledir\_*}} and 
-\mylinkext{fac:alteralm:windowfile_in}{{\tt windowfile\_*}} qualifiers in \htmlref{{\tt alteralm}}{fac:alteralm} facility.
+\mylink{fac:alteralm:winfiledir_in}{{\tt winfiledir\_*}} and 
+\mylink{fac:alteralm:windowfile_in}{{\tt windowfile\_*}} qualifiers in \htmlref{{\tt alteralm}}{fac:alteralm} facility.
 \end{itemize}
 
 \subsection{Version 3.30}

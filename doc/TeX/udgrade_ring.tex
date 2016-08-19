@@ -43,14 +43,14 @@ map\_in\mytarget{sub:udgrade_ring:map_in}(0:12*nside\_in**2-1) & SP/ DP & INOUT 
                    prograded or degraded. The routine finds the second
                    dimension (nd) by itself. \textbf{Note that the map is modified on
                    output (reordered into NESTED scheme).}\\
-map\_in\mytarget{sub:udgrade_ring:map_in}(0:12*nside\_in**2-1,1:nd) & SP/ DP & INOUT & bi-dimensional full sky map to be
+map\_in                                 (0:12*nside\_in**2-1,1:nd) & SP/ DP & INOUT & bi-dimensional full sky map to be
                    prograded or degraded. \textbf{Note that the map is modified on
                    output (reordered into NESTED scheme).}\\
 nside\_in\mytarget{sub:udgrade_ring:nside_in} & I4B & IN & the $\nside$ resolution parameter of the input
                    map. Must be a power of 2.\\
 map\_out\mytarget{sub:udgrade_ring:map_out}(0:12*nside\_out**2-1) & SP/ DP & OUT & mono-dimensional full sky map after
                    degradation or progradation. \\
-map\_out\mytarget{sub:udgrade_ring:map_out}(0:12*nside\_out**2-1,1:nd) & SP/ DP & OUT & bi-dimensional full sky map after
+map\_out                                   (0:12*nside\_out**2-1,1:nd) & SP/ DP & OUT & bi-dimensional full sky map after
                    degradation or progradation. The second dimension
                    (nd) should match that of the input map.\\
 nside\_out\mytarget{sub:udgrade_ring:nside_out} & I4B & IN & the $\nside$ resolution parameter of the output

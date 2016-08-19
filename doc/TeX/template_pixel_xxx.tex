@@ -35,11 +35,21 @@ They are chosen to have their center located at
 
 \docid{template\_pixel\_nest}
 \begin{f90format}
-{nside, pixel\_nest, template, reflexion}
+{%
+\mylink{sub:template_pixel_xxx:nside}{nside}, 
+\mylink{sub:template_pixel_xxx:pixel_nest}{pixel\_nest}, 
+\mylink{sub:template_pixel_xxx:template}{template}, 
+\mylink{sub:template_pixel_xxx:reflexion}{reflexion}%
+}
 \end{f90format}
 \docid{template\_pixel\_ring}
 \begin{f90format}
-{nside, pixel\_ring, template, reflexion}
+{%
+\mylink{sub:template_pixel_xxx:nside}{nside}, 
+\mylink{sub:template_pixel_xxx:pixel_ring}{pixel\_ring}, 
+\mylink{sub:template_pixel_xxx:template}{template}, 
+\mylink{sub:template_pixel_xxx:reflexion}{reflexion}%
+}
 \end{f90format}
 %\ mylink: to avoid automatic processing by make_internal_links.sh
 
@@ -48,14 +58,14 @@ They are chosen to have their center located at
 \begin{tabular}{p{0.3\hsize} p{0.05\hsize} p{0.1\hsize} p{0.45\hsize}} \hline  
 \textbf{name~\&~dimensionality} & \textbf{kind} & \textbf{in/out} & \textbf{description} \\ \hline
                    &   &   &                           \\ %%% for presentation
-nside & I4B & IN & the \healpix $\nside$ parameter. \\
-pixel\_nest & I4B/ I8B & IN & NESTED scheme pixel identification number over the range \{0,$12\nside^2-1$\}.\\
-pixel\_ring & I4B/ I8B & IN & RING scheme pixel identification number over the
+nside\mytarget{sub:template_pixel_xxx:nside} & I4B & IN & the \healpix $\nside$ parameter. \\
+pixel\_nest\mytarget{sub:template_pixel_xxx:pixel_nest} & I4B/ I8B & IN & NESTED scheme pixel identification number over the range \{0,$12\nside^2-1$\}.\\
+pixel\_ring\mytarget{sub:template_pixel_xxx:pixel_ring} & I4B/ I8B & IN & RING scheme pixel identification number over the
                    range \{0,$12\nside^2-1$\}.\\
-template & I4B/ I8B & OUT & identification number of the
+template\mytarget{sub:template_pixel_xxx:template} & I4B/ I8B & OUT & identification number of the
                    template matching in shape the pixel provided (the numbering
                    scheme of the pixel templates is the same for both routines). \\
-reflexion & I4B & OUT & in \{0, 3\} encodes the transformation(s) to
+reflexion\mytarget{sub:template_pixel_xxx:reflexion} & I4B & OUT & in \{0, 3\} encodes the transformation(s) to
                    apply to each pixel provided to match exactly in
                    shape and position its respective template. 0: rotation around the polar axis only,
                    1: rotation + East-West swap (ie, reflexion around meridian),

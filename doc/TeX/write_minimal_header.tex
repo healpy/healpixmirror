@@ -67,7 +67,7 @@ required for dtype='MAP' and dtype='CUTMAP' \\
 map ordering, either 1 (=ring) or 2
 (=nested); see {\tt ordering}\\
 %
-\optional{order\mytarget{sub:write_minimal_header:order}ing(LEN=*)} & CHR & IN & 
+\optional{ordering(LEN=*)\mytarget{sub:write_minimal_header:ordering}} & CHR & IN & 
 map ordering, either 'RING' or 
 'NESTED' (case un-sensitive); 
 either {\tt order} or {\tt ordering} is required for dtype='MAP' and dtype='CUTMAP'\\
@@ -82,7 +82,7 @@ name of software generating the
 data set\\
 %
 \optional{version\mytarget{sub:write_minimal_header:version}(LEN=*)} & CHR & IN & 
-version\mytarget{sub:write_minimal_header:version} of {\tt creator} software\\
+version of {\tt creator} software\\
 %
 \optional{randseed\mytarget{sub:write_minimal_header:randseed}} & I4B & IN & 
 random number generator seed used to generate the data\\
@@ -111,7 +111,7 @@ included;
 only applies to dtype='CL' \\
 %
 \optional{deriv\mytarget{sub:write_minimal_header:deriv}     } & I4B & IN & 
-order\mytarget{sub:write_minimal_header:order} of derivatives to included in FITS file (0, 1 or 2); 
+order of derivatives to included in FITS file (0, 1 or 2); 
 only applies to dtype='MAP' \\
 %
 \optional{asym\_cl\mytarget{sub:write_minimal_header:asym_cl}    } & LGT & IN &

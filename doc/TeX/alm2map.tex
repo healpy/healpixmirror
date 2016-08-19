@@ -50,17 +50,17 @@ alm\_TGC\mytarget{sub:alm2map:alm_TGC}(1:p, 0:nlmax, 0:nmmax) & SPC or DPC & IN 
 \begin{tabular}{p{0.4\hsize} p{0.05\hsize} p{0.1\hsize} p{0.35\hsize}}  \hline  
 map\_TQU\mytarget{sub:alm2map:map_TQU}(0:12*nsmax**2-1)      & SP or DP & OUT & if only a temperature map is
 to be synthesized, the map-array should be passed with this rank.  \\ 
-map\_TQU\mytarget{sub:alm2map:map_TQU}(0:12*nsmax**2-1, 1:3) & SP or DP & OUT & if both temperature an 
+map\_TQU(0:12*nsmax**2-1, 1:3) & SP or DP & OUT & if both temperature an 
 polarisation maps are to be synthesized, the map array should have this rank, 
 where the second index is (1,2,3) corresponding to (T,Q,U). \\ 
 plm\mytarget{sub:alm2map:plm}(0:n\_plm-1), \hskip 3cm OPTIONAL & DP & IN & If this optional matrix is passed with
 this rank, precomputed $P_{lm}(\theta)$ are used instead of recursion. (
 n\_plm = nsmax*(nmmax+1)*(2*nlmax-nmmax+2)
 \\ 
-plm\mytarget{sub:alm2map:plm}(0:n\_plm-1,1:3), \hskip 3cm OPTIONAL & DP & IN & If this optional matrix is 
+plm(0:n\_plm-1,1:3), \hskip 3cm OPTIONAL & DP & IN & If this optional matrix is 
 passed with this rank, precomputed $P_{lm}(\theta)$ AND precomputed tensor
 harmonics are used instead of recursion. (n\_plm =
-nsmax\mytarget{sub:alm2map:nsmax}*(nmmax+1)*(2*nlmax-nmmax+2) 
+nsmax*(nmmax+1)*(2*nlmax-nmmax+2) 
 \end{tabular}
 }
 \end{arguments}
