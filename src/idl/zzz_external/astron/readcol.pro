@@ -59,8 +59,7 @@ pro readcol,name,v1,V2,v3,v4,v5,v6,v7,v8,v9,v10,v11,v12,v13,v14,v15, $
 ;                beginning with this character will be skipped.   Default is
 ;                no comment lines.
 ;       /COMPRESS - If set, then the file is assumed to be gzip compressed.
-;                There is no automatic recognition of compressed files
-;                by extension type.
+;                The file is assumed to be compressed if it ends in '.gz'
 ;       DELIMITER - Character(s) specifying delimiter used to separate 
 ;                columns.   Usually a single character but, e.g. delimiter=':,'
 ;                specifies that either a colon or comma as a delimiter. 
@@ -166,6 +165,7 @@ pro readcol,name,v1,V2,v3,v4,v5,v6,v7,v8,v9,v10,v11,v12,v13,v14,v15, $
 ;       Feb 2010 change caused errors when reading blanks as numbers. 
 ;                          W.L. July 2012
 ;       Read up to 50 columns W.L.  March 2013
+;       Assume a compressed file if it ends in '.gz'  W.L.  Oct 2015
 ;-
   On_error,2                    ;Return to caller
   compile_opt idl2
@@ -179,7 +179,9 @@ pro readcol,name,v1,V2,v3,v4,v5,v6,v7,v8,v9,v10,v11,v12,v13,v14,v15, $
 ; Get number of lines in file
 
   ngood = 0L                 ;Number of good lines
-  nlines = FILE_LINES( name, COMPRESS=compress )
+  if N_elements(compress) EQ 0 then $
+        compress = strmid(name,2,3,/reverse) EQ '.gz'
+  nlines = FILE_LINES( name, COMPRESS=compress[0] )
   
 
   if keyword_set(DEBUG) then $
@@ -271,7 +273,7 @@ pro readcol,name,v1,V2,v3,v4,v5,v6,v7,v8,v9,v10,v11,v12,v13,v14,v15, $
   idltype = idltype[goodcol]
   check_numeric = (idltype NE 7)
   check_comment = N_elements(comment) GT 0
-  openr, lun, name, /get_lun, compress=compress
+  openr, lun, name, /get_lun, compress=compress[0]
 
   temp = ' '
   skip_lun,lun,skipline, /lines
@@ -291,7 +293,7 @@ pro readcol,name,v1,V2,v3,v4,v5,v6,v7,v8,v9,v10,v11,v12,v13,v14,v15, $
      if strlen(temp) LT ncol then begin ;Need at least 1 chr per output line
         ngood--
         if ~keyword_set(SILENT) then $
-           message,'Skipping Line ' + strtrim(skipline+j+1,2),/INF
+           message,'Skipping Line (strlen) ' + strtrim(skipline+j+1,2),/INF
         goto, BADLINE 
      endif
 
@@ -308,7 +310,7 @@ pro readcol,name,v1,V2,v3,v4,v5,v6,v7,v8,v9,v10,v11,v12,v13,v14,v15, $
        :strsplit(strcompress(temp) ,delimiter,/extract, preserve=preserve_null) 
      if N_elements(var) LT nfmt then begin 
         if ~keyword_set(SILENT) then $ 
-           message,'Skipping Line ' + strtrim(skipline+j+1,2),/INF 
+           message,'Skipping Line (n_elements)' + strtrim(skipline+j+1,2),/INF
         ngood--            
         goto, BADLINE           ;Enough columns?
      endif
@@ -328,7 +330,7 @@ pro readcol,name,v1,V2,v3,v4,v5,v6,v7,v8,v9,v10,v11,v12,v13,v14,v15, $
            tst = strnumber(var[i],val,hex=hex[i],NAN=nan)   ;Valid number?
            if ~tst  then begin                           ;If not, skip this line
               if ~keyword_set(SILENT) then $ 
-                 message,'Skipping Line ' + strtrim(skipline+j+1,2),/INF 
+                 message,'Skipping Line (check_numeric)' + strtrim(skipline+j+1,2),/INF
               ngood--
               goto, BADLINE 
            endif

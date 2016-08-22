@@ -11,19 +11,9 @@
 # 2012-02-20: deal with 2012Feb01 version
 # 2013-02-08: deal with 2013Jan28 version
 # 2014-01-06: deal with latest version
+# 2016-08-22: detect duplicates
 #
 # directory with new routines
-# set dir = /home/soft/idl/external_contributions/astron-aug00/pro/
-# set dir = /home/soft/rsi/external_contributions/astron-may2002/pro/
-# set dir = /home/soft/rsi/external_contributions/astron_2004Dec17/pro
-# set dir = /home/soft/rsi/external_contributions/astron_2007Apr14/pro/
-# set dir = /home/soft/rsi/external_contributions/astron_2008Mar07/pro/
-# set dir = /Applications/itt/external_contributions/astron_2009Aug20/pro/
-# set dir = /Applications/itt/external_contributions/astron_2009Nov25/pro/
-# set dir = /Applications/itt/external_contributions/astron_2010May24/pro/
-# set dir = /Applications/itt/external_contributions/astron_2012Feb01/pro/
-# set dir = /Applications/itt/external_contributions/astron_2013Jan28/pro/
-# set dir = /Applications/itt/external_contributions/astron_2013Sep27/pro/
 set dir = /Applications/itt/external_contributions/astron/pro/
 
 # list of routines in current directory
@@ -40,20 +30,42 @@ set df = 0
 set nf_list = ()
 set df_list = ()
 
+# look for duplicates
+set duplicates = `find $dir -name \*.pro | xargs basename | sort -n | uniq -d`
+set ndup = $#duplicates
+if ($ndup > 0) then
+    echo
+    echo 'Error: found '$ndup' duplicates in '$dir
+    foreach file ($duplicates)
+	echo ' *****      '$file
+	find $dir -name $file -print
+    end
+    echo 'Aborting!'
+    exit
+endif
+
 # update routines in current directory
 foreach file ($list)
 	echo $file
 	set fullname = `find $dir -name $file -print`
+	if ($#fullname > 1) then
+	   echo '-----------------------------'
+	   echo 'Duplicate files: '
+	   echo $fullname
+	   sdiff -s $fullname[1] $fullname[2]
+	   echo '-----------------------------'
+	   set fullname = $fullname[1]
+        endif
 	if ($fullname == '') then
 	   echo $file' NOT FOUND !'
 	   @ nf++
 	   set nf_list = ($nf_list $file)
 	else
-	  echo $fullname
+	  #echo $fullname
 	  #$DIFF $file $fullname
 	  set notsame = `$DIFF $file $fullname | wc -l`
 	  if ($notsame == 1) then
-	     echo 'Files are different!'
+	     echo $file':  Files are different!'
 	     @ df++
 	     set df_list = ($df_list $file)
 	  endif

@@ -4,7 +4,7 @@
 #  before packing them up for a release (see ./pack)
 #
 
-healpytag="1.9.0"
+healpytag="1.9.1"
 healpygit=0 # 1: uses GIT, 0: uses tar.gz
 healpyrepo="https://github.com/healpy/healpy.git"
 #healpyarchive="https://github.com/healpy/healpy/archive/"
@@ -12,11 +12,11 @@ healpyrepo="https://github.com/healpy/healpy.git"
 healpyarchive="https://github.com/healpy/healpy/releases/download/${healpytag}/"
 #healpyarchive="/Users/hivon/healpy/"
 ##
-mixed=0
+mixed=1
 if [ "$mixed" = "1" ]; then
     healpixbranch="trunk"
-    healpixbranch_cxx="branches/branch_v310r461"
-    healpixbranch_java="branches/branch_v310r461"
+    healpixbranch_cxx="branches/branch_v330r807"
+    healpixbranch_java=${healpixbranch}
 else
     #healpixbranch="branches/branch_v320r670"
     healpixbranch="trunk"

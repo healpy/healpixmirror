@@ -16,13 +16,7 @@
 # 2014-01-06: deal with latest version
 #
 
-#set dir = /home/soft/rsi/external_contributions/astron_2008Mar07/pro/
-#set dir = /Applications/itt/external_contributions/astron_2009Aug20/pro/
-#set dir = /Applications/itt/external_contributions/astron_2009Nov25/pro/
-#set dir = /Applications/itt/external_contributions/astron_2010May24/pro/
-#set dir = /Applications/itt/external_contributions/astron_2012Feb01/pro/
-#set dir = /Applications/itt/external_contributions/astron_2013Jan28/pro/
-#set dir = /Applications/itt/external_contributions/astron_2013Sep27/pro/
+# directory with new routines
 set dir = /Applications/itt/external_contributions/astron/pro
 
 # # full list of routine name (no path, no trailing .pro)
