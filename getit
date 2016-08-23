@@ -10,6 +10,7 @@ healpyrepo="https://github.com/healpy/healpy.git"
 #healpyarchive="https://github.com/healpy/healpy/archive/"
 #healpyarchive="https://pypi.python.org/packages/source/h/healpy/"
 healpyarchive="https://github.com/healpy/healpy/releases/download/${healpytag}/"
+healpyarchive_alt="https://github.com/healpy/healpy/archive/"
 #healpyarchive="/Users/hivon/healpy/"
 ##
 mixed=1
@@ -56,16 +57,19 @@ if [ ${doit} = 1 ] ; then
     \rm -rf             ${WRKDIR}/healpy
 
     cd ${WRKDIR}
+    echo "-------------------- HEALPix ------------------"
     svn co     ${healpixrepo}${healpixbranch}               Healpix_${VERSION}
     if [ ${healpixbranch_cxx} != ${healpixbranch} ] ; then
 	echo "-------------------- C++ ------------------"
 	\rm -rf Healpix_${VERSION}/src/cxx
-	svn co ${healpixrepo}${healpixbranch_cxx}/src/cxx   Healpix_${VERSION}/src/cxx
+	svn co ${healpixrepo}${healpixbranch_cxx}/src/cxx   Hc++_${VERSION}
+	mv Hc++_${VERSION}                                  Healpix_${VERSION}/src/cxx
     fi
     if [ ${healpixbranch_java} != ${healpixbranch} ] ; then
 	echo "-------------------- Java ------------------"
 	\rm -rf Healpix_${VERSION}/src/java
-	svn co ${healpixrepo}${healpixbranch_java}/src/java Healpix_${VERSION}/src/java
+	svn co ${healpixrepo}${healpixbranch_java}/src/java Hjava_${VERSION}
+	mv Hjava_${VERSION}                                 Healpix_${VERSION}/src/java
     fi
 
     echo "---------------------- Healpy ----------------"
@@ -76,7 +80,10 @@ if [ ${doit} = 1 ] ; then
 	git branch
     else
 	if [ "${healpyarchive:0:4}" = "http" ] ; then
-	    wget ${healpyarchive}healpy-${healpytag}.tar.gz  --no-check-certificate -O healpy-${healpytag}.tar.gz
+	    hpy1=${healpyarchive}healpy-${healpytag}.tar.gz # default
+	    hpy2=${healpyarchive_alt}${healpytag}.tar.gz    # alternative
+	    hpyops="--no-check-certificate -O healpy-${healpytag}.tar.gz"
+	    wget -O/dev/null -q ${hpy1} && wget ${hpy1} ${hpyops} || wget ${hpy2} ${hpyops}
 	else
 	    echo ${healpyarchive}healpy-${healpytag}.tar.gz
 	    ls -l ${healpyarchive}healpy-${healpytag}.tar.gz
@@ -108,6 +115,7 @@ if [ ${doit} = 1 ] ; then
 	ln -s ../../../cxx .
     fi
 
+    echo "-------------------- Done! ------------------"
     cd ${WRKDIR}
 fi
 
