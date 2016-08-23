@@ -83,7 +83,7 @@ for shortfile in $files; do
     #outfile=`echo $file | sed "s|.tex|_2.tex|"`
     outfile=$file
 
-    np=`countLinks $file`
+    np=0 #`countLinks $file`
     ### [[ "$file" = "write_bintabh.tex" ]] && np=0
 
     if [ $np -eq 0 ] ; then # unprocessed file
@@ -179,7 +179,7 @@ for shortfile in $files; do
 	    if [ "$type" = "F90fac" ] ; then
 		echo "$name \t\t $link \t\t $target \t\t "$name2
 		sed -i "/${form_b}/,/${form_e}/s|"${name2}"|${magic}:${tag}}{"${name2}"}%\n|" $wrkfile
-		sed -i "/${desc_b}/,/${desc_e}/s|^"${name2}"|"${name2}"${target}|g"  $wrkfile
+		sed -i "/${desc_b}/,/${desc_e}/s|\\\\item\[{"${name2}" = }\]|\\\\item\[{"${name2}" = }\]${target}%\n|g"  $wrkfile
 	    fi
         done
 	sed -i "/${form_b}/,/${form_e}/s|${magic}|${slink}|" $wrkfile

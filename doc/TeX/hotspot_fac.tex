@@ -24,9 +24,12 @@ in-place conversion between RING and NESTED pixel schemes }
 
 \begin{qualifiers}
   \begin{qulist}{} %%%% NOTE the ``extra'' brace here %%%%
-    \item[{infile = }] Defines the input map file.
-    \item[{extrema\_outfile = }] Defines the output map file.
-    \item[{maxima\_outfile = }] Defines the output ascii list of maxima.
+    \item[{infile = }]\mytarget{fac:hotspot:infile}%
+ Defines the input map file.
+    \item[{extrema\_outfile = }]\mytarget{fac:hotspot:extrema_outfile}%
+ Defines the output map file.
+    \item[{maxima\_outfile = }]\mytarget{fac:hotspot:maxima_outfile}%
+ Defines the output ascii list of maxima.
     \item[{minima\_outfile=  }] Defines the output ascii list of minima.
   \end{qulist}
 \end{qualifiers}
@@ -69,7 +72,7 @@ only work on maps with $N_{side}\ge 2$.
             sky map to be input to hotspot.
   \item[\htmlref{map2gif}{fac:map2gif}] This \healpix Fortran facility can be used to visualise the
   output map.
-  \item[mollview] This \healpix IDL facility can be used to visualise the
+  \item[\htmlref{mollview}{idl:mollview}] This \healpix IDL facility can be used to visualise the
   output map.
   \end{sulist}
 \end{support}
@@ -101,10 +104,14 @@ input file, the parser assumes the default value shown below.
 If the equality sign is omitted, then the parser ignores the entry.
 In this way comments may also be included in the file.
 In this example, the file contains the following qualifiers:\hfill\newline
-\fileparam{infile = map.fits}
-\fileparam{extrema\_outfile = pixlminmax.fits}
-\fileparam{maxima\_outfile = maxima.dat}
-\fileparam{minima\_outfile = minima.dat}
+\fileparam{\mylink{fac:hotspot:infile}{infile}%
+ = map.fits}
+\fileparam{\mylink{fac:hotspot:extrema_outfile}{extrema\_outfile}%
+ = pixlminmax.fits}
+\fileparam{\mylink{fac:hotspot:maxima_outfile}{maxima\_outfile}%
+ = maxima.dat}
+\fileparam{\mylink{fac:hotspot:minima_outfile}{minima\_outfile}%
+ = minima.dat}
 hotspot reads in the map `map.fits' and generates
 an output map with name `pixlminmax.fits', and two ASCII files,
 `maxima.dat' and

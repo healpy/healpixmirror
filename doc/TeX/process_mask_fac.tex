@@ -32,8 +32,10 @@ defining a new apodized mask}
 
 \begin{qualifiers}
   \begin{qulist}{} %%%% NOTE the ``extra'' brace here %%%%
-\item[{mask\_file = }] Input binary mask FITS file
-\item[{hole\_min\_size = }] Minimal size (in pixels) of invalid regions to be kept
+\item[{mask\_file = }]\mytarget{fac:process_mask:mask_file}%
+ Input binary mask FITS file
+\item[{hole\_min\_size = }]\mytarget{fac:process_mask:hole_min_size}%
+ Minimal size (in pixels) of invalid regions to be kept
        (can be used together with hole\_min\_surf\_arcmin2 below, the result will
 be the largest of the two). \default{0}
 \item[{hole\_min\_surf\_arcmin2 = }] Minimal surface area (in arcmin\^{}2) of invalid regions to be kept
@@ -41,7 +43,8 @@ be the largest of the two). \default{0}
         the result will be the largest of the two). \default{0.0}
 \item[{filled\_file = }] Optional output FITS file to contain mask with
 filled-in small holes (as defined above). \default{'', no output file}
-\item[{distance\_file = }] Optional output FITS file to contain angular distance
+\item[{distance\_file = }]\mytarget{fac:process_mask:distance_file}%
+ Optional output FITS file to contain angular distance
 (in radians) from valid pixel to the closest invalid one. \default{'', no output file}
 
   \end{qulist}
@@ -91,15 +94,15 @@ much as 10.}}
 
 \begin{support}
   \begin{sulist}{} %%%% NOTE the ``extra'' brace here %%%%
-  \item[mollview] IDL routine to view the input and output masks and the angular
+  \item[\htmlref{mollview}{idl:mollview}] IDL routine to view the input and output masks and the angular
 distance map.
 %%%  \item[\htmlref{anafast}{fac:anafast}] This \healpix facility can analyse an
 %%up/downgraded map.
   \item[mask\_tools] F90 module containing the routines   
-	{\tt dist2holes\_nest}, %{sub:dist2holes_nest}
-	{\tt fill\_holes\_nest}, %{sub:fill_holes_nest}
-	{\tt maskborder\_nest}, %{sub:maskborder_nest}
-	{\tt size\_holes\_nest}  %{sub:size_holes_nest}
+	\htmlref{\tt dist2holes\_nest}{sub:dist2holes_nest},
+	\htmlref{\tt fill\_holes\_nest}{sub:fill_holes_nest},
+	\htmlref{\tt maskborder\_nest}{sub:maskborder_nest},
+	\htmlref{\tt size\_holes\_nest}{sub:size_holes_nest}
 used in \thedocid\ and
 described in the \linklatexhtml{''Fortran Subroutines''}{subroutines.pdf}{subroutines.htm} document
   \end{sulist}
@@ -132,9 +135,12 @@ input file, the parser assumes the default value.
 If the equality sign is omitted, then the parser ignores the entry.
 In this way comments may also be included in the file.
 In this example, the file contains the following qualifiers:\hfill\newline
-\fileparam{mask\_file = wmap\_temperature\_analysis\_mask\_r9\_5yr\_v3.fits}
-\fileparam{hole\_min\_size =    100}
-\fileparam{distance\_file = !/tmp/dist\_wmap.fits}
+\fileparam{\mylink{fac:process_mask:mask_file}{mask\_file}%
+ = wmap\_temperature\_analysis\_mask\_r9\_5yr\_v3.fits}
+\fileparam{\mylink{fac:process_mask:hole_min_size}{hole\_min\_size}%
+ =    100}
+\fileparam{\mylink{fac:process_mask:distance_file}{distance\_file}%
+ = !/tmp/dist\_wmap.fits}
 process\_mask computes the distance in Radians from each valid pixel to the closest invalid
 pixel for WMAP-5 mask 'wmap\_temperature\_analysis\_mask\_r9\_5yr\_v3.fits', ignoring
 the holes containing fewer than 100 pixels, and outputs the result in '/tmp/dist\_wmap.fits'.}

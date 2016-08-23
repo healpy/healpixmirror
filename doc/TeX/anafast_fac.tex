@@ -153,27 +153,33 @@ executing \thedocid\ under such cicumstances!
 
 \begin{qualifiers}
   \begin{qulist}{} %%%% NOTE the ``extra'' brace here %%%%
-    \item[{infile = }] Defines the input map file. 
+    \item[{infile = }]\mytarget{fac:anafast:infile}%
+ Defines the input map file. 
 	(default= map.fits)
 	If not blank, the filename should {\em never} be put between quotes even if it contains
 symbols such as {\tt \&, [, ], ?, =} which should be typed literally (ie, unprotected). For instance
  {\tt infile~=~http://site/action?file.fits[2][col FLUX]} is just fine.
-    \item[{infile2 = }] Defines the 2nd input map file, to be cross-correlated with
+    \item[{infile2 = }]\mytarget{fac:anafast:infile2}%
+ Defines the 2nd input map file, to be cross-correlated with
 	the first one. The 2 maps should match in resolution ($nsmax$) and coordinate.
 	(default= `', only the auto-correlation of the first map will be computed)
-    \item[{outfile = }] Defines the output file with the power spectrum. If only
+    \item[{outfile = }]\mytarget{fac:anafast:outfile}%
+ Defines the output file with the power spectrum. If only
       one input map is provided, {\tt outfile} will contains its auto-spectra,
       if 2 maps are provided, {\tt outfile} will contain their
       cross-spectra. Note in particular that in the latter case, the $C^{T\times E}_l$ power
       spectrum will be build from the $T$ field of the 1st (possibly polarized) map, and the $E$
       field of the second polarized map.
 (default= cl\_out.fits)
-     \item[{simul\_type = }] Defines which map(s) to analyse, 1=temperature only, 2=temperature AND polarisation.
+     \item[{simul\_type = }]\mytarget{fac:anafast:simul_type}%
+ Defines which map(s) to analyse, 1=temperature only, 2=temperature AND polarisation.
 (default= 1)
-     \item[{nlmax = }] Defines the maximum $\ell$ value 
+     \item[{nlmax = }]\mytarget{fac:anafast:nlmax}%
+ Defines the maximum $\ell$ value 
 to be used. See the Recommendations for Users. 
 (default= 64)
- \item[{maskfile =}] Defines the FITS file containing the pixel mask(s) or
+ \item[{maskfile = }]\mytarget{fac:anafast:maskfile}%
+ Defines the FITS file containing the pixel mask(s) or
  weighting scheme(s) by which the map(s) read from {\tt infile} will be
  multiplied before analysis. If the file contains several fields, the first
 one in which at least one pixel is non-zero will be used. This option can be
@@ -188,33 +194,42 @@ one's, and the mask will be pro/down-graded and reordered to match the map. On t
 other hand, the mask and maps coordinates will always be presumed to match (ie, no
 attempt of rotation of the mask will be made).
 (default= `': no mask, all valid pixels are used)
- \item[{theta\_cut\_deg = }] Defines the latitude (in degrees) of 
+ \item[{theta\_cut\_deg = }]\mytarget{fac:anafast:theta_cut_deg}%
+ Defines the latitude (in degrees) of 
 an optional, straight symmetric cut around the equator.  Pixels located within
 that cut ($|b|<${\tt theta\_cut\_deg} are ignored.
 (default= $0^\circ$: no cut)
- \item[{iter\_order = }] Defines the maximum order of quadrature 
+ \item[{iter\_order = }]\mytarget{fac:anafast:iter_order}%
+ Defines the maximum order of quadrature 
 iteration to be used. (default=0, no iteration)
- \item[{outfile\_alms = }] Defines the name of the file 
+ \item[{outfile\_alms = }]\mytarget{fac:anafast:outfile_alms}%
+ Defines the name of the file 
 containing the $a_{\ell m}$  coefficients of the first map
 which can be written optionally.   (default= no entry ---
 $a_{\ell m}$s are not written to a file)
- \item[{outfile\_alms2 = }] Defines the name of the file 
+ \item[{outfile\_alms2 = }]\mytarget{fac:anafast:outfile_alms2}%
+ Defines the name of the file 
 containing the $a_{\ell m}$  coefficients of the second map, if any,
 which can be written optionally.   (default= no entry ---
 $a_{\ell m}$s are not written to a file)
- \item[{plmfile = }] Defines the name for an input file
+ \item[{plmfile = }]\mytarget{fac:anafast:plmfile}%
+ Defines the name for an input file
     containing  precomputed Legendre polynomials $P_{\ell m}$.
 (default= no entry --- \thedocid\ executes the recursive evaluation 
 of $P_{\ell m}$s)
-\item[{w8file = }] Defines name for an input file containing ring
+\item[{w8file = }]\mytarget{fac:anafast:w8file}%
+ Defines name for an input file containing ring
   weights in the improved quadrature mode (default= no entry ---
 the name is assumed to be 'weight\_ring\_n0xxxx.fits' where xxxx is nsmax)
-\item[{w8filedir = }] Gives the directory where the ring weight files are
+\item[{w8filedir = }]\mytarget{fac:anafast:w8filedir}%
+ Gives the directory where the ring weight files are
 to be found (default= no entry --- \thedocid\ searches the default
 directories, see introduction)
-\item[{won = }] Set this to 1 if ring weight files are to be used,
+\item[{won = }]\mytarget{fac:anafast:won}%
+ Set this to 1 if ring weight files are to be used,
 otherwise set it to 0 (or 2). (default= 0)
-\item[{regression = }] {{Sets the degree of the regression made on the
+\item[{regression = }]\mytarget{fac:anafast:regression}%
+ {{Sets the degree of the regression made on the
 input map before doing the power spectrum analysis. 
 The regression is a minimal variance fit (assuming a uniform noise) 
 made on valid (unflagged and unmasked) pixels, out of the symmetric cut (if
@@ -321,34 +336,50 @@ input file, the parser assumes the default value.
 If the equality sign is omitted, then the parser ignores the entry.
 In this way comments may also be included in the file.
 In this example, the file contains the following qualifiers:\hfill\newline
-\fileparam{simul\_type = 1}
-\fileparam{nlmax = 64}
-\fileparam{theta\_cut\_deg = 0}
-\fileparam{iter\_order = 0}
-\fileparam{infile = map.fits}
-\fileparam{outfile = cl\_out.fits}
-\fileparam{regression = 0}
+\fileparam{\mylink{fac:anafast:simul_type}{simul\_type}%
+ = 1}
+\fileparam{\mylink{fac:anafast:nlmax}{nlmax}%
+ = 64}
+\fileparam{\mylink{fac:anafast:theta_cut_deg}{theta\_cut\_deg}%
+ = 0}
+\fileparam{\mylink{fac:anafast:iter_order}{iter\_order}%
+ = 0}
+\fileparam{\mylink{fac:anafast:infile}{infile}%
+ = map.fits}
+\fileparam{\mylink{fac:anafast:outfile}{outfile}%
+ = cl\_out.fits}
+\fileparam{\mylink{fac:anafast:regression}{regression}%
+ = 0}
 Anafast reads the map from {\em map.fits}, makes an analysis and produces $C^T_l$s up to l=64.
 This powerspectrum is saved in the file {\em cl\_out.fits}. 
 No galactic cut is excised and no iterations are performed.
-As regression is set to 0 (its default value) the map is analyzed as
+As \mylink{fac:anafast:regression}{regression}{}%
+ is set to 0 (its default value) the map is analyzed as
 is, without prior best fit removal of the monopole nor the dipole.
 
 Since\hfill\newline
-\fileparam{infile2}
-\fileparam{outfile\_alms }
-\fileparam{outfile\_alms2 }
-\fileparam{w8file }
-\fileparam{w8filedir}
-\fileparam{plmfile}
-\fileparam{maskfile}
+\fileparam{\mylink{fac:anafast:infile2}{infile2}%
+}
+\fileparam{\mylink{fac:anafast:outfile_alms}{outfile\_alms}%
+}
+\fileparam{\mylink{fac:anafast:outfile_alms2}{outfile\_alms2}%
+}
+\fileparam{\mylink{fac:anafast:w8file}{w8file}%
+}
+\fileparam{\mylink{fac:anafast:w8filedir}{w8filedir}%
+}
+\fileparam{\mylink{fac:anafast:plmfile}{plmfile}%
+}
+\fileparam{\mylink{fac:anafast:maskfile}{maskfile}%
+}
 were omitted, they take their default values (empty strings). 
 This means that no file for precomputed
 Legendre polynomials is read, no second map is read, no mask is applied, and \thedocid\ does not save the $a_{\ell m}$ values
 from the analysis.
 
 Also since\hfill\newline
-\fileparam{won}
+\fileparam{\mylink{fac:anafast:won}{won}%
+}
 is not given, it takes it default value 2, which means that ring
 weights are not used.
 

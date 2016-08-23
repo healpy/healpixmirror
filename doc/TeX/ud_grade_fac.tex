@@ -29,12 +29,15 @@
 
 \begin{qualifiers}
   \begin{qulist}{} %%%% NOTE the ``extra'' brace here %%%%
-    \item[{nside\_out = }] Defines the resolution parameter for the output map. 
+    \item[{nside\_out = }]\mytarget{fac:ud_grade:nside_out}%
+ Defines the resolution parameter for the output map. 
 	(default= 64)
-\item[{infile = }] Defines the name of the file containing the map to be 
+\item[{infile = }]\mytarget{fac:ud_grade:infile}%
+ Defines the name of the file containing the map to be 
 up/degraded.
 (default='map.fits')
-\item[{outfile = }] Defines the filename for the output up/degraded map.
+\item[{outfile = }]\mytarget{fac:ud_grade:outfile}%
+ Defines the filename for the output up/degraded map.
 (default='outmap.fits')
   \end{qulist}
 \end{qualifiers}
@@ -68,7 +71,7 @@ in local coordinates is {\bf not} implemented.
 
 \begin{support}
   \begin{sulist}{} %%%% NOTE the ``extra'' brace here %%%%
-  \item[mollview] IDL routine to view an up/downgraded map.
+  \item[\htmlref{mollview}{idl:mollview}] IDL routine to view an up/downgraded map.
   \item[\htmlref{anafast}{fac:anafast}] This \healpix facility can analyse an up/downgraded map.
   \end{sulist}
 \end{support}
@@ -100,9 +103,12 @@ input file, the parser assumes the default value.
 If the equality sign is omitted, then the parser ignores the entry.
 In this way comments may also be included in the file.
 In this example, the file contains the following qualifiers:\hfill\newline
-\fileparam{nside\_out = 64}
-\fileparam{infile= map.fits}
-\fileparam{outfile = outmap.fits}
+\fileparam{\mylink{fac:ud_grade:nside_out}{nside\_out}%
+ = 64}
+\fileparam{\mylink{fac:ud_grade:infile}{infile}%
+= map.fits}
+\fileparam{\mylink{fac:ud_grade:outfile}{outfile}%
+ = outmap.fits}
 }
 
 Ud\_grade transforms the \healpix map in 'map.fits' 

@@ -50,52 +50,64 @@ where $P(\ell)$ is the pixel window function, and $B(\ell)$ is the beam window
 
 \begin{qualifiers}
   \begin{qulist}{} %%%% NOTE the ``extra'' brace here %%%%
-    \item[{infile\_alms = }] Defines the FITS file from which to read the input
+    \item[{infile\_alms = }]\mytarget{fac:alteralm:infile_alms}%
+ Defines the FITS file from which to read the input
 	$a_{\ell m}$.
-    \item[{outfile\_alms = }] Defines the FITS file in which to write the altered
+    \item[{outfile\_alms = }]\mytarget{fac:alteralm:outfile_alms}%
+ Defines the FITS file in which to write the altered
 	$a_{\ell m}$.
-    \item[{fwhm\_arcmin\_in = }] Defines the FWHM size in arcminutes 
+    \item[{fwhm\_arcmin\_in = }]\mytarget{fac:alteralm:fwhm_arcmin_in}%
+ Defines the FWHM size in arcminutes 
       of the Gaussian beam present in the input $a_{lm}$. The output $a_{lm}$ will be
       corrected from it, see Eq.~(\ref{eq:alteralm}). (default= value of FWHM keyword in {\tt infile\_alms}).
-    \item[{beam\_file\_in = }] Defines the FITS file describing the
+    \item[{beam\_file\_in = }]\mytarget{fac:alteralm:beam_file_in}%
+ Defines the FITS file describing the
       Legendre window function of the circular beam present in the input $a_{lm}$. The output $a_{lm}$ will be
       corrected from it, see Eq.~(\ref{eq:alteralm}). If set to an existing file name, it will override the
     {\tt fhwm\_arcmin\_in} given above. (default= value of the BEAM\_LEG keyword in {\tt infile\_alms})
-     \item[{nlmax\_out = }] Defines the maximum $\ell$ value 
+     \item[{nlmax\_out = }]\mytarget{fac:alteralm:nlmax_out}%
+ Defines the maximum $\ell$ value 
        to be used for the output $a_{lm}$s. (default= maximum $\ell$ of input
        $a_{\ell m}$ = value of MAX-LPOL keyword in {\tt infile\_alms}).
-     \item[{nsmax\_in = }] If it can not be determined from the input file {\tt infile\_alms}, asks
+     \item[{nsmax\_in = }]\mytarget{fac:alteralm:nsmax_in}%
+ If it can not be determined from the input file {\tt infile\_alms}, asks
        for the \healpix resolution parameter $\nside$ whose
        window function is applied to the input $a_{\ell m}$
-     \item[{nsmax\_out = }] Defines the \healpix resolution parameter $\nside$ whose
+     \item[{nsmax\_out = }]\mytarget{fac:alteralm:nsmax_out}%
+ Defines the \healpix resolution parameter $\nside$ whose
        window function will be applied to the output $a_{\ell m}$. Could be set
        to 0 for infinitely small pixels, ie no pixel window function (default= same as input's $\nside$).
-    \item[{fwhm\_arcmin\_out = }] Defines the FWHM size in arcminutes 
+    \item[{fwhm\_arcmin\_out = }]\mytarget{fac:alteralm:fwhm_arcmin_out}%
+ Defines the FWHM size in arcminutes 
       of the Gaussian beam to be applied to $a_{lm}$, see
       Eq.~(\ref{eq:alteralm}). (default= {\tt fwhm\_arcmin\_in}).
     \item[{beam\_file\_out = }] Defines the FITS file describing the
       Legendre window function of the circular beam to be applied $a_{lm}$. If
       set to an existing file name, it will override the 
     {\tt fhwm\_arcmin\_out} given above. (default= `` '')
-    \item[{coord\_in = }] Defines astrophysical coordinates used to compute the
+    \item[{coord\_in = }]\mytarget{fac:alteralm:coord_in}%
+ Defines astrophysical coordinates used to compute the
     input $a_{\ell m}$. Valid choices are 'G' = Galactic, 'E' = Ecliptic, 
     'C'/'Q' = Celestial = eQuatorial. (default = value of COORDSYS keyword read
     from input FITS file)
-    \item[{epoch\_in = }] Defines astronomical epoch of input coordinate system (default=2000)
-    \item[{coord\_out = }] Defines astrophysical coordinates into which to rotate
+    \item[{epoch\_in = }]\mytarget{fac:alteralm:epoch_in}%
+ Defines astronomical epoch of input coordinate system (default=2000)
+    \item[{coord\_out = }]\mytarget{fac:alteralm:coord_out}%
+ Defines astrophysical coordinates into which to rotate
     the $a_{\ell m}$ (default = {\tt coord\_in})
-    \item[{epoch\_out = }] Defines astronomical epoch of output coordinate system
+    \item[{epoch\_out = }]\mytarget{fac:alteralm:epoch_out}%
+ Defines astronomical epoch of output coordinate system
     (default={\tt epoch\_in})
-     \item[{windowfile\_in = }] \mytarget{fac:alteralm:windowfile_in}
+     \item[{windowfile\_in = }]\mytarget{fac:alteralm:windowfile_in}%
 	Defines the input filename from which to read the pixel window function parameterized by {\tt nsmax\_in}
 (default= pixel\_window\_n????.fits, see Notes on default files and directories on page~\pageref{page:defdir})
-     \item[{winfiledir\_in = }] \mytarget{fac:alteralm:winfiledir_in}
+     \item[{winfiledir\_in = }]\mytarget{fac:alteralm:winfiledir_in}%
 	Defines the directory in which {\tt windowfile\_in}
     is located (default : see Notes on default files and directories on page~\pageref{page:defdir}).
-     \item[{windowfile\_out = }] 
+     \item[{windowfile\_out = }]\mytarget{fac:alteralm:windowfile_out}%
 	Defines the input filename from which to read the pixel window function parameterized by {\tt nsmax\_out}
 (default= pixel\_window\_n????.fits, see Notes on default files and directories on page~\pageref{page:defdir})
-     \item[{winfiledir\_out = }] 
+     \item[{winfiledir\_out = }]\mytarget{fac:alteralm:winfiledir_out}%
 	Defines the directory in which {\tt windowfile\_out}
     is located (default : see Notes on default files and directories on page~\pageref{page:defdir}).
 
@@ -164,24 +176,40 @@ input file, the parser assumes the default value.
 If the equality sign is omitted, then the parser ignores the entry.
 In this way comments may also be included in the file.
 In this example, the file contains the following qualifiers:\hfill\newline
-\fileparam{infile\_alms = alm.fits}
-\fileparam{nlmax\_out = 512}
-\fileparam{fwhm\_arcmin\_out = 20.0}
-\fileparam{coord\_out = G}
-\fileparam{outfile\_alms = newalm.fits}
+\fileparam{\mylink{fac:alteralm:infile_alms}{infile\_alms}%
+ = alm.fits}
+\fileparam{\mylink{fac:alteralm:nlmax_out}{nlmax\_out}%
+ = 512}
+\fileparam{\mylink{fac:alteralm:fwhm_arcmin_out}{fwhm\_arcmin\_out}%
+ = 20.0}
+\fileparam{\mylink{fac:alteralm:coord_out}{coord\_out}%
+ = G}
+\fileparam{\mylink{fac:alteralm:outfile_alms}{outfile\_alms}%
+ = newalm.fits}
 
 Alteralm reads the $a_{lm}$ from 'alm.fits'. Since \hfill\newline
-\fileparam{nsmax\_in }
-\fileparam{nsmax\_out }
-\fileparam{fwhm\_arcmin\_in }
-\fileparam{beam\_file\_in } 
-\fileparam{coord\_in }
-\fileparam{epoch\_in }
-\fileparam{epoch\_out }
-\fileparam{windowfile\_in }
-\fileparam{winfiledir\_in }
-\fileparam{windowfile\_out }
-\fileparam{winfiledir\_out }
+\fileparam{\mylink{fac:alteralm:nsmax_in}{nsmax\_in}%
+ }
+\fileparam{\mylink{fac:alteralm:nsmax_out}{nsmax\_out}%
+ }
+\fileparam{\mylink{fac:alteralm:fwhm_arcmin_in}{fwhm\_arcmin\_in}%
+ }
+\fileparam{\mylink{fac:alteralm:beam_file_in}{beam\_file\_in}%
+ } 
+\fileparam{\mylink{fac:alteralm:coord_in}{coord\_in}%
+ }
+\fileparam{\mylink{fac:alteralm:epoch_in}{epoch\_in}%
+ }
+\fileparam{\mylink{fac:alteralm:epoch_out}{epoch\_out}%
+ }
+\fileparam{\mylink{fac:alteralm:windowfile_in}{windowfile\_in}%
+ }
+\fileparam{\mylink{fac:alteralm:winfiledir_in}{winfiledir\_in}%
+ }
+\fileparam{\mylink{fac:alteralm:windowfile_out}{windowfile\_out}%
+ }
+\fileparam{\mylink{fac:alteralm:winfiledir_out}{winfiledir\_out}%
+ }
 have their default values, the pixel size will remain the same, the $a_{lm}$ will be corrected
 from its input beam (whatever it was, assuming the relevant information can be
 found), and a gaussian beam of 20.0 arcmin will be applied

@@ -33,39 +33,48 @@ and random seed for the simulation can be selected by the user.
 
 \begin{qualifiers}
   \begin{qulistwide}{} %%%% NOTE the ``extra'' brace here %%%%
-     \item[{simul\_type = }] Defines the simulation type, 1=temperature map only,
+     \item[{simul\_type = }]\mytarget{fac:sky_ng_sim:simul_type}%
+ Defines the simulation type, 1=temperature map only,
        3=temperature and its first spatial derivatives,
        4=temperature and its first and second spatial derivatives.
 (default= 1).
-    \item[{infile = }] Defines the input power spectrum file,
+    \item[{infile = }]\mytarget{fac:sky_ng_sim:infile}%
+ Defines the input power spectrum file,
 	(default= HEALPIX/test/cl.fits).
 %
-    \item[{outfile\_alms = }] Defines the FITS file in which to output $a_{lm}$ used
+    \item[{outfile\_alms = }]\mytarget{fac:sky_ng_sim:outfile_alms}%
+ Defines the FITS file in which to output $a_{lm}$ used
       for the simulation (default= `')
 %
-    \item[{outfile = }] Defines the output map file, (default= test.fits).
+    \item[{outfile = }]\mytarget{fac:sky_ng_sim:outfile}%
+ Defines the output map file, (default= test.fits).
 %
-    \item[{nsmax = }] Defines the resolution of the map.
+    \item[{nsmax = }]\mytarget{fac:sky_ng_sim:nsmax}%
+ Defines the resolution of the map.
 (default= 32)
 %
-     \item[{nlmax = }] Defines the maximum $\ell$ value 
+     \item[{nlmax = }]\mytarget{fac:sky_ng_sim:nlmax}%
+ Defines the maximum $\ell$ value 
 to be used in the simulation. WARNING: $\ell_{max}$ can not exceed
 the value $4\cdot$ {\tt nsmax}, because the coefficients of the  average Fourier 
 pixel window functions
 are precomputed and provided up to this limit.
 (default= 2*{\tt nsmax})
 %
-    \item[{fwhm\_arcmin = }] Defines the FWHM size in arcminutes 
+    \item[{fwhm\_arcmin = }]\mytarget{fac:sky_ng_sim:fwhm_arcmin}%
+ Defines the FWHM size in arcminutes 
 of the simulated Gaussian beam.
 (default= 0.0)
 %
-    \item[{beam\_file = }] Defines the FITS file describing the
+    \item[{beam\_file = }]\mytarget{fac:sky_ng_sim:beam_file}%
+ Defines the FITS file describing the
     Legendre window
     function of the circular beam to be used for the
     simulation. If set to an existing file name, it will override the
     {\tt fhwm\_arcmin} given above. (default=`')
 %
-     \item[{windowfile = }] Defines the input filename  for the pixel
+     \item[{windowfile = }]\mytarget{fac:sky_ng_sim:windowfile}%
+ Defines the input filename  for the pixel
     smoothing windows 
 (default= pixel\_window\_n????.fits, see Notes on default files and directories
 on page~\pageref{page:defdir})
@@ -74,10 +83,12 @@ on page~\pageref{page:defdir})
     is located (default : see Notes on default files and directories on
 page~\pageref{page:defdir}).
 %
-      \item[{iseed = }] Defines the seed of the pseudo-random sequence to be used 
+      \item[{iseed = }]\mytarget{fac:sky_ng_sim:iseed}%
+ Defines the seed of the pseudo-random sequence to be used 
 for the generation of the non-gaussian white noise (default= 1)
 %
-     \item[{plot =}] If \thedocid was linked with the PGPLOT library during compilation, and
+     \item[{plot = }]\mytarget{fac:sky_ng_sim:plot}%
+ If \thedocid was linked with the PGPLOT library during compilation, and
 if {\tt plot} is set to (case unsensitive) {\tt .true.}, {\tt t}, {\tt yes}, {\tt y}  or
 1, then the histogram of the simulated non-gaussian is produced, overplotted
 with the theoretical PDF; the histogram of the final map pixel values,
@@ -85,25 +96,32 @@ overplotted with a PDF of a gaussian of same mean and variance is subsequently
 produced.
 (default=.false.)
 %
-     \item[{pdf\_choice=1}] Choice of non-Gaussian PDF to use: 1= Simple
+     \item[{pdf\_choice=1 }]\mytarget{fac:sky_ng_sim:pdf_choice}%
+ Choice of non-Gaussian PDF to use: 1= Simple
 Harmonics oscillator (see Eq~\ref{eq:nongauss_sho} below)
 %
     \begin{itemize}
-      \item[{sigma0= }] RMS of oscillator ground state
+      \item[{sigma0= }]\mytarget{fac:sky_ng_sim:sigma0}%
+ RMS of oscillator ground state
 %
-      \item[{na= }] Integer in \{0, 20\}. Number of $\alpha$ coefficients to be
+      \item[{na= }]\mytarget{fac:sky_ng_sim:na}%
+ Integer in \{0, 20\}. Number of $\alpha$ coefficients to be
 given (default=3).
 Note: analytical calculation of the PDF moments
 can only be done for {\tt na}$\le 3$. 
 %
-      \item[{alpha\_1=, alpha\_2=, ... }] Real values of $\alpha_i$ coefficients for
+      \item[{alpha\_1=, alpha\_2=, ... }]\mytarget{fac:sky_ng_sim:alpha_1}%
+\mytarget{fac:sky_ng_sim:alpha_2}%
+\mytarget{fac:sky_ng_sim:alpha_3}%
+ Real values of $\alpha_i$ coefficients for
 $i$ in $[1, {\tt na}]$
      \end{itemize}
 %
      \item[{pdf\_choice=2}] Choice of non-Gaussian PDF to use: 2=Power of a
 Gaussian (see Eq~\ref{eq:nongauss_powgauss} below)
       \begin{itemize}
-     \item[{npower = }] Positive integer in \{1,4\} (default=1). The gaussian
+     \item[{npower = }]\mytarget{fac:sky_ng_sim:npower}%
+ Positive integer in \{1,4\} (default=1). The gaussian
 will be set to the power 2*{\tt npower}.
      \end{itemize}
 %
@@ -175,7 +193,7 @@ output ({\tt simul\_type} option).
 subroutine generates or reads the $B(\ell)$ window function used in \thedocid
   \item[\htmlref{map2gif}{fac:map2gif}] This \healpix Fortran facility can be used to visualise the
   output map.
-  \item[mollview] This \healpix IDL facility can be used to visualise the
+  \item[\htmlref{mollview}{idl:mollview}] This \healpix IDL facility can be used to visualise the
   output map.
   \item[\htmlref{anafast}{fac:anafast}] This \healpix Fortran facility can analyse a \healpix map and 
      	       save the $a_{lm}$ and $C_l$s to be read by sky\_ng\_sim.
@@ -210,32 +228,51 @@ input file, the parser assumes the default value.
 If the equality sign is omitted, then the parser ignores the entry.
 In this way comments may also be included in the file.
 In this example, the file contains the following qualifiers:\hfill\newline
-\fileparam{simul\_type = 1}
-\fileparam{nsmax = 128}
-\fileparam{nlmax = 256}
-\fileparam{fwhm\_arcmin = 30.0}
-\fileparam{infile = cl.fits}
-\fileparam{pdf\_choice = 1}
-\fileparam{iseed =  1}
-\fileparam{na = 3}
-\fileparam{sigma0 = 1.0}
-\fileparam{alpha\_1 = 0.0}
-\fileparam{alpha\_2 = 0.0}
-\fileparam{alpha\_3 = 0.2}
-\fileparam{outfile = !test\_ngfs.fits}
+\fileparam{\mylink{fac:sky_ng_sim:simul_type}{simul\_type}%
+ = 1}
+\fileparam{\mylink{fac:sky_ng_sim:nsmax}{nsmax}%
+ = 128}
+\fileparam{\mylink{fac:sky_ng_sim:nlmax}{nlmax}%
+ = 256}
+\fileparam{\mylink{fac:sky_ng_sim:fwhm_arcmin}{fwhm\_arcmin}%
+ = 30.0}
+\fileparam{\mylink{fac:sky_ng_sim:infile}{infile}%
+ = cl.fits}
+\fileparam{\mylink{fac:sky_ng_sim:pdf_choice}{pdf\_choice}%
+ = 1}
+\fileparam{\mylink{fac:sky_ng_sim:iseed}{iseed}%
+ =  1}
+\fileparam{\mylink{fac:sky_ng_sim:na}{na}%
+ = 3}
+\fileparam{\mylink{fac:sky_ng_sim:sigma0}{sigma0}%
+ = 1.0}
+\fileparam{\mylink{fac:sky_ng_sim:alpha_1}{alpha\_1}%
+ = 0.0}
+\fileparam{\mylink{fac:sky_ng_sim:alpha_2}{alpha\_2}%
+ = 0.0}
+\fileparam{\mylink{fac:sky_ng_sim:alpha_3}{alpha\_3}%
+ = 0.2}
+\fileparam{\mylink{fac:sky_ng_sim:outfile}{outfile}%
+ = !test\_ngfs.fits}
 {\tt sky\_ng\_sim} reads in the $C_l$ power spectrum in 'cl.fits' up to $l=256$, and produces the map
 'map.fits' which has $N_{\rm side}=128$. The non-gaussian white noise was generated
 assuming a SHO PDF (see Eq~\ref{eq:nongauss_sho} above) with $\sigma_0=1$ and
 $\alpha_i = (0, 0, 0.2)$.
-The map is convolved with a beam of FWHM 30.0 arcminutes. The $iseed=1$ sets
-the random seed for the realisation. A different $iseed$ would have given a different 
-realisation from the same power spectrum. And finally, since {\tt simul\_type =
+The map is convolved with a beam of FWHM 30.0 arcminutes. The $\mylink{fac:sky_ng_sim:iseed}{iseed}%
+=1$ sets
+the random seed for the realisation. A different $\mylink{fac:sky_ng_sim:iseed}{iseed}%
+$ would have given a different 
+realisation from the same power spectrum. And finally, since {\tt \mylink{fac:sky_ng_sim:simul_type}{simul\_type}%
+ =
 1} only the map (and not its spatial derivatives) will be output.
 
 Since \hfill\newline
-\fileparam{beam\_file }
-\fileparam{windowfile }
-\fileparam{outfile\_alms }
+\fileparam{\mylink{fac:sky_ng_sim:beam_file}{beam\_file}%
+ }
+\fileparam{\mylink{fac:sky_ng_sim:windowfile}{windowfile}%
+ }
+\fileparam{\mylink{fac:sky_ng_sim:outfile_alms}{outfile\_alms}%
+ }
 were omitted, they take their default values (empty strings). 
 This means respectively that no beam were read, that {\tt sky\_ng\_sim} attempts to find the pixel
 window files in the default directories (see page~\pageref{page:defdir}), and

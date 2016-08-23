@@ -43,25 +43,30 @@
 \begin{qualifiers}
   \begin{qulistwide}{} %%%% NOTE the ``extra'' brace here %%%%
 %
-    \item[{simul\_type = }] Either 1 or 2. If set to 1, only the temperature component of the
+    \item[{simul\_type = }]\mytarget{fac:median_filter:simul_type}%
+ Either 1 or 2. If set to 1, only the temperature component of the
       input map will be filtered. If set to 2, all the Stokes components available
       in the input file will be filtered (default = 1)
 %
-    \item[{infile = }] Name of the FITS file containing the map to be filtered
+    \item[{infile = }]\mytarget{fac:median_filter:infile}%
+ Name of the FITS file containing the map to be filtered
       (default = '', no default input file).
 %
-    \item[{mf\_radius\_arcmin = }] Radius in arcmin of the disk over which the
+    \item[{mf\_radius\_arcmin = }]\mytarget{fac:median_filter:mf_radius_arcmin}%
+ Radius in arcmin of the disk over which the
       median is computed (default = $3\theta_{\rm pix}$ where $\theta_{\rm pix}$
       is the input map pixel size).
 %
-    \item[{fill\_holes = }] If set to true, flagged pixels take for value the median of
+    \item[{fill\_holes = }]\mytarget{fac:median_filter:fill_holes}%
+ If set to true, flagged pixels take for value the median of
       the valid pixels surrounding them (if any). Otherwise they are left
       unchanged.
       (default = .false.). Note that {\tt y, yes,t, true, .true.} and 1 are
       interpreted as {\em true}, while {\tt n, no, f, false, .false.} and 0 stand
       for {\em false}.
 %
-    \item[{mffile = }] Name of the FITS file containing the median filtered map
+    \item[{mffile = }]\mytarget{fac:median_filter:mffile}%
+ Name of the FITS file containing the median filtered map
 %
   \end{qulistwide}
 \end{qualifiers}
@@ -114,13 +119,18 @@ input file, the parser assumes the default value.
 If the equality sign is omitted, then the parser ignores the entry.
 In this way comments may also be included in the file.
 In this example, the file contains the following qualifiers:\hfill\newline
-\fileparam{simul\_type = 1}
-\fileparam{infile = map.fits}
-\fileparam{mf\_radius\_arcmin = 20.0}
-\fileparam{mffile = med.fits}
+\fileparam{\mylink{fac:median_filter:simul_type}{simul\_type}%
+ = 1}
+\fileparam{\mylink{fac:median_filter:infile}{infile}%
+ = map.fits}
+\fileparam{\mylink{fac:median_filter:mf_radius_arcmin}{mf\_radius\_arcmin}%
+ = 20.0}
+\fileparam{\mylink{fac:median_filter:mffile}{mffile}%
+ = med.fits}
 
 Median\_Filter reads the sky map from 'map.fits'. Since \hfill\newline
-\fileparam{fill\_holes }
+\fileparam{\mylink{fac:median_filter:fill_holes}{fill\_holes}%
+ }
 has its default value, ..., The median will be computed on a disk of 20 arcmin
 in radius, and the result will be written in 'med.fits'.
 }

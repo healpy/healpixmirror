@@ -49,34 +49,43 @@ to choose an iterative computation of the $a_{\ell m}$ coefficients.
 
 \begin{qualifiers}
   \begin{qulist}{} %%%% NOTE the ``extra'' brace here %%%%
-     \item[{simul\_type = }] Defines which map(s) to analyse, 1=temperature only, 2=temperature AND polarisation.
+     \item[{simul\_type = }]\mytarget{fac:smoothing:simul_type}%
+ Defines which map(s) to analyse, 1=temperature only, 2=temperature AND polarisation.
 (default= 1)
-    \item[{infile = }] Defines the filename for the FITS file containing the map to be smoothed. 
+    \item[{infile = }]\mytarget{fac:smoothing:infile}%
+ Defines the filename for the FITS file containing the map to be smoothed. 
 	(default= 'map.fits')
-    \item[{nlmax = }] Defines the $\ell_{max}$ value for the application.
+    \item[{nlmax = }]\mytarget{fac:smoothing:nlmax}%
+ Defines the $\ell_{max}$ value for the application.
 (default= 64)
-    \item[{iter\_order = }] Defines the maximum order of quadrature 
+    \item[{iter\_order = }]\mytarget{fac:smoothing:iter_order}%
+ Defines the maximum order of quadrature 
       iteration to be used. (default=0, no iteration)
- \item[{fwhm\_arcmin = }] Defines the FWHM in arcminutes of the gaussian 
+ \item[{fwhm\_arcmin = }]\mytarget{fac:smoothing:fwhm_arcmin}%
+ Defines the FWHM in arcminutes of the gaussian 
 beam for the convolution. (default=10)
     \item[{beam\_file = }] Defines the FITS file describing the
     Legendre window
     function of the circular beam to be used for the
     simulation. If set to an existing file name, it will override the
     {\tt fhwm\_arcmin} given above. default=`'
-\item[{outfile = }] Defines the filename for the file that will contain 
+\item[{outfile = }]\mytarget{fac:smoothing:outfile}%
+ Defines the filename for the file that will contain 
 the smoothed map. (default='map\_smoothed.fits')
      \item[{plmfile = }] Defines the name for an input file
     containing  precomputed Legendre polynomials $P_{lm}$.
-(default= no entry --- \htmlref{anafast}{fac:anafast} executes the recursive evaluation 
+(default= no entry --- \thedocid executes the recursive evaluation 
 of $P_{lm}$s)
-\item[{w8file = }] Defines name for an input file containing ring
+\item[{w8file = }]\mytarget{fac:smoothing:w8file}%
+ Defines name for an input file containing ring
   weights in the improved quadrature mode (default= no entry ---
 the name is assumed to be 'weight\_ring\_n0xxxx.fits' where xxxx is nsmax)
-\item[{w8filedir = }] Gives the directory where the weight files are
+\item[{w8filedir = }]\mytarget{fac:smoothing:w8filedir}%
+ Gives the directory where the weight files are
 to be found (default= no entry --- smoothing searches in the default
 directories, see introduction)
-\item[{won = }] Set this to 1 if weight files are to be used,
+\item[{won = }]\mytarget{fac:smoothing:won}%
+ Set this to 1 if weight files are to be used,
 otherwise set it to 0 (or 2). (default= 0)
   \end{qulist}
 \end{qualifiers}
@@ -108,6 +117,10 @@ The output map is stored in {\em the same scheme} as the input map.
   \begin{sulist}{} %%%% NOTE the ``extra'' brace here %%%%
   \item[\htmlref{generate\_beam}{sub:generate_beam}] This \healpix Fortran
 subroutine generates or reads the $B(\ell)$ window function used in \thedocid
+  \item[\htmlref{map2gif}{fac:map2gif}] This \healpix Fortran facility can be used to visualise the
+  input and output maps of \thedocid.
+  \item[\htmlref{mollview}{idl:mollview}] This \healpix IDL facility can be used to visualise the
+  input and output maps of \thedocid.
   \item[\htmlref{synfast}{fac:synfast}] This \healpix facility can generate a map and also do the smoothing.
   \item[\htmlref{anafast}{fac:anafast}] This \healpix facility can analyse a smoothed map.		
   \end{sulist}
@@ -141,19 +154,23 @@ If the equality sign is omitted, then the parser ignores the entry.
 In this way comments may also be included in the file.
 In this example, the file contains the following
 qualifiers:\hfill\newline
-\fileparam{simul\_type = 1}
-\fileparam{nlmax = 64}
-\fileparam{infile = map.fits}
-\fileparam{outfile = map\_smoothed.fits}
-\fileparam{fwhm\_arcmin = 10.}
-\fileparam{iter\_order = 1}
-}
-
-Smoothes the \healpix temperature map contained in `map.fits' with 
+\fileparam{\mylink{fac:smoothing:simul_type}{simul\_type}%
+ = 1}
+\fileparam{\mylink{fac:smoothing:nlmax}{nlmax}%
+ = 64}
+\fileparam{\mylink{fac:smoothing:infile}{infile}%
+ = map.fits}
+\fileparam{\mylink{fac:smoothing:outfile}{outfile}%
+ = map\_smoothed.fits}
+\fileparam{\mylink{fac:smoothing:fwhm_arcmin}{fwhm\_arcmin}%
+ = 10.}
+\fileparam{\mylink{fac:smoothing:iter_order}{iter\_order}%
+ = 1}
+smoothes the \healpix temperature map contained in `map.fits' with 
 a 10 arcmin FWHM beam. The resulting map is saved 
 in `map\_smoothed.fits'. The map analysis/synthesis was carried 
 out using fourier coeffecients up to an $\ell$ value of 64. A first
-order iteration of the quadrature was performed.
+order iteration of the quadrature was performed.}
 
 \end{examples}
 

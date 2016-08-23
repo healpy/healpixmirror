@@ -30,15 +30,19 @@ used.}
 
 \begin{qualifiers}
   \begin{qulist}{} %%%% NOTE the ``extra'' brace here %%%%
-    \item[{nsmax = }] Defines the resolution parameter for the map to 
+    \item[{nsmax = }]\mytarget{fac:plmgen:nsmax}%
+ Defines the resolution parameter for the map to 
 be analysed/synthesized with the precomputed harmonics. 
 	(default= 32)
-    \item[{nlmax = }] Defines the $\ell_{max}$ value for the execution.
+    \item[{nlmax = }]\mytarget{fac:plmgen:nlmax}%
+ Defines the $\ell_{max}$ value for the execution.
 (default= 64)
-     \item[{simul\_type = }] Defines whether only scalar, or scalar and 
+     \item[{simul\_type = }]\mytarget{fac:plmgen:simul_type}%
+ Defines whether only scalar, or scalar and 
 tensor harmonics are to be precomputed, 1=scalar only, 2=scalar AND tensor.
 (default=1)
-\item[{outfile = }] Defines the name for the file that will 
+\item[{outfile = }]\mytarget{fac:plmgen:outfile}%
+ Defines the name for the file that will 
 contain the precomputed harmonics.
 (default='plm.fits')
   \end{qulist}
@@ -112,14 +116,19 @@ input file, the parser assumes the default value.
 If the equality sign is omitted, then the parser ignores the entry.
 In this way comments may also be included in the file.
 In this example, the file contains the following qualifiers:\hfill\newline
-\fileparam{simul\_type = 1}
-\fileparam{nsmax = 32}
-\fileparam{nlmax = 86}
-\fileparam{outfile = plm.fits}
+\fileparam{\mylink{fac:plmgen:simul_type}{simul\_type}%
+ = 1}
+\fileparam{\mylink{fac:plmgen:nsmax}{nsmax}%
+ = 32}
+\fileparam{\mylink{fac:plmgen:nlmax}{nlmax}%
+ = 86}
+\fileparam{\mylink{fac:plmgen:outfile}{outfile}%
+ = plm.fits}
 }
 
 Creates a binary FITS file called 'plm.fits' containing Legendre polynomials 
-up to $\ell$ and $m$ values of 86 for a $nsmax=32$ map. 
+up to $\ell$ and $m$ values of 86 for a $\mylink{fac:plmgen:nsmax}{nsmax}%
+=32$ map. 
 Legendre polynomials for all $\ell$ and $m$ 
 values for each angle $\theta$ corresponding to all of the \healpix
 pixel center rings will be 
