@@ -1,8 +1,8 @@
 % -*- LaTeX -*-
 
 
-\renewcommand{\facname}{{ud\_grade }}
-\renewcommand{\FACNAME}{{UD\_GRADE }}
+\renewcommand{\facname}{{ud\_grade}}
+\renewcommand{\FACNAME}{{UD\_GRADE}}
 
 \sloppy
 
@@ -76,7 +76,7 @@ data set,
 \end{keywords}  
 
 \begin{codedescription}
-{\facname can upgrade/degrade a \healpix map using the hierarchical
+{\facname{} can upgrade/degrade a \healpix map using the hierarchical
 properties of \healpix. It can also reorder a sky map (from NEST to RING and
 vice-versa). It operates on FITS files as well as on memory variables. Cut-sky
 operations are only accessible via FITS files.
@@ -104,7 +104,7 @@ copied unchanged into the output file.}
 \end{tabular}
 }
 {
-\facname reads the FITS file map\_512.fits (that allegedly contains a map with
+\facname{} reads the FITS file map\_512.fits (that allegedly contains a map with
 NSIDE=512), and write in the FITS file map\_256.fits a map degraded to resolution 256, with
 the same ordering.
 }
@@ -117,7 +117,7 @@ the same ordering.
 \end{tabular}
 }
 {
-\facname reads the FITS file map\_512.fits (that allegedly contains a map with
+\facname{} reads the FITS file map\_512.fits (that allegedly contains a map with
 NSIDE=512), 
 and writes in the FITS file map\_Nest256.fits a map degraded to resolution 256,
 with NESTED ordering.
@@ -132,7 +132,7 @@ with NESTED ordering.
 }
 {
 mymap is IDL variable containing a \healpix NESTED-ordered map with resolution nside=256.
-\facname upgrades this map to a resolution of 1024, reorder it to RING and write
+\facname{} upgrades this map to a resolution of 1024, reorder it to RING and write
 it in the IDL vector mymap2.
 }
 \end{examples}

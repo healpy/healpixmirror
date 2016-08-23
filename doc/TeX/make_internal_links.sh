@@ -22,6 +22,28 @@ listArguments () {
 
 }
 
+listArgumentsF90Fac () {
+    # listArguments  file begin end
+    # returns arguments found in file between begin and end
+    file=$1
+    sbeg=$2
+    send=$3
+
+# cf http://www.folkstalk.com/2013/03/sed-remove-lines-file-unix-examples.html 
+    cat ${file} | sed "/${sbeg}/,/${send}/!d" | \
+		  grep -v ${sbeg} | grep -v ${send} | \
+	          grep "fileparam" | sed "s|\\\\fileparam||g" | awk -F= '{print $1}' | \
+		  sed "s|\\\\optional||g" | \
+		  sed "s|\[||g"  | sed "s|\]||g" | \
+		  sed "s|{||g"   | sed "s|}||g"  | \
+		  sed "s| ||g"   | sed "s|,|\n|g" | \
+		  sed "s|\\\\facname| |g" | sed "s|\\\\FACNAME| |g" | \
+		  sed "s|\\\\thedocid||g" | sed "s|\\\\tt||g" | \
+		  sed "s/|/ /g" | sed "s|~||g" | sed "s|\\\\hfill||g" | \
+	          sed "s|(||g" | sed "s|)||g" 
+
+}
+
 
 countLinks () {
     file=$1
@@ -67,10 +89,11 @@ for shortfile in $files; do
     if [ $np -eq 0 ] ; then # unprocessed file
 
 	nidl=`match $file "_idl"`
-	if [ "$nidl" = "0" ] ; then
+	nfac=`match $file "_fac"`
+	if [ "$nidl" = "0"  -a "$nfac" = "0" ] ; then
 	    # for F90 functions/subroutines
 	    nf=`testF90Function $file`
-	    type="F90"
+	    type="F90sub"
 	    desc_b="begin{arguments}"
 	    desc_e="end{arguments}"
 	    pretarg="sub"
@@ -84,7 +107,17 @@ for shortfile in $files; do
 		form_b="begin{f90function}"
 		form_e="end{f90function}"
 	    fi
-	else
+	fi
+	if [ "$nidl" = "0"  -a "$nfac" > "0" ] ; then
+	    # for F90 facilities
+	    type="F90fac"
+	    form_b="begin{examples}{2}"
+	    form_e="end{examples}"
+	    desc_b="begin{qualifiers}"
+	    desc_e="end{qualifiers}"
+	    pretarg="fac"
+	fi
+	if [ "$nidl" > "0"  -a "$nfac" = "0" ] ; then
 	    # for IDL subroutines
 	    type="IDL"
 	    form_b="begin{IDLformat}"
@@ -96,12 +129,16 @@ for shortfile in $files; do
 	    pretarg="idl"
 	fi
         # --------------------
-        mylist=`listArguments $file ${form_b} ${form_e}`
         rad=`echo $file | sed "s|.tex||"` 
 	rad=`echo $rad | sed 's|_idl$||'` # remove trailing _idl
+	rad=`echo $rad | sed 's|_fac$||'` # remove trailing _fac
         wrkfile="/tmp/wrkfile_${rad}.txt"
+	if [ "$type" = "F90fac" ]; then
+	    mylist=`listArgumentsF90Fac $file ${form_b} ${form_e}`
+	else
+	    mylist=`listArguments $file ${form_b} ${form_e}`
+	fi
         
-        #echo $mylist
         echo '---------------------------------------------------'
 	echo "       $type "
         echo "$file -> $wrkfile -> $outfile"
@@ -121,7 +158,7 @@ for shortfile in $files; do
             #sed -i "/${form_b}/,/${form_e}/s|"${name2}"|${link}{"${name2}"}%\n|" $wrkfile
             #sed -i "/${desc_b}/,/${desc_e}/s|^"${name2}"|${target} "${name2}"|g"  $wrkfile
             #sed -i "/${desc_b}/,/${desc_e}/s|\\\\optional{"${name2}"}|${target} \\\\optional{"${name2}"}|g"  $wrkfile
-	    if [ "$type" = "F90" ] ; then
+	    if [ "$type" = "F90sub" ] ; then
 		echo "$name \t\t $link \t\t $target \t\t "$name2
 		sed -i "/${form_b}/,/${form_e}/s|"${name2}"|${magic}:${tag}}{"${name2}"}%\n|" $wrkfile
 		sed -i "/${desc_b}/,/${desc_e}/s|^"${name2}"|"${name2}"${target}|g"  $wrkfile
@@ -138,6 +175,11 @@ for shortfile in $files; do
 		sed -i "/${desc_b2}/,/${desc_e2}/s|^/"${name2}"|/"${name2}"${target}|g"  $wrkfile
 		sed -i "/${desc_b1}/,/${desc_e1}/s|\\\\item\[/"${name2}"|\\\\item\[/"${name2}"${target}%\n|g"  $wrkfile
 		sed -i "/${desc_b2}/,/${desc_e2}/s|\\\\item\[/"${name2}"|\\\\item\[/"${name2}"${target}%\n|g"  $wrkfile
+	    fi
+	    if [ "$type" = "F90fac" ] ; then
+		echo "$name \t\t $link \t\t $target \t\t "$name2
+		sed -i "/${form_b}/,/${form_e}/s|"${name2}"|${magic}:${tag}}{"${name2}"}%\n|" $wrkfile
+		sed -i "/${desc_b}/,/${desc_e}/s|^"${name2}"|"${name2}"${target}|g"  $wrkfile
 	    fi
         done
 	sed -i "/${form_b}/,/${form_e}/s|${magic}|${slink}|" $wrkfile

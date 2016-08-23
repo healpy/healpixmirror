@@ -9,8 +9,8 @@
 
 
 
-\renewcommand{\facname}{{write\_fits\_sb }}
-\renewcommand{\FACNAME}{{WRITE\_FITS\_SB }}
+\renewcommand{\facname}{{write\_fits\_sb}}
+\renewcommand{\FACNAME}{{WRITE\_FITS\_SB}}
 \sloppy
 
 
@@ -132,7 +132,7 @@ binary table}
 
 \begin{codedescription}
 %%%{\parbox[t]{\hsize}
-{\parbox[t]{\hsize}{\facname writes out the information contained in {\tt{Prim\_stc}} and {\tt{Exten\_stc}} in the primary unit and extension of the FITS file
+{\parbox[t]{\hsize}{\facname{} writes out the information contained in {\tt{Prim\_stc}} and {\tt{Exten\_stc}} in the primary unit and extension of the FITS file
 {\tt File} respectively . Coordinate systems can also be specified by {\tt Coordsys}. Specifying the
 ordering scheme is compulsary for \healpix data sets and can be done either in {\tt Header} or by setting {\tt
 Ordering} or {\tt Nested} or {\tt Ring} to the correct value. If {\tt
@@ -166,7 +166,7 @@ If {\tt Nothealpix} is set, the restrictions on Nside are void.}}
   \item[sxaddpar] This IDL routine (included in \healpix package) can be used to update
   or add FITS keywords to the header in {\tt Prim\_stc} and {\tt Exten\_stc}
 \input{item_write_fits_idl}
-  \item[\htmlref{write\_tqu}{idl:write_tqu}] This \healpix IDL facility based on \thedocid\ is designed to write
+  \item[\htmlref{write\_tqu}{idl:write_tqu}] This \healpix IDL facility based on \thedocid{} is designed to write
   temperature+polarization (T,Q,U) maps
   \end{sulist}
 \end{related}
@@ -186,7 +186,7 @@ If {\tt Nothealpix} is set, the restrictions on Nside are void.}}
 % {
 % The structure map\_TQU is defined to contain a fictitious polarisation map, with
 % the 3 Stokes parameters T, Q and U.
-% \thedocid writes out the contents of map\_TQU into the extension 
+% \thedocid{} writes out the contents of map\_TQU into the extension 
 % of the FITS file 'map\_polarization.fits'.
 % }
 % \end{example}
@@ -204,7 +204,7 @@ map\_FN =  create\_struct('HDR',[' '],'FLUX',f,'NUMBER',n) \\
 {
 The structure map\_FN is defined to contain a fictitious Flux$+$number map, where
 one field is a float and the other an integer.
-\thedocid\ writes out the contents of map\_FN into the extension 
+\thedocid{} writes out the contents of map\_FN into the extension 
 of the FITS file 'map\_fluxnumber.fits'.
 }
 \end{example}

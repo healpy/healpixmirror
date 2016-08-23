@@ -1,8 +1,8 @@
 % -*- LaTeX -*-
 
 
-\renewcommand{\facname}{{healpixwindow }}
-\renewcommand{\FACNAME}{{HEALPIXWINDOW }}
+\renewcommand{\facname}{{healpixwindow}}
+\renewcommand{\FACNAME}{{HEALPIXWINDOW}}
 \renewcommand{\l}{{$\ell$ }}
 
 \sloppy
@@ -57,13 +57,13 @@ Healpix pixel of resolution Nside.}
 % \end{keywords}  
 
 \begin{codedescription}
-{\thedocid\ computes the $\ell$ space window function due to the finite size of the
+{\thedocid{} computes the $\ell$ space window function due to the finite size of the
 \healpix pixels. The typical size of a pixel (square root of its uniform surface
 area) is $\myhtmlimage{}\sqrt{3/\pi}\ 3600/N_{\rm side}$ arcmin.
 If a unpixelated sky has a power spectrum $C(\ell)$, the same
 sky pixelated with a resolution parameter Nside 
 will have the power spectrum $C(\ell)_{\rm pix} = C(\ell)
-W(\ell)^2$ where $W(\ell)$ is given by \thedocid (Nside). The polarized
+W(\ell)^2$ where $W(\ell)$ is given by \thedocid(Nside). The polarized
 pixel window function is also provided (when Dim $>$ 1).
 This routine reads some FITS files located in the subdirectory {\tt data/} of the
 \healpix distribution, unless the keyword {\tt Directory} is set otherwise.}

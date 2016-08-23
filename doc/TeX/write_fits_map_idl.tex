@@ -9,8 +9,8 @@
 
 
 
-\renewcommand{\facname}{{write\_fits\_map }}
-\renewcommand{\FACNAME}{{WRITE\_FITS\_MAP }}
+\renewcommand{\facname}{{write\_fits\_map}}
+\renewcommand{\FACNAME}{{WRITE\_FITS\_MAP}}
 \sloppy
 
 
@@ -100,7 +100,7 @@ the \healpix convention}
 \end{keywords}
 
 \begin{codedescription}
-{\facname writes out the full sky \healpix map {\tt T\_sky} into the FITS file
+{\facname{} writes out the full sky \healpix map {\tt T\_sky} into the FITS file
 {\tt File}. Extra information about the map can be given in {\tt
 Header} according to the FITS header conventions. Coordinate systems 
 can also be specified by {\tt Coordsys}. Specifying the
@@ -130,10 +130,10 @@ its value overrides what is given in {\tt Header}.}
 \begin{example}
 {
 \begin{tabular}{l} %%%% use this tabular format %%%%
-write\_fits\_map, 'file.fits', map, coordsys='G', ordering='ring' \\
+\facname, 'file.fits', map, coordsys='G', ordering='ring' \\
 \end{tabular}
 }
-{\facname writes out the RING ordered map {\tt map} in Galactic
+{\facname{} writes out the RING ordered map {\tt map} in Galactic
 coordinates into the file {\tt file.fits}.
 }
 \end{example}
