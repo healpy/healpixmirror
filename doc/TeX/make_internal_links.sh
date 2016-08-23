@@ -83,7 +83,7 @@ for shortfile in $files; do
     #outfile=`echo $file | sed "s|.tex|_2.tex|"`
     outfile=$file
 
-    np=0 #`countLinks $file`
+    np=`countLinks $file`
     ### [[ "$file" = "write_bintabh.tex" ]] && np=0
 
     if [ $np -eq 0 ] ; then # unprocessed file
