@@ -7,14 +7,14 @@
 % A.J. Banday, April 1999.
 
 \documentclass[12pt,twoside]{article}
+%\usepackage{xr-hyper,healpix,html,makeidx,tabularx} 
+%%\usepackage{xr-hyper,healpix,html,makeidx} 
 \usepackage{xr-hyper,healpix,graphicx,html,makeidx} 
 %\usepackage{healpix,xr-hyper,html,graphicx,makeidx}
 \begin{htmlonly}
-\renewcommand{\ell}{l}
-%\renewcommand{\lq}{`}
-\renewcommand{\lq}{'}
-%%\renewcommand{\cdot}{.}
-\input{hpxversion}
+ \renewcommand{\ell}{l}
+ \renewcommand{\lq}{'}
+ \input{hpxversion}
 \end{htmlonly}
 
 \hypersetup{%
@@ -25,8 +25,6 @@
 
 \newcommand{\nside}{{N_{\rm side}}}
 \newcommand{\npix}{{N_{\rm pix}}}
-%% \renewcommand{\contentsname}{{TABLE OF CONTENTS\\
-%% \rule{\hsize}{0.7mm}\\}}
 %\newcommand{\myhtmlimage}[1]{\htmlimage{#1}}
 \newcommand{\myhtmlimage}[1]{ }
 \renewcommand{\contentsname}{{TABLE OF CONTENTS}}
@@ -44,7 +42,8 @@
 \makeatletter
      \newcommand{\nop}[1]{\Hy@raisedlink{\hypertarget{#1}{}}}
 \makeatother
-\newcommand{\mytarget}[1]{\nop{#1}}%    \mytarget{id}
+\newcommand{\mytarget}[1]{\nop{#1}\phantomsection\label{#1}}%    \mytarget{id}
+%\newcommand{\mytarget}[1]{\nop{#1}}%    \mytarget{id}
 \begin{htmlonly}
  \newcommand{\mytarget}[1]{\label{#1}}
 \end{htmlonly}
@@ -74,10 +73,14 @@
 \externallabels{.}{/tmp/subroutineslabels.pl}
 \end{htmlonly}
 
+% \newcommand{\aboutoptional}{Arguments appearing in \optional{italic} are
+% optional.}
+% \newcommand{\modHeadFits}{src/f90/mod/head\_fits.F90}
 
 %%%%%
 \begin{document}
 \title{\healpix Fortran Facility User Guidelines}
+\label{fac:facilities}
 \docrv{Version \hpxversion}
 \author{Eric Hivon, Frode K.~Hansen, Benjamin D.~Wandelt, Krzysztof M.~G\'orski,
 Anthony J.~Banday, Martin Reinecke}
@@ -311,7 +314,6 @@ has been added.
 %--------------------------------------------
 
 \newpage
-
 \include{alteralm_fac}
 \include{anafast_fac}
 \include{hotspot_fac}
@@ -324,29 +326,6 @@ has been added.
 \include{synfast_fac}
 \include{ud_grade_fac}
 
-% \hspace{5cm}
-% \begin{minipage}{5cm}
-% \begin{itemize}
-% \item \textbf{ANAFAST}
-% \item \textbf{HOTSPOT}
-% \item \textbf{MAP2GIF}
-% \item \textbf{PLMGEN}
-% \item \textbf{SMOOTHING}
-% \item \textbf{SYNFAST}
-% \item \textbf{UD\_GRADE}
-
-% \end{itemize}
-% \end{minipage}
-
-% \clearpage
-
-% \input{anafast}
-% \input{hotspots}
-% \input{map2gif}
-% \input{plmgen}
-% \input{smoothing}
-% \input{synfast}
-% \input{ud_grade}
 
 \newpage
 \include{fac_appendix}

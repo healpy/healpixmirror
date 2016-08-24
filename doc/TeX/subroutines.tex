@@ -7,7 +7,6 @@
 % A.J. Banday, April 1999.
 
 \documentclass[12pt,twoside]{article}
-%%\usepackage{healrut}
 \usepackage{xr-hyper,healpix,html,makeidx,tabularx} 
 %\usepackage{healpix,xr-hyper,html,makeidx,tabularx}
 \begin{htmlonly}
@@ -34,6 +33,7 @@
 \newcommand{\myhtmlimage}[1]{ }
 \newcommand{\aboutoptional}{Arguments appearing in \optional{italic} are
 optional.}
+\renewcommand{\contentsname}{{TABLE OF CONTENTS}}
 
 % %%%%%%%%%%%%%% to allow reference to keyword from another PDF file
 % \newcounter{word}
@@ -64,7 +64,6 @@ optional.}
 \makeatletter
      \newcommand{\nop}[1]{\Hy@raisedlink{\hypertarget{#1}{}}}
 \makeatother
-%\newcommand{\mytarget}[1]{\nop{#1}\LBL[#1]{}}%    \mytarget{id}
 \newcommand{\mytarget}[1]{\nop{#1}\phantomsection\label{#1}}%    \mytarget{id}
 \begin{htmlonly}
  \newcommand{\mytarget}[1]{\label{#1}}
@@ -135,7 +134,6 @@ pixels) of holes found in input mask
 
 %%%%
 \begin{document}
-
 \title{\healpix Fortran90 Subroutines Overview}
 \label{sub:subroutines}
 \docrv{Version \hpxversion}

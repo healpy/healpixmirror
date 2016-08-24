@@ -1,5 +1,5 @@
 # -*- Makefile -*-
-# for a better html result, do 'make pdf' right begore 'make html' (so that the aux file of the former can be used by the latter)
+# for a better html result, do 'make pdf' right before 'make html' (so that the aux file of the former can be used by the latter)
 TEX	:= latex
 DVIPS   := dvips
 PDFTEX  := pdflatex
