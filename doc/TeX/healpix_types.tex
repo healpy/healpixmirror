@@ -35,13 +35,13 @@ The parameters defined in \thedocid\ include
 
 \begin{mytable}{%
 \begin{tabularx}{\linewidth}{lcc X}
-name & type & value\footnote{actual value may depend on hardware or compiler} & definition \\
+name & type & value\footnote{\label{fn:healpix_types:kind}actual value may depend on hardware or compiler} & definition \\
 \hline
 \mytarget{sub:healpix_types:i1b}I1B & integer & 1 & number of bytes in the hardware-supported signed integers covering the range -99 to
 99 with the least margin\\
 \mytarget{sub:healpix_types:i2b}I2B & integer & 2 & same as above for the range -9999 to 9999 (ie, 4 digits)\\
 \mytarget{sub:healpix_types:i4b}I4B & integer & 4 & same as above for 9 digits \\
-\mytarget{sub:healpix_types:i8b}I8B & integer & 8 & same as above for 16 digits\footnote{may not be supported by
+\mytarget{sub:healpix_types:i8b}I8B & integer & 8 & same as above for 16 digits\footnote{\label{fn:healpix_types:long}may not be supported by
   some hardware or compiler; on those systems, the user should set the
 preprocessing variable {\tt NO64BITS} to 1 during compilation to demote
 automatically {\tt I8B} to {\tt I4B}} \\
@@ -64,7 +64,7 @@ largest accessible numbers,
 
 \begin{mytable}{%
 \begin{tabularx}{\linewidth}{lcc X}
-name & type or kind & value\footnote{actual value may depend on hardware or compiler} & definition \\
+name & type or kind & value\footnote{\label{fn:healpix_types:max}actual value may depend on hardware or compiler} & definition \\
 \hline
 MAX\_I1B & integer & 127 & largest number accessible to integers of kind {\tt I1B}\\
 MAX\_I2B & integer & $32767$ &

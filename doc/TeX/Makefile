@@ -53,7 +53,8 @@ pdf: $(pdf)
 crossref: $(pdf) $(cross)
 	mkdir -p $(PDFDIR)
 	cp $(pdf) $(PDFDIR)
-	grep reference *.log
+	@echo "$(GREEN_COLOR)looking for missing (cross)-references:$(NO_COLOR)"
+	grep -E reference\ \|name\{ *.log
 
 # all HTML
 html: $(html) main.html
