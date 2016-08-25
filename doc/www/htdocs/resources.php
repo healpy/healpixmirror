@@ -1,7 +1,9 @@
 <?php require('_header.inc.php'); ?>
 
 
+<!-- ********************** -->
 <h2>Data in HEALPix format</h2>
+<!-- ********************** -->
 <br>
 <ul>
 <li>
@@ -67,11 +69,14 @@ An extensive list of
 </ul>
 </ul>
 
+<!-- ********************** -->
 <h2>Applications related to HEALPix</h2>
+<!-- ********************** -->
 
 <p>
 
 <ul>
+<!--   ------Data simulation--------  -->
 <li>
 The 
 <a href="http://lambda.gsfc.nasa.gov/toolbox/tb_cmbfast_ov.cfm" >
@@ -106,6 +111,8 @@ and the diffuse emissions they produce (now compatible with HEALPix 3.11 and new
 Computation of photon fluxes from dark matter annihilation or decay in galaxy haloes
 </li>
 
+<br>
+<!--   ------Visualization--------  -->
 <li>
 Visualization tools supporting HEALPix maps in FITS format:
 <a href="http://aladin.u-strasbg.fr/">Aladin&nbsp;Sky&nbsp;Atlas</a> 
@@ -124,6 +131,13 @@ to access, visualize and browse images, catalogues and cube data
 <a href="http://sky.esa.int">ESA Sky</a> to search, retrieve, explore and visualize the entire sky as observed by ESA (and other) astronomy missions (<a href="http://www.cosmos.esa.int/web/esdc/esasky-help">help desk</a>)
 </li>
 
+<li>
+<a href="http://montage.ipac.caltech.edu/">Montage Astronomical Image Mosaic Engine</a>: to stitch astronomical images, including (soon) those in HEALPix format
+<!-- https://en.wikipedia.org/wiki/Montage_Image_Mosaic_Software -->
+</li>
+
+<br>
+<!--   ------Data analysis--------  -->
 <li>
 <a href="https://github.com/healpy/healpy">Healpy</a>: 
 python wrapper to HEALPix (now included in HEALPix package)
@@ -173,7 +187,9 @@ by Anthony J. Banday
 </ul>
 </p>
 
+<!-- ********************** -->
 <h2>HEALPix in the literature</h2>
+<!-- ********************** -->
 
 <p>
 Published articles using HEALPix: 
@@ -186,13 +202,16 @@ on
 
 <a href="http://inspirebeta.net/search?ln=en&p=FIND+C+ASTRO-PH%2F9812350+or+refersto%3Arecid%3A659804+or+fulltext%3Ahealpix&f=&action_search=Search&sf=&so=d&rm=&rg=25&sc=0&of=hb">INSPIRE (High Energy Physics &amp; Cosmology)</a>,<br>
 
-<a href="http://adsabs.harvard.edu/cgi-bin/nph-ref_query?bibcode=2005ApJ...622..759G&amp;refs=CITATIONS&amp;db_key=AST">ADS Classic</a>,
-
-<a href="https://ui.adsabs.harvard.edu/#search/q=full%3Ahealpix&sort=date%20desc">ADS beta</a>
+<a href="http://adsabs.harvard.edu/cgi-bin/nph-ref_query?bibcode=2005ApJ...622..759G&amp;refs=CITATIONS&amp;db_key=AST">ADS Classic</a>
 
 &amp;
 
+<a href="https://ui.adsabs.harvard.edu/#search/q=full%3Ahealpix&sort=date%20desc">ADS beta</a>
+
+<!-- ADS 2.0 now deprecated
+&amp;
 <a href="http://adslabs.org/adsabs/search/?q=full%3A%22healpix%22&month_from=&year_from=&month_to=&year_to=&db_f=&nr=&bigquery=&re_sort_type=DATE&re_sort_dir=desc">ADS 2.0</a> 
+-->
 
 (Astrophysics)
 
