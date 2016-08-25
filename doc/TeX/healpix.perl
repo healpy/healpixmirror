@@ -355,7 +355,11 @@ sub do_env_examples {
     "<hr><H1>EXAMPLE # $t_num:</H1> \n<tt>$t_example</tt>\n<blockquote>$t_bla</blockquote>" ;
 }
 
-
+sub do_env_mytable{
+# used in healpix_types.tex
+    local($_) = @_;
+    " " . $_;
+}
 #------------------------
 
 sub do_env_qualifiers{
