@@ -86,6 +86,21 @@ For any problem, question or comment, see the <a href="support.php">Support</a> 
 
 <UL CLASS="ChildLinks">
 
+<LI><A NAME="tex2html_331_11"
+  HREF="#SECTION_331_10000000000000000">Bug corrections and Improvements in Version 3.31</A>
+<UL>
+<LI><A NAME="tex2html_331_12"
+  HREF="#SECTION_331_11000000000000000">General</A>
+<LI><A NAME="tex2html_331_13"
+  HREF="#SECTION_331_12000000000000000">C++</A>
+<LI><A NAME="tex2html_331_14"
+  HREF="#SECTION_331_13000000000000000">Fortran</A>
+<LI><A NAME="tex2html_331_15"
+  HREF="#SECTION_331_14000000000000000">IDL</A>
+<LI><A NAME="tex2html_331_16"
+  HREF="#SECTION_331_15000000000000000">Python</A>
+</UL>
+
 <LI><A NAME="tex2html_330_13"
   HREF="#SECTION_330_10000000000000000">Bug corrections and Improvements in Version 3.30</A>
 <UL>
@@ -101,6 +116,7 @@ For any problem, question or comment, see the <a href="support.php">Support</a> 
   HREF="#SECTION_330_15000000000000000">Python</A>
 </UL>
 
+<!--
 <LI><A NAME="tex2html_320_12"
   HREF="#SECTION_320_10000000000000000">Bug corrections and Improvements in Version 3.20</A>
 <UL>
@@ -119,6 +135,7 @@ For any problem, question or comment, see the <a href="support.php">Support</a> 
 <LI><A NAME="tex2html_320_19"
   HREF="#SECTION_320_17000000000000000">Python</A>
 </UL>
+-->
 
 
 </ul>
@@ -126,6 +143,111 @@ For any problem, question or comment, see the <a href="support.php">Support</a> 
 </p>
 
 <!-- ************************************************* -->
+
+<h3><A NAME="SECTION_331_10000000000000000">
+New Features in HEALPix 3.31</A>
+</h3>
+<P>
+
+<h4><A NAME="SECTION_331_11000000000000000">
+General</A>
+</h4>
+<UL>
+<LI>Detailed 
+<!--a href="http://healpix.sourceforge.net/html/install.htm#SECTION00082000000000000000">HOWTO</a--> 
+<a href="http://healpix.sourceforge.net/html/install.htm#sec:windows">HOWTO</a> 
+for installation under Windows;
+</LI>
+<LI>Interactive <TT>configure</TT> script now supports MINGW environment (for Windows), 
+		and better detects <TT>gcc</TT> and <TT>python</TT> versions;
+</LI>
+<LI>Improved cross-document linking in PDF documentation.
+</LI>
+</UL>
+
+<A HREF=#top>    Back to Top</A><br><br>
+<p>
+
+<h4><A NAME="SECTION_331_12000000000000000"></A>
+<A NAME="tex2html_331_1"
+  HREF="http://healpix.sourceforge.net/html/index_cxx.htm">C++</A>
+</h4>	
+<UL>
+<LI>Removal of C++11 features inadvertently introduced in Version 3.30 
+	(see <A NAME="tex2html_331_2"
+  HREF="http://sourceforge.net/p/healpix/bugs/72"><TT>http://sourceforge.net/p/healpix/bugs/72</TT></A>)	
+</LI>
+</UL>
+<A HREF=#top>    Back to Top</A><br><br>
+<p>
+
+<h4>Fortran 90 <A NAME="tex2html_331_3"
+  HREF="http://healpix.sourceforge.net/html/facilities.htm">facilities</A>
+and
+ 	<A NAME="tex2html_331_4"
+  HREF="http://healpix.sourceforge.net/html/subroutines.htm">subroutines</A>
+</h4>
+<UL>
+<LI>Bug correction in <a href="http://healpix.sourceforge.net/html/subroutinesnode43.htm"><TT>input_map</TT></a> routine for reading of polarized multi-HDU cut sky FITS files;
+</LI>
+<LI>Introduction of 
+<TT>winfiledir_*</TT> and 
+<TT>windowfile_*</TT> qualifiers in <a href="http://healpix.sourceforge.net/html/facilitiesnode5.htm"><TT>alteralm</TT></a> facility.	
+</LI>
+</UL>
+
+<A HREF=#top>    Back to Top</A><br><br>
+<p>
+
+<h4><A NAME="SECTION_331_14000000000000000"></A>
+<BR>
+<A NAME="tex2html_331_5"
+  HREF="http://healpix.sourceforge.net/html/idl.htm">IDL</A>
+</h4>
+<UL>
+<LI>Improved support for 
+ <a href="http://healpix.sourceforge.net/html/install.htm#install:using_gdl">GDL</a>;
+</LI>
+<LI>update of the required
+    <A NAME="tex2html_331_6"
+  HREF="http://idlastro.gsfc.nasa.gov/homepage.html"><TT>IDL-astron</TT> library</A>
+routines, and <A NAME="tex2html_331_7"
+  HREF="http://www.idlcoyote.com"><TT>Coyote</TT></A>
+library
+    routines (2016-08-19).
+</LI>
+</UL>
+
+<A HREF=#top>    Back to Top</A><br><br>
+<p>
+
+<h4><A NAME="SECTION_331_15000000000000000"></A>
+<BR>
+<A NAME="tex2html_331_8"
+  HREF="http://healpy.readthedocs.org/en/latest/">Python</A>
+</h4>
+<UL>
+<LI>Switch to 
+	<A NAME="tex2html_331_9"
+  HREF="https://github.com/healpy/healpy/releases"><TT>healpy 1.9.1</TT></A>
+(<A NAME="tex2html_331_10"
+  HREF="https://github.com/healpy/healpy/blob/master/CHANGELOG.rst">CHANGELOG</A>)
+<UL>
+<LI>Removed C++ 11 features
+</LI>
+<LI>Streamlined setup.py
+</LI>
+<LI>Plotting fixes for Python 3
+</LI>
+<LI>Numpy 1.10 fix
+</LI>
+</UL>
+</LI>
+</UL>
+
+<A HREF=#top>    Back to Top</A><br><br>
+<p>
+
 
 <h3><A NAME="SECTION_330_10000000000000000">
 New Features in HEALPix 3.30</A>
@@ -186,7 +308,7 @@ for more details.
 behavior in <TT>write_bintabh</TT> routine
 </LI>
 <LI>edited <TT>map2alm_iterative</TT> 
-routine to avoid a bug specific to Intel's Ifort 15.0.2
+routine to avoid a bug specific to Intel&#039;s Ifort 15.0.2
 </LI>
 <LI>CFITSIO version 3.20 (August 2009) or more now required;
 </LI>
@@ -295,7 +417,7 @@ for high-level description);
 <A HREF=#top>    Back to Top</A><br><br>
 
 
-<!-- ************************************************* -->
+<!-- *************************************************
 
 
 
@@ -473,7 +595,7 @@ Python</A>
 </UL>
 <A HREF=#top>    Back to Top</A><br><br>
 
-
+ -->
 <!-- ************************************************* -->
 
 
