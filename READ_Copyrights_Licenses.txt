@@ -1,6 +1,6 @@
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-  Copyright (C) 1997-2015  HEALPix collaboration
+  Copyright (C) 1997-2016  HEALPix collaboration
 
 
   HEALPix is free software; you can redistribute it and/or modify
@@ -143,6 +143,14 @@ COPYRIGHTS
 
  Copyright 2015 by A. Zonca, L. Singer, C. Rosset
  for the healpy package version 1.9.0
+  All rights reserved.
+
+ Copyright 2016 by E. Hivon, M. Reinecke, W. O'Mullane, E. Joliet, K.M. Gorski, A.J. Banday
+ for the HEALPix package version 3.31
+  All rights reserved.
+
+ Copyright 2015 by A. Zonca, L. Singer, C. Rosset
+ for the healpy package version 1.9.1
   All rights reserved.
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!

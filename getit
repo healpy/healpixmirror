@@ -115,6 +115,24 @@ if [ ${doit} = 1 ] ; then
 	ln -s ../../../cxx .
     fi
 
+    if [ ! -f cfitsio/License.txt ] ; then # put by hand cfitsio source
+	echo "Put CFITSIO source files"
+	\rm -rf cfitsio
+	cfitsio_tarball=cfitsio_3.36_for_healpy_1.9.x.tar.gz
+	cp -p ~/Healpix_releases/${cfitsio_tarball} .
+	tar -xvzpf ${cfitsio_tarball}
+	\rm ${cfitsio_tarball}
+    fi
+
+    if [ ! -d healpixsubmodules/src ] ; then # put by hand cfitsio source
+	echo "Put links to HEALPix/C++ source files"
+	\rm -rf healpixsubmodules
+	hsm_tarball=healpixsubmodule_for_healpy_1.9.x.tar.gz
+	cp -p ~/Healpix_releases/${hsm_tarball} .
+	tar -xvzpf ${hsm_tarball}
+	\rm ${hsm_tarball}
+    fi
+
     echo "-------------------- Done! ------------------"
     cd ${WRKDIR}
 fi

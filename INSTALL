@@ -146,14 +146,14 @@ or
 =========================================
 
 
-For background information on healpix see
+For background information on healpix visit
    http://healpix.sourceforge.net
-or
+or type
+   healpix_doc
+or have a look at
    doc/pdf/intro.pdf
 or
    doc/html/intro.htm
-or type
-   healpix_doc
 
 
 For questions/comments/suggestions on HEALPix: 
