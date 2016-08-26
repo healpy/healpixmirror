@@ -50,7 +50,7 @@
               the first large release of the HEALPix software (Version 1.10).
               <br>
               <br>
-              The following releases of the HEALPix software (Versions 1.20 to 3.20) and the current one (Version 3.30) benefited
+              The following releases of the HEALPix software (Versions 1.20 to 3.30) and the current one (Version 3.31) benefited
               from:
 		<ul>
 		<li>
