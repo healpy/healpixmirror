@@ -145,13 +145,16 @@ gettingHealpy(){
 
     cd healpixsubmodule/src/cxx/autotools
     # chmod ugo+x install-sh # done in 1.9.0
-    \ln -sf ../../../../../cxx .
-    for dir in Healpix_cxx c_utils cxxsupport libfftpack libsharp ; do
-	echo ${dir}
-	\rm -r ${dir}
-	\ln -sf cxx/${dir} .
-#	\ln -sf ../../../../../cxx/${dir} .
-    done
+
+    # replace hard sources by links to C++ directory, if not already done
+    if [ ! -s cxx ] ; then
+	\ln -sf ../../../../../cxx .
+	for dir in Healpix_cxx c_utils cxxsupport libfftpack libsharp ; do
+	    echo "Creating link for ${dir}"
+	    \rm -r ${dir}
+	    \ln -sf cxx/${dir} .
+	done
+    fi
 
     cd ${here}
     mv ${wrkdir}/healpy src
