@@ -53,10 +53,11 @@ The <a href="http://www.drao-ofr.hia-iha.nrc-cnrc.gc.ca/26msurvey/data.html"
 
 <li>
 The Schlegel, Finkbeiner, and Davis
-    (<a href="http://lanl.arxiv.org/abs/astro-ph/9710327" >astro-ph/9710327</a>,
-     <a href="http://adsabs.harvard.edu/abs/1998ApJ...500..525S" >ApJ. 500, p.525</a>),
+    (<a href="http://lanl.arxiv.org/abs/astro-ph/9710327">astro-ph/9710327</a>,
+     <a href="http://adsabs.harvard.edu/abs/1998ApJ...500..525S">ApJ. 500, p.525</a>),
     combined
-    <a href="http://astro.berkeley.edu/davis/dust/index.html" >COBE/DIRBE-IRAS/SISSA dust emission map</a>
+    <!--a href="http://astro.berkeley.edu/davis/dust/index.html"-->
+    <a href="http://irsa.ipac.caltech.edu/applications/DUST/docs/background.html">COBE/DIRBE-IRAS/SISSA dust emission map</a>
 </li>
 
 <li>
@@ -154,10 +155,12 @@ Temperature+Polarization angular power spectrum extraction tool dealing with the
 cut-sky, beam smoothing, noise contamination...
 </li>
 
+<!-- commented out 2016-09-13
 <li>
 <a href="http://lcdm.astro.illinois.edu/code/aps.html">APS</a>:
 Quadratic estimator of the galaxy angular power spectrum
 </li>
+-->
 
 <li>
 <a href="http://www2.iap.fr/users/sousbie/web/html/indexd41d.html?"> DisPerSE</a>: 
@@ -169,7 +172,8 @@ Wavelets on the Sphere:
 <a href="http://www.cosmostat.org//isap.html">iSAP</a>, 
     <a href="http://irfu.cea.fr/en/Phocea/Vie_des_labos/Ast/ast_visu.php?id_ast=895">MRS</a>,
     <a href="http://www.s2let.org/">S2LET</a>, 
-    <a href="https://gitorious.org/spherelib">spherelib (previously SphereLab)</a>
+<!--    <a href="https://gitorious.org/spherelib">spherelib (previously SphereLab)</a>-->
+    <a href="https://forge.in2p3.fr/projects/sphere-lib">spherelib (previously SphereLab)</a>
 </li>
 
 <li>
@@ -177,12 +181,14 @@ Wavelets on the Sphere:
 interpolation algorithm of fields sampled on a sphere
 </li>
 
+<!-- commented out 2016-09-13
 <li>
 Take a look at a very useful compilation of 
 <a href="http://www.mpa-garching.mpg.de/~banday/CMB.html" >
     CMB Resources</a>
 by Anthony J. Banday
 </li>
+-->
 
 </ul>
 </p>
