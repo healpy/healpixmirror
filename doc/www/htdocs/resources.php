@@ -172,8 +172,9 @@ Wavelets on the Sphere:
 <a href="http://www.cosmostat.org//isap.html">iSAP</a>, 
     <a href="http://irfu.cea.fr/en/Phocea/Vie_des_labos/Ast/ast_visu.php?id_ast=895">MRS</a>,
     <a href="http://www.s2let.org/">S2LET</a>, 
-<!--    <a href="https://gitorious.org/spherelib">spherelib (previously SphereLab)</a>-->
-    <a href="https://forge.in2p3.fr/projects/sphere-lib">spherelib (previously SphereLab)</a>
+<!--    <a href="https://gitorious.org/spherelib">spherelib (previously SphereLab)</a>           -->
+<!--    <a href="https://forge.in2p3.fr/projects/sphere-lib">spherelib (previously SphereLab)</a>-->
+    <a href="https://gitlab.in2p3.fr/spherelib/spherelib">spherelib (previously SphereLab)</a>
 </li>
 
 <li>
