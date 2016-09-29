@@ -152,6 +152,7 @@
 ;       Mar 2013: EH, added PLANCK1 keyword
 ;       Aug 2015: EH, can read files with 9 columns
 ;       Sep 2015: EH, added PLANCK2 keyword
+;       Sep 2016; EH, work with QuickPol W(l)
 ;
 ; requires the THE IDL ASTRONOMY USER'S LIBRARY 
 ; that can be found at http://idlastro.gsfc.nasa.gov/homepage.html
@@ -296,10 +297,9 @@ if (read_cl) then begin
 
 ; simply read the extension from the FITS file
     tmpout = MRDFITS(myfitsfile,extension_idp1,/use_colnum,silent=silent)
-
 ; get the dimensions of the input array
-    info  = size(tmpout)
-    nrows = info(1)             ; # of entries for l-range: nrows = lmax+1
+    info  = size(tmpout.(0),/dim)
+    nrows = info[0]            ; # of entries for l-range: nrows = lmax+1
     ncols = n_elements(tag_names(tmpout)) - nextra
 
     if ( (ncols ne 1) and (ncols ne 4) and (ncols ne 6) and (ncols ne 9)) then begin
