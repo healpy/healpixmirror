@@ -144,12 +144,19 @@ typedef __m256d Tv;
 #define vfmaaeq(a,b,c,d,e) a=_mm256_macc_pd(d,e,_mm256_macc_pd(b,c,a))
 #define vfmaseq(a,b,c,d,e) a=_mm256_nmacc_pd(d,e,_mm256_macc_pd(b,c,a))
 #else
+#ifdef __FMA__
+#define vfmaeq(a,b,c) a=_mm256_fmadd_pd(b,c,a)
+#define vfmseq(a,b,c) a=_mm256_fnmadd_pd(b,c,a)
+#define vfmaaeq(a,b,c,d,e) a=_mm256_fmadd_pd(d,e,_mm256_fmadd_pd(b,c,a))
+#define vfmaseq(a,b,c,d,e) a=_mm256_fnmadd_pd(d,e,_mm256_fmadd_pd(b,c,a))
+#else
 #define vfmaeq(a,b,c) a=_mm256_add_pd(a,_mm256_mul_pd(b,c))
 #define vfmseq(a,b,c) a=_mm256_sub_pd(a,_mm256_mul_pd(b,c))
 #define vfmaaeq(a,b,c,d,e) \
   a=_mm256_add_pd(a,_mm256_add_pd(_mm256_mul_pd(b,c),_mm256_mul_pd(d,e)))
 #define vfmaseq(a,b,c,d,e) \
   a=_mm256_add_pd(a,_mm256_sub_pd(_mm256_mul_pd(b,c),_mm256_mul_pd(d,e)))
+#endif
 #endif
 #define vneg(a) _mm256_xor_pd(_mm256_set1_pd(-0.),a)
 #define vload(a) _mm256_set1_pd(a)

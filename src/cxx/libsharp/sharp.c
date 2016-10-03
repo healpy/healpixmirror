@@ -481,19 +481,25 @@ static void dealloc_almtmp (sharp_job *job)
 static void alm2almtmp (sharp_job *job, int lmax, int mi)
   {
 
-#define COPY_LOOP(real_t, source_t, expr_of_x)                      \
-  for (int l=job->ainfo->mval[mi]; l<=lmax; ++l)            \
+#define COPY_LOOP(real_t, source_t, expr_of_x)              \
+  {                                                         \
+  for (int l=m; l<lmin; ++l)                                \
+    for (int i=0; i<job->ntrans*job->nalm; ++i)             \
+      job->almtmp[job->ntrans*job->nalm*l+i] = 0;           \
+  for (int l=lmin; l<=lmax; ++l)                            \
     for (int i=0; i<job->ntrans*job->nalm; ++i)             \
       {                                                     \
-        source_t x = *(source_t *)(((real_t *)job->alm[i])+ofs+l*stride); \
-        job->almtmp[job->ntrans*job->nalm*l+i] = expr_of_x; \
-      }
+      source_t x = *(source_t *)(((real_t *)job->alm[i])+ofs+l*stride); \
+      job->almtmp[job->ntrans*job->nalm*l+i] = expr_of_x;   \
+      }                                                     \
+  }
 
   if (job->type!=SHARP_MAP2ALM)
     {
     ptrdiff_t ofs=job->ainfo->mvstart[mi];
     int stride=job->ainfo->stride;
     int m=job->ainfo->mval[mi];
+    int lmin=(m<job->spin) ? job->spin : m;
     /* in the case of SHARP_REAL_HARMONICS, phase2ring scales all the
        coefficients by sqrt_one_half; here we must compensate to avoid scaling
        m=0 */
@@ -548,7 +554,7 @@ static void almtmp2alm (sharp_job *job, int lmax, int mi)
   {
 
 #define COPY_LOOP(real_t, target_t, expr_of_x)               \
-  for (int l=job->ainfo->mval[mi]; l<=lmax; ++l)             \
+  for (int l=lmin; l<=lmax; ++l)                             \
     for (int i=0; i<job->ntrans*job->nalm; ++i)              \
       {                                                      \
         dcmplx x = job->almtmp[job->ntrans*job->nalm*l+i];   \
@@ -559,6 +565,7 @@ static void almtmp2alm (sharp_job *job, int lmax, int mi)
   ptrdiff_t ofs=job->ainfo->mvstart[mi];
   int stride=job->ainfo->stride;
   int m=job->ainfo->mval[mi];
+  int lmin=(m<job->spin) ? job->spin : m;
   /* in the case of SHARP_REAL_HARMONICS, ring2phase scales all the
      coefficients by sqrt_two; here we must compensate to avoid scaling
      m=0 */
