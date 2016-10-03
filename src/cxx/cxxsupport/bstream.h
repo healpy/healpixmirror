@@ -61,7 +61,7 @@ template<> inline void byteswap_helper__<1> (char *)
   {}
 template<> inline void byteswap_helper__<2> (char *val)
   {
-  using namespace std; 
+  using namespace std;
   swap (val[0],val[1]);
   }
 template<> inline void byteswap_helper__<4> (char *val)

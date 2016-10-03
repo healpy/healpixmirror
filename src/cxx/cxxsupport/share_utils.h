@@ -25,13 +25,14 @@
 /*! \file share_utils.h
  *  Various convenience functions for subdividing tasks into chunks
  *
- *  Copyright (C) 2002-2014 Max-Planck-Society
+ *  Copyright (C) 2002-2016 Max-Planck-Society
  *  \author Martin Reinecke
  */
 
 #ifndef PLANCK_SHARE_UTILS_H
 #define PLANCK_SHARE_UTILS_H
 
+#include <algorithm>
 #include "datatypes.h"
 
 /*! Divides the index range [\a glo; \a ghi) into \a nshares approximately

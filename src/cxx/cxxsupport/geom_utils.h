@@ -25,7 +25,7 @@
 /*! \file geom_utils.h
  *  Geometric utility functions.
  *
- *  Copyright (C) 2003-2011 Max-Planck-Society
+ *  Copyright (C) 2003-2016 Max-Planck-Society
  *  \author Martin Reinecke
  *  \author Reinhard Hell
  */
@@ -33,10 +33,9 @@
 #ifndef PLANCK_GEOM_UTILS_H
 #define PLANCK_GEOM_UTILS_H
 
+#include <vector>
 #include "math_utils.h"
 #include "vec3.h"
-
-template<typename T> class arr;
 
 /*! Returns the orientation when looking from point \a loc on the unit
     sphere in the direction \a dir. \a loc must be normalized. The result
@@ -75,7 +74,7 @@ inline double cosdist_zphi (double z1, double phi1, double z2, double phi2)
     Barequet & Elber: Information Processing Letters 93(2005), p.83.
     All points are expected to be passed as unit vectors.
     The enclosing cone must have an opening angle <pi/2. */
-void find_enclosing_circle (const arr<vec3> &point, vec3 &center,
+void find_enclosing_circle (const std::vector<vec3> &point, vec3 &center,
   double &cosrad);
 
 #endif

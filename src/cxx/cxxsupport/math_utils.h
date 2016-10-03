@@ -33,6 +33,7 @@
 #define PLANCK_MATH_UTILS_H
 
 #include <cmath>
+#include <vector>
 #include <algorithm>
 #include "datatypes.h"
 
@@ -205,12 +206,12 @@ template<typename T, typename Iter> inline void interpol_helper
 
 #if (__cplusplus>=201103L)
 
-template<typename T>
-inline bool multiequal (const T &a, const T &b)
+template<typename T1, typename T2>
+inline bool multiequal (const T1 &a, const T2 &b)
   { return (a==b); }
 
-template<typename T, typename... Args>
-inline bool multiequal (const T &a, const T &b, Args... args)
+template<typename T1, typename T2, typename... Args>
+inline bool multiequal (const T1 &a, const T2 &b, Args... args)
   { return (a==b) && multiequal (a, args...); }
 
 #else
@@ -252,6 +253,37 @@ template<typename T> class kahan_adder
       c=tc;
       }
     T result() const { return sum; }
+  };
+
+template<typename T> class tree_adder
+  {
+  private:
+    std::vector<T> state;
+    tsize n;
+
+  public:
+    tree_adder(): state(1,T(0)), n(0) {}
+
+    void add (const T &val)
+      {
+      state[0]+=val; ++n;
+      if (n>(tsize(1)<<(state.size()-1)))
+        state.push_back(T(0));
+      int shift=0;
+      while (((n>>shift)&1)==0)
+        {
+        state[shift+1]+=state[shift];
+        state[shift]=T(0);
+        ++shift;
+        }
+      }
+    T result() const
+      {
+      T sum(0);
+      for (tsize i=0; i<state.size(); ++i)
+        sum+=state[i];
+      return sum;
+      }
   };
 
 template<typename Iter> bool checkNan (Iter begin, Iter end)
