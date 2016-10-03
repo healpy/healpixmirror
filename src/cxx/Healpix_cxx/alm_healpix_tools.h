@@ -25,7 +25,7 @@
  */
 
 /*! \file alm_healpix_tools.h
- *  Copyright (C) 2003-2011 Max-Planck-Society
+ *  Copyright (C) 2003-2016 Max-Planck-Society
  *  \author Martin Reinecke
  */
 
@@ -159,6 +159,13 @@ template<typename T> void map2alm_pol_iter2
     \param map the output map, which must have RING ordering. */
 template<typename T> void alm2map (const Alm<xcomplex<T> > &alm,
   Healpix_Map<T> &map);
+
+/*! Adjoint of the alm2map transform.
+    \param map the input map, which must have RING ordering
+    \param alm the output a_lms. l_max and m_max of the conversion are
+           determined from this object. */
+template<typename T> void alm2map_adjoint (const Healpix_Map<T> &map,
+  Alm<xcomplex<T> > &alm);
 
 template<typename T> void alm2map_spin
   (const Alm<xcomplex<T> > &alm1, const Alm<xcomplex<T> > &alm2,

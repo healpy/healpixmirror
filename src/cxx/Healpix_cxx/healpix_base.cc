@@ -25,7 +25,7 @@
  */
 
 /*
- *  Copyright (C) 2003-2015 Max-Planck-Society
+ *  Copyright (C) 2003-2016 Max-Planck-Society
  *  Author: Martin Reinecke
  */
 
@@ -587,6 +587,8 @@ template<typename I> void T_Healpix_Base<I>::query_multidisc_general
     }
   }
 
+#ifndef __BMI2__
+
 template<> inline int T_Healpix_Base<int>::spread_bits (int v) const
   { return utab[v&0xff] | (utab[(v>>8)&0xff]<<16); }
 template<> inline int64 T_Healpix_Base<int64>::spread_bits (int v) const
@@ -608,6 +610,21 @@ template<> inline int T_Healpix_Base<int64>::compress_bits (int64 v) const
       | (ctab[(raw>>32)&0xff]<<16) | (ctab[(raw>>40)&0xff]<<20);
   }
 
+#else
+
+#include <x86intrin.h>
+
+template<> inline int T_Healpix_Base<int>::spread_bits (int v) const
+  { return _pdep_u32(v,0x55555555u); }
+template<> inline int64 T_Healpix_Base<int64>::spread_bits (int v) const
+  { return _pdep_u64(v,0x5555555555555555ull); }
+template<> inline int T_Healpix_Base<int>::compress_bits (int v) const
+  { return _pext_u32(v,0x55555555u); }
+template<> inline int T_Healpix_Base<int64>::compress_bits (int64 v) const
+  { return _pext_u64(v,0x5555555555555555ull); }
+
+#endif
+
 template<typename I> inline void T_Healpix_Base<I>::nest2xyf (I pix, int &ix,
   int &iy, int &face_num) const
   {
@@ -621,6 +638,18 @@ template<typename I> inline I T_Healpix_Base<I>::xyf2nest (int ix, int iy,
   int face_num) const
   { return (I(face_num)<<(2*order_)) + spread_bits(ix) + (spread_bits(iy)<<1); }
 
+namespace {
+
+// low-level hack to accelerate divisions with a result of [0;3]
+template<typename I> inline I special_div(I a, I b)
+  {
+  I t=(a>=(b<<1));
+  a-=t*(b<<1);
+  return (t<<1)+(a>=b);
+  }
+
+} // unnamed namespace
+
 template<typename I> void T_Healpix_Base<I>::ring2xyf (I pix, int &ix, int &iy,
   int &face_num) const
   {
@@ -633,7 +662,7 @@ template<typename I> void T_Healpix_Base<I>::ring2xyf (I pix, int &ix, int &iy,
     iphi  = (pix+1) - 2*iring*(iring-1);
     kshift = 0;
     nr = iring;
-    face_num=(iphi-1)/nr;
+    face_num=special_div(iphi-1,nr);
     }
   else if (pix<(npix_-ncap_)) // Equatorial region
     {
@@ -643,10 +672,10 @@ template<typename I> void T_Healpix_Base<I>::ring2xyf (I pix, int &ix, int &iy,
     iphi = ip-tmp*4*nside_ + 1;
     kshift = (iring+nside_)&1;
     nr = nside_;
-    I ire = iring-nside_+1,
-      irm = nl2+2-ire;
-    I ifm = iphi - ire/2 + nside_ -1,
-      ifp = iphi - irm/2 + nside_ -1;
+    I ire = tmp+1,
+      irm = nl2+1-tmp;
+    I ifm = iphi - (ire>>1) + nside_ -1,
+      ifp = iphi - (irm>>1) + nside_ -1;
     if (order_>=0)
       { ifm >>= order_; ifp >>= order_; }
     else
@@ -661,11 +690,12 @@ template<typename I> void T_Healpix_Base<I>::ring2xyf (I pix, int &ix, int &iy,
     kshift = 0;
     nr = iring;
     iring = 2*nl2-iring;
-    face_num = 8 + (iphi-1)/nr;
+    face_num=special_div(iphi-1,nr)+8;
     }
 
-  I irt = iring - (jrll[face_num]*nside_) + 1;
+  I irt = iring - ((2+(face_num>>2))*nside_) + 1;
   I ipt = 2*iphi- jpll[face_num]*nr - kshift -1;
+//  I ipt = 2*iphi- (((face_num&3)<<1)+1-((face_num>>2)&1))*nr - kshift -1;
   if (ipt>=nl2) ipt-=8*nside_;
 
   ix =  (ipt-irt) >>1;
@@ -958,7 +988,7 @@ template<typename I> template<typename I2>
   tsize nv=vertex.size();
   tsize ncirc = inclusive ? nv+1 : nv;
   planck_assert(nv>=3,"not enough vertices in polygon");
-  arr<vec3> vv(nv);
+  vector<vec3> vv(nv);
   for (tsize i=0; i<nv; ++i)
     vv[i]=vertex[i].to_vec3();
   arr<vec3> normal(ncirc);

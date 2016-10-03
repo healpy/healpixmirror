@@ -148,7 +148,7 @@ void real_plan_forward_fftpack (real_plan plan, double *data)
     rfftf (plan->length, data, plan->work);
   }
 
-static void fftpack2halfcomplex (double *data, size_t n)
+void fftpack2halfcomplex (double *data, size_t n)
   {
   size_t m;
   double *tmp = RALLOC(double,n);
@@ -164,7 +164,7 @@ static void fftpack2halfcomplex (double *data, size_t n)
   DEALLOC(tmp);
   }
 
-static void halfcomplex2fftpack (double *data, size_t n)
+void halfcomplex2fftpack (double *data, size_t n)
   {
   size_t m;
   double *tmp = RALLOC(double,n);

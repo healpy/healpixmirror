@@ -152,6 +152,11 @@ void real_plan_forward_c (real_plan plan, double *data);
     - on exit, it has the form <tt>r0, 0, r1, 0, ..., r[length-1], 0</tt>. */
 void real_plan_backward_c (real_plan plan, double *data);
 
+/*! Rearrange the contents of \a data from FFTPACK order to halfcomplex order */
+void fftpack2halfcomplex (double *data, size_t n);
+/*! Rearrange the contents of \a data from halfcomplex order to FFTPACK order */
+void halfcomplex2fftpack (double *data, size_t n);
+
 /*! \} */
 
 #ifdef __cplusplus

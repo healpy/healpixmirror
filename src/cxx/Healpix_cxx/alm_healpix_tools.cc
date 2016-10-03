@@ -25,7 +25,7 @@
  */
 
 /*
- *  Copyright (C) 2003-2015 Max-Planck-Society
+ *  Copyright (C) 2003-2016 Max-Planck-Society
  *  Author: Martin Reinecke
  */
 
@@ -69,6 +69,25 @@ template void map2alm (const Healpix_Map<float> &map,
 template void map2alm (const Healpix_Map<double> &map,
   Alm<xcomplex<double> > &alm, const arr<double> &weight,
   bool add_alm);
+
+template<typename T> void alm2map_adjoint (const Healpix_Map<T> &map,
+  Alm<xcomplex<T> > &alm)
+  {
+  planck_assert (map.Scheme()==RING,
+    "alm2map_adjoint: map must be in RING scheme");
+  planck_assert (map.fullyDefined(),"map contains undefined pixels");
+  checkLmaxNside(alm.Lmax(), map.Nside());
+
+  sharp_cxxjob<T> job;
+  job.set_Healpix_geometry (map.Nside());
+  job.set_triangular_alm_info (alm.Lmax(), alm.Mmax());
+  job.alm2map_adjoint(&map[0], &alm(0,0), false);
+  }
+
+template void alm2map_adjoint (const Healpix_Map<float> &map,
+  Alm<xcomplex<float> > &alm);
+template void alm2map_adjoint (const Healpix_Map<double> &map,
+  Alm<xcomplex<double> > &alm);
 
 template<typename T> void map2alm_iter (const Healpix_Map<T> &map,
   Alm<xcomplex<T> > &alm, int num_iter, const arr<double> &weight)
