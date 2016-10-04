@@ -34,6 +34,7 @@
 #define PLANCK_WEIGHT_UTILS_H
 
 #include <vector>
+#include "healpix_map.h"
 
 void apply_fullweights (Healpix_Map<double> &map,
   const std::vector<double> &wgt);
