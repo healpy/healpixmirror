@@ -42,10 +42,39 @@
 
 using namespace std;
 
-void apply_fullweights (Healpix_Map<double> &map, const vector<double> &wgt)
+namespace {
+
+double dprod(const vector<double> &a, const vector<double> &b)
+  { return inner_product(a.begin(),a.end(),b.begin(),0.); }
+
+tsize n_fullweights (int nside)
+  {
+  tsize res=0;
+  //polar region
+  int nrings=nside-1;
+  int nrings2=nrings>>1;
+  res+=nrings2*(nrings2+1);
+  if (nrings&1) // odd number of rings
+    res+=nrings2+1;
+  //equatorial region
+  nrings=nside+1;
+  res+=nrings*((nside+1)>>1);
+  bool odd= (nside&1);
+  if (!odd)
+    {
+    int nshifted=(nrings+1)>>1;
+    res+=nrings-nshifted;
+    }
+  return res;
+  }
+
+void apply_fullweights (Healpix_Map<double> &map, const vector<double> &wgt,
+  bool setwgt)
   {
   planck_assert (map.Scheme()==RING, "bad map ordering scheme");
   int nside=map.Nside();
+  planck_assert(wgt.size()==n_fullweights(nside),
+    "incorrect size of weight array");
   int pix=0, vpix=0;
   for (int i=0; i<2*nside; ++i)
     {
@@ -61,25 +90,22 @@ void apply_fullweights (Healpix_Map<double> &map, const vector<double> &wgt)
       {
       int j4=j%qpix;
       int rpix=min(j4,qpix - (shifted ? 1:0) - j4);
-      map[pix+j] *= wgt[vpix+rpix];
+      double w = wgt[vpix+rpix];
+      map[pix+j] = setwgt ? w : (map[pix+j]*(1.+w));
       if (i!=2*nside-1) // everywhere except on equator
-        map[psouth+j] *= wgt[vpix+rpix];
+        map[psouth+j] = setwgt ? w : (map[psouth+j]*(1.+w));
       }
     pix+=ringpix;
     vpix+=wpix;
     }
   }
 
-namespace {
-
-double dprod(const vector<double> &a, const vector<double> &b)
-  { return inner_product(a.begin(),a.end(),b.begin(),0.); }
-
 vector<double> extract_fullweights (const Healpix_Map<double> &map)
   {
   planck_assert (map.Scheme()==RING, "bad map ordering scheme");
   int nside=map.Nside();
   vector<double> res;
+  res.reserve(n_fullweights(nside));
   int pix=0;
   for (int i=0; i<2*nside; ++i)
     {
@@ -95,34 +121,19 @@ vector<double> extract_fullweights (const Healpix_Map<double> &map)
     }
   return res;
   }
-tsize n_fullweights (int nside)
-  {
-  tsize res=0;
-  for (int i=0; i<2*nside; ++i)
-    {
-    bool shifted=true;
-    if (i>=nside-1)
-      shifted = ((i+1-nside) & 1) == 0;
-    int ringpix=4*min(nside,i+1);
-    bool odd=(ringpix>>2)&1;
-    int wpix=((ringpix+4)>>3) + (((!odd) && (!shifted)) ? 1 : 0);
-    res+=wpix;
-    }
-  return res;
-  }
+
 tsize n_weightalm (int lmax, int mmax)
   {
-  tsize res=0;
-  for (int l=0; l<=lmax; l+=2)
-    ++res;
-  for (int m=4; m<=mmax; m+=4)
-    for (int l=m; l<=lmax; l+=2)
-      ++res;
+  int nmsteps=(mmax>>2)+1;
+  tsize res=nmsteps*((lmax+2)>>1);
+  int sum=(nmsteps*(nmsteps-1))>>1; // Gauss
+  res-=2*sum;
   return res;
   }
 vector<double> extract_weightalm (const Alm<xcomplex<double> > &alm)
   {
   vector<double> res;
+  res.reserve(n_weightalm(alm.Lmax(),alm.Mmax()));
   const double sq2=sqrt(2.);
   for (int l=0; l<=alm.Lmax(); l+=2)
     res.push_back(real(alm(l,0)));
@@ -133,6 +144,8 @@ vector<double> extract_weightalm (const Alm<xcomplex<double> > &alm)
   }
 void expand_weightalm (const vector<double> &calm, Alm<xcomplex<double> > &alm)
   {
+  planck_assert(calm.size()==n_weightalm(alm.Lmax(), alm.Mmax()),
+    "incorrect size of weight array");
   const double xsq2=sqrt(0.5);
   alm.SetToZero();
   tsize idx=0;
@@ -163,8 +176,7 @@ class STS_hpwgt
     vectype ST (const vectype &x) const
       {
       Healpix_Map<double> tm(nside,RING, SET_NSIDE);
-      tm.fill(1.);
-      apply_fullweights(tm,x);
+      apply_fullweights(tm,x,true);
       Alm<xcomplex<double> > ta(lmax,mmax);
       alm2map_adjoint(tm,ta);
       return extract_weightalm(ta);
@@ -283,6 +295,9 @@ vector<double> get_fullweights(int nside, int lmax, double epsilon, int itmax)
   return mat.S(x);
   }
 
+void apply_fullweights (Healpix_Map<double> &map, const vector<double> &wgt)
+  { apply_fullweights (map,wgt,false); }
+
 vector<double> get_ringweights(int nside, int lmax, double epsilon, int itmax)
   {
   vector<double> nir(2*nside), x(lmax/2+1,0.);
@@ -294,7 +309,6 @@ vector<double> get_ringweights(int nside, int lmax, double epsilon, int itmax)
   for (tsize i=0; i<b.size(); ++i)
     b[i]=-b[i];
   b[0]+=12*nside*nside/sqrt(4*pi);
-
   cg_solve(mat, x, b, epsilon, itmax);
   auto mtmp=mat.S(x);
   for (tsize i=0; i<mtmp.size(); ++i)
