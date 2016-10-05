@@ -36,11 +36,25 @@
 #include <vector>
 #include "healpix_map.h"
 
+/*! Applies the vector \a wgt containing compressed full weights to \a map. */
 void apply_fullweights (Healpix_Map<double> &map,
   const std::vector<double> &wgt);
 
+/*! Computes full weights for a map of the given \a nside at a maximum
+    multipole \a lmax. The solution is obtained via CGNE iteration, which stops
+    once the norm of the residual falls below \a epsilon times the norm of the
+    initial residual, or once \a itmax iterations have been performed.
+    \returns a vector containing the compressed full weights.
+    \note \a lmax must be even; odd \a l do not contribute to the weights. */
 std::vector<double> get_fullweights(int nside, int lmax, double epsilon,
   int itmax);
+
+/*! Computes ring weights for a map of the given \a nside at a maximum
+    multipole \a lmax. The solution is obtained via CGNE iteration, which stops
+    once the norm of the residual falls below \a epsilon times the norm of the
+    initial residual, or once \a itmax iterations have been performed.
+    \returns a vector of size \c 2*nside containing the ring weights.
+    \note \a lmax must be even; odd \a l do not contribute to the weights. */
 std::vector<double> get_ringweights(int nside, int lmax, double epsilon,
   int itmax);
 

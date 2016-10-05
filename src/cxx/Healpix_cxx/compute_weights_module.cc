@@ -30,9 +30,9 @@
  */
 
 #include "paramfile.h"
+#include "fitshandle.h"
 #include "announce.h"
 #include "weight_utils.h"
-#include "fitshandle.h"
 
 using namespace std;
 
@@ -45,6 +45,11 @@ int compute_weights_module (int argc, const char **argv)
               || params.param_present("outfile_full"), "no job requested");
   int nside = params.find<int>("nside");
   int nlmax = params.find<int>("nlmax");
+  if (nlmax&1)
+    {
+    cout << "Warning: specified nlmax is odd. Reducing by 1" << endl;
+    --nlmax;
+    }
   double epsilon = params.find<double>("epsilon",1e-7);
   int itmax = params.find<int>("max_iter",10000);
 

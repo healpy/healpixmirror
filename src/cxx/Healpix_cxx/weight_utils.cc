@@ -26,6 +26,18 @@
 
 /*! \file weight_utils.cc
  *
+ *  Functionality for computing ring weights and full map weights
+ *
+ *  Helpful literature:
+ *  Graef, Kunis, Potts: On the computation of nonnegative quadrature weights
+ *  on the sphere
+ *    (https://www-user.tu-chemnitz.de/~potts/paper/quadgewS2.pdf)
+ *  Lambers: Minimum Norm Solutions of Underdetermined Systems
+ *    (http://www.math.usm.edu/lambers/mat419/lecture15.pdf)
+ *  Shewchuk: An Introduction to the Conjugate Gradient Method Without the
+ *  Agonizing Pain
+ *    (https://www.cs.cmu.edu/~quake-papers/painless-conjugate-gradient.pdf)
+ *
  *  Copyright (C) 2016 Max-Planck-Society
  *  \author Martin Reinecke
  */
@@ -44,27 +56,23 @@ using namespace std;
 
 namespace {
 
+// inner product of two vectors
 double dprod(const vector<double> &a, const vector<double> &b)
   { return inner_product(a.begin(),a.end(),b.begin(),0.); }
 
 tsize n_fullweights (int nside)
   {
-  tsize res=0;
   //polar region
   int nrings=nside-1;
   int nrings2=nrings>>1;
-  res+=nrings2*(nrings2+1);
+  tsize res=nrings2*(nrings2+1);
   if (nrings&1) // odd number of rings
     res+=nrings2+1;
   //equatorial region
   nrings=nside+1;
   res+=nrings*((nside+1)>>1);
-  bool odd= (nside&1);
-  if (!odd)
-    {
-    int nshifted=(nrings+1)>>1;
-    res+=nrings-nshifted;
-    }
+  if ((nside&1)==0) // nside is even
+    res+=nrings-((nrings+1)>>1);
   return res;
   }
 
@@ -78,15 +86,12 @@ void apply_fullweights (Healpix_Map<double> &map, const vector<double> &wgt,
   int pix=0, vpix=0;
   for (int i=0; i<2*nside; ++i)
     {
-    bool shifted=true;
-    if (i>=nside-1)
-      shifted = ((i+1-nside) & 1) == 0;
+    bool shifted = (i<nside-1) || ((i+nside)&1); 
     int qpix=min(nside,i+1);
-    int ringpix=4*qpix;
-    bool odd=(ringpix>>2)&1;
-    int wpix=((ringpix+4)>>3) + (((!odd) && (!shifted)) ? 1 : 0);
-    int psouth=map.Npix()-pix-ringpix;
-    for (int j=0; j<ringpix; ++j)
+    bool odd=qpix&1;
+    int wpix=((qpix+1)>>1) + ((odd||shifted) ? 0 : 1);
+    int psouth=map.Npix()-pix-(qpix<<2);
+    for (int j=0; j<(qpix<<2); ++j)
       {
       int j4=j%qpix;
       int rpix=min(j4,qpix - (shifted ? 1:0) - j4);
@@ -95,7 +100,7 @@ void apply_fullweights (Healpix_Map<double> &map, const vector<double> &wgt,
       if (i!=2*nside-1) // everywhere except on equator
         map[psouth+j] = setwgt ? w : (map[psouth+j]*(1.+w));
       }
-    pix+=ringpix;
+    pix+=qpix<<2;
     vpix+=wpix;
     }
   }
@@ -104,20 +109,17 @@ vector<double> extract_fullweights (const Healpix_Map<double> &map)
   {
   planck_assert (map.Scheme()==RING, "bad map ordering scheme");
   int nside=map.Nside();
-  vector<double> res;
-  res.reserve(n_fullweights(nside));
+  vector<double> res; res.reserve(n_fullweights(nside));
   int pix=0;
   for (int i=0; i<2*nside; ++i)
     {
-    bool shifted=true;
-    if (i>=nside-1)
-      shifted = ((i+1-nside) & 1) == 0;
-    int ringpix=4*min(nside,i+1);
-    bool odd=(ringpix>>2)&1;
-    int wpix=((ringpix+4)>>3) + (((!odd) && (!shifted)) ? 1 : 0);
+    bool shifted = (i<nside-1) || ((i+nside)&1); 
+    int qpix=min(nside,i+1);
+    bool odd=qpix&1;
+    int wpix=((qpix+1)>>1) + ((odd||shifted) ? 0 : 1);
     for (int j=0; j<wpix; ++j)
       res.push_back(map[pix+j]);
-    pix+=ringpix;
+    pix+=qpix<<2;
     }
   return res;
   }
@@ -125,15 +127,11 @@ vector<double> extract_fullweights (const Healpix_Map<double> &map)
 tsize n_weightalm (int lmax, int mmax)
   {
   int nmsteps=(mmax>>2)+1;
-  tsize res=nmsteps*((lmax+2)>>1);
-  int sum=(nmsteps*(nmsteps-1))>>1; // Gauss
-  res-=2*sum;
-  return res;
+  return nmsteps * (((lmax+2)>>1) - nmsteps+1);
   }
 vector<double> extract_weightalm (const Alm<xcomplex<double> > &alm)
   {
-  vector<double> res;
-  res.reserve(n_weightalm(alm.Lmax(),alm.Mmax()));
+  vector<double> res; res.reserve(n_weightalm(alm.Lmax(),alm.Mmax()));
   const double sq2=sqrt(2.);
   for (int l=0; l<=alm.Lmax(); l+=2)
     res.push_back(real(alm(l,0)));
@@ -164,7 +162,8 @@ class STS_hpwgt
   public:
     using vectype=vector<double>;
     STS_hpwgt (int lmax_, int mmax_, int nside_)
-      : lmax(lmax_), mmax(mmax_), nside(nside_) {}
+      : lmax(lmax_), mmax(mmax_), nside(nside_)
+      { planck_assert((lmax&1)==0,"lmax must be even"); }
     vectype S (const vectype &x) const
       {
       Alm<xcomplex<double> > ta(lmax,mmax);
@@ -196,33 +195,28 @@ class STS_hpring
     STS_hpring (int lmax_, int nside_)
       : lmax(lmax_), nside(nside_)
       {
+      planck_assert((lmax&1)==0,"lmax must be even");
       int nring=2*nside;
-      vector<double> phi0(nring,0.),wgt(nring,0.),theta(nring);
-      vector<int> nphi(nring,1),stride(nring,1);
+      vector<double> dbl0(nring,0.),theta(nring);
+      vector<int> int1(nring,1);
       vector<ptrdiff_t> ofs(nring);
-      ptrdiff_t npix=ptrdiff_t(nside)*nside*12;
+      Healpix_Base base(nside, RING, SET_NSIDE);
       for (int i=0; i<nring; ++i)
         {
         ofs[i]=i;
-        int ring=i+1;
-        if (ring < nside)
-          theta[i] = 2*asin(ring/(sqrt(6.)*nside));
-        else
-          {
-          double fact1 = (8.*nside)/npix;
-          double costheta = (2*nside-ring)*fact1;
-          theta[i] = acos(costheta);
-          }
+        int idum1,idum2;
+        bool bdum;
+        base.get_ring_info2 (i+1, idum1, idum2, theta[i], bdum);
         }
-      job.set_general_geometry (nring, nphi.data(), ofs.data(),
-        stride.data(), phi0.data(), theta.data(), wgt.data());
+      job.set_general_geometry (nring, int1.data(), ofs.data(),
+        int1.data(), dbl0.data(), theta.data(), dbl0.data());
       job.set_triangular_alm_info (lmax, 0);
       }
     vectype S(const vectype &alm) const
       {
       planck_assert(int(alm.size())==lmax/2+1,"bad input size");
       vectype res(2*nside);
-      vector<xcomplex<double> > alm2(2*alm.size(),0.);
+      vector<xcomplex<double> > alm2(2*alm.size()-1,0.);
       for (tsize i=0; i<alm.size(); ++i)
         alm2[2*i]=alm[i];
       job.alm2map(&alm2[0],&res[0],false);
@@ -255,25 +249,24 @@ vector<double> muladd (double fct, const vector<double> &a,
 template<typename M> void cg_solve (const M &A, typename M::vectype &x,
   const typename M::vectype &b, double epsilon, int itmax)
   {
-  typename M::vectype r(b), d(b), vtmp(b);
+  typename M::vectype r(b), d(b);
   double res0=0.,rr=0.;
   for (int iter=0; iter<itmax; ++iter)
     {
     if (iter%300==0) // restart iteration
       {
-      vtmp=A.apply(x);
-      r=muladd(-1.,vtmp,b);
+      r=muladd(-1.,A.apply(x),b);
       rr=dprod(r,r);
-      if (iter==0) cout << "res0: " << sqrt(rr) << endl;
-      if (iter==0)
-        res0=sqrt(rr);
+      if (rr==0.) break; // direct hit
+      if (iter==0) res0=sqrt(rr);
+      if (iter==0) cout << "res0: " << res0 << endl;
       d=r;
       }
-    vtmp=A.apply(d);
+    auto vtmp=A.apply(d);
     double alpha = rr/dprod(d,vtmp);
     x=muladd(alpha,d,x);
     cout << "\rIteration " << iter
-         << ": residual=" << sqrt(rr)/res0 << "                  " << flush;
+         << ": residual=" << sqrt(rr)/res0 << "                    " << flush;
     if (sqrt(rr)<epsilon*res0) { cout << endl; break; } // convergence
     double rrold=rr;
     r=muladd(-alpha,vtmp,r);
@@ -287,6 +280,7 @@ template<typename M> void cg_solve (const M &A, typename M::vectype &x,
 
 vector<double> get_fullweights(int nside, int lmax, double epsilon, int itmax)
   {
+  planck_assert((lmax&1)==0,"lmax must be even");
   STS_hpwgt mat(lmax, lmax, nside);
   vector<double> x(n_weightalm(lmax,lmax),0.);
   vector<double> rhs=mat.ST(vector<double> (n_fullweights(nside),-1.));
@@ -300,8 +294,9 @@ void apply_fullweights (Healpix_Map<double> &map, const vector<double> &wgt)
 
 vector<double> get_ringweights(int nside, int lmax, double epsilon, int itmax)
   {
-  vector<double> nir(2*nside), x(lmax/2+1,0.);
+  planck_assert((lmax&1)==0,"lmax must be even");
   STS_hpring mat(lmax,nside);
+  vector<double> nir(2*nside), x(lmax/2+1,0.);
   for (tsize ith=0; ith<nir.size(); ++ith)
     nir[ith]=8*min<int>(ith+1,nside);
   nir[2*nside-1]/=2;
