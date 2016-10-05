@@ -1438,7 +1438,7 @@ contains
        call query_disc(nside, vector, radius, listpix, nlist, nest=nest)
 
        if (do_fill .or. abs(in_map(p)-fmissval_in) > abs(fmissval_in*1.e-7)) then
-          med_map(p) = median(in_map(listpix(0:nlist-1)), badval = fmissval_in, even= .true.)
+          med_map(p) = median(in_map(listpix(0:nlist-1)), badval = fmissval_in, even=(nlist<100))
        else
           med_map(p) = in_map(p)
        endif
@@ -1512,7 +1512,7 @@ contains
        call query_disc(nside, vector, radius, listpix, nlist, nest=nest)
 
        if (do_fill .or. abs(in_map(p)-fmissval_in) > abs(fmissval_in*1.e-7)) then
-          med_map(p) = median(in_map(listpix(0:nlist-1)), badval = fmissval_in, even= .true.)
+          med_map(p) = median(in_map(listpix(0:nlist-1)), badval = fmissval_in, even=(nlist<100))
        else
           med_map(p) = in_map(p)
        endif

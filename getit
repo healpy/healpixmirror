@@ -7,8 +7,12 @@
 healpytag="1.9.1"
 healpygit=0 # 1: uses GIT, 0: uses tar.gz
 healpyrepo="https://github.com/healpy/healpy.git"
-#healpyarchive="https://github.com/healpy/healpy/archive/"
-#healpyarchive="https://pypi.python.org/packages/source/h/healpy/"
+#healpyarchive="https://github.com/healpy/healpy/archive/" # git (maybe partial package)
+#healpyarchive="https://pypi.python.org/packages/source/h/healpy/" # pypi (full package)
+# simple paths pypi:
+# http://pypi.python.org/simple/healpy/healpy-${healpytag}.tar.gz
+# https://pypi.debian.net/healpy/healpy-${healpytag}.tar.gz
+#
 healpyarchive="https://github.com/healpy/healpy/releases/download/${healpytag}/"
 healpyarchive_alt="https://github.com/healpy/healpy/archive/"
 #healpyarchive="/Users/hivon/healpy/"

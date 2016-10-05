@@ -1328,6 +1328,21 @@ All other features work properly, including the \mylinkext{idl:mollview:latex}{\
 % \subsubsection[Python]{\htmladdnormallink{Python}{http://healpy.readthedocs.org/en/latest/}}
 
 \subsubsection[General]{General}
+\subsubsection[C]{\linklatexhtml{C}{csub.pdf}{csub.htm}}
+\subsubsection[C++]{\htmladdnormallink{C++}{http://healpix.sourceforge.net/html/index_cxx.htm}}
+\subsubsection[Fortran]{%
+	Fortran 90 \linklatexhtml{facilities}{facilities.pdf}{facilities.htm} and
+	\linklatexhtml{subroutines}{subroutines.pdf}{subroutines.htm}}
+\item {\tt median_filter} facility: faster by moving an internal array from heap to stack;
+slightly different output: when median is computed over an even number of pixels $n\ge 100$, sorted in $[1,n]$,
+the output is $d(n/2)$ instead of $(d(n/2)+d(n/2+1))/2$ previously. Result remain $d(n/2+1)$ for odd $n$.
+\subsubsection[IDL]{\linklatexhtml{IDL}{idl.pdf}{idl.htm}}
+\subsubsection[Java]{\htmladdnormallink{Java}{http://healpix.sourceforge.net/html/java/index.html}}
+\subsubsection[Python]{\htmladdnormallink{Python}{http://healpy.readthedocs.org/en/latest/}}
+
+\subsection{Bug corrections and Improvements in Version 3.31}%(2016-08-26)
+
+\subsubsection[General]{General}
 	\begin{itemize}
 	\item Detailed \htmlref{HOWTO}{sec:windows} for installation under Windows;
 	\item Interactive {\tt configure} script now supports MINGW environment (for Windows), 

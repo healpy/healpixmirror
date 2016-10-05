@@ -33,6 +33,8 @@
 !           for R,D, I (and forthcoming) implementations
 !         - remove SAVE attribute of IDONT, and remove IDONT from module header
 !
+! 2016-10-05: faster code by turning IDONT array from allocatable to stack array
+!
 Module m_indmed
   Integer, Parameter :: kdp = selected_real_kind(12,200)
   Integer, Parameter :: ksp = selected_real_kind(5, 30)
@@ -53,11 +55,10 @@ contains
     ! __________________________________________________________
     Real (kind=kdp), Dimension (:), Intent (In) :: XDONT
     Integer (kind=i4b),             Intent (Out):: INDM
-    integer, allocatable, dimension(:)          :: idont
+    integer, dimension(size(xdont)) :: idont
     Integer :: tmpout, IDON ! can be 4 or 8 bytes depending on default
     ! __________________________________________________________
     !
-    Allocate (IDONT (SIZE(XDONT)))
     Do IDON = 1, SIZE(XDONT)
        IDONT (IDON) = IDON
     End Do
@@ -65,7 +66,6 @@ contains
     Call d_med (XDONT, IDONT, tmpout)
     indm = tmpout
     !
-    Deallocate (IDONT)
   End Subroutine D_indmed
 
   Recursive Subroutine d_med (XDATT, IDATT, ires_med)
@@ -104,11 +104,10 @@ contains
     ! __________________________________________________________
     Real (kind=ksp), Dimension (:), Intent (In) :: XDONT
     Integer (kind=i4b),             Intent (Out):: INDM
-    integer, allocatable, dimension(:)          :: idont
+    integer, dimension(size(xdont)) :: idont
     Integer :: tmpout, IDON ! can be 4 or 8 bytes depending on default
     ! __________________________________________________________
     !
-    Allocate (IDONT (SIZE(XDONT)))
     Do IDON = 1, SIZE(XDONT)
        IDONT (IDON) = IDON
     End Do
@@ -116,8 +115,6 @@ contains
     Call r_med (XDONT, IDONT, tmpout)
     indm = tmpout
     !
-    Deallocate (IDONT)
-
   End Subroutine R_indmed
   Recursive Subroutine r_med (XDATT, IDATT, ires_med)
     ! __________________________________________________________
@@ -148,11 +145,10 @@ contains
     ! __________________________________________________________
     Integer, Dimension (:), Intent (In) :: XDONT
     Integer, Intent (Out) :: INDM
-    integer, allocatable, dimension(:)          :: idont
+    integer, dimension(size(xdont)) :: idont
     Integer :: tmpout, IDON
     ! __________________________________________________________
     !
-    Allocate (IDONT (SIZE(XDONT)))
     Do IDON = 1, SIZE(XDONT)
        IDONT (IDON) = IDON
     End Do
@@ -160,7 +156,6 @@ contains
     Call i_med (XDONT, IDONT, tmpout)
     INDM = tmpout
 !
-    Deallocate (IDONT)
   End Subroutine I_indmed
 
   Recursive Subroutine i_med (XDATT, IDATT, ires_med)
