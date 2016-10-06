@@ -54,6 +54,27 @@
 
 using namespace std;
 
+/* General considerations concerning the full weights and their a_lm
+   coefficients:
+   The Healpix grid geometry has several symmetries:
+     - mirror symmetry with respect to phi=0
+     - mirror symmetry with respect to the equator
+     - invariance with respect to rotation around the z-axis by multiples of
+       pi/2
+   This reduces the number of pixels with distinct weights to roughly 1/16 of
+   the total number of map pixels.
+   The geometrical symmetries also reduce the number of a_lm coefficients
+   required to describe the weight map:
+     - the mirror symmetry in phi means that all a_lm are purely real-valued
+     - the mirror symmetry in theta means that all a_lm with odd l are zero
+     - the rotational symmetry means that all a_lm with m not a multiple of 4
+       vanish as well.
+
+   These symmetries are used when storing a_lm coefficients and weight maps to
+   save memory. So far, the SHTs themselves are carried out with full maps and
+   a_lm sets, because there is no libsharp support for this kind of symmetries
+   yet. */
+
 namespace {
 
 // inner product of two vectors
@@ -86,7 +107,7 @@ void apply_fullweights (Healpix_Map<double> &map, const vector<double> &wgt,
   int pix=0, vpix=0;
   for (int i=0; i<2*nside; ++i)
     {
-    bool shifted = (i<nside-1) || ((i+nside)&1); 
+    bool shifted = (i<nside-1) || ((i+nside)&1);
     int qpix=min(nside,i+1);
     bool odd=qpix&1;
     int wpix=((qpix+1)>>1) + ((odd||shifted) ? 0 : 1);
@@ -113,7 +134,7 @@ vector<double> extract_fullweights (const Healpix_Map<double> &map)
   int pix=0;
   for (int i=0; i<2*nside; ++i)
     {
-    bool shifted = (i<nside-1) || ((i+nside)&1); 
+    bool shifted = (i<nside-1) || ((i+nside)&1);
     int qpix=min(nside,i+1);
     bool odd=qpix&1;
     int wpix=((qpix+1)>>1) + ((odd||shifted) ? 0 : 1);
@@ -132,26 +153,20 @@ tsize n_weightalm (int lmax, int mmax)
 vector<double> extract_weightalm (const Alm<xcomplex<double> > &alm)
   {
   vector<double> res; res.reserve(n_weightalm(alm.Lmax(),alm.Mmax()));
-  const double sq2=sqrt(2.);
-  for (int l=0; l<=alm.Lmax(); l+=2)
-    res.push_back(real(alm(l,0)));
-  for (int m=4; m<=alm.Mmax(); m+=4)
+  for (int m=0; m<=alm.Mmax(); m+=4)
     for (int l=m; l<=alm.Lmax(); l+=2)
-      res.push_back(sq2*real(alm(l,m)));
+      res.push_back(real(alm(l,m)) * ((m==0) ? 1 : sqrt(2.)));
   return res;
   }
 void expand_weightalm (const vector<double> &calm, Alm<xcomplex<double> > &alm)
   {
   planck_assert(calm.size()==n_weightalm(alm.Lmax(), alm.Mmax()),
     "incorrect size of weight array");
-  const double xsq2=sqrt(0.5);
   alm.SetToZero();
   tsize idx=0;
-  for (int l=0; l<=alm.Lmax(); l+=2)
-    alm(l,0) = calm[idx++];
-  for (int m=4; m<=alm.Mmax(); m+=4)
+  for (int m=0; m<=alm.Mmax(); m+=4)
     for (int l=m; l<=alm.Lmax(); l+=2)
-      alm(l,m) = xsq2*calm[idx++];
+      alm(l,m) = calm[idx++] * ((m==0) ? 1 : sqrt(0.5));
   }
 
 class STS_hpwgt
