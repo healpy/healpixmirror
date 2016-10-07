@@ -31,9 +31,12 @@ To help us provide some support, please read
 before reporting a problem.
 </p>
 
+<!--
 <h3>Search HEALPix code</h3>
 <div class="ohloh" style="margin-top:0px">
 <script type="text/javascript" src="http://www.ohloh.net/p/40087/widgets/project_search_code.js"></script><noscript><em>[Enable javascript in your browser to see this widget]</em></noscript>
+<script type="text/javascript" src="https://www.openhub.net/p/healpix/widgets/project_search_code.js"></script><noscript><em>[Enable javascript in your browser to see this widget]</em></noscript>
 </div>
+-->
 
 <?php require('_footer.inc.php'); ?>

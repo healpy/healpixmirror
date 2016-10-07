@@ -220,11 +220,18 @@ on
 <a href="http://adslabs.org/adsabs/search/?q=full%3A%22healpix%22&month_from=&year_from=&month_to=&year_to=&db_f=&nr=&bigquery=&re_sort_type=DATE&re_sort_dir=desc">ADS 2.0</a> 
 -->
 
-(Astrophysics)
+(Astrophysics),
 
-and<br>
+<br>
 
-<a href="http://scholar.google.com/scholar?scisbd=2&q=healpix&hl=en&as_sdt=0,5">Google Scholar (Multidisciplinary)</a>
+<a href="http://tinyurl.com/hyky2hy">Scopus</a>
+<!-- http://preview.tinyurl.com/hyky2hy -->
+
+and
+
+<a href="http://scholar.google.com/scholar?scisbd=2&q=healpix&hl=en&as_sdt=0,5">Google Scholar</a>
+
+ (Multidisciplinary)
 
 </li>
 </ul>
