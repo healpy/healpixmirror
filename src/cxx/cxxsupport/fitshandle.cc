@@ -200,7 +200,7 @@ void fitshandle::init_image()
   fits_get_img_dim (FPTR, &naxis, &status);
   check_errors();
   arr<LONGLONG> naxes(naxis);
-  fits_get_img_sizell (FPTR, naxis, &naxes[0], &status);
+  if (naxis>0) fits_get_img_sizell (FPTR, naxis, naxes.begin(), &status);
   for (long m=0; m<naxis; ++m) axes_.push_back(naxes[naxis-m-1]);
   check_errors();
   }

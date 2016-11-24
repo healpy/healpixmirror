@@ -95,8 +95,8 @@ int compute_weights_module (int argc, const char **argv)
     out.insert_bintab(cols);
     out.set_key ("CREATOR",string("compute_weights"),
       "Software creating the FITS file");
-    out.set_key ("NSIDE",nside,"Resolution parameter for HEALPIX");
-    out.set_key ("MAX_LPOL",nlmax,"Maximum multipole l used in map synthesis");
+    out.set_key ("NSIDE",nside,"Resolution parameter for HEALPix");
+    out.set_key ("MAX_LPOL",nlmax,"Maximum l multipole");
     double val=*max_element(wgt.begin(),wgt.end());
     out.set_key("MAXVAL1",val,"maximum value of pixel weights");
     val=*min_element(wgt.begin(),wgt.end());

@@ -97,6 +97,16 @@ void Palette::setPredefined (int num)
       addb(231,242,242,250);
       addb(255,252,252,255);
       break;
+    case 100: // Comptel
+      addb(  0,  0,  0,  0);
+      addb( 36, 64,  0,128);
+      addb( 71,  0,  0,255);
+      addb(117,  0,255,255);
+      addb(152,  0,255,  0);
+      addb(188,255,255,  0);
+      addb(223,255,  0,  0);
+      addb(255,255,255,255);
+      break;
     default:
       planck_fail("Palette #"+dataToString(num)+" not yet supported.");
     }

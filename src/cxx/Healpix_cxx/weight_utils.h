@@ -37,7 +37,7 @@
 #include "healpix_map.h"
 
 /*! Applies the vector \a wgt containing compressed full weights to \a map. */
-void apply_fullweights (Healpix_Map<double> &map,
+template<typename T>void apply_fullweights (Healpix_Map<T> &map,
   const std::vector<double> &wgt);
 
 /*! Computes full weights for a map of the given \a nside at a maximum

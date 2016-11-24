@@ -23,7 +23,7 @@
  */
 
 /*
- *  Copyright (C) 2005 Max-Planck-Society
+ *  Copyright (C) 2005-2016 Max-Planck-Society
  *  \author Martin Reinecke
  */
 
@@ -33,6 +33,13 @@
 #include "bluestein.h"
 #include "fftpack.h"
 #include "ls_fft.h"
+
+typedef struct complex_plan_i
+  {
+  double *work;
+  size_t length, worksize;
+  int bluestein;
+  } complex_plan_i;
 
 complex_plan make_complex_plan (size_t length)
   {
@@ -88,6 +95,12 @@ void complex_plan_backward (complex_plan plan, double *data)
     cfftb (plan->length, data, plan->work);
   }
 
+typedef struct real_plan_i
+  {
+  double *work;
+  size_t length, worksize;
+  int bluestein;
+  } real_plan_i;
 
 real_plan make_real_plan (size_t length)
   {
@@ -289,3 +302,4 @@ void real_plan_backward_c (real_plan plan, double *data)
       }
     }
   }
+

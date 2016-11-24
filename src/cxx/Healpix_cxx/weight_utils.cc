@@ -97,8 +97,16 @@ tsize n_fullweights (int nside)
   return res;
   }
 
-void apply_fullweights (Healpix_Map<double> &map, const vector<double> &wgt,
-  bool setwgt)
+template <typename T> void apply_weight (T &pix, double w, bool setwgt)
+  {
+  if (setwgt)
+    pix=T(w);
+  else
+    if (!approx<double>(pix,Healpix_undef)) pix*=T(1.+w);
+  }
+
+template <typename T> void apply_fullweights (Healpix_Map<T> &map,
+  const vector<double> &wgt, bool setwgt)
   {
   planck_assert (map.Scheme()==RING, "bad map ordering scheme");
   int nside=map.Nside();
@@ -116,10 +124,9 @@ void apply_fullweights (Healpix_Map<double> &map, const vector<double> &wgt,
       {
       int j4=j%qpix;
       int rpix=min(j4,qpix - (shifted ? 1:0) - j4);
-      double w = wgt[vpix+rpix];
-      map[pix+j] = setwgt ? w : (map[pix+j]*(1.+w));
+      apply_weight (map[pix+j],wgt[vpix+rpix],setwgt);
       if (i!=2*nside-1) // everywhere except on equator
-        map[psouth+j] = setwgt ? w : (map[psouth+j]*(1.+w));
+        apply_weight(map[psouth+j],wgt[vpix+rpix],setwgt);
       }
     pix+=qpix<<2;
     vpix+=wpix;
@@ -304,8 +311,14 @@ vector<double> get_fullweights(int nside, int lmax, double epsilon, int itmax)
   return mat.S(x);
   }
 
-void apply_fullweights (Healpix_Map<double> &map, const vector<double> &wgt)
+template <typename T> void apply_fullweights (Healpix_Map<T> &map,
+  const vector<double> &wgt)
   { apply_fullweights (map,wgt,false); }
+
+template void apply_fullweights (Healpix_Map<float> &map,
+  const vector<double> &wgt);
+template void apply_fullweights (Healpix_Map<double> &map,
+  const vector<double> &wgt);
 
 vector<double> get_ringweights(int nside, int lmax, double epsilon, int itmax)
   {

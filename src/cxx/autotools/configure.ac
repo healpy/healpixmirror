@@ -1,4 +1,4 @@
-AC_INIT([healpix_cxx], [3.30.0])
+AC_INIT([healpix_cxx], [3.40.0])
 AM_INIT_AUTOMAKE([foreign subdir-objects -Wall -Werror])
 AM_MAINTAINER_MODE([enable])
 
@@ -76,6 +76,7 @@ AX_CHECK_COMPILE_FLAG([-fcx-limited-range],[CFLAGS="$CFLAGS -fcx-limited-range"]
 
 AC_PROG_CXX
 AC_LANG_PUSH([C++])
+AX_CXX_COMPILE_STDCXX_11
 AC_OPENMP
 CXXFLAGS="$CXXFLAGS $OPENMP_CFLAGS"
 AS_IF(

@@ -25,7 +25,7 @@
 /*! \file wigner.cc
  *  Several C++ classes for calculating Wigner matrices
  *
- *  Copyright (C) 2009-2015 Max-Planck-Society
+ *  Copyright (C) 2009-2016 Max-Planck-Society
  *  \author Martin Reinecke and others (see individual classes)
  */
 
@@ -315,7 +315,7 @@ void wignergen_scalar::prepare (int m1_, int m2_)
   int mlo_=abs(m1_), mhi_=abs(m2_);
   if (mhi_<mlo_) swap(mhi_,mlo_);
   bool ms_similar = ((mhi==mhi_) && (mlo==mlo_));
-  bool flip_m_sign = ((m1*m2)!=(m1_*m2_));
+  bool flip_m_sign = ms_similar && ((m1*m2)!=(m1_*m2_));
 
   m1=m1_; m2=m2_;
   mlo=am1=abs(m1); mhi=am2=abs(m2);
@@ -409,6 +409,7 @@ void wignergen_scalar::calc (int nth, int &firstl, arr<double> &resx) const
     swap (rec1,rec2);
     }
 
+  if ((l==lmax)&&(abs(rec2)<=eps)) { firstl=lmax+1; return; }
   firstl = l;
   if (l>lmax) return;
 
@@ -540,6 +541,7 @@ void wignergen::calc (int nth1, int nth2, int &firstl,
         RENORMALIZE;
       }
     }
+  if ((l==lmax)&&(!any(abs(rec2).gt(eps2)))) { firstl=lmax+1; return; }
   firstl=l;
   if (l>lmax) return;
 

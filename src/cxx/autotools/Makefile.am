@@ -6,7 +6,9 @@ src_c_utils = \
   c_utils/c_utils.c \
   c_utils/c_utils.h \
   c_utils/walltime_c.c \
-  c_utils/walltime_c.h
+  c_utils/walltime_c.h \
+  c_utils/trig_utils.c \
+  c_utils/trig_utils.h
 src_libfftpack = \
   libfftpack/bluestein.h \
   libfftpack/bluestein.c \
@@ -62,6 +64,7 @@ src_cxxsupport = \
   cxxsupport/planck_rng.h \
   cxxsupport/pointing.h \
   cxxsupport/rangeset.h \
+  cxxsupport/crangeset.h \
   cxxsupport/rotmatrix.h \
   cxxsupport/safe_cast.h \
   cxxsupport/safe_ptr.h \

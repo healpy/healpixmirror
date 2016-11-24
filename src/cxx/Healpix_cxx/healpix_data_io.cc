@@ -60,6 +60,19 @@ void get_ring_weights (paramfile &params, int nside, arr<double> &weight)
     weight.fill(1);
   }
 
+vector<double> read_fullweights_from_fits(const std::string &weightfile,
+  int nside)
+  {
+  fitshandle inp;
+  inp.open(weightfile);
+  inp.goto_hdu(2);
+  planck_assert(inp.colname(1)=="COMPRESSED PIXEL WEIGHTS","wrong column name");
+  planck_assert(inp.get_key<int>("NSIDE")==nside,"incorrect NSIDE parameter");
+  vector<double> res;
+  inp.read_entire_column(1,res);
+  return res;
+  }
+
 void read_pixwin (const string &dir, int nside, arr<double> &temp)
   {
   fitshandle inp;

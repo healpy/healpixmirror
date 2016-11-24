@@ -53,7 +53,7 @@ class Palette: public linearMap<Colour>
     void add (float f, const Colour &c)
       { addVal (f, c); }
     void addb (uint8 f, uint8 r,uint8 g, uint8 b)
-      { addVal (f, Colour(r/255.,g/255.,b/255.)); }
+      { addVal (f/255., Colour(r/255.,g/255.,b/255.)); }
     /*! Sets the palette to the predefined palette \a num. */
     void setPredefined(int num);
     /*! Returns the colour corresponding to the value \a f. The colour is
