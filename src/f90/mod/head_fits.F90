@@ -620,6 +620,8 @@ contains
     count_in = 0
     value = ' '
     stcom = ''
+    stval1= ''
+    stcom1= ''
     nlh = size(header)
     statusfits = 0
     long_strn = .false.
