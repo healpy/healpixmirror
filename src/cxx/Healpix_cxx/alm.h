@@ -27,13 +27,14 @@
 /*! \file alm.h
  *  Class for storing spherical harmonic coefficients.
  *
- *  Copyright (C) 2003-2012 Max-Planck-Society
+ *  Copyright (C) 2003-2017 Max-Planck-Society
  *  \author Martin Reinecke
  */
 
 #ifndef PLANCK_ALM_H
 #define PLANCK_ALM_H
 
+#include <vector>
 #include "arr.h"
 
 /*! Base class for calculating the storage layout of spherical harmonic
@@ -120,6 +121,15 @@ template<typename T> class Alm: public Alm_Base
       { for (tsize m=0; m<alm.size(); ++m) alm[m]*=factor; }
     /*! \a a(l,m) *= \a factor[l] for all \a l,m. */
     template<typename T2> void ScaleL (const arr<T2> &factor)
+      {
+      planck_assert(factor.size()>tsize(lmax),
+        "alm.ScaleL: factor array too short");
+      for (int m=0; m<=mmax; ++m)
+        for (int l=m; l<=lmax; ++l)
+          operator()(l,m)*=factor[l];
+      }
+    /*! \a a(l,m) *= \a factor[l] for all \a l,m. */
+    template<typename T2> void ScaleL (const std::vector<T2> &factor)
       {
       planck_assert(factor.size()>tsize(lmax),
         "alm.ScaleL: factor array too short");

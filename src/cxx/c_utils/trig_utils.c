@@ -24,7 +24,7 @@
 
 /*! \file trig_utils.c
  *
- *  Copyright (C) 2016 Max-Planck-Society
+ *  Copyright (C) 2016-2017 Max-Planck-Society
  *  \author Martin Reinecke
  *
  *  Many inspirations for this code come from Tasche and Zeuner: "Improved
@@ -36,9 +36,14 @@
 #include "c_utils.h"
 #include "trig_utils.h"
 
+//#define PRECISE
 void sincos_multi (size_t n, double alpha, double beta, double *s, double *c,
   int stride)
   {
+#ifdef PRECISE
+  for (size_t i=0; i<n; ++i)
+    { s[i*stride]=sin(i*alpha+beta); c[i*stride]=cos(i*alpha+beta); }
+#else
   if (beta!=0.)
     { s[0]=sin(beta); c[0]=cos(beta); }
   else
@@ -53,6 +58,7 @@ void sincos_multi (size_t n, double alpha, double beta, double *s, double *c,
     if (ilim==n) return;
     alpha*=2;
     }
+#endif
   }
 
 void sincos_2pibyn (size_t n, size_t nang, double *s, double *c, int stride)
@@ -106,18 +112,21 @@ void sincos_2pibyn (size_t n, size_t nang, double *s, double *c, int stride)
   }
 
 
-/* Code for sin/cos(2*pi*m/n). Taken from FFTW. */
-static void mysincos(int m, int n, double *s, double *c)
+/* Code for accurate calculation of sin/cos(2*pi*m/n). Adapted from FFTW. */
+void fracsincos(int m, int n, double *s, double *c)
   {
   static const double twopi=6.28318530717958647692;
   double theta, t;
   unsigned octant = 0;
+  UTIL_ASSERT (n>0,"denominator must be positive");
+  m%=n;
+  if (m<0) m+=n;
+
   int quarter_n = n;
 
-  n += n; n += n;
-  m += m; m += m;
+  n<<=2;
+  m<<=2;
 
-  if (m < 0) m += n;
   if (m > n - m) { m = n - m; octant |= 4; }
   if (m - quarter_n > 0) { m = m - quarter_n; octant |= 2; }
   if (m > quarter_n - m) { m = quarter_n - m; octant |= 1; }
@@ -147,7 +156,7 @@ void trigtest(void)
     for (int j=0; j<i; ++j)
       {
       double c, s;
-      mysincos(j,i,&s,&c);
+      fracsincos(j,i,&s,&c);
       UTIL_ASSERT(fabs(sc[2*j+2]-s)<8e-16,"bad sin");
       UTIL_ASSERT(fabs(sc[2*j+3]-c)<8e-16,"bad cos");
       }

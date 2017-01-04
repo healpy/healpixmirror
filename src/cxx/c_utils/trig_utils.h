@@ -24,7 +24,7 @@
 
 /*! \file trig_utils.h
  *
- *  Copyright (C) 2016 Max-Planck-Society
+ *  Copyright (C) 2016-2017 Max-Planck-Society
  *  \author Martin Reinecke
  */
 
@@ -45,6 +45,9 @@ void sincos_multi (size_t n, double alpha, double beta, double *s, double *c,
 /*! Computes sine and cosine of \a i*2pi/n for \a i=[0;nang[. Stores the sines
     in \a s[i*stride] and the cosines in c[i*stride]. */
 void sincos_2pibyn (size_t n, size_t nang, double *s, double *c, int stride);
+
+/*! Computes sin/cos(2*pi*m/n). Adapted from FFTW. */
+void fracsincos(int m, int n, double *s, double *c);
 
 #ifdef __cplusplus
 }

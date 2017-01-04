@@ -13,5 +13,6 @@ int smoothing_cxx_module (int argc, const char **argv);
 int udgrade_cxx_module (int argc, const char **argv);
 int udgrade_harmonic_cxx_module (int argc, const char **argv);
 int compute_weights_module (int argc, const char **argv);
+int needlet_tool (int argc, const char **argv);
 
 #endif

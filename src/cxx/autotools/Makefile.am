@@ -120,7 +120,8 @@ src_healpix_cxx= \
   Healpix_cxx/moc_query.cc \
   Healpix_cxx/weight_utils.h \
   Healpix_cxx/weight_utils.cc \
-  Healpix_cxx/compute_weights_module.cc
+  Healpix_cxx/compute_weights_module.cc \
+  Healpix_cxx/needlet_tool_module.cc
 
 EXTRA_DIST = \
   libfftpack/fftpack_inc.c \
@@ -170,7 +171,7 @@ libhealpix_cxx_la_LIBADD = $(CFITSIO_LIBS)
 
 bin_PROGRAMS = alm2map_cxx anafast_cxx calc_powspec hotspots_cxx map2tga \
   median_filter_cxx mult_alm rotalm_cxx smoothing_cxx syn_alm_cxx udgrade_cxx \
-  udgrade_harmonic_cxx compute_weights
+  udgrade_harmonic_cxx compute_weights needlet_tool
 check_PROGRAMS = hpxtest
 alm2map_cxx_SOURCES = Healpix_cxx/alm2map_cxx.cc
 alm2map_cxx_LDADD = libhealpix_cxx.la
@@ -211,6 +212,9 @@ udgrade_harmonic_cxx_LDFLAGS = -static-libtool-libs
 compute_weights_SOURCES = Healpix_cxx/compute_weights.cc
 compute_weights_LDADD = libhealpix_cxx.la
 compute_weights_LDFLAGS = -static-libtool-libs
+needlet_tool_SOURCES = Healpix_cxx/needlet_tool.cc
+needlet_tool_LDADD = libhealpix_cxx.la
+needlet_tool_LDFLAGS = -static-libtool-libs
 hpxtest_SOURCES=Healpix_cxx/hpxtest.cc
 hpxtest_LDADD = libhealpix_cxx.la
 hpxtest_LDFLAGS = -static-libtool-libs
