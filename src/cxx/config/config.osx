@@ -8,14 +8,14 @@ LS_PICFLAGS:= -fPIC
 CC= gcc
 CL= gcc
 CWARNFLAGS= -Wall -Wextra -Wno-long-long -Wno-unknown-pragmas -Wshadow -Wmissing-prototypes -Wfatal-errors
-CCFLAGS_NO_C= $(CWARNFLAGS) $(LS_PROFILEFLAGS) $(LS_DEBUGFLAGS) $(LS_OMPFLAGS) $(LS_PICFLAGS) $(LS_OPTFLAGS) -fno-strict-aliasing -std=c99 -pedantic -fdata-sections -ffunction-sections
+CCFLAGS_NO_C= $(CWARNFLAGS) $(LS_PROFILEFLAGS) $(LS_DEBUGFLAGS) $(LS_OMPFLAGS) $(LS_PICFLAGS) $(LS_OPTFLAGS) -fno-strict-aliasing -std=c99 -pedantic
 CCFLAGS= $(CCFLAGS_NO_C) -c
 CLFLAGS= -L. -L$(LIBDIR) $(LS_PROFILEFLAGS) $(LS_OMPFLAGS) $(LS_STATICFLAGS) $(LS_PICFLAGS) $(LS_OPTFLAGS) -lm
 
 CXX= g++
 CXXL= g++
 CXXWARNFLAGS= -Wall -Wextra -Wstrict-aliasing=2 -Wundef -Wshadow -Wwrite-strings -Wredundant-decls -Woverloaded-virtual -Wcast-qual -Wcast-align -Wpointer-arith -Wold-style-cast -Wno-unknown-pragmas -Wfatal-errors
-CXXCFLAGS_NO_C= $(CXXWARNFLAGS) $(LS_PROFILEFLAGS) $(LS_DEBUGFLAGS) $(LS_OMPFLAGS) $(LS_PICFLAGS) $(LS_OPTFLAGS) -ansi -fdata-sections -ffunction-sections
+CXXCFLAGS_NO_C= $(CXXWARNFLAGS) $(LS_PROFILEFLAGS) $(LS_DEBUGFLAGS) $(LS_OMPFLAGS) $(LS_PICFLAGS) $(LS_OPTFLAGS) -std=c++11
 CXXCFLAGS= $(CXXCFLAGS_NO_C) -c
 CXXLFLAGS= -L. -L$(LIBDIR) $(LS_PROFILEFLAGS) $(LS_OMPFLAGS) $(LS_STATICFLAGS) $(LS_PICFLAGS) $(LS_OPTFLAGS)
 
