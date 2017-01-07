@@ -25,7 +25,7 @@
  */
 
 /*
- *  Copyright (C) 2003-2011 Max-Planck-Society
+ *  Copyright (C) 2003-2017 Max-Planck-Society
  *  Author: Martin Reinecke
  */
 
@@ -44,6 +44,14 @@ unsigned int healpix_repcount (tsize npix)
   if (npix<1024) return 1;
   if ((npix%1024)==0) return 1024;
   return isqrt (npix/12);
+  }
+
+bool is_iau (const fitshandle &inp)
+  {
+  if (!inp.key_present("POLCCONV")) return false; // no keyword implies COSMO
+  string polcconv=inp.get_key<string>("POLCCONV");
+  planck_assert((polcconv=="COSMO")||(polcconv=="IAU"), "bad POLCCONV keyword");
+  return (polcconv=="IAU");
   }
 
 } // unnamed namespace
@@ -104,6 +112,9 @@ template<typename T> void read_Healpix_map_from_fits
     inp.read_column_raw(2,&mapQ[offset],ppix,offset);
     inp.read_column_raw(3,&mapU[offset],ppix,offset);
     }
+  if (is_iau(inp))
+    for (int i=0; i<mapU.Npix(); ++i)
+      mapU[i]=-mapU[i];
   }
 
 template void read_Healpix_map_from_fits (fitshandle &inp,
@@ -176,6 +187,7 @@ template<typename T> void write_Healpix_map_to_fits
   colname[1] = "Q-pol";
   colname[2] = "U-pol";
   prepare_Healpix_fitsmap (out, mapT, datatype, colname);
+  out.set_key ("POLCCONV", string("COSMO"));
   chunkMaker cm(mapT.Npix(),out.efficientChunkSize(1));
   uint64 offset,ppix;
   while(cm.getNext(offset,ppix))
