@@ -82,12 +82,20 @@ case $CCTYPE in
         ;;
     esac
     changequote(,)
-    gcc43=`echo $GCCVERSION | grep -c '4\.[3456789]'`
+    gcc43=`echo $GCCVERSION | grep -c '^4\.[3456789]'`
+    gcc44=`echo $GCCVERSION | grep -c '^4\.4'`
+    gcc5plus=`echo $GCCVERSION | grep -c '^[56789]\.'`
     changequote([,])
     if test $ENABLE_NATIVE = yes; then
       if test $gcc43 -gt 0; then
         CCFLAGS="$CCFLAGS -march=native"
       fi
+      if test $gcc5plus -gt 0; then
+        CCFLAGS="$CCFLAGS -march=native"
+      fi
+    fi
+    if test $gcc44 -gt 0; then
+      CCFLAGS="$CCFLAGS -fno-tree-fre"
     fi
     ;;
   icc)
@@ -117,12 +125,20 @@ case $CXXTYPE in
         ;;
     esac
     changequote(,)
-    gxx43=`echo $GXXVERSION | grep -c '4\.[3456789]'`
+    gxx43=`echo $GXXVERSION | grep -c '^4\.[3456789]'`
+    gxx44=`echo $GXXVERSION | grep -c '^4\.4'`
+    gxx5plus=`echo $GXXVERSION | grep -c '^[56789]\.'`
     changequote([,])
     if test $ENABLE_NATIVE = yes; then
       if test $gxx43 -gt 0; then
         CXXCFLAGS="$CXXCFLAGS -march=native"
       fi
+      if test $gxx5plus -gt 0; then
+        CXXCFLAGS="$CXXCFLAGS -march=native"
+      fi
+    fi
+    if test $gxx44 -gt 0; then
+      CXXCFLAGS="$CXXCFLAGS -fno-tree-fre"
     fi
     ;;
   icpc)
