@@ -79,13 +79,13 @@
   real(kind=DP),       DIMENSION(:,:),   ALLOCATABLE :: plm
   integer(kind=I4B) :: status
 
-  integer(kind=I8B) :: npixtot, n_plm, ipix
-  integer(kind=I4B) :: mlpol, polar_fits
+  integer(kind=I8B) :: npixtot, n_plm, ipix, npixtot_tmp
+  integer(kind=I4B) :: mlpol
   integer(kind=I4B) :: plm_nside, plm_lmax, plm_pol, plm_mmax
-  integer(kind=I4B) :: nmaps
+  !integer(kind=I4B) :: nmaps, type, polar_fits
   integer(kind=I4B) :: i, j
   integer(kind=I4B) :: nlheader
-  integer(kind=I4B) :: ordering, order_type, type
+  integer(kind=I4B) :: ordering, order_type
   integer(kind=I4B) :: iter, iter_order, polar, n_pols
   integer(kind=I4B) :: simul_type
   integer(kind=I4B) :: n_rings, n_rings_read, won, nmw8
@@ -165,37 +165,45 @@
        & " Enter input file name (Map FITS file): ")
   infile = parse_string(handle, 'infile',default=chline, descr=description, filestatus='old')
 
+  !     --- check that this map is usable for this analysis
+  call check_input_map(code, infile, polarisation) ! this may change polarisation from T to F
+
   !     --- finds out the pixel number of the map and its ordering ---
-  npixtot = getsize_fits(infile, nmaps = nmaps, ordering=ordering, nside=nsmax, &
-  &    mlpol=mlpol, type = type, polarisation = polar_fits, coordsys = coordsys)
-  if (nsmax<=0) then
-     print*,'Keyword NSIDE not found in FITS header!'
-     call fatal_error(code)
-  endif
-  if (type == 3) npixtot = nside2npix(nsmax) ! cut sky input data set
-  if (nsmax/=npix2nside(npixtot)) then
-     print*,"FITS header keyword NSIDE does not correspond"
-     print*,"to the size of the map!"
-     call fatal_error(code)
-  endif
+  ! npixtot = getsize_fits(infile, nmaps = nmaps, ordering=ordering, nside=nsmax, &
+  ! &    mlpol=mlpol, type = type, polarisation = polar_fits, coordsys = coordsys)
 
-  if (polarisation .and. (nmaps >=3) .and. polar_fits == -1) then
-     print*,"The input fits file MAY NOT contain polarisation data."
-     print*,"Proceed at your own risk"
-  endif
+  !    --- get other relevant information ---
+  npixtot_tmp = getsize_fits(infile, ordering=ordering, nside=nsmax, &
+       mlpol=mlpol, coordsys = coordsys)
 
-  if (polarisation .and. (nmaps<3 .or. polar_fits ==0)) then
-     print *,"The file does NOT contain polarisation maps"
-     print *,"only the temperature field will be smoothed"
-     polarisation = .false.
-  endif
+!   if (nsmax<=0) then
+!      print*,'Keyword NSIDE not found in FITS header!'
+!      call fatal_error(code)
+!   endif
+!   if (type == 3) npixtot = nside2npix(nsmax) ! cut sky input data set
+!   if (nsmax/=npix2nside(npixtot)) then
+!      print*,"FITS header keyword NSIDE does not correspond"
+!      print*,"to the size of the map!"
+!      call fatal_error(code)
+!   endif
 
-  !     --- check ordering scheme ---
-  if ((ordering/=1).and.(ordering/=2)) then
-     print*,'The ordering scheme of the map must be RING or NESTED.'
-     print*,'No ordering specification is given in the FITS-header!'
-     call fatal_error(code)
-  endif
+!   if (polarisation .and. (nmaps >=3) .and. polar_fits == -1) then
+!      print*,"The input fits file MAY NOT contain polarisation data."
+!      print*,"Proceed at your own risk"
+!   endif
+
+!   if (polarisation .and. (nmaps<3 .or. polar_fits ==0)) then
+!      print *,"The file does NOT contain polarisation maps"
+!      print *,"only the temperature field will be smoothed"
+!      polarisation = .false.
+!   endif
+
+!   !     --- check ordering scheme ---
+!   if ((ordering/=1).and.(ordering/=2)) then
+!      print*,'The ordering scheme of the map must be RING or NESTED.'
+!      print*,'No ordering specification is given in the FITS-header!'
+!      call fatal_error(code)
+!   endif
 
   order_type = ordering
 

@@ -59,18 +59,27 @@ function euler_matrix_new, a1, a2, a3, $
 ;     		rotation a2 around interm   X 
 ;     		rotation a3 around final    Z
 ;	 DEFAULT,  classical mechanics convention
+;           same as: rotation a3 around Z,
+;                    rotation a2 around initial (unrotated) X,
+;                    rotation a1 around initial (unrotated) Z.
 ;
 ;
 ; 	Y : 	rotation a1 around original Z
 ;     		rotation a2 around interm   Y
 ;     		rotation a3 around final    Z
 ;	 quantum mechanics convention
+;           same as: rotation a3 around Z,
+;                    rotation a2 around initial (unrotated) Y,
+;                    rotation a1 around initial (unrotated) Z.
 ;
 ;
 ; 	ZYX : 	rotation a1 around original Z
 ;     		rotation a2 around interm   Y
 ;     		rotation a3 around final    X
 ;	 aeronautics convention
+;           same as: rotation a3 around X,
+;                    rotation a2 around initial (unrotated) Y,
+;                    rotation a1 around initial (unrotated) Z.
 ;
 ;       * these last three keywords are obviously mutually exclusive *
 ;
@@ -90,6 +99,7 @@ function euler_matrix_new, a1, a2, a3, $
 ;	March 2002, EH, Caltech, rewritting of euler_matrix
 ;       Dec   2012, Paddy Leahy, Manchester: use double precision d2r if needed.
 ;       2014-08: EH, HELP keyword added
+;       2016-11: EH, added description of rotations around initial axes
 ;
 ;  convention   euler_matrix_new           euler_matrix
 ;      X:       M_new(a,b,c,/X)  =  M_old(-a,-b,-c,/X) = Transpose( M_old(c, b, a,/X))

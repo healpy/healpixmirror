@@ -147,6 +147,15 @@ pro proj2out, planmap, Tmax, Tmin, color_bar, dx, title_display, sunits, $
 ;    values in [0,255] setting the opacity of each pixel
 ;   while the IDL version expects a color mask (ie, a vector of size 255) with
 ;   values in [0,255] setting the opacity of each color
+;
+;
+; In GDL CVS of 2017-01-06
+;     Device, Decomposed=    seems to work
+;     !D.n_colors            OK
+;     write_gif              OK
+;     set_plot,'Z' & device,set_pixel_depth=    remains at 24bits
+;     write_png, transparent   Not really
+;     !p.font               Only !p.font=-1
 ;-
 ;===============================================================================
 
@@ -951,9 +960,9 @@ if do_image then begin
             write_png, file_image, image3d
         endif else begin
             if (keyword_set(transparent)) then begin
-                mytransp = (in_idl) ? transp_colors  : 0 ; transp_colors[image] ; no transparent support in GDL
+                ;mytransp = (in_idl) ? transp_colors  : 0 ; transp_colors[image] ; no transparent support in GDL
                 ;mytransp = (in_idl) ? transp_colors  : transp_colors[image]    ; GDL same as IDL doc
-                ;mytransp = transp_colors                                       ; GDL same as IDL actual behavior
+                mytransp = transp_colors ; test on 2017-01-06                  ; GDL same as IDL actual behavior
                 write_png,file_image, image,red,green,blue, transparent=mytransp
             endif else begin
                 write_png,file_image, image,red,green,blue

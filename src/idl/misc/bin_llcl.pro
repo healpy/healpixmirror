@@ -39,7 +39,7 @@ pro bin_llcl, llcl_in, ubin, l_out, llcl_out, dllcl, uniform=uniform, deltal=del
 ;
 ;
 ; INPUTS
-;   llcl_in : input l*(l+1)*Cl/2Pi, 1D vector
+;   llcl_in : input l*(l+1)*Cl/2Pi, 1D vector, defined for each l from l=0
 ;   bin : can be either a scalar = dl
 ;     or a vector defining the bins boundaries : 
 ;     [low0, low1, low2, ...,low(n-2), low(n-1)+1]
@@ -62,7 +62,7 @@ pro bin_llcl, llcl_in, ubin, l_out, llcl_out, dllcl, uniform=uniform, deltal=del
 ;     binned. By default, the input C(l) is binned as is.
 ;
 ;   uniform: if set, each l is given the same weight in the bin.
-;     By default, a weighing propto (2*l+1) (inverse cosmic
+;     By default, a weighting propto (2*l+1) (inverse cosmic
 ;     variance) is applied to each l.
 ;     In any cases, the l_out is the same
 ;
@@ -74,6 +74,7 @@ pro bin_llcl, llcl_in, ubin, l_out, llcl_out, dllcl, uniform=uniform, deltal=del
 ;  2008-03-03: ignore bins beyond data lmax, truncate last valid bin if necessary.
 ;  2013-03-15: correctly deals with optional Dllcl argument
 ;  2014-07-21: correction of a mistyped call to MESSAGE mostly showing up under GDL
+;  2016-11-23: typo corrections in this header
 ;-
 
 

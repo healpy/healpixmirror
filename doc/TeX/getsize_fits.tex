@@ -78,8 +78,9 @@ information alone\\
                    astrophysical coordinates. 
 		'G' = Galactic, 'E' = ecliptic, 'C' = celestial = equatorial. 
 		Returns a empty string if not found. \\
-\optional{polcconv\mytarget{sub:getsize_fits:polcconv}} (OPTIONAL) & I4B & OUT & polarisation coordinate convention (see
-             Healpix primer for details) 0=unknown, 1=COSMO, 2=IAU \\
+\optional{polcconv\mytarget{sub:getsize_fits:polcconv}} (OPTIONAL) & I4B & OUT & polarisation coordinate convention
+% (see Healpix primer for details) 0=unknown, 1=COSMO, 2=IAU \\
+ (see Healpix primer for details) 0=unknown, 1=COSMO, 2=IAU, 3=neither COSMO nor IAU \\ % 2017-01-09
 \optional{extno\mytarget{sub:getsize_fits:extno}} (OPTIONAL)  & I4B & IN & extension number (0 based) for which information
              is provided. Default = 0 (first extension). 
 \end{tabular}

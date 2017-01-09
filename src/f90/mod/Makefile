@@ -22,6 +22,7 @@ obj0  = healpix_types.o cgetEnvironment.o indmed.o utilities.o
 obj1  = bit_manipulation.o extension.o long_intrinsic.o obsolete.o ran_tools_dist.o rngmod.o
 obj2  = healpix_fft.o misc_utils.o
 obj3  = head_fits.o num_rec.o statistics.o paramfile_io.o 
+#obj3  = head_fits.o num_rec.o statistics_stack.o paramfile_io.o 
 obj4  = pix_tools.o 
 obj5  = coord_v_convert.o fitstools.o udgrade_nr.o 
 obj6  = mask_tools.o alm_tools.o

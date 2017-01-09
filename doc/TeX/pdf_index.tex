@@ -16,6 +16,29 @@
 
 \newcommand{\facname}{} % must be here because it is in idl.tex
 \newcommand{\FACNAME}{}
+\newcommand{\remoteloc}{http://healpix.sourceforge.net}
+%\newcommand{\remoteloc}{../../../../../../../../../../../tmp/doc}
+%\newcommand{\remoteloc}{\$HEALPIX/tmp/doc}
+
+% works with 
+%   - (MacOS): Preview, Skim, Acrobat Reader, xpdf
+%   - (Linux):
+
+
+
+\newcommand{\linksfn}[1]{%
+(\href{#1}{local}%
+\footnote{Opens PDF file found in current working directory, if available. Note that the file opened may be outdated.}/%
+\href{\remoteloc/pdf/#1}{remote}%
+\footnote{Downloads and opens latest PDF file from \href{\remoteloc/documentation.php}\remoteloc.})}
+
+\newcommand{\links}[1]{%
+(\href{#1}{local}%
+/\href{\remoteloc/pdf/#1}{remote})}
+
+%tried nextactionraw: http://tex.stackexchange.com/questions/136352/how-to-make-a-link-open-multiple-pages-when-clicked
+% without success
+
 \externaldocument{csub}
 \externaldocument{intro}
 \externaldocument{install}
@@ -32,13 +55,21 @@
 %The following documentation is available in the form of .pdf files.
 {\Large HEALPix \hpxversion\ PDF documentation:}
 \begin{itemize}
-    \item \href{intro.pdf}{The HEALPix \textbf{Primer}}
-    \item \href{install.pdf}{HEALPix Facility \textbf{Installation} Guidelines}
-    \item \href{facilities.pdf}{HEALPix \textbf{Fortran90 Facilities} User Guidelines}
-    \item \href{subroutines.pdf}{HEALPix \textbf{Fortran90 Subroutines} Overview}
-    \item \href{idl.pdf}{HEALPix \textbf{IDL Facilities} Overview}
+    %\item \href{intro.pdf}{The HEALPix \textbf{Primer}}
+    %\item \href{install.pdf}{HEALPix Facility \textbf{Installation} Guidelines}
+    %\item \href{facilities.pdf}{HEALPix \textbf{Fortran90 Facilities} User Guidelines}
+    %\item \href{subroutines.pdf}{HEALPix \textbf{Fortran90 Subroutines} Overview}
+    %\item \href{idl.pdf}{HEALPix \textbf{IDL Facilities} Overview}
+    %\item \href{csub.pdf}{HEALPix \textbf{C Subroutines} Overview}
+%
+    \item {The HEALPix \textbf{Primer}} 				\linksfn{intro.pdf}
+    \item {HEALPix Facility \textbf{Installation} Guidelines} 		\links{install.pdf}
+    \item {HEALPix \textbf{Fortran90 Facilities} User Guidelines}	\links{facilities.pdf}
+    \item {HEALPix \textbf{Fortran90 Subroutines} Overview}		\links{subroutines.pdf}
+    \item {HEALPix \textbf{IDL Facilities} Overview}			\links{idl.pdf}
 %    \item \textcolor{lightgray} {Ximview Help Page (HTML Only)}
-    \item \href{csub.pdf}{HEALPix \textbf{C Subroutines} Overview}
+    \item {HEALPix \textbf{C Subroutines} Overview}			\links{csub.pdf}
+%
     \item \textcolor{lightgray} {HEALPix C++ Facilities and Subroutines Overview (HTML Only)}
     \item \textcolor{lightgray} {HEALPix Java Overview (HTML Only)}
     \item \textcolor{lightgray} {HEALPix Python Overview (HTML Only)}

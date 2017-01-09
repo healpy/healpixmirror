@@ -67,20 +67,32 @@ matrix parametrized by three angles and three axes of rotation.
 	rotation a1 around original Z axis, \\
 	rotation a2 around intermediate X axis, \\
         rotation a3 around final Z axis \\
-        (see Goldstein for more details). \\
+        (see \htmladdnormallink{Goldstein (1951)}{https://en.wikipedia.org/wiki/Classical_Mechanics_(Goldstein_book)} for more details). \\
+	{\em Equivalent to:} \\
+	rotation a3 around Z axis, \\
+	rotation a2 around initial (unrotated) X axis, \\
+	rotation a1 around initial (unrotated) Z axis.\\
 	\default{this convention is used}
 
     \item[Y=] \mytarget{idl:euler_matrix_new:y} 
       if set, uses the quantum mechanics convention (ZYZ):\\
 	rotation a1 around original Z axis, \\
 	rotation a2 around intermediate Y axis, \\
-        rotation a3 around final Z axis.
+        rotation a3 around final Z axis.\\
+	{\em Equivalent to:} \\
+	rotation a3 around Z axis, \\
+	rotation a2 around initial (unrotated) Y axis, \\
+	rotation a1 around initial (unrotated) Z axis.
 
     \item[ZYX=] \mytarget{idl:euler_matrix_new:zyx} 
       if set, uses the aeronautics convention (ZYX):\\
 	rotation a1 around original Z axis, \\
 	rotation a2 around intermediate Y axis, \\
-        rotation a3 around final X axis.
+        rotation a3 around final X axis.\\
+	{\em Equivalent to:} \\
+	rotation a3 around X axis, \\
+	rotation a2 around initial (unrotated) Y axis, \\
+	rotation a1 around initial (unrotated) Z axis.
   \end{kwlist}
 \end{keywords}  
 

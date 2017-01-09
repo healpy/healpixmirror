@@ -1121,21 +1121,21 @@ polarisation power spectra.
 \vskip 0.3cm
 \noindent{\bf{How \healpix deals with these discrepancies}}\\
 The FITS keyword {\tt POLCCONV} has been introduced in \healpix 2.0 to describe the
-polarisation coordinate convention applied to the data contained in the file. Its value is either {\tt
-  COSMO} for files following the Healpix/CMB/{\em Planck} convention (default
-for sky map synthetized with Healpix routine 
-\htmlref{{\tt synfast}}{fac:synfast}
+polarisation coordinate convention applied to the data contained in the file. 
+Its value is either {\tt COSMO} for files following the Healpix/CMB/{\em Planck} convention 
+(default for sky map synthetized with Healpix routine \htmlref{{\tt synfast}}{fac:synfast})
 or {\tt IAU} for those
 following the IAU convention, as defined above. Absence of this keyword is
 interpreted as meaning {\tt COSMO}.
 
+The facilities 
+\htmlref{{\tt anafast}}{fac:anafast} and 
+\htmlref{{\tt smoothing}}{fac:smoothing} will stop with an error message if the map to analyze follows the 'IAU' convention, or if the convention is explicitely set to a value different from 'COSMO' and 'IAU'.\\
+They will issue a warning if the convention used can not be determined from the FITS header.
+
 The \htmlref{{\tt change\_polcconv}}{idl:change_polcconv} IDL facility is provided to add this keyword or
 change/update its value and swap the sign of the $U$ Stokes parameter, when applicable, in
 an existing FITS file.
-
-The facility \htmlref{{\tt anafast}}{fac:anafast} will crash if the map to analyze follows the 'IAU'
-convention, and issue a warning if the convention used can not be determined.
-
 
 %------------------------ P _ l _ m -------------------
 %

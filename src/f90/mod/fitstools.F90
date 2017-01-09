@@ -108,7 +108,8 @@ module fitstools
   ! subroutine putrec                      NA
   ! subroutine get_clean_header            NA
   !
-
+  ! subroutine check_input_map
+  !
   use healpix_types
   use misc_utils, only : fatal_error, assert, strupcase, string
   implicit none
@@ -245,6 +246,7 @@ module fitstools
   public :: dump_alms, alms2fits, fits2alms, write_alms, read_alms, read_conbintab
   public :: printerror, read_par, getsize_fits, number_of_alms, getnumext_fits
   public :: putrec
+  public :: check_input_map
 
 contains
 
@@ -2103,9 +2105,10 @@ contains
     !                     empty if not found.
     !
     !     polcconv     = (OPTIONAL, I4B, OUT) coordinate convention for polarisation
-    !                   0: unknown
+    !                   0: not found
     !                   1: COSMO (default for Healpix)
     !                   2: IAU
+    !                   3: neither COSMO nor IAU
     !
     !     extno = (OPTIONAL, IN) specify FITS extension to look at (0 based)
     !                  default = 0 (first extension)
@@ -2469,9 +2472,11 @@ contains
 
        call ftgkys(unit,'POLCCONV',polcconv_val,comment,status)
        if (status == 0) then
+          polcconv_in = 3 ! neither COSMO nor IAU
           if (trim(polcconv_val) == 'COSMO') polcconv_in = 1
           if (trim(polcconv_val) == 'IAU')   polcconv_in = 2
        else
+          polcconv_in = 0 ! not found
           status = 0
        endif
 
@@ -2712,11 +2717,84 @@ contains
 
     return
   end subroutine get_clean_header
-  !====================================================================
 
   
+  !====================================================================
+  subroutine check_input_map(code, mapfile, polarisation)
+  !====================================================================
+    ! check out that file contains a valid HEALPIX map
+    ! on input polarisation is set to T if one wants to get polarisation data from map,
+    ! and on output it will be set to F if that is not possible
+    !====================================================================
+    use pix_tools, only: nside2npix, npix2nside
+    character(len=*)                      :: code
+    character(len=*)                      :: mapfile
+    logical(LGT), intent(inout)           :: polarisation
+    
+    !
+    integer(I4B) :: nmaps, order_map, nsmax, mlpol, type, polar_fits, polcconv
+    integer(I4B) :: npixtot
+    character(len=1) :: coordsys
+    character(len=*), parameter :: primer_url = 'http://healpix.sf.net/pdf/intro.pdf'
+    !====================================================================
+    
+    npixtot = getsize_fits(mapfile, nmaps = nmaps, ordering=order_map, nside=nsmax,&    
+         &              mlpol=mlpol, type = type, polarisation = polar_fits, &
+         &             coordsys=coordsys, polcconv=polcconv)
+    
+    if (nsmax<=0) then
+       print*,"Keyword NSIDE not found in FITS header!"
+       call fatal_error(code)
+    endif
+    if (type == 3) npixtot = nside2npix(nsmax) ! cut sky input data set
+    if (nsmax/=npix2nside(npixtot)) then
+       print 9000,"FITS header keyword NSIDE does not correspond"
+       print 9000,"to the size of the map!"
+       call fatal_error(code)
+    endif
 
-
-
+    if (polarisation .and. (nmaps >=3) .and. polar_fits == -1) then
+       print 9000,"The input fits file MAY NOT contain polarisation data."
+       print 9000,"Proceed at your own risk"
+    endif
+    
+    if (polarisation .and. (nmaps<3 .or. polar_fits ==0)) then
+       print 9000,"The file does NOT contain polarisation maps"
+       print 9000,"only the temperature field will be analyzed"
+       polarisation = .false.
+    endif
+    
+    if (polarisation .and. (polcconv == 3)) then
+       print 9000,"The polarisation coordinate convention (POLCCONV) is neither COSMO nor IAU."
+       print 9000,code//" can not proceed with these data"
+       print 9000,"See Healpix primer ("//primer_url//") for details."
+       call fatal_error(code)
+    endif
+    
+    if (polarisation .and. (polcconv == 2)) then
+       print 9000,"The input map contains polarized data in the IAU coordinate convention (POLCCONV)"
+       print 9000,code//" can not proceed with these data"
+       print 9000,"See Healpix primer ("//primer_url//") for details."
+       call fatal_error(code)
+    endif
+    
+    if (polarisation .and. (polcconv == 0)) then
+       print 9000,"WARNING: the polarisation coordinate convention (POLCCONV) can not be determined"
+       print 9000,"         COSMO will be assumed."
+       print 9000,"See Healpix primer ("//primer_url//") for details."
+    endif
+    
+    !     --- check ordering scheme ---
+    if ((order_map/=1).and.(order_map/=2)) then
+       print 9000,"The ordering scheme of the map must be RING or NESTED."
+       print 9000,"No ordering specification is given in the FITS-header!"
+       call fatal_error(code)
+    endif
+    
+9000 format(a)
+    
+    return
+  end subroutine check_input_map
+      
 
 end module fitstools

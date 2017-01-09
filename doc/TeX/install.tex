@@ -520,7 +520,7 @@ Postscript and PNG files created by IDL (or GDL). \\
 If the HEALPix configuration file is
 sourced as described in \S~\ref{subsub:conf}, the aliases {\tt hidl}, {\tt hidlde}, {\tt hgdl} and {\tt hgdlde}
 are also defined to give you access to HEALPIX routines from IDL (and GDL).\\
-See the \linklatexhtml{\healpix IDL Document}{idl.pdf}{idl.html} for more
+See the \linklatexhtml{\healpix IDL Document}{idl.pdf}{idl.htm} for more
 information on using \healpix IDL/GDL together with other IDL libraries.
 
 
@@ -1131,7 +1131,7 @@ A proper fix requires the user to ask the local system
 administrator to adjust the local IDL script.
 
 \subsection{Using \healpix IDL together with other IDL libraries}
-See the \htmlref{eponymous section}{idl:other_idl_libs} in the \linklatexhtml{``IDL Facilities Overview''}{idl.pdf}{idl.html}
+See the \htmlref{eponymous section}{idl:other_idl_libs} in the \linklatexhtml{``IDL Facilities Overview''}{idl.pdf}{idl.htm}
 
 \subsection{Mac OS X,  X11 and IDL cursor}
 \label{install:macos_idl_cursor}
@@ -1333,9 +1333,11 @@ All other features work properly, including the \mylinkext{idl:mollview:latex}{\
 \subsubsection[Fortran]{%
 	Fortran 90 \linklatexhtml{facilities}{facilities.pdf}{facilities.htm} and
 	\linklatexhtml{subroutines}{subroutines.pdf}{subroutines.htm}}
-\item {\tt median_filter} facility: faster by moving an internal array from heap to stack;
+\begin{itemize}
+\item {\tt median\_filter} facility: faster by moving an internal array from heap to stack;
 slightly different output: when median is computed over an even number of pixels $n\ge 100$, sorted in $[1,n]$,
 the output is $d(n/2)$ instead of $(d(n/2)+d(n/2+1))/2$ previously. Result remain $d(n/2+1)$ for odd $n$.
+\end{itemize}
 \subsubsection[IDL]{\linklatexhtml{IDL}{idl.pdf}{idl.htm}}
 \subsubsection[Java]{\htmladdnormallink{Java}{http://healpix.sourceforge.net/html/java/index.html}}
 \subsubsection[Python]{\htmladdnormallink{Python}{http://healpy.readthedocs.org/en/latest/}}

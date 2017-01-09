@@ -184,7 +184,7 @@
   if (twomaps) n_maps = 2
 
   !     --- check that this map is usable for this analysis
-  call check_input_map(infile(1), polarisation) ! this may change polarisation from T to F
+  call check_input_map(code, infile(1), polarisation) ! this may change polarisation from T to F
 
   !     --- finds out the pixel number of the map and its ordering and coordinates ---
   npixtot = getsize_fits(infile(1), ordering=order_map(1), &
@@ -192,7 +192,7 @@
   if (trim(coordsys) == '') coordsys = 'unknown'
 
   if (twomaps) then
-     call check_input_map(infile(2), polarisation)
+     call check_input_map(code, infile(2), polarisation)
      npixtot2 = getsize_fits(infile(2), ordering=order_map(2), &
           &                  nside=nsmax2, mlpol=mlpol2, coordsys=coordsys2)
      if (trim(coordsys2) == '') coordsys2 = 'unknown'
