@@ -12,7 +12,7 @@
 \begin{facility}
 {This program performs harmonic analysis of the \healpix maps 
 up to a user
-specified maximum spherical harmonic order $\ell_{max}$.
+specified maximum spherical harmonic order $\lmax$.
 The integrals are computed on the whole sphere, unless the user 
 chooses  a provided option 
 to excise from the input map(s) a simple, constant latitude, symmetric cut, and/or
@@ -21,8 +21,8 @@ Scalar, or scalar and tensor, spherical harmonic coefficients are evaluated
 from the map(s) if the input provides, respectively, only the temperature,
 or temperature and polarisation maps.
 The total operation count scales as 
-${\cal {O}}(N_{\rm pix}^{3/2} )$ with a prefactor
-depending on $\ell_{max}$. %
+${\cal {O}}(N_{\textrm{pix}}^{3/2} )$ with a prefactor
+depending on $\lmax$. %
 \\ %
 Anafast reads one (two) file(s) containing the map(s) and produces 
 a file containing the temperature auto- (or cross-) power spectrum
@@ -61,12 +61,12 @@ of the maps.}%
 
 \begin{recommend}
 {Execution of \thedocid\ requires a user to specify the maximum 
-spherical harmonic order $\ell_{max}$ up to which the harmonic 
+spherical harmonic order $\lmax$ up to which the harmonic 
 decomposition of the input maps will be performed.
 Since there are no formal limits on parameter
-$\ell_{max}$ enforced by \thedocid, the user should make his/her choices
+$\lmax$ enforced by \thedocid, the user should make his/her choices
 judiciously. 
-Hereafter it is convenient to specify $\ell_{max}$  
+Hereafter it is convenient to specify $\lmax$  
 in terms of the \healpix
 map resolution parameter $nsmax$.
 
@@ -74,7 +74,7 @@ If the function to be analysed is strictly  band-width
 limited, or nearly band-width limited (as in the case of 
 a Gaussian beam smoothed signal discretized at a rate of a few pixels
 per beam area), it is  sufficient to run \thedocid\ with
-$\ell_{max} \approx 2\cdot nsmax$, with a very good $C_\ell$ 
+$\lmax \approx 2\cdot nsmax$, with a very good $C_\ell$ 
 error performance 
 already in the raw (i.e. uncorrected quadrature) harmonic transform mode. 
 If quadrature 
@@ -93,8 +93,8 @@ the following should be kept in mind:
 $\bullet$ Spherical harmonics discretized using \healpix 
 (either sampled at
 pixel centers, or avaraged over pixel areas) form a linearly independent
-system up to $\ell_{max} = 3 \cdot nsmax -1$. Hence, the functions which are
-strictly band-width limited to $\ell_{max} = 3 \cdot nsmax - 1 $ 
+system up to $\lmax = 3 \cdot nsmax -1$. Hence, the functions which are
+strictly band-width limited to $\lmax = 3 \cdot nsmax - 1 $ 
 can be fully
 spectrally resolved with \thedocid, albeit with integration errors
 in the uncorrected quadrature mode, which grow up to 
@@ -102,8 +102,8 @@ $\myhtmlimage{}\delta C_\ell \propto \epsilon \cdot C_\ell$, with $\epsilon <0.1
 at the highest values of $\ell$. These integration  errors 
 can be efficiently 
 reduced
-using \thedocid\ in the iterative mode. Although this $\ell_{max}$ range
---- $2 \cdot nsmax < \ell_{max} < 3 \cdot nsmax - 1$ --- is easily
+using \thedocid\ in the iterative mode. Although this $\lmax$ range
+--- $2 \cdot nsmax < \lmax < 3 \cdot nsmax - 1$ --- is easily
 manageable with \thedocid\ used on strictly band-width limited functions,
 it should be used with caution in basic and automated applications, e.g.
 Monte Carlo simulations.
@@ -135,7 +135,7 @@ executing \thedocid\ under such cicumstances!
 \end{f90facility}
 
 %% \begin{options}
-%%   \begin{optionlistwide}{} %%%% NOTE the ``extra'' brace here %%%%
+%%   \begin{optionlistwide}{} %%%% NOTE the ''extra'' brace here %%%%
 %%     \item[{\tt -d}]
 %%     \item[{\tt --double}] If present, all internal variables and arrays will be in double precision, and the output data will be written on disk at double precision (see Notes on I/O precision on page~\pageref{page:ioprec})
 %%     \item[{\tt -s}]
@@ -143,16 +143,18 @@ executing \thedocid\ under such cicumstances!
 %%   \end{optionlistwide}
 %% \end{options}
 \begin{options}
-  \begin{optionlistwide}{} %%%% NOTE the ``extra'' brace here %%%%
+  \begin{optionlistwide}{} %%%% NOTE the ''extra'' brace here %%%%
     \item[{\tt -d}]
-    \item[{\tt -}{\tt -}{\tt double}] double precision mode (see Notes on double/single precision modes on page~\pageref{page:ioprec})
+    \item[{\tt -}{\tt -}{\tt double}] double precision mode (see 
+  \htmlref{Notes on double/single precision modes}{fac:subsec:ioprec}%
+\latexhtml{ on page~\pageref{page:ioprec}}{})
     \item[{\tt -s}]
     \item[{\tt -}{\tt -}{\tt single}] single precision mode (default)
   \end{optionlistwide}
 \end{options}
 
 \begin{qualifiers}
-  \begin{qulist}{} %%%% NOTE the ``extra'' brace here %%%%
+  \begin{qulist}{} %%%% NOTE the ''extra'' brace here %%%%
     \item[{infile = }]\mytarget{fac:anafast:infile}%
  Defines the input map file. 
 	(default= map.fits)
@@ -224,7 +226,7 @@ the name is assumed to be 'weight\_ring\_n0xxxx.fits' where xxxx is nsmax)
 \item[{w8filedir = }]\mytarget{fac:anafast:w8filedir}%
  Gives the directory where the ring weight files are
 to be found (default= no entry --- \thedocid\ searches the default
-directories, see introduction)
+directories, see \htmlref{''Default file names and directories'' in introduction}{fac:subsec:defdir})
 \item[{won = }]\mytarget{fac:anafast:won}%
  Set this to 1 if ring weight files are to be used,
 otherwise set it to 0 (or 2). (default= 0)
@@ -300,7 +302,7 @@ longer be used.
 \end{datasets}
 
 \begin{support}
-  \begin{sulist}{} %%%% NOTE the ``extra'' brace here %%%%
+  \begin{sulist}{} %%%% NOTE the ''extra'' brace here %%%%
   \item[\htmlref{synfast}{fac:synfast}] This \healpix facility can generate a map for analysis by \thedocid.
   \item[\htmlref{alteralm}{fac:alteralm}] This \healpix Fortran facility can be
   used to modify the $a_{\ell m}$ extracted by \thedocid\ before they are used as

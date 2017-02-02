@@ -18,8 +18,8 @@ theoretical power spectra,
 or as constrained realisations of such fields characterised by the user
 provided $a_{\ell m}$ coefficients and/or power spectra.
 Total operation count scales as
- ${\cal {O}}(N_{\rm pix}^{3/2})$ with a prefactor dependent on the limiting spherical harmonics
-order $\ell_{max}$ of the actual problem. 
+ ${\cal {O}}(N_\textrm{pix}^{3/2})$ with a prefactor dependent on the limiting spherical harmonics
+order $\lmax$ of the actual problem. 
 The map resolution, Gaussian beam FWHM,  
 and random seed for the simulation can be selected by the user.
 Spherical harmonics are either generated using the recurrence relations
@@ -35,20 +35,22 @@ in \healpix v2.20. }
 \end{f90facility}
 
 \begin{options}
-  \begin{optionlistwide}{} %%%% NOTE the ``extra'' brace here %%%%
+  \begin{optionlistwide}{} %%%% NOTE the ''extra'' brace here %%%%
     \item[{\tt -d}]
-    \item[{\tt -}{\tt -}{\tt double}] double precision mode (see Notes on double/single precision modes on page~\pageref{page:ioprec})
+    \item[{\tt -}{\tt -}{\tt double}] double precision mode (see 
+\htmlref{Notes on double/single precision modes}{fac:subsec:ioprec}
+\latexhtml{ on page~\pageref{page:ioprec}}{})
     \item[{\tt -s}]
     \item[{\tt -}{\tt -}{\tt single}] single precision mode (default)
   \end{optionlistwide}
 \end{options}
 
 \begin{qualifiers}
-  \begin{qulistwide}{} %%%% NOTE the ``extra'' brace here %%%%
+  \begin{qulistwide}{} %%%% NOTE the ''extra'' brace here %%%%
     \item[{infile = }]\mytarget{fac:synfast:infile}%
  Defines the input power spectrum file,
 	(default= cl.fits). Note that {\tt infile} is now optional :
-    synfast can run even if only {\tt almsfile} is provided.
+    \thedocid\ can run even if only {\tt almsfile} is provided.
     \item[{outfile = }]\mytarget{fac:synfast:outfile}%
  Defines the output (RING ordered) map file,
 (default= map.fits). Note that {\tt outfile} is now optional: if it set to 
@@ -69,7 +71,7 @@ spatial derivatives (3 fields),
 (default= 32)
      \item[{nlmax = }]\mytarget{fac:synfast:nlmax}%
  Defines the maximum $\ell$ value 
-to be used in the simulation. WARNING: $\ell_{max}$ can not exceed
+to be used in the simulation. WARNING: $\lmax$ can not exceed
 the value $4\cdot$ {\tt nsmax}, because the coefficients of the  average Fourier 
 pixel window functions
 are precomputed and provided up to this limit.
@@ -84,7 +86,7 @@ of the simulated Gaussian beam.
 (default= 420.0)
 %
     \item[{beam\_file = }]\mytarget{fac:synfast:beam_file}%
- Defines the FITS file describing the
+ Defines the FITS file (see \htmlref{''Beam window function files'' in introduction}{fac:subsec:beamfiles}) describing the
     Legendre window
     function of the circular beam to be used for the
     simulation. If set to an existing file name, it will override the
@@ -114,13 +116,17 @@ by the beam or pixel window function (with the assumption that they already have
  Defines the input  filename for a file
     containing  precomputed Legendre polynomials $P_{\ell m}$.
 (default= `')
+%
      \item[{windowfile = }]\mytarget{fac:synfast:windowfile}%
  Defines the input filename  for the pixel
     smoothing windows 
-(default= pixel\_window\_n????.fits, see Notes on default files and directories on page~\pageref{page:defdir})
+(default= pixel\_window\_n????.fits, see below).
+%
      \item[{winfiledir = }]\mytarget{fac:synfast:winfiledir}%
   Defines the directory in which windowfile
-    is located (default : see Notes on default files and directories on page~\pageref{page:defdir}).
+    is located (default: see 
+\htmlref{Notes on default files and directories}{fac:subsec:defdir}%
+\latexhtml{ on page~\pageref{page:defdir}}{}).
   \end{qulistwide}
 \end{qualifiers}
 
@@ -129,11 +135,11 @@ by the beam or pixel window function (with the assumption that they already have
 Synfast reads the power spectrum from a file in  ascii FITS
 format. This can contain either just the temperature power spectrum $C^T_{\ell}$s or 
 temperature and polarisation power spectra: $C^T_{\ell}$, $C^E_{\ell}$, $C^B_{\ell}$
-and $C^{T\times E}_{\ell}$ (see \mylink{fac:synfast:note1}{Note 1, below}). If {\tt simul\_type = 2} synfast generates 
+and $C^{T\times E}_{\ell}$ (see \mylink{fac:synfast:note1}{Note 1, below}). If {\tt simul\_type = 2} \thedocid\ generates 
 Q and U maps as well as the temperature map. The output map(s)
 is (are) saved in a FITS file. 
 The $C_{\ell}$s are used up to the specified 
-$\ell_{lmax}$, which can not exceed $4\times$ nsmax. If {\tt simul\_type = 3} or
+$\lmax$, which can not exceed $4\times$ nsmax. If {\tt simul\_type = 3} or
 {\tt 4} the first derivatives of the temperature field or the first and second derivatives respectively
 are output as well as the temperature itself: $T(p)$, $\left({\partial T}/{\partial \theta}, {\partial T}/{\partial \phi}/\sin\theta \right)\myhtmlimage{}
 $, $\left({\partial^2 T}/{\partial \theta^2}, {\partial^2 T}/{\partial
@@ -155,25 +161,27 @@ The map can be convolved with a gaussian beam for which a beamsize can
 be specified, or for an arbitrary {\em circular} beam for which the
 Legendre transform is provided. The map is automatically convolved with a pixel window
 function. These are stored in FITS files  in
-the {\tt healpix/data} directory. If synfast is not run in a directory
+the {\tt healpix/data} directory. If \thedocid\ is not run in a directory
 which has these files, or from a directory which can reach these files
 by a `{\tt ../data/}' or `{\tt ./data/}' specification, the system
 variable {\tt HEALPIX} is used to locate the main \healpix directory
 and its {\tt data} subdirectory is scanned. Failing this, the location of these
 files must be specified (using winfiledir). In the interactive mode this is
-requested only when necessary (see Notes on default directories on page~\pageref{page:defdir}).
+requested only when necessary (see 
+\htmlref{Notes on default directories}{fac:subsec:defdir}
+\latexhtml{ on page~\pageref{page:defdir}}{}).
 
 If some of the $a_{\ell m}$ in the simulations are constrained eg. from observations, a FITS file
 with these $a_{\ell m}$ can be read. This FITS file contains 
 the $a_{\ell m}$ for certain $\ell$ and $m$ values
 and also the standard deviation for these $a_{\ell m}$. The sky
-realisation which synfast produces will be statistically consistent
+realisation which \thedocid\ produces will be statistically consistent
 with the constraining $a_{\ell m}$.
 
 The code can also be used
 to generate a set of $a_{\ell m}$ matching the input power spectra, beam size and
 pixel size with or without actually synthesizing the map. Those $a_{\ell m}$ can be
-used as an input (constraining $a_{\ell m}$) to another synfast run.
+used as an input (constraining $a_{\ell m}$) to another \thedocid\ run.
 %---------------------------------
 \\
 \latexonly{{{\bf ...}}}
@@ -192,7 +200,7 @@ $P_{\ell m}(\theta)$ from a file generated by the \healpix facility
 harmonic transforms in \healpix v2.20, this feature is obsolete and should no
 longer be used. 
 
-Synfast will issue a warning if the input FITS file for the power spectrum does
+\thedocid\ will issue a warning if the input FITS file for the power spectrum does
 not contain the keyword {\tt POLNORM}. This keyword indicates that the convention
 used for polarization is consistent with CMBFAST (and consistent with \healpix
 1.2). See the 
@@ -223,8 +231,8 @@ see the subroutine \htmlref{{\tt create\_alm}}{sub:create_alm}.
 \end{datasets}
 
 \begin{support}
-%   \begin{sulistwide}{} %%%% NOTE the ``extra'' brace here %%%%
-  \begin{sulist}{} %%%% NOTE the ``extra'' brace here %%%%
+%   \begin{sulistwide}{} %%%% NOTE the ''extra'' brace here %%%%
+  \begin{sulist}{} %%%% NOTE the ''extra'' brace here %%%%
   \item[\htmlref{generate\_beam}{sub:generate_beam}] This \healpix Fortran
 subroutine generates or reads the $B(\ell)$ window function used in \thedocid
   \item[\htmlref{map2gif}{fac:map2gif}] This \healpix Fortran facility can be used to visualise the
@@ -235,7 +243,7 @@ subroutine generates or reads the $B(\ell)$ window function used in \thedocid
   used to implement the beam and pixel window functions on the constraining
   $a_{\ell m}$s ({\tt almsfile} file).
   \item[\htmlref{anafast}{fac:anafast}] This \healpix Fortran facility can analyse a \healpix map and 
-     	       save the $a_{\ell m}$ and $C_{\ell}$s to be read by synfast.
+     	       save the $a_{\ell m}$ and $C_{\ell}$s to be read by \thedocid.
   \item[\htmlref{plmgen}{fac:plmgen}] This \healpix Fortran facility can be used to generate precomputed Legendre polynomials.
 		
   \end{sulist}
@@ -261,7 +269,7 @@ Synfast runs in interactive mode, self-explanatory.
 synfast  filename \\
 \end{tabular}
 }
-{When 'filename' is present, synfast enters the non-interactive mode and parses
+{When 'filename' is present, \thedocid\ enters the non-interactive mode and parses
 its inputs from the file 'filename'. This has the following
 structure: the first entry is a qualifier which announces to the parser
 which input immediately follows. If this input is omitted in the
@@ -284,9 +292,9 @@ In this example, the file contains the following qualifiers:\hfill\newline
 \fileparam{\mylink{fac:synfast:outfile}{outfile}%
  = map.fits}
 
-Synfast reads in the $C_{\ell}$ power spectrum in 'cl.fits' up to $l=64$, and
+Synfast reads in the $C_{\ell}$ power spectrum in 'cl.fits' up to $\ell=64$, and
 produces the (RING ordered) map
-'map.fits' which has $N_{\rm side}=32$.
+'map.fits' which has $\nside=32$.
 The map is convolved with a beam of FWHM 420.0 arcminutes. The $\mylink{fac:synfast:iseed}{iseed}%
 =-1$ sets
 the random seed for the realisation. A different $\mylink{fac:synfast:iseed}{iseed}%
@@ -309,8 +317,10 @@ Since \hfill\newline
 were omitted, they take their default values (empty strings). 
 This means that no file for constrained realisation or precomputed
 Legendre polynomials are read, the $a_{\ell m}$ generated in the process are not
-output, and synfast attempts to find the pixel
-window files in the default directories (see page~\pageref{page:defdir}).
+output, and \thedocid\ attempts to find the pixel
+window files in the default directories (see 
+\htmlref{Notes on default files and directories}{fac:subsec:defdir}%
+\latexhtml{ on page~\pageref{page:defdir}}).
 }
 \end{examples}
 

@@ -19,8 +19,8 @@
 	colorlinks=true}
 
 
-\newcommand{\nside}{{N_{\rm side}}}
-\newcommand{\npix}{{N_{\rm pix}}}
+\newcommand{\nside}{N_\textrm{side}}
+\newcommand{\npix}{N_\textrm{pix}}
 \newcommand{\healpixwebpage}{http://healpix.sourceforge.net}
 \newcommand{\healpixmail}{{\em healpix-support} {\tt at} {\em lists.sourceforge.net}}
 \newcommand{\healpixsupport}{\healpixwebpage/support.php}
@@ -173,37 +173,37 @@ configuration which is beyond our control.
                             &                      &     \\ %%% for presentation
 %
   Fortran 90     & This document & 
-\linklatexhtml{''Fortran Facilities''}{facilities.pdf}{facilities.htm} and 
-\linklatexhtml{''Fortran Subroutines''}{subroutines.pdf}{subroutines.htm} documents \\
+\linklatexhtml{"Fortran Facilities"}{facilities.pdf}{facilities.htm} and 
+\linklatexhtml{"Fortran Subroutines"}{subroutines.pdf}{subroutines.htm} documents \\
 %
  & & \\
 %
   IDL/GDL        & This document  & 
-\linklatexhtml{''IDL Facilities''}{idl.pdf}{idl.htm}\\
+\linklatexhtml{"IDL Facilities"}{idl.pdf}{idl.htm}\\
  & & \\
 %
   C++     & This document, or \phantom{filling up --} {\tt src/cxx/README.compilation} & 
-%\htmladdnormallink{''C++ Facilities and Subroutines''}{index_cxx.html}
-\linklatexhtml{''C++ Facilities and Subroutines''}{../html/index_cxx.html}{index_cxx.html}
+%\htmladdnormallink{"C++ Facilities and Subroutines"}{index_cxx.html}
+\linklatexhtml{"C++ Facilities and Subroutines"}{../html/index_cxx.html}{index_cxx.html}
  (HTML only)\\
 %
  & & \\
 %
   C       & This document, or \phantom{filling up --} {\tt src/C/README} & 
-    \linklatexhtml{''C Subroutines Overview''}{csub.pdf}{csub.htm} \\ 
+    \linklatexhtml{"C Subroutines Overview"}{csub.pdf}{csub.htm} \\ 
 %
  & & \\
 %
   Java    & {\tt src/java/README} & 
-%\htmladdnormallink{''Java Overview''}{java/index.html}
-\linklatexhtml{''Java Overview''}{../html/java/index.html}{java/index.html}
+%\htmladdnormallink{"Java Overview"}{java/index.html}
+\linklatexhtml{"Java Overview"}{../html/java/index.html}{java/index.html}
  (HTML only)\\
 %
  & & \\
 %
   Python    & This document, or \phantom{filling up --} {\tt src/healpy/INSTALL} & 
-\linklatexhtml{''Healpy
-Documentation''}{http://healpy.github.com/healpy}{http://healpy.github.com/healpy}
+\linklatexhtml{"Healpy
+Documentation"}{http://healpy.github.com/healpy}{http://healpy.github.com/healpy}
  (HTML only)\\
 %
                                    &                          \\ \hline %%% for presentation
@@ -330,7 +330,7 @@ softwares can also be useful.
 % For convenience we provide the freely available FFTPACK\footnote{At 
 % {\tt
 % http://math.nist.gov/cgi-bin/gams-serve/list-package-components/FFTPACK.html}}
-% routines ''rffti'', ''rfftf'' and ''rfftb''.
+% routines "rffti", "rfftf" and "rfftb".
 %
 
 %% At the user choice (at installation time) the FFT operations can be
@@ -469,7 +469,7 @@ The user can therefore add new targets or edit existing ones, and the
 {\tt ./configure} script will update its menu accordingly.
 If a fairly recent version
 (4.2 or higher) of gcc and g++ is installed on the system, the target
-"generic\_gcc" should always work, except under MacOSX, where ``osx'' target is
+"generic\_gcc" should always work, except under MacOSX, where "osx" target is
 required.  \\
 The environment variables EXTERNAL\_CFITSIO, 
 CFITSIO\_EXT\_LIB, 
@@ -631,12 +631,12 @@ is currently the WMAP 1yr best fit, in $(\mu$K$)^2$, and is therefore different 
 included in releases 1.* (that can still be found in {\tt cl\_old.fits}).
 % See \htmladdnormallink{{\tt  http://lambda.gsfc.nasa.gov/}}{http://lambda.gsfc.nasa.gov/} 
 % for details on WMAP and its data products.
-\item Other input fiducial $C(\ell)$, all in $(\mu$K$)^2$ and defined on the multipole range $[0, \ell_{\rm max}]$, have been included for convenience in 
+\item Other input fiducial $C(\ell)$, all in $(\mu$K$)^2$ and defined on the multipole range $[0, \ell_\textrm{max}]$, have been included for convenience in 
 {\tt Healpix\_\hpxversion/test/} in a \healpix compatible format.
 \\
 \begin{tabular}{l l l l} 
 \hline 
-  \textbf{File name} & \textbf{alias} & \textbf{Origin} & $\ell_{\rm max}$\\ \hline
+  \textbf{File name} & \textbf{alias} & \textbf{Origin} & $\ell_\textrm{max}$\\ \hline
 wmap\_lcdm\_pl\_model\_yr1\_v1.fits      & cl.fits             & 
  \htmladdnormallink{WMAP}{http://lambda.gsfc.nasa.gov/}-1yr (2005)   & 3000 \\
 wmap\_lcdm\_sz\_lens\_wmap5\_cl\_v3.fits & cl\_wmap5.fits      & WMAP-5yr (2008)   & 2000 \\
@@ -1131,7 +1131,7 @@ A proper fix requires the user to ask the local system
 administrator to adjust the local IDL script.
 
 \subsection{Using \healpix IDL together with other IDL libraries}
-See the \htmlref{eponymous section}{idl:other_idl_libs} in the \linklatexhtml{``IDL Facilities Overview''}{idl.pdf}{idl.htm}
+See the \htmlref{eponymous section}{idl:other_idl_libs} in the \linklatexhtml{"IDL Facilities Overview"}{idl.pdf}{idl.htm}
 
 \subsection{Mac OS X,  X11 and IDL cursor}
 \label{install:macos_idl_cursor}
@@ -1158,8 +1158,8 @@ can be used to determine the X window system installed on
 your Mac.
 See also \htmladdnormallink{{\tt http://www.idlcoyote.com/misc\_tips/maccursor.html}}
 {http://www.idlcoyote.com/misc_tips/maccursor.html} and
-\htmlref{{\tt mollcursor}}{idl:mollcursor} documentation in \linklatexhtml{''IDL
-Facilities''}{idl.pdf}{idl.htm}).
+\htmlref{{\tt mollcursor}}{idl:mollcursor} documentation in \linklatexhtml{"IDL
+Facilities"}{idl.pdf}{idl.htm}).
 
 
 \newpage%%%%%%%%%%%%
@@ -1428,7 +1428,7 @@ the output is $d(n/2)$ instead of $(d(n/2)+d(n/2+1))/2$ previously. Result remai
  non-zero (exotic) TB and EB cross-spectra (option \mylinkext{sub:create_alm:polar}{{\tt polar=2}}) if the input FITS file contains the relevant information
 	\item new routines \htmlref{{\tt nest2uniq}}{sub:nest2uniq} 
 	and \htmlref{{\tt uniq2nest}}{sub:uniq2nest} for conversion 
-	of standard pixel index to/from Unique ID number. See \htmlref{''The Unique Identifier scheme''}{intro:unique} section in \linklatexhtml{''\healpix Introduction Document''}{intro.pdf}{intro.htm} for more details.
+	of standard pixel index to/from Unique ID number. See \htmlref{"The Unique Identifier scheme"}{intro:unique} section in \linklatexhtml{"\healpix Introduction Document"}{intro.pdf}{intro.htm} for more details.
 	\item improved 
 \mylinkext{sub:write_bintabh:repeat}{{\tt repeat}}
 behavior in \htmlref{{\tt write\_bintabh}}{sub:write_bintabh} routine
@@ -1458,7 +1458,7 @@ origin and type of character font;
 \item \htmlref{{\tt fits2cl}}{idl:fits2cl}: addition of \mylinkext{idl:fits2cl:planck2}{{\tt /PLANCK2}} keyword
 to read best fit $C(\ell)$ model to Planck 2015 data.
 %
-\item new routines \htmlref{{\tt nest2uniq}}{idl:nest2uniq} and \htmlref{{\tt uniq2nest}}{idl:uniq2nest} for conversion of standard pixel index to/from Unique ID number. See \htmlref{''The Unique Identifier scheme''}{intro:unique} section in \linklatexhtml{''\healpix Introduction Document''}{intro.pdf}{intro.htm} for more details.
+\item new routines \htmlref{{\tt nest2uniq}}{idl:nest2uniq} and \htmlref{{\tt uniq2nest}}{idl:uniq2nest} for conversion of standard pixel index to/from Unique ID number. See \htmlref{"The Unique Identifier scheme"}{intro:unique} section in \linklatexhtml{"\healpix Introduction Document"}{intro.pdf}{intro.htm} for more details.
 %
 \item \healpix enabled GDL commands ({\tt hgdl} and  {\tt hgdlde}) are defined during the 
 \htmlref{configuration process}{install:idlgdlconfig}.
@@ -1508,7 +1508,7 @@ for high-level description);
 files during the configuration of the C, C++ and F90 packages. 
 % BeginSkip
 See Section~\ref{sec:pkg-config} of 
-\linklatexhtml{''\healpix\ Installation''}{install.pdf}{install.htm} for
+\linklatexhtml{"\healpix\ Installation"}{install.pdf}{install.htm} for
 details.
 % EndSkip
 	\end{itemize}
@@ -1541,8 +1541,8 @@ CFITSIO-related functions
 the free Fortran95 compiler \textbf{g95}
 (\htmladdnormallink{http://www.g95.org/}{http://www.g95.org/}).
 % BeginSkip
-See Section~\ref{sec:freef90compilers} of \linklatexhtml{''\healpix\
-Installation''}{install.pdf}{install.htm} for details.
+See Section~\ref{sec:freef90compilers} of \linklatexhtml{"\healpix\
+Installation"}{install.pdf}{install.htm} for details.
 % EndSkip
 	\item A separate {\tt build} directory is used to store the objects,
 modules, ... produced during the compilation of the source codes
@@ -1695,8 +1695,8 @@ configuration script remains available
 	\setlength{\itemsep}{0pt}
 	\setlength{\parsep}{0pt}
 %
-	\item all Fortran facilities now support most of {\tt cfitsio}'s ``\htmladdnormallink{Extended File
-Name Syntax}{http://heasarc.gsfc.nasa.gov/docs/software/fitsio/filters.html}'' features,
+	\item all Fortran facilities now support most of {\tt cfitsio}'s "\htmladdnormallink{Extended File
+Name Syntax}{http://heasarc.gsfc.nasa.gov/docs/software/fitsio/filters.html}" features,
 allowing the reading and processing of an arbitrary HDU and table column out of
 remote, compressed FITS files. For example, setting \hfill \\
 {\tt infile = }{\tt ftp://}{\it url/file.fits}{\tt .gz}{\tt [}{\it extn}{\tt
@@ -1782,7 +1782,7 @@ PDF and HTML documentation.
 	\item Interface has remained unchanged, but the code has been replaced by a C port
 of the relevant Healpix C++ functions, resulting in significant speedups.
 	\item Additional functions are provided which support Nside values up to $2^{29}$.
-They have the same name as the traditional functions, with a ``64'' suffix appended.
+They have the same name as the traditional functions, with a "64" suffix appended.
 \end{itemize}
 
 \tinysubsubsection*{C++}
@@ -1990,7 +1990,7 @@ package (C. Rosset, A. Zonca et al.) is now part of \healpix
 % 	\item Faster Spherical Harmonic Transforms thanks to {\tt libpsht} routines
 % 	\item Support for spin-weighted Spherical Harmonic Transforms at the library level
 % 	\item Support for 6-component power spectra in {\tt anafast\_cxx}
-% 	\item The {\tt smoothing\_cxx} module allows ``unsmoothing'' a map by specifying
+% 	\item The {\tt smoothing\_cxx} module allows "unsmoothing" a map by specifying
 %               a negative FWHM value
 % 	\item Module {\tt median\_filter} renamed to {\tt median\_filter\_cxx} to avoid
 %               name clashes with Fortran
@@ -2089,7 +2089,7 @@ package (C. Rosset, A. Zonca et al.) is now part of \healpix
 % $\partial^2 X/\partial \theta^2$, 
 % for $X=Q,U$ produced by {\tt synfast}  (bug detected by Wen Zhao,
 % Cardiff University). See 
-% \htmlref{''Fortran Facilities'' Appendix}{fac:appendix} for details.
+% \htmlref{"Fortran Facilities" Appendix}{fac:appendix} for details.
 %  \end{itemize}
 % %
 % \tinysubsubsection*{IDL}
@@ -2291,7 +2291,7 @@ package (C. Rosset, A. Zonca et al.) is now part of \healpix
 % 	\end{itemize}
 % \item documentation:
 % 	\begin{itemize}
-% 	\item ``IDL routines'': rightfully says that IDL6.0 or more recent is required
+% 	\item "IDL routines": rightfully says that IDL6.0 or more recent is required
 % 	\end{itemize}
 % \end{itemize}
 
@@ -2577,8 +2577,8 @@ package (C. Rosset, A. Zonca et al.) is now part of \healpix
 %    Primer}{intro.pdf}{intro.htm}
 %    \item The pixel window functions are now provided for both temperature and
 %      polarization. Recalculation of the temperature window for $N_{side} > 128$
-%      induce a slight change of these functions (see the \linklatexhtml{``\healpix
-%    Primer''}{intro.pdf}{intro.htm} for details).
+%      induce a slight change of these functions (see the \linklatexhtml{"\healpix
+%    Primer"}{intro.pdf}{intro.htm} for details).
 %    \item Because of its obsolete F66 features that limited its portability with
 %      current f90/f95 compilers, the FFTPACK module used in
 %      version 1.10 is no longer in use. \healpix 1.2 can either use a different
@@ -2604,11 +2604,11 @@ package (C. Rosset, A. Zonca et al.) is now part of \healpix
 %  %   \item new Fortran subroutines and functions include: \hfill\newline
 %  %     {\tt ....}
 %    \item A small subset of routines for the pixel to sky coordinate conversion
-%      is now available in C (see the documentation \linklatexhtml{''C Subroutines Overview''}{csub.pdf}{csub.htm}).
+%      is now available in C (see the documentation \linklatexhtml{"C Subroutines Overview"}{csub.pdf}{csub.htm}).
 %    \item New Fortran subroutines have been added or upgraded (see the documentation
-%    \linklatexhtml{''Fortran90 Subroutines Overview''}{subroutines.pdf}{subroutines.htm}) and
+%    \linklatexhtml{"Fortran90 Subroutines Overview"}{subroutines.pdf}{subroutines.htm}) and
 %    most of the Fortran facilities have been upgraded (see the documentation
-%    \linklatexhtml{''Fortran90 Facilities User Guidelines''}{facilities.pdf}{facilities.htm})
+%    \linklatexhtml{"Fortran90 Facilities User Guidelines"}{facilities.pdf}{facilities.htm})
 %    \item several Fortran routines have been renamed and merged.
 %  	\begin{itemize}
 %  	\item The module {\tt wrap\_fits} has been renamed {\tt head\_fits} to reflect its
@@ -2618,8 +2618,8 @@ package (C. Rosset, A. Zonca et al.) is now part of \healpix
 %         \item some routines no longer in use have been moved to {\tt obsolete} module
 %  	\end{itemize}
 %    \item New IDL routines have been added, and several routines have been renamed
-%    or merged. See the documentation \linklatexhtml{''IDL Facilities
-%    Overview''}{idl.pdf}{idl.htm}
+%    or merged. See the documentation \linklatexhtml{"IDL Facilities
+%    Overview"}{idl.pdf}{idl.htm}
 %    \item The configure script automatically creates a (system specific)
 %      profile defining useful environment variables and aliases. {\em In
 %      particular, the system variable {\tt HEALPIX} must be correctly

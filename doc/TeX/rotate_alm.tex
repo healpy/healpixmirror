@@ -14,8 +14,8 @@
 emulate the effect of an arbitrary rotation of the underlying map. The rotation is done
 directly on the $a_{\ell m}$ using the Wigner rotation matrices, computed by
 recursion.
-To rotate the $a_{\ell m}$ for $\ell \leq \ell_{\rm max}$ the number of
-operations scales like $\ell^3_{\rm max}$.}
+To rotate the $a_{\ell m}$ for $\ell \leq \ell_\textrm{max}$ the number of
+operations scales like $\ell^3_\textrm{max}$.}
 {\modAlmTools}
 \end{facility}
 
@@ -63,8 +63,8 @@ use alm\_tools, only: rotate\_alm \\
 call rotate\_alm(64, alm\_TGC, PI/3., 0.5\_dp, 0.0\_dp)  \\
 }
 {
-Transforms scalar and tensor $a_{lm}$ for $\ell_{\rm
-  max}=m_{\rm max} = 64$ to emulate a rotation of the underlying map by
+Transforms scalar and tensor $a_{\ell m}$ for $\ell_{\rm
+  max}=m_\textrm{max} = 64$ to emulate a rotation of the underlying map by
 ($\psi=\pi/3, \theta=0.5, \varphi=0\myhtmlimage{}$).
 }
 \end{example}
@@ -78,7 +78,7 @@ call coordsys2euler\_zyz(2000.0\_dp, 2000.0\_dp, 'E', 'G', psi, theta, phi) \\
 call rotate\_alm(64, alm\_TGC, psi, theta, phi)  \\
 }
 {
-Rotate the $a_{lm}$ from Ecliptic to Galactic coordinates.
+Rotate the $a_{\ell m}$ from Ecliptic to Galactic coordinates.
 }
 \end{example}
 
@@ -102,7 +102,7 @@ the Euler angles $\psi, \theta, \varphi \myhtmlimage{}$ for rotation between sta
   \item[\htmlref{alm2map}{sub:alm2map}] Routines to synthetize a \healpix sky map from its $a_{\ell m}$
   coefficients.
   \item[\htmlref{alms2fits}{sub:alms2fits}, \htmlref{dump\_alms}{sub:dump_alms}]
-  Routines to save a set of $a_{lm}$ in a FITS file.  
+  Routines to save a set of $a_{\ell m}$ in a FITS file.  
   \item[\htmlref{xcc\_v\_convert}{sub:xcc_v_convert}] rotates a 3D coordinate
 vector from one astronomical coordinate system to another.
   \end{sulist}

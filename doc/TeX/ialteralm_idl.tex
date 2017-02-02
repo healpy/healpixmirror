@@ -11,18 +11,18 @@
 
 \begin{facility}
 {This IDL facility provides an interface to F90 '\htmlref{alteralm}{fac:alteralm}' facility. 
-This program can be used to modify a set of $a_{lm}$ spherical harmonics
+This program can be used to modify a set of $a_{\ell m}$ spherical harmonics
   coefficients, as those extracted by \htmlref{ianafast}{idl:ianafast} or 
   simulated by \htmlref{isynfast}{idl:isynfast}, before
   they are used as constraints on a isynfast run. Currently the alterations
   possible are %
 \begin{itemize}
-    \item rotation (using Wigner matrices) of the $a_{lm}$ from the input
+    \item rotation (using Wigner matrices) of the $a_{\ell m}$ from the input
     coordinate system to any other standard astrophysical coordinate system. The
-    resulting $a_{lm}$ can be used with e.g. synfast to generate a map in the
+    resulting $a_{\ell m}$ can be used with e.g. synfast to generate a map in the
     new coordinate system.
     \item removal of the pixel and beam window functions of the input
-  $a_{lm}$ (corresponding to the pixel size and beam shape of the map from which
+  $a_{\ell m}$ (corresponding to the pixel size and beam shape of the map from which
   they were extracted) and implementation of an arbitrary pixel and beam window
   function. 
 \begin{equation} a_{\ell m}^{\rm OUT} = a_{\ell m}^{\rm IN} \frac{B^{\rm OUT}(\ell) P^{\rm 
@@ -68,8 +68,8 @@ where $P(\ell)$ is the pixel window function, and $B(\ell)$ is the beam window
 
 \begin{qualifiers}
   \begin{qulist}{} %%%% NOTE the ``extra'' brace here %%%%
-   \item[alm\_in]  \mytarget{idl:ialteralm:alm_in} required input: input $a_{lm}$, must be a FITS file
-   \item[alm\_out] \mytarget{idl:ialteralm:alm_out} required output: output $a_{lm}$, must be a FITS file
+   \item[alm\_in]  \mytarget{idl:ialteralm:alm_in} required input: input $a_{\ell m}$, must be a FITS file
+   \item[alm\_out] \mytarget{idl:ialteralm:alm_out} required output: output $a_{\ell m}$, must be a FITS file
 
   \end{qulist}
 \end{qualifiers}
@@ -82,23 +82,27 @@ where $P(\ell)$ is the pixel window function, and $B(\ell)$ is the beam window
               -- a binpath starting with ./ is interpreted as relative to current directory\\
               -- all other binpathes are relative to \$HEALPIX
 
- \item[beam\_file\_in=]\mytarget{idl:ialteralm:beam_file_in} Beam window function of input $a_{lm}$,
-                 either a FITS file or an array. If present, will override
-\mylink{idl:ialteralm:fwhm_arcmin_in}{{\tt fwhm\_arcmin\_in}}
+ \item[beam\_file\_in=]\mytarget{idl:ialteralm:beam_file_in} Beam window function of input $a_{\ell m}$,
+                 either a FITS file or an array 
+		(see \htmlref{''Beam window function files''}{fac:subsec:beamfiles} section
+		in the \linklatexhtml{\healpix Fortran Facilities document}{facilities.pdf}{facilities.htm}). 
+		If present, will override
+	\mylink{idl:ialteralm:fwhm_arcmin_in}{{\tt fwhm\_arcmin\_in}}
                  \default{value of BEAM\_LEG  keyword read from
-\mylink{idl:ialteralm:alm_in}{\tt alm\_in}}
+	\mylink{idl:ialteralm:alm_in}{\tt alm\_in}}
 
  \item[beam\_file\_out=] \mytarget{idl:ialteralm:beam_file_out} Beam window function of output alm, 
-                 either a FITS file or an array. If present and non-empty, will override
-\mylink{idl:ialteralm:fwhm_arcmin_out}{{\tt fwhm\_arcmin\_out}}
+                 either a FITS file or an array (see \mylink{idl:ialteralm:beam_file_in}{{\tt beam\_file\_in}}. 
+		If present and non-empty, will override
+	\mylink{idl:ialteralm:fwhm_arcmin_out}{{\tt fwhm\_arcmin\_out}}
                  \default{'' (empty string, no beam window applied)}
 
- \item[coord\_in=]     \mytarget{idl:ialteralm:coord_in} Astrophysical coordinates system used to compute input $a_{lm}$.
+ \item[coord\_in=]     \mytarget{idl:ialteralm:coord_in} Astrophysical coordinates system used to compute input $a_{\ell m}$.
                  Case-insensitive single letter code.
                  Valid choices are 'g','G' = Galactic, 'e','E' = Ecliptic,
                  'c','q','C','Q' = Celestial/eQuatorial.
                  \default{value of COORDSYS keyword read from
-\mylink{idl:ialteralm:alm_in}{\tt alm\_in}}
+	\mylink{idl:ialteralm:alm_in}{\tt alm\_in}}
 
  \item[coord\_out=]    \mytarget{idl:ialteralm:coord_out} Astrophysical coordinates system of output alm.
                   \default{ \mylink{idl:ialteralm:coord_in}{{\tt coord\_in}} }
@@ -112,7 +116,7 @@ where $P(\ell)$ is the pixel window function, and $B(\ell)$ is the beam window
 
  \item[fwhm\_arcmin\_in=]  \mytarget{idl:ialteralm:fwhm_arcmin_in} Full Width
 Half-Maximum in arcmin of Gaussian beam applied to map from which are obtained
-input $a_{lm}$.\\
+input $a_{\ell m}$.\\
            \default{value of FWHM keyword in \mylink{idl:ialteralm:alm_in}{\tt alm\_in}}
 
  \item[fwhm\_arcmin\_out=] \mytarget{idl:ialteralm:fwhm_arcmin_out} FWHM in
@@ -128,7 +132,7 @@ temporary files are not discarded at the end of the run
  \item[nside\_in=, nsmax\_in=]     \mytarget{idl:ialteralm:nside_in}
 \mytarget{idl:ialteralm:nsmax_in}
 HEALPix resolution parameter of map
-                  from which were computed input $a_{lm}$
+                  from which were computed input $a_{\ell m}$
                    \default{determined from \mylink{idl:ialteralm:alm_in}{\tt alm\_in}}
 
  \item[nside\_out=,nsmax\_out=]    \mytarget{idl:ialteralm:nside_out}\mytarget{idl:ialteralm:nsmax_out}
@@ -197,7 +201,7 @@ ialteralm, \htmlref{!healpix.path.test}{idl:init_healpix}+'alm.fits', '/tmp/alm\
 \end{tabular}
 }
 {
-  This example script reads the test (polarised) $a_{lm}$ located in {\tt
+  This example script reads the test (polarised) $a_{\ell m}$ located in {\tt
 \$HEALPIX/test/alm.fits} and rotates them from Galactic to Equatorial
   coordinates, it then synthetizes a map out of those,
   and finally plots its I and Q Stokes components (in Equatorial coordinates)

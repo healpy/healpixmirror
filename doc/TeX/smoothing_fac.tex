@@ -30,7 +30,7 @@ to choose an iterative computation of the $a_{\ell m}$ coefficients.
 \end{f90facility}
 
 %% \begin{options}
-%%   \begin{optionlistwide}{} %%%% NOTE the ``extra'' brace here %%%%
+%%   \begin{optionlistwide}{} %%%% NOTE the ''extra'' brace here %%%%
 %%     \item[{\tt -d}]
 %%     \item[{\tt --double}] If present, all internal variables and arrays will be in double precision, and the output data will be written on disk at double precision (see Notes on I/O precision on page~\pageref{page:ioprec})
 %%     \item[{\tt -s}]
@@ -39,16 +39,18 @@ to choose an iterative computation of the $a_{\ell m}$ coefficients.
 %% \end{options}
 
 \begin{options}
-  \begin{optionlistwide}{} %%%% NOTE the ``extra'' brace here %%%%
+  \begin{optionlistwide}{} %%%% NOTE the ''extra'' brace here %%%%
     \item[{\tt -d}]
-    \item[{\tt -}{\tt -}{\tt double}] double precision mode (see Notes on double/single precision modes on page~\pageref{page:ioprec})
+    \item[{\tt -}{\tt -}{\tt double}] double precision mode (see 
+  \htmlref{Notes on double/single precision modes}{fac:subsec:ioprec}%
+\latexhtml{ on page~\pageref{page:ioprec}}{})
     \item[{\tt -s}]
     \item[{\tt -}{\tt -}{\tt single}] single precision mode (default)
   \end{optionlistwide}
 \end{options}
 
 \begin{qualifiers}
-  \begin{qulist}{} %%%% NOTE the ``extra'' brace here %%%%
+  \begin{qulist}{} %%%% NOTE the ''extra'' brace here %%%%
      \item[{simul\_type = }]\mytarget{fac:smoothing:simul_type}%
  Defines which map(s) to analyse, 1=temperature only, 2=temperature AND polarisation.
 (default= 1)
@@ -56,7 +58,7 @@ to choose an iterative computation of the $a_{\ell m}$ coefficients.
  Defines the filename for the FITS file containing the map to be smoothed. 
 	(default= 'map.fits')
     \item[{nlmax = }]\mytarget{fac:smoothing:nlmax}%
- Defines the $\ell_{max}$ value for the application.
+ Defines the $\lmax$ value for the application.
 (default= 64)
     \item[{iter\_order = }]\mytarget{fac:smoothing:iter_order}%
  Defines the maximum order of quadrature 
@@ -67,15 +69,16 @@ beam for the convolution. (default=10)
     \item[{beam\_file = }] Defines the FITS file describing the
     Legendre window
     function of the circular beam to be used for the
-    simulation. If set to an existing file name, it will override the
+    simulation (see \htmlref{''Beam window function files'' in introduction}{fac:subsec:beamfiles}). 
+    If set to an existing file name, it will override the
     {\tt fhwm\_arcmin} given above. default=`'
 \item[{outfile = }]\mytarget{fac:smoothing:outfile}%
  Defines the filename for the file that will contain 
 the smoothed map. (default='map\_smoothed.fits')
      \item[{plmfile = }] Defines the name for an input file
-    containing  precomputed Legendre polynomials $P_{lm}$.
+    containing  precomputed Legendre polynomials $P_{\ell m}$.
 (default= no entry --- \thedocid executes the recursive evaluation 
-of $P_{lm}$s)
+of $P_{\ell m}$s)
 \item[{w8file = }]\mytarget{fac:smoothing:w8file}%
  Defines name for an input file containing ring
   weights in the improved quadrature mode (default= no entry ---
@@ -83,7 +86,7 @@ the name is assumed to be 'weight\_ring\_n0xxxx.fits' where xxxx is nsmax)
 \item[{w8filedir = }]\mytarget{fac:smoothing:w8filedir}%
  Gives the directory where the weight files are
 to be found (default= no entry --- smoothing searches in the default
-directories, see introduction)
+directories, see \htmlref{''Default file names and directories'' in introduction}{fac:subsec:defdir})
 \item[{won = }]\mytarget{fac:smoothing:won}%
  Set this to 1 if weight files are to be used,
 otherwise set it to 0 (or 2). (default= 0)
@@ -114,7 +117,7 @@ The output map is stored in {\em the same scheme} as the input map.
 \end{datasets}
 
 \begin{support}
-  \begin{sulist}{} %%%% NOTE the ``extra'' brace here %%%%
+  \begin{sulist}{} %%%% NOTE the ''extra'' brace here %%%%
   \item[\htmlref{generate\_beam}{sub:generate_beam}] This \healpix Fortran
 subroutine generates or reads the $B(\ell)$ window function used in \thedocid
   \item[\htmlref{map2gif}{fac:map2gif}] This \healpix Fortran facility can be used to visualise the

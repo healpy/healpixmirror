@@ -34,10 +34,10 @@
   \begin{qulist}{} %%%% NOTE the ``extra'' brace here %%%%
     \item[Index] \mytarget{idl:alm_i2t:index}
 Integer vector of size ni containing the index $i$ of the 
-            of $a_{lm}$ coefficients, related to $\{l,m\}$ by 
-             $i = l^2 + l + m + 1$
+            of $a_{\ell m}$ coefficients, related to $\{\ell,m\}$ by 
+             $i = \ell^2 + \ell + m + 1$
     \item[Alm\_vec] \mytarget{idl:alm_i2t:alm_vec}%
-Array of $a_{lm}$ coefficients, with dimension (ni, nalm [,nsig])
+Array of $a_{\ell m}$ coefficients, with dimension (ni, nalm [,nsig])
      where\\
            ni   = number of $i$ indices\\
            nalm = 2 for real and imaginary parts of alm coefficients {\em or}\\
@@ -69,8 +69,8 @@ by user.
 
 \begin{codedescription}
 {%
-\thedocid\ returns a real or complex array, containing the $a_{lm}$ with
-$0 \le l \le l_{\rm max}$ and $0 \le m \le m_{\rm max}$. The negative $m$ are
+\thedocid\ returns a real or complex array, containing the $a_{\ell m}$ with
+$0 \le \ell \le l_\textrm{max}$ and $0 \le m \le m_\textrm{max}$. The negative $m$ are
 therefore ignored.
 }
 \end{codedescription}
@@ -84,7 +84,7 @@ therefore ignored.
 \thedocid\ into indexed lists than can written to FITS files with
 \htmlref{alm2fits}{idl:alm2fits}
   \item[\htmlref{alm2fits}{idl:alm2fits}, \htmlref{fits2alm}{idl:fits2alm}]
-routines to read and write $a_{lm}$ indexed lists from and to FITS files.
+routines to read and write $a_{\ell m}$ indexed lists from and to FITS files.
   \end{sulist}
 \end{related}
 
@@ -105,8 +105,8 @@ ac = 0.9*ac1 + 0.1*ac2          \\
 \end{tabular}
 }%
 {%
-The example above reads 2 sets of $a_{lm}$ from FITS files, puts the alm's with (l,m)
-$\le 100$ in tabular arrays, and then make a weighted sum of the alm's. The
+The example above reads 2 sets of $a_{\ell m}$ from FITS files, puts the alm's with 
+$(\ell,m) \le 100$ in tabular arrays, and then make a weighted sum of the alm's. The
 resulting alm or put back into a indexed list in order to be written to FITS.
 }
 \end{example}

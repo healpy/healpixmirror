@@ -10,18 +10,18 @@
 \abstract{This document describes the \healpix facility ALTERALM.}
 
 \begin{facility}
-{This program can be used to modify a set of $a_{lm}$ spherical harmonics
+{This program can be used to modify a set of $a_{\ell m}$ spherical harmonics
   coefficients, as those extracted by \htmlref{anafast}{fac:anafast} or 
   simulated by \htmlref{synfast}{fac:synfast}, before
   they are used as constraints on a synfast run. Currently the alterations
   possible are %
 \begin{itemize}
-    \item rotation (using Wigner matrices) of the $a_{lm}$ from the input
+    \item rotation (using Wigner matrices) of the $a_{\ell m}$ from the input
     coordinate system to any other standard astrophysical coordinate system. The
-    resulting $a_{lm}$ can be used with e.g. synfast to generate a map in the
+    resulting $a_{\ell m}$ can be used with e.g. synfast to generate a map in the
     new coordinate system.
     \item removal of the pixel and beam window functions of the input
-  $a_{lm}$ (corresponding to the pixel size and beam shape of the map from which
+  $a_{\ell m}$ (corresponding to the pixel size and beam shape of the map from which
   they were extracted) and implementation of an arbitrary pixel and beam window
   function.
  \begin{equation} a_{\ell m}^{\rm OUT} = a_{\ell m}^{\rm IN} \frac{B^{\rm OUT}(\ell) P^{\rm 
@@ -40,16 +40,18 @@ where $P(\ell)$ is the pixel window function, and $B(\ell)$ is the beam window
 \end{f90facility}
 
 \begin{options}
-  \begin{optionlistwide}{} %%%% NOTE the ``extra'' brace here %%%%
+  \begin{optionlistwide}{} %%%% NOTE the ''extra'' brace here %%%%
     \item[{\tt -d}]
-    \item[{\tt -}{\tt -}{\tt double}] double precision mode (see Notes on double/single precision modes on page~\pageref{page:ioprec})
+    \item[{\tt -}{\tt -}{\tt double}] double precision mode (see 
+  \htmlref{Notes on double/single precision modes}{fac:subsec:ioprec}%
+\latexhtml{ on page~\pageref{page:ioprec}}{})
     \item[{\tt -s}]
     \item[{\tt -}{\tt -}{\tt single}] single precision mode (default)
   \end{optionlistwide}
 \end{options}
 
 \begin{qualifiers}
-  \begin{qulist}{} %%%% NOTE the ``extra'' brace here %%%%
+  \begin{qulist}{} %%%% NOTE the ''extra'' brace here %%%%
     \item[{infile\_alms = }]\mytarget{fac:alteralm:infile_alms}%
  Defines the FITS file from which to read the input
 	$a_{\ell m}$.
@@ -58,16 +60,16 @@ where $P(\ell)$ is the pixel window function, and $B(\ell)$ is the beam window
 	$a_{\ell m}$.
     \item[{fwhm\_arcmin\_in = }]\mytarget{fac:alteralm:fwhm_arcmin_in}%
  Defines the FWHM size in arcminutes 
-      of the Gaussian beam present in the input $a_{lm}$. The output $a_{lm}$ will be
+      of the Gaussian beam present in the input $a_{\ell m}$. The output $a_{\ell m}$ will be
       corrected from it, see Eq.~(\ref{eq:alteralm}). (default= value of FWHM keyword in {\tt infile\_alms}).
     \item[{beam\_file\_in = }]\mytarget{fac:alteralm:beam_file_in}%
- Defines the FITS file describing the
-      Legendre window function of the circular beam present in the input $a_{lm}$. The output $a_{lm}$ will be
+ Defines the FITS file (see \htmlref{''Beam window function files'' in introduction}{fac:subsec:beamfiles}) describing the
+      Legendre window function of the circular beam present in the input $a_{\ell m}$. The output $a_{\ell m}$ will be
       corrected from it, see Eq.~(\ref{eq:alteralm}). If set to an existing file name, it will override the
     {\tt fhwm\_arcmin\_in} given above. (default= value of the BEAM\_LEG keyword in {\tt infile\_alms})
      \item[{nlmax\_out = }]\mytarget{fac:alteralm:nlmax_out}%
  Defines the maximum $\ell$ value 
-       to be used for the output $a_{lm}$s. (default= maximum $\ell$ of input
+       to be used for the output $a_{\ell m}$s. (default= maximum $\ell$ of input
        $a_{\ell m}$ = value of MAX-LPOL keyword in {\tt infile\_alms}).
      \item[{nsmax\_in = }]\mytarget{fac:alteralm:nsmax_in}%
  If it can not be determined from the input file {\tt infile\_alms}, asks
@@ -79,12 +81,13 @@ where $P(\ell)$ is the pixel window function, and $B(\ell)$ is the beam window
        to 0 for infinitely small pixels, ie no pixel window function (default= same as input's $\nside$).
     \item[{fwhm\_arcmin\_out = }]\mytarget{fac:alteralm:fwhm_arcmin_out}%
  Defines the FWHM size in arcminutes 
-      of the Gaussian beam to be applied to $a_{lm}$, see
+      of the Gaussian beam to be applied to $a_{\ell m}$, see
       Eq.~(\ref{eq:alteralm}). (default= {\tt fwhm\_arcmin\_in}).
-    \item[{beam\_file\_out = }] Defines the FITS file describing the
-      Legendre window function of the circular beam to be applied $a_{lm}$. If
+    \item[{beam\_file\_out = }] Defines the FITS file 
+(see \htmlref{''Beam window function files'' in introduction}{fac:subsec:beamfiles}) describing the
+      Legendre window function of the circular beam to be applied $a_{\ell m}$. If
       set to an existing file name, it will override the 
-    {\tt fhwm\_arcmin\_out} given above. (default= `` '')
+    {\tt fhwm\_arcmin\_out} given above. (default= '' '')
     \item[{coord\_in = }]\mytarget{fac:alteralm:coord_in}%
  Defines astrophysical coordinates used to compute the
     input $a_{\ell m}$. Valid choices are 'G' = Galactic, 'E' = Ecliptic, 
@@ -100,24 +103,26 @@ where $P(\ell)$ is the pixel window function, and $B(\ell)$ is the beam window
     (default={\tt epoch\_in})
      \item[{windowfile\_in = }]\mytarget{fac:alteralm:windowfile_in}%
 	Defines the input filename from which to read the pixel window function parameterized by {\tt nsmax\_in}
-(default= pixel\_window\_n????.fits, see Notes on default files and directories on page~\pageref{page:defdir})
+(default= pixel\_window\_n????.fits, see 
+\htmlref{Notes on default files and directories}{fac:subsec:defdir}%
+\latexhtml{ on page~\pageref{page:defdir}}{})
      \item[{winfiledir\_in = }]\mytarget{fac:alteralm:winfiledir_in}%
 	Defines the directory in which {\tt windowfile\_in}
-    is located (default : see Notes on default files and directories on page~\pageref{page:defdir}).
+    is located (default : see above).
      \item[{windowfile\_out = }]\mytarget{fac:alteralm:windowfile_out}%
 	Defines the input filename from which to read the pixel window function parameterized by {\tt nsmax\_out}
-(default= pixel\_window\_n????.fits, see Notes on default files and directories on page~\pageref{page:defdir})
+(default= pixel\_window\_n????.fits, see above)
      \item[{winfiledir\_out = }]\mytarget{fac:alteralm:winfiledir_out}%
 	Defines the directory in which {\tt windowfile\_out}
-    is located (default : see Notes on default files and directories on page~\pageref{page:defdir}).
+    is located (default : see above).
 
   \end{qulist}
 \end{qualifiers}
 
 \begin{codedescription}
 {%
-Alteralm can modify temperature as well as polarisation $a_{lm}$. It will also
-modify the error on the $a_{lm}$ if those are provided. It works best if the
+Alteralm can modify temperature as well as polarisation $a_{\ell m}$. It will also
+modify the error on the $a_{\ell m}$ if those are provided. It works best if the
 input FITS file contains the relevant information on the beam size and shape,
 maximum multipoles, ...
 }
@@ -136,7 +141,7 @@ maximum multipoles, ...
 \end{datasets}
 
 \begin{support}
-  \begin{sulist}{} %%%% NOTE the ``extra'' brace here %%%%
+  \begin{sulist}{} %%%% NOTE the ''extra'' brace here %%%%
   \item[\htmlref{generate\_beam}{sub:generate_beam}] This \healpix Fortran
 subroutine generates or reads the $B(\ell)$ window function(s) used in \thedocid
   \item[\htmlref{anafast}{fac:anafast}] This \healpix Fortran facility can
@@ -187,7 +192,7 @@ In this example, the file contains the following qualifiers:\hfill\newline
 \fileparam{\mylink{fac:alteralm:outfile_alms}{outfile\_alms}%
  = newalm.fits}
 
-Alteralm reads the $a_{lm}$ from 'alm.fits'. Since \hfill\newline
+Alteralm reads the $a_{\ell m}$ from 'alm.fits'. Since \hfill\newline
 \fileparam{\mylink{fac:alteralm:nsmax_in}{nsmax\_in}%
  }
 \fileparam{\mylink{fac:alteralm:nsmax_out}{nsmax\_out}%
@@ -210,10 +215,10 @@ Alteralm reads the $a_{lm}$ from 'alm.fits'. Since \hfill\newline
  }
 \fileparam{\mylink{fac:alteralm:winfiledir_out}{winfiledir\_out}%
  }
-have their default values, the pixel size will remain the same, the $a_{lm}$ will be corrected
+have their default values, the pixel size will remain the same, the $a_{\ell m}$ will be corrected
 from its input beam (whatever it was, assuming the relevant information can be
 found), and a gaussian beam of 20.0 arcmin will be applied
-instead, the $a_{lm}$ will also be rotated from their original coordinate system
+instead, the $a_{\ell m}$ will also be rotated from their original coordinate system
 (whatever it was, assuming the relevant information can be found)
 into Galactic coordinates, assuming a year 2000 epoch for both,
  and only the multipoles up to 512 will be written in

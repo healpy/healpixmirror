@@ -11,7 +11,10 @@
 %%\usepackage{xr-hyper,healpix,html,makeidx} 
 \usepackage{xr-hyper,healpix,graphicx,html,makeidx} 
 %\usepackage{healpix,xr-hyper,html,graphicx,makeidx}
+\usepackage{ae,lmodern}% load vectorial font, keep PDF small *and* good quality when in T1 font
+\usepackage[T1]{fontenc}% underscore searchable in PDF, but larger PDF http://latex-community.org/forum/viewtopic.php?t=8891
 \begin{htmlonly}
+% \renewcommand{\backslash}{\}
  \renewcommand{\ell}{l}
  \renewcommand{\lq}{'}
  \input{hpxversion}
@@ -23,8 +26,9 @@
 	pdfkeywords={HEALPix, Fortran},%
 	colorlinks=true}%
 
-\newcommand{\nside}{{N_{\rm side}}}
-\newcommand{\npix}{{N_{\rm pix}}}
+\newcommand{\nside}{{N_{\textrm{side}}}}
+\newcommand{\npix}{{N_{\textrm{pix}}}}
+\newcommand{\lmax}{\ell_{\textrm{max}}}
 %\newcommand{\myhtmlimage}[1]{\htmlimage{#1}}
 \newcommand{\myhtmlimage}[1]{ }
 \renewcommand{\contentsname}{{TABLE OF CONTENTS}}
@@ -94,8 +98,10 @@ Anthony J.~Banday, Martin Reinecke}
 \newpage
 
 \section{Using the \healpix Fortran 90 facilities}
-\label{section:defdir}
-{\bf {Default File Names and Directories}}: for some applications, the \healpix facilities
+% {\bf {Default File Names and Directories}}: 
+\subsection{Default file names and directories}
+\label{fac:subsec:defdir}
+For some applications, the \healpix facilities
 require some precalculated input files describing the pixel window
 function and quadrature ring weight (shipped as {\tt
 Healpix/data/pixel\_window\_n????.fits} and {\tt
@@ -128,8 +134,11 @@ and their location.
 %%   it will almost double the memory consumption.
 %% \end{itemize}
 %% \end{itemize}
-\vskip 1cm
-{\bf {Double/Single Precision mode}}: several facilities offer the option of switching at run time 
+% \vskip 1cm
+% {\bf {Double/Single Precision mode}}: s
+\subsection{Double/Single precision mode}
+\label{fac:subsec:ioprec}
+Several facilities offer the option of switching at run time 
 the precision of the internal variables and arrays and of the I/O data from single to double precision
 floating point reals. The following points should be noted: \label{page:ioprec}
 \begin{itemize}
@@ -149,6 +158,53 @@ floating point reals. The following points should be noted: \label{page:ioprec}
 \item will obviously double the size of the output file(s).
 \end{itemize}
 \end{itemize}
+
+%\vskip 1cm
+\subsection{Beam window function files}
+\label{fac:subsec:beamfiles}
+%Beam window function files.
+Several F90 and IDL applications (eg,
+\htmlref{\tt alteralm}{fac:alteralm}, 
+\htmlref{\tt sky\_ng\_sim}{fac:sky_ng_sim}, 
+\htmlref{\tt smoothing}{fac:smoothing}, 
+\htmlref{\tt synfast}{fac:synfast}, 
+\htmlref{\tt ialteralm}{idl:ialteralm}, 
+\htmlref{\tt ismoothing}{idl:ismoothing}, 
+\htmlref{\tt isynfast}{idl:isynfast})
+accept, generally with the argument {\tt beam\_file} a circular (possibly non-gaussian) beam or smoothing window,
+which is described under the form of its {\em real} (polarized) Legendre window functions
+(see IDL's \htmlref{\tt beam2bl}{idl:beam2bl})
+read from an external file.\label{page:beamfiles}
+The file is either 
+\begin{itemize}
+\item 
+{\em highly recommended:} a FITS file containing a binary or ASCII table, with 1, 2 or 3 fields, respectively\\
+$b_T(\ell)$, [$b_E(\ell)$, [$b_B(\ell)$]]\\
+\item 
+ in IDL, is can also be an array of size ($\lmax+1$,$d$) with $d=$1, 2 or 3, which will be 
+automatically turned into a FITS file of the format described above using the 
+\healpixns/IDL routine \htmlref{\tt bl2fits}{idl:bl2fits}
+\item 
+or, it can also be, a plain text file with 2, 3 or 4 columns, containing, on each line,  \\
+$\ell$, $b_T(\ell)$, [$b_E(\ell)$, [$b_B(\ell)$]]\\ 
+and in which lines starting with a \# sign are ignored.
+\end{itemize}
+In any case, 
+the multipole $\ell$ must take all integer values in $\{0,\ldots,\lmax\}$, 
+with the assumption that the window functions vanish outside that range.
+$b_T$ is the 'temperature' or intensity window function, 
+while the optional $b_E$ and $b_B$ are respectively the electric (or gradient) and
+magnetic (or curl) components of polarization.
+If not provided, $b_B(\ell)$ takes the value of $b_E(\ell)$ which itself defaults to $b_T(\ell)$.
+With these window functions, the (polarized) 
+map spherical harmonics coefficients and its power spectra are transformed according to
+\begin{equation}
+	a^{X}_{\ell m} \longrightarrow a^{X}_{\ell m} b_{X}(\ell),
+\end{equation}
+\begin{equation}
+	C^{XY}_{\ell m} \longrightarrow C^{XY}_{\ell m} b_{X}(\ell)b_{Y}(\ell),
+\end{equation}
+with $X,Y \in \{T,E,B\}$.
 
 \newpage
 
@@ -211,7 +267,7 @@ can now be compiled with any {\tt gcc} version.
 \subsubsection{Version 3.10}
 \begin{itemize}
 %
-	\item all Fortran facilities now support most of {\tt cfitsio}'s ``\htmladdnormallink{Extended File
+	\item all Fortran facilities now support most of {\tt cfitsio}'s ''\htmladdnormallink{Extended File
 Name Syntax}{http://heasarc.gsfc.nasa.gov/docs/software/fitsio/filters.html}'' features,
 allowing the reading and processing of an arbitrary HDU and table column out of
 remote, compressed FITS files. For example, setting \hfill \\
@@ -275,7 +331,7 @@ analyzed.
 805,306,368 pixels.
 \end{itemize}
 See
-\linklatexhtml{``F90 Subroutines Overview''}{subroutines.pdf}{subroutines.htm}
+\linklatexhtml{''F90 Subroutines Overview''}{subroutines.pdf}{subroutines.htm}
 for details.
 
 \subsection[Changes between releases 2.13 and 2.14]{Changes between releases 2.13 and

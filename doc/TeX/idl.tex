@@ -40,9 +40,9 @@
 % \makeatother
 
 %%%%%% ----- commands for HTML and PDF -----
-\newcommand{\nside}{N_{\rm side}}
-\newcommand{\npix}{N_{\rm pix}}
-\newcommand{\ntemplate}{N_{\rm template}}
+\newcommand{\nside}{N_{\textrm{side}}}
+\newcommand{\npix}{N_{\textrm{pix}}}
+\newcommand{\ntemplate}{N_{\textrm{template}}}
 %\newcommand{\myhtmlimage}[1]{\htmlimage{#1}}
 \newcommand{\myhtmlimage}[1]{ }
 \renewcommand{\contentsname}{{TABLE OF CONTENTS}}
@@ -147,13 +147,13 @@ or third party) IDL routines. There are several ways to achieve this:\\
 %
 {\em -- with {\tt hidl}:}\\
 before starting {\tt hidl} or {\tt hidlde}, (re)define the environment variable {\tt \$IDL\_PATH} so that it looks like:
-``{\tt +}{\it /path/to/my/idl/routines}{\tt :+}{\it /path/to/other/idl/routines}:{\tt
+''{\tt +}{\it /path/to/my/idl/routines}{\tt :+}{\it /path/to/other/idl/routines}:{\tt
 <IDL\_DEFAULT>}''
 (where {\tt
 <IDL\_DEFAULT>} should be typed literally and the {\tt +}{\it /path} means that
 subdirectories of {\em path} will be searched recursively). For example, if
 young Albert types in Bourne shell:\\
-{\tt export IDL\_PATH=}``{\tt +/home/aeinstein/brownian:<IDL\_DEFAULT>}''\\
+{\tt export IDL\_PATH=}''{\tt +/home/aeinstein/brownian:<IDL\_DEFAULT>}''\\
 {\tt hidl}\\
 he will start an IDL session in which the \healpix IDL routines are accessible, followed by all those located
 in subdirectories of {\tt /home/aeinstein/brownian}, followed by the standard
@@ -164,8 +164,8 @@ one encountered will prevail;\\
 before starting IDL, the environment variables {\tt \$IDL\_PATH} and {\tt
 \$IDL\_STARTUP} must be defined. For instance, to emulate under ({\tt ba}){\tt
 sh} the behavior of {\tt hidl} shown above, the same (bolder) Albert will type:\\
-{\tt export IDL\_PATH=}``{\tt +\$\{HEALPIX\}/src/idl:+/home/aeinstein/brownian:<IDL\_DEFAULT>}''\\
-{\tt export IDL\_STARTUP=}``{\tt +\$\{HEALPIX\}/src/idl/HEALPix\_startup}''\\
+{\tt export IDL\_PATH=}''{\tt +\$\{HEALPIX\}/src/idl:+/home/aeinstein/brownian:<IDL\_DEFAULT>}''\\
+{\tt export IDL\_STARTUP=}''{\tt +\$\{HEALPIX\}/src/idl/HEALPix\_startup}''\\
 {\tt idl}
 
 GDL users can do the same, replacing {\tt hidl}, {\tt IDL\_PATH} and {\tt IDL\_STARTUP} 
@@ -174,7 +174,7 @@ while {\tt <IDL\_DEFAULT>} must be replaced by the default value of {\tt \$\{GDL
 Of course, {\tt \$\{HEALPIX\}/src/idl} (and all the {\tt +} signs) remain unchanged.
 
 \subsection{Using GDL instead of IDL}
-See the section ``\htmlref{Using GDL instead of IDL}{install:using_gdl}'' in \linklatexhtml{the Installation Document}{install.pdf}{install.htm} for more information on this issue.
+See the section ''\htmlref{Using GDL instead of IDL}{install:using_gdl}'' in \linklatexhtml{the Installation Document}{install.pdf}{install.htm} for more information on this issue.
 
 
 
@@ -473,7 +473,7 @@ color image from 3 channel map
 	\end{itemize}
 	\item improved compatibility with 
 \htmladdnormallink{GDL}{http://gnudatalanguage.sourceforge.net}
- (free IDL clone). See \linklatexhtml{``\healpix Installation Document''}{install.pdf}{install.htm} for current GDL limitations.
+ (free IDL clone). See \linklatexhtml{''\healpix Installation Document''}{install.pdf}{install.htm} for current GDL limitations.
 	\item update of the {\tt IDL-astron} library routines, which now require IDL 6.1 or more
 	\item \htmlref{{\tt fits2alm}}{idl:fits2alm}: new {\tt LMAX=} and {\tt LMIN=} keywords
 	\item \htmlref{{\tt fits2cl}}{idl:fits2cl}: new {\tt LLFACTOR=}  keyword

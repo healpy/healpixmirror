@@ -19,8 +19,8 @@
 
 
 \begin{facility}
-{This IDL facility provides the number of pixels Npix over the full sky corresponding
-to resolution parameter Nside.
+{This IDL facility provides the number of pixels $\npix$ over the full sky corresponding
+to resolution parameter $\nside$.
 }
 {src/idl/toolkit/nside2npix.pro}
 \end{facility}
@@ -36,9 +36,9 @@ to resolution parameter Nside.
   \begin{qulist}{} %%%% NOTE the ``extra'' brace here %%%%
     \item[Nside\mytarget{idl:nside2npix:Nside}%
 ] \healpix resolution parameter (scalar integer),
-         should be a valid Nside (power of 2 $ \le 2^{29}$)
+         should be a valid $\nside$ (power of 2 $ \le 2^{29}$)
     \item[Npix\mytarget{idl:nside2npix:Npix}%
-] number of pixels, Npix = 12*Nside$^2$ if Nside is a valid
+] number of pixels, $\npix = 12 \nside^2$ if $\nside$ is a valid
     resolution parameter or -1 otherwise
   \end{qulist}
 \end{qualifiers}
@@ -54,7 +54,7 @@ to resolution parameter Nside.
 \begin{codedescription}
 {\facname\ checks that the given Nside is valid (power of 2 in
 $\{1,\ldots,2^{29}\}$) and then computes the
-corresponding number of pixels $N_{\rm pix} = 12N_{\rm side}^2$.}
+corresponding number of pixels $\npix = 12\nside^2$.}
 \end{codedescription}
 
 

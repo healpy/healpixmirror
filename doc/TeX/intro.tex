@@ -6,7 +6,7 @@
 %%\usepackage{healpix,html,graphicx,makeidx,color,apalike,heqn}
 %\newif\ifpdf\ifx\pdfoutput\undefined\pdffalse\else\pdfoutput=1\pdftrue\fi
 \begin{htmlonly}
-\renewcommand{\ell}{l}
+%\renewcommand{\ell}{l}
 \input{hpxversion}
 \end{htmlonly}
 
@@ -43,9 +43,9 @@
  \newcommand{\mytarget}[1]{\label{#1}}
 \end{htmlonly}
 
-\newcommand{\npix}{{N_{\rm pix}}}
-\newcommand{\Opix}{{\Omega_{\rm pix}}}
-\newcommand{\nside}{N_{\rm side}}
+\newcommand{\npix}{N_{\textrm{pix}}}
+\newcommand{\Opix}{\Omega_{\textrm{pix}}}
+\newcommand{\nside}{N_{\textrm{side}}}
 
 \sloppy
 \setcounter{secnumdepth}{10}%must be non-zero for cross-reference of Figs and Sections
@@ -365,7 +365,7 @@ $\nside =$ 1, 2, 4, 8,
 %$N_{\rm side} = \,1,\,2,\,4,\,8$, 
 and the total number of pixels  equal to 
 $\npix = 12 \times \nside^2$ = 12, 48, 192, 768. 
-All pixel centers are located on $N_{\rm ring} = 4 \times \nside - 1$ rings of 
+All pixel centers are located on $N_\textrm{ring} = 4 \times \nside - 1$ rings of 
 constant latitude.
 Within each panel the areas of all pixels are identical.}
 \end{figure}
@@ -386,7 +386,7 @@ and are equidistant in azimuth
 (on each ring). All iso-latitude rings located between the upper and lower corners of
 the equatorial base-resolution pixels, the equatorial zone, 
 are divided into the same number of pixels: 
-$N_{\rm eq}= 4\times \nside$. The remaining rings are located within the
+$N_\textrm{eq}= 4\times \nside$. The remaining rings are located within the
 polar cap regions and contain a varying number of pixels, increasing 
 from ring to ring with increasing distance
 from the poles by one pixel within each quadrant. 
@@ -476,7 +476,7 @@ those with $\nside=2$ are in the range 16 to 63, and so on \citep{rh15},
 thus simplifying the handling of data with heteregenous $\nside$.
 Splitting the unique index $u$ into its original $\nside$ and $p$ is as simple as
 \begin{eqnarray}
-	\nside &\myequal& 2^{\rm{floor}\left( \log_2(u/4)/2 \right)}, \myhtmlimage{} \label{eq:ring2nest_a}\\
+	\nside &\myequal& 2^{\textrm{floor}\left( \log_2(u/4)/2 \right)}, \myhtmlimage{} \label{eq:ring2nest_a}\\
 	     p_{\ } &\myequal& u - 4 \nside^2, \myhtmlimage{} \label{eq:ring2nest_b}
 \end{eqnarray}
 giving immediate access to the usual pixel based tools.
@@ -583,12 +583,12 @@ $-\ell_{max}$ to $\ell_{max}$ but all quantities with index ${\ell m}$ vanish
 for $m>\ell$. Our conventions for $Y_{\ell m}$ are defined in subsection
 \ref{sphericalstuff} below.
 
-Pixelating $f({ \gamma})$ corresponds to sampling it at $N_{\rm{pix}}$
- locations $\gamma_{p}$, $p\in[0,N_{\rm{pix}}-1]$. The sample
+Pixelating $f({ \gamma})$ corresponds to sampling it at $\npix$
+ locations $\gamma_{p}$, $p\in[0,\npix-1]$. The sample
 function values $f_p$ can then be used  
 to estimate  $a_{\ell m}$. A straightforward estimator is
 \begin{eqnarray}
-  \hat{a}_{\ell m}&\myequal& \frac{4\pi}{N_{\rm{pix}}}\sum_{p=0}^{N_{\rm{pix}}-1}
+  \hat{a}_{\ell m}&\myequal& \frac{4\pi}{\npix}\sum_{p=0}^{\npix-1}
   Y^\ast_{\ell m}(\gamma_p) f(\gamma_p),\myhtmlimage{}\label{eq:hata}
 %  \hat{a}_{\ell m}&\myequal& \frac{4\pi}{N_{\rm{pix}}}\sum_{p=0}^{N_{\rm{pix}}-1} 
 %  Y^\ast_{\ell m}(\gamma_p) f(\gamma_p),\label{eq:hata}
@@ -612,7 +612,7 @@ package.
 These $\hat{a}_{\ell m}$ can be used to compute estimates of the angular power spectrum
  $\hat{C}_\ell$ as 
 \begin{eqnarray}
-  \hat{C}_\ell&\myequal&\frac{1}{2l +1}\sum_{m} \vert\hat{a}_{\ell m}\vert^2.\myhtmlimage{}\label{eq:hatC}
+  \hat{C}_\ell&\myequal&\frac{1}{2\ell +1}\sum_{m} \vert\hat{a}_{\ell m}\vert^2.\myhtmlimage{}\label{eq:hatC}
 %  \hat{C}_\ell&=&\frac{1}{2l +1}\sum_{m} \vert\hat{a}_{\ell m}\vert^2.\label{eq:hatC}
 \end{eqnarray}
 Equations (\ref{eq:hata}) and (\ref{eq:hatC}) above do not consider the impact of a pixel masking or weighting 
@@ -646,7 +646,7 @@ As required,  the integral of $f(\gamma)$ over the full $4\pi$
 solid angle of the sphere has zero mean and variance $4\pi$. 
 \end{verse}
 Note that this definition implies the standard result that the total power
-at the angular wavenumber $\ell$ is $(2l+1)C_\ell$, because there are
+at the angular wavenumber $\ell$ is $(2\ell+1)C_\ell$, because there are
 $2\ell+1$ modes for each  $\ell$. 
 
 This defines unambiguously how the $C_\ell$ have to be defined given the
@@ -669,7 +669,7 @@ of theoretical predictions of the spectrum of CMB anisotropy is CMBFAST
 CMBFAST makes its outputs in ASCII files, which instead
 of $C_{X,\ell}$ contain quantities defined as
 \begin{eqnarray}
-  D_{X,\ell}&\myequal&\frac{l(l+1)}{(2\pi)T_{CMB}^2}C_{X,\ell},\myhtmlimage{}
+  D_{X,\ell}&\myequal&\frac{\ell(\ell+1)}{(2\pi)T_{CMB}^2}C_{X,\ell},\myhtmlimage{}
 \end{eqnarray}
 where $T_{CMB}=2.726K$ is the temperature of the CMB today and $X$ stands for T,
 E, B or C (see \S~\ref{subsec:pol}).  
@@ -708,22 +708,22 @@ inherited by the simulated map.
 % WWW--sites, will be made available describing the combined 
 % usage of the two packages.
 
-
+\textbf{ffff}
 \subsection{Polarisation convention}
 \label{subsec:pol}
-\newcommand{\Cl}[1]{C_{\ell}^{\rm #1}}
-\newcommand{\Chl}[1]{C_{\ell}^{\rm{#1}}}
-\newcommand{\Czl}[1]{C_{\rm{#1},\ell}}
-\newcommand{\alm}[1]{a_{\ell m}^{\rm #1}}
-\newcommand{\azlm}[1]{a_{{\rm #1},\ell m}}
+\newcommand{\Cl}[1]{C_{\ell}^\textrm{#1}}
+\newcommand{\Chl}[1]{C_{\ell}^\textrm{#1}}
+\newcommand{\Czl}[1]{C_\textrm{#1},\ell}
+\newcommand{\alm}[1]{a_{\ell m}^\textrm{#1}}
+\newcommand{\azlm}[1]{a_\textrm{#1},\ell m}
 \newcommand{\pushup}{\rule[.3cm]{0cm}{.2cm}}
 \newcommand{\pushdn}{\rule[-.3cm]{0cm}{.2cm}}
 \newcommand{\push}{\pushup\pushdn}
 \newcommand{\vecn}{{\bf n}}
-\newcommand{\veceo}{{\bf{e}_{1}}}
-\newcommand{\vecet}{{\bf{e}_{2}}}
-\newcommand{\vectheta}{{\bf{e}_\theta}}
-\newcommand{\vecphi}{{\bf{e}_\phi}}
+\newcommand{\veceo}{\textbf{e}_{1}}
+\newcommand{\vecet}{\textbf{e}_{2}}
+\newcommand{\vectheta}{\textbf{e}_\theta}
+\newcommand{\vecphi}{\textbf{e}_\phi}
 \newcommand{\mattwo}[2]
 {{
 \left( 
@@ -1221,7 +1221,7 @@ made. If the pixel is small compared to the signal correlation length
 (determined by the beam size), the exact structure of the pixel can be ignored
 in the subsequent analysis and we can {\em assume}
 \begin{eqnarray}
-  w_{\ell m}(p) = w_\ell(p) Y_{\ell m}(p)\myhtmlimage{}
+  w_{\ell m}(p) &\myequal& w_\ell(p) Y_{\ell m}(p)\myhtmlimage{}
 \end{eqnarray}
 where we introduced the $m$-averaged window function
 \begin{eqnarray}
@@ -1231,8 +1231,8 @@ where we introduced the $m$-averaged window function
 which is independent of the pixel location on the sky.
 
 If we assume all the pixels to be identical, the power spectrum of the
-pixelated map, $C_{\ell}^{\rm pix}$, is related to the hypothetical unpixelated
-one, $C_{\ell}^{\rm unpix}$, by 
+pixelated map, $C_{\ell}^{\textrm{pix}}$, is related to the hypothetical unpixelated
+one, $C_{\ell}^{\textrm{unpix}}$, by 
 \begin{eqnarray}
 	C_{\ell}^{\rm pix} &\myequal& w^2_{\ell} C_{\ell}^{\rm unpix} \myhtmlimage{}
 	\label{eq:cl_pixel} 
@@ -1277,9 +1277,12 @@ $\ell=2\nside$ and $\Delta w/w < 1.7\ 10^{-3}$ at $\ell=4\nside$.
 
 We provide a new random number generator (RNG) with this package, available both
 in Fortran90 and C++. 
-It resides in {\tt src/f90/mod/rngmod.f90} and {\tt
-  src/cxx/cxxsupport/planck\_rng.h} and supersedes the previous RNG (which
-is still available at {\tt src/f90/mod/ran\_tools\_dist.f90}). 
+It resides in 
+\htmladdnormallink{\tt src/f90/mod/rngmod.f90}{http://sourceforge.net/p/healpix/code/HEAD/tree/trunk/src/f90/mod/rngmod.f90}
+and 
+\htmladdnormallink{\tt src/cxx/cxxsupport/planck\_rng.h}{http://sourceforge.net/p/healpix/code/HEAD/tree/trunk/src/cxx/cxxsupport/planck_rng.h}
+and supersedes the previous RNG (which is still available at 
+\htmladdnormallink{\tt src/f90/mod/ran\_tools\_dist.f90}{http://sourceforge.net/p/healpix/code/HEAD/tree/trunk/src/f90/mod/ran_tools_dist.f90}). 
 
 It produces double precision real numbers $x$ with $x\in]0,1[$ and is based 
 on a xorshift method described by Marsaglia in 

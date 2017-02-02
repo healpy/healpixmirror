@@ -127,6 +127,15 @@ sub do_cmd_filenamelen{
   "<tt>filenamelen</tt>" . $_;
 }
 
+# sub do_cmd_myell{
+#   local($_) = @_;
+#   "L" . $_;
+# }
+
+# sub do_cmd_nside{
+#   local($_) = @_;
+#   $out = '<SPAN CLASS="MATH"><I>N</I><SUB>side</SUB></SPAN>';
+#   join('',$out,$_);
 #---------
 
 sub do_cmd_underline {
