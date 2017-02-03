@@ -6,6 +6,8 @@
 %xr-hyper first to have correct Equation and Figure cross-referencing in html
 %putting hyperref first screws up references in html
 %%%
+\usepackage{ae,lmodern}% load vectorial font, keep PDF small *and* good quality when in T1 font
+\usepackage[T1]{fontenc}% underscore searchable in PDF, but larger PDF http://latex-community.org/forum/viewtopic.php?t=8891
 \begin{htmlonly}
 \input{hpxversion}
 \input{idlversion}
@@ -19,8 +21,8 @@
 	colorlinks=true}
 
 
-\newcommand{\nside}{N_\textrm{side}}
-\newcommand{\npix}{N_\textrm{pix}}
+\newcommand{\nside}{N_\mathrm{side}}
+\newcommand{\npix}{N_\mathrm{pix}}
 \newcommand{\healpixwebpage}{http://healpix.sourceforge.net}
 \newcommand{\healpixmail}{{\em healpix-support} {\tt at} {\em lists.sourceforge.net}}
 \newcommand{\healpixsupport}{\healpixwebpage/support.php}
@@ -631,12 +633,12 @@ is currently the WMAP 1yr best fit, in $(\mu$K$)^2$, and is therefore different 
 included in releases 1.* (that can still be found in {\tt cl\_old.fits}).
 % See \htmladdnormallink{{\tt  http://lambda.gsfc.nasa.gov/}}{http://lambda.gsfc.nasa.gov/} 
 % for details on WMAP and its data products.
-\item Other input fiducial $C(\ell)$, all in $(\mu$K$)^2$ and defined on the multipole range $[0, \ell_\textrm{max}]$, have been included for convenience in 
+\item Other input fiducial $C(\ell)$, all in $(\mu$K$)^2$ and defined on the multipole range $[0, \ell_\mathrm{max}]$, have been included for convenience in 
 {\tt Healpix\_\hpxversion/test/} in a \healpix compatible format.
 \\
 \begin{tabular}{l l l l} 
 \hline 
-  \textbf{File name} & \textbf{alias} & \textbf{Origin} & $\ell_\textrm{max}$\\ \hline
+  \textbf{File name} & \textbf{alias} & \textbf{Origin} & $\ell_\mathrm{max}$\\ \hline
 wmap\_lcdm\_pl\_model\_yr1\_v1.fits      & cl.fits             & 
  \htmladdnormallink{WMAP}{http://lambda.gsfc.nasa.gov/}-1yr (2005)   & 3000 \\
 wmap\_lcdm\_sz\_lens\_wmap5\_cl\_v3.fits & cl\_wmap5.fits      & WMAP-5yr (2008)   & 2000 \\

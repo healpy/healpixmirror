@@ -18,7 +18,7 @@ theoretical power spectra,
 or as constrained realisations of such fields characterised by the user
 provided $a_{\ell m}$ coefficients and/or power spectra.
 Total operation count scales as
- ${\cal {O}}(N_\textrm{pix}^{3/2})$ with a prefactor dependent on the limiting spherical harmonics
+ ${\cal {O}}(\npix^{3/2})$ with a prefactor dependent on the limiting spherical harmonics
 order $\lmax$ of the actual problem. 
 The map resolution, Gaussian beam FWHM,  
 and random seed for the simulation can be selected by the user.
@@ -183,13 +183,12 @@ to generate a set of $a_{\ell m}$ matching the input power spectra, beam size an
 pixel size with or without actually synthesizing the map. Those $a_{\ell m}$ can be
 used as an input (constraining $a_{\ell m}$) to another \thedocid\ run.
 %---------------------------------
-\\
-\latexonly{{{\bf ...}}}
+\latexhtml{{\\ {\bf ...}}}{}
 }
 \end{codedescription}
 %
 \begin{cd_contd}
-{
+{%
 %---------------------------------
 Spherical harmonics values in the synthesis are obtained from a
 recurrence on associated Legendre polynomials $P_{\ell m}(\theta)$. 

@@ -32,8 +32,8 @@ indexed list of alm that can be written into a FITS file with \htmlref{alm2fits}
   \begin{qulist}{} %%%% NOTE the ``extra'' brace here %%%%
     \item[Alm\_table] \mytarget{idl:alm_t2i:alm_table}
 Input real or complex array, containing all the $a^s_{\ell m}$ for $\ell$
-         in [0,$\ell_\textrm{max}$] and $m$ in [0,$m_\textrm{max}$] 
-(and $s$ in [0,$s_\textrm{max}$] if applicable)\\
+         in [0,$\lmax$] and $m$ in [0,$\mmax$] 
+(and $s$ in [0,$\smax$] if applicable)\\
        if REAL    it has 3 (or 4) dimensions,\\
        if COMPLEX is has 2 (or 3) dimensions
 
@@ -42,11 +42,11 @@ Output integer vector of size ni containing the index $i$ of the
             of $a_{\ell m}$ coefficients, related to $\{\ell,m\}$ by 
              $i = \ell^2 + \ell + m + 1$
     \item[Alm\_vec] \mytarget{idl:alm_t2i:alm_vec}%
-Output array of $a_{\ell m}$ coefficients, with dimension (ni, 2 [,$s_\textrm{max}+1$])
+Output array of $a_{\ell m}$ coefficients, with dimension (ni, 2 [,$\smax+1$])
      where\\
            ni   = number of $i$ indices\\
            2 for real and imaginary parts of alm coefficients\\
-           $s_\textrm{max}+1$ = number of signals (usually 1 for any of T E B
+           $\smax+1$ = number of signals (usually 1 for any of T E B
                   or 3 for T,E,B together)
 \end{qulist}
 \end{qualifiers}
@@ -67,7 +67,7 @@ set) into a real list of $a_{\ell m}$ (with the real and imaginary parts separat
 and its index $i=\ell^2+\ell+m+1$. The unphysical $m>\ell$ elements of the input
 table are dropped from the output list.
 % returns a real or complex array, containing the $a_{\ell m}$ with
-% $0 \le l \le l_\textrm{max}$ and $0 \le m \le m_\textrm{max}$. The negative $m$ are
+% $0 \le l \le \lmax$ and $0 \le m \le \mmax$. The negative $m$ are
 % therefore ignored.
 }
 \end{codedescription}

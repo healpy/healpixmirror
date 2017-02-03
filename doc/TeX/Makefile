@@ -6,7 +6,7 @@ PDFTEX  := pdflatex
 TEXFLAGS := 
 DVIFLAGS :=
 PDFFLAGS :=
-LATEX2HTML := latex2html
+LATEX2HTML := export L2HCONFIG ./my_l2hconf.pm ; latex2html
 # LATEX2HTML := ~/bin/latex2html
 VERSION =  $(shell grep newcommand hpxversion.tex | grep hpxversion | sed "s/[a-z{}\\]*//g")
 DOCDIR  := ../../healpix-dynamicPages/
@@ -16,8 +16,11 @@ ADDRESS := -address "Version $(VERSION), `date +%Y-%m-%d`" -info 1
 #L2HFLAGS := -dir $(HTMLDIR) -up_url main.htm -up_title "Main Page" -math -html_version 4.0 -bottom_navigation -short_extn -white -local_icons -noexternal_images -toc_depth 8 $(ADDRESS) # -debug -verbosity 2  -show_section_numbers 
 L2HFLAGS := -dir $(HTMLDIR) -up_url main.htm -up_title "Main Page" \
 	-down_url main.htm -down_title "Main Page" \
-	-math -html_version 4.1 -bottom_navigation -short_extn -white -local_icons \
+	-math -html_version 4.1 -antialias \
+	-bottom_navigation -short_extn -white -local_icons \
 	-noexternal_images -toc_depth 8 $(ADDRESS) # -debug -verbosity 2 # -show_section_numbers 
+#-math -html_version 4.1 
+
 EQNFIX := ./eqnfix.sh
 IMPROVEHTML := ./improve_mobile_html.sh
 CSSFILE := common.css
@@ -120,7 +123,7 @@ intro.html: $(style) healpix.perl cssfile
 	@echo "$(GREEN_COLOR)==================================$(NO_COLOR)"
 	mkdir -p $(HTMLDIR)
 	-$(LATEX2HTML) $(L2HFLAGS) -split 4 -prefix intro -external_file ./intro    -t "Introduction to HEALPix"  intro
-	-$(EQNFIX)      $(HTMLDIR)/intro > /dev/null
+	-$(EQNFIX)      $(HTMLDIR)/intro
 	-$(IMPROVEHTML) $(HTMLDIR)/intro
 	mv -f $(HTMLDIR)/WARNINGS $(HTMLDIR)/WARNINGS_intro
 	ln -sf $(CSSFILE) $(HTMLDIR)/intro.css

@@ -9,13 +9,15 @@
 \documentclass[12pt,twoside]{article}
 %%\usepackage{healrut}
 \usepackage{healpix,html,makeidx}
+\usepackage{ae,lmodern}% load vectorial font, keep PDF small *and* good quality when in T1 font
+\usepackage[T1]{fontenc}% underscore searchable in PDF, but larger PDF http://latex-community.org/forum/viewtopic.php?t=8891
 \begin{htmlonly}
 \renewcommand{\ell}{l}
 \renewcommand{\lq}{`}
 \input{hpxversion}
 \end{htmlonly}
-\newcommand{\nside}{N_\textrm{side}}
-\newcommand{\npix}{N_\textrm{pix}}
+\newcommand{\nside}{N_\mathrm{side}}
+\newcommand{\npix}{N_\mathrm{pix}}
 %\newcommand{\myhtmlimage}[1]{\htmlimage{#1}}
 \newcommand{\myhtmlimage}[1]{ }
 

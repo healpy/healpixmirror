@@ -18,9 +18,9 @@ while it is optional for the slaves. However, the information is disregarded
 if they do.\\
 A major advantage of MPI parallelization is large quantities
 of memory, allowing for pre-computation of the Legendre 
-polynomials even with high $N_{\textrm{side}}$ and
-$\ell_{\textrm{max}}$, since each processor only needs a fraction
-$(1/N_{\textrm{procs}})$ of the complete table. This feature is
+polynomials even with high $\nside$ and
+$\lmax$, since each processor only needs a fraction
+$(1/N_{\mathrm{procs}})$ of the complete table. This feature is
 controlled by the ``precompute\_plms'' parameter. In general, the CPU
 time can be expected to decrease by roughly 50\% using pre-computed
 Legendre polynomials for temperature calculations, and by about 30\%
@@ -61,8 +61,8 @@ zbounds\mytarget{sub:mpi_initialize_alm_tools:zbounds}(1:2) & DP & IN & section 
 polarization\mytarget{sub:mpi_initialize_alm_tools:polarization} & LGT & IN & if polarization is required, this should be
 set to true, else it should be set to false. (OPTIONAL) \\
 precompute\_plms\mytarget{sub:mpi_initialize_alm_tools:precompute_plms} & I4B & IN & 0 = do not pre-compute any $P_{\ell
-m}$'s; 1 = pre-compute $P_{\ell m}^\textrm{T}$; 2 = pre-compute
-$P_{\ell m}^\textrm{T}$ and $P_{\ell m}^\textrm{P}$.  (OPTIONAL)\\
+m}$'s; 1 = pre-compute $P_{\ell m}^\mathrm{T}$; 2 = pre-compute
+$P_{\ell m}^\mathrm{T}$ and $P_{\ell m}^\mathrm{P}$.  (OPTIONAL)\\
 w8ring\mytarget{sub:mpi_initialize_alm_tools:w8ring}\_TQU(1:2*nsmax, 1:p) & DP & IN & ring weights for quadrature corrections. If ring weights are not used, this array should be 1 everywhere. p is 1 for a temperature analysis and 3 for (T,Q,U). (OPTIONAL)\\
 \end{tabular}
 }

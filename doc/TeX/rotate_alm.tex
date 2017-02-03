@@ -14,8 +14,8 @@
 emulate the effect of an arbitrary rotation of the underlying map. The rotation is done
 directly on the $a_{\ell m}$ using the Wigner rotation matrices, computed by
 recursion.
-To rotate the $a_{\ell m}$ for $\ell \leq \ell_\textrm{max}$ the number of
-operations scales like $\ell^3_\textrm{max}$.}
+To rotate the $a_{\ell m}$ for $\ell \leq \lmax$ the number of
+operations scales like $\lmax^3$.}
 {\modAlmTools}
 \end{facility}
 
@@ -63,8 +63,7 @@ use alm\_tools, only: rotate\_alm \\
 call rotate\_alm(64, alm\_TGC, PI/3., 0.5\_dp, 0.0\_dp)  \\
 }
 {
-Transforms scalar and tensor $a_{\ell m}$ for $\ell_{\rm
-  max}=m_\textrm{max} = 64$ to emulate a rotation of the underlying map by
+Transforms scalar and tensor $a_{\ell m}$ for $\lmax = \mmax = 64$ to emulate a rotation of the underlying map by
 ($\psi=\pi/3, \theta=0.5, \varphi=0\myhtmlimage{}$).
 }
 \end{example}

@@ -5,6 +5,8 @@
 %\usepackage{healpix,html,graphicx,makeidx,color,natbib} %heqn
 %%\usepackage{healpix,html,graphicx,makeidx,color,apalike,heqn}
 %\newif\ifpdf\ifx\pdfoutput\undefined\pdffalse\else\pdfoutput=1\pdftrue\fi
+\usepackage{ae,lmodern}% load vectorial font, keep PDF small *and* good quality when in T1 font
+\usepackage[T1]{fontenc}% underscore searchable in PDF, but larger PDF http://latex-community.org/forum/viewtopic.php?t=8891
 \begin{htmlonly}
 %\renewcommand{\ell}{l}
 \input{hpxversion}
@@ -43,9 +45,10 @@
  \newcommand{\mytarget}[1]{\label{#1}}
 \end{htmlonly}
 
-\newcommand{\npix}{N_{\textrm{pix}}}
-\newcommand{\Opix}{\Omega_{\textrm{pix}}}
-\newcommand{\nside}{N_{\textrm{side}}}
+\newcommand{\npix}{N_{\mathrm{pix}}}
+\newcommand{\Opix}{\Omega_{\mathrm{pix}}}
+\newcommand{\nside}{N_{\mathrm{side}}}
+\newcommand{\lmax}{\ell_{\mathrm{max}}}
 
 \sloppy
 \setcounter{secnumdepth}{10}%must be non-zero for cross-reference of Figs and Sections
@@ -365,7 +368,7 @@ $\nside =$ 1, 2, 4, 8,
 %$N_{\rm side} = \,1,\,2,\,4,\,8$, 
 and the total number of pixels  equal to 
 $\npix = 12 \times \nside^2$ = 12, 48, 192, 768. 
-All pixel centers are located on $N_\textrm{ring} = 4 \times \nside - 1$ rings of 
+All pixel centers are located on $N_\mathrm{ring} = 4 \times \nside - 1$ rings of 
 constant latitude.
 Within each panel the areas of all pixels are identical.}
 \end{figure}
@@ -386,7 +389,7 @@ and are equidistant in azimuth
 (on each ring). All iso-latitude rings located between the upper and lower corners of
 the equatorial base-resolution pixels, the equatorial zone, 
 are divided into the same number of pixels: 
-$N_\textrm{eq}= 4\times \nside$. The remaining rings are located within the
+$N_\mathrm{eq}= 4\times \nside$. The remaining rings are located within the
 polar cap regions and contain a varying number of pixels, increasing 
 from ring to ring with increasing distance
 from the poles by one pixel within each quadrant. 
@@ -476,7 +479,7 @@ those with $\nside=2$ are in the range 16 to 63, and so on \citep{rh15},
 thus simplifying the handling of data with heteregenous $\nside$.
 Splitting the unique index $u$ into its original $\nside$ and $p$ is as simple as
 \begin{eqnarray}
-	\nside &\myequal& 2^{\textrm{floor}\left( \log_2(u/4)/2 \right)}, \myhtmlimage{} \label{eq:ring2nest_a}\\
+	\nside &\myequal& 2^{\mathrm{floor}\left( \log_2(u/4)/2 \right)}, \myhtmlimage{} \label{eq:ring2nest_a}\\
 	     p_{\ } &\myequal& u - 4 \nside^2, \myhtmlimage{} \label{eq:ring2nest_b}
 \end{eqnarray}
 giving immediate access to the usual pixel based tools.
@@ -574,12 +577,12 @@ A bandlimited function $f$ on the sphere can
 be expanded in spherical harmonics, $Y_{\ell m}$,
 as
 \begin{eqnarray}
-  f({ \gamma})&\myequal&\sum_{\ell =0}^{l_{max}}\sum_{m}a_{\ell m}Y_{\ell m}(\gamma),\myhtmlimage{}\label{eq:alms}
+  f({ \gamma})&\myequal&\sum_{\ell =0}^{\lmax}\sum_{m}a_{\ell m}Y_{\ell m}(\gamma),\myhtmlimage{}\label{eq:alms}
 \end{eqnarray}
 where ${{\gamma}}$ denotes a unit vector pointing at polar angle $\theta\in[0,\pi]$ and
 azimuth $\phi\in[0,2\pi)$. Here we have assumed that there is insignificant signal power in modes
-with $\ell>\ell_{max}$ and introduce the  notation that all sums over $m$ run from
-$-\ell_{max}$ to $\ell_{max}$ but all quantities with index ${\ell m}$ vanish
+with $\ell>\lmax$ and introduce the  notation that all sums over $m$ run from
+$-\lmax$ to $\lmax$ but all quantities with index ${\ell m}$ vanish
 for $m>\ell$. Our conventions for $Y_{\ell m}$ are defined in subsection
 \ref{sphericalstuff} below.
 
@@ -711,11 +714,11 @@ inherited by the simulated map.
 \textbf{ffff}
 \subsection{Polarisation convention}
 \label{subsec:pol}
-\newcommand{\Cl}[1]{C_{\ell}^\textrm{#1}}
-\newcommand{\Chl}[1]{C_{\ell}^\textrm{#1}}
-\newcommand{\Czl}[1]{C_\textrm{#1},\ell}
-\newcommand{\alm}[1]{a_{\ell m}^\textrm{#1}}
-\newcommand{\azlm}[1]{a_\textrm{#1},\ell m}
+\newcommand{\Cl}[1]{C_{\ell}^\mathrm{#1}}
+\newcommand{\Chl}[1]{C_{\ell}^\mathrm{#1}}
+\newcommand{\Czl}[1]{C_\mathrm{#1},\ell}
+\newcommand{\alm}[1]{a_{\ell m}^\mathrm{#1}}
+\newcommand{\azlm}[1]{a_\mathrm{#1},\ell m}
 \newcommand{\pushup}{\rule[.3cm]{0cm}{.2cm}}
 \newcommand{\pushdn}{\rule[-.3cm]{0cm}{.2cm}}
 \newcommand{\push}{\pushup\pushdn}
@@ -1187,7 +1190,7 @@ even though our definition of the $P_{\ell m}$ differ from his by a factor
 $(-1)^m$ ({\it a.k.a.} Condon-Shortley phase).
 
 \section{Pixel window functions}
-\renewcommand{\u}{{\bf{u}}}
+\renewcommand{\u}{{\bf u}}
 %\warnhtml
 
 A pixelated signal $f(p)$ is the average within each pixel $p$ (with surface
@@ -1199,7 +1202,7 @@ where $w_p$ is equal to $1/\Opix$ within the pixel, and equal to 0 outside, so
 that $\int d\u w_p(\u) = 1$.
 Eq.~(\ref{eq:alms}) then becomes
 \begin{eqnarray}
-  f(p)&\myequal&\sum_{\ell =0}^{\ell_{max}}\sum_{m}a_{\ell m}w_{\ell m}(p),
+  f(p)&\myequal&\sum_{\ell =0}^{\lmax}\sum_{m}a_{\ell m}w_{\ell m}(p),
 \myhtmlimage{}
 \end{eqnarray}
 where
@@ -1231,8 +1234,8 @@ where we introduced the $m$-averaged window function
 which is independent of the pixel location on the sky.
 
 If we assume all the pixels to be identical, the power spectrum of the
-pixelated map, $C_{\ell}^{\textrm{pix}}$, is related to the hypothetical unpixelated
-one, $C_{\ell}^{\textrm{unpix}}$, by 
+pixelated map, $C_{\ell}^{\mathrm{pix}}$, is related to the hypothetical unpixelated
+one, $C_{\ell}^{\mathrm{unpix}}$, by 
 \begin{eqnarray}
 	C_{\ell}^{\rm pix} &\myequal& w^2_{\ell} C_{\ell}^{\rm unpix} \myhtmlimage{}
 	\label{eq:cl_pixel} 

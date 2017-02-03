@@ -10,9 +10,9 @@
 \abstract{This document describes the \healpix Fortran90 subroutine
 PIXEL\_WINDOW.}
 
-\newcommand{\wpix}{w_\textrm{pix}(\ell)}
+\newcommand{\wpix}{w_\mathrm{pix}(\ell)}
 \newcommand{\alm}{a_{\ell m}}
-\newcommand{\almpix}{a_{\ell m}^\textrm{(pix)}}
+\newcommand{\almpix}{a_{\ell m}^\mathrm{(pix)}}
 
 \begin{facility}
 {This routine returns the {\em averaged} $\ell$-space window function $\wpix$ (for temperature and
@@ -39,7 +39,7 @@ Unless specified otherwise, the $\wpix$ are read from the files
 \textbf{name~\&~dimensionality} & \textbf{kind} & \textbf{in/out} & \textbf{description} \\ \hline
                    &   &   &                           \\ %%% for presentation
 pixlw\mytarget{sub:pixel_window:pixlw}(0:lmax,1:p) & DP & OUT & pixel window function(s) $\wpix$ generated. The first index
-                   must be $\ell_\textrm{max}\leq 4\nside$. The second index runs from 1:1 for
+                   must be $\lmax\leq 4\nside$. The second index runs from 1:1 for
                    temperature only, and 1:3 for polarisation. In the latter
                    case, 1=T, 2=E, 3=B.\\
 nside\mytarget{sub:pixel_window:nside} & I4B & IN & \healpix\ $\nside$ resolution parameter. Unless {\tt

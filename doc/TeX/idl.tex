@@ -5,6 +5,8 @@
 %xr-hyper first to have correct Equation and Figure cross-referencing in html
 %putting hyperref first screws up references in html
 %
+\usepackage{ae,lmodern}% load vectorial font, keep PDF small *and* good quality when in T1 font
+\usepackage[T1]{fontenc}% underscore searchable in PDF, but larger PDF http://latex-community.org/forum/viewtopic.php?t=8891
 %\externaldocument{install}
 %%%%%% ----- HTML only commands -------
 \begin{htmlonly}
@@ -40,9 +42,12 @@
 % \makeatother
 
 %%%%%% ----- commands for HTML and PDF -----
-\newcommand{\nside}{N_{\textrm{side}}}
-\newcommand{\npix}{N_{\textrm{pix}}}
-\newcommand{\ntemplate}{N_{\textrm{template}}}
+\newcommand{\nside}{N_{\mathrm{side}}}
+\newcommand{\npix}{N_{\mathrm{pix}}}
+\newcommand{\lmax}{\ell_{\mathrm{max}}}
+\newcommand{\mmax}{m_{\mathrm{max}}}
+\newcommand{\smax}{s_{\mathrm{max}}}
+\newcommand{\ntemplate}{N_{\mathrm{template}}}
 %\newcommand{\myhtmlimage}[1]{\htmlimage{#1}}
 \newcommand{\myhtmlimage}[1]{ }
 \renewcommand{\contentsname}{{TABLE OF CONTENTS}}
