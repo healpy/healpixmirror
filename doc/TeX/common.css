@@ -2,9 +2,12 @@
 
 
 /* Century Schoolbook font is very similar to Computer Modern Math: cmmi */
-.BOLDMATH { font-family: "Century Schoolbook", serif; font-weight: bold }
-.MATH     { font-family: "Century Schoolbook", serif; }
-.MATH I   { font-family: "Century Schoolbook", serif; font-style: italic }
+/* .BOLDMATH { font-family: "Century Schoolbook", serif; font-weight: bold } */
+/* .MATH     { font-family: "Century Schoolbook", serif; }  */
+/* .MATH I   { font-family: "Century Schoolbook", serif; font-style: italic } */
+.BOLDMATH { font-family: "Century Schoolbook", serif; font-weight: bold ; font-size: larger}
+.MATH     { font-family: "Century Schoolbook", serif                    ; font-size: larger}
+.MATH I   { font-family: "Century Schoolbook", serif; font-style: italic ; font-size: larger}
 
 /* implement both fixed-size and relative sizes */
 SMALL.XTINY		{ font-size : xx-small }

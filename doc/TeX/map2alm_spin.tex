@@ -12,20 +12,20 @@
 \begin{facility}
 {This routine extracts the alm coefficients out of maps of spin $s$ and $-s$.
 %
-A (complex) map $S$ of spin $s$ is a linear combination of the spin weighted harmonics ${_s}Y_{lm}$
+A (complex) map $S$ of spin $s$ is a linear combination of the spin weighted harmonics ${_s}Y_{\ell m}$
 \begin{equation}
-	{_s}S(p) = \sum_{lm} {_s}a_{lm}\ \ {_s}Y_{lm}(p)
+	{_s}S(p) = \sum_{\ell m} {_s}a_{\ell m}\ \ {_s}Y_{\ell m}(p)
 \end{equation}
-for $l \ge |m|, l \ge |s|$,
+for $\ell \ge |m|, \ell \ge |s|$,
 and is such that ${_s}S^* = {_{-s}}S$.\\
 The 
 \linklatexhtml{usual phase convention for the spin weighted harmonics}%
 {http://en.wikipedia.org/wiki/Spin-weighted_spherical_harmonics\#Calculating}%
 {http://en.wikipedia.org/wiki/Spin-weighted_spherical_harmonics\#Calculating}
 is
-${_s}Y_{lm}^* = (-1)^{s+m} {_{-s}}Y_{l-m}$
+${_s}Y_{\ell m}^* = (-1)^{s+m} {_{-s}}Y_{\ell -m}$
 and therefore 
-${_s}a_{lm}^* = (-1)^{s+m} {_{-s}}a_{l-m}$.
+${_s}a_{\ell m}^* = (-1)^{s+m} {_{-s}}a_{\ell -m}$.
 %
 The two (real) input maps for \thedocid\ are defined respectively as
 \begin{eqnarray}
@@ -36,19 +36,19 @@ The two (real) input maps for \thedocid\ are defined respectively as
 \thedocid\ outputs the alm coefficients defined as
 	%typo correction on spin sign of second term of RHS, 2009-09-03
 \begin{eqnarray}
-	{_{|s|}}a^{+}_{lm} &\myequal& - ( {_{|s|}}a_{lm} + (-1)^s {_{-|s|}}a_{lm} )/2 \\
-	{_{|s|}}a^{-}_{lm} &\myequal& - ( {_{|s|}}a_{lm} - (-1)^s {_{-|s|}}a_{lm} )/(2i)
+	{_{|s|}}a^{+}_{\ell m} &\myequal& - ( {_{|s|}}a_{\ell m} + (-1)^s {_{-|s|}}a_{\ell m} )/2 \\
+	{_{|s|}}a^{-}_{\ell m} &\myequal& - ( {_{|s|}}a_{\ell m} - (-1)^s {_{-|s|}}a_{\ell m} )/(2i)
 \end{eqnarray}
 for $m\ge 0$, knowing that, just as for spin 0 maps, the
 coefficients for $m<0$ are given by 
 \begin{eqnarray}
-{_{|s|}}a^{+}_{l-m} &\myequal& (-1)^m {_{|s|}}a^{+*}_{lm}, \\
-{_{|s|}}a^{-}_{l-m} &\myequal& (-1)^m {_{|s|}}a^{-*}_{lm}.
+{_{|s|}}a^{+}_{l-m} &\myequal& (-1)^m {_{|s|}}a^{+*}_{\ell m}, \\
+{_{|s|}}a^{-}_{l-m} &\myequal& (-1)^m {_{|s|}}a^{-*}_{\ell m}.
 \end{eqnarray}
 %
 With these definitions, ${_2}a^{+}$, ${_2}a^{-}$, ${_2}S^+$ and ${_2}S^-$
 match \healpix  polarization $a^E, a^B, Q$ and $U$ respectively. However, for
-$s=0$, $\ _{0}a^+_{lm} = -a^T_{lm}$, $\ _{0}a^-_{lm} = 0$, $\ {_0}S^+ = T$, $\
+$s=0$, $\ _{0}a^+_{\ell m} = -a^T_{\ell m}$, $\ _{0}a^-_{\ell m} = 0$, $\ {_0}S^+ = T$, $\
 {_0}S^- = 0.$
 }
 {\modAlmTools}
@@ -71,16 +71,16 @@ $s=0$, $\ _{0}a^+_{lm} = -a^T_{lm}$, $\ _{0}a^-_{lm} = 0$, $\ {_0}S^+ = T$, $\
 \begin{tabular}{p{0.4\hsize} p{0.05\hsize} p{0.05\hsize} p{0.40\hsize}} \hline  
 \textbf{name~\&~dimensionality} & \textbf{kind} & \textbf{in/out} & \textbf{description} \\ \hline
                    &   &   &                           \\ %%% for presentation
-nsmax\mytarget{sub:map2alm_spin:nsmax} & I4B & IN & the $N_{side}$ value of the map to analyse. \\
+nsmax\mytarget{sub:map2alm_spin:nsmax} & I4B & IN & the $\nside$ value of the map to analyse. \\
 nlmax\mytarget{sub:map2alm_spin:nlmax} & I4B & IN & the maximum $\ell$ value for the analysis. \\
 nmmax\mytarget{sub:map2alm_spin:nmmax} & I4B & IN & the maximum $m$ value for the analysis. \\
 spin\mytarget{sub:map2alm_spin:spin} & I4B & IN & the spin $s$ of the maps to be analysed (only its absolute
 value is relevant).\\
 map\mytarget{sub:map2alm_spin:map}(0:12*nsmax**2-1, 1:2) & SP/ DP & IN & ${_{|s|}}S^+$ and ${_{|s|}}S^-$ input maps\\
-alm\mytarget{sub:map2alm_spin:alm}(1:2, 0:nlmax, 0:nmmax) & SPC/ DPC & OUT & The ${_{|s|}}a^+_{lm}$ and
-${_{|s|}}a^-_{lm}$ output values. \\
-zbounds\mytarget{sub:map2alm_spin:zbounds}(1:2), \hskip 4cm OPTIONAL & DP & IN & section of the map on which to perform the $a_{lm}$
-                   analysis, expressed in terms of $z=\sin({\rm latitude}) =
+alm\mytarget{sub:map2alm_spin:alm}(1:2, 0:nlmax, 0:nmmax) & SPC/ DPC & OUT & The ${_{|s|}}a^+_{\ell m}$ and
+${_{|s|}}a^-_{\ell m}$ output values. \\
+zbounds\mytarget{sub:map2alm_spin:zbounds}(1:2), \hskip 4cm OPTIONAL & DP & IN & section of the map on which to perform the $a_{\ell m}$
+                   analysis, expressed in terms of $z=\sin(\mathrm{latitude}) =
                    \cos(\theta).$ If zbounds(1)$<$zbounds(2), the analysis is
                    performed {\em on} the strip zbounds(1)$<z<$zbounds(2); if not,
                    it is performed {\em outside} of the strip
@@ -116,8 +116,8 @@ call map2alm\_spin(nside, lmax, lmax, spin, map, alm)  \\
 }
 {
 Analyses spin 5 and -5 maps. The maps have
-an $N_{side}$ of 256, and the analysis is performed up
-to 512 in $\ell$ and m. The resulting $a_{lm}$ coefficients for
+an $\nside$ of 256, and the analysis is performed up
+to 512 in $\ell$ and $m$. The resulting $a_{\ell m}$ coefficients for
 are returned in alm.
 }
 \end{example}

@@ -49,8 +49,8 @@ If {\tt V} (and/or {\tt W}) has the form (n,3,4) (like the pixel {\em corners} r
   \end{kwlist}
 \end{keywords}  
 
-\newcommand{\vecV}{\ensuremath{\bf V}}
-\newcommand{\vecW}{\ensuremath{\bf W}}
+\newcommand{\vecV}{\ensuremath{\textbf{V}}}
+\newcommand{\vecW}{\ensuremath{\textbf{W}}}
 \begin{codedescription}
 {%
 After renormalizing the vectors, \thedocid\ computes the angular distance using
@@ -59,11 +59,11 @@ $2 \sin^{-1}\left(||\vecV-\vecW||\right)/2$ when
  $\vecV$ and $\vecW$ are almost aligned.\\
 If $\vecV$ (resp. $\vecW$) is a single vector, while $\vecW$ (resp. $\vecW$) is a list of vectors,
 then the result is a list of distances
- $d_i = {\rm dist}(\vecV,{\vecW}_i)$ 
-(resp. $d_i = {\rm dist}({\vecV}_i,{\vecW})$).\\
+ $d_i = \mathrm{dist}(\vecV,{\vecW}_i)$ 
+(resp. $d_i = \mathrm{dist}({\vecV}_i,{\vecW})$).\\
 If both $\vecV$ and $\vecW$ are lists of vector {\em of the same length},
 then the result is a list of distances
- $d_i = {\rm dist}({\vecV}_i,{\vecW}_i)$.\\
+ $d_i = \mathrm{dist}({\vecV}_i,{\vecW}_i)$.\\
 }
 \end{codedescription}
 
