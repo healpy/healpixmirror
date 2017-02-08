@@ -110,7 +110,7 @@ call create\_alm(64, 128, 128, 1, 'cl.fits', rng\_handle, 5.0, alm\_TGC, \&\\
 {
 Creates scalar and tensor $a_{\ell m}$ from the power spectrum given in the file
 `cl.fits'. The map to be created from these $a_{\ell m}$ is assumed to have
-$N_{side}=64$. $C_l$s from the power spectrum are used up to an $\ell$ value of
+$\nside=64$. $C_\ell$s from the power spectrum are used up to an $\ell$ value of
 128. 
 Corresponding $a_{\ell m}$ values up to l=128 and m=128 are created as gaussian distributed
 complex numbers. Their are drawn from a sequence of pseudo-random numbers

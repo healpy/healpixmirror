@@ -36,10 +36,10 @@ affecting the calculation of polarisation derivatives on past versions of this r
 \begin{tabular}{p{0.35\hsize} p{0.05\hsize} p{0.1\hsize} p{0.40\hsize}} \hline  
 \textbf{name~\&~dimensionality} & \textbf{kind} & \textbf{in/out} & \textbf{description} \\ \hline
                    &   &   &                           \\ %%% for presentation
-nsmax\mytarget{sub:alm2map_der:nsmax} & I4B & IN & the $N_{side}$ value of the map to synthesize. \\
-nlmax\mytarget{sub:alm2map_der:nlmax} & I4B & IN & the maximum $\ell$ value used for the $a_{lm}$. \\
-nmmax\mytarget{sub:alm2map_der:nmmax} & I4B & IN & the maximum $m$ value used for the $a_{lm}$. \\
-alm\mytarget{sub:alm2map_der:alm}(1:p, 0:nlmax, 0:nmmax) & SPC/ DPC & IN & The $a_{lm}$ values to make the map
+nsmax\mytarget{sub:alm2map_der:nsmax} & I4B & IN & the $\nside$ value of the map to synthesize. \\
+nlmax\mytarget{sub:alm2map_der:nlmax} & I4B & IN & the maximum $\ell$ value used for the $a_{\ell m}$. \\
+nmmax\mytarget{sub:alm2map_der:nmmax} & I4B & IN & the maximum $m$ value used for the $a_{\ell m}$. \\
+alm\mytarget{sub:alm2map_der:alm}(1:p, 0:nlmax, 0:nmmax) & SPC/ DPC & IN & The $a_{\ell m}$ values to make the map
                    from. p is either 1 (temperature only) or 3 (temperature+polarisation).\\
 %% \end{tabular}
 %% \begin{tabular}{p{0.4\hsize} p{0.05\hsize} p{0.1\hsize} p{0.35\hsize}}  \hline  
@@ -82,7 +82,7 @@ allocate(der1(0:npix-1,1:2), der2(0:npix-1,1:3))\\
 call alm2map\_der(nside, lmax, mmax, alm, map, der1, der2)  \\
 }
 {
-Make temperature maps and its derivatives from the $a_{lm}$ passed in alm. The maps have $N_{side}$ of 256, and are constructed from $a_{lm}$ values up to 512 in $\ell$ and $m$.
+Make temperature maps and its derivatives from the $a_{\ell m}$ passed in alm. The maps have $\nside$ of 256, and are constructed from $a_{\ell m}$ values up to 512 in $\ell$ and $m$.
 }
 \end{example}
 

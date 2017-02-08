@@ -29,9 +29,9 @@
 \textbf{name~\&~dimensionality} & \textbf{kind} & \textbf{in/out} & \textbf{description} \\ \hline
                    &   &   &                           \\ %%% for presentation
 nsmax\mytarget{sub:plm_gen:nsmax} & I4B & IN & The $\nside$ value for which to compute the $\lambda_{\ell m}$. \\
-nlmax\mytarget{sub:plm_gen:nlmax} & I4B & IN & The maximum multipole order $\ell$ of the generated $\lambda_{lm}$. \\
-nmmax\mytarget{sub:plm_gen:nmmax} & I4B & IN & The maximum degree $m$ of the generated $\lambda_{lm}$. \\
-plm\mytarget{sub:plm_gen:plm}(0:n\_plm-1, 1:p) & DP & OUT & The $\lambda_{lm}$ values, either for temperature only
+nlmax\mytarget{sub:plm_gen:nlmax} & I4B & IN & The maximum multipole order $\ell$ of the generated $\lambda_{\ell m}$. \\
+nmmax\mytarget{sub:plm_gen:nmmax} & I4B & IN & The maximum degree $m$ of the generated $\lambda_{\ell m}$. \\
+plm\mytarget{sub:plm_gen:plm}(0:n\_plm-1, 1:p) & DP & OUT & The $\lambda_{\ell m}$ values, either for temperature only
                    ($p=1$) or temperature and polarisation ($p=3$). The number
                     of $\lambda_{\ell m}$ is n\_plm =
                     nsmax*(nmmax+1)*(2*nlmax-nmmax+2). They are stored in the
@@ -59,7 +59,7 @@ allocate(plm(0:n\_plm-1,1:3))\\
 call \thedocid(nside, lmax, mmax, plm)  \\
 }
 {
-Computes the spherical harmonics for temperature and polarisation for $N_{side}= 256$, up to 512 in $\ell$ and $m$.
+Computes the spherical harmonics for temperature and polarisation for $\nside= 256$, up to 512 in $\ell$ and $m$.
 }
 \end{example}
 

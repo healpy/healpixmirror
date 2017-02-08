@@ -11,7 +11,7 @@
 \abstract{This document describes the \healpix IDL facility bl2beam.}
 
 \begin{facility}
-{This IDL facility computes a circular beam profile $b(\theta)$ from its transfer (or window) function $b(l)$.
+{This IDL facility computes a circular beam profile $b(\theta)$ from its transfer (or window) function $b(\ell)$.
 }
 {src/idl/misc/bl2beam.pro}
 \end{facility}
@@ -34,7 +34,7 @@
 %     \item[beam]\mytarget{idl:bl2beam:bl}%
 % 	output (circular) beam profile $b(\theta)$
     \item[bl] \mytarget{idl:bl2beam:bl}%
-      input $b(l)$ window function of beam (defined for all integer multipoles $l$ starting at 0)
+      input $b(\ell)$ window function of beam (defined for all integer multipoles $l$ starting at 0)
     \item[theta] \mytarget{idl:bl2beam:theta}%
     angles $\theta$ (in arcmin, degrees or radians) 
   at which the output beam $b(\theta)$ is to be computed.
@@ -58,17 +58,17 @@
 {Since an arbitrary beam is related to its SH Transform via
 \begin{equation}
 	\label{eq:bl2beam_idl:br}
-	b({\bf{r}}) = \sum_{lm} b_{lm} Y_{lm}({\bf{r}}),
+	b({\textbf{r}}) = \sum_{\ell m} b_{\ell m} Y_{\ell m}({\textbf{r}}),
 \end{equation}
 a circular beam has a radial profile (as returned by \thedocid)
 \begin{equation}
 	\label{eq:bl2beam_idl:btheta}
-	b(\theta) = \sum_l  b(l) P_l(\theta) \frac{2l+1}{4 \pi},
+	b(\theta) = \sum_\ell  b(\ell) P_\ell(\theta) \frac{2\ell+1}{4 \pi},
 \end{equation}
 where $P_l$ is Legendre Polynomial and 
 \begin{equation}
 	\label{eq:bl2beam_idl:bl}
-	b(l)=b_{l0} \sqrt{\frac{4 \pi}{2l+1}}
+	b(\ell)=b_{\ell 0} \sqrt{\frac{4 \pi}{2\ell+1}}
 \end{equation}
 is the beam window (or transfer)
 function, expected as input to \thedocid.%
@@ -82,8 +82,8 @@ function, expected as input to \thedocid.%
     \item[idl] version \idlversion or more is necessary to run \thedocid.
     \item[\htmlref{beam2bl}{idl:beam2bl}] facility to perform the inverse
 transform to \thedocid.
-    \item[\htmlref{bl2fits}{idl:bl2fits}] facility to write a $b(l)$ window function into a FITS file.
-    \item[\htmlref{fits2cl}{idl:fits2cl}] facility to read a $b(l)$ window
+    \item[\htmlref{bl2fits}{idl:bl2fits}] facility to write a $b(\ell)$ window function into a FITS file.
+    \item[\htmlref{fits2cl}{idl:fits2cl}] facility to read a $b(\ell)$ window
 function from a FITS file
   \end{sulist}
 \end{related}

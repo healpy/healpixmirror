@@ -34,7 +34,7 @@
 \begin{tabular}{p{0.36\hsize} p{0.05\hsize} p{0.09\hsize} p{0.40\hsize}} \hline  
 \textbf{name~\&~dimensionality} & \textbf{kind} & \textbf{in/out} & \textbf{description} \\ \hline
                    &   &   &                           \\ %%% for presentation
-nsmax\mytarget{sub:alter_alm:nsmax} & I4B & IN & $\nside$ resolution parameter of the map associated with the $a_{lm}$
+nsmax\mytarget{sub:alter_alm:nsmax} & I4B & IN & $\nside$ resolution parameter of the map associated with the $a_{\ell m}$
                    considered. Currently has no effect on the routine. \\ 
 nlmax\mytarget{sub:alter_alm:nlmax} & I4B & IN & maximum $\ell$ value for the $a_{\ell m}$.   \\
 nmmax\mytarget{sub:alter_alm:nmmax} & I4B & IN & maximum $m$ value for the $a_{\ell m}$.   \\
@@ -63,7 +63,7 @@ window\mytarget{sub:alter_alm:window}(0:nlw,1:d) \hskip 5cm (OPTIONAL)& SP/ DP &
 call alter\_alm(64, 128, 128, 1, 5.0, alm\_TGC)  \\
 }
 {
-Alters scalar and tensor $a_{lm}$ of a map with $\nside=64$, 
+Alters scalar and tensor $a_{\ell m}$ of a map with $\nside=64$, 
  $\lmax=\mmax = 128$ by multiplying them by the beam window function of a
 gaussian beam with FWHM = 5 arcmin.
 }
@@ -87,7 +87,7 @@ gaussian beam with FWHM = 5 arcmin.
   \item[\htmlref{alm2map}{sub:alm2map}] Routines to synthetize a \healpix sky map from its $a_{\ell m}$
   coefficients.
   \item[\htmlref{alms2fits}{sub:alms2fits}, \htmlref{dump\_alms}{sub:dump_alms}]
-  Routines to save a set of $a_{lm}$ in a FITS file.  
+  Routines to save a set of $a_{\ell m}$ in a FITS file.  
   \end{sulist}
 \end{related}
 

@@ -13,7 +13,7 @@
   alm2map\_sc\_pre\_X, alm2map\_pol\_X, alm2map\_pol\_pre1\_X,
   alm2map\_pol\_pre2\_X, where X stands for either s or d. These routines
   synthesize a \healpix {\em RING ordered} temperature map (and if specified, polarisation maps) 
-from input $a_{lm}^T$ (and if specified $a_{lm}^E$ and $a_{lm}^B$) values. 
+from input $a_{\ell m}^T$ (and if specified $a_{\ell m}^E$ and $a_{\ell m}^B$) values. 
 The different routines are called dependent on what parameters are passed. 
 Some routines synthesize maps with or without precomputed harmonics (note that
 since \healpix v2.20 precomputed harmonics most likely won't speed up computation)
@@ -38,10 +38,10 @@ The routines accept both single and double precision arrays for alm\_TGC and
 \begin{tabular}{p{0.4\hsize} p{0.05\hsize} p{0.1\hsize} p{0.35\hsize}} \hline  
 \textbf{name~\&~dimensionality} & \textbf{kind} & \textbf{in/out} & \textbf{description} \\ \hline
                    &   &   &                           \\ %%% for presentation
-nsmax\mytarget{sub:alm2map:nsmax} & I4B & IN & the $N_{side}$ value of the map to synthesize. \\
-nlmax\mytarget{sub:alm2map:nlmax} & I4B & IN & the maximum $\ell$ value used for the $a_{lm}$. \\
-nmmax\mytarget{sub:alm2map:nmmax} & I4B & IN & the maximum $m$ value used for the $a_{lm}$. \\
-alm\_TGC\mytarget{sub:alm2map:alm_TGC}(1:p, 0:nlmax, 0:nmmax) & SPC or DPC & IN & The $a_{lm}$ values to make
+nsmax\mytarget{sub:alm2map:nsmax} & I4B & IN & the $\nside$ value of the map to synthesize. \\
+nlmax\mytarget{sub:alm2map:nlmax} & I4B & IN & the maximum $\ell$ value used for the $a_{\ell m}$. \\
+nmmax\mytarget{sub:alm2map:nmmax} & I4B & IN & the maximum $m$ value used for the $a_{\ell m}$. \\
+alm\_TGC\mytarget{sub:alm2map:alm_TGC}(1:p, 0:nlmax, 0:nmmax) & SPC or DPC & IN & The $a_{\ell m}$ values to make
                    the map from. $p$ is 3 or 1 depending on wether polarisation is
                    respectively included or not. In the former case, the first
                    index runs from 1 to 3 corresponding to (T,E,B). \\
@@ -54,11 +54,11 @@ map\_TQU(0:12*nsmax**2-1, 1:3) & SP or DP & OUT & if both temperature an
 polarisation maps are to be synthesized, the map array should have this rank, 
 where the second index is (1,2,3) corresponding to (T,Q,U). \\ 
 plm\mytarget{sub:alm2map:plm}(0:n\_plm-1), \hskip 3cm OPTIONAL & DP & IN & If this optional matrix is passed with
-this rank, precomputed $P_{lm}(\theta)$ are used instead of recursion. (
+this rank, precomputed $P_{\ell m}(\theta)$ are used instead of recursion. (
 n\_plm = nsmax*(nmmax+1)*(2*nlmax-nmmax+2)
 \\ 
 plm(0:n\_plm-1,1:3), \hskip 3cm OPTIONAL & DP & IN & If this optional matrix is 
-passed with this rank, precomputed $P_{lm}(\theta)$ AND precomputed tensor
+passed with this rank, precomputed $P_{\ell m}(\theta)$ AND precomputed tensor
 harmonics are used instead of recursion. (n\_plm =
 nsmax*(nmmax+1)*(2*nlmax-nmmax+2) 
 \end{tabular}
@@ -85,10 +85,10 @@ allocate(plm(0:n\_plm-1,1:3))\\
 call alm2map(nside, lmax, mmax, alm, map, plm)  \\
 }
 {
-Make temperature and polarisation maps from the scalar and tensor $a_{lm}$
-passed in alm. The maps have $N_{side}$ of 256, and are constructed from
-$a_{lm}$ values up to 512 in $\ell$ and $m$. Since the optional plm array is
-passed with both precomputed $P_{lm}(\theta)$ AND tensor harmonics, there will
+Make temperature and polarisation maps from the scalar and tensor $a_{\ell m}$
+passed in alm. The maps have $\nside$ of 256, and are constructed from
+$a_{\ell m}$ values up to 512 in $\ell$ and $m$. Since the optional plm array is
+passed with both precomputed $P_{\ell m}(\theta)$ AND tensor harmonics, there will
 be no recursions in the routine. However, this will most likely have a
 \emph{negative} impact on execution speed.
 }
@@ -106,7 +106,7 @@ be no recursions in the routine. However, this will most likely have a
   allocated properly
   \end{sulist}
 Note: Starting with \htmlref{version 2.20}{sub:new2p20}, {\tt libpsht} routines will be called when
-precomputed $P_{lm}$ are not provided.
+precomputed $P_{\ell m}$ are not provided.
 \end{modules}
 
 \begin{related}
@@ -122,8 +122,8 @@ arbitrary spin from their  ${_s}a_{\ell m}$
   \item[\htmlref{create\_alm}{sub:create_alm}] routine to generate randomly
   distributed $a_{\ell m}$ coefficients according to a given power spectrum
   \item[\htmlref{pixel\_window}{sub:pixel_window},
-\htmlref{generate\_beam}{sub:generate_beam}] return the $l$-space \healpix-pixel and beam window function respectively
-  \item[\htmlref{alter\_alm}{sub:alter_alm}] modifies $a_{lm}$ to emulate effect
+\htmlref{generate\_beam}{sub:generate_beam}] return the $\ell$-space \healpix-pixel and beam window function respectively
+  \item[\htmlref{alter\_alm}{sub:alter_alm}] modifies $a_{\ell m}$ to emulate effect
 of real space filtering
   \end{sulist}
 \end{related}

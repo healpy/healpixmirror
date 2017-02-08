@@ -47,12 +47,12 @@ for polarization calculations.
 \textbf{name~\&~dimensionality} & \textbf{kind} & \textbf{in/out} & \textbf{description} \\ \hline
                    &   &   &                           \\ %%% for presentation
 comm\mytarget{sub:mpi_initialize_alm_tools:comm}  & I4B & IN & MPI communicator. \\
-nsmax\mytarget{sub:mpi_initialize_alm_tools:nsmax} & I4B & IN & the $N_{side}$ value of the HEALPix map. (OPTIONAL) \\
-nlmax\mytarget{sub:mpi_initialize_alm_tools:nlmax} & I4B & IN & the maximum $\ell$ value used for the $a_{lm}$. (OPTIONAL) \\
-nmmax\mytarget{sub:mpi_initialize_alm_tools:nmmax} & I4B & IN & the maximum $m$ value used for the $a_{lm}$. (OPTIONAL) \\
+nsmax\mytarget{sub:mpi_initialize_alm_tools:nsmax} & I4B & IN & the $\nside$ value of the HEALPix map. (OPTIONAL) \\
+nlmax\mytarget{sub:mpi_initialize_alm_tools:nlmax} & I4B & IN & the maximum $\ell$ value used for the $a_{\ell m}$. (OPTIONAL) \\
+nmmax\mytarget{sub:mpi_initialize_alm_tools:nmmax} & I4B & IN & the maximum $m$ value used for the $a_{\ell m}$. (OPTIONAL) \\
 \end{tabular}
 \begin{tabular}{p{0.4\hsize} p{0.05\hsize} p{0.05\hsize} p{0.40\hsize}} \hline  
-zbounds\mytarget{sub:mpi_initialize_alm_tools:zbounds}(1:2) & DP & IN & section of the map on which to perform the $a_{lm}$
+zbounds\mytarget{sub:mpi_initialize_alm_tools:zbounds}(1:2) & DP & IN & section of the map on which to perform the $a_{\ell m}$
                    analysis, expressed in terms of $z=\sin({\rm latitude}) =
                    \cos(\theta)$. If zbounds(1)$<$zbounds(2), the analysis is
                    performed {\em on} the strip zbounds(1)$<z<$zbounds(2); if not,

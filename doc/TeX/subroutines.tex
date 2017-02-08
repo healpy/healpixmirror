@@ -164,7 +164,7 @@ subroutines. Which one of the specific routines is called depends on
 the type and rank of the arguments supplied in the call. We tag
 generic names with a $*$ in this document.\\
 \\
-$\mathbf{N_{side}}$ & \healpix resolution parameter --- see the
+$\mathbf{\nside}$ & \healpix resolution parameter --- see the
 \healpix Primer.\\
 \\
 $\mathbf{map}$ & We use the word ``map'' referring to a function,
@@ -252,7 +252,7 @@ and
 {\tt Python} libraries
 	\item improved FITS file parsing in 
 \htmlref{{\tt generate\_beam}}{sub:generate_beam},
-affecting the external $B(l)$ reading in the F90 facilities 
+affecting the external $B(\ell)$ reading in the F90 facilities 
 \htmlref{{\tt alteralm}}{fac:alteralm}, 
 \htmlref{{\tt synfast}}{fac:synfast}, 
 \htmlref{{\tt sky\_ng\_sim}}{fac:sky_ng_sim}, 
@@ -322,7 +322,7 @@ mode.
 \item Spherical Harmonics Transform routines now transparently call \htmladdnormallink{\tt
 libpsht}{http://libpsht.sourceforge.net} C routines, leading to a significant (2 to 4) speed-up factor. This
 concerns temperature and polarized transforms (\htmlref{alm2map}{sub:alm2map}, 
-\htmlref{map2alm}{sub:map2alm}) {\em without precomputation} of the $P_{lm}$ as
+\htmlref{map2alm}{sub:map2alm}) {\em without precomputation} of the $P_{\ell m}$ as
 well as spin 
 weighted (\htmlref{alm2map\_spin}{sub:alm2map_spin}, 
 \htmlref{map2alm\_spin}{sub:map2alm_spin}) transforms for $0 < |s| \le 100$,
@@ -356,8 +356,8 @@ pixels and the pixel indexes can now be stored in either
 {\tt integer(\htmlref{I8B}{sub:healpix_types})} variables (on systems
 supporting 64 bit variables).\\
 The reading and writing of
-$a_{lm}$ containing files remains limited to $l < 46340 $, though. This
-restriction does not apply to $C(l)$ containing files.
+$a_{\ell m}$ containing files remains limited to $\ell < 46340 $, though. This
+restriction does not apply to $C(\ell)$ containing files.
 
 \item As a positive side effect of their upgrade, the F90
 \htmlref{pixel/coordinate conversion

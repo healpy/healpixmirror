@@ -27,7 +27,7 @@
 % \begin{tabular}{p{0.4\hsize} p{0.05\hsize} p{0.1\hsize} p{0.35\hsize}} \hline  
 % \textbf{name\&dimensionality} & \textbf{kind} & \textbf{in/out} & \textbf{description} \\ \hline
 %                    &   &   &                           \\ %%% for presentation
-% nside & I4B & IN & the $N_{side}$ parameter of the map. \\
+% nside & I4B & IN & the $\nside$ parameter of the map. \\
 % vector0(3) & DP & IN & cartesian vector pointing at the central position. \\
 % radius & DP & IN & radius from central position in radians. \\
 % listpix(0:*) & I4B & OUT & the pixel indexs for all pixels inside $radius$. Make sure that the size of the array is big enough to contain all pixels. \\ 
@@ -41,7 +41,7 @@
 % call getdisc\_ring(256,(0,0,1),pi/2,listpix,nlist)  \\
 % }
 % {
-% Returns the pixel indexs of all pixels north of the equatorial line in a $N_{side}=256$ map.
+% Returns the pixel indexs of all pixels north of the equatorial line in a $\nside=256$ map.
 % }
 % \end{example}
 % \newpage

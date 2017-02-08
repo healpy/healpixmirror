@@ -33,7 +33,7 @@ alm2fits routine for instance)}
 ] Long array containing on INPUT the degree $m$. 
     \item[index\mytarget{idl:lm2index:index}%
 ] Long array containing on OUTPUT the index \hfill\newline
-                 $i$ = $\ell^2$ + $\ell$ + $m$ + 1.
+                 $i=\ell^2 + \ell + m + 1$.
   \end{qulist}
 \end{qualifiers}
 
@@ -52,8 +52,7 @@ definition $0 \le |m|\le \ell$ (the routine does not check for this).
     $a_{\ell m}$ values.
     \item[\htmlref{alm2fits}{idl:alm2fits}] writes $a_{\ell m}$ values into a FITS file.
     \item[\htmlref{index2lm}{idl:index2lm}] routine complementary to \thedocid:
-    converts $i$ = $\ell^2$ +
-    $\ell$ + $m$ + 1 into $(\ell, m)$.
+    converts $i=\ell^2 + \ell + m + 1$ into $(\ell, m)$.
   \end{sulist}
 \end{related}
 
@@ -64,7 +63,7 @@ definition $0 \le |m|\le \ell$ (the routine does not check for this).
 \end{tabular}
 }
 {
-will return in {\tt index} in value $\ell^2 + \ell + m + 1$
+will return in {\tt index} the value $\ell^2 + \ell + m + 1$
 }
 \end{example}
 

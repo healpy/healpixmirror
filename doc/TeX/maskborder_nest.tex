@@ -27,7 +27,7 @@ located on the inner boundary of {\em invalid} regions
 \begin{tabular}{p{0.35\hsize} p{0.05\hsize} p{0.1\hsize} p{0.40\hsize}} \hline  
 \textbf{name~\&~dimensionality} & \textbf{kind} & \textbf{in/out} & \textbf{description} \\ \hline
                    &   &   &                           \\ %%% for presentation
-nside\mytarget{sub:maskborder_nest:nside} & I4B & IN & The $N_{side}$ value of the input mask. \\
+nside\mytarget{sub:maskborder_nest:nside} & I4B & IN & The $\nside$ value of the input mask. \\
 mask\_in\mytarget{sub:maskborder_nest:mask_in}(0:Npix-1) & I4B & IN & Input binary NESTED-ordered mask. Npix = 12*nside*nside\\
 mask\_out\mytarget{sub:maskborder_nest:mask_out}(0:Npix-1) &I4B & OUT & Output NESTED-ordered mask, in which inner border
 pixels (defined as 0-valued and adjacent to 1-valued pixels) take the value 2

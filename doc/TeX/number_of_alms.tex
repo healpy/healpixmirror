@@ -10,7 +10,7 @@
 \abstract{This document describes the \healpix Fortran90 function NUMBER\_OF\_ALMS.}
 
 \begin{facility}
-{This function returns the number of $a_{lm}$ values stored in each FITS extension in a FITS file containing $a_{lm}$}
+{This function returns the number of $a_{\ell m}$ values stored in each FITS extension in a FITS file containing $a_{\ell m}$}
 {\modFitstools}
 \end{facility}
 
@@ -37,7 +37,7 @@ extnum\mytarget{sub:number_of_alms:extnum} & I4B & OUT & number of extensions in
 print*,number\_of\_alms('alms.fits')  \\
 }
 {
-Prints the number of $a_{lm}$ stored in each extension of the file 'alms.fits'
+Prints the number of $a_{\ell m}$ stored in each extension of the file 'alms.fits'
 }
 \end{example}
 
@@ -51,7 +51,7 @@ Prints the number of $a_{lm}$ stored in each extension of the file 'alms.fits'
 \newpage
 \begin{related}
   \begin{sulist}{} %%%% NOTE the ``extra'' brace here %%%%
-  \item[\htmlref{fits2alms}{sub:fits2alms}, \htmlref{read\_conbintab}{sub:read_conbintab}] routines that read $a_{lm}$ values from FITS files. 
+  \item[\htmlref{fits2alms}{sub:fits2alms}, \htmlref{read\_conbintab}{sub:read_conbintab}] routines that read $a_{\ell m}$ values from FITS files. 
   \end{sulist}
 \end{related}
 

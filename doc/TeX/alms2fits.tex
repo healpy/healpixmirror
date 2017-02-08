@@ -10,9 +10,9 @@
 \abstract{This document describes the \healpix Fortran90 subroutine ALMS2FITS.}
 
 \begin{facility}
-{This routine stores  $a_{lm}$  values in a binary FITS file. Each FITS file
+{This routine stores  $a_{\ell m}$  values in a binary FITS file. Each FITS file
   extension created will contain one integer column with
-  $index=\ell^2+\ell+m+1$, and 2 or 4 single (or double) precision columns with real/imaginary  $a_{lm}$  values and real/imaginary   standard deviation. One can store temperature $a_{lm}$ or temperature and polarisation, $a^T_{lm}$, $a^E_{lm}$ and $a^B_{lm}$. If temperature is specified, a FITS file with one extension is created. If polarisation is specified, a FITS file with 3 extensions one for each set of $a_{lm}$, $a_{lm}^T$, $a_{lm}^E$ and $a_{lm}^B$ is created.}
+  $index=\ell^2+\ell+m+1$, and 2 or 4 single (or double) precision columns with real/imaginary  $a_{\ell m}$  values and real/imaginary   standard deviation. One can store temperature $a_{\ell m}$ or temperature and polarisation, $a^T_{\ell m}$, $a^E_{\ell m}$ and $a^B_{\ell m}$. If temperature is specified, a FITS file with one extension is created. If polarisation is specified, a FITS file with 3 extensions one for each set of $a_{\ell m}$, $a_{\ell m}^T$, $a_{\ell m}^E$ and $a_{\ell m}^B$ is created.}
 {\modFitstools}
 \end{facility}
 
@@ -32,8 +32,8 @@
 \begin{tabular}{p{0.4\hsize} p{0.05\hsize} p{0.05\hsize} p{0.40\hsize}} \hline  
 \textbf{name~\&~dimensionality} & \textbf{kind} & \textbf{in/out} & \textbf{description} \\ \hline
                    &   &   &                           \\ %%% for presentation
-filename\mytarget{sub:alms2fits:filename}(LEN=\filenamelen) & CHR & IN & filename for the FITS file to store the $a_{lm}$ in. \\
-nalms\mytarget{sub:alms2fits:nalms} & I4B & IN & number of  $a_{lm}$  to store. \\
+filename\mytarget{sub:alms2fits:filename}(LEN=\filenamelen) & CHR & IN & filename for the FITS file to store the $a_{\ell m}$ in. \\
+nalms\mytarget{sub:alms2fits:nalms} & I4B & IN & number of  $a_{\ell m}$  to store. \\
 ncl\mytarget{sub:alms2fits:ncl} & I4B & IN & number of columns in the FITS file. If an standard deviation is given, this number is 5, otherwise it is 3. \\
 next\mytarget{sub:alms2fits:next} & I4B & IN & the number of extensions. 1 for temperature only, 3
                    for temperature and polarisation. \\
@@ -41,12 +41,12 @@ next\mytarget{sub:alms2fits:next} & I4B & IN & the number of extensions. 1 for t
 \begin{tabular}{p{0.4\hsize} p{0.05\hsize} p{0.05\hsize} p{0.40\hsize}} \hline  
 \textbf{name~\&~dimensionality} & \textbf{kind} & \textbf{in/out} & \textbf{description} \\ \hline
                    &   &   &                           \\ %%% for presentation
-alms\mytarget{sub:alms2fits:alms}(1:nalms,1:ncl+1,1:next) & SP/ DP & IN & the $a_{lm}$ to write to the
+alms\mytarget{sub:alms2fits:alms}(1:nalms,1:ncl+1,1:next) & SP/ DP & IN & the $a_{\ell m}$ to write to the
                    file. alms(i,1,j) and alms(i,2,j) contain the $\ell$ and $m$
-                   values for the ith  $a_{lm}$  (j=1,2,3 for
+                   values for the ith  $a_{\ell m}$  (j=1,2,3 for
                    (T,E,B)). alms(i,3,j) and alms(i,4,j) contain the real and
-                   imaginary value of the ith  $a_{lm}$. Finally, the standard
-                   deviation for the ith  $a_{lm}$  is contained in alms(i,5,j)
+                   imaginary value of the ith  $a_{\ell m}$. Finally, the standard
+                   deviation for the ith  $a_{\ell m}$  is contained in alms(i,5,j)
                    (real) and alms(i,6,j) (imaginary). \\ 
 nlheader\mytarget{sub:alms2fits:nlheader} & I4B & IN & number of header lines to write to the file. \\
 header\mytarget{sub:alms2fits:header}(LEN=80) (1:nlheader, 1:next) & CHR & IN & the header to the FITS file. \\ 
@@ -59,7 +59,7 @@ header\mytarget{sub:alms2fits:header}(LEN=80) (1:nlheader, 1:next) & CHR & IN & 
 call alms2fits ('alms.fits', 65*66/2, alms, 3, header, 80, 3)  \\
 }
 {
-Creates a FITS file with the $a_{lm}^T$, $a_{lm}^E$ and $a_{lm}^B$ values given in alms(1:65*66/2,1:4,1:3). The last index specifies (T,E,B). The second index gives l, m, real( $a_{lm}$ ), imaginary( $a_{lm}$ ) for each of the $a_{lm}$. The number 65*66/2 is the number of  $a_{lm}$  values up to an $\ell$ value of 64. 80 lines from header(1:80,1:3) is written to each extension.
+Creates a FITS file with the $a_{\ell m}^T$, $a_{\ell m}^E$ and $a_{\ell m}^B$ values given in alms(1:65*66/2,1:4,1:3). The last index specifies (T,E,B). The second index gives l, m, real( $a_{\ell m}$ ), imaginary( $a_{\ell m}$ ) for each of the $a_{\ell m}$. The number 65*66/2 is the number of  $a_{\ell m}$  values up to an $\ell$ value of 64. 80 lines from header(1:80,1:3) is written to each extension.
 }
 \end{example}
 
@@ -75,7 +75,7 @@ Creates a FITS file with the $a_{lm}^T$, $a_{lm}^E$ and $a_{lm}^B$ values given 
 \begin{related}
   \begin{sulist}{} %%%% NOTE the ``extra'' brace here %%%%
   \item[\htmlref{fits2alms}{sub:fits2alms},
-  \htmlref{read\_conbintab}{sub:read_conbintab}] routines to read $a_{lm}$ from
+  \htmlref{read\_conbintab}{sub:read_conbintab}] routines to read $a_{\ell m}$ from
   a FITS file 
   \item[\htmlref{dump\_alms}{sub:dump_alms}] has the same function as \thedocid\ but with parameters passed differently.
   \end{sulist}

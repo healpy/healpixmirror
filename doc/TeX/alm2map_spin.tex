@@ -9,12 +9,12 @@
 {This routine produces the maps of arbitrary spin $s$ and $-s$ given their alm
 coefficients.
 %
-A (complex) map $S$ of spin $s$ is a linear combination of the spin weighted harmonics ${_s}Y_{lm}$
+A (complex) map $S$ of spin $s$ is a linear combination of the spin weighted harmonics ${_s}Y_{\ell m}$
 \begin{equation}
-	{_s}S(p) = \sum_{lm} {_s}a_{lm}\ \ {_s}Y_{lm}(p)
+	{_s}S(p) = \sum_{\ell m} {_s}a_{\ell m}\ \ {_s}Y_{\ell m}(p)
 \end{equation}
 % \begin{eqnarray}
-% 	{_s}S(p) = \sum_{lm} {_s}a_{lm}\ \ {_s}Y_{lm}(p) \myhtmlimage{} \label{spinmap}
+% 	{_s}S(p) = \sum_{\ell m} {_s}a_{\ell m}\ \ {_s}Y_{\ell m}(p) \myhtmlimage{} \label{spinmap}
 % \end{eqnarray}
 for $l \ge |m|, l \ge |s|$,
 and is such that ${_s}S^* = {_{-s}}S$.\\
@@ -23,23 +23,23 @@ The
 {http://en.wikipedia.org/wiki/Spin-weighted_spherical_harmonics\#Calculating}%
 {http://en.wikipedia.org/wiki/Spin-weighted_spherical_harmonics\#Calculating}
 is
-${_s}Y_{lm}^* = (-1)^{s+m} {_{-s}}Y_{l-m}$
+${_s}Y_{\ell m}^* = (-1)^{s+m} {_{-s}}Y_{\ell -m}$
 and therefore 
-${_s}a_{lm}^* = (-1)^{s+m} {_{-s}}a_{l-m}$.
+${_s}a_{\ell m}^* = (-1)^{s+m} {_{-s}}a_{\ell -m}$.
 
 
 %
 \thedocid\ expects the alm coefficients to be provided as
 	%typo correction on spin sign of second term of RHS, 2009-09-03
 \begin{eqnarray}
-	{_{|s|}}a^{+}_{lm} &\myequal& - ( {_{|s|}}a_{lm} + (-1)^s {_{-|s|}}a_{lm} )/2 \\
-	{_{|s|}}a^{-}_{lm} &\myequal& - ( {_{|s|}}a_{lm} - (-1)^s {_{-|s|}}a_{lm} )/(2i)
+	{_{|s|}}a^{+}_{\ell m} &\myequal& - ( {_{|s|}}a_{\ell m} + (-1)^s {_{-|s|}}a_{\ell m} )/2 \\
+	{_{|s|}}a^{-}_{\ell m} &\myequal& - ( {_{|s|}}a_{\ell m} - (-1)^s {_{-|s|}}a_{\ell m} )/(2i)
 \end{eqnarray}
 for $m\ge 0$, knowing that, just as for spin 0 maps, the
 coefficients for $m<0$ are given by 
 \begin{eqnarray}
-{_{|s|}}a^{+}_{l-m} &\myequal& (-1)^m {_{|s|}}a^{+*}_{lm}, \\
-{_{|s|}}a^{-}_{l-m} &\myequal& (-1)^m {_{|s|}}a^{-*}_{lm}.
+{_{|s|}}a^{+}_{l-m} &\myequal& (-1)^m {_{|s|}}a^{+*}_{\ell m}, \\
+{_{|s|}}a^{-}_{l-m} &\myequal& (-1)^m {_{|s|}}a^{-*}_{\ell m}.
 \end{eqnarray}
 %
 The two (real) maps produced by \thedocid\ are  defined respectively as
@@ -50,7 +50,7 @@ The two (real) maps produced by \thedocid\ are  defined respectively as
 %
 With these definitions, ${_2}a^{+}$, ${_2}a^{-}$, ${_2}S^+$ and ${_2}S^-$
 match \healpix polarization $a^E, a^B, Q$ and $U$ respectively. However, for
-$s=0$, $\ _{0}a^+_{lm} = -a^T_{lm}$, $\ _{0}a^-_{lm} = 0$, $\ {_0}S^+ = T$, $\ {_0}S^- = 0.$}
+$s=0$, $\ _{0}a^+_{\ell m} = -a^T_{\ell m}$, $\ _{0}a^-_{\ell m} = 0$, $\ {_0}S^+ = T$, $\ {_0}S^- = 0.$}
 {\modAlmTools}
 \end{facility}
 
@@ -69,12 +69,12 @@ $s=0$, $\ _{0}a^+_{lm} = -a^T_{lm}$, $\ _{0}a^-_{lm} = 0$, $\ {_0}S^+ = T$, $\ {
 \begin{tabular}{p{0.35\hsize} p{0.05\hsize} p{0.1\hsize} p{0.40\hsize}} \hline  
 \textbf{name~\&~dimensionality} & \textbf{kind} & \textbf{in/out} & \textbf{description} \\ \hline
                    &   &   &                           \\ %%% for presentation
-nsmax\mytarget{sub:alm2map_spin:nsmax} & I4B & IN & the $N_{side}$ value of the map to synthesize. \\
-nlmax\mytarget{sub:alm2map_spin:nlmax} & I4B & IN & the maximum $\ell$ value used for the $a_{lm}$. \\
-nmmax\mytarget{sub:alm2map_spin:nmmax} & I4B & IN & the maximum $m$ value used for the $a_{lm}$. \\
+nsmax\mytarget{sub:alm2map_spin:nsmax} & I4B & IN & the $\nside$ value of the map to synthesize. \\
+nlmax\mytarget{sub:alm2map_spin:nlmax} & I4B & IN & the maximum $\ell$ value used for the $a_{\ell m}$. \\
+nmmax\mytarget{sub:alm2map_spin:nmmax} & I4B & IN & the maximum $m$ value used for the $a_{\ell m}$. \\
 spin\mytarget{sub:alm2map_spin:spin} & I4B & IN & spin $s$ of the maps to be generated (only its absolute value
 is relevant). \\
-alm\mytarget{sub:alm2map_spin:alm}(1:2, 0:nlmax, 0:nmmax) & SPC/ DPC & IN & The ${_{|s|}}a^+_{lm}$ and ${_{|s|}}a^-_{lm}$ values to make the map
+alm\mytarget{sub:alm2map_spin:alm}(1:2, 0:nlmax, 0:nmmax) & SPC/ DPC & IN & The ${_{|s|}}a^+_{\ell m}$ and ${_{|s|}}a^-_{\ell m}$ values to make the map
                    from.\\
 map\mytarget{sub:alm2map_spin:map}(0:12*nsmax**2-1, 1:2) & SP/ DP & OUT & ${_{|s|}}S^+$ and ${_{|s|}}S^-$ output maps
 \end{tabular}
@@ -98,7 +98,7 @@ allocate(map(0:npix-1,1:2))\\
 call alm2map\_spin(nside, lmax, mmax, spin, alm, map)  \\
 }
 {
-Make spin-4 maps from the $a_{lm}$ passed in alm. The maps have $N_{side}$ of 256, and are constructed from $a_{lm}$ values up to 512 in $\ell$ and $m$.
+Make spin-4 maps from the $a_{\ell m}$ passed in alm. The maps have $\nside$ of 256, and are constructed from $a_{\ell m}$ values up to 512 in $\ell$ and $m$.
 }
 \end{example}
 

@@ -10,12 +10,12 @@
 \abstract{This document describes the \healpix Fortran90 subroutine READ\_CONBINTAB.}
 
 \begin{facility}
-{This routine reads a FITS file containing  $a_{lm}$  values for constained
+{This routine reads a FITS file containing  $a_{\ell m}$  values for constained
   realisation. The FITS file is supposed to contain one integer column with
   $index=\ell^2+\ell+m+1$ and 2 or 4 single (or double) precision columns with
-  real/imaginary  $a_{lm}$  values and real/imaginary   standard deviation on
-  these $a_{lm}$. It is supposed to contain either 1 or 3 extension(s) containing
-  respectively the $a_{lm}$ for T and if applicable E and B.}
+  real/imaginary  $a_{\ell m}$  values and real/imaginary   standard deviation on
+  these $a_{\ell m}$. It is supposed to contain either 1 or 3 extension(s) containing
+  respectively the $a_{\ell m}$ for T and if applicable E and B.}
 {\modFitstools}
 \end{facility}
 
@@ -33,13 +33,13 @@
 \begin{tabular}{p{0.39\hsize} p{0.05\hsize} p{0.06\hsize} p{0.40\hsize}} \hline  
 \textbf{name\&dimensionality} & \textbf{kind} & \textbf{in/out} & \textbf{description} \\ \hline
                    &   &   &                           \\ %%% for presentation
-filename\mytarget{sub:read_conbintab:filename}(LEN=\filenamelen) & CHR & IN & filename of FITS file containing $a_{lm}$. \\
-nalms\mytarget{sub:read_conbintab:nalms} & I4B & IN & Number of  $a_{lm}$  values to read from the file. \\
-alms\mytarget{sub:read_conbintab:alms}(0:nalms-1,1:6) & SP/ DP & OUT & the $a_{lm}$ read from the file. alms(i,1)
+filename\mytarget{sub:read_conbintab:filename}(LEN=\filenamelen) & CHR & IN & filename of FITS file containing $a_{\ell m}$. \\
+nalms\mytarget{sub:read_conbintab:nalms} & I4B & IN & Number of  $a_{\ell m}$  values to read from the file. \\
+alms\mytarget{sub:read_conbintab:alms}(0:nalms-1,1:6) & SP/ DP & OUT & the $a_{\ell m}$ read from the file. alms(i,1)
                    and alms(i,2) contain the $\ell$ and $m$ values for the ith
-                   $a_{lm}$ . alms(i,3) and alms(i,4) contain the real and
-                   imaginary value of the ith  $a_{lm}$ . Finally, the
-                   standard deviation for the ith  $a_{lm}$  is contained in
+                   $a_{\ell m}$ . alms(i,3) and alms(i,4) contain the real and
+                   imaginary value of the ith  $a_{\ell m}$ . Finally, the
+                   standard deviation for the ith  $a_{\ell m}$  is contained in
                    alms(i,5) (real) and alms(i,6) (imaginary). \\
 units\mytarget{sub:read_conbintab:units}(len=20)(1:) \hskip 6cm (OPTIONAL)& CHR & OUT & character string containing the units of the
                    $a_{\ell m}$ \\
@@ -55,7 +55,7 @@ extno\mytarget{sub:read_conbintab:extno} \hskip 8cm (OPTIONAL) & I4B & IN & exte
 call read\_conbintab ('alms.fits',alms,65*66/2)  \\
 }
 {
-Read 65*66/2 (the number of $a_{lm}$ needed to fill the whole range from l=0 to l=64)  $a_{lm}$  values from the file `alms.fits' into the array alms(0:65*66/2-1,1:6). 
+Read 65*66/2 (the number of $a_{\ell m}$ needed to fill the whole range from l=0 to l=64)  $a_{\ell m}$  values from the file `alms.fits' into the array alms(0:65*66/2-1,1:6). 
 }
 \end{example}
 
@@ -69,10 +69,10 @@ Read 65*66/2 (the number of $a_{lm}$ needed to fill the whole range from l=0 to 
 
 \begin{related}
   \begin{sulist}{} %%%% NOTE the ``extra'' brace here %%%%
-  \item[\htmlref{alms2fits}{sub:alms2fits}, \htmlref{dump\_alms}{sub:dump_alms}] routines to write $a_{lm}$ to a FITS-file 
+  \item[\htmlref{alms2fits}{sub:alms2fits}, \htmlref{dump\_alms}{sub:dump_alms}] routines to write $a_{\ell m}$ to a FITS-file 
   \item[\htmlref{fits2alms}{sub:fits2alms}] has the same function as read\_conbintab but is more general.
   \item[\htmlref{number\_of\_alms}{sub:number_of_alms}, \htmlref{getsize\_fits}{sub:getsize_fits}]
-  can be used to find out the number of $a_{lm}$ available in the file.
+  can be used to find out the number of $a_{\ell m}$ available in the file.
   \end{sulist}
 \end{related}
 

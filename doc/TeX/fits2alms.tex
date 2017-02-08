@@ -10,11 +10,11 @@
 \abstract{This document describes the \healpix Fortran90 subroutine FITS2ALMS.}
 
 \begin{facility}
-{This routine reads  $a_{lm}$  values from a binary FITS file. Each FITS file
+{This routine reads  $a_{\ell m}$  values from a binary FITS file. Each FITS file
   extension is supposed to contain one integer column with
   $index=\ell^2+\ell+m+1$  and 2 or 4 single (or double) precision columns 
-with real/imaginary  $a_{lm}$  values and real/imaginary   standard deviation. 
-One can read temperature $a_{lm}$ or temperature and polarisation, $a^T_{lm}$, $a^E_{lm}$ and $a^B_{lm}$.}
+with real/imaginary  $a_{\ell m}$  values and real/imaginary   standard deviation. 
+One can read temperature $a_{\ell m}$ or temperature and polarisation, $a^T_{\ell m}$, $a^E_{\ell m}$ and $a^B_{\ell m}$.}
 {\modFitstools}
 \end{facility}
 
@@ -34,19 +34,19 @@ One can read temperature $a_{lm}$ or temperature and polarisation, $a^T_{lm}$, $
 \begin{tabular}{p{0.39\hsize} p{0.05\hsize} p{0.06\hsize} p{0.40\hsize}} \hline  
 \textbf{name~\&~dimensionality} & \textbf{kind} & \textbf{in/out} & \textbf{description} \\ \hline
                    &   &   &                           \\ %%% for presentation
-filename\mytarget{sub:fits2alms:filename}(LEN=\filenamelen) & CHR & IN & filename of the FITS-file to read the $a_{lm}$ from. \\
-nalms\mytarget{sub:fits2alms:nalms} & I4B & IN & number of $a_{lm}$ to read. \\
+filename\mytarget{sub:fits2alms:filename}(LEN=\filenamelen) & CHR & IN & filename of the FITS-file to read the $a_{\ell m}$ from. \\
+nalms\mytarget{sub:fits2alms:nalms} & I4B & IN & number of $a_{\ell m}$ to read. \\
 ncl\mytarget{sub:fits2alms:ncl} & I4B & IN & number of columns to read in the FITS file. If an standard
                deviation is to be read, this number is 5, otherwise it is 3. \\ 
 next\mytarget{sub:fits2alms:next} & I4B & IN & the number of extensions to read. 1 for temperature only, 3
                    for temperature and polarisation. \\ 
 \end{tabular}
 \begin{tabular}{p{0.4\hsize} p{0.05\hsize} p{0.05\hsize} p{0.40\hsize}} \hline  
-alms\mytarget{sub:fits2alms:alms}(1:nalms,1:(ncl+1),1:next) & SP/ DP & OUT & the $a_{lm}$ to read from the
+alms\mytarget{sub:fits2alms:alms}(1:nalms,1:(ncl+1),1:next) & SP/ DP & OUT & the $a_{\ell m}$ to read from the
           file. alms(i,1,j) and alms(i,2,j) contain the $\ell$ and $m$ values
-          for the ith  $a_{lm}$  (j=1,2,3 for (T,E,B)). alms(i,3,j) and
+          for the ith  $a_{\ell m}$  (j=1,2,3 for (T,E,B)). alms(i,3,j) and
           alms(i,4,j) contain the real and imaginary value of the ith
-          $a_{lm}$. Finally, the   standard deviation for the ith  $a_{lm}$  is
+          $a_{\ell m}$. Finally, the   standard deviation for the ith  $a_{\ell m}$  is
           contained in alms(i,5,j) (real) and alms(i,6,j) (imaginary). \\  
 nlheader\mytarget{sub:fits2alms:nlheader} & I4B & IN & number of header lines to read from the file. \\
 header\mytarget{sub:fits2alms:header}(LEN=80) (1:nlheader, 1:next) & CHR & OUT & the header(s) read from the FITS-file. \\ 
@@ -59,7 +59,7 @@ header\mytarget{sub:fits2alms:header}(LEN=80) (1:nlheader, 1:next) & CHR & OUT &
 call fits2alms ('alms.fits', 65*66/2, alms, 3, header, 80, 3)  \\
 }
 {
-Reads a FITS file with the $a_{lm}^T$, $a_{lm}^E$ and $a_{lm}^B$ values read into alms(1:65*66/2,1:4,1:3). The last index specifies (T,E,B). The second index gives l, m, real( $a_{lm}$ ), imaginary( $a_{lm}$ ) for each of the $a_{lm}$. The number 65*66/2 is the number of  $a_{lm}$  values up to an $\ell$ value of 64. 80 lines is read from the header in each extension and returned in header(1:80,1:3).
+Reads a FITS file with the $a_{\ell m}^T$, $a_{\ell m}^E$ and $a_{\ell m}^B$ values read into alms(1:65*66/2,1:4,1:3). The last index specifies (T,E,B). The second index gives l, m, real( $a_{\ell m}$ ), imaginary( $a_{\ell m}$ ) for each of the $a_{\ell m}$. The number 65*66/2 is the number of  $a_{\ell m}$  values up to an $\ell$ value of 64. 80 lines is read from the header in each extension and returned in header(1:80,1:3).
 }
 \end{example}
 
@@ -74,11 +74,11 @@ Reads a FITS file with the $a_{lm}^T$, $a_{lm}^E$ and $a_{lm}^B$ values read int
 \newpage
 \begin{related}
   \begin{sulist}{} %%%% NOTE the ``extra'' brace here %%%%
-  \item[\htmlref{alms2fits}{sub:alms2fits}, \htmlref{dump\_alms}{sub:dump_alms}] routines to store $a_{lm}$ in a FITS-file 
+  \item[\htmlref{alms2fits}{sub:alms2fits}, \htmlref{dump\_alms}{sub:dump_alms}] routines to store $a_{\ell m}$ in a FITS-file 
   \item[\htmlref{read\_conbintab}{sub:read_conbintab}] has the same function as
   \thedocid\ but with parameters passed differently.
   \item[\htmlref{number\_of\_alms}{sub:number_of_alms}, \htmlref{getsize\_fits}{sub:getsize_fits}]
-  can be used to find out the number of $a_{lm}$ available in the file.
+  can be used to find out the number of $a_{\ell m}$ available in the file.
   \end{sulist}
 \end{related}
 

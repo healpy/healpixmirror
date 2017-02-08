@@ -13,8 +13,8 @@
 \begin{facility}
 {This IDL facility provides a means to
 read from a FITS file an ascii or binary table extension containing power 
-spectrum ($C(l)$) or spherical harmonics ($a_{l m}$) coefficients, and returns
-the corresponding power spectrum ($C(l) = \sum_m a_{lm}a^*_{lm} / (2l+1)$). Reads primary and extension headers if
+spectrum ($C(\ell)$) or spherical harmonics ($a_{\ell m}$) coefficients, and returns
+the corresponding power spectrum ($C(\ell) = \sum_m a_{\ell m}a^*_{\ell m} / (2\ell+1)$). Reads primary and extension headers if
 required. The facility is intended to enable the user to read the
 output from the \healpix facility \textbf{anafast}.
 }
@@ -59,8 +59,8 @@ output from the \healpix facility \textbf{anafast}.
 %
     \item[fitsfile] \mytarget{idl:fits2cl:fitsfile}%
     String containing the name of the FITS file to be read. The
-    file contains either $C(l)$ power spectra or $a_{l m}$ coefficients. In either
-    cases, $C(l)$ is returned. If {\tt fitsfile} is not set, then
+    file contains either $C(\ell)$ power spectra or $a_{\ell m}$ coefficients. In either
+    cases, $C(\ell)$ is returned. If {\tt fitsfile} is not set, then
 \mylink{idl:fits2cl:planck1}{\tt /PLANCK1},
 \mylink{idl:fits2cl:planck2}{\tt /PLANCK2},
 \mylink{idl:fits2cl:wmap1}{\tt /WMAP1},
@@ -88,8 +88,8 @@ must be set.
            for interactive cropping, zooming and annotation of the plots. This
            requires IDL 6.4 or newer to work properly.
     \item[LLFACTOR =] \mytarget{idl:fits2cl:llfactor}%
-	vector containing on output the factor $l(l+1)/2\pi$ which is often
-          applied to $C(l)$ to flatten it for plotting purposes
+	vector containing on output the factor $\ell(\ell+1)/2\pi$ which is often
+          applied to $C(\ell)$ to flatten it for plotting purposes
     \item[MULTIPOLES =] \mytarget{idl:fits2cl:multipoles}%
 	vector containing on output the multipoles
     $\ell$ for which the power spectra are provided. They are either\\
@@ -114,9 +114,9 @@ which matches !healpix.path.test+'cl\_planck2.fits')
           See !healpix.path.test+'README' for details
 
     \item[/RSHOW] \mytarget{idl:fits2cl:rshow}%
-	If set, the raw power spectra $C(l)$ read from the file are plotted
+	If set, the raw power spectra $C(\ell)$ read from the file are plotted
     \item[/SHOW] \mytarget{idl:fits2cl:show}%
-	If set, the rescaled power spectra $l(l+1)C(l)/2\pi$ are plotted
+	If set, the rescaled power spectra $\ell(\ell+1)C(\ell)/2\pi$ are plotted
     \item[/SILENT] \mytarget{idl:fits2cl:silent}%
 	If set, no message is issued during normal execution
 %
@@ -171,10 +171,10 @@ with \thedocid.
     \item[\htmlref{bl2fits}{idl:bl2fits}] facility to write a window function into a FITS file.
     \item[\htmlref{cl2fits}{idl:cl2fits}] provides the complimentary routine to write a
       power spectrum to a FITS file.
-    \item[\htmlref{fits2alm}{idl:fits2alm}, \htmlref{alm2fits}{idl:alm2fits}] routines to read and write $a_{lm}$ coefficients
-    \item[\htmlref{ianafast}{idl:ianafast}] IDL routine computing $C(l)$ files
+    \item[\htmlref{fits2alm}{idl:fits2alm}, \htmlref{alm2fits}{idl:alm2fits}] routines to read and write $a_{\ell m}$ coefficients
+    \item[\htmlref{ianafast}{idl:ianafast}] IDL routine computing $C(\ell)$ files
 that can be read by \thedocid.
-    \item[anafast] F90 facility computing $C(l)$ files that can be read by \thedocid.
+    \item[anafast] F90 facility computing $C(\ell)$ files that can be read by \thedocid.
   \end{sulist}
 \end{related}
 
@@ -187,12 +187,12 @@ plot, l, powrsp[*,0]*fll
 \end{tabular}
 }
 {
-\thedocid\ reads a power spectrum $C(l)$ from the input FITS file 
+\thedocid\ reads a power spectrum $C(\ell)$ from the input FITS file 
 {\tt \$HEALPIX/test/cl.fits}
 into the variable {\tt pwrsp},  with optional headers
-passed by the string variables {\tt hdr} and {\tt xhdr}. The multipoles $l$ and
-factors $l(l+1)/2\pi$ are read into {\tt l} and {\tt fll} respectively.
-$l(l+1) C(l)/2\pi$ vs $l$ is then plotted.
+passed by the string variables {\tt hdr} and {\tt xhdr}. The multipoles $\ell$ and
+factors $\ell(\ell+1)/2\pi$ are read into {\tt l} and {\tt fll} respectively.
+$\ell(\ell+1) C(\ell)/2\pi$ vs $\ell$ is then plotted.
 }
 \end{example}
 

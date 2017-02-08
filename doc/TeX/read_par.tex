@@ -11,10 +11,10 @@
 
 \begin{facility}
 {This routine reads the `NSIDE', `TFIELDS' , `MAX-LPOL', and optionally `MAX-MPOL'
-  keywords from a FITS-file. These keywords desribe $N_{side}$, number of
+  keywords from a FITS-file. These keywords desribe $\nside$, number of
   datasets (maps) and maximum multipole $\ell$ (order) and $m$ (degree) value
   for the file. If a keyword is not found in the FITS file, a value of -1 is
-  returned instead. The file could eg. be a \healpix map, or a set of $a_{lm}$  or precomputed $P_{lm}(\theta)$}
+  returned instead. The file could eg. be a \healpix map, or a set of $a_{\ell m}$  or precomputed $P_{\ell m}(\theta)$}
 {\modFitstools}
 \end{facility}
 
@@ -46,7 +46,7 @@ tfields\mytarget{sub:read_par:tfields} & I4B & OUT & `TFIELDS' keyword value fro
 call read\_par('plm\_128p.fits', nside, lmax, nhar)  \\
 }
 {
-Checks the $N_{side}$ and maximum $\ell$ value used for the precomputed $P_{\ell
+Checks the $\nside$ and maximum $\ell$ value used for the precomputed $P_{\ell
   m}(\theta)$ that are stored in the file `plm\_128p.fits'. If the file also contains tensor harmonics, nhar is returned with the value 3, otherwise it is 1.
 }
 \end{example}

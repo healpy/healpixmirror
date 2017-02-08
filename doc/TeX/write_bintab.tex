@@ -48,7 +48,7 @@ filename\mytarget{sub:write_bintab:filename}(LEN=*) & CHR & IN & the map(s) is (
 call write\_bintab (map,12*32**2,3,header,120,'map.fits')  \\
 }
 {
-Makes a binary FITS-file called `map.fits' from the \healpix maps (T,Q,U) in the array map(0:12*32**2-1,1:3). The number of pixels 12*32**2 corresponds to the number of pixels in a $N_{side}=32$ \healpix map. The header for the FITS-file is given in the string array header and the number of lines in the header is 120. 
+Makes a binary FITS-file called `map.fits' from the \healpix maps (T,Q,U) in the array map(0:12*32**2-1,1:3). The number of pixels 12*32**2 corresponds to the number of pixels in a $\nside=32$ \healpix map. The header for the FITS-file is given in the string array header and the number of lines in the header is 120. 
 }
 \end{example}
 \begin{modules}
@@ -62,7 +62,7 @@ Makes a binary FITS-file called `map.fits' from the \healpix maps (T,Q,U) in the
 \begin{related}
   \begin{sulist}{} %%%% NOTE the ``extra'' brace here %%%%
   \item[\htmlref{input\_map}{sub:input_map}, \htmlref{read\_bintab}{sub:read_bintab}] routines which read a file created by \thedocid. 
-  \item[\htmlref{map2alm}{sub:map2alm}] subroutine which analyse a map and returns the $a_{lm}$ coeffecients.
+  \item[\htmlref{map2alm}{sub:map2alm}] subroutine which analyse a map and returns the $a_{\ell m}$ coeffecients.
   \item[\htmlref{output\_map}{sub:output_map}] subroutine which calls \thedocid
   \item[\htmlref{write\_bintabh}{sub:write_bintabh}] subroutine to write a large
 array into a FITS file piece by piece

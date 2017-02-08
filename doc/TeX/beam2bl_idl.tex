@@ -11,7 +11,7 @@
 \abstract{This document describes the \healpix IDL facility beam2bl.}
 
 \begin{facility}
-{This IDL facility computes a transfer (or window) function $b(l)$ for a circular beam profile $b(\theta)$.
+{This IDL facility computes a transfer (or window) function $b(\ell)$ for a circular beam profile $b(\theta)$.
 }
 {src/idl/misc/beam2bl.pro}
 \end{facility}
@@ -40,7 +40,7 @@
     angles $\theta$ (in arcmin, degrees or radians) 
   at which the input beam $b(\theta)$ is defined
     \item[lmax] \mytarget{idl:beam2bl:lmax}%
-    maximum multipole on which the output $b(l)$ is to be computed
+    maximum multipole on which the output $b(\ell)$ is to be computed
   \end{qulist}
 \end{qualifiers}
 
@@ -62,15 +62,15 @@
 Since the SH Transform of an arbitrary beam is
 \begin{equation}
 	\label{eq:beam2bl_idl:b_lm}
-	b_{lm} = \int d{\bf{r}}\ b({\bf{r}})\ Y_{lm}^*({\bf{r}})
+	b_{\ell m} = \int d{\textbf{r}}\ b({\textbf{r}})\ Y_{\ell m}^*({\textbf{r}})
 \end{equation}
  then, for a circular beam
 \begin{eqnarray}
 	\label{eq:beam2bl_idl:bl}
-	b(l) &=& b_{l0}  \sqrt{\frac{4 \pi}{2l+1}} \nonumber \\
-             &=& \int  b(\theta) P_l(\theta) \sin(\theta)\ d\theta\ 2\pi
+	b(\ell) &=& b_{\ell 0}  \sqrt{\frac{4 \pi}{2\ell+1}} \nonumber \\
+             &=& \int  b(\theta) P_\ell(\theta) \sin(\theta)\ d\theta\ 2\pi
 \end{eqnarray}
-where $P_l$ is the Legendre Polynomial, $b(l)$ is the beam window (or transfer)
+where $P_\ell$ is the Legendre Polynomial, $b(\ell)$ is the beam window (or transfer)
 function returned by \thedocid\ and $b(\theta)$ is the beam radial
 profile expected as input of \thedocid.\\
 IDL's routine {\tt{INT\_TABULATED}} is used to perform the integration.}
@@ -83,8 +83,8 @@ IDL's routine {\tt{INT\_TABULATED}} is used to perform the integration.}
     \item[idl] version \idlversion or more is necessary to run \thedocid.
     \item[\htmlref{bl2beam}{idl:bl2beam}] facility to perform the inverse
 transform to \thedocid.
-    \item[\htmlref{bl2fits}{idl:bl2fits}] facility to write a $b(l)$ window function into a FITS file.
-    \item[\htmlref{fits2cl}{idl:fits2cl}] facility to read a $b(l)$ window
+    \item[\htmlref{bl2fits}{idl:bl2fits}] facility to write a $b(\ell)$ window function into a FITS file.
+    \item[\htmlref{fits2cl}{idl:fits2cl}] facility to read a $b(\ell)$ window
 function from a FITS file
   \end{sulist}
 \end{related}
@@ -101,7 +101,7 @@ plot, bl1-bl\\
 }
 {
 the example above generates a beam window function (defined for
-all $l$ in $\{0,\ldots,4000\}$) for a 15arcmin-FWHM gaussian beam, computes the
+all $\ell$ in $\{0,\ldots,4000\}$) for a 15arcmin-FWHM gaussian beam, computes the
 beam profile for angles in $[0,40]$ arcmin, computes back the beam window
 function from the beam profile and finally plots the difference between the beam
 window functions.%

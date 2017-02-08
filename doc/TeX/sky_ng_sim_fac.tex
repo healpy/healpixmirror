@@ -43,7 +43,7 @@ and random seed for the simulation can be selected by the user.
 	(default= HEALPIX/test/cl.fits).
 %
     \item[{outfile\_alms = }]\mytarget{fac:sky_ng_sim:outfile_alms}%
- Defines the FITS file in which to output $a_{lm}$ used
+ Defines the FITS file in which to output $a_{\ell m}$ used
       for the simulation (default= `')
 %
     \item[{outfile = }]\mytarget{fac:sky_ng_sim:outfile}%
@@ -154,21 +154,21 @@ where $g$ is a zero mean, unit variance Gaussian variable, and $P$ is
 a user-defined positive integer.
 \end{itemize}
 %--------
-The resulting map is analyzed into its $a_{lm}$ coefficients, which are then
+The resulting map is analyzed into its $a_{\ell m}$ coefficients, which are then
 multiplied by the beam, pixel and spectrum window
 \begin{equation}
-	a_{lm} \longrightarrow a_{lm} \left[C(l)\right]^{1/2} B(l) w_{\rm pix}(l) \nonumber
+	a_{\ell m} \longrightarrow a_{\ell m} \left[C(l)\right]^{1/2} B(\ell) w_{\rm pix}(\ell) \nonumber
 \end{equation}
-The resulting $a_{lm}$ coefficients are turned back into a map, which is
-therefore non-gaussian, with an effective angular power spectrum $C(l) B(l)^2
-w_{\rm pix}(l)^2$ (Rocha et al, 2005).
+The resulting $a_{\ell m}$ coefficients are turned back into a map, which is
+therefore non-gaussian, with an effective angular power spectrum $C(\ell) B(\ell)^2
+w_\mathrm{pix}(\ell)^2$ (Rocha et al, 2005).
 \\
 Notes: the code has been modified from the original NGSIMS package in several
 respects:
 the seed parameter is named {\tt iseed} instead of {\tt idum}, to be consistent
 with other \healpix simulation codes; and the SHO generator has been
 dramatically sped up, without loss of accuracy. Moreover, just like in \htmlref{{\tt synfast}}{fac:synfast} facility,
-it is now possible to output the $a_{lm}$ coefficients being used ({\tt
+it is now possible to output the $a_{\ell m}$ coefficients being used ({\tt
 outfile\_alms} option), and the spatial derivatives of the final map can also be
 output ({\tt simul\_type} option).
 }
@@ -196,7 +196,7 @@ subroutine generates or reads the $B(\ell)$ window function used in \thedocid
   \item[\htmlref{mollview}{idl:mollview}] This \healpix IDL facility can be used to visualise the
   output map.
   \item[\htmlref{anafast}{fac:anafast}] This \healpix Fortran facility can analyse a \healpix map and 
-     	       save the $a_{lm}$ and $C_l$s to be read by sky\_ng\_sim.
+     	       save the $a_{\ell m}$ and $C_\ell$s to be read by sky\_ng\_sim.
 		
   \end{sulist}
 \end{support}
@@ -254,14 +254,14 @@ In this example, the file contains the following qualifiers:\hfill\newline
  = 0.2}
 \fileparam{\mylink{fac:sky_ng_sim:outfile}{outfile}%
  = !test\_ngfs.fits}
-{\tt sky\_ng\_sim} reads in the $C_l$ power spectrum in 'cl.fits' up to $l=256$, and produces the map
-'map.fits' which has $N_{\rm side}=128$. The non-gaussian white noise was generated
+{\tt sky\_ng\_sim} reads in the $C_\ell$ power spectrum in 'cl.fits' up to $\ell=256$, and produces the map
+'map.fits' which has $\nside=128$. The non-gaussian white noise was generated
 assuming a SHO PDF (see Eq~\ref{eq:nongauss_sho} above) with $\sigma_0=1$ and
 $\alpha_i = (0, 0, 0.2)$.
 The map is convolved with a beam of FWHM 30.0 arcminutes. The $\mylink{fac:sky_ng_sim:iseed}{iseed}%
 =1$ sets
-the random seed for the realisation. A different $\mylink{fac:sky_ng_sim:iseed}{iseed}%
-$ would have given a different 
+the random seed for the realisation. A different \mylink{fac:sky_ng_sim:iseed}{$iseed$}%
+ would have given a different 
 realisation from the same power spectrum. And finally, since {\tt \mylink{fac:sky_ng_sim:simul_type}{simul\_type}%
  =
 1} only the map (and not its spatial derivatives) will be output.
@@ -276,7 +276,7 @@ Since \hfill\newline
 were omitted, they take their default values (empty strings). 
 This means respectively that no beam were read, that {\tt sky\_ng\_sim} attempts to find the pixel
 window files in the default directories (see page~\pageref{page:defdir}), and
-that the $a_{lm}$ generated and used to produce the map were not output.
+that the $a_{\ell m}$ generated and used to produce the map were not output.
 }
 \end{examples}
 

@@ -11,8 +11,8 @@
 
 \begin{facility}
 {This IDL facility provides an interface to F90 '\htmlref{synfast}{fac:synfast}' facility. It can be
-used to generate sky maps and/or $a_{lm}$ from power spectra ($C(l)$), synthesize maps from
-$a_{lm}$ or simulate maps from $C(l)$ and constraining $a_{lm}$.}
+used to generate sky maps and/or $a_{\ell m}$ from power spectra ($C(\ell)$), synthesize maps from
+$a_{\ell m}$ or simulate maps from $C(\ell)$ and constraining $a_{\ell m}$.}
 {src/idl/interfaces/isynfast.pro}
 \end{facility}
 
@@ -50,7 +50,7 @@ $a_{lm}$ or simulate maps from $C(l)$ and constraining $a_{lm}$.}
   \begin{qulist}{} %%%% NOTE the ``extra'' brace here %%%%
    \item[cl\_in\mytarget{idl:isynfast:cl_in}%
 ] input power spectrum, can be a FITS file, or a memory array containing the
-        $C(l)$, used to generate a map or a set of gaussian alm \\
+        $C(\ell)$, used to generate a map or a set of gaussian alm \\
    If empty quotes ('') or a zero (0) are provided, it will be interpreted as "No input C(l)", in
    which case some input alm's (alm\_in) are required.
     \item[map\_out\mytarget{idl:isynfast:map_out}%

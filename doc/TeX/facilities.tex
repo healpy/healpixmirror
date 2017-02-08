@@ -312,7 +312,7 @@ facility to compute the angular distance of valid
 pixels to the closest invalid pixels for a input binary mask,
 	\item \htmlref{{\tt sky\_ng\_sim}}{fac:sky_ng_sim} now allows the computation
 of the spatial derivatives of the non Gaussian map being produced, and the
-output of the $a_{lm}$ coefficients of that map,
+output of the $a_{\ell m}$ coefficients of that map,
 	\item \htmlref{{\tt anafast}}{fac:anafast} now allows the
 pro/down-grading of the input mask to match the resolution of the map(s) being
 analyzed.
@@ -355,12 +355,12 @@ has been added.
 
 \subsection[Changes between releases 1.2 and 2.0]{Changes between releases 1.2 and 2.0}
 \begin{itemize}
-\item faster implementation of $a_{lm}$ related facilities, generalization of
+\item faster implementation of $a_{\ell m}$ related facilities, generalization of
   OpenMP parallelization, and availability of MPI parallelized routines (see
   mpi\_* routines in {\bf Fortran90 Subroutines Overview} document).
 \item introduction of \htmlref{{\tt alteralm}}{fac:alteralm} facility to modify and/or rotate the spherical
-  harmonics coefficients $a_{lm}$ and greater flexibility for constraining
-  $a_{lm}$ in {\tt synfast}
+  harmonics coefficients $a_{\ell m}$ and greater flexibility for constraining
+  $a_{\ell m}$ in {\tt synfast}
 \item single and double precision implementation of most facilities (see {\bf {Input and Output Precision}}
   page~\pageref{page:ioprec})
 \end{itemize}

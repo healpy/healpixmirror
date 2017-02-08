@@ -10,7 +10,7 @@
 \abstract{This document describes the \healpix Fortran90 subroutine READ\_DBINTAB.}
 
 \begin{facility}
-{This routine reads a double precision binary array from a FITS-file. It is used by \healpix to read precomputed $P_{lm}(\theta)$ values and pixel window functions.}
+{This routine reads a double precision binary array from a FITS-file. It is used by \healpix to read precomputed $P_{\ell m}(\theta)$ values and pixel window functions.}
 {\modFitstools}
 \end{facility}
 
@@ -32,7 +32,7 @@
                    &   &   &                           \\ %%% for presentation
 filename\mytarget{sub:read_dbintab:filename}(LEN=\filenamelen) & CHR & IN & filename of FITS-file containing the double precision array. \\
 npixtot\mytarget{sub:read_dbintab:npixtot} & I4B & IN & Number of values to be read from the file.\\
-nmaps\mytarget{sub:read_dbintab:nmaps} & I4B & IN & number of 1-dim. arrays, 1 for scalar $P_{lm}\!\!$ s and pixel windows, 3 for scalar and tensor $P_{lm}\!\!$ s. \\
+nmaps\mytarget{sub:read_dbintab:nmaps} & I4B & IN & number of 1-dim. arrays, 1 for scalar $P_{\ell m}\!\!$ s and pixel windows, 3 for scalar and tensor $P_{\ell m}\!\!$ s. \\
 map\mytarget{sub:read_dbintab:map}(0:npixtot-1,1:nmaps) & DP & OUT & the array read from the FITS-file.\\
 nullval\mytarget{sub:read_dbintab:nullval} & DP & OUT & value of missing pixels in the array. \\
 anynull\mytarget{sub:read_dbintab:anynull} & LGT & OUT & TRUE, if there are missing pixels, and FALSE otherwise. \\
@@ -47,7 +47,7 @@ units\mytarget{sub:read_dbintab:units}(len=20)(1:nmaps) & CHR & OUT & respective
 call read\_dbintab ('plm\_32.fits',plm,65*66*32,1,nullval,anynull)  \\
 }
 {
-Reads precomputed scalar $P_{lm}(\theta)$ from the file `plm\_32.fits'. The values are returned in the array plm(0:65*66*32,1:1). The number of values 65*66*32 is the number of precomputed $P_{lm}(\theta)$ for a $N_{side}=32$, $lmax=64$ map. If there are missing values in the file, anynull is TRUE and nullval contains the values of these pixels.
+Reads precomputed scalar $P_{\ell m}(\theta)$ from the file `plm\_32.fits'. The values are returned in the array plm(0:65*66*32,1:1). The number of values 65*66*32 is the number of precomputed $P_{\ell m}(\theta)$ for a $\nside=32$, $\lmax=64$ map. If there are missing values in the file, anynull is TRUE and nullval contains the values of these pixels.
 }
 \end{example}
 
@@ -61,7 +61,7 @@ Reads precomputed scalar $P_{lm}(\theta)$ from the file `plm\_32.fits'. The valu
 
 \begin{related}
   \begin{sulist}{} %%%% NOTE the ``extra'' brace here %%%%
-  \item[plmgen] Executable to create files with precomputed $P_{lm}(\theta)$.
+  \item[plmgen] Executable to create files with precomputed $P_{\ell m}(\theta)$.
   \item[\htmlref{write\_plm}{sub:write_plm}] Routine to create a file to be read by read\_dbintab.
   \end{sulist}
 \end{related}

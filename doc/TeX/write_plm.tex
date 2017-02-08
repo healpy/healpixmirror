@@ -10,7 +10,7 @@
 \abstract{This document describes the \healpix Fortran90 subroutine WRITE\_PLM.}
 
 \begin{facility}
-{This routine creates a double precision binary FITS-file from a given array. The routine is used by the \healpix facility plmgen to store precomputed $P_{lm}(\theta)$.}
+{This routine creates a double precision binary FITS-file from a given array. The routine is used by the \healpix facility plmgen to store precomputed $P_{\ell m}(\theta)$.}
 {\modFitstools}
 \end{facility}
 
@@ -31,14 +31,14 @@
 \begin{tabular}{p{0.4\hsize} p{0.05\hsize} p{0.05\hsize} p{0.40\hsize}} \hline  
 \textbf{name\&dimensionality} & \textbf{kind} & \textbf{in/out} & \textbf{description} \\ \hline
                    &   &   &                           \\ %%% for presentation
-plm\mytarget{sub:write_plm:plm}(0:nplm-1,1:nhar) & DP & IN & the array with the precomputed $P_{lm}(\theta)$ values.\\
-nplm\mytarget{sub:write_plm:nplm} & I4B & IN & Number of $P_{lm}$ values to store.\\
-nhar\mytarget{sub:write_plm:nhar} & I4B & IN & 1 for scalar $P_{lm}$ only and 3 for tensor harmonics. \\
+plm\mytarget{sub:write_plm:plm}(0:nplm-1,1:nhar) & DP & IN & the array with the precomputed $P_{\ell m}(\theta)$ values.\\
+nplm\mytarget{sub:write_plm:nplm} & I4B & IN & Number of $P_{\ell m}$ values to store.\\
+nhar\mytarget{sub:write_plm:nhar} & I4B & IN & 1 for scalar $P_{\ell m}$ only and 3 for tensor harmonics. \\
 header\mytarget{sub:write_plm:header}(LEN=80) (1:nlheader) & CHR & IN & The header for the FITS-file. \\
 nlheader\mytarget{sub:write_plm:nlheader} & I4B & IN & number of header lines to write to the file. \\
-filename\mytarget{sub:write_plm:filename}(LEN=\filenamelen) & CHR & IN & the precomputed $P_{lm}(\theta)$ values are written to this file. \\
-nsmax\mytarget{sub:write_plm:nsmax} & I4B & IN & $N_{side}$ for the precomputed $P_{lm}\!\!$ s. \\
-nlmax\mytarget{sub:write_plm:nlmax} & I4B & IN & maximum $\ell$  value for the precomputed $P_{lm}\!\!$ s. \\
+filename\mytarget{sub:write_plm:filename}(LEN=\filenamelen) & CHR & IN & the precomputed $P_{\ell m}(\theta)$ values are written to this file. \\
+nsmax\mytarget{sub:write_plm:nsmax} & I4B & IN & $\nside$ for the precomputed $P_{\ell m}\!\!$ s. \\
+nlmax\mytarget{sub:write_plm:nlmax} & I4B & IN & maximum $\ell$  value for the precomputed $P_{\ell m}\!\!$ s. \\
 \end{tabular}
 }
 \end{arguments}
@@ -48,7 +48,7 @@ nlmax\mytarget{sub:write_plm:nlmax} & I4B & IN & maximum $\ell$  value for the p
 call write\_plm (plm, 65*66*32, 1, header, 120, `plm\_32.fits', 32, 64)  \\
 }
 {
-Makes a double precision binary FITS-file called `plm\_32.fits' from the precomputed $P_{lm}(\theta)$ in the array plm(0:65*66*32-1,1:1). The number 65*66*32 corresponds to the number of precomputed $P_{lm}\!\!$ s needed for a $N_{side}=32$ \healpix map synthesis/analysis. The header for the FITS-file is given in the string array header and the number of lines in the header is 120. 
+Makes a double precision binary FITS-file called `plm\_32.fits' from the precomputed $P_{\ell m}(\theta)$ in the array plm(0:65*66*32-1,1:1). The number 65*66*32 corresponds to the number of precomputed $P_{\ell m}\!\!$ s needed for a $\nside=32$ \healpix map synthesis/analysis. The header for the FITS-file is given in the string array header and the number of lines in the header is 120. 
 }
 \end{example}
 
@@ -63,7 +63,7 @@ Makes a double precision binary FITS-file called `plm\_32.fits' from the precomp
 \begin{related}
   \begin{sulist}{} %%%% NOTE the ``extra'' brace here %%%%
   \item[\htmlref{read\_dbintab}{sub:read_dbintab}, \htmlref{read\_bintab}{sub:read_bintab}] routines which reads a file created by write\_plm. 
-  \item[\htmlref{map2alm}{sub:map2alm}, \htmlref{alm2map}{sub:alm2map}] routines using precomputed $P_{lm}(\theta)$.
+  \item[\htmlref{map2alm}{sub:map2alm}, \htmlref{alm2map}{sub:alm2map}] routines using precomputed $P_{\ell m}(\theta)$.
   \end{sulist}
 \end{related}
 
