@@ -38,7 +38,8 @@ outfile (string):
 
 polarisation (bool):
   if false, only the intensity a_lm are processed,
-  if true, a_lm for T, G and C component are processed
+  if true, the code currently exits with an error message,
+  since polarisation is not yet supported.
 
 double_precision (bool, default=false):
   if false, a_lm are read/written in single precision,
