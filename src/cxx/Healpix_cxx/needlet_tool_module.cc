@@ -174,18 +174,13 @@ class spline: public needlet_base
   private:
     double B;
 
-  static double b3_spline (double x)
-    {
-    double A1 = abs ((x - 2) * (x - 2) * (x - 2));
-    double A2 = abs ((x - 1) * (x - 1) * (x - 1));
-    double A3 = abs (x * x * x);
-    double A4 = abs ((x + 1) * (x + 1) * (x + 1));
-    double A5 = abs ((x + 2) * (x + 2) * (x + 2));
-    return 1./12. * (A1 - 4. * A2 + 6. * A3 - 4. * A4 + A5);
-    }
-
-  static double psi (double x)
-    { return 1.5 * b3_spline(2*x); }
+    static double psi (double x)
+      {
+      if (x<=0.) return 1.;
+      if (x>=1.) return 0.;
+      return (x>=0.5) ? 2.*(1.-x)*(1.-x)*(1.-x)
+                      : 12.*x*x*(.5*x-.5) + 1.;
+      }
 
   double h (double xi) const
     { return psi(xi/B)-psi(xi); }
