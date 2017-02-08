@@ -1,0 +1,57 @@
+Parameters read by needlet_tool:
+
+mode (string):
+  split   : a single a_lm file is input and split into needlet bands
+  assemble: multiple needlet bands are read and combined into a single a_lm file
+
+needlet_type (string):
+  needatool: use needlets as defined by Pietrobon et al., ApJ 723, 1 (2010),
+             following the construction in section 3
+  basak    : use needlets as defined by Basak et al., MNRAS 419, 1163 (2012),
+             following the equations in section 3
+  sdw      : use needlets as defined by Leistedt et al., A&A 558, A128 (2013),
+             following equations 10 to 15
+
+if (needlet_type=="basak"):
+  lpeak (string):
+    comma-separated list of integer numbers containing the lpeak values for each
+    band to be used.
+    Each needlet has support from the preceding lpeak (or 0 in the case of the
+    first needlet) to the next lpeak (or its own lpeak, for the last needlet).
+else
+  B (double):
+    B parameter for the respective needlet
+    The window for the nth band peaks at l=B^n.
+endif
+
+infile (string):
+  if mode=="split"   : input file containing the a_lm
+  if mode=="assemble": root name for the input a_lm files
+                       Full names are "<infile>###.fits",
+                       where ### is the three-digit number of the band
+
+outfile (string):
+  if mode=="split"   : root name for the output a_lm files
+                       Full names are "<outfile>###.fits",
+                       where ### is the three-digit number of the band
+  if mode=="assemble": output file containing the assembled a_lm
+
+polarisation (bool):
+  if false, only the intensity a_lm are processed,
+  if true, a_lm for T, G and C component are processed
+
+double_precision (bool, default=false):
+  if false, a_lm are read/written in single precision,
+  otherwise in double precision.
+
+
+
+General remarks on the code
+===========================
+
+Splitting and reassembling a set of a_lm should accurately reproduce the input
+a_lm at all l starting from the first peak (which is 1 for "needatool" and "sdw"
+needlets, but may be different for "basak" wavelets).
+The remaining information in the input data (monopole for "needatool" and "sdw",
+everything below the first peak for "basak") is currently discarded, but could
+also be written to an additional output file.
