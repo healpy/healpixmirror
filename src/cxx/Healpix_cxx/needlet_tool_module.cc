@@ -169,6 +169,46 @@ class sdw: public needlet_base
       }
   };
 
+class spline: public needlet_base
+  {
+  private:
+    double B;
+
+  static double b3_spline (double x)
+    {
+    double A1 = abs ((x - 2) * (x - 2) * (x - 2));
+    double A2 = abs ((x - 1) * (x - 1) * (x - 1));
+    double A3 = abs (x * x * x);
+    double A4 = abs ((x + 1) * (x + 1) * (x + 1));
+    double A5 = abs ((x + 2) * (x + 2) * (x + 2));
+    return 1./12. * (A1 - 4. * A2 + 6. * A3 - 4. * A4 + A5);
+    }
+
+  static double psi (double x)
+    { return 1.5 * b3_spline(2*x); }
+
+  double h (double xi) const
+    { return psi(xi/B)-psi(xi); }
+
+  public:
+    spline (double B_) : B(B_) {}
+
+    virtual int lmin (int band) const
+      { return 1; }
+    virtual int lmax (int band) const
+      { return int(std::pow(B,band+1)-1e-10); }
+    virtual std::vector<double> getBand(int band) const
+      {
+      using namespace std;
+      double fct=pow(B,-band);
+      vector<double> res(lmax(band)+1);
+      for (int i=0; i<lmin(band); ++i) res[i] = 0;
+      for (int i=lmin(band); i<int(res.size()); ++i)
+        res[i]=sqrt(h(i*fct));
+      return res;
+      }
+  };
+
 class basak: public needlet_base
   {
   private:
@@ -198,7 +238,6 @@ class basak: public needlet_base
     virtual std::vector<double> getBand(int band) const
       {
       using namespace std;
-      double halfpi=0.5*M_PI;
       vector<double> res(lmax(band)+1);
       for (int i=0; i<lmin(band); ++i) res[i]=0.;
       if (band>0)
@@ -237,6 +276,8 @@ template<typename T> void needlet_tool (paramfile &params)
     needgen.reset(new needlet(params.template find<double>("B")));
   else if (ntype=="sdw")
     needgen.reset(new sdw(params.template find<double>("B")));
+  else if (ntype=="spline")
+    needgen.reset(new spline(params.template find<double>("B")));
   else
     planck_fail("unknown needlet type");
 
@@ -250,7 +291,10 @@ template<typename T> void needlet_tool (paramfile &params)
       Alm<xcomplex<T> > alm;
       read_Alm_from_fits(infile,alm,nlmax,nmmax);
       int hiband=0;
-      while (needgen->lmin(hiband)<=nlmax) ++hiband;
+      if (ntype=="spline")
+        hiband=params.template find<int>("maxband")+1;
+      else
+        while (needgen->lmin(hiband)<=nlmax) ++hiband;
       for (int i=0; i<hiband; ++i)
         {
         int lmax_t=min(nlmax,needgen->lmax(i)),

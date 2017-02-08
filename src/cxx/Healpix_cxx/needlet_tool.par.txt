@@ -11,6 +11,9 @@ needlet_type (string):
              following the equations in section 3
   sdw      : use needlets as defined by Leistedt et al., A&A 558, A128 (2013),
              following equations 10 to 15
+  spline   : use B-spline based wavelets, similar to those defined by Starck et
+             al., A&A 446, 1191 (2006), but with band number ascending towards
+             higher resolutions.
 
 if (needlet_type=="basak"):
   lpeak (string):
@@ -22,6 +25,11 @@ else
   B (double):
     B parameter for the respective needlet
     The window for the nth band peaks at l=B^n.
+endif
+
+if (needlet_type=="spline")
+  maxband (integer):
+    number of the highest wavelet band to compute
 endif
 
 infile (string):
@@ -50,9 +58,21 @@ double_precision (bool, default=false):
 General remarks on the code
 ===========================
 
-Splitting and reassembling a set of a_lm should accurately reproduce the input
-a_lm at all l starting from the first peak (which is 1 for "needatool" and "sdw"
-needlets, but may be different for "basak" wavelets).
+In contrast to most other needlet-related codes, needlet_tool does not read and
+write map data, but spherical harmonic coefficients. This is done because
+ - the code is then independent of a particular pixelisation.
+ - the necessary transforms between map and spherical harmonic domain are
+   subject to many complications (like choice of band limits, removal of low
+   multipoles, masking, pixel weighting, iterative map analysis, choice of
+   resolution for the output maps, etc.) so that it would be cumbersome to
+   reproduce all these details in needlet_tool.
+ - the separation of the transforms and needlet operations does not degrade
+   overall performance, so it is just as efficient to let the SHTs be done by
+   dedicated codes like anafast/synfast etc.
+
+Splitting and then reassembling a set of a_lm should accurately reproduce the
+input a_lm at all l starting from the first peak (which is 1 for "needatool" and
+"sdw" needlets, but may be different for "basak" wavelets).
 The remaining information in the input data (monopole for "needatool" and "sdw",
-everything below the first peak for "basak") is currently discarded, but could
-also be written to an additional output file.
+part of the coefficients below the first peak for "basak") is currently
+discarded, but could also be written to an additional output file.
