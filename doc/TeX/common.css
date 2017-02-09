@@ -5,21 +5,25 @@
 /* .BOLDMATH { font-family: "Century Schoolbook", serif; font-weight: bold } */
 /* .MATH     { font-family: "Century Schoolbook", serif; }  */
 /* .MATH I   { font-family: "Century Schoolbook", serif; font-style: italic } */
-.BOLDMATH { font-family: "Century Schoolbook", serif; font-weight: bold ; font-size: larger}
-.MATH     { font-family: "Century Schoolbook", serif                    ; font-size: larger}
-.MATH I   { font-family: "Century Schoolbook", serif; font-style: italic ; font-size: larger}
+.BOLDMATH   { font-family: "Century Schoolbook", serif; font-weight: bold  ; font-size: larger ; }
+.MATH       { font-family: "Century Schoolbook", serif                     ; font-size: larger ; }
+.MATH I     { font-family: "Century Schoolbook", serif; font-style: italic ; font-size: larger ; }
+.MATH SUB   { font-family: "Century Schoolbook", serif                     ; font-size: smaller; }
+.MATH SUB I { font-family: "Century Schoolbook", serif; font-style: italic ; font-size: smaller; }
+.MATH SUP   { font-family: "Century Schoolbook", serif                     ; font-size: smaller; }
+.MATH SUP I { font-family: "Century Schoolbook", serif; font-style: italic ; font-size: smaller; }
 
 /* implement both fixed-size and relative sizes */
-SMALL.XTINY		{ font-size : xx-small }
+SMALL.XTINY		{ font-size : xx-small } /*<small class="xtiny"> ... </small>*/
 SMALL.TINY		{ font-size : x-small  }
-SMALL.SCRIPTSIZE	{ font-size : smaller  }
-SMALL.FOOTNOTESIZE	{ font-size : small    }
-SMALL.SMALL		{  }
-BIG.LARGE		{  }
-BIG.XLARGE		{ font-size : large    }
-BIG.XXLARGE		{ font-size : x-large  }
-BIG.HUGE		{ font-size : larger   }
-BIG.XHUGE		{ font-size : xx-large }
+SMALL.SCRIPTSIZE	{ font-size : smaller    }
+SMALL.FOOTNOTESIZE	{ font-size : inherit }
+SMALL.SMALL		{ font-size : inherit }
+BIG.LARGE		{ font-size : inherit }
+BIG.XLARGE		{ font-size : larger   }
+BIG.XXLARGE		{ font-size : large    }
+BIG.HUGE		{ font-size : x-large  }
+BIG.XHUGE		{ font-size : xx-large } /*<big class="xhuge"> ... </big>*/
 
 body { color: #000000;
 	background: #FFFFFA;
@@ -35,12 +39,13 @@ p { 	padding: 0px 0px 0px 0px;
   }
 
 blockquote { 
-	font-size: small;
+	font-size: inherit;
 	line-height: normal;
 }
 
-tt		{ 
-	font: monospace;
+tt { 
+	font-family: "Lucida Console", "Lucida Sans Typewriter", Courier, sans-serif, monospace;
+	font-size: larger;
 }
 
 /* heading styles */
@@ -76,4 +81,5 @@ SPAN.it		{   }
 SPAN.sc		{   }
 SPAN.textbf		{ font-weight: bold  }
 SPAN.tt		{   }
+
 

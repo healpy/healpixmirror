@@ -368,7 +368,7 @@ $\nside =$ 1, 2, 4, 8,
 %$N_{\rm side} = \,1,\,2,\,4,\,8$, 
 and the total number of pixels  equal to 
 $\npix = 12 \times \nside^2$ = 12, 48, 192, 768. 
-All pixel centers are located on $N_\mathrm{ring} = 4 \times \nside - 1$ rings of 
+All pixel centers are located on $N_{\mathrm{ring}} = 4 \times \nside - 1$ rings of 
 constant latitude.
 Within each panel the areas of all pixels are identical.}
 \end{figure}
@@ -389,7 +389,7 @@ and are equidistant in azimuth
 (on each ring). All iso-latitude rings located between the upper and lower corners of
 the equatorial base-resolution pixels, the equatorial zone, 
 are divided into the same number of pixels: 
-$N_\mathrm{eq}= 4\times \nside$. The remaining rings are located within the
+$N_{\mathrm{eq}}= 4\times \nside$. The remaining rings are located within the
 polar cap regions and contain a varying number of pixels, increasing 
 from ring to ring with increasing distance
 from the poles by one pixel within each quadrant. 
@@ -472,7 +472,7 @@ and its index $p$ lying in $[0, 12\nside^2-1]$.
 Since some applications require to process simultaneously pixels of different resolutions, it is possible
 to merge the resolution $\nside$ and index $p$ into a single unique number $u$
 \begin{eqnarray}
-	u_{\ } &\myequal& p + 4 \nside^2, \myhtmlimage{} \label{eq:nest2uniq}
+	u &=& p + 4 \nside^2, \myhtmlimage{} \label{eq:nest2uniq}
 \end{eqnarray}
 so that all pixels with $\nside=1$ have the unique indices 4 to 15, 
 those with $\nside=2$ are in the range 16 to 63, and so on \citep{rh15}, 
@@ -480,7 +480,8 @@ thus simplifying the handling of data with heteregenous $\nside$.
 Splitting the unique index $u$ into its original $\nside$ and $p$ is as simple as
 \begin{eqnarray}
 	\nside &\myequal& 2^{\mathrm{floor}\left( \log_2(u/4)/2 \right)}, \myhtmlimage{} \label{eq:ring2nest_a}\\
-	     p_{\ } &\myequal& u - 4 \nside^2, \myhtmlimage{} \label{eq:ring2nest_b}
+%	     p_{\ } &\myequal& u - 4 \nside^2, \myhtmlimage{} \label{eq:ring2nest_b}
+	     p &\myequal& u - 4 \nside^2, \myhtmlimage{} \label{eq:ring2nest_b}
 \end{eqnarray}
 giving immediate access to the usual pixel based tools.
 
@@ -516,7 +517,7 @@ as realisations of random Gaussian fields, with an option to constrain
 the realisation by prior information.
 \item Analysis of the full sky CMB temperature and polarisation maps
 resulting in power spectra and/or spherical harmonic
-coefficients. Relevant conventions are given in Appendix \ref{conventions}.
+coefficients. Relevant conventions are given in Appendix \ref{sec:conventions}.
 {\large {\em Note that the convention used for polarization has been changed in
 release 1.2!}}.
 \item Global smoothing of whole sky maps with a Gaussian kernel.
@@ -572,7 +573,7 @@ http://www.cosmos.esa.int/web/planck}}%
 \newpage
 \appendix
 \section{\healpix conventions}
-\label{conventions}%\warnhtml
+\label{sec:conventions}%\warnhtml
 A bandlimited function $f$ on the sphere can
 be expanded in spherical harmonics, $Y_{\ell m}$,
 as
@@ -662,14 +663,15 @@ fluctuations about the average CMB temperature.
 \item The absolute quantity $\Delta T$ in $\mu K$ or $K$.
 \end{itemize}
 
-\subsection{\healpix and CMBFAST}
+\subsection{\healpix and Boltzmann codes}
+\subsubsection{CMBFAST}
 \label{subsec:cmbfast}
 A widely used  solver of the Boltzmann equations for the computation
-of theoretical predictions of the spectrum of CMB anisotropy is CMBFAST
-(\htmladdnormallink{{\tt http://www.physics.nyu.edu/matiasz/CMBFAST/cmbfast.html}}
-{http://www.physics.nyu.edu/matiasz/CMBFAST/cmbfast.html}).
+of theoretical predictions of the spectrum of CMB anisotropy used to be CMBFAST
+(\htmladdnormallink{{\tt https://lambda.gsfc.nasa.gov/toolbox/tb\_cmbfast\_ov.cfm}}
+{https://lambda.gsfc.nasa.gov/toolbox/tb_cmbfast_ov.cfm}).
 
-CMBFAST makes its outputs in ASCII files, which instead
+CMBFAST made its outputs in ASCII files, which instead
 of $C_{X,\ell}$ contain quantities defined as
 \begin{eqnarray}
   D_{X,\ell}&\myequal&\frac{\ell(\ell+1)}{(2\pi)T_{CMB}^2}C_{X,\ell},\myhtmlimage{}
@@ -678,17 +680,17 @@ where $T_{CMB}=2.726K$ is the temperature of the CMB today and $X$ stands for T,
 E, B or C (see \S~\ref{subsec:pol}).  
 
 The version 4.0 of CMBFAST also created a FITS file containing the power spectra
-$C_{X,\ell}$, designed for interface with \healpix. The spectra for polarization were renormalized to match the
-normalization used in \healpix~1.1, which was different from the one used by
-CMBFAST and by \healpix~1.2 (see \S~\ref{subsub:relatoldversion} for details).
+$C_{X,\ell}$, designed for interface with \healpixns. The spectra for polarization were renormalized to match the
+normalization used in \healpixns~1.1, which was different from the one used by
+CMBFAST and by \healpixns~1.2 (see \S~\ref{subsub:relatoldversion} for details).
 
 % Since \healpix 1.2 now uses the same normalization as CMBFAST, 
 % we provide a new version of the file {\tt fitsout.f} used by CMBFAST, so that
 % it creates FITS files with the same normalization as the rest of the code. 
 
-The newer version of CMBFAST (4.2, released in Feb. 2003) will generate FITS files containing
+A later version of CMBFAST (4.2, released in Feb. 2003) generated FITS files containing
 $C_{X,\ell}$, with the same convention for polarization as the one used
-internally. It will therefore match the convention adopted by \healpix in its
+internally. It therefore matches the convention adopted by \healpix in its
 version 1.2.
 
 For backward compatibility, we provide an IDL code 
@@ -710,6 +712,19 @@ inherited by the simulated map.
 % available, a WWW page, linked to from both the CMBFAST and \healpix
 % WWW--sites, will be made available describing the combined 
 % usage of the two packages.
+
+\subsubsection{CAMB and CLASS}
+Newer and actively maintained Boltzmann codes currently include 
+{\tt camb} and {\tt class}:
+\begin{itemize}
+\item {\tt camb} (\htmladdnormallink{{\tt http://camb.info}}{http://camb.info}) 
+is written in Fortran 90 with a python wrapper, and can optionally output into FITS files 
+the $C_X(\ell)$ power spectra in [K]$^2$ in a format directly usable by \healpixns;\\
+\item {\tt class} (\htmladdnormallink{{\tt http://class-code.net}}{http://class-code.net}) 
+is written in C and C++, and only outputs $\frac{\ell(\ell+1)}{2\pi}C_X(\ell)$ in plain text files 
+(optionally in [$\mu$K]$^2$ and in a order of columns for polarized spectra matching the one of {\tt camb}).
+\end{itemize}
+Both codes are parallelized for faster computations and provide fine control of the output accuracy.
 
 \subsection{Polarisation convention}
 \label{subsec:pol}
@@ -757,7 +772,7 @@ $a_{21}^{GRAD}=\ -\ a_{2-1}^{GRAD}=1$}
 %\warnhtml
 Starting with version 1.20 (released in Feb 2003),\healpix uses the same
 conventions as CMBFAST for the sign and normalization of the polarization power
-spectra, as exposed below (adapted from \cite{zalda}). How this relates to
+spectra, as exposed below (adapted from \citet{zalda}). How this relates to
 what was used in previous releases is exposed in~\ref{subsub:relatoldversion}.
 
 \begin{quotation}
@@ -1026,11 +1041,11 @@ $Q$ and $U$ can be written in the case of \healpix 1.2 as
 
 For KKS, with the same definition of $M$, the decomposition reads
 \begin{eqnarray}
-\mattwo{Q}{-U} &\myequal& \sum_{\ell m} M_{\ell m} \mattwo{\sqrt{2}\azlm{E}}{\sqrt{2}\azlm{B}}
+\mattwo{Q}{-U} &\myequal& \sum_{\ell m} M_{\ell m} \mattwo{\sqrt{2}\azlm{E}}{\sqrt{2}\azlm{B}},
 \myhtmlimage{}
 \label{QU:KKS}
 \end{eqnarray}
-
+%
 whereas in \healpix 1.1 it was
 \begin{eqnarray}
 \phantom{1.1}\mattwo{Q}{U}&\myequal&\sum_{\ell m} M_{\ell m} \mattwo{-\sqrt{2}\alm{GRAD}}{\sqrt{2}\alm{CURL}}.
@@ -1150,7 +1165,7 @@ The Spherical Harmonics are defined as
 	Y_{\ell m}(\theta,\phi) &\myequal& \lambda_{\ell m}(\cos\theta) e^{{i}
 	m\phi} \label{eq:ylm_def} \myhtmlimage{}
 \end{eqnarray}
-where the 
+where 
 \begin{eqnarray}
 	\lambda_{\ell m}(x) &\myequal& \sqrt{ \frac{2\ell+1}{4\pi}
 	\frac{(\ell-m)!}{(\ell+m)!} } P_{\ell m}(x), \quad\textrm{for~}
@@ -1319,23 +1334,23 @@ Please note that we have not extensively tested this generator
 %
 %%%\backrefparscanfalse
 
-\bibitem[Ansari et al, 2003]{ansari}
+\bibitem[Ansari {et~al.}(2003)]{ansari}
 Ansari, R., et al, 2003, {\em Planck parameter definition document} (DRAFT
 2003-10-23), Technical Report PL-COM-IAS-SD-L2.02.005, ESA.
 %
-\bibitem[Baumgardner \& Frederickson (1985)]{baum}
+\bibitem[Baumgardner \& Frederickson(1985)]{baum}
 Baumgardner, J.R. and Frederickson, P.O., 1985, SIAM J. Numerical Analysis, Vol. 22,
 No. 6, p. 1107
 %
-\bibitem[Boch et al, 2014]{moc}
+\bibitem[Boch {et~al.}(2014)]{moc}
 Boch, T., Donaldson, T., Durand, D., et al. 2014, 
 ``{\em MOC-HEALPix Multi-Order Coverage map}'', 
 \htmladdnormallink{http://ivoa.net/documents/MOC/}{http://ivoa.net/documents/MOC/}
 
-\bibitem[Chandrasekhar (1960)]{chandra}  
+\bibitem[Chandrasekhar(1960)]{chandra}  
 Chandrasekhar, S. 1960, in Radiative Transfer (Dover: New York) 
 
-\bibitem[Chon et al (2004)]{polspice}
+\bibitem[Chon {et~al.}(2004)]{polspice}
 Chon, G., Challinor, A., Prunet, S., Hivon, E. \& Szapudi, I., 2004, 
 \htmladdnormallink{MNRAS, 350, 914}{http://cdsads.u-strasbg.fr/abs/2004MNRAS.350..914C}.
 PolSpice code available at \htmladdnormallink{http://www2.iap.fr/users/hivon/software/PolSpice/}{%
@@ -1345,13 +1360,13 @@ http://www2.iap.fr/users/hivon/software/PolSpice/}
 
 %   eprint = {astro-ph/0303414},
 
-\bibitem[Crittenden et al (1995)]{crco}
+\bibitem[Crittenden {et~al.}(1995)]{crco}
 Crittenden, R.G., Coulson, D. \&  Turok, N.G., 1995, Phys.Rev. D52, 5402
 
-\bibitem[Crittenden \& Turok (1998)]{crtu}
+\bibitem[Crittenden \& Turok(1998)]{crtu}
 Crittenden, R. and Turok, N.G., 1998, \htmladdnormallink{astro-ph/9806374}{http://arXiv.org/abs/astro-ph/9806374}
 
-\bibitem[Doroshkevich et al. (2005)]{glesp}
+\bibitem[Doroshkevich {et~al.}(2005)]{glesp}
 Doroshkevich, A.G.,
 Naselsky,    P.D.,  
 Verkhodanov, O.V.,  
@@ -1362,84 +1377,84 @@ Christensen, P.R. \&
 Chiang,	     L.-Y., 2005,
 IJMPD, 14, 2, 275, \htmladdnormallink{astro-ph/0305537}{http://arXiv.org/abs/astro-ph/0305537}
 
-\bibitem[Driscoll \& Healy (1994)]{drhea}
+\bibitem[Driscoll \& Healy(1994)]{drhea}
 Driscoll, J.R. and Healy, D., 1994, Adv. in Appl. Math., Vol. 15, p.202
 
-\bibitem[Edmonds, 1957]{edmonds}
+\bibitem[Edmonds(1957)]{edmonds}
 Edmonds, A.R., 1957, {\em Angular Momentum in Quantum Mechanics}, Princeton
 University Press
 
-\bibitem[Goldberg (1967)]{goldberg} 
+\bibitem[Goldberg(1967)]{goldberg} 
 Goldberg, J. N., et al. 1967, J. Math. Phys. 8, 2155
 
-\bibitem[G{\'o}rski et al (2005)]{gorskihealpix05}
+\bibitem[G{\'o}rski {et~al.}(2005)]{gorskihealpix05}
   G\'orski, K.M., Hivon, E., Banday, A.~J., Wandelt,
   B.~D., Hansen, F.~K., Reinecke, M. \& Bartelmann, M., 2005, 
 \htmladdnormallink{ApJ, 622, 759}{http://adsabs.harvard.edu/cgi-bin/nph-bib_query?bibcode=2005ApJ...622..759G&amp;db_key=AST&amp;high=41069202cf02947}, 
 \htmladdnormallink{astro-ph/0409513}{http://arxiv.org/abs/astro-ph/0409513}
 
-\bibitem[Hamaker \& Bregman, 1996]{hambreg}
+\bibitem[Hamaker \& Bregman(1996)]{hambreg}
 Hamaker, J.P. \& Bregman, J.D., 1996, A\&AS 117, 161
 
-\bibitem[Hamaker \& Leahy, 2003]{hamakerleahy}
+\bibitem[Hamaker \& Leahy(2003)]{hamakerleahy}
   Hamaker, J.P. \& Leahy, J.P., 2003, {\em ``A study of CMB differencing
   polarimetry with particular reference to {\em Planck}}'', {\sc ESA Report SCI-A/2003.312/jt}
 
-\bibitem[Hivon et al (2002)]{master}
+\bibitem[Hivon {et~al.}(2002)]{master}
 Hivon, E., G{\'o}rski, K, M., Netterfield, C. B., Crill, B. P., Prunet, S. \& Hansen, F., 
 2002, \htmladdnormallink{ApJ, 567, 2}{http://cdsads.u-strasbg.fr/abs/2002ApJ...567....2H}, 
 \htmladdnormallink{astro-ph/0105302}{http://arxiv.org/abs/astro-ph/0105302}
 
-\bibitem[Hu \& White (1997)]{primer}
+\bibitem[Hu \& White(1997)]{primer}
 Hu, W. \& White, M., 1997, NewA, 2, 323
 
-\bibitem[IAU, 1974]{iau74}
+\bibitem[IAU(1974)]{iau74}
 IAU, 1974, Transactions of the IAU Vol. 15B (1973) 166
 
-\bibitem[Kamionkowski et al (1997)]{kks}
+\bibitem[Kamionkowski {et~al.}(1997)]{kks}
 Kamionkowski, M., Kosowsky, A., Stebbins, A., 1997, Ph.Rev. D, 55, 7368 (KKS)
 
-\bibitem[Muciaccia, Natoli \& Vittorio (1998)]{munavi}
+\bibitem[Muciaccia, Natoli \& Vittorio(1998)]{munavi}
 Mucaccia, P.F, Natoli, P. and Vittorio, N., 1998, ApJ, 488, L63
 
-\bibitem[Planck 2015-XI (2015)]{planck2015-11}
+\bibitem[Planck 2015-XI(2015)]{planck2015-11}
 Planck Collaboration, 2015-XI, \htmladdnormallink{arXiv:1507.02704v1}{http://arXiv.org/abs/1507.02704v1}
 
-\bibitem[Reinecke \& Hivon, 2015]{rh15}
+\bibitem[Reinecke \& Hivon(2015)]{rh15}
 Reinecke, M. and Hivon, E., 2015, 
 \htmladdnormallink{A\&A, 580, A132}{http://cdsads.u-strasbg.fr/abs/2015A\%26A...580A.132R}, 
 \htmladdnormallink{arXiv:1505.04632v2}{http://arxiv.org/abs/1505.04632}
 
-\bibitem[Rocha et al, 2009]{xfaster}
+\bibitem[Rocha {et~al.}(2009)]{xfaster}
 Rocha, G., Contaldi, C.R., Bond, J.R. \& G\'orski, K.M., 2009,
 \htmladdnormallink{arXiv:0912.4059v2}{http://arxiv.org/abs/0912.4059}
 
-\bibitem[Saff \& Kuijlaars (1997)]{mathint}
+\bibitem[Saff \& Kuijlaars(1997)]{mathint}
 Saff, E.B. and Kuijlaars, A.B.J., 1997, The Mathematical 
 Intelligencer, 19, \#1, p.5
 
-\bibitem[Seljak \& Zaldarriaga (1997)]{longspin}
+\bibitem[Seljak \& Zaldarriaga(1997)]{longspin}
 Seljak, U. \& Zaldarriaga, M., Phys. Rev. Lett. \textbf{78}, 2054 (1997).   
 
-\bibitem[Szalay \& Brunner (1998)]{szalay}
+\bibitem[Szalay \& Brunner(1998)]{szalay}
 Szalay, A.S. and Brunner, R.J., 1998, 
 \htmladdnormallink{astro-ph/9812335}{http://arXiv.org/abs/astro-ph/9812335}, to appear in 
 a special issue of the Elsevier journal "Future Generation Computer Systems"
 
-\bibitem[Tegmark (1996)]{teg}
+\bibitem[Tegmark(1996)]{teg}
 Tegmark, M., 1996, ApJ, 470, L81
 
-\bibitem[Tristram et al (2005)]{xspect}
+\bibitem[Tristram {et~al.}(2005)]{xspect}
 Tristram, M., Macias-Perez, J.F., Renault, C., \& Santos, D., 2005, 
 \htmladdnormallink{MNRAS, 358, 833}{http://cdsads.u-strasbg.fr/abs/2005MNRAS.358..833T}
 
-\bibitem[Wandelt, Hivon \& G\'orski (1998)]{whg}
+\bibitem[Wandelt, Hivon \& G\'orski(1998)]{whg}
 Wandelt, B.D., Hivon, E. and G\'orski, K.M., 1998, 
 \htmladdnormallink{astro-ph/9803317}{http://arXiv.org/abs/astro-ph/9803317}, in
  "Fundamental Parameters in Cosmology", proceedings of the XXXIIIrd Rencontres
 de Moriond, Tr{\^a}n Thanh V{\^a}n (ed.)
 
-\bibitem[Wandelt, Hivon \& G\'orski (2001)]{whg2001}
+\bibitem[Wandelt, Hivon \& G\'orski(2001)]{whg2001}
 Wandelt, B.D., Hivon, E. and G\'orski, K.M., 2001, 
 \htmladdnormallink{Phys. Rev. D, 64, 083003}{http://adsabs.harvard.edu/abs/2001PhRvD..64h3003W},
 \htmladdnormallink{astro-ph/9808292v1}{http://arXiv.org/abs/astro-ph/9808292v1}
@@ -1447,10 +1462,10 @@ Wandelt, B.D., Hivon, E. and G\'orski, K.M., 2001,
 %% \bibitem{fastah} Wandelt, B.D., G\'orski, K.M., Hivon, E.\ and Hansen,
 %% F.\, in preparation
  
-\bibitem[Zaldarriaga (1998)]{zalda} 
+\bibitem[Zaldarriaga(1998)]{zalda} 
 Zaldarriaga, M., 1998, ApJ, 503, 1
 
-\bibitem[Zaldarriaga~\&~Seljak (1997)]{spinlong}
+\bibitem[Zaldarriaga~\&~Seljak(1997)]{spinlong}
 Zaldarriaga, M. \& Seljak, U., Phys. Rev. D \textbf{55} 1830 (1997)
 
 %% \backrefprint\backrefparscantrue

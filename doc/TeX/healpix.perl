@@ -591,6 +591,205 @@ sub do_env_mylist_bullet{
 }
 
 
+# adapted from html4_1.pl
+sub do_env_eqnarray {
+    #print"\nIn EqnArray (healpix.perl)\n";
+    local($_) = @_;
+    local($math_mode, $failed, $labels, $comment, $doimage) = ("equation",'','');
+    local($attribs, $border);
+    if (s/$htmlborder_rx//o) { $attribs = $2; $border = (($4)? "$4" : 1) }
+    elsif (s/$htmlborder_pr_rx//o) { $attribs = $2; $border = (($4)? "$4" : 1) }
+    local($saved) = $_;
+    local($sbig,$ebig,$falign) = ('','','CENTER');
+    ($sbig,$ebig) = ('<BIG>','</BIG>')
+	if (($DISP_SCALE_FACTOR)&&($DISP_SCALE_FACTOR >= 1.2 ));
+    local($valign) = join('', ' VALIGN="', 
+	($NETSCAPE_HTML)? "BASELINE" : "MIDDLE", '"');
+    $failed = 1; # simplifies the next call
+    ($labels, $comment, $_) = &process_math_env($math_mode,$_);
+    $failed = 0 unless ($no_eqn_numbers);
+    if ((($failed)&&($NO_SIMPLE_MATH))
+	||(/$htmlimage_rx|$htmlimage_pr_rx/)) {
+#	||((/$htmlimage_rx|$htmlimage_pr_rx/)&&($& =~/thumb/))) {
+	# image of whole environment, no equation-numbers
+	$failed = 1;
+	$falign = (($EQN_TAGS =~ /L/)? 'LEFT' : 'RIGHT')
+	    unless $no_eqn_numbers;
+	$_ = join ('', $comment
+	    , &process_undefined_environment(
+		"eqnarray".(($no_eqn_numbers) ? "star" : '')
+		, $id, $saved));
+	local($fclass) = $math_class;
+	$fclass =~ s/(ALIGN=\")[^"]*/$1$falign/;
+	$_ = join('',"<P></P><DIV$fclass>"
+	    , $_, "</DIV><BR CLEAR=\"ALL\"><P></P>\n");
+    } else {
+	$failed = 0;
+	s/$htmlimage_rx/$doimage = $&;''/eo ; # force an image
+	s/$htmlimage_pr_rx/$doimage .= $&;''/eo ; # force an image
+	local($sarray, $srow, $slcell, $elcell, $srcell, $ercell, $erow, $earray);
+# 	($sarray, $elcell, $srcell, $erow, $earray, $sempty) = ( 
+# 	    "\n<TABLE$env_id$lang CELLPADDING=\"0\" ALIGN=\"CENTER\""
+# 	    , "</TD>\n<TD ALIGN=\"CENTER\" NOWRAP>"
+# 	    , "</TD>\n<TD ALIGN=\"LEFT\" WIDTH=\"50%\" NOWRAP>"
+# 	    , "</TD></TR>", "\n</TABLE>", "</TD>\n<TD>" );
+	($sarray, $elcell, $srcell, $erow, $earray, $sempty) = ( 
+	    "\n<SPAN CLASS=\"MATH\">\n<TABLE$env_id$lang CELLPADDING=\"0\" ALIGN=\"CENTER\""
+	    , "</TD>\n<TD ALIGN=\"CENTER\" NOWRAP>"
+	    , "</TD>\n<TD ALIGN=\"LEFT\" WIDTH=\"50%\" NOWRAP>"
+	    , "</TD></TR>", "\n</TABLE>\n</SPAN>", "</TD>\n<TD>" );
+	$env_id = '';
+	$sarray .= (($no_eqn_numbers) ? ">" :  " WIDTH=\"100%\">" );
+	local($seqno) = join('',"\n<TD$eqno_class WIDTH=10 ALIGN=\""
+		, (($EQN_TAGS =~ /L/)? 'LEFT': 'RIGHT')
+		, "\">\n");
+	if ($EQN_TAGS =~ /L/) { # number on left
+	    ($srow, $slcell, $ercell) = (
+		"\n<TR$valign>" . $seqno
+		, "</TD>\n<TD NOWRAP WIDTH=\"50%\" ALIGN=", '');
+	} else { # equation number on right
+	    ($srow, $slcell, $ercell) = ("\n<TR$valign>"
+		, "<TD NOWRAP WIDTH=\"50%\" ALIGN="
+		, '</TD>'. $seqno );
+	}
+
+	$_ = &protect_array_envs($_);
+
+	local(@rows,@cols,$eqno,$return,$thismath,$savemath);
+	s/\\\\[ \t]*\[[^\]]*]/\\\\/g; # remove forced line-heights
+	@rows = split(/\\\\/);
+	$#rows-- if ( $rows[$#rows] =~ /^\s*$/ );
+	$return = join(''
+	    , (($border||($attribs))? '': "<BR>")
+	    , (($doimage)? '' : "\n<DIV ALIGN=\"CENTER\">")
+	    , (($labels)? $labels : "\n") , $comment, $sarray);
+	foreach (@rows) { # displaymath
+	    $eqno = '';
+	    do { 
+		$global{'eqn_number'}++ ;
+		$eqno = &simplify(&translate_commands('\theequation'));
+	    } unless ((s/\\nonumber//)||($no_eqn_numbers));
+	    if (/\\tag(\*)?/){
+		if (defined &get_eqn_number) {
+		    # AmS-TEX line-number tags.
+		    ($eqno, $_) = &get_eqn_number(1,$_);
+		} else {
+		    s/\\tag(\*)?//;
+		    local($nobrack,$before) = ($1,$`);
+		    $_ = $';
+		    s/next_pair_pr_rx//o;
+		    if ($nobrack) { $eqno = $2 }
+		    else { $eqno = join('',$EQNO_START,$2,$EQNO_END) }
+		    $_ = $before;
+		}
+	    } elsif ($eqno) {
+		$eqno = join('',$EQNO_START, $eqno, $EQNO_END)
+	    } else { $eqno = '&nbsp;' } # spacer, when no numbering
+
+	    $return .= $srow;
+	    $return .= $eqno if ($EQN_TAGS =~ /L/);
+	    $return .= $slcell;
+#	    if (s/\\lefteqn$OP(\d+)$CP(.*)$OP\1$CP/ $2 /) {
+	    if (s/\\lefteqn//) {
+		$return .= "\"LEFT\" COLSPAN=\"3\">";
+		$* =1; s/(^\s*|$html_specials{'&'}|\s*$)//g; $*=0;
+		if (($NO_SIMPLE_MATH)||($doimage)||($failed)) {
+		    $_ = (($_)? &process_math_in_latex(
+		        "indisplay" , '', '', $doimage.$_ ):'');
+		    $return .= join('', $_, $erow) if ($_);
+		} elsif ($_ ne '') {
+		    $savemath = $_; $failed = 0;
+		    $_ = &simple_math_env($_);
+		    if ($failed) {
+			$_ = &process_math_in_latex(
+			    "indisplay",'','',$savemath);
+			$return .= join('', $_, $erow) if ($_);
+		    } elsif ($_ ne '') {
+			$return .= join('', $sbig, $_, $ebig, $erow)
+		    }
+		}
+		$return .= join('',";SPMnbsp;", $erow) if ($_ eq ''); 
+		next;
+	    }
+
+	    # columns to be set using math-modes
+	    @cols = split(/$html_specials{'&'}/o);
+
+	    # left column, set using \displaystyle
+	    $thismath = shift(@cols); $failed = 0;
+	    $* =1; $thismath =~ s/(^\s*|\s*$)//g; $*=0;
+	    if (($NO_SIMPLE_MATH)||($doimage)||($failed)) {
+		$thismath = (($thismath ne '')? &process_math_in_latex(
+		    "indisplay" , '', '', $doimage.$thismath ):'');
+		$return .= join('',"\"RIGHT\">",$thismath) if ($thismath ne '');
+	    } elsif ($thismath ne '') { 
+		$savemath = $thismath;
+		$thismath = &simple_math_env($thismath);
+		if ($failed) {
+		    $thismath = &process_math_in_latex(
+			"indisplay",'','',$savemath);
+		    $return .= join('',"\"RIGHT\">",$thismath)
+		} elsif ($thismath ne '') {
+		    $return .= join('',"\"RIGHT\">$sbig",$thismath,"$ebig")
+		}
+	    }
+	    $return .= "\"RIGHT\">\&nbsp;" if ($thismath eq '');
+
+	    # center column, set using \textstyle
+	    $thismath = shift(@cols); $failed = 0;
+	    $* =1; $thismath =~ s/(^\s*|\s*$)//g; $*=0;
+	    if (($NO_SIMPLE_MATH)||($doimage)||($failed)) {
+		$thismath = (($thismath ne '')? &process_math_in_latex(
+		    "indisplay" , 'text', '', $doimage.$thismath ):'');
+		$return .= join('', $elcell, $thismath) if ($thismath ne '');
+	    } elsif ($thismath ne '') { 
+		$savemath = $thismath;
+		$thismath = &simple_math_env($thismath);
+		if ($failed) {
+		    $thismath = &process_math_in_latex(
+			"indisplay",'text','',$savemath);
+		    $return .= join('', $elcell, $thismath)
+		} elsif ($thismath ne '') {
+		    $return .= join('', $elcell, $sbig , $thismath, $ebig)
+		}
+	    }
+	    $return .= join('', $sempty,"\&nbsp;") if ($thismath eq '');
+
+	    # right column, set using \displaystyle
+	    $thismath = shift(@cols); $failed = 0;
+	    $* =1; $thismath =~ s/(^\s*|\s*$)//g; $*=0;
+	    if (($NO_SIMPLE_MATH)||($doimage)||($failed)) {
+		$thismath = (($thismath ne '')? &process_math_in_latex(
+		    "indisplay" , '', '', $doimage.$thismath ):'');
+		$return .= join('', $srcell, $thismath, $ercell)
+		    if ($thismath ne '');
+	    } elsif ($thismath ne '') {
+		$savemath = $thismath;
+		$thismath = &simple_math_env($thismath);
+		if ($failed) {
+		    $thismath = &process_math_in_latex(
+			"indisplay",'','',$savemath);
+		    $return .= join('', $srcell, $thismath, $ercell)
+		} elsif ($thismath ne '') {
+		    $return .= join('', $srcell, $sbig, $thismath, $ebig, $ercell)
+		}
+	    }
+	    $return .= join('', $sempty, "\&nbsp;", $ercell) if ($thismath eq '');
+
+	    $return .= $eqno unless ($EQN_TAGS =~ /L/);
+	    $return .= $erow;
+	}
+	$_ = join('', $return , $earray, (($doimage)? '' : "</DIV>" ));
+    }
+    if ($border||($attribs)) { 
+	join('' #,"<BR>\n<DIV$math_class>"
+	    , &make_table( $border, $attribs, '', '', '', $_ )
+	    , "\n</DIV><P></P><BR CLEAR=\"ALL\">");
+    } else {
+	join('', $_ ,"<BR CLEAR=\"ALL\"><P></P>");
+    }
+}
+
 # copied from amstex.perl
 #----------
 sub do_cmd_title {

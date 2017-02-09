@@ -6,7 +6,7 @@ PDFTEX  := pdflatex
 TEXFLAGS := 
 DVIFLAGS :=
 PDFFLAGS :=
-LATEX2HTML := export L2HCONFIG ./my_l2hconf.pm ; latex2html
+LATEX2HTML := export L2HCONFIG=./my_l2hconf.pm ; ./latex2html
 # LATEX2HTML := ~/bin/latex2html
 VERSION =  $(shell grep newcommand hpxversion.tex | grep hpxversion | sed "s/[a-z{}\\]*//g")
 DOCDIR  := ../../healpix-dynamicPages/
@@ -113,7 +113,7 @@ install.html: $(style) healpix.perl cssfile
 	mkdir -p $(HTMLDIR)
 	-cp $(HTMLDIR)/*labels.pl /tmp
 	-$(LATEX2HTML) $(L2HFLAGS) -split 3 -prefix install -external_file ./install  -t "Installing HEALPix"      install
-	-$(EQNFIX)      $(HTMLDIR)/install
+	-$(EQNFIX)      $(HTMLDIR)/install 1> /dev/null 2>&1
 	-$(IMPROVEHTML) $(HTMLDIR)/install
 	mv -f $(HTMLDIR)/WARNINGS $(HTMLDIR)/WARNINGS_install
 	ln -sf $(CSSFILE) $(HTMLDIR)/install.css
@@ -125,7 +125,7 @@ intro.html: $(style) healpix.perl cssfile
 	@echo "$(GREEN_COLOR)==================================$(NO_COLOR)"
 	mkdir -p $(HTMLDIR)
 	-$(LATEX2HTML) $(L2HFLAGS) -split 4 -prefix intro -external_file ./intro    -t "Introduction to HEALPix"  intro
-	-$(EQNFIX)      $(HTMLDIR)/intro
+	-$(EQNFIX)      $(HTMLDIR)/intro 1> /dev/null 2>&1
 	-$(IMPROVEHTML) $(HTMLDIR)/intro
 	mv -f $(HTMLDIR)/WARNINGS $(HTMLDIR)/WARNINGS_intro
 	ln -sf $(CSSFILE) $(HTMLDIR)/intro.css
@@ -139,7 +139,7 @@ idl.html: $(style) healpix.perl cssfile
 	mkdir -p $(HTMLDIR)
 	-cp $(HTMLDIR)/*labels.pl /tmp
 	-$(LATEX2HTML) $(L2HFLAGS) -split 4 -prefix idl -external_file ./idl      -t "HEALPix/IDL subroutines"   idl
-	-$(EQNFIX)      $(HTMLDIR)/idl
+	-$(EQNFIX)      $(HTMLDIR)/idl 1> /dev/null 2>&1
 	-$(IMPROVEHTML) $(HTMLDIR)/idl
 	mv -f $(HTMLDIR)/WARNINGS $(HTMLDIR)/WARNINGS_idl
 	ln -sf $(CSSFILE) $(HTMLDIR)/idl.css
@@ -153,7 +153,7 @@ subroutines.html: $(style) healpix.perl cssfile
 	mkdir -p $(HTMLDIR)
 	-cp $(HTMLDIR)/*labels.pl /tmp
 	-$(LATEX2HTML) $(L2HFLAGS) -split 4 -prefix subroutines -external_file ./subroutines -t "HEALPix/F90 subroutines" subroutines
-	-$(EQNFIX)      $(HTMLDIR)/subroutines
+	-$(EQNFIX)      $(HTMLDIR)/subroutines 1> /dev/null 2>&1
 	-$(IMPROVEHTML) $(HTMLDIR)/subroutines
 	mv -f $(HTMLDIR)/WARNINGS $(HTMLDIR)/WARNINGS_subroutines
 	ln -sf $(CSSFILE) $(HTMLDIR)/subroutines.css
@@ -167,7 +167,7 @@ facilities.html: $(style) healpix.perl cssfile
 	mkdir -p $(HTMLDIR)
 	-cp $(HTMLDIR)/*labels.pl /tmp
 	-$(LATEX2HTML) $(L2HFLAGS) -split 4 -prefix facilities -external_file ./facilities -t "HEALPix/F90 facilities"  facilities
-	-$(EQNFIX)      $(HTMLDIR)/facilities
+	-$(EQNFIX)      $(HTMLDIR)/facilities 1> /dev/null 2>&1
 	-$(IMPROVEHTML) $(HTMLDIR)/facilities
 	mv -f $(HTMLDIR)/WARNINGS $(HTMLDIR)/WARNINGS_facilities
 	ln -sf $(CSSFILE) $(HTMLDIR)/facilities.css
@@ -180,7 +180,7 @@ csub.html: $(style) healpix.perl cssfile
 	@echo "$(GREEN_COLOR)==================================$(NO_COLOR)"
 	mkdir -p $(HTMLDIR)
 	-$(LATEX2HTML) $(L2HFLAGS) -prefix csub       -t "HEALPix/C subroutines"  csub
-	-$(EQNFIX)      $(HTMLDIR)/csub
+	-$(EQNFIX)      $(HTMLDIR)/csub 1> /dev/null 2>&1
 	-$(IMPROVEHTML) $(HTMLDIR)/csub
 	mv -f $(HTMLDIR)/WARNINGS $(HTMLDIR)/WARNINGS_csub
 	ln -sf $(CSSFILE) $(HTMLDIR)/csub.css
