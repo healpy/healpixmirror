@@ -2764,25 +2764,26 @@ contains
        polarisation = .false.
     endif
     
-    if (polarisation .and. (polcconv == 3)) then
-       print 9000,"The polarisation coordinate convention (POLCCONV) is neither COSMO nor IAU."
-       print 9000,code//" can not proceed with these data"
-       print 9000,"See Healpix primer ("//primer_url//") for details."
-       call fatal_error(code)
-    endif
+    ! POLCCONV now dealt with in input_map
+!     if (polarisation .and. (polcconv == 3)) then
+!        print 9000,"The polarisation coordinate convention (POLCCONV) is neither COSMO nor IAU."
+!        print 9000,code//" can not proceed with these data"
+!        print 9000,"See Healpix primer ("//primer_url//") for details."
+!        call fatal_error(code)
+!     endif
     
-    if (polarisation .and. (polcconv == 2)) then
-       print 9000,"The input map contains polarized data in the IAU coordinate convention (POLCCONV)"
-       print 9000,code//" can not proceed with these data"
-       print 9000,"See Healpix primer ("//primer_url//") for details."
-       call fatal_error(code)
-    endif
+!     if (polarisation .and. (polcconv == 2)) then
+!        print 9000,"The input map contains polarized data in the IAU coordinate convention (POLCCONV)"
+!        print 9000,code//" can not proceed with these data"
+!        print 9000,"See Healpix primer ("//primer_url//") for details."
+!        call fatal_error(code)
+!     endif
     
-    if (polarisation .and. (polcconv == 0)) then
-       print 9000,"WARNING: the polarisation coordinate convention (POLCCONV) can not be determined"
-       print 9000,"         COSMO will be assumed."
-       print 9000,"See Healpix primer ("//primer_url//") for details."
-    endif
+!     if (polarisation .and. (polcconv == 0)) then
+!        print 9000,"WARNING: the polarisation coordinate convention (POLCCONV) can not be determined"
+!        print 9000,"         COSMO will be assumed."
+!        print 9000,"See Healpix primer ("//primer_url//") for details."
+!     endif
     
     !     --- check ordering scheme ---
     if ((order_map/=1).and.(order_map/=2)) then

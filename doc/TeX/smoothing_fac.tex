@@ -96,9 +96,11 @@ otherwise set it to 0 (or 2). (default= 0)
 \begin{codedescription}
 {
 A FITS file containing a \healpix map in RING or NESTED scheme is read in.
+When dealing with polarized signal maps, the \thedocid\ behavior will depend on the value of the \texttt{POLCCONV} FITS keyword
+(see \htmlref{note on POLCCONV}{intro:polcconv} in \linklatexhtml{The \healpix Primer}{intro.pdf}{intro.htm}).
 The map is analysed and smoothed in fourier space with a  gaussian beam 
 of a given FHWM. 
-A new map is then synthesized using the smoothed $a_{\ell m}$ coeffecients. 
+A new map is then synthesized using the smoothed $a_{\ell m}$ coefficients. 
 For a more accurate application, an iteration of arbitrary order can be applied. 
 The output map is stored in {\em the same scheme} as the input map.
 }

@@ -433,6 +433,8 @@ sub do_env_relist{
 }
 
 sub do_env_itemize{
+  #local($_) = @_;
+  #print "itemize ($_)";
   &do_env_mylist_bullet(@_," COMPACT", "GreenBall");
 }
 

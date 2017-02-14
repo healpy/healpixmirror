@@ -146,7 +146,8 @@ subroutine input_map4_KLOAD(filename, map, npixtot, nmaps, fmissval, header, uni
 !=======================================================================
 subroutine input_map8_KLOAD(filename, map, npixtot, nmaps, fmissval, header, units, extno)
     !=======================================================================
-
+  use head_fits, only: get_card, add_card
+  use pix_tools, only: nside2npix
     INTEGER(I8B),     INTENT(IN)                           :: npixtot
     INTEGER(I4B),     INTENT(IN)                           :: nmaps
     REAL(KMAP),       INTENT(OUT), dimension(0:,1:)        :: map
@@ -157,7 +158,7 @@ subroutine input_map8_KLOAD(filename, map, npixtot, nmaps, fmissval, header, uni
     INTEGER(I4B),     INTENT(IN)                , optional :: extno
 
     INTEGER(I8B) :: i, imissing, obs_npix, maxpix, minpix
-    REAL(KMAP)     :: fmissing, fmiss_effct
+    REAL(KMAP)   :: fmissing, fmiss_effct
     integer(I4B) :: imap, nlheader
 
     LOGICAL(LGT) :: anynull
@@ -168,9 +169,13 @@ subroutine input_map8_KLOAD(filename, map, npixtot, nmaps, fmissval, header, uni
     integer(I4B) :: status
     integer(I4B) :: type_fits, nmaps_fits
     CHARACTER(LEN=80)  :: units1
-    CHARACTER(LEN=80),dimension(1:10)  :: unitsm
+    CHARACTER(LEN=80),dimension(1:30)  :: unitsm
+    character(len=80), dimension(:), allocatable  :: hbuffer
 !    CHARACTER(LEN=80),dimension(:), allocatable  :: unitsm
     integer(I4B) :: extno_i, extno_f
+    CHARACTER(LEN=80)  :: polcconv
+    integer(I4B)       :: ipolcconv, polar, nside_fits
+    character(len=*), parameter :: primer_url = 'http://healpix.sf.net/pdf/intro.pdf'
     !-----------------------------------------------------------------------
 
     units1    = ' '
@@ -181,26 +186,27 @@ subroutine input_map8_KLOAD(filename, map, npixtot, nmaps, fmissval, header, uni
     if (PRESENT(header)) then
        nlheader = size(header)
     else
-       nlheader = 0
+       nlheader = 36*100
     endif
     extno_i = 0
     if (present(extno)) extno_i = extno
+    allocate(hbuffer(1:nlheader))
 
-    obs_npix = getsize_fits(filename, nmaps = nmaps_fits, type=type_fits, extno=extno_i)
+    obs_npix = getsize_fits(filename, nmaps = nmaps_fits, type=type_fits, extno=extno_i, &
+         polcconv=ipolcconv, polarisation=polar, nside=nside_fits)
 
     !       if (nmaps_fits > nmaps) then 
     !          print*,trim(filename)//' only contains ',nmaps_fits,' maps'
     !          print*,' You try to read ',nmaps
     !       endif
     if (type_fits == 0 .or. type_fits == 2) then ! full sky map (in image or binary table)
+       call read_bintab(filename, map(0:,1:), &
+            & npixtot, nmaps, fmissing, anynull, header=hbuffer(1:), &
+            & units=unitsm(1:), extno=extno_i)
        if (present(header)) then
-          call read_bintab(filename, map(0:,1:), &
-               & npixtot, nmaps, fmissing, anynull, header=header(1:), &
-               & units=unitsm(1:), extno=extno_i)
-       else
-          call read_bintab(filename, map(0:,1:), &
-               & npixtot, nmaps, fmissing, anynull, units=unitsm(1:), &
-               &  extno=extno_i)
+          do i=1,nlheader
+             header(i) = hbuffer(i)
+          enddo
        endif
        if (present(units)) then
           units(1:size(units)) = unitsm(1:size(units))
@@ -228,7 +234,12 @@ subroutine input_map8_KLOAD(filename, map, npixtot, nmaps, fmissval, header, uni
           allocate(pixel(0:obs_npix-1), stat = status)
           allocate(signal(0:obs_npix-1), stat = status)
           call read_fits_cut4(filename, int(obs_npix,kind=i4b), &
-               &              pixel, signal, header=header, units=units1, extno=extno_f)
+               &              pixel, signal, header=hbuffer, units=units1, extno=extno_f)
+          if (present(header) .and. imap == 1) then
+             do i=1,nlheader
+                header(i) = hbuffer(i)
+             enddo
+          endif
           if (present(units)) units(imap) = trim(units1)
           maxpix = maxval(pixel)
           minpix = maxval(pixel)
@@ -257,6 +268,47 @@ subroutine input_map8_KLOAD(filename, map, npixtot, nmaps, fmissval, header, uni
     endif
 
 !    deallocate(unitsm)
+
+    !-----------------------------------------------------------------------
+    ! deal with polcconv
+    ! print*,'******* in input_map ',nmaps, polar, type_fits, nside_fits
+
+    if (   (nmaps >= 3 .and. type_fits == 3) &  ! cut-sky, multiple maps
+         &  .or. &
+         & (nmaps >=3 .and. polar==1 .and. type_fits ==2 .and. &
+         &    obs_npix==nside2npix(nside_fits)) & ! full-sky, polarized map
+         & ) then 
+       if (ipolcconv == 0) then
+          print 9000,' The POLCCONV keyword not found in '//trim(filename)
+          print 9000,' COSMO (HEALPix default) will be assumed, and map is unchanged.'
+          print 9000,' See HEALPix primer ('//primer_url//') for details.'
+       endif
+!        if (ipolcconv == 1) then
+!           print 9000,' POLCCONV=COSMO found in '//trim(filename)//'. Map is unchanged.'
+!        endif
+       if (ipolcconv == 2) then
+          print 9000,' POLCCONV=IAU found in '//trim(filename)
+          map(:,3) = - map(:,3)
+          if (present(header)) then
+             print 9000,' The sign of the U polarisation is changed in memory,'&
+                  & //' and the header is updated.'
+             call add_card(header, 'POLCCONV', 'COSMO', &
+                  comment='Changed by input_map', update=.true.)
+          else
+             print 9000,' The sign of the U polarisation is changed in memory.'
+          endif
+          print 9000,' See HEALPix primer ('//primer_url//') for details.'
+       endif
+       if (ipolcconv == 3) then
+          call get_card(hbuffer,'POLCCONV',polcconv)
+          print 9000,' POLCCONV='//trim(polcconv)//' found in '//trim(filename)
+          print 9000,' It is neither COSMO nor IAU.   Aborting!'
+          print 9000,' See HEALPix primer ('//primer_url//') for details.'
+          call fatal_error
+       endif
+    endif
+9000 format(a)
+    if (allocated(hbuffer)) deallocate(hbuffer)
 
     RETURN
   END subroutine input_map8_KLOAD

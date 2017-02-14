@@ -1,36 +1,49 @@
 /* CCS for Healpix HTML documentation */
 
 
+body { color: #000000;
+	background: #FFFFFA;
+	margin: 10px 10px 10px 10px;
+	font: 85% 'Lucida Grande', Geneva, Verdana, Arial, Helvetica, sans-serif;
+	line-height: normal;
+}
+	/* font: small 'Lucida Grande', Geneva, Verdana, Arial, Helvetica, sans-serif; */
+
+
 /* Century Schoolbook font is very similar to Computer Modern Math: cmmi */
 /* .BOLDMATH { font-family: "Century Schoolbook", serif; font-weight: bold } */
 /* .MATH     { font-family: "Century Schoolbook", serif; }  */
 /* .MATH I   { font-family: "Century Schoolbook", serif; font-style: italic } */
-.BOLDMATH   { font-family: "Century Schoolbook", serif; font-weight: bold  ; font-size: larger ; }
-.MATH       { font-family: "Century Schoolbook", serif                     ; font-size: larger ; }
-.MATH I     { font-family: "Century Schoolbook", serif; font-style: italic ; font-size: larger ; }
-.MATH SUB   { font-family: "Century Schoolbook", serif                     ; font-size: smaller; }
-.MATH SUB I { font-family: "Century Schoolbook", serif; font-style: italic ; font-size: smaller; }
-.MATH SUP   { font-family: "Century Schoolbook", serif                     ; font-size: smaller; }
-.MATH SUP I { font-family: "Century Schoolbook", serif; font-style: italic ; font-size: smaller; }
+.BOLDMATH   { font-family: "Century Schoolbook", serif; font-weight: bold  ; font-size: 110% ; }
+.MATH       { font-family: "Century Schoolbook", serif                     ; font-size: 110% ; }
+.MATH I     { font-family: "Century Schoolbook", serif; font-style: italic ; font-size: 110% ; }
+.MATH SUB   { font-family: "Century Schoolbook", serif                     ; font-size: 90%; }
+.MATH SUB I { font-family: "Century Schoolbook", serif; font-style: italic ; font-size: 90%; }
+.MATH SUP   { font-family: "Century Schoolbook", serif                     ; font-size: 90%; }
+.MATH SUP I { font-family: "Century Schoolbook", serif; font-style: italic ; font-size: 90%; }
 
-/* implement both fixed-size and relative sizes */
-SMALL.XTINY		{ font-size : xx-small } /*<small class="xtiny"> ... </small>*/
-SMALL.TINY		{ font-size : x-small  }
-SMALL.SCRIPTSIZE	{ font-size : smaller    }
-SMALL.FOOTNOTESIZE	{ font-size : inherit }
-SMALL.SMALL		{ font-size : inherit }
-BIG.LARGE		{ font-size : inherit }
-BIG.XLARGE		{ font-size : larger   }
-BIG.XXLARGE		{ font-size : large    }
-BIG.HUGE		{ font-size : x-large  }
-BIG.XHUGE		{ font-size : xx-large } /*<big class="xhuge"> ... </big>*/
+SMALL.XTINY		{ font-size : 50% } /*<small class="xtiny"> ... </small>*/
+SMALL.TINY		{ font-size : 60% }
+SMALL.SCRIPTSIZE	{ font-size : 70% }
+SMALL.FOOTNOTESIZE	{ font-size : 92% } /*in use  (was 85%) */
+SMALL.SMALL		{ font-size : 92% } /*in use*/
+BIG.LARGE		{ font-size : 106% } /*in use*/
+BIG.XLARGE		{ font-size : 112% } /*in use*/
+BIG.XXLARGE		{ font-size : 130% }
+BIG.HUGE		{ font-size : 150% }
+BIG.XHUGE		{ font-size : 200% } /*<big class="xhuge"> ... </big>*/
 
-body { color: #000000;
-	background: #FFFFFA;
-	margin: 10px 10px 10px 10px;
-	font: small 'Lucida Grande', Geneva, Verdana, Arial, Helvetica, sans-serif;
-	line-height: normal;
-}
+/* SMALL.XTINY		{ font-size : xx-small } */
+/* SMALL.TINY		{ font-size : x-small  }  */
+/* SMALL.SCRIPTSIZE	{ font-size : small    } */
+/* SMALL.FOOTNOTESIZE	{ font-size : smaller } */
+/* SMALL.SMALL		{ font-size : inherit } */
+/* BIG.LARGE		{ font-size : inherit } */
+/* BIG.XLARGE		{ font-size : larger   } */
+/* BIG.XXLARGE		{ font-size : large    } */
+/* BIG.HUGE		{ font-size : x-large  } */
+/* BIG.XHUGE		{ font-size : xx-large } */
+
 
 
 p { 	padding: 0px 0px 0px 0px; 

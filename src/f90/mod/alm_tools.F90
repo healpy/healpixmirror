@@ -1484,13 +1484,13 @@ contains
 
                 ! failure
 666             continue
-                print*, 'ERROR in '//code
-                print*, 'Unable to parse ASCII file '//trim(new_beam_file)
-                print*, 'at line '//trim(adjustl(string(iline)))//' containing '
-                print*, trim(str)
-                print*, 'Expected format :'
-                print*, ' Multipole,  column_1 [, column_2, column_3]'
-                print*, ' with OPTIONAL colum_2 and column_3'
+                print 9000, 'ERROR in '//code
+                print 9000, 'Unable to parse ASCII file '//trim(new_beam_file)
+                print 9000, 'at line '//trim(adjustl(string(iline)))//' containing'
+                print 9000, trim(str)
+                print 9000, 'Expected format :'
+                print 9000, ' Multipole,  column_1 [, column_2, column_3]'
+                print 9000, ' with OPTIONAL colum_2 and column_3'
                 call fatal_error
 
                 ! record data, keep going until end of file
@@ -1519,8 +1519,9 @@ contains
 
        ! if Grad absent, replicate Temperature; if Curl absent, replicate Grad
        if (nc < nd) then
-          print*,'Not enough columns found in '//trim(new_beam_file)
-          print*,'Expected '//trim(adjustl(string(nd)))//', found '//trim(adjustl(string(nc)))
+          print 9000,'Not enough columns found in '//trim(new_beam_file)
+          print 9000,'Expected '//trim(adjustl(string(nd)))&
+               //', found '//trim(adjustl(string(nc)))
           do i=nc+1, nd
              print 9000,' column #'//trim(adjustl(string(i))) &
                   &                //' empty, fill in with column #' &
@@ -1528,8 +1529,9 @@ contains
              gb(:,i) = gb(:,i-1)
           enddo
        else
-          print*,'Read '//trim(adjustl(string(nd)))//' columns from '//trim(new_beam_file)
-          print*,'(out of '//trim(adjustl(string(nc)))//')'
+          print 9000,'Read '//trim(adjustl(string(nd)))&
+               //' columns from '//trim(new_beam_file)
+          print 9000,'(out of '//trim(adjustl(string(nc)))//')'
        endif
 
 !        ! if Grad absent, replicate Temperature; if Curl absent, replicate Grad

@@ -11,6 +11,7 @@
 %\renewcommand{\ell}{l}
 \input{hpxversion}
 \end{htmlonly}
+\usepackage{tocloft} % to indent sections in TOC https://texblog.org/2011/09/09/10-ways-to-customize-tocloflot/
 
 \hypersetup{%
 	pdftitle={HEALPix Introduction},%
@@ -192,7 +193,7 @@ properties of our proposed approach for a high resolution numerical
 representation of  functions on the sphere
  --- the Hierarchical
 Equal Area and iso-Latitude Pixelation  (\healpixns, see 
-\htmladdnormallink{{\tt \healpixwebpage}}
+\htmladdnormallink{\texttt{\healpixwebpage}}
 {\healpixwebpage}), 
 and the associated multi-purpose computer 
 software package. 
@@ -249,7 +250,7 @@ essential for very large data bases, and was  postulated
 in construction
 of the Quadrilateralized Spherical Cube 
 (or quad-sphere, see 
-\htmladdnormallink{{\tt http://space.gsfc.nasa.gov/ast\-ro/co\-be/skymap\_info.html}}
+\htmladdnormallink{\texttt{http://space.gsfc.nasa.gov/ast\-ro/co\-be/skymap\_info.html}}
 {http://space.gsfc.nasa.gov/astro/cobe/skymap_info.html}), 
 which was used for the
 {\it COBE} data. An  argument in favour of this 
@@ -492,7 +493,7 @@ at resolution $\nside$ is subdivided in four pixels with index $4p,\, 4p+1,\, 4p
 at resolution $2\nside$, Eq.~(\ref{eq:nest2uniq}) shows that
 a pixel with Nested-based unique identifier $u$ is subdivided in four smaller pixels 
 whose unique identifiers are $4u,\, 4u+1,\, 4u+2,\, 4u+3$.
-This Nested-based Unique identification is for instance the basis of the {\tt NUNIQ} storage scheme used for Multi-Order Coverage map (MOC) description of astronomical datasets proposed for virtual observatories \citep{moc}.
+This Nested-based Unique identification is for instance the basis of the \texttt{NUNIQ} storage scheme used for Multi-Order Coverage map (MOC) description of astronomical datasets proposed for virtual observatories \citep{moc}.
 
 Routines implementing Eqs~(\ref{eq:nest2uniq}) and (\ref{eq:ring2nest_a}, \ref{eq:ring2nest_b}) in various languages have been available since release 3.30.
 
@@ -503,7 +504,7 @@ We have developed a package of \healpix based mathematical software, consisting
 of C, C++, Fortran90, IDL/GDL, Java and Python source codes as well as documentation and
 examples. Successful installation produces a set of facilities using standardised
 FITS I/O interfaces 
-(\htmladdnormallink{{\tt http://heasarc.gsfc.nasa.gov/docs/software/fitsio}}
+(\htmladdnormallink{\texttt{http://heasarc.gsfc.nasa.gov/docs/software/fitsio}}
 {http://heasarc.gsfc.nasa.gov/docs/software/fitsio}) 
 as well as 
 libraries  which users can link to their own applications.
@@ -536,38 +537,36 @@ projections of the whole sky or small areas of it.
 The package includes documents which describe the installation
 process, the facilities available and a large number of 
 subroutines contained in the various libraries. It is
-available to the scientific community  at \htmladdnormallink{{\tt
-\healpixwebpage}}
+available to the scientific community  at \htmladdnormallink{\texttt{\healpixwebpage}}
 {\healpixwebpage}.
 
 \healpix was the format chosen by the \textbf{WMAP}
 collaboration 
 for the production
 of sky maps (see 
-\htmladdnormallink{{\tt 
+\htmladdnormallink{\texttt{
 http://map.gsfc.nasa.gov/news/index.html}}{http://map.gsfc.nasa.gov/news/index.html})
  from the mission data. 
 
 \healpix software and format have been used by the HFI and LFI consortia of \textbf{Planck}
 collaboration for the simulation, analysis and data release of \textbf{Planck} data
-(see \htmladdnormallink{{\tt
-http://www.cosmos.esa.int/web/planck}}%
+(see \htmladdnormallink{\texttt{http://www.cosmos.esa.int/web/planck}}%
 {http://www.cosmos.esa.int/web/planck}).
 
-\healpix software has been selected by the GAIA satellite mission currently surveying our Galaxy
+\healpix software has been selected by the \textbf{GAIA} satellite mission currently surveying our Galaxy
 (see 
 \htmladdnormallink%
-{http://www.esa.int/Our\_Activities/Space\_Science/Gaia\_overview}%
+{\texttt{http://www.esa.int/Our\_\-Activities/Space\_\-Science/Gaia\_\-overview}}%
 {http://www.esa.int/Our_Activities/Space_Science/Gaia_overview})
 
 % It is also being used to analyse the data provided by the balloon CMB missions
 % \textbf{Boomerang}
-% (see \htmladdnormallink{{\tt http://cmb.PHYS.cwru.edu/boomerang/}}
+% (see \htmladdnormallink{\texttt{http://cmb.PHYS.cwru.edu/boomerang/}}
 % {http://cmb.PHYS.cwru.edu/boomerang/} or 
-% \htmladdnormallink{{\tt http://oberon.roma1.infn.it/\-boomerang/}}
+% \htmladdnormallink{\texttt{http://oberon.roma1.infn.it/\-boomerang/}}
 % {http://oberon.roma1.infn.it/boomerang/})
 % and \textbf{Archeops} (
-% \htmladdnormallink{{\tt http://archeops01.free.fr/\-main\_archeops/\-index\_english.html}}
+% \htmladdnormallink{\texttt{http://archeops01.free.fr/\-main\_archeops/\-index\_english.html}}
 % {http://archeops01.free.fr/main_archeops/index_english.html}).
 
 \newpage
@@ -587,7 +586,7 @@ $-\lmax$ to $\lmax$ but all quantities with index ${\ell m}$ vanish
 for $m>\ell$. Our conventions for $Y_{\ell m}$ are defined in subsection
 \ref{sphericalstuff} below.
 
-Pixelating $f({ \gamma})$ corresponds to sampling it at $\npix$
+Pixelating $f({\gamma})$ corresponds to sampling it at $\npix$
  locations $\gamma_{p}$, $p\in[0,\npix-1]$. The sample
 function values $f_p$ can then be used  
 to estimate  $a_{\ell m}$. A straightforward estimator is
@@ -599,7 +598,7 @@ to estimate  $a_{\ell m}$. A straightforward estimator is
 \end{eqnarray}
 where the superscript star denotes complex  conjugation, and an equal weight was assumed for each pixel. This
 zeroth order estimator, as well as  higher order  estimators, are implemented in the
-Fortran90 facility \htmlref{{\tt anafast}}{fac:anafast}, included in the
+Fortran90 facility \htmlref{\texttt{anafast}}{fac:anafast}, included in the
 package. 
 %Publications discussing these estimators and the  generalised
 %quadrature problem on the sphere (Hivon {\em et al.~}) are  in preparation.
@@ -632,11 +631,11 @@ among others.
 % http://www2.iap.fr/users/hivon/software/PolSpice/}
 
 The \healpix package contains the Fortran90 facility 
-\htmlref{{\tt synfast}}{fac:synfast}, 
+\htmlref{\texttt{synfast}}{fac:synfast}, 
 which takes as input a power spectrum $C_\ell$ and generates a realisation of
 $f(\gamma_p)$
 on the \healpix grid.  The convention for power spectrum input into
-{\tt synfast} is straightforward: each $C_\ell$ is just the expected
+\texttt{synfast} is straightforward: each $C_\ell$ is just the expected
 variance of the $a_{\ell m}$ at that $\ell$. 
 
 \begin{verse}
@@ -668,7 +667,7 @@ fluctuations about the average CMB temperature.
 \label{subsec:cmbfast}
 A widely used  solver of the Boltzmann equations for the computation
 of theoretical predictions of the spectrum of CMB anisotropy used to be CMBFAST
-(\htmladdnormallink{{\tt https://lambda.gsfc.nasa.gov/toolbox/tb\_cmbfast\_ov.cfm}}
+(\htmladdnormallink{\texttt{https://lambda.gsfc.nasa.gov/toolbox/tb\_cmbfast\_ov.cfm}}
 {https://lambda.gsfc.nasa.gov/toolbox/tb_cmbfast_ov.cfm}).
 
 CMBFAST made its outputs in ASCII files, which instead
@@ -685,7 +684,7 @@ normalization used in \healpixns~1.1, which was different from the one used by
 CMBFAST and by \healpixns~1.2 (see \S~\ref{subsub:relatoldversion} for details).
 
 % Since \healpix 1.2 now uses the same normalization as CMBFAST, 
-% we provide a new version of the file {\tt fitsout.f} used by CMBFAST, so that
+% we provide a new version of the file \texttt{fitsout.f} used by CMBFAST, so that
 % it creates FITS files with the same normalization as the rest of the code. 
 
 A later version of CMBFAST (4.2, released in Feb. 2003) generated FITS files containing
@@ -694,15 +693,15 @@ internally. It therefore matches the convention adopted by \healpix in its
 version 1.2.
 
 For backward compatibility, we provide an IDL code 
-(\htmlref{{\tt convert\_oldhpx2cmbfast}}{idl:convert_oldhpx2cmbfast}) 
+(\htmlref{\texttt{convert\_oldhpx2cmbfast}}{idl:convert_oldhpx2cmbfast}) 
 to change the normalization of existing FITS files created with CMBFAST 4.0. 
 When created with the correct normalization (with CMBFAST 4.2)
-or set to the correct normalization (using {\tt convert\_oldhpx2cmbfast}), the FITS file will include a
-specific keyword ({\tt POLNORM = CMBFAST}) in their header to identify them.
+or set to the correct normalization (using \texttt{convert\_oldhpx2cmbfast}), the FITS file will include a
+specific keyword (\texttt{POLNORM = CMBFAST}) in their header to identify them.
 The map simulation code 
-\htmlref{{\tt synfast}}{fac:synfast}
+\htmlref{\texttt{synfast}}{fac:synfast}
 will issue a warning if the input power
-spectrum file does not contain the keyword {\tt POLNORM}, but no attempt will
+spectrum file does not contain the keyword \texttt{POLNORM}, but no attempt will
 be made to renormalize the power spectrum. If the keyword is present, it will be
 inherited by the simulated map.
 
@@ -715,14 +714,14 @@ inherited by the simulated map.
 
 \subsubsection{CAMB and CLASS}
 Newer and actively maintained Boltzmann codes currently include 
-{\tt camb} and {\tt class}:
+\texttt{camb} and \texttt{class}:
 \begin{itemize}
-\item {\tt camb} (\htmladdnormallink{{\tt http://camb.info}}{http://camb.info}) 
+\item \texttt{camb} (\htmladdnormallink{\texttt{http://camb.info}}{http://camb.info}) 
 is written in Fortran 90 with a python wrapper, and can optionally output into FITS files 
 the $C_X(\ell)$ power spectra in [K]$^2$ in a format directly usable by \healpixns;\\
-\item {\tt class} (\htmladdnormallink{{\tt http://class-code.net}}{http://class-code.net}) 
+\item \texttt{class} (\htmladdnormallink{\texttt{http://class-code.net}}{http://class-code.net}) 
 is written in C and C++, and only outputs $\frac{\ell(\ell+1)}{2\pi}C_X(\ell)$ in plain text files 
-(optionally in [$\mu$K]$^2$ and in a order of columns for polarized spectra matching the one of {\tt camb}).
+(optionally in [$\mu$K]$^2$ and in a order of columns for polarized spectra matching the one of \texttt{camb}).
 \end{itemize}
 Both codes are parallelized for faster computations and provide fine control of the output accuracy.
 
@@ -1135,22 +1134,39 @@ The consequence of this definition discrepency is a change of sign of $U$,
 which, if not accounted for, jeopardizes the calculation of the Electric and Magnetic  CMB
 polarisation power spectra.
 
-\vskip 0.3cm
-\noindent\textbf{How \healpix deals with these discrepancies}\\
-The FITS keyword {\tt POLCCONV} has been introduced in \healpix 2.0 to describe the
+% \vskip 0.3cm
+% \noindent\textbf{How \healpix deals with these discrepancies}\\
+\subsubsection{How \healpix deals with these discrepancies: \texttt{POLCCONV} keyword}
+\label{intro:polcconv}
+The FITS keyword \texttt{POLCCONV} has been introduced in \healpix 2.0 to describe the
 polarisation coordinate convention applied to the data contained in the file. 
-Its value is either {\tt COSMO} for files following the Healpix/CMB/{\em Planck} convention 
-(default for sky map synthetized with Healpix routine \htmlref{{\tt synfast}}{fac:synfast})
-or {\tt IAU} for those
+Its value is either \texttt{'COSMO'} for files following the HEALPix/CMB/{\em Planck} convention 
+(default for sky map synthetized with HEALPix routine \htmlref{\texttt{synfast}}{fac:synfast})
+or \texttt{'IAU'} for those
 following the IAU convention, as defined above. Absence of this keyword is
-interpreted as meaning {\tt COSMO}.
+interpreted as meaning \texttt{'COSMO'}.
 
-The facilities 
-\htmlref{{\tt anafast}}{fac:anafast} and 
-\htmlref{{\tt smoothing}}{fac:smoothing} will stop with an error message if the map to analyze follows the 'IAU' convention, or if the convention is explicitely set to a value different from 'COSMO' and 'IAU'.\\
-They will issue a warning if the convention used can not be determined from the FITS header.
+% The facilities 
+% \htmlref{\texttt{anafast}}{fac:anafast} and 
+% \htmlref{\texttt{smoothing}}{fac:smoothing} will stop with an error message if the map to analyze follows the 'IAU' convention, or if the convention is explicitely set to a value different from 'COSMO' and 'IAU'.\\
+% They will issue a warning if the convention used can not be determined from the FITS header.
+When dealing with a polarized (full-sky or cut-sky) signal map, 
+the F90 subroutine \htmlref{\texttt{input\_map}}{sub:input_map} and the facilities 
+\htmlref{\texttt{anafast}}{fac:anafast},
+\htmlref{\texttt{median\_filter}}{fac:median_filter},
+\htmlref{\texttt{smoothing}}{fac:smoothing}, and
+\htmlref{\texttt{ud\_grade}}{fac:ud_grade}
+ invoking it (as well as the IDL wrappers 
+\htmlref{\texttt{ianafast}}{idl:ianafast} and
+\htmlref{\texttt{ismoothing}}{idl:ismoothing})
+will \\
+- issue an error message and 
+crash if \texttt{POLCCONV} is explicitely set to a value different from \texttt{'COSMO'} and \texttt{'IAU'},\\
+- issue a warning, and \emph{swap the sign of the $U$ polarisation} stored into memory if the FITS file being read contains \texttt{POLCCONV='IAU'}, \\
+- issue a warning if the keyword \texttt{POLCCONV} is totally absent, and then carry on with the original data,\\
+- work silently with the original data if \texttt{POLCCONV='COSMO'}.
 
-The \htmlref{{\tt change\_polcconv}}{idl:change_polcconv} IDL facility is provided to add this keyword or
+The IDL facility \htmlref{\texttt{change\_polcconv}}{idl:change_polcconv} is provided to add this keyword or
 change/update its value and swap the sign of the $U$ Stokes parameter, when applicable, in
 an existing FITS file.
 
@@ -1199,7 +1215,7 @@ which are given by the Rodrigues formula
 \label{eq:rodrigues}
 \end{eqnarray}
 
-Note our $Y_{\ell m}$ are identical to those of \citet{edmonds},
+Note that our $Y_{\ell m}$ are identical to those of \citet{edmonds},
 even though our definition of the $P_{\ell m}$ differ from his by a factor
 $(-1)^m$ ({\it a.k.a.} Condon-Shortley phase).
 
@@ -1295,16 +1311,16 @@ $\ell=2\nside$ and $\Delta w/w < 1.7\ 10^{-3}$ at $\ell=4\nside$.
 We provide a new random number generator (RNG) with this package, available both
 in Fortran90 and C++. 
 It resides in 
-\htmladdnormallink{\tt src/f90/mod/rngmod.f90}{http://sourceforge.net/p/healpix/code/HEAD/tree/trunk/src/f90/mod/rngmod.f90}
+\htmladdnormallink{\texttt{src/f90/mod/rngmod.f90}}{http://sourceforge.net/p/healpix/code/HEAD/tree/trunk/src/f90/mod/rngmod.f90}
 and 
-\htmladdnormallink{\tt src/cxx/cxxsupport/planck\_rng.h}{http://sourceforge.net/p/healpix/code/HEAD/tree/trunk/src/cxx/cxxsupport/planck_rng.h}
+\htmladdnormallink{\texttt{src/cxx/cxxsupport/planck\_rng.h}}{http://sourceforge.net/p/healpix/code/HEAD/tree/trunk/src/cxx/cxxsupport/planck_rng.h}
 and supersedes the previous RNG (which is still available at 
-\htmladdnormallink{\tt src/f90/mod/ran\_tools\_dist.f90}{http://sourceforge.net/p/healpix/code/HEAD/tree/trunk/src/f90/mod/ran_tools_dist.f90}). 
+\htmladdnormallink{\texttt{src/f90/mod/ran\_tools\_dist.f90}}{http://sourceforge.net/p/healpix/code/HEAD/tree/trunk/src/f90/mod/ran_tools_dist.f90}). 
 
 It produces double precision real numbers $x$ with $x\in]0,1[$ and is based 
 on a xorshift method described by Marsaglia in 
 Journal of Statistical Software 2003, vol 8
-(cf. \htmladdnormallink{{\tt http://www.cs.hku.hk/}}{http://www.cs.hku.hk/}).
+(cf. \htmladdnormallink{\texttt{http://www.cs.hku.hk/}}{http://www.cs.hku.hk/}).
 It accepts up to four different seeds simultaneously, allowing each sequence to
 have a
 theoretical period of $2^{128}-1 \approx 3.4 10^{38}$. A Gaussian deviate RNG is

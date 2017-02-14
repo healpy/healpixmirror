@@ -82,7 +82,8 @@ An extensive list of
 The 
 <a href="http://lambda.gsfc.nasa.gov/toolbox/tb_cmbfast_ov.cfm" >
     CMBFAST</a>, <a href="http://camb.info/">CAMB</a> and
-<a href="http://lesgourg.web.cern.ch/lesgourg/class.php">CLASS</a>
+<!-- a href="http://lesgourg.web.cern.ch/lesgourg/class.php">CLASS</a -->
+<a href="http://class-code.net/">CLASS</a>
 softwares can be used for the computation of the
 theoretical spectra of CMB anisotropy. The HEALPix synfast
 program reads in the output of these applications to allow one to

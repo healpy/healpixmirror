@@ -92,7 +92,7 @@ polar = sxpar(info_header,'POLAR')
 if (polar) then begin
     polcconv = sxpar(info_header,'POLCCONV',count=npolcc)
     if (npolcc eq 0) then begin
-        sxaddpar,info_header,'POLCCONV','COSMO',' Coord. convention for polarisation COSMO/IAU)',after='POLAR'
+        sxaddpar,info_header,'POLCCONV','COSMO',' Coord. convention for polarisation (COSMO/IAU)',after='POLAR'
 ;;        sxaddpar,info_header,'COMMENT',' either IAU or COSMO',after='POLCCONV'
     endif
 endif
