@@ -1150,8 +1150,9 @@ interpreted as meaning \texttt{'COSMO'}.
 % \htmlref{\texttt{anafast}}{fac:anafast} and 
 % \htmlref{\texttt{smoothing}}{fac:smoothing} will stop with an error message if the map to analyze follows the 'IAU' convention, or if the convention is explicitely set to a value different from 'COSMO' and 'IAU'.\\
 % They will issue a warning if the convention used can not be determined from the FITS header.
-When dealing with a polarized (full-sky or cut-sky) signal map, 
-the F90 subroutine \htmlref{\texttt{input\_map}}{sub:input_map} and the facilities 
+Starting with \healpix 3.4, when dealing with a polarized (full-sky or cut-sky) signal map, 
+the F90 subroutine \htmlref{\texttt{input\_map}}{sub:input_map} in its default mode, 
+and the facilities 
 \htmlref{\texttt{anafast}}{fac:anafast},
 \htmlref{\texttt{median\_filter}}{fac:median_filter},
 \htmlref{\texttt{smoothing}}{fac:smoothing}, and
@@ -1162,11 +1163,12 @@ the F90 subroutine \htmlref{\texttt{input\_map}}{sub:input_map} and the faciliti
 will \\
 - issue an error message and 
 crash if \texttt{POLCCONV} is explicitely set to a value different from \texttt{'COSMO'} and \texttt{'IAU'},\\
-- issue a warning, and \emph{swap the sign of the $U$ polarisation} stored into memory if the FITS file being read contains \texttt{POLCCONV='IAU'}, \\
+- issue a warning, and {\em swap the sign of the $U$ polarisation} stored into memory if the FITS file being read contains \texttt{POLCCONV='IAU'}, \\
 - issue a warning if the keyword \texttt{POLCCONV} is totally absent, and then carry on with the original data,\\
 - work silently with the original data if \texttt{POLCCONV='COSMO'}.
 
-The IDL facility \htmlref{\texttt{change\_polcconv}}{idl:change_polcconv} is provided to add this keyword or
+Finally, the IDL facility \htmlref{\texttt{change\_polcconv}}{idl:change_polcconv} is provided to add the 
+\texttt{POLCCONV} keyword or
 change/update its value and swap the sign of the $U$ Stokes parameter, when applicable, in
 an existing FITS file.
 

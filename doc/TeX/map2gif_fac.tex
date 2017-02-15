@@ -12,58 +12,64 @@
 \begin{facility}
 {This Fortran facility provides a means to generate a
 gif image from an input \healpix sky map. It is intended to allow some
-primitive visualisation for those with limited or no access to IDL. 
+primitive visualisation for those with limited or no access to IDL or python. 
 It is also useful for image generation in a pipeline environment.}
 {src/f90/map2gif/map2gif.f90}
 \end{facility}
 
 \begin{f90facility}
-{map2gif}
+{map2gif -inp FITS\_file -out GIF\_file [options]}
 \end{f90facility}
 
 \begin{qualifiers}
   \begin{qulist}{} %%%% NOTE the ``extra'' brace here %%%%
-    \item[{- bar}] Logical which determines whether a color bar is
-      displayed \default{.false.}. 
-    \item[{- col}] The number of the color table to utilise \default{5}.
-    \item[{- hlp}] Print on-line help for the facility.
-    \item[{- inp}] The file name of the input FITS sky map \nodefault.\\
+    \item[{-inp FITS\_file}] The file name of the input FITS sky map \nodefault.\\
 In \thedocid\ (and \thedocid\ only) it may be necessary to put the file name between quotes if it contains symbols
-such as {\tt \&}, {\tt [}, {\tt ]}, {\tt ?}, {\tt =}  or blanks
-    \item[{- log}] Logical to use the log of the signal when plotting 
-      \default{.false.}
-    \item[{- ash}] Logical to use the hyperbolic arc sine of the signal when
-      plotting. Cannot be true when -log is true.
-      \default{.false.}
-    \item[{- add}] Real value to add to the signal before performing any
+such as \texttt{\&}, \texttt{[}, \texttt{]}, \texttt{?}, \texttt{=}  or blanks
+    \item[{-out GIF\_file}] The file name of the output gif image \nodefault.\\
+Prepending the output file name with \texttt{$\backslash$!} (see example below) will allow the overwriting of the
+file if it already exists
+    \item[{-add offset}] Real value to add to the signal before performing any
       other operation to it (like taking the logarithm etc.)
       \default{0.0}
-    \item[{- mul}] Real value to multiply the signal with directly after
+    \item[{-ash flag}] Logical to use the hyperbolic arc sine of the signal when
+      plotting. Cannot be true when \texttt{-log} is true.
+      \default{.false.}
+    \item[{-bar flag}] Logical which determines whether a color bar is
+      displayed \default{.false.}. 
+    \item[{-col table}] The number of the color table to utilise (in [1,5]) \default{5}.
+    \item[{-hlp}] Print on-line help for the facility.
+    \item[{-lat lat0}] Latitude (Deg) of central point \default{0}
+    \item[{-log flag}] Logical to use the log of the signal when plotting 
+      \default{.false.}
+    \item[{-lon lon0}] Longitude (Deg) of central point \default{0}
+    \item[{-max maxval}] Set the maximum value for the plotted signal
+      \default{is to use the actual signal maximum}.
+    \item[{-min minval}] Set the minimum value for the plotted signal
+     \default{is to use the actual signal minimum}.
+    \item[{-mul factor}] Real value to multiply the signal with directly after
       adding the offset (see above).
       \default{1.0}
-    \item[{- min}] Set the minimum value for the plotted signal
-    \default{is to use the actual signal minimum}.
-    \item[{- max}] Set the maximum value for the plotted signal
-      \default{is to use the actual signal maximum}.
-    \item[{- pro}] Select the projection scheme \default{Mollweide}.
-    \item[{- out}] The file name of the output gif image \nodefault.\\
-Prepending the output file name with {\tt $\backslash$!} (see example below) will allow the overwriting of the
-file if it already exists
-    \item[{- sig}] The identifier of the signal to plot: for a
+    \item[{-pro projection}] Select the projection scheme 
+	(among \texttt{mol} or \texttt{MOL} for Mollweide and \texttt{gno} or \texttt{GNO} for gnomic)
+	\default{MOL}.
+    \item[{-res reso}] Resolution in projected plan in arcmin (only for gnomic projection) \default{2}
+    \item[{-sig number}] The identifier of the signal to plot: for a
       polarisation map, then the mapping is 1 = I; 2 = Q; 3 = U
       \default{1}.
-    \item[{- ttl}] A string specifying the title for the plot \nodefault.
-    \item[{- xsz}] The x-dimension of the image in pixels \default{800}.
+    \item[{-ttl title}] A string specifying the title for the plot (see note on quotes for \texttt{-inp})\nodefault.
+    \item[{-xsz xsize}] The x-dimension of the image in pixels \default{800}.
   \end{qulist}
 \end{qualifiers}
 
 \begin{codedescription}
 {map2gif reads in a \healpix sky map in FITS format and generates an
 image in GIF format. map2gif allows the selection of the projection
-scheme (Mollweide or Gnomonic for small patches of the sky), color
+scheme (Mollweide for the full sky or Gnomonic for small patches of the sky), color
 table, color bar inclusion, linear or log scaling, maximum and 
-minimum range for the plot and plot-title. The facility utilises
-a command-line interface.}
+minimum range for the plot and plot-title. 
+Flagged, undefined and NaN-valued input pixels will take a grey color on output. 
+The facility utilises a command-line interface.}
 \end{codedescription}
 
 \begin{datasets}
@@ -79,7 +85,7 @@ a command-line interface.}
 
 \begin{support}
   \begin{sulist}{} %%%% NOTE the ``extra'' brace here %%%%
-  \item[xv] xv or a similar facility is required to view the
+  \item[display, open] a facility is required to view the
             gif image generated by map2gif (a browser can also 
             be used).
   \item[\htmlref{synfast}{fac:synfast}] This \healpix facility will generate the FITS format 
@@ -96,14 +102,14 @@ map2gif & -inp planck100GHZ-LFI.fits \\
         & -bar .true. \\
         & -min -100 \\
         & -max 100 \\
-        & -ttl Simulated Planck LFI Sky Map at 100GHz \\
+        & -ttl 'Simulated Planck LFI Sky Map at 100GHz' \\
 \end{tabular}
 }
-{map2gif reads in the map `planck100GHZ-LFI.fits' and generates
-an output gif image with name `planck100GHZ-LFI.gif' (overwriting it if
+{map2gif reads in the map 'planck100GHZ-LFI.fits' and outputs
+its Mollweide projection in a gif image with name 'planck100GHZ-LFI.gif' (overwriting it if
 necessary) in which
 the temperature scale has been set to lie between $\pm$ 100 ($\mu$K), 
-a color bar has been drawn and the title `Simulated Planck
+a color bar has been drawn and the title 'Simulated Planck
 LFI Sky Map at 100GHz' appended to the image.
 }
 \end{examples}

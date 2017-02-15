@@ -36,16 +36,16 @@ PROGRAM MAP2GIF
    !    in Healpix pixelisation
    !
    ! CALLING SEQUENCE:
-   !    MAP2GIF [-inp input_file] [-out output_file]'
-   !            [-max usermax] [-min usermin]'
-   !            [-add offset] [-mul factor]'
-   !            [-pro projection] [-res gridresn]'
-   !            [-lon lon0] [-lat lat0]'
-   !            [-col color_table] [-sig signal]'
-   !            [-xsz xsize] [-log logflg]'
-   !            [-ash ashflg]'
-   !            [-bar barflg] [-ttl title]'
-   !            [-hlp]'
+   !    MAP2GIF  -inp input_file -out output_file 
+   !            [-max usermax] [-min usermin]
+   !            [-add offset] [-mul factor]
+   !            [-pro projection] [-res gridresn]
+   !            [-lon lon0] [-lat lat0]
+   !            [-col color_table] [-sig signal]
+   !            [-xsz xsize] [-log logflg]
+   !            [-ash ashflg]
+   !            [-bar barflg] [-ttl title]
+   !            [-hlp]
    !
    ! INPUTS:
    !    input_file = string containing the name of a FITS file of
@@ -116,7 +116,7 @@ PROGRAM MAP2GIF
 
    USE healpix_types
    USE misc_utils
-   USE fitstools
+   USE fitstools, only: getnumext_fits, getsize_fits, input_map
    use pix_tools, only: npix2nside
    USE gifmod
 
@@ -205,7 +205,10 @@ PROGRAM MAP2GIF
    call assert_alloc(status,'map2gif','map_IQU') 
 
    !--- read in the FITS file ---
-   call read_bintab(input_file, map_IQU, npixtot, nmaps, fmissval, anynull, extno=i_ext) ! flagged, NaN and Infinity pixels take same value of HPX_*BADVAL (returned in fmissval)
+   !call read_bintab(input_file, map_IQU, npixtot, nmaps, fmissval, anynull, extno=i_ext) ! flagged, NaN and Infinity pixels take same value of HPX_*BADVAL (returned in fmissval)
+   call input_map(input_file, map_IQU, npixtot, nmaps, &
+        & fmissval=HPX_SBADVAL, extno=i_ext, & ! flagged, NaN and Infinity pixels take value HPX_SBADVAL
+        ignore_polcconv=.true.) ! ignore POLCCONV
 !    call wall_clock_time(time1)
 !    print*,'file read:', time1-time0
 
@@ -715,24 +718,39 @@ END SUBROUTINE PROJ_GNOMIC
 
       if (n < 4) then
          print *, 'usage: MAP2GIF -inp input_file -out output_file'
-         print *, '               [-max usermax] [-min usermin]'
-         print *, '               [-add offset] [-mul factor]'
-         print *, '               [-pro projection] [-res gridresn]'
-         print *, '               [-lon lon0] [-lat lat0]'
-         print *, '               [-col color_table] [-sig signal]'
-         print *, '               [-xsz xsize] [-log logflg]'
-         print *, '               [-ash ashflg]'
-         print *, '               [-bar add color bar] [-ttl title]'
+         print *, '               [-add offset] [-ash ashflg] '
+         print *, '               [-bar add color bar] [-col color_table] '
          print *, '               [-hlp]'
+         print *, '               [-max usermax] [-min usermin]'
+         print *, '               [-mul factor]'
+         print *, '               [-lat lat0] [-log logflg] [-lon lon0] '
+         print *, '               [-pro projection] [-res gridresn]'
+         print *, '               [-sig signal] [-ttl title]'
+         print *, '               [-xsz xsize] '
+         print *, '               '
+         print *, '               '
       end if
 
 
       do i = 1,n,2
          call getArgument(i,opt)
          if (opt == '-hlp') then
-            print 1, trim(input_file),trim(output_file),color_table,usermax,usermin,&
-                 & offset, factor, trim(projection), lon0, lat0, gridresn, &
-                 & signal,xsize,logflg,ashflg,bar,trim(title)
+            print 1, trim(input_file),trim(output_file),&
+                 & offset, &
+                 & ashflg,&
+                 & bar,&
+                 & color_table,&
+                 & usermax,&
+                 & usermin,&
+                 & factor, &
+                 & lat0, &
+                 & logflg,&
+                 & lon0, &
+                 & trim(projection), &
+                 & gridresn, &
+                 & signal,&
+                 & trim(title), &
+                 & xsize
             stop
          end if
          if (i == n) then
@@ -804,21 +822,21 @@ END SUBROUTINE PROJ_GNOMIC
 1     format(/,&
            & " -inp [Req] ",A,/,&
            & " -out [Req] ",A/,&
+           & " -add [Opt] ",g10.2,/,&
+           & " -ash [Opt] ",L1,/,&
+           & " -bar [Opt] ",L1,/,&
            & " -col [Opt] ",I1,/,&
            & " -max [Opt] ",g10.2,/,&
            & " -min [Opt] ",g10.2,/,&
-           & " -add [Opt] ",g10.2,/,&
            & " -mul [Opt] ",g10.2,/,&
-           & " -pro [Opt] ",A,/,&
-           & " -lon [Opt] ",g10.2,/,&
            & " -lat [Opt] ",g10.2,/,&
+           & " -log [Opt] ",L1,/,&
+           & " -lon [Opt] ",g10.2,/,&
+           & " -pro [Opt] ",A,/,&
            & " -res [Opt] ",g10.2,/,&
            & " -sig [Opt] ",I1,/,&
-           & " -xsz [Opt] ",I6,/,&
-           & " -log [Opt] ",L1,/,&
-           & " -ash [Opt] ",L1,/,&
-           & " -bar [Opt] ",L1,/,&
-           & " -ttl [Opt] ",A,/)
+           & " -ttl [Opt] ",A,/,&
+           & " -xsz [Opt] ",I6,/)
 
    end subroutine parseOptions
 

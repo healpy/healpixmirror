@@ -119,11 +119,15 @@ end subroutine map_bad_pixels_KLOAD
 !     header    = OPTIONAL (output) contains extension header
 !     units     = OPTIONAL (output) contains the maps units
 !     extno     = OPTIONAL (input)  contains the unit number to read from (0 based)
+!     ignore_polcconv = OPTIONAL (input), LGT, default=.false.
+!                  take into account or not the POLCCONV FITS keyword
 !
 !     modified Feb 03 for units argument to run with Sun compiler
+!     2017-02-15: deals with POLCCONV
 !=======================================================================
 #ifndef NO64BITS
-subroutine input_map4_KLOAD(filename, map, npixtot, nmaps, fmissval, header, units, extno)
+subroutine input_map4_KLOAD(filename, map, npixtot, nmaps, &
+     & fmissval, header, units, extno, ignore_polcconv)
     !=======================================================================
 
     INTEGER(I4B),     INTENT(IN)                           :: npixtot
@@ -134,17 +138,20 @@ subroutine input_map4_KLOAD(filename, map, npixtot, nmaps, fmissval, header, uni
     CHARACTER(LEN=*), INTENT(OUT), dimension(1:), OPTIONAL :: header
     CHARACTER(LEN=*), INTENT(OUT), dimension(1:), OPTIONAL :: units
     INTEGER(I4B),     INTENT(IN)                , optional :: extno
+    logical(LGT),     intent(IN)                , optional :: ignore_polcconv
     integer(i8b) :: npixtot8
 
     npixtot8 = npixtot
-    call input_map8_KLOAD(filename, map, npixtot8, nmaps, fmissval, header, units, extno)
+    call input_map8_KLOAD(filename, map, npixtot8, nmaps, &
+         fmissval, header, units, extno, ignore_polcconv)
 
     return
   end subroutine input_map4_KLOAD
 #endif
 
 !=======================================================================
-subroutine input_map8_KLOAD(filename, map, npixtot, nmaps, fmissval, header, units, extno)
+subroutine input_map8_KLOAD(filename, map, npixtot, nmaps, &
+     fmissval, header, units, extno, ignore_polcconv)
     !=======================================================================
   use head_fits, only: get_card, add_card
   use pix_tools, only: nside2npix
@@ -156,12 +163,13 @@ subroutine input_map8_KLOAD(filename, map, npixtot, nmaps, fmissval, header, uni
     CHARACTER(LEN=*), INTENT(OUT), dimension(1:), OPTIONAL :: header
     CHARACTER(LEN=*), INTENT(OUT), dimension(1:), OPTIONAL :: units
     INTEGER(I4B),     INTENT(IN)                , optional :: extno
+    logical(LGT),     intent(IN)                , optional :: ignore_polcconv
 
     INTEGER(I8B) :: i, imissing, obs_npix, maxpix, minpix
     REAL(KMAP)   :: fmissing, fmiss_effct
     integer(I4B) :: imap, nlheader
 
-    LOGICAL(LGT) :: anynull
+    LOGICAL(LGT) :: anynull, do_polcconv
     ! Note : read_fits_cut4 still SP and I4B only
     integer(I4B), dimension(:), allocatable :: pixel
 !     real(KMAP),     dimension(:), allocatable :: signal
@@ -191,6 +199,10 @@ subroutine input_map8_KLOAD(filename, map, npixtot, nmaps, fmissval, header, uni
     extno_i = 0
     if (present(extno)) extno_i = extno
     allocate(hbuffer(1:nlheader))
+    do_polcconv = .true.
+    if (present(ignore_polcconv)) then
+       do_polcconv = .not. ignore_polcconv
+    endif
 
     obs_npix = getsize_fits(filename, nmaps = nmaps_fits, type=type_fits, extno=extno_i, &
          polcconv=ipolcconv, polarisation=polar, nside=nside_fits)
@@ -273,11 +285,12 @@ subroutine input_map8_KLOAD(filename, map, npixtot, nmaps, fmissval, header, uni
     ! deal with polcconv
     ! print*,'******* in input_map ',nmaps, polar, type_fits, nside_fits
 
-    if (   (nmaps >= 3 .and. type_fits == 3) &  ! cut-sky, multiple maps
+    if ( do_polcconv .and. ( &
+         & (nmaps >= 3 .and. type_fits == 3) &  ! cut-sky, multiple maps
          &  .or. &
          & (nmaps >=3 .and. polar==1 .and. type_fits ==2 .and. &
          &    obs_npix==nside2npix(nside_fits)) & ! full-sky, polarized map
-         & ) then 
+         &                  )      ) then 
        if (ipolcconv == 0) then
           print 9000,' The POLCCONV keyword not found in '//trim(filename)
           print 9000,' COSMO (HEALPix default) will be assumed, and map is unchanged.'

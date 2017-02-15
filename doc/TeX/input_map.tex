@@ -11,9 +11,7 @@
 
 \begin{facility}
 {This routine reads a \healpix map from a FITS file. This can deal with full sky
-as well as cut sky maps.\\
-When dealing with polarized signal maps, its behavior will depend on the value of the \texttt{POLCCONV} FITS keyword
-(see \htmlref{note on POLCCONV}{intro:polcconv} in \linklatexhtml{The \healpix Primer}{intro.pdf}{intro.htm})}
+as well as cut sky maps.}
 {\modFitstools}
 \end{facility}
 
@@ -26,6 +24,7 @@ When dealing with polarized signal maps, its behavior will depend on the value o
 , \mylink{sub:input_map:header}{header}%
 , \mylink{sub:input_map:units}{units}%
 , \mylink{sub:input_map:extno}{extno}%
+, \mylink{sub:input_map:ignore_polcconv}{ignore\_polcconv}%
 ]}}
 \end{f90format}
 \aboutoptional
@@ -33,7 +32,7 @@ When dealing with polarized signal maps, its behavior will depend on the value o
 \begin{arguments}
 {
 \begin{tabular}{p{0.3\hsize} p{0.05\hsize} p{0.05\hsize} p{0.5\hsize}} \hline  
-\textbf{name~\&~dimensionality} & \textbf{kind} & \textbf{in/out} & \textbf{description} \\ \hline
+\textbf{name~\&~dimensionality} & \textbf{kind} & \textbf{i/o} & \textbf{description} \\ \hline
                    &   &   &                           \\ %%% for presentation
 filename\mytarget{sub:input_map:filename}(len=\filenamelen) & CHR & IN & FITS file to be read from,
                    containing a full sky or cut sky map \\
@@ -50,7 +49,12 @@ nmaps\mytarget{sub:input_map:nmaps}     & I4B & IN &  number of maps in the file
 \optional{header\mytarget{sub:input_map:header}}(LEN=80)(1:)     & CHR & OUT &   FITS extension header \\
 \optional{units\mytarget{sub:input_map:units}}(LEN=20)(1:nmaps)  & CHR & OUT &  maps units \\
 \optional{extno\mytarget{sub:input_map:extno}}  & I4B & IN & extension number to read the data from
-                   (0 based).\default{0} (the first extension is read) 
+                   (0 based).\default{0} (the first extension is read) \\
+\optional{ignore\_polccconv\mytarget{sub:input_map:ignore_polcconv}}  & LGT & IN & by default 
+	(\texttt{ignore\_polcconv=.false.}) the output of this routine depends on the value of the FITS keyword
+	\texttt{POLCCONV} found in \mylink{sub:input_map:filename}{filename}, as described in 
+	the \htmlref{note on POLCCONV}{intro:polcconv} in \linklatexhtml{The \healpix Primer}{intro.pdf}{intro.htm}. 
+	Setting \texttt{ignore\_polcconv=.true.} will force input\_map to ignore that keyword.
 \end{tabular}
 }
 \end{arguments}
