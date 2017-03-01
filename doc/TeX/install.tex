@@ -92,11 +92,16 @@
 \externaldocument{subroutines}[subroutines.pdf]
 \begin{htmlonly}
 \externallabels{.}{/tmp/introlabels.pl}
+\externallabels{.}{/tmp/intro_labels.pl}
 %\externallabels{.}{/tmp/installlabels.pl}
 \externallabels{.}{/tmp/csublabels.pl}
+\externallabels{.}{/tmp/csub_labels.pl}
 \externallabels{.}{/tmp/idllabels.pl}
+\externallabels{.}{/tmp/idl_labels.pl}
 \externallabels{.}{/tmp/facilitieslabels.pl}
+\externallabels{.}{/tmp/fac_labels.pl}
 \externallabels{.}{/tmp/subroutineslabels.pl}
+\externallabels{.}{/tmp/sub_labels.pl}
 \end{htmlonly}
 
 %%%%%
@@ -1165,7 +1170,7 @@ See also \htmladdnormallink{{\tt http://www.idlcoyote.com/misc\_tips/maccursor.h
 Facilities"}{idl.pdf}{idl.htm}).
 
 
-\newpage%%%%%%%%%%%%
+%\newpage%%%%%%%%%%%%
 
 \subsection{Using GDL instead of IDL}
 \label{install:using_gdl}
@@ -1178,7 +1183,9 @@ Both the source code and precompiled executables for various platforms are avail
 When used to run IDL-Healpix routines, GDL \gdlversion or more gives
 very satisfactory results\footnote{All the caveats listed below have been noticed in
 GDL v0.9.6 released on Jan 2016 and may be solved in subsequent versions. Please send all your questions
-{\em on} GDL directly to GDL developpers.}. The calculations agree with those done under IDL, with
+{\em on} GDL directly to GDL developpers at 
+\htmladdnormallink{{\tt http://gnudatalanguage.sourceforge.net/support.php}}{http://gnudatalanguage.sourceforge.net/support.php}.}. 
+The calculations agree with those done under IDL, with
 comparable computation times, but a few minor features are missing in the production
 of Postscript, GIF and PNG files, as described below.
 
@@ -1285,7 +1292,7 @@ the visualization routines
 \htmlref{{\tt azeqview}, {\tt cartview}, {\tt gnomview}, {\tt mollview} and {\tt orthview}}{idl:mollview} 
 will produce correct screen (X) outputs and PS, PDF, PNG and JPEG images, with the following caveats:
 \begin{itemize}
-\item they won't produce \mylinkext{idl:mollview:gif}{GIF} files (because GDL's {\tt write\_gif} is not yet functional); 
+\item they won't produce \mylinkext{idl:mollview:gif}{GIF} files (because GDL's {\tt write\_gif} is not yet functional), {\em Fixed in GDL v0.9.7}; 
 \item the \mylinkext{idl:mollview:transparent}{\tt transparent} keyword will be ignored in the
 production of \mylinkext{idl:mollview:png}{PNG} files under GDL (except when \mylinkext{idl:mollview:truecolors}{\tt TrueColors} is set and $N$x3 map is provided), 
 and for the same reason, the \htmlref{\tt hpx2gs}{idl:hpx2gs} routine won't mark missing pixels as
@@ -1319,7 +1326,7 @@ All other features work properly, including the \mylinkext{idl:mollview:latex}{\
 \section{Appendix I: Recent Changes and New Features}
 \label{sec:newfeatures}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% BEGIN LATEST CHANGES %%%%%%%%%%%%%
-\subsection{Bug corrections and Improvements in Version \hpxversion}%(2016-?)
+\subsection{Bug corrections and Improvements in Version \hpxversion}%(2017-?)
 % \subsubsection[General]{General}
 % \subsubsection[C]{\linklatexhtml{C}{csub.pdf}{csub.htm}}
 % \subsubsection[C++]{\htmladdnormallink{C++}{http://healpix.sourceforge.net/html/index_cxx.htm}}
@@ -1337,11 +1344,27 @@ All other features work properly, including the \mylinkext{idl:mollview:latex}{\
 	Fortran 90 \linklatexhtml{facilities}{facilities.pdf}{facilities.htm} and
 	\linklatexhtml{subroutines}{subroutines.pdf}{subroutines.htm}}
 \begin{itemize}
-\item {\tt median\_filter} facility: faster by moving an internal array from heap to stack;
+\item The subroutine 
+\htmlref{\texttt{input\_map}}{sub:input_map} in its default mode
+and the facilities 
+\htmlref{\texttt{anafast}}{fac:anafast},
+\htmlref{\texttt{median\_filter}}{fac:median_filter},
+\htmlref{\texttt{smoothing}}{fac:smoothing}, and
+\htmlref{\texttt{ud\_grade}}{fac:ud_grade} 
+test the value of the \texttt{POLCCONV} FITS keyword when reading a polarized map,
+and interpret the polarization accordingly, 
+as described in the \htmlref{note on POLCCONV}{intro:polcconv} in \linklatexhtml{The \healpix Primer}{intro.pdf}{intro.htm}.
+%
+\item \htmlref{{\tt median\_filter}}{fac:median_filter} facility: faster by moving an internal array from heap to stack;
 slightly different output: when median is computed over an even number of pixels $n\ge 100$, sorted in $[1,n]$,
 the output is $d(n/2)$ instead of $(d(n/2)+d(n/2+1))/2$ previously. Result remain $d(n/2+1)$ for odd $n$.
 \end{itemize}
 \subsubsection[IDL]{\linklatexhtml{IDL}{idl.pdf}{idl.htm}}
+\begin{itemize}
+\item \htmlref{\texttt{ianafast}}{idl:ianafast} and \htmlref{\texttt{ismoothing}}{idl:ismoothing}: 
+see note on {\tt POLCCONV} in F90 facilities above.
+\end{itemize}
+
 \subsubsection[Java]{\htmladdnormallink{Java}{http://healpix.sourceforge.net/html/java/index.html}}
 \subsubsection[Python]{\htmladdnormallink{Python}{http://healpy.readthedocs.org/en/latest/}}
 

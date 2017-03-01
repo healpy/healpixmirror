@@ -267,9 +267,8 @@ mkdir -p ${docautodir}/html
 \rm -f ${docautodir}/pdf/*
 \rm -f ${docautodir}/html/*
 cd doc/TeX
-make pdf || exit
-make crossref
-make html > /dev/null || exit
+make crossref || exit
+make crosshtml > /dev/null || exit
 cd $here
 
 echoGrn "dealing with Ximview doc"

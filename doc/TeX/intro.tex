@@ -67,11 +67,17 @@
 \externaldocument{facilities}
 \externaldocument{subroutines}
 \begin{htmlonly}
+%\externallabels{.}{/tmp/introlabels.pl}
+%\externallabels{.}{/tmp/intro_labels.pl}
 \externallabels{.}{/tmp/installlabels.pl}
 \externallabels{.}{/tmp/csublabels.pl}
+\externallabels{.}{/tmp/csub_labels.pl}
 \externallabels{.}{/tmp/idllabels.pl}
+\externallabels{.}{/tmp/idl_labels.pl}
 \externallabels{.}{/tmp/facilitieslabels.pl}
+\externallabels{.}{/tmp/fac_labels.pl}
 \externallabels{.}{/tmp/subroutineslabels.pl}
+\externallabels{.}{/tmp/sub_labels.pl}
 \end{htmlonly}
 
 \begin{document}
@@ -1152,12 +1158,10 @@ interpreted as meaning \texttt{'COSMO'}.
 % They will issue a warning if the convention used can not be determined from the FITS header.
 Starting with \healpix 3.4, when dealing with a polarized (full-sky or cut-sky) signal map, 
 the F90 subroutine \htmlref{\texttt{input\_map}}{sub:input_map} in its default mode, 
-and the facilities 
-\htmlref{\texttt{anafast}}{fac:anafast},
-\htmlref{\texttt{median\_filter}}{fac:median_filter},
-\htmlref{\texttt{smoothing}}{fac:smoothing}, and
-\htmlref{\texttt{ud\_grade}}{fac:ud_grade}
- invoking it (as well as the IDL wrappers 
+and the facilities calling it and dealing with the $I$, $Q$ and $U$ Stokes parameters as a whole, {\em ie}
+\htmlref{\texttt{anafast}}{fac:anafast} and
+\htmlref{\texttt{smoothing}}{fac:smoothing}
+(as well as their IDL wrappers 
 \htmlref{\texttt{ianafast}}{idl:ianafast} and
 \htmlref{\texttt{ismoothing}}{idl:ismoothing})
 will \\
@@ -1165,7 +1169,13 @@ will \\
 crash if \texttt{POLCCONV} is explicitely set to a value different from \texttt{'COSMO'} and \texttt{'IAU'},\\
 - issue a warning, and {\em swap the sign of the $U$ polarisation} stored into memory if the FITS file being read contains \texttt{POLCCONV='IAU'}, \\
 - issue a warning if the keyword \texttt{POLCCONV} is totally absent, and then carry on with the original data,\\
-- work silently with the original data if \texttt{POLCCONV='COSMO'}.
+- work silently with the original data if \texttt{POLCCONV='COSMO'}.\\
+On the other hand, routines treating each of $I$, $Q$ and $U$ fields separately , such as the F90 facilities
+\htmlref{\texttt{median\_filter}}{fac:median_filter} and
+\htmlref{\texttt{ud\_grade}}{fac:ud_grade}, as well as their IDL implementation 
+\htmlref{\texttt{median\_filter}}{idl:median_filter} and
+\htmlref{\texttt{ud\_grade}}{idl:ud_grade}
+ignore the value of \texttt{POLCCONV} and copy it unchanged into their output files, as before.
 
 Finally, the IDL facility \htmlref{\texttt{change\_polcconv}}{idl:change_polcconv} is provided to add the 
 \texttt{POLCCONV} keyword or

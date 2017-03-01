@@ -224,7 +224,7 @@ endif else begin
         2: begin
             case nmaps of
                 1:    write_fits_map, file_out, data_out, xh
-                else: write_tqu,      file_out, data_out, hhdr= h, xhdr = xh
+                else: write_tqu,      file_out, data_out, hdr= h, xhdr = xh
             endcase
         end
         3: begin

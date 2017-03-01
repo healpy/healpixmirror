@@ -75,6 +75,9 @@
   character(len=*), parameter :: VERSION = HEALPIX_VERSION
 
   type(paramfile_handle) :: handle
+  character(len=20) :: polcconv
+  character(len=80) :: com_polcconv
+  integer(i4b)      :: n_polcconv
 
   !-----------------------------------------------------------------------
   !                    get input parameters and create arrays
@@ -164,7 +167,7 @@
   !-----------------------------------------------------------------------
   PRINT *,'      '//code//'> Input original map '
   call input_map(infile, map_in(0:,1:nmaps), npix_in, nmaps, &
-       &   fmissval=fmissval, header=header_in)
+       &   fmissval=fmissval, header=header_in, ignore_polcconv=.true.)
   ! get input type and unit
   do j=1,nmaps
      call get_card(header_in, 'TTYPE'//sn(j), ttype(j), com_ttype(j), count=ct_ttype(j))
@@ -206,6 +209,14 @@
   call add_card(header,'HISTORY','Input Map in '//TRIM(infile))
   write(char,'(i6)') nside_in
   call add_card(header,'HISTORY','Input Map resolution NSIDE =  '//TRIM(char))
+
+  ! replicate in output file the POLCCONV found in input file (added 2017-02-27)
+  call get_card(header_in, 'POLCCONV', polcconv, com_polcconv, count=n_polcconv)
+  if (n_polcconv == 0) then ! delete what write_minimal_header wrote
+     call del_card(header,'POLCCONV')
+  else ! overwrite what write_minimal_header wrote
+     call add_card(header,'POLCCONV', polcconv, update=.true.)
+  endif
 
   ! copy input type and units
   do j=1,nmaps

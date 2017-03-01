@@ -213,7 +213,8 @@
   !                      reads the map
   !-----------------------------------------------------------------------
   PRINT *,"      "//code//"> Inputting map "
-  call input_map(infile, map_in, npixtot, n_pols, fmissval=fbad_value, header=header)
+  call input_map(infile, map_in, npixtot, n_pols, &
+       & fmissval=fbad_value, header=header, ignore_polcconv=.true.)
 
   !-----------------------------------------------------------------------
   !                      filter the map
