@@ -268,32 +268,29 @@ vector<double> muladd (double fct, const vector<double> &a,
   return res;
   }
 
+// canned algorithm B2 from Shewchuk
 template<typename M> void cg_solve (const M &A, typename M::vectype &x,
   const typename M::vectype &b, double epsilon, int itmax)
   {
-  typename M::vectype r(b), d(b);
-  double res0=0.,rr=0.;
+  typename M::vectype r=muladd(-1.,A.apply(x),b), d(r);
+  double delta0=dprod(r,r), deltanew=delta0;
+  cout << "res0: " << sqrt(delta0) << endl;
   for (int iter=0; iter<itmax; ++iter)
     {
-    if (iter%300==0) // restart iteration
-      {
-      r=muladd(-1.,A.apply(x),b);
-      rr=dprod(r,r);
-      if (rr==0.) break; // direct hit
-      if (iter==0) res0=sqrt(rr);
-      if (iter==0) cout << "res0: " << res0 << endl;
-      d=r;
-      }
-    auto vtmp=A.apply(d);
-    double alpha = rr/dprod(d,vtmp);
+    auto q=A.apply(d);
+    double alpha = deltanew/dprod(d,q);
     x=muladd(alpha,d,x);
+    if (iter%300==0) // get accurate residual
+      r=muladd(-1.,A.apply(x),b);
+    else
+      r=muladd(-alpha,q,r);
+    double deltaold=deltanew;
+    deltanew=dprod(r,r);
     cout << "\rIteration " << iter
-         << ": residual=" << sqrt(rr)/res0 << "                    " << flush;
-    if (sqrt(rr)<epsilon*res0) { cout << endl; break; } // convergence
-    double rrold=rr;
-    r=muladd(-alpha,vtmp,r);
-    rr=dprod(r,r);
-    double beta=rr/rrold;
+         << ": residual=" << sqrt(deltanew/delta0)
+         << "                    " << flush;
+    if (deltanew<epsilon*epsilon*delta0) { cout << endl; break; } // convergence
+    double beta=deltanew/deltaold;
     d=muladd(beta,d,r);
     }
   }

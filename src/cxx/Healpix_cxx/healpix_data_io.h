@@ -38,8 +38,6 @@
 class paramfile;
 template<typename T> class arr;
 
-void read_weight_ring (const std::string &dir, int nside, arr<double> &weight);
-
 /*! Reads a set of full pixel weights for a map of the given \a nside from the
     FITS file \a weightfile. The code checks that the number of weights in the
     file is compatible with the provided \a nside parameter.
@@ -50,12 +48,11 @@ std::vector<double> read_fullweights_from_fits(const std::string &weightfile,
 
 void get_ring_weights (paramfile &params, int nside, arr<double> &weight);
 
-void read_pixwin (const std::string &dir, int nside, arr<double> &temp);
-void read_pixwin (const std::string &dir, int nside, arr<double> &temp,
-  arr<double> &pol);
+void read_pixwin (const std::string &file, arr<double> &temp);
+void read_pixwin (const std::string &file, arr<double> &temp, arr<double> &pol);
 
-void get_pixwin (paramfile &params, int lmax, int nside, arr<double> &pixwin);
-void get_pixwin (paramfile &params, int lmax, int nside, arr<double> &pixwin,
+void get_pixwin (paramfile &params, int lmax, arr<double> &pixwin);
+void get_pixwin (paramfile &params, int lmax, arr<double> &pixwin,
   arr<double> &pixwin_pol);
 
 #endif

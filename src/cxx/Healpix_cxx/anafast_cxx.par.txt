@@ -19,13 +19,13 @@ polarisation (bool):
   if false, only the intensity a_lm are generated,
   if true, a_lm for T, G and C component are generated
 
-weighted (bool, default=false):
-  if true, weighted quadrature is used
+ringweights (string, default=""):
+  if supplied, ring weights will be read from this file
+  NOTE: mutually exclusive with "pixelweights".
 
-if (weighted)
-  healpix_data (string):
-    directory containing the Healpix data files
-endif
+pixelweights (string, default=""):
+  if supplied, compressed pixel weights will be read from this file
+  NOTE: mutually exclusive with "ringweights".
 
 iter_order (integer, default=0)
   number of iterations for the analysis (0: standard analysis)

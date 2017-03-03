@@ -23,13 +23,9 @@ fwhm_arcmin (double, default=0):
   FWHM in arc minutes of a Gaussian beam, which is used to smooth
   the a_lm
 
-pixel_window (bool, default=false):
-  if true, the a_lm are multiplied by the appropriate pixel window function
-
-if (pixel_window)
-  healpix_data (string):
-    directory containing the Healpix data files
-endif
+windowfile (string, default=""):
+  if supplied, the pixel window function from this file will be applied
+  to the a_lm
 
 double_precision (bool, default=false):
   if false, a_lm and maps are read/written in single precision,

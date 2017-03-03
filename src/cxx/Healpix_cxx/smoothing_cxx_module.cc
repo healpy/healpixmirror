@@ -25,7 +25,7 @@
  */
 
 /*
- *  Copyright (C) 2005-2015 Max-Planck-Society
+ *  Copyright (C) 2005-2017 Max-Planck-Society
  *  Author: Martin Reinecke
  */
 
@@ -37,6 +37,7 @@
 #include "healpix_map_fitsio.h"
 #include "alm_healpix_tools.h"
 #include "alm_powspec_tools.h"
+#include "weight_utils.h"
 #include "fitshandle.h"
 #include "levels_facilities.h"
 #include "lsconstants.h"
@@ -56,6 +57,11 @@ template<typename T> void smoothing_cxx (paramfile &params)
   double fwhm = arcmin2rad*params.template find<double>("fwhm_arcmin");
   if (fwhm<0)
     cout << "NOTE: negative FWHM supplied, doing a deconvolution..." << endl;
+  bool do_pwgt = params.param_present("pixelweights");
+  planck_assert(!(params.param_present("ringweights")&&do_pwgt),
+    "both pixel and ring weights specified");
+  planck_assert((num_iter==0)||(!do_pwgt),
+    "iterative analysis cannot be done in combination with pixel weights");
 
   if (!polarisation)
     {
@@ -69,6 +75,13 @@ template<typename T> void smoothing_cxx (paramfile &params)
 
     double avg=map.average();
     map.Add(T(-avg));
+
+    if (do_pwgt)
+      {
+      auto pwgt = read_fullweights_from_fits(
+        params.template find<string>("pixelweights"), map.Nside());
+      apply_fullweights(map,pwgt);
+      }
 
     arr<double> weight;
     get_ring_weights (params,map.Nside(),weight);
@@ -96,6 +109,15 @@ template<typename T> void smoothing_cxx (paramfile &params)
 
     double avg=mapT.average();
     mapT.Add(T(-avg));
+
+    if (do_pwgt)
+      {
+      auto pwgt = read_fullweights_from_fits(
+        params.template find<string>("pixelweights"), mapT.Nside());
+      apply_fullweights(mapT,pwgt);
+      apply_fullweights(mapQ,pwgt);
+      apply_fullweights(mapU,pwgt);
+      }
 
     arr<double> weight;
     get_ring_weights (params,mapT.Nside(),weight);

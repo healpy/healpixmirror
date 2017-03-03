@@ -25,7 +25,7 @@
  */
 
 /*
- *  Copyright (C) 2003-2015 Max-Planck-Society
+ *  Copyright (C) 2003-2017 Max-Planck-Society
  *  Author: Martin Reinecke
  */
 
@@ -38,6 +38,7 @@
 #include "healpix_map_fitsio.h"
 #include "powspec.h"
 #include "powspec_fitsio.h"
+#include "weight_utils.h"
 #include "alm_healpix_tools.h"
 #include "alm_powspec_tools.h"
 #include "fitshandle.h"
@@ -61,6 +62,11 @@ template<typename T> void anafast_cxx (paramfile &params)
   bool polarisation = params.template find<bool>("polarisation");
   int num_iter = params.template find<int>("iter_order",0);
   bool remove_mono = params.template find<bool>("remove_monopole",false);
+  bool do_pwgt = params.param_present("pixelweights");
+  planck_assert(!(params.param_present("ringweights")&&do_pwgt),
+    "both pixel and ring weights specified");
+  planck_assert((num_iter==0)||(!do_pwgt),
+    "iterative analysis cannot be done in combination with pixel weights");
 
   if (!polarisation)
     {
@@ -77,6 +83,13 @@ template<typename T> void anafast_cxx (paramfile &params)
       {
       avg=map.average();
       map.Add(T(-avg));
+      }
+
+    if (do_pwgt)
+      {
+      auto pwgt = read_fullweights_from_fits(
+        params.template find<string>("pixelweights"), map.Nside());
+      apply_fullweights(map,pwgt);
       }
 
     arr<double> weight;
@@ -113,6 +126,15 @@ template<typename T> void anafast_cxx (paramfile &params)
       {
       avg=mapT.average();
       mapT.Add(T(-avg));
+      }
+
+    if (do_pwgt)
+      {
+      auto pwgt = read_fullweights_from_fits(
+        params.template find<string>("pixelweights"), mapT.Nside());
+      apply_fullweights(mapT,pwgt);
+      apply_fullweights(mapQ,pwgt);
+      apply_fullweights(mapU,pwgt);
       }
 
     arr<double> weight;

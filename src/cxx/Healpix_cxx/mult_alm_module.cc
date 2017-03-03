@@ -25,7 +25,7 @@
  */
 
 /*
- *  Copyright (C) 2003-2014 Max-Planck-Society
+ *  Copyright (C) 2003-2017 Max-Planck-Society
  *  Author: Martin Reinecke
  */
 
@@ -50,10 +50,8 @@ template<typename T> void mult_alm (paramfile &params)
   {
   string infile = params.template find<string>("infile");
   string outfile = params.template find<string>("outfile");
-  int nside_pixwin_in = params.template find<int>("nside_pixwin_in",0);
-  planck_assert (nside_pixwin_in>=0,"nside_pixwin_in must be >= 0");
-  int nside_pixwin_out = params.template find<int>("nside_pixwin_out",0);
-  planck_assert (nside_pixwin_out>=0,"nside_pixwin_out must be >= 0");
+  string pixwin_in = params.template find<string>("pixwin_in","");
+  string pixwin_out = params.template find<string>("pixwin_out","");
   string cl_in = params.template find<string>("cl_in","");
   string cl_out = params.template find<string>("cl_out","");
   double fwhm_in = arcmin2rad*params.template find<double>("fwhm_arcmin_in",0);
@@ -67,10 +65,6 @@ template<typename T> void mult_alm (paramfile &params)
     cw_lmax = params.template find<int>("cw_lmax");
     }
 
-  string datadir;
-  if ((nside_pixwin_in>0) || (nside_pixwin_out>0))
-    datadir = params.template find<string>("healpix_data");
-
   bool polarisation = params.template find<bool>("polarisation");
   if (!polarisation)
     {
@@ -81,9 +75,9 @@ template<typename T> void mult_alm (paramfile &params)
     if (fwhm_in>0) smoothWithGauss (alm, -fwhm_in);
     arr<double> temp(nlmax+1);
     PowSpec tps;
-    if (nside_pixwin_in>0)
+    if (pixwin_in!="")
       {
-      read_pixwin(datadir,nside_pixwin_in,temp);
+      read_pixwin(pixwin_in,temp);
       for (int l=0; l<=nlmax; ++l)
         temp[l] = 1/temp[l];
       alm.ScaleL (temp);
@@ -95,9 +89,9 @@ template<typename T> void mult_alm (paramfile &params)
         temp[l] = 1./sqrt(tps.tt(l));
       alm.ScaleL (temp);
       }
-    if (nside_pixwin_out>0)
+    if (pixwin_out!="")
       {
-      read_pixwin(datadir,nside_pixwin_out,temp);
+      read_pixwin(pixwin_out,temp);
       alm.ScaleL (temp);
       }
     if (cl_out!="")
@@ -119,18 +113,18 @@ template<typename T> void mult_alm (paramfile &params)
     read_Alm_from_fits(infile,almT,almG,almC,nlmax,nmmax,2);
     if (fwhm_in>0) smoothWithGauss (almT, almG, almC, -fwhm_in);
     arr<double> temp(nlmax+1), pol(nlmax+1);
-    if (nside_pixwin_in>0)
+    if (pixwin_in!="")
       {
-      read_pixwin(datadir,nside_pixwin_in,temp,pol);
+      read_pixwin(pixwin_in,temp,pol);
       for (int l=0; l<=nlmax; ++l)
         { temp[l] = 1/temp[l]; if (pol[l]!=0.) pol[l] = 1/pol[l]; }
       almT.ScaleL(temp); almG.ScaleL(pol); almC.ScaleL(pol);
       }
     if (cl_in!="")
       planck_fail ("power spectra not (yet) supported with polarisation");
-    if (nside_pixwin_out>0)
+    if (pixwin_out!="")
       {
-      read_pixwin(datadir,nside_pixwin_out,temp,pol);
+      read_pixwin(pixwin_out,temp,pol);
       almT.ScaleL(temp); almG.ScaleL(pol); almC.ScaleL(pol);
       }
     if (cl_out!="")

@@ -14,18 +14,13 @@ fwhm_arcmin_out (real, default=0):
   FWHM (in arcmin) of a Gaussian beam, which will be used to smoothe the
   output a_lm
 
-nside_pixwin_in (integer, default=0):
-  If this is different from 0, the corresponding pixel window function
-  will be _removed_ from the input a_lm
+pixwin_in (string, default=""):
+  if supplied, the pixel window function from this file will be _removed_
+  from the input a_lm
 
-nside_pixwin_out (integer, default=0):
-  If this is different from 0, the corresponding pixel window function
-  will be applied to the output a_lm
-
-if ((nside_pixwin_in>0)||(nside_pixwin_out>0))
-  healpix_data (string):
-    directory containing the Healpix data files
-endif
+pixwin_out (string, default=""):
+  if supplied, the pixel window function from this file will be applied
+  to the output a_lm
 
 cl_in (string, default=""):
   if supplied, the power spectrum from this file will be _removed_

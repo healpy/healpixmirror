@@ -65,7 +65,7 @@ template<typename T> void alm2map_cxx (paramfile &params)
     }
 
   arr<double> temp, pol;
-  get_pixwin (params,nlmax,nside,temp,pol);
+  get_pixwin (params,nlmax,temp,pol);
 
   bool deriv = params.template find<bool>("derivatives",false);
   if (deriv)

@@ -15,7 +15,7 @@
  *  along with Healpix_cxx; if not, write to the Free Software
  *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  *
- *  For more information about HEALPix, see http://healpix.sourceforge.sourceforge.net
+ *  For more information about HEALPix, see http://healpix.sourceforge.net
  */
 
 /*
@@ -25,7 +25,7 @@
  */
 
 /*
- *  Copyright (C) 2012-2013 Max-Planck-Society
+ *  Copyright (C) 2012-2017 Max-Planck-Society
  *  Author: Martin Reinecke
  */
 
@@ -36,6 +36,7 @@
 #include "healpix_map.h"
 #include "healpix_map_fitsio.h"
 #include "alm_healpix_tools.h"
+#include "weight_utils.h"
 #include "levels_facilities.h"
 #include "announce.h"
 #include "lsconstants.h"
@@ -50,16 +51,15 @@ template<typename T> void udgrade_harmonic_cxx (paramfile &params)
   string outfile = params.template find<string>("outfile");
   int nlmax = params.template find<int>("nlmax");
   int nside = params.template find<int>("nside");
-  int nside_pixwin_in = params.template find<int>("nside_pixwin_in",0);
-  planck_assert (nside_pixwin_in>=0,"nside_pixwin_in must be >= 0");
-  int nside_pixwin_out = params.template find<int>("nside_pixwin_out",0);
-  planck_assert (nside_pixwin_out>=0,"nside_pixwin_out must be >= 0");
+  string pixwin_in = params.template find<string>("pixwin_in","");
+  string pixwin_out = params.template find<string>("pixwin_out","");
   int num_iter = params.template find<int>("iter_order",0);
   bool polarisation = params.template find<bool>("polarisation",false);
-
-  string datadir;
-  if ((nside_pixwin_in>0) || (nside_pixwin_out>0))
-    datadir = params.template find<string>("healpix_data");
+  bool do_pwgt = params.param_present("pixelweights");
+  planck_assert(!(params.param_present("ringweights")&&do_pwgt),
+    "both pixel and ring weights specified");
+  planck_assert((num_iter==0)||(!do_pwgt),
+    "iterative analysis cannot be done in combination with pixel weights");
 
   if (!polarisation)
     {
@@ -69,6 +69,13 @@ template<typename T> void udgrade_harmonic_cxx (paramfile &params)
     double avg=map.average();
     map.Add(T(-avg));
 
+    if (do_pwgt)
+      {
+      auto pwgt = read_fullweights_from_fits(
+        params.template find<string>("pixelweights"), map.Nside());
+      apply_fullweights(map,pwgt);
+      }
+
     arr<double> weight;
     get_ring_weights (params,map.Nside(),weight);
 
@@ -77,16 +84,16 @@ template<typename T> void udgrade_harmonic_cxx (paramfile &params)
     map2alm_iter(map,alm,num_iter,weight);
 
     arr<double> temp(nlmax+1);
-    if (nside_pixwin_in>0)
+    if (pixwin_in!="")
       {
-      read_pixwin(datadir,nside_pixwin_in,temp);
+      read_pixwin(pixwin_in,temp);
       for (int l=0; l<=nlmax; ++l)
         temp[l] = 1/temp[l];
       alm.ScaleL (temp);
       }
-    if (nside_pixwin_out>0)
+    if (pixwin_out!="")
       {
-      read_pixwin(datadir,nside_pixwin_out,temp);
+      read_pixwin(pixwin_out,temp);
       alm.ScaleL (temp);
       }
 
@@ -104,6 +111,15 @@ template<typename T> void udgrade_harmonic_cxx (paramfile &params)
     double avg=mapT.average();
     mapT.Add(T(-avg));
 
+    if (do_pwgt)
+      {
+      auto pwgt = read_fullweights_from_fits(
+        params.template find<string>("pixelweights"), mapT.Nside());
+      apply_fullweights(mapT,pwgt);
+      apply_fullweights(mapQ,pwgt);
+      apply_fullweights(mapU,pwgt);
+      }
+
     arr<double> weight;
     get_ring_weights (params,mapT.Nside(),weight);
 
@@ -115,16 +131,16 @@ template<typename T> void udgrade_harmonic_cxx (paramfile &params)
       (mapT,mapQ,mapU,almT,almG,almC,num_iter,weight);
 
     arr<double> temp(nlmax+1), pol(nlmax+1);
-    if (nside_pixwin_in>0)
+    if (pixwin_in!="")
       {
-      read_pixwin(datadir,nside_pixwin_in,temp,pol);
+      read_pixwin(pixwin_in,temp,pol);
       for (int l=0; l<=nlmax; ++l)
         { temp[l] = 1/temp[l]; if (pol[l]!=0.) pol[l] = 1/pol[l]; }
       almT.ScaleL(temp); almG.ScaleL(pol); almC.ScaleL(pol);
       }
-    if (nside_pixwin_out>0)
+    if (pixwin_out!="")
       {
-      read_pixwin(datadir,nside_pixwin_out,temp,pol);
+      read_pixwin(pixwin_out,temp,pol);
       almT.ScaleL(temp); almG.ScaleL(pol); almC.ScaleL(pol);
       }
 
