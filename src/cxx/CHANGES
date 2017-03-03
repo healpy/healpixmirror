@@ -1,3 +1,15 @@
+Changes since 3.30:
+- IMPORTANT: the syntax for specifying ring weights and pixel windows has
+  changed! This affects the facilities anafast_cxx, smoothing_cxx,
+  udgrade_harmonic_cxx, alm2map_cxx, mult_alm_cxx
+- full pixel quadrature weights are now supported in map analysis. For maps
+  containing a signal that is band-limited at lmax=1.5*nside, this allows
+  recovery of the a_lm at almost machine precision. Pixel weights for a desired
+  nside can be generated using the "compute_weights" facility, and the resulting
+  files can be fed into anafast_cxx, smoothing_cxx and udgrade_harmonic_cxx
+  using the "pixelweights" parameter.
+- experimental "needlet_tool" code for needlet analysis
+
 Changes since 3.20:
 - switch from custom xcomplex class to std::complex
 - support for multi-order coverages (MOC)
