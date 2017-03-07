@@ -157,4 +157,22 @@ static inline void vhsum_cmplx_special (Tv a, Tv b, Tv c, Tv d,
 
 #endif
 
+#if (VLEN==8)
+
+static inline complex double vhsum_cmplx(Tv a, Tv b)
+  { return _mm512_reduce_add_pd(a)+_Complex_I*_mm512_reduce_add_pd(b); }
+
+static inline void vhsum_cmplx2 (Tv a, Tv b, Tv c, Tv d,
+  complex double * restrict c1, complex double * restrict c2)
+  {
+  *c1 += _mm512_reduce_add_pd(a)+_Complex_I*_mm512_reduce_add_pd(b);
+  *c2 += _mm512_reduce_add_pd(c)+_Complex_I*_mm512_reduce_add_pd(d);
+  }
+
+static inline void vhsum_cmplx_special (Tv a, Tv b, Tv c, Tv d,
+  complex double * restrict cc)
+  { vhsum_cmplx2(a,b,c,d,cc,cc+1); }
+
+#endif
+
 #endif

@@ -25,7 +25,7 @@
 /*! \file sharp_almhelpers.h
  *  SHARP helper function for the creation of a_lm data structures
  *
- *  Copyright (C) 2008-2011 Max-Planck-Society
+ *  Copyright (C) 2008-2016 Max-Planck-Society
  *  \author Martin Reinecke
  */
 
@@ -49,6 +49,14 @@ void sharp_make_triangular_alm_info (int lmax, int mmax, int stride,
     \ingroup almgroup */
 void sharp_make_rectangular_alm_info (int lmax, int mmax, int stride,
   sharp_alm_info **alm_info);
+
+/*! Initialises alm_info for mmajor, real, packed spherical harmonics.
+    Pass \a mmax + 1 to nm and NULL to \a ms in order to use everything;
+    otherwise you can pick a subset of m to process (should only be used
+    for MPI parallelization).
+    \ingroup almgroup */
+void sharp_make_mmajor_real_packed_alm_info (int lmax, int stride,
+  int nm, const int *ms, sharp_alm_info **alm_info);
 
 #ifdef __cplusplus
 }

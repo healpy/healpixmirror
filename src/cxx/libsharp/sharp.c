@@ -111,7 +111,7 @@ static void ringhelper_update (ringhelper *self, int nph, int mmax, double phi0)
       self->s_shift = mmax+1;
       self->phi0_ = phi0;
       double *tmp=(double *) self->shiftarr;
-      sincos_multi (mmax+1, phi0, 0., &tmp[1], &tmp[0], 2);
+      sincos_multi (mmax+1, phi0, &tmp[1], &tmp[0], 2);
       }
   if (!self->plan) self->plan=make_real_plan(nph);
   if (nph!=(int)self->length)
@@ -172,6 +172,19 @@ ptrdiff_t sharp_alm_index (const sharp_alm_info *self, int l, int mi)
   return self->mvstart[mi]+self->stride*l;
   }
 
+ptrdiff_t sharp_alm_count(const sharp_alm_info *self)
+  {
+  ptrdiff_t result=0;
+  for (int im=0; im!=self->nm; ++im)
+    {
+    int m=self->mval[im];
+    ptrdiff_t x=(self->lmax + 1 - m);
+    if ((m!=0)&&((self->flags&SHARP_PACKED)!=0)) result+=2*x;
+    else result+=x;
+    }
+  return result;
+  }
+
 void sharp_destroy_alm_info (sharp_alm_info *info)
   {
   DEALLOC (info->mval);
@@ -229,6 +242,17 @@ void sharp_make_geom_info (int nrings, const int *nph, const ptrdiff_t *ofs,
   qsort(info->pair,info->npairs,sizeof(sharp_ringpair),ringpair_compare);
   }
 
+ptrdiff_t sharp_map_size(const sharp_geom_info *info)
+  {
+  ptrdiff_t result = 0;
+  for (int m=0; m<info->npairs; ++m)
+    {
+      result+=info->pair[m].r1.nph;
+      result+=(info->pair[m].r2.nph>=0) ? (info->pair[m].r2.nph) : 0;
+    }
+  return result;
+  }
+
 void sharp_destroy_geom_info (sharp_geom_info *geom_info)
   {
   DEALLOC (geom_info->pair);
@@ -240,6 +264,7 @@ void sharp_destroy_geom_info (sharp_geom_info *geom_info)
    distribution are permissible. */
 static int sharp_get_mmax (int *mval, int nm)
   {
+  //FIXME: if gaps are allowed, we have to search the maximum m in the array
   int *mcheck=RALLOC(int,nm);
   SET_ARRAY(mcheck,0,nm,0);
   for (int i=0; i<nm; ++i)
@@ -786,6 +811,7 @@ static void sharp_execute_job (sharp_job *job)
   int nchunks, chunksize;
   get_chunk_info(job->ginfo->npairs,(job->flags&SHARP_NVMAX)*VLEN,&nchunks,
     &chunksize);
+//FIXME: needs to be changed to "nm"
   alloc_phase (job,mmax+1,chunksize);
 
 /* chunk loop */
@@ -869,6 +895,8 @@ static void sharp_build_job_common (sharp_job *job, sharp_jobtype type,
   job->flags = flags;
   if ((job->flags&SHARP_NVMAX)==0)
     job->flags|=sharp_nv_oracle (type, spin, ntrans);
+  if (alm_info->flags&SHARP_REAL_HARMONICS)
+    job->flags|=SHARP_REAL_HARMONICS;
   job->time = 0.;
   job->opcnt = 0;
   job->ntrans = ntrans;

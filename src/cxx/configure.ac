@@ -112,7 +112,7 @@ esac
 
 case $CXXTYPE in
   g++)
-    CXXCFLAGS="-O2 -ffast-math -fomit-frame-pointer"
+    CXXCFLAGS="-std=c++11 -O2 -ffast-math -fomit-frame-pointer"
     GXXVERSION="`$CXX -dumpversion 2>&1`"
     echo "Using g++ version $GXXVERSION"
     AC_SUBST(GXXVERSION)

@@ -1,6 +1,6 @@
 ACLOCAL_AMFLAGS = -I m4
 
-lib_LTLIBRARIES = libhealpix_cxx.la
+lib_LTLIBRARIES = libhealpix_cxx.la libhealpy.la
 
 src_c_utils = \
   c_utils/c_utils.c \
@@ -32,10 +32,11 @@ src_libsharp = \
   libsharp/sharp_vecsupport.h \
   libsharp/sharp_vecutil.h \
   libsharp/sharp_ylmgen_c.c \
-  libsharp/sharp_ylmgen_c.h
+  libsharp/sharp_ylmgen_c.h \
+  libsharp/sharp_legendre_roots.c \
+  libsharp/sharp_legendre_roots.h
 src_cxxsupport = \
   cxxsupport/announce.cc \
-  cxxsupport/fitshandle.cc \
   cxxsupport/geom_utils.cc \
   cxxsupport/string_utils.cc \
   cxxsupport/ls_image.cc \
@@ -53,7 +54,6 @@ src_cxxsupport = \
   cxxsupport/datatypes.h \
   cxxsupport/error_handling.h \
   cxxsupport/fftpack_support.h \
-  cxxsupport/fitshandle.h \
   cxxsupport/geom_utils.h \
   cxxsupport/levels_facilities.h \
   cxxsupport/ls_image.h \
@@ -80,46 +80,51 @@ src_cxxsupport = \
   cxxsupport/colour.h \
   cxxsupport/linear_map.h \
   cxxsupport/sort_utils.h
+src_cxxsupport_fits = \
+  cxxsupport/fitshandle.cc \
+  cxxsupport/fitshandle.h
 src_healpix_cxx= \
   Healpix_cxx/alm.cc \
   Healpix_cxx/alm.h \
-  Healpix_cxx/alm2map_cxx_module.cc \
-  Healpix_cxx/alm_fitsio.cc \
-  Healpix_cxx/alm_fitsio.h \
   Healpix_cxx/alm_healpix_tools.cc \
   Healpix_cxx/alm_healpix_tools.h \
   Healpix_cxx/alm_powspec_tools.cc \
   Healpix_cxx/alm_powspec_tools.h \
-  Healpix_cxx/anafast_cxx_module.cc \
-  Healpix_cxx/calc_powspec_module.cc \
-  Healpix_cxx/healpix_base.cc \
-  Healpix_cxx/healpix_base.h \
-  Healpix_cxx/healpix_data_io.cc \
-  Healpix_cxx/healpix_data_io.h \
-  Healpix_cxx/healpix_map.cc \
-  Healpix_cxx/healpix_map.h \
-  Healpix_cxx/healpix_map_fitsio.cc \
-  Healpix_cxx/healpix_map_fitsio.h \
   Healpix_cxx/healpix_tables.cc \
   Healpix_cxx/healpix_tables.h \
+  Healpix_cxx/healpix_base.cc \
+  Healpix_cxx/healpix_base.h \
+  Healpix_cxx/healpix_map.cc \
+  Healpix_cxx/healpix_map.h \
+  Healpix_cxx/powspec.cc \
+  Healpix_cxx/powspec.h \
+  Healpix_cxx/moc_query.h \
+  Healpix_cxx/moc_query.cc \
+  Healpix_cxx/weight_utils.h \
+  Healpix_cxx/weight_utils.cc
+src_healpix_cxx_fits= \
+  Healpix_cxx/healpix_data_io.cc \
+  Healpix_cxx/healpix_data_io.h \
+  Healpix_cxx/healpix_map_fitsio.cc \
+  Healpix_cxx/healpix_map_fitsio.h \
+  Healpix_cxx/alm_fitsio.cc \
+  Healpix_cxx/alm_fitsio.h \
+  Healpix_cxx/powspec_fitsio.cc \
+  Healpix_cxx/powspec_fitsio.h \
+  Healpix_cxx/moc_fitsio.h \
+  Healpix_cxx/moc_fitsio.cc
+src_healpix_cxx_mod= \
+  Healpix_cxx/alm2map_cxx_module.cc \
+  Healpix_cxx/anafast_cxx_module.cc \
+  Healpix_cxx/calc_powspec_module.cc \
   Healpix_cxx/hotspots_cxx_module.cc \
   Healpix_cxx/map2tga_module.cc \
   Healpix_cxx/median_filter_cxx_module.cc \
   Healpix_cxx/mult_alm_module.cc \
-  Healpix_cxx/powspec.cc \
-  Healpix_cxx/powspec.h \
-  Healpix_cxx/powspec_fitsio.cc \
-  Healpix_cxx/powspec_fitsio.h \
   Healpix_cxx/smoothing_cxx_module.cc \
   Healpix_cxx/syn_alm_cxx_module.cc \
   Healpix_cxx/udgrade_cxx_module.cc \
   Healpix_cxx/udgrade_harmonic_cxx_module.cc \
-  Healpix_cxx/moc_fitsio.h \
-  Healpix_cxx/moc_fitsio.cc \
-  Healpix_cxx/moc_query.h \
-  Healpix_cxx/moc_query.cc \
-  Healpix_cxx/weight_utils.h \
-  Healpix_cxx/weight_utils.cc \
   Healpix_cxx/compute_weights_module.cc \
   Healpix_cxx/needlet_tool_module.cc
 
@@ -166,8 +171,9 @@ include_HEADERS = \
   Healpix_cxx/moc_query.h \
   Healpix_cxx/weight_utils.h
 
-libhealpix_cxx_la_SOURCES = $(src_c_utils) $(src_libfftpack) $(src_libsharp) $(src_cxxsupport) $(src_healpix_cxx)
+libhealpix_cxx_la_SOURCES = $(src_c_utils) $(src_libfftpack) $(src_libsharp) $(src_cxxsupport) $(src_cxxsupport_fits) $(src_healpix_cxx) $(src_healpix_cxx_fits) $(src_healpix_cxx_mod)
 libhealpix_cxx_la_LIBADD = $(CFITSIO_LIBS)
+libhealpy_la_SOURCES = $(src_c_utils) $(src_libfftpack) $(src_libsharp) $(src_cxxsupport) $(src_healpix_cxx)
 
 bin_PROGRAMS = alm2map_cxx anafast_cxx calc_powspec hotspots_cxx map2tga \
   median_filter_cxx mult_alm rotalm_cxx smoothing_cxx syn_alm_cxx udgrade_cxx \
