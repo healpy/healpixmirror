@@ -134,7 +134,7 @@ to access, visualize and browse images, catalogues and cube data
 </li>
 
 <li>
-<a href="http://montage.ipac.caltech.edu/">Montage Astronomical Image Mosaic Engine</a>: to stitch astronomical images, including (soon) those in HEALPix format
+<a href="http://montage.ipac.caltech.edu/">Montage Astronomical Image Mosaic Engine</a>: to stitch and reproject astronomical images, including <a href="http://montage.ipac.caltech.edu/docs/HEALPix/">those in HEALPix format</a>
 <!-- https://en.wikipedia.org/wiki/Montage_Image_Mosaic_Software -->
 </li>
 
