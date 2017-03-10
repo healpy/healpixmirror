@@ -732,19 +732,19 @@ and \mylink{idl:mollview:retain}{Retain}}\\
 	 \setlength{\itemsep}{0pt}
 	 \setlength{\leftmargin}{.1cm}
 	 \setlength{\labelwidth}{.1cm}
-         \item[0] no polarization information is plotted. 
+         \item[0:] no polarization information is plotted;
 %
-         \item[1]
-             the AMPLITUDE $P = \sqrt{\left(U^2 + Q^2\right)}$ of the polarization is plotted 
+         \item[1:]
+             the AMPLITUDE $P = \sqrt{U^2 + Q^2}$ of the polarization is plotted 
 	(as long as the input data contains polarization information
-             (ie, Stokes parameter Q and U for each pixel)) 
+             (ie, Stokes parameter $Q$ and $U$ for each pixel));
 %
-         \item[2]
+         \item[2:]
              the ANGLE $\phi = \tan^{-1}(U/Q) /2$ of the polarization is plotted \\
-             Note: the angles are color coded with a fixed color table (independent of \mylink{idl:mollview:colt}{Colt})
+             Note: the angles are color coded with a fixed color table (independent of \mylink{idl:mollview:colt}{Colt});
 %
-         \item[3]
-             --the temperature is color coded (with a color table defined by \mylink{idl:mollview:colt}{Colt})\\
+         \item[3:]
+             --the temperature is color coded (with a color table defined by \mylink{idl:mollview:colt}{Colt}),\\
              --and the polarization is overplotted as headless VECTORS\\
              Polarization can then be a 3-element vector (the first element being 3).
              The second element controls the average length of vectors
@@ -753,15 +753,18 @@ and \mylink{idl:mollview:retain}{Retain}}\\
 
 	\end{itemize}
 	\default{0} \\
-	\textbf{Note:} The representation of the polarization direction (options 2 and 3 above),
+	\textbf{Note 1:} The representation of the polarization direction (options 2 and 3 above),
         include the effects of the rotations and/or changes or astronomical coordinates
       (controlled by \mylink{idl:mollview:rot}{ROT} and 
 	\mylink{idl:mollview:coord}{COORD} respectively) but do not include the effects
       of the distortions induced by the projection from the sphere to the plan.
       Because the polarization usually has more power at small scales, it must
       generally be represented on maps of small patches of the sky to remain
-      legible, in which case the projection-induced distortions are small.
-	}   \\
+      legible, in which case the projection-induced distortions are small.\\
+	\textbf{Note 2:} when \texttt{polarization=2} or \texttt{polarization=3}, the visualisation routines behavior
+     will depend on the value of the \texttt{POLCCONV} FITS keyword
+     (see \htmlref{note on POLCCONV}{intro:polcconv} in \linklatexhtml{The \healpix Primer}{intro.pdf}{intro.htm})
+	}  \\
 
 %%%%%%%%%%%%%%%%%
 \end{tabular}
@@ -774,13 +777,13 @@ and \mylink{idl:mollview:retain}{Retain}}\\
 %%%%%%%%%%%%%%%%%
 
 {/PREVIEW}\mytarget{idl:mollview:preview}  & \mylink{idl:mollview:routines}{all}  & \parbox[t]{\hsize}{
-		if set, there is a 'ghostview' preview of the
-	        postscript file or a 'xv' preview of the gif file\\
-	 \seealso \mylink{idl:mollview:gif}{Gif}, 
+		if set, the external file generated with \mylink{idl:mollview:gif}{Gif}, 
 		\mylink{idl:mollview:jpeg}{Jpeg}, 
 		\mylink{idl:mollview:pdf}{Pdf},
 		\mylink{idl:mollview:png}{Png},
-		and \mylink{idl:mollview:ps}{Ps}}\\
+		or \mylink{idl:mollview:ps}{Ps} will be previewed with the 
+		visualisation applications (eg, {\tt gv}, {\tt display} or {\tt open}) 
+		chosen during the \htmlref{\healpix IDL/GDL configuration step}{install:idlgdlconfig}}\\
 
 {PS=}\mytarget{idl:mollview:ps}  & \mylink{idl:mollview:routines}{all}  &  \parbox[t]{\hsize}{
 	      if set to 0            : no PostScript output \\

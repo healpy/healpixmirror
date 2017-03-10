@@ -182,6 +182,8 @@ fits_read, fcb, void, exthdr, exten_no = xtnum, /header_only, no_pdu = no_pdu
 tfields  = round(float(sxpar(exthdr,'TFIELDS')))
 bad_data =       float(sxpar(exthdr,'BAD_DATA', count=nbd))
 if (nbd eq 0) then bad_data = !healpix.bad_value
+polcconv = strtrim(strupcase(sxpar(exthdr,'POLCCONV',count=n_pccv)),2)
+if (n_pccv eq 0) then polcconv=''
 
 ; read image if file is in deprecated format
 if (xtnum eq 0 && fcb.nextend eq 0) then begin
@@ -289,6 +291,26 @@ while (w_start LE (n_words-1) ) do begin
         endif
         if (polar eq 2 || polar eq 3) then begin
             psi[0:np-1] = 0.5 * atan(tmp[0:np-1,2]*flipconv, tmp[0:np-1,1]) ; (Q,U) --> psi
+            primer = '(http://healpix.sourceforge.net/pdf/intro.pdf)'
+            case polcconv of
+                'COSMO':  ; COSMO -> carry on silently
+                '': begin ; absent -> assume COSMO and make a comment
+                    print,'The POLCCONV keyword was not found in '+file
+                    print,'COSMO (HEALPix default) will be assumed, and map is unchanged.'
+                    print,'See HEALPix primer '+primer+' for details.'
+                end
+                'IAU':begin ; IAU -> issue a warning
+                    message,/info,'POLCCONV=IAU found in '+file,level=-2
+                    message,/info,'The sign of U (and direction of polarisation) is changed',level=-2
+                    message,/info,'See HEALPix primer '+primer+' for details.',level=-2
+                    psi[0:np-1] *= -1
+                end
+                else: begin ; none of the above -> stop
+                    message,/info,'POLCCONV='+polcconv+' found in '+file,level=-2
+                    message,/info,'It is neither COSMO nor IAU. Aborting',level=-2
+                    message,      'See HEALPix primer '+primer+' for details.',level=-2
+                end
+            endcase
         endif
         if (polar eq 1) then array[pstart] = norm[0:np-1]
         if (polar eq 2) then array[pstart] = psi[0:np-1]

@@ -25,7 +25,7 @@
 \newcommand{\nside}{N_\mathrm{side}}
 \newcommand{\npix}{N_\mathrm{pix}}
 \newcommand{\healpixwebpage}{http://healpix.sourceforge.net}
-\newcommand{\healpixmail}{{\em healpix-support} {\tt at} {\em lists.sourceforge.net}}
+\newcommand{\healpixmail}{{\em healpix-support} \texttt{at} {\em lists.sourceforge.net}}
 \newcommand{\healpixsupport}{\healpixwebpage/support.php}
 \renewcommand{\contentsname}{{TABLE OF CONTENTS}}
 
@@ -133,14 +133,14 @@ The distribution can be downloaded as a gzipped tarred file, {\em or} as a zippe
 which can respectively be unpacked by executing the commands\footnote{Microsoft Windows users can have a look at \\
 \htmladdnormallink{http://sourceforge.net/p/healpix/wiki/Windows\%20and\%20peazip/}{http://sourceforge.net/p/healpix/wiki/Windows\%20and\%20peazip/}} \hfill\newline
 %\begin{verbatim}
-{\tt \% gunzip Healpix\_\hpxversion.tar.gz}\hfill\\
-{\tt \% tar -xpf Healpix\_\hpxversion.tar}\hfill\\
+\texttt{\% gunzip Healpix\_\hpxversion.tar.gz}\hfill\\
+\texttt{\% tar -xpf Healpix\_\hpxversion.tar}\hfill\\
 or \hfill\\
-{\tt \% tar -xzpf Healpix\_\hpxversion.tar.gz}\hfill\\
+\texttt{\% tar -xzpf Healpix\_\hpxversion.tar.gz}\hfill\\
 or \hfill\\
-{\tt \% unzip Healpix\_\hpxversion.zip}\hfill\\
+\texttt{\% unzip Healpix\_\hpxversion.zip}\hfill\\
 %\end{verbatim}
-creating a directory named {\tt Healpix\_\hpxversion}\ whose structure is shown in Figure
+creating a directory named \texttt{Healpix\_\hpxversion}\ whose structure is shown in Figure
 \ref{fig:dirtree}.
 
 \begin{figure}[!ht]
@@ -190,26 +190,26 @@ configuration which is beyond our control.
 \linklatexhtml{"IDL Facilities"}{idl.pdf}{idl.htm}\\
  & & \\
 %
-  C++     & This document, or \phantom{filling up --} {\tt src/cxx/README.compilation} & 
+  C++     & This document, or \phantom{filling up --} \texttt{src/cxx/README.compilation} & 
 %\htmladdnormallink{"C++ Facilities and Subroutines"}{index_cxx.html}
 \linklatexhtml{"C++ Facilities and Subroutines"}{../html/index_cxx.html}{index_cxx.html}
  (HTML only)\\
 %
  & & \\
 %
-  C       & This document, or \phantom{filling up --} {\tt src/C/README} & 
+  C       & This document, or \phantom{filling up --} \texttt{src/C/README} & 
     \linklatexhtml{"C Subroutines Overview"}{csub.pdf}{csub.htm} \\ 
 %
  & & \\
 %
-  Java    & {\tt src/java/README} & 
+  Java    & \texttt{src/java/README} & 
 %\htmladdnormallink{"Java Overview"}{java/index.html}
 \linklatexhtml{"Java Overview"}{../html/java/index.html}{java/index.html}
  (HTML only)\\
 %
  & & \\
 %
-  Python    & This document, or \phantom{filling up --} {\tt src/healpy/INSTALL} & 
+  Python    & This document, or \phantom{filling up --} \texttt{src/healpy/INSTALL} & 
 \linklatexhtml{"Healpy
 Documentation"}{http://healpy.github.com/healpy}{http://healpy.github.com/healpy}
  (HTML only)\\
@@ -234,7 +234,7 @@ Starting with version 3.0, the
 (HEALPix in Python) library has been integrated into \healpix releases. Since it
 is, to a large extent, a
 wrapper to the C++ routines, installing it also requires a C++ compiler (on top
-of {\tt python} and a few supporting Python libraries) but it will perform
+of \texttt{python} and a few supporting Python libraries) but it will perform
 its own compilation of the current \healpix C++ library.
 
 {\em This section and the next focus on the compilation and installation of the
@@ -243,11 +243,11 @@ its own compilation of the current \healpix C++ library.
 \textbf{Java} routines see table~\ref{tab:allpackages}}
 
 The configure script is written in the Bourne shell. The script
-attempts to generate a {\tt Makefile} which is tailored to one of 
+attempts to generate a \texttt{Makefile} which is tailored to one of 
 the above Operating Systems (OS's) and using 
-{\tt Makefile.in} as a template for non system-specific statements. 
+\texttt{Makefile.in} as a template for non system-specific statements. 
 Only the basic UNIX make facility is required to build the software, although we do
-still recommend the GNU make facility (\htmladdnormallink{{\tt ftp://ftp.gnu.org/gnu/make/}}{ftp://ftp.gnu.org/gnu/make/}).
+still recommend the GNU make facility (\htmladdnormallink{\texttt{ftp://ftp.gnu.org/gnu/make/}}{ftp://ftp.gnu.org/gnu/make/}).
 In addition, several environment configuration files and an IDL/GDL startup file are
 generated. These automatically establish
 various environment variables and aliases to make the use of the
@@ -301,26 +301,26 @@ GDL \gdlversion or more         & \htmladdnormallink{{\tt
 
 As it was already the case in version 1.20, users no longer need to acquire the
 {\textbf IDL}
-Astronomy User's Library (\htmladdnormallink{{\tt http://idlastro.gsfc.nasa.gov/homepage.html}}{http://idlastro.gsfc.nasa.gov/homepage.html})
-or the COBE (IDL) Analysis Software (\htmladdnormallink{{\tt http://lambda.gsfc.nasa.gov/product/cobe/cgis.cfm}}{http://lambda.gsfc.nasa.gov/product/cobe/cgis.cfm}),
+Astronomy User's Library (\htmladdnormallink{\texttt{http://idlastro.gsfc.nasa.gov/homepage.html}}{http://idlastro.gsfc.nasa.gov/homepage.html})
+or the COBE (IDL) Analysis Software (\htmladdnormallink{\texttt{http://lambda.gsfc.nasa.gov/product/cobe/cgis.cfm}}{http://lambda.gsfc.nasa.gov/product/cobe/cgis.cfm}),
 although we do recommend these packages to the user.
 The 100-odd routines required for version \hpxversion\ are contained in the
-subdirectory {\tt Healpix\_\hpxversion/src/idl/zzz\_external}.
+subdirectory \texttt{Healpix\_\hpxversion/src/idl/zzz\_external}.
 These procedures are included in the \healpix package unchanged and 
 solely for the purpose of making it self contained. In this way,
 we remove the burden of installation of additional libraries from 
 the end user.
 
-The  \textbf{Python} {\tt healpy} package requires
+The  \textbf{Python} \texttt{healpy} package requires
 
 \begin{tabular}{p{0.3\hsize} p{0.6\hsize}} \hline  
   \textbf{Software Package} & \textbf{Source} \\ \hline
                             &                          \\ %%% for presentation
-Python 2.6, 2.7, or 3.2--3.5         & \htmladdnormallink{{\tt http://www.python.org}}{http://www.python.org}
+Python 2.6, 2.7, or 3.2--3.5         & \htmladdnormallink{\texttt{http://www.python.org}}{http://www.python.org}
 			\\
-Numpy 1.0.1 or more         & \htmladdnormallink{{\tt http://numpy.scipy.org}}{http://numpy.scipy.org}
+Numpy 1.0.1 or more         & \htmladdnormallink{\texttt{http://numpy.scipy.org}}{http://numpy.scipy.org}
 			\\
-Matplotlib 0.91.2 or more         & \htmladdnormallink{{\tt http://matplotlib.sourceforge.net}}{http://matplotlib.sourceforge.net}
+Matplotlib 0.91.2 or more         & \htmladdnormallink{\texttt{http://matplotlib.sourceforge.net}}{http://matplotlib.sourceforge.net}
 			\\
 PyFITS         & \htmladdnormallink{{\tt
 http://www.stsci.edu/institute/software\_\-hardware/pyfits}}{%
@@ -330,9 +330,9 @@ http://www.stsci.edu/institute/software\_\-hardware/pyfits}}{%
 \end{tabular}\vspace{3ex}
 
 While not required, the 
-{\tt IPython} (\htmladdnormallink{\tt http://ipython.org}{http://ipython.org})
+\texttt{IPython} (\htmladdnormallink\texttt{http://ipython.org}{http://ipython.org})
 and 
-{\tt Cython} (\htmladdnormallink{\tt http://cython.org}{http://cython.org})
+\texttt{Cython} (\htmladdnormallink\texttt{http://cython.org}{http://cython.org})
 softwares can also be useful.
 
 % For convenience we provide the freely available FFTPACK\footnote{At 
@@ -347,9 +347,9 @@ softwares can also be useful.
 %% double precision.
 
 A parallel implementation (based on OpenMP, for shared memory architectures) of the Spherical Harmonics
-Transforms involved in \textbf{F90} {\tt synfast, anafast, smoothing, plmgen, alteralm}
+Transforms involved in \textbf{F90} \texttt{synfast, anafast, smoothing, plmgen, alteralm}
 and \textbf{C++}
-{\tt synalm\_cxx, alm2map\_cxx, anafast\_cxx, smoothing\_cxx, rotalm\_cxx } ... is now
+\texttt{synalm\_cxx, alm2map\_cxx, anafast\_cxx, smoothing\_cxx, rotalm\_cxx } ... is now
 available by default and can be readily compiled and used with the standard installation script. 
 
 A set of routines with MPI parallelization (for distributed memory architectures)
@@ -372,61 +372,61 @@ We are providing one (both in \textbf{C++} and \textbf{F90}) which is an adaptat
 %% provide it as free software with this package (cf. Appendix I).
 
 
-\section{{\tt healpix\_doc}: an easy access to \healpix documentation}
-The shell script {\tt healpix\_doc} now is available to provide easy
+\section{\texttt{healpix\_doc}: an easy access to \healpix documentation}
+The shell script \texttt{healpix\_doc} now is available to provide easy
 access to the HTML and/or PDF documentation of {\em all} Healpix packages.
 It will automatically open a web browser or PDF viewer (among those found on the
 system) on the documentation
-available locally (at {\tt \$HEALPIX/doc}) or on remote web sites. To use it, simply type\\
+available locally (at \texttt{\$HEALPIX/doc}) or on remote web sites. To use it, simply type\\
 \mycode{\$HEALPIX/healpix\_doc} \\
 or \\
 \mycode{\$HEALPIX/healpix\_doc -p}\\
 to access respectively the HTML and PDF documentation. The default browser and
-viewer used by {\tt healpix\_doc} can {\em optionally} be set with the
+viewer used by \texttt{healpix\_doc} can {\em optionally} be set with the
 environment variables
-{\tt \$HEALPIX\_HTML\_BROWSER} and
-{\tt \$HEALPIX\_PDF\_VIEWER}.
+\texttt{\$HEALPIX\_HTML\_BROWSER} and
+\texttt{\$HEALPIX\_PDF\_VIEWER}.
 
 
 \section{The Installation Procedure}
 
 If the user has one of the supported OS's, then installation proceeds utilizing
 the following commands. If your OS is not supported, the configuration step
-should be omitted, {\tt Makefile.in} should be copied as {\tt Makefile} and explicitly
+should be omitted, \texttt{Makefile.in} should be copied as \texttt{Makefile} and explicitly
 tailored to the user environment.
 
 
 \begin{flushright}
 \begin{tabular}{p{0.3\hsize} p{0.60\hsize}}
-{\tt \% ./configure} {\em [-L]}    & uses {\tt Makefile.in} as a template to build 
+\texttt{\% ./configure} {\em [-L]}    & uses \texttt{Makefile.in} as a template to build 
                          the correct Makefile (from user inputs as required), it
                          will also configure the IDL/GDL routines\\
-{\tt \% make}           & builds all the facilities \\
-{\tt \% make test}      & tests all the facility previously compiled \\
-{\tt \% make clean}     & removes object ({\tt *.o}) files \\
-%%%%%{\tt \% make vclean}    & 
-{\tt \% make tidy}      & removes object files, module files ({\tt *.mod}), executables and libraries \\
-{\tt \% make distclean} & same as above and restores the directories to the state of the 
+\texttt{\% make}           & builds all the facilities \\
+\texttt{\% make test}      & tests all the facility previously compiled \\
+\texttt{\% make clean}     & removes object (\texttt{*.o}) files \\
+%%%%%\texttt{\% make vclean}    & 
+\texttt{\% make tidy}      & removes object files, module files (\texttt{*.mod}), executables and libraries \\
+\texttt{\% make distclean} & same as above and restores the directories to the state of the 
                           original distribution \\
-%% {\tt \% ./config\_preview} & configure the IDL previewer
+%% \texttt{\% ./config\_preview} & configure the IDL previewer
 \end{tabular}
 \end{flushright}
 These different steps are detailed below.
 
 \subsection{./configure [-L]}
 
-The {\tt ./configure} script manages the configuration of the C, C++,
+The \texttt{./configure} script manages the configuration of the C, C++,
 Fortran90, IDL and Python suites of routines and facilities.
 
-Since v2.11, it accepts the {\tt -L} option to write the \healpix specific configuration files
+Since v2.11, it accepts the \texttt{-L} option to write the \healpix specific configuration files
 into the \healpix directory itself rather than in installer's home directory (see
-\S~\ref{subsub:conf}).
-Using the {\tt -L} option is recommended when doing a {\em project} or {\em system wide} installation of
+\S\ref{subsub:conf}).
+Using the \texttt{-L} option is recommended when doing a {\em project} or {\em system wide} installation of
 \healpix to be accessed by several different users.
 
 An online help is available with 
-{\tt ./configure~-h}, while 
-{\tt ./configure~-v} 
+\texttt{./configure~-h}, while 
+\texttt{./configure~-v} 
 will return the \healpix release number (currently \hpxversion) and exit.
 
 \subsubsection{Configuration profile}
@@ -434,11 +434,11 @@ will return the \healpix release number (currently \hpxversion) and exit.
 A feature introduced in previous releases and enhanced since v2.10, is that 
 the configure script creates a shell configuration file \hfill\\
 (located in
-{\tt \$\{HOME\}/.healpix/\hpxverstex\_}{\em $\langle$OS\_TYPE$\rangle$}{\tt /config}
+\texttt{\$\{HOME\}/.healpix/\hpxverstex\_}{\em $\langle$OS\_TYPE$\rangle$}\texttt{/config}
 or in
 \hfill\\
-{\tt \$\{HEALPIX\}/confdir/\hpxverstex\_}{\em $\langle$OS\_TYPE$\rangle$}{\tt /config}
-if {\tt ./configure -L} was used)
+\texttt{\$\{HEALPIX\}/confdir/\hpxverstex\_}{\em $\langle$OS\_TYPE$\rangle$}\texttt{/config}
+if \texttt{./configure -L} was used)
 according to shell
 type in which various environment variables and aliases are defined
 for your convenience. If you agree upon prompting, it will also
@@ -446,35 +446,35 @@ change your default system profile during installation to
 automatically source this profile. If you do not agree to this change,
 you will need to explicitly source the configuration file above for any session in
 which you intend to run \healpix facilities. {\bf In particular, you will
-have to make sure that the {\tt HEALPIX} system variable is correctly
+have to make sure that the \texttt{HEALPIX} system variable is correctly
 defined (as the full path to the \healpix directory) before running
 the package}.
 
-% And finally, the current {\tt ./configure} script allows several compilations of
+% And finally, the current \texttt{./configure} script allows several compilations of
 % the Healpix routines to coexist by letting the user choose the name of directories
 % containing the executables, libraries and include files.
 
 \subsubsection{C configuration}
 
-The {\tt ./configure} script will ask for the C compiler and options to
-be used, and for the full path of an installed {\tt cfitsio} library to link to.
+The \texttt{./configure} script will ask for the C compiler and options to
+be used, and for the full path of an installed \texttt{cfitsio} library to link to.
 By default, only a static library is created, but the user can also ask for
  a shared (Unix/Linux systems) or dynamic (Darwin) library. \\
 After compilation
-(see {\tt make} section) and linking, all libraries will be 
-in {\tt \$\{HEALPIX\}/lib/chealpix.*}\ .
+(see \texttt{make} section) and linking, all libraries will be 
+in \texttt{\$\{HEALPIX\}/lib/chealpix.*}\ .
 
 \subsubsection{C++ configuration}
 \label{sec:cpp_config}
 Two options are available:
 \begin{itemize}
-\item The interactive {\tt ./configure} script will 
-ask for the full path to an installed {\tt cfitsio} library to link to, and then provide a choice of
+\item The interactive \texttt{./configure} script will 
+ask for the full path to an installed \texttt{cfitsio} library to link to, and then provide a choice of
 predefined targets corresponding to different combinations of C++ compilers and
 options. Each of those targets is defined in a configuration file located in
-{\tt Healpix\_\hpxversion/src/cxx/config/config.}{\em target}.
+\texttt{Healpix\_\hpxversion/src/cxx/config/config.}{\em target}.
 The user can therefore add new targets or edit existing ones, and the
-{\tt ./configure} script will update its menu accordingly.
+\texttt{./configure} script will update its menu accordingly.
 If a fairly recent version
 (4.2 or higher) of gcc and g++ is installed on the system, the target
 "generic\_gcc" should always work, except under MacOSX, where "osx" target is
@@ -485,23 +485,23 @@ CFITSIO\_EXT\_INC and
 HEALPIX\_TARGET 
 will be set according to the choices made above.
 \\
-If the HEALPIX configuration file is sourced as described in \S~\ref{subsub:conf}, the full path to the C++
+If the \healpix configuration file is sourced as described in \S\ref{subsub:conf}, the full path to the C++
 executables will be added to the environment PATH variable.
 
-\item Starting with HEALPix 3.0, an automated ({\tt autoconf} generated) {\tt configure} script is 
-available in {\tt Healpix\_\hpxversion/src/cxx/configure}. To use it (and also make the compilation, and test it) 
+\item Starting with \healpix 3.0, an automated (\texttt{autoconf} generated) \texttt{configure} script is 
+available in \texttt{Healpix\_\hpxversion/src/cxx/configure}. To use it (and also make the compilation, and test it) 
 do\\
 \mycode{cd src/cxx}\\
 \mycode{./configure}\\
 \mycode{make}\\
 \mycode{make test}\\
-which will put the compilation products in {\tt Healpix\_\hpxversion/src/cxx/auto}.
+which will put the compilation products in \texttt{Healpix\_\hpxversion/src/cxx/auto}.
 \end{itemize}
 
 
 
 \subsubsection{Fortran 90 configuration}
-When you run {\tt ./configure} on a supported system 
+When you run \texttt{./configure} on a supported system 
 you will be prompted to enter compiler optimisation flags.
 We have not attempted to provide the best optimisation flags for all
 operating systems. The configure
@@ -509,49 +509,50 @@ script will have a guess at optimisation options for some systems, but it
 is up to the user to figure out an optimal set\footnote{In particular, the Intel Fortran
 Compiler, available for free for Linux systems with Intel-like processors, have
 specific tuning options for each Intel processor family and instructions set. Please consult
-the online help ({\tt ifort -help}) or PDF documentation ({\tt
+the online help (\texttt{ifort -help}) or PDF documentation ({\tt
 /opt/intel/composer*/Documentation/en\_US/Release\_NotesF.pdf}) or HTML documentation
-({\tt 
+(\texttt{
 /opt/intel/composer*/Documentation/en\_US/documentation\_f.htm}) for further
 information.}. 
 From our experience,
 we have not found significant accumulation of numerical error even
 when using the most aggressive optimisation level available. \\
-If the HEALPIX configuration file is sourced as described in \S~\ref{subsub:conf}, the full path to the F90
+If the \healpix configuration file is sourced as described in \S\ref{subsub:conf}, the full path to the F90
 executables will be added to the environment PATH variable.
 
 \subsubsection{IDL/GDL configuration}
 \label{install:idlgdlconfig}
 \mytarget{install:idlgdlconfig}
-You will be asked for the external applications you want to use to visualize the
-Postscript and PNG files created by IDL (or GDL). \\
-If the HEALPix configuration file is
-sourced as described in \S~\ref{subsub:conf}, the aliases {\tt hidl}, {\tt hidlde}, {\tt hgdl} and {\tt hgdlde}
-are also defined to give you access to HEALPIX routines from IDL (and GDL).\\
+You will be asked for the external applications, such as \texttt{gv}, \texttt{xpdf}, \texttt{display},
+$\ldots$ you want to use to visualize the
+GIF, JPEG, PDF, Postscript and PNG files \mylinkext{idl:mollview:preview}{created by IDL (or GDL)}. \\
+If the \healpix configuration file is
+sourced as described in \S\ref{subsub:conf}, the aliases \texttt{hidl}, \texttt{hidlde}, \texttt{hgdl} and \texttt{hgdlde}
+are also defined to give you access to \healpix routines from IDL (and GDL).\\
 See the \linklatexhtml{\healpix IDL Document}{idl.pdf}{idl.htm} for more
 information on using \healpix IDL/GDL together with other IDL libraries.
 
 
 \subsubsection{Java installation}
-The configuration and installation of the Healpix Java package is currently
+The configuration and installation of the \healpix Java package is currently
 handled separately. See table~\ref{tab:allpackages} for more information.
 
 \subsubsection{Python (healpy) installation}
-% The {\tt ./configure} script will 
-% ask for the parent directory containing the {\tt lib/libcfitsio.*} library and
+% The \texttt{./configure} script will 
+% ask for the parent directory containing the \texttt{lib/libcfitsio.*} library and
 % the {\tt
-% include/fitsio.h} include file (therefore {\tt /usr/local} or {\tt /usr} often are the correct
+% include/fitsio.h} include file (therefore \texttt{/usr/local} or \texttt{/usr} often are the correct
 % choices) and
 % the environment variable CFITSIO\_EXT\_PREFIX
 % will be set accordingly.\\
 % The configuration and installation of the Healpix Python package (healpy) is currently
-% not handled by the {\tt configure} script: see table~\ref{tab:allpackages} for more
+% not handled by the \texttt{configure} script: see table~\ref{tab:allpackages} for more
 % information. 
-The {\tt ./configure} script will ask for the Python command you want to use 
-(in case many coexist on your computer) and will check that its version number meets the {\tt healpy} requirements (see above).
-Note that during the compilation with {\tt make} (see below), the 
- {\tt src/healpy/setup.py} Python script will be invoked to automatically prompt a {\em fresh} compilation of the
- {\tt src/cxx/*} libraries, with all the options necessary to Python linkage, and
+The \texttt{./configure} script will ask for the Python command you want to use 
+(in case many coexist on your computer) and will check that its version number meets the \texttt{healpy} requirements (see above).
+Note that during the compilation with \texttt{make} (see below), the 
+ \texttt{src/healpy/setup.py} Python script will be invoked to automatically prompt a {\em fresh} compilation of the
+ \texttt{src/cxx/*} libraries, with all the options necessary to Python linkage, and
  can be done independently of the C++ installation described above.
 
 \subsection{Compilation and installation}
@@ -559,7 +560,7 @@ Note that during the compilation with {\tt make} (see below), the
 The \\
 \mycode{make} \\
 command will compile one or several of the C, C++, F90 and Python packages
-depending on what was configured with the {\tt ./configure} script.
+depending on what was configured with the \texttt{./configure} script.
 Specific packages can be compiled with the respective commands 
 \begin{verbatim}
    make c-all
@@ -568,14 +569,14 @@ Specific packages can be compiled with the respective commands
    make healpy-all
 \end{verbatim}
 
-To perform several compilation jobs simultaneously, the command {\tt make -j [jobs]}
+To perform several compilation jobs simultaneously, the command \texttt{make -j [jobs]}
 can be used.
 
 Please neglect any possible warnings at compile time. If you run into
 trouble please refer to the section \htmlref{{\bf Troubleshooting and further
 information}}{sec:troubleshoot}.
 
-After running {\tt make}, the user must re-login to ensure that the new profiles built by the installation
+After running \texttt{make}, the user must re-login to ensure that the new profiles built by the installation
 procedure are correctly sourced. Only then will the
 user have full access to the specific \healpix
 environment variables etc.
@@ -623,8 +624,8 @@ reference files.
 \footnotesize
 Data files and images produced by the Fortran codes during the tests,
 and the respective reference files to which they can be compared. All the files listed
-are located or produced in the {\tt Healpix\_\hpxversion/test} directory. The GIF images of full sky maps were
-produced using {\tt map2gif}. {\em NA}: No image available, because the data set
+are located or produced in the \texttt{Healpix\_\hpxversion/test} directory. The GIF images of full sky maps were
+produced using \texttt{map2gif}. {\em NA}: No image available, because the data set
 is not a sky map}
 \normalsize
 \end{table}
@@ -636,11 +637,12 @@ is not a sky map}
 \item the input power spectrum (in {\tt
 Healpix\_\hpxversion/test/cl.fits}) used to generate the Fortran90 test maps
 is currently the WMAP 1yr best fit, in $(\mu$K$)^2$, and is therefore different from the one
-included in releases 1.* (that can still be found in {\tt cl\_old.fits}).
-% See \htmladdnormallink{{\tt  http://lambda.gsfc.nasa.gov/}}{http://lambda.gsfc.nasa.gov/} 
+included in releases 1.* (that can still be found in \texttt{cl\_old.fits}).
+% See \htmladdnormallink{\texttt{ http://lambda.gsfc.nasa.gov/}}{http://lambda.gsfc.nasa.gov/} 
 % for details on WMAP and its data products.
 \item Other input fiducial $C(\ell)$, all in $(\mu$K$)^2$ and defined on the multipole range $[0, \ell_\mathrm{max}]$, have been included for convenience in 
-{\tt Healpix\_\hpxversion/test/} in a \healpix compatible format.
+\htmladdnormallink{\texttt{Healpix\_\hpxversion/test/}}{http://sourceforge.net/p/healpix/code/HEAD/tree/trunk/test}
+in a \healpix compatible format.
 \\
 \begin{tabular}{l l l l} 
 \hline 
@@ -656,7 +658,7 @@ planck2015\_lcdm\_cl\_v2.fits          & cl\_planck2.fits    & Planck 2015      
 \end{tabular}
 \\
 For more information on their respective origin and underlying model see their FITS header, or
-{\tt Healpix\_\hpxversion/test/README}
+\texttt{Healpix\_\hpxversion/test/README}.
 
 %
 % \item the file  {\tt Healpix\_\hpxversion/test/wmap\_lcdm\_sz\_lens\_wmap5\_cl\_v3.fits}
@@ -682,7 +684,7 @@ For more information on their respective origin and underlying model see their F
 
 In order to test the new \healpix profile set-up one can then attempt
 to run any C++ or F90 facility from any directory on your system. Similarly,
-IDL (and/or GDL) can be tested by invoking {\tt hidl} or {\tt hidlde}  (resp. {\tt hgdl} or {\tt hgdlde}).
+IDL (and/or GDL) can be tested by invoking \texttt{hidl} or \texttt{hidlde}  (resp. \texttt{hgdl} or \texttt{hgdlde}).
 
 
 
@@ -705,9 +707,9 @@ will return the \healpix directory to its original 'distribution' state by disca
 files as above, as well as the executable and library directories and the top
 level Makefile.
 
-As a consequence, {\tt make clean} can be used after a successful compilation and installation in order to remove now useless intermediate files while keeping the codes functional, 
+As a consequence, \texttt{make clean} can be used after a successful compilation and installation in order to remove now useless intermediate files while keeping the codes functional, 
 while
-{\tt make tidy} should be used between consecutive (failed) attempts with different compilers, compiler versions or compiler options, to avoid any conflict between new and pre-existing files.
+\texttt{make tidy} should be used between consecutive (failed) attempts with different compilers, compiler versions or compiler options, to avoid any conflict between new and pre-existing files.
 
 % \section{Upgrading from 2.0 to 2.1}
 
@@ -733,33 +735,33 @@ allowing the corrected version to be added.
 
 \section{Pkg-config files}
 \label{sec:pkg-config}
-Starting with \healpix 3.12, {\tt pkg-config} ({\tt .pc}) files are generated
+Starting with \healpix 3.12, \texttt{pkg-config} (\texttt{.pc}) files are generated
 during the configuration of the 
 C, C++ and F90 packages, and are initially located respectively in
-{\tt \$\{HEALPIX\}/lib/chealpix.pc},
-{\em install\_lib\_directory}{\tt /pkgconfig/healpix\_cxx.pc}
+\texttt{\$\{HEALPIX\}/lib/chealpix.pc},
+{\em install\_lib\_directory}\texttt{/pkgconfig/healpix\_cxx.pc}
 and 
-{\tt \$\{HEALPIX\}/lib}{\em suffix}{\tt /healpix.pc}.
+\texttt{\$\{HEALPIX\}/lib}{\em suffix}\texttt{/healpix.pc}.
 If the 
-\htmladdnormallink{{\tt pkg-config} software}{http://en.wikipedia.org/wiki/Pkg-config} 
+\htmladdnormallink{\texttt{pkg-config} software}{http://en.wikipedia.org/wiki/Pkg-config} 
 is available on your system (see 
 \htmladdnormallink{http://www.freedesktop.org/wiki/Software/pkg-config/}{%
 http://www.freedesktop.org/wiki/Software/pkg-config/} to download, install and
 use it) and if the location of
-the \healpix {\tt pkg-config} files above are known to it (either by moving/copying them
+the \healpix \texttt{pkg-config} files above are known to it (either by moving/copying them
 to one of the standard locations returned by \\
-{\tt pkg-config --variable pc\_path pkg-config}\\
-or by customizing the environment variable {\tt PKG\_CONFIG\_PATH}\footnote{a
-third option is provide the location of the {\tt .pc} file in full at each
-{\tt pkg-config} invocation : {\it eg}\\ {\tt
-pkg-config --cflags --libs }{\em full\_path}{\tt /healpix.pc}}) then linking
+\texttt{pkg-config --variable pc\_path pkg-config}\\
+or by customizing the environment variable \texttt{PKG\_CONFIG\_PATH}\footnote{a
+third option is provide the location of the \texttt{.pc} file in full at each
+\texttt{pkg-config} invocation : {\it eg}\\ {\tt
+pkg-config --cflags --libs }{\em full\_path}\texttt{/healpix.pc}}) then linking
 your own code with the 
 C,
 C++,
 F90 \healpix library simply becomes \\
-{\tt cc `pkg-config --cflags --libs chealpix` mycode.c -o mycode} \\
-{\tt c++ `pkg-config --cflags --libs healpix\_cxx` mycode.cpp -o mycode} \\
-{\em FC} `{\tt pkg-config --cflags --libs healpix` mycode.f90 -o mycode}\\
+\texttt{cc `pkg-config --cflags --libs chealpix` mycode.c -o mycode} \\
+\texttt{c++ `pkg-config --cflags --libs healpix\_cxx` mycode.cpp -o mycode} \\
+{\em FC} `\texttt{pkg-config --cflags --libs healpix` mycode.f90 -o mycode}\\
 (where {\em FC} has to be replaced by the Fortran compiler used to generate the
 \healpix library).
 
@@ -783,22 +785,22 @@ In case of problems, see \htmladdnormallink{\tt
 The {\bf free} Fortran90/95 compilers that can be used to compile \healpix include: 
     \begin{itemize}
       \item {\bf Intel Fortran} Compiler for Linux based computers (versions
-11.* to 16.*\footnote{problems have been reported with one of the code ({\tt sky\_ng\_sim}) when compiled with
-{\tt ifort 14.0.1.106}}) \hfill \\
+11.* to 16.*\footnote{problems have been reported with one of the code (\texttt{sky\_ng\_sim}) when compiled with
+\texttt{ifort 14.0.1.106}}) \hfill \\
          \htmladdnormallink{{\tt
         https://software.intel.com/en-us/fortran-compilers}}{https://software.intel.com/en-us/fortran-compilers}
         %%%%%http://www.intel.com/software/products/compilers/downloads/forlin.htm}}{http://www.intel.com/software/products/compilers/downloads/forlin.htm}
-      \item {\bf GNU Fortran 95} compiler ({\tt gfortran}) included in GNU Compiler Collection {\em GCC} version 4.0.0
+      \item {\bf GNU Fortran 95} compiler (\texttt{gfortran}) included in GNU Compiler Collection {\em GCC} version 4.0.0
          and up and available for Linux, Mac OSX, Windows, Sun ... platforms
          \hfill \\
-          \htmladdnormallink{{\tt http://www.gnu.org/software/gcc/fortran/}}{http://www.gnu.org/software/gcc/fortran/}. \hfill \\
+          \htmladdnormallink{\texttt{http://www.gnu.org/software/gcc/fortran/}}{http://www.gnu.org/software/gcc/fortran/}. \hfill \\
          GFortran binaries for all platforms can also be downloaded from  \hfill \\
-          \htmladdnormallink{{\tt http://gcc.gnu.org/wiki/GFortranBinaries}}{http://gcc.gnu.org/wiki/GFortranBinaries}. \hfill \\
-         Please note that only recent versions of {\tt gfortran} (Aug 2005
-         and later) compile HEALPix correctly, and v4.2.1 and more have given satisfying
+          \htmladdnormallink{\texttt{http://gcc.gnu.org/wiki/GFortranBinaries}}{http://gcc.gnu.org/wiki/GFortranBinaries}. \hfill \\
+         Please note that only recent versions of \texttt{gfortran} (Aug 2005
+         and later) compile \healpix correctly, and v4.2.1 and more have given satisfying
          results so far, including native OpenMP support.
-     \item {\bf G95} compiler available for Linux, Mac OSX, Windows, Sun and HP platforms with 32 and 64 bit architectures (eg, x86 and x86-64). In the latter case, the '32bit default integer' (32bit DI) version of {\tt g95} {\em must} be used.
-         \hfill \\ \htmladdnormallink{{\tt http://www.g95.org}}{http://www.g95.org}
+     \item {\bf G95} compiler available for Linux, Mac OSX, Windows, Sun and HP platforms with 32 and 64 bit architectures (eg, x86 and x86-64). In the latter case, the '32bit default integer' (32bit DI) version of \texttt{g95} {\em must} be used.
+         \hfill \\ \htmladdnormallink{\texttt{http://www.g95.org}}{http://www.g95.org}
     \end{itemize}
 
 \newpage %------------ TEMPORARY 
@@ -815,7 +817,7 @@ The three steps (installation of Cygwin, cfitsio and \healpix respectively) must
 \begin{enumerate}
 	\setlength{\itemsep}{-1pt}
 	\setlength{\parsep}{-10pt}
-\item Go to \htmladdnormallink{{\tt https://www.cygwin.com/}}{https://www.cygwin.com/}
+\item Go to \htmladdnormallink{\texttt{https://www.cygwin.com/}}{https://www.cygwin.com/}
 and click on `Install Cygwin' in the menu on the left.
 
 \item Click on setup-x86.exe (for 32-bit installation) or setup-x86\_64.exe
@@ -831,7 +833,7 @@ double-click on the setup-x86*.exe file to run it.
 	\setlength{\parsep}{-10pt}
 \item
   You have to `Choose A Download Site'. (eg:
-  \htmladdnormallink{{\tt ftp://ftp.gtlib.gatech.edu}}{ftp://ftp.gtlib.gatech.edu}).
+  \htmladdnormallink{\texttt{ftp://ftp.gtlib.gatech.edu}}{ftp://ftp.gtlib.gatech.edu}).
 \item
   When prompted to `Select Packages', expand `Default' (if you see a `+'
   to the left of it), expand `Devel', then find and add the following
@@ -900,7 +902,7 @@ double-click on the setup-x86*.exe file to run it.
   the first time
   you run configure, you'll be prompted at the end to modify your
   home shell profile ('.profile'). Enter `y' at this prompt.\\
-  If you want to install the C++ package of \healpix (option 4), pick {\tt generic\_gcc} when prompted for a C++ configuration.\\
+  If you want to install the C++ package of \healpix (option 4), pick \texttt{generic\_gcc} when prompted for a C++ configuration.\\
   	\mycode{\textbf{\$} make}\\ 
 	\mycode{\textbf{\$} make test}\\ 
 	\mycode{\textbf{\$} make tidy}
@@ -910,20 +912,20 @@ double-click on the setup-x86*.exe file to run it.
 \label{sec:windows_other}
 Installation on Windows versions other than 7 should be very similar to the one detailed above.\\
 In step A above, replacing Cygwin with {\bf MinGW} (%
-\htmladdnormallink{{\tt http://www.mingw.org/}}{http://www.mingw.org/}%
+\htmladdnormallink{\texttt{http://www.mingw.org/}}{http://www.mingw.org/}%
 ) together with the MSYS collection of GNU utilities 
-(see \htmladdnormallink{{\tt http://www.mingw.org/wiki/msys}}{http://www.mingw.org/wiki/msys}
+(see \htmladdnormallink{\texttt{http://www.mingw.org/wiki/msys}}{http://www.mingw.org/wiki/msys}
 and
-\htmladdnormallink{{\tt https://sourceforge.net/projects/mingw/files}}{%
+\htmladdnormallink{\texttt{https://sourceforge.net/projects/mingw/files}}{%
 https://sourceforge.net/projects/mingw/files}) is also possible.
-The Unix/Linux tools required include {\tt sh, make, awk, grep, sed, ls, wc, cat, more, nm, ar},
+The Unix/Linux tools required include \texttt{sh, make, awk, grep, sed, ls, wc, cat, more, nm, ar},
 as well as C, C++ and Fortran compilers.\\
-The latest {\tt gfortran} binaries for Cygwin and/or MinGW can be found at, eg
+The latest \texttt{gfortran} binaries for Cygwin and/or MinGW can be found at, eg
 \hfill \\
-\htmladdnormallink{{\tt \small https://cygwin.com/cgi\--bin2/package\--grep.cgi?grep=gcc\--fortran\&arch=x86\_64}}{%
+\htmladdnormallink{\texttt{\small https://cygwin.com/cgi\--bin2/package\--grep.cgi?grep=gcc\--fortran\&arch=x86\_64}}{%
 https://cygwin.com/cgi-bin2/package-grep.cgi?grep=gcc-fortran&arch=x86_64},
 following the tips found at 
-\htmladdnormallink{{\tt http://gcc.gnu.org/wiki/GFortranBinaries}}{%
+\htmladdnormallink{\texttt{http://gcc.gnu.org/wiki/GFortranBinaries}}{%
 http://gcc.gnu.org/wiki/GFortranBinaries}.
 
 
@@ -996,13 +998,13 @@ To solve this problem
 \begin{enumerate}
 \item Go into the CFITSIO directory. \\
 Assuming that {\bf ifort} is available on your
-system (it can be replaced below by {\tt \bf gfortran}, {\tt \bf g95}, {\tt \bf f77}, {\tt \bf f2c}, $\ldots$) type: \\
+system (it can be replaced below by \texttt{\bf gfortran}, \texttt{\bf g95}, \texttt{\bf f77}, \texttt{\bf f2c}, $\ldots$) type: \\
 \mycode{./configure FC={\bf ifort}} \\
 \mycode{make} \\
 \mycode{make install} \hskip 0.3cm (optional).
 %
 \item Then go back into the \healpix directory and do \\
-\mycode{./configure} \hskip 0.3cm (making sure that you are using the newly created {\tt libcfitsio.a} library) \\
+\mycode{./configure} \hskip 0.3cm (making sure that you are using the newly created \texttt{libcfitsio.a} library) \\
 \mycode{make} \\
 \mycode{make test}
 \end{enumerate}
@@ -1025,7 +1027,7 @@ CFITSIO directory:
 
 You can
 then force compilation to the same binary format by entering
-{\tt -m64} when asked for the optimisation options in the
+\texttt{-m64} when asked for the optimisation options in the
 \healpix configure script.
 
 \item {\bf IRIX64}
@@ -1043,9 +1045,9 @@ command line in the CFITSIO directory:
   make
 \end{verbatim}
 
-Alternatively you can replace the {\tt -n32} with {\tt -64}. You can
+Alternatively you can replace the \texttt{-n32} with \texttt{-64}. You can
 then force compilation to the same binary format by entering either
-{\tt -n32} or {\tt -64} when asked for the optimisation options in the
+\texttt{-n32} or \texttt{-64} when asked for the optimisation options in the
 \healpix configure script.
 %
 \end{enumerate}
@@ -1055,11 +1057,11 @@ then force compilation to the same binary format by entering either
 A particular problem encountered with the CFITSIO Version 2.0 release relates
 to the inclusion of various libraries within the system release for a given
 machine. This led to some modifications to the Makefile to include the specific
-library links {\tt -lm -lnsl -lsocket} on SunOS, but only {\tt -lm} for IRIX64.
+library links \texttt{-lm -lnsl -lsocket} on SunOS, but only \texttt{-lm} for IRIX64.
 If your OS is not completely supported by the distribution, you may find this
 as one source of errors. The CFITSIO developers recommend compilation of the
-{\tt testprog} routine. Inspection of the libraries linked after executing the
-{\tt make testprog} statement will reveal those you need to include in the
+\texttt{testprog} routine. Inspection of the libraries linked after executing the
+\texttt{make testprog} statement will reveal those you need to include in the
 Makefile.
 
 \subsubsection*{CFITSIO and Debian/Linux}
@@ -1088,11 +1090,11 @@ to \healpix.
 % these flags are but they might differ from compiler to compiler so
 % please refer to your compiler documentation.
 
-\subsection{{\tt diff} shows that the test files are different from
+\subsection{\texttt{diff} shows that the test files are different from
 the supplied files}
 
 This by itself is no cause for concern. When comparing using a
-{\tt diff } on the test files will most likely report a
+\texttt{diff } on the test files will most likely report a
 difference even when the installation has been successful. 
 This  may be due to the fact that
 different installations  have different floating point
@@ -1104,34 +1106,34 @@ representations. Also, the FITS files carry date information.
 % which cause run-time memory faults. We have not found any problems
 % with Version 7.2.1.1m.
 
-\subsection{Try {\tt unlimit}}
+\subsection{Try \texttt{unlimit}}
 
-If you have unforeseen problems at runtime, try {\tt unlimit} (under csh or tcsh) or {\tt ulimit} (under sh or bash), in order to increase the heap and stack memory size. It
+If you have unforeseen problems at runtime, try \texttt{unlimit} (under csh or tcsh) or \texttt{ulimit} (under sh or bash), in order to increase the heap and stack memory size. It
 sometimes helps.
 
-\subsection{{\tt hidl} usage}
+\subsection{\texttt{hidl} usage}
 
-We have found that in very rare cases the alias {\tt hidl}
+We have found that in very rare cases the alias \texttt{hidl}
 is not recognised by the user's system. Usually, this is related
 to the local system's IDL script. A quick-fix is achieved
-by setting the environment variable {\tt IDL\_STARTUP} to be
-equal to the \healpix startup file {\tt HEALPix\_startup}
+by setting the environment variable \texttt{IDL\_STARTUP} to be
+equal to the \healpix startup file \texttt{HEALPix\_startup}
 {\bf including} the directory path to the file. This enables
 the user to access the \healpix IDL procedures simply by invoking
 IDL. For example, in the typical installation documented
 above for a user running the tcsh shell, the command \hfill \\
 %\begin{verbatim}
-{\tt setenv IDL\_STARTUP
+\texttt{setenv IDL\_STARTUP
 /disk1/user1/HEALPix\_\hpxversion/src/idl/HEALPix\_startup}
 \hfill \\
 %\end{verbatim}
 should be issued (or added to the user's shell profile).
 
 If the user already has an IDL startup file, then
-this should be merged with {\tt HEALPix\_startup}. This temporary
+this should be merged with \texttt{HEALPix\_startup}. This temporary
 solution does mean that the \healpix IDL procedures are available
-in the {\tt IDL\_PATH} at all times, which may lead to conflicts with
-user-defined procedures. The {\tt hidl} invocation was intended 
+in the \texttt{IDL\_PATH} at all times, which may lead to conflicts with
+user-defined procedures. The \texttt{hidl} invocation was intended 
 to circumvent these issues, allowing \healpix IDL procedures to
 be available only when desired.
 
@@ -1150,23 +1152,23 @@ type
 \item with Apple's X11:
 \begin{itemize}
 \item under Tiger (10.4.*): \\
-{ {\tt defaults write com.apple.x11 wm\_click\_through -bool true}}
+{ \texttt{defaults write com.apple.x11 wm\_click\_through -bool true}}
 \item under Leopard (10.5.*), Snow Leopard (10.6.*) and Lion (10.7.*): \\
-{ {\tt defaults write org.x.x11 wm\_click\_through -bool true}}
+{ \texttt{defaults write org.x.x11 wm\_click\_through -bool true}}
 \end{itemize}
 \item with Xquartz (default under Moutain Lion (10.8.*), Mavericks (10.9.*) and Yosemite (10.10.*), available
 for download for El Capitan (10.11.*) and Sierra (10.12.*)):\\
-{{\tt defaults write org.macosforge.xquartz.X11 wm\_click\_through -bool true}}
+{\texttt{defaults write org.macosforge.xquartz.X11 wm\_click\_through -bool true}}
 \item with MacPort's X11 (package xorg-server):\\
-{{\tt defaults write org.macports.X11 wm\_click\_through -bool true}}
+{\texttt{defaults write org.macports.X11 wm\_click\_through -bool true}}
 \end{itemize}
 at your X11 prompt and restart X11.\\
-Note that the command {\tt ls -lrt  \$HOME/Library/Preferences/*[xX]11*plist} 
+Note that the command \texttt{ls -lrt  \$HOME/Library/Preferences/*[xX]11*plist} 
 can be used to determine the X window system installed on
 your Mac.
-See also \htmladdnormallink{{\tt http://www.idlcoyote.com/misc\_tips/maccursor.html}}
+See also \htmladdnormallink{\texttt{http://www.idlcoyote.com/misc\_tips/maccursor.html}}
 {http://www.idlcoyote.com/misc_tips/maccursor.html} and
-\htmlref{{\tt mollcursor}}{idl:mollcursor} documentation in \linklatexhtml{"IDL
+\htmlref{\texttt{mollcursor}}{idl:mollcursor} documentation in \linklatexhtml{"IDL
 Facilities"}{idl.pdf}{idl.htm}).
 
 
@@ -1177,14 +1179,14 @@ Facilities"}{idl.pdf}{idl.htm}).
 \mytarget{install:using_gdl}
 
 GNU Data Language (GDL), is a {\em free} clone of IDL 6.0 (for more information see
-\htmladdnormallink{{\tt http://gnudatalanguage.sourceforge.net}}{http://gnudatalanguage.sourceforge.net}).
+\htmladdnormallink{\texttt{http://gnudatalanguage.sourceforge.net}}{http://gnudatalanguage.sourceforge.net}).
 Both the source code and precompiled executables for various platforms are available.
 
 When used to run IDL-Healpix routines, GDL \gdlversion or more gives
 very satisfactory results\footnote{All the caveats listed below have been noticed in
 GDL v0.9.6 released on Jan 2016 and may be solved in subsequent versions. Please send all your questions
 {\em on} GDL directly to GDL developpers at 
-\htmladdnormallink{{\tt http://gnudatalanguage.sourceforge.net/support.php}}{http://gnudatalanguage.sourceforge.net/support.php}.}. 
+\htmladdnormallink{\texttt{http://gnudatalanguage.sourceforge.net/support.php}}{http://gnudatalanguage.sourceforge.net/support.php}.}. 
 The calculations agree with those done under IDL, with
 comparable computation times, but a few minor features are missing in the production
 of Postscript, GIF and PNG files, as described below.
@@ -1193,30 +1195,30 @@ of Postscript, GIF and PNG files, as described below.
 To fully enjoy GDL capabilities
 \begin{itemize}
 \item \healpix \hpxversion{} or more must be installed\footnote{%
-If \healpix 3.30 is used instead, {\tt Healpix\_3.30/src/idl/visu/proj2out.pro} must be replaced with the one found in 
+If \healpix 3.30 is used instead, \texttt{Healpix\_3.30/src/idl/visu/proj2out.pro} must be replaced with the one found in 
 \htmladdnormallink{%
 http://sourceforge.net/p/healpix\-/code\-/HEAD\-/tree\-/branches\-/branch\_v330r807\-/src\-/idl\-/visu\-/proj2out.pro}{%
 http://sourceforge.net/p/healpix/code/HEAD/tree/branches/branch_v330r807/src/idl/visu/proj2out.pro}.
 }.
-% \item \healpix 3.30 must be installed, and {\tt Healpix\_3.30/src/idl/visu/proj2out.pro} must be replaced with the one found in 
+% \item \healpix 3.30 must be installed, and \texttt{Healpix\_3.30/src/idl/visu/proj2out.pro} must be replaced with the one found in 
 % \htmladdnormallink{%
 % http://sourceforge.net/p/healpix\-/code\-/HEAD\-/tree\-/branches\-/branch\_v330r807\-/src\-/idl\-/visu\-/proj2out.pro}{%
 % http://sourceforge.net/p/healpix/code/HEAD/tree/branches/branch_v330r807/src/idl/visu/proj2out.pro}.
 
 \item
 Besides the mandatory requirements (%
-\htmladdnormallink{\tt plplot}{http://plplot.sourceforge.net/source/index.html}, 
-\htmladdnormallink{\tt gsl}{http://www.gnu.org/software/gsl}, 
-\htmladdnormallink{\tt readline}{http://ftp.gnu.org/pub/gnu/readline/} 
+\htmladdnormallink\texttt{plplot}{http://plplot.sourceforge.net/source/index.html}, 
+\htmladdnormallink\texttt{gsl}{http://www.gnu.org/software/gsl}, 
+\htmladdnormallink\texttt{readline}{http://ftp.gnu.org/pub/gnu/readline/} 
 and 
-\htmladdnormallink{\tt zlib}{http://www.zlib.net/}) 
+\htmladdnormallink\texttt{zlib}{http://www.zlib.net/}) 
 GDL must also have been (pre-)compiled with links to
 \begin{itemize}
-\item \htmladdnormallink{\tt ImageMagick}{http://www.imagemagick.org}
-(or \htmladdnormallink{\tt GraphicsMagick}{http://www.graphicsmagick.org/}) 
+\item \htmladdnormallink\texttt{ImageMagick}{http://www.imagemagick.org}
+(or \htmladdnormallink\texttt{GraphicsMagick}{http://www.graphicsmagick.org/}) 
 to produce PNG and JPEG output files, 
-\item \htmladdnormallink{\tt pslib}{http://pslib.sourceforge.net} to produce PostScript and PDF files (in the latter case,
-a recent version of \htmladdnormallink{\tt ghostscript}{http://www.ghostscript.com/}, i.e. 9.07 or more, is also recommended).
+\item \htmladdnormallink\texttt{pslib}{http://pslib.sourceforge.net} to produce PostScript and PDF files (in the latter case,
+a recent version of \htmladdnormallink\texttt{ghostscript}{http://www.ghostscript.com/}, i.e. 9.07 or more, is also recommended).
 \end{itemize}
 
 % \item 
@@ -1289,20 +1291,20 @@ a recent version of \htmladdnormallink{\tt ghostscript}{http://www.ghostscript.c
 % IDL native routine {\tt WIDGET\_DRAW})
 \item When run under GDL 0.9.6, and if the requirements stated above are met, 
 the visualization routines
-\htmlref{{\tt azeqview}, {\tt cartview}, {\tt gnomview}, {\tt mollview} and {\tt orthview}}{idl:mollview} 
+\htmlref{\texttt{azeqview}, \texttt{cartview}, \texttt{gnomview}, \texttt{mollview} and \texttt{orthview}}{idl:mollview} 
 will produce correct screen (X) outputs and PS, PDF, PNG and JPEG images, with the following caveats:
 \begin{itemize}
-\item they won't produce \mylinkext{idl:mollview:gif}{GIF} files (because GDL's {\tt write\_gif} is not yet functional), {\em Fixed in GDL v0.9.7}; 
-\item the \mylinkext{idl:mollview:transparent}{\tt transparent} keyword will be ignored in the
-production of \mylinkext{idl:mollview:png}{PNG} files under GDL (except when \mylinkext{idl:mollview:truecolors}{\tt TrueColors} is set and $N$x3 map is provided), 
-and for the same reason, the \htmlref{\tt hpx2gs}{idl:hpx2gs} routine won't mark missing pixels as
+\item they won't produce \mylinkext{idl:mollview:gif}{GIF} files (because GDL's \texttt{write\_gif} is not yet functional), {\em Fixed in GDL v0.9.7}; 
+\item the \mylinkext{idl:mollview:transparent}\texttt{transparent} keyword will be ignored in the
+production of \mylinkext{idl:mollview:png}{PNG} files under GDL (except when \mylinkext{idl:mollview:truecolors}\texttt{TrueColors} is set and $N$x3 map is provided), 
+and for the same reason, the \htmlref{\texttt{hpx2gs}}{idl:hpx2gs} routine won't mark missing pixels as
 transparent in the output PNG file;
-\item  and finally, the \mylinkext{idl:mollview:pfonts}{\tt pfonts} keyword will not allow the selection of other fonts than Hershey vectorial fonts (pfonts[0]=-1).
-% \item and finally, the virtual window (\mylinkext{idl:mollview:window}{\tt window}$<0$, used for remote production of PNG images over slow network connections) won't work as expected, except in cases where
+\item  and finally, the \mylinkext{idl:mollview:pfonts}{\texttt{pfonts}} keyword will not allow the selection of other fonts than Hershey vectorial fonts (pfonts[0]=-1).
+% \item and finally, the virtual window (\mylinkext{idl:mollview:window}\texttt{window}$<0$, used for remote production of PNG images over slow network connections) won't work as expected, except in cases where
 % \mylinkext{idl:mollview:shaded}{\tt shaded} or 
 % \mylinkext{idl:mollview:truecolors}{\tt TrueColors} is set.
 \end{itemize}
-All other features work properly, including the \mylinkext{idl:mollview:latex}{\tt Latex} keyword.
+All other features work properly, including the \mylinkext{idl:mollview:latex}{\texttt{Latex}} keyword.
 
 % \item The {\tt healpix\_doc} routine won't work under GDL.
 %\item The behaviour of {\tt Ximview} under GDL has not been investigated.
@@ -1355,14 +1357,14 @@ test the value of the \texttt{POLCCONV} FITS keyword when reading a polarized ma
 and interpret the polarization accordingly, 
 as described in the \htmlref{note on POLCCONV}{intro:polcconv} in \linklatexhtml{The \healpix Primer}{intro.pdf}{intro.htm}.
 %
-\item \htmlref{{\tt median\_filter}}{fac:median_filter} facility: faster by moving an internal array from heap to stack;
+\item \htmlref{\texttt{median\_filter}}{fac:median_filter} facility: faster by moving an internal array from heap to stack;
 slightly different output: when median is computed over an even number of pixels $n\ge 100$, sorted in $[1,n]$,
 the output is $d(n/2)$ instead of $(d(n/2)+d(n/2+1))/2$ previously. Result remain $d(n/2+1)$ for odd $n$.
 \end{itemize}
 \subsubsection[IDL]{\linklatexhtml{IDL}{idl.pdf}{idl.htm}}
 \begin{itemize}
 \item \htmlref{\texttt{ianafast}}{idl:ianafast} and \htmlref{\texttt{ismoothing}}{idl:ismoothing}: 
-see note on {\tt POLCCONV} in F90 facilities above.
+see note on \texttt{POLCCONV} in F90 facilities above.
 \end{itemize}
 
 \subsubsection[Java]{\htmladdnormallink{Java}{http://healpix.sourceforge.net/html/java/index.html}}
@@ -1373,39 +1375,39 @@ see note on {\tt POLCCONV} in F90 facilities above.
 \subsubsection[General]{General}
 	\begin{itemize}
 	\item Detailed \htmlref{HOWTO}{sec:windows} for installation under Windows;
-	\item Interactive {\tt configure} script now supports MINGW environment (for Windows), 
-		and better detects {\tt gcc} and {\tt python} versions;
+	\item Interactive \texttt{configure} script now supports MINGW environment (for Windows), 
+		and better detects \texttt{gcc} and \texttt{python} versions;
 	\item Improved cross-document linking in PDF documentation.
 	\end{itemize}
 % \subsubsection[C]{\linklatexhtml{C}{csub.pdf}{csub.htm}}
 \subsubsection[C++]{\htmladdnormallink{C++}{http://healpix.sourceforge.net/html/index_cxx.htm}}
 	\begin{itemize}
 	\item Removal of C++11 features inadvertently introduced in Version 3.30 
-	(see \htmladdnormallink{\tt http://sourceforge.net/p/healpix/bugs/72}{http://sourceforge.net/p/healpix/bugs/72})
+	(see \htmladdnormallink\texttt{http://sourceforge.net/p/healpix/bugs/72}{http://sourceforge.net/p/healpix/bugs/72})
 	\end{itemize}
 \subsubsection[Fortran]{%
  	Fortran 90 \linklatexhtml{facilities}{facilities.pdf}{facilities.htm} and
  	\linklatexhtml{subroutines}{subroutines.pdf}{subroutines.htm}}
 	\begin{itemize}
-	\item Bug correction in \htmlref{{\tt input\_map}}{sub:input_map} routine for reading of polarized multi-HDU cut sky FITS files;
+	\item Bug correction in \htmlref{\texttt{input\_map}}{sub:input_map} routine for reading of polarized multi-HDU cut sky FITS files;
 	\item Introduction of 
-\mylinkext{fac:alteralm:winfiledir_in}{{\tt winfiledir\_*}} and 
-\mylinkext{fac:alteralm:windowfile_in}{{\tt windowfile\_*}} qualifiers in \htmlref{{\tt alteralm}}{fac:alteralm} facility.
+\mylinkext{fac:alteralm:winfiledir_in}{\texttt{winfiledir\_*}} and 
+\mylinkext{fac:alteralm:windowfile_in}{\texttt{windowfile\_*}} qualifiers in \htmlref{\texttt{alteralm}}{fac:alteralm} facility.
 	\end{itemize}
 \subsubsection[IDL]{\linklatexhtml{IDL}{idl.pdf}{idl.htm}}
 	\begin{itemize}
 	\item Improved support for \htmlref{GDL}{install:using_gdl};
 %(see \htmlref{Using GDL instead of IDL}{install:using_gdl})
 	\item update of the required
-    \htmladdnormallink{{\tt IDL-astron} library}{http://idlastro.gsfc.nasa.gov/homepage.html}
-    routines, and \htmladdnormallink{\tt Coyote}{http://www.idlcoyote.com} library
+    \htmladdnormallink{\texttt{IDL-astron} library}{http://idlastro.gsfc.nasa.gov/homepage.html}
+    routines, and \htmladdnormallink\texttt{Coyote}{http://www.idlcoyote.com} library
     routines (2016-08-19).
 	\end{itemize}
 % \subsubsection[Java]{\htmladdnormallink{Java}{http://healpix.sourceforge.net/html/java/index.html}}
 \subsubsection[Python]{\htmladdnormallink{Python}{http://healpy.readthedocs.org/en/latest/}}
 	\begin{itemize}
 	\item Switch to 
-	\htmladdnormallink{{\tt healpy 1.9.1}}{https://github.com/healpy/healpy/releases} 
+	\htmladdnormallink{\texttt{healpy 1.9.1}}{https://github.com/healpy/healpy/releases} 
 	(\htmladdnormallink{CHANGELOG}{https://github.com/healpy/healpy/blob/master/CHANGELOG.rst})
 	\begin{itemize}
 	\item Removed C++ 11 features% <https://github.com/healpy/healpy/pull/297>
@@ -1431,10 +1433,10 @@ see note on {\tt POLCCONV} in F90 facilities above.
 \begin{itemize}
 \item support for multi-order coverages (MOC);
 \item allow generation of $a_{\ell m}$ from 6-component power spectra;
-\item moved from {\tt alice2} to {\tt alice3}, which produces FITS \healpix maps as output.
+\item moved from \texttt{alice2} to \texttt{alice3}, which produces FITS \healpix maps as output.
  These can be visualized more flexibly with external tools.
-\item switch from custom {\tt xcomplex} class to {\tt std::complex};
-\item {\tt rangeset} class has been redesigned.
+\item switch from custom \texttt{xcomplex} class to \texttt{std::complex};
+\item \texttt{rangeset} class has been redesigned.
 \end{itemize}
 
 
@@ -1961,7 +1963,7 @@ maps
 	\setlength{\parsep}{0pt}
 	\item Core functionality has been reimplemented from scratch in the form of the
 "healpix.essentials" package. It is strongly recommended to use this package
-directly in future projects making use of Java HEALPix.
+directly in future projects making use of Java \healpix.
 "healpix.essentials" is a port of the Healpix C++ library and presents a very
 similar interface.
 

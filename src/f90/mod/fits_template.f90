@@ -292,7 +292,7 @@ subroutine input_map8_KLOAD(filename, map, npixtot, nmaps, &
          &    obs_npix==nside2npix(nside_fits)) & ! full-sky, polarized map
          &                  )      ) then 
        if (ipolcconv == 0) then
-          print 9000,' The POLCCONV keyword not found in '//trim(filename)
+          print 9000,' The POLCCONV keyword was not found in '//trim(filename)
           print 9000,' COSMO (HEALPix default) will be assumed, and map is unchanged.'
           print 9000,' See HEALPix primer ('//primer_url//') for details.'
        endif

@@ -21,8 +21,7 @@ Scalar, or scalar and tensor, spherical harmonic coefficients are evaluated
 from the map(s) if the input provides, respectively, only the temperature,
 or temperature and polarisation maps.
 The total operation count scales as 
-${\cal {O}}(\npix^{3/2} )$ with a prefactor
-depending on $\lmax$. %
+${\cal {O}}(\npix^{1/2}\lmax^2 )$. %
 \\ %
 Anafast reads one (two) file(s) containing the map(s) and produces 
 a file containing the temperature auto- (or cross-) power spectrum
@@ -68,13 +67,13 @@ $\lmax$ enforced by \thedocid, the user should make his/her choices
 judiciously. 
 Hereafter it is convenient to specify $\lmax$  
 in terms of the \healpix
-map resolution parameter $nsmax$.
+map resolution parameter $\nside$ (called $nsmax$ in some other contexts).
 
 If the function to be analysed is strictly  band-width
 limited, or nearly band-width limited (as in the case of 
 a Gaussian beam smoothed signal discretized at a rate of a few pixels
 per beam area), it is  sufficient to run \thedocid\ with
-$\lmax \approx 2\cdot nsmax$, with a very good $C_\ell$ 
+$\lmax \approx 2\cdot \nside$, with a very good $C_\ell$ 
 error performance 
 already in the raw (i.e. uncorrected quadrature) harmonic transform mode. 
 If quadrature 
@@ -85,7 +84,7 @@ error and worry free typical applications, e.g. CPU-intensive
 Monte Carlo studies. 
 
 If more aggressive attempts are undertaken to extract from a map 
-the spectral coefficients at $\ell > 2\cdot nsmax$ (for example, as 
+the spectral coefficients at $\ell > 2\cdot \nside$ (for example, as 
 in a possible case of an attempt to analyse an existing map, which was 
 irreversibly binned  at a suboptimal resolution) 
 the following should be kept in mind:
@@ -93,8 +92,8 @@ the following should be kept in mind:
 $\bullet$ Spherical harmonics discretized using \healpix 
 (either sampled at
 pixel centers, or avaraged over pixel areas) form a linearly independent
-system up to $\lmax = 3 \cdot nsmax -1$. Hence, the functions which are
-strictly band-width limited to $\lmax = 3 \cdot nsmax - 1 $ 
+system up to $\lmax = 3 \cdot \nside -1$. Hence, the functions which are
+strictly band-width limited to $\lmax = 3 \cdot \nside - 1 $ 
 can be fully
 spectrally resolved with \thedocid, albeit with integration errors
 in the uncorrected quadrature mode, which grow up to 
@@ -103,7 +102,7 @@ at the highest values of $\ell$. These integration  errors
 can be efficiently 
 reduced
 using \thedocid\ in the iterative mode. Although this $\lmax$ range
---- $2 \cdot nsmax < \lmax < 3 \cdot nsmax - 1$ --- is easily
+--- $2 \cdot \nside < \lmax < 3 \cdot \nside - 1$ --- is easily
 manageable with \thedocid\ used on strictly band-width limited functions,
 it should be used with caution in basic and automated applications, e.g.
 Monte Carlo simulations.
@@ -112,9 +111,9 @@ $\bullet$ As with any discrete Fourier transform, \thedocid\ application to
 functions which are not band-width limited results with aliasing
 of power, which can not be remedied. If the particular case of interest
 may result in such a band-width violation (i.e. there is significant power
-in the function at $\ell > 3 \cdot nsmax -1$), the function should
+in the function at $\ell > 3 \cdot \nside -1$), the function should
 be smoothed before the application of \thedocid, or discretized and
-then analysed, on a refined \healpix grid (with larger $nsmax$).
+then analysed, on a refined \healpix grid (with larger $\nside$).
 
 $\bullet$ REMEMBER: 
 A peculiar property of the sphere, which usually surprizes those 
@@ -163,7 +162,7 @@ symbols such as {\tt \&, [, ], ?, =} which should be typed literally (ie, unprot
  {\tt infile~=~http://site/action?file.fits[2][col FLUX]} is just fine.
     \item[{infile2 = }]\mytarget{fac:anafast:infile2}%
  Defines the 2nd input map file, to be cross-correlated with
-	the first one. The 2 maps should match in resolution ($nsmax$) and coordinate.
+	the first one. The 2 maps should match in resolution ($\nside$) and coordinate.
 	(default= `', only the auto-correlation of the first map will be computed)
     \item[{outfile = }]\mytarget{fac:anafast:outfile}%
  Defines the output file with the power spectrum. If only
@@ -191,7 +190,7 @@ the WMAP Kp intensity mask to the data (see
 ), but it will {\em not} handle the WMAP composite mask correctly.
 Can be used in conjonction with {\tt theta\_cut\_deg}. Masked or weighted pixels
  will be correctly accounted when performing the monopole and dipole regression.\\
-{\em Note:} The mask's resolution ($nsmax$) and ordering can be different from the input map(s)
+{\em Note:} The mask's resolution ($\nside$) and ordering can be different from the input map(s)
 one's, and the mask will be pro/down-graded and reordered to match the map. On the
 other hand, the mask and maps coordinates will always be presumed to match (ie, no
 attempt of rotation of the mask will be made).
@@ -269,7 +268,7 @@ the quadrature accuracy:
 (2)  the  iterative scheme. 
 Using the ring weights does not increase the execution time.  
 The precomputed ring weights to be used for each 
-\healpix resolution $nsmax$ are provided in
+\healpix resolution $\nside$ are provided in
 the {\tt \$HEALPIX/data} directory. 
 The more sophisticated iterative scheme increases the
 accuracy more effectively than the weighted ring scheme,
