@@ -48,7 +48,7 @@ module num_rec
      module procedure indexx, indexx_8
   end interface
 #endif
-  public :: dsvbksb, dsvdcmp, isort, sort, iindexx, indexx, othpl
+  public :: dsvbksb, dsvdcmp, isort, sort, iindexx, indexx, othpl, pythag
 
 
 contains
@@ -86,6 +86,7 @@ contains
 ! Jan 2008: replaced integer by integer(I4B)
 !           0, 1, 2 -> IZERO, IONE, ITWO
 !           int(x)  -> int(x, kind=i4b)
+! Mar 2017: PYTHAG: made public, replaced xx.0 with xx.0_dp
 !
 ! The routine OTHPL was taken from:
 !   S. Zhang & J. Jin "Computation of Special Functions" (Wiley, 1996).
@@ -97,7 +98,7 @@ contains
 ! -----------------------------------------------------------
 !
 !DECK PYTHAG
-      FUNCTION PYTHAG (A, B)
+      FUNCTION PYTHAG (A, B) result(pyth)
 !***BEGIN PROLOGUE  PYTHAG
 !***SUBSIDIARY
 !***PURPOSE  Compute the complex square root of a complex number without
@@ -116,23 +117,23 @@ contains
 !   891214  Prologue converted to Version 4.0 format.  (BAB)
 !   900402  Added TYPE section.  (WRB)
 !***END PROLOGUE  PYTHAG
-      REAL(DP) PYTHAG
-      REAL(DP) A,B
+      REAL(DP):: PYTH
+      REAL(DP), intent(IN):: A,B
 !
-      REAL(DP) P,Q,R,S,T
+      REAL(DP):: P,Q,R,S,T
 !***FIRST EXECUTABLE STATEMENT  PYTHAG
       P = MAX(ABS(A),ABS(B))
       Q = MIN(ABS(A),ABS(B))
-      IF (Q .EQ. 0.0E0) GO TO 20
+      IF (Q .EQ. 0.0_dp) GO TO 20
    10 CONTINUE
          R = (Q/P)**ITWO
-         T = 4.0E0 + R
-         IF (T .EQ. 4.0E0) GO TO 20
+         T = 4.0_dp + R
+         IF (T .EQ. 4.0_dp) GO TO 20
          S = R/T
-         P = P + 2.0E0*P*S
+         P = P + 2.0_dp*P*S
          Q = Q*S
       GO TO 10
-   20 PYTHAG = P
+   20 PYTH = P
       RETURN
       END FUNCTION PYTHAG
 

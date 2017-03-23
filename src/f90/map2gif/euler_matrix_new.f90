@@ -117,9 +117,9 @@ subroutine euler_matrix_new(       &
 
    ! matrix = m1 ( m2 m3 )
 
-   m1(:,1) = (/ c1,-s1, ze /)
-   m1(:,2) = (/ s1, c1, ze /)
-   m1(:,3) = (/ ze, ze, un /)
+   m1(:,1) = (/ c1,-s1, ze /)  ! 1st column
+   m1(:,2) = (/ s1, c1, ze /)  ! 2nd column
+   m1(:,3) = (/ ze, ze, un /)  ! 3rd column
 
    select case (itype)
 

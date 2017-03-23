@@ -57,12 +57,14 @@ contains
     ! EH, March 2005
     !     April 06 2005, corrected psi calculation
     !
-    use pix_tools, only: angdist
+    !use pix_tools, only: angdist
+    use num_rec, only: pythag
     real(dp),         intent(in)  :: iepoch, oepoch
     character(len=*), intent(in)  :: isys, osys
     real(dp),         intent(out) :: psi, theta, phi
 
     real(dp), dimension(1:3) :: v1, v2, v3, v1p, v2p, v3p
+    real(dp) :: st, ct
     !-----------------------
  
     ! generate basis vector
@@ -81,9 +83,26 @@ contains
     v3p = v3p / sqrt(dot_product(v3p,v3p))
 
     ! figure out Euler angles
-    call angdist(v3,v3p, theta)
-    psi = atan2(v2p(3),-v1p(3))
-    phi = atan2(v3p(2), v3p(1))
+
+!     call angdist(v3,v3p, theta)
+!     psi = atan2(v2p(3),-v1p(3))
+!     phi = atan2(v3p(2), v3p(1))
+
+    st = pythag(v3p(1),v3p(2)) ! |sin(theta)| in [0,1]
+    ct =        v3p(3)         !  cos(theta)  in [-1,1]
+    theta = atan2(st, ct) ! theta in [0,Pi]
+    if (st >= 1.d-7) then
+       psi = atan2(v2p(3),-v1p(3))
+       phi = atan2(v3p(2), v3p(1))
+    else ! theta=0 or theta=Pi, phi and +/-psi degenerate
+       if (ct >= 0) then ! theta=0
+          ! only phi+psi is known
+          psi = atan2(-v2p(1)+v1p(2), v2p(2)+v1p(1)) ! returns psi+phi for any theta /= 180
+       else ! theta=pi, only  psi-phi in known
+          psi = atan2(-v2p(1)-v1p(2), v2p(2)-v1p(1)) ! return psi-phi for any theta /= 0
+       endif
+       phi = 0.0_dp
+    endif
 
     return
   end subroutine coordsys2euler_zyz

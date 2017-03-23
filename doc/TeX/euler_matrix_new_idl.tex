@@ -100,21 +100,25 @@ matrix parametrized by three angles and three axes of rotation.
 {\parbox[t]{\hsize}{\facname\ ~\ allows the generation of a rotation Euler matrix. The user
 can choose the three Euler angles, and the three axes of rotation.
 
-If vec is an N$\times$3 array containing N 3D vectors, \\
-    vecr = vec  \# euler\_matrix\_new(a1,a2,a3,/Y) \\
-will be the rotated vectors\\
+If \texttt{vec} is an N$\times$3 array containing N 3D vectors, \\
+    \texttt{vecr = vec  \# euler\_matrix\_new(a1,a2,a3,/Y)}\\
+will be the rotated vectors. 
+Alternatively, \htmlref{rotate\_coord}{idl:rotate_coord} can also be used to rotate 
+\texttt{vec} into \texttt{vecr}.\\
  
+\small{
 This routine supersedes euler\_matrix, which had inconsistent angle
 definitions. The relation between the two routines is as follows  :
-\\[.2cm]
+\\[.1cm]
 %
 euler\_matrix\_new(a,b,c,/X)  =  euler\_matrix($-$a,$-$b,$-$c,/X) \\
-= Transpose(euler\_matrix(c, b, a,/X)) \\[.2cm]
+= Transpose(euler\_matrix(c, b, a,/X)) \\[.1cm]
 %
 euler\_matrix\_new(a,b,c,/Y)  =  euler\_matrix($-$a, b,$-$c,/Y) \\
-= Transpose(euler\_matrix(c,$-$b, a,/Y)) \\[.2cm]
+= Transpose(euler\_matrix(c,$-$b, a,/Y)) \\[.1cm]
 %
 euler\_matrix\_new(a,b,c,/Z)  =  euler\_matrix($-$a, b,$-$c,/Z)
+}
 }}
 \end{codedescription}
 
