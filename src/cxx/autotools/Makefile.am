@@ -143,6 +143,7 @@ include_HEADERS = \
   cxxsupport/xcomplex.h \
   cxxsupport/datatypes.h \
   cxxsupport/pointing.h \
+  cxxsupport/geom_utils.h \
   cxxsupport/rangeset.h \
   cxxsupport/fitshandle.h \
   cxxsupport/alloc_utils.h \
