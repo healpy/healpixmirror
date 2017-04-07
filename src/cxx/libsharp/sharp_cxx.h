@@ -25,7 +25,7 @@
 /*! \file sharp_cxx.h
  *  Spherical transform library
  *
- *  Copyright (C) 2012-2016 Max-Planck-Society
+ *  Copyright (C) 2012-2017 Max-Planck-Society
  *  \author Martin Reinecke
  */
 
@@ -48,8 +48,8 @@ class sharp_base
       : ainfo(0), ginfo(0) {}
     ~sharp_base()
       {
-      sharp_destroy_geom_info(ginfo);
-      sharp_destroy_alm_info(ainfo);
+      if (ginfo) sharp_destroy_geom_info(ginfo);
+      if (ainfo) sharp_destroy_alm_info(ainfo);
       }
 
     void set_general_geometry (int nrings, const int *nph, const ptrdiff_t *ofs,
