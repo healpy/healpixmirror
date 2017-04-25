@@ -131,6 +131,9 @@ pro write_fits_sb, filename, prim_st, exten_st, Coordsys=coordsys, Nested=nested
 ;  Nov 2009: increased buffersize in fxbwritm for slightly faster writing
 ;  2010-05-11: adds BAD_DATA = -1.6375e30  in FITS header of *Healpix* data sets
 ;  2012-09-27: added HELP keyword. Work around for STRING(format='(:)') bug in GDL
+;  2017-04-25: increased buffersize from 2MB to 1GB, 
+;     which makes large difference on some systems (eg, NERSC's edison)
+;     but none on others (eg, my mac)
 ;-
 ;
 ; NB : do NOT use 'T' or 'F' as the tag names
@@ -330,7 +333,8 @@ FXBCREATE, unit, filename, xthdr, xtn_id
 naxis1 = sxpar(xthdr,'NAXIS1')
 
 ;nloop = (long(nrows) * nentry * (number-1L)) / 1.e4 ; write 10^4 values at a time
-buffersize = 32768L*64 ; number of bytes per chunk
+;buffersize = 32768L*64 ; number of bytes per chunk  (2MB)
+buffersize = 32768LL^2 ; number of bytes per chunk  (1GB)
 ;;bytes_per_row = nentry * (number-1L) * 4 ; nuber of bytes per row in FITS file = NAXIS1
 bytes_per_row = naxis1
 nloop = (long64(nrows) * bytes_per_row) / buffersize  ; number of chunks of size buffersize
@@ -339,7 +343,6 @@ nw = nrows/nloop + 1L ; number of rows in each chunk
 buffersize = nw * bytes_per_row ; final size of chunk
 ip1   = indgen(number-1)+1 ; from 1 to number-1
 ;print,nloop,nw,nw*nloop-nrows, buffersize
-
 
 stcol = '['+string(ip1,form='(50(i2, :, ","))')+']'
 stbuf = ',buffersize='+strtrim(buffersize,2)
