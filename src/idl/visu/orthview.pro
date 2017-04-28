@@ -34,6 +34,8 @@ pro orthview, file_in, select_in, $
               COLT = colt, $
               COORD = coord, $
               CROP = crop, $
+              CUSTOMIZE = customize, $
+              DEFAULT_SETTINGS = default_settings, $
               EXECUTE = execute, $
               FACTOR = factor, $
               FITS = fits, $
@@ -197,7 +199,7 @@ proj2out, $
   IGRATICULE=igraticule, HBOUND = hbound, WINDOW = window, SILENT=silent, GLSIZE=glsize, IGLSIZE=iglsize, $
   SHADEMAP=shademap, EXECUTE=execute, RETAIN=retain, TRUECOLORS=truecolors, TRANSPARENT=transparent, $
   CHARTHICK=charthick, STAGGER=stagger, JPEG=jpeg, BAD_COLOR=bad_color, BG_COLOR=bg_color, FG_COLOR=fg_color, $
-  PDF=pdf, LATEX=latex, PFONTS=pfonts
+  PDF=pdf, LATEX=latex, PFONTS=pfonts, CUSTOMIZE=CUSTOMIZE, DEFAULT_SETTINGS=default_settings
 
 
 w_num = !d.window

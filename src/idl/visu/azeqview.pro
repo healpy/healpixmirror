@@ -32,6 +32,8 @@ PRO azeqview, file_in, select_in, $
               COLT = colt, $
               COORD = coord, $
               CROP = crop, $
+              CUSTOMIZE = customize, $
+              DEFAULT_SETTINGS = default_settings, $
               EXECUTE = execute, $
               FACTOR = factor, $
               FITS = fits, $
@@ -179,7 +181,8 @@ proj2out, $
   POLARIZATION=polarization, OUTLINE=outline, /AZEQ, FLIP=flip, COORD_IN=coord_in, IGRATICULE=igraticule, $
   HBOUND = hbound, WINDOW = window, TRANSPARENT = transparent, EXECUTE=execute, $
   SILENT=silent, GLSIZE = glsize, IGLSIZE = iglsize, RETAIN=retain, TRUECOLORS=truecolors, $
-  CHARTHICK=charthick, JPEG=jpeg, PDF=pdf, LATEX=latex, PFONTS=pfonts
+  CHARTHICK=charthick, JPEG=jpeg, PDF=pdf, LATEX=latex, PFONTS=pfonts, $
+  CUSTOMIZE=CUSTOMIZE, DEFAULT_SETTINGS=default_settings
 
 
 w_num = !d.window

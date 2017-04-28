@@ -25,7 +25,73 @@
 ;  For more information about HEALPix see http://healpix.sourceforge.net
 ;
 ;  mollview,findgen(12),fact=1.e6,units='$\mu$K',pdf='/tmp/moll.pdf',/preview,silent=1,sub='sub',/grat,glsize=1,title='title {\bf title} tit2'
+
 ; -----------------------------------------------------------------------------
+function is_structure, stc
+return, size(/tname, stc) eq 'STRUCT'
+end
+; -----------------------------------------------------------------------------
+function is_tag_in_stc, stc, tag, index
+index = where(tag_names(stc) eq strupcase(tag), n)
+return,n
+end
+; -----------------------------------------------------------------------------
+function parse_custom_structure,default,structure,sub1,sub2,sub3,sub4,sub5
+;
+;2017-04-28
+out = default
+if is_structure(structure) then begin
+    st = structure 
+    if ~is_structure(st) then goto,  found
+    if defined(sub1) && is_tag_in_stc(st, sub1, i1) then begin
+        st = st.(i1[0]) 
+        if ~is_structure(st) then goto,  found
+        if defined(sub2) && is_tag_in_stc(st, sub2, i2) then begin
+            st = st.(i2[0]) 
+            if ~is_structure(st) then goto,  found
+            if defined(sub3) && is_tag_in_stc(st, sub3, i3) then begin
+                st = st.(i3[0]) 
+                if ~is_structure(st) then goto,  found
+                if defined(sub4) && is_tag_in_stc(st, sub4, i4) then begin
+                    st = st.(i4[0]) 
+                    if ~is_structure(st) then goto,  found
+                    if defined(sub5) && is_tag_in_stc(st, sub5, i5) then begin
+                        st = st.(i5[0]) 
+                        if ~is_structure(st) then goto,  found
+                    endif
+                endif
+            endif
+        endif
+    endif
+endif
+return, out
+found:
+return, st
+end
+; -----------------------------------------------------------------------------
+
+function absolute_file_path, file
+; afp = absolute_file_path(file) return absolute path to provided file
+;
+;            file                   afp
+;       '/a/b/c.abc'         '/a/b/c.abc'
+;       '~john/a.b.c'        '/home/users/john/a.b.c'
+;       'c.'                 '[current_dir]/c.'
+;       './c'                '[current_dir]/c'
+;       '../c.fits'          '[parent_dir]/c.fits'
+; 2017-04-28
+basename = cgRootname(file,directory=filedir,extension=suffix)
+if (strtrim(suffix,2) eq '') then begin
+    if (strpos(file,'.',/reverse_search) eq strlen(file)-1) then suffix='.'
+endif else begin
+    suffix='.'+suffix
+endelse
+cd,filedir,curr=cwd1
+cd,cwd1,   curr=cwd2
+afp = Filepath(root_dir=expand_tilde(cwd2), basename+suffix)
+return, afp
+end
+
 function parse_planck_colorstring, color, colshift
 ; -----------------------
 ;   number   -> number
@@ -77,7 +143,7 @@ pro proj2out, planmap, Tmax, Tmin, color_bar, dx, title_display, sunits, $
               TRANSPARENT = transparent, EXECUTE=execute, SILENT=silent, GLSIZE=glsize, IGLSIZE=iglsize, $
               SHADEMAP=SHADEMAP, RETAIN=retain, TRUECOLORS=truecolors, CHARTHICK=charthick, $
               STAGGER=stagger, AZEQ=azeq, JPEG=jpeg, BAD_COLOR=bad_color, BG_COLOR=bg_color, FG_COLOR=fg_color, $
-              PDF=pdf, LATEX=latex, PFONTS=pfonts
+              PDF=pdf, LATEX=latex, PFONTS=pfonts, customize=custom_stc, default_settings=default_stc
 
 ;===============================================================================
 ;+
@@ -156,6 +222,11 @@ pro proj2out, planmap, Tmax, Tmin, color_bar, dx, title_display, sunits, $
 ;     set_plot,'Z' & device,set_pixel_depth=    remains at 24bits
 ;     write_png, transparent   Not really
 ;     !p.font               Only !p.font=-1
+;
+;
+;   Apr 2017, EH, fixed path problem when PDF=1 instead of PDF=file_name
+;                 added CUSTOM (input) and DEFAULT_SETTINGS (output) structure
+;                 for customization of color bar size, title and subtitle location
 ;-
 ;===============================================================================
 
@@ -210,6 +281,7 @@ if (projtype eq 2) then begin
     proj_small = 'gnomic'
     proj_big   = 'Gnomic'
     do_gnom    = 1
+    default_stc = {cbar:{dx:1./3., dy:1./70.}, title:{x:0.5, y:0.95}, subtitle:{x:0.5, y:0.915}}
 
     du_dv = xsize/float(ysize)                  ; aspect ratio
     fudge = 1.00                ; 
@@ -223,8 +295,8 @@ if (projtype eq 2) then begin
     w_yll = w_pos[1] & w_yur = w_pos[3] & w_dy = w_yur - w_yll
     w_dx_dy = w_dx / w_dy       ; 1.4
 ; color bar, position, dimension
-    cbar_dx = 1./3.
-    cbar_dy = 1./70.
+    cbar_dx = parse_custom_structure(default_stc.cbar.dx, custom_stc, 'cbar','dx')
+    cbar_dy = parse_custom_structure(default_stc.cbar.dy, custom_stc, 'cbar','dy')
     cbar_xll = (1. - cbar_dx)/2.
     cbar_xur = (1. + cbar_dx)/2.
     cbar_yur = w_yll - cbar_dy
@@ -241,8 +313,10 @@ if (projtype eq 2) then begin
     vscal_x = 0.05
     vscal_y = 0.01
 ; location of title and subtitle
-    x_title = 0.5 & y_title = 0.95
-    x_subtl = 0.5 & y_subtl = 0.915
+    x_title = parse_custom_structure(default_stc.title.x, custom_stc, 'title','x') 
+    y_title = parse_custom_structure(default_stc.title.y, custom_stc, 'title','y') 
+    x_subtl = parse_custom_structure(default_stc.subtitle.x, custom_stc, 'subtitle','x') 
+    y_subtl = parse_custom_structure(default_stc.subtitle.y, custom_stc, 'subtitle','y') 
     if (do_print) then begin
 ; default X dimension of hardcopy (cm)
         hxsize_def = 15.
@@ -257,6 +331,7 @@ if (projtype eq 1) then begin
     proj_big   = 'Mollweide'
     proj_small = 'mollweide'
     do_moll    = 1
+    default_stc = {cbar:{dx:1./3., dy:1./70.}, title:{x:0.5, y:0.95}, subtitle:{x:0.5, y:0.905}}
 
     du_dv = 2.                  ; aspect ratio
     fudge = 1.02                ; spare some space around the Mollweide egg
@@ -270,8 +345,8 @@ if (projtype eq 1) then begin
     w_yll = w_pos[1] & w_yur = w_pos[3] & w_dy = w_yur - w_yll
     w_dx_dy = w_dx / w_dy       ; 1./.8
 ; color bar, position, dimension
-    cbar_dx = 1./3.
-    cbar_dy = 1./70.
+    cbar_dx = parse_custom_structure(default_stc.cbar.dx, custom_stc, 'cbar','dx')
+    cbar_dy = parse_custom_structure(default_stc.cbar.dy, custom_stc, 'cbar','dy')
     cbar_xll = (1. - cbar_dx)/2.
     cbar_xur = (1. + cbar_dx)/2.
     cbar_yur = w_yll - cbar_dy
@@ -285,8 +360,10 @@ if (projtype eq 1) then begin
     vscal_x = 0.05
     vscal_y = 0.02
 ; location of title and subtitle
-    x_title = 0.5 & y_title = 0.95
-    x_subtl = 0.5 & y_subtl = 0.905
+    x_title = parse_custom_structure(default_stc.title.x, custom_stc, 'title','x') 
+    y_title = parse_custom_structure(default_stc.title.y, custom_stc, 'title','y') 
+    x_subtl = parse_custom_structure(default_stc.subtitle.x, custom_stc, 'subtitle','x') 
+    y_subtl = parse_custom_structure(default_stc.subtitle.y, custom_stc, 'subtitle','y') 
     if (do_print) then begin
 ; default X dimension of hardcopy (cm)
         hxsize_def = 26.
@@ -301,6 +378,7 @@ if (projtype eq 5) then begin
     proj_big   = 'Diamonds'
     proj_small = 'diamonds'
     do_moll    = 1
+    default_stc = {cbar:{dx:1./3., dy:1./70.}, title:{x:0.5, y:0.95}, subtitle:{x:0.5, y:0.905}}
 
     du_dv = 2.                  ; aspect ratio
     fudge = 1.00                ; spare some space around the 12-Diamonds
@@ -314,8 +392,8 @@ if (projtype eq 5) then begin
     w_yll = w_pos[1] & w_yur = w_pos[3] & w_dy = w_yur - w_yll
     w_dx_dy = w_dx / w_dy       ; 1./.8
 ; color bar, position, dimension
-    cbar_dx = 1./3.
-    cbar_dy = 1./70.
+    cbar_dx = parse_custom_structure(1./3.,  custom_stc, 'cbar','dx')
+    cbar_dy = parse_custom_structure(1./70., custom_stc, 'cbar','dy')
     cbar_xll = (1. - cbar_dx)/2.
     cbar_xur = (1. + cbar_dx)/2.
     cbar_yur = w_yll - cbar_dy
@@ -329,8 +407,10 @@ if (projtype eq 5) then begin
     vscal_x = 0.05
     vscal_y = 0.02
 ; location of title and subtitle
-    x_title = 0.5 & y_title = 0.95
-    x_subtl = 0.5 & y_subtl = 0.905
+    x_title = parse_custom_structure(default_stc.title.x, custom_stc, 'title','x') 
+    y_title = parse_custom_structure(default_stc.title.y, custom_stc, 'title','y') 
+    x_subtl = parse_custom_structure(default_stc.subtitle.x, custom_stc, 'subtitle','x') 
+    y_subtl = parse_custom_structure(default_stc.subtitle.y, custom_stc, 'subtitle','y') 
     if (do_print) then begin
 ; default X dimension of hardcopy (cm)
         hxsize_def = 26.
@@ -345,6 +425,7 @@ if (projtype eq 4) then begin
     proj_big   = 'Orthographic'
     proj_small = 'orthographic'
     do_orth    = 1
+    default_stc = {cbar:{dx:1./3., dy:1./70.}, title:{x:0.5, y:0.95}, subtitle:{x:0.5, y:0.905}}
     
     if keyword_set(half_sky) then do_fullsky = 0 else do_fullsky = 1
     if (do_fullsky) then du_dv = 2. else du_dv = 1. ; aspect ratio
@@ -360,8 +441,8 @@ if (projtype eq 4) then begin
     w_yll = w_pos[1] & w_yur = w_pos[3] & w_dy = w_yur - w_yll
     w_dx_dy = w_dx / w_dy       ; 1./.8
 ; color bar, position, dimension
-    cbar_dx = 1./3.
-    cbar_dy = 1./70.
+    cbar_dx = parse_custom_structure(1./3.,  custom_stc, 'cbar','dx')
+    cbar_dy = parse_custom_structure(1./70., custom_stc, 'cbar','dy')
     cbar_xll = (1. - cbar_dx)/2.
     cbar_xur = (1. + cbar_dx)/2.
     cbar_yur = w_yll - cbar_dy
@@ -375,8 +456,10 @@ if (projtype eq 4) then begin
     vscal_x = 0.05
     vscal_y = 0.02
 ; location of title and subtitle
-    x_title = 0.5 & y_title = 0.95
-    x_subtl = 0.5 & y_subtl = 0.905
+    x_title = parse_custom_structure(default_stc.title.x, custom_stc, 'title','x') 
+    y_title = parse_custom_structure(default_stc.title.y, custom_stc, 'title','y') 
+    x_subtl = parse_custom_structure(default_stc.subtitle.x, custom_stc, 'subtitle','x') 
+    y_subtl = parse_custom_structure(default_stc.subtitle.y, custom_stc, 'subtitle','y') 
     if (do_print) then begin
 ; default X dimension of hardcopy (cm)
         hxsize_def = 26.
@@ -391,6 +474,7 @@ if (projtype eq 3) then begin
     proj_small = 'cartesian'
     proj_big   = 'Cartesian'
     do_cart    = 1
+    default_stc = {cbar:{dx:1./3., dy:1./70.}, title:{x:0.5, y:0.95}, subtitle:{x:0.5, y:0.915}}
     
 ;     du_dv = 1.                  ; aspect ratio
     du_dv = xsize/float(ysize)                  ; aspect ratio
@@ -405,8 +489,8 @@ if (projtype eq 3) then begin
     w_yll = w_pos[1] & w_yur = w_pos[3] & w_dy = w_yur - w_yll
     w_dx_dy = w_dx / w_dy       ; 1.4
 ; color bar, position, dimension
-    cbar_dx = 1./3.
-    cbar_dy = 1./70.
+    cbar_dx = parse_custom_structure(1./3.,  custom_stc, 'cbar','dx')
+    cbar_dy = parse_custom_structure(1./70., custom_stc, 'cbar','dy')
     cbar_xll = (1. - cbar_dx)/2.
     cbar_xur = (1. + cbar_dx)/2.
     cbar_yur = w_yll - cbar_dy
@@ -423,8 +507,10 @@ if (projtype eq 3) then begin
     vscal_x = 0.05
     vscal_y = 0.01
 ; location of title and subtitle
-    x_title = 0.5 & y_title = 0.95
-    x_subtl = 0.5 & y_subtl = 0.915
+    x_title = parse_custom_structure(default_stc.title.x, custom_stc, 'title','x') 
+    y_title = parse_custom_structure(default_stc.title.y, custom_stc, 'title','y') 
+    x_subtl = parse_custom_structure(default_stc.subtitle.x, custom_stc, 'subtitle','x') 
+    y_subtl = parse_custom_structure(default_stc.subtitle.y, custom_stc, 'subtitle','y') 
     if (do_print) then begin
 ; default X dimension of hardcopy (cm)
         hxsize_def = 15.
@@ -439,6 +525,7 @@ if (projtype eq 6) then begin
     proj_small = 'azimequid'
     proj_big   = 'AzimEquidistant'
     do_cart    = 1
+    default_stc = {cbar:{dx:1./3., dy:1./70.}, title:{x:0.5, y:0.95}, subtitle:{x:0.5, y:0.915}}
     
 ;     du_dv = 1.                  ; aspect ratio
     du_dv = xsize/float(ysize)                  ; aspect ratio
@@ -453,8 +540,8 @@ if (projtype eq 6) then begin
     w_yll = w_pos[1] & w_yur = w_pos[3] & w_dy = w_yur - w_yll
     w_dx_dy = w_dx / w_dy       ; 1.4
 ; color bar, position, dimension
-    cbar_dx = 1./3.
-    cbar_dy = 1./70.
+    cbar_dx = parse_custom_structure(1./3.,  custom_stc, 'cbar','dx')
+    cbar_dy = parse_custom_structure(1./70., custom_stc, 'cbar','dy')
     cbar_xll = (1. - cbar_dx)/2.
     cbar_xur = (1. + cbar_dx)/2.
     cbar_yur = w_yll - cbar_dy
@@ -471,8 +558,10 @@ if (projtype eq 6) then begin
     vscal_x = 0.05
     vscal_y = 0.01
 ; location of title and subtitle
-    x_title = 0.5 & y_title = 0.95
-    x_subtl = 0.5 & y_subtl = 0.915
+    x_title = parse_custom_structure(default_stc.title.x, custom_stc, 'title','x') 
+    y_title = parse_custom_structure(default_stc.title.y, custom_stc, 'title','y') 
+    x_subtl = parse_custom_structure(default_stc.subtitle.x, custom_stc, 'subtitle','x') 
+    y_subtl = parse_custom_structure(default_stc.subtitle.y, custom_stc, 'subtitle','y') 
     if (do_print) then begin
 ; default X dimension of hardcopy (cm)
         hxsize_def = 15.
@@ -561,8 +650,12 @@ if (do_print) then begin
     if (do_ps) then begin
         if (size(ps,/tname) ne 'STRING')  then file_ps = 'plot_'+proj_small+'.ps' else file_ps = ps[0]
     endif
-    if (do_pdf) then begin
-        if (size(pdf,/tname) ne 'STRING') then file_pdf = 'plot_'+proj_small+'.pdf' else file_pdf = pdf[0]
+    if (do_pdf) then begin ; make sure that PDF file path is always absolute, with home '~' expanded
+        if (size(pdf,/tname) ne 'STRING') then begin
+            file_pdf = absolute_file_path('plot_'+proj_small+'.pdf')
+        endif else begin
+            file_pdf = absolute_file_path(pdf[0])
+        endelse
         file_ps = file_pdf+'TEMP.ps'
     endif
     SET_plot,'ps'

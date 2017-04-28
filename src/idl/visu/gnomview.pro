@@ -34,6 +34,8 @@ PRO gnomview, file_in, select_in, $
               COLT = colt, $
               COORD = coord, $
               CROP = crop, $
+              CUSTOMIZE = customize, $
+              DEFAULT_SETTINGS = default_settings, $
               EXECUTE=execute, $
               FACTOR = factor, $
               FITS = fits, $
@@ -189,7 +191,7 @@ proj2out, $
   HBOUND = hbound, WINDOW = window, EXECUTE=execute, SILENT=silent, GLSIZE=glsize, $
   IGLSIZE=iglsize, RETAIN=retain, TRUECOLORS=truecolors, TRANSPARENT=transparent, $
   CHARTHICK=charthick, JPEG=jpeg, BAD_COLOR=bad_color, BG_COLOR=bg_color, FG_COLOR=fg_color, PDF=pdf, $
-  LATEX=latex, PFONTS=pfonts
+  LATEX=latex, PFONTS=pfonts, CUSTOMIZE=CUSTOMIZE, DEFAULT_SETTINGS=default_settings
 
 
 w_num = !d.window

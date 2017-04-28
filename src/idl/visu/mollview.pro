@@ -34,6 +34,8 @@ pro mollview, file_in, select_in, $
               COLT = colt, $
               COORD = coord, $
               CROP = crop, $
+              CUSTOMIZE = customize, $
+              DEFAULT_SETTINGS = default_settings, $
               EXECUTE = execute, $
               FACTOR = factor, $
               FITS = fits, $
@@ -97,6 +99,8 @@ pro mollview, file_in, select_in, $
 ;                       [ASINH=, $
 ;                       BAD_COLOR=, BG_COLOR=, $
 ;                       CHARSIZE=, COLT=, COORD=, CROP=, $
+;                       CUSTOMIZE=, $
+;                       DEFAULT_SETTINGS=, $
 ;                       EXECUTE=, $
 ;                       FACTOR=, FG_COLOR=, FITS=, FLIP=, $
 ;                       GAL_CUT=, GIF=, GLSIZE=, GRATICULE=, $
@@ -204,6 +208,16 @@ pro mollview, file_in, select_in, $
 ;       CROP : if set, the image produced (gif, jpeg, pdf, png, ps, X) only
 ;               contains the projected map and not the title, color bar, ...
 ;               (see also : GIF, JPEG, PDF, PNG, PS)
+;
+;       CUSTOMIZE: (input) IDL structure containing customization parameters
+;          whose default values are listed in DEFAULT_SETTINGS
+;           accept   cbar.dx, cbar.dy : color bar X and Y sizes
+;                    title.x, title.y:  title X and Y location
+;                    subtitle.x, subtitle.y: subtitle X and Y location
+;            {cbar:{dx:1./3., dy:1./70.}, title:{x:0.5, y:0.95}, subtitle:{x:0.5, y:0.905}}
+;
+;       DEFAULT_SETTINGS: (output) IDL structure listing the default values
+;          of the plot settings, like the color bar size, title and subtitle location
 ;
 ;       EXECUTE: character string containing an IDL command to be executed in
 ;                the plotting window
@@ -709,7 +723,7 @@ proj2out, $
   HBOUND = hbound, WINDOW = window, EXECUTE=execute, SILENT=silent, GLSIZE=glsize, $
   IGLSIZE=iglsize, RETAIN=retain, TRUECOLORS=truecolors, TRANSPARENT=transparent, CHARTHICK=charthick, $
   JPEG=jpeg, BAD_COLOR=bad_color, BG_COLOR=bg_color, FG_COLOR=fg_color, PDF=pdf, $
-  LATEX=latex, PFONTS=pfonts
+  LATEX=latex, PFONTS=pfonts, CUSTOMIZE=CUSTOMIZE, DEFAULT_SETTINGS=default_settings
 
 
 w_num = !d.window
