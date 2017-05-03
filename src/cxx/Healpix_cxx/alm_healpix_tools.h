@@ -25,7 +25,7 @@
  */
 
 /*! \file alm_healpix_tools.h
- *  Copyright (C) 2003-2016 Max-Planck-Society
+ *  Copyright (C) 2003-2017 Max-Planck-Society
  *  \author Martin Reinecke
  */
 
@@ -158,18 +158,23 @@ template<typename T> void map2alm_pol_iter2
            determined from this object.
     \param map the output map, which must have RING ordering. */
 template<typename T> void alm2map (const Alm<xcomplex<T> > &alm,
-  Healpix_Map<T> &map);
+  Healpix_Map<T> &map, bool add_map=false);
 
 /*! Adjoint of the alm2map transform.
     \param map the input map, which must have RING ordering
     \param alm the output a_lms. l_max and m_max of the conversion are
            determined from this object. */
 template<typename T> void alm2map_adjoint (const Healpix_Map<T> &map,
-  Alm<xcomplex<T> > &alm);
+  Alm<xcomplex<T> > &alm, bool add_alm=false);
 
 template<typename T> void alm2map_spin
   (const Alm<xcomplex<T> > &alm1, const Alm<xcomplex<T> > &alm2,
-   Healpix_Map<T> &map1, Healpix_Map<T> &map2, int spin);
+   Healpix_Map<T> &map1, Healpix_Map<T> &map2, int spin, bool add_map=false);
+
+template<typename T> void alm2map_spin_adjoint
+  (const Healpix_Map<T> &map1, const Healpix_Map<T> &map2,
+   Alm<xcomplex<T> > &alm1, Alm<xcomplex<T> > &alm2,
+   int spin, bool add_alm=false);
 
 /*! Converts a a set of polarised a_lm to a HEALPix map.
     \param almT the input temperature a_lms
@@ -184,7 +189,17 @@ template<typename T> void alm2map_pol
    const Alm<xcomplex<T> > &almC,
    Healpix_Map<T> &mapT,
    Healpix_Map<T> &mapQ,
-   Healpix_Map<T> &mapU);
+   Healpix_Map<T> &mapU,
+   bool add_map=false);
+
+  template<typename T> void alm2map_pol_adjoint
+  (const Healpix_Map<T> &mapT,
+   const Healpix_Map<T> &mapQ,
+   const Healpix_Map<T> &mapU,
+   Alm<xcomplex<T> > &almT,
+   Alm<xcomplex<T> > &almG,
+   Alm<xcomplex<T> > &almC,
+   bool add_alm=false);
 
 /*! Converts a a set of a_lm to a HEALPix map and its first derivatives.
     \param alm the input a_lms. l_max and m_max of the conversion are

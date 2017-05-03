@@ -25,7 +25,7 @@
  */
 
 /*
- *  Copyright (C) 2003-2016 Max-Planck-Society
+ *  Copyright (C) 2003-2017 Max-Planck-Society
  *  Author: Martin Reinecke
  */
 
@@ -71,7 +71,7 @@ template void map2alm (const Healpix_Map<double> &map,
   bool add_alm);
 
 template<typename T> void alm2map_adjoint (const Healpix_Map<T> &map,
-  Alm<xcomplex<T> > &alm)
+  Alm<xcomplex<T> > &alm, bool add_alm)
   {
   planck_assert (map.Scheme()==RING,
     "alm2map_adjoint: map must be in RING scheme");
@@ -81,13 +81,13 @@ template<typename T> void alm2map_adjoint (const Healpix_Map<T> &map,
   sharp_cxxjob<T> job;
   job.set_Healpix_geometry (map.Nside());
   job.set_triangular_alm_info (alm.Lmax(), alm.Mmax());
-  job.alm2map_adjoint(&map[0], &alm(0,0), false);
+  job.alm2map_adjoint(&map[0], &alm(0,0), add_alm);
   }
 
 template void alm2map_adjoint (const Healpix_Map<float> &map,
-  Alm<xcomplex<float> > &alm);
+  Alm<xcomplex<float> > &alm, bool add_alm);
 template void alm2map_adjoint (const Healpix_Map<double> &map,
-  Alm<xcomplex<double> > &alm);
+  Alm<xcomplex<double> > &alm, bool add_alm);
 
 template<typename T> void map2alm_iter (const Healpix_Map<T> &map,
   Alm<xcomplex<T> > &alm, int num_iter, const arr<double> &weight)
@@ -170,6 +170,37 @@ template void map2alm_spin
   (const Healpix_Map<double> &map1, const Healpix_Map<double> &map2,
    Alm<xcomplex<double> > &alm1, Alm<xcomplex<double> > &alm2,
    int spin, const arr<double> &weight, bool add_alm);
+
+template<typename T> void alm2map_spin_adjoint
+  (const Healpix_Map<T> &map1, const Healpix_Map<T> &map2,
+   Alm<xcomplex<T> > &alm1, Alm<xcomplex<T> > &alm2,
+   int spin, bool add_alm)
+  {
+  planck_assert (map1.Scheme()==RING,
+    "alm2map_spin_adjoint: maps must be in RING scheme");
+  planck_assert (map1.conformable(map2),
+    "alm2map_spin_adjoint: maps are not conformable");
+  planck_assert (alm1.conformable(alm1),
+    "alm2map_spin_adjoint: a_lm are not conformable");
+  planck_assert (map1.fullyDefined()&&map2.fullyDefined(),
+    "map contains undefined pixels");
+  checkLmaxNside(alm1.Lmax(), map1.Nside());
+
+  sharp_cxxjob<T> job;
+  job.set_Healpix_geometry (map1.Nside());
+  job.set_triangular_alm_info (alm1.Lmax(), alm1.Mmax());
+  job.alm2map_spin_adjoint(&map1[0],&map2[0],&alm1(0,0),&alm2(0,0),spin,
+    add_alm);
+  }
+
+template void alm2map_spin_adjoint
+  (const Healpix_Map<float> &map1, const Healpix_Map<float> &map2,
+   Alm<xcomplex<float> > &alm1, Alm<xcomplex<float> > &alm2,
+   int spin, bool add_alm);
+template void alm2map_spin_adjoint
+  (const Healpix_Map<double> &map1, const Healpix_Map<double> &map2,
+   Alm<xcomplex<double> > &alm1, Alm<xcomplex<double> > &alm2,
+   int spin, bool add_alm);
 
 template<typename T> void map2alm_spin_iter2
   (const Healpix_Map<T> &map1, const Healpix_Map<T> &map2,
@@ -254,6 +285,48 @@ template void map2alm_pol
    const arr<double> &weight,
    bool add_alm);
 
+template<typename T> void alm2map_pol_adjoint
+  (const Healpix_Map<T> &mapT,
+   const Healpix_Map<T> &mapQ,
+   const Healpix_Map<T> &mapU,
+   Alm<xcomplex<T> > &almT,
+   Alm<xcomplex<T> > &almG,
+   Alm<xcomplex<T> > &almC,
+   bool add_alm)
+  {
+  planck_assert (mapT.Scheme()==RING,
+    "alm2map_pol_adjoint: maps must be in RING scheme");
+  planck_assert (mapT.conformable(mapQ) && mapT.conformable(mapU),
+    "alm2map_pol_adjoint: maps are not conformable");
+  planck_assert (almT.conformable(almG) && almT.conformable(almC),
+    "alm2map_pol_adjoint: a_lm are not conformable");
+  planck_assert (mapT.fullyDefined()&&mapQ.fullyDefined()&&mapU.fullyDefined(),
+    "map contains undefined pixels");
+  checkLmaxNside(almT.Lmax(), mapT.Nside());
+
+  sharp_cxxjob<T> job;
+  job.set_Healpix_geometry (mapT.Nside());
+  job.set_triangular_alm_info (almT.Lmax(), almT.Mmax());
+  job.alm2map_adjoint(&mapT[0], &almT(0,0), add_alm);
+  job.alm2map_spin_adjoint(&mapQ[0],&mapU[0],&almG(0,0),&almC(0,0),2,add_alm);
+  }
+
+template void alm2map_pol_adjoint
+  (const Healpix_Map<float> &mapT,
+   const Healpix_Map<float> &mapQ,
+   const Healpix_Map<float> &mapU,
+   Alm<xcomplex<float> > &almT,
+   Alm<xcomplex<float> > &almG,
+   Alm<xcomplex<float> > &almC,
+   bool add_alm);
+template void alm2map_pol_adjoint
+  (const Healpix_Map<double> &mapT,
+   const Healpix_Map<double> &mapQ,
+   const Healpix_Map<double> &mapU,
+   Alm<xcomplex<double> > &almT,
+   Alm<xcomplex<double> > &almG,
+   Alm<xcomplex<double> > &almC,
+   bool add_alm);
 
 template<typename T> void map2alm_pol_iter
   (const Healpix_Map<T> &mapT,
@@ -351,24 +424,24 @@ template void map2alm_pol_iter2
 
 
 template<typename T> void alm2map (const Alm<xcomplex<T> > &alm,
-  Healpix_Map<T> &map)
+  Healpix_Map<T> &map, bool add_map)
   {
   planck_assert (map.Scheme()==RING, "alm2map: map must be in RING scheme");
 
   sharp_cxxjob<T> job;
   job.set_Healpix_geometry (map.Nside());
   job.set_triangular_alm_info (alm.Lmax(), alm.Mmax());
-  job.alm2map(&alm(0,0), &map[0], false);
+  job.alm2map(&alm(0,0), &map[0], add_map);
   }
 
 template void alm2map (const Alm<xcomplex<double> > &alm,
-  Healpix_Map<double> &map);
+  Healpix_Map<double> &map, bool add_map);
 template void alm2map (const Alm<xcomplex<float> > &alm,
-  Healpix_Map<float> &map);
+  Healpix_Map<float> &map, bool add_map);
 
 template<typename T> void alm2map_spin
   (const Alm<xcomplex<T> > &alm1, const Alm<xcomplex<T> > &alm2,
-   Healpix_Map<T> &map1, Healpix_Map<T> &map2, int spin)
+   Healpix_Map<T> &map1, Healpix_Map<T> &map2, int spin, bool add_map)
   {
   planck_assert (map1.Scheme()==RING,
     "alm2map_spin: maps must be in RING scheme");
@@ -380,15 +453,15 @@ template<typename T> void alm2map_spin
   sharp_cxxjob<T> job;
   job.set_Healpix_geometry (map1.Nside());
   job.set_triangular_alm_info (alm1.Lmax(), alm1.Mmax());
-  job.alm2map_spin(&alm1(0,0),&alm2(0,0),&map1[0],&map2[0],spin,false);
+  job.alm2map_spin(&alm1(0,0),&alm2(0,0),&map1[0],&map2[0],spin,add_map);
   }
 
 template void alm2map_spin
   (const Alm<xcomplex<double> > &alm1, const Alm<xcomplex<double> > &alm2,
-   Healpix_Map<double> &map, Healpix_Map<double> &map2, int spin);
+   Healpix_Map<double> &map, Healpix_Map<double> &map2, int spin, bool add_map);
 template void alm2map_spin
   (const Alm<xcomplex<float> > &alm1, const Alm<xcomplex<float> > &alm2,
-   Healpix_Map<float> &map, Healpix_Map<float> &map2, int spin);
+   Healpix_Map<float> &map, Healpix_Map<float> &map2, int spin, bool add_map);
 
 
 template<typename T> void alm2map_pol
@@ -397,7 +470,8 @@ template<typename T> void alm2map_pol
    const Alm<xcomplex<T> > &almC,
    Healpix_Map<T> &mapT,
    Healpix_Map<T> &mapQ,
-   Healpix_Map<T> &mapU)
+   Healpix_Map<T> &mapU,
+   bool add_map)
   {
   planck_assert (mapT.Scheme()==RING,
     "alm2map_pol: maps must be in RING scheme");
@@ -409,8 +483,8 @@ template<typename T> void alm2map_pol
   sharp_cxxjob<T> job;
   job.set_Healpix_geometry (mapT.Nside());
   job.set_triangular_alm_info (almT.Lmax(), almT.Mmax());
-  job.alm2map(&almT(0,0), &mapT[0], false);
-  job.alm2map_spin(&almG(0,0), &almC(0,0), &mapQ[0], &mapU[0], 2, false);
+  job.alm2map(&almT(0,0), &mapT[0], add_map);
+  job.alm2map_spin(&almG(0,0), &almC(0,0), &mapQ[0], &mapU[0], 2, add_map);
   }
 
 template void alm2map_pol (const Alm<xcomplex<double> > &almT,
@@ -418,14 +492,16 @@ template void alm2map_pol (const Alm<xcomplex<double> > &almT,
                            const Alm<xcomplex<double> > &almC,
                            Healpix_Map<double> &mapT,
                            Healpix_Map<double> &mapQ,
-                           Healpix_Map<double> &mapU);
+                           Healpix_Map<double> &mapU,
+                           bool add_map);
 
 template void alm2map_pol (const Alm<xcomplex<float> > &almT,
                            const Alm<xcomplex<float> > &almG,
                            const Alm<xcomplex<float> > &almC,
                            Healpix_Map<float> &mapT,
                            Healpix_Map<float> &mapQ,
-                           Healpix_Map<float> &mapU);
+                           Healpix_Map<float> &mapU,
+                           bool add_map);
 
 
 template<typename T> void alm2map_der1
