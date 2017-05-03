@@ -275,300 +275,233 @@ xsize = (size(planmap))(1)
 ysize = (size(planmap))(2)
 w_pos = (do_crop) ? [0.00, 0.00, 1.00, 1.00] : [0.00, 0.10, 1.00, 0.90]
 
-if (projtype eq 2) then begin
-;  ---- Gnomonic specific definitions for the plot ----
-    routine    = 'GNOMVIEW'
-    proj_small = 'gnomic'
-    proj_big   = 'Gnomic'
-    do_gnom    = 1
-    default_stc = {cbar:{dx:1./3., dy:1./70.}, title:{x:0.5, y:0.95}, subtitle:{x:0.5, y:0.915}}
+case projtype of
 
-    du_dv = xsize/float(ysize)                  ; aspect ratio
-    fudge = 1.00                ; 
-    xc = (xsize-1)/2. & delta_x = (xsize-1 - xc)
-    yc = (ysize-1)/2. & delta_y = (ysize-1 - yc)
-; u and v range of the map
-    umin = - dx * xc * fudge & umax = dx * xc * fudge
-    vmin = - dx * yc * fudge & vmax = dx * yc * fudge
-; position of the rectangle in the final window
-    w_xll = w_pos[0] & w_xur = w_pos[2] & w_dx = w_xur - w_xll
-    w_yll = w_pos[1] & w_yur = w_pos[3] & w_dy = w_yur - w_yll
-    w_dx_dy = w_dx / w_dy       ; 1.4
-; color bar, position, dimension
-    cbar_dx = parse_custom_structure(default_stc.cbar.dx, custom_stc, 'cbar','dx')
-    cbar_dy = parse_custom_structure(default_stc.cbar.dy, custom_stc, 'cbar','dy')
-    cbar_xll = (1. - cbar_dx)/2.
-    cbar_xur = (1. + cbar_dx)/2.
-    cbar_yur = w_yll - cbar_dy
-    cbar_yll = cbar_yur - cbar_dy
-; polarisation color ring, position, dimension
-    cring_dx = 1./15.
-    cring_dy = 1./15.
-    cring_xll = .025
-    cring_yll = .025
-; location of astro. coordinate
-    x_aspos = 0.5
-    y_aspos = 0.04
-; location of pol vector scale
-    vscal_x = 0.05
-    vscal_y = 0.01
-; location of title and subtitle
-    x_title = parse_custom_structure(default_stc.title.x, custom_stc, 'title','x') 
-    y_title = parse_custom_structure(default_stc.title.y, custom_stc, 'title','y') 
-    x_subtl = parse_custom_structure(default_stc.subtitle.x, custom_stc, 'subtitle','x') 
-    y_subtl = parse_custom_structure(default_stc.subtitle.y, custom_stc, 'subtitle','y') 
-    if (do_print) then begin
-; default X dimension of hardcopy (cm)
-        hxsize_def = 15.
-; offset along the long axis of the page
-        yoffset = (papersize eq 'a4') ? 2 : 1
-    endif
-endif
-
-if (projtype eq 1) then begin
+    1:begin
 ;  ---- Mollweide specific definitions for the plot ----
-    routine    = 'MOLLVIEW'
-    proj_big   = 'Mollweide'
-    proj_small = 'mollweide'
-    do_moll    = 1
-    default_stc = {cbar:{dx:1./3., dy:1./70.}, title:{x:0.5, y:0.95}, subtitle:{x:0.5, y:0.905}}
-
-    du_dv = 2.                  ; aspect ratio
-    fudge = 1.02                ; spare some space around the Mollweide egg
-    xc = 0.5*(xsize-1) & delta_x = (xsize-1 - xc)
-    yc = 0.5*(ysize-1) & delta_y = (ysize-1 - yc)
+        routine    = 'MOLLVIEW'
+        proj_big   = 'Mollweide'
+        proj_small = 'mollweide'
+        do_moll    = 1
+        default_stc = {$
+                      aspos:{x:-1, y:-1}, $
+                      cbar:{dx:1./3., dy:1./70., spaces:[' ',' ',' '], ty:0}, $
+                      cring:{dx:1./10., xll:0.025, yll:0.025}, $
+                      subtitle:{x:0.5, y:0.905, charsize:1.2}, $
+                      title:{x:0.5, y:0.95, charsize:1.6}, $
+                      vscale:{x:0.05, y:0.02}}
+        
+        du_dv = 2.              ; aspect ratio
+        fudge = 1.02            ; spare some space around the Mollweide egg
+        xc = 0.5*(xsize-1) & delta_x = (xsize-1 - xc)
+        yc = 0.5*(ysize-1) & delta_y = (ysize-1 - yc)
 ; x and y range of egg
-    umin = - du_dv * fudge & umax = du_dv * fudge
-    vmin = - fudge         & vmax =         fudge
+        umin = - du_dv * fudge & umax = du_dv * fudge
+        vmin = - fudge         & vmax =         fudge
 ; position of the egg in the final window
-    w_xll = w_pos[0] & w_xur = w_pos[2] & w_dx = w_xur - w_xll
-    w_yll = w_pos[1] & w_yur = w_pos[3] & w_dy = w_yur - w_yll
-    w_dx_dy = w_dx / w_dy       ; 1./.8
-; color bar, position, dimension
-    cbar_dx = parse_custom_structure(default_stc.cbar.dx, custom_stc, 'cbar','dx')
-    cbar_dy = parse_custom_structure(default_stc.cbar.dy, custom_stc, 'cbar','dy')
-    cbar_xll = (1. - cbar_dx)/2.
-    cbar_xur = (1. + cbar_dx)/2.
-    cbar_yur = w_yll - cbar_dy
-    cbar_yll = cbar_yur - cbar_dy
-; polarisation color ring, position, dimension
-    cring_dx = 1./10.
-    cring_dy = 1./10.
-    cring_xll = .025
-    cring_yll = .025
-; location of pol vector scale
-    vscal_x = 0.05
-    vscal_y = 0.02
-; location of title and subtitle
-    x_title = parse_custom_structure(default_stc.title.x, custom_stc, 'title','x') 
-    y_title = parse_custom_structure(default_stc.title.y, custom_stc, 'title','y') 
-    x_subtl = parse_custom_structure(default_stc.subtitle.x, custom_stc, 'subtitle','x') 
-    y_subtl = parse_custom_structure(default_stc.subtitle.y, custom_stc, 'subtitle','y') 
-    if (do_print) then begin
-; default X dimension of hardcopy (cm)
-        hxsize_def = 26.
-; offset along the long axis of the page
-        yoffset = (papersize eq 'a4') ? 2 : 1
-    endif
-endif
+        w_xll = w_pos[0] & w_xur = w_pos[2] & w_dx = w_xur - w_xll
+        w_yll = w_pos[1] & w_yur = w_pos[3] & w_dy = w_yur - w_yll
+        w_dx_dy = w_dx / w_dy   ; 1./.8
+        if (do_print) then begin
+            hxsize_def = 26.                     ; default X dimension of hardcopy (cm)
+            yoffset = (papersize eq 'a4') ? 2 : 1; offset along the long axis of the page
+        endif
+    end
 
-if (projtype eq 5) then begin
-;  ---- Diamonds specific definitions for the plot ----
-    routine    = 'DIAMONDS'
-    proj_big   = 'Diamonds'
-    proj_small = 'diamonds'
-    do_moll    = 1
-    default_stc = {cbar:{dx:1./3., dy:1./70.}, title:{x:0.5, y:0.95}, subtitle:{x:0.5, y:0.905}}
+    2:begin
+;  ---- Gnomonic specific definitions for the plot ----
+        routine    = 'GNOMVIEW'
+        proj_small = 'gnomic'
+        proj_big   = 'Gnomic'
+        do_gnom    = 1
+        default_stc = {$
+                      aspos:{x:0.5, y:0.04}, $
+                      cbar:{dx:1./3., dy:1./70., spaces:[' ',' ',' '], ty:0}, $
+                      cring:{dx:1./15., xll:0.025, yll:0.025}, $
+                      subtitle:{x:0.5, y:0.915, charsize:1.2}, $
+                      title:{x:0.5, y:0.95, charsize:1.6}, $
+                      vscale:{x:0.05, y:0.01}}
+        
+        du_dv = xsize/float(ysize) ; aspect ratio
+        fudge = 1.00            ; 
+        xc = (xsize-1)/2. & delta_x = (xsize-1 - xc)
+        yc = (ysize-1)/2. & delta_y = (ysize-1 - yc)
+; u and v range of the map
+        umin = - dx * xc * fudge & umax = dx * xc * fudge
+        vmin = - dx * yc * fudge & vmax = dx * yc * fudge
+; position of the rectangle in the final window
+        w_xll = w_pos[0] & w_xur = w_pos[2] & w_dx = w_xur - w_xll
+        w_yll = w_pos[1] & w_yur = w_pos[3] & w_dy = w_yur - w_yll
+        w_dx_dy = w_dx / w_dy   ; 1.4
+        if (do_print) then begin
+            hxsize_def = 15.                     ; default X dimension of hardcopy (cm)
+            yoffset = (papersize eq 'a4') ? 2 : 1; offset along the long axis of the page
+        endif
+    end
 
-    du_dv = 2.                  ; aspect ratio
-    fudge = 1.00                ; spare some space around the 12-Diamonds
-    xc = 0.5*(xsize-1) & delta_x = (xsize-1 - xc)
-    yc = 0.5*(ysize-1) & delta_y = (ysize-1 - yc)
-; x and y range of egg
-    umin = - du_dv * fudge & umax = du_dv * fudge
-    vmin = - fudge         & vmax =         fudge
-; position of the egg in the final window
-    w_xll = w_pos[0] & w_xur = w_pos[2] & w_dx = w_xur - w_xll
-    w_yll = w_pos[1] & w_yur = w_pos[3] & w_dy = w_yur - w_yll
-    w_dx_dy = w_dx / w_dy       ; 1./.8
-; color bar, position, dimension
-    cbar_dx = parse_custom_structure(1./3.,  custom_stc, 'cbar','dx')
-    cbar_dy = parse_custom_structure(1./70., custom_stc, 'cbar','dy')
-    cbar_xll = (1. - cbar_dx)/2.
-    cbar_xur = (1. + cbar_dx)/2.
-    cbar_yur = w_yll - cbar_dy
-    cbar_yll = cbar_yur - cbar_dy
-; polarisation color ring, position, dimension
-    cring_dx = 1./10.
-    cring_dy = 1./10.
-    cring_xll = .025
-    cring_yll = .025
-; location of pol vector scale
-    vscal_x = 0.05
-    vscal_y = 0.02
-; location of title and subtitle
-    x_title = parse_custom_structure(default_stc.title.x, custom_stc, 'title','x') 
-    y_title = parse_custom_structure(default_stc.title.y, custom_stc, 'title','y') 
-    x_subtl = parse_custom_structure(default_stc.subtitle.x, custom_stc, 'subtitle','x') 
-    y_subtl = parse_custom_structure(default_stc.subtitle.y, custom_stc, 'subtitle','y') 
-    if (do_print) then begin
-; default X dimension of hardcopy (cm)
-        hxsize_def = 26.
-; offset along the long axis of the page
-        yoffset = (papersize eq 'a4') ? 2 : 1
-    endif
-endif
+    3:begin
+;------------ cartesion projection ----------------
+        routine    = 'CARTVIEW'
+        proj_small = 'cartesian'
+        proj_big   = 'Cartesian'
+        do_cart    = 1
+        default_stc = {$
+                      aspos:{x:0.5, y:0.04}, $
+                      cbar:{dx:1./3., dy:1./70., spaces:[' ',' ',' '], ty:0}, $
+                      cring:{dx:1./15., xll:0.025, yll:0.025}, $
+                      subtitle:{x:0.5, y:0.905, charsize:1.2}, $
+                      title:{x:0.5, y:0.95, charsize:1.6}, $
+                      vscale:{x:0.05, y:0.01}}
+        
+        du_dv = xsize/float(ysize) ; aspect ratio
+        fudge = 1.00            ; 
+        xc = (xsize-1)/2. & delta_x = (xsize-1 - xc)
+        yc = (ysize-1)/2. & delta_y = (ysize-1 - yc)
+; u and v range of the map
+        umin = - dx * xc * fudge & umax = dx * xc * fudge
+        vmin = - dx * yc * fudge & vmax = dx * yc * fudge
+; position of the rectangle in the final window
+        w_xll = w_pos[0] & w_xur = w_pos[2] & w_dx = w_xur - w_xll
+        w_yll = w_pos[1] & w_yur = w_pos[3] & w_dy = w_yur - w_yll
+        w_dx_dy = w_dx / w_dy   ; 1.4
+        if (do_print) then begin
+            hxsize_def = 15.                     ; default X dimension of hardcopy (cm)
+            yoffset = (papersize eq 'a4') ? 2 : 1; offset along the long axis of the page
+        endif
+    end
 
-if (projtype eq 4) then begin
+    4: begin
 ;  ---- Orthographic specific definitions for the plot ----
-    routine    = 'ORTHVIEW'
-    proj_big   = 'Orthographic'
-    proj_small = 'orthographic'
-    do_orth    = 1
-    default_stc = {cbar:{dx:1./3., dy:1./70.}, title:{x:0.5, y:0.95}, subtitle:{x:0.5, y:0.905}}
-    
-    if keyword_set(half_sky) then do_fullsky = 0 else do_fullsky = 1
-    if (do_fullsky) then du_dv = 2. else du_dv = 1. ; aspect ratio
+        routine    = 'ORTHVIEW'
+        proj_big   = 'Orthographic'
+        proj_small = 'orthographic'
+        do_orth    = 1
+        default_stc = {$
+                      aspos:{x:-1, y:-1}, $
+                      cbar:{dx:1./3., dy:1./70., spaces:[' ',' ',' '], ty:0}, $
+                      cring:{dx:1./10., xll:0.025, yll:0.025}, $
+                      subtitle:{x:0.5, y:0.905, charsize:1.2}, $
+                      title:{x:0.5, y:0.95, charsize:1.6}, $
+                      vscale:{x:0.05, y:0.02}}
+        
+        do_fullsky = ~keyword_set(half_sky)
+        du_dv = do_fullsky ? 2. : 1. ; aspect ratio
 
-    fudge = 1.02                ; spare some space around the Orthographic disc
-    xc = 0.5*(xsize-1) & delta_x = (xsize-1 - xc)
-    yc = 0.5*(ysize-1) & delta_y = (ysize-1 - yc)
+        fudge = 1.02            ; spare some space around the Orthographic disc
+        xc = 0.5*(xsize-1) & delta_x = (xsize-1 - xc)
+        yc = 0.5*(ysize-1) & delta_y = (ysize-1 - yc)
 ; x and y range of disc
-    umin = - du_dv * fudge & umax = du_dv * fudge
-    vmin = - fudge         & vmax =         fudge
+        umin = - du_dv * fudge & umax = du_dv * fudge
+        vmin = - fudge         & vmax =         fudge
 ; position of the disc in the final window
-    w_xll = w_pos[0] & w_xur = w_pos[2] & w_dx = w_xur - w_xll
-    w_yll = w_pos[1] & w_yur = w_pos[3] & w_dy = w_yur - w_yll
-    w_dx_dy = w_dx / w_dy       ; 1./.8
+        w_xll = w_pos[0] & w_xur = w_pos[2] & w_dx = w_xur - w_xll
+        w_yll = w_pos[1] & w_yur = w_pos[3] & w_dy = w_yur - w_yll
+        w_dx_dy = w_dx / w_dy   ; 1./.8
+        if (do_print) then begin
+            hxsize_def = 26.                     ; default X dimension of hardcopy (cm)
+            yoffset = (papersize eq 'a4') ? 2 : 1; offset along the long axis of the page
+        endif
+    end
+
+    5:begin
+;  ---- Diamonds specific definitions for the plot ----
+        routine    = 'DIAMONDS'
+        proj_big   = 'Diamonds'
+        proj_small = 'diamonds'
+        do_moll    = 1
+        default_stc = {$
+                      aspos:{x:-1, y:-1}, $
+                      cbar:{dx:1./3., dy:1./70., spaces:[' ',' ',' '], ty:0}, $
+                      cring:{dx:1./10., xll:0.025, yll:0.025}, $
+                      subtitle:{x:0.5, y:0.905, charsize:1.2}, $
+                      title:{x:0.5, y:0.95, charsize:1.6}, $
+                      vscale:{x:0.05, y:0.02}}
+
+        du_dv = 2.              ; aspect ratio
+        fudge = 1.00            ; spare some space around the 12-Diamonds
+        xc = 0.5*(xsize-1) & delta_x = (xsize-1 - xc)
+        yc = 0.5*(ysize-1) & delta_y = (ysize-1 - yc)
+; x and y range of egg
+        umin = - du_dv * fudge & umax = du_dv * fudge
+        vmin = - fudge         & vmax =         fudge
+; position of the egg in the final window
+        w_xll = w_pos[0] & w_xur = w_pos[2] & w_dx = w_xur - w_xll
+        w_yll = w_pos[1] & w_yur = w_pos[3] & w_dy = w_yur - w_yll
+        w_dx_dy = w_dx / w_dy   ; 1./.8
+        if (do_print) then begin
+            hxsize_def = 26.                     ; default X dimension of hardcopy (cm)
+            yoffset = (papersize eq 'a4') ? 2 : 1; offset along the long axis of the page
+        endif
+    end
+
+    6:begin
+;------------ azimuthal equidistant projection ----------------
+        routine    = 'AZEQVIEW'
+        proj_small = 'azimequid'
+        proj_big   = 'AzimEquidistant'
+        do_azeq    = 1
+        default_stc = {$
+                      aspos:{x:0.5, y:0.04}, $
+                      cbar:{dx:1./3., dy:1./70., spaces:[' ',' ',' '], ty:0}, $
+                      cring:{dx:1./15., xll:0.025, yll:0.025}, $
+                      subtitle:{x:0.5, y:0.905, charsize:1.2}, $
+                      title:{x:0.5, y:0.95, charsize:1.6}, $
+                      vscale:{x:0.05, y:0.01}}
+        
+        du_dv = xsize/float(ysize) ; aspect ratio
+        fudge = 1.00            ; 
+        xc = (xsize-1)/2. & delta_x = (xsize-1 - xc)
+        yc = (ysize-1)/2. & delta_y = (ysize-1 - yc)
+; u and v range of the map
+        umin = - dx * xc * fudge & umax = dx * xc * fudge
+        vmin = - dx * yc * fudge & vmax = dx * yc * fudge
+; position of the rectangle in the final window
+        w_xll = w_pos[0] & w_xur = w_pos[2] & w_dx = w_xur - w_xll
+        w_yll = w_pos[1] & w_yur = w_pos[3] & w_dy = w_yur - w_yll
+        w_dx_dy = w_dx / w_dy   ; 1.4
+        if (do_print) then begin
+            hxsize_def = 15.                     ; default X dimension of hardcopy (cm)
+            yoffset = (papersize eq 'a4') ? 2 : 1; offset along the long axis of the page
+        endif
+    end
+
+    else: begin
+        message,'Unknown projtype, not in [1,6]: '+strtrim(projtype,2)
+    end
+endcase
+
+;----------------------------------------
+; take into account user customization
+;----------------------------------------
 ; color bar, position, dimension
-    cbar_dx = parse_custom_structure(1./3.,  custom_stc, 'cbar','dx')
-    cbar_dy = parse_custom_structure(1./70., custom_stc, 'cbar','dy')
-    cbar_xll = (1. - cbar_dx)/2.
-    cbar_xur = (1. + cbar_dx)/2.
-    cbar_yur = w_yll - cbar_dy
-    cbar_yll = cbar_yur - cbar_dy
+cbar_dx = parse_custom_structure(default_stc.cbar.dx,     custom_stc, 'cbar','dx')
+cbar_dy = parse_custom_structure(default_stc.cbar.dy,     custom_stc, 'cbar','dy')
+cbar_sp = parse_custom_structure(default_stc.cbar.spaces, custom_stc, 'cbar','spaces')
+cbar_ty = parse_custom_structure(default_stc.cbar.ty,     custom_stc, 'cbar','ty')
+cbar_xll = (1. - cbar_dx)/2.
+cbar_xur = (1. + cbar_dx)/2.
+cbar_yur = w_yll - cbar_dy
+cbar_yll = cbar_yur - cbar_dy
 ; polarisation color ring, position, dimension
-    cring_dx = 1./10.
-    cring_dy = 1./10.
-    cring_xll = .025
-    cring_yll = .025
+cring_dx  = parse_custom_structure(default_stc.cring.dx,     custom_stc, 'cring','dx')
+cring_dy  = cring_dx
+cring_xll = parse_custom_structure(default_stc.cring.xll,    custom_stc, 'cring','xll')
+cring_yll = parse_custom_structure(default_stc.cring.xll,    custom_stc, 'cring','yll')
+; location of astro. coordinate
+x_aspos   = parse_custom_structure(default_stc.aspos.x,     custom_stc, 'aspos','x')
+y_aspos   = parse_custom_structure(default_stc.aspos.y,     custom_stc, 'aspos','y')
 ; location of pol vector scale
-    vscal_x = 0.05
-    vscal_y = 0.02
+vscal_x   = parse_custom_structure(default_stc.vscale.x,     custom_stc, 'vscale','x')
+vscal_y   = parse_custom_structure(default_stc.vscale.y,     custom_stc, 'vscale','y')
 ; location of title and subtitle
-    x_title = parse_custom_structure(default_stc.title.x, custom_stc, 'title','x') 
-    y_title = parse_custom_structure(default_stc.title.y, custom_stc, 'title','y') 
-    x_subtl = parse_custom_structure(default_stc.subtitle.x, custom_stc, 'subtitle','x') 
-    y_subtl = parse_custom_structure(default_stc.subtitle.y, custom_stc, 'subtitle','y') 
-    if (do_print) then begin
-; default X dimension of hardcopy (cm)
-        hxsize_def = 26.
-; offset along the long axis of the page
-        yoffset = (papersize eq 'a4') ? 2 : 1
-    endif
-endif
+x_title  = parse_custom_structure(default_stc.title.x,           custom_stc, 'title','x') 
+y_title  = parse_custom_structure(default_stc.title.y,           custom_stc, 'title','y') 
+cs_title = parse_custom_structure(default_stc.title.charsize,    custom_stc, 'title','charsize') 
+x_subtl  = parse_custom_structure(default_stc.subtitle.x,        custom_stc, 'subtitle','x') 
+y_subtl  = parse_custom_structure(default_stc.subtitle.y,        custom_stc, 'subtitle','y') 
+cs_subtl = parse_custom_structure(default_stc.subtitle.charsize, custom_stc, 'subtitle','charsize') 
 
-if (projtype eq 3) then begin
-    ;------------ cartesion projection ----------------
-    routine    = 'CARTVIEW'
-    proj_small = 'cartesian'
-    proj_big   = 'Cartesian'
-    do_cart    = 1
-    default_stc = {cbar:{dx:1./3., dy:1./70.}, title:{x:0.5, y:0.95}, subtitle:{x:0.5, y:0.915}}
-    
-;     du_dv = 1.                  ; aspect ratio
-    du_dv = xsize/float(ysize)                  ; aspect ratio
-    fudge = 1.00                ; 
-    xc = (xsize-1)/2. & delta_x = (xsize-1 - xc)
-    yc = (ysize-1)/2. & delta_y = (ysize-1 - yc)
-; u and v range of the map
-    umin = - dx * xc * fudge & umax = dx * xc * fudge
-    vmin = - dx * yc * fudge & vmax = dx * yc * fudge
-; position of the rectangle in the final window
-    w_xll = w_pos[0] & w_xur = w_pos[2] & w_dx = w_xur - w_xll
-    w_yll = w_pos[1] & w_yur = w_pos[3] & w_dy = w_yur - w_yll
-    w_dx_dy = w_dx / w_dy       ; 1.4
-; color bar, position, dimension
-    cbar_dx = parse_custom_structure(1./3.,  custom_stc, 'cbar','dx')
-    cbar_dy = parse_custom_structure(1./70., custom_stc, 'cbar','dy')
-    cbar_xll = (1. - cbar_dx)/2.
-    cbar_xur = (1. + cbar_dx)/2.
-    cbar_yur = w_yll - cbar_dy
-    cbar_yll = cbar_yur - cbar_dy
-; polarisation color ring, position, dimension
-    cring_dx = 1./15.
-    cring_dy = 1./15.
-    cring_xll = .025
-    cring_yll = .025
-; location of astro. coordinate
-    x_aspos = 0.5
-    y_aspos = 0.04
-; pol vector scale
-    vscal_x = 0.05
-    vscal_y = 0.01
-; location of title and subtitle
-    x_title = parse_custom_structure(default_stc.title.x, custom_stc, 'title','x') 
-    y_title = parse_custom_structure(default_stc.title.y, custom_stc, 'title','y') 
-    x_subtl = parse_custom_structure(default_stc.subtitle.x, custom_stc, 'subtitle','x') 
-    y_subtl = parse_custom_structure(default_stc.subtitle.y, custom_stc, 'subtitle','y') 
-    if (do_print) then begin
-; default X dimension of hardcopy (cm)
-        hxsize_def = 15.
-; offset along the long axis of the page
-        yoffset = (papersize eq 'a4') ? 2 : 1
-    endif
-endif
 
-if (projtype eq 6) then begin
-    ;------------ azimuthal equidistant projection ----------------
-    routine    = 'AZEQVIEW'
-    proj_small = 'azimequid'
-    proj_big   = 'AzimEquidistant'
-    do_cart    = 1
-    default_stc = {cbar:{dx:1./3., dy:1./70.}, title:{x:0.5, y:0.95}, subtitle:{x:0.5, y:0.915}}
-    
-;     du_dv = 1.                  ; aspect ratio
-    du_dv = xsize/float(ysize)                  ; aspect ratio
-    fudge = 1.00                ; 
-    xc = (xsize-1)/2. & delta_x = (xsize-1 - xc)
-    yc = (ysize-1)/2. & delta_y = (ysize-1 - yc)
-; u and v range of the map
-    umin = - dx * xc * fudge & umax = dx * xc * fudge
-    vmin = - dx * yc * fudge & vmax = dx * yc * fudge
-; position of the rectangle in the final window
-    w_xll = w_pos[0] & w_xur = w_pos[2] & w_dx = w_xur - w_xll
-    w_yll = w_pos[1] & w_yur = w_pos[3] & w_dy = w_yur - w_yll
-    w_dx_dy = w_dx / w_dy       ; 1.4
-; color bar, position, dimension
-    cbar_dx = parse_custom_structure(1./3.,  custom_stc, 'cbar','dx')
-    cbar_dy = parse_custom_structure(1./70., custom_stc, 'cbar','dy')
-    cbar_xll = (1. - cbar_dx)/2.
-    cbar_xur = (1. + cbar_dx)/2.
-    cbar_yur = w_yll - cbar_dy
-    cbar_yll = cbar_yur - cbar_dy
-; polarisation color ring, position, dimension
-    cring_dx = 1./15.
-    cring_dy = 1./15.
-    cring_xll = .025
-    cring_yll = .025
-; location of astro. coordinate
-    x_aspos = 0.5
-    y_aspos = 0.04
-; pol vector scale
-    vscal_x = 0.05
-    vscal_y = 0.01
-; location of title and subtitle
-    x_title = parse_custom_structure(default_stc.title.x, custom_stc, 'title','x') 
-    y_title = parse_custom_structure(default_stc.title.y, custom_stc, 'title','y') 
-    x_subtl = parse_custom_structure(default_stc.subtitle.x, custom_stc, 'subtitle','x') 
-    y_subtl = parse_custom_structure(default_stc.subtitle.y, custom_stc, 'subtitle','y') 
-    if (do_print) then begin
-; default X dimension of hardcopy (cm)
-        hxsize_def = 15.
-; offset along the long axis of the page
-        yoffset = (papersize eq 'a4') ? 2 : 1
-    endif
-endif
 ;====================================================
 do_shade = (do_orth && defined(shademap))
 ; set color table and character size
@@ -886,10 +819,10 @@ if (~(do_crop || keyword_set(nobar) || keyword_set(nolabels) || do_true || do_po
     if ((Tmax - Tmin) ge 5  and MAX(ABS([Tmax,Tmin])) le 1.e2) then format='(f6.1)'
     strmin = STRING(Tmin,format=format)
     strmax = STRING(Tmax,format=format)
-    xyouts_latex, cbar_xll, cbar_yll,prefont+STRTRIM(strmin,2)+' ',$
+    xyouts_latex, cbar_xll, cbar_yll+cbar_ty,prefont+STRTRIM(strmin,2)+cbar_sp[0],$
                   ALIGN=1.,/normal, chars=1.3*charsfactor, charthick=mycharthick, $
                   latex=my_latex, ltxstc=ltxstc
-    xyouts_latex, cbar_xur, cbar_yll,prefont+' '+STRTRIM(strmax,2)+' '+sunits,$
+    xyouts_latex, cbar_xur, cbar_yll+cbar_ty,prefont+cbar_sp[1]+STRTRIM(strmax,2)+cbar_sp[2]+sunits,$
                   ALIGN=0.,/normal, chars=1.3*charsfactor, charthick=mycharthick, $
                   latex=my_latex, ltxstc=ltxstc
 endif
@@ -912,14 +845,14 @@ endif
 if (~do_crop) then begin
     if (~ keyword_set(titleplot)) then title= prefont+title_display else title=prefont+titleplot
     xyouts_latex, x_title, y_title ,title, $
-            align=0.5, /normal, chars=1.6*charsfactor, charthick=mycharthick, $
+            align=x_title, /normal, chars=cs_title*charsfactor, charthick=mycharthick, $
             latex=my_latex, ltxstc=ltxstc
 endif
 
 ;  the subtitle
 if (~do_crop && keyword_set(subtitle)) then begin
     xyouts_latex, x_subtl, y_subtl ,prefont+' '+subtitle, $
-            align=0.5, /normal, chars=1.6*.75*charsfactor, charthick=mycharthick, $
+            align=x_subtl, /normal, chars=cs_subtl*charsfactor, charthick=mycharthick, $
             latex=my_latex, ltxstc=ltxstc
 endif
 
