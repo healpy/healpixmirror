@@ -183,7 +183,7 @@ $y \approx 0.21 x$ when $x\ll 1$ and $y\approx \log(x)$ when $x\gg 1$. \\
 {CHARSIZE=}\mytarget{idl:mollview:charsize}  & \mylink{idl:mollview:routines}{all}  &  
 	overall multiplicative factor applied to the size of
         all characters appearing on the plot
-        	\default {1.0} \\ 
+        	\default {1.0}; \seealso \mylink{idl:mollview:customize}{CUSTOMIZE} \\ 
 
 {CHARTHICK=}\mytarget{idl:mollview:charthick} & \mylink{idl:mollview:routines}{all}& character thickness (in
 \mylink{idl:mollview:titleplot}{TITLEPLOT}, \mylink{idl:mollview:subtitle}{SUBTITLE} and
@@ -258,6 +258,49 @@ See \mylink{idl:mollview:example6}{Example \#6} \latexhtml{on page~\pageref{page
 			\mylink{idl:mollview:png}{Png},
 			\mylink{idl:mollview:ps}{Ps}}\\
 
+%%%%%%%%%%%%%%%%%
+\end{tabular}
+\mollbacktotop
+%-----------------------------------------------------------
+\begin{tabular}{p{\sizeone} p{\sizetwo} p{\sizethr}}
+\hline  
+\textbf{name} & \textbf{routines} & \textbf{\ description} \\ \hline
+%                   &   &                            \\ %%% for presentation
+%%%%%%%%%%%%%%%%%
+
+{CUSTOMIZE=}\mytarget{idl:mollview:customize}  & \mylink{idl:mollview:routines}{all}  & \parbox[t]{\hsize}{User provided structure containing customization parameters of the produced output, whose default values are listed in \mylink{idl:mollview:default_settings}{DEFAULT\_SETTINGS}.
+The accepted inputs are \\
+{\tt ASPOS.X, ASPOS.Y}: X,Y location of astronomical coordinates label  (which can be removed altogether with \mylink{idl:mollview:noposition}{/NOPOSITION}, only applicable to \htmlref{gnomview}{idl:gnomview}),\\
+{\tt CBAR.DX, CBAR.DY}: length and width of color bar (which can be removed with \mylink{idl:mollview:nobar}{/NOBAR}), the bar is centered, at an automatically determined height\\
+{\tt CBAR.SPACES, CBAR.TY}: 3-element vector listing the strings to be inserted between the map minimum value label, the color bar, the map maximum value, and the map units (read from the FITS file or provided by \mylink{idl:mollview:units}{UNITS}): \default{3 single spaces}, and vertical offset of the text (min, max and units labels) with respect to the color bar \default{0};
+the character size of the text accompanying the color bar is fully determined by the keyword \mylink{idl:mollview:charsize}{Charsize},\\
+{\tt CRING.DX, CRING.XLL, CRING.YLL}: radius and X,Y location of lower left corner of the color disc showing the polarization direction when \mylink{idl:mollview:polarization}{POLARIZATION=3}\\
+{\tt SUBTITLE.X, SUBTITLE.Y, SUBTITLE.CHARSIZE}: control the X,Y location of the plot 
+\mylink{idl:mollview:subtitle}{subtitle} 
+(X=0 is left justified, X=0.5 is centered and X=1 is right justified), 
+and its final character size, which is the product of the number 
+{\tt SUBTITLE.CHARSIZE}
+with the one provided in the keyword
+\mylink{idl:mollview:charsize}{Charsize}\\
+{\tt TITLE.X, TITLE.Y, TITLE.CHARSIZE}: same as above, applied to the plot title (\mylink{idl:mollview:titleplot}{titleplot}),\\
+{\tt VSCALE.X, VSCALE.Y}: X,Y location of scale calibrating the polarization rods (whose length and spacing can be tuned with \mylink{idl:mollview:polarization}{POLARIZATION=[3, length, spacing]})\\
+See \mylink{idl:mollview:example7}{Example \#7} \latexhtml{on page~\pageref{page:moll_customize}}{below}.
+}\\
+
+\hspace{\sizeone}{DEFAULT\-\_SETTINGS=}\mytarget{idl:mollview:default_settings}  & \mylink{idl:mollview:routines}{all}  & \parbox[t]{\hsize}{Structure containing on output the default values (slightly projection dependent) of the plotting parameters that can be customized with 
+\mylink{idl:mollview:customize}{CUSTOMIZE}.\\
+As shown in \mylink{idl:mollview:example7}{Example \#7} \latexhtml{on page~\pageref{page:moll_customize}}{below}, the returned structure can be inspected with the routine \htmlref{help\_st}{idl:help_st}.}\\
+
+
+%%%%%%%%%%%%%%%%%
+\end{tabular}
+\mollbacktotop
+%-----------------------------------------------------------
+\begin{tabular}{p{\sizeone} p{\sizetwo} p{\sizethr}}
+\hline  
+\textbf{name} & \textbf{routines} & \textbf{\ description} \\ \hline
+%                   &   &                            \\ %%% for presentation
+%%%%%%%%%%%%%%%%%
 
 {EXECUTE=}\mytarget{idl:mollview:execute}  & \mylink{idl:mollview:routines}{all}  & \parbox[t]{\hsize}{
 		character string containing IDL command(s) to be executed in the
@@ -275,15 +318,6 @@ plotting window. See
         \seealso \mylink{idl:mollview:asinh}{ASINH}, \mylink{idl:mollview:offset}{Offset}, \mylink{idl:mollview:log}{LOG}, \mylink{idl:mollview:truecolors}{Truecolors} \\
 	\default {1.0} } \\
 
-%%%%%%%%%%%%%%%%%
-\end{tabular}
-\mollbacktotop
-%-----------------------------------------------------------
-\begin{tabular}{p{\sizeone} p{\sizetwo} p{\sizethr}}
-\hline  
-\textbf{name} & \textbf{routines} & \textbf{\ description} \\ \hline
-%                   &   &                            \\ %%% for presentation
-%%%%%%%%%%%%%%%%%
 
 {FG\_COLOR=}\mytarget{idl:mollview:fg_color}  & \mylink{idl:mollview:routines}{all}  &  
 \parbox[t]{\hsize}{color of title and subtile characters, 
@@ -333,6 +367,16 @@ The resulting FITS file can be read in IDL with eg. map={\tt readfits}({\em file
 	\default{0: monopole and dipole fit done on the whole sky}
               (\seealso \mylink{idl:mollview:no_dipole}{No\_dipole}, \mylink{idl:mollview:no_monopole}{No\_monopole}) \\
 
+%%%%%%%%%%%%%%%%%
+\end{tabular}
+\mollbacktotop
+%-----------------------------------------------------------
+\begin{tabular}{p{\sizeone} p{\sizetwo} p{\sizethr}}
+\hline  
+\textbf{name} & \textbf{routines} & \textbf{\ description} \\ \hline
+%                   &   &                            \\ %%% for presentation
+%%%%%%%%%%%%%%%%%
+
 {GIF=}\mytarget{idl:mollview:gif}  & \mylink{idl:mollview:routines}{all}  & \parbox[t]{\hsize}{
 		string containing the name of a .GIF output \\
 	      if set to 1            : outputs the plot in 
@@ -353,15 +397,6 @@ or {\tt orthographic}, \\
 		\mylink{idl:mollview:ps}{Ps}
 		and \mylink{idl:mollview:retain}{Retain}}\\
 
-%%%%%%%%%%%%%%%%%
-\end{tabular}
-\mollbacktotop
-%-----------------------------------------------------------
-\begin{tabular}{p{\sizeone} p{\sizetwo} p{\sizethr}}
-\hline  
-\textbf{name} & \textbf{routines} & \textbf{\ description} \\ \hline
-%                   &   &                            \\ %%% for presentation
-%%%%%%%%%%%%%%%%%
 
 {GLSIZE=}\mytarget{idl:mollview:glsize} & \mylink{idl:mollview:routines}{CGMO}& \parbox[t]{\hsize}{
 	character size of the graticule labels in units of {\tt Charsize}. \\
@@ -392,6 +427,16 @@ or {\tt orthographic}, \\
 {/HALF\_SKY}\mytarget{idl:mollview:half_sky} & \mylink{idl:mollview:routines}{---O} & if set, only shows only one half of the sky 
    (centered on (0,0) or on the location parametrized by \mylink{idl:mollview:rot}{Rot}) instead of the full sky \\
  
+%%%%%%%%%%%%%%%%%
+\end{tabular}
+\mollbacktotop
+%-----------------------------------------------------------
+\begin{tabular}{p{\sizeone} p{\sizetwo} p{\sizethr}}
+\hline  
+\textbf{name} & \textbf{routines} & \textbf{\ description} \\ \hline
+%                   &   &                            \\ %%% for presentation
+%%%%%%%%%%%%%%%%%
+
 {HBOUND=}\mytarget{idl:mollview:hbound} & \mylink{idl:mollview:routines}{all}& scalar or vector of up to 3
 elements.
 If Hbound[i] is set to a valid $\nside$, the routine will overplot the \healpix\ pixel
@@ -407,6 +452,7 @@ plot $\nside=4$ boundaries with dashes (resp. dots), while Hbound=4 would plot t
 boundaries with solid lines.
 \\
 
+
 {/HELP}\mytarget{idl:mollview:help} & \mylink{idl:mollview:routines}{all}& if set, the routine header is printed (by doc\_library)
       and nothing else is done \\
 
@@ -420,15 +466,6 @@ boundaries with solid lines.
 	                               \mylink{idl:mollview:max}{Max} are not symmetric}\\
                      \seealso \mylink{idl:mollview:asinh}{Asinh}, \mylink{idl:mollview:log}{Log}}\\
 
-%%%%%%%%%%%%%%%%%
-\end{tabular}
-\mollbacktotop
-%-----------------------------------------------------------
-\begin{tabular}{p{\sizeone} p{\sizetwo} p{\sizethr}}
-\hline  
-\textbf{name} & \textbf{routines} & \textbf{\ description} \\ \hline
-%                   &   &                            \\ %%% for presentation
-%%%%%%%%%%%%%%%%%
 
 {HXSIZE=}\mytarget{idl:mollview:hxsize}  & \mylink{idl:mollview:routines}{all}  & \parbox[t]{\hsize}{
 		horizontal dimension (in cm) of the \mylink{idl:mollview:ps}{Postscript} printout \\
@@ -453,6 +490,16 @@ boundaries with solid lines.
 \mylink{idl:mollview:iglsize}{Iglsize}
 	}\\
 
+%%%%%%%%%%%%%%%%%
+\end{tabular}
+\mollbacktotop
+%-----------------------------------------------------------
+\begin{tabular}{p{\sizeone} p{\sizetwo} p{\sizethr}}
+\hline  
+\textbf{name} & \textbf{routines} & \textbf{\ description} \\ \hline
+%                   &   &                            \\ %%% for presentation
+%%%%%%%%%%%%%%%%%
+
 {JPEG=}\mytarget{idl:mollview:jpeg}  & \mylink{idl:mollview:routines}{all}  & \parbox[t]{\hsize}{
 		string containing the name of a {\em lossless} .JPEG output file\\
 	      if set to 1            : outputs the plot in 
@@ -475,6 +522,7 @@ or {\tt orthographic}, \\
 \mylink{idl:mollview:pdf}{Pdf}, 
 \mylink{idl:mollview:ps}{Ps}, 
 and \mylink{idl:mollview:retain}{Retain}}\\
+
 
 
 {LATEX=}\mytarget{idl:mollview:latex}  & \mylink{idl:mollview:routines}{all}  & \parbox[t]{\hsize}{
@@ -512,15 +560,6 @@ In this case, \mylink{idl:mollview:pfonts}{Pfonts} settings can be used.\\
 	\default{0, no LaTeX handling}	
 }\\
 
-%%%%%%%%%%%%%%%%%
-\end{tabular}
-\mollbacktotop
-%-----------------------------------------------------------
-\begin{tabular}{p{\sizeone} p{\sizetwo} p{\sizethr}}
-\hline  
-\textbf{name} & \textbf{routines} & \textbf{\ description} \\ \hline
-%                   &   &                            \\ %%% for presentation
-%%%%%%%%%%%%%%%%%
 
 {/LOG}\mytarget{idl:mollview:log}  & \mylink{idl:mollview:routines}{all}  & \parbox[t]{\hsize}{
 		display the log of map. This is intended for
@@ -544,6 +583,16 @@ Unobserved pixels, and pixels outside the sphere, take value \htmlref{{\tt
 	\seealso \mylink{idl:mollview:fits}{Fits}}\\
 
 
+%%%%%%%%%%%%%%%%%
+\end{tabular}
+\mollbacktotop
+%-----------------------------------------------------------
+\begin{tabular}{p{\sizeone} p{\sizetwo} p{\sizethr}}
+\hline  
+\textbf{name} & \textbf{routines} & \textbf{\ description} \\ \hline
+%                   &   &                            \\ %%% for presentation
+%%%%%%%%%%%%%%%%%
+
 {MAX=}\mytarget{idl:mollview:max}  & \mylink{idl:mollview:routines}{all}  & \parbox[t]{\hsize}{
 	Set the maximum value for the plotted signal \\ \default{is to use the actual signal
 	maximum}.}\\
@@ -554,6 +603,7 @@ Unobserved pixels, and pixels outside the sphere, take value \htmlref{{\tt
 
 {/NESTED}\mytarget{idl:mollview:nested}  & \mylink{idl:mollview:routines}{all}  & \parbox[t]{\hsize}{
 	specify that the online data is ordered in the nested scheme}\\
+
 
 {/NO\_DIPOLE}\mytarget{idl:mollview:no_dipole}  & \mylink{idl:mollview:routines}{---MO}   & \parbox[t]{\hsize}{
 		if set  (and Gal\_cut is not set) 
@@ -578,13 +628,13 @@ Unobserved pixels, and pixels outside the sphere, take value \htmlref{{\tt
 
 {/NOBAR}\mytarget{idl:mollview:nobar}  & \mylink{idl:mollview:routines}{all}  & if set, the color bar 
 (or the color wheel used when \mylink{idl:mollview:polarization}{Polarization}=2) 
-is hidden \\
+is hidden; \seealso \mylink{idl:mollview:customize}{CUSTOMIZE} \\
 
 {/NOLABELS}\mytarget{idl:mollview:nolabels}  & \mylink{idl:mollview:routines}{all}  & if set, color bar labels (min and max) are not present, \default
-	{labels are present} \\
+	{labels are present}; \seealso \mylink{idl:mollview:customize}{CUSTOMIZE}  \\
 
 {/NOPOSITION}\mytarget{idl:mollview:noposition} & \mylink{idl:mollview:routines}{--G--} & if set, the astronomical location of the map
-        central point is not indicated \\
+        central point is not indicated; \seealso \mylink{idl:mollview:customize}{CUSTOMIZE}  \\
  
 
 %%%%%%%%%%%%%%%%%
@@ -602,7 +652,7 @@ is hidden \\
 	This does not affect the flagged pixels \\
 	can be used together with ASINH or LOG \\
 	When used with TRUECOLORS, OFFSET can be a 3-element vector. \\
-        \seealso : \mylink{idl:mollview:asinh}{ASINH}, \mylink{idl:mollview:factor}{Factor}, \mylink{idl:mollview:log}{LOG}, \mylink{idl:mollview:truecolors}{TRUECOLORS} \\
+        \seealso \mylink{idl:mollview:asinh}{ASINH}, \mylink{idl:mollview:factor}{Factor}, \mylink{idl:mollview:log}{LOG}, \mylink{idl:mollview:truecolors}{TRUECOLORS} \\
 	\default {0.0} } \\
 	
 
@@ -750,6 +800,7 @@ and \mylink{idl:mollview:retain}{Retain}}\\
              The second element controls the average length of vectors
              \default{1}, while the third one controls the distance between
              vectors \default{1}. Non-positive values are replaced by 1.
+		\seealso \mylink{idl:mollview:customize}{Customize}
 
 	\end{itemize}
 	\default{0} \\
@@ -895,13 +946,13 @@ Currently {\bf can not} be used with
 {SUBTITLE=}\mytarget{idl:mollview:subtitle}  & \mylink{idl:mollview:routines}{all}  & \parbox[t]{\hsize}{
 		String containing the subtitle to the plot\\ 
 \seealso \mylink{idl:mollview:titleplot}{Titleplot},
-\mylink{idl:mollview:latex}{Latex}}\\
+\mylink{idl:mollview:latex}{Latex}, \mylink{idl:mollview:customize}{Customize}}\\
 
 {TITLEPLOT=}\mytarget{idl:mollview:titleplot}  & \mylink{idl:mollview:routines}{all}  & \parbox[t]{\hsize}{
 		String containing the title of the plot, 
      		if not set the title will be File\\ 
 \seealso \mylink{idl:mollview:subtitle}{Subtitle},
-\mylink{idl:mollview:latex}{Latex}}\\
+\mylink{idl:mollview:latex}{Latex}, \mylink{idl:mollview:customize}{Customize}}\\
 
 {TRANSPARENT=}\mytarget{idl:mollview:transparent}  & \mylink{idl:mollview:routines}{all}  & \parbox[t]{\hsize}{
 		If set to 1, the input data pixels with value \htmlref{{\tt
@@ -1037,7 +1088,7 @@ in the same window \\
 \mytarget{idl:mollview:example1}
 \begin{tabular}{l} %%%% use this tabular format %%%%
 \htmlref{\thedocid}{idl:mollview},  \mylink{idl:mollview:file}{'planck100GHZ-LFI.fits'}, \mylink{idl:mollview:min}{min}=-100, \mylink{idl:mollview:max}{max}=100, \mylink{idl:mollview:graticule}{/graticule}, \$ \\
-$\quad$	 \mylink{idl:mollview:titleplot}{title}='Simulated Planck LFI Sky Map at 100GHz'\\
+\hspace{1em}	 \mylink{idl:mollview:titleplot}{title}='Simulated Planck LFI Sky Map at 100GHz'\\
 \end{tabular}
 }
 {\thedocid{} reads in the map 'planck100GHZ-LFI.fits' and generates
@@ -1057,8 +1108,8 @@ and the \mylink{idl:mollview:titleplot}{title} 'Simulated Planck LFI Sky Map at 
 map  = findgen(48) \\
 triangle= create\_struct('coord','G','ra',[0,80,0],'dec',[40,45,65]) \\
 \htmlref{\thedocid}{idl:mollview},\mylink{idl:mollview:file}{map}, \mylink{idl:mollview:graticule}{graticule}=[45,30],\mylink{idl:mollview:rot}{rot}=[10,20,30],\$ \\
-$\quad\quad$	  \mylink{idl:mollview:titleplot}{title}='Mollweide projection',\mylink{idl:mollview:subtitle}{subtitle}='mollview', \$ \\
-$\quad\quad$          \mylink{idl:mollview:outline}{outline}=triangle \\
+\hspace{2em}	  \mylink{idl:mollview:titleplot}{title}='Mollweide projection',\mylink{idl:mollview:subtitle}{subtitle}='mollview', \$ \\
+\hspace{2em}          \mylink{idl:mollview:outline}{outline}=triangle \\
 \end{tabular}
 }
 {makes a Mollweide projection of a pixel index map 
@@ -1093,10 +1144,10 @@ routine documentation for details.}
 
 map  = findgen(48) \\
 mycommand = 'x=findgen(64)/10. \& ' + \$ \\
-$\quad\quad$	'plot,x,sin(x),pos=[0.8,0.8,0.99,0.99],/noerase \&' +\$ \\
-$\quad\quad$	'xyouts,0.5,0.5,''Hello World !'',/normal,charsize=2,align=0.5'  \\
+\hspace{2em}	'plot,x,sin(x),pos=[0.8,0.8,0.99,0.99],/noerase \&' +\$ \\
+\hspace{2em}	'xyouts,0.5,0.5,''Hello World !'',/normal,charsize=2,align=0.5'  \\
 \htmlref{\thedocid}{idl:mollview},map, \mylink{idl:mollview:execute}{execute}=mycommand, \mylink{idl:mollview:png}{png}='plot\_example\_execute.png',\$ \\
-$\quad\quad$	\mylink{idl:mollview:preview}{/preview},\mylink{idl:mollview:graticule}{/graticule},\mylink{idl:mollview:glsize}{/glsize} \\
+\hspace{2em}	\mylink{idl:mollview:preview}{/preview},\mylink{idl:mollview:graticule}{/graticule},\mylink{idl:mollview:glsize}{/glsize} \\
 \end{tabular}
 }
 {produces a PNG file containing a Mollweide projection of a pixel index map
@@ -1180,6 +1231,7 @@ of the various color scales available.}
 \end{figure}
 
 %-------------------------------------------
+\newpage
 \begin{examples}
 {6}
 {
@@ -1189,11 +1241,11 @@ of the various color scales available.}
  \htmlref{mollview}{idl:mollview},
 '\htmladdnormallink{HFI\_SkyMap\_217\_2048\_R1.10\_nominal.fits}%
 {http://pla.esac.esa.int/pla/aio/planckProducts.html}', \$ \\
-$\quad\quad$ \mylink{idl:mollview:colt}{colt}='planck2',
+\hspace{2em} \mylink{idl:mollview:colt}{colt}='planck2',
 \mylink{idl:mollview:asinh}{asinh}=2, 
 \mylink{idl:mollview:factor}{factor}=1.e6,
 \mylink{idl:mollview:offset}{offset}=-1.33e-4,  \$ \\
-$\quad\quad$ \mylink{idl:mollview:min}{min}=-1.e3,
+\hspace{2em} \mylink{idl:mollview:min}{min}=-1.e3,
 \mylink{idl:mollview:max}{max}=1.e7,
 \mylink{idl:mollview:titleplot}{title}='Planck @ 217GHz',
 \mylink{idl:mollview:charsize}{charsize}=2
@@ -1218,6 +1270,68 @@ Illustration (generated by
 %\mylink{idl:mollview:example6}{Example~\#6}
 Example~\#6) of the application of Planck color table
 \#2  to a Planck sky map.}
+\end{figure}
+
+%-------------------------------------------
+\newpage
+\begin{examples}
+{7}
+{
+\mytarget{idl:mollview:example7}
+\begin{tabular}{l} %%%% use this tabular format %%%%
+ \htmlref{mollview}{idl:mollview}, findgen(12),
+ \mylink{idl:mollview:default_settings}{default\_settings=}dsmoll,\$ \\
+\hspace{2em} \mylink{idl:mollview:titleplot}{title}=%
+'Wider, thicker color bar; left justified title',\$ \\
+\hspace{2em}  \mylink{idl:mollview:customize}{customize=}%
+\{cbar:\{dx:2/3.,dy:1/32.,ty:0.005\},\$ \\
+\hspace{3em}  title:\{x:0,charsize:2\}\} \\
+%,png='~/healpix_svn/doc/TeX/fig/moll_customize.png',/preview
+ \htmlref{help\_st}{idl:help_st}, dsmoll
+\\
+\end{tabular}
+}
+{\parbox[t]{\hsize}{will generate a Mollweide projection plot with customized thickness and length of the color bar, 
+and location of the title (see Fig.~\ref{fig:moll_customize}\latexhtml{ on page~\pageref{page:moll_customize}}{}). 
+The default value (in the Mollweide projection) 
+ of the available customization parameters is also listed as\\
+\scriptsize{\texttt{ % put font size before font type to get line spacing right
+   ** Structure <4200ac08>, 6 tags, length=120, data length=112, refs=1:\\
+\hspace{1em}      .ASPOS.X                   \hspace{2em}         FLOAT   \hspace{2em}        -1.00000\\
+\hspace{1em}      .ASPOS.Y                   \hspace{2em}         FLOAT   \hspace{2em}        -1.00000\\
+\hspace{1em}      .CBAR.DX                   \hspace{2em}         FLOAT   \hspace{2em}        0.333333\\
+\hspace{1em}      .CBAR.DY                   \hspace{2em}         FLOAT   \hspace{2em}       0.0142857\\
+\hspace{1em}      .CBAR.SPACES               \hspace{2em}         STRING  \hspace{2em}   Array[3]\\
+\hspace{1em}      .CBAR.TY                   \hspace{2em}         FLOAT   \hspace{2em}         0.00000\\
+\hspace{1em}      .CRING.DX                  \hspace{2em}         FLOAT   \hspace{2em}        0.100000\\
+\hspace{1em}      .CRING.XLL                 \hspace{2em}         FLOAT   \hspace{2em}       0.0250000\\
+\hspace{1em}      .CRING.YLL                 \hspace{2em}         FLOAT   \hspace{2em}       0.0250000\\
+\hspace{1em}      .SUBTITLE.X                \hspace{2em}         FLOAT   \hspace{2em}        0.500000\\
+\hspace{1em}      .SUBTITLE.Y                \hspace{2em}         FLOAT   \hspace{2em}        0.905000\\
+\hspace{1em}      .SUBTITLE.CHARSIZE         \hspace{2em}         FLOAT   \hspace{2em}         1.20000\\
+\hspace{1em}      .TITLE.X                   \hspace{2em}         FLOAT   \hspace{2em}        0.500000\\
+\hspace{1em}      .TITLE.Y                   \hspace{2em}         FLOAT   \hspace{2em}        0.950000\\
+\hspace{1em}      .TITLE.CHARSIZE            \hspace{2em}         FLOAT   \hspace{2em}         1.60000\\
+\hspace{1em}      .VSCALE.X                  \hspace{2em}         FLOAT   \hspace{2em}       0.0500000\\
+\hspace{1em}      .VSCALE.Y                  \hspace{2em}         FLOAT   \hspace{2em}       0.0200000
+}}
+}}
+\end{examples}
+%
+\begin{figure}[h!]
+\latexhtml{%for latex
+\centerline{\includegraphics[width=0.60\textwidth]{fig/moll_customize}}
+}{%for html
+\centerline{\includegraphics[width=520pt]{fig/moll_customize}{}}
+}
+\caption{%
+\label{page:moll_customize}%
+\label{fig:moll_customize}%
+Illustration (generated by 
+%\mylink{idl:mollview:example7}{Example~\#7}%
+Example~\#7
+) 
+of customization of the title size and location and of the color bar size.}
 \end{figure}
 %-------------------------------------------
 

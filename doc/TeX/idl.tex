@@ -122,13 +122,13 @@ K.~Hansen and Krzysztof M.~G\'orski}
 \tableofcontents
 \newpage
 
-\section{Using the \healpix IDL facilities}
+\section{Using the \healpixns-IDL facilities}
 
 %Before the \healpix IDL facilities can be utilised, the user MUST 
 %install \hfill\newline
 
 %\noindent {\it The IDL Astronomy User's Library} \hfill\newline
-%\noindent (available for download at {\tt http://idlastro.gsfc.nasa.gov/homepage.html})\hfill\newline
+%\noindent (available for download at {\tt http://idlastro.gsfc.asa.gov/homepage.html})\hfill\newline
 %\noindent the {\it COBE (IDL) Analysis Software} \hfill\newline
 %\noindent (available for download at {\tt http://space.gsfc.nasa.gov/astro/cobe/cgis.html}).\hfill\newline
 
@@ -149,11 +149,33 @@ commands {\tt hidl} or {\tt hidlde} which are aliases defined in the
 for the package (see \linklatexhtml{the Installation Document}{install.pdf}{install.htm}).
 
 
-\subsection{Using \healpix IDL together with other IDL libraries}
+\subsection{Using \healpixns-IDL together with other IDL libraries}
 \label{idl:other_idl_libs}
 \mytarget{idl:other_idl_libs}
-Many users want to use \healpix IDL routines at the same time as other (home made
-or third party) IDL routines. There are several ways to achieve this:\\
+Many users want to use \healpixns-IDL routines at the same time as other (home made
+or third party\footnote{
+An extensive list of third party IDL libraries can be found at
+\htmladdnormallink{%
+https://idlastro.gsfc.nasa.gov\-/other\-\_url.html}{%
+https://idlastro.gsfc.nasa.gov/other_url.html}.
+Among them, we recommend 
+the IDL Astronomy Users library
+(\htmladdnormallink{%
+https://idlastro\-.gsfc.nasa.gov}{%
+https://idlastro.gsfc.nasa.gov})
+maintained by Wayne Landsman and which is extensively used in 
+\healpixns-IDL,
+David Fanning's IDL Coyote library
+(\htmladdnormallink{%
+http://www.idlcoyote.com}{%
+http://www.idlcoyote.com})
+from which some routines are used in \healpixns-IDL, 
+and
+Craig Markwardt's IDL library
+(\htmladdnormallink{%
+http://cow.physics.wisc.edu/{\textasciitilde}craigm/idl/idl.html}{%
+http://cow.physics.wisc.edu/~craigm/idl/idl.html}).}) 
+IDL routines. There are several ways to achieve this:\\
 %
 {\em -- with {\tt hidl}:}\\
 before starting {\tt hidl} or {\tt hidlde}, (re)define the environment variable {\tt \$IDL\_PATH} so that it looks like:
@@ -165,7 +187,7 @@ subdirectories of {\em path} will be searched recursively). For example, if
 young Albert types in Bourne shell:\\
 {\tt export IDL\_PATH=}''{\tt +/home/aeinstein/brownian:<IDL\_DEFAULT>}''\\
 {\tt hidl}\\
-he will start an IDL session in which the \healpix IDL routines are accessible, followed by all those located
+he will start an IDL session in which the \healpixns-IDL routines are accessible, followed by all those located
 in subdirectories of {\tt /home/aeinstein/brownian}, followed by the standard
 IDL routines. If {\tt .pro} files of the same name are avaible at the different locations, the first
 one encountered will prevail;\\
@@ -184,29 +206,47 @@ while {\tt <IDL\_DEFAULT>} must be replaced by the default value of {\tt \$\{GDL
 Of course, {\tt \$\{HEALPIX\}/src/idl} (and all the {\tt +} signs) remain unchanged.
 
 \subsection{Using GDL instead of IDL}
-See the section ''\htmlref{Using GDL instead of IDL}{install:using_gdl}'' in \linklatexhtml{the Installation Document}{install.pdf}{install.htm} for more information on this issue.
+See the section ''\htmlref{Using GDL instead of IDL}{install:using_gdl}'' in \linklatexhtml{the Installation Document}{install.pdf}{install.htm} for more information on this topic.
 
 
 
 %%%%%%
-\newpage
+%\newpage
 %%%%\include{startup_idl}
 \input startup_idl
 %%%%%%%
 \newpage
 
-\section{Changes between releases 3.30 and \hpxversion}
+\section{Changes between releases 3.31 and \hpxversion}
 \begin{itemize}
+\item \htmlref{{\tt azeqview, cartview, gnomview, mollview,
+orthview}}{idl:mollview} visualization routines:
+\begin{itemize}
+	\item addition of the keywords 
+	\mylink{idl:mollview:customize}{{\tt CUSTOMIZE}} and 
+	\mylink{idl:mollview:default_settings}{{\tt DEFAULT\_SETTINGS}}
+	for extensize customization of the figures produced
+\end{itemize}
+\end{itemize}
+
+
+\section{Previous changes}
+\subsubsection{Changes between releases 3.30 and 3.31}
+%--------------------------------
+{\footnotesize{%
+\begin{itemize}
+%--------------------------------
 	\item Improved support for \htmlref{GDL}{install:using_gdl};
 %(see \htmlref{Using GDL instead of IDL}{install:using_gdl})
 	\item update of the required
     \htmladdnormallink{{\tt IDL-astron} library}{http://idlastro.gsfc.nasa.gov/homepage.html}
     routines, and \htmladdnormallink{\tt Coyote}{http://www.idlcoyote.com} library
     routines (2016-08-19).
+%--------------------------------
 \end{itemize}
+}}% end of footnotesize
+%--------------------------------
 
-
-\section{Previous changes}
 \subsubsection{Changes between releases 3.20 and 3.30}
 %--------------------------------
 {\footnotesize{%

@@ -217,9 +217,9 @@ IDL arrays.}
 {
 \begin{tabular}{l} %%%% use this tabular format %%%%
 gnomview,  'planck100GHZ-LFI.fits', rot=[160,-30], reso\_arcmin=2., \$ \\
-$\quad$           pxsize = 500., \$ \\
-$\quad$           title='Simulated Planck LFI Sky Map at 100GHz',  \$ \\
-$\quad$           min=-100,max=100\\
+\hspace{1em}           pxsize = 500., \$ \\
+\hspace{1em}           title='Simulated Planck LFI Sky Map at 100GHz',  \$ \\
+\hspace{1em}           min=-100,max=100\\
 \end{tabular}
 }
 {gnomview reads in the map 'planck100GHZ-LFI.fits' and generates
@@ -239,8 +239,8 @@ The map is centered at ($l=$160, $b=$-30) }
 map  = findgen(48) \\
 triangle= create\_struct('coord','G','ra',[0,80,0],'dec',[40,45,65]) \\
 gnomview,map,/online,res=25,graticule=[45,30],rot=[10,20,30],\$ \\
-$\quad$	   title='Gnomic projection',subtitle='gnomview', \$ \\
-$\quad$           outline=triangle \\
+\hspace{1em}	   title='Gnomic projection',subtitle='gnomview', \$ \\
+\hspace{1em}           outline=triangle \\
 \end{tabular}
 }
 {makes a gnomic projection of map (see Figure~\ref{fig:plot_visu}b on
