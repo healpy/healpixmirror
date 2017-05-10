@@ -271,9 +271,20 @@ test_preview
 @idl_default_previewer ; defines the paper size
 if (do_print and undefined(papersize)) then papersize = 'a4'
 
+; -------------------------------------------------
+; implement default settings for each projection
+; -------------------------------------------------
 xsize = (size(planmap))(1)
 ysize = (size(planmap))(2)
 w_pos = (do_crop) ? [0.00, 0.00, 1.00, 1.00] : [0.00, 0.10, 1.00, 0.90]
+
+default_stc = {$
+              aspos:   {x:-1.0,    y:-1.0}, $
+              cbar:    {dx:1./3.,  dy:1./70., spaces:[' ',' ',' '], ty:0.0}, $
+              cring:   {dx:1./10., xll:0.025, yll:0.025}, $
+              subtitle:{x:0.5,     y:0.905,   charsize:1.2}, $
+              title:   {x:0.5,     y:0.95,    charsize:1.6}, $
+              vscale:  {x:0.05,    y:0.02}}
 
 case projtype of
 
@@ -283,13 +294,7 @@ case projtype of
         proj_big   = 'Mollweide'
         proj_small = 'mollweide'
         do_moll    = 1
-        default_stc = {$
-                      aspos:{x:-1, y:-1}, $
-                      cbar:{dx:1./3., dy:1./70., spaces:[' ',' ',' '], ty:0}, $
-                      cring:{dx:1./10., xll:0.025, yll:0.025}, $
-                      subtitle:{x:0.5, y:0.905, charsize:1.2}, $
-                      title:{x:0.5, y:0.95, charsize:1.6}, $
-                      vscale:{x:0.05, y:0.02}}
+        ; no change to default_stc
         
         du_dv = 2.              ; aspect ratio
         fudge = 1.02            ; spare some space around the Mollweide egg
@@ -314,13 +319,10 @@ case projtype of
         proj_small = 'gnomic'
         proj_big   = 'Gnomic'
         do_gnom    = 1
-        default_stc = {$
-                      aspos:{x:0.5, y:0.04}, $
-                      cbar:{dx:1./3., dy:1./70., spaces:[' ',' ',' '], ty:0}, $
-                      cring:{dx:1./15., xll:0.025, yll:0.025}, $
-                      subtitle:{x:0.5, y:0.915, charsize:1.2}, $
-                      title:{x:0.5, y:0.95, charsize:1.6}, $
-                      vscale:{x:0.05, y:0.01}}
+        default_stc.aspos      = {x:0.5, y:0.04}
+        default_stc.cring.dx   = 1./15.
+        default_stc.subtitle.y = 0.915
+        default_stc.vscale     = {x:0.05, y:0.01}
         
         du_dv = xsize/float(ysize) ; aspect ratio
         fudge = 1.00            ; 
@@ -345,13 +347,10 @@ case projtype of
         proj_small = 'cartesian'
         proj_big   = 'Cartesian'
         do_cart    = 1
-        default_stc = {$
-                      aspos:{x:0.5, y:0.04}, $
-                      cbar:{dx:1./3., dy:1./70., spaces:[' ',' ',' '], ty:0}, $
-                      cring:{dx:1./15., xll:0.025, yll:0.025}, $
-                      subtitle:{x:0.5, y:0.905, charsize:1.2}, $
-                      title:{x:0.5, y:0.95, charsize:1.6}, $
-                      vscale:{x:0.05, y:0.01}}
+        default_stc.aspos      = {x:0.5, y:0.04}
+        default_stc.cring.dx   = 1./15.
+        ;default_stc.subtitle.y = 0.905
+        default_stc.vscale     = {x:0.05, y:0.01}
         
         du_dv = xsize/float(ysize) ; aspect ratio
         fudge = 1.00            ; 
@@ -376,13 +375,7 @@ case projtype of
         proj_big   = 'Orthographic'
         proj_small = 'orthographic'
         do_orth    = 1
-        default_stc = {$
-                      aspos:{x:-1, y:-1}, $
-                      cbar:{dx:1./3., dy:1./70., spaces:[' ',' ',' '], ty:0}, $
-                      cring:{dx:1./10., xll:0.025, yll:0.025}, $
-                      subtitle:{x:0.5, y:0.905, charsize:1.2}, $
-                      title:{x:0.5, y:0.95, charsize:1.6}, $
-                      vscale:{x:0.05, y:0.02}}
+        ; no change to default_stc
         
         do_fullsky = ~keyword_set(half_sky)
         du_dv = do_fullsky ? 2. : 1. ; aspect ratio
@@ -409,13 +402,7 @@ case projtype of
         proj_big   = 'Diamonds'
         proj_small = 'diamonds'
         do_moll    = 1
-        default_stc = {$
-                      aspos:{x:-1, y:-1}, $
-                      cbar:{dx:1./3., dy:1./70., spaces:[' ',' ',' '], ty:0}, $
-                      cring:{dx:1./10., xll:0.025, yll:0.025}, $
-                      subtitle:{x:0.5, y:0.905, charsize:1.2}, $
-                      title:{x:0.5, y:0.95, charsize:1.6}, $
-                      vscale:{x:0.05, y:0.02}}
+        ; no change to default_stc
 
         du_dv = 2.              ; aspect ratio
         fudge = 1.00            ; spare some space around the 12-Diamonds
@@ -440,13 +427,10 @@ case projtype of
         proj_small = 'azimequid'
         proj_big   = 'AzimEquidistant'
         do_azeq    = 1
-        default_stc = {$
-                      aspos:{x:0.5, y:0.04}, $
-                      cbar:{dx:1./3., dy:1./70., spaces:[' ',' ',' '], ty:0}, $
-                      cring:{dx:1./15., xll:0.025, yll:0.025}, $
-                      subtitle:{x:0.5, y:0.905, charsize:1.2}, $
-                      title:{x:0.5, y:0.95, charsize:1.6}, $
-                      vscale:{x:0.05, y:0.01}}
+        default_stc.aspos      = {x:0.5, y:0.04}
+        default_stc.cring.dx   = 1./15.
+        ;default_stc.subtitle.y = 0.905
+        default_stc.vscale     = {x:0.05, y:0.01}
         
         du_dv = xsize/float(ysize) ; aspect ratio
         fudge = 1.00            ; 
@@ -477,6 +461,7 @@ endcase
 cbar_dx = parse_custom_structure(default_stc.cbar.dx,     custom_stc, 'cbar','dx')
 cbar_dy = parse_custom_structure(default_stc.cbar.dy,     custom_stc, 'cbar','dy')
 cbar_sp = parse_custom_structure(default_stc.cbar.spaces, custom_stc, 'cbar','spaces')
+cbar_sp = ([cbar_sp,' ',' '])[0:2] ; absent elements are set to ' '
 cbar_ty = parse_custom_structure(default_stc.cbar.ty,     custom_stc, 'cbar','ty')
 cbar_xll = (1. - cbar_dx)/2.
 cbar_xur = (1. + cbar_dx)/2.
@@ -488,8 +473,8 @@ cring_dy  = cring_dx
 cring_xll = parse_custom_structure(default_stc.cring.xll,    custom_stc, 'cring','xll')
 cring_yll = parse_custom_structure(default_stc.cring.xll,    custom_stc, 'cring','yll')
 ; location of astro. coordinate
-x_aspos   = parse_custom_structure(default_stc.aspos.x,     custom_stc, 'aspos','x')
-y_aspos   = parse_custom_structure(default_stc.aspos.y,     custom_stc, 'aspos','y')
+x_aspos   = parse_custom_structure(default_stc.aspos.x,      custom_stc, 'aspos','x')
+y_aspos   = parse_custom_structure(default_stc.aspos.y,      custom_stc, 'aspos','y')
 ; location of pol vector scale
 vscal_x   = parse_custom_structure(default_stc.vscale.x,     custom_stc, 'vscale','x')
 vscal_y   = parse_custom_structure(default_stc.vscale.y,     custom_stc, 'vscale','y')

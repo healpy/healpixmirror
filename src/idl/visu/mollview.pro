@@ -211,9 +211,12 @@ pro mollview, file_in, select_in, $
 ;
 ;       CUSTOMIZE: (input) IDL structure containing customization parameters
 ;          whose default values are listed in DEFAULT_SETTINGS
-;           accept   cbar.dx, cbar.dy : color bar X and Y sizes
-;                    title.x, title.y:  title X and Y location
+;           accept   aspos.x, aspos.y: astronomical coordinates,
+;                    cbar.dx, cbar.dy, cbar.spaces : color bar X and Y sizes,
+;                    cring
 ;                    subtitle.x, subtitle.y: subtitle X and Y location
+;                    title.x, title.y:  title X and Y location
+;                    vscale.x, vscale.y
 ;            {cbar:{dx:1./3., dy:1./70.}, title:{x:0.5, y:0.95}, subtitle:{x:0.5, y:0.905}}
 ;
 ;       DEFAULT_SETTINGS: (output) IDL structure listing the default values

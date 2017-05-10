@@ -1,0 +1,96 @@
+% -*- LaTeX -*-
+
+
+\sloppy
+
+\title{\healpix IDL Facility User Guidelines}
+\docid{help\_st} \section[help\_st]{ }
+\label{idl:help_st}
+\docrv{Version 1.0}
+\author{Eric Hivon}
+\abstract{This document describes the \healpix IDL facility help\_st.}
+
+\begin{facility}
+{This IDL facility provides some HELP-like information on any IDL variable,
+and especially on sub-structures.}
+{src/idl/misc/help\_st.pro}
+\end{facility}
+
+\begin{IDLformat}
+{\thedocid,
+\mylink{idl:help_st:var}{Var}}
+\end{IDLformat}
+
+\begin{qualifiers}
+  \begin{qulist}{} %%%% NOTE the ``extra'' brace here %%%%
+    \item[Var] \mytarget{idl:help_st:var}%
+	IDL variable, of any kind
+  \end{qulist}
+\end{qualifiers}
+
+% \begin{keywords}
+%   \begin{kwlist}{} %%% extra brace
+%   \end{kwlist}
+% \end{keywords}  
+
+\begin{codedescription}
+{%
+If \mylink{idl:help_st:var}{\texttt{Var}} is an IDL structure, \thedocid{} does a recursive \texttt{HELP,/STRUCTURES} on \texttt{Var} and each of its substructure, otherwise it does the equivalent of \texttt{HELP, Var}}
+\end{codedescription}
+
+
+
+\begin{related}
+  \begin{sulist}{} %%%% NOTE the ``extra'' brace here %%%%
+    \item[idl] version \idlversion or more is necessary to run \thedocid.
+  \end{sulist}
+\end{related}
+
+\begin{example}
+{
+\begin{tabular}{l} %%%% use this tabular format %%%%
+\htmlref{init\_healpix}{idl:init_healpix} ; make sure that \texttt{!healpix} is defined\\
+help, /structure, !healpix\\
+\thedocid, !healpix
+\end{tabular}
+}
+{\parbox[t]{\hsize}{
+the example above compares the output of \texttt{help,/structures} which only expand the top structure: 
+\\
+\par
+{\scriptsize{\texttt{ % put font size before font type to get line spacing right
+** Structure <151cef8>, 7 tags, length=528, data length=524, refs=2:    \\
+   VERSION      \hspace{2em}   STRING  \hspace{2em}  '3.40'   \\
+   DATE         \hspace{2em}   STRING  \hspace{2em}  '2018-01-01'   \\
+   DIRECTORY    \hspace{2em}   STRING  \hspace{2em}  '/home/user/Healpix'   \\
+   PATH         \hspace{2em}   STRUCT  \hspace{2em}  -> <Anonymous> Array[1]   \\
+   NSIDE        \hspace{2em}   LONG    \hspace{2em}  Array[30]   \\
+   BAD\_VALUE   \hspace{2em}   FLOAT   \hspace{2em}   -1.63750e+30   \\
+   COMMENT      \hspace{2em}   STRING  \hspace{2em}  Array[15]   
+}}}  
+\\
+\\
+and \texttt{\thedocid}, which expand each sub-structure:
+\\   
+\\
+\scriptsize{\texttt{ % put font size before font type to get line spacing right   
+** Structure <151cef8>, 7 tags, length=528, data length=524, refs=2:   \\
+  .VERSION           \hspace{3em}     STRING  \hspace{2em}   '3.40'   \\
+  .DATE              \hspace{3em}     STRING  \hspace{2em}   '2018-01-01'   \\
+  .DIRECTORY         \hspace{3em}     STRING  \hspace{2em}   '/home/user/Healpix'   \\
+  .PATH.BIN.CXX      \hspace{3em}     STRING  \hspace{2em}   '/home/user/Healpix/src/cxx/generic\_gcc/bin/'\\
+  .PATH.BIN.F90      \hspace{3em}     STRING  \hspace{2em}   '/home/user/Healpix/bin/'   \\
+  .PATH.DATA         \hspace{3em}     STRING  \hspace{2em}   '/home/user/Healpix/data/'   \\
+  .PATH.DOC.HTML     \hspace{3em}     STRING  \hspace{2em}   '/home/user/Healpix/doc/html/'   \\
+  .PATH.DOC.PDF      \hspace{3em}     STRING  \hspace{2em}   '/home/user/Healpix/doc/pdf/'   \\
+  .PATH.SRC          \hspace{3em}     STRING  \hspace{2em}   '/home/user/Healpix/src/'   \\
+  .PATH.TEST         \hspace{3em}     STRING  \hspace{2em}   '/home/user/Healpix/test/'   \\
+  .NSIDE             \hspace{3em}     LONG    \hspace{2em}   Array[30]   \\
+  .BAD\_VALUE        \hspace{3em}     FLOAT   \hspace{2em}    -1.63750e+30   \\
+  .COMMENT           \hspace{3em}     STRING  \hspace{2em}   Array[15]   
+}}
+}}
+\end{example}
+
+
+

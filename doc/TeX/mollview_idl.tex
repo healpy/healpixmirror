@@ -272,8 +272,9 @@ See \mylink{idl:mollview:example6}{Example \#6} \latexhtml{on page~\pageref{page
 The accepted inputs are \\
 {\tt ASPOS.X, ASPOS.Y}: X,Y location of astronomical coordinates label  (which can be removed altogether with \mylink{idl:mollview:noposition}{/NOPOSITION}, only applicable to \htmlref{gnomview}{idl:gnomview}),\\
 {\tt CBAR.DX, CBAR.DY}: length and width of color bar (which can be removed with \mylink{idl:mollview:nobar}{/NOBAR}), the bar is centered, at an automatically determined height\\
-{\tt CBAR.SPACES, CBAR.TY}: 3-element vector listing the strings to be inserted between the map minimum value label, the color bar, the map maximum value, and the map units (read from the FITS file or provided by \mylink{idl:mollview:units}{UNITS}): \default{3 single spaces}, and vertical offset of the text (min, max and units labels) with respect to the color bar \default{0};
-the character size of the text accompanying the color bar is fully determined by the keyword \mylink{idl:mollview:charsize}{Charsize},\\
+{\tt CBAR.SPACES}: 3-element vector listing the strings to be inserted between the map minimum value label, the color bar, the map maximum value, and the map units (read from the FITS file or provided by \mylink{idl:mollview:units}{UNITS}) \default{3 single spaces}, \\
+{\tt CBAR.TY}: vertical offset of the text (min, max and units labels) with respect to the color bar \default{0};\\
+\textbf{Note:} the character size of the text accompanying the color bar is fully determined by the keyword \mylink{idl:mollview:charsize}{Charsize},\\
 {\tt CRING.DX, CRING.XLL, CRING.YLL}: radius and X,Y location of lower left corner of the color disc showing the polarization direction when \mylink{idl:mollview:polarization}{POLARIZATION=3}\\
 {\tt SUBTITLE.X, SUBTITLE.Y, SUBTITLE.CHARSIZE}: control the X,Y location of the plot 
 \mylink{idl:mollview:subtitle}{subtitle} 
@@ -283,7 +284,7 @@ and its final character size, which is the product of the number
 with the one provided in the keyword
 \mylink{idl:mollview:charsize}{Charsize}\\
 {\tt TITLE.X, TITLE.Y, TITLE.CHARSIZE}: same as above, applied to the plot title (\mylink{idl:mollview:titleplot}{titleplot}),\\
-{\tt VSCALE.X, VSCALE.Y}: X,Y location of scale calibrating the polarization rods (whose length and spacing can be tuned with \mylink{idl:mollview:polarization}{POLARIZATION=[3, length, spacing]})\\
+{\tt VSCALE.X, VSCALE.Y}: X,Y location of scale calibrating the polarization rods (whose length and spacing in the main plotting area can be tuned with \mylink{idl:mollview:polarization}{POLARIZATION=[3, length, spacing]})\\
 See \mylink{idl:mollview:example7}{Example \#7} \latexhtml{on page~\pageref{page:moll_customize}}{below}.
 }\\
 
@@ -1285,7 +1286,7 @@ Example~\#6) of the application of Planck color table
 'Wider, thicker color bar; left justified title',\$ \\
 \hspace{2em}  \mylink{idl:mollview:customize}{customize=}%
 \{cbar:\{dx:2/3.,dy:1/32.,ty:0.005\},\$ \\
-\hspace{3em}  title:\{x:0,charsize:2\}\} \\
+\hspace{5em}  title:\{x:0,charsize:2\}\} \\
 %,png='~/healpix_svn/doc/TeX/fig/moll_customize.png',/preview
  \htmlref{help\_st}{idl:help_st}, dsmoll
 \\
@@ -1294,26 +1295,28 @@ Example~\#6) of the application of Planck color table
 {\parbox[t]{\hsize}{will generate a Mollweide projection plot with customized thickness and length of the color bar, 
 and location of the title (see Fig.~\ref{fig:moll_customize}\latexhtml{ on page~\pageref{page:moll_customize}}{}). 
 The default value (in the Mollweide projection) 
- of the available customization parameters is also listed as\\
+ of the available customization parameters is also listed as \\
 \scriptsize{\texttt{ % put font size before font type to get line spacing right
    ** Structure <4200ac08>, 6 tags, length=120, data length=112, refs=1:\\
-\hspace{1em}      .ASPOS.X                   \hspace{2em}         FLOAT   \hspace{2em}        -1.00000\\
-\hspace{1em}      .ASPOS.Y                   \hspace{2em}         FLOAT   \hspace{2em}        -1.00000\\
-\hspace{1em}      .CBAR.DX                   \hspace{2em}         FLOAT   \hspace{2em}        0.333333\\
-\hspace{1em}      .CBAR.DY                   \hspace{2em}         FLOAT   \hspace{2em}       0.0142857\\
-\hspace{1em}      .CBAR.SPACES               \hspace{2em}         STRING  \hspace{2em}   Array[3]\\
-\hspace{1em}      .CBAR.TY                   \hspace{2em}         FLOAT   \hspace{2em}         0.00000\\
-\hspace{1em}      .CRING.DX                  \hspace{2em}         FLOAT   \hspace{2em}        0.100000\\
-\hspace{1em}      .CRING.XLL                 \hspace{2em}         FLOAT   \hspace{2em}       0.0250000\\
-\hspace{1em}      .CRING.YLL                 \hspace{2em}         FLOAT   \hspace{2em}       0.0250000\\
-\hspace{1em}      .SUBTITLE.X                \hspace{2em}         FLOAT   \hspace{2em}        0.500000\\
-\hspace{1em}      .SUBTITLE.Y                \hspace{2em}         FLOAT   \hspace{2em}        0.905000\\
-\hspace{1em}      .SUBTITLE.CHARSIZE         \hspace{2em}         FLOAT   \hspace{2em}         1.20000\\
-\hspace{1em}      .TITLE.X                   \hspace{2em}         FLOAT   \hspace{2em}        0.500000\\
-\hspace{1em}      .TITLE.Y                   \hspace{2em}         FLOAT   \hspace{2em}        0.950000\\
-\hspace{1em}      .TITLE.CHARSIZE            \hspace{2em}         FLOAT   \hspace{2em}         1.60000\\
-\hspace{1em}      .VSCALE.X                  \hspace{2em}         FLOAT   \hspace{2em}       0.0500000\\
-\hspace{1em}      .VSCALE.Y                  \hspace{2em}         FLOAT   \hspace{2em}       0.0200000
+%\begin{tabular}{lll}
+.ASPOS.X                   \hspace{2em}  FLOAT    \hspace{2em}        -1.00000\\
+.ASPOS.Y                   \hspace{2em}  FLOAT    \hspace{2em}        -1.00000\\
+.CBAR.DX                   \hspace{2em}  FLOAT    \hspace{2em}        0.333333\\
+.CBAR.DY                   \hspace{2em}  FLOAT    \hspace{2em}       0.0142857\\
+.CBAR.SPACES               \hspace{2em}  STRING   \hspace{2em}   Array[3]\\
+.CBAR.TY                   \hspace{2em}  FLOAT    \hspace{2em}         0.00000\\
+.CRING.DX                  \hspace{2em}  FLOAT    \hspace{2em}        0.100000\\
+.CRING.XLL                 \hspace{2em}  FLOAT    \hspace{2em}       0.0250000\\
+.CRING.YLL                 \hspace{2em}  FLOAT    \hspace{2em}       0.0250000\\
+.SUBTITLE.X                \hspace{2em}  FLOAT    \hspace{2em}        0.500000\\
+.SUBTITLE.Y                \hspace{2em}  FLOAT    \hspace{2em}        0.905000\\
+.SUBTITLE.CHARSIZE         \hspace{2em}  FLOAT    \hspace{2em}         1.20000\\
+.TITLE.X                   \hspace{2em}  FLOAT    \hspace{2em}        0.500000\\
+.TITLE.Y                   \hspace{2em}  FLOAT    \hspace{2em}        0.950000\\
+.TITLE.CHARSIZE            \hspace{2em}  FLOAT    \hspace{2em}         1.60000\\
+.VSCALE.X                  \hspace{2em}  FLOAT    \hspace{2em}       0.0500000\\
+.VSCALE.Y                  \hspace{2em}  FLOAT    \hspace{2em}       0.0200000\\
+%\end{tabular}
 }}
 }}
 \end{examples}
