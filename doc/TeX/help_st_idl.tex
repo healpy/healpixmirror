@@ -35,7 +35,10 @@ and especially on sub-structures.}
 
 \begin{codedescription}
 {%
-If \mylink{idl:help_st:var}{\texttt{Var}} is an IDL structure, \thedocid{} does a recursive \texttt{HELP,/STRUCTURES} on \texttt{Var} and each of its substructure, otherwise it does the equivalent of \texttt{HELP, Var}}
+If \mylink{idl:help_st:var}{\texttt{Var}} is an IDL structure, \thedocid{} does a recursive \texttt{HELP,/STRUCTURES} on \texttt{Var} and each of its substructure, otherwise it does the equivalent of \texttt{HELP, Var} (see respectively 
+Examples 
+\mylink{idl:help_st:example1}{\#1} and 
+\mylink{idl:help_st:example2}{\#2} below)}
 \end{codedescription}
 
 
@@ -46,51 +49,82 @@ If \mylink{idl:help_st:var}{\texttt{Var}} is an IDL structure, \thedocid{} does 
   \end{sulist}
 \end{related}
 
-\begin{example}
+\begin{examples}
+{1}
 {
+\mytarget{idl:help_st:example1}
 \begin{tabular}{l} %%%% use this tabular format %%%%
 \htmlref{init\_healpix}{idl:init_healpix} ; make sure that \texttt{!healpix} is defined\\
 help, /structure, !healpix\\
 \thedocid, !healpix
 \end{tabular}
 }
-{\parbox[t]{\hsize}{
-the example above compares the output of \texttt{help,/structures} which only expand the top structure: 
+{
+%\parbox[t]{\hsize}{
+\begin{minipage}[t]{\hsize}
+the example above compares the output of \texttt{help,/structures} which only describes the top structure: 
 \\
-\par
+\\
 {\scriptsize{\texttt{ % put font size before font type to get line spacing right
 ** Structure <151cef8>, 7 tags, length=528, data length=524, refs=2:    \\
-   VERSION      \hspace{2em}   STRING  \hspace{2em}  '3.40'   \\
-   DATE         \hspace{2em}   STRING  \hspace{2em}  '2018-01-01'   \\
-   DIRECTORY    \hspace{2em}   STRING  \hspace{2em}  '/home/user/Healpix'   \\
-   PATH         \hspace{2em}   STRUCT  \hspace{2em}  -> <Anonymous> Array[1]   \\
-   NSIDE        \hspace{2em}   LONG    \hspace{2em}  Array[30]   \\
-   BAD\_VALUE   \hspace{2em}   FLOAT   \hspace{2em}   -1.63750e+30   \\
-   COMMENT      \hspace{2em}   STRING  \hspace{2em}  Array[15]   
-}}}  
+\begin{tabular}{lll}
+   VERSION      &   STRING  &  '3.40'   \\
+   DATE         &   STRING  &  '2018-01-01'   \\
+   DIRECTORY    &   STRING  &  '/home/user/Healpix'   \\
+   PATH         &   STRUCT  &  -> <Anonymous> Array[1]   \\
+   NSIDE        &   LONG    &  Array[30]   \\
+   BAD\_VALUE   &   FLOAT   &   -1.63750e+30   \\
+   COMMENT      &   STRING  &  Array[15]   
+\end{tabular}
+}}}
 \\
-\\
-and \texttt{\thedocid}, which expand each sub-structure:
+\par
+and \texttt{\thedocid}, which describes each sub-structure:
 \\   
-\\
-\scriptsize{\texttt{ % put font size before font type to get line spacing right   
+{\scriptsize{\texttt{ % put font size before font type to get line spacing right   
 ** Structure <151cef8>, 7 tags, length=528, data length=524, refs=2:   \\
-  .VERSION           \hspace{3em}     STRING  \hspace{2em}   '3.40'   \\
-  .DATE              \hspace{3em}     STRING  \hspace{2em}   '2018-01-01'   \\
-  .DIRECTORY         \hspace{3em}     STRING  \hspace{2em}   '/home/user/Healpix'   \\
-  .PATH.BIN.CXX      \hspace{3em}     STRING  \hspace{2em}   '/home/user/Healpix/src/cxx/generic\_gcc/bin/'\\
-  .PATH.BIN.F90      \hspace{3em}     STRING  \hspace{2em}   '/home/user/Healpix/bin/'   \\
-  .PATH.DATA         \hspace{3em}     STRING  \hspace{2em}   '/home/user/Healpix/data/'   \\
-  .PATH.DOC.HTML     \hspace{3em}     STRING  \hspace{2em}   '/home/user/Healpix/doc/html/'   \\
-  .PATH.DOC.PDF      \hspace{3em}     STRING  \hspace{2em}   '/home/user/Healpix/doc/pdf/'   \\
-  .PATH.SRC          \hspace{3em}     STRING  \hspace{2em}   '/home/user/Healpix/src/'   \\
-  .PATH.TEST         \hspace{3em}     STRING  \hspace{2em}   '/home/user/Healpix/test/'   \\
-  .NSIDE             \hspace{3em}     LONG    \hspace{2em}   Array[30]   \\
-  .BAD\_VALUE        \hspace{3em}     FLOAT   \hspace{2em}    -1.63750e+30   \\
-  .COMMENT           \hspace{3em}     STRING  \hspace{2em}   Array[15]   
+\begin{tabular}{lll}
+  .VERSION           &     STRING  &   '3.40'   \\
+  .DATE              &     STRING  &   '2018-01-01'   \\
+  .DIRECTORY         &     STRING  &   '/home/user/Healpix'   \\
+  .PATH.BIN.CXX      &     STRING  &   '/home/user/Healpix/src/cxx/generic\_gcc/bin/'\\
+  .PATH.BIN.F90      &     STRING  &   '/home/user/Healpix/bin/'   \\
+  .PATH.DATA         &     STRING  &   '/home/user/Healpix/data/'   \\
+  .PATH.DOC.HTML     &     STRING  &   '/home/user/Healpix/doc/html/'   \\
+  .PATH.DOC.PDF      &     STRING  &   '/home/user/Healpix/doc/pdf/'   \\
+  .PATH.SRC          &     STRING  &   '/home/user/Healpix/src/'   \\
+  .PATH.TEST         &     STRING  &   '/home/user/Healpix/test/'   \\
+  .NSIDE             &     LONG    &   Array[30]   \\
+  .BAD\_VALUE        &     FLOAT   &    -1.63750e+30   \\
+  .COMMENT           &     STRING  &   Array[15]   
+\end{tabular}
+}}}
+\end{minipage}
+%}
+}
+\end{examples}
+
+
+
+\begin{examples}
+{2}
+{
+\mytarget{idl:help_st:example2}
+\begin{tabular}{l} %%%% use this tabular format %%%%
+a=0\\
+help,a+1\\
+\thedocid, a+1
+\end{tabular}
+}
+{\parbox[t]{\hsize}{
+will print out
+\\
+{\scriptsize{\texttt{ 
+<Expression>    \hspace{3em} INT  \hspace{3em}     =   \hspace{3em}     1 \\
+A+1             \hspace{3em} INT   \hspace{3em}    =   \hspace{3em}     1
+}}}
 }}
-}}
-\end{example}
+\end{examples}
 
 
 

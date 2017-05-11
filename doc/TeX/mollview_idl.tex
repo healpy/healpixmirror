@@ -290,7 +290,7 @@ See \mylink{idl:mollview:example7}{Example \#7} \latexhtml{on page~\pageref{page
 
 \hspace{\sizeone}{DEFAULT\-\_SETTINGS=}\mytarget{idl:mollview:default_settings}  & \mylink{idl:mollview:routines}{all}  & \parbox[t]{\hsize}{Structure containing on output the default values (slightly projection dependent) of the plotting parameters that can be customized with 
 \mylink{idl:mollview:customize}{CUSTOMIZE}.\\
-As shown in \mylink{idl:mollview:example7}{Example \#7} \latexhtml{on page~\pageref{page:moll_customize}}{below}, the returned structure can be inspected with the routine \htmlref{help\_st}{idl:help_st}.}\\
+As shown in \mylink{idl:mollview:example7}{Example \#7} \latexhtml{on page~\pageref{page:moll_customize}}{below}, the returned structure can be inspected with the routine \htmlref{{\tt help\_st}}{idl:help_st}.}\\
 
 
 %%%%%%%%%%%%%%%%%
@@ -1292,38 +1292,41 @@ Example~\#6) of the application of Planck color table
 \\
 \end{tabular}
 }
-{\parbox[t]{\hsize}{will generate a Mollweide projection plot with customized thickness and length of the color bar, 
+{
+\begin{minipage}[t]{\hsize}
+will generate a Mollweide projection plot with customized thickness and length of the color bar, 
 and location of the title (see Fig.~\ref{fig:moll_customize}\latexhtml{ on page~\pageref{page:moll_customize}}{}). 
 The default value (in the Mollweide projection) 
  of the available customization parameters is also listed as \\
-\scriptsize{\texttt{ % put font size before font type to get line spacing right
+{\scriptsize{\texttt{ % put font size before font type to get line spacing right
    ** Structure <4200ac08>, 6 tags, length=120, data length=112, refs=1:\\
-%\begin{tabular}{lll}
-.ASPOS.X                   \hspace{2em}  FLOAT    \hspace{2em}        -1.00000\\
-.ASPOS.Y                   \hspace{2em}  FLOAT    \hspace{2em}        -1.00000\\
-.CBAR.DX                   \hspace{2em}  FLOAT    \hspace{2em}        0.333333\\
-.CBAR.DY                   \hspace{2em}  FLOAT    \hspace{2em}       0.0142857\\
-.CBAR.SPACES               \hspace{2em}  STRING   \hspace{2em}   Array[3]\\
-.CBAR.TY                   \hspace{2em}  FLOAT    \hspace{2em}         0.00000\\
-.CRING.DX                  \hspace{2em}  FLOAT    \hspace{2em}        0.100000\\
-.CRING.XLL                 \hspace{2em}  FLOAT    \hspace{2em}       0.0250000\\
-.CRING.YLL                 \hspace{2em}  FLOAT    \hspace{2em}       0.0250000\\
-.SUBTITLE.X                \hspace{2em}  FLOAT    \hspace{2em}        0.500000\\
-.SUBTITLE.Y                \hspace{2em}  FLOAT    \hspace{2em}        0.905000\\
-.SUBTITLE.CHARSIZE         \hspace{2em}  FLOAT    \hspace{2em}         1.20000\\
-.TITLE.X                   \hspace{2em}  FLOAT    \hspace{2em}        0.500000\\
-.TITLE.Y                   \hspace{2em}  FLOAT    \hspace{2em}        0.950000\\
-.TITLE.CHARSIZE            \hspace{2em}  FLOAT    \hspace{2em}         1.60000\\
-.VSCALE.X                  \hspace{2em}  FLOAT    \hspace{2em}       0.0500000\\
-.VSCALE.Y                  \hspace{2em}  FLOAT    \hspace{2em}       0.0200000\\
-%\end{tabular}
-}}
-}}
+\begin{tabular}{lll}
+.ASPOS.X                &     FLOAT     &       -1.00000\\
+.ASPOS.Y                &     FLOAT     &       -1.00000\\
+.CBAR.DX                &     FLOAT     &       0.333333\\
+.CBAR.DY                &     FLOAT     &      0.0142857\\
+.CBAR.SPACES            &     STRING    &  Array[3]\\
+.CBAR.TY                &     FLOAT     &        0.00000\\
+.CRING.DX               &     FLOAT     &       0.100000\\
+.CRING.XLL              &     FLOAT     &      0.0250000\\
+.CRING.YLL              &     FLOAT     &      0.0250000\\
+.SUBTITLE.X             &     FLOAT     &       0.500000\\
+.SUBTITLE.Y             &     FLOAT     &       0.905000\\
+.SUBTITLE.CHARSIZE      &     FLOAT     &        1.20000\\
+.TITLE.X                &     FLOAT     &       0.500000\\
+.TITLE.Y                &     FLOAT     &       0.950000\\
+.TITLE.CHARSIZE         &     FLOAT     &        1.60000\\
+.VSCALE.X               &     FLOAT     &      0.0500000\\
+.VSCALE.Y               &     FLOAT     &      0.0200000
+\end{tabular}
+}}}
+\end{minipage}
+}
 \end{examples}
 %
 \begin{figure}[h!]
 \latexhtml{%for latex
-\centerline{\includegraphics[width=0.60\textwidth]{fig/moll_customize}}
+\centerline{\includegraphics[width=0.49\textwidth]{fig/moll_customize}}
 }{%for html
 \centerline{\includegraphics[width=520pt]{fig/moll_customize}{}}
 }
