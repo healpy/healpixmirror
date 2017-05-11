@@ -211,16 +211,19 @@ pro mollview, file_in, select_in, $
 ;
 ;       CUSTOMIZE: (input) IDL structure containing customization parameters
 ;          whose default values are listed in DEFAULT_SETTINGS
-;           accept   aspos.x, aspos.y: astronomical coordinates,
-;                    cbar.dx, cbar.dy, cbar.spaces : color bar X and Y sizes,
-;                    cring
-;                    subtitle.x, subtitle.y: subtitle X and Y location
-;                    title.x, title.y:  title X and Y location
-;                    vscale.x, vscale.y
-;            {cbar:{dx:1./3., dy:1./70.}, title:{x:0.5, y:0.95}, subtitle:{x:0.5, y:0.905}}
+;           accept   aspos.x, aspos.y:               astronomical coordinates,
+;                    cbar.dx, cbar.dy, cbar.spaces:  color bar X and Y sizes,
+;                    cbar.spaces, cbar.ty:           management of text around color bar
+;                    cring.dx, cring.xll, cring.yll: color ring size and location
+;                    subtitle.x, subtitle.y, subtible.charsize: subtitle X,Y location and charsize
+;                    title.x, title.y, title.charsize:        title X and Y location
+;                    vscale.x, vscale.y:                X,Y location for polarization vector legend
+;
+;         eg   customize={cbar:{dx:1./3., dy:1./70.}, title:{x:0.5, y:0.95}, subtitle:{x:0.5, y:0.905}}
 ;
 ;       DEFAULT_SETTINGS: (output) IDL structure listing the default values
 ;          of the plot settings, like the color bar size, title and subtitle location
+;          can be inspected with HELP_ST
 ;
 ;       EXECUTE: character string containing an IDL command to be executed in
 ;                the plotting window

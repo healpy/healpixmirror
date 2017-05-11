@@ -55,6 +55,7 @@ if size(var,/tname) eq 'STRUCT' then begin
         print, output[0]
     endif
 
+    ; recursive call to HELP
     names = tag_names(var)
     for i=0, n_tags(var)-1 do begin
         current = defined(longname) ? longname+'.'+names[i] : root+names[i]
@@ -65,7 +66,7 @@ endif else begin
     ; deal with non-structure
     if defined(var) then _myjunk_ = var
     help, _myjunk_, output=output
-    if (keyword_set(longname) && defined(longname)) then begin
+    if keyword_set(old) then begin
         ; describe non-structure tag
         arg = string(longname,form='(a-30)') ; left justified in 30 blanks
         print,strtrans(output,['_MYJUNK_','='],[arg,''])
@@ -73,7 +74,8 @@ endif else begin
         ; treat non-structure entry argument
         help, /recall, output=history
         command = strupcase(strcompress(strmid(history[1],1),/remove_all) )
-        arg     = strtrans(command,[strupcase(routine),','],['',''])
+        arg     = strtrans(command, strupcase(routine)+',', '')
+        if (strlen(arg) gt 30) then arg='<Expression>'
         print,strtrans(output,'_MYJUNK_',arg)
     endelse
 endelse

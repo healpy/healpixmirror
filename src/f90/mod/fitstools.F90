@@ -2125,6 +2125,7 @@ contains
     !     addition of fwhm_arcmin and beam_leg, EH (Jan 05).
     !     addition of polcconv, EH (June 05).
     !     accept files with NAXIS2 > 2^31 (2015-04) (requires recent cfitsio >= 3.20)
+    !     accept files with polarisation columns named Q_S*, Q-S*, ... U_S*, U-S*
     !=======================================================================
     use pix_tools, only: nside2npix
     character(LEN=*), intent(IN)             :: filename
@@ -2153,7 +2154,7 @@ contains
 !     INTEGER(I4B)           :: getsize_fits
     INTEGER(I8B)           :: getsize_fits
     LOGICAL(LGT)           ::  polar_in
-    character(len=3),  dimension(1:10,1:2)  :: defpol
+    character(len=3),  dimension(1:16,1:2)  :: defpol
     logical(kind=LGT), dimension(1:2)       :: pf
     integer(kind=I4B)                       :: ndp, j, k
 
@@ -2446,9 +2447,11 @@ contains
                 defpol(1:ndp,2) = (/ "CUR","B-M","POW","BB " /)    
              endif
              if (hdutype == 2) then ! binary table -> maps or power spectra
-                ndp = 8
-                defpol(1:ndp,1) = (/ "Q-P","Q_P","Q P","Q  ","GRA","E-M","POW","EE " /)
-                defpol(1:ndp,2) = (/ "U-P","U_P","U P","U  ","CUR","B-M","POW","BB " /)
+                ndp = 10
+                defpol(1:ndp,1) = (/ "Q-P","Q_P","Q P", "Q-S","Q_S", &
+                     &               "Q  ",      "GRA","E-M","POW","EE " /)
+                defpol(1:ndp,2) = (/ "U-P","U_P","U P", "U-S","U_S", &
+                     &               "U  ",      "CUR","B-M","POW","BB " /)
              endif
              pf(:) = .false.
              do i = 2, tfields ! do not consider first field (generally temperature)
