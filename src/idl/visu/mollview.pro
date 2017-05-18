@@ -266,6 +266,8 @@ pro mollview, file_in, select_in, $
 ;             (see also : CROP, JPEG, PNG, PDF, PS and PREVIEW)
 ;
 ;       GLSIZE : character size of the graticule labels in units of CHARSIZE
+;             can be a scalar (which applies to both parallel and meridian labels),
+;             or a 2 element vector (interpreted as [meridian_label_size, parallel_label_size])
 ;             default: 0 (ie, no labeling of graticules)
 ;             (see also: CHARSIZE, GRATICULE)
 ;
@@ -312,6 +314,7 @@ pro mollview, file_in, select_in, $
 ;               (see also : PXSIZE)
 ;
 ;       IGLSIZE : character size of the input coordinates graticule labels in units of CHARSIZE
+;             either scalar or 2-element vector (see GLSIZE)
 ;             default: 0 (ie, no labeling of graticules)
 ;             (see also: CHARSIZE, IGRATICULE)
 ;

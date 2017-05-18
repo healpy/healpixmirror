@@ -95,6 +95,7 @@ end
 
 
 pro xyouts_latex, x, y, str, $
+                  alignment = alignment, $
                   charsize= charsize, $
                   color = color, $
                   font = font, $
@@ -103,7 +104,6 @@ pro xyouts_latex, x, y, str, $
                   ltxstc = ltxstc, $
                   width = width, $
                   _ref_extra = extra
-;                   alignment = alignment, $
 ;                   charthick = charthick, $
 ;                   text_axes = text_axes, $
 ;                   CLIP = clip, $
@@ -132,7 +132,8 @@ if (do_latex) then begin
                                 ; for Postscript, create information to be used by LaTeX psfrag package
         if (size(/tname, ltxstc) ne 'STRUCT') then begin
             nmax = 100
-            ltxstc={n:0, tag:replicate('void',nmax),  tex:replicate('void',nmax), scale:replicate(-1.,nmax)}
+            ltxstc={n:0, tag:replicate('void',nmax),  tex:replicate('void',nmax), $
+                    scale:replicate(-1.,nmax), alignment:replicate(0.0,nmax)}
         endif 
         fudge_size = 1.0
         xxx = 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'
@@ -147,6 +148,7 @@ if (do_latex) then begin
         ltxstc.tag[n]   = tag1
         ltxstc.tex[n]   = scol+e2latex(str)
         ltxstc.scale[n] = chars1
+        ltxstc.alignment[n] = defined(alignment) ? alignment : 0
         ltxstc.n        = n + 1
         myfont = 0
         mystr = tag1
@@ -160,12 +162,12 @@ endif else begin
 endelse
 
 xyouts, x, y, mystr, $
+        alignment = alignment, $
         charsize= charsize, $
         color = color, $
         font = myfont, $
         width = width, $
         _strict_extra = extra
-;         alignment = alignment, $
 ;         charthick = charthick, $
 ;         text_axes = text_axes, $
 ;         CLIP = clip, $

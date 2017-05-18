@@ -5,7 +5,7 @@
 ;PURPOSE
 ;	to use PSfrag to do latex syntax correctly
 ;SYNTAX
-;	hpx_latexify, filename, tags, tex, [scale, HEIGHT=, HELP=, OUTNAME=, WIDTH=]
+;	hpx_latexify, filename, tags, tex, [scale, ALIGNMENT=, HEIGHT=, HELP=, OUTNAME=, WIDTH=]
 ;INPUTS
 ;	filename: name of eps file
 ;	tags: name of dummy placeholder
@@ -33,16 +33,18 @@
 ; adapted from latexify.pro by R. da Silva, UCSC, 1-4-11
 ;  and from LS_latexify.pro by L. Spencer (2011)
 ;  version 1.0: 2015-05-12
+;  2017-05-18: added ALIGNMENT keyword
 ;	
 ;-
 pro hpx_latexify, filename, tag, tex, scale, $
+                  alignment = alignment, $
                   height = height, $
                   help = help, $
                   outname=outname, $
                   width = width
 
 routine = 'hpx_latexify'
-syntax = routine+', filename, tags, tex, [scale, HEIGHT=, HELP=, OUTNAME=, WIDTH=]'
+syntax = routine+', filename, tags, tex, [scale, ALIGNMENT=, HEIGHT=, HELP=, OUTNAME=, WIDTH=]'
 
 if keyword_set(help) then begin
     doc_library,routine
@@ -80,7 +82,12 @@ printf, lun,'\geometry{paperwidth='+strtrim(width*1.01,2)+'cm,'+$
                     'paperheight='+strtrim(height*1.01,2)+'cm,margin=0pt}'
 printf, lun,'\begin{document}'
 for i=0, n_elements(tag)-1 do begin
-    printf, lun,'\psfrag{'+tag[i]+'}[cc][cc]['+scale[i]+']{'+tex[i]+'}'
+    pospos = '[cc][cc]' ; centers of tag and tex will match
+    if (n_elements(alignment) ge (i+1)) then begin
+        if (alignment[i] lt 0.1) then pospos = '[cl][cl]' ; left  edges of tag and tex will match
+        if (alignment[i] gt 0.9) then pospos = '[cr][cr]' ; right edges of tag and tex will match
+    endif
+    printf, lun,'\psfrag{'+tag[i]+'}'+pospos+'['+scale[i]+']{'+tex[i]+'}'
 endfor
 printf, lun,'\begin{center}'
 printf, lun,'\includegraphics[width='+$

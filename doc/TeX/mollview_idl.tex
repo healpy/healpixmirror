@@ -401,9 +401,12 @@ or {\tt orthographic}, \\
 
 {GLSIZE=}\mytarget{idl:mollview:glsize} & \mylink{idl:mollview:routines}{CGMO}& \parbox[t]{\hsize}{
 	character size of the graticule labels in units of {\tt Charsize}. \\
+        Can be a scalar (which applies to both parallel and meridian labels),
+        or a 2 element vector (interpreted as [meridian\_label\_size, parallel\_label\_size])\\
 	\default{0: no labeling of graticules}. \\
-	\seealso \mylink{idl:mollview:charsize}{Charsize}, \mylink{idl:mollview:graticule}{Graticule}
-	}\\
+	\seealso \mylink{idl:mollview:charsize}{Charsize}, \mylink{idl:mollview:graticule}{Graticule},
+	\mylink{idl:mollview:iglsize}{Iglsize},
+	\mylink{idl:mollview:igraticule}{Igraticule}}\\
 
 {GRATICULE=}\mytarget{idl:mollview:graticule}  & \mylink{idl:mollview:routines}{CGMO}  & \parbox[t]{\hsize}{
 	if set, puts a graticule (ie, longitude and latitude grid) 
@@ -474,6 +477,7 @@ boundaries with solid lines.
 
 {IGLSIZE=}\mytarget{idl:mollview:iglsize} & \mylink{idl:mollview:routines}{CGMO}& \parbox[t]{\hsize}{
 	character size of the input coordinates graticule labels in units of {\tt Charsize}. \\
+	Either scalar or 2-element vector (see \mylink{idl:mollview:glsize}{Glsize}).\\
 	\default{0: no labeling of graticules}. \\
 	\seealso \mylink{idl:mollview:charsize}{Charsize}, \mylink{idl:mollview:igraticule}{Igraticule}
 	}\\
@@ -708,8 +712,15 @@ once by gathering the respective structures into one meta-structure or an array.
 or {\tt orthographic}, \\
 	      if set to a file name  : outputs the plot in that file \\
 		\default 0 \\
-The PDF file is produced from a PostScript file using the script \htmladdnormallink{{\tt epstopdf}}{http://tug.org/epstopdf/} now shipped with \healpix. Note that {\tt epstopdf} usually requires a fully functional implementation of the fairly widespread {\tt gs}, aka
+The PDF file is produced from a PostScript file using the script \htmladdnormallink{{\tt epstopdf}}{http://tug.org/epstopdf/} now shipped with \healpixns. Note that {\tt epstopdf} usually requires a fully functional implementation of the fairly widespread {\tt gs}, aka
 \htmladdnormallink{{\tt Ghostscript}}{https://en.wikipedia.org/wiki/Ghostscript}, which may however not be available on the computation dedicated nodes of some computer clusters.\\
+If the resulting PDF file is not properly rotated (ie landscape orientation instead of portrait), 
+and/or has excessive white margins, the scripts
+\htmladdnormallink{{\tt pdf90}}{https://linux.die.net/man/1/pdf90}, part of the package 
+\htmladdnormallink{{\tt pdfjam}}{http://www2.warwick.ac.uk/fac/sci/statistics/staff/academic-research/firth/software/pdfjam/}, and 
+\htmladdnormallink{{\tt pdfcrop}}{http://pdfcrop.sourceforge.net}, 
+often included in PDFTeX installations, 
+can respectively prove very useful.\\
                \seealso 
 \mylink{idl:mollview:preview}{Preview}, 
 \mylink{idl:mollview:gif}{Gif}, 
@@ -717,6 +728,16 @@ The PDF file is produced from a PostScript file using the script \htmladdnormall
 \mylink{idl:mollview:png}{Png},
 \mylink{idl:mollview:ps}{Ps}}\\
 
+
+%%%%%%%%%%%%%%%%%
+\end{tabular}
+\mollbacktotop
+%-----------------------------------------------------------
+\begin{tabular}{p{\sizeone} p{\sizetwo} p{\sizethr}}
+\hline  
+\textbf{name} & \textbf{routines} & \textbf{\ description} \\ \hline
+%                   &   &                            \\ %%% for presentation
+%%%%%%%%%%%%%%%%%
 
 {PFONTS=}\mytarget{idl:mollview:pfonts}  & \mylink{idl:mollview:routines}{all}  &  \parbox[t]{\hsize}{
 2-element vector of integers [$p_0$, $p_1$] selecting the default IDL font of character strings such as the
@@ -744,6 +765,7 @@ Note that PFONTS will be ignored if \mylink{idl:mollview:latex}{Latex}=2 {\em an
 \mylink{idl:mollview:pdf}{PDF} or \mylink{idl:mollview:ps}{PS} are set.
 }\\
 
+
 {PNG=}\mytarget{idl:mollview:png}  & \mylink{idl:mollview:routines}{all}  & \parbox[t]{\hsize}{
 		string containing the name of a .PNG output \\
 	      if set to 1            : outputs the plot in 
@@ -766,6 +788,7 @@ or {\tt orthographic}, \\
 \mylink{idl:mollview:pdf}{Pdf}, 
 \mylink{idl:mollview:ps}{Ps}, 
 and \mylink{idl:mollview:retain}{Retain}}\\
+
 
 %%%%%%%%%%%%%%%%%
 \end{tabular}

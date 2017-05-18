@@ -866,7 +866,8 @@ endif else begin
 ;  the graticule in output astrophysical coordinates
     if (KEYWORD_SET(graticule)) then begin
         grattwice =1
-        glabelsize = charsfactor * (keyword_set(glsize) ? glsize : 0 )
+        glabelsize = charsfactor * (keyword_set(glsize) ? glsize : [0,0] )
+        if n_elements(glabelsize) eq 1 then glabelsize=[1,1]*glabelsize[0]
         oplot_graticule, graticule, eul_mat, projection=proj_small, flip = flip, thick = 1.*thick_dev, $
                          color = !p.color, half_sky=half_sky, linestyle=0, charsize=glabelsize, reso_rad=dx, $
                          latex=my_latex, ltxstc=ltxstc
@@ -875,7 +876,8 @@ endif else begin
 ;  the graticule in input coordinates
     if (KEYWORD_SET(igraticule)) then begin
         lines_ig = 2*grattwice  ; either 0 or 2
-        iglabelsize = charsfactor * (keyword_set(iglsize) ? iglsize : 0 )
+        iglabelsize = charsfactor * (keyword_set(iglsize) ? iglsize : [0,0] )
+        if n_elements(glabelsize) eq 1 then glabelsize=[1,1]*glabelsize[0]
         oplot_graticule, igraticule, eul_mat, projection=proj_small, flip = flip, thick = 1.*thick_dev, $
                          color = !p.color, half_sky=half_sky, linestyle=lines_ig, charsize=iglabelsize, reso_rad=dx, $
                          coordsys=[coord_in,coord_out],  $
@@ -1020,6 +1022,7 @@ if (do_print) then begin
     if (my_latex eq 2) then begin
         nlts = ltxstc.n
         hpx_latexify, file_ps, ltxstc.tag[0:nlts-1], ltxstc.tex[0:nlts-1], ltxstc.scale[0:nlts-1], $
+                      alignment = ltxstc.alignment[0:nlts-1], $
                       width  = do_portrait ? hxsize : hysize, $
                       height = do_portrait ? hysize : hxsize
     endif
