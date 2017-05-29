@@ -215,6 +215,7 @@ pro mollview, file_in, select_in, $
 ;                    cbar.dx, cbar.dy, cbar.spaces:  color bar X and Y sizes,
 ;                    cbar.spaces, cbar.ty:           management of text around color bar
 ;                    cring.dx, cring.xll, cring.yll: color ring size and location
+;                    pdf.debug:                      if set to 1, and SILENT not set, will help degugging PDF generation
 ;                    subtitle.x, subtitle.y, subtible.charsize: subtitle X,Y location and charsize
 ;                    title.x, title.y, title.charsize:        title X and Y location
 ;                    vscale.x, vscale.y:                X,Y location for polarization vector legend

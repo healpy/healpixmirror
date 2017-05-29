@@ -276,6 +276,8 @@ The accepted inputs are \\
 {\tt CBAR.TY}: vertical offset of the text (min, max and units labels) with respect to the color bar \default{0};\\
 \textbf{Note:} the character size of the text accompanying the color bar is fully determined by the keyword \mylink{idl:mollview:charsize}{Charsize},\\
 {\tt CRING.DX, CRING.XLL, CRING.YLL}: radius and X,Y location of lower left corner of the color disc showing the polarization direction when \mylink{idl:mollview:polarization}{POLARIZATION=3}\\
+{\tt PDF.DEBUG}: if set to 1, and \mylink{idl:mollview:silent}{SILENT} is not set, then debugging information on the \mylink{idl:mollview:pdf}{PDF} generation will be printed (when applicable), 
+and the intermediate Postscript file will be kept\\
 {\tt SUBTITLE.X, SUBTITLE.Y, SUBTITLE.CHARSIZE}: control the X,Y location of the plot 
 \mylink{idl:mollview:subtitle}{subtitle} 
 (X=0 is left justified, X=0.5 is centered and X=1 is right justified), 
@@ -949,7 +951,9 @@ backing store to use for direct graphics windows in \{0,1,2\}.
                  Can NOT be used with \mylink{idl:mollview:gif}{GIF}.} \\
 
 {/SILENT}\mytarget{idl:mollview:silent}  & \mylink{idl:mollview:routines}{all}  & \parbox[t]{\hsize}{
-		if set, the program runs silently} \\
+		if set, the program runs silently, and extra debugging switches such as 
+		\mylink{idl:mollview:customize}{customize=\{pdf:\{debug:1\}\}}
+		will be ignored.} \\
 
 {STAGGER=}\mytarget{idl:mollview:stagger}  & \mylink{idl:mollview:routines}{---O}   & \parbox[t]{\hsize}{
 Scalar or 2 element vector:\\
@@ -1333,6 +1337,7 @@ The default value (in the Mollweide projection)
 .CRING.DX               &     FLOAT     &       0.100000\\
 .CRING.XLL              &     FLOAT     &      0.0250000\\
 .CRING.YLL              &     FLOAT     &      0.0250000\\
+.PDF.DEBUG              &     INT       &      0 \\
 .SUBTITLE.X             &     FLOAT     &       0.500000\\
 .SUBTITLE.Y             &     FLOAT     &       0.905000\\
 .SUBTITLE.CHARSIZE      &     FLOAT     &        1.20000\\

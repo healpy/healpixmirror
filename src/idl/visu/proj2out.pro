@@ -282,6 +282,7 @@ default_stc = {$
               aspos:   {x:-1.0,    y:-1.0}, $
               cbar:    {dx:1./3.,  dy:1./70., spaces:[' ',' ',' '], ty:0.0}, $
               cring:   {dx:1./10., xll:0.025, yll:0.025}, $
+              pdf:     {debug:0}, $
               subtitle:{x:0.5,     y:0.905,   charsize:1.2}, $
               title:   {x:0.5,     y:0.95,    charsize:1.6}, $
               vscale:  {x:0.05,    y:0.02}}
@@ -485,6 +486,9 @@ cs_title = parse_custom_structure(default_stc.title.charsize,    custom_stc, 'ti
 x_subtl  = parse_custom_structure(default_stc.subtitle.x,        custom_stc, 'subtitle','x') 
 y_subtl  = parse_custom_structure(default_stc.subtitle.y,        custom_stc, 'subtitle','y') 
 cs_subtl = parse_custom_structure(default_stc.subtitle.charsize, custom_stc, 'subtitle','charsize') 
+; debugging of PDF generation
+pdf_debug = parse_custom_structure(default_stc.pdf.debug,    custom_stc, 'pdf', 'debug')
+pdf_debug and= ~keyword_set(silent)
 
 
 ;====================================================
@@ -1039,7 +1043,8 @@ if (do_print) then begin
     endif 
     if (do_pdf) then begin
         ;cgPS2PDF, file_ps, file_pdf, /delete_ps, pagetype=papersize, /showcmd
-        epstopdf, file_ps, file_pdf, /delete_ps, /silent
+        ;epstopdf, file_ps, file_pdf, /delete_ps, /silent ; <<<<< normal mode
+        epstopdf, file_ps, file_pdf, delete_ps=~pdf_debug, silent=~pdf_debug, showcmd=pdf_debug ; <<<<< test mode
         ;epstopdf, file_ps, file_pdf, delete_ps=0,/showcmd, /silent
         ;epstopdf, file_ps, file_pdf, /delete_ps, silent=0, /showcmd ;, options='--autorotate=All'
         if (be_verbose) then print,'PDF file is in '+file_pdf
