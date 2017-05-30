@@ -12,7 +12,7 @@ Pro sxaddpar, Header, Name, Value, Comment, Location, before=before, $
 ;                               BEFORE =, AFTER = , FORMAT= , /PDU
 ;                               /SAVECOMMENT, Missing=, /Null
 ; INPUTS:
-;       Header = String array containing FITS or STSDAS header.    The
+;       Header = String array containing FITS header.    The
 ;               length of each element must be 80 characters.    If not 
 ;               defined, then SXADDPAR will create an empty FITS header array.
 ;
@@ -107,7 +107,6 @@ Pro sxaddpar, Header, Name, Value, Comment, Location, before=before, $
 ; MODIFICATION HISTORY:
 ;       DMS, RSI, July, 1983.
 ;       D. Lindler Oct. 86  Added longer string value capability
-;       Converted to NEWIDL  D. Lindler April 90
 ;       Added Format keyword, J. Isensee, July, 1990
 ;       Added keywords BEFORE and AFTER. K. Venkatakrishna, May '92
 ;       Pad string values to at least 8 characters   W. Landsman  April 94
@@ -129,7 +128,9 @@ Pro sxaddpar, Header, Name, Value, Comment, Location, before=before, $
 ;       Oct 2005 Jan 2004 change made SXADDPAR fail for empty strings W.L.
 ;       May 2011 Fix problem with slashes in string values W.L. 
 ;       Aug 2013 Only use keyword_set for binary keywords W. L. 
-;       Sep 2015 Added NULL and MISSING keywords W.L>
+;       Sep 2015 Added NULL and MISSING keywords W.L.
+;       Sep 2016 Allow writing of byte or Boolean variables  W.L.
+;       Nov 2016 Allow value to be a 1 element scalar  W.L.
 ;       
 ;-
  compile_opt idl2
@@ -177,17 +178,17 @@ Pro sxaddpar, Header, Name, Value, Comment, Location, before=before, $
 ;
         stype = size(value,/type)
         save_as_null = 0
-        if stype EQ 0 then $
+        if stype EQ 0 then begin        
             if (n_elements(missing) eq 1) || keyword_set(null) then $
               save_as_null = 1 else $
-                message = 'keyword value (third parameter) is not defined'
-        if (stype NE 6) && (stype NE 7) && (stype NE 9) then begin
+                message,'Keyword value (third parameter) is not defined'
+        endif else if (stype NE 6) && (stype NE 7) && (stype NE 9) then begin
             if N_elements(missing) eq 1 then $
               if value eq missing then save_as_null = 1
               if ~save_as_null then if ~finite(value) then begin
                 if ((n_elements(missing) eq 1) || keyword_set(null)) then $
                   save_as_null = 1 else $
-                    message = 'keyword value (third parameter) is not finite'
+                    message,'Keyword value (third parameter) is not finite'
             endif
         endif
 ;
@@ -339,8 +340,8 @@ REPLACE:
         strput,h,nn+'= '        ;insert name and =.
         apost = "'"             ;quote a quote
         type = size(value)      ;get type of value parameter
-        if type[0] ne 0 then $
-                message,'Keyword Value (third parameter) must be scalar'
+        if N_elements(value) NE 1 then $
+                message,'Keyword Value (third parameter) must be a scalar'
 
         case type[1] of         ;which type?
 
@@ -366,14 +367,22 @@ REPLACE:
         ELSE v = STRING(value, FORMAT='(G19.12)')
         s = strlen(v)                                   ; right justify
         strput, h, v, (30-s)>10
-        END
+        END               
 
  else:  begin
         if ~save_as_null then begin
+        if type[1] EQ 1 then begin
+             if !VERSION.RELEASE GE '8.4' && ISA(value,/boolean) then begin
+                upval = ['F','T']
+                strput,h,upval[value],29 
+                break
+             endif else v = strtrim(fix(value),2) 
+        endif else begin
         if (N_elements(format) eq 1) then $            ;use format keyword
             v = string(value, FORMAT='('+strupcase(format)+')' ) else $
             v = strtrim(strupcase(value),2)      
                                       ;convert to string, default format
+        endelse                              
         s = strlen(v)                 ;right justify
         strput,h,v,(30-s)>10          ;insert
         endif

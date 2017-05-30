@@ -146,8 +146,10 @@ pro putast, hdr, astr, crpix, crval, ctype, EQUINOX=equinox, $
 ;       Support IRAF TNX projection  M. Sullivan U. of Southamptom March 2014
 ;       PV1_3, PV1_4 keywords take precedence over LONPOLE, LATPOLE keywords
 ;                   WL, August 2014
+;       Fix typo spelling RADECSYS, don't use LONPOLE, LATPOLE in PV keywords when
+;          TPV projection   WL  December 2015
+;	    Corrected for case when Equinox is NaN in structure. J. Murthy May 2016
 ;-
-
  compile_opt idl2
  npar = N_params()
 
@@ -217,7 +219,8 @@ RD_CEN:
         astr2 = TAG_EXIST(astr,'AXES')
         IF astr2 THEN BEGIN ; version 2 astrometry structure
            ax = STRTRIM(STRING(astr.axes),2)
-           IF N_ELEMENTS(equinox) EQ 0 THEN equinox = astr.equinox
+           IF N_ELEMENTS(equinox) EQ 0 THEN $
+              if (finite(astr.equinox)) then equinox = astr.equinox
         ENDIF
    endif else  begin
         cd = astr
@@ -382,10 +385,14 @@ RD_CEN:
      sxaddpar, hdr, 'CRVAL'+ax[1]+alt, double(crval[1]), comm[1], 'HISTORY'
      hist = ' World Coordinate System parameters written'
   endif
-
-; 
+  
+; We don't want to update PV keywords if they are being used for TPV projection
+     if N_elements(astr) GT 0 then begin
+     pv_update = ~tag_exist(astr,'DISTORT') ||  $
+                  (tag_exist(astr,'DISTORT') &&  astr.distort.name NE 'TPV')
+    endif else pv_update = 0
     if N_elements(longpole) EQ 1 then begin
-        astr.pv1[3] = longpole
+        if pv_update then astr.pv1[3] = longpole
         test = sxpar(hdr,'LONPOLE',count=N_lonpole)
         if N_lonpole EQ 1 then $
             sxaddpar, hdr, 'LONPOLE' +alt ,double(longpole), $
@@ -393,7 +400,7 @@ RD_CEN:
     endif 
  
     if N_elements(latpole) EQ 1 then begin
-       astr.pv1[4] = latpole
+       if pv_update then astr.pv1[4] = latpole
        test = sxpar(hdr,'LATPOLE',count=N_latpole)
         if N_latpole EQ 1 then $
          sxaddpar, hdr, 'LATPOLE' +alt ,double(latpole), $
@@ -432,7 +439,7 @@ RD_CEN:
           ' Modified Julian day of observations', 'HISTORY', /SaveC
         IF astr.dateobs NE 'UNKNOWN' THEN SXADDPAR, hdr, 'DATE-OBS', $
           astr.dateobs, ' Date of observations', 'HISTORY', /SaveC
-        IF astr.radecsys NE '' THEN SXADDPAR, hdr, 'RADESYS'+alt, $
+        IF astr.radecsys NE '' THEN SXADDPAR, hdr, 'RADECSYS'+alt, $
           astr.radecsys,' Reference frame', 'HISTORY', /SaveC
     ENDIF
     

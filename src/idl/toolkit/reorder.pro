@@ -80,6 +80,7 @@ function reorder, map_in, in=in, out= out, n2r= n2r, r2n=r2n, help=help
 ;    Jan   2000, EH,  improved documentation header 
 ;    Oct   2004, EH,  added extra dimension, added R2N  and N2R
 ;    Mars  2012, EH, IAP: added HELP keyword
+;    May   2017, EH, IAP: replaced obsolete DATATYPE() with IDL's SIZE(/TYPE)
 ;-
 
  ok = (defined(in) && defined(out)) + keyword_set(r2n) + keyword_set(n2r)
@@ -135,7 +136,7 @@ function reorder, map_in, in=in, out= out, n2r= n2r, r2n=r2n, help=help
  endif
 
  npf = np/12
- map_out = make_array(np, ncol, type=datatype(map_in,2))
+ map_out = make_array(np, ncol, type=size(/type,map_in))
  if (kin eq 'RING') then begin  ; ring -> nest
      for j=0L, 11 do begin
          ipn = lindgen(npf) + j*npf

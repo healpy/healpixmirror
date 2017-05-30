@@ -227,6 +227,7 @@ pro proj2out, planmap, Tmax, Tmin, color_bar, dx, title_display, sunits, $
 ;   Apr 2017, EH, fixed path problem when PDF=1 instead of PDF=file_name
 ;                 added CUSTOM (input) and DEFAULT_SETTINGS (output) structure
 ;                 for customization of color bar size, title and subtitle location
+;    2017-05-30: replaced obsolete DATATYPE() with IDL's SIZE(/TNAME)
 ;-
 ;===============================================================================
 
@@ -929,9 +930,9 @@ if do_image then begin
         endif else valid_transparent = 1
     endif
 
-    if (do_gif)  then file_image = (datatype(gif)  ne 'STR') ? 'plot_'+proj_small+'.gif'  : gif
-    if (do_png)  then file_image = (datatype(png)  ne 'STR') ? 'plot_'+proj_small+'.png'  : png
-    if (do_jpeg) then file_image = (datatype(jpeg) ne 'STR') ? 'plot_'+proj_small+'.jpeg' : jpeg
+    if (do_gif)  then file_image = (size(/tname,gif)  ne 'STRING') ? 'plot_'+proj_small+'.gif'  : gif
+    if (do_png)  then file_image = (size(/tname,png)  ne 'STRING') ? 'plot_'+proj_small+'.png'  : png
+    if (do_jpeg) then file_image = (size(/tname,jpeg) ne 'STRING') ? 'plot_'+proj_small+'.jpeg' : jpeg
         
     image = (do_true || do_shade) ? tvrd(true=1) : tvrd() ; a single call to tvrd()
     if (do_shade) then begin

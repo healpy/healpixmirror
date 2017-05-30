@@ -63,6 +63,7 @@ pro ang2vec, theta, phi, vector, astro = astro
 ;       March 6, 1999    Eric Hivon, Caltech, Version 1.0
 ;       March 22, 2002     use Message
 ;       Aug 2011, IAP: more precise (x,y) determination close to pole
+;       May 2017: replaced obsolete DATATYPE() with IDL's SIZE(/TNAME)
 ;
 ;-
 ;*****************************************************************************
@@ -78,7 +79,7 @@ if (np NE np1) then begin
 endif
 
 dtor = !DtoR
-if (DATATYPE(theta,2) EQ 5 OR DATATYPE(phi,2) EQ 5) then begin ; double precision
+if (size(theta,/type) EQ 5 || size(phi,/type) EQ 5) then begin ; double precision
     dtor = !DPi / 180.d0
 endif
 

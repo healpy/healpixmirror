@@ -91,6 +91,7 @@
 ;      EH, IPAC, 2005-April
 ;      March 2006: M.A. Miville-Deschenes (IAS) and EH (IAP): bugs correction
 ;      July 2006: EH corrected definition of do_nest (pointed out by Kwangil Seon)
+;      May 2017: replaced obsolete DATATYPE() with IDL's SIZE(/TNAME)
 ;-
 
 pro medfilt_sub, in_map, radius_radian, med_map, ring=ring, nested=nested, ordering=ordering, $
@@ -174,11 +175,11 @@ if (n_params() ne 3) then begin
     return
 endif
 
-if (datatype(datain) eq 'STR' xor datatype(medmap) eq 'STR') then begin
+if (size(/tname,datain) eq 'STRING' xor size(/tname,medmap) eq 'STRING') then begin
     message,'Inconsistent input and output data: should both be either FITS files or arrays'
 endif
 
-if (keyword_set(arcmin) and keyword_set(degrees)) then begin
+if (keyword_set(arcmin) && keyword_set(degrees)) then begin
     message,'Choose either DEGREES or ARCMIN'
 endif
 
@@ -190,7 +191,7 @@ if (radius_radian lt 0 or radius_radian gt !pi) then begin
 endif
 radius_deg = radius_radian * !Radeg
 
-if datatype(datain) ne 'STR' then begin
+if size(/tname,datain) ne 'STRING' then begin
     ; data are memory array
     medfilt_sub, datain, radius_radian, medmap, ring=ring, nested=nested, ordering=ordering, $
       fill_holes=fill_holes, bad_data=bad_data

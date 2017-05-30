@@ -246,6 +246,7 @@ pro ud_grade, map_in, map_out, nside_out=nside_out, order_in=order_in, order_out
 ;               upgrading maps
 ;    2010-02-17: bad pixels correctly identified in DP map
 ;    2012-03-16: added HELP keyword
+;    2017-05-30: replaced obsolete DATATYPE() with IDL's SIZE(/TNAME)
 ;-
 
 routine = 'UD_GRADE'
@@ -262,21 +263,21 @@ if n_params() ne 2 then begin
     return
 endif
 
-dtype_in  = datatype(map_in)
-dtype_out = datatype(map_out)
+dtype_in  = size(/tname,map_in)
+dtype_out = size(/tname,map_out)
 
-if (dtype_in eq 'STR' and not (dtype_out eq 'STR' or dtype_out eq 'UND')) then begin
+if (dtype_in eq 'STRING' && ~(dtype_out eq 'STRING' || dtype_out eq 'UNDEFINED')) then begin
     print,'inconsistent type for map_in and map_out in '+routine
     print,'******** ABORT *********'
     return
 endif
 
-if (dtype_in ne 'STR' and dtype_out eq 'STR') then begin
+if (dtype_in ne 'STRING' && dtype_out eq 'STRING') then begin
     print,'inconsistent type for map_in and map_out in '+routine
     return
 endif
 
-if (dtype_in ne 'STR' and undefined(order_in)) then begin
+if (dtype_in ne 'STRING' && undefined(order_in)) then begin
     print,'the input ordering has to be defined for online input map'
     print,'******** ABORT *********'
     return
@@ -294,11 +295,11 @@ endif
 ;----------------
 ; file to file
 ;----------------
-if dtype_in eq 'STR' then begin
+if dtype_in eq 'STRING' then begin
     junk = getsize_fits(map_in, ordering = order_in, nside = nside_in, type = ftype_in)
     fits_info, map_in, /silent, n_ext = n_ext
 
-    if not (keyword_set(order_out) or arg_present(order_out)) then order_out = order_in
+    if ~(keyword_set(order_out) || arg_present(order_out)) then order_out = order_in
     ord_in  = decode_ordering(order_in, full=ford_in) ; strupcase(strmid(order_in,0,4))
     ord_out = decode_ordering(order_out, full=ford_out) ; strupcase(strmid(order_out,0,4))
 
@@ -331,7 +332,7 @@ if dtype_in eq 'STR' then begin
             write_fits_cut4, map_out, pixel, signal, n_obs, serror, xh = xhdr, ext= i_ext
         endfor
 
-    endif else if (ftype_in eq 0 or ftype_in eq 2) then begin
+    endif else if (ftype_in eq 0 || ftype_in eq 2) then begin
         if (n_ext gt 1) then message,'Can not curently deal with multiple extension in this format'
         ; ----- full sky -----
         if (ftype_in eq 0) then begin ; image
@@ -351,7 +352,7 @@ if dtype_in eq 'STR' then begin
         junk = where(xnames eq 'TEMPERATURE', nk_temp)
 
         wmap_format = 0
-        if (((nk_temp+nk_obs) eq 2) and (ncol eq 2)) then begin
+        if (((nk_temp+nk_obs) eq 2) && (ncol eq 2)) then begin
             wmap_format = 1
         endif else begin
             if ((nk_pix+nk_sig+nk_obs) gt 0) then begin
@@ -368,7 +369,7 @@ if dtype_in eq 'STR' then begin
           '    ORDERING: '+ford_in+' -> '+ford_out
         xtenout=create_struct(xnames[0],xhdr)
 
-        if ((ncol eq 1) or (wmap_format eq 1)) then begin ; Temperature
+        if ((ncol eq 1) || (wmap_format eq 1)) then begin ; Temperature
             map = reorder(xten.(1),in=ord_in,out='NEST')
             map = sub_ud_grade(map, nside_in, nside_out, bad_data=bad_data, pessimistic=pessimistic)
             map = reorder(map,in='NEST',out=ord_out)
@@ -426,19 +427,19 @@ endif else begin
         return
     endif
 
-    if ((defined(nside_out) or defined(order_out)) and undefined(order_in)) then begin
+    if ((defined(nside_out) || defined(order_out)) && undefined(order_in)) then begin
         print,routine+': the input order (order_in) should be defined for an input vector map'
         print,'******** ABORT *********'
         return
     endif
-    if not (keyword_set(order_out) or arg_present(order_out)) then order_out = order_in
+    if ~(keyword_set(order_out) || arg_present(order_out)) then order_out = order_in
     if undefined(nside_out) then nside_out = nside_in
 
     ord_in  = decode_ordering(order_in)
     ord_out = decode_ordering(order_out)
 
     ; same resolution and order : do nothing
-    if (nside_in eq nside_out and ord_in eq ord_out) then begin
+    if (nside_in eq nside_out && ord_in eq ord_out) then begin
         map_out = map_in
         return
     endif
