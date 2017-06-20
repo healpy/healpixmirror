@@ -13,6 +13,7 @@
 \input{hpxversion}
 \input{idlversion}
 \input{gdlversion}
+\input{flversion}
 \end{htmlonly}
 
 \hypersetup{%
@@ -186,7 +187,7 @@ configuration which is beyond our control.
 %
  & & \\
 %
-  IDL/GDL        & This document  & 
+  IDL/GDL/FL        & This document  & 
 \linklatexhtml{"IDL Facilities"}{idl.pdf}{idl.htm}\\
  & & \\
 %
@@ -240,7 +241,7 @@ its own compilation of the current \healpix C++ library.
 {\em This section and the next focus on the compilation and installation of the
   \textbf{C}, \textbf{C++}, \textbf{Fortran~90}, \textbf{IDL} and
 \textbf{Python} routines. For more information on the 
-\textbf{Java} routines see table~\ref{tab:allpackages}}
+\textbf{Java} routines see table~\ref{tab:allpackages}.}
 
 The configure script is written in the Bourne shell. The script
 attempts to generate a \texttt{Makefile} which is tailored to one of 
@@ -248,7 +249,7 @@ the above Operating Systems (OS's) and using
 \texttt{Makefile.in} as a template for non system-specific statements. 
 Only the basic UNIX make facility is required to build the software, although we do
 still recommend the GNU make facility (\htmladdnormallink{\texttt{ftp://ftp.gnu.org/gnu/make/}}{ftp://ftp.gnu.org/gnu/make/}).
-In addition, several environment configuration files and an IDL/GDL startup file are
+In addition, several environment configuration files and an IDL/GDL/FL startup file are
 generated. These automatically establish
 various environment variables and aliases to make the use of the
 \healpix package simpler. 
@@ -279,12 +280,17 @@ available at
   \textbf{Software Package} & \textbf{Source} \\ \hline
                             &                          \\ %%% for presentation
 IDL V \idlversion or more          & \htmladdnormallink{{\tt
-                            http://www.exelisvis.com/}}{http://www.exelisvis.com/}
+                            http://harrisgeospatial.com/\-ProductsandTechnology/\-Software/IDL.aspx}}{%
+			http://harrisgeospatial.com/ProductsandTechnology/Software/IDL.aspx}
 			\\
                                    &                          \\ \hline %%% for presentation
 \end{tabular}\vspace{3ex}
-while the GNU Data Language \textbf{GDL}, a {\em free} clone of IDL 6.0, can also be used (with some
-caveats, see \S\ref{install:using_gdl}) and can be downloaded for free from
+%
+while the GNU Data Language \textbf{GDL}, a {\em free open} clone of IDL 7.1, 
+or
+the Fawlty Language \textbf{FL}, a {\em free closed} clone of IDL 8, 
+can also be used (with some
+caveats, listed respectively in  \S\ref{install:using_gdl} and \S\ref{install:using_fl}) and can be downloaded for free from
 
 \begin{tabular}{p{0.3\hsize} p{0.6\hsize}} \hline  
   \textbf{Software Package} & \textbf{Source} \\ \hline
@@ -292,6 +298,10 @@ caveats, see \S\ref{install:using_gdl}) and can be downloaded for free from
 GDL \gdlversion or more         & \htmladdnormallink{{\tt
                             http://sourceforge.net/projects/gnudatalanguage}}{%
 			http://sourceforge.net/projects/gnudatalanguage}
+                                                      \\ %%% for presentation
+FL \flversion or more         & \htmladdnormallink{{\tt
+                            http://www.fawlty.uhostall.com/}}{%
+			http://www.fawlty.uhostall.com/}
 			\\
                                    &                          \\ \hline %%% for presentation
 \end{tabular}\vspace{3ex}
@@ -300,7 +310,7 @@ GDL \gdlversion or more         & \htmladdnormallink{{\tt
 %of the \healpix IDL codes).
 
 As it was already the case in version 1.20, users no longer need to acquire the
-{\textbf IDL}
+\textbf{IDL}
 Astronomy User's Library (\htmladdnormallink{\texttt{http://idlastro.gsfc.nasa.gov/homepage.html}}{http://idlastro.gsfc.nasa.gov/homepage.html})
 or the COBE (IDL) Analysis Software (\htmladdnormallink{\texttt{http://lambda.gsfc.nasa.gov/product/cobe/cgis.cfm}}{http://lambda.gsfc.nasa.gov/product/cobe/cgis.cfm}),
 although we do recommend these packages to the user.
@@ -400,7 +410,7 @@ tailored to the user environment.
 \begin{tabular}{p{0.3\hsize} p{0.60\hsize}}
 \texttt{\% ./configure} {\em [-L]}    & uses \texttt{Makefile.in} as a template to build 
                          the correct Makefile (from user inputs as required), it
-                         will also configure the IDL/GDL routines\\
+                         will also configure the IDL/GDL/FL routines\\
 \texttt{\% make}           & builds all the facilities \\
 \texttt{\% make test}      & tests all the facility previously compiled \\
 \texttt{\% make clean}     & removes object (\texttt{*.o}) files \\
@@ -530,7 +540,7 @@ If the \healpix configuration file is
 sourced as described in \S\ref{subsub:conf}, the aliases \texttt{hidl}, \texttt{hidlde}, \texttt{hgdl} and \texttt{hgdlde}
 are also defined to give you access to \healpix routines from IDL (and GDL).\\
 See the \linklatexhtml{\healpix IDL Document}{idl.pdf}{idl.htm} for more
-information on using \healpix IDL/GDL together with other IDL libraries, and \S\ref{install:using_gdl} on using GDL instead of IDL.
+information on using \healpix IDL/GDL/FL together with other IDL libraries, and \S\ref{install:using_gdl},\ref{install:using_fl} on using GDL or FL instead of IDL.
 
 
 \subsubsection{Java installation}
@@ -1174,32 +1184,34 @@ Facilities"}{idl.pdf}{idl.htm}).
 
 %\newpage%%%%%%%%%%%%
 
+%------------------
 \subsection{Using GDL instead of IDL}
 \label{install:using_gdl}
 \mytarget{install:using_gdl}
 
-GNU Data Language (GDL), is a {\em free} clone of IDL 6.0 (for more information see
+GNU Data Language (GDL), is a {\em free} clone of IDL 7.1, with support for some IDL 8.0 features (for more information see
 \htmladdnormallink{\texttt{http://gnudatalanguage.sourceforge.net}}{http://gnudatalanguage.sourceforge.net}).
 Both the source code and precompiled executables for various platforms are available.
 
 When used to run IDL-Healpix routines, GDL \gdlversion or more gives
 very satisfactory results\footnote{All the caveats listed below have been noticed in
-GDL v0.9.6 released on Jan 2016 and may be solved in subsequent versions. Please send all your questions
+GDL v0.9.7 released on Jan 2017 and may be solved in subsequent versions. Please send all your questions
 {\em on} GDL directly to GDL developpers at 
 \htmladdnormallink{\texttt{http://gnudatalanguage.sourceforge.net/support.php}}{http://gnudatalanguage.sourceforge.net/support.php}.}. 
 The calculations agree with those done under IDL, with
-comparable computation times, but a few minor features are missing in the production
-of Postscript, GIF and PNG files, as described below.
+comparable computation times, but a few minor features, mostly related to the font selection, are missing.
+%in the production
+%of Postscript, GIF and PNG files, as described below.
 
 \subsubsection*{GDL+\healpix specific requirements}
 To fully enjoy GDL capabilities
 \begin{itemize}
-\item \healpix \hpxversion{} or more must be installed\footnote{%
-If \healpix 3.30 is used instead, \texttt{Healpix\_3.30/src/idl/visu/proj2out.pro} must be replaced with the one found in 
-\htmladdnormallink{%
-http://sourceforge.net/p/healpix\-/code\-/HEAD\-/tree\-/branches\-/branch\_v330r807\-/src\-/idl\-/visu\-/proj2out.pro}{%
-http://sourceforge.net/p/healpix/code/HEAD/tree/branches/branch_v330r807/src/idl/visu/proj2out.pro}.
-}.
+\item \healpix \hpxversion{} or more must be installed%\footnote{%
+% If \healpix 3.30 is used instead, \texttt{Healpix\_3.30/src/idl/visu/proj2out.pro} must be replaced with the one found in 
+% \htmladdnormallink{%
+% http://sourceforge.net/p/healpix\-/code\-/HEAD\-/tree\-/branches\-/branch\_v330r807\-/src\-/idl\-/visu\-/proj2out.pro}{%
+% http://sourceforge.net/p/healpix/code/HEAD/tree/branches/branch_v330r807/src/idl/visu/proj2out.pro}.
+%}.
 % \item \healpix 3.30 must be installed, and \texttt{Healpix\_3.30/src/idl/visu/proj2out.pro} must be replaced with the one found in 
 % \htmladdnormallink{%
 % http://sourceforge.net/p/healpix\-/code\-/HEAD\-/tree\-/branches\-/branch\_v330r807\-/src\-/idl\-/visu\-/proj2out.pro}{%
@@ -1216,7 +1228,7 @@ GDL must also have been (pre-)compiled with links to
 \begin{itemize}
 \item \htmladdnormallink{\texttt{ImageMagick}}{http://www.imagemagick.org}
 (or \htmladdnormallink{\texttt{GraphicsMagick}}{http://www.graphicsmagick.org/}) 
-to produce PNG and JPEG output files, 
+to produce GIF, JPEG and PNG output files, 
 \item \htmladdnormallink{\texttt{pslib}}{http://pslib.sourceforge.net} to produce PostScript and PDF files (in the latter case,
 a recent version of \htmladdnormallink{\texttt{ghostscript}}{http://www.ghostscript.com/}, i.e. 9.07 or more, is also recommended).
 \end{itemize}
@@ -1289,17 +1301,17 @@ a recent version of \htmladdnormallink{\texttt{ghostscript}}{http://www.ghostscr
 \begin{itemize}
 % \item {\tt Ximview} won't work under GDL 0.9.3 (because it requires the
 % IDL native routine {\tt WIDGET\_DRAW})
-\item When run under GDL 0.9.6, and if the requirements stated above are met, 
+\item When run under GDL 0.9.7, and if the requirements stated above are met, 
 the visualization routines
 \htmlref{\texttt{azeqview}, \texttt{cartview}, \texttt{gnomview}, \texttt{mollview} and \texttt{orthview}}{idl:mollview} 
-will produce correct screen (X) outputs and PS, PDF, PNG and JPEG images, with the following caveats:
+will produce correct screen (X) outputs and PS, PDF, PNG, GIF, and JPEG images, with the following caveat(s):
 \begin{itemize}
-\item they won't produce \mylinkext{idl:mollview:gif}{GIF} files (because GDL's \texttt{write\_gif} is not yet functional), {\em Fixed in GDL v0.9.7}; 
-\item the \mylinkext{idl:mollview:transparent}\texttt{transparent} keyword will be ignored in the
-production of \mylinkext{idl:mollview:png}{PNG} files under GDL (except when \mylinkext{idl:mollview:truecolors}\texttt{TrueColors} is set and $N$x3 map is provided), 
-and for the same reason, the \htmlref{\texttt{hpx2gs}}{idl:hpx2gs} routine won't mark missing pixels as
-transparent in the output PNG file;
-\item  and finally, the \mylinkext{idl:mollview:pfonts}{\texttt{pfonts}} keyword will not allow the selection of other fonts than Hershey vectorial fonts (pfonts[0]=-1).
+% \item they won't produce \mylinkext{idl:mollview:gif}{GIF} files (because GDL's \texttt{write\_gif} is not yet functional), {\em Fixed in GDL v0.9.7}; 
+%
+%\item the \mylinkext{idl:mollview:transparent}\texttt{transparent} keyword will be ignored in the production of \mylinkext{idl:mollview:png}{PNG} files under GDL (except when \mylinkext{idl:mollview:truecolors}\texttt{TrueColors} is set and $N$x3 map is provided), 
+%and for the same reason, the \htmlref{\texttt{hpx2gs}}{idl:hpx2gs} routine won't mark missing pixels as transparent in the output PNG file, {\em Fixed in GDL v0.9.7};
+%\item  and finally, 
+\item the \mylinkext{idl:mollview:pfonts}{\texttt{pfonts}} keyword will not allow the selection of other fonts than Hershey vectorial fonts (pfonts[0]=-1).
 % \item and finally, the virtual window (\mylinkext{idl:mollview:window}\texttt{window}$<0$, used for remote production of PNG images over slow network connections) won't work as expected, except in cases where
 % \mylinkext{idl:mollview:shaded}{\tt shaded} or 
 % \mylinkext{idl:mollview:truecolors}{\tt TrueColors} is set.
@@ -1316,6 +1328,89 @@ All other features work properly, including the \mylinkext{idl:mollview:latex}{\
 % However, they have been clearly identified and actively looked at by the GDL 
 % development team and most, if not all, of them
 % are expected to be fixed in the forthcoming GDL 0.9.6 (scheduled for late 2015).
+
+%------------------
+\subsection{Using FL instead of IDL}
+\label{install:using_fl}
+\mytarget{install:using_fl}
+Fawlty Language (FL) is a black-box implementation of IDL 8, for which precompiled self-contained packages
+are available for Linux, Windows, MacOSX and more from 
+\htmladdnormallink{http://www.fawlty.uhostall.com}{http://www.fawlty.uhostall.com}.
+
+Most of the IDL routines and features have been implemented, with a few exceptions 
+(like \texttt{xloadct}) and the restrictions listed below.
+
+\subsubsection*{FL+\healpix specific requirements}
+To fully enjoy FL capabilities
+\begin{itemize}
+\item \healpix \hpxversion{} or more must be installed,
+%
+\item the version \flversion or more of FL must be used,
+%
+\item to produce PDF files
+a recent version of \htmladdnormallink{\texttt{ghostscript}}{http://www.ghostscript.com/}, i.e. 9.07 or more, is recommended.
+%
+%\item and the environment variable {\tt IDL\_TMPDIR} must be set to a location suitable for temporary files
+% (such as {\tt /tmp}, {\tt /usr/tmp} or {\tt /var/tmp}) before starting FL.
+\end{itemize}
+
+\subsubsection*{Impact of FL limitations on \healpix}
+\begin{itemize}
+\item
+Only the Hershey font (\texttt{!p.font=-1}) is accessible.
+As a consequence, in \htmlref{\texttt{azeqview}, \texttt{cartview}, \texttt{gnomview}, \texttt{mollview} and \texttt{orthview}}{idl:mollview}:
+the options
+\mylinkext{idl:mollview:latex}{\texttt{LATEX=2}} (only available in conjunction with 
+\mylinkext{idl:mollview:ps}{\texttt{PS}} and 
+\mylinkext{idl:mollview:pdf}{\texttt{PDF}}) and 
+\mylinkext{idl:mollview:pfonts}{\texttt{PFONTS}}
+will not work properly.
+
+%\emph{Problems detected when testing FL on MacOSX:}
+%We now list problems encountered when testing FL on MacOSX, even though they can affect other platforms as well.
+%
+\item
+In FL, and at least under MacOSX, the on-screen ('X' device) fonts and character thicknesses may be sligtly different from the ones produced in IDL.
+If present, the difference will also be visible
+on the X-based graphical outputs of 
+\htmlref{\texttt{azeqview}, \texttt{cartview}, \texttt{gnomview}, \texttt{mollview} and \texttt{orthview}}{idl:mollview}
+(ie \mylinkext{idl:mollview:gif}{\texttt{GIF}}, 
+\mylinkext{idl:mollview:jpeg}{\texttt{JPEG}} or 
+\mylinkext{idl:mollview:png}{\texttt{PNG}} files) 
+{\em unless} a virtual window (eg, \mylinkext{idl:mollview:pfonts}{\texttt{window=-1}})
+is used during their production.
+
+% Because of limitations of the Qt4 library used by FL on MacOSX, 
+% problems will appear in the generation of GIF, JPEG and PNG output in \htmlref{\texttt{azeqview}, \texttt{cartview}, \texttt{gnomview}, \texttt{mollview} and \texttt{orthview}}{idl:mollview},
+% {\em if} the hardware screen resolution, whose value is accessible from IDL or FL via\\
+% \texttt{FL$>$ spawn,/sh,'system\_profiler SPDisplaysDataType | grep Resolution'}
+% \\ differs from the logical screen resolution\\
+% \texttt{FL$>$ set\_plot,'x' \& device,get\_screen\_size=gss \& print,gss}\\
+% .
+% If it is the case, problems can be solved by using a virtual window (eg, \mylinkext{idl:mollview:window}{\texttt{window=-1}}) in combination with the
+% \mylinkext{idl:mollview:gif}{\texttt{GIF}}, 
+% \mylinkext{idl:mollview:jpeg}{\texttt{JPEG}} or 
+% \mylinkext{idl:mollview:png}{\texttt{PNG}} production.
+%
+% \item the option \mylinkext{idl:mollview:truecolors}{\texttt{TRUECOLORS}} of 
+% \htmlref{\texttt{azeqview}, \texttt{cartview}, \texttt{gnomview}, \texttt{mollview} and \texttt{orthview}}{idl:mollview} will work with X, 
+% \mylinkext{idl:mollview:ps}{\texttt{PS}} and 
+% \mylinkext{idl:mollview:pdf}{\texttt{PDF}}
+%  outputs, but not with 
+% \mylinkext{idl:mollview:gif}{\texttt{GIF}}, 
+% \mylinkext{idl:mollview:jpeg}{\texttt{JPEG}} nor 
+% \mylinkext{idl:mollview:png}{\texttt{PNG}} outputs,
+%
+% \item the option 
+% \mylinkext{idl:mollview:shaded}{\texttt{SHADED}} of 
+% \htmlref{\texttt{orthview}}{idl:mollview} will work with
+% \mylinkext{idl:mollview:ps}{\texttt{PS}} and 
+% \mylinkext{idl:mollview:pdf}{\texttt{PDF}}
+% outputs, but not with 
+% \mylinkext{idl:mollview:gif}{\texttt{GIF}}, 
+% \mylinkext{idl:mollview:jpeg}{\texttt{JPEG}}, 
+% \mylinkext{idl:mollview:png}{\texttt{PNG}} nor screen (X) outputs.
+\end{itemize}
 
 
 %******************************************************************************
@@ -1365,6 +1460,18 @@ the output is $d(n/2)$ instead of $(d(n/2)+d(n/2+1))/2$ previously. Result remai
 \begin{itemize}
 \item \htmlref{\texttt{ianafast}}{idl:ianafast} and \htmlref{\texttt{ismoothing}}{idl:ismoothing}: 
 see note on \texttt{POLCCONV} in F90 facilities above.
+\item new \htmlref{{\tt help\_st}}{idl:help_st} to get information on a structure and its sub-structures
+\item \htmlref{{\tt azeqview, cartview, gnomview, mollview,
+orthview}}{idl:mollview} visualization routines:
+\begin{itemize}
+	\item addition of the keywords 
+	\mylinkext{idl:mollview:customize}{{\tt CUSTOMIZE}} and 
+	\mylinkext{idl:mollview:default_settings}{{\tt DEFAULT\_SETTINGS}}
+	for extensize customization of the figures produced
+	\item \mylinkext{idl:mollview:glsize}{{\tt GLSIZE}} and
+	\mylinkext{idl:mollview:iglsize}{{\tt IGLSIZE}} can now be 2-element vectors to control separately the size
+	(and presence) of labels on the parallel and meridian graticules
+\end{itemize}
 \end{itemize}
 
 \subsubsection[Java]{\htmladdnormallink{Java}{http://healpix.sourceforge.net/html/java/index.html}}

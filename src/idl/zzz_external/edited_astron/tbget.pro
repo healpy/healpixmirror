@@ -1,5 +1,5 @@
 function tbget, hdr_or_tbstr, tab, field, rows, nulls, NOSCALE = noscale, $
-        CONTINUE = continue
+        CONTINUE = continue_
 ;+
 ; NAME:
 ;       TBGET
@@ -82,6 +82,7 @@ function tbget, hdr_or_tbstr, tab, field, rows, nulls, NOSCALE = noscale, $
 ;       Use faster BYTEORDER byteswapping  W. Landsman April 2006
 ;       Free pointers if FITS header supplied W. Landsman March 2007
 ;       Use V6.0 notation W. Landsman  April 2014
+;       continue variable replaced with continue_  E. Hivon June 2017
 ;-
 ;------------------------------------------------------------------
  On_error,2

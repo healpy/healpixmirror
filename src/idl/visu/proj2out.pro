@@ -207,12 +207,14 @@ pro proj2out, planmap, Tmax, Tmin, color_bar, dx, title_display, sunits, $
 ;          limited !P.FONT)
 ;
 ;
-; 2 problems with write_png,...,/transparent in GDL:
+; 2 problems with write_png,file,image,red,grn,blu,/transparent in GDL:
 ;  - it is currently (v0.9.6) not supported
 ;  - it expects a pixel mask (ie an array of the same size as the image) with
 ;    values in [0,255] setting the opacity of each pixel
 ;   while the IDL version expects a color mask (ie, a vector of size 255) with
 ;   values in [0,255] setting the opacity of each color
+;  - in GDL 0.9.7, expects a list (ie a vector of length <= 256) of
+;   the colors to be turned transparent
 ;
 ;
 ; In GDL CVS of 2017-01-06
@@ -220,7 +222,7 @@ pro proj2out, planmap, Tmax, Tmin, color_bar, dx, title_display, sunits, $
 ;     !D.n_colors            OK
 ;     write_gif              OK
 ;     set_plot,'Z' & device,set_pixel_depth=    remains at 24bits
-;     write_png, transparent   Not really
+;     write_png, transparent   somehow fixed in GDL 0.9.7, see above
 ;     !p.font               Only !p.font=-1
 ;
 ;
@@ -228,6 +230,8 @@ pro proj2out, planmap, Tmax, Tmin, color_bar, dx, title_display, sunits, $
 ;                 added CUSTOM (input) and DEFAULT_SETTINGS (output) structure
 ;                 for customization of color bar size, title and subtitle location
 ;    2017-05-30: replaced obsolete DATATYPE() with IDL's SIZE(/TNAME)
+;
+;   June 2017, EH, work on compatibility with Fawlty Language
 ;-
 ;===============================================================================
 
@@ -267,7 +271,8 @@ do_poldirection = (polarization[0] eq 2)
 do_polvector    = (polarization[0] eq 3)
 ;-------------------------------------------------
 in_gdl = is_gdl()
-in_idl = ~in_gdl
+in_fl  = is_fl()
+in_idl = is_idl()
 test_preview
 @idl_default_previewer ; defines the paper size
 if (do_print and undefined(papersize)) then papersize = 'a4'
@@ -275,8 +280,9 @@ if (do_print and undefined(papersize)) then papersize = 'a4'
 ; -------------------------------------------------
 ; implement default settings for each projection
 ; -------------------------------------------------
-xsize = (size(planmap))(1)
-ysize = (size(planmap))(2)
+sz = size(planmap,/dim)
+xsize = sz[0]
+ysize = sz[1]
 w_pos = (do_crop) ? [0.00, 0.00, 1.00, 1.00] : [0.00, 0.10, 1.00, 0.90]
 
 default_stc = {$
@@ -603,7 +609,7 @@ if (do_print) then begin
     TVLCT,red,green,blue
 ;    thick_dev = 2. ; device dependent thickness factor
     thick_dev = (!P.THICK ne 0) ? 2.*!P.THICK : 2. ; device dependent thickness factor
-; GDL (0.9.6) ignores FONT argument in XYOUTS, PLOT, ..., !p.font must be set prior to calling any of those
+; GDL (0.9.6 and 0.9.7) ignores FONT argument in XYOUTS, PLOT, ..., !p.font must be set prior to calling any of those
     if (is_gdl() && my_latex eq 2) then !p.font = 0
 endif else begin ; X, png, gif or jpeg output
     idl_window = defined(window_user) ? window_user : 32 ; idl_window = 32 or window_user
@@ -705,13 +711,18 @@ endif
 ; ---------- projection independent ------------------
 ; map itself
 if (do_shade) then begin
+    ;;;;common debug, image3d
     image = planmap
     image3d  =   make_array(/uint, xsize, ysize, 3)
     image3d[*,*,0] = uint( (256. * red  [image] * shademap) < 65535.)
     image3d[*,*,1] = uint( (256. * green[image] * shademap) < 65535.)
     image3d[*,*,2] = uint( (256. * blue [image] * shademap) < 65535.)
     if (do_print) then loadct,0,/silent ; must be in grey-scale for TrueColor PS output
+    if (in_fl && ~do_print && ~do_image) then device, decomposed=1 ; patch for FL in X
     TV, bytscl(image3d),w_xll,w_yll,/normal,xsize=1.,true=3
+    ;;help,/device
+    ;;message,'Abort'
+    ;;print,(bytscl(image3d))[0,0,0:2]
     if (do_print) then tvlct,red,green,blue ; revert to custom color table
     image3d = 0
 endif else if (do_true) then begin
@@ -937,6 +948,7 @@ if do_image then begin
     image = (do_true || do_shade) ? tvrd(true=1) : tvrd() ; a single call to tvrd()
     if (do_shade) then begin
         image3d  =   make_array(/byte, 3, !d.x_size, !d.y_size)
+        ;;;;help,image3d,image,planmap,w_xll,w_yll
         image3d[0,0,0] = image
     endif
     if (do_true) then begin
@@ -980,7 +992,8 @@ if do_image then begin
             if (keyword_set(transparent)) then begin
                 ;mytransp = (in_idl) ? transp_colors  : 0 ; transp_colors[image] ; no transparent support in GDL
                 ;mytransp = (in_idl) ? transp_colors  : transp_colors[image]    ; GDL same as IDL doc
-                mytransp = transp_colors ; test on 2017-01-06                  ; GDL same as IDL actual behavior
+                ;mytransp = transp_colors ; test on 2017-01-06                  ; GDL same as IDL actual behavior
+                mytransp = (in_idl || in_fl) ? transp_colors : where(transp_colors eq 0B) ; what works with GDL 0.9.7 2017-05-31
                 write_png,file_image, image,red,green,blue, transparent=mytransp
             endif else begin
                 write_png,file_image, image,red,green,blue
@@ -1002,7 +1015,10 @@ if do_image then begin
             device,decomposed=0     ; put back colors on X window and redo color image
         endelse
         if (do_shade || do_true) then begin
+            fl_patch = (in_fl && do_shade && ~do_print)
+            if fl_patch then device, decomposed=1 ; patch for FL in GIF/JPEG/PNG
             tv, bytscl(image3d[0:2,*,*]),0,0,/normal,xsize=1.,true=1
+            if fl_patch then device, decomposed=0 
         endif else begin
             tv, image
         endelse
@@ -1029,7 +1045,7 @@ if (do_print) then begin
         hpx_latexify, file_ps, ltxstc.tag[0:nlts-1], ltxstc.tex[0:nlts-1], ltxstc.scale[0:nlts-1], $
                       alignment = ltxstc.alignment[0:nlts-1], $
                       width  = do_portrait ? hxsize : hysize, $
-                      height = do_portrait ? hysize : hxsize
+                      height = do_portrait ? hysize : hxsize, keep_temporary_files=pdf_debug
     endif
     ;;;;;; cgfixps, file_ps,/a4 ; in test
     if (do_ps) then begin

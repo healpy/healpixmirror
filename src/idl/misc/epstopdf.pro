@@ -100,10 +100,12 @@ endif
 
 ; first try epstopdf.pl which produces PDF files with BoundingBox
 bin = 'epstopdf.pl'
-defsysv, '!healpix',          exists = exists
-defsysv, '!healpix.path.src', exists = exists2
-if ~exists then init_healpix
 bin_path = file_which(bin)
+defsysv, '!healpix',          exists = exists
+if ~exists then init_healpix
+exists2 = 0
+junk1 = where(tag_names(!healpix) eq 'PATH', exists1)
+if (exists1 eq 1) then junk2 = where(tag_names(!healpix.path) eq 'SRC', exists2)
 if (bin_path eq '' && exists2) then begin
     bin_path = file_search(!healpix.path.src, bin, count=count)
 endif

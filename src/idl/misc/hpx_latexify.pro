@@ -5,7 +5,7 @@
 ;PURPOSE
 ;	to use PSfrag to do latex syntax correctly
 ;SYNTAX
-;	hpx_latexify, filename, tags, tex, [scale, ALIGNMENT=, HEIGHT=, HELP=, OUTNAME=, WIDTH=]
+;	hpx_latexify, filename, tags, tex, [scale, ALIGNMENT=, HEIGHT=, HELP=, OUTNAME=, WIDTH=, KEEP_TEMPORARY_FILES=]
 ;INPUTS
 ;	filename: name of eps file
 ;	tags: name of dummy placeholder
@@ -34,6 +34,7 @@
 ;  and from LS_latexify.pro by L. Spencer (2011)
 ;  version 1.0: 2015-05-12
 ;  2017-05-18: added ALIGNMENT keyword
+;  2017-06-13: added KEEP_TEMPORARY_FILES keyword
 ;	
 ;-
 pro hpx_latexify, filename, tag, tex, scale, $
@@ -41,10 +42,11 @@ pro hpx_latexify, filename, tag, tex, scale, $
                   height = height, $
                   help = help, $
                   outname=outname, $
-                  width = width
+                  width = width, $
+                  keep_temporary_files = keep_tmp_files
 
 routine = 'hpx_latexify'
-syntax = routine+', filename, tags, tex, [scale, ALIGNMENT=, HEIGHT=, HELP=, OUTNAME=, WIDTH=]'
+syntax = routine+', filename, tags, tex, [scale, ALIGNMENT=, HEIGHT=, HELP=, OUTNAME=, WIDTH=, KEEP_TEMPORARY_FILES=]'
 
 if keyword_set(help) then begin
     doc_library,routine
@@ -66,6 +68,7 @@ tmprad = add_prefix(tmpdir,path_sep(),/suff)+'psfrag_'+stime+'_temp'
 noname=0
 if ~keyword_set(outname) then begin
     outname=tmprad + '2.ps'
+    cpname =tmprad + 'BKUP.ps'
     noname=1
 endif
 
@@ -116,15 +119,20 @@ endif else begin
 endelse
 
 ;garbage cleanup
+tmp_files =  tmprad+['2.ps','.tex','.aux','.log','.dvi','_dvi.log']
 ;;;;;;; spawn,'cp '+filename+' '+tmprad+'_in.ps'
 if noname then begin
-	spawn, 'mv -f '+outname+' '+filename
-	outname=filename
+    spawn, 'cp -f '+filename+' '+cpname
+    tmp_files = [tmp_files, cpname]
+    spawn, 'mv -f '+outname+' '+filename
+    outname=filename
 endif
 
-;;;;;;; print,tmprad+['2.ps','.tex','.aux','.log','.dvi','_dvi.log']
-;;;print,'Files NOT deleted: ',tmprad+['2.ps','.tex','.aux','.log','.dvi','_dvi.log']
-file_delete, tmprad+['2.ps','.tex','.aux','.log','.dvi','_dvi.log'], allow_nonexistent=1
+if keyword_set(keep_tmp_files) then begin
+    print,'Files NOT deleted: ',tmp_files
+endif else begin
+    file_delete, tmp_files, allow_nonexistent=1
+endelse
 
 
 end

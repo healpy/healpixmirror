@@ -631,6 +631,8 @@ pro mollview, file_in, select_in, $
 ;       Jan-12: added STAGGER to orthview; created azeqview; added JPEG to all
 ;       Sep-13: added BAD_COLOR, BG_COLOR, FG_COLOR
 ;       2015:   added PDF, LATEX and PFONTS
+;       2017-05: addition of CUSTOMIZE, DEFAULT_SETTINGS, 
+;                improvement of GLSIZE and IGLSIZE
 ;-
 
 defsysv, '!healpix', exists = exists

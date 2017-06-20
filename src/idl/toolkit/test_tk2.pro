@@ -27,7 +27,9 @@
 ; -----------------------------------------------------------------------------
 pro test_tk2, nside, upix, random=random
 ;+
-; test_tk [,nside ,upix, random= ]
+; test_tk2 [,nside ,upix, random= ]
+;
+;  tests the consistency of Healpix toolkit routines (pix2*, ang2*, vec2*, ang2vec, vec2ang)
 ;
 ;  by default, all pixels in 0, Npix-1 are tested (Npix=12*nside*nside)
 ;  unless upix or random are defined
@@ -45,10 +47,13 @@ pro test_tk2, nside, upix, random=random
 ;   test_tk2, 8192,  random=1.d-3
 ;   test_tk2, 2L^29, random=1.d-12
 ;
-;  
+;  HISTORY:
+;   based on test_tk, with a few extra tests on vectors
 ;  2011-08: cosmetic editions
+;  2017-06: more cosmetic editions
 ;-
 
+t0 = systime(1)
 if undefined(nside) then nside = 32
 ;lnside = long(nside)
 
@@ -153,7 +158,8 @@ ang2vec,             theta, phi, vec
 vec2pix_nest, nside, vec, pixel1
 nest2ring,    nside, pixel1, pixel2
 if total(abs(pixel2-pixel)) ne 0 then begin
-    print,'error loop1', nside
+    ;print,'error loop1', nside
+    print,'R -> A -> V -> N -> R', nside
     error = error + 1
 endif
 ;---------------------
@@ -163,7 +169,8 @@ vec2ang,             vec, theta, phi
 ang2pix_nest, nside, theta, phi, pixel1
 nest2ring,    nside, pixel1, pixel2
 if total(abs(pixel2-pixel)) ne 0 then begin
-    print,'error loop2', nside
+    ;print,'error loop2', nside
+    print,'R -> V -> A -> N -> R', nside
     error = error + 1
 endif
 ;---------------------
@@ -174,7 +181,8 @@ pix2vec_nest, nside, pixnest, vec2, vv2
 t1 = total(abs(vec-vec2))/np
 m1 = max(abs(vec-vec2))
 if  (t1 gt trigger || m1 gt trigger) then begin
-    print,'error loop3 vector', nside
+    ;print,'error loop3 vector', nside
+    print,'R -> V  vs  R -> N -> V,  vector', nside
     print,t1,m1,n_elements(vec)
     print,total(vec,1)/np
     error = error + 1
@@ -182,17 +190,21 @@ endif
 t2 = total(abs(vv-vv2))/np
 m2 = max(abs(vv-vv2))
 if (t2 gt trigger || m2 gt trigger) then begin
-    print,'error loop3 vertex', nside
+    ;print,'error loop3 vertex', nside
+    print,'R -> V  vs  R -> N -> V,  vertex', nside
     print,t2,m2,n_elements(vv)
     print,total(total(vv,1),2)/np
     error = error + 1
 endif
 
+t1 = systime(1)
 if (error eq 0) then begin
     print, ' -----------------'
-    print, '   TEST PASSED'
+    print, '   TEST2 PASSED ('+snside+')'
     print, ' -----------------'
+    print, 'Time [s]: ', t1-t0
 endif
+
 
 return
 end

@@ -21,6 +21,9 @@
  o ./obsolete_astron/ : routines from the Astron library which are now considered
    obsolete, but may still be needed by Healpix (or by user-developped applications).
 
+ o ./edited_astron/ : routines from the Astron library, 
+     slightly modified
+
  o ./epstopdf/ : Perl script to turn (encapsulated) PostScript file into PDF
      and its documentation
      see ./epstopdf/README  for details
@@ -34,6 +37,7 @@
  2000-03-03
  updated 2007-05-15
  updated 2013-02-08
+ updated 2017-06-20
  AJB, KMG, EH
 
 ----------------
@@ -216,3 +220,8 @@ replaced coyote's ASPECT with CGASPECT
       Done with version 2017-05-30
 
  2017-05-30
+
+----------------
+
+astron/tbget.pro, edited for compatibility with Fawlty Language, 
+and put in edited_astron/tbget.pro

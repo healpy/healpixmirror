@@ -29,6 +29,16 @@ function rodrigues_matrix, vector, angle, deg=deg, help=help
 ;       Euler_matrix_new
 ;       Rotate_coord
 ;
+; USAGE: 
+;     if vec is an Nx3 array containing N 3D vectors,
+;       v0 the axis of rotation, by angle in Degrees
+;    vec2 = vec # rodriguez_matrix(v0,angle,/deg) will be the rotated vectors
+;
+;    alternatively
+;   
+;    vec2 = rotate_coord(vec, euler_matrix= rodriguez_matrix(v0,angle,/deg))
+;        will also produce the rotated vectors
+;
 ; MODIFICATION HISTORY:
 ;    2014-08-26: EH, creation
 ;
@@ -48,9 +58,11 @@ if n_params() ne 2 then begin
     return,-1
 endif
 
+double_v = size(vector,/tname) eq 'DOUBLE'
+double_a = size(angle, /tname) eq 'DOUBLE'
 ; normalize vector
 v = vector[0:2]
-v /= sqrt(total(v*v))
+v /= sqrt(total(v*v, double=double_v))
 
 ; cross product matrix
 kmat = [[ 0,    -v[2],  v[1]],$
@@ -58,9 +70,8 @@ kmat = [[ 0,    -v[2],  v[1]],$
         [-v[1],  v[0],  0   ] ]
 
 ; trigonometry
-double = SIZE(angle,/TNAME) EQ 'DOUBLE'
 convert = 1.0
-IF KEYWORD_SET(deg) THEN convert = double ? !dpi/180d : !DtoR
+IF KEYWORD_SET(deg) THEN convert = double_a ? !dpi/180d : !DtoR
 c1 = COS(angle[0]*convert)
 s1 = SIN(angle[0]*convert)
 

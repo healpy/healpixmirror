@@ -150,7 +150,7 @@ if (do_latex) then begin
         ltxstc.scale[n] = chars1
         ltxstc.alignment[n] = defined(alignment) ? alignment : 0
         ltxstc.n        = n + 1
-        myfont = 0
+        myfont = 0  ; must be written in Device Font for psfrag to work
         mystr = tag1
     endif else begin
                                 ; for non Postcript, use TeXtoIDL

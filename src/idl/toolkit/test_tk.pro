@@ -67,8 +67,11 @@ pro test_tk, nside, upix, help=help, random=random
 ;   test_tk, 8192,  random=1.d-3
 ;   test_tk, 2L^29, random=1.d-12
 ;
+;  HISTORY:
+;    see test_tk2 for a slightly longer set of tests
 ;  2008-03-17: enabled Nside > 8192
 ;  2011-08:    use detect_tk_error
+;  2017-06:    cosmetic editions
 ;-
 
 t0 = systime(1)

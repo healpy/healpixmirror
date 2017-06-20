@@ -38,7 +38,7 @@ function add_prefix, file_in, prefix, except=except, suffix=suffix
 ;
 ;  prepend prefix to str_in (prefix+str_in) except if 
 ;    - the prefix is already in place OR
-;    - file_in does not belong Except
+;    - file_in does not belong to Except
 ;
 ; if Suffix is set, the result is (str_in+prefix) except if
 ;     - the suffix is already in place OR
