@@ -288,20 +288,25 @@ IDL V \idlversion or more          & \htmladdnormallink{{\tt
 %
 while the GNU Data Language \textbf{GDL}, a {\em free open} clone of IDL 7.1, 
 or
-the Fawlty Language \textbf{FL}, a {\em free closed} clone of IDL 8, 
+the freeware Fawlty Language \textbf{FL}, a {\em free closed} clone of IDL 8, 
 can also be used (with some
 caveats, listed respectively in  \S\ref{install:using_gdl} and \S\ref{install:using_fl}) and can be downloaded for free from
 
 \begin{tabular}{p{0.3\hsize} p{0.6\hsize}} \hline  
   \textbf{Software Package} & \textbf{Source} \\ \hline
                             &                          \\ %%% for presentation
-GDL \gdlversion or more         & \htmladdnormallink{{\tt
-                            http://sourceforge.net/projects/gnudatalanguage}}{%
-			http://sourceforge.net/projects/gnudatalanguage}
+GDL \gdlversion or more         & 
+                            \htmladdnormallink{{\tt
+                            http://sf.net/projects/gnudatalanguage}}{%
+			    http://sf.net/projects/gnudatalanguage}
                                                       \\ %%% for presentation
-FL \flversion or more         & \htmladdnormallink{{\tt
-                            http://www.fawlty.uhostall.com/}}{%
-			http://www.fawlty.uhostall.com/}
+FL \flversion or more         & 
+                            \htmladdnormallink{{\tt
+                            http://www.fawlty.uhostall.com}}{%
+			    http://www.fawlty.uhostall.com} or
+                            \htmladdnormallink{{\tt
+                            http://85.255.9.75/fl}}{%
+			    http://85.255.9.75/fl}
 			\\
                                    &                          \\ \hline %%% for presentation
 \end{tabular}\vspace{3ex}
@@ -530,15 +535,19 @@ when using the most aggressive optimisation level available. \\
 If the \healpix configuration file is sourced as described in \S\ref{subsub:conf}, the full path to the F90
 executables will be added to the environment PATH variable.
 
-\subsubsection{IDL/GDL configuration}
+\subsubsection{IDL/GDL/FL configuration}
 \label{install:idlgdlconfig}
 \mytarget{install:idlgdlconfig}
 You will be asked for the external applications, such as \texttt{gv}, \texttt{xpdf}, \texttt{display},
 $\ldots$ you want to use to visualize the
-GIF, JPEG, PDF, Postscript and PNG files \mylinkext{idl:mollview:preview}{created by IDL (or GDL)}. \\
+GIF, JPEG, PDF, Postscript and PNG files \mylinkext{idl:mollview:preview}{created by IDL, GDL or FL}. \\
 If the \healpix configuration file is
-sourced as described in \S\ref{subsub:conf}, the aliases \texttt{hidl}, \texttt{hidlde}, \texttt{hgdl} and \texttt{hgdlde}
-are also defined to give you access to \healpix routines from IDL (and GDL).\\
+sourced as described in \S\ref{subsub:conf}, the aliases 
+\texttt{hidl} (\texttt{hidlde}), 
+\texttt{hgdl} (\texttt{hgdlde}) and/or
+\texttt{hfl} (\texttt{hflde})
+are also defined to give you access to \healpix routines from respectively IDL, GDL and/or FL, 
+with a command-line (or graphical) interface.\\
 See the \linklatexhtml{\healpix IDL Document}{idl.pdf}{idl.htm} for more
 information on using \healpix IDL/GDL/FL together with other IDL libraries, and \S\ref{install:using_gdl},\ref{install:using_fl} on using GDL or FL instead of IDL.
 
@@ -694,7 +703,8 @@ For more information on their respective origin and underlying model see their F
 
 In order to test the new \healpix profile set-up one can then attempt
 to run any C++ or F90 facility from any directory on your system. Similarly,
-IDL (and/or GDL) can be tested by invoking \texttt{hidl} or \texttt{hidlde}  (resp. \texttt{hgdl} or \texttt{hgdlde}).
+IDL, GDL or FL can be tested by invoking respectively 
+\texttt{hidl} (or \texttt{hidlde}),  \texttt{hgdl} (or \texttt{hgdlde}), or \texttt{hfl} (or \texttt{hflde}).
 
 
 
@@ -1333,7 +1343,7 @@ All other features work properly, including the \mylinkext{idl:mollview:latex}{\
 \subsection{Using FL instead of IDL}
 \label{install:using_fl}
 \mytarget{install:using_fl}
-Fawlty Language (FL) is a black-box implementation of IDL 8, for which precompiled self-contained packages
+Fawlty Language (FL) is a black-box implementation of IDL 8.0, for which precompiled self-contained packages
 are available for Linux, Windows, MacOSX and more from 
 \htmladdnormallink{http://www.fawlty.uhostall.com}{http://www.fawlty.uhostall.com}.
 
@@ -1346,6 +1356,10 @@ To fully enjoy FL capabilities
 \item \healpix \hpxversion{} or more must be installed,
 %
 \item the version \flversion or more of FL must be used,
+%
+\item it is recommended to set the environment variable \texttt{FL\_DIR} to the FL top directory (ie {\em path}\texttt{/fl/fl\_\flversion}in Linux and Windows, and {\em path}\texttt{/fl.app} in MacOSX) 
+in order for the \healpix enabled FL tools (\texttt{hfl} and \texttt{hflde}) to be defined properly during the
+\htmlref{IDL/GDL/FL configuration}{install:idlgdlconfig}.
 %
 \item to produce PDF files
 a recent version of \htmladdnormallink{\texttt{ghostscript}}{http://www.ghostscript.com/}, i.e. 9.07 or more, is recommended.
