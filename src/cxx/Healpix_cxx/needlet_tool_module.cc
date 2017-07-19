@@ -188,7 +188,7 @@ class spline: public needlet_base
   public:
     spline (double B_) : B(B_) {}
 
-    virtual int lmin (int band) const
+    virtual int lmin (int /*band*/) const
       { return 1; }
     virtual int lmax (int band) const
       { return int(std::pow(B,band+1)-1e-10); }
@@ -207,49 +207,45 @@ class spline: public needlet_base
 class basak: public needlet_base
   {
   private:
-    std::vector<int> peaks;
+    std::vector<int> llim;
 
     void checkBand(int band) const
       {
-      planck_assert((band>=0) && (band<int(peaks.size())), "illegal band");
+      planck_assert((band>=0) && (band<int(llim.size()-2)), "illegal band");
       }
 
   public:
-    basak (const std::vector<int> &peaks_) : peaks(peaks_)
+    basak (const std::vector<int> &llim_) : llim(llim_)
       {
-      planck_assert(peaks.size()>0, "empty peaks vector");
-      planck_assert(peaks[0]>0,"first peak must be >0");
-      for (tsize i=1; i<peaks.size(); ++i)
-        planck_assert(peaks[i]>peaks[i-1],"peaks not strictly increasing");
+      planck_assert(llim.size()>=3, "llim vector needs at least 3 entries");
+      if ((llim[0]==0) && (llim[1]==0))
+        llim[0]=-1;
+      for (tsize i=1; i<llim.size(); ++i)
+        planck_assert(llim[i]>llim[i-1], "llim not strictly increasing");
       }
 
     virtual int lmin (int band) const
-      { checkBand(band); return (band>0) ? peaks[band-1]+1 : 0; }
+      {
+      checkBand(band);
+      return llim[band]+1;
+      }
     virtual int lmax (int band) const
       {
-      checkBand(band); return (band<int(peaks.size())-1) ?
-        peaks[band+1]-1:peaks[band];
+      checkBand(band);
+      return llim[band+2]-1;
       }
     virtual std::vector<double> getBand(int band) const
       {
       using namespace std;
       vector<double> res(lmax(band)+1);
       for (int i=0; i<lmin(band); ++i) res[i]=0.;
-      if (band>0)
-        for (int i=lmin(band); i<=peaks[band]; ++i)
-          res[i]=cos(halfpi*(peaks[band]-i)/(peaks[band]-peaks[band-1]));
-      if (band<int(peaks.size())-1)
-        for (int i=peaks[band]; i<=lmax(band); ++i)
-          res[i]=cos(halfpi*(i-peaks[band])/(peaks[band+1]-peaks[band]));
+      for (int i=lmin(band); i<=llim[band+1]; ++i)
+        res[i]=cos(halfpi*(llim[band+1]-i)/(llim[band+1]-llim[band]));
+      for (int i=llim[band+1]; i<=lmax(band); ++i)
+        res[i]=cos(halfpi*(i-llim[band+1])/(llim[band+2]-llim[band+1]));
       return res;
       }
   };
-
-bool fileExists(const string &name)
-  {
-  ifstream inp(name);
-  return bool(inp);
-  }
 
 template<typename T> void needlet_tool (paramfile &params)
   {
@@ -262,7 +258,7 @@ template<typename T> void needlet_tool (paramfile &params)
   string ntype = params.template find<string>("needlet_type");
   if (ntype=="basak")
     {
-    vector<string> lps=tokenize(params.template find<string>("lpeak"),',');
+    vector<string> lps=tokenize(params.template find<string>("llim"),',');
     vector<int> lpeak;
     for (auto x:lps) lpeak.push_back(stringToData<int>(x));
     needgen.reset(new basak(lpeak));
@@ -275,22 +271,21 @@ template<typename T> void needlet_tool (paramfile &params)
     needgen.reset(new spline(params.template find<double>("B")));
   else
     planck_fail("unknown needlet type");
+  int loband=params.template find<int>("minband");
+  int hiband=params.template find<int>("maxband")+1;
 
   bool polarisation = params.template find<bool>("polarisation");
   if (!polarisation)
     {
     if (split)
       {
+      string outfile_needlets = params.template find<string>
+        ("outfile_needlets","");
       int nlmax, nmmax;
       get_almsize(infile, nlmax, nmmax);
       Alm<xcomplex<T> > alm;
       read_Alm_from_fits(infile,alm,nlmax,nmmax);
-      int hiband=0;
-      if (ntype=="spline")
-        hiband=params.template find<int>("maxband")+1;
-      else
-        while (needgen->lmin(hiband)<=nlmax) ++hiband;
-      for (int i=0; i<hiband; ++i)
+      for (int i=loband; i<hiband; ++i)
         {
         int lmax_t=min(nlmax,needgen->lmax(i)),
             mmax_t=min(nmmax, lmax_t);
@@ -301,12 +296,21 @@ template<typename T> void needlet_tool (paramfile &params)
         atmp.ScaleL(needgen->getBand(i));
         write_Alm_to_fits (outfile+intToString(i,3)+".fits",atmp,lmax_t,mmax_t,
           planckType<T>());
+        if (outfile_needlets!="")
+          {
+          fitshandle out;
+          out.create (outfile_needlets+intToString(i,3)+".fits");
+          vector<fitscolumn> cols;
+          cols.push_back(fitscolumn("coeff","[none]",1,PLANCK_FLOAT64));
+          out.insert_bintab(cols);
+          out.write_column(1,needgen->getBand(i));
+          }
         }
       }
     else
       {
       Alm<xcomplex<T> > alm;
-      for (int i=0; fileExists(infile+intToString(i,3)+".fits"); ++i)
+      for (int i=loband; i<hiband; ++i)
         {
         int nlmax, nmmax;
         get_almsize(infile+intToString(i,3)+".fits", nlmax, nmmax);
