@@ -25,7 +25,7 @@
 /*! \file rangeset.h
  *  Class for storing sets of ranges of integer numbers
  *
- *  Copyright (C) 2011-2014 Max-Planck-Society
+ *  Copyright (C) 2011-2017 Max-Planck-Society
  *  \author Martin Reinecke
  */
 
@@ -38,6 +38,7 @@
 #include <iostream>
 #include "datatypes.h"
 #include "error_handling.h"
+#include "math_utils.h"
 
 /*! Class for storing sets of ranges of integer numbers */
 template<typename T> class rangeset
