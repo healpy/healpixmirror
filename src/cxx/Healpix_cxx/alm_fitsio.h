@@ -27,7 +27,7 @@
 /*! \file alm_fitsio.h
  *  FITS I/O for spherical harmonic coefficients
  *
- *  Copyright (C) 2003-2010 Max-Planck-Society
+ *  Copyright (C) 2003-2017 Max-Planck-Society
  *  \author Martin Reinecke
  */
 
@@ -61,6 +61,16 @@ void get_almsize_pol(const std::string &filename, int &lmax, int &mmax);
     the requested (l,m) range are ignored. */
 template<typename T> void read_Alm_from_fits
   (fitshandle &inp, Alm<xcomplex<T> > &alms, int lmax, int mmax);
+/*! Returns the a_lm of the FITS binary table pointed to by \a inp.
+    Values not present in the FITS table are set to zero; values outside
+    the requested (l,m) range are ignored. */
+template<typename T> inline Alm<xcomplex<T> > read_Alm_from_fits
+  (fitshandle &inp, int lmax, int mmax)
+  {
+  Alm<xcomplex<T> > res;
+  read_Alm_from_fits (inp, res, lmax, mmax);
+  return res;
+  }
 /*! Opens the FITS file \a filename, jumps to the HDU \a hdunum, then reads
     the a_lm from the FITS binary table there into \a alms. \a alms is
     reallocated with the parameters \a lmax and \a mmax.
@@ -69,6 +79,17 @@ template<typename T> void read_Alm_from_fits
 template<typename T> void read_Alm_from_fits
   (const std::string &filename, Alm<xcomplex<T> > &alms,
    int lmax, int mmax, int hdunum=2);
+/*! Opens the FITS file \a filename, jumps to the HDU \a hdunum, then returns
+    the a_lm from the FITS binary table there.
+    Values not present in the FITS table are set to zero; values outside
+    the requested \a (l,m) range are ignored. */
+template<typename T> inline Alm<xcomplex<T> > read_Alm_from_fits
+  (const std::string &filename, int lmax, int mmax, int hdunum=2)
+  {
+  Alm<xcomplex<T> > res;
+  read_Alm_from_fits (filename, res, lmax, mmax, hdunum);
+  return res;
+  }
 
 template<typename T> inline void read_Alm_from_fits
   (const std::string &filename, Alm<xcomplex<T> > &almT,

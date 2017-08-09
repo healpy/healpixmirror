@@ -25,7 +25,7 @@
  */
 
 /*
- *  Copyright (C) 2014-2015 Max-Planck-Society
+ *  Copyright (C) 2014-2017 Max-Planck-Society
  *  Author: Martin Reinecke
  */
 
@@ -34,8 +34,8 @@
 
 using namespace std;
 
-template<typename T> void read_Moc_from_fits
-  (const std::string &filename, Moc<T> &moc, bool peano)
+template<typename T> Moc<T> read_Moc_from_fits
+  (const std::string &filename, bool peano)
   {
   fitshandle inp;
   inp.open (filename);
@@ -44,13 +44,13 @@ template<typename T> void read_Moc_from_fits
   inp.read_entire_column(1,data);
   if (peano)
     Moc<T>::uniq_nest2peano(data);
-  moc=Moc<T>::fromUniq(data);
+  return Moc<T>::fromUniq(data);
   }
 
-template void read_Moc_from_fits
-  (const std::string &filename, Moc<int> &moc, bool peano);
-template void read_Moc_from_fits
-  (const std::string &filename, Moc<int64> &moc, bool peano);
+template Moc<int> read_Moc_from_fits
+  (const std::string &filename, bool peano);
+template Moc<int64> read_Moc_from_fits
+  (const std::string &filename, bool peano);
 
 template<typename T> void write_Moc_to_fits
   (const std::string &outfile, const Moc<T> &moc, bool peano)
@@ -75,7 +75,7 @@ template<typename T> void write_Moc_to_fits
   out.set_key<int>("MOCORDER", moc.maxOrder(), "MOC resolution (best order)");
   out.write_column(1,data);
   }
-  
+
 template void write_Moc_to_fits
   (const std::string &outfile, const Moc<int> &moc, bool peano);
 template void write_Moc_to_fits

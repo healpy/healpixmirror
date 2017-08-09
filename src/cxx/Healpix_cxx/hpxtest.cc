@@ -25,7 +25,7 @@
  */
 
 /*
- *  Copyright (C) 2004-2015 Max-Planck-Society
+ *  Copyright (C) 2004-2017 Max-Planck-Society
  *  Author: Martin Reinecke
  */
 
@@ -612,9 +612,7 @@ template<typename I> void check_Moc()
     planck_assert(a.op_and(a.complement())==empty,"error");
 #if 0
     write_Moc_to_fits("!healpixtestmoctmp",a);
-    Moc<I> b;
-    read_Moc_from_fits("healpixtestmoctmp",b);
-    planck_assert(a==b,"FITS problem");
+    planck_assert(a==read_Moc_from_fits<I>("healpixtestmoctmp"),"FITS problem");
 #endif
     }
   }
@@ -850,10 +848,9 @@ void check_issue_229 (Healpix_Ordering_Scheme scheme)
   Healpix_Map<vec3> vmap(order,scheme);
   for (int m=0; m<vmap.Npix(); ++m)
     vmap[m]=vmap.pix2vec(m);
-  rangeset<int> pixset;
   pointing ptg(halfpi-0.1,0);
   double rad=0.1;
-  map.query_disc(ptg,rad,pixset);
+  auto pixset = map.query_disc(ptg,rad);
   vec3 vptg=ptg;
   double cosrad=cos(rad);
   for (tsize j=0; j<pixset.nranges(); ++j)
@@ -880,13 +877,12 @@ void check_query_disc_strict (Healpix_Ordering_Scheme scheme)
     Healpix_Map<vec3> vmap(order,scheme);
     for (int m=0; m<vmap.Npix(); ++m)
       vmap[m]=vmap.pix2vec(m);
-    rangeset<int> pixset;
     for (int m=0; m<100000; ++m)
       {
       pointing ptg;
       random_dir (ptg);
       double rad = pi/1 * rng.rand_uni();
-      map.query_disc(ptg,rad,pixset);
+      auto pixset = map.query_disc(ptg,rad);
       vec3 vptg=ptg;
       double cosrad=cos(rad);
       for (tsize j=0; j<pixset.nranges(); ++j)
@@ -913,30 +909,27 @@ template<typename I>void check_query_disc()
   for (int order=0; order<=omax; ++order)
     {
     T_Healpix_Base<I> rbase (order,RING), nbase (order,NEST);
-    rangeset<I> pixset;
     int niter=max(1,min(1000,100000>>order));
     for (int m=0; m<niter; ++m)
       {
       pointing ptg;
       random_dir (ptg);
       double rad = pi/1 * rng.rand_uni();
-      rbase.query_disc(ptg,rad,pixset);
+      auto pixset = rbase.query_disc(ptg,rad);
       rangeset<I> pslast=pixset;
       for (tsize fct=5; fct>0; --fct)
         {
-        rangeset<I> psi;
-        rbase.query_disc_inclusive(ptg,rad,psi,fct);
+        auto psi = rbase.query_disc_inclusive(ptg,rad,fct);
         if (!psi.contains(pslast))
           cout << "  Potential problem: RING pixel sets inconsistent" << endl;
         swap(pslast,psi);
         }
       I nval = pixset.nval();
-      nbase.query_disc(ptg,rad,pixset);
+      pixset = nbase.query_disc(ptg,rad);
       pslast=pixset;
       for (tsize fct=8; fct>0; fct>>=1)
         {
-        rangeset<I> psi;
-        nbase.query_disc_inclusive(ptg,rad,psi,fct);
+        auto psi = nbase.query_disc_inclusive(ptg,rad,fct);
         if (!psi.contains(pslast))
           FAIL(cout << "  PROBLEM: NEST pixel sets inconsistent" << endl)
         swap(pslast,psi);
@@ -955,21 +948,20 @@ template<typename I>void check_query_polygon()
   for (int order=0; order<=omax; ++order)
     {
     T_Healpix_Base<I> rbase (order,RING), nbase (order,NEST);
-    rangeset<I> pixset;
     int niter=max(1,min(1000,100000>>order));
     for (int m=0; m<niter; ++m)
       {
       vector<pointing> corner(3);
       random_dir(corner[0]); random_dir(corner[1]); random_dir(corner[2]);
-      rbase.query_polygon(corner,pixset);
+      auto pixset = rbase.query_polygon(corner);
       I nval = pixset.nval();
-      nbase.query_polygon(corner,pixset);
+      pixset = nbase.query_polygon(corner);
       if (nval!=pixset.nval())
         FAIL(cout << "  PROBLEM: number of pixels different: "
                   << nval << " vs. " << pixset.nval() << endl)
-      rbase.query_polygon_inclusive(corner,pixset,4);
+      pixset = rbase.query_polygon_inclusive(corner,4);
       I nv1=pixset.nval();
-      nbase.query_polygon_inclusive(corner,pixset,4);
+      pixset = nbase.query_polygon_inclusive(corner,4);
       I nv2=pixset.nval();
       if (nv1<nv2)
         FAIL(cout << "  PROBLEM: inclusive(RING)<inclusive(NEST): "
@@ -1446,9 +1438,7 @@ template<typename I>void perf_query_disc(const string &name,
   wallTimers.start(name);
   for (int m=0; m<1000; ++m)
     {
-    rangeset<I> pix;
-    base.query_disc(vec3(1,0,0),halfpi/9,pix);
-    dummy+=pix.nranges();
+    dummy += base.query_disc(vec3(1,0,0),halfpi/9).nranges();
     ++cnt;
     }
   wallTimers.stop(name);
@@ -1466,9 +1456,7 @@ template<typename I>void perf_query_triangle(const string &name,
   wallTimers.start(name);
   for (int m=0; m<1000; ++m)
     {
-    rangeset<I> pix;
-    base.query_polygon(corner,pix);
-    dummy+=pix.nranges();
+    dummy += base.query_polygon(corner).nranges();
     ++cnt;
     }
   wallTimers.stop(name);
@@ -1487,9 +1475,7 @@ template<typename I>void perf_query_polygon(const string &name,
   wallTimers.start(name);
   for (int m=0; m<1000; ++m)
     {
-    rangeset<I> pix;
-    base.query_polygon(corner,pix);
-    dummy+=pix.nranges();
+    dummy += base.query_polygon(corner).nranges();
     ++cnt;
     }
   wallTimers.stop(name);
@@ -1598,4 +1584,5 @@ int main(int argc, const char **argv)
 #ifdef UNITTESTS
   if (errcount>0) planck_fail("unit test errors");
 #endif
+  return 0;
   }

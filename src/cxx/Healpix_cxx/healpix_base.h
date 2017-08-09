@@ -25,7 +25,7 @@
  */
 
 /*! \file healpix_base.h
- *  Copyright (C) 2003-2014 Max-Planck-Society
+ *  Copyright (C) 2003-2017 Max-Planck-Society
  *  \author Martin Reinecke
  */
 
@@ -228,6 +228,17 @@ template<typename I> class T_Healpix_Base: public Healpix_Tables
            whose centers lie inside the disk
         \note This method is more efficient in the RING scheme. */
     void query_disc (pointing ptg, double radius, rangeset<I> &pixset) const;
+    /*! Returns the range set of all pixels whose centers lie within the disk
+        defined by \a dir and \a radius.
+        \param dir the angular coordinates of the disk center
+        \param radius the radius (in radians) of the disk
+        \note This method is more efficient in the RING scheme. */
+    rangeset<I> query_disc (pointing ptg, double radius) const
+      {
+      rangeset<I> res;
+      query_disc(ptg, radius, res);
+      return res;
+      }
     /*! Returns the range set of all pixels which overlap with the disk
         defined by \a dir and \a radius.
         \param dir the angular coordinates of the disk center
@@ -243,6 +254,24 @@ template<typename I> class T_Healpix_Base: public Healpix_Tables
         \note This method is more efficient in the RING scheme. */
     void query_disc_inclusive (pointing ptg, double radius, rangeset<I> &pixset,
       int fact=1) const;
+    /*! Returns the range set of all pixels which overlap with the disk
+        defined by \a dir and \a radius.
+        \param dir the angular coordinates of the disk center
+        \param radius the radius (in radians) of the disk
+        \param fact The overlapping test will be done at the resolution
+           \a fact*nside. For NESTED ordering, \a fact must be a power of 2,
+           else it can be any positive integer. A typical choice would be 4.
+        \note This method may return some pixels which don't overlap with
+           the disk at all. The higher \a fact is chosen, the fewer false
+           positives are returned, at the cost of increased run time.
+        \note This method is more efficient in the RING scheme. */
+    rangeset<I> query_disc_inclusive (pointing ptg, double radius,
+      int fact=1) const
+      {
+      rangeset<I> res;
+      query_disc_inclusive(ptg, radius, res, fact);
+      return res;
+      }
 
     /*! \deprecated Please use the version based on \a rangeset */
     void query_disc (const pointing &dir, double radius,
@@ -273,6 +302,16 @@ template<typename I> class T_Healpix_Base: public Healpix_Tables
         \note This method is more efficient in the RING scheme. */
     void query_polygon (const std::vector<pointing> &vertex,
       rangeset<I> &pixset) const;
+    /*! Returns a range set of pixels whose centers lie within the convex
+        polygon defined by the \a vertex array.
+        \param vertex array containing the vertices of the polygon.
+        \note This method is more efficient in the RING scheme. */
+    rangeset<I> query_polygon (const std::vector<pointing> &vertex) const
+      {
+      rangeset<I> res;
+      query_polygon(vertex, res);
+      return res;
+      }
 
     /*! Returns a range set of pixels which overlap with the convex
         polygon defined by the \a vertex array.
@@ -288,6 +327,23 @@ template<typename I> class T_Healpix_Base: public Healpix_Tables
         \note This method is more efficient in the RING scheme. */
     void query_polygon_inclusive (const std::vector<pointing> &vertex,
       rangeset<I> &pixset, int fact=1) const;
+    /*! Returns a range set of pixels which overlap with the convex
+        polygon defined by the \a vertex array.
+        \param vertex array containing the vertices of the polygon.
+        \param fact The overlapping test will be done at the resolution
+           \a fact*nside. For NESTED ordering, \a fact must be a power of 2,
+           else it can be any positive integer. A typical choice would be 4.
+        \note This method may return some pixels which don't overlap with
+           the polygon at all. The higher \a fact is chosen, the fewer false
+           positives are returned, at the cost of increased run time.
+        \note This method is more efficient in the RING scheme. */
+    rangeset<I> query_polygon_inclusive (const std::vector<pointing> &vertex,
+      int fact=1) const
+      {
+      rangeset<I> res;
+      query_polygon_inclusive(vertex, res, fact);
+      return res;
+      }
 
     /*! Returns a range set of pixels whose centers lie within the colatitude
         range defined by \a theta1 and \a theta2 (if \a inclusive==false), or
@@ -301,6 +357,22 @@ template<typename I> class T_Healpix_Base: public Healpix_Tables
            that overlap with the region. */
     void query_strip (double theta1, double theta2, bool inclusive,
       rangeset<I> &pixset) const;
+    /*! Returns a range set of pixels whose centers lie within the colatitude
+        range defined by \a theta1 and \a theta2 (if \a inclusive==false), or
+        which overlap with this region (if \a inclusive==true). If
+        \a theta1<theta2, the region between both angles is considered,
+        otherwise the regions \a 0<theta<theta2 and \a theta1<theta<pi.
+        \param theta1 first colatitude
+        \param theta2 second colatitude
+        \param inclusive if \a false, return the exact set of pixels whose
+           pixels centers lie within the region; if \a true, return all pixels
+           that overlap with the region. */
+    rangeset<I> query_strip (double theta1, double theta2, bool inclusive) const
+      {
+      rangeset<I> res;
+      query_strip(theta1, theta2, inclusive, res);
+      return res;
+      }
 
     /*! Returns useful information about a given ring of the map.
         \param ring the ring number (the number of the first ring is 1)

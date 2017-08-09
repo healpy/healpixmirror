@@ -27,7 +27,7 @@
 /*! \file moc_fitsio.h
  *  FITS I/O for multi-order coverage information
  *
- *  Copyright (C) 2014 Max-Planck-Society
+ *  Copyright (C) 2014-2017 Max-Planck-Society
  *  \author Martin Reinecke
  */
 
@@ -40,8 +40,8 @@
 /*! \defgroup moc_fitsio_group FITS-based I/O of MOC objects */
 /*! \{ */
 
-template<typename T> void read_Moc_from_fits
-  (const std::string &filename, Moc<T> &moc, bool peano=false);
+template<typename T> Moc<T> read_Moc_from_fits
+  (const std::string &filename, bool peano=false);
 
 template<typename T> void write_Moc_to_fits
   (const std::string &outfile, const Moc<T> &moc, bool peano=false);

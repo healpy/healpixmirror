@@ -25,7 +25,7 @@
  */
 
 /*! \file healpix_map_fitsio.h
- *  Copyright (C) 2003-2011 Max-Planck-Society
+ *  Copyright (C) 2003-2017 Max-Planck-Society
  *  \author Martin Reinecke
  */
 
@@ -47,11 +47,19 @@ template<typename T> class Healpix_Map;
     pointed to by \a inp into \a map. */
 template<typename T> void read_Healpix_map_from_fits
   (fitshandle &inp, Healpix_Map<T> &map, int colnum=1);
+/*! Returns the map stored in column \a colnum of the FITS binary table
+    pointed to by \a inp. */
+template<typename T> Healpix_Map<T> read_Healpix_map_from_fits
+  (fitshandle &inp, int colnum=1);
 /*! Opens the FITS file \a filename, jumps to the HDU \a hdunum,
     and reads the column \a colnum into \a map. */
 template<typename T> void read_Healpix_map_from_fits
   (const std::string &filename, Healpix_Map<T> &map, int colnum=1,
   int hdunum=2);
+/*! Opens the FITS file \a filename, jumps to the HDU \a hdunum,
+    and returns the map in column \a colnum. */
+template<typename T> Healpix_Map<T> read_Healpix_map_from_fits
+  (const std::string &filename, int colnum=1, int hdunum=2);
 
 template<typename T> void read_Healpix_map_from_fits
   (fitshandle &inp, Healpix_Map<T> &mapT, Healpix_Map<T> &mapQ,

@@ -16,21 +16,25 @@ needlet_type (string):
              higher resolutions.
 
 if (needlet_type=="basak"):
-  lpeak (string):
-    comma-separated list of integer numbers containing the lpeak values for each
-    band to be used.
-    Each needlet has support from the preceding lpeak (or 0 in the case of the
-    first needlet) to the next lpeak (or its own lpeak, for the last needlet).
+  llim: string
+    For n bands, this list must contain n+2 comma-separated integers:
+      - start of band 1
+      - start of band 2 == peak of band 1
+      - start of band 3 == peak of band 2 == end of band 1
+      [...]
+      - start of band n == peak of band n-1 == end of band n-2
+      - peak of band n == end of band n-1
+      - end of band n
+    The values must be strictly increasing, with the exception of the first and
+    second value, which may both be 0.
 else
   B (double):
     B parameter for the respective needlet
     The window for the nth band peaks at l=B^n.
 endif
 
-if (needlet_type=="spline")
-  maxband (integer):
-    number of the highest wavelet band to compute
-endif
+minband, maxband (integer):
+  the minimum and maximum needlet scales requested for the operation
 
 infile (string):
   if mode=="split"   : input file containing the a_lm

@@ -75,6 +75,20 @@ template void read_Healpix_map_from_fits (fitshandle &inp,
 template void read_Healpix_map_from_fits (fitshandle &inp,
   Healpix_Map<int> &map, int colnum);
 
+template<typename T> Healpix_Map<T> read_Healpix_map_from_fits
+  (fitshandle &inp, int colnum)
+  {
+  Healpix_Map<T> res;
+  read_Healpix_map_from_fits (inp, res, colnum);
+  return res;
+  }
+
+template Healpix_Map<float> read_Healpix_map_from_fits
+  (fitshandle &inp, int colnum);
+template Healpix_Map<double> read_Healpix_map_from_fits
+  (fitshandle &inp, int colnum);
+template Healpix_Map<int> read_Healpix_map_from_fits
+  (fitshandle &inp, int colnum);
 
 template<typename T> void read_Healpix_map_from_fits
   (const string &filename, Healpix_Map<T> &map, int colnum, int hdunum)
@@ -91,6 +105,21 @@ template void read_Healpix_map_from_fits (const string &filename,
   Healpix_Map<double> &map, int colnum, int hdunum);
 template void read_Healpix_map_from_fits (const string &filename,
   Healpix_Map<int> &map, int colnum, int hdunum);
+
+template<typename T> Healpix_Map<T> read_Healpix_map_from_fits
+  (const string &filename, int colnum, int hdunum)
+  {
+  Healpix_Map<T> res;
+  read_Healpix_map_from_fits (filename, res, colnum, hdunum);
+  return res;
+  }
+
+template Healpix_Map<float> read_Healpix_map_from_fits
+  (const string &filename, int colnum, int hdunum);
+template Healpix_Map<double> read_Healpix_map_from_fits
+  (const string &filename, int colnum, int hdunum);
+template Healpix_Map<int> read_Healpix_map_from_fits
+  (const string &filename, int colnum, int hdunum);
 
 template<typename T> void read_Healpix_map_from_fits
   (fitshandle &inp, Healpix_Map<T> &mapT, Healpix_Map<T> &mapQ,

@@ -283,8 +283,7 @@ template<typename T> void needlet_tool (paramfile &params)
         ("outfile_needlets","");
       int nlmax, nmmax;
       get_almsize(infile, nlmax, nmmax);
-      Alm<xcomplex<T> > alm;
-      read_Alm_from_fits(infile,alm,nlmax,nmmax);
+      auto alm = read_Alm_from_fits<T>(infile,nlmax,nmmax);
       for (int i=loband; i<hiband; ++i)
         {
         int lmax_t=min(nlmax,needgen->lmax(i)),
@@ -314,8 +313,8 @@ template<typename T> void needlet_tool (paramfile &params)
         {
         int nlmax, nmmax;
         get_almsize(infile+intToString(i,3)+".fits", nlmax, nmmax);
-        Alm<xcomplex<T> > atmp;
-        read_Alm_from_fits(infile+intToString(i,3)+".fits",atmp,nlmax,nmmax);
+        auto atmp = read_Alm_from_fits<T>(infile+intToString(i,3)+".fits",
+          nlmax,nmmax);
         atmp.ScaleL(needgen->getBand(i));
         for (int m=0; m<=alm.Mmax(); ++m)
           for (int l=m; l<=alm.Lmax(); ++l)

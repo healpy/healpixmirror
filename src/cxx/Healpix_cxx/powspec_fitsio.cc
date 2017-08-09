@@ -25,7 +25,7 @@
  */
 
 /*
- *  Copyright (C) 2003-2013 Max-Planck-Society
+ *  Copyright (C) 2003-2017 Max-Planck-Society
  *  Author: Martin Reinecke
  */
 
@@ -67,6 +67,13 @@ void read_powspec_from_fits (fitshandle &inp, PowSpec &powspec, int nspecs,
   if (nspecs==6) powspec.Set(tt,gg,cc,tg,tc,gc);
   }
 
+PowSpec read_powspec_from_fits (fitshandle &inp, int nspecs, int lmax)
+  {
+  PowSpec res;
+  read_powspec_from_fits (inp, res, nspecs, lmax);
+  return res;
+  }
+
 void read_powspec_from_fits (const string &infile, PowSpec &powspec,
   int nspecs, int lmax, int hdunum)
   {
@@ -75,6 +82,14 @@ void read_powspec_from_fits (const string &infile, PowSpec &powspec,
   inp.goto_hdu(hdunum);
 
   read_powspec_from_fits (inp,powspec,nspecs,lmax);
+  }
+
+PowSpec read_powspec_from_fits (const string &infile,
+  int nspecs, int lmax, int hdunum)
+  {
+  PowSpec res;
+  read_powspec_from_fits (infile, nspecs, lmax, hdunum);
+  return res;
   }
 
 void write_powspec_to_fits (fitshandle &out,
