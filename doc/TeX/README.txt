@@ -37,3 +37,8 @@ style files:
 	healpix.perl
 	common.css
 	(healrut.sty)
+
+
+
+see also fig/process_images.txt
+

@@ -3,7 +3,18 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en">
 
 <head>
-  <link rel="shortcut icon" href="images/healpix.ico">
+  <!-- link rel="shortcut icon" href="images/healpix.ico" -->
+  <link rel="apple-touch-icon" sizes="180x180" href="images/favicons/apple-touch-icon.png?v=2017">
+  <link rel="icon" type="image/png" sizes="32x32" href="images/favicons/favicon-32x32.png?v=2017">
+  <link rel="icon" type="image/png" sizes="16x16" href="images/favicons/favicon-16x16.png?v=2017">
+  <link rel="manifest" href="images/favicons/manifest.json?v=2017">
+  <link rel="mask-icon" href="images/favicons/safari-pinned-tab.svg?v=2017" color="#5bbad5">
+  <link rel="shortcut icon" href="images/favicons/favicon.ico?v=2017">
+  <meta name="apple-mobile-web-app-title" content="HEALPix">
+  <meta name="application-name" content="HEALPix">
+  <meta name="msapplication-config" content="images/favicons/browserconfig.xml?v=2017">
+  <meta name="theme-color" content="#ffffff">
+
 <?php 
   $menu = array(
     'index.php' => 'Features',

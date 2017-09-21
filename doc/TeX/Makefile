@@ -6,7 +6,7 @@ PDFTEX  := pdflatex
 TEXFLAGS := 
 DVIFLAGS :=
 PDFFLAGS :=
-LATEX2HTML := export L2HCONFIG=./my_l2hconf.pm ; ./latex2html
+LATEX2HTML := export L2HCONFIG=./my_l2hconf.pm ; export PATH=$(PATH):/sw2/bin ; ./latex2html
 # LATEX2HTML := ~/bin/latex2html
 VERSION =  $(shell grep newcommand hpxversion.tex | grep hpxversion | sed "s/[a-z{}\\]*//g")
 DOCDIR  := ../../healpix-dynamicPages
@@ -26,6 +26,7 @@ L2HFLAGS := -dir $(HTMLDIR) -up_url main.htm -up_title "Main Page" \
 EQNFIX      := ./eqnfix.sh
 IMPROVEHTML := ./improve_mobile_html.sh
 SHORTEN     := ./shorten_section_tag.sh
+INSERTFAVICONS := ./insert_favicons.sh
 CSSFILE     := common.css
 COLORS = 1
 
@@ -170,6 +171,7 @@ intro.html: $(style) healpix.perl cssfile
 	-$(EQNFIX)      $(HTMLDIR)/$(PREFIX) 1> /dev/null 2>&1
 	-$(SHORTEN)	$(HTMLDIR)/$(PREFIX)
 	-$(IMPROVEHTML) $(HTMLDIR)/$(PREFIX)
+	-$(INSERTFAVICONS) $(HTMLDIR)/$(PREFIX)
 	mv -f $(HTMLDIR)/WARNINGS $(HTMLDIR)/WARNINGS_$(FULL)
 	ln -sf $(CSSFILE)          $(HTMLDIR)/$(FULL).css
 	ln -sf $(PREFIX)$(TTL).htm $(HTMLDIR)/$(FULL).htm
@@ -265,6 +267,11 @@ csub.html: $(style) healpix.perl cssfile
 	@echo "created$(BLUE_COLOR) $(HTMLDIR)/$(FULL).htm $(NO_COLOR)"
 
 #----------------------------------
+
+t1:	
+	@export PATH=${OLDPATH}:${MAGICPATH} ; echo $$PATH ; ppmquant
+	#ppmquant
+	@echo $$PATH
 
 clean: 
 	$(RM) *.aux *.log *.toc *.blg *.bbl *.lof *.lot *.kf *.out ; \

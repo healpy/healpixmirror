@@ -18,47 +18,87 @@ It is also useful for image generation in a pipeline environment.}
 \end{facility}
 
 \begin{f90facility}
-{map2gif -inp FITS\_file -out GIF\_file [options]}
+{map2gif 
+\mylink{fac:map2gif:inp}{-inp} FITS\_file 
+\mylink{fac:map2gif:out}{-out} GIF\_file [options]}
 \end{f90facility}
 
 \begin{qualifiers}
   \begin{qulist}{} %%%% NOTE the ``extra'' brace here %%%%
-    \item[{-inp FITS\_file}] The file name of the input FITS sky map \nodefault.\\
+%
+    \item[{-inp FITS\_file}]\mytarget{fac:map2gif:inp} 
+The file name of the input FITS sky map \nodefault.\\
 In \thedocid\ (and \thedocid\ only) it may be necessary to put the file name between quotes if it contains symbols
 such as \texttt{\&}, \texttt{[}, \texttt{]}, \texttt{?}, \texttt{=}  or blanks
-    \item[{-out GIF\_file}] The file name of the output gif image \nodefault.\\
-Prepending the output file name with \texttt{$\backslash$!} (see example below) will allow the overwriting of the
+%
+    \item[{-out GIF\_file}]\mytarget{fac:map2gif:out} 
+The file name of the output gif image \nodefault.\\
+Prepending the output file name with \texttt{$\backslash$!} 
+(see \mylink{fac:map2gif:example}{example below}) will allow the overwriting of the
 file if it already exists
-    \item[{-add offset}] Real value to add to the signal before performing any
+%
+    \item[{-add offset}]\mytarget{fac:map2gif:add} 
+Real value to add to the signal before performing any
       other operation to it (like taking the logarithm etc.)
       \default{0.0}
-    \item[{-ash flag}] Logical to use the hyperbolic arc sine of the signal when
-      plotting. Cannot be true when \texttt{-log} is true.
+%
+    \item[{-ash flag}]\mytarget{fac:map2gif:ash} 
+Logical to use the hyperbolic arc sine of the signal when
+      plotting. Cannot be true when \mylink{fac:map2gif:log}{\texttt{-log}} is true.
       \default{.false.}
-    \item[{-bar flag}] Logical which determines whether a color bar is
+%
+    \item[{-bar flag}]\mytarget{fac:map2gif:bar}
+ Logical which determines whether a color bar is
       displayed \default{.false.}. 
-    \item[{-col table}] The number of the color table to utilise (in [1,5]) \default{5}.
-    \item[{-hlp}] Print on-line help for the facility.
-    \item[{-lat lat0}] Latitude (Deg) of central point \default{0}
-    \item[{-log flag}] Logical to use the log of the signal when plotting 
+%
+    \item[{-col table}]\mytarget{fac:map2gif:col} 
+The number of the color table to utilise (in [1,5]) \default{5}.
+%
+    \item[{-hlp}]\mytarget{fac:map2gif:hlp}
+ Print on-line help for the facility.
+%
+    \item[{-lat lat0}]\mytarget{fac:map2gif:lat}
+ Latitude (Deg) of central point \default{0}
+%
+    \item[{-log flag}]\mytarget{fac:map2gif:log}
+ Logical to use the log of the signal when plotting 
       \default{.false.}
-    \item[{-lon lon0}] Longitude (Deg) of central point \default{0}
-    \item[{-max maxval}] Set the maximum value for the plotted signal
+%
+    \item[{-lon lon0}]\mytarget{fac:map2gif:lon}
+ Longitude (Deg) of central point \default{0}
+%
+    \item[{-max maxval}]\mytarget{fac:map2gif:max}
+ Set the maximum value for the plotted signal
       \default{is to use the actual signal maximum}.
-    \item[{-min minval}] Set the minimum value for the plotted signal
+%
+    \item[{-min minval}]\mytarget{fac:map2gif:min}
+ Set the minimum value for the plotted signal
      \default{is to use the actual signal minimum}.
-    \item[{-mul factor}] Real value to multiply the signal with directly after
+%
+    \item[{-mul factor}]\mytarget{fac:map2gif:mul}
+ Real value to multiply the signal with directly after
       adding the offset (see above).
       \default{1.0}
-    \item[{-pro projection}] Select the projection scheme 
+%
+    \item[{-pro projection}]\mytarget{fac:map2gif:pro}
+ Select the projection scheme 
 	(among \texttt{mol} or \texttt{MOL} for Mollweide and \texttt{gno} or \texttt{GNO} for gnomic)
 	\default{MOL}.
-    \item[{-res reso}] Resolution in projected plan in arcmin (only for gnomic projection) \default{2}
-    \item[{-sig number}] The identifier of the signal to plot: for a
+%
+    \item[{-res reso}]\mytarget{fac:map2gif:res}
+ Resolution in projected plan in arcmin (only for gnomic projection) \default{2}
+%
+    \item[{-sig number}]\mytarget{fac:map2gif:sig}
+ The identifier of the signal to plot: for a
       polarisation map, then the mapping is 1 = I; 2 = Q; 3 = U
       \default{1}.
-    \item[{-ttl title}] A string specifying the title for the plot (see note on quotes for \texttt{-inp})\nodefault.
-    \item[{-xsz xsize}] The x-dimension of the image in pixels \default{800}.
+%
+    \item[{-ttl title}]\mytarget{fac:map2gif:ttl}
+ A string specifying the title for the plot (see note on quotes for 
+\mylink{fac:map2gif:inp}{\texttt{-inp}}) \nodefault.
+%
+    \item[{-xsz xsize}]\mytarget{fac:map2gif:xsz}
+ The x-dimension of the image in pixels \default{800}.
   \end{qulist}
 \end{qualifiers}
 
@@ -97,12 +137,13 @@ The facility utilises a command-line interface.}
 \begin{examples}{1}
 {
 \begin{tabular}{ll} %%%% use this tabular format %%%%
-map2gif & -inp planck100GHZ-LFI.fits \\
-        & -out $\backslash$!planck100GHZ-LFI.gif \\
-        & -bar .true. \\
-        & -min -100 \\
-        & -max 100 \\
-        & -ttl 'Simulated Planck LFI Sky Map at 100GHz' \\
+\mytarget{fac:map2gif:example}
+map2gif & \mylink{fac:map2gif:inp}{-inp} planck100GHZ-LFI.fits $\backslash$ \\
+        & \mylink{fac:map2gif:out}{-out} $\backslash$!planck100GHZ-LFI.gif $\backslash$ \\
+        & \mylink{fac:map2gif:bar}{-bar} .true. $\backslash$ \\
+        & \mylink{fac:map2gif:min}{-min} -100 $\backslash$ \\
+        & \mylink{fac:map2gif:max}{-max} 100 $\backslash$ \\
+        & \mylink{fac:map2gif:ttl}{-ttl} 'Simulated Planck LFI Sky Map at 100GHz' \\
 \end{tabular}
 }
 {map2gif reads in the map 'planck100GHZ-LFI.fits' and outputs

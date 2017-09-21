@@ -1450,7 +1450,9 @@ is used during their production.
 
 \subsubsection[General]{General}
 \subsubsection[C]{\linklatexhtml{C}{csub.pdf}{csub.htm}}
+%
 \subsubsection[C++]{\htmladdnormallink{C++}{http://healpix.sourceforge.net/html/index_cxx.htm}}
+%
 \subsubsection[Fortran]{%
 	Fortran 90 \linklatexhtml{facilities}{facilities.pdf}{facilities.htm} and
 	\linklatexhtml{subroutines}{subroutines.pdf}{subroutines.htm}}
@@ -1466,10 +1468,13 @@ test the value of the \texttt{POLCCONV} FITS keyword when reading a polarized ma
 and interpret the polarization accordingly, 
 as described in the \htmlref{note on POLCCONV}{intro:polcconv} in \linklatexhtml{The \healpix Primer}{intro.pdf}{intro.htm}.
 %
-\item \htmlref{\texttt{median\_filter}}{fac:median_filter} facility: faster by moving an internal array from heap to stack;
-slightly different output: when median is computed over an even number of pixels $n\ge 100$, sorted in $[1,n]$,
+\item%
+\htmlref{\texttt{median\_filter}}{fac:median_filter} facility and 
+\htmlref{\texttt{median}}{sub:median} subroutine: faster by moving an internal array from heap to stack; do not crash anymore when dealing with empty data sets; 
+slightly different output of \htmlref{\texttt{median\_filter}}{fac:median_filter}: when median is computed over an even number of pixels $n\ge 100$, sorted in $[1,n]$,
 the output is $d(n/2)$ instead of $(d(n/2)+d(n/2+1))/2$ previously. Result remain $d(n/2+1)$ for odd $n$.
 \end{itemize}
+%
 \subsubsection[IDL]{\linklatexhtml{IDL}{idl.pdf}{idl.htm}}
 \begin{itemize}
 \item \htmlref{\texttt{ianafast}}{idl:ianafast} and \htmlref{\texttt{ismoothing}}{idl:ismoothing}: 
@@ -1487,9 +1492,12 @@ orthview}}{idl:mollview} visualization routines:
 	(and presence) of labels on the parallel and meridian graticules
 \end{itemize}
 \end{itemize}
-
+%
 \subsubsection[Java]{\htmladdnormallink{Java}{http://healpix.sourceforge.net/html/java/index.html}}
+%
 \subsubsection[Python]{\htmladdnormallink{Python}{http://healpy.readthedocs.org/en/latest/}}
+
+
 
 \subsection{Bug corrections and Improvements in Version 3.31}%(2016-08-26)
 

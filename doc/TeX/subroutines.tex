@@ -110,9 +110,18 @@ boundary pixels of 'holes' for given mask
 pixels) of holes found in input mask
 }
 
-
+% macros for old changes
 \newcommand{\mysmaller}{% small in LaTeX, normal in html
 \latexhtml{\scriptsize}{\normalsize}}
+\newcommand{\compresstext}{% smaller vertical spacing in LaTeX, normal in html
+\latexhtml{%
+\setlength{\parsep}{-3ex}%
+\setlength{\topsep}{0ex}%
+\setlength{\parskip}{0ex}}{}}
+\newcommand{\compresslist}{% smaller vertical spacing in list in LaTeX, normal in html
+\setlength{\itemsep}{0ex}}{}
+
+
 %\includeonly{}
 \sloppy
 \setcounter{secnumdepth}{0}
@@ -189,11 +198,33 @@ $\mathbf{\phi}$ & The azimuthal angle on the sphere, $\phi\in[0,2\pi[$.\\
 %--------------------------------------------
 %-------------------------------------------- CHANGES
 %--------------------------------------------
-\section[Changes between releases 3.20 and \hpxversion]{Changes between releases 3.20 and
+\section[Changes between releases 3.31 and \hpxversion]{Changes between releases 3.31 and
 \hpxversion}
-%--------------------------------------------
-\subsection{Version \hpxversion}
+%from install.tex
 \begin{itemize}
+\item The subroutine 
+\htmlref{\texttt{input\_map}}{sub:input_map} in its default mode
+test the value of the \texttt{POLCCONV} FITS keyword when reading a polarized map,
+and interpret the polarization accordingly, 
+as described in the \htmlref{note on POLCCONV}{intro:polcconv} in \linklatexhtml{The \healpix Primer}{intro.pdf}{intro.htm}.
+%
+\item \htmlref{\texttt{median}}{sub:median} subroutine: faster by moving an internal array from heap to stack; 
+does not crash anymore when dealing with empty data sets.
+\end{itemize}
+
+%--------------------------------------------
+\section{Older Changes}
+%--------------------------------------------
+
+{\mysmaller%
+\compresstext
+%--------------------------------------------
+\subsection[Changes between releases 3.00 and 3.31]{Changes between releases 3.00 and
+3.31}
+%--------------------------------------------
+
+\subsubsection{Version 3.31}
+\begin{itemize}\compresslist
 	\item Bug correction in \htmlref{{\tt input\_map}}{sub:input_map} routine for reading of polarized multi-HDU cut sky FITS files;
 	\item Introduction of 
 \mylinkext{fac:alteralm:winfiledir_in}{{\tt winfiledir\_*}} and 
@@ -201,9 +232,8 @@ $\mathbf{\phi}$ & The azimuthal angle on the sphere, $\phi\in[0,2\pi[$.\\
 \end{itemize}
 
 
-\subsection{Version 3.30}
-\begin{itemize}
-
+\subsubsection{Version 3.30}
+\begin{itemize}\compresslist
 %
 	\item new routines \htmlref{{\tt nest2uniq}}{sub:nest2uniq} 
 	and \htmlref{{\tt uniq2nest}}{sub:uniq2nest} for conversion 
@@ -234,16 +264,11 @@ routine to avoid a bug specific to Intel's Ifort 15.0.2
 	\item CFITSIO version 3.20 (August 2009) or more now required
 \end{itemize}
 
-%--------------------------------------------
-\section{Older Changes}
-%--------------------------------------------
 
-{\mysmaller%
-\subsection[Changes between releases 3.00 and 3.20]{Changes between releases 3.00 and
-3.20}
+%\subsection[Changes between releases 3.00 and 3.20]{Changes between releases 3.00 and 3.20}
 \subsubsection{Version 3.20} % Dec 2014
 \label{sub:new3p20}
-\begin{itemize}
+\begin{itemize}\compresslist
 	\item \healpixns-F90 routines and facilities can now also be compiled with
 the free Fortran95 compiler \textbf{g95} (\htmladdnormallink{www.g95.org}{http://www.g95.org/})
 	\item a separate {\tt build} directory is used to store the objects,
@@ -267,9 +292,9 @@ affecting the external $B(\ell)$ reading in the F90 facilities
 
 \subsubsection{Version 3.11} % Apr 2013
 \label{sub:new3p11}
-\begin{itemize}
+\begin{itemize}\compresslist
 	\item {\tt libsharp} C routines used for Spherical Harmonics Transforms 
-	and introduced in \healpix\ 3.10
+	and introduced in \healpix 3.10
 	can now be compiled with any {\tt gcc} version.
 	\item bug correction in \htmlref{{\tt query\_disc}}{sub:query_disc}
 	routine in {\tt inclusive} mode
@@ -279,7 +304,7 @@ affecting the external $B(\ell)$ reading in the F90 facilities
 
 \subsubsection{Version 3.10} % Mar 2013
 \label{sub:new3p10}
-\begin{itemize}
+\begin{itemize}\compresslist
 	\item Support for {\tt cfitsio} ''Extended File Name Syntax'', and usage of {\tt
 libsharp} Spherical Harmonics Transform library. See \linklatexhtml{''Fortran
 Facilities''}{facilities.pdf}{facilities.htm} for details.
@@ -291,10 +316,12 @@ To {\em revert} to the original F90 implementation of these routines, the prepro
 variable {\tt DONT\_USE\_SHARP} must be set during compilation.}.
 \end{itemize}
 
-\subsection[Changes between releases 2.20 and 3.00]{Changes between releases 2.20
-and 3.00}
+% \subsection[Changes between releases 2.20 and 3.00]{Changes between releases 2.20
+% and 3.00}
+\subsection[Changes up to release 3.00]{Changes up to release 3.00}
+\subsubsection{Version 3.00}
 \label{sub:new3p00}
-\begin{itemize}
+\begin{itemize}\compresslist
 	\item all {\em input} FITS files can now be compressed (with a 
 {\tt .gz}, {\tt .Z}, {\tt .z}, or {\tt .zip} 
 extension) and/or remotely located (with a {\tt ftp://} or {\tt http://}
@@ -302,7 +329,7 @@ prefix). Besides, the \htmlref{fits2cl}{sub:fits2cl} routine, used to read
 external beam window functions from FITS files, supports (part of) the CFTISIO 
 \htmladdnormallink{Extended File Name Syntax}{http://heasarc.gsfc.nasa.gov/docs/software/fitsio/c/c_user/node81.html} in
 order to read an arbitrary extension identified by its number or its name. \\
-{\em Version 3.14 (March 2009) or newer of CFITSIO is required for \healpix \hpxversion.}
+{\em Version 3.14 (March 2009) or newer of CFITSIO is required for \healpix 3.00.}
 	\item%
 new code {\tt process\_mask} and new module {\tt mask\_tools} containing the routines
 \htmlref{dist2holes\_nest}{sub:dist2holes_nest}, 
@@ -321,10 +348,10 @@ inclusive
 mode.
 \end{itemize}
 
-\subsection[Changes between releases 2.14 and 2.20]{Changes between releases 2.14 and
-2.20}
+%\subsection[Changes between releases 2.14 and 2.20]{Changes between releases 2.14 and 2.20}
+\subsubsection{Version 2.20}
 \label{sub:new2p20}
-\begin{itemize}
+\begin{itemize}\compresslist
 \item Spherical Harmonics Transform routines now transparently call \htmladdnormallink{\tt
 libpsht}{http://libpsht.sourceforge.net} C routines, leading to a significant (2 to 4) speed-up factor. This
 concerns temperature and polarized transforms (\htmlref{alm2map}{sub:alm2map}, 
@@ -375,8 +402,9 @@ routines}{sub:pix_tools} are now up to 20\% faster.
 
 \end{itemize}
 
-\subsection[Changes between releases 2.13 and 2.14]{Changes between releases 2.13 and 2.14}
-\begin{itemize}
+%\subsection[Changes between releases 2.13 and 2.14]{Changes between releases 2.13 and 2.14}
+\subsubsection{Version 2.14}
+\begin{itemize}\compresslist
 \item In \htmlref{alm2map\_der}{sub:alm2map_der} routine, a numerical bug affecting the accuracy of the Stokes parameter derivatives 
 $\partial X/\partial\theta$, 
 $\partial^2 X/(\partial\theta\partial\phi\sin\theta)$, 
@@ -385,10 +413,11 @@ for $X=Q,U$ has been corrected. See \linklatexhtml{''Fortran
 Facilities''}{facilities.pdf}{facilities.htm} Appendix for details.
 \end{itemize}
 
-\subsection[Changes between releases 2.0 and 2.13]{Changes between releases 2.0 and 2.13}
-\begin{itemize}
+%\subsection[Changes between releases 2.0 and 2.13]{Changes between releases 2.0 and 2.13}
+\subsubsection{Versions 2.10 and 2.13}
+\begin{itemize}\compresslist
 \item New functions in version 2.13: 
-\begin{itemize}
+\begin{itemize}\compresslist
 	\item\htmlref{%
 get\_healpix\_data\_dir, %
 get\_healpix\_main\_dir, %
@@ -409,7 +438,7 @@ to write minimal FITS header
 parameters present in parameter file but not used by the code.
 \end{itemize}
 \item Improved routines:
-\begin{itemize}
+\begin{itemize}\compresslist
 \item \htmlref{query\_strip}{sub:query_strip}: the {\tt inclusive} option now
 returns {\em all} (and only) the pixels overlapping, even partially, with the
 strip
@@ -425,9 +454,10 @@ pixel weights.
 \end{itemize}
 
 %--------------------------------------------
-\subsection[Changes between releases 1.2 and 2.0]{Changes between releases 1.2 and 2.0}
+%\subsection[Changes between releases 1.2 and 2.0]{Changes between releases 1.2 and 2.0}
+\subsubsection{Version 2.0}
 Some new features have been added
-\begin{itemize}
+\begin{itemize}\compresslist
 \item Most routines dealing with maps and $a_{\ell m}$ (eg, create\_alm, map2alm, alm2map,
   convert\_inplace, convert\_nest2ring, udgrade\_nest, udgrade\_ring) or inputting or outputting  data (read\_*, write\_*)
  now accept both single and double precision arguments.
@@ -440,19 +470,19 @@ also parallelized with MPI (for distributed memory architecture)
 
 
 Some new routines have been introduced since version 1.2, as listed below.
-\begin{itemize}
+\begin{itemize}\compresslist
 \item New routines in version 2.0
 \begin{itemize}
-\item \htmlref{add\_dipole}{sub:add_dipole}
-\item \htmlref{alm2cl}{sub:alm2cl}
-\item \htmlref{alm2map\_der}{sub:alm2map_der}
-\item \htmlref{fits2cl}{sub:fits2cl} (replaces read\_asctab)
-\item \htmlref{nside2ntemplates}{sub:nside2ntemplates}
-\item \htmlref{plm\_gen}{sub:plm_gen}
-\item \htmlref{rand\_gauss}{sub:rand_gauss}, \htmlref{rand\_init}{sub:rand_init}, \htmlref{rand\_uni}{sub:rand_uni}
-\item \htmlref{same\_shape\_pixels\_nest}{sub:same_shape_pixels_xxx}, \htmlref{same\_shape\_pixels\_ring}{sub:same_shape_pixels_xxx}
-\item \htmlref{template\_pixel\_nest}{sub:template_pixel_xxx}, \htmlref{template\_pixel\_ring}{sub:template_pixel_xxx}
-\item \htmlref{write\_plm}{sub:write_plm} (replaces write\_dbintab)
+\item \htmlref{add\_dipole}{sub:add_dipole},
+\htmlref{alm2cl}{sub:alm2cl},
+\htmlref{alm2map\_der}{sub:alm2map_der},
+\htmlref{fits2cl}{sub:fits2cl} (replaces read\_asctab),
+\htmlref{nside2ntemplates}{sub:nside2ntemplates},
+\htmlref{plm\_gen}{sub:plm_gen},
+\htmlref{rand\_gauss}{sub:rand_gauss}, \htmlref{rand\_init}{sub:rand_init}, \htmlref{rand\_uni}{sub:rand_uni},
+\htmlref{same\_shape\_pixels\_nest}{sub:same_shape_pixels_xxx}, \htmlref{same\_shape\_pixels\_ring}{sub:same_shape_pixels_xxx},
+\htmlref{template\_pixel\_nest}{sub:template_pixel_xxx}, \htmlref{template\_pixel\_ring}{sub:template_pixel_xxx},
+\htmlref{write\_plm}{sub:write_plm} (replaces write\_dbintab).
 \end{itemize}
 \item New modules or modules with new name
 \begin{itemize}
@@ -473,7 +503,7 @@ fatal\_error}{sub:assert},
 \end{itemize}
 
 \item The following routines are superseded.
-\begin{itemize}
+\begin{itemize}\compresslist
 \item read\_asctab (replaced by \htmlref{fits2cl}{sub:fits2cl})
 \item write\_dbintab (replaced by \htmlref{write\_plm}{sub:write_plm})
 \end{itemize}
@@ -481,7 +511,8 @@ fatal\_error}{sub:assert},
 \end{itemize}
 
 %--------------------------------------------
-\subsection{Changes between releases 1.1 and 1.2}
+%\subsection{Changes between releases 1.1 and 1.2}
+\subsubsection{Version 1.2}
 Some new routines have been introduced since version 1.1, as listed below.
 % Most of the routines that already existed now have extended
 % capabilities.
@@ -489,9 +520,9 @@ Some new routines have been introduced since version 1.1, as listed below.
 % below. They all remain backward compatible (ie, they can be used with codes written
 % around version 1.1 without any edition).
 
-\begin{itemize}
+\begin{itemize}\compresslist
 \item New routines in version 1.2
-\begin{itemize}
+\begin{itemize}\compresslist
 \item \htmlref{angdist}{sub:angdist}, 
 \htmlref{complex\_fft}{sub:complex_fft}, 
 \htmlref{concatnl}{sub:concatnl}, 
@@ -516,7 +547,7 @@ parse\_double, parse\_init, parse\_int, parse\_lgt, parse\_long, parse\_real, pa
 \end{itemize}
 
 \item New modules or modules with new name
-\begin{itemize}
+\begin{itemize}\compresslist
 \item the modules {\tt extension} (C extensions), {\tt healpix\_fft} (FFT
 operations), {\tt paramfile\_io} (parameter parsing) have
 been introduced,
@@ -526,7 +557,7 @@ reflect its extended capabilities in manipulating FITS headers.
 
 \item The following routines are superseded. They have been moved to the
 {\tt obsolete} module.
-\begin{itemize}
+\begin{itemize}\compresslist
 \item ask\_inputmap, ask\_outputmap, ask\_lrange (initially in {\tt fitstools} module)
 \item setpar, getpar, anafast\_parser, anafast\_setpar, anafast\_getpar,
 hotspots\_parser, hotspots\_setpar, hotspots\_getpar, udgrade\_parser,

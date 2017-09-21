@@ -97,7 +97,7 @@ subroutine map_bad_pixels_KLOAD(map, fin, fout, nbads, verbose)
      write(*,'(a,1pe11.4)') 'blank value : ' ,fin
      do imap = 1, nmaps
         if (imiss(imap) > 0) then
-           write(*,'(i7,a,f7.3,a,1pe11.4)') &
+           write(*,'(i12,a,f7.3,a,1pe11.4)') &
                 &           imiss(imap),' missing pixels (', &
                 &           (100.0_KMAP*imiss(imap))/npix,' %),'// &
                 &           ' have been set to : ',fout
@@ -273,7 +273,7 @@ subroutine input_map8_KLOAD(filename, map, npixtot, nmaps, &
     endif
     !-----------------------------------------------------------------------
     if (imissing > 0) then
-       write(*,'(i7,a,f7.3,a,1pe11.4)') &
+       write(*,'(i12,a,f7.3,a,1pe11.4)') &
             &           imissing,' missing pixels (', &
             &           (100.*imissing)/npixtot,' %),'// &
             &           ' have been set to : ',fmiss_effct

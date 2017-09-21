@@ -27,7 +27,8 @@ for file in `ls -1 ${d}*.htm` ; do
 found=`grep -i viewport ${file} | wc -l`
 if [ ${found} == 0 ] ; then
     # echo "editing HTML ${file}"
-    cat ${file} | sed "s/${trigger}/${magic}\n&/g" > ${tmpfile}
+    cat ${file} | sed "s/${trigger}/${magic}\\
+&/g" > ${tmpfile}
     mv ${tmpfile} ${file}
 else
     echo "       SKIP              ${file}"

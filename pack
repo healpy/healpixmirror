@@ -285,6 +285,10 @@ mv ${docautodir}/pdf/*  doc/pdf
 \rm -rf DONE.txt TODO Bugs.txt
 \rm -rf include bin lib
 
+echoRed "copy favicons material"
+mkdir -p doc/html/images/favicons
+cp -p doc/www/htdocs/images/favicons/* doc/html/images/favicons/
+
 echoRed "removing web site material ..."
 \rm -rf doc/www
 

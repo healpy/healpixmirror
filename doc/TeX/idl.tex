@@ -102,6 +102,17 @@
 \externallabels{.}{/tmp/sub_labels.pl}
 \end{htmlonly}
 
+% macros for old changes
+\newcommand{\mysmaller}{% small in LaTeX, normal in html
+\latexhtml{\scriptsize}{\normalsize}}
+\newcommand{\compresstext}{% smaller vertical spacing in LaTeX, normal in html
+\latexhtml{%
+\setlength{\parsep}{-3ex}%
+\setlength{\topsep}{0ex}%
+\setlength{\parskip}{0ex}}{}}
+\newcommand{\compresslist}{% smaller vertical spacing in list in LaTeX, normal in html
+\setlength{\itemsep}{0ex}}{}
+
 %%%%
 \sloppy
 \setcounter{secnumdepth}{0}
@@ -244,9 +255,10 @@ orthview}}{idl:mollview} visualization routines:
 
 
 \section{Previous changes}
+{\mysmaller%
+\compresstext
 \subsubsection{Changes between releases 3.30 and 3.31}
 %--------------------------------
-{\footnotesize{%
 \begin{itemize}
 %--------------------------------
 	\item Improved support for \htmlref{GDL}{install:using_gdl};
@@ -257,12 +269,10 @@ orthview}}{idl:mollview} visualization routines:
     routines (2016-08-19).
 %--------------------------------
 \end{itemize}
-}}% end of footnotesize
 %--------------------------------
 
 \subsubsection{Changes between releases 3.20 and 3.30}
 %--------------------------------
-{\footnotesize{%
 \begin{itemize}
 %--------------------------------
 
@@ -295,12 +305,10 @@ to read best fit $C(\ell)$ model to Planck 2015 data.
     routines (2015-09-23).
 %
 \end{itemize}
-}}% end of footnotesize
 
 %-------------------------------------------
 \subsubsection{Changes between releases 3.11 and 3.20}
 %-------------------------------------------
-{\footnotesize{%
 \begin{itemize}
 %
 \item addition of \htmlref{{\tt ialteralm}}{{idl:ialteralm}} to modify Spherical
@@ -333,12 +341,10 @@ defined in \htmlref{{\tt planck\_colors}}{{idl:planck_colors}}
     routines (2014-11-10).
 %
 \end{itemize}
-}}% end of footnotesize
 
 %-------------------------------------------
 \subsubsection{Changes between releases 3.00 and 3.11}
 %--------------------------------
-{\footnotesize{%
 \begin{itemize}
 %--------------------------------
 
@@ -382,11 +388,9 @@ to read best fit $C(\ell)$ model to Planck 2013 + external data.
 	routines (2013-02-08).
 \end{itemize}
 \end{itemize}
-}}%end of {\footnotesize{
 
 \subsubsection{Changes between releases 2.20 and 3.00}
 %--------------------------------
-{\footnotesize{%
 \begin{itemize}
 %--------------------------------
 \item Previous edition (version 3.0)
@@ -438,7 +442,6 @@ maps
 	\item update of {\tt astron} library routines (01-Feb-2012).
 \end{itemize}
 \end{itemize}
-%%}}% end of footnotesize
 
 \subsubsection{Changes between release 2.0 and 2.20}
 Several routines have been added or improved since version 2.0, as listed below.
@@ -449,7 +452,6 @@ Using 64 bit integers available since version 5.2 of IDL the maximum resolution 
 from $2^{13}=8192$ to $2^{29}=536870912$, corresponding to $3.46\ 10^{18}$
 pixels on the sphere.
 
-}}%end of {\footnotesize{
 
 %\begin{itemize}
 
@@ -458,7 +460,6 @@ pixels on the sphere.
 %
 %--------------------------------
 %\end{itemize}
-{\footnotesize{%
 \begin{itemize}
 %--------------------------------
 \item Recent edition (versions 2.20 and 2.20a)
@@ -651,7 +652,7 @@ given so that these routines work under Mac OS X 10.4 and 10.5.
 \end{itemize}
 \end{itemize}
 %--------------------------------
-}} %% end of footnotesize
+} %% end of mysmaller
 %--------------------------------
 
 % \subsubsection{Changes between release 1.2 and 2.0}

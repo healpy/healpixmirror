@@ -52,6 +52,17 @@
  \newcommand{\mytarget}[1]{\label{#1}}
 \end{htmlonly}
 
+% macros for old changes
+\newcommand{\mysmaller}{% small in LaTeX, normal in html
+\latexhtml{\scriptsize}{\normalsize}}
+\newcommand{\compresstext}{% smaller vertical spacing in LaTeX, normal in html
+\latexhtml{%
+\setlength{\parsep}{-3ex}%
+\setlength{\topsep}{0ex}%
+\setlength{\parskip}{0ex}}{}}
+\newcommand{\compresslist}{% smaller vertical spacing in list in LaTeX, normal in html
+\setlength{\itemsep}{0ex}}{}
+
 \sloppy
 \setcounter{secnumdepth}{0}
 \setcounter{tocdepth}{1}
@@ -216,33 +227,61 @@ with $X,Y \in \{T,E,B\}$.
 %--------------------------------------------
 %-------------------------------------------- CHANGES
 %--------------------------------------------
-\section[Changes between releases 3.20 and \hpxversion]{%
-Changes between releases 3.20 and \hpxversion}
-\subsection{Version \hpxversion}
+\section[Changes between releases 3.31 and \hpxversion]{%
+Changes between releases 3.31 and \hpxversion}
+
+%from install.tex
 \begin{itemize}
+\item The facilities 
+\htmlref{\texttt{anafast}}{fac:anafast},
+\htmlref{\texttt{median\_filter}}{fac:median_filter},
+\htmlref{\texttt{smoothing}}{fac:smoothing}, and
+\htmlref{\texttt{ud\_grade}}{fac:ud_grade} 
+test the value of the \texttt{POLCCONV} FITS keyword when reading a polarized map,
+and interpret the polarization accordingly, 
+as described in the \htmlref{note on POLCCONV}{intro:polcconv} in \linklatexhtml{The \healpix Primer}{intro.pdf}{intro.htm}.
+%
+\item%
+\htmlref{\texttt{median\_filter}}{fac:median_filter} faster by moving an internal array from heap to stack; does not crash anymore when dealing with empty data sets; 
+slightly different output when median is computed over an even number of pixels $n\ge 100$, sorted in $[1,n]$,
+the output is $d(n/2)$ instead of $(d(n/2)+d(n/2+1))/2$ previously. Result remain $d(n/2+1)$ for odd $n$.
+\end{itemize}
+
+%--------------------------------------------
+\section[Older Changes]{Older Changes}
+%--------------------------------------------
+
+%%%%{\footnotesize{%
+{\mysmaller%
+\compresstext
+%%%%%%%%%%%%%%%%%%%
+\subsection[Changes between releases 3.00 and 3.31]{%
+Changes between releases 3.00 and 3.31}
+
+%\setlength{\partopsep}{0}
+
+\subsubsection{Version 3.31}
+\begin{itemize}\compresslist
 	\item Bug correction in \htmlref{{\tt input\_map}}{sub:input_map} routine for reading of polarized multi-HDU cut sky FITS files;
 	\item Introduction of 
 \mylink{fac:alteralm:winfiledir_in}{{\tt winfiledir\_*}} and 
 \mylink{fac:alteralm:windowfile_in}{{\tt windowfile\_*}} qualifiers in \htmlref{{\tt alteralm}}{fac:alteralm} facility.
 \end{itemize}
 
-\subsection{Version 3.30}
-\begin{itemize}
+\subsubsection{Version 3.30}
+\begin{itemize}\compresslist
 	\item \htmlref{{\tt anafast}}{fac:anafast} now produces nine spectra 
 	(TT, EE, BB, TE, TB, EB, ET, BT and BE), instead of six previously,
           when analyzing two polarized maps
 	\item CFITSIO version 3.20 (August 2009) or more now required
 \end{itemize}
 
-{\footnotesize{%
-%%%%%%%%%%%%%%%%%%%
-\section[Older Changes]{Older Changes}
 
-\subsection[Changes between releases 3.00 and 3.20]{%
-Changes between releases 3.00 and 3.20}
+% \subsection[Changes between releases 3.00 and 3.20]{%
+% Changes between releases 3.00 and 3.20}
 
 \subsubsection{Version 3.20}
-\begin{itemize}
+\begin{itemize}\compresslist
 	\item \healpixns-F90 routines and facilities can now also be compiled with
 the free Fortran95 compiler \textbf{g95} (\htmladdnormallink{www.g95.org}{http://www.g95.org/})
  	\item a separate {\tt build} directory is used to store the objects,
@@ -263,14 +302,14 @@ affecting the external $B(l)$ reading in the F90 facilities
 \end{itemize}
 
 \subsubsection{Version 3.11}
-\begin{itemize}
+\begin{itemize}\compresslist
 	\item {\tt libsharp} C routines used for Spherical Harmonics Transforms 
 and introduced in \healpix\ 3.10
 can now be compiled with any {\tt gcc} version.
 \end{itemize}
 
 \subsubsection{Version 3.10}
-\begin{itemize}
+\begin{itemize}\compresslist
 %
 	\item all Fortran facilities now support most of {\tt cfitsio}'s ''\htmladdnormallink{Extended File
 Name Syntax}{http://heasarc.gsfc.nasa.gov/docs/software/fitsio/filters.html}'' features,
@@ -305,9 +344,10 @@ newer versions and was not present in versions 4.2.* and 4.3.*.
 %
 \end{itemize}
 
-\subsection[Changes between releases 2.20 and 3.00]{%
-Changes between releases 2.20 and 3.00}
-\begin{itemize}
+\subsection[Changes up to release 3.00]{%
+Changes up to release 3.00}
+\subsubsection{Version 3.00}
+\begin{itemize}\compresslist
 	\item all {\em input} FITS files can now be compressed (with a 
 {\tt .gz}, {\tt .Z}, {\tt .z}, or {\tt .zip} 
 extension) and/or remotely located (with a {\tt ftp://} or {\tt http://} prefix).
@@ -324,9 +364,10 @@ analyzed.
 \end{itemize}
 
 
-\subsection[Changes between releases 2.14 and 2.20]{Changes between releases 2.14 and
-2.20}
-\begin{itemize}
+% \subsection[Changes between releases 2.14 and 2.20]{Changes between releases 2.14 and
+% 2.20}
+\subsubsection{Version 2.20}
+\begin{itemize}\compresslist
 	\item faster 
 \htmlref{{\tt synfast}}{fac:synfast},
 \htmlref{{\tt anafast}}{fac:anafast},
@@ -339,9 +380,10 @@ See
 \linklatexhtml{''F90 Subroutines Overview''}{subroutines.pdf}{subroutines.htm}
 for details.
 
-\subsection[Changes between releases 2.13 and 2.14]{Changes between releases 2.13 and
-2.14}
-\begin{itemize}
+% \subsection[Changes between releases 2.13 and 2.14]{Changes between releases 2.13 and
+% 2.14}
+\subsubsection{Version 2.14}
+\begin{itemize}\compresslist
 \item In \htmlref{{\tt synfast}}{fac:synfast} facility, a numerical bug affecting the accuracy of the Stokes parameter derivatives 
 $\partial X/\partial\theta$, 
 $\partial^2 X/(\partial\theta\partial\phi\sin\theta)$, 
@@ -349,17 +391,18 @@ $\partial^2 X/\partial \theta^2$,
 for $X=Q,U$ has been corrected. See \htmlref{this appendix}{fac:sec:bug_synder} for details.
 \end{itemize}
 
-\subsection[Changes between releases 2.0 and 2.1]{Changes between releases 2.0 and
-2.1}
-\begin{itemize}
+%\subsection[Changes between releases 2.0 and 2.1]{Changes between releases 2.0 and 2.1}
+\subsubsection{Version 2.10}
+\begin{itemize}\compresslist
 \item The \htmlref{{\tt anafast}}{fac:anafast} facility can now compute the cross-correlations of two different
 maps. 
 \item The \htmlref{{\tt sky\_ng\_sim}}{fac:sky_ng_sim} facility (Rocha et al, 2005), to produce non-Gaussian CMB temperature maps,
 has been added.
 \end{itemize}
 
-\subsection[Changes between releases 1.2 and 2.0]{Changes between releases 1.2 and 2.0}
-\begin{itemize}
+%\subsection[Changes between releases 1.2 and 2.0]{Changes between releases 1.2 and 2.0}
+\subsubsection{Version 2.00}
+\begin{itemize}\compresslist
 \item faster implementation of $a_{\ell m}$ related facilities, generalization of
   OpenMP parallelization, and availability of MPI parallelized routines (see
   mpi\_* routines in {\bf Fortran90 Subroutines Overview} document).
@@ -369,7 +412,7 @@ has been added.
 \item single and double precision implementation of most facilities (see {\bf {Input and Output Precision}}
   page~\pageref{page:ioprec})
 \end{itemize}
-}}%%%%%%%%%%%%%%%%%%
+}%%%%%%%%%%%%%%%%%%
 %--------------------------------------------
 %-------------------------------------------- END of CHANGES
 %--------------------------------------------

@@ -20,13 +20,14 @@ EOF
   exit
 fi
 
+dir=/sw2/bin/
 # Fix each PNG image
 for file in `ls -1 $1*.png`
 do
 #  echo Fixing $file...
-  pngtopnm $file | \
-    pnmcrop -black | \
-    pnmtopng -transparent "#B3B3B3" > img_fixed.png
+  ${dir}pngtopnm $file | \
+    ${dir}pnmcrop -black | \
+    ${dir}pnmtopng -transparent "#B3B3B3" > img_fixed.png
 #  convert img_fixed.png -trim img_fixed.png
   mv -f img_fixed.png $file
 done

@@ -644,15 +644,6 @@ is hidden; \seealso \mylink{idl:mollview:customize}{CUSTOMIZE} \\
         central point is not indicated; \seealso \mylink{idl:mollview:customize}{CUSTOMIZE}  \\
  
 
-%%%%%%%%%%%%%%%%%
-\end{tabular}
-\mollbacktotop
-%-----------------------------------------------------------
-\begin{tabular}{p{\sizeone} p{\sizetwo} p{\sizethr}}
-\hline  
-\textbf{name} & \textbf{routines} & \textbf{\ description} \\ \hline
-%                   &   &                            \\ %%% for presentation
-%%%%%%%%%%%%%%%%%
 
 {OFFSET=}\mytarget{idl:mollview:offset} & \mylink{idl:mollview:routines}{all}& \parbox[t]{\hsize}{scalar additive factor to be applied to the valid data \\
 	the data plotted is of the form Factor*(data + Offset) \\
@@ -663,8 +654,19 @@ is hidden; \seealso \mylink{idl:mollview:customize}{CUSTOMIZE} \\
 	\default {0.0} } \\
 	
 
+%%%%%%%%%%%%%%%%%
+\end{tabular}
+\mollbacktotop
+%-----------------------------------------------------------
+\begin{tabular}{p{\sizeone} p{\sizetwo} p{\sizethr}}
+\hline  
+\textbf{name} & \textbf{routines} & \textbf{\ description} \\ \hline
+%                   &   &                            \\ %%% for presentation
+%%%%%%%%%%%%%%%%%
+
 {OUTLINE=}\mytarget{idl:mollview:outline} & \mylink{idl:mollview:routines}{CGMO}&  \parbox[t]{\hsize}{
-	IDL structure, structure of structures, or array of structures, 
+	IDL structure, array of (same size) structures, or structure of (mixed size) structures 
+     (see \mylink{idl:mollview:outline:note}{Note below}),  
        containing the description of one (or several) outline(s) to
       be overplotted on the final map.\\
            For each contour or point list, the corresponding (sub)structure should
@@ -691,8 +693,13 @@ as SYMSIZE in IDL), \default {1}\\
 	Notes: when applicable, the vertices are connected by segments of geodesics. To
 	obtain a better looking outline, increase the number of vertices
 	provided. The outline does not have to be closed. The procedure will NOT
-	attempt to close the outline.\\Several outlines can be overplotted at
-once by gathering the respective structures into one meta-structure or an array.\\ \seealso{\mylink{idl:mollview:coord}{Coord}, \mylink{idl:mollview:graticule}{Graticule}}} \\
+	attempt to close the outline. See 
+\mylink{idl:mollview:example2}{Example \#2} below.
+\\{\bf Note:}\mytarget{idl:mollview:outline:note} several outlines 
+(let's say {\tt circle} and \mylink{idl:mollview:example2}{{\tt triangle}})
+ can be overplotted at once by gathering the respective structures into an array 
+({\tt outline=[circle,triangle]}) if they have the same features and in particular the same number of vertices, or in
+one meta-structure ({\tt outline=\{s1:circle,s2:triangle\}}) in all cases.\\ \seealso{\mylink{idl:mollview:coord}{Coord}, \mylink{idl:mollview:graticule}{Graticule}}} \\
  
 
 %%%%%%%%%%%%%%%%%
@@ -719,7 +726,7 @@ The PDF file is produced from a PostScript file using the script \htmladdnormall
 If the resulting PDF file is not properly rotated (ie landscape orientation instead of portrait), 
 and/or has excessive white margins, the scripts
 \htmladdnormallink{{\tt pdf90}}{https://linux.die.net/man/1/pdf90}, part of the package 
-\htmladdnormallink{{\tt pdfjam}}{http://www2.warwick.ac.uk/fac/sci/statistics/staff/academic-research/firth/software/pdfjam/}, and 
+\htmladdnormallink{{\tt pdfjam}}{http://www2.warwick.ac.uk/fac/sci/statistics/staff/academic-research/firth/software/pdfjam/}, and/or 
 \htmladdnormallink{{\tt pdfcrop}}{http://pdfcrop.sourceforge.net}, 
 often included in PDFTeX installations, 
 can respectively prove very useful.\\
