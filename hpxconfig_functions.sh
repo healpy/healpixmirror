@@ -1569,7 +1569,7 @@ IdentifyF90Compiler () {
 		    FFLAGS="$IFCINC -cm -w -sox -vec_report0"
 		    PRFLAGS="-openmp -openmp_report0" # Open MP enabled # June 2007
 		else # new syntax, supported since version 15, required in 18
-		    FFLAGS="$IFCINC -cm -w -sox"
+		    FFLAGS="$IFCINC -cm -w -sox -qopt-report=0"
 		    PRFLAGS="-qopenmp" # Open MP enabled # Sept 2017
 		fi
 		MOD="$IFCMOD"

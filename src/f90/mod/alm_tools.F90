@@ -930,8 +930,8 @@ contains
     write(*,9001) '    ',zbounds(1),zbounds(2)
     print*,'    See documentation for details.'
     print*,' -------------------------------------'
-9000 format (a,g12.6)
-9001 format (a,g12.6,g12.6)
+9000 format (a,g13.6)
+9001 format (a,g13.6,g13.6)
 
     return
   end subroutine warning_oldbounds

@@ -438,7 +438,7 @@
              & sqrt(sum(mono_dip(1:3)**2))," "//trim(units_map(1))
         long_dip =      phi_dip  /PI*180.0
         lat_dip  = 90.0-theta_dip/PI*180.0
-        write(unit=*,fmt="(a,g9.3,', ',g9.3,a)")  &
+        write(unit=*,fmt="(a,g10.3,', ',g10.3,a)")  &
              & "(long.,lat.) = (",long_dip,lat_dip,") Deg"
      endif
 
