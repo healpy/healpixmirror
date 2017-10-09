@@ -204,7 +204,7 @@ class spline: public needlet_base
       }
   };
 
-class basak: public needlet_base
+class cosine: public needlet_base
   {
   private:
     std::vector<int> llim;
@@ -215,7 +215,7 @@ class basak: public needlet_base
       }
 
   public:
-    basak (const std::vector<int> &llim_) : llim(llim_)
+    cosine (const std::vector<int> &llim_) : llim(llim_)
       {
       planck_assert(llim.size()>=3, "llim vector needs at least 3 entries");
       if ((llim[0]==0) && (llim[1]==0))
@@ -256,12 +256,12 @@ template<typename T> void needlet_tool (paramfile &params)
   bool split = mode=="split";
   unique_ptr<needlet_base> needgen;
   string ntype = params.template find<string>("needlet_type");
-  if (ntype=="basak")
+  if (ntype=="cosine")
     {
     vector<string> lps=tokenize(params.template find<string>("llim"),',');
     vector<int> lpeak;
     for (auto x:lps) lpeak.push_back(stringToData<int>(x));
-    needgen.reset(new basak(lpeak));
+    needgen.reset(new cosine(lpeak));
     }
   else if (ntype=="needatool")
     needgen.reset(new needlet(params.template find<double>("B")));

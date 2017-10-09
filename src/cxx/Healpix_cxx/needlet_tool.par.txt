@@ -7,7 +7,7 @@ mode (string):
 needlet_type (string):
   needatool: use needlets as defined by Pietrobon et al., ApJ 723, 1 (2010),
              following the construction in section 3
-  basak    : use needlets as defined by Basak et al., MNRAS 419, 1163 (2012),
+  cosine   : use needlets as defined by Basak et al., MNRAS 419, 1163 (2012),
              following the equations in section 3
   sdw      : use needlets as defined by Leistedt et al., A&A 558, A128 (2013),
              following equations 10 to 15
@@ -15,7 +15,7 @@ needlet_type (string):
              al., A&A 446, 1191 (2006), but with band number ascending towards
              higher resolutions.
 
-if (needlet_type=="basak"):
+if (needlet_type=="cosine"):
   llim: string
     For n bands, this list must contain n+2 comma-separated integers:
       - start of band 1
@@ -76,7 +76,7 @@ write map data, but spherical harmonic coefficients. This is done because
 
 Splitting and then reassembling a set of a_lm should accurately reproduce the
 input a_lm at all l starting from the first peak (which is 1 for "needatool" and
-"sdw" needlets, but may be different for "basak" wavelets).
+"sdw" needlets, but may be different for "cosine" wavelets).
 The remaining information in the input data (monopole for "needatool" and "sdw",
-part of the coefficients below the first peak for "basak") is currently
+part of the coefficients below the first peak for "cosine") is currently
 discarded, but could also be written to an additional output file.
