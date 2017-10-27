@@ -25,20 +25,20 @@
 ;  For more information about HEALPix see http://healpix.sourceforge.net
 ;
 ; -----------------------------------------------------------------------------
-pro write_fits_sb, filename, prim_st, exten_st, Coordsys=coordsys, Nested=nested, Ring=ring, Ordering=ordering, Partial=Partial_usr, Nside=nside_usr, Extension=extension_id, Nothealpix=nothealpix, help=help
+pro write_fits_sb, filename, prim_st, exten_st, Coordsys=coordsys, Nested=nested, Ring=ring, Ordering=ordering, Partial=Partial_usr, Nside=nside_usr, Extension=extension_id, Nothealpix=nothealpix, help=help, hdr=hdr_u, xthdr=xthdr_u
 ;+
 ; writes a FITS file with data contained in a BINTABLE extension
 ;
 ; CALLING SEQUENCE:
 ;    WRITE_FITS_SB, filename, prim_st, exten_st, [Coordsys=, Ring=, Nested=,
-;    Ordering=, Partial=, Nside=, Extension=, Nothealpix=, Help=]
+;    Ordering=, Partial=, Nside=, Extension=, Nothealpix=, Help=, Xthdr=]
 ;
 ; INPUTS:
 ;    filename = name of the output file 
 ;
 ;    prim_st  = structure containing the primary unit
 ;    with prim_st.hdr = prim_st.(0) : primary header to be added to the 
-;       minimal header
+;       minimal header (can be over-rules with HDR)
 ;    with prim_st.(1) = primary image (if any)
 ;
 ;    ** note ** the healpix standard is to write all the information in the extension units,
@@ -61,7 +61,7 @@ pro write_fits_sb, filename, prim_st, exten_st, Coordsys=coordsys, Nested=nested
 ; OPTIONAL INPUT
 ;    exten_st = structure containing the extension unit if any
 ;    with exten_st.hdr = exten_st.(0) = extension header to be added to the
-;        minimal header
+;        minimal header (will be over-ruled by XTHDR)
 ;    with exten_st.(1)   = 1st column of the BINTABLE
 ;    with exten_st.(2)   = 2nd column of the BINTABLE if any
 ;    ...
@@ -91,6 +91,9 @@ pro write_fits_sb, filename, prim_st, exten_st, Coordsys=coordsys, Nested=nested
 ;
 ;   Nothealpix = if set, the data set to be output is not a Healpix map, and the
 ;   restriction on the number of pixels, Nside, Ordering, Ring, Nested do not apply
+;
+;   Hdr = FITS Header for primary HDU, will over-rule  prim_st.hdr
+;   Xthdr = FITS Header for extension, will over-rule exten_st.hdr
 ;
 ; EXAMPLES
 ;  to write out in 'map.fits' the RING-ordered Healpix maps 
@@ -134,6 +137,7 @@ pro write_fits_sb, filename, prim_st, exten_st, Coordsys=coordsys, Nested=nested
 ;  2017-04-25: increased buffersize from 2MB to 1GB, 
 ;     which makes large difference on some systems (eg, NERSC's edison)
 ;     but none on others (eg, my mac)
+;  2017-10-27: added hdr and xthdr,  use UTC date
 ;-
 ;
 ; NB : do NOT use 'T' or 'F' as the tag names
@@ -148,20 +152,20 @@ endif
 if n_params() ne 3 then begin
     message,' Invalid number of arguments ',/nopref,/info 
     message,'Syntax : WRITE_FITS_SB, filename, prim_st, exten_st, $ ',/nopref,/info,/noname
-    message,'    [Coordsys=, Ring=, Nested=, Ordering=, Partial=, Nside=, Extension=, Nothealpix=, Help=]',/nopref,/noname,/info
+    message,'    [Coordsys=, Ring=, Nested=, Ordering=, Partial=, Nside=, Extension=, Nothealpix=, Hdr=, Xthdr=, Help=]',/nopref,/noname,/info
     return
 endif
 
 init_astrolib
 
 ;-------------------------------------------------------------------------------
-create = 1 - keyword_set(extension_id)
-do_hpx = 1 - keyword_set(nothealpix)
+create = ~keyword_set(extension_id)
+do_hpx = ~keyword_set(nothealpix)
 
 if (create) then begin
     hdr = strarr(1)
     image = 0
-    IF (N_TAGS(prim_st) GE 1) THEN hdr   = prim_st.(0)
+    IF (N_TAGS(prim_st) GE 1) THEN hdr   = defined(hdr_u) ? hdr_u : prim_st.(0)
     IF (N_TAGS(prim_st) GE 2) THEN begin
         image = prim_st.(1)
         if (n_elements(image) gt 1) then begin
@@ -183,8 +187,8 @@ if (create) then begin
     CHECK_FITS, image, h0, /UPDATE, /FITS
 
 ; update date to Y2K
-    fdate = today_fits()
-    SXADDPAR,h0,'DATE',fdate,' Creation date (CCYY-MM-DD) of FITS header'
+    fdate = today_fits(/utc)
+    SXADDPAR,h0,'DATE',fdate,' Creation date (CCYY-MM-DD UTC) of FITS header'
 
 ; add header information given by user
     sxdelpar,hdr,['BITPIX','NAXIS','NAXIS1','NAXIS2','DATE','SIMPLE','EXTEND'] ; remove redundant information
@@ -208,7 +212,8 @@ endif
 ;------------------------------
 IF (N_ELEMENTS(exten_st) EQ 0) THEN message,'empty data set' ; undefined
 IF (N_TAGS(exten_st)     EQ 0) THEN message,'invalid data structure' ; not a structure
-xhdr = exten_st.(0)
+;xhdr = exten_st.(0)
+xhdr = defined(xthdr_u) ? xthdr_u : exten_st.(0)
 if (n_elements(xhdr) eq 1) then xhdr = [xhdr] ; make sure it is an array
 number = n_tags(exten_st)
 tags = tag_names(exten_st)
@@ -297,7 +302,7 @@ for i=1, number-1 do begin
     endif
 endfor
 
-; add the user defined header 
+; add the user defined header (xhdr) to xthdr
 iend = WHERE( STRUPCASE(STRMID(xthdr,0,8)) EQ 'END     ', nend)
 xh_tmp = (nend eq 1) ? xthdr[0:iend[0]-1] : xthdr
 for i=0, n_elements(xhdr)-1 do begin

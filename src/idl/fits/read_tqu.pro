@@ -25,6 +25,26 @@
 ;  For more information about HEALPix see http://healpix.sourceforge.net
 ;
 ; -----------------------------------------------------------------------------
+pro selectread_wrapper, file, map, header=header, extension=extension_id, no_pdu=no_pdu, level=level,silent=silent
+obsnpix = getsize_fits(file, type=filetype,nside=nside)
+if (filetype eq 3) then begin
+    if ~keyword_set(silent) then begin
+        message,/info,level=level,'WARNING: input file '+file+' is in cut-sky format, which can be read properly with READ_FITS_CUT4.'
+        message,/info,level=level,'Here a full sky map will be generated, replacing missing data with 0.'
+    endif
+    read_fits_cut4, file, pix, c2, c3, c4, extension=extension_id, xhdr=header
+    map = make_array(nside2npix(nside), 3, type=size(c2,/type))
+    map[pix,0] = c2
+    map[pix,1] = c3
+    map[pix,2] = c4   
+endif else begin
+    selectread, file, map, extension=extension_id, no_pdu=no_pdu, header=header
+endelse
+
+
+return
+end
+
 PRO read_tqu, fitsfile, TQU, EXTENSION=extension_id, HDR = hdr, XHDR = xhdr, HELP = help, NSIDE=nside, ORDERING=ordering, COORDSYS=coordsys
 
 ;+
@@ -90,6 +110,8 @@ PRO read_tqu, fitsfile, TQU, EXTENSION=extension_id, HDR = hdr, XHDR = xhdr, HEL
 ;       May 2005, EH, replaces FINDFILE by FILE_TEST
 ;       Jan 2009: calls init_astrolib
 ;       Jan 2013: allows Extension to be a string
+;       Aug 2017: produces a full-sky map (with empty pixels set to 0) when reading
+;           a FITS file in cut-sky format
 ;
 ; requires the THE IDL ASTRONOMY USER'S LIBRARY 
 ; that can be found at http://idlastro.gsfc.nasa.gov/homepage.html
@@ -153,11 +175,11 @@ for i = x0,xf do begin
     ; read data
     if (n_ext eq 1) then begin
         ; if only 1 extension: read directly into TQU
-        selectread, fitsfile, tqu, header = xhdr, exten=exten, /no_pdu
+        selectread_wrapper, fitsfile, tqu, header = xhdr, exten=exten, /no_pdu,level=-1,silent=0
         nmaps = n_elements(tqu[0,*])
     endif else begin
         ; if several extensions, read into tmp array, TO BE IMPROVED
-        selectread, fitsfile, tmp, header = xhdr, exten=exten, /no_pdu
+        selectread_wrapper, fitsfile, tmp, header = xhdr, exten=exten, /no_pdu,level=-1,silent=(i ne x0)
         npix  = n_elements(tmp[*,0])
         nmaps = n_elements(tmp[0,*])
         if (i eq 0) then begin

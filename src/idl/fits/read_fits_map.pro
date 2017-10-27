@@ -106,6 +106,8 @@ PRO READ_FITS_MAP, filename, T_sky, hdr, exthdr, $
 ;  Feb 2012: calls SELECTREAD which is much faster than FITS_READ
 ;    and can read Nside=8192 sky maps
 ;  Jan 2013: added HELP= and EXTENSION= keywords
+;  Aug 2017: produces a full-sky map (with empty pixels set to 0) when reading
+;           a FITS file in cut-sky format
 ;
 ; requires the THE IDL ASTRONOMY USER'S LIBRARY 
 ; that can be found at http://idlastro.gsfc.nasa.gov/homepage.html
@@ -174,11 +176,23 @@ if (count eq 0) then coordsys = sxpar(hdr,'SKYCOORD', count=count)
 if (count eq 0) then coordsys = ' ' else coordsys = strtrim(coordsys,2)
 
 ; actual reading
-selectread, filename, T_sky, exten=extension_id, /no_pdu
+obsnpix = getsize_fits(exthdr,/header,type=filetype)
+if (filetype eq 3) then begin
+    message,/info,'WARNING: input file '+filename+' is in cut-sky format, which can be read properly with READ_FITS_CUT4.'
+    message,/info,'Here a full sky map will be generated, replacing missing data with 0.'
+    read_fits_cut4, filename, pix, c2, c3, c4, extension=extension_id
+    T_sky = make_array(nside2npix(nside), 3, type=size(c2,/type))
+    T_sky[pix,0] = c2
+    T_sky[pix,1] = c3
+    T_sky[pix,2] = c4   
+endif else begin
+    selectread, filename, T_sky, extension=extension_id, /no_pdu
+endelse
 
 ; find pixels to keep
 ;max_pix  = n_elements(T_sky[*,0]) - 1L ; costly in memory
-max_pix = (size(T_sky))[1] - 1LL
+;max_pix = (size(T_sky))[1] - 1LL
+max_pix = (size(T_sky,/dim))[0] - 1LL
 firstpix = 0LL
 lastpix = max_pix
 cut = 0

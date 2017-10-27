@@ -66,13 +66,13 @@ pro change_polcconv, file_in, file_out, i2c=i2c, c2i=c2i, c2c=c2c, i2i=i2i, forc
 ;          C2C: does NOT change coordinate system
 ;              -if POLCCONV is found with value 'IAU', program will issue error
 ;              message and no file is written
-;              -in all other case POLCCONV is set/reset to 'COSMO', but
+;              -in all other cases POLCCONV is set/reset to 'COSMO', but
 ;               data is NOT changed
 ;
 ;          I2I: does NOT change coordinate system
 ;              -if POLCCONV is found with value 'COSMO', program will issue error
 ;              message and no file is written
-;              -in all other case POLCCONV is set/reset to 'IAU', but
+;              -in all other cases POLCCONV is set/reset to 'IAU', but
 ;               data is NOT changed
 ;
 ;          FORCE: if set, the value of POLCCONV read from the FITS header is
@@ -105,9 +105,10 @@ pro change_polcconv, file_in, file_out, i2c=i2c, c2i=c2i, c2c=c2c, i2i=i2i, forc
 ; MODIFICATION HISTORY:
 ;          v1.0, May 2005, Eric Hivon
 ;          v1.1, Oct 2006, Eric Hivon: added /force
+;          v2.0, Oct 2017, Eric Hivon: supports Planck formats
 ;-
 
-
+t0 = systime(1)
 syntax = 'CHANGE_POLCCONV, File_In , File_Out [, /I2C, /C2I, /C2C, /I2I, /FORCE]'
 
 if (n_params() ne 2) then begin
@@ -125,9 +126,24 @@ if (sum ne 1) then begin
     print,syntax
     message,'One and only one keyword out of /I2C, /C2I, /C2C, /I2I should be set'
 endif
+if do_c2c then edit = 'C2C'
+if do_c2i then edit = 'C2I'
+if do_i2c then edit = 'I2C'
+if do_i2i then edit = 'I2I'
+
+
+if ~file_test(file_in) then begin
+    message,'File '+file_in+' not found'
+endif
+
+if file_same(file_in, file_out) then begin
+    print, syntax
+    message,'For safety reasons, the input and output files must be different.'
+endif
 
 ; full sky TQU format (with extra extension for correlation)
 ; WMAP format (extra column and extra extension with correlation)
+; Planck polarized maps (with extran columns for correlation)
 ; cut sky format (multi extension ?)
 
 kw_pol = 'POLCCONV'
@@ -136,96 +152,164 @@ kw_cos = 'COSMO'
 fits_info, File_In, /silent, n_ext = n_ext
 junk = getsize_fits(File_In, type = type)
 
-if (n_ext ne 3 and type eq 3) then begin
-    message,'Unpolarised format cut sky format. No changes made',/info
+if ~ (type eq 2 || type eq 3) then begin
+    message,'Input file is not a HEALPix map'
     return
 endif
 
-print,file_in, file_out
+; if (n_ext ne 3 and type eq 3) then begin
+;     message,'Unpolarised format cut sky format. No changes made',/info
+;     return
+; endif
+
+print,file_in+' -> ['+edit+'] -> '+file_out
+modify_map = (do_c2i || do_i2c)
+
 for i=0,n_ext-1 do begin
     ; read data
     if (type eq 3) then begin
         read_fits_cut4, File_In, pixel, signal, n_obs, serror, hdr=hdr, xhdr=xhdr, ext = i
     endif else begin
-        read_tqu, File_In, tqu, hdr=hdr, xhdr = xhdr, ext = i
+        ;read_tqu, File_In, tqu, hdr=hdr, xhdr = xhdr, ext = i
+        read_fits_s, File_In, prim, xtn, ext=i
+        hdr = prim.hdr  & xhdr = xtn.hdr
     endelse
+    names   = sxpar(xhdr,'TTYPE*')
+    extname = sxpar(xhdr,'EXTNAME')
     xhdr_tmp = [hdr,xhdr]
     polcconv = strupcase(sxpar(xhdr_tmp,KW_POL,count=count))
     in_xxx = 1 & in_iau = 0 & in_cos = 0
-    modify_map = (do_c2i or do_i2c)
+    str_ext = 'extension #'+strtrim(i,2)+' ('+strtrim(extname,2)+')'
+    ;nmaps = n_elements(tqu[0,*])
+    nmaps = n_elements(names)
+    xQU = (nmaps ge 3) ? product(strcmp(names[1:2],['Q','U'],1,/fold_case),/preserve):0 ; first 3 column names are *,Q*,U*
     
     case count of
         0: in_xxx = 1
         1: begin
             in_iau = (strtrim(polcconv) eq KW_IAU)
             in_cos = (strtrim(polcconv) eq KW_COS)
-            in_xxx = 1 - (in_iau + in_cos)
+            in_xxx = ~ (in_iau || in_cos)
         end
         else: begin
             print,'FITS file: ',strtrim(File_In)
-            message,'several '+KW_POL+' keyword in header of extension'+string(i)
+            message,'several '+KW_POL+' keywords in header of '+str_ext
         end
     endcase
-    if (1 - do_force) then begin
-        if ((in_cos and do_i2i) or (in_iau and do_c2c)) then begin
-            print,'FITS file: ',strtrim(File_In)
-            print,KW_POL+': ',polcconv
-            message,'can not perform requested edition'
+    done = 0
+    non_pol = 0 ; assume polarization
+    do_edit = 0
+    if (~ do_force) then begin
+        if ((in_cos && do_i2i) || (in_iau && do_c2c)) then begin
+            print,'in FITS file: ',strtrim(File_In)
+            print,KW_POL+'= ',polcconv
+            print,'can not perform requested '+edit+' edition'
+            message,'Use the /FORCE keyword to only update '+KW_POL+' value.'
         endif
-        if (in_cos *(do_i2c+do_c2c) or in_iau *(do_c2i+do_i2i)) then goto, skip
+        done = ( (in_cos && (do_i2c || do_c2c)) || (in_iau && (do_c2i || do_i2i)) )
     endif
 
-    if (modify_map) then begin
+    if (modify_map && ~done) then begin
         ; change sign of U and related quantities
-        do_edit = 0
-        nmaps = n_elements(tqu[0,*])
-        if (type eq 3) then begin ; cut sky format: change sign of U (last extension)
+        if (type eq 3) then begin ; cut sky format (pixel, T, hT, sT; pixel, Q, hQ, sQ; pixel, U, hU, sU)
             if (i eq 2) then begin
-                signal = -signal
+                clist   = [1] ;change sign of U (last extension)
                 do_edit = 1
             endif
         endif else begin
-            case nmaps of 
-                4: begin ; WMAP format
-                    tqu[*,2] = - tqu[*,2] ; change sign of U and of N_QU
+            clist = [-1]
+
+            if (nmaps le 2) then begin
+                non_pol = 1
+            endif
+
+            if (nmaps eq 4 && n_ext eq 2) then begin ; WMAP format (T, Q, U, TT ; TT, QQ, QU, UU)
+                clist   = [2]   ; change sign of U and of N_QU
+                do_edit = 1
+            endif
+
+
+            if (nmaps eq 3) then begin
+                                ; standard Healpix full sky format (T, Q, U;   TT, QQ, UU;  QU, TU, TQ)
+                                ; should NOT affect unpolarized Planck maps (I_Stokes ,HITS, II_COV) 
+                if (i eq 0) then begin
+                    if (xQU) then begin
+                        clist   = [2] ; change sign of U
+                        do_edit = 1
+                    endif else begin
+                        non_pol = 1
+                    endelse
+                endif
+                if (i eq 2) then begin
+                    clist   = [0, 1] ; change sign of QU and of TU
                     do_edit = 1
-                end
-                3: begin; standard Healpix full sky format
-                    if (i eq 0) then begin
-                        tqu[*,2] = - tqu[*,2] ; change sign of U
-                        do_edit = 1
-                    endif
-                    if (i eq 2) then begin
-                        tqu[*,0:1] = - tqu[*,0:1] ; change sign of QU and of TU
-                        do_edit = 1
-                    endif
-                end
-                1 or 2: begin
-                    print,'Warning: Unpolarised format, no change in extension '+string(i)
-                    goto, skip
-                end
-                else: begin
-                    message,'unrecognised format'
-                end
-            endcase
+                endif
+            endif
+
+            if (nmaps eq 5 && n_ext le 2) then begin ; Planck 5 cols (I_STOKES, Q_STOKES, U_STOKES, TMASK, PMASK)
+                if (i eq 0 && xQU) then begin
+                    clist   = [2] ; change sign of U
+                    do_edit = 1
+                endif
+            endif
+            
+            if (nmaps eq 10 && n_ext eq 1) then begin; Planck R3 (2017) 10 cols (I_STOKES, Q_STOKES, U_STOKES, HIT, II_COV, IQ_COV, IU_COV, QQ_COV, QU_COV, UU_COV)
+                if (i eq 0 && xQU) then begin
+                    clist = [2, 6, 8] ; change sign of U, IU, QU
+                    do_edit = 1
+                endif
+            endif
+
+            if (~do_edit) then begin
+                if (non_pol) then begin
+                    print,' Unpolarised format, no change in '+str_ext
+                endif else begin
+                    print,'WARNING: unrecognised format in '+str_ext
+                    print,nmaps,n_ext
+                    print,names
+                    done = 1
+                endelse
+            endif
+
         endelse
         if (do_edit) then begin
-            sxaddpar, xhdr, 'HISTORY','modified U related components to match coordinate convention (POLCCONV)'
-            print,'flip sign of U map in extension '+string(i)
+            sxaddpar, xhdr, 'HISTORY',strtrim(file_in)
+            sxaddpar, xhdr, 'HISTORY','edited on '+today_fits(/utc,/time)+' UTC'
+            for kc=0,n_elements(clist)-1 do begin
+                column = clist[kc]
+                if (type eq 3) then begin
+                    signal *= -1
+                endif else begin
+                    ;tqu[*, column] *= -1
+                    xtn.(column+1) *= -1
+                endelse
+                str_col = 'column #'+strtrim(column+1,2)+' ('+names[column]+')'
+                print,' Flip sign of '+str_col+' in '+str_ext
+                sxaddpar, xhdr, 'HISTORY','modified '+str_col+' to match coord. conv. ('+kw_pol+')'
+            endfor
         endif
     endif
+    if ( (do_edit || in_xxx || do_force) && ~non_pol) then begin
+        new_cconv = (do_c2c || do_i2c) ? KW_COS : KW_IAU
+        sxaddpar, xhdr, KW_POL, new_cconv,' Coord. convention for polarisation (COSMO/IAU)'
+        print, (in_xxx ? ' Add ' : ' Update ') + 'keyword '+strtrim(KW_POL)+'='+new_cconv+' in header of '+str_ext
+    endif else begin
+        print, ' No change in header of '+str_ext
+    endelse
+
     ; write new data
-    new_cconv = (do_c2c+do_i2c) ? KW_COS : KW_IAU
-    sxaddpar, xhdr, KW_POL, new_cconv,' Coord. convention for polarisation (COSMO/IAU)'
-;    sxaddpar,info_header,'COMMENT',' either IAU or COSMO',after=kw_pol
-    print,'Update/add '+strtrim(KW_POL)+'in extension '+string(i)
-    skip:
     if (type eq 3) then begin
         write_fits_cut4, File_Out, pixel, signal, n_obs, serror, hdr=hdr, xhdr=xhdr, /pol, ext=i
     endif else begin
-        write_tqu, File_Out, tqu, hdr=hdr, xhdr=xhdr, ext = i
+        ;if (nmaps eq 1) then tqu = reform(tqu, n_elements(tqu), 1, /overwrite)
+        ;write_tqu,      File_Out, tqu, hdr=hdr, xhdr=xhdr, ext = i
+        write_fits_sb, File_Out, prim, xtn, ext = i, xthdr=xhdr, /nothealpix
     endelse
 endfor
+
+spawn,/sh,'ls -lt '+strtrim(file_in,2)+' '+strtrim(file_out,2)
+t1 = systime(1)
+print, t1-t0
 
 return
 end
