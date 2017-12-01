@@ -70,6 +70,7 @@ C_WITHOUT_CFITSIO =
 C_CFITSIO_INCDIR = 
 C_CFITSIO_LIBDIR = 
 C_WLRPATH = 
+C_EXTRA_LIB = 
 #
 # Libraries to install (static, shared, dynamic)
 C_ALL =
@@ -78,6 +79,7 @@ C_MKFLAGS = CC="$(C_CC)" PIC="$(C_PIC)" OPT="$(C_OPT)" \
 	LIBDIR="$(C_LIBDIR)" INCDIR="$(C_INCDIR)" AR="$(C_AR)" \
 	WITHOUT_CFITSIO="$(C_WITHOUT_CFITSIO)" CFITSIO_INCDIR="$(C_CFITSIO_INCDIR)" \
 	CFITSIO_LIBDIR="$(C_CFITSIO_LIBDIR)" WLRPATH="$(C_WLRPATH)" \
+	EXTRA_LIB="$(C_EXTRA_LIB)" \
 	RM="$(RM)" 
 
 # ------------------------------ variables for C++ --------------------------
@@ -294,7 +296,7 @@ healpy-all:
 
 healpy-test: healpy-all
 	@cd /tmp ; \
-	$(HPY_PYTHON) -c "import pylab; import healpy; import numpy ; hpv=healpy.__version__ ; print '\n\n Welcome to Healpy %s! \n\n'%(hpv); healpy.mollview(numpy.arange(12),title='Healpy %s'%(hpv)); pylab.show()" ; \
+	$(HPY_PYTHON) -c "import pylab; import healpy; import numpy ; hpv=healpy.__version__ ; print ('\n\n Welcome to Healpy %s! \n\n'%(hpv)); healpy.mollview(numpy.arange(12),title='Healpy %s'%(hpv)); pylab.show()" ; \
 	cd $(HEALPIX)
 
 healpy-clean:

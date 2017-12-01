@@ -16,6 +16,7 @@
 #  WITHOUT_CFITSIO=1: cfitsio integration will not be built
 #  CFITSIO_INCDIR is where the header files for the 'cfitsio' library is kept
 #  CFITSIO_LIBDIR is where the 'cfitsio' library archive is kept
+#  EXTRA_LIB extra libraries required (like libcurl by cfitsio >= 3.42)
 #  AR is the command to create the archive with its index table
 #      default = ar -rsv
 #
@@ -73,7 +74,7 @@ ifeq ($(WITHOUT_CFITSIO), 0)
   ifdef CFITSIO_LIBDIR
     CFITSIO_LIBS += -L$(CFITSIO_LIBDIR) 
   endif
-  CFITSIO_LIBS += -lcfitsio
+  CFITSIO_LIBS += -lcfitsio $(EXTRA_LIB)
 endif
 
 PIC = -fPIC
@@ -132,7 +133,7 @@ install :  chealpix.h
 
 test_chealpix : test_chealpix.c static
 	$(CC) $(FLAGS) -c -o test_chealpix.o $<
-	$(CC) $(FLAGS) -o $@ test_chealpix.o -L. -lchealpix $(CFITSIO_LIBS) -lm
+	$(CC) $(FLAGS) -o $@ test_chealpix.o -L. -lchealpix $(CFITSIO_LIBS) -lm 
 
 tests : test_chealpix
 	./test_chealpix

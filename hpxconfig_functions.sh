@@ -171,7 +171,7 @@ whereisCmd () {
     done
 }
 #=====================================
-#=========== C pakage ===========
+#=========== C package ===========
 #=====================================
 # setCDefaults
 # add64bitCFlags
@@ -262,6 +262,8 @@ askCUserMisc () {
 	    echo "error: fits library $lib not found"
 	    crashAndBurn
 	fi
+	checkFitsioCurl $lib
+
 	guess1=${FITSDIR}
 	guess2=`${DIRNAME} ${guess1}`
 	guess3="${guess2}/include"
@@ -320,6 +322,7 @@ editCMakefile () {
 	${SED} "s|^C_WITHOUT_CFITSIO.*$|C_WITHOUT_CFITSIO = $C_WITHOUT_CFITSIO|" |\
 	${SED} "s|^C_CFITSIO_INCDIR.*$|C_CFITSIO_INCDIR = $FITSINC|" |\
 	${SED} "s|^C_CFITSIO_LIBDIR.*$|C_CFITSIO_LIBDIR = $FITSDIR|" |\
+	${SED} "s|^C_EXTRA_LIB.*$|C_EXTRA_LIB = $CFITSIOCURL|" |\
 	${SED} "s|^C_WLRPATH.*$|C_WLRPATH = $WLRPATH|" |\
 	${SED} "s|^C_ALL.*|C_ALL     = ${clibtypes}|" |\
 	${SED} "s|^ALL\(.*\) c-void \(.*\)|ALL\1 c-all \2|" |\
@@ -431,10 +434,14 @@ editCppMakefile () {
 
     echoLn "edit top Makefile for C++ ..."
 
+    CPPWLRPATH="-Wl,-R"
+    [ "${OS}" = "Darwin" ]  && CPPWLRPATH="-Wl,-rpath "
+
+
     mv -f Makefile Makefile_tmp
     ${CAT} Makefile_tmp |\
 	${SED} "s|^HEALPIX_TARGET\(.*\)|HEALPIX_TARGET = ${HEALPIX_TARGET}|" |\
-	${SED} "s|^CFITSIO_EXT_LIB\(.*\)|CFITSIO_EXT_LIB = -L${FITSDIR} -l${LIBFITS}|" |\
+	${SED} "s|^CFITSIO_EXT_LIB\(.*\)|CFITSIO_EXT_LIB = -L${FITSDIR} -l${LIBFITS} ${CFITSIOCURL} ${CPPWLRPATH}${FITSDIR}|" |\
 	${SED} "s|^CFITSIO_EXT_INC\(.*\)|CFITSIO_EXT_INC = -I${FITSINC}|" |\
 	${SED} "s|^ALL\(.*\) cpp-void \(.*\)|ALL\1 cpp-all \2|" |\
 	${SED} "s|^TESTS\(.*\) cpp-void \(.*\)|TESTS\1 cpp-test \2|" |\
@@ -490,6 +497,8 @@ Cpp_config () {
     guess1=${FITSDIR}
     guess2=`${DIRNAME} ${guess1}`
     guess3="${guess2}/include"
+
+    checkFitsioCurl "${FITSDIR}/lib${LIBFITS}.*"
 
     findFITSInclude $INCDIR ${guess1} ${guess2} ${guess3} $FITSINC
     echoLn "enter location of cfitsio header fitsio.h ($FITSINC): "
@@ -644,7 +653,7 @@ editHealpyMakefile () {
 
 }
 #=====================================
-#=========== IDL pakage ===========
+#=========== IDL package ===========
 #=====================================
 #-------------
 askPaperSize () {
@@ -968,14 +977,15 @@ idl_config () {
 }
 
 #=====================================
-#=========== F90 pakage ===========
+#=========== F90 package ===========
 #=====================================
 #
 #   setF90Defaults: set default values of variables
 #   sun_modules : test weither the Sun compiler creates modules ending with .M or .mod
 #   ifc_modules : test weither the IFC compiler creates .d or .mod (version7) modules
-#   checkF90Fitsio: check that CFITSIO library contains Fortran wrapper
-#   checkF90FitsioLink: check that CFITSIO library links to Fortran test code
+#   checkF90Fitsio:        check that CFITSIO library contains Fortran wrapper
+#   checkFitsioCurl:       check if   CFITSIO library is linked to libcurl
+#   checkF90FitsioLink:    check that CFITSIO library links to Fortran test code
 #   checkF90FitsioVersion: check that CFITSIO library is recent enough
 #   checkCParall: check that C compiler supports OpenMP
 #   GuessF90Compiler: tries to guess compiler from operating system
@@ -1127,6 +1137,22 @@ checkF90Fitsio () {
     fi
 
 }
+#----------
+checkFitsioCurl () {
+    cfitsiolib=$1
+    if [ -z ${CFITSIOCURL} ] ; then
+	CFITSIOCURL=" "
+	sanity=`${NM} ${cfitsiolib} 2> ${DEVNULL} | ${GREP} read | ${GREP} T | ${WC} -l` # make sure that nm, grep and wc are understood
+	if [ $sanity -gt 0 ] ; then
+	    check=`${NM} ${cfitsiolib} 2> ${DEVNULL} | ${GREP} curl_ | ${WC} -l` # count curl calls
+	    if [ $check -gt 0 ] ; then
+		CFITSIOCURL="-lcurl"
+		# adding -lcurl is necessary if the cfitsio library is static
+		#echo "WARNING: his version of CFITSIO must be linked with libcurl (flag -lcurl will be added)"
+	    fi
+	fi
+    fi
+}
 # ----------------
 checkF90FitsioLink () {
 # check that F90 routines can link with F90-fitsio wrappers
@@ -1141,7 +1167,7 @@ cat > ${tmpfile}${suffix} << EOF
     end program needs_fitsio
 EOF
     # compile and link
-    ${FC} ${FFLAGS}  ${tmpfile}${suffix} -o ${tmpfile}.x -L${FITSDIR} -l${LIBFITS} #${WLRPATH}
+    ${FC} ${FFLAGS}  ${tmpfile}${suffix} -o ${tmpfile}.x -L${FITSDIR} -l${LIBFITS} ${CFITSIOCURL} #${WLRPATH}
 
     # test
     if [ ! -s ${tmpfile}.x ]; then
@@ -1174,7 +1200,7 @@ cat > ${tmpfile}${suffix} << EOF
     end program date_fitsio
 EOF
     # compile and link
-    ${FC} ${FFLAGS}  ${tmpfile}${suffix} -o ${tmpfile}.x -L${FITSDIR} -l${LIBFITS} ${WLRPATH_}
+    ${FC} ${FFLAGS}  ${tmpfile}${suffix} -o ${tmpfile}.x -L${FITSDIR} -l${LIBFITS} ${CFITSIOCURL} ${WLRPATH_}
 
     #CFITSIOVREQ="3.14"            # required  version of CFITSIO (in Healpix 3.00)
     CFITSIOVREQ="3.20"            # required  version of CFITSIO (in Healpix 3.30)
@@ -1924,7 +1950,9 @@ askUserMisc () {
 	LDFLAGS="${LDFLAGS} ${WLRPATH}"
     fi
 
-    checkF90Fitsio ${lib}
+    checkF90Fitsio  ${lib}
+    checkFitsioCurl ${lib}
+    LDFLAGS="$LDFLAGS $CFITSIOCURL"
     checkF90FitsioLink
     checkF90FitsioVersion
 
