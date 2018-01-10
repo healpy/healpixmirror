@@ -175,6 +175,7 @@ bitpix  = ABS(ROUND(SXPAR(xthdr,'BITPIX'))) ; bits per 'word'
 n_wpr   =     ROUND(SXPAR(xthdr,'NAXIS1')) ; 'word' per row
 n_rows  =     ROUND(SXPAR(xthdr,'NAXIS2')) ; number of rows
 byt_row = bitpix * n_wpr / 8 ; bytes per row
+;;;;;stride = ((1024L^2 * 20L) / byt_row) > 1 ; strides of 20MB or 1 row
 stride = ((1024L^2 * 20L) / byt_row) > 1 ; strides of 20MB or 1 row
 ishift = 0
 n_entry = intarr(n_tag)
@@ -193,7 +194,8 @@ endcase
 
 ; mrdfits is slower than fits_read + tbget
 size = (bitpix/8.) * float(n_wpr) * float(n_rows) / 1024.^2 ; size in MB
-if (size le 100.) then begin ; smaller than 100MB, read in one sitting
+print,'File size (MB) ',size
+if (size le 600.) then begin ; smaller than 600MB, read in one sitting
     if defined(columns) then begin
         table = MRDFITS(filename,extension_idp1,/SILENT, columns=columns)
         for i=0L, n_tag-1 do begin
@@ -221,7 +223,6 @@ if (size le 100.) then begin ; smaller than 100MB, read in one sitting
         tbfree, tb_str
     endelse
 endif else begin
-    print,'File size (MB) ',size
 ; build up the final structure according to data 
     for i=0L, n_tag-1 do begin      
         type = datatype(table.(i),2)
@@ -243,8 +244,8 @@ endif else begin
             ni = n_entry(i)
             ;;help,prim_stc.(i+ishift+1)(r_start*ni:r_end*ni+ni-1),reform(table.(i),nn)
             case (merge) of
-                0 : xten_stc.(i+ishift+1)(r_start*ni:r_end*ni+ni-1) = (table.(i))[*]
-                1 : prim_stc.(i+ishift+1)(r_start*ni:r_end*ni+ni-1) = (table.(i))[*]
+                0 : xten_stc.(i+ishift+1)[r_start*ni:r_end*ni+ni-1] = (table.(i))[*]
+                1 : prim_stc.(i+ishift+1)[r_start*ni:r_end*ni+ni-1] = (table.(i))[*]
             endcase
         endfor
         r_start = r_end + 1L

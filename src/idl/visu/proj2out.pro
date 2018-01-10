@@ -718,7 +718,7 @@ if (do_shade) then begin
     image3d[*,*,1] = uint( (256. * green[image] * shademap) < 65535.)
     image3d[*,*,2] = uint( (256. * blue [image] * shademap) < 65535.)
     if (do_print) then loadct,0,/silent ; must be in grey-scale for TrueColor PS output
-    if (in_fl && ~do_print && ~do_image) then device, decomposed=1 ; patch for FL in X
+    ;;;; if (in_fl && ~do_print && ~do_image) then device, decomposed=1 ; patch for FL in X solved in 0.79.41?
     TV, bytscl(image3d),w_xll,w_yll,/normal,xsize=1.,true=3
     ;;help,/device
     ;;message,'Abort'
@@ -1015,7 +1015,7 @@ if do_image then begin
             device,decomposed=0     ; put back colors on X window and redo color image
         endelse
         if (do_shade || do_true) then begin
-            fl_patch = (in_fl && do_shade && ~do_print)
+            fl_patch =  0 ; (in_fl && do_shade && ~do_print) ; solved in 0.79.41 ?
             if fl_patch then device, decomposed=1 ; patch for FL in GIF/JPEG/PNG
             tv, bytscl(image3d[0:2,*,*]),0,0,/normal,xsize=1.,true=1
             if fl_patch then device, decomposed=0 

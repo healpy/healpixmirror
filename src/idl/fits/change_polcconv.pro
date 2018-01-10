@@ -142,8 +142,8 @@ if file_same(file_in, file_out) then begin
 endif
 
 ; full sky TQU format (with extra extension for correlation)
-; WMAP format (extra column and extra extension with correlation)
-; Planck polarized maps (with extran columns for correlation)
+; WMAP (I,Q,U) and (I,Q,U,S) formats (extra column and/or extra extension with correlation)
+; Planck polarized maps (with extra columns for correlation)
 ; cut sky format (multi extension ?)
 
 kw_pol = 'POLCCONV'
@@ -152,8 +152,12 @@ kw_cos = 'COSMO'
 fits_info, File_In, /silent, n_ext = n_ext
 junk = getsize_fits(File_In, type = type)
 
+print,file_in+' -> ['+edit+'] -> '+file_out
+
 if ~ (type eq 2 || type eq 3) then begin
-    message,'Input file is not a HEALPix map'
+    message,/info,'Input file is not a HEALPix map'
+    message,/info,'File will be copied unchanged'
+    file_copy, file_in, file_out, /overwrite
     return
 endif
 
@@ -162,7 +166,6 @@ endif
 ;     return
 ; endif
 
-print,file_in+' -> ['+edit+'] -> '+file_out
 modify_map = (do_c2i || do_i2c)
 
 for i=0,n_ext-1 do begin
@@ -176,6 +179,7 @@ for i=0,n_ext-1 do begin
     endelse
     names   = sxpar(xhdr,'TTYPE*')
     extname = sxpar(xhdr,'EXTNAME')
+    nside   = long(sxpar(xhdr,'NSIDE'))
     xhdr_tmp = [hdr,xhdr]
     polcconv = strupcase(sxpar(xhdr_tmp,KW_POL,count=count))
     in_xxx = 1 & in_iau = 0 & in_cos = 0
@@ -223,12 +227,6 @@ for i=0,n_ext-1 do begin
                 non_pol = 1
             endif
 
-            if (nmaps eq 4 && n_ext eq 2) then begin ; WMAP format (T, Q, U, TT ; TT, QQ, QU, UU)
-                clist   = [2]   ; change sign of U and of N_QU
-                do_edit = 1
-            endif
-
-
             if (nmaps eq 3) then begin
                                 ; standard Healpix full sky format (T, Q, U;   TT, QQ, UU;  QU, TU, TQ)
                                 ; should NOT affect unpolarized Planck maps (I_Stokes ,HITS, II_COV) 
@@ -246,20 +244,45 @@ for i=0,n_ext-1 do begin
                 endif
             endif
 
-            if (nmaps eq 5 && n_ext le 2) then begin ; Planck 5 cols (I_STOKES, Q_STOKES, U_STOKES, TMASK, PMASK)
+            if (n_ext ge 1 && nmaps eq 5) then begin
+                                ; Planck 5 cols (I_STOKES, Q_STOKES, U_STOKES, TMASK, PMASK) + BEAM_TF extension
                 if (i eq 0 && xQU) then begin
                     clist   = [2] ; change sign of U
                     do_edit = 1
                 endif
             endif
-            
-            if (nmaps eq 10 && n_ext eq 1) then begin; Planck R3 (2017) 10 cols (I_STOKES, Q_STOKES, U_STOKES, HIT, II_COV, IQ_COV, IU_COV, QQ_COV, QU_COV, UU_COV)
+
+            if (n_ext eq 1 && nmaps eq 10) then begin
+                                ; Planck R3 (2017) 10 cols (I_STOKES, Q_STOKES, U_STOKES, HIT, II_COV, IQ_COV, IU_COV, QQ_COV, QU_COV, UU_COV)
                 if (i eq 0 && xQU) then begin
                     clist = [2, 6, 8] ; change sign of U, IU, QU
                     do_edit = 1
                 endif
             endif
 
+
+            if (nside le 512 && n_ext eq 2) then begin
+                                ; WMAP: https://lambda.gsfc.nasa.gov/product/map/dr5/skymap_file_format_info.cfm
+                if (nmaps ge 5) then begin
+                                ; WMAP (I,Q,U,S) format (T, Q, U, S, N_OBS ; 
+                                ;      N_OBS, M11=SS, M12=SQ, M13=SU, M23=QU, M22=QQ, M33=UU)
+                    if (i eq 0 && nmaps eq 5  && xQU) then begin
+                        clist   = [2] ; change sign of U
+                        do_edit = 1
+                    endif
+                    if (i eq 1 && nmaps eq 7) then begin
+                        clist   = [3,4] ; change sign of SU and QU
+                        do_edit = 1
+                    endif
+                endif
+               
+                if (nmaps eq 4) then begin 
+                                ; WMAP (I,Q,U) format (T, Q, U, N_OBS ; N_OBS, QQ, QU, UU)
+                    clist   = [2] ; change sign of U and of N_QU
+                    do_edit = 1
+                endif
+            endif
+            
             if (~do_edit) then begin
                 if (non_pol) then begin
                     print,' Unpolarised format, no change in '+str_ext
@@ -307,9 +330,10 @@ for i=0,n_ext-1 do begin
     endelse
 endfor
 
-spawn,/sh,'ls -lt '+strtrim(file_in,2)+' '+strtrim(file_out,2)
+spawn,/sh,'ls -l '+strtrim(file_in,2)+' '+strtrim(file_out,2)
 t1 = systime(1)
-print, t1-t0
+print, "Time [s] = ",t1-t0
+print,'     ----------------        '
 
 return
 end
