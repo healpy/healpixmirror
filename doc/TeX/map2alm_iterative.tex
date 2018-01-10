@@ -34,6 +34,12 @@ with
 	\ba^{(0)} = \bA.\bw.\bm.
 \end{equation}
 
+During the processing, the standard deviation of the input map $\left(\bw.\bm\right)$ 
+and the current residual map $\left(\bw.\bm - \bw . \bS .\ba^{(k)}\right)$ is printed out, with these numbers expected
+to get smaller and smaller.\\
+The standard deviation of map $x$ has the usual definition
+$\sigma \equiv \sqrt{\sum_{p=1}^{N}\frac{(x(p)-\bar{x})^2}{N-1}}$, where the mean is
+$\bar{x} \equiv  \sum_{p=1}^{N} \frac{x(p)}{N}$, and the index $p$ runs over all pixels.
 }
 {\modAlmTools}
 \end{facility}
