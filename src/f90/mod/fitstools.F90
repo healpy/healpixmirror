@@ -559,6 +559,9 @@ contains
        !     create the new empty FITS file
        !*************************************
        call ftinit(unit,filename,blocksize,status)
+       if (status > 0) call fatal_error("Error while creating file " &
+            & //trim(filename) &
+            & //". Check path and/or access rights.")
 
        !     -----------------------------------------------------
        !     initialize parameters about the FITS image
@@ -1371,6 +1374,9 @@ contains
     !     create the new empty FITS file
     blocksize=1
     call ftinit(unit,filename,blocksize,status)
+    if (status > 0) call fatal_error("Error while creating file " &
+         & //trim(filename) &
+         & //". Check path and/or access rights.")
 
     !     -----------------------------------------------------
     !     initialize parameters about the FITS image

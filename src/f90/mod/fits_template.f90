@@ -907,6 +907,9 @@ subroutine input_map8_KLOAD(filename, map, npixtot, nmaps, &
        !     create the new empty FITS file
        !*************************************
        call ftinit(unit,filename,blocksize,status)
+       if (status > 0) call fatal_error("Error while creating file " &
+            & //trim(filename) &
+            & //". Check path and/or access rights.")
 
        !     -----------------------------------------------------
        !     initialize parameters about the FITS image
@@ -1071,6 +1074,9 @@ subroutine input_map8_KLOAD(filename, map, npixtot, nmaps, &
 
     if (extno_i == 0) then
        call ftinit(unit,filename,blocksize,status)
+       if (status > 0) call fatal_error("Error while creating file " &
+            & //trim(filename) &
+            & //". Check path and/or access rights.")
        
        !     -----------------------------------------------------
        !     initialize parameters about the FITS image
@@ -1241,6 +1247,9 @@ subroutine input_map8_KLOAD(filename, map, npixtot, nmaps, &
        !     create the new empty FITS file
        !*********************************************
        call ftinit(unit,filename,blocksize,status)
+       if (status > 0) call fatal_error("Error while creating file " &
+            & //trim(filename) &
+            & //". Check path and/or access rights.")
 
        !     -----------------------------------------------------
        !     initialize parameters about the FITS image
@@ -1415,6 +1424,9 @@ subroutine input_map8_KLOAD(filename, map, npixtot, nmaps, &
     if (extno==1) then
 
        call ftinit(unit,filename,blocksize,status)
+       if (status > 0) call fatal_error("Error while creating file " &
+            & //trim(filename) &
+            & //". Check path and/or access rights.")
 
        !     -----------------------------------------------------
        !     initialize parameters about the FITS image
@@ -2003,6 +2015,9 @@ subroutine input_map8_KLOAD(filename, map, npixtot, nmaps, &
 
        if (extno_i == 0) then 
           CALL ftinit(unit,filename,blocksize,status)
+          if (status > 0) call fatal_error("Error while creating file " &
+               & //trim(filename) &
+               & //". Check path and/or access rights.")
 
           ! -----------------------------------------------------
           ! Initialize parameters about the FITS image

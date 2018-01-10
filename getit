@@ -14,7 +14,7 @@ healpyrepo="https://github.com/healpy/healpy.git"
 # https://pypi.debian.net/healpy/healpy-${healpytag}.tar.gz
 #
 healpyarchive="https://github.com/healpy/healpy/releases/download/${healpytag}/"
-healpyarchive_alt="https://github.com/healpy/healpy/archive/"
+#healpyarchive_alt="https://github.com/healpy/healpy/archive/" # partial package (no cfitsio/, no healpy/src/_*.cpp)
 #healpyarchive="/Users/hivon/healpy/"
 ##
 mixed=1
@@ -84,14 +84,15 @@ if [ ${doit} = 1 ] ; then
 	git branch
     else
 	if [ "${healpyarchive:0:4}" = "http" ] ; then
-	    hpy1=${healpyarchive}healpy-${healpytag}.tar.gz # default
-	    hpy2=${healpyarchive_alt}${healpytag}.tar.gz    # alternative
 	    hpyops="--no-check-certificate -O healpy-${healpytag}.tar.gz"
-	    wget -O/dev/null -q ${hpy1} && wget ${hpy1} ${hpyops} || wget ${hpy2} ${hpyops}
+	    hpy1=${healpyarchive}healpy-${healpytag}.tar.gz # default
+	    #hpy2=${healpyarchive_alt}${healpytag}.tar.gz    # alternative
+	    #wget -O/dev/null -q ${hpy1} && wget ${hpy1} ${hpyops} || wget ${hpy2} ${hpyops}
+	    wget ${hpy1} ${hpyops}
 	else
-	    echo ${healpyarchive}healpy-${healpytag}.tar.gz
+	    echo  ${healpyarchive}healpy-${healpytag}.tar.gz
 	    ls -l ${healpyarchive}healpy-${healpytag}.tar.gz
-	    cp ${healpyarchive}healpy-${healpytag}.tar.gz .
+	    cp    ${healpyarchive}healpy-${healpytag}.tar.gz .
 	fi
 	tar -xvzpf healpy-${healpytag}.tar.gz
 	mv healpy-${healpytag} healpy
