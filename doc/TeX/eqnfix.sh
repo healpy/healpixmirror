@@ -21,6 +21,7 @@ EOF
 fi
 
 dir=/sw2/bin/
+#dir=/tmp/netpbm/bin/
 # Fix each PNG image
 for file in `ls -1 $1*.png`
 do
