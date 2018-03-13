@@ -39,7 +39,7 @@ using namespace std;
 
 namespace {
 
-void read_weight_ring (const string &weightfile, int nside, arr<double> &weight)
+void read_wring (const string &weightfile, int nside, arr<double> &weight)
   {
   fitshandle inp;
   inp.open(weightfile);
@@ -52,13 +52,18 @@ void read_weight_ring (const string &weightfile, int nside, arr<double> &weight)
 
 } // unnamed namespace
 
+void read_weight_ring (const string &dir, int nside, arr<double> &weight)
+  {
+  read_wring(dir+"/weight_ring_n"+intToString(nside,5)+".fits", nside, weight);
+  }
+
 void get_ring_weights (paramfile &params, int nside, arr<double> &weight)
   {
   string weightfile = params.find<string>("ringweights","");
   weight.alloc (2*nside);
   if (weightfile!="")
     {
-    read_weight_ring (weightfile, nside, weight);
+    read_wring (weightfile, nside, weight);
     for (tsize m=0; m<weight.size(); ++m) weight[m]+=1;
     }
   else

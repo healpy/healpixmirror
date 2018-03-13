@@ -46,6 +46,8 @@ template<typename T> class arr;
 std::vector<double> read_fullweights_from_fits(const std::string &weightfile,
   int nside);
 
+void read_weight_ring (const std::string &dir, int nside, arr<double> &weight);
+
 void get_ring_weights (paramfile &params, int nside, arr<double> &weight);
 
 void read_pixwin (const std::string &file, arr<double> &temp);
