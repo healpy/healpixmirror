@@ -215,6 +215,17 @@ for i=0,n_outlines-1 do begin
     endif
     ocuv_assert_scalar,ssize,'SYMSIZE', error=err_assert
 
+
+    colors = [!p.color, !p.background]
+    iw = index_word(names,'COL',err=errword)
+    if (errword eq 0) then begin
+        colors[0] = c1.(iw)[0]
+        if n_elements(c1.(iw)) ge 2 then colors[1] = c1.(iw)[1]
+        nc1 = nc1 - 1
+        invalid_tags[iw] = 0
+    endif
+
+
     if (err_assert ne 0) then begin
         message,/info,'No outline is plotted'
         return
@@ -315,8 +326,10 @@ for i=0,n_outlines-1 do begin
         endcase
                                 ; store (U,V) in structure
         if (nkeep gt 0) then begin
-            c1uv = create_struct('U',u_cont,'V',v_cont,'T',pcont_type,'ST',psym_type,'SS',ssize)
-            tag = 's'+strtrim(string(ist,form='(i2)'),2)
+            ;c1uv = create_struct('U',u_cont,'V',v_cont,'T',pcont_type,'ST',psym_type,'SS',ssize,'COL',colors)
+            c1uv = {U:u_cont, V:v_cont, T:pcont_type, ST:psym_type, SS:ssize, COL:colors}
+            ;tag = 's'+strtrim(string(ist,form='(i2)'),2)
+            tag = 's'+string(ist,form='(i4.4)')
             if (ist eq 0) then begin
                 outline_uv = create_struct(tag,c1uv) 
             endif else begin
@@ -333,7 +346,7 @@ if (keyword_set(show)) then begin
         c1 = outline_uv.(i)
         psym_type = c1.ST
         if (psym_type ge 9 && psym_type le 46) then  psym_type = cgsymcat(psym_type) ; call usersym and set psym_type to 8
-        oplot_sphere, c1.U, c1.V, line_type=c1.T, _extra = oplot_kw, psym=psym_type, symsize=c1.SS
+        oplot_sphere, c1.U, c1.V, line_type=c1.T, _extra = oplot_kw, psym=psym_type, symsize=c1.SS, color=c1.COL
     endfor
 endif
 

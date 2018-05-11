@@ -211,6 +211,7 @@ pro loaddata_healpix, file_in, select_in,$
 ;          : replaced findfile with file_test
 ;  Jun 2010: make sure that pixel_list is undefined by default
 ;  May 2017: replaced obsolete DATATYPE() with IDL's SIZE(/TNAME)
+;  Mar 2018: fixed bug with FLIP in call to selectread
 ;-
 
 factor = defined(factor_u) ? factor_u : 1.
@@ -456,7 +457,7 @@ if (from_file) then begin ; fits file
         data = total(data_tc,2)/3.
         select_name = 'RGB'
     endif else begin
-        selectread, file_in, data, pol_data, header=header, extension = ext2read, pol = polarization[0], tonan=tonan, factor=factor, offset=offset, columns=select
+        selectread, file_in, data, pol_data, header=header, extension = ext2read, pol = polarization[0], tonan=tonan, factor=factor, offset=offset, columns=select, flip=flip ; added missing FLIP on 2018-03-07
     ;
         pol_err_mess = 'can not find POLARISATION in file '+file_in
         case polarization[0] of

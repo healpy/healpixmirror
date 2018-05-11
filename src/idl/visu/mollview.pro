@@ -77,6 +77,7 @@ pro mollview, file_in, select_in, $
               ROT = rot, $
               SAVE = save, $
               SILENT = silent, $
+              SILHOUETTE = silhouette, $
               SUBTITLE = subtitle, $
               TITLEPLOT = titleplot, $
               TRANSPARENT = transparent, $
@@ -116,7 +117,7 @@ pro mollview, file_in, select_in, $
 ;                       PS=, PXSIZE=, PYSIZE=, $
 ;                       QUADCUBE= , $
 ;                       RESO_ARCMIN= , ROT=, $
-;                       SAVE=, SHADED=, SILENT=, STAGGER=, SUBTITLE=, $
+;                       SAVE=, SHADED=, SILENT=, SILHOUETTE=, STAGGER=, SUBTITLE=, $
 ;                       TITLEPLOT=, TRANSPARENT=, TRUECOLORS= $
 ;                       UNITS=, WINDOW=, XPOS=, YPOS=]
 ;                        
@@ -212,10 +213,11 @@ pro mollview, file_in, select_in, $
 ;       CUSTOMIZE: (input) IDL structure containing customization parameters
 ;          whose default values are listed in DEFAULT_SETTINGS
 ;           accept   aspos.x, aspos.y:               astronomical coordinates,
-;                    cbar.dx, cbar.dy, cbar.spaces:  color bar X and Y sizes,
+;                    cbar.dx, cbar.dy:               color bar X and Y sizes,
 ;                    cbar.spaces, cbar.ty:           management of text around color bar
+;                    cbar.box:                       thickness of box around color bar
 ;                    cring.dx, cring.xll, cring.yll: color ring size and location
-;                    pdf.debug:                      if set to 1, and SILENT not set, will help degugging PDF generation
+;                    pdf.debug:                      if set to 1, and SILENT not set, will help debugging PDF generation
 ;                    subtitle.x, subtitle.y, subtible.charsize: subtitle X,Y location and charsize
 ;                    title.x, title.y, title.charsize:        title X and Y location
 ;                    vscale.x, vscale.y:                X,Y location for polarization vector legend
@@ -527,6 +529,13 @@ pro mollview, file_in, select_in, $
 ;
 ;       SILENT: if set, the code runs silently
 ;
+;       SILHOUETTE: if set to a scalar or 2-element vector with silhouette[0] !=  0,
+;          a silhouette is drawn around the map.
+;          Its thickness is proportional to abs(silhouette[0])
+;           (and also depends in a device dependant manner on !P.THICK)
+;          Its color is determined by abs(silhouette[1]) in [0,255] (defaulting to FG_COLOR=0)
+;             ** mollview and orthview only **
+;
 ;       STAGGER: scalar or 2 element vector.
 ;            - if stagger[0] is in ]0,2], 
 ;             3 copies of the same sphere centered at [-stagger[0], 0, stagger[0]]
@@ -735,7 +744,7 @@ proj2out, $
   HBOUND = hbound, WINDOW = window, EXECUTE=execute, SILENT=silent, GLSIZE=glsize, $
   IGLSIZE=iglsize, RETAIN=retain, TRUECOLORS=truecolors, TRANSPARENT=transparent, CHARTHICK=charthick, $
   JPEG=jpeg, BAD_COLOR=bad_color, BG_COLOR=bg_color, FG_COLOR=fg_color, PDF=pdf, $
-  LATEX=latex, PFONTS=pfonts, CUSTOMIZE=CUSTOMIZE, DEFAULT_SETTINGS=default_settings
+  LATEX=latex, PFONTS=pfonts, CUSTOMIZE=CUSTOMIZE, DEFAULT_SETTINGS=default_settings, SILHOUETTE = silhouette
 
 
 w_num = !d.window

@@ -79,6 +79,7 @@ pro orthview, file_in, select_in, $
               SAVE = save, $
               SHADED = shaded, $
               SILENT = silent, $
+              SILHOUETTE = silhouette, $
               STAGGER = stagger, $
               SUBTITLE = subtitle, $
               TITLEPLOT = titleplot, $
@@ -138,7 +139,7 @@ if (n_params() lt 1 or n_params() gt 2) then begin
     print,'              PDF=, PFONTS=, PNG=, POLARIZATION=, PREVIEW=, '
     print,'              PS=, PXSIZE=, PYSIZE=, QUADCUBE= ,'
     print,'              RETAIN=, ROT=,  '
-    print,'              SAVE=, SHADED=, SILENT=, STAGGER=, SUBTITLE=, '
+    print,'              SAVE=, SHADED=, SILENT=, SILHOUETTE=, STAGGER=, SUBTITLE=, '
     print,'              TITLEPLOT=, TRANSPARENT=, TRUECOLORS= '
     print,'              UNITS=, WINDOW=, XPOS=, YPOS=]'
     print
@@ -199,7 +200,8 @@ proj2out, $
   IGRATICULE=igraticule, HBOUND = hbound, WINDOW = window, SILENT=silent, GLSIZE=glsize, IGLSIZE=iglsize, $
   SHADEMAP=shademap, EXECUTE=execute, RETAIN=retain, TRUECOLORS=truecolors, TRANSPARENT=transparent, $
   CHARTHICK=charthick, STAGGER=stagger, JPEG=jpeg, BAD_COLOR=bad_color, BG_COLOR=bg_color, FG_COLOR=fg_color, $
-  PDF=pdf, LATEX=latex, PFONTS=pfonts, CUSTOMIZE=CUSTOMIZE, DEFAULT_SETTINGS=default_settings
+  PDF=pdf, LATEX=latex, PFONTS=pfonts, CUSTOMIZE=CUSTOMIZE, DEFAULT_SETTINGS=default_settings, SILHOUETTE=silhouette
+
 
 
 w_num = !d.window

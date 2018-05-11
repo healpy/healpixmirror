@@ -146,7 +146,8 @@ if (do_latex) then begin
         tag1 = '#'+string(n,form='(i2.2)')+strmid(xxx,0, (len_latex(str)-3)>0)
         chars1 = defined(charsize) ? charsize*fudge_size : 1.*fudge_size
         ltxstc.tag[n]   = tag1
-        ltxstc.tex[n]   = scol+e2latex(str)
+        ;ltxstc.tex[n]   = scol+e2latex(str)
+        ltxstc.tex[n]   = scol+strtrans(e2latex(str),' ','{ }')
         ltxstc.scale[n] = chars1
         ltxstc.alignment[n] = defined(alignment) ? alignment : 0
         ltxstc.n        = n + 1

@@ -143,7 +143,8 @@ pro proj2out, planmap, Tmax, Tmin, color_bar, dx, title_display, sunits, $
               TRANSPARENT = transparent, EXECUTE=execute, SILENT=silent, GLSIZE=glsize, IGLSIZE=iglsize, $
               SHADEMAP=SHADEMAP, RETAIN=retain, TRUECOLORS=truecolors, CHARTHICK=charthick, $
               STAGGER=stagger, AZEQ=azeq, JPEG=jpeg, BAD_COLOR=bad_color, BG_COLOR=bg_color, FG_COLOR=fg_color, $
-              PDF=pdf, LATEX=latex, PFONTS=pfonts, customize=custom_stc, default_settings=default_stc
+              PDF=pdf, LATEX=latex, PFONTS=pfonts, customize=custom_stc, default_settings=default_stc, $
+              SILHOUETTE=silhouette
 
 ;===============================================================================
 ;+
@@ -168,7 +169,8 @@ pro proj2out, planmap, Tmax, Tmin, color_bar, dx, title_display, sunits, $
 ;              ORTHOGRAPHIC=orthographic, $
 ;              FLIP=flip, HALF_SKY=half_sky,COORD_IN=coord_in, IGRATICULE=,
 ;              HBOUND=, DIAMONDS =, WINDOW =, TRANSPARENT=, EXECUTE=, SILENT=
-;              GLSIZE=, IGLSIZE=, SHADEMAP=, STAGGER=, AZEQ=, JPEG=, PDF=, LATEX=, PFONTS=
+;              GLSIZE=, IGLSIZE=, SHADEMAP=, STAGGER=, AZEQ=, JPEG=, PDF=, LATEX=, PFONTS=,
+;              CUSTOMIZE=, DEFAULT_SETTINGS=, SILHOUETTE=
 ;
 ;   for more information, see Gnomview.pro Mollview.pro
 ;
@@ -235,6 +237,7 @@ pro proj2out, planmap, Tmax, Tmin, color_bar, dx, title_display, sunits, $
 ;-
 ;===============================================================================
 
+;;;;;;;;;;;;;common junks, junk1, junk2, junk3, junk4
 debug = 0
 do_gif  = keyword_set(gif)
 do_png  = keyword_set(png)
@@ -269,6 +272,8 @@ if undefined(polarization) then polarization=0
 do_polamplitude = (polarization[0] eq 1)
 do_poldirection = (polarization[0] eq 2)
 do_polvector    = (polarization[0] eq 3)
+
+do_silhouette = keyword_set(silhouette)
 ;-------------------------------------------------
 in_gdl = is_gdl()
 in_fl  = is_fl()
@@ -287,12 +292,12 @@ w_pos = (do_crop) ? [0.00, 0.00, 1.00, 1.00] : [0.00, 0.10, 1.00, 0.90]
 
 default_stc = {$
               aspos:   {x:-1.0,    y:-1.0}, $
-              cbar:    {dx:1./3.,  dy:1./70., spaces:[' ',' ',' '], ty:0.0}, $
+              cbar:    {dx:1./3.,  dy:1./70., spaces:[' ',' ',' '], ty:0.0, box:0.0}, $
               cring:   {dx:1./10., xll:0.025, yll:0.025}, $
               pdf:     {debug:0}, $
               subtitle:{x:0.5,     y:0.905,   charsize:1.2}, $
               title:   {x:0.5,     y:0.95,    charsize:1.6}, $
-              vscale:  {x:0.05,    y:0.02}}
+              vscale:  {x:0.05,    y:0.02, ty:0.0}}
 
 case projtype of
 
@@ -315,6 +320,11 @@ case projtype of
         w_xll = w_pos[0] & w_xur = w_pos[2] & w_dx = w_xur - w_xll
         w_yll = w_pos[1] & w_yur = w_pos[3] & w_dy = w_yur - w_yll
         w_dx_dy = w_dx / w_dy   ; 1./.8
+; create silhouette
+        if (do_silhouette) then begin
+            np_sil  = 360 & phi_sil = 2 * !DPI * dindgen(np_sil+1)/np_sil
+            u_sil   = cos(phi_sil)*du_dv & v_sil   = sin(phi_sil)
+        endif
         if (do_print) then begin
             hxsize_def = 26.                     ; default X dimension of hardcopy (cm)
             yoffset = (papersize eq 'a4') ? 2 : 1; offset along the long axis of the page
@@ -330,7 +340,7 @@ case projtype of
         default_stc.aspos      = {x:0.5, y:0.04}
         default_stc.cring.dx   = 1./15.
         default_stc.subtitle.y = 0.915
-        default_stc.vscale     = {x:0.05, y:0.01}
+        default_stc.vscale     = {x:0.05, y:0.01, ty:0.0}
         
         du_dv = xsize/float(ysize) ; aspect ratio
         fudge = 1.00            ; 
@@ -358,7 +368,7 @@ case projtype of
         default_stc.aspos      = {x:0.5, y:0.04}
         default_stc.cring.dx   = 1./15.
         ;default_stc.subtitle.y = 0.905
-        default_stc.vscale     = {x:0.05, y:0.01}
+        default_stc.vscale     = {x:0.05, y:0.01, ty:0.0}
         
         du_dv = xsize/float(ysize) ; aspect ratio
         fudge = 1.00            ; 
@@ -398,6 +408,14 @@ case projtype of
         w_xll = w_pos[0] & w_xur = w_pos[2] & w_dx = w_xur - w_xll
         w_yll = w_pos[1] & w_yur = w_pos[3] & w_dy = w_yur - w_yll
         w_dx_dy = w_dx / w_dy   ; 1./.8
+; create silhouette
+        if (do_silhouette) then begin
+            np_sil  = 360 & phi_sil = 2 * !DPI * dindgen(np_sil+1)/np_sil
+            u_sil   = cos(phi_sil) & v_sil   = sin(phi_sil)
+            if do_fullsky then begin
+                u_sil = [u_sil-1, 1-u_sil] & v_sil = [v_sil, v_sil]
+            endif
+        endif
         if (do_print) then begin
             hxsize_def = 26.                     ; default X dimension of hardcopy (cm)
             yoffset = (papersize eq 'a4') ? 2 : 1; offset along the long axis of the page
@@ -438,7 +456,7 @@ case projtype of
         default_stc.aspos      = {x:0.5, y:0.04}
         default_stc.cring.dx   = 1./15.
         ;default_stc.subtitle.y = 0.905
-        default_stc.vscale     = {x:0.05, y:0.01}
+        default_stc.vscale     = {x:0.05, y:0.01, ty:0.0}
         
         du_dv = xsize/float(ysize) ; aspect ratio
         fudge = 1.00            ; 
@@ -475,6 +493,7 @@ cbar_xll = (1. - cbar_dx)/2.
 cbar_xur = (1. + cbar_dx)/2.
 cbar_yur = w_yll - cbar_dy
 cbar_yll = cbar_yur - cbar_dy
+cbar_box = parse_custom_structure(default_stc.cbar.box,  custom_stc, 'cbar','box')
 ; polarisation color ring, position, dimension
 cring_dx  = parse_custom_structure(default_stc.cring.dx,     custom_stc, 'cring','dx')
 cring_dy  = cring_dx
@@ -486,6 +505,7 @@ y_aspos   = parse_custom_structure(default_stc.aspos.y,      custom_stc, 'aspos'
 ; location of pol vector scale
 vscal_x   = parse_custom_structure(default_stc.vscale.x,     custom_stc, 'vscale','x')
 vscal_y   = parse_custom_structure(default_stc.vscale.y,     custom_stc, 'vscale','y')
+vscal_ty  = parse_custom_structure(default_stc.vscale.ty,    custom_stc, 'vscale','ty')
 ; location of title and subtitle
 x_title  = parse_custom_structure(default_stc.title.x,           custom_stc, 'title','x') 
 y_title  = parse_custom_structure(default_stc.title.y,           custom_stc, 'title','y') 
@@ -691,6 +711,7 @@ endelse
 ; print,!p.background,!p.color,red[0:3],green[0:3],blue[0:3]
 ; print,back[0:4,0:4]
 
+z_buf64 = ((in_gdl || in_fl) && use_z_buffer) ; ugly patch for GDL 0.9.6 and FL 0.79.43 = Z buffer is 64 bits
 myplot={urange:[umin,umax],vrange:[vmin,vmax],position:[w_xll,w_yll,w_xur,w_yur],xstyle:5,ystyle:5}
 plot, /nodata, myplot.urange, myplot.vrange, pos=myplot.position, XSTYLE=myplot.xstyle, YSTYLE=myplot.ystyle
 ; if (use_z_buffer) then begin; Set the background when doing a plot in Z buffer
@@ -701,7 +722,7 @@ if (do_image) then begin; set the background when doing PNG/GIF/JPG
         tv, reform(back3, xsize, l64ysize, 3, /overwrite),true=3
         back3=0
     endif else begin
-        if (in_gdl && use_z_buffer) then begin ; ugly patch for GDL 0.9.6
+        if z_buf64 then begin
             tv, replicate(!p.background, xsize, l64ysize, 3), true=3
         endif else begin
             tv, replicate(!p.background, xsize, l64ysize)
@@ -720,9 +741,6 @@ if (do_shade) then begin
     if (do_print) then loadct,0,/silent ; must be in grey-scale for TrueColor PS output
     ;;;; if (in_fl && ~do_print && ~do_image) then device, decomposed=1 ; patch for FL in X solved in 0.79.41?
     TV, bytscl(image3d),w_xll,w_yll,/normal,xsize=1.,true=3
-    ;;help,/device
-    ;;message,'Abort'
-    ;;print,(bytscl(image3d))[0,0,0:2]
     if (do_print) then tvlct,red,green,blue ; revert to custom color table
     image3d = 0
 endif else if (do_true) then begin
@@ -737,7 +755,7 @@ endif else if (do_true) then begin
 ;;;    if (do_print) then tvlct,red,green,blue ; revert to custom color table
     image3d = 0
 endif else begin
-    if (in_gdl && use_z_buffer) then begin ; ugly patch for GDL 0.9.6
+    if z_buf64 then begin
         TV, [ [[planmap]], [[planmap]], [[planmap]] ],true=3,w_xll,w_yll,/normal,xsize=1.
     endif else begin
         TV, planmap,                                         w_xll,w_yll,/normal,xsize=1.
@@ -761,7 +779,7 @@ if (~keyword_set(nobar) && ~do_crop && do_poldirection) then begin
         angle = atan(xx,-yy)  * !radeg + 180. ; angle in deg in [0,360]
     endelse
     color_ring = (bytscl(angle,TOP=252) + 3B) * mask + byte((1-mask)*!P.BACKGROUND); in [3,255] in ring and !p.background outside ring
-    if (in_gdl && use_z_buffer) then begin ; ugly patch for GDL 0.9.6
+    if z_buf64 then begin
         TV,[[[color_ring]],[[color_ring]],[[color_ring]]],true=3,cring_xll,cring_yll,/normal,xsize = npring/float(xsize)
     endif else begin
         TV,color_ring,                                           cring_xll,cring_yll,/normal,xsize = npring/float(xsize)
@@ -769,9 +787,9 @@ if (~keyword_set(nobar) && ~do_crop && do_poldirection) then begin
 endif
 
 ; polarisation vector field
-pgparam=[1.,1.]; [scale, grid_step] of grid of headless vector
+pgparam=[1.,1.,1.]; [scale, grid_step, thickness] of grid of headless vector
 if (do_polvector) then begin
-    pgparam = ([polarization[*], 1., 1.])[1:2] ; 2nd and 3rd elements of polarization (default:[1,1])
+    pgparam = ([polarization[*], 1., 1., 1.])[1:3] ; 2nd,3rd and 4th elements of polarization (default:[1,1,1])
     pgparam = pgparam*(pgparam gt 0) + (pgparam le 0) ; replace non-positive values by 1.
     dyg = 10.
     pol_rescale = float(dyg)/ysize * pgparam[0]
@@ -785,10 +803,10 @@ if (do_polvector) then begin
         angle = planvec[xg[i],yg[i],1]
         if (hpxv11) then begin
             ; angles are measured from horizontal
-            if (norm gt 0) then plots, u[i]+norm*cos(angle)*[-.5,.5], v[i]+norm*sin(angle)*[-.5,.5]
+            if (norm gt 0) then plots, u[i]+norm*cos(angle)*[-.5,.5], v[i]+norm*sin(angle)*[-.5,.5], thick=pgparam[2]*thick_dev
         endif else begin
             ; angles are measured from vertical
-            if (norm gt 0) then plots, u[i]-norm*sin(angle)*[-.5,.5], v[i]+norm*cos(angle)*[-.5,.5]
+            if (norm gt 0) then plots, u[i]-norm*sin(angle)*[-.5,.5], v[i]+norm*cos(angle)*[-.5,.5], thick=pgparam[2]*thick_dev
         endelse
     endfor
     xg = 0 & yg = 0 & u = 0 & v = 0
@@ -799,15 +817,22 @@ if (~(do_crop || keyword_set(nobar) || do_poldirection || do_true )) then begin
     color_bar_out = BYTE(CONGRID(color_bar,xsize*cbar_dx)) # REPLICATE(1.,(ysize*cbar_dy*w_dx_dy)>1)
     back[xsize*cbar_xll,0] = color_bar_out
     if (do_shade) then begin
-        newback3 = (do_print) ? [ [[back]], [[back]], [[back]] ] : [ [[red[back]]], [[green[back]]], [[blue[back]]] ]
-        TV, newback3,0, cbar_yll, /normal, xsize = 1., true=3
+        if (do_print) then loadct, 0, /silent
+        TV, [ [[red[back]]], [[green[back]]], [[blue[back]]] ], true=3, 0, cbar_yll, /normal, xsize = 1.
+        if (do_print) then tvlct, red, green, blue
     endif else begin
-        if (in_gdl && use_z_buffer) then begin ; ugly patch for GDL 0.9.6
+        if z_buf64 then begin
             TV, [ [[back]], [[back]], [[back]] ], true=3, 0, cbar_yll, /normal, xsize = 1.
         endif else begin
             TV, back,                                     0, cbar_yll, /normal, xsize = 1.
         endelse
     endelse
+    if (abs(cbar_box) gt 0.0) then begin
+        ; add box around color bar. Mimic truncation used for pixel location
+        xcbbox = (long(xsize*        cbar_xll) +long(xsize*        cbar_dx)*[0,0,1,1,0,0])/float(xsize)
+        ycbbox = (long(ysize*w_dx_dy*cbar_yll) +long(ysize*w_dx_dy*cbar_dy)*[0,1,1,0,0,1])/float(ysize*w_dx_dy)
+        plots, xcbbox, ycbbox, /normal, thick=abs(cbar_box)*thick_dev
+    endif
     ; For Totor <<<<<<<<<<<<<<<<<<<<<<<<<
 ;     plot, /nodata, [tmin,tmax],[0,1],pos=[cbar_xll,cbar_yll,cbar_xur,cbar_yur],/noerase
 ;     plot, /nodata, myplot.urange, myplot.vrange, pos=myplot.position, XSTYLE=myplot.xstyle, YSTYLE=myplot.ystyle, /noerase ; to ensure that mollcursor will work
@@ -832,11 +857,11 @@ endif
 if (~do_crop && ~keyword_set(nobar)  && do_polvector) then begin
     vp_plot = 5*pol_rescale[0] /pgparam[0]; length of ruler on plot
     vp_phys = 5*vector_scale[0]/pgparam[0] ; 'physical' length of ruler
-    plots, vscal_x*[1,1], vscal_y+[0, vp_plot]*w_dy, /normal
+    plots, vscal_x*[1,1], vscal_y+[0, vp_plot]*w_dy, /normal, thick=pgparam[2]*thick_dev
     format = '(g10.2)'
     if (vp_phys lt 1.e3 && vp_phys ge 10)    then format = '(f5.1)'
     if (vp_phys lt 10   && vp_phys gt 1.e-1) then format = '(f4.2)'
-    xyouts_latex, vscal_x, vscal_y + .5*(vp_plot)*w_dy, $
+    xyouts_latex, vscal_x, vscal_y + vscal_ty + .5*(vp_plot)*w_dy, $
             prefont+'  '+strtrim(string(vp_phys,form=format),2)+' '+sunits,$
             ALIGN=0.,/normal, chars=1.1*charsfactor, charthick=mycharthick, $
             latex=my_latex, ltxstc=ltxstc
@@ -852,7 +877,7 @@ endif
 
 ;  the subtitle
 if (~do_crop && keyword_set(subtitle)) then begin
-    xyouts_latex, x_subtl, y_subtl ,prefont+' '+subtitle, $
+    xyouts_latex, x_subtl, y_subtl ,prefont+subtitle, $
             align=x_subtl, /normal, chars=cs_subtl*charsfactor, charthick=mycharthick, $
             latex=my_latex, ltxstc=ltxstc
 endif
@@ -873,7 +898,7 @@ endif
 
 ; do not plot graticules, outlines or pixel boundaries in stagger mode (orthview)
 skip_oplots = do_orth && keyword_set(stagger) && $
-  ( keyword_set(graticule) || keyword_set(igraticule) || keyword_set(hbound) || keyword_set(outline))
+  ( keyword_set(graticule) || keyword_set(igraticule) || keyword_set(hbound) || keyword_set(outline) || do_silhouette)
 
 if (skip_oplots) then begin
     message_patch,/info,level=-1,'*Warning*: GRAT, IGRAT, HBOUND and OUTLINE keywords are ignored in STAGGER mode'
@@ -916,6 +941,13 @@ endif else begin
             if (hbound[i] gt 0) then oplot_healpix_bounds, hbound[i], eul_mat, projection=proj_small, flip = flip, thick = 1.*thick_dev, color = !p.color, half_sky=half_sky, linestyle=lnst[i], coordsys=[coord_in,coord_out]
         endfor
     endif
+
+; overplot silhouette
+    if (do_silhouette && silhouette[0] ne 0.) then begin
+        col_sil = n_elements(silhouette) ge 2 ? abs(silhouette[1]) : !p.color
+        plots, u_sil, v_sil, thick = abs(silhouette[0]) * thick_dev, color=col_sil
+    endif
+
 endelse
 
 ; overplot user defined commands
@@ -946,6 +978,9 @@ if do_image then begin
     if (do_jpeg) then file_image = (size(/tname,jpeg) ne 'STRING') ? 'plot_'+proj_small+'.jpeg' : jpeg
         
     image = (do_true || do_shade) ? tvrd(true=1) : tvrd() ; a single call to tvrd()
+    ;image = (do_true || do_shade || z_buf64) ? tvrd(true=1) : tvrd() ; a single call to tvrd()
+    ;;;;help,image
+    ;;;;print,minmax(image)
     if (do_shade) then begin
         image3d  =   make_array(/byte, 3, !d.x_size, !d.y_size)
         ;;;;help,image3d,image,planmap,w_xll,w_yll

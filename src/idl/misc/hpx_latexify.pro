@@ -37,6 +37,22 @@
 ;  2017-06-13: added KEEP_TEMPORARY_FILES keyword
 ;	
 ;-
+; *****************************
+pro check_commands, commands
+nc = n_elements(commands)
+default_paths = getenv('PATH')
+for k=0,nc-1 do begin
+    command = commands[k]
+    command_path = strtrim(file_which(default_paths, command),2)
+    if (command_path eq '') then begin
+        message,/info,level=-1,''
+        message,/info,level=-1,'WARNING: the command  '+command+'  was not found in PATH ('+default_paths+')'
+        message,/info,level=-1,''
+    endif
+endfor
+return
+end
+; *****************************
 pro hpx_latexify, filename, tag, tex, scale, $
                   alignment = alignment, $
                   height = height, $
@@ -91,6 +107,7 @@ for i=0, n_elements(tag)-1 do begin
         if (alignment[i] gt 0.9) then pospos = '[cr][cr]' ; right edges of tag and tex will match
     endif
     printf, lun,'\psfrag{'+tag[i]+'}'+pospos+'['+scale[i]+']{'+tex[i]+'}'
+    ;;;;;print,      '\psfrag{'+tag[i]+'}'+pospos+'['+scale[i]+']{'+tex[i]+'}'
 endfor
 printf, lun,'\begin{center}'
 printf, lun,'\includegraphics[width='+$
@@ -101,11 +118,13 @@ close, lun
 free_lun, lun
 
 ; generate PS file
+check_commands, ['cd','latex']
 spawn, 'cd '+tmpdir+'; latex '               +tmprad +'.tex', ls0
 if ~file_test(tmprad+'.dvi') then begin
     print, ls0,form='(a)'
     message,'Error in LaTeX. Aborting.'
 endif else begin
+    check_commands, ['cd','dvips']
     command = 'cd '+tmpdir+'; dvips -o '+outname+' '+tmprad +'.dvi'
     if (strupcase(!version.os_family) eq 'WINDOWS') then begin
         spawn,      command, ls1
@@ -122,6 +141,7 @@ endelse
 tmp_files =  tmprad+['2.ps','.tex','.aux','.log','.dvi','_dvi.log']
 ;;;;;;; spawn,'cp '+filename+' '+tmprad+'_in.ps'
 if noname then begin
+    check_commands, ['cp','mv']
     spawn, 'cp -f '+filename+' '+cpname
     tmp_files = [tmp_files, cpname]
     spawn, 'mv -f '+outname+' '+filename

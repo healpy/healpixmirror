@@ -27,7 +27,7 @@
 ; -----------------------------------------------------------------------------
 pro oplot_line_with_label, u, v, $
   linelabel=linelabel, putlabel=putlabel, flush=flush, lines=line_type, _extra = oplot_kw, charsize=charsize, $
-  latex=latex, ltxstc=ltxstc
+  latex=latex, ltxstc=ltxstc, color=color
 ; , labrot=labrot, fixminus=fixminus
 
 ; note on oplot: linestyle in _extra prevails silently over explicit linestyle
@@ -45,8 +45,8 @@ if (do_label) then begin
     ; make sure that label is shorther than line to be labelled
     if (2*blank lt lensegment) then begin
                                 ; break line under label
-        if ((middle-blank) gt 0) then oplot, u[0:middle-blank], v[0:middle-blank], _extra = oplot_kw, lines=line_type
-        if ((middle+blank) lt (lensegment-1)) then oplot, u[middle+blank:*], v[middle+blank:*], _extra = oplot_kw, lines=line_type
+        if ((middle-blank) gt 0) then oplot, u[0:middle-blank], v[0:middle-blank], _extra = oplot_kw, lines=line_type, color=color
+        if ((middle+blank) lt (lensegment-1)) then oplot, u[middle+blank:*], v[middle+blank:*], _extra = oplot_kw, lines=line_type, color=color
                                 ; put label
         step = 3
         dv = v[middle+step]-v[middle-step]
@@ -64,11 +64,11 @@ if (do_label) then begin
                       latex=latex, ltxstc=ltxstc
     endif else begin
         ; if label too big, drop it and only plot line
-        oplot, u, v, _extra = oplot_kw, lines=line_type
+        oplot, u, v, _extra = oplot_kw, lines=line_type, color=color
     endelse
 endif else begin
     ; no label, line only
-    oplot, u, v, _extra = oplot_kw, lines=line_type
+    oplot, u, v, _extra = oplot_kw, lines=line_type, color=color
 endelse
 
 return
@@ -78,9 +78,10 @@ end
 
 pro oplot_sphere, u, v,  $
                   line_type=line_type, _extra = oplot_kw, linelabel=linelabel, flush=flush, charsize=charsize, $
-                  latex=latex, ltxstc=ltxstc
+                  latex=latex, ltxstc=ltxstc, color=color
 
 if undefined(line_type) then line_type = 0
+if undefined(color)     then color = [!p.color, !p.background]
 
 ; find points where line should be interrupted (large step in u)
 bad = where(abs(u-shift(u,1)) gt .1, nbad)
@@ -92,12 +93,12 @@ endif
 
 if (nbad eq 0) then begin
     if (line_type lt 0) then begin
-        oplot, u, v, _extra = oplot_kw, col=1 ; white background
-        oplot, u, v, _extra = oplot_kw, col=0, lines=abs(line_type)
+        oplot, u, v, _extra = oplot_kw, col=color[1] ; white background
+        oplot, u, v, _extra = oplot_kw, col=color[0], lines=abs(line_type)
     endif else begin
         oplot_line_with_label, u, v, linelabel=linelabel, _extra = oplot_kw, lines=line_type, $
           putlabel=1,flush=flush,charsize=charsize, $
-          latex=latex, ltxstc=ltxstc
+          latex=latex, ltxstc=ltxstc, color=color[0]
     endelse
 endif else begin
 ;    bad = [0,bad,n_elements(u)-1]
@@ -109,13 +110,13 @@ endif else begin
             u1 = u[bad[j]:bad[j+1]-1]
             v1 = v[bad[j]:bad[j+1]-1]
             if (line_type lt 0) then begin
-                oplot, u1, v1, _extra = oplot_kw, col=1 ; white background
-                oplot, u1, v1, _extra = oplot_kw, col=0, lines=abs(line_type)
+                oplot, u1, v1, _extra = oplot_kw, col=color[1] ; white background
+                oplot, u1, v1, _extra = oplot_kw, col=color[0], lines=abs(line_type)
             endif else begin
                 putlabel = (~already)
                 oplot_line_with_label, u1, v1, linelabel=linelabel, _extra = oplot_kw, lines=line_type, $
                   putlabel=putlabel, flush=flush, charsize=charsize, $
-                  latex=latex, ltxstc=ltxstc
+                  latex=latex, ltxstc=ltxstc, color=color[0]
                 already = 1
             endelse        
         endif

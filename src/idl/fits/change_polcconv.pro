@@ -44,41 +44,46 @@ pro change_polcconv, file_in, file_out, i2c=i2c, c2i=c2i, c2c=c2c, i2i=i2i, forc
 ; INPUTS:
 ;           File_In: Input FITS file
 ;
-;           File_Out: Output FITS file
+;           File_Out: Output FITS file, must be different from File_In
 ;
 ; KEYWORD PARAMETERS:
 ;          one and only one of the following four should be set
 ;
 ;          I2C: changes from IAU to COSMO coordinate convention
-;              -if POLCCONV is not found or found with value 'IAU', it is
-;               added/replaced with value 'COSMO', and the sign of the U stokes
-;               parameter map is changed
-;              -if POLCCONV already has value 'COSMO', File_In is copied
-;              unchanged into File_Out
+;              -if POLCCONV is not found or found with value 'IAU', 
+;               or FORCE is set, 
+;               it is added/replaced with value 'COSMO', 
+;               and the sign of the U stokes parameter map is changed;
+;              -if POLCCONV already has value 'COSMO', 
+;               and FORCE is NOT set,
+;               File_In is copied unchanged into File_Out,
 ;
 ;          C2I: changes from COSMO to IAU coordinate convention
-;              -if POLCCONV is not found or found with value 'COSMO', it is
-;               added/replaced with value 'IAU', and the sign of the U stokes
-;               parameter map is changed
-;              -if POLCCONV already has value 'IAU',  File_In is copied
-;              unchanged into File_Out
+;              -if POLCCONV is not found or found with value 'COSMO', 
+;               or FORCE is set, 
+;               it is added/replaced with value 'IAU', 
+;               and the sign of the U stokes parameter map is changed;
+;              -if POLCCONV already has value 'IAU',  
+;               and FORCE is NOT set,
+;               File_In is copied unchanged into File_Out.
 ;
 ;          C2C: does NOT change coordinate system
-;              -if POLCCONV is found with value 'IAU', program will issue error
-;              message and no file is written
-;              -in all other cases POLCCONV is set/reset to 'COSMO', but
-;               data is NOT changed
+;              -if POLCCONV is found with value 'IAU', and FORCE is NOT set,
+;               program will issue error message and no file is written;
+;              -in all other cases POLCCONV is set/reset to 'COSMO' in File_Out, 
+;               but data is NOT changed
 ;
 ;          I2I: does NOT change coordinate system
-;              -if POLCCONV is found with value 'COSMO', program will issue error
-;              message and no file is written
+;              -if POLCCONV is found with value 'COSMO', and FORCE is NOT set,
+;               program will issue error message and no file is written,
 ;              -in all other cases POLCCONV is set/reset to 'IAU', but
 ;               data is NOT changed
 ;
 ;          FORCE: if set, the value of POLCCONV read from the FITS header is
 ;          ignored.
-;              The sign of U is swapped (if used with C2I or I2C), and the
-;              keyword is updated accordingly
+;              The sign of U is swapped (if used with C2I or I2C), and/or the
+;              keyword is updated to IAU (if used with I2I or C2I)
+;              or to COSMO (if used with C2C or I2C).
 ;
 ;
 ;
@@ -92,7 +97,7 @@ pro change_polcconv, file_in, file_out, i2c=i2c, c2i=c2i, c2c=c2c, i2i=i2i, forc
 ;          none
 ;
 ; SIDE EFFECTS:
-;          may write a new FITS file or modify an existing one
+;          write a new FITS file
 ;
 ; RESTRICTIONS:
 ;          only works with recognised FITS formats
@@ -187,6 +192,7 @@ for i=0,n_ext-1 do begin
     ;nmaps = n_elements(tqu[0,*])
     nmaps = n_elements(names)
     xQU = (nmaps ge 3) ? product(strcmp(names[1:2],['Q','U'],1,/fold_case),/preserve):0 ; first 3 column names are *,Q*,U*
+     QU = (nmaps eq 2) ? product(strcmp(names[0:1],['Q','U'],1,/fold_case),/preserve):0 ; first 2 column names are Q*,U*
     
     case count of
         0: in_xxx = 1
@@ -223,10 +229,18 @@ for i=0,n_ext-1 do begin
         endif else begin
             clist = [-1]
 
-            if (nmaps le 2) then begin
-                non_pol = 1
-            endif
+            if (nmaps le 1) then non_pol = 1
 
+            if (nmaps eq 2) then begin
+                if (n_ext eq 1 && QU) then begin
+                    ; Planck 2 columns (Q*, U*)
+                    clist   = [1] ; change sign of U
+                    do_edit = 1
+                endif else begin
+                    non_pol = 1
+                endelse
+            endif
+            
             if (nmaps eq 3) then begin
                                 ; standard Healpix full sky format (T, Q, U;   TT, QQ, UU;  QU, TU, TQ)
                                 ; should NOT affect unpolarized Planck maps (I_Stokes ,HITS, II_COV) 
