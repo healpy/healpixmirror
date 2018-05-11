@@ -2,7 +2,7 @@
 
 
 \renewcommand{\facname}{{change\_polcconv }}
-\renewcommand{\FACNAME}{{CHANGE\_POLCCONV }}
+\renewcommand{\FACNAME}{{CHANGE\_POLCCONV}}
 \sloppy
 
 \title{\healpix IDL Facility User Guidelines}
@@ -14,9 +14,9 @@
 
 \begin{facility}
 {This IDL facility  changes the coordinate convention in FITS file containing a polarised sky map.
-The main effect is to change the sign of the U Stokes parameter,
-and add/update the POLCCONV FITS header with either
-COSMO or IAU value.\\
+The main effect is to change the sign of the $U$ Stokes parameter,
+and add/update the \texttt{POLCCONV} FITS header keyword with either
+\texttt{COSMO} or \texttt{IAU} value.\\
 See \htmlref{note on POLCCONV}{intro:polcconv} in \linklatexhtml{The \healpix Primer}{intro.pdf}{intro.htm}}
 {src/idl/fits/change\_polcconv.pro}
 \end{facility}
@@ -24,11 +24,11 @@ See \htmlref{note on POLCCONV}{intro:polcconv} in \linklatexhtml{The \healpix Pr
 \begin{IDLformat}
 {\FACNAME, \mylink{idl:change_polcconv:File_In}{File\_In}%
 , \mylink{idl:change_polcconv:File_Out}{File\_Out}%
- [, \mylink{idl:change_polcconv:I2C}{/I2C}%
-, \mylink{idl:change_polcconv:C2I}{/C2I}%
-, \mylink{idl:change_polcconv:C2C}{/C2C}%
-, \mylink{idl:change_polcconv:I2I}{/I2I}%
-, \mylink{idl:change_polcconv:FORCE}{/FORCE}%
+, [\mylink{idl:change_polcconv:I2C}{/I2C}%
+|\mylink{idl:change_polcconv:C2I}{/C2I}%
+|\mylink{idl:change_polcconv:C2C}{/C2C}%
+|\mylink{idl:change_polcconv:I2I}{/I2I}]%
+, [\mylink{idl:change_polcconv:FORCE}{/FORCE}%
 ]
 }
 \end{IDLformat}
@@ -40,43 +40,62 @@ See \htmlref{note on POLCCONV}{intro:polcconv} in \linklatexhtml{The \healpix Pr
 
  	\item[{File\_Out}]  \mytarget{idl:change_polcconv:File_Out}
           name of a FITS file to be written, after modification of the
-          polarisation coordinate convention, if applicable
+          polarisation coordinate convention, if applicable. 
+	It must be different from \mylink{idl:change_polcconv:File_In}{File\_In}
 
   \end{qulist}
 \end{qualifiers}
 
 \begin{keywords}
+One and only one among 
+\mylink{idl:change_polcconv:I2C}{I2C}, 
+\mylink{idl:change_polcconv:C2I}{C2I}, 
+\mylink{idl:change_polcconv:C2C}{C2C} and 
+\mylink{idl:change_polcconv:I2I}{I2I} must be set.\\
   \begin{kwlist}{} %%% extra brace
         \item[{/I2C}]  \mytarget{idl:change_polcconv:I2C} changes from IAU to COSMO coordinate convention \\
-            -if POLCCONV is not found or found with value 'IAU', it is
-             added/replaced with value 'COSMO', and the sign of the U stokes
-             parameter map is changed \\
-            -if POLCCONV already has value 'COSMO', File\_In is copied
-            unchanged into File\_Out
+            -if POLCCONV is not found or found with value 'IAU', 
+	     or \mylink{idl:change_polcconv:FORCE}{FORCE} is set,
+             it is added/replaced with value 'COSMO', and the sign of the $U$ Stokes parameter map is changed; \\
+            -if POLCCONV already has value 'COSMO' 
+             and \mylink{idl:change_polcconv:FORCE}{FORCE} is NOT set, 
+             \mylink{idl:change_polcconv:File_In}{File\_In} is copied
+             unchanged into \mylink{idl:change_polcconv:File_Out}{File\_Out}.
 
         \item[{/C2I}]  \mytarget{idl:change_polcconv:C2I} changes from COSMO to IAU coordinate convention \\
-            -if POLCCONV is not found or found with value 'COSMO', it is
-             added/replaced with value 'IAU', and the sign of the U stokes
-             parameter map is changed \\
-            -if POLCCONV already has value 'IAU',  File\_In is copied
-            unchanged into File\_Out
+            -if POLCCONV is not found or found with value 'COSMO', 
+	     or \mylink{idl:change_polcconv:FORCE}{FORCE} is set,
+             it is added/replaced with value 'IAU', and the sign of the $U$ Stokes parameter map is changed; \\
+            -if POLCCONV already has value 'IAU',  
+             and \mylink{idl:change_polcconv:FORCE}{FORCE} is NOT set, 
+             \mylink{idl:change_polcconv:File_In}{File\_In} is copied
+             unchanged into \mylink{idl:change_polcconv:File_Out}{File\_Out}.
 
         \item[{/C2C}]  \mytarget{idl:change_polcconv:C2C} does NOT change coordinate system \\
-            -if POLCCONV is found with value 'IAU', program will issue error
-            message and no file is written \\
-            -in all other case POLCCONV is set/added with value 'COSMO', but
-             data is NOT changed
+            -if POLCCONV is found with value 'IAU', 
+             and \mylink{idl:change_polcconv:FORCE}{FORCE} is NOT set,
+             program will issue error message and no file is written; \\
+            -in all other cases POLCCONV is set/added with value 'COSMO' in \mylink{idl:change_polcconv:File_Out}{File\_Out}, 
+             but data is NOT changed.
 
         \item[{/I2I}]  \mytarget{idl:change_polcconv:I2I} does NOT change coordinate system \\
-            -if POLCCONV is found with value 'COSMO', program will issue error
-            message and no file is written \\
-            -in all other case POLCCONV is set/added with value 'IAU', but
-             data is NOT changed
+            -if POLCCONV is found with value 'COSMO', 
+             and \mylink{idl:change_polcconv:FORCE}{FORCE} is NOT set,
+             program will issue error message and no file is written; \\
+            -in all other cases POLCCONV is set/added with value 'IAU' in \mylink{idl:change_polcconv:File_Out}{File\_Out}, 
+             but data is NOT changed.
 
-        \item[{/FORCE}]  \mytarget{idl:change_polcconv:FORCE} if set, the value of POLCCONV read from the FITS header is
-          ignored.
-              The sign of U is swapped (if used with /C2I or /I2C), and the
-              FITS keyword is updated accordingly.
+        \item[{/FORCE}]  \mytarget{idl:change_polcconv:FORCE} if set, 
+           the value of \texttt{POLCCONV} read from 
+	\mylink{idl:change_polcconv:File_In}{File\_In} FITS header is ignored.
+              The sign of $U$ is swapped (if used with 
+              \mylink{idl:change_polcconv:C2I}{/C2I} or 
+              \mylink{idl:change_polcconv:I2C}{/I2C}), and/or the \mylink{idl:change_polcconv:File_Out}{File\_Out}
+              FITS keyword is updated to IAU (if used with 
+		\mylink{idl:change_polcconv:I2I}{/I2I} or 
+		\mylink{idl:change_polcconv:C2I}{/C2I}) or to COSMO (if used with 
+		\mylink{idl:change_polcconv:C2C}{/C2C} or 
+		\mylink{idl:change_polcconv:I2C}{/I2C}).
 
    \end{kwlist}
 \end{keywords}
@@ -84,11 +103,12 @@ See \htmlref{note on POLCCONV}{intro:polcconv} in \linklatexhtml{The \healpix Pr
 \begin{codedescription}
 {This routine will change the sign of the $U$ Stokes parameters (and related
 quantities, such as the $TU$ and $QU$ cross-correlations) and update the
-'POLCCONV' FITS keyword where applicable.
-The recognised format are: \\
-- standard Healpix  full sky polarised format \\
-- cut sky Healpix polarised format \\
-- WMAP 2nd year polarised format}
+\texttt{POLCCONV} FITS keyword where applicable.
+The recognised formats are: \\
+- standard \healpix full sky polarised format, \\
+- cut sky \healpix polarised format, \\
+- WMAP 9-year release polarised \texttt{*\_iqumap\_*} and \texttt{*\_iqusmap\_*} formats,\\
+- Planck \texttt{*\_SkyMap\_*} and \texttt{*\_CMB\_IQU*} formats}
 \end{codedescription}
 
 

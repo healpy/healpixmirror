@@ -6,7 +6,8 @@ PDFTEX  := pdflatex
 TEXFLAGS := 
 DVIFLAGS :=
 PDFFLAGS :=
-LATEX2HTML := export L2HCONFIG=./my_l2hconf.pm ; export PATH=$(PATH):/sw2/bin ; ./latex2html
+LATEX2HTML := export L2HCONFIG=./my_l2hconf.pm ; export PATH=$(PATH):/usr/local/bin ; ./latex2html
+#LATEX2HTML := export L2HCONFIG=./my_l2hconf.pm ; export PATH=$(PATH):/sw2/bin ; ./latex2html
 #LATEX2HTML := export L2HCONFIG=./my_l2hconf_test.pm ; export PATH=$(PATH):/tmp/netpbm/bin ; ./latex2html
 # LATEX2HTML := ~/bin/latex2html
 VERSION =  $(shell grep newcommand hpxversion.tex | grep hpxversion | sed "s/[a-z{}\\]*//g")

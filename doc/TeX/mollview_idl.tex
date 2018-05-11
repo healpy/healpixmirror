@@ -275,6 +275,12 @@ The accepted inputs are \\
 {\tt CBAR.SPACES}: 3-element vector listing the strings to be inserted between the map minimum value label, the color bar, the map maximum value, and the map units (read from the FITS file or provided by \mylink{idl:mollview:units}{UNITS}) \default{3 single spaces}, \\
 {\tt CBAR.TY}: vertical offset of the text (min, max and units labels) with respect to the color bar \default{0};\\
 \textbf{Note:} the character size of the text accompanying the color bar is fully determined by the keyword \mylink{idl:mollview:charsize}{Charsize},\\
+{\tt CBAR.BOX}: thickness of the black box drawn around the color bar \default{0: no box}; 
+the final thickness is \texttt{2* cbar.box*!p.thick} in 
+\mylink{idl:mollview:pdf}{PDF} and 
+\mylink{idl:mollview:ps}{PS}, 
+and \texttt{cbar.box*!p.thick} otherwise, 
+where \texttt{!p.thick} is assumed to have a value of 1.0 unless specified otherwise.\\
 {\tt CRING.DX, CRING.XLL, CRING.YLL}: radius and X,Y location of lower left corner of the color disc showing the polarization direction when \mylink{idl:mollview:polarization}{POLARIZATION=3}\\
 {\tt PDF.DEBUG}: if set to 1, and \mylink{idl:mollview:silent}{SILENT} is not set, then debugging information on the \mylink{idl:mollview:pdf}{PDF} generation will be printed (when applicable), 
 and the intermediate Postscript file will be kept\\
@@ -290,11 +296,6 @@ with the one provided in the keyword
 See \mylink{idl:mollview:example7}{Example \#7} \latexhtml{on page~\pageref{page:moll_customize}}{below}.
 }\\
 
-\hspace{\sizeone}{DEFAULT\-\_SETTINGS=}\mytarget{idl:mollview:default_settings}  & \mylink{idl:mollview:routines}{all}  & \parbox[t]{\hsize}{Structure containing on output the default values (slightly projection dependent) of the plotting parameters that can be customized with 
-\mylink{idl:mollview:customize}{CUSTOMIZE}.\\
-As shown in \mylink{idl:mollview:example7}{Example \#7} \latexhtml{on page~\pageref{page:moll_customize}}{below}, the returned structure can be inspected with the routine \htmlref{{\tt help\_st}}{idl:help_st}.}\\
-
-
 %%%%%%%%%%%%%%%%%
 \end{tabular}
 \mollbacktotop
@@ -304,6 +305,12 @@ As shown in \mylink{idl:mollview:example7}{Example \#7} \latexhtml{on page~\page
 \textbf{name} & \textbf{routines} & \textbf{\ description} \\ \hline
 %                   &   &                            \\ %%% for presentation
 %%%%%%%%%%%%%%%%%
+
+\hspace{\sizeone}{DEFAULT\-\_SETTINGS=}\mytarget{idl:mollview:default_settings}  & \mylink{idl:mollview:routines}{all}  & \parbox[t]{\hsize}{Structure containing on output the default values (slightly projection dependent) of the plotting parameters that can be customized with 
+\mylink{idl:mollview:customize}{CUSTOMIZE}.\\
+As shown in \mylink{idl:mollview:example7}{Example \#7} \latexhtml{on page~\pageref{page:moll_customize}}{below}, the returned structure can be inspected with the routine \htmlref{{\tt help\_st}}{idl:help_st}.}\\
+
+
 
 {EXECUTE=}\mytarget{idl:mollview:execute}  & \mylink{idl:mollview:routines}{all}  & \parbox[t]{\hsize}{
 		character string containing IDL command(s) to be executed in the
@@ -360,6 +367,16 @@ The resulting FITS file can be read in IDL with eg. map={\tt readfits}({\em file
 \\
 	\seealso \mylink{idl:mollview:map_out}{Map\_out}}\\
 
+%%%%%%%%%%%%%%%%%
+\end{tabular}
+\mollbacktotop
+%-----------------------------------------------------------
+\begin{tabular}{p{\sizeone} p{\sizetwo} p{\sizethr}}
+\hline  
+\textbf{name} & \textbf{routines} & \textbf{\ description} \\ \hline
+%                   &   &                            \\ %%% for presentation
+%%%%%%%%%%%%%%%%%
+
 {/FLIP}\mytarget{idl:mollview:flip}  & \mylink{idl:mollview:routines}{all}  & if set the longitude increases to the right, whereas by
                 default (astronomical convention) it increases towards the left \\
  
@@ -370,15 +387,6 @@ The resulting FITS file can be read in IDL with eg. map={\tt readfits}({\em file
 	\default{0: monopole and dipole fit done on the whole sky}
               (\seealso \mylink{idl:mollview:no_dipole}{No\_dipole}, \mylink{idl:mollview:no_monopole}{No\_monopole}) \\
 
-%%%%%%%%%%%%%%%%%
-\end{tabular}
-\mollbacktotop
-%-----------------------------------------------------------
-\begin{tabular}{p{\sizeone} p{\sizetwo} p{\sizethr}}
-\hline  
-\textbf{name} & \textbf{routines} & \textbf{\ description} \\ \hline
-%                   &   &                            \\ %%% for presentation
-%%%%%%%%%%%%%%%%%
 
 {GIF=}\mytarget{idl:mollview:gif}  & \mylink{idl:mollview:routines}{all}  & \parbox[t]{\hsize}{
 		string containing the name of a .GIF output \\
@@ -430,9 +438,6 @@ or {\tt orthographic}, \\
 	}\\
 
 
-{/HALF\_SKY}\mytarget{idl:mollview:half_sky} & \mylink{idl:mollview:routines}{---O} & if set, only shows only one half of the sky 
-   (centered on (0,0) or on the location parametrized by \mylink{idl:mollview:rot}{Rot}) instead of the full sky \\
- 
 %%%%%%%%%%%%%%%%%
 \end{tabular}
 \mollbacktotop
@@ -442,6 +447,10 @@ or {\tt orthographic}, \\
 \textbf{name} & \textbf{routines} & \textbf{\ description} \\ \hline
 %                   &   &                            \\ %%% for presentation
 %%%%%%%%%%%%%%%%%
+
+{/HALF\_SKY}\mytarget{idl:mollview:half_sky} & \mylink{idl:mollview:routines}{---O} & if set, only shows only one half of the sky 
+   (centered on (0,0) or on the location parametrized by \mylink{idl:mollview:rot}{Rot}) instead of the full sky \\
+ 
 
 {HBOUND=}\mytarget{idl:mollview:hbound} & \mylink{idl:mollview:routines}{all}& scalar or vector of up to 3
 elements.

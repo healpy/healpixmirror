@@ -169,7 +169,7 @@ floating point reals. The following points should be noted: \label{page:ioprec}
 \item   will have a limited impact on the output accuracy if the input file contains only
   single precision data,
 \item is recommended if the input file contains double precision data, and the precision of the output is critical
-\item will not alter the execution speed, but
+\item will only increase a bit the execution time (by 15\% in some of our tests), but
   it will almost double the memory consumption of the facility,
 \item will obviously double the size of the output file(s).
 \end{itemize}
@@ -244,7 +244,7 @@ as described in the \htmlref{note on POLCCONV}{intro:polcconv} in \linklatexhtml
 \item%
 \htmlref{\texttt{median\_filter}}{fac:median_filter} faster by moving an internal array from heap to stack; does not crash anymore when dealing with empty data sets; 
 slightly different output when median is computed over an even number of pixels $n\ge 100$, sorted in $[1,n]$,
-the output is $d(n/2)$ instead of $(d(n/2)+d(n/2+1))/2$ previously. Result remain $d(n/2+1)$ for odd $n$.
+the output is $d(n/2)$ instead of $(d(n/2)+d(n/2+1))/2$ previously. Result remains $d(n/2+1)$ for odd $n$.
 \end{itemize}
 
 %--------------------------------------------

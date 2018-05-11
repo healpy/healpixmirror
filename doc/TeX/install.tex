@@ -14,6 +14,7 @@
 \input{idlversion}
 \input{gdlversion}
 \input{flversion}
+\input{hpyversion}
 \end{htmlonly}
 
 \hypersetup{%
@@ -301,12 +302,18 @@ GDL \gdlversion or more         &
 			    http://sf.net/projects/gnudatalanguage}
                                                       \\ %%% for presentation
 FL \flversion or more         & 
+%                             \htmladdnormallink{{\tt
+%                             http://www.fawlty.uhostall.com}}{%
+% 			    http://www.fawlty.uhostall.com} or
+%                             \htmladdnormallink{{\tt
+%                             http://85.255.9.75/fl}}{%
+% 			    http://85.255.9.75/fl}
                             \htmladdnormallink{{\tt
-                            http://www.fawlty.uhostall.com}}{%
-			    http://www.fawlty.uhostall.com} or
+                            \flsitea}}{%
+			    \flsitea} or
                             \htmladdnormallink{{\tt
-                            http://85.255.9.75/fl}}{%
-			    http://85.255.9.75/fl}
+                            \flsiteb}}{%
+			    \flsiteb}
 			\\
                                    &                          \\ \hline %%% for presentation
 \end{tabular}\vspace{3ex}
@@ -1346,7 +1353,8 @@ All other features work properly, including the \mylinkext{idl:mollview:latex}{\
 \mytarget{install:using_fl}
 Fawlty Language (FL) is a black-box implementation of IDL 8.0, for which precompiled self-contained packages
 are available for Linux, Windows, MacOSX and more from 
-\htmladdnormallink{http://www.fawlty.uhostall.com}{http://www.fawlty.uhostall.com}.
+%\htmladdnormallink{http://www.fawlty.uhostall.com}{http://www.fawlty.uhostall.com}.
+\htmladdnormallink{\flsitea}{\flsitea}.
 
 Most of the IDL routines and features have been implemented, with a few exceptions 
 (like \texttt{xloadct}) and the restrictions listed below.
@@ -1371,29 +1379,37 @@ a recent version of \htmladdnormallink{\texttt{ghostscript}}{http://www.ghostscr
 
 \subsubsection*{Impact of FL limitations on \healpix}
 \begin{itemize}
-\item
-Only the Hershey font (\texttt{!p.font=-1}) is accessible.
-As a consequence, in \htmlref{\texttt{azeqview}, \texttt{cartview}, \texttt{gnomview}, \texttt{mollview} and \texttt{orthview}}{idl:mollview}:
-the options
-\mylinkext{idl:mollview:latex}{\texttt{LATEX=2}} (only available in conjunction with 
-\mylinkext{idl:mollview:ps}{\texttt{PS}} and 
-\mylinkext{idl:mollview:pdf}{\texttt{PDF}}) and 
-\mylinkext{idl:mollview:pfonts}{\texttt{PFONTS}}
-will not work properly.
-
-%\emph{Problems detected when testing FL on MacOSX:}
-%We now list problems encountered when testing FL on MacOSX, even though they can affect other platforms as well.
-%
-\item
-In FL, and at least under MacOSX, the on-screen ('X' device) fonts and character thicknesses may be sligtly different from the ones produced in IDL.
-If present, the difference will also be visible
-on the X-based graphical outputs of 
+\item In FL the Hershey Fonts (\texttt{!p.font=-1}) and Device Fonts (\texttt{!p.font=0})
+look respectively slightly and noticeably different from their IDL counterparts,
+while the TrueType Fonts (\texttt{!p.font=1}) are not fully implemented yet.
+As a consequence, the graphical outputs of 
 \htmlref{\texttt{azeqview}, \texttt{cartview}, \texttt{gnomview}, \texttt{mollview} and \texttt{orthview}}{idl:mollview}
-(ie \mylinkext{idl:mollview:gif}{\texttt{GIF}}, 
-\mylinkext{idl:mollview:jpeg}{\texttt{JPEG}} or 
-\mylinkext{idl:mollview:png}{\texttt{PNG}} files) 
-{\em unless} a virtual window (eg, \mylinkext{idl:mollview:pfonts}{\texttt{window=-1}})
-is used during their production.
+will look slightly different in FL and IDL, 
+while in those routines the option 
+\mylinkext{idl:mollview:pfonts}{\texttt{PFONTS}} will not work fully as expected.
+% \item
+% Only the Hershey font (\texttt{!p.font=-1}) is accessible.
+% As a consequence, in \htmlref{\texttt{azeqview}, \texttt{cartview}, \texttt{gnomview}, \texttt{mollview} and \texttt{orthview}}{idl:mollview}:
+% the options
+% \mylinkext{idl:mollview:latex}{\texttt{LATEX=2}} (only available in conjunction with 
+% \mylinkext{idl:mollview:ps}{\texttt{PS}} and 
+% \mylinkext{idl:mollview:pdf}{\texttt{PDF}}) and 
+% \mylinkext{idl:mollview:pfonts}{\texttt{PFONTS}}
+% will not work properly.
+
+% %\emph{Problems detected when testing FL on MacOSX:}
+% %We now list problems encountered when testing FL on MacOSX, even though they can affect other platforms as well.
+% %
+% \item
+% In FL, and at least under MacOSX, the on-screen ('X' device) fonts and character thicknesses may be sligtly different from the ones produced in IDL.
+% If present, the difference will also be visible
+% on the X-based graphical outputs of 
+% \htmlref{\texttt{azeqview}, \texttt{cartview}, \texttt{gnomview}, \texttt{mollview} and \texttt{orthview}}{idl:mollview}
+% (ie \mylinkext{idl:mollview:gif}{\texttt{GIF}}, 
+% \mylinkext{idl:mollview:jpeg}{\texttt{JPEG}} or 
+% \mylinkext{idl:mollview:png}{\texttt{PNG}} files) 
+% {\em unless} a virtual window (eg, \mylinkext{idl:mollview:pfonts}{\texttt{window=-1}})
+% is used during their production.
 
 % Because of limitations of the Qt4 library used by FL on MacOSX, 
 % problems will appear in the generation of GIF, JPEG and PNG output in \htmlref{\texttt{azeqview}, \texttt{cartview}, \texttt{gnomview}, \texttt{mollview} and \texttt{orthview}}{idl:mollview},
@@ -1473,14 +1489,25 @@ as described in the \htmlref{note on POLCCONV}{intro:polcconv} in \linklatexhtml
 \htmlref{\texttt{median\_filter}}{fac:median_filter} facility and 
 \htmlref{\texttt{median}}{sub:median} subroutine: faster by moving an internal array from heap to stack; do not crash anymore when dealing with empty data sets; 
 slightly different output of \htmlref{\texttt{median\_filter}}{fac:median_filter}: when median is computed over an even number of pixels $n\ge 100$, sorted in $[1,n]$,
-the output is $d(n/2)$ instead of $(d(n/2)+d(n/2+1))/2$ previously. Result remain $d(n/2+1)$ for odd $n$.
+the output is $d(n/2)$ instead of $(d(n/2)+d(n/2+1))/2$ previously. Result remains $d(n/2+1)$ for odd $n$.
 \end{itemize}
 %
 \subsubsection[IDL]{\linklatexhtml{IDL}{idl.pdf}{idl.htm}}
 \begin{itemize}
 \item \htmlref{\texttt{ianafast}}{idl:ianafast} and \htmlref{\texttt{ismoothing}}{idl:ismoothing}: 
 see note on \texttt{POLCCONV} in F90 facilities above.
+%
+\item 
+\label{install:idl:change_polcconv}
+\mytarget{install:idl:change_polcconv}
+\htmlref{\texttt{change\_polcconv}}{idl:change_polcconv} has been improved to allow the change of 
+polarization convention (by changing the sign of $U$ Stokes parameter and updating \htmlref{\texttt{POLCCONV}}{intro:polcconv} value) in FITS files 
+containing polarized maps generated by standard \healpix tools, 
+as well as for specific formats brewed by the WMAP and Planck projects throughout the years.\\
+%An equivalent python facility \texttt{change\_polcconv.py} is now available as well.
+%
 \item new \htmlref{{\tt help\_st}}{idl:help_st} to get information on a structure and its sub-structures
+%
 \item \htmlref{{\tt azeqview, cartview, gnomview, mollview,
 orthview}}{idl:mollview} visualization routines:
 \begin{itemize}
@@ -1497,6 +1524,14 @@ orthview}}{idl:mollview} visualization routines:
 \subsubsection[Java]{\htmladdnormallink{Java}{http://healpix.sourceforge.net/html/java/index.html}}
 %
 \subsubsection[Python]{\htmladdnormallink{Python}{http://healpy.readthedocs.org/en/latest/}}
+\begin{itemize}
+\item Switch to 
+	\htmladdnormallink{\texttt{healpy \hpyversion}}{https://github.com/healpy/healpy/releases} 
+	(\htmladdnormallink{CHANGELOG}{https://github.com/healpy/healpy/blob/master/CHANGELOG.rst})
+\item addition of the python facility \texttt{change\_polcconv.py} to change the polarization convention 
+(see \mylink{install:idl:change_polcconv}{IDL's \texttt{change\_polcconv.pro} above}).
+\end{itemize}
+
 
 
 

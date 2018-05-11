@@ -20,8 +20,8 @@ EOF
   exit
 fi
 
-dir=/sw2/bin/
-#dir=/tmp/netpbm/bin/
+#dir=/sw2/bin/
+dir=/usr/local/bin/
 # Fix each PNG image
 for file in `ls -1 $1*.png`
 do

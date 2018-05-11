@@ -21,13 +21,19 @@ $PERL = '/usr/bin/perl';
 
 #  Give the paths to latex and dvips on your system:
 #
-$LATEX = '/sw2/bin/latex';	# LaTeX
-$DVIPS = '/sw2/bin/dvips';	# dvips
+# $LATEX = '/sw2/bin/latex';	# LaTeX
+# $DVIPS = '/sw2/bin/dvips';	# dvips
+# $LATEX = '/usr/local/texlive/2012/bin/x86_64-darwin/latex';	# LaTeX
+# $DVIPS = '/usr/local/texlive/2012/bin/x86_64-darwin/dvips';	# dvips
+$LATEX = '/usr/local/texlive/2017/bin/x86_64-darwin/latex';	# LaTeX
+$DVIPS = '/usr/local/texlive/2017/bin/x86_64-darwin/dvips';	# dvips
 
 
 #  give these too, to use the  -ldump  feature
 #
-$TEX = "/sw2/bin/tex"; 			# TeX
+#$TEX = "/sw2/bin/tex"; 			# TeX
+#$TEX = "/usr/local/texlive/2012/bin/x86_64-darwin/tex"; 			# TeX
+$TEX = "/usr/local/texlive/2017/bin/x86_64-darwin/tex"; 			# TeX
 $INILATEX = " \"&latex\"";	# initex+latex
 
 
@@ -811,28 +817,28 @@ $PAPERSIZE = "a5";
 # Thanks to Bruce Miller <bruce.miller@nist.gov> for revising support for
 # these packages, via the module  styles/graphics-support.perl 
 
-$PNMCUT = '/sw2/bin/pnmcut';
-$PNMFLIP = '/sw2/bin/pnmflip';
-$PNMPAD = '/sw2/bin/pnmpad';
-$PNMROTATE = '/sw2/bin/pnmrotate';
-$PNMSCALE = '/sw2/bin/pnmscale';
+$PNMCUT    = '/usr/local/bin/pnmcut';
+$PNMFLIP   = '/usr/local/bin/pnmflip';
+$PNMPAD    = '/usr/local/bin/pnmpad';
+$PNMROTATE = '/usr/local/bin/pnmrotate';
+$PNMSCALE  = '/usr/local/bin/pnmscale';
 
-$GIFTOPNM = '/sw2/bin/giftopnm';
-$JPEGTOPNM = '/sw2/bin/jpegtopnm';
-$PNGTOPNM = '/sw2/bin/pngtopnm';
-$PNMTOPNG = '/sw2/bin/pnmtopng';
-$PPMTOGIF = '/sw2/bin/ppmtogif';
-$PPMTOJPEG = '/sw2/bin/ppmtojpeg';
+$GIFTOPNM  = '/usr/local/bin/giftopnm';
+$JPEGTOPNM = '/usr/local/bin/jpegtopnm';
+$PNGTOPNM  = '/usr/local/bin/pngtopnm';
+$PNMTOPNG  = '/usr/local/bin/pnmtopng';
+$PPMTOGIF  = '/usr/local/bin/ppmtogif';
+$PPMTOJPEG = '/usr/local/bin/ppmtojpeg';
 
 # there are for some lesser-used (platform-specific ?) graphics formats:
-$TIFFTOPNM = '/sw2/bin/tifftopnm';
-$ANYTOPNM = '/sw2/bin/anytopnm';
-$BMPTOPPM = '/sw2/bin/bmptoppm';
-$PCXTOPPM = '/sw2/bin/pcxtoppm';
-$PICTTOPPM = '/sw2/bin/picttoppm';
-$SGITOPNM = '/sw2/bin/sgitopnm';
-$XBMTOPBM = '/sw2/bin/xbmtopbm';
-$XWDTOPNM = '/sw2/bin/xwdtopnm';
+$TIFFTOPNM = '/usr/local/bin/tifftopnm';
+$ANYTOPNM  = '/usr/local/bin/anytopnm';
+$BMPTOPPM  = '/usr/local/bin/bmptoppm';
+$PCXTOPPM  = '/usr/local/bin/pcxtoppm';
+$PICTTOPPM = '/usr/local/bin/picttoppm';
+$SGITOPNM  = '/usr/local/bin/sgitopnm';
+$XBMTOPBM  = '/usr/local/bin/xbmtopbm';
+$XWDTOPNM  = '/usr/local/bin/xwdtopnm';
 
 # uncomment these, and adjust  configure.in  to find the executable
 # $FIASCOTOPNM = ;
