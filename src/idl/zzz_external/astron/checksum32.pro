@@ -34,13 +34,10 @@ pro checksum32, array, checksum, FROM_IEEE = from_IEEE, NOSAVE = nosave
 ; METHOD:
 ;       Uses TOTAL() to sum the array into an unsigned integer variable.  The
 ;       overflow bits beyond 2^32 are then shifted back to the least significant
-;       bits.    The summing is done in chunks. of 2^31 numbers to avoid loss
+;       bits.    The summing is done in chunks of 2^31 numbers to avoid loss
 ;      of precision.    Adapted from FORTRAN code in
 ;      heasarc.gsfc.nasa.gov/docs/heasarc/ofwg/docs/general/checksum/node30.html
 ;
-;      Could probably be done in a cleverer way (similar to the C
-;      implementation) but then the array-oriented TOTAL() function could not 
-;      be used.
 ; RESTRICTIONS:
 ;       (1) Not valid for object or pointer data types
 ; EXAMPLE:

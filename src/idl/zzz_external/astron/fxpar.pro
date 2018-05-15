@@ -109,7 +109,7 @@
 ;       /NAN    = If set, then return Not-a-Number (!values.f_nan) for missing
 ;                 values.  Ignored if keyword MISSING is present.
 ;       /NULL   = If set, then return !NULL (undefined) for missing values.
-;                 Ignored if MISSING of /NAN is present, or if earlier than IDL
+;                 Ignored if MISSING or /NAN is present, or if earlier than IDL
 ;                 version 8.0.  If multiple values would be returned, then
 ;                 MISSING= or /NAN should be used instead of /NULL, making sure
 ;                 that the datatype is consistent with the non-missing values,
@@ -127,7 +127,7 @@
 ;
 ;       The system variable !err is set to -1 if parameter not found, 0 for a
 ;       scalar value returned.  If a vector is returned it is set to the number
-;       of keyword matches found.
+;       of keyword matches found.    This use of !ERR is deprecated.
 ;
 ;       If a keyword occurs more than once in a header, a warning is given,
 ;       and the first occurence is used.  However, if the keyword is "HISTORY",
@@ -170,6 +170,8 @@
 ;               Don't convert LONG64 numbers to to double precision
 ;       Version 12, William Thompson, 13-Aug-2014
 ;               Add keywords MISSING, /NAN, and /NULL
+;		Version 13, W. Landsman 25-Jan-2018
+;				Return ULONG64 integer if LONG64 would overflow
 ;-
 ;------------------------------------------------------------------------------
 ;
@@ -405,12 +407,15 @@ NOT_COMPLEX:
                                 GE 0) OR (STRPOS(VALUE,'D') GE 0) THEN BEGIN
                             IF ( STRPOS(VALUE,'D') GT 0 ) OR $
                                     ( STRLEN(VALUE) GE 8 ) THEN BEGIN
-                                VALUE = DOUBLE(VALUE)
+                            	VALUE = DOUBLE(VALUE)
                                 END ELSE VALUE = FLOAT(VALUE)
                         ENDIF ELSE BEGIN
                             LMAX = 2.0D^31 - 1.0D
                             LMIN = -2.0D^31       ;Typo fixed Feb 2010
-                            VALUE = LONG64(VALUE)
+                            IF STRMID(VALUE,0,1) NE '-' THEN BEGIN
+                            	VALUE = ULONG64(VALUE)
+                            	IF VALUE LT ULONG64(2)^63-1 THEN VALUE = LONG64(VALUE)
+                            ENDIF ELSE VALUE = LONG64(VALUE)
                             if (VALUE GE LMIN) and (VALUE LE LMAX) THEN $
                                 VALUE = LONG(VALUE)
                         ENDELSE

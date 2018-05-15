@@ -221,7 +221,13 @@ replaced coyote's ASPECT with CGASPECT
 
  2017-05-30
 
+
 ----------------
 
-astron/tbget.pro, edited for compatibility with Fawlty Language, 
-and put in edited_astron/tbget.pro
+21 routines updated in astron(5)
+CGFIXPS CHECK_FITS CHECKSUM32 FITS_INFO FITS_OPEN FITS_READ FXHMODIFY FXPAR MAKE_ASTR MATCH MKHDR MRDFITS N_BYTES PUTAST READFITS REPSTR SXDELPAR SXPAR TBGET TBINFO WRITEFITS
+
+ (5) This version of astron requires IDL v6.4 or newer.
+      Done with version 2018-05-15
+
+ 2018-05-15
