@@ -215,7 +215,7 @@ pro proj2out, planmap, Tmax, Tmin, color_bar, dx, title_display, sunits, $
 ;    values in [0,255] setting the opacity of each pixel
 ;   while the IDL version expects a color mask (ie, a vector of size 255) with
 ;   values in [0,255] setting the opacity of each color
-;  - in GDL 0.9.7, expects a list (ie a vector of length <= 256) of
+;  - in GDL 0.9.7 and 0.9.8, expects a list (ie a vector of length <= 256) of
 ;   the colors to be turned transparent
 ;
 ;
@@ -224,7 +224,7 @@ pro proj2out, planmap, Tmax, Tmin, color_bar, dx, title_display, sunits, $
 ;     !D.n_colors            OK
 ;     write_gif              OK
 ;     set_plot,'Z' & device,set_pixel_depth=    remains at 24bits
-;     write_png, transparent   somehow fixed in GDL 0.9.7, see above
+;     write_png, transparent   somehow fixed in GDL 0.9.7 and 0.9.8, see above
 ;     !p.font               Only !p.font=-1
 ;
 ;
