@@ -2,6 +2,9 @@ Changes since 3.30:
 - IMPORTANT: the syntax for specifying ring weights and pixel windows has
   changed! This affects the facilities anafast_cxx, smoothing_cxx,
   udgrade_harmonic_cxx, alm2map_cxx, mult_alm_cxx
+  Pixel window files have to be specified (with path) using the parameter
+  "windowfile"; "ringweights" is used for ring weight files, and "pixelweights"
+  for pixel weight files.
 - full pixel quadrature weights are now supported in map analysis. For maps
   containing a signal that is band-limited at lmax=1.5*nside, this allows
   recovery of the a_lm at almost machine precision. Pixel weights for a desired
