@@ -13,11 +13,11 @@ This should install the compilation products in the subdirectory "auto/".
 
 2) Manual setup
 
-Starting with HEALPix 2.20, Healpix_cxx supports compilation using a
-pre-installed libcfitsio. In order to use this feature, simply set
+Healpix_cxx requires an existing libcfitsio installation (binary as well as
+development header files).
+If these are not located in a standard search path, simply set
 the following environment variables before running "make":
 
-EXTERNAL_CFITSIO=yes
 CFITSIO_EXT_LIB=<full name including path of the cfitsio library file>
                 (or "-L<path/to/library> -lcfitsio")
 CFITSIO_EXT_INC=-I<full name of a directory containing fitsio.h and longnam.h>
@@ -28,16 +28,6 @@ NOTE: due to a conflict of header file names it is currently not possible
 to use the cfitsio library provided with the HEASOFT package for compilation
 of Healpix C++. HEASOFT's include directory contains a file called "rotmatrix.h"
 which clashes with Healpix's own rotmatrix.h.
-
-Alternatively, Healpix_cxx can be instructed to compile its own libcfitsio.
-For that purpose the file cfitsio3310.tar.gz needs to be present in
-the subdirectory libcfitsio/. It can be obtained from
-http://heasarc.gsfc.nasa.gov/FTP/software/fitsio/c/cfitsio3310.tar.gz
-Please simply put the .tar.gz file into the libcfitsio/ directory; it will
-be unpacked and compiled automatically.
-
-If you have a more recent version of the cfitsio package, please edit the
-line starting with "PACKAGE =" in the file libcfitsio/planck.make accordingly.
 
 GNU make is also required for compilation.
 

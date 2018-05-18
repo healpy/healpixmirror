@@ -12,6 +12,8 @@ Changes since 3.30:
   files can be fed into anafast_cxx, smoothing_cxx and udgrade_harmonic_cxx
   using the "pixelweights" parameter.
 - experimental "needlet_tool" code for needlet analysis
+- compilation now always requires that libcfitsio is already installed on the
+  system
 
 Changes since 3.20:
 - switch from custom xcomplex class to std::complex
