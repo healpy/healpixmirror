@@ -79,6 +79,7 @@ int compute_weights_module (int argc, const char **argv)
     out.set_key("MINVAL1",val,"minimum value of T weights");
     out.set_key("MINVAL2",val,"minimum value of Q weights");
     out.set_key("MINVAL3",val,"minimum value of U weights");
+    out.set_key("EPSILON",epsilon,"epsilon parameter for minimization");
     out.write_column(1,wgt);
     out.write_column(2,wgt);
     out.write_column(3,wgt);
@@ -101,6 +102,7 @@ int compute_weights_module (int argc, const char **argv)
     out.set_key("MAXVAL1",val,"maximum value of pixel weights");
     val=*min_element(wgt.begin(),wgt.end());
     out.set_key("MINVAL1",val,"minimum value of pixel weights");
+    out.set_key("EPSILON",epsilon,"epsilon parameter for minimization");
     out.write_column(1,wgt);
     }
   return 0;

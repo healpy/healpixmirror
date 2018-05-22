@@ -82,20 +82,7 @@ double dprod(const vector<double> &a, const vector<double> &b)
   { return inner_product(a.begin(),a.end(),b.begin(),0.); }
 
 tsize n_fullweights (int nside)
-  {
-  //polar region
-  int nrings=nside-1;
-  int nrings2=nrings>>1;
-  tsize res=nrings2*(nrings2+1);
-  if (nrings&1) // odd number of rings
-    res+=nrings2+1;
-  //equatorial region
-  nrings=nside+1;
-  res+=nrings*((nside+1)>>1);
-  if ((nside&1)==0) // nside is even
-    res+=nrings-((nrings+1)>>1);
-  return res;
-  }
+  { return ((3*nside+1)*(nside+1))/4; }
 
 template <typename T> void apply_weight (T &pix, double w, bool setwgt)
   {
