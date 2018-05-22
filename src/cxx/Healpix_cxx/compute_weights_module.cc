@@ -25,7 +25,7 @@
  */
 
 /*
- *  Copyright (C) 2016 Max-Planck-Society
+ *  Copyright (C) 2016-2018 Max-Planck-Society
  *  Author: Martin Reinecke
  */
 
@@ -55,7 +55,8 @@ int compute_weights_module (int argc, const char **argv)
 
   if (params.param_present("outfile_ring"))
     {
-    vector<double> wgt=get_ringweights(nside,nlmax,epsilon,itmax);
+    double epsilon_out;
+    vector<double> wgt=get_ringweights(nside,nlmax,epsilon,itmax,epsilon_out);
     fitshandle out;
     out.create (params.find<string>("outfile_ring"));
     vector<fitscolumn> cols;
@@ -79,14 +80,15 @@ int compute_weights_module (int argc, const char **argv)
     out.set_key("MINVAL1",val,"minimum value of T weights");
     out.set_key("MINVAL2",val,"minimum value of Q weights");
     out.set_key("MINVAL3",val,"minimum value of U weights");
-    out.set_key("EPSILON",epsilon,"epsilon parameter for minimization");
+    out.set_key("EPSILON",epsilon_out,"epsilon reached after minimization");
     out.write_column(1,wgt);
     out.write_column(2,wgt);
     out.write_column(3,wgt);
     }
   if (params.param_present("outfile_full"))
     {
-    vector<double> wgt=get_fullweights(nside,nlmax,epsilon,itmax);
+    double epsilon_out;
+    vector<double> wgt=get_fullweights(nside,nlmax,epsilon,itmax,epsilon_out);
     fitshandle out;
     out.create (params.find<string>("outfile_full"));
     vector<fitscolumn> cols;
@@ -102,7 +104,7 @@ int compute_weights_module (int argc, const char **argv)
     out.set_key("MAXVAL1",val,"maximum value of pixel weights");
     val=*min_element(wgt.begin(),wgt.end());
     out.set_key("MINVAL1",val,"minimum value of pixel weights");
-    out.set_key("EPSILON",epsilon,"epsilon parameter for minimization");
+    out.set_key("EPSILON",epsilon_out,"epsilon reached after minimization");
     out.write_column(1,wgt);
     }
   return 0;

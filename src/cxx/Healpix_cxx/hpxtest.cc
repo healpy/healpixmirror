@@ -1176,7 +1176,8 @@ void check_ringweights ()
   {
   cout << "testing the accuracy of ring weights" << endl;
   int nside=128;
-  auto rwgt0=get_ringweights(nside,3*nside,1e-6,3000);
+  double dummy;
+  auto rwgt0=get_ringweights(nside,3*nside,1e-6,3000,dummy);
   arr<double> rwgt(2*nside);
   for (tsize i=0; i<rwgt.size(); ++i) rwgt[i]=rwgt0[i]+1.;
   Alm<xcomplex<double> > alm; random_alm(alm,1.5*nside,0);
@@ -1197,7 +1198,8 @@ void check_fullweights ()
   {
   cout << "testing the accuracy of pixel weights" << endl;
   int nside=128;
-  auto fwgt=get_fullweights(nside,3*nside,1e-6,3000);
+  double dummy;
+  auto fwgt=get_fullweights(nside,3*nside,1e-6,3000,dummy);
   Alm<xcomplex<double> > alm; random_alm(alm,1.5*nside,1.5*nside);
   Healpix_Map<double> omap(nside,RING,SET_NSIDE),map2(omap);
   alm2map(alm,omap);

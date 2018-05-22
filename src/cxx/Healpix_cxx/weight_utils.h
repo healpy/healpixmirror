@@ -26,7 +26,7 @@
 
 /*! \file weight_utils.h
  *
- *  Copyright (C) 2016 Max-Planck-Society
+ *  Copyright (C) 2016-2018 Max-Planck-Society
  *  \author Martin Reinecke
  */
 
@@ -47,7 +47,7 @@ template<typename T>void apply_fullweights (Healpix_Map<T> &map,
     \returns a vector containing the compressed full weights.
     \note \a lmax must be even; odd \a l do not contribute to the weights. */
 std::vector<double> get_fullweights(int nside, int lmax, double epsilon,
-  int itmax);
+  int itmax, double &epsilon_out);
 
 /*! Computes ring weights for a map of the given \a nside at a maximum
     multipole \a lmax. The solution is obtained via CGNE iteration, which stops
@@ -56,6 +56,6 @@ std::vector<double> get_fullweights(int nside, int lmax, double epsilon,
     \returns a vector of size \c 2*nside containing the ring weights.
     \note \a lmax must be even; odd \a l do not contribute to the weights. */
 std::vector<double> get_ringweights(int nside, int lmax, double epsilon,
-  int itmax);
+  int itmax, double &epsilon_out);
 
 #endif

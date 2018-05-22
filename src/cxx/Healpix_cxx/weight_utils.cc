@@ -38,7 +38,7 @@
  *  Agonizing Pain
  *    (https://www.cs.cmu.edu/~quake-papers/painless-conjugate-gradient.pdf)
  *
- *  Copyright (C) 2016 Max-Planck-Society
+ *  Copyright (C) 2016-2018 Max-Planck-Society
  *  \author Martin Reinecke
  */
 
@@ -256,7 +256,7 @@ vector<double> muladd (double fct, const vector<double> &a,
   }
 
 // canned algorithm B2 from Shewchuk
-template<typename M> void cg_solve (const M &A, typename M::vectype &x,
+template<typename M> double cg_solve (const M &A, typename M::vectype &x,
   const typename M::vectype &b, double epsilon, int itmax)
   {
   typename M::vectype r=muladd(-1.,A.apply(x),b), d(r);
@@ -280,18 +280,20 @@ template<typename M> void cg_solve (const M &A, typename M::vectype &x,
     double beta=deltanew/deltaold;
     d=muladd(beta,d,r);
     }
+  return sqrt(deltanew/delta0);
   }
 
 } // unnamed namespace
 
-vector<double> get_fullweights(int nside, int lmax, double epsilon, int itmax)
+vector<double> get_fullweights(int nside, int lmax, double epsilon, int itmax,
+  double &epsilon_out)
   {
   planck_assert((lmax&1)==0,"lmax must be even");
   STS_hpwgt mat(lmax, lmax, nside);
   vector<double> x(n_weightalm(lmax,lmax),0.);
   vector<double> rhs=mat.ST(vector<double> (n_fullweights(nside),-1.));
   rhs[0]+=12*nside*nside/sqrt(4*pi);
-  cg_solve(mat, x, rhs, epsilon, itmax);
+  epsilon_out=cg_solve(mat, x, rhs, epsilon, itmax);
   return mat.S(x);
   }
 
@@ -304,7 +306,8 @@ template void apply_fullweights (Healpix_Map<float> &map,
 template void apply_fullweights (Healpix_Map<double> &map,
   const vector<double> &wgt);
 
-vector<double> get_ringweights(int nside, int lmax, double epsilon, int itmax)
+vector<double> get_ringweights(int nside, int lmax, double epsilon, int itmax,
+  double &epsilon_out)
   {
   planck_assert((lmax&1)==0,"lmax must be even");
   STS_hpring mat(lmax,nside);
@@ -316,7 +319,7 @@ vector<double> get_ringweights(int nside, int lmax, double epsilon, int itmax)
   for (tsize i=0; i<b.size(); ++i)
     b[i]=-b[i];
   b[0]+=12*nside*nside/sqrt(4*pi);
-  cg_solve(mat, x, b, epsilon, itmax);
+  epsilon_out=cg_solve(mat, x, b, epsilon, itmax);
   auto mtmp=mat.S(x);
   for (tsize i=0; i<mtmp.size(); ++i)
     mtmp[i]/=nir[i];
