@@ -69,6 +69,7 @@ module fitstools
   ! 2013-12-13 : increased MAXDIM from 40 to MAXDIM_TOP
   ! 2014-05-02: fixed problem with keywords having a long string value
   ! 2016-08-16: debugged input_map on cut4 FITS files with multi-HDU polarized data
+  ! 2018-05-22: added unfold_weightsfile and unfold_weightslist
   ! -------------------------------------------------------------
   !
   ! --------------------------- from include file (see fits_template.f90)
@@ -82,6 +83,7 @@ module fitstools
   ! subroutine read_alms
   ! subroutine read_bintod
   ! subroutine write_bintabh
+  ! subroutine unfold_weights
   ! ----------------------------------
   !
   ! subroutine read_fits_cut4               ?
@@ -111,7 +113,7 @@ module fitstools
   ! subroutine check_input_map
   !
   use healpix_types
-  use misc_utils, only : fatal_error, assert, strupcase, string
+  use misc_utils, only : fatal_error, assert, assert_alloc, strupcase, string
   implicit none
 
   real(kind=SP),     private, parameter :: s_bad_value = HPX_SBADVAL
@@ -234,6 +236,14 @@ module fitstools
      module procedure map_bad_pixels_s, map_bad_pixels_d
   end interface
 
+  interface unfold_weightsfile
+     module procedure unfold_weightsfile_s, unfold_weightsfile_d
+  end interface
+
+  interface unfold_weightslist
+     module procedure unfold_weightslist_s, unfold_weightslist_d
+  end interface
+
   private
 
   public :: read_fits_cut4, write_fits_cut4, & 
@@ -247,6 +257,7 @@ module fitstools
   public :: printerror, read_par, getsize_fits, number_of_alms, getnumext_fits
   public :: putrec
   public :: check_input_map
+  public :: unfold_weightsfile, unfold_weightslist
 
 contains
 

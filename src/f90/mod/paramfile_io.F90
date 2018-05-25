@@ -41,6 +41,7 @@
 ! v1.7: 2011-01-03: addition of get_healpix_pixel_window_file & get_healpix_ring_weight_file
 ! v1.8: 2012-10-29: replaced F90 inquire with misc_utils's file_present which will accept remote files
 ! v1.9: 2012-11-14: deal correctly with undefined HEALPIX (or equivalent) in get_healpix_data_dir
+! v2.0: 2018-05-18: added get_healpix_pixel_weight_file and get_healpix_weight_file
 module paramfile_io
   use healpix_types
   use extension
@@ -56,7 +57,8 @@ module paramfile_io
 
   public get_healpix_main_dir, get_healpix_data_dir, get_healpix_test_dir
 
-  public get_healpix_pixel_window_file, get_healpix_ring_weight_file
+  public get_healpix_pixel_window_file, get_healpix_ring_weight_file, &
+       get_healpix_pixel_weight_file, get_healpix_weight_file
 
   type paramfile_handle
     character(len=filenamelen) filename
@@ -1031,5 +1033,49 @@ end function scan_directories
     filename = "weight_ring_n"//trim(sstr)//".fits"
 
   end function get_healpix_ring_weight_file
+
+  !-----------------------------------------------------------
+  ! file = get_healpix_pixel_weight_file(nside)
+  ! returns default file name of Healpix pixel weights
+  !-----------------------------------------------------------
+  function get_healpix_pixel_weight_file(nside) result (filename)
+    integer(i4b),              intent(in) :: nside
+    character(len=FILENAMELEN)            :: filename
+    character(len=6) :: sstr
+
+    if (nside <= 8192) then
+       sstr = adjustl(string(nside,'(i5.5)'))
+    else
+       sstr = adjustl(string(nside,'(i6.6)'))
+    endif
+    filename = "weight_pixel_n"//trim(sstr)//".fits"
+
+  end function get_healpix_pixel_weight_file
+
+  !-----------------------------------------------------------
+  ! file = get_healpix_weight_file(nside, type)
+  ! returns default file name of Healpix ring weights (if type=1)
+  ! or pixel weigts (if type=2)
+  !-----------------------------------------------------------
+  function get_healpix_weight_file(nside, type) result (filename)
+    integer(i4b),              intent(in) :: nside, type
+    character(len=FILENAMELEN)            :: filename
+
+    if (type == 0) then
+       filename = ''
+    else if (type == 1) then
+       filename = get_healpix_ring_weight_file(nside)
+    else if (type == 2) then
+       filename = get_healpix_pixel_weight_file(nside)
+    else
+       print*,'Wrong choice of weight: must be either'
+       print*,' 0: no weight'
+       print*,' 1: ring-based weights'
+       print*,' 2: pixel-based weights'
+       print*,' value: '//string(type)
+       call fatal_error
+    endif
+
+  end function get_healpix_weight_file
 
 end module paramfile_io

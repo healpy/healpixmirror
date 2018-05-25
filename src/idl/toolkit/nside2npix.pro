@@ -25,9 +25,9 @@
 ;  For more information about HEALPix see http://healpix.sourceforge.net
 ;
 ; -----------------------------------------------------------------------------
-function nside2npix, nside, error=error
+function nside2npix, nside, error=error, help=help
 ;+
-; npix = nside2npix(nside, error=error)
+; npix = nside2npix(nside, ERROR=, HELP=)
 ;
 ; returns npix = 12*nside*nside
 ; number of pixels on a Healpix map of resolution nside
@@ -41,10 +41,17 @@ function nside2npix, nside, error=error
 ;     v1.1, EH, Caltech, 2002-08-16 : uses !Healpix structure
 ;     v2.1, EH, IAP,     2006-10-16 : enabled nside > 8192
 ;     v2.2, EH, IAP,     2011-04-07: returns syntax in case of improper use
+;     v3.0, EH, IAP,     2018-05-22 : accepts non-scalar nside, added /HELP
 ;-
 
 routine = 'nside2npix'
 syntax = 'Npix = '+routine+' (Nside [,error=])'
+
+if keyword_set(help) then begin
+    error = 0
+    doc_library,routine
+    return, -1
+endif
 
 error = 1
 if N_params() ne 1 then begin
@@ -55,16 +62,32 @@ endif
 defsysv, '!healpix', exists = exists
 if (exists ne 1) then init_healpix
 
-junk = where(nside eq !healpix.nside, count)
-if count ne 1 then return,-1
+ni        = n_elements(nside)
+nside_max = max(nside)
+tag       = replicate(1, ni)
+for i=0,ni-1 do begin
+    junk = where(nside[i] eq !healpix.nside, count)
+    ;if count ne 1 then return,-1
+    if count ne 1 then tag[i] = -1
+endfor
 
-if (nside gt 8192) then begin
+; compute npix
+if (nside_max gt 8192) then begin
     npix = 12LL* long64(nside)^2
 endif else begin
     npix = 12L * long(nside)^2
 endelse
 
-error = 0
+; flag bad nside (and npix)
+if (min(tag) le 1) then begin
+    npix = npix*tag > (-1)
+endif
+
+; if input is scalar, return a scalar
+if size(nside,/n_dim) eq 0 then npix = npix[0]
+
+if (min(npix) gt 0) then error=0
+
 return, npix
 end
 

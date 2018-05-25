@@ -12,8 +12,8 @@
 \begin{facility}
 {This IDL facility provides an interface to '\htmlref{anafast}{fac:anafast}' F90 and 'anafast\_cxx' C++
 facilities. It can be used to produce the Spherical Harmonics coefficients
-($a_{lm}$ of a \healpix map (or pair of maps) and/or the resulting auto (or
-cross) power spectra $C(l)$.}
+($a_{\ell m}$ of a \healpix map (or pair of maps) and/or the resulting auto (or
+cross) power spectra $C(\ell)$.}
 {src/idl/interfaces/ianafast.pro}
 \end{facility}
 
@@ -62,7 +62,7 @@ cross) power spectra $C(l)$.}
 ] required input: 1st input map, can be a FITS file, or a memory array containing the
         map to analyze
     \item[cl\_out\mytarget{idl:ianafast:cl_out}%
-] optional output: auto or cross power spectrum $C(l)$, can be a FITS
+] optional output: auto or cross power spectrum $C(\ell)$, can be a FITS
 file or a memory array
   \end{qulist}
 \end{qualifiers}
@@ -76,11 +76,11 @@ file or a memory array
 =]   output alm of 2nd map (if any, must be a FITS file) \default {alm not kept}
 
 \item[binpath\mytarget{idl:ianafast:binpath}%
-=] full path to back-end routine \default {\$HEXE/anafast, then \$HEALPIX/bin/anafast 
-                or \$HEALPIX/src/cxx/\$HEALPIX\_TARGET\-/bin/anafast\_cxx, then \$HEALPIX/src/cxx/generic\_gcc\-/bin/anafast\_cxx if cxx is set}\\
+=] full path to back-end routine \default {\$HEXE/anafast, then \$HEALPIX\-/bin/anafast 
+                or \$HEALPIX\-/src/cxx/\$HEALPIX\_TARGET\-/bin/anafast\_\-cxx, then \$HEALPIX\-/src/cxx/generic\_gcc\-/bin/anafast\_\-cxx if cxx is set}\\
               -- a binpath starting with / (or $\backslash$), $~$ or \$ is interpreted as absolute\\
               -- a binpath starting with ./ is interpreted as relative to current directory\\
-              -- all other binpathes are relative to \$HEALPIX
+              -- all other binpaths are relative to \$HEALPIX
 
 \item[/cxx\mytarget{idl:ianafast:cxx}%
 ] if set, the C++ back-end anafast\_cxx is invoked instead of F90 \htmlref{anafast}{fac:anafast},
@@ -93,8 +93,7 @@ file or a memory array
 ]      if set, prints extended help
 
 \item[healpix\_data\mytarget{idl:ianafast:healpix_data}%
-=] directory with Healpix precomputed files (only for C++ back\_end when weighted=1)
-     \default {\$HEALPIX/data}
+=] same as \mylink{idl:ianafast:w8dir}{w8dir}
 
 \item[iter\_order\mytarget{idl:ianafast:iter_order}%
 =] order of iteration in the analysis \default {0}
@@ -140,7 +139,7 @@ file or a memory array
 ] see /nested and ordering above
 
 \item[/show\_cl\mytarget{idl:ianafast:show_cl}%
-] if set, and {\tt cl\_out} is defined, the produced $l (l+1) C(l)/2\pi$ will
+] if set, and {\tt cl\_out} is defined, the produced $\ell (\ell+1) C(\ell)/2\pi$ will
 be plotted
 
 \item[simul\_type\mytarget{idl:ianafast:simul_type}%
@@ -156,21 +155,25 @@ be plotted
 =]      directory in which are written temporary files 
 \default {IDL\_TMPDIR (see IDL documentation)}
 
-\item[/weighted\mytarget{idl:ianafast:weighted}%
-]     same as won
-    \default {apply weighting}
+\item[weighted\mytarget{idl:ianafast:weighted}%
+=]     same as \mylink{idl:ianafast:won}{won}
+    \default {see won}
 
-\item[/won\mytarget{idl:ianafast:won}%
-]     if set, a weighting scheme is used to improve the quadrature
-    \default {apply weighting}
+\item[won\mytarget{idl:ianafast:won}%
+=]     if set to 0, no weighting applied, if set to 1, a ring-based quadrature weighting scheme is applied,
+              if set to 2, a pixel-based quadrature weighting scheme is applied.
+    \default {1: apply ring-based weighting}
 
 \item[w8file\mytarget{idl:ianafast:w8file}%
-=]    FITS file containing weights 
+=]    In F90: FITS file containing weights 
      \default {determined automatically by back-end routine}.
-   Do not set this keyword unless you really know what you are doing
+   Do not set this keyword unless you really know what you are doing \\
+      In C++ (\mylink{idl:ianafast:cxx}{/cxx} flag):  
+      must be set to full path of weight file, consistent with value 
+     of \mylink{idl:ianafast:won}{won} (or weighted)
 
 \item[w8dir\mytarget{idl:ianafast:w8dir}%
-=]     directory where the weights are to be found 
+=]     In F90 only: directory where the weights are to be found 
         \default {determined automatically by back-end routine}
 
   \end{kwlist}

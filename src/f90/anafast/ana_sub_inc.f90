@@ -81,12 +81,14 @@
   real(kind=DP),       DIMENSION(:,:),   ALLOCATABLE :: w8ring_TQU
   real(kind=DP),       DIMENSION(:,:),   ALLOCATABLE :: dw8
   real(kind=DP),       DIMENSION(:,:),   ALLOCATABLE :: plm
+!  real(kind=KMAP),     dimension(:,:),   ALLOCATABLE :: pw8list
+  real(kind=KMAP),     dimension(:,:), target, ALLOCATABLE :: pw8map
   integer(kind=I4B) :: status
 
   integer(kind=I4B) :: mlpol, mlpol2
   integer(kind=I4B), dimension(1:2) :: order_map
   integer(kind=I4B) :: l, plm_nside, plm_lmax, plm_pol, plm_mmax
-  integer(kind=I8B) :: npixtot, npixtot2, ipix, n_plm
+  integer(kind=I8B) :: npixtot, npixtot2, ipix, n_plm !, n_pw8_read
   integer(kind=I4B) :: i, j
   integer(kind=I4B) :: iter_order, polar, n_pols, n_maps
   integer(kind=I4B) :: simul_type
@@ -118,7 +120,7 @@
   character(len=FILENAMELEN)          :: healpixtestdir
   character(len=FILENAMELEN)          :: description
   character(len=FILENAMELEN)          :: maskfile
-  character(len=100)                  :: chline, chline1
+  character(len=100)                  :: chline, chline1, strw8file
   character(len=20)                   :: coordsys, coordsys2
 !  character(len=5)                    :: sstr
   LOGICAL(kind=LGT) :: bad, ok, polarisation, bcoupling, do_mask, twomaps, asym_cl
@@ -330,18 +332,25 @@
 
   description = concatnl(&
        & "", &
-       & " Do you want to use ring weights in the analysis (1=yes; 2,0=no) ?")
+       & " Do you want to use quadrature weights in the analysis: ", &
+       & " 0: no weight            ", &
+       & " 1: ring-based weights   ", &
+       & " 2: pixel-based weights ?")
   won = parse_int(handle, 'won', vmin=0, vmax=2, default=0, descr=description)
 
   infile_w8=""
+  strw8file = ""
 
-  if (won.eq.1) then
+  if (won == 1 .or. won == 2) then
 
      ! default weight file name
-     w8name = get_healpix_ring_weight_file(nsmax)
+     w8name = get_healpix_weight_file(nsmax, won)
 
      def_file = trim(w8name)
      def_dir  = get_healpix_data_dir()
+
+     if (won == 1) strw8file = "ring-based  quadrature weight file"
+     if (won == 2) strw8file = "pixel-based quadrature weight file"
 
 22   continue
      final_file = ''
@@ -351,12 +360,12 @@
      if (.not. ok) then
         ! not found, ask the user
         description = concatnl("",&
-             &        " Could not find weight file", &
+             &        " Could not find "//trim(strw8file), &
              &        " Enter the directory where this file can be found:")
         usr_dir = parse_string(handle,'w8filedir',default='',descr=description)
         if (trim(usr_dir) == '') usr_dir = trim(def_dir)
         description = concatnl("",&
-             &        " Enter the name of the weight file:")
+             &        " Enter the name of the "//trim(strw8file)//":")
         usr_file = parse_string(handle,'w8file',default=def_file,descr=description)
         ! look for new name in user provided or default directories
         ok   = scan_directories(usr_dir, usr_file, final_file)
@@ -587,20 +596,51 @@
   !                      Input weights
   !-----------------------------------------------------------------------
 
-  dw8=0.0_dp ! read as DP, even in SP in FITS file
+  dw8=0.0_dp ! read as DP
   if (trim(infile_w8)/="") then
-     n_rings = 2 * nsmax
-     n_rings_read = getsize_fits(infile_w8, nmaps=nmw8)
+     if (won == 1) then
+        ! ring based weights: treated as such in map2alm
+        n_rings = 2 * nsmax
+        n_rings_read = getsize_fits(infile_w8, nmaps=nmw8)
 
-     if (n_rings_read /= n_rings) then
-        PRINT *," "
-        print *,"wrong ring weight file:"//trim(infile_w8)
-        call fatal_error(code)
+        if (n_rings_read /= n_rings) then
+           PRINT *," "
+           print *,"wrong ring weight file:"//trim(infile_w8)
+           call fatal_error(code)
+        endif
+        nmw8 = min(nmw8, n_pols)
+        
+        PRINT *,"      "//code//"> Inputting "//trim(strw8file)
+        call input_map(infile_w8, dw8, n_rings, nmw8, fmissval=0.0_dp)
      endif
-     nmw8 = min(nmw8, n_pols)
 
-     PRINT *,"      "//code//"> Inputting Quadrature ring weights "
-     call input_map(infile_w8, dw8, n_rings, nmw8, fmissval=0.0_dp)
+     if (won == 2) then 
+        ! pixel based weights: turned into full sky map and multiply with mask
+        allocate(pw8map (0:npixtot-1,   1:1), stat=status)
+        call assert_alloc(status,code,"pw8map")
+
+        PRINT *,"      "//code//"> Inputting and unfolding "//trim(strw8file)
+
+!         n_pw8_read = getsize_fits(infile_w8)
+!         allocate(pw8list(0:n_pw8_read-1,1:1), stat=status)
+!         call assert_alloc(status,code,"pw8list")
+!         call input_map(infile_w8, pw8list, n_pw8_read, 1)
+!         call unfold_weights(nsmax, won, pw8list(:,1), pw8map(:,1))
+!         deallocate(pw8list)
+
+        call unfold_weightsfile(infile_w8, pw8map(:,1))
+
+        if (do_mask) then
+           do i=1,size(pmask,2)
+              pmask(1:npixtot,i:i) = pmask(1:npixtot,i:i) * pw8map(0:npixtot-1,1:1)
+           enddo
+        else
+           deallocate(pmask)
+           pmask => pw8map(:,1:1)
+        endif
+        !print*,pmask(1:12,1)
+        !print*,pmask(npixtot-11:npixtot,1)
+     endif
   endif
   w8ring_TQU = 1.0_dp + dw8
 
@@ -652,6 +692,7 @@
   deallocate( map_TQU )
   deallocate(w8ring_TQU)
   deallocate(dw8)
+  if (allocated(pw8map)) deallocate(pw8map)
 
   !-----------------------------------------------------------------------
   !                  power spectrum calculation
@@ -699,6 +740,7 @@
      call add_card(header,"NITERALM",iter_order,   " Number of iterations for a_lms extraction")
      call add_card(header,"LREGRESS",lowlreg,      " Regression of low multipoles (0/1/2)")
      call add_card(header,"NMAPS_IN",n_maps,       " Number of maps (co-)analysed (1/2)")
+     call add_card(header,"QUADSCHM",won,          " Quadrature scheme (0/1/2)")
      call add_card(header)
      if (twomaps) then
         call add_card(header,"HISTORY","Input Map1 = "//TRIM(infile(1)))
@@ -737,6 +779,7 @@
            call add_card(header,"NITERALM",iter_order,   " Number of iterations for a_lms extraction")
            call add_card(header,"LREGRESS",lowlreg,      " Regression of low multipoles (0/1/2)")
            call add_card(header,"HISTORY","Input Map = "//TRIM(infile(j)))
+           call add_card(header,"QUADSCHM",won,          " Quadrature scheme (0/1/2)")
            nlheader = SIZE(header)
            if (j == 1) call dump_alms(outfile_alms(j), alm_TGC (i,0:nlmax,0:nmmax), &
                 &                     nlmax, header, nlheader, i-1_i4b)
@@ -771,19 +814,18 @@
      write(*,9000) "    Temperature + Polarisation"
   endif
   write(*,9000) " "
-  write(*,9000) " Input map            : "//TRIM(infile(1))
-  if (trim(infile(2))/="") write(*,9000) " Input map 2          : "//TRIM(infile(2))
-!   write(*,9005) " Multipole range      : 0 <= l <= ", nlmax
-  write(*,9006) " Multipole range      : ",lowlreg ," <= l <= ", nlmax
-  write(*,9010) " Number of pixels     : ", npixtot
-  write(*,9020) " Pixel size in arcmin : ", pix_size_arcmin
-  write(*,9020) " Symmetric cut in deg : ", theta_cut_deg
+  write(*,9000) " Input map              : "//TRIM(infile(1))
+  if (trim(infile(2))/="") write(*,9000) " Input map 2            : "//TRIM(infile(2))
+  write(*,9006) " Multipole range        : ",lowlreg ," <= l <= ", nlmax
+  write(*,9010) " Number of pixels       : ", npixtot
+  write(*,9020) " Pixel size in arcmin   : ", pix_size_arcmin
+  write(*,9020) " Symmetric cut in deg   : ", theta_cut_deg
   if (do_mask) write(*,9000) &
-       &        " Mask read from       : "//trim(maskfile)
-  write(*,9000) " Output power spectrum: "//TRIM(outfile)
-  if (outfile_alms(1)/="") write(*,9000) " Output alm           : "//TRIM(outfile_alms(1))
-  if (outfile_alms(2)/="") write(*,9000) " Output alm 2         : "//TRIM(outfile_alms(2))
-  if (won == 1) write(*,9000) " Ring weight file     : "//trim(infile_w8)
+       &        " Mask read from         : "//trim(maskfile)
+  write(*,9000) " Output power spectrum  : "//TRIM(outfile)
+  if (outfile_alms(1)/="") write(*,9000) " Output alm             : "//TRIM(outfile_alms(1))
+  if (outfile_alms(2)/="") write(*,9000) " Output alm 2           : "//TRIM(outfile_alms(2))
+  if (won >0) write(*,9000) " Quadrature weight file : "//trim(infile_w8)
   write(*,9030) " Clock and CPU time [s] : ", clock_time, ptime
 
   !-----------------------------------------------------------------------

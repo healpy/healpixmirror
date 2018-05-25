@@ -37,6 +37,8 @@
 !    subroutine read_alms_KLOAD                NotYet
 !    subroutine read_bintod_KLOAD           (8)
 !    subroutine write_bintabh_KLOAD         (8)
+!    subroutine unfold_weights_KLOAD
+!    subroutine unfold_weightslist_KLOAD
 !
 !
 ! K M A P   : map kind                 either SP or DP
@@ -52,6 +54,7 @@
 ! 2008-10-14: corrected bug introduced in write_asctab
 ! 2012-02-23: correction of a possible bug with index writing in dump_alms and write_alms
 ! 2013-12-13: increased MAXDIM from 40 to MAXDIM_TOP
+! 2018-05-22: added unfold_weights, unfold_weightslist
 !
 
 !=======================================================================
@@ -2207,4 +2210,147 @@ subroutine input_map8_KLOAD(filename, map, npixtot, nmaps, &
 
   END SUBROUTINE write_bintabh_KLOAD
   ! ==============================================================================
+
+!******************************************************************************
+!---------------------------------------
+!  reads a FITS file containing a list of 
+!  ring-based or pixel-based quadrature weights
+!  and turns it into a (ring-ordered) full sky map
+!
+! adapted from unfold_weights.pro
+! 2018-05-25
+!---------------------------------------
+  subroutine unfold_weightsfile_KLOAD(w8file, w8map)
+
+    USE pix_tools,      only: nside2npix, nside2npweights
+
+    character(len=*), intent(in)                  :: w8file
+    real(KMAP),       intent(out), dimension(0:)  :: w8map
+    real(KMAP),       allocatable, dimension(:,:) :: w8list
+    integer(i4b)                :: nside, status, won
+    integer(i8b)                :: nfw8, npw8, nrw8
+    character(len=*), parameter :: code = 'unfold_weightsfile'
+
+    nfw8 = getsize_fits(w8file, nside=nside)
+    npw8 = nside2npweights(nside)
+    nrw8 = 2*nside
+
+    won = 0
+    if (nfw8 == nrw8) won = 1
+    if (nfw8 == npw8) won = 2
+    if (won == 0) then
+       print*,'Weights file = '//trim(w8file)
+       print*,'contains ',nfw8,' weights'
+       print*,'for Nside    = ',nside
+       print*,'Expected either ',nrw8,' or ',npw8
+       call fatal_error
+    endif
+
+    allocate(w8list(0:nfw8-1,1:1), stat=status)
+    call assert_alloc(status,code,"w8list")
+    call input_map(w8file, w8list, nfw8, 1)
+    call unfold_weightslist(nside, won, w8list(:,1), w8map)
+    deallocate(w8list)
+    
+    return
+  end subroutine unfold_weightsfile_KLOAD
+!---------------------------------------
+!  turns a list of ring-based or pixel-based quadrature weights 
+!  into a (ring-ordered) full sky map
+!
+! adapted from unfold_weights.pro
+! 2018-05-18
+!---------------------------------------
+  subroutine unfold_weightslist_KLOAD(nside, won, w8list, w8map)
+
+    USE pix_tools,      only: nside2npix, nside2npweights
+    USE long_intrinsic, only: long_size
+
+    integer(i4b),            intent(in)  :: nside, won
+    real(KMAP), dimension(0:), intent(in)  :: w8list
+    real(KMAP), dimension(0:), intent(out) :: w8map
+
+    integer(i8b) :: np, npix
+    integer(i8b) :: nf, nw8, pnorth, psouth, vpix, qp4, p
+    integer(i4b) :: ring, qpix, odd, shifted, rpix, wpix, j4, n4, it
+
+    ! test nside
+    npix = nside2npix(nside)
+    if (npix <= 0) then 
+       print*,'Unvalid Nside = ',nside
+       call fatal_error
+    endif
+
+    ! test won
+    if (won < 1 .or. won > 2) then
+       print*,'Expected either 1 or 2, got ',won
+       call fatal_error
+    endif
+
+    ! test input list size
+    nf  = long_size(w8list)
+    if (won == 1) then
+       nw8 = 2 * nside
+    else
+       nw8 = nside2npweights(nside)
+    endif
+    if (nf /= nw8) then
+       print*,'Expected in input weight list',nw8
+       print*,'got ',nf
+       call fatal_error
+    endif
+
+    ! test output map size
+    np = long_size(w8map)
+    if (np /= npix) then
+       print*,'Expected in output weight map',npix
+       print*,'got ',np
+       call fatal_error
+    endif
+
+    ! do actual unfolding
+    if (won == 1) then
+
+       pnorth = 0_i8b
+       n4 = 4 * nside
+       do ring=1,n4-1                ! loop on all rings
+          it = min(ring, n4 - ring)  ! ring index, counting from closest pole
+          qp4= 4_i8b * min(it, nside)    ! pixels / ring
+          w8map(pnorth:pnorth+qp4-1) = w8list(it-1)
+          pnorth = pnorth + qp4
+       enddo
+
+    else
+       
+       pnorth = 0_i8b            ! position in expanded weights
+       vpix   = 0_i8b            ! position in compress list
+       do ring=0, 2*nside-1
+           qpix    = min(ring+1, nside) ! 1/4 of number of pixels per ring
+           shifted = 0
+           if (ring < (nside-1) .or. iand(ring+nside,1_i4b) == 1_i4b) shifted = 1
+           odd     = iand(qpix,1)
+           qp4     = 4_i8b*qpix       ! number of pixels per ring
+           ! fill the weight map
+           do p=0,qp4-1
+              j4 = mod(p, qpix)
+              rpix = min(j4, qpix - shifted - j4) ! seesaw
+              w8map(pnorth+p) = w8list(vpix + rpix)
+           enddo
+       
+           if (ring < 2*nside-1) then  ! south part (except equator)
+               psouth     = npix - pnorth - qp4
+               w8map(psouth:psouth+qp4-1) = w8map(pnorth:pnorth+qp4-1)
+           endif
+           ! locations on next ring
+           pnorth  = pnorth + qp4
+           wpix    = (qpix+1)/2  + 1 - ior(odd, shifted)
+           vpix    = vpix + wpix
+       enddo
+    endif
+
+    ! add 1 to get final weight
+    w8map = w8map + 1.0_KMAP
+
+    return
+  end subroutine unfold_weightslist_KLOAD
 

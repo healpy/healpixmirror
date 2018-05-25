@@ -90,8 +90,9 @@ the name is assumed to be 'weight\_ring\_n0xxxx.fits' where xxxx is nsmax)
 to be found (default= no entry --- smoothing searches in the default
 directories, see \htmlref{''Default file names and directories'' in introduction}{fac:subsec:defdir})
 \item[{won = }]\mytarget{fac:smoothing:won}%
- Set this to 1 if weight files are to be used,
-otherwise set it to 0 (or 2). (default= 0)
+ Set this to 1 if ring-based quadrature weight files are to be used,
+ or to 2 to use pixel-based weight files instead;
+otherwise set it to 0. (default= 0)
   \end{qulist}
 \end{qualifiers}
 
@@ -185,6 +186,7 @@ order iteration of the quadrature was performed.}
   \begin{relist}
     \item Initial release (\healpix 0.90)
     \item Extension to polarization and arbitrary {\em circular} beams (\healpix 1.20)
+    \item Support for pixel-based quadrature weights (\healpix 3.40)
   \end{relist}
 \end{release}
 

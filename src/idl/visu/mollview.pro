@@ -532,8 +532,8 @@ pro mollview, file_in, select_in, $
 ;       SILHOUETTE: if set to a scalar or 2-element vector with silhouette[0] !=  0,
 ;          a silhouette is drawn around the map.
 ;          Its thickness is proportional to abs(silhouette[0])
-;           (and also depends in a device dependant manner on !P.THICK)
-;          Its color is determined by abs(silhouette[1]) in [0,255] (defaulting to FG_COLOR=0)
+;           (and also depends in a device-dependent manner on !P.THICK)
+;          Its color is determined by abs(silhouette[1]) in [0,255] (defaulting to 0 = FG_COLOR)
 ;             ** mollview and orthview only **
 ;
 ;       STAGGER: scalar or 2 element vector.

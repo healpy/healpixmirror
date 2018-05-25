@@ -1,0 +1,110 @@
+% -*- LaTeX -*-
+
+
+\renewcommand{\facname}{{unfold\_weights }}
+\renewcommand{\FACNAME}{{UNFOLD\_WEIGHTS }}
+
+\sloppy
+
+
+
+\title{\healpix IDL Facility User Guidelines}
+\docid{unfold\_weights} \section[unfold\_weights]{ }
+\label{idl:unfold_weights}
+\docrv{Version 1.0}
+\author{Eric Hivon}
+\abstract{This document describes the \healpix IDL facility \facname.}
+
+
+\begin{facility}
+{This IDL function returns the full sky map of the weights to be applied to a \healpix map in order to improve the quadrature.
+The input weights can be either ring-based or pixel-based, and read from file with user provided path, or from files with standardized name and location (ie, \texttt{!healpix.path.data+'weight\_ring\_n?????.fits'} and 
+\texttt{!healpix.path.data+'weight\_pixel\_n?????.fits'}}
+{src/idl/toolkit/unfold\_weights.pro}
+\end{facility}
+
+\begin{IDLformats}
+{\mylink{idl:unfold_weights:weight_map}{weight\_map} = %
+\facname(%
+\mylink{idl:unfold_weights:nside}{File}, 
+[\mylink{idl:unfold_weights:dim}{Dim},
+\mylink{idl:unfold_weights:help}{/HELP},
+\mylink{idl:unfold_weights:silent}{/SILENT}])}%
+%
+{\mylink{idl:unfold_weights:weight_map}{weight\_map} = %
+\facname(%
+\mylink{idl:unfold_weights:nside}{Nside}, 
+[\mylink{idl:unfold_weights:dim}{Dim},
+\mylink{idl:unfold_weights:pixel}{/PIXEL},
+\mylink{idl:unfold_weights:ring}{/RING},
+\mylink{idl:unfold_weights:scheme}{SCHEME=},
+\mylink{idl:unfold_weights:directory}{DIRECTORY=},
+\mylink{idl:unfold_weights:help}{/HELP},
+\mylink{idl:unfold_weights:silent}{/SILENT}])}%
+%
+\end{IDLformats}
+
+\begin{qualifiers}
+  \begin{qulist}{} %%%% NOTE the ``extra'' brace here %%%%
+    \item[Nside\mytarget{idl:unfold_weights:nside}] \healpix resolution parameter (scalar integer),
+         should be a valid Nside (power of 2 in $\{1,\ldots,2^{29}\}$)
+    \item[File\mytarget{idl:unfold_weights:file}] Input weight file to be read. If not provided, 
+the function will try to guess the relevant file path based on 
+\mylink{idl:unfold_weights:nside}{Nside}, 
+the optional \mylink{idl:unfold_weights:directory}{DIRECTORY}, 
+and the weighting scheme which \textbf{must} be set, with either
+\mylink{idl:unfold_weights:ring}{RING}, 
+\mylink{idl:unfold_weights:pixel}{PIXEL} or 
+\mylink{idl:unfold_weights:scheme}{SCHEME}
+    \item[Dim\mytarget{idl:unfold_weights:dim}] dimension of output, either 1 or 2. \default{1}
+    \item[weight\_map\mytarget{idl:unfold_weights:weight_map}] output: vector of size $\npix=12\nside^2$ if Dim=1, array of size $(\npix,3)$ if Dim=2 (in the latter case, all three columns are identical).
+  \end{qulist}
+\end{qualifiers}
+
+\begin{keywords}
+  \begin{kwlist}{} %%% extra brace
+    \item[DIRECTORY=\mytarget{idl:unfold_weights:directory}] 
+    directory in which to look for the weight file \default{\htmlref{!healpix.path.data}{idl:init_healpix}}
+    \item[/HELP\mytarget{idl:unfold_weights:help}] if set on input, the documentation header 
+  is printed out and the function exits
+    \item[/PIXEL\mytarget{idl:unfold_weights:pixel}] if set, the code will look for the pixel-based weight file corresponding the the \mylink{idl:unfold_weights:nside}{Nside} provided, in the default or provided 
+   \mylink{idl:unfold_weights:directory}{Directory}
+    \item[/RING\mytarget{idl:unfold_weights:ring}] if set, the code will look for the ring-based weight file corresponding the the \mylink{idl:unfold_weights:nside}{Nside} provided, in the default or provided
+   \mylink{idl:unfold_weights:directory}{Directory}
+    \item[SCHEME=\mytarget{idl:unfold_weights:scheme}] can be either 'PIXEL' or 'RING', setting the type of weight file the code will look for.
+    \item[/SILENT\mytarget{idl:unfold_weights:silent}] if set on input, the function works silently
+  \end{kwlist}
+\end{keywords}  
+
+\begin{codedescription}
+{\facname reads a list of weights, stored in a compact form in a FITS file, and centered on 0,
+either ring-based (uniform weights on each iso-latitude rings, defined on $2\nside$ rings),
+or pixel-based (defined on $N_w \simeq 0.75 \nside^2 \simeq \npix/16$) and turns them into a 
+full sky \healpix map of quadrature weights, with RING indexing and with values centered on 1.}
+\end{codedescription}
+
+
+
+\begin{related}
+  \begin{sulist}{} %%%% NOTE the ``extra'' brace here %%%%
+    \item[idl] version \idlversion or more is necessary to run \facname.	
+  \item[\htmlref{nside2npweights}{idl:nside2npweights}] 
+ returns the number of non-redundant pixel-based weights used for disc storage
+  \end{sulist}
+\end{related}
+
+\begin{example}
+{
+\begin{tabular}{l} %%%% use this tabular format %%%%
+\htmlref{mollview}{idl:mollview}, \mylink{idl:mollview:hist_equal}{/hist},  \\
+\hspace{2em} 	unfold\_weights(256, \mylink{idl:unfold_weights:ring}{/ring}), 
+ title='Ring-based weights @ Nside=256'\\
+\htmlref{mollview}{idl:mollview}, \mylink{idl:mollview:hist_equal}{/hist},  \\
+\hspace{2em} 	unfold\_weights(256, \mylink{idl:unfold_weights:pixel}{/pixel}), 
+ title='Pixel-based weights @ Nside=256' \\
+\end{tabular}
+}
+{will plot the full sky map of the ring-based and pixel-based quadrature weights for $\nside=256$.
+}
+\end{example}
+

@@ -116,8 +116,10 @@ pro ismoothing, map_in, map_out $
 ;   tmpdir=:      directory in which are written temporary files 
 ;         [default: IDL_TMPDIR (see IDL documentation about IDL_TMPDIR)]
 ;
-;   /won:     if set, a weighting scheme is used to improve the quadrature
-;       [default: apply weighting]
+;   won=:     if 0, no weighting, 
+;              if set to 1, a ring-based  quadrature weighting scheme is applied,
+;              if set to 2, a pixel-based quadrature weighting scheme is applied.
+;       [default: 1 apply ring-based weighting]
 ;
 ;   w8file=:    FITS file containing weights 
 ;        [default: determined automatically by back-end routine] 
@@ -154,6 +156,7 @@ pro ismoothing, map_in, map_out $
 ;	Aug  2007, Eric Hivon, v1.1
 ;       Oct  2007, v1.1.1
 ;       2009-09-07:  w8filedir -> w8dir *EVERYWHERE*
+;       2018-05-23: deal with pixel-based quadrature weights
 ;-
 
 local = {routine: 'ismoothing', exe: 'smoothing', double: keyword_set(double)}

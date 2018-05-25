@@ -101,8 +101,7 @@ pro ianafast, map1_in, cl_out $
 ;
 ;   /help:      if set, prints extended help
 ;
-;   healpix_data=: directory with Healpix precomputed files (only for C++ back_end when weighted=1)
-;        [default= $HEALPIX/data]
+;   healpix_data=: same as w8dir
 ;
 ;   iter_order=: order of iteration in the analysis [default = 0]
 ;
@@ -146,17 +145,20 @@ pro ianafast, map1_in, cl_out $
 ;    tmpdir=:      directory in which are written temporary files 
 ;         [default: IDL_TMPDIR (see IDL documentation about IDL_TMPDIR)]
 ;
-;    /weighted:     same as won
+;    weighted=:     same as won
 ;       [default: apply weighting]
 ;
-;    /won:     if set, a weighting scheme is used to improve the quadrature
-;       [default: apply weighting]
+;    won=:     if 0, no weighting, 
+;              if set to 1, a ring-based  quadrature weighting scheme is applied,
+;              if set to 2, a pixel-based quadrature weighting scheme is applied.
+;       [default: 1 apply ring-based weighting]
 ;
-;    w8file=:    FITS file containing weights 
-;        [default: determined automatically by back-end routine] 
-;      do not set this keyword unless you really know what you are doing             
+;    w8file=:    FITS file containing weights (applicable when won or weighted non-zero)
+;       In F90: [default: determined automatically by back-end routine] 
+;          do not set this keyword unless you really know what you are doing  
+;       In C++: must be set to full path of weight file, consistent with value of won (or weighted)       
 ;
-;    w8dir=:     directory where the weights are to be found 
+;    w8dir=:     directory where the weights are to be found, in F90 only 
 ;        [default: determined automatically by back-end routine]
 ;
 ;
@@ -193,6 +195,7 @@ pro ianafast, map1_in, cl_out $
 ;       2009-09-09:  use !healpix.path.data instead of !healpix.directory+'/data'
 ;       2010-02-22: SILENT forwarded to hpx_file2mem
 ;       2012-03-01: retrofitted to run with GDL
+;       2018-05-23: deal with pixel-based quadrature weights
 ;
 ;-
 local = {routine: 'ianafast', exe: 'anafast', exe_cxx: 'anafast_cxx', double: keyword_set(double)}
@@ -234,6 +237,10 @@ hpx_xface_generic, fullpath, tmp_par_file, binpath, init=local, cxx=cxx, tmpdir=
 
 NoFile = keyword_set(cxx) ? " " : " '' "
 
+if (keyword_set(cxx) && keyword_set(won) && undefined(w8file)) then begin
+    message,'w8file must be defined when setting won or weighted with C++ code (/cxx option).'
+endif
+
 ; deal with online data
 tmp_cl_out   = hpx_mem2file(with_cl_out ? (defined(cl_out)?cl_out :-1) : NoFile, /out)
 tmp_map1_in  = hpx_mem2file(set_parameter(map1_in, NoFile, /ifempty),  /in, /map, ring=ring, nested=nested, ordering=ordering)
@@ -272,12 +279,20 @@ if (~keyword_set(cxx)) then begin
 endif else begin
 ; ------- C++ only -------
     printf,lunit,hpx_add_parameter('polarisation', pol_bool)
+    if (pol_bool eq 'true') then begin
+        printf,lunit,hpx_add_parameter('full_powerspectrum','true' )
+    endif
+    if (defined(regression) && regression ge 1) then begin
+        printf,lunit,hpx_add_parameter('remove_monopole','true' )
+    endif
     printf,lunit,hpx_add_parameter('double_precision',keyword_set(double)?'true':'false')
     printf,lunit,hpx_add_parameter('nmmax',       nmmax,      /skip_if_not_set) ; let code choose default
-    printf,lunit,hpx_add_parameter('weighted',keyword_set(won)?'true':'false')
+;    printf,lunit,hpx_add_parameter('weighted',keyword_set(won)?'true':'false')
     if (keyword_set(won)) then begin
 ;        printf,lunit,hpx_add_parameter('healpix_data', !healpix.directory+'/data', /expand, /skip_if_not_set)
         printf,lunit,hpx_add_parameter('healpix_data', !healpix.path.data, /expand, /skip_if_not_set)
+        if (won eq 1) then printf,lunit,hpx_add_parameter('ringweights',  w8file, /skip_if_not_set)
+        if (won eq 2) then printf,lunit,hpx_add_parameter('pixelweights', w8file, /skip_if_not_set)
     endif
 endelse
 ; ------------------------

@@ -279,9 +279,20 @@ sub do_env_IDLformat {
     "<hr><h1>FORMAT </h1><h3>IDL>$_</h3>";
 }
 
+sub do_env_IDLformats {
+    local($_) = @_;
+    local($descr) = efhpack(&get_next_argument);
+    "<hr><h1>FORMAT </h1><h3>IDL>$_</h3>\n<h1>       </h1><h3>IDL>$descr</h3>";
+}
+
 sub do_env_recommend {
     local($_) = efhpack(@_);
     "<hr> \n<H1>RECOMMENDATIONS FOR USERS</H1> \n<blockquote>$_</blockquote>";
+}
+
+sub do_env_recommend_contd {
+    local($_) = efhpack(@_);
+    "\n<blockquote>$_</blockquote>";
 }
 
 sub do_env_arguments {

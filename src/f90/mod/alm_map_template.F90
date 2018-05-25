@@ -4836,6 +4836,7 @@
     ! start iterative (Jacobi) analysis
     ! a^(n) = a^(n-1) + A w ( m - S a^(n-1) )
     ! a^(0) = A w m
+    ! with w = mask * quadrature_weights
     ! -------------------------------------
     do iter = 0, iter_order
        ! map -> alm

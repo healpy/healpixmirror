@@ -201,8 +201,17 @@ $\mathbf{\phi}$ & The azimuthal angle on the sphere, $\phi\in[0,2\pi[$.\\
 %--------------------------------------------
 \section[Changes between releases 3.31 and \hpxversion]{Changes between releases 3.31 and
 \hpxversion}
-%from install.tex
+
 \begin{itemize}
+\item The facilities 
+\htmlref{\texttt{anafast}}{fac:anafast} and 
+\htmlref{\texttt{smoothing}}{fac:smoothing} now support pixel-based quadrature weights.
+Introduction of the supporting 
+\htmlref{\texttt{nside2npweights}}{sub:nside2npweights},
+\htmlref{\texttt{unfold\_weightsfile}}{sub:unfold_weightsfile},
+\mylink{sub:get_healpix_xxx_file:ghw8f}{\texttt{get\_healpix\_weight\_file}},
+\mylink{sub:get_healpix_xxx_file:ghpw8f}{\texttt{get\_healpix\_pixel\_weight\_file}}.
+%
 \item The subroutine 
 \htmlref{\texttt{input\_map}}{sub:input_map} in its default mode
 test the value of the \texttt{POLCCONV} FITS keyword when reading a polarized map,
@@ -602,6 +611,7 @@ smoothing\_getpar (initially in {\tt utilities} module).
 \include{generate_beam}
 \include{get_card}
 \include{get_healpix_xxx_dir}
+\include{get_healpix_xxx_file}
 \include{getargument}
 \include{getenvironment}
 \include{getdisc_ring}
@@ -634,6 +644,7 @@ smoothing\_getpar (initially in {\tt utilities} module).
 \include{nest2uniq}
 \include{npix2nside}
 \include{nside2npix}
+\include{nside2npweights}
 \include{nside2ntemplates}
 \include{number_of_alms}
 \include{output_map}
@@ -669,6 +680,7 @@ smoothing\_getpar (initially in {\tt utilities} module).
 \include{template_pixel_xxx}% special format, TBD
 \include{udgrade_nest}
 \include{udgrade_ring}
+\include{unfold_weightsfile}
 \include{uniq2nest}
 \include{vec2ang}
 \include{vect_prod}

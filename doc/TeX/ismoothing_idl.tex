@@ -61,7 +61,7 @@ Legendre window function (or its FWHM if it is assumed Gaussian)}
  \item[binpath=] \mytarget{idl:ismoothing:binpath} full path to back-end routine \default {\$HEXE/smoothing, then \$HEALPIX/bin/smoothing}\\
               -- a binpath starting with / (or $\backslash$), $~$ or \$ is interpreted as absolute\\
               -- a binpath starting with ./ is interpreted as relative to current directory\\
-              -- all other binpathes are relative to \$HEALPIX
+              -- all other binpaths are relative to \$HEALPIX
 
  \item[/double] \mytarget{idl:ismoothing:double} if set, I/O is done in double precision \default {single precision I/O}
 
@@ -105,8 +105,10 @@ see
 \item[tmpdir=]      \mytarget{idl:ismoothing:tmpdir} directory in which are written temporary files 
 \default {IDL\_TMPDIR (see IDL documentation)}
 
-\item[/won]     \mytarget{idl:ismoothing:won} if set, a weighting scheme is used to improve the quadrature
-    \default {apply weighting}
+\item[won=]     \mytarget{idl:ismoothing:won} 
+if set to 0, no weighting applied, if set to 1, a ring-based quadrature weighting scheme is applied,
+              if set to 2, a pixel-based quadrature weighting scheme is applied.
+    \default {1: apply ring-based weighting}
 
 \item[w8file=]    \mytarget{idl:ismoothing:w8file} FITS file containing weights 
      \default {determined automatically by back-end routine}.

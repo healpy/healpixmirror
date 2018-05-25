@@ -278,6 +278,18 @@ are optional}}
         \textsc{\Large{\textbf{FORMAT}}} &  \Large{IDL$>$ {\pdes}} \\
      \end{tabular}}
 
+  \newenvironment{IDLformats}[2]
+    {\def\pdeso{#1}%
+     \def\pdest{#2}%
+     \rule{\hsize}{2mm}
+     \vspace{\baselineskip}
+     \begin{tabular}{@{}p{0.3\hsize}@{\hspace{1ex}}
+                        p{0.7\hsize}@{}}
+        \textsc{\Large{\textbf{FORMAT}}} &  \Large{IDL$>$ {\pdeso}} \\
+	\\
+        \                                &  \Large{IDL$>$ {\pdest}} \\
+     \end{tabular}}
+
 %%   \newenvironment{codedescription}[1]
 %%     {\def\pdes{#1}%
 %%      \rule{\hsize}{0.7mm}
@@ -395,6 +407,15 @@ are optional}}
                         p{0.95\hsize}@{}}
         \textsc{\Large{\textbf{RECOMMENDATIONS}}}\hfill\newline 
         \textsc{\Large{\textbf{FOR~USERS}}}\hfill\newline\\
+& {\pdes} \\
+     \end{tabular}
+%     \vspace{\baselineskip}
+}
+
+  \newenvironment{recommend_contd}[1]
+    {\def\pdes{#1}%
+     \begin{tabular}{@{}p{0.05\hsize}@{\hspace{1ex}}
+                        p{0.95\hsize}@{}}
 & {\pdes} \\
      \end{tabular}
      \vspace{\baselineskip}}

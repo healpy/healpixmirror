@@ -1,0 +1,82 @@
+
+\sloppy
+
+
+\title{\healpix Fortran Subroutines Overview}
+\docid{unfold\_weightsfile} 
+\section[unfold\_weightsfile]{ }
+\label{sub:unfold_weightsfile}
+
+\docrv{Version 1.1}
+\author{E. Hivon}
+\abstract{This document describes the \healpix Fortran90 subroutine \thedocid.}
+
+\begin{facility}
+{This routine read a ring-based or pixel-based quadrature weight file and turn it 
+into a full sky (ring-ordered) \healpix map.}
+{\modFitstools}
+\end{facility}
+
+\begin{f90format}
+{\mylink{sub:unfold_weightsfile:w8file}{w8file}%
+, \mylink{sub:unfold_weightsfile:w8map}{w8map}%
+}
+\end{f90format}
+
+\begin{arguments}
+{
+\begin{tabular}{p{0.35\hsize} p{0.05\hsize} p{0.1\hsize} p{0.4\hsize}} \hline  
+\textbf{name~\&~dimensionality} & \textbf{kind} & \textbf{in/out} & \textbf{description} \\ \hline
+                   &   &   &                           \\ %%% for presentation
+w8file\mytarget{sub:unfold_weightsfile:w8file}(LEN=\filenamelen) & CHR & IN & filename of FITS-file containing a list of ring-ordered or pixel-ordered quadrature weights for some Nside. \\
+w8map\mytarget{sub:unfold_weightsfile:w8map}(0:12*Nside**2-1) & SP/ DP & OUT & 
+an array containing a full sky map of weights for the same Nside.
+\end{tabular}
+}
+\end{arguments}
+
+\begin{example}
+{
+use \htmlref{healpix\_modules}{sub:healpix_modules}\\
+real(DP), allocatable(:) :: w8map\\
+character(len=FILENAMELEN) :: dirname, filename \\
+integer(I4B) :: nside, won\\
+%
+won = 2\\
+nside = 128\\
+npix = \htmlref{nside2npix}{sub:nside2npix}(nside)\\
+allocate(w8map(0:npix-1))\\
+dirname  = \mylink{sub:get_healpix_xxx_dir:ghdd}{get\_healpix\_data\_dir}()\\
+filename = \mylink{sub:get_healpix_xxx_file:ghw8f}{get\_healpix\_weights\_file}(nside, won)\\
+filename = trim(dirname)//'/'//trim(filename)\\
+call \thedocid(filename, w8map)}%
+{This code snippet looks for a pixel-based (\texttt{won=2}) weights file in standard location, with a standard name, 
+for \texttt{nside=128}, reads it and unfolds it into a full sky ring-ordered map named \texttt{w8map}.
+}
+\end{example}
+
+\begin{modules}
+  \begin{sulist}{} %%%% NOTE the ``extra'' brace here %%%%
+  \item[\textbf{pixtools}] module, containing:
+  \item[\htmlref{nside2npweights}{sub:nside2npweights}] function returning the number of pixel-based weights expected for a given Nside when stored in compact form
+  \item[\htmlref{nside2npix}{sub:nside2npix}] function returning the number of pixels on the full sky, for a given Nside
+  \item[\textbf{fitstools}] module, containing:
+  \item[printerror] routine for printing FITS error messages.
+  \item[\htmlref{getsize\_fits}{sub:getsize_fits}] function returning the size of a FITS file, and parsing its header.
+  \item[\htmlref{input\_map}{sub:input_map}] routine to read FITS file.
+  \item[\textbf{cfitsio}] library for FITS file handling.		
+  \end{sulist}
+\end{modules}
+
+\begin{related}
+  \begin{sulist}{} %%%% NOTE the ``extra'' brace here %%%%
+  \item[\htmlref{get\_healpix\_data\_dir}{sub:get_healpix_xxx_dir}] routine returning actual path to \texttt{data} directory
+   \item[\htmlref{get\_healpix\_weights\_file}{sub:get_healpix_xxx_file:ghw8f}] routine returning the standard name of pre-computed weights file
+   \item[\htmlref{anafast}{fac:anafast}, \htmlref{smoothing}{fac:smoothing}] these two facilities use \thedocid\ to apply quadrature weighting to the maps they respectively 
+analyze and smooth
+  \end{sulist}
+\end{related}
+
+\rule{\hsize}{2mm}
+
+\newpage

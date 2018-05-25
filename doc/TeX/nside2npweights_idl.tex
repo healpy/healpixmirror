@@ -1,0 +1,79 @@
+% -*- LaTeX -*-
+
+
+\renewcommand{\facname}{{nside2npweights }}
+\renewcommand{\FACNAME}{{NSIDE2NPWEIGHTS }}
+
+\sloppy
+
+
+
+\title{\healpix IDL Facility User Guidelines}
+\docid{nside2npweights} \section[nside2npweights]{ }
+\label{idl:nside2npweights}
+\docrv{Version 1.0}
+\author{Eric Hivon}
+\abstract{This document describes the \healpix IDL facility \facname.}
+
+
+\begin{facility}
+{This IDL facility provides the number pixel-based quadrature weights (in compact non-redundant form) 
+for a given resolution parameter Nside. Because of the \healpix layout symmetries,
+$N_w  \simeq \npix/16$, allowing economical storage on disc.%
+}
+{src/idl/toolkit/nside2npweights.pro}
+\end{facility}
+
+\begin{IDLformat}
+{\mylink{idl:nside2npweights:Npweights}{Npweights=}%
+\FACNAME(\mylink{idl:nside2npweights:Nside}{Nside}
+ [,\mylink{idl:nside2npweights:ERROR}{ERROR=}%
+, \mylink{idl:nside2npweights:HELP}{/HELP}%
+])}
+\end{IDLformat}
+
+\begin{qualifiers}
+  \begin{qulist}{} %%%% NOTE the ``extra'' brace here %%%%
+    \item[Nside\mytarget{idl:nside2npweights:Nside}%
+] \healpix resolution parameter (scalar integer),
+         should be a valid Nside (power of 2 in $\{1,\ldots,2^{29}\}$)
+    \item[Npweights\mytarget{idl:nside2npweights:Npweights}%
+] number of non-redundant weights
+  \end{qulist}
+\end{qualifiers}
+
+\begin{keywords}
+  \begin{kwlist}{} %%% extra brace
+    \item[ERROR\mytarget{idl:nside2npweights:ERROR}=] error flag, set to 1 on output if Nside is NOT valid, or
+    stays to 0 otherwise.
+    \item[/HELP\mytarget{idl:nside2npweights:HELP}] if set on input, the documentation header 
+  is printed out and the routine exits
+  \end{kwlist}
+\end{keywords}  
+
+\begin{codedescription}
+{\facname outputs the number of different pixel-based weights
+  $$N_w=\frac{(\nside+1)(3\nside+1)}{4}.$$ If the argument $\nside$ is not
+  valid, a  warning is issued and the error flag is raised.}
+\end{codedescription}
+
+
+
+\begin{related}
+  \begin{sulist}{} %%%% NOTE the ``extra'' brace here %%%%
+    \item[idl] version \idlversion or more is necessary to run \facname.	
+  \item[\htmlref{unfold\_weights}{idl:unfold_weights}] generates a full sky map of pixel-based or ring-based quadrature weights
+  \end{sulist}
+\end{related}
+
+\begin{example}
+{
+\begin{tabular}{ll} %%%% use this tabular format %%%%
+Npweights = nside2npweights(256, ERROR=error)
+\end{tabular}
+}
+{
+Npweights will be 49408 the number of pixel-based weights for the \healpix
+resolution parameter 256 and error will be 0}
+\end{example}
+

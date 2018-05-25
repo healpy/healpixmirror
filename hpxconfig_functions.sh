@@ -1204,11 +1204,13 @@ EOF
 
     #CFITSIOVREQ="3.14"            # required  version of CFITSIO (in Healpix 3.00)
     CFITSIOVREQ="3.20"            # required  version of CFITSIO (in Healpix 3.30)
+    CFITSIOVREC="3.44"            # recommended  version of CFITSIO (according to NASA)
     # run if executable
     if [ -x ${tmpfile}.x ]; then
 	CFITSIOVERSION=`${tmpfile}.x` # available version of CFITSIO 
 	v1=`echo ${CFITSIOVERSION} | ${AWK} '{print $1*1000}'` # multiply by 1000 to get integer
 	v2=`echo ${CFITSIOVREQ}    | ${AWK} '{print $1*1000}'`
+	v3=`echo ${CFITSIOVREC}    | ${AWK} '{print $1*1000}'`
 	${RM} ${tmpfile}.*
 	if [ $v1 -lt $v2 ]; then
 	    echo 
@@ -1216,6 +1218,12 @@ EOF
 	    echo "CFITSIO >= ${CFITSIOVREQ} is expected for Healpix-F90"
 	    echo
 	    crashAndBurn
+	fi
+	if [ $v1 -lt $v3 ]; then
+	    echo 
+	    echo "WARNING: CFITSIO version in ${FITSDIR}/lib${LIBFITS}.a  is  $CFITSIOVERSION "
+	    echo "         CFITSIO >= ${CFITSIOVREQ} is recommended by NASA security team"
+	    echo
 	fi
     else
 	echo "Warning: unable to check that CFITSIO is recent enough (>= ${CFITSIOVREQ})"
