@@ -194,7 +194,7 @@ template<typename T> void write_Healpix_map_to_fits
   (fitshandle &out, const Healpix_Map<T> &map, PDT datatype)
   {
   arr<string> colname(1);
-  colname[0] = "signal";
+  colname[0] = "TEMPERATURE";
   prepare_Healpix_fitsmap (out, map, datatype, colname);
   out.write_column(1,map.Map());
   }
@@ -212,9 +212,9 @@ template<typename T> void write_Healpix_map_to_fits
    const Healpix_Map<T> &mapQ, const Healpix_Map<T> &mapU, PDT datatype)
   {
   arr<string> colname(3);
-  colname[0] = "signal";
-  colname[1] = "Q-pol";
-  colname[2] = "U-pol";
+  colname[0] = "TEMPERATURE";
+  colname[1] = "Q_POLARISATION";
+  colname[2] = "U_POLARISATION";
   prepare_Healpix_fitsmap (out, mapT, datatype, colname);
   out.set_key ("POLCCONV", string("COSMO"));
   chunkMaker cm(mapT.Npix(),out.efficientChunkSize(1));
