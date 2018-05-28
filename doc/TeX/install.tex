@@ -1473,7 +1473,7 @@ However, the \mylinkext{idl:mollview:latex}{\texttt{Latex}} keyword will work pr
 A new set of (pixel-based) quadrature weights has been introduced, besides the older ring-based ones, to improve the accuracy of the Spherical Harmonics calculation. For maps
   containing a signal that is band-limited at $\lmax=1.5 \nside$, this allows
   recovery of the $a_{\ell m}$ at almost machine precision. They are supported by map-analysis routines in C++, Fortran, IDL and Python. 
-The weights for power-of-2 values of $\nside$ in $\{8,\ldots,2048\}$ are precomputed and shipped in \texttt{Healpix/data/weight_pixel_n?????.fits}, and the missing ones can be computed for any value of $\nside$ with the \texttt{compute\_weights} C++ facility.
+The weights for power-of-2 values of $\nside$ in $\{16,\ldots,2048\}$ are precomputed and shipped in \texttt{Healpix/data/weight_pixel_n?????.fits}, and the missing ones can be computed for any value of $\nside$ with the \texttt{compute\_weights} C++ facility.
 
 \subsubsection[C]{\linklatexhtml{C}{csub.pdf}{csub.htm}}
 %

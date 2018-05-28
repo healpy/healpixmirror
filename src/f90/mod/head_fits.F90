@@ -39,6 +39,9 @@ module head_fits
   ! 2009-01-08 corrected typo in FITS header written by write_minimal_header (DY_Y -> DY_T)
   ! 2013-05-07: G95-compatible
   ! 2014-05-02: fixed problem with keywords having a long string value
+  ! 2018-05-28: write_minimal_header: in agreement with IDL, healpy, C++?
+  !    IQU maps are now column names TEMPERATURE, Q_POLARISATION, U_POLARISATION,
+  !            
   !-------------------------------------------------------------------------
 
   ! subroutine add_card   [interface]
@@ -1196,11 +1199,13 @@ contains
           call add_card(header)
 
           if (do_polar) then
-             call add_card(header,"TTYPE2", "Q-POLARISATION","Q Polarisation map")
+             !call add_card(header,"TTYPE2", "Q-POLARISATION","Q Polarisation map")
+             call add_card(header,"TTYPE2", "Q_POLARISATION","Q Polarisation map")
              call add_card(header,"TUNIT2", my_units(iq),"map unit")
              call add_card(header)
 
-             call add_card(header,"TTYPE3", "U-POLARISATION","U Polarisation map")
+             !call add_card(header,"TTYPE3", "U-POLARISATION","U Polarisation map")
+             call add_card(header,"TTYPE3", "U_POLARISATION","U Polarisation map")
              call add_card(header,"TUNIT3", my_units(iu),"map unit")
              call add_card(header)
 
