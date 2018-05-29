@@ -111,22 +111,25 @@ updateVersion () {
   grep release $infile
 
   # update test/*.par files (2013-09)
-  echoBlu "editing  test/*.par  files"
+  echo "editing  test/*.par  files"
   inlist=`find test -name \*.par`
   outstring="# HEALPix $version"
+  suff="bk"
   for file in $inlist ; do
       ls -l $file
-      sed -i "s|^# HEALPix.*$|$outstring|" ${file}
-      sed -i "s|^# Healpix.*$|$outstring|" ${file}
+      sed -i ${suff} "s|^# HEALPix.*$|$outstring|" ${file}
+      sed -i ${suff} "s|^# Healpix.*$|$outstring|" ${file}
       grep "$outstring" $file
+      \rm ${file}${suff}
   done
 
   # update test/README file (2014-01)
   file='test/README'
   echoBlu "editing  $file  file"
   outstring="test data for HEALPix $version"
-  sed -i "s|test data for HEALPix.*$|$outstring|" ${file}
+  sed -i ${suff} "s|test data for HEALPix.*$|$outstring|" ${file}
   grep "$outstring" $file
+  \rm ${file}${suff}
 
 }
 

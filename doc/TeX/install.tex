@@ -813,7 +813,7 @@ In case of problems, see \htmladdnormallink{\tt
 The {\bf free} Fortran90/95 compilers that can be used to compile \healpix include: 
     \begin{itemize}
       \item {\bf Intel Fortran} Compiler for Linux based computers (versions
-11.* to 16.*\footnote{problems have been reported with one of the code (\texttt{sky\_ng\_sim}) when compiled with
+11.* to 18.*\footnote{problems have been reported with one of the code (\texttt{sky\_ng\_sim}) when compiled with
 \texttt{ifort 14.0.1.106}}) \hfill \\
          \htmladdnormallink{{\tt
         https://software.intel.com/en-us/fortran-compilers}}{https://software.intel.com/en-us/fortran-compilers}
@@ -1473,9 +1473,9 @@ However, the \mylinkext{idl:mollview:latex}{\texttt{Latex}} keyword will work pr
 A new set of (pixel-based) quadrature weights has been introduced, besides the older ring-based ones, to improve the accuracy of the Spherical Harmonics calculation. For maps
   containing a signal that is band-limited at $\lmax=1.5 \nside$, this allows
   recovery of the $a_{\ell m}$ at almost machine precision. They are supported by map-analysis routines in C++, Fortran, IDL and Python. 
-The weights for power-of-2 values of $\nside$ in $\{16,\ldots,2048\}$ are precomputed and shipped in \texttt{Healpix/data/weight_pixel_n?????.fits}, and the missing ones can be computed for any value of $\nside$ with the \texttt{compute\_weights} C++ facility.
+The weights for power-of-2 values of $\nside$ in $\{16,\ldots,2048\}$ are precomputed and shipped in \htmladdnormallink{\texttt{Healpix/data/weight\_pixel\_n?????.fits}}{http://sourceforge.net/p/healpix/code/HEAD/tree/trunk/data}, and the missing ones can be computed for any value of $\nside$ with the \texttt{compute\_weights} C++ facility.
 
-\subsubsection[C]{\linklatexhtml{C}{csub.pdf}{csub.htm}}
+%%\subsubsection[C]{\linklatexhtml{C}{csub.pdf}{csub.htm}}
 %
 \subsubsection[C++]{\htmladdnormallink{C++}{http://healpix.sourceforge.net/html/index_cxx.htm}}
 \begin{itemize}
@@ -1561,7 +1561,7 @@ orthview}}{idl:mollview} visualization routines:
     routines (2018-05-15).
 \end{itemize}
 %
-\subsubsection[Java]{\htmladdnormallink{Java}{http://healpix.sourceforge.net/html/java/index.html}}
+%%\subsubsection[Java]{\htmladdnormallink{Java}{http://healpix.sourceforge.net/html/java/index.html}}
 %
 \subsubsection[Python]{\htmladdnormallink{Python}{http://healpy.readthedocs.org/en/latest/}}
 \begin{itemize}

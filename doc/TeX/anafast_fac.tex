@@ -84,7 +84,7 @@ error and worry free typical applications, e.g. CPU-intensive
 Monte Carlo studies. 
 
 A new set of pixel-based quadrature weights was introduced in \healpix 3.40.
-Pre-computed to inforce a (near) ideal integration of the spherical harmonics $Y_{\ell m}$ on the pixelized sphere
+Pre-computed to inforce a (near) ideal integration of the spherical harmonics $Y_{\ell m}$ on the pixelized sphere (ie $\frac{4\pi}{\npix} \sum_p w(p) Y_{\ell m}(p) = \sqrt{4 \pi} \delta_{\ell 0}\delta_{m 0}$)
 for $|m| \le \ell \le 3 \nside$, they can be used to insure that the $a_{\ell m}$ and $C_\ell$ computed by \thedocid\
 are perfectly accurate (almost to machine precision) without the need for iterations, 
 but \textbf{only} for band-width 
