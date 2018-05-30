@@ -1153,13 +1153,13 @@ Its value is either \texttt{'COSMO'} for files following the HEALPix/CMB/{\em Pl
 (default for sky map synthetized with HEALPix routine \htmlref{\texttt{synfast}}{fac:synfast})
 or \texttt{'IAU'} for those
 following the IAU convention, as defined above. Absence of this keyword is
-interpreted as meaning \texttt{'COSMO'}.
+interpreted as meaning \texttt{'COSMO'} (as it is the case for WMAP maps).
 
 % The facilities 
 % \htmlref{\texttt{anafast}}{fac:anafast} and 
 % \htmlref{\texttt{smoothing}}{fac:smoothing} will stop with an error message if the map to analyze follows the 'IAU' convention, or if the convention is explicitely set to a value different from 'COSMO' and 'IAU'.\\
 % They will issue a warning if the convention used can not be determined from the FITS header.
-Starting with \healpix 3.4, when dealing with a polarized (full-sky or cut-sky) signal map, \\
+Starting with \healpix 3.40, when dealing with a polarized (full-sky or cut-sky) signal map, \\
 -- the F90 subroutine \htmlref{\texttt{input\_map}}{sub:input_map} in its default mode, \\
 -- the F90 facilities calling it and dealing with the $I$, $Q$ and $U$ Stokes parameters as a whole, {\em ie}
 \htmlref{\texttt{anafast}}{fac:anafast} and
@@ -1177,17 +1177,23 @@ crash if \texttt{POLCCONV} is explicitely set to a value different from \texttt{
 -- issue a warning, and {\em swap the sign of the $U$ polarisation} stored into memory if the FITS file being read contains \texttt{POLCCONV='IAU'}, \\
 -- issue a warning if the keyword \texttt{POLCCONV} is totally absent, and then carry on with the original data,\\
 -- work silently with the original data if \texttt{POLCCONV='COSMO'}.\\
-On the other hand, routines treating each of $I$, $Q$ and $U$ fields separately, 
+On the other hand, and as previously, routines treating or showing 
+each of $I$, $Q$ and $U$ fields separately, 
 such as the F90 facilities
-\htmlref{\texttt{median\_filter}}{fac:median_filter} and
-\htmlref{\texttt{ud\_grade}}{fac:ud_grade}, as well as their IDL implementation 
-\htmlref{\texttt{median\_filter}}{idl:median_filter} and
-\htmlref{\texttt{ud\_grade}}{idl:ud_grade}
-ignore the value of \texttt{POLCCONV} and copy it unchanged into their output files, as before.
+\htmlref{\texttt{median\_filter}}{fac:median_filter},
+\htmlref{\texttt{ud\_grade}}{fac:ud_grade}, or
+\htmlref{\texttt{map2gif}}{fac:map2gif}
+as well as their IDL counterparts
+\htmlref{\texttt{median\_filter}}{idl:median_filter},
+\htmlref{\texttt{ud\_grade}}{idl:ud_grade}, or
+\htmlref{\texttt{mollview} et al}{idl:mollview} run with 
+\mylinkext{idl:mollview:polarization}{\texttt{Polarization=0} or \texttt{1}} will
+ignore the value of \texttt{POLCCONV} (copying it unchanged into their output files, when applicable) 
+and preserve the sign of $U$.
 
 Finally, 
 the IDL subroutine \htmlref{\texttt{change\_polcconv.pro}}{idl:change_polcconv} 
-and the python facility \texttt{change\_polcconv.py} are 
+and the Python facility \texttt{change\_polcconv.py} are 
 provided to add the  \texttt{POLCCONV} keyword or
 change/update its value and swap the sign of the $U$ Stokes parameter, when applicable, in
 an existing FITS file.
