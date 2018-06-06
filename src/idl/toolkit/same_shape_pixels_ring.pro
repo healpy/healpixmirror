@@ -102,7 +102,7 @@ if (N_ELEMENTS(nside) GT 1) then message,'Nside should be a scalar in '+routine
 npix = nside2npix(nside, error = error)
 
 if (error ne 0) then message,'Invalid Nside '+string(nside)
-lnside = long(nside)
+lnside = long(nside[0]) ; 2018-06-06
 
 if (N_ELEMENTS(template) GT 1) then message,'template should be a scalar in '+routine
 ntplt= (lnside*(lnside+6))/4 > 2

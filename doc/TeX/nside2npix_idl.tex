@@ -29,25 +29,30 @@ to resolution parameter $\nside$.
 {\mylink{idl:nside2npix:Npix}{Npix}=%
 \FACNAME(\mylink{idl:nside2npix:Nside}{Nside}%
  [, \mylink{idl:nside2npix:ERROR}{ERROR=}%
+ , \mylink{idl:nside2npix:HELP}{/HELP}%
 ])}
 \end{IDLformat}
 
 \begin{qualifiers}
   \begin{qulist}{} %%%% NOTE the ``extra'' brace here %%%%
     \item[Nside\mytarget{idl:nside2npix:Nside}%
-] \healpix resolution parameter (scalar integer),
+] \healpix resolution parameter (integer, scalar or not),
          should be a valid $\nside$ (power of 2 $ \le 2^{29}$)
     \item[Npix\mytarget{idl:nside2npix:Npix}%
-] number of pixels, $\npix = 12 \nside^2$ if $\nside$ is a valid
+] number of pixels, same size as \mylink{idl:nside2npix:Nside}{Nside},
+ $\npix = 12 \nside^2$ if $\nside$ is a valid
     resolution parameter or -1 otherwise
   \end{qulist}
 \end{qualifiers}
 
 \begin{keywords}
   \begin{kwlist}{} %%% extra brace
-    \item[ERROR\mytarget{idl:nside2npix:ERROR}%
- =] error flag, set to 1 on output if Nside is NOT valid, or
+    \item[ERROR\mytarget{idl:nside2npix:ERROR}=] 
+ error flag, set to 1 on output if Nside is NOT valid, or
     stays to 0 otherwise.
+    \item[/HELP\mytarget{idl:nside2npix:HELP}] 
+ if set on input, the documentation header is printed, and the routine exits 
+(with a returned value of -1 and an error flag set to 0).
   \end{kwlist}
 \end{keywords}  
 

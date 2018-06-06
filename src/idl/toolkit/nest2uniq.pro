@@ -62,7 +62,7 @@ n2 = n_elements(pnest)
 
 if (n1 ne n2 and n1 ne 1) then begin
     print,syntax
-    print,'Nside must be a scalar of Nside and Pnest must have same length'
+    print,'Nside must be a scalar, or Nside and Pnest must have same length'
     return
 endif
 

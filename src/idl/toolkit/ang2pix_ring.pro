@@ -91,7 +91,7 @@ PRO ang2pix_ring, nside, theta, phi, ipring
   endif
   if (MIN(theta) lt 0.) or (MAX(theta) gt !PI) then message, 'theta out of range'
 ;------------------------------------------------------------
-  nl1  = LONG(nside)
+  nl1  = LONG(nside[0]) ; 2018-06-06
   nl2   = 2L*nl1
   l64 = 0
   if (nl1 gt 8192) then begin

@@ -1167,17 +1167,18 @@ Starting with \healpix 3.40, when dealing with a polarized (full-sky or cut-sky)
 -- as well as their IDL wrappers 
 \htmlref{\texttt{ianafast}}{idl:ianafast} and
 \htmlref{\texttt{ismoothing}}{idl:ismoothing}, \\
--- and the IDL visualisation routines 
+-- the IDL visualisation routines 
 \htmlref{\texttt{azeqview}, \texttt{cartview}, \texttt{gnomview}, \texttt{mollview} and \texttt{orthview}}{idl:mollview}
 called with 
 \mylinkext{idl:mollview:polarization}{\texttt{Polarization=2} or \texttt{3}},\\
-will \\
+-- and all C++ facilities (and the input routine \texttt{read\_Healpix\_map\_from\_fits})\\
+will all \\
 -- issue an error message and 
 crash if \texttt{POLCCONV} is explicitely set to a value different from \texttt{'COSMO'} and \texttt{'IAU'},\\
--- issue a warning, and {\em swap the sign of the $U$ polarisation} stored into memory if the FITS file being read contains \texttt{POLCCONV='IAU'}, \\
--- issue a warning if the keyword \texttt{POLCCONV} is totally absent, and then carry on with the original data,\\
--- work silently with the original data if \texttt{POLCCONV='COSMO'}.\\
-On the other hand, and as previously, routines treating or showing 
+-- issue a warning (except in C++), and {\em swap the sign of the $U$ polarisation} stored into memory if the FITS file being read contains \texttt{POLCCONV='IAU'}, \\
+-- issue a warning (except in C++) if the keyword \texttt{POLCCONV} is totally absent, and then carry on with the original data,\\
+-- or work silently with the original data if \texttt{POLCCONV='COSMO'}.\\
+On the other hand, and as in previous releases, routines treating or showing 
 each of $I$, $Q$ and $U$ fields separately, 
 such as the F90 facilities
 \htmlref{\texttt{median\_filter}}{fac:median_filter},

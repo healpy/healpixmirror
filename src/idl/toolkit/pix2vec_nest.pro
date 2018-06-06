@@ -102,7 +102,7 @@ PRO pix2vec_nest, nside, ipix, vec_out, vertex
   jrll = [2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4] ; in unit of nside
   jpll = [1, 3, 5, 7, 0, 2, 4, 6, 1, 3, 5, 7] ; in unit of nside/2
 
-  nl1 = LONG(nside)
+  nl1 = LONG(nside[0]) ; 2018-06-06
   nl2 = 2L*nl1
   nl3 = 3L*nl1
   if (nl1 gt 8192) then begin

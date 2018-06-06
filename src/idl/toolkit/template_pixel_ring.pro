@@ -128,7 +128,7 @@ IF (max_pix GT npix-1) THEN BEGIN
     message,'Abort'
 ENDIF
 
-lnside = long(nside)
+lnside = long(nside[0]) ; 2018-06-06
 np = n_elements(ipix)
 
 if (lnside gt 8192) then begin

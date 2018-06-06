@@ -99,7 +99,7 @@ PRO pix2vec_ring, nside, ipix, vec_out, vertex
   do_vertex = (N_params() eq 4)
 
 
-  nl1 = LONG(nside)
+  nl1 = LONG(nside[0]) ; 2018-06-06
   nl2 = 2L*nl1
   if (nl1 gt 8192) then begin
       nl4 = 4LL*nl1

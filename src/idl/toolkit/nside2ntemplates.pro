@@ -39,17 +39,20 @@ function nside2ntemplates, nside, error=error
 ; MODIFICATION HISTORY:
 ;
 ;     v1.0, EH, Caltech, ?
-;     v1.1, EH, IAP,     2000-03-18 : enabled nside > 8192
+;     v1.1, EH, IAP,     2000-03-18: enabled nside > 8192
+;     v1.2, EH, IAP,     2018-06-06: accept non-scalar Nside
 ;-
 
 npix = nside2npix(nside,err=error)
 
 if (error ne 0) then begin
-    message,' WARNING: invalid nside: '+string(nside),/info
+    bad = where(npix lt 0, nbad)
+    if nbad eq 0 then bad = 0
+    message,' WARNING: invalid nside: '+string(nside[bad]),/info
     return, -1
 endif
 
-if (nside gt 8192) then begin
+if (max(nside) gt 8192) then begin
     lnside = long64(nside)
     nt = 1LL + lnside * (lnside + 6LL)
     ntemplate = long64( nt / 4LL )

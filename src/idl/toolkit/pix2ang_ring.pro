@@ -89,7 +89,7 @@ PRO pix2ang_ring, nside, ipix, theta, phi
       message,'Abort'
   ENDIF
 
-  nl1 = LONG(nside)
+  nl1 = LONG(nside[0]) ; 2018-06-06
   nl2 = 2L*nl1
   if (nl1 gt 8192) then begin
       nl4 = 4LL*nl1

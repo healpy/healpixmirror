@@ -82,7 +82,7 @@ PRO vec2pix_nest, nside, vec_in, ipnest
   vec_in = reform(vec_in,np,3,/OVERWRITE)
 ;------------------------------------------------------------
 
-  nl1 = LONG(nside)
+  nl1 = LONG(nside[0]) ; 2018-06-06
   ns_max = nl1
   l64 = 0
   if (nl1 gt 8192) then begin

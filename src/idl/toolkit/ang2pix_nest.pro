@@ -83,7 +83,7 @@ PRO ang2pix_nest, nside, theta, phi, ipnest
   if (MIN(theta) lt 0.) or (MAX(theta) gt !PI) then message, 'theta out of range'
 ;------------------------------------------------------------
 
-  nl1 = LONG(nside)
+  nl1 = LONG(nside[0]) ; 2018-06-06
   ns_max = nl1
   l64 = 0 ; all in 32 bit
   if (nl1 gt 8192) then begin

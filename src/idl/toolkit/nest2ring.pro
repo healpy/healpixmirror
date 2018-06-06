@@ -85,7 +85,7 @@ PRO nest2ring, nside, ipnest, ipring
   jpll = [1, 3, 5, 7, 0, 2, 4, 6, 1, 3, 5, 7] ; in unit of nside/2
 
   np = N_ELEMENTS(ipnest)
-  nl1 = LONG(nside)
+  nl1 = LONG(nside[0]) ; 2018-06-06
   nl3  = 3L*nl1
   if (nl1 gt 8192) then begin
       nl4  = 4LL*nl1
