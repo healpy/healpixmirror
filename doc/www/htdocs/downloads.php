@@ -53,9 +53,9 @@ an empty email with only &quot;<tt>subscribe</tt>&quot; on the Subject line.
 			
 <p>		
 <A name="top"></A>
-The recommended channel for obtaining and installing the latest HEALPix software is to download the <em>source</em> package from the <a href="http://sourceforge.net/projects/healpix/">SourceForge Download page</a> under the GNU General Public License, version2 <a href="http://www.gnu.org/licenses/gpl-2.0.html">(GPLv2)</a>, and follow the <a href="documentation.php">installation directions</a>.<br>
-The source code of past, latest and forthcoming releases can be browsed on <a href="http://sourceforge.net/p/healpix/code/HEAD/tree/">SourceForge SVN repository</a>.<br>
-Prepackaged or precompiled HEALPix packages can also be found in various places, with variable delays, for e.g. MacOSX (<a href="http://www.macports.org/ports.php?by=name&substr=healpix">MacPorts</a>, <a href="http://braumeister.org/repos/Homebrew/homebrew-science/formula/healpix">HomeBrew</a>) and Linux (<a href="http://fr2.rpmfind.net/linux/rpm2html/search.php?query=healpix&submit=Search+...">RPM</a>) systems, under the <a href="http://www.gnu.org/licenses/gpl-2.0.html">same GPLv2 licensing scheme</a>.
+The recommended channel for obtaining and installing the latest HEALPix software is to download the <em>source</em> package from the <a href="https://sourceforge.net/projects/healpix/">SourceForge Download page</a> under the GNU General Public License, version2 <a href="http://www.gnu.org/licenses/gpl-2.0.html">(GPLv2)</a>, and follow the <a href="documentation.php">installation directions</a>.<br>
+The source code of past, latest and forthcoming releases can be browsed on <a href="https://sourceforge.net/p/healpix/code/HEAD/tree/">SourceForge SVN repository</a>.<br>
+Prepackaged or precompiled HEALPix packages can also be found in various places, with variable delays, for e.g. MacOSX (<a href="https://www.macports.org/ports.php?by=name&substr=healpix">MacPorts</a>, <a href="https://github.com/brewsci/homebrew-science/blob/master/Formula/healpix.rb">HomeBrew</a>) and Linux (<a href="https://fr2.rpmfind.net/linux/rpm2html/search.php?query=healpix&submit=Search+...">RPM</a>) systems, under the <a href="https://www.gnu.org/licenses/gpl-2.0.html">same GPLv2 licensing scheme</a>.
 </p>
 
 <p>
@@ -175,7 +175,7 @@ for installation under Windows;
 <UL>
 <LI>Removal of C++11 features inadvertently introduced in Version 3.30 
 	(see <A NAME="tex2html_331_2"
-  HREF="http://sourceforge.net/p/healpix/bugs/72"><TT>http://sourceforge.net/p/healpix/bugs/72</TT></A>)	
+  HREF="https://sourceforge.net/p/healpix/bugs/72"><TT>https://sourceforge.net/p/healpix/bugs/72</TT></A>)	
 </LI>
 </UL>
 <A HREF=#top>    Back to Top</A><br><br>
@@ -210,7 +210,7 @@ and
 </LI>
 <LI>update of the required
     <A NAME="tex2html_331_6"
-  HREF="http://idlastro.gsfc.nasa.gov/homepage.html"><TT>IDL-astron</TT> library</A>
+  HREF="https://idlastro.gsfc.nasa.gov/homepage.html"><TT>IDL-astron</TT> library</A>
 routines, and <A NAME="tex2html_331_7"
   HREF="http://www.idlcoyote.com"><TT>Coyote</TT></A>
 library
@@ -353,7 +353,7 @@ configuration process.
 </LI>
 <LI>update of the required
     <A NAME="tex2html_330_7"
-  HREF="http://idlastro.gsfc.nasa.gov/homepage.html"><TT>IDL-astron</TT> library</A>
+  HREF="https://idlastro.gsfc.nasa.gov/homepage.html"><TT>IDL-astron</TT> library</A>
 routines, and <A NAME="tex2html_330_8"
   HREF="http://www.idlcoyote.com"><TT>Coyote</TT></A>
 library
@@ -552,7 +552,7 @@ IDL</A>
 </LI>
 <LI>update of the required
     <A NAME="tex2html_320_9"
-  HREF="http://idlastro.gsfc.nasa.gov/homepage.html"><TT>IDL-astron</TT> library</A>
+  HREF="https://idlastro.gsfc.nasa.gov/homepage.html"><TT>IDL-astron</TT> library</A>
 routines, and their supporting <A NAME="tex2html_320_10"
   HREF="http://www.idlcoyote.com"><TT>Coyote</TT></A>
 routines (2014-11-10).

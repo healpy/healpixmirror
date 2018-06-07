@@ -7,18 +7,18 @@
 <br>
 <ul>
 <li>
-The <a href="http://www.cosmos.esa.int/web/planck">Planck</a> satellite full sky maps, 
-<a href="http://www.cosmos.esa.int/web/planck/publications">observed at 30 to 857 GHz with unprecedented accuracy</a>, 
+The <a href="https://www.cosmos.esa.int/web/planck">Planck</a> satellite full sky maps, 
+<a href="https://www.cosmos.esa.int/web/planck/publications">observed at 30 to 857 GHz with unprecedented accuracy</a>, 
 and their decomposition in cosmological and astrophysical components are available in HEALPix format from ESA 
-<a href="http://www.cosmos.esa.int/web/planck/pla">Planck Legacy Archive</a>, 
+<a href="https://www.cosmos.esa.int/web/planck/pla">Planck Legacy Archive</a>, 
 and NASA <a href="http://irsa.ipac.caltech.edu/Missions/planck.html">Infrared Science Archive</a>
 </li>
 
 <li>
 The 
-<a href="http://lambda.gsfc.nasa.gov/product/map/current/m_products.cfm" >Wilkinson 
+<a href="https://lambda.gsfc.nasa.gov/product/map/current/m_products.cfm" >Wilkinson 
     Microwave Anisotropy Probe (WMAP)</a> satellite data, see
-    <a href="http://map.gsfc.nasa.gov/" >WMAP Technical Information</a>
+    <a href="https://map.gsfc.nasa.gov/" >WMAP Technical Information</a>
 </li>
 
 <li>
@@ -30,7 +30,7 @@ SDSS <a href="http://risa.stanford.edu/redmapper/">DR8 Depth maps</a>
 </li>
 
 <li>
-The <a href="http://lambda.gsfc.nasa.gov/product/cobe/" >COBE</a>
+The <a href="https://lambda.gsfc.nasa.gov/product/cobe/" >COBE</a>
 data, including DMR and FIRAS
 </li>
 
@@ -40,9 +40,9 @@ which includes <a href="http://cade.irap.omp.eu/dokuwiki/doku.php?id=cobe">COBE/
 </li>
 
 <li>
-The radio and infrared <a href="http://lambda.gsfc.nasa.gov/product/foreground/f_products.cfm">foregrounds</a> maps
+The radio and infrared <a href="https://lambda.gsfc.nasa.gov/product/foreground/f_products.cfm">foregrounds</a> maps
 including CO, Dust, Synchrotron, H-alpha and HI, as well as
-<a href="http://lambda.gsfc.nasa.gov/product/iras/">IRAS</a> maps
+<a href="https://lambda.gsfc.nasa.gov/product/iras/">IRAS</a> maps
 </li>
 <!--
 <li>
@@ -62,7 +62,7 @@ The Schlegel, Finkbeiner, and Davis
 
 <li>
 An extensive list of 
-<a href="http://lambda.gsfc.nasa.gov/product/expt/" >
+<a href="https://lambda.gsfc.nasa.gov/product/expt/" >
     past, current and future CMB or SZ experiments and data availability</a> on Lambda web site
 
 </li>
@@ -80,7 +80,7 @@ An extensive list of
 <!--   ------Data simulation--------  -->
 <li>
 The 
-<a href="http://lambda.gsfc.nasa.gov/toolbox/tb_cmbfast_ov.cfm" >
+<a href="https://lambda.gsfc.nasa.gov/toolbox/tb_cmbfast_ov.cfm" >
     CMBFAST</a>, <a href="http://camb.info/">CAMB</a> and
 <!-- a href="http://lesgourg.web.cern.ch/lesgourg/class.php">CLASS</a -->
 <a href="http://class-code.net/">CLASS</a>
@@ -121,7 +121,7 @@ Visualization tools supporting HEALPix maps in FITS format:
 (which can overlay any astronomical map or catalog), 
 <a href="http://helios.av.it.pt/projects/healpixviewer">HealpixViewer</a>,
 <a href="http://www.ast.cam.ac.uk/~vlad/univiewer/index.html">Univiewer</a>,
-<a href="http://lambda.gsfc.nasa.gov/toolbox/tb_skyviewer_ov.cfm">SkyViewer</a>
+<a href="https://lambda.gsfc.nasa.gov/toolbox/tb_skyviewer_ov.cfm">SkyViewer</a>
 </li>
 
 <li>
@@ -130,7 +130,7 @@ to access, visualize and browse images, catalogues and cube data
 </li>
 
 <li>
-<a href="http://sky.esa.int">ESA Sky</a> to search, retrieve, explore and visualize the entire sky as observed by ESA (and other) astronomy missions (<a href="http://www.cosmos.esa.int/web/esdc/esasky-help">help desk</a>)
+<a href="https://sky.esa.int">ESA Sky</a> to search, retrieve, explore and visualize the entire sky as observed by ESA (and other) astronomy missions (<a href="https://www.cosmos.esa.int/web/esdc/esasky-help">help desk</a>)
 </li>
 
 <li>

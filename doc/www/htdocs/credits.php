@@ -59,7 +59,7 @@
 		the work of 
 
               <u>William O&#039;Mullane</u>
-		(<a href="http://www.esa.int/About_Us/ESAC">European Space Astronomy Center, ESAC</a>), 
+		(<a href="https://www.esa.int/About_Us/ESAC">European Space Astronomy Center, ESAC</a>), 
 
 		<u>Hans Kristian Eriksen</u> 
 		(<a href="http://www.uio.no/english">Universitetet i Oslo</a>),
