@@ -18,7 +18,7 @@ top LaTeX files:
 	intro.tex 	
 		none
 	facilities.tex 
-
+		*_fac.tex
 	subroutines.tex 
 
 	csub.tex 
@@ -42,3 +42,9 @@ style files:
 
 see also fig/process_images.txt
 
+
+find files with http:
+grep -v '^%' *.tex | grep http: | awk -F: '{print $1}' | uniq
+
+find http: string in file
+grep -v '^%' facilities.tex | grep http: | sed "s|[[:print:]]*http://\([^{}]*\)[[:print:]]*|http://\1|g"

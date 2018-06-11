@@ -345,9 +345,13 @@ Numpy 1.0.1 or more         & \htmladdnormallink{\texttt{https://numpy.scipy.org
 			\\
 Matplotlib 0.91.2 or more         & \htmladdnormallink{\texttt{https://matplotlib.sourceforge.net}}{https://matplotlib.sourceforge.net}
 			\\
-PyFITS         & \htmladdnormallink{{\tt
-http://www.stsci.edu/institute/software\_\-hardware/pyfits}}{%
-	http://www.stsci.edu/institute/software_hardware/pyfits}
+Astropy.io.fits         & \htmladdnormallink{{\tt
+https://www.astropy.org}}{%
+https://www.astropy.org}
+			\\
+(PyFITS)         & \htmladdnormallink{{\tt
+https://pypi.org/project/pyfits/3.3}}{%
+https://pypi.org/project/pyfits/3.3}
 			\\
                                    &                          \\ \hline %%% for presentation
 \end{tabular}\vspace{3ex}
@@ -1467,7 +1471,7 @@ However, the \mylinkext{idl:mollview:latex}{\texttt{Latex}} keyword will work pr
 % 	\linklatexhtml{subroutines}{subroutines.pdf}{subroutines.htm}}
 % \subsubsection[IDL]{\linklatexhtml{IDL}{idl.pdf}{idl.htm}}
 % \subsubsection[Java]{\htmladdnormallink{Java}{http://healpix.sourceforge.net/html/java/index.html}}
-% \subsubsection[Python]{\htmladdnormallink{Python}{http://healpy.readthedocs.org/en/latest/}}
+% \subsubsection[Python]{\htmladdnormallink{Python}{https://healpy.readthedocs.org/en/latest/}}
 
 \subsubsection[General]{General}
 A new set of (pixel-based) quadrature weights has been introduced, besides the older ring-based ones, to improve the accuracy of the Spherical Harmonics calculation. For maps
@@ -1618,7 +1622,7 @@ visualization routines:
     routines (2016-08-19).
 	\end{itemize}
 % \tinysubsubsection[Java]{\htmladdnormallink{Java}{http://healpix.sourceforge.net/html/java/index.html}}
-\tinysubsubsection*{\htmladdnormallink{Python}{http://healpy.readthedocs.org/en/latest/}}
+\tinysubsubsection*{\htmladdnormallink{Python}{https://healpy.readthedocs.org/en/latest/}}
 	\begin{itemize}
 	\item Switch to 
 	\htmladdnormallink{\texttt{healpy 1.9.1}}{https://github.com/healpy/healpy/releases} 
@@ -1716,7 +1720,7 @@ for high-level description);
 \end{itemize}
 
 
-\tinysubsubsection*{\htmladdnormallink{Python}{http://healpy.readthedocs.org/en/latest/}}
+\tinysubsubsection*{\htmladdnormallink{Python}{https://healpy.readthedocs.org/en/latest/}}
 \begin{itemize}
 	\item switch to \htmladdnormallink{{\tt healpy
 1.9.0}}{https://github.com/healpy/healpy/releases} 
@@ -1737,7 +1741,7 @@ for high-level description);
 \tinysubsubsection*{General}
 	\begin{itemize}
 	\item Generation of 
-\htmladdnormallink{{\tt pkg-config}}{http://en.wikipedia.org/wiki/Pkg-config} 
+\htmladdnormallink{{\tt pkg-config}}{https://en.wikipedia.org/wiki/Pkg-config} 
 files during the configuration of the C, C++ and F90 packages. 
 % BeginSkip
 See Section~\ref{sec:pkg-config} of 
@@ -1756,10 +1760,10 @@ CFITSIO-related functions
 \begin{itemize}
 \item automatic workaround for bugs in older versions of GNU {\tt g++} compiler
  (bug reports 
-\htmladdnormallink{37}{http://sourceforge.net/p/healpix/bugs/37}, 
-\htmladdnormallink{45}{http://sourceforge.net/p/healpix/bugs/45}, 
-\htmladdnormallink{48}{http://sourceforge.net/p/healpix/bugs/48}, 
-\htmladdnormallink{51}{http://sourceforge.net/p/healpix/bugs/51})
+\htmladdnormallink{37}{https://sourceforge.net/p/healpix/bugs/37}, 
+\htmladdnormallink{45}{https://sourceforge.net/p/healpix/bugs/45}, 
+\htmladdnormallink{48}{https://sourceforge.net/p/healpix/bugs/48}, 
+\htmladdnormallink{51}{https://sourceforge.net/p/healpix/bugs/51})
 \item workaround for possible bug in Intel {\tt icc} 14.0 compiler
 \item bug fix in Mollweide projection in {\tt map2tga} when not looking at (0,0)
 \item {\tt autotools} updates
@@ -1781,9 +1785,9 @@ Installation"}{install.pdf}{install.htm} for details.
 modules, ... produced during the compilation of the source codes
 	\item improved handling of long FITS keywords, now producing FITS files
 fully compatible with the
-\htmladdnormallink{\tt PyFITS}{http://www.stsci.edu/institute/software_hardware/pyfits} 
+\htmladdnormallink{\tt PyFITS}{https://pypi.org/project/pyfits/3.3} 
 and 
-{\tt Astropy} (\htmladdnormallink{www.astropy.org}{http://www.astropy.org/})
+{\tt Astropy} (\htmladdnormallink{https://www.astropy.org}{https://www.astropy.org/})
 {\tt Python} libraries
 	\item improved FITS file parsing in 
 \htmlref{{\tt generate\_beam}}{sub:generate_beam},
@@ -1852,7 +1856,7 @@ affecting the external $B(l)$ reading in the F90 facilities
 	\setlength{\itemsep}{0pt}
 	\setlength{\parsep}{0pt}
 	\item \htmladdnormallink{{\tt
-libsharp}}{http://sourceforge.net/projects/libsharp}
+libsharp}}{https://sourceforge.net/projects/libsharp}
 C library used for Spherical Harmonics Transforms 
 in Fortran and C++ since \healpix\ 3.10
 can now be compiled with {\em any} {\tt gcc} version.
@@ -1908,10 +1912,10 @@ configuration script remains available
 	\setlength{\itemsep}{0pt}
 	\setlength{\parsep}{0pt}
 \item Spherical Harmonics Transform library {\tt libpsht} replaced by \htmladdnormallink{{\tt
-libsharp}}{http://sourceforge.net/projects/libsharp}
-(\htmladdnormallink{Reinecke \& Seljebotn, 2013}{http://arxiv.org/abs/1303.4945}). \\
+libsharp}}{https://sourceforge.net/projects/libsharp}
+(\htmladdnormallink{Reinecke \& Seljebotn, 2013}{https://arxiv.org/abs/1303.4945}). \\
 {\em \mytarget{install:cpp:gccreleases}{Note} that 
-some \htmladdnormallink{{\tt gcc} versions}{http://gcc.gnu.org/releases.html}
+some \htmladdnormallink{{\tt gcc} versions}{https://gcc.gnu.org/releases.html}
 (4.4.1 to 4.4.6) crash with an internal compiler error during compilation of {\tt libsharp}}. 
 The problem has been fixed in {\tt gcc} 4.4.7, 4.5.*, 4.6.*, 4.7.* and
 newer versions and was not present in versions 4.2.* and 4.3.*.
@@ -1950,7 +1954,7 @@ as input map file.
 \htmlref{{\tt synfast}}{fac:synfast},
 \htmlref{{\tt anafast}}{fac:anafast},
 \htmlref{{\tt smoothing}}{fac:smoothing} thanks to \htmladdnormallink{{\tt
-libsharp}}{http://sourceforge.net/projects/libsharp} routines (see \mylink{install:cpp:gccreleases}{warning on
+libsharp}}{https://sourceforge.net/projects/libsharp} routines (see \mylink{install:cpp:gccreleases}{warning on
 gcc releases above}).
 %
 \end{itemize}

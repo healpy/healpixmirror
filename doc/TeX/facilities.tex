@@ -306,9 +306,9 @@ the free Fortran95 compiler \textbf{g95} (\htmladdnormallink{www.g95.org}{http:/
 modules, ... produced during the compilation of the source codes
 	\item improved handling of long FITS keywords, now producing FITS files
 fully compatible with the
-\htmladdnormallink{\tt PyFITS}{http://www.stsci.edu/institute/software_hardware/pyfits} 
+\htmladdnormallink{\tt PyFITS}{https://pypi.org/project/pyfits/3.3}
 and 
-{\tt Astropy} (\htmladdnormallink{www.astropy.org}{http://www.astropy.org/})
+{\tt Astropy} (\htmladdnormallink{https://www.astropy.org}{https://www.astropy.org/})
 {\tt Python} libraries
 	\item improved FITS file parsing in 
 \htmlref{{\tt generate\_beam}}{sub:generate_beam},
@@ -330,7 +330,7 @@ can now be compiled with any {\tt gcc} version.
 \begin{itemize}\compresslist
 %
 	\item all Fortran facilities now support most of {\tt cfitsio}'s ''\htmladdnormallink{Extended File
-Name Syntax}{http://heasarc.gsfc.nasa.gov/docs/software/fitsio/filters.html}'' features,
+Name Syntax}{https://heasarc.gsfc.nasa.gov/docs/software/fitsio/filters.html}'' features,
 allowing the reading and processing of an arbitrary HDU and table column out of
 remote, compressed FITS files. For example, setting \hfill \\
 {\tt infile = }{\tt ftp://}{\it url/file.fits}{\tt .gz}{\tt [}{\it extn}{\tt
@@ -341,21 +341,24 @@ uncompress it, open the HDU (extension) featuring keyword {\tt EXTNAME=}{\it
 extn}, or the one with 1-based rank number {\it extn}, read the table column
 with {\tt TTYPE*=}{\it colname} out of it and will analyze it.\\
 It is also possible to perform a remote \htmlref{{\tt anafast}}{fac:anafast} analysis of a 
-\htmladdnormallink{Planck Legacy Archive (PLA)}{http://www.sciops.esa.int/index.php?project=planck&page=Planck_Legacy_Archive}
-sky map named {\it map.fits} via the PLA \htmladdnormallink{AIO
-Subsystem}{http://pla.esac.esa.int/pla/aio/} by simply setting
-{\tt infile=http://pla.esac.esa.int/pla/aio/product-action?MAP.MAP\_ID=}{\it map.fits}
+%\htmladdnormallink{Planck Legacy Archive (PLA)}{http://www.sciops.esa.int/index.php?project=planck&page=Planck_Legacy_Archive}
+\htmladdnormallink{Planck Legacy Archive (PLA)}{https://pla.esac.esa.int/pla/\#home}
+sky map named {\it map.fits} via the PLA \htmladdnormallink{AIO Subsystem}%
+{https://pla.esac.esa.int/pla/\#aio}
+%{http://pla.esac.esa.int/pla/aio/} 
+by simply setting
+{\tt infile=https://pla.esac.esa.int/pla/aio/product-action?MAP.MAP\_ID=}{\it map.fits}
 as input map file.
 %
 	\item yet faster 
 \htmlref{{\tt synfast}}{fac:synfast},
 \htmlref{{\tt anafast}}{fac:anafast},
 \htmlref{{\tt smoothing}}{fac:smoothing} thanks to \htmladdnormallink{{\tt
-libsharp}}{http://sourceforge.net/projects/libsharp} routines\footnote{
+libsharp}}{https://sourceforge.net/projects/libsharp} routines\footnote{
 To {\em revert} to the original F90 implementation of all these routines, the preprocessing
 variable {\tt DONT\_USE\_SHARP} must be set during compilation.}. \\
 {\em Note that 
-some \htmladdnormallink{{\tt gcc} versions}{http://gcc.gnu.org/releases.html}
+some \htmladdnormallink{{\tt gcc} versions}{https://gcc.gnu.org/releases.html}
 (4.4.1 to 4.4.6) crash with an internal compiler error during compilation of {\tt libsharp}}. 
 The problem has been fixed in {\tt gcc} 4.4.7, 4.5.*, 4.6.*, 4.7.* and
 newer versions and was not present in versions 4.2.* and 4.3.*.

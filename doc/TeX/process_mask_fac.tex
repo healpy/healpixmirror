@@ -72,7 +72,7 @@ The output FITS files have the same ordering as the input mask
 though the code has been optimized to reduce the number of calculations by a
 factor $10^2$ to $10^3$ compared to a naive implementation, and the most
 computationally intensive loops are parallelized with OpenMP.
-On a 3.06GHz Intel Core 2 Duo, the distances on a \htmladdnormallink{$\nside=512$ Galactic + Point sources mask}{http://lambda.gsfc.nasa.gov/product/map/dr4/masks_get.cfm} can be computed in a few
+On a 3.06GHz Intel Core 2 Duo, the distances on a \htmladdnormallink{$\nside=512$ Galactic + Point sources mask}{https://lambda.gsfc.nasa.gov/product/map/dr4/masks_get.cfm} can be computed in a few
 seconds, while a similar $\nside=2048$ mask takes a minute or less to process.
 For totally arbitrary masks though, the return times can be multiplied by as
 much as 10.}}
