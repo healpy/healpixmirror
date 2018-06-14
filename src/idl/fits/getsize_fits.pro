@@ -262,7 +262,7 @@ endif else begin
         junk = STRUPCASE(STRTRIM(sxpar(xhdr,'TTYPE*',count=countfits),2))
         if (countfits ne 0 and junk[0] ne '') then begin
             type = 2
-            if junk[0] eq 'PIXEL' then type = 3
+            if (junk[0] eq 'PIXEL' || junk[0] eq 'PIX') then type = 3
             goto, found
         endif
                                 ; lousy test, for backward compatibility

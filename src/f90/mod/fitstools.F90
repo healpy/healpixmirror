@@ -428,7 +428,8 @@ contains
        print*,'Expected 4 columns in FITS file '//filename
        print*,'found ',tfields
        if (tfields < 2) call fatal_error
-       if (trim(ttype(1)) /= 'PIXEL') call fatal_error
+       if (.not.  (trim(ttype(1)) == 'PIXEL' &
+            & .or. trim(ttype(1)) == 'PIX'  ) ) call fatal_error
     endif
 
     if (present(header)) then 
@@ -2418,7 +2419,7 @@ contains
           endif
           ! 3rd most stringent test
           if (trim(ttype(1)) /= '') then
-             if (trim(ttype(1)) == 'PIXEL') then
+             if (trim(ttype(1)) == 'PIXEL' .or. trim(ttype(1)) == 'PIX') then
                 ftype_in = 3
              else
                 ftype_in = 2
