@@ -1222,7 +1222,7 @@ EOF
 	if [ $v1 -lt $v3 ]; then
 	    echo 
 	    echo "WARNING: CFITSIO version in ${FITSDIR}/lib${LIBFITS}.a  is  $CFITSIOVERSION "
-	    echo "         CFITSIO >= ${CFITSIOVREQ} is recommended by NASA security team"
+	    echo "         CFITSIO >= ${CFITSIOVREC} is recommended by NASA security team"
 	    echo
 	fi
     else
