@@ -135,7 +135,7 @@ updateVersion () {
 
 
 gettingHealpy(){
-    HPY_VERSION=1.9.0
+    HPY_VERSION=1.12.0
     hpy_repo="https://pypi.python.org/packages/source/h/healpy"
     wrkdir=/tmp
     cd ${wrkdir}

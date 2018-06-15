@@ -114,7 +114,7 @@ $(pdf): %.pdf : %.tex healpix.sty $(incs)
 html: $(html) main.html
 
 # reprocess all HTML to get cross-ref right
-crosshtml: $(html) $(chtml)
+crosshtml: $(html) $(chtml) main.html
 
 # cross-reference pass on each HTML
 $(chtml): %.chtml : %.html
