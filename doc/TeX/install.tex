@@ -1173,7 +1173,7 @@ A proper fix requires the user to ask the local system
 administrator to adjust the local IDL script.
 
 \subsection{Using \healpix IDL together with other IDL libraries}
-See the \htmlref{eponymous section}{idl:other_idl_libs} in the \linklatexhtml{"IDL Facilities Overview"}{idl.pdf}{idl.htm}
+See the \htmlref{homonymous section}{idl:other_idl_libs} in the \linklatexhtml{"IDL Facilities Overview"}{idl.pdf}{idl.htm}
 
 \subsection{Mac OS X,  X11 and IDL cursor}
 \label{install:macos_idl_cursor}
@@ -1474,10 +1474,13 @@ However, the \mylinkext{idl:mollview:latex}{\texttt{Latex}} keyword will work pr
 % \subsubsection[Python]{\htmladdnormallink{Python}{https://healpy.readthedocs.org/en/latest/}}
 
 \subsubsection[General]{General}
-A new set of (pixel-based) quadrature weights has been introduced, besides the older ring-based ones, to improve the accuracy of the Spherical Harmonics calculation. For maps
+\begin{itemize}
+\item A new set of (pixel-based) quadrature weights has been introduced, besides the older ring-based ones, to improve the accuracy of the Spherical Harmonics calculation. For maps
   containing a signal that is band-limited at $\lmax=1.5 \nside$, this allows
   recovery of the $a_{\ell m}$ at almost machine precision. They are supported by map-analysis routines in C++, Fortran, IDL and Python. 
 The weights for power-of-2 values of $\nside$ in $\{16,\ldots,2048\}$ are precomputed and shipped in \htmladdnormallink{\texttt{Healpix/data/weight\_pixel\_n?????.fits}}{https://sourceforge.net/p/healpix/code/HEAD/tree/trunk/data}, and the missing ones can be computed for any value of $\nside$ with the \texttt{compute\_weights} C++ facility.
+\end{itemize}
+
 
 %%\subsubsection[C]{\linklatexhtml{C}{csub.pdf}{csub.htm}}
 %
