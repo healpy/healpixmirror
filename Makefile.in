@@ -180,6 +180,8 @@ f90-test: f90-all
 	$(F90_BINDIR)/hotspot hot.par ; \
 	$(F90_BINDIR)/map2gif -inp test_ext.fits -out test_ext.gif -bar t -ttl 'Extrema Only Map'; \
 	$(F90_BINDIR)/anafast ana.par; \
+        $(F90_BINDIR)/anafast ana2maps.par ; \
+        $(F90_BINDIR)/anafast ana_w2.par ; \
 	$(F90_BINDIR)/alteralm alt.par; \
 	$(F90_BINDIR)/median_filter med.par ; \
 	$(F90_BINDIR)/map2gif -inp test_mf.fits -out test_mf.gif -bar t -ttl 'Median Filtered Map'; \
@@ -188,7 +190,7 @@ f90-test: f90-all
 	$(F90_BINDIR)/process_mask prmask.par ; \
 	$(F90_BINDIR)/map2gif -inp test_distmask.fits -out test_distmask.gif -bar t -ttl 'Distance to mask border'; \
 	echo "Healpix F90 tests done" ; \
-	echo "success rate: `ls -1 test*fits | wc -l`/10"
+	echo "success rate: `ls -1 test*fits | wc -l`/12"
 
 f90-clean:
 	for p in $(f90-progs) lib mod sharp; do \
