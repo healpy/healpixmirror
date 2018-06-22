@@ -838,11 +838,13 @@ and \mylink{idl:mollview:retain}{Retain}}\\
 %
          \item[3:]
              --the temperature is color coded (with a color table defined by \mylink{idl:mollview:colt}{Colt}),\\
-             --and the polarization is overplotted as headless VECTORS\\
-             Polarization can then be a 3-element vector (the first element being 3).
-             The second element controls the average length of vectors
-             \default{1}, while the third one controls the distance between
-             vectors \default{1}. Non-positive values are replaced by 1.
+             --and the polarization is overplotted as small RODS (or headless VECTORS).\\
+             \texttt{Polarization} can then be a 4-element vector (the first element being 3).
+             The second element controls the average length of the rods \default{1}, 
+             the third one controls their spacing \default{1}, 
+             while the fourth one controls their thickness 
+             (which also depends in a device dependent manner on \texttt{!P.THICK}) \default{1}. 
+             Non-positive values are replaced by 1.\\
 		\seealso \mylink{idl:mollview:customize}{Customize}
 
 	\end{itemize}

@@ -471,13 +471,15 @@ pro mollview, file_in, select_in, $
 ;             the ANGLE phi = 0.5*ATAN(U/Q) of the polarisation is plotted
 ;             Note: the angles are color coded with a fixed color table (independant of Colt)
 ;
-;         if set to 3 or [3, scale_factor, step_factor]
+;         if set to 3 or [3, scale_factor, step_factor, thickness]
 ;             -the temperature is color coded (with a color table defined by Colt)
-;             -and the polarisation is overplot as a headless vector
-;             Polarization can be a 3-element vector (the first element being 3).
-;             The second element controls the average length of vectors
-;             (default=1), while the third one controls the distance between
-;             vectors (default=1). Non positive values are replaced by 1.
+;             -and the polarisation is overplot as small rods.
+;             Polarization can be a 4-element vector (the first element being 3).
+;             The second element controls the average length of the rods (default=1), 
+;             the third one controls their spacing (default=1),
+;             while the fourth one controls their thickness 
+;             (which also depends in a device dependent manner on !P.THICK, default=1).
+;             Non positive values are replaced by 1.
 ;
 ;	PREVIEW : if set, there is a preview of the GIF, JPG, PDF, PostScript,
 ;	         PNG file being produced  

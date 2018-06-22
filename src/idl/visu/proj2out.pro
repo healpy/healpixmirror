@@ -1075,7 +1075,7 @@ endif
 if (do_print) then begin
     device,/close
     set_plot,old_device
-    if (my_latex eq 2) then begin
+    if (my_latex eq 2 && size(/tname,ltxstc) eq 'STRUCT') then begin
         nlts = ltxstc.n
         hpx_latexify, file_ps, ltxstc.tag[0:nlts-1], ltxstc.tex[0:nlts-1], ltxstc.scale[0:nlts-1], $
                       alignment = ltxstc.alignment[0:nlts-1], $
