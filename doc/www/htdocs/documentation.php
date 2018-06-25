@@ -28,6 +28,8 @@ function doc_entry($de_title, $de_htmlfile, $de_pdffile, $de_gatag)
 }
 ?>
 
+<?php clearstatcache();?>
+
 <table cellSpacing=0 cellPadding=0 border=0 width=585>
 
 <!--  begin list -->
