@@ -174,7 +174,9 @@ include_HEADERS = \
 
 libhealpix_cxx_la_SOURCES = $(src_c_utils) $(src_libfftpack) $(src_libsharp) $(src_cxxsupport) $(src_cxxsupport_fits) $(src_healpix_cxx) $(src_healpix_cxx_fits) $(src_healpix_cxx_mod)
 libhealpix_cxx_la_LIBADD = $(CFITSIO_LIBS)
+libhealpix_cxx_la_LDFLAGS = -version-info 1:0:0
 libhealpy_la_SOURCES = $(src_c_utils) $(src_libfftpack) $(src_libsharp) $(src_cxxsupport) $(src_healpix_cxx)
+libhealpy_la_LDFLAGS = -version-info 1:0:0
 
 bin_PROGRAMS = alm2map_cxx anafast_cxx calc_powspec hotspots_cxx map2tga \
   median_filter_cxx mult_alm rotalm_cxx smoothing_cxx syn_alm_cxx udgrade_cxx \
