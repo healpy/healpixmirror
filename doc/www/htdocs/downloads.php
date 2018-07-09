@@ -356,11 +356,11 @@ and
   HREF="http://healpix.sourceforge.net/html/subroutines.htm">subroutines</A>
 </h4>
 <UL>
-<LI>Bug correction in <a href="http://healpix.sourceforge.net/html/subroutinesnode43.htm"><TT>input_map</TT></a> routine for reading of polarized multi-HDU cut sky FITS files;
+<LI>Bug correction in <a href="http://healpix.sourceforge.net/html/sub_input_map.htm"><TT>input_map</TT></a> routine for reading of polarized multi-HDU cut sky FITS files;
 </LI>
 <LI>Introduction of 
 <TT>winfiledir_*</TT> and 
-<TT>windowfile_*</TT> qualifiers in <a href="http://healpix.sourceforge.net/html/facilitiesnode5.htm"><TT>alteralm</TT></a> facility.	
+<TT>windowfile_*</TT> qualifiers in <a href="http://healpix.sourceforge.net/html/fac_alteralm.htm"><TT>alteralm</TT></a> facility.	
 </LI>
 </UL>
 
