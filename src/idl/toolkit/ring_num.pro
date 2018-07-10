@@ -25,7 +25,7 @@
 ;  For more information about HEALPix see http://healpix.sourceforge.net
 ;
 ; -----------------------------------------------------------------------------
-function ring_num, nside, z, shift=ishift
+function ring_num, nside, z, shift=ishift, withpoles=withpoles
 ;+
 ; ring=ring_num(nside, z [, shift=, withpoles=])
 ;
@@ -40,6 +40,7 @@ function ring_num, nside, z, shift=ishift
 ;
 ; 2009-04-30: returns long integers (32 bits) instead of 16-bit integers
 ; 2011-03-10: added withpoles= to return rings in [0,4Nside] instead of [1, 4Nside-1]
+; 2018-07-10: activates withpoles
 ;-
 twothird = 2.d0 /3.d0
 long = 1

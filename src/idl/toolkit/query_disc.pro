@@ -25,16 +25,6 @@
 ;  For more information about HEALPix see http://healpix.sourceforge.net
 ;
 
-;===============================================================
-function modulo, arg1, arg2
-
-n2 = n_elements(arg2)
-out = arg1 mod arg2
-neg = where(out lt 0, nneg)
-if (nneg gt 0) then out[neg] += arg2[neg < (n2-1)]
-
-return, out
-end
 
 ;===============================================================
 pro pixels_per_ring, nside, npr, kshift, npc
@@ -347,8 +337,8 @@ pro query_disc, nside, vector0, radius_in, listpix, nlist, deg = deg, inclusive=
 ;     rather than ranked in distance to the disc center.
 ;
 ; SIDE EFFECTS:
-;     calls : ring_num, discphirange_at_z, ring2nest
-;          and   modulo, pixels_in_phi_range2 (included in this file)
+;     calls : ring_num, discphirange_at_z, ring2nest, modulo
+;          and   pixels_in_phi_range2 (included in this file)
 ;
 ; PROCEDURE:
 ;     uses the particular layout of the pixels in parallel rings,
