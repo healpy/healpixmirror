@@ -1498,7 +1498,7 @@ IdentifyCParallCompiler () {
     npath=`$CC -v 2>&1         | ${GREP} -i ekopath  | ${WC} -l` # pathscale EKOPath
     PRCFLAGS=""
     if [ $nicc != 0 ] ; then
-	PRCFLAGS='-openmp' # -openmp-report0
+	PRCFLAGS='-qopenmp' # -openmp-report0
     elif [ $ngcc != 0 ] ; then
 	PRCFLAGS='-fopenmp'
     elif [ $nclang != 0 ] ; then
