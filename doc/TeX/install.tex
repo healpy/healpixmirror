@@ -15,6 +15,7 @@
 \input{gdlversion}
 \input{flversion}
 \input{hpyversion}
+\input{healpix_src_url}
 \end{htmlonly}
 
 \hypersetup{%
@@ -233,7 +234,7 @@ manipulation routines are provided in \textbf{IDL} (please note
 that at least version \idlversion is required), \textbf{Java} and \textbf{Python}. Some of the \healpix routines are
 also available in \textbf{C}. \\
 Starting with version 3.0, the
-\linklatexhtml{healpy}{https://github.com/healpy/healpy}{https://github.com/healpy/healpy}
+\linklatexhtml{healpy}{\gdlsite}{\gdlsite}
 (HEALPix in Python) library has been integrated into \healpix releases. Since it
 is, to a large extent, a
 wrapper to the C++ routines, installing it also requires a C++ compiler (on top
@@ -299,8 +300,8 @@ caveats, listed respectively in  \S\ref{install:using_gdl} and \S\ref{install:us
                             &                          \\ %%% for presentation
 GDL \gdlversion\ or more         & 
                             \htmladdnormallink{{\tt
-                            https://sf.net/projects/gnudatalanguage}}{%
-			    https://sf.net/projects/gnudatalanguage}
+                            \gdlsite}}{%
+			    \gdlsite}
                                                       \\ %%% for presentation
 FL \flversion or more         & 
 %                             \htmladdnormallink{{\tt
@@ -672,7 +673,7 @@ included in releases 1.* (that can still be found in \texttt{cl\_old.fits}).
 % See \htmladdnormallink{\texttt{ http://lambda.gsfc.nasa.gov/}}{http://lambda.gsfc.nasa.gov/} 
 % for details on WMAP and its data products.
 \item Other input fiducial $C(\ell)$, all in $(\mu$K$)^2$ and defined on the multipole range $[0, \ell_\mathrm{max}]$, have been included for convenience in 
-\htmladdnormallink{\texttt{Healpix\_\hpxversion/test/}}{https://sourceforge.net/p/healpix/code/HEAD/tree/trunk/test}
+\htmladdnormallink{\texttt{Healpix\_\hpxversion/test/}}{\srcurl test}
 in a \healpix compatible format.
 \\
 \begin{tabular}{l l l l} 
@@ -1213,7 +1214,7 @@ Facilities"}{idl.pdf}{idl.htm}).
 \mytarget{install:using_gdl}
 
 GNU Data Language (GDL), is a {\em free} clone of IDL 7.1, with support for some IDL 8.0 features (for more information see
-\htmladdnormallink{\texttt{http://gnudatalanguage.sourceforge.net}}{http://gnudatalanguage.sourceforge.net}).
+\htmladdnormallink{\texttt{\gdlsite}}{\gdlsite}).
 Both the source code and precompiled executables for various platforms are available.
 
 When used to run IDL-Healpix routines, GDL \gdlversion\ or more gives
@@ -1221,7 +1222,7 @@ very satisfactory results\footnote{All the caveats listed below have been notice
 GDL 0.9.7 (released in Jan 2017) and 
 \gdlversion\ (\gdlreldate) and may be solved in subsequent versions. Please send all your questions
 {\em on} GDL and/or its installation directly to GDL developpers at 
-\htmladdnormallink{\texttt{http://gnudatalanguage.sourceforge.net/support.php}}{http://gnudatalanguage.sourceforge.net/support.php}.}. 
+\htmladdnormallink{\texttt{\gdlsite/issues}}{\gdlsite/issues}.}. 
 The calculations agree with those done under IDL, with
 comparable computation times, but a few minor features, mostly related to the font selection, are missing.
 %in the production
@@ -1478,7 +1479,11 @@ However, the \mylinkext{idl:mollview:latex}{\texttt{Latex}} keyword will work pr
 \item A new set of (pixel-based) quadrature weights has been introduced, besides the older ring-based ones, to improve the accuracy of the Spherical Harmonics calculation. For maps
   containing a signal that is band-limited at $\lmax=1.5 \nside$, this allows
   recovery of the $a_{\ell m}$ at almost machine precision. They are supported by map-analysis routines in C++, Fortran, IDL and Python. 
-The weights for power-of-2 values of $\nside$ in $\{16,\ldots,2048\}$ are precomputed and shipped in \htmladdnormallink{\texttt{Healpix/data/weight\_pixel\_n?????.fits}}{https://sourceforge.net/p/healpix/code/HEAD/tree/trunk/data}, and the missing ones can be computed for any value of $\nside$ with the \texttt{compute\_weights} C++ facility.
+The weights for power-of-2 values of $\nside$ in $\{16,\ldots,2048\}$ are precomputed and shipped in
+%\htmladdnormallink{\texttt{Healpix/data/weight\_pixel\_n?????.fits}}{https://sourceforge.net/p/healpix/code/HEAD/tree/trunk/data}, 
+\htmladdnormallink{\texttt{Healpix/data/weight\_pixel\_n?????.fits}}{\srcurl data}, 
+
+and the missing ones can be computed for any value of $\nside$ with the \texttt{compute\_weights} C++ facility.
 \end{itemize}
 
 
@@ -1575,8 +1580,8 @@ visualization routines:
 \subsubsection[Python]{\htmladdnormallink{Python}{https://healpy.readthedocs.org/en/latest/}}
 \begin{itemize}
 \item Switch to 
-	\htmladdnormallink{\texttt{healpy \hpyversion}}{https://github.com/healpy/healpy/releases} 
-	(\htmladdnormallink{CHANGELOG}{https://github.com/healpy/healpy/blob/master/CHANGELOG.rst})
+	\htmladdnormallink{\texttt{healpy \hpyversion}}{\hpysite/releases} 
+	(\htmladdnormallink{CHANGELOG}{\hpysite/blob/master/CHANGELOG.rst})
 \item Addition of the python facility \texttt{src/python/change\_polcconv.py} to change the polarization convention 
 (see \mylink{install:idl:change_polcconv}{IDL's \texttt{change\_polcconv.pro} above}).
 \end{itemize}
@@ -1630,13 +1635,13 @@ visualization routines:
 \tinysubsubsection*{\htmladdnormallink{Python}{https://healpy.readthedocs.org/en/latest/}}
 	\begin{itemize}
 	\item Switch to 
-	\htmladdnormallink{\texttt{healpy 1.9.1}}{https://github.com/healpy/healpy/releases} 
-	(\htmladdnormallink{CHANGELOG}{https://github.com/healpy/healpy/blob/master/CHANGELOG.rst})
+	\htmladdnormallink{\texttt{healpy 1.9.1}}{\hpysite/releases} 
+	(\htmladdnormallink{CHANGELOG}{\hpysite/blob/master/CHANGELOG.rst})
 	\begin{itemize}
-	\item Removed C++ 11 features% <https://github.com/healpy/healpy/pull/297>
-    	\item Streamlined setup.py% <https://github.com/healpy/healpy/pull/298>
-    	\item Plotting fixes for Python 3% <https://github.com/healpy/healpy/pull/303>, <https://github.com/healpy/healpy/pull/304>
-    	\item Numpy 1.10 fix% <https://github.com/healpy/healpy/pull/305>
+	\item Removed C++ 11 features% <\hpysite/pull/297>
+    	\item Streamlined setup.py% <\hpysite/pull/298>
+    	\item Plotting fixes for Python 3% <\hpysite/pull/303>, <\hpysite/pull/304>
+    	\item Numpy 1.10 fix% <\hpysite/pull/305>
 	\end{itemize}
 	\end{itemize}
 
@@ -1728,7 +1733,7 @@ for high-level description);
 \tinysubsubsection*{\htmladdnormallink{Python}{https://healpy.readthedocs.org/en/latest/}}
 \begin{itemize}
 	\item switch to \htmladdnormallink{{\tt healpy
-1.9.0}}{https://github.com/healpy/healpy/releases} 
+1.9.0}}{\hpysite/releases} 
 	\begin{itemize}
 \item same C++ source code as \healpix 3.30
 \item drop support for Python 2.6
@@ -1843,7 +1848,7 @@ affecting the external $B(l)$ reading in the F90 facilities
 %
 \begin{itemize}
 	\item switch to \htmladdnormallink{{\tt healpy
-1.8.1}}{https://github.com/healpy/healpy/releases} 
+1.8.1}}{\hpysite/releases} 
 	\begin{itemize}
 		\item fixes bugs in monopole removal, 
 		\item adds orthographic projection,
@@ -2217,8 +2222,8 @@ as the C++ implementation (see \mylink{install:cpp:query}{above}).
 	\setlength{\parsep}{0pt}
 	\item the 
 \linklatexhtml{{\tt{healpy}}}{%
-https://github.com/healpy/healpy}{%
-https://github.com/healpy/healpy}
+\hpysite}{%
+\hpysite}
 package (C. Rosset, A. Zonca et al.) is now part of \healpix
 \end{itemize}
 

@@ -153,6 +153,7 @@ install.html: $(style) healpix.perl cssfile
 	-$(EQNFIX)      $(HTMLDIR)/$(PREFIX) 1> /dev/null 2>&1
 	-$(SHORTEN)	$(HTMLDIR)/$(PREFIX)
 	-$(IMPROVEHTML) $(HTMLDIR)/$(PREFIX)
+	-$(INSERTFAVICONS) $(HTMLDIR)/$(PREFIX)
 	mv -f $(HTMLDIR)/WARNINGS $(HTMLDIR)/WARNINGS_$(FULL)
 	ln -sf $(CSSFILE)          $(HTMLDIR)/$(FULL).css
 	#ln -sf $(PREFIX)$(TTL).htm $(HTMLDIR)/$(FULL).htm
@@ -197,6 +198,7 @@ idl.html: $(style) healpix.perl cssfile
 	-$(EQNFIX)      $(HTMLDIR)/$(PREFIX) 1> /dev/null 2>&1
 	-$(SHORTEN)	$(HTMLDIR)/$(PREFIX)
 	-$(IMPROVEHTML) $(HTMLDIR)/$(PREFIX)
+	-$(INSERTFAVICONS) $(HTMLDIR)/$(PREFIX)
 	mv -f $(HTMLDIR)/WARNINGS $(HTMLDIR)/WARNINGS_$(FULL)
 	ln -sf $(CSSFILE)          $(HTMLDIR)/$(FULL).css
 	ln -sf $(PREFIX)$(TTL).htm $(HTMLDIR)/$(FULL).htm
@@ -219,6 +221,7 @@ subroutines.html: $(style) healpix.perl cssfile
 	-$(EQNFIX)      $(HTMLDIR)/$(PREFIX) 1> /dev/null 2>&1
 	-$(SHORTEN)	$(HTMLDIR)/$(PREFIX)
 	-$(IMPROVEHTML) $(HTMLDIR)/$(PREFIX)
+	-$(INSERTFAVICONS) $(HTMLDIR)/$(PREFIX)
 	mv -f $(HTMLDIR)/WARNINGS $(HTMLDIR)/WARNINGS_$(FULL)
 	ln -sf $(CSSFILE)          $(HTMLDIR)/$(FULL).css
 	ln -sf $(PREFIX)$(TTL).htm $(HTMLDIR)/$(FULL).htm
@@ -241,6 +244,7 @@ facilities.html: $(style) healpix.perl cssfile
 	-$(EQNFIX)      $(HTMLDIR)/$(PREFIX) 1> /dev/null 2>&1
 	-$(SHORTEN)	$(HTMLDIR)/$(PREFIX)
 	-$(IMPROVEHTML) $(HTMLDIR)/$(PREFIX)
+	-$(INSERTFAVICONS) $(HTMLDIR)/$(PREFIX)
 	mv -f $(HTMLDIR)/WARNINGS $(HTMLDIR)/WARNINGS_$(FULL)
 	ln -sf $(CSSFILE)          $(HTMLDIR)/$(FULL).css
 	ln -sf $(PREFIX)$(TTL).htm $(HTMLDIR)/$(FULL).htm
@@ -263,6 +267,7 @@ csub.html: $(style) healpix.perl cssfile
 	-$(EQNFIX)      $(HTMLDIR)/$(PREFIX) 1> /dev/null 2>&1
 	-$(SHORTEN)	$(HTMLDIR)/$(PREFIX)
 	-$(IMPROVEHTML) $(HTMLDIR)/$(PREFIX)
+	-$(INSERTFAVICONS) $(HTMLDIR)/$(PREFIX)
 	mv -f $(HTMLDIR)/WARNINGS $(HTMLDIR)/WARNINGS_$(FULL)
 	ln -sf $(CSSFILE)          $(HTMLDIR)/$(FULL).css
 	ln -sf $(PREFIX)$(TTL).htm $(HTMLDIR)/$(FULL).htm

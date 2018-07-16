@@ -9,17 +9,37 @@ package main;
 print "\n \n Using HEALPix Style Conversions...\n \n";
 
 $srcurl = get_srcurl();
+
+# sub get_srcurl {
+#   open (MYINPUTFILE, "<$ENV{HEALPIX}/doc/TeX/healpix_src_url.tex");
+#   $mysrcurl='XXX';
+#   while(<MYINPUTFILE>){
+#     my($line) = $_;
+#     chomp($line);
+#     my $i = substr $line, 0, 1; # first letter
+#     if ($i ne "#") {
+#       my @values = split('=', $line);
+#       if (efhtrim(@values[0]) eq "srcurl"){
+# 	$mysrcurl = efhtrim(@values[1]);
+#       }
+#     }
+#   }
+#   close(MYINPUTFILE);
+#   #print "\n url =$mysrcurl,\n";
+#   print "\n\n\n\n\n url =$mysrcurl,\n\n\n\n";
+#   return $mysrcurl;
+# }
 sub get_srcurl {
   open (MYINPUTFILE, "<$ENV{HEALPIX}/doc/TeX/healpix_src_url.tex");
   $mysrcurl='XXX';
   while(<MYINPUTFILE>){
     my($line) = $_;
     chomp($line);
-    my $i = substr $line, 0, 1; # first letter
-    if ($i ne "#") {
-      my @values = split('=', $line);
-      if (efhtrim(@values[0]) eq "srcurl"){
-	$mysrcurl = efhtrim(@values[1]);
+    my $i = substr ($line, 0, 1); # first letter
+    if ($i ne "%") {
+      my @values = split('}{', $line);
+      if (substr(@values[0],1,3) eq "new"){
+	$mysrcurl = substr(@values[1],0,-1);
       }
     }
   }
@@ -27,7 +47,6 @@ sub get_srcurl {
   print "\n url =$mysrcurl,\n";
   return $mysrcurl;
 }
-
 
 sub efhtrim {
 #http://stackoverflow.com/questions/4597937/perl-function-to-trim-string-leading-and-trailing-whitespace
