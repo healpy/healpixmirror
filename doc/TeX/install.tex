@@ -16,6 +16,7 @@
 \input{flversion}
 \input{hpyversion}
 \input{healpix_src_url}
+\input{hpxwebsites}
 \end{htmlonly}
 
 \hypersetup{%
@@ -28,9 +29,6 @@
 \newcommand{\nside}{N_\mathrm{side}}
 \newcommand{\npix}{N_\mathrm{pix}}
 \newcommand{\lmax}{\ell_{\mathrm{max}}}
-\newcommand{\healpixwebpage}{http://healpix.sourceforge.net}
-\newcommand{\healpixmail}{{\em healpix-support} \texttt{at} {\em lists.sourceforge.net}}
-\newcommand{\healpixsupport}{\healpixwebpage/support.php}
 \renewcommand{\contentsname}{{TABLE OF CONTENTS}}
 
 % in LaTeX2HTML:
@@ -117,7 +115,9 @@
 \author{Eric Hivon, Anthony J.~Banday, Matthias Bartelmann, Benjamin D.~Wandelt,
 Frode K.~Hansen and Krzysztof M.~G\'orski}
 \abstract{This document describes the installation for the \healpix facilities.}
-\input{hpxwebsite}
+%\input{hpxwebsite}
+%\website{\hpxws}
+\defwebsite
 \date{\today}
 
 \frontpage
@@ -1466,13 +1466,13 @@ However, the \mylinkext{idl:mollview:latex}{\texttt{Latex}} keyword will work pr
 \subsection{Bug corrections and Improvements in Version \hpxversion}%(2018-05)
 % \subsubsection[General]{General}
 % \subsubsection[C]{\linklatexhtml{C}{csub.pdf}{csub.htm}}
-% \subsubsection[C++]{\htmladdnormallink{C++}{http://healpix.sourceforge.net/html/index_cxx.htm}}
+% \subsubsection[C++]{\htmladdnormallink{C++}{\healpixwebpage/html/index_cxx.htm}}
 % \subsubsection[Fortran]{%
 % 	Fortran 90 \linklatexhtml{facilities}{facilities.pdf}{facilities.htm} and
 % 	\linklatexhtml{subroutines}{subroutines.pdf}{subroutines.htm}}
 % \subsubsection[IDL]{\linklatexhtml{IDL}{idl.pdf}{idl.htm}}
-% \subsubsection[Java]{\htmladdnormallink{Java}{http://healpix.sourceforge.net/html/java/index.html}}
-% \subsubsection[Python]{\htmladdnormallink{Python}{https://healpy.readthedocs.org/en/latest/}}
+% \subsubsection[Java]{\htmladdnormallink{Java}{\healpixwebpage/html/java/index.html}}
+% \subsubsection[Python]{\htmladdnormallink{Python}{https://healpy.readthedocs.io/en/latest/}}
 
 \subsubsection[General]{General}
 \begin{itemize}
@@ -1575,9 +1575,9 @@ visualization routines:
     routines (2018-05-15).
 \end{itemize}
 %
-%%\subsubsection[Java]{\htmladdnormallink{Java}{http://healpix.sourceforge.net/html/java/index.html}}
+%%\subsubsection[Java]{\htmladdnormallink{Java}{\healpixwebpage/html/java/index.html}}
 %
-\subsubsection[Python]{\htmladdnormallink{Python}{https://healpy.readthedocs.org/en/latest/}}
+\subsubsection[Python]{\htmladdnormallink{Python}{https://healpy.readthedocs.io/en/latest/}}
 \begin{itemize}
 \item Switch to 
 	\htmladdnormallink{\texttt{healpy \hpyversion}}{\hpysite/releases} 
@@ -1608,7 +1608,7 @@ visualization routines:
 	\item Improved cross-document linking in PDF documentation.
 	\end{itemize}
 % \tinysubsubsection[C]{\linklatexhtml{C}{csub.pdf}{csub.htm}}
-\tinysubsubsection*{\htmladdnormallink{C++}{http://healpix.sourceforge.net/html/index_cxx.htm}}
+\tinysubsubsection*{\htmladdnormallink{C++}{\healpixwebpage/html/index_cxx.htm}}
 	\begin{itemize}
 	\item Removal of C++11 features inadvertently introduced in Version 3.30 
 	(see \htmladdnormallink{\texttt{https://sourceforge.net/p/healpix/bugs/72}}{https://sourceforge.net/p/healpix/bugs/72})
@@ -1631,8 +1631,8 @@ visualization routines:
     routines, and \htmladdnormallink{\texttt{Coyote}}{http://www.idlcoyote.com} library
     routines (2016-08-19).
 	\end{itemize}
-% \tinysubsubsection[Java]{\htmladdnormallink{Java}{http://healpix.sourceforge.net/html/java/index.html}}
-\tinysubsubsection*{\htmladdnormallink{Python}{https://healpy.readthedocs.org/en/latest/}}
+% \tinysubsubsection[Java]{\htmladdnormallink{Java}{\healpixwebpage/html/java/index.html}}
+\tinysubsubsection*{\htmladdnormallink{Python}{https://healpy.readthedocs.io/en/latest/}}
 	\begin{itemize}
 	\item Switch to 
 	\htmladdnormallink{\texttt{healpy 1.9.1}}{\hpysite/releases} 
@@ -1648,7 +1648,7 @@ visualization routines:
 
 
 \tinysubsection*{Bug corrections and Improvements in Version 3.30 (2015-10)}%(2015-10-08)
-\tinysubsubsection*{\htmladdnormallink{C++}{http://healpix.sourceforge.net/html/index_cxx.htm}}
+\tinysubsubsection*{\htmladdnormallink{C++}{\healpixwebpage/html/index_cxx.htm}}
 \begin{itemize}
 \item support for multi-order coverages (MOC);
 \item allow generation of $a_{\ell m}$ from 6-component power spectra;
@@ -1717,7 +1717,7 @@ to read best fit $C(\ell)$ model to Planck 2015 data.
 %
 \end{itemize}
 
-\tinysubsubsection*{\htmladdnormallink{Java}{http://healpix.sourceforge.net/html/java/index.html}}
+\tinysubsubsection*{\htmladdnormallink{Java}{\healpixwebpage/html/java/index.html}}
 \begin{itemize}
 \item deprecated parts of the library have been removed;
 \item MOC support (see 
@@ -1730,7 +1730,7 @@ for high-level description);
 \end{itemize}
 
 
-\tinysubsubsection*{\htmladdnormallink{Python}{https://healpy.readthedocs.org/en/latest/}}
+\tinysubsubsection*{\htmladdnormallink{Python}{https://healpy.readthedocs.io/en/latest/}}
 \begin{itemize}
 	\item switch to \htmladdnormallink{{\tt healpy
 1.9.0}}{\hpysite/releases} 
@@ -2010,7 +2010,7 @@ N/A%
 	\setlength{\parsep}{0pt}
 	\item	switch to {\tt healpy 1.5.0}: addition of 
 \htmladdnormallink{{\tt
-gauss\_beam}}{https://healpy.readthedocs.org/en/1.5.0/generated/healpy.sphtfunc.gauss_beam.html}
+gauss\_beam}}{https://healpy.readthedocs.io/en/1.5.0/generated/healpy.sphtfunc.gauss_beam.html}
 to generate Gaussian beam window function.
 \end{itemize}
 
@@ -2766,7 +2766,6 @@ package (C. Rosset, A. Zonca et al.) is now part of \healpix
 % \begin{itemize}
 %   \item Free / Open source software license
 %   \item New web page: \htmladdnormallink{{\tt \healpixwebpage}}{\healpixwebpage}
-% %%    \htmladdnormallink{{\tt http://healpix.sf.net}}{http://healpix.sf.net}
 %   \item HTML and PDF documentations are available in {\tt
 %   [HEALPix]/doc/html/main.htm} and {\tt [HEALPix]/doc/pdf/}
 %   \item C++ implementation of almost all codes and routines

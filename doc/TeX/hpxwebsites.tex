@@ -1,0 +1,33 @@
+% -*- LaTeX -*-
+% This LaTeX file sets the Healpix websites
+% as they will appear in the documentation
+% implement it with: \input{hpxwebsites}
+
+% -------- mailing list
+\newcommand{\healpixmail}{{\em healpix-support} \texttt{at} {\em lists.sourceforge.net}}
+
+% -------- source web site: see healpix_src_url.tex
+
+% -------- doc web site
+\newcommand{\hpxwebsite}{https://healpix.sourceforge.io}
+\newcommand{\oldhpxwebsite}{http://healpix.sf.net}
+
+% --------- used in install.tex:
+\newcommand{\healpixwebpage}{\oldhpxwebsite}
+%\newcommand{\healpixwebpage}{\hpxwebsite}
+\newcommand{\healpixsupport}{\healpixwebpage/support.php}
+
+% DO NOT FORGET TO UPDATE main.html AS WELL !!!!!
+
+
+%--------------------- web site(s) showing on front page
+% %OLD
+\newcommand{\defwebsite}{\website{\htmladdnormallink{\oldhpxwebsite}{\oldhpxwebsite}}}
+
+% %TRANSITION
+% \newcommand{\defwebsite}{\website{\htmladdnormallink{\hpxwebsite}{\hpxwebsite}\\\htmladdnormallink{\oldhpxwebsite}{\oldhpxwebsite}}}
+
+% %FUTURE
+% \newcommand{\defwebsite}{\website{\htmladdnormallink{\hpxwebsite}{\hpxwebsite}}}
+
+
