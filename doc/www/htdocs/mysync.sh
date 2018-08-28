@@ -12,6 +12,8 @@ rsync -avP -e ssh \
 	    --exclude=.DS_Store \
 	    --exclude='*-BK' --exclude='*-bk' \
 	    --exclude=test.php --exclude=mysync.sh \
+	    --exclude='sitemaps/errors.txt' \
+	    --exclude='sitemaps/sitemap.cache' \
 	    . \
 	    web.sourceforge.net:/home/project-web/healpix/htdocs
 

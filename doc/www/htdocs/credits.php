@@ -8,7 +8,7 @@
 		<u>Krzysztof M. G&oacute;rski</u> at the
               <a href="http://www.tac.dk/">(now defunct) Theoretical Astrophysics Center (TAC)</a>
 
-              in Copenhagen, Denmark (he is currently at <a href="http://www.jpl.nasa.gov">Jet Propulsion Laboratory, JPL</a>).  
+              in Copenhagen, Denmark (he is currently at <a href="https://www.jpl.nasa.gov">Jet Propulsion Laboratory, JPL</a>).  
 	<br>
 	     Early development
               of the HEALPix concept and initial implementation was made in
@@ -32,7 +32,7 @@
               TAC (now at
 
               <!-- <a href="http://www2.uniroma2.it/">Universita Roma II</a>), -->
-              <a href="http://www.uio.no/english/">Universitetet i Oslo</a>, UIO),
+              <a href="https://www.uio.no/english/">Universitetet i Oslo</a>, UIO),
 
               <u>Anthony J. Banday</u>
               (then at <a href="http://www.mpa-garching.mpg.de/mpa/index-en.shtml">Max Planck Institut f&#252;r Astrophysik (MPA)</a>,
@@ -62,17 +62,17 @@
 		(<a href="https://www.esa.int/About_Us/ESAC">European Space Astronomy Center, ESAC</a>), 
 
 		<u>Hans Kristian Eriksen</u> 
-		(<a href="http://www.uio.no/english">Universitetet i Oslo</a>),
+		(<a href="https://www.uio.no/english">Universitetet i Oslo</a>),
 
 		<u>Snorre Boasson</u> 
-		(<a href="http://www.ntnu.edu/">NTNU</a>),
+		(<a href="https://www.ntnu.edu/">NTNU</a>),
 
 		<u>David Larson</u> 
-		(<a href="http://www.jhu.edu/">Johns Hopkins University, JHU</a>),
+		(<a href="https://www.jhu.edu/">Johns Hopkins University, JHU</a>),
 
-		<u>Emmanuel Joliet</u> (<a href="http://www.ipac.caltech.edu/">IPAC</a>),
+		<u>Emmanuel Joliet</u> (<a href="https://www.ipac.caltech.edu/">IPAC</a>),
 
-		<u>Paddy Leahy</u> (<a href="http://www.manchester.ac.uk">Manchester University</a>),
+		<u>Paddy Leahy</u> (<a href="https://www.manchester.ac.uk">Manchester University</a>),
 
 		<u>Graca Rocha</u> (JPL),
 		</li>
@@ -81,7 +81,7 @@
 		<u>Cyrille Rosset</u>&#039;s
 		(<a href="http://www.apc.univ-paris7.fr/APC_CS/en">APC</a>),  
 		<u>Andrea Zonca</u>&#039;s
-		(<a href="http://www.ucsb.edu/">UCSB</a>), and
+		(<a href="https://www.ucsb.edu/">UCSB</a>), and
 		<u>Leo Singer</u>&#039;s
 		(<a href="http://www.caltech.edu">Caltech</a>)
 		healpy package,
@@ -258,7 +258,7 @@
                         HEALPix documentation is a part of the HEALPix project and is released under the GNU General Public License<br />
 -->
 			PHP scripts and CSS layout adapted from <a href="http://gnudatalanguage.sourceforge.net">GDL website</a> and <i>Colourise</i> template by <a href="http://www.styleshout.com/">styleshout.com</a>.
-			<i>Sui Generis</i> font downloaded from <a href="http://www.urbanfonts.com">Urbanfonts.com</a><br>
+			<i>Sui Generis</i> font downloaded from <a href="https://www.urbanfonts.com">Urbanfonts.com</a><br>
 <!--
                         Hosted by <a href="http://sf.net/">Sourceforge.net</a>
 -->
