@@ -22,7 +22,7 @@ The
 </li>
 
 <li>
-Unofficial low-resolution <a href="http://faun.rc.fas.harvard.edu/ameisner/wssa/healpix.html">WISE 12 micron full-sky dust maps</a>
+Unofficial low-resolution <a href="https://faun.rc.fas.harvard.edu/ameisner/wssa/healpix.html">WISE 12 micron full-sky dust maps</a>
 </li>
 
 <li>
@@ -81,7 +81,7 @@ An extensive list of
 <li>
 The 
 <a href="https://lambda.gsfc.nasa.gov/toolbox/tb_cmbfast_ov.cfm" >
-    CMBFAST</a>, <a href="http://camb.info/">CAMB</a> and
+    CMBFAST</a>, <a href="https://camb.info/">CAMB</a> and
 <!-- a href="http://lesgourg.web.cern.ch/lesgourg/class.php">CLASS</a -->
 <a href="http://class-code.net/">CLASS</a>
 softwares can be used for the computation of the
@@ -92,18 +92,19 @@ generate random realizations of the observable CMB sky
 
 <li>
 The 
-<a href="http://cosmologist.info/lenspix" >
+<a href="https://cosmologist.info/lenspix" >
     LensPix</a>
 software can be used to simulate lensed polarized CMB maps in HEALPix format using MPI
 </li>
 
 <li>
-The <a href="http://www.apc.univ-paris7.fr/~delabrou/PSM/psm.html">Planck Sky Model</a> 
+The <a href="http://www.apc.univ-paris7.fr/~delabrou/PSM/psm.html">Planck Sky Model (PSM)</a> 
+and <a href="https://github.com/bthorne93/PySM_public">Python Sky Model (PySM)</a>
 to simulate the IR and submm sky
 </li>
 
 <li>
-<a href="http://galprop.stanford.edu/index.php">GALPROP</a>: 
+<a href="https://galprop.stanford.edu/index.php">GALPROP</a>: 
 Numerical code for calculating the propagation of relativistic charged particles 
 and the diffuse emissions they produce (now compatible with HEALPix 3.11 and newer)
 </li>
@@ -117,7 +118,7 @@ Computation of photon fluxes from dark matter annihilation or decay in galaxy ha
 <!--   ------Visualization--------  -->
 <li>
 Visualization tools supporting HEALPix maps in FITS format:
-<a href="http://aladin.u-strasbg.fr/">Aladin&nbsp;Sky&nbsp;Atlas</a> 
+<a href="https://aladin.u-strasbg.fr/">Aladin&nbsp;Sky&nbsp;Atlas</a> 
 (which can overlay any astronomical map or catalog), 
 <a href="http://helios.av.it.pt/projects/healpixviewer">HealpixViewer</a>,
 <a href="http://www.ast.cam.ac.uk/~vlad/univiewer/index.html">Univiewer</a>,
@@ -125,7 +126,7 @@ Visualization tools supporting HEALPix maps in FITS format:
 </li>
 
 <li>
-HEALPix based <a href="http://aladin.u-strasbg.fr/hips/">Hierarchical Progressive Surveys (HiPS)</a> mechanism
+HEALPix based <a href="https://aladin.u-strasbg.fr/hips/">Hierarchical Progressive Surveys (HiPS)</a> mechanism
 to access, visualize and browse images, catalogues and cube data
 </li>
 
@@ -172,7 +173,8 @@ Automatic identification of persistent structures in 2D & 3D
 Wavelets on the Sphere: 
 <a href="http://www.cosmostat.org//isap.html">iSAP</a>, 
     <a href="http://irfu.cea.fr/en/Phocea/Vie_des_labos/Ast/ast_visu.php?id_ast=895">MRS</a>,
-    <a href="http://www.s2let.org/">S2LET</a>, 
+<!--  a href="http://www.s2let.org/">S2LET</a  --> 
+    <a href="https://astro-informatics.github.io/s2let/">S2LET</a>, 
 <!--    <a href="https://gitorious.org/spherelib">spherelib (previously SphereLab)</a>           -->
 <!--    <a href="https://forge.in2p3.fr/projects/sphere-lib">spherelib (previously SphereLab)</a>-->
     <a href="https://gitlab.in2p3.fr/spherelib/spherelib">spherelib (previously SphereLab)</a>
@@ -208,8 +210,8 @@ First HEALPix paper: <a href="http://adsabs.harvard.edu/cgi-bin/nph-bib_query?bi
 <li>HEALPix 
 on 
 
-<a href="http://inspirebeta.net/search?ln=en&p=FIND+C+ASTRO-PH%2F9812350+or+refersto%3Arecid%3A659804+or+fulltext%3Ahealpix&f=&action_search=Search&sf=&so=d&rm=&rg=25&sc=0&of=hb">INSPIRE (High Energy Physics &amp; Cosmology)</a>,<br>
-
+<!-- a href="http://inspirebeta.net/search?ln=en&p=FIND+C+ASTRO-PH%2F9812350+or+refersto%3Arecid%3A659804+or+fulltext%3Ahealpix&f=&action_search=Search&sf=&so=d&rm=&rg=25&sc=0&of=hb">INSPIRE (High Energy Physics &amp; Cosmology)</a>,<br -->
+<a href="https://inspirehep.net/search?ln=en&p=FIND+C+ASTRO-PH%2F9812350+or+refersto%3Arecid%3A659804+or+fulltext%3Ahealpix&f=&action_search=Search&sf=&so=d&rm=&rg=25&sc=0&of=hb">INSPIRE (High Energy Physics &amp; Cosmology)</a>,<br>
 <a href="http://adsabs.harvard.edu/cgi-bin/nph-ref_query?bibcode=2005ApJ...622..759G&amp;refs=CITATIONS&amp;db_key=AST">ADS Classic</a>
 
 &amp;
@@ -230,7 +232,7 @@ on
 
 and
 
-<a href="http://scholar.google.com/scholar?scisbd=2&q=healpix&hl=en&as_sdt=0,5">Google Scholar</a>
+<a href="https://scholar.google.com/scholar?scisbd=2&q=healpix&hl=en&as_sdt=0,5">Google Scholar</a>
 
  (Multidisciplinary)
 
@@ -241,7 +243,7 @@ and
 Misc
 <ul>
 <li>
-<a href="http://en.wikipedia.org/wiki/Healpix">Wikipedia Page on HEALPix</a>
+<a href="https://en.wikipedia.org/wiki/Healpix">Wikipedia Page on HEALPix</a>
 </li>
 <li>
 	HEALPix on <a href="https://www.openhub.net/p/healpix">BlackDuck (previously Ohloh)</a> and

@@ -30,7 +30,8 @@
    </td></tr>
 <tr><td align="center" style="font-size:100%">
    <input type="checkbox"  name="sitesearch"
-   value="healpix.sourceforge.net" checked /> only search this site<br />
+   value="http://healpix.sourceforge.net" checked /> only search this site<br />
+<!--   value="https://healpix.sourceforge.io" checked /> only search this site<br / -->
 </td></tr>
 <tr align="center"><td colspan="2" style="font-size:100%">
    Search result will appear in a new tab
