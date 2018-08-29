@@ -41,9 +41,11 @@
 <?php
 #$myhost = parse_url($_SERVER['SERVER_NAME'], PHP_URL_HOST);
 $myhost = $_SERVER['SERVER_NAME'];
-$goodhost = 'healpix.sourceforge.net';
-echo ("<!--  $myhost ==  $goodhost  -->\r\n");
-if ($myhost == $goodhost) include_once("_analytics_tracking.php");
+$httphost  = 'healpix.sourceforge.net';
+$httpshost = 'healpix.sourceforge.io';
+echo ("<!--  $myhost ==  $httphost, $httpshost  -->\r\n");
+if ($myhost == $httphost) include_once("_analytics_tracking.php");
+if ($myhost == $httpshost) include_once("_gtag.php");
 ?>
 </head>
 
