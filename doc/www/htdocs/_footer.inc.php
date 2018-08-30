@@ -19,7 +19,8 @@
 <h3>Site Search</h3>	
 <!-- Google HTML for Search -->
 <!-- Read more at http://www.askdavetaylor.com/how_can_i_add_a_google_search_box_to_my_web_site.html#pi7uw7S71w8KhJtm.99 -->
-<form action="http://www.google.com/search" class="searchform" method="get" target="_blank">
+<!--form action="http://www.google.com/search" class="searchform" method="get" target="_blank"-->
+<form action="https://www.google.com/webhp" class="searchform" method="get" target="_blank">
    <table width=100% border="0" cellpadding="0" cellspacing="0">
    <tr align="center"><td colspan="2">
    <input type="text"   name="q" size="32" maxlength="255" value="" />

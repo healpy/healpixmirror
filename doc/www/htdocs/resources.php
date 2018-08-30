@@ -98,7 +98,7 @@ software can be used to simulate lensed polarized CMB maps in HEALPix format usi
 </li>
 
 <li>
-The <a href="http://www.apc.univ-paris7.fr/~delabrou/PSM/psm.html">Planck Sky Model (PSM)</a> 
+The <a href="https://www.apc.univ-paris7.fr/~delabrou/PSM/psm.html">Planck Sky Model (PSM)</a> 
 and <a href="https://github.com/bthorne93/PySM_public">Python Sky Model (PySM)</a>
 to simulate the IR and submm sky
 </li>
@@ -119,9 +119,10 @@ Computation of photon fluxes from dark matter annihilation or decay in galaxy ha
 <li>
 Visualization tools supporting HEALPix maps in FITS format:
 <a href="https://aladin.u-strasbg.fr/">Aladin&nbsp;Sky&nbsp;Atlas</a> 
-(which can overlay any astronomical map or catalog), 
-<a href="http://helios.av.it.pt/projects/healpixviewer">HealpixViewer</a>,
-<a href="http://www.ast.cam.ac.uk/~vlad/univiewer/index.html">Univiewer</a>,
+(which can overlay any astronomical map or catalog)
+<!-- a href="http://helios.av.it.pt/projects/healpixviewer">HealpixViewer</a>,
+<a href="http://www.ast.cam.ac.uk/~vlad/univiewer/index.html">Univiewer</a -->
+and
 <a href="https://lambda.gsfc.nasa.gov/toolbox/tb_skyviewer_ov.cfm">SkyViewer</a>
 </li>
 
@@ -147,14 +148,19 @@ python wrapper to HEALPix (now included in HEALPix package)
 </li>
 
 <li>
-<a href="http://www.apc.univ-paris7.fr/APC_CS/Recherche/Adamis/MIDAS09/software/s2hat/s2hat.html">S2Hat</a>:
+<a href="https://www.apc.univ-paris7.fr/APC_CS/Recherche/Adamis/MIDAS09/software/s2hat/s2hat.html">S2Hat</a>:
 Scalable Spherical Harmonics transforms
 </li>
 
 <li>
-<a href="http://www2.iap.fr/users/hivon/software/PolSpice" > PolSPICE</a>: 
+<a href="http://www2.iap.fr/users/hivon/software/PolSpice">PolSPICE</a>: 
 Temperature+Polarization angular power spectrum extraction tool dealing with the effects of
 cut-sky, beam smoothing, noise contamination...
+</li>
+
+<li>
+<a href="https://github.com/damonge/NaMaster">NaMaster</a>:
+Power spectrum extraction using MASTER approach, on full sky and flat sky.
 </li>
 
 <!-- commented out 2016-09-13
@@ -246,8 +252,8 @@ Misc
 <a href="https://en.wikipedia.org/wiki/Healpix">Wikipedia Page on HEALPix</a>
 </li>
 <li>
-	HEALPix on <a href="https://www.openhub.net/p/healpix">BlackDuck (previously Ohloh)</a> and
-<a href="http://www.digplanet.com/wiki/HEALPix#">digplanet</a>
+	HEALPix on <a href="https://www.openhub.net/p/healpix">BlackDuck (previously Ohloh)</a> 
+<!-- commented out 2018-08-30   and <a href="http://www.digplanet.com/wiki/HEALPix#">digplanet</a>  -->
 </li>
 <li>
 <a href="https://www.google.com/search?q=healpix&pws=0&biw=1395&bih=710&tbm=shop&source=lnms&sa=X&ved=0ahUKEwixwtO39-_JAhXHOBoKHQ0_CFgQ_AUICCgC&dpr=2#q=healpix&pws=0&tbm=bks&start=0">Some books mentioning HEALPix according to Google</a> (and some not)

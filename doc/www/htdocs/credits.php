@@ -15,13 +15,13 @@
               the spring of 1997 in collaborative work of K.M. G&oacute;rski
               with <u>Eric Hivon</u> (currently at the
 
-              <!-- <a href="http://www.caltech.edu">California Institute of Technology</a>). -->
+              <!-- <a href="https://www.caltech.edu">California Institute of Technology</a>). -->
               <a href="http://www.iap.fr/?langue=en">Institut d&#039;Astrophysique 
 									  de Paris, IAP</a>, France).
 	<br>
               <u>Benjamin D. Wandelt</u>, then at the TAC (now at
 	      <!-- 	
-              <a href="http://illinois.edu/index.html">University of Illinois at Urbana-Champaign</a> 
+              <a href="https://illinois.edu/index.html">University of Illinois at Urbana-Champaign</a> 
 		-->
               <a href="http://www.iap.fr/?langue=en">IAP</a>),
 
@@ -31,11 +31,11 @@
 		<u>Frode K. Hansen</u>, then at the
               TAC (now at
 
-              <!-- <a href="http://www2.uniroma2.it/">Universita Roma II</a>), -->
+              <!-- <a href="https://web.uniroma2.it/">Universita Roma II</a>), -->
               <a href="https://www.uio.no/english/">Universitetet i Oslo</a>, UIO),
 
               <u>Anthony J. Banday</u>
-              (then at <a href="http://www.mpa-garching.mpg.de/mpa/index-en.shtml">Max Planck Institut f&#252;r Astrophysik (MPA)</a>,
+              (then at <a href="https://www.mpa-garching.mpg.de">Max Planck Institut f&#252;r Astrophysik (MPA)</a>,
 
               Garching, Germany, now at <a href="http://www.cesr.fr/?lang=en">Centre d&#039;Etude 
 	       Spatiale du Rayonnement</a>, Toulouse, France) 
@@ -55,7 +55,7 @@
 		<ul>
 		<li>
 		the continuing dedicated effort of E. Hivon, 
-		<u>Martin Reinecke</u> (<a href="http://www.mpa-garching.mpg.de/mpa/index-en.shtml">MPA</a>), and A. J. Banday, 
+		<u>Martin Reinecke</u> (<a href="https://www.mpa-garching.mpg.de">MPA</a>), and A. J. Banday, 
 		the work of 
 
               <u>William O&#039;Mullane</u>
@@ -79,11 +79,11 @@
 		<li>
                the inclusion of 
 		<u>Cyrille Rosset</u>&#039;s
-		(<a href="http://www.apc.univ-paris7.fr/APC_CS/en">APC</a>),  
+		(<a href="https://www.apc.univ-paris7.fr/APC_CS/en">APC</a>),  
 		<u>Andrea Zonca</u>&#039;s
 		(<a href="https://www.ucsb.edu/">UCSB</a>), and
 		<u>Leo Singer</u>&#039;s
-		(<a href="http://www.caltech.edu">Caltech</a>)
+		(<a href="https://www.caltech.edu">Caltech</a>)
 		healpy package,
 		</li>
 		<li>
@@ -260,7 +260,7 @@
 			PHP scripts and CSS layout adapted from <a href="http://gnudatalanguage.sourceforge.net">GDL website</a> and <i>Colourise</i> template by <a href="http://www.styleshout.com/">styleshout.com</a>.
 			<i>Sui Generis</i> font downloaded from <a href="https://www.urbanfonts.com">Urbanfonts.com</a><br>
 <!--
-                        Hosted by <a href="http://sf.net/">Sourceforge.net</a>
+                        Hosted by <a href="https://sourceforge.net/">Sourceforge.net</a>
 -->
 </p>
 

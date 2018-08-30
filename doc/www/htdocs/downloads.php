@@ -53,7 +53,7 @@ an empty email with only &quot;<tt>subscribe</tt>&quot; on the Subject line.
 			
 <p>		
 <A name="top"></A>
-The recommended channel for obtaining and installing the latest HEALPix software is to download the <em>source</em> package from the <a href="https://sourceforge.net/projects/healpix/">SourceForge Download page</a> under the GNU General Public License, version2 <a href="http://www.gnu.org/licenses/gpl-2.0.html">(GPLv2)</a>, and follow the <a href="documentation.php">installation directions</a>.<br>
+The recommended channel for obtaining and installing the latest HEALPix software is to download the <em>source</em> package from the <a href="https://sourceforge.net/projects/healpix/">SourceForge Download page</a> under the GNU General Public License, version2 <a href="https://www.gnu.org/licenses/gpl-2.0.html">(GPLv2)</a>, and follow the <a href="documentation.php">installation directions</a>.<br>
 The source code of past, latest and forthcoming releases can be browsed on <a href="https://sourceforge.net/p/healpix/code/HEAD/tree/">SourceForge SVN repository</a>.<br>
 Prepackaged or precompiled HEALPix packages can also be found in various places, with variable delays, for e.g. MacOSX (<a href="https://www.macports.org/ports.php?by=name&substr=healpix">MacPorts</a>, <a href="https://github.com/brewsci/homebrew-science/blob/master/Formula/healpix.rb">HomeBrew</a>) and Linux (<a href="https://fr2.rpmfind.net/linux/rpm2html/search.php?query=healpix&submit=Search+...">RPM</a>) systems, under the <a href="https://www.gnu.org/licenses/gpl-2.0.html">same GPLv2 licensing scheme</a>.
 </p>
@@ -65,7 +65,8 @@ Use of the HEALPix software package <em>in any form</em> should be explicitly ac
                   an acknowledgment statement &ndash; "Some of the results in this paper have been derived using the HEALPix (<a href="http://adsabs.harvard.edu/cgi-bin/nph-bib_query?bibcode=2005ApJ...622..759G&amp;db_key=AST&amp;high=41069202cf02947">K.M. G&oacute;rski et al., 2005, ApJ, 622, p759</a>) package", and
                 </li><br>
                 <li>
-                  at the first use of the HEALPix acronym, a footnote placed in the main body of the paper referring to the HEALPix website &ndash; currently <a href="http://healpix.sourceforge.net">http://healpix.sourceforge.net</a>
+                  at the first use of the HEALPix acronym, a footnote placed in the main body of the paper referring to the HEALPix website &ndash; currently <a href="http://healpix.sourceforge.net">http://healpix.sourceforge.net</a> or
+<a href="https://healpix.sourceforge.io">https://healpix.sourceforge.io</a>
                 </li>
 </ul>
 </p>
@@ -323,7 +324,7 @@ General</A>
 <UL>
 <LI>Detailed 
 <!--a href="http://healpix.sourceforge.net/html/install.htm#SECTION00082000000000000000">HOWTO</a--> 
-<a href="http://healpix.sourceforge.net/html/install.htm#sec:windows">HOWTO</a> 
+<a href="https://healpix.sourceforge.io/html/install.htm#sec:windows">HOWTO</a> 
 for installation under Windows;
 </LI>
 <LI>Interactive <TT>configure</TT> script now supports MINGW environment (for Windows), 
@@ -338,7 +339,7 @@ for installation under Windows;
 
 <h4><A NAME="SECTION_331_12000000000000000"></A>
 <A NAME="tex2html_331_1"
-  HREF="http://healpix.sourceforge.net/html/index_cxx.htm">C++</A>
+  HREF="https://healpix.sourceforge.io/html/index_cxx.htm">C++</A>
 </h4>	
 <UL>
 <LI>Removal of C++11 features inadvertently introduced in Version 3.30 
@@ -350,17 +351,17 @@ for installation under Windows;
 <p>
 
 <h4>Fortran 90 <A NAME="tex2html_331_3"
-  HREF="http://healpix.sourceforge.net/html/facilities.htm">facilities</A>
+  HREF="https://healpix.sourceforge.io/html/facilities.htm">facilities</A>
 and
  	<A NAME="tex2html_331_4"
-  HREF="http://healpix.sourceforge.net/html/subroutines.htm">subroutines</A>
+  HREF="https://healpix.sourceforge.io/html/subroutines.htm">subroutines</A>
 </h4>
 <UL>
-<LI>Bug correction in <a href="http://healpix.sourceforge.net/html/sub_input_map.htm"><TT>input_map</TT></a> routine for reading of polarized multi-HDU cut sky FITS files;
+<LI>Bug correction in <a href="https://healpix.sourceforge.io/html/sub_input_map.htm"><TT>input_map</TT></a> routine for reading of polarized multi-HDU cut sky FITS files;
 </LI>
 <LI>Introduction of 
 <TT>winfiledir_*</TT> and 
-<TT>windowfile_*</TT> qualifiers in <a href="http://healpix.sourceforge.net/html/fac_alteralm.htm"><TT>alteralm</TT></a> facility.	
+<TT>windowfile_*</TT> qualifiers in <a href="https://healpix.sourceforge.io/html/fac_alteralm.htm"><TT>alteralm</TT></a> facility.	
 </LI>
 </UL>
 
@@ -370,11 +371,11 @@ and
 <h4><A NAME="SECTION_331_14000000000000000"></A>
 <BR>
 <A NAME="tex2html_331_5"
-  HREF="http://healpix.sourceforge.net/html/idl.htm">IDL</A>
+  HREF="https://healpix.sourceforge.io/html/idl.htm">IDL</A>
 </h4>
 <UL>
 <LI>Improved support for 
- <a href="http://healpix.sourceforge.net/html/install.htm#install:using_gdl">GDL</a>;
+ <a href="https://healpix.sourceforge.io/html/install.htm#install:using_gdl">GDL</a>;
 </LI>
 <LI>update of the required
     <A NAME="tex2html_331_6"
@@ -392,7 +393,7 @@ library
 <h4><A NAME="SECTION_331_15000000000000000"></A>
 <BR>
 <A NAME="tex2html_331_8"
-  HREF="http://healpy.readthedocs.org/en/latest/">Python</A>
+  HREF="https://healpy.readthedocs.org/en/latest/">Python</A>
 </h4>
 <UL>
 <LI>Switch to 
