@@ -57,7 +57,7 @@ function doc_entry($de_title, $de_htmlfile, $de_pdffile, $de_gatag)
 <?php doc_entry("HEALPix Java Overview", "html/java/index.html", "", "") ?>
 <tr><td> &nbsp; </td></tr>
 
-<?php doc_entry("HEALPix Python Overview (healpy)", "http://healpy.readthedocs.io/en/latest", "", "") ?>
+<?php doc_entry("HEALPix Python Overview (healpy)", "https://healpy.readthedocs.io/en/latest", "", "") ?>
 <!--   end list -->
 
 </table>
