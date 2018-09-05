@@ -62,7 +62,9 @@ Prepackaged or precompiled HEALPix packages can also be found in various places,
 Use of the HEALPix software package <em>in any form</em> should be explicitly acknowledged in all publications in the following form:
               <ul>
                 <li>
-                  an acknowledgment statement &ndash; "Some of the results in this paper have been derived using the HEALPix (<a href="http://adsabs.harvard.edu/cgi-bin/nph-bib_query?bibcode=2005ApJ...622..759G&amp;db_key=AST&amp;high=41069202cf02947">K.M. G&oacute;rski et al., 2005, ApJ, 622, p759</a>) package", and
+                  an acknowledgment statement &ndash; "Some of the results in this paper have been derived using the HEALPix 
+(<!--a href="http://adsabs.harvard.edu/cgi-bin/nph-bib_query?bibcode=2005ApJ...622..759G&amp;db_key=AST&amp;high=41069202cf02947">K.M. G&oacute;rski et al., 2005, ApJ, 622, p759</a--><a href="https://ui.adsabs.harvard.edu/#abs/2005ApJ...622..759G/abstract">K.M. G&oacute;rski et al., 2005, ApJ, 622, p759</a>) 
+package", and
                 </li><br>
                 <li>
                   at the first use of the HEALPix acronym, a footnote placed in the main body of the paper referring to the HEALPix website &ndash; currently <a href="http://healpix.sourceforge.net">http://healpix.sourceforge.net</a> or

@@ -1,7 +1,7 @@
 <?php require('_header.inc.php'); ?>
 
 <p>The HEALPix documentation is currently available for downloading in <a href="pdf/pdf_index.pdf"
-  onClick="_ga('send', 'event', 'PDF', 'Download', 'PDF Index');"
+  onClick="gtag('send', 'event', 'PDF', 'Download', 'PDF Index');"
 >pdf</a> and can be browsed in <a href="html/main.htm">html</a>
 
               
@@ -13,7 +13,7 @@ function doc_entry($de_title, $de_htmlfile, $de_pdffile, $de_gatag)
  if (strlen($de_pdffile) > 0) {
    echo ' <td width="75" align="center">';
    echo '     <a href="' . $de_pdffile . '" target="_top"';
-   echo '       onClick="_ga(\'send\', \'event\', \'PDF\', \'Download\', \'' . $de_gatag . '\');" ';
+   echo '       onClick="gtag(\'send\', \'event\', \'PDF\', \'Download\', \'' . $de_gatag . '\');" ';
    echo '     >pdf</a> ';
    echo '   <br> ';
    echo "  (" . number_format(filesize($de_pdffile)/1024/1024,2) . " MiB)" ;
