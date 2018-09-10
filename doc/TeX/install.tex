@@ -1463,7 +1463,7 @@ However, the \mylinkext{idl:mollview:latex}{\texttt{Latex}} keyword will work pr
 \section{Appendix I: Recent Changes and New Features}
 \label{sec:newfeatures}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% BEGIN LATEST CHANGES %%%%%%%%%%%%%
-\subsection{Bug corrections and Improvements in Version \hpxversion}%(2018-05)
+\subsection{Bug corrections and Improvements in Version \hpxversion}
 % \subsubsection[General]{General}
 % \subsubsection[C]{\linklatexhtml{C}{csub.pdf}{csub.htm}}
 % \subsubsection[C++]{\htmladdnormallink{C++}{\healpixwebpage/html/index_cxx.htm}}
@@ -1476,13 +1476,53 @@ However, the \mylinkext{idl:mollview:latex}{\texttt{Latex}} keyword will work pr
 
 \subsubsection[General]{General}
 \begin{itemize}
+\item new \healpix web site \url{\hpxwebsite}
+\item addition of $\Lambda$-CDM best $C(\ell)$ fit to Planck 2018 CMB data in 
+\htmladdnormallink{\texttt{Healpix/data/planck2018\_lcdm\_cl\_v3.fits}}{\srcurl data/planck2018_lcdm_cl_v3.fits}
+\end{itemize}
+
+%
+% \subsubsection[C]{\linklatexhtml{C}{csub.pdf}{csub.htm}}
+%
+% \subsubsection[C++]{\htmladdnormallink{C++}{\healpixwebpage/html/index_cxx.htm}}
+%
+\subsubsection[Fortran]{%
+	Fortran 90 \linklatexhtml{facilities}{facilities.pdf}{facilities.htm} and
+	\linklatexhtml{subroutines}{subroutines.pdf}{subroutines.htm}}
+\begin{itemize}
+\item  \htmladdnormallink{improved support of ifort18}{https://sourceforge.net/p/healpix/bugs/78} in \texttt{configure} script
+\end{itemize}
+
+%
+\subsubsection[IDL]{\linklatexhtml{IDL}{idl.pdf}{idl.htm}}
+\begin{itemize}
+\item \htmlref{{\tt fits2cl}}{idl:fits2cl}: addition of \mylinkext{idl:fits2cl:planck3}{{\tt /PLANCK3}} keyword
+to read best fit $C(\ell)$ model to Planck 2018 data;
+\item \htmlref{rotate\_coord}{idl:rotate_coord}: addition of optional variable \mylinkext{idl:rotate_coord:delta_psi}{{\tt Delta\_Psi}} containing rotation of polarization on output, and of keyword \mylinkext{idl:rotate_coord:free_norm}{{\tt Free\_Norm}} to deal with un-normalized input coordinate vectors;
+\item minor bugs correction in 
+\texttt{azeqview, cartview, gnomview, mollview, orthview}}{idl:mollview} (when \texttt{polarization=3}}) and 
+\texttt{alm2fits}{idl:alm2fits} (user provided header now correctly processed).
+\end{itemize}
+%
+% \subsubsection[Java]{\htmladdnormallink{Java}{\healpixwebpage/html/java/index.html}}
+%
+\subsubsection[Python]{\htmladdnormallink{Python}{https://healpy.readthedocs.io/en/latest/}}
+\begin{itemize}
+\item Switch to 
+	\htmladdnormallink{\texttt{healpy \hpyversion}}{\hpysite/releases} 
+	(\htmladdnormallink{CHANGELOG}{\hpysite/blob/master/CHANGELOG.rst})
+\end{itemize}
+
+\subsection{Bug corrections and Improvements in Version 3.40 (2018-06)}%(2018-06-22)
+
+\subsubsection[General]{General}
+\begin{itemize}
 \item A new set of (pixel-based) quadrature weights has been introduced, besides the older ring-based ones, to improve the accuracy of the Spherical Harmonics calculation. For maps
   containing a signal that is band-limited at $\lmax=1.5 \nside$, this allows
   recovery of the $a_{\ell m}$ at almost machine precision. They are supported by map-analysis routines in C++, Fortran, IDL and Python. 
 The weights for power-of-2 values of $\nside$ in $\{16,\ldots,2048\}$ are precomputed and shipped in
 %\htmladdnormallink{\texttt{Healpix/data/weight\_pixel\_n?????.fits}}{https://sourceforge.net/p/healpix/code/HEAD/tree/trunk/data}, 
 \htmladdnormallink{\texttt{Healpix/data/weight\_pixel\_n?????.fits}}{\srcurl data}, 
-
 and the missing ones can be computed for any value of $\nside$ with the \texttt{compute\_weights} C++ facility.
 \end{itemize}
 
@@ -1648,6 +1688,7 @@ visualization routines:
 
 
 \tinysubsection*{Bug corrections and Improvements in Version 3.30 (2015-10)}%(2015-10-08)
+
 \tinysubsubsection*{\htmladdnormallink{C++}{\healpixwebpage/html/index_cxx.htm}}
 \begin{itemize}
 \item support for multi-order coverages (MOC);

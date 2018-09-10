@@ -20,7 +20,7 @@
 
 \begin{facility}
 {This IDL facility provides a means to rotate a set of 3D position
-vectors (and their Stokes parameters Q and U) between to astrophysical coordinate systems
+vectors (and their Stokes parameters $Q$ and $U$) between to astrophysical coordinate systems
 or by an arbitrary rotation.
 }
 {src/idl/misc/\facname.pro}
@@ -28,57 +28,92 @@ or by an arbitrary rotation.
 
 \begin{IDLformat}
 {%
-\mylink{idl:rotate_coord:outvec}{Outvec} = \FACNAME(%
-\mylink{idl:rotate_coord:invec}{Invec} [, 
-\mylink{idl:rotate_coord:help}{/Help}, %
+\mylink{idl:rotate_coord:outvec}{Outvec} = \facname(%
+\mylink{idl:rotate_coord:invec}{Invec}  
+[, \mylink{idl:rotate_coord:delta_psi}{Delta\_Psi=}, %
 \mylink{idl:rotate_coord:euler_matrix}{Euler\_Matrix=}, %
 \mylink{idl:rotate_coord:inco}{Inco=}, %
 \mylink{idl:rotate_coord:outco}{Outco=}, % 
-\mylink{idl:rotate_coord:stokes_parameters}{Stokes\_Parameters=}%
+\mylink{idl:rotate_coord:stokes_parameters}{Stokes\_Parameters=}, %
+\mylink{idl:rotate_coord:free_norm}{/free\_norm}, %
+\mylink{idl:rotate_coord:help}{/help}%
 ] )}
 \end{IDLformat}
 
 \begin{qualifiers}
   \begin{qulist}{} %%%% NOTE the ``extra'' brace here %%%%
+%
     \item[Invec] \mytarget{idl:rotate_coord:invec}
       input,  array of size (n,3) : set of 3D position vectors
+%
     \item[Outvec] \mytarget{idl:rotate_coord:outvec}
-     output, array of size (n,3) : rotated 3D vectors
-    \item[Euler\_Matrix=] \mytarget{idl:rotate_coord:euler_matrix}
+     output, array of size (n,3) : rotated 3D vectors, with the same norms as the input vectors
+% 
+   \item[Delta\_Psi]\mytarget{idl:rotate_coord:delta_psi}
+       output, vector of size (n) containing the change in azimuth $\Delta\psi$ in Radians
+	resulting from the rotation 
+       (\htmlref{measured with respect to the local meridian, from South to East}{intro:fig:reftqu}),
+        so that for field of spin $s$ the output $Q',U'$ is related to the input $Q,U$ via
+                  $Q' = Q \cos (s\Delta\psi)  -  U \sin (s\Delta\psi),\ $
+                  $U' = U \cos (s\Delta\psi)  +  Q \sin (s\Delta\psi), $
+       with $s=2$ for polarization Stokes parameters 
+(for which the specific \mylink{idl:rotate_coord:stokes_parameters}{Stokes\_Parameters} is also available).
+%
+   \item[Euler\_Matrix=] \mytarget{idl:rotate_coord:euler_matrix}
        input, array of size (3,3). Euler Matrix
        describing the rotation to apply to vectors.
-       \default{unity : no rotation}.\\
-       Can not be used together with a change in coordinates.
+       \default{identity : no rotation}.\\
+       Can \emph{not} be used together with a change in coordinates.
+%
     \item[Inco=] \mytarget{idl:rotate_coord:inco}
        input, character string (either 'Q' or 'C': equatorial,
     'G': galactic or 'E': ecliptic) describing the input coordinate system 
+%
     \item[Outco=] \mytarget{idl:rotate_coord:outco}
         input, character string (see above) describing the output
           coordinate system.\\
-    Can not be used together with Euler\_Matrix
+    Can not be used together with \mylink{idl:rotate_coord:euler_matrix}{Euler\_Matrix}
+%
     \item[Stokes\_Parameters=]\mytarget{idl:rotate_coord:stokes_parameters}
        input and output, array of size (n, 2) :
-      values of the Q and U Stokes parameters on the sphere for each of
-      the input position vector. Q and U are defined wrt the local
-      parallel and meridian and are therefore transformed in a non
-      trivial way in case of rotation
+      values of the $Q$ and $U$ Stokes parameters on the sphere for each of
+      the input position vector. \htmlref{$Q$ and $U$ are defined wrt the local
+      meridian and parallel}{intro:fig:reftqu} and are therefore transformed in a
+      non-trivial way in case of rotation
+%
+%
   \end{qulist}
 \end{qualifiers}
 
 \begin{keywords}
   \begin{kwlist}{} %%% extra brace
-    \item[/Help] \mytarget{idl:rotate_coord:help}
-     if set, the documentation header is printed and the routine exits	
+%
+     \item[/free\_norm]\mytarget{idl:rotate_coord:free_norm} if set 
+         (and \mylink{idl:rotate_coord:stokes_parameters}{Stokes\_Parameters} and/or 
+         \mylink{idl:rotate_coord:delta_psi}{Delta\_Psi} are present)
+        the input (and output) coordinate vectors are \emph{not} assumed to be normalized to 1.
+        Using this option is therefore safer, but 20 to 30\% slower.
+        (Note that 3D vectors produced by 
+        \htmlref{\texttt{ang2vec}}{idl:ang2vec}, 
+	\htmlref{\texttt{pix2vec\_nest}}{idl:pix_tools} and 
+        \htmlref{\texttt{pix2vec\_ring}}{idl:pix_tools} \emph{are} properly normalized).
+        Ignored when \mylink{idl:rotate_coord:stokes_parameters}{Stokes\_Parameters} and
+         \mylink{idl:rotate_coord:delta_psi}{Delta\_Psi} are both absent.
+%
+    \item[/help] \mytarget{idl:rotate_coord:help}
+     if set, the documentation header is printed and the routine exits
+%	
   \end{kwlist}
 \end{keywords}  
 
 \begin{codedescription}
 {\thedocid{} is a generalisation of the Astro library routine {\tt skyconv}. It allows
 a rotation of 3D position vectors between two standard astronomic coordinates
-system but also an arbitrary rotation described by its Euler Matrix.
-It can also be applied to compute the effect of a rotation on the
-linear polarization Stokes parameters (Q and U) expressed in local
-coordinates system at the location of each of the input 3D vectors.}
+system but also an arbitrary active rotation described by its Euler Matrix.
+It can also compute how the linear polarization Stokes parameters ($Q$ and $U$, 
+expressed in local coordinates system)
+of each input location are affected by the solid body rotation, or equivalently
+it can output the corresponding change in azimuth.}
 \end{codedescription}
 
 
@@ -88,6 +123,7 @@ coordinates system at the location of each of the input 3D vectors.}
     \item[idl] version \idlversion or more is necessary to run \thedocid.
     \item[\htmlref{euler\_matrix\_new}{idl:euler_matrix_new}] constructs the Euler Matrix for a set of
     three angles and three axes of rotation
+    \item[\htmlref{\texttt{ang2vec}}{idl:ang2vec}, \htmlref{\texttt{pix2vec\_*}}{idl:pix_tools}] can be used to generate the input 3D vectors
   \end{sulist}
 \end{related}
 

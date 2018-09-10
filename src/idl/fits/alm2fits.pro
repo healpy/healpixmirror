@@ -90,6 +90,7 @@ PRO ALM2FITS, index, alm_array, fitsfile, HDR = hdr, XHDR = xhdr, HELP=help
 ;       Aug 2005: replaced FXBWRITE by much faster FXBWRITM
 ;       Jan 2009: calls init_astrolib
 ;       Jan 2010: added HELP keyword
+;       Aug 2018: user provided HDR is not ignored anymore
 ;-
 
 if (keyword_set(help)) then begin
@@ -117,18 +118,18 @@ fdate = today_fits()
 SXADDPAR,h0,'DATE',fdate,' Creation date (CCYY-MM-DD) of FITS header'
 
 ; add header information given by user
-if (STRMID(hdr(0),0,1) NE ' ') then begin
+if (STRMID(hdr[0],0,1) NE ' ') then begin
   iend = WHERE( STRUPCASE(STRMID(h0,0,8)) EQ 'END     ', nend)
   if (nend eq 1) then begin
-    iend = iend(0)
-    h1 = [h0(0:iend-1), hdr]
+    h1 = [h0[0:iend[0]-1], hdr]
   endif else begin
     h1 = h0
   endelse
 endif
 
 ; initial write of minimal primary header and null image
-fxwrite,fitsfile,h0
+;fxwrite,fitsfile,h0 ; fixed on Aug 2018
+fxwrite,fitsfile,h1
 
 ; -------- extension -----------
 

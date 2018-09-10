@@ -794,8 +794,9 @@ if (do_polvector) then begin
     dyg = 10.
     pol_rescale = float(dyg)/ysize * pgparam[0]
     dyg *= pgparam[1] & dxg = dyg
-    xg = (lindgen(xsize/dxg)+.5) #  replicate(dxg, ysize/dyg)
-    yg = (lindgen(ysize/dyg)+.5) ## replicate(dyg, xsize/dxg)
+    nxp = round(xsize/dxg) & nyp = round(ysize/dyg) ; fix round-off error, 2018-07-09
+    xg = (lindgen(nxp)+.5) #  replicate(dxg, nyp)
+    yg = (lindgen(nyp)+.5) ## replicate(dyg, nxp)
     u = umin + xg * (umax-umin) / xsize
     v = vmin + yg * (vmax-vmin) / ysize
     for i=0L, n_elements(xg)-1 do begin

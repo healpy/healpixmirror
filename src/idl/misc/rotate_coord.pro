@@ -25,7 +25,15 @@
 ;  For more information about HEALPix see http://healpix.sourceforge.net
 ;
 ; -----------------------------------------------------------------------------
-function rotate_coord, in_uvec, inco=in_coord, outco=out_coord, euler_matrix=eul_mat, stokes_parameters = stokes, help=help
+function rotate_coord, in_uvec, $
+                       inco=in_coord, $
+                       outco=out_coord, $
+                       euler_matrix=eul_mat, $
+                       stokes_parameters = stokes, $
+                       delta_psi = dpsi, $
+                       help=help, $
+                       Free_Norm = Free_Norm         ;,junk=junk
+
 ;+
 ; NAME:
 ;   rotate_coord
@@ -41,7 +49,8 @@ function rotate_coord, in_uvec, inco=in_coord, outco=out_coord, euler_matrix=eul
 ;
 ;
 ; CALLING SEQUENCE:
-;    Result= rotate_coord(Vec, Euler_Matrix=, Help=, Inco=, Outco=, Stokes_parameters=)
+;    Result= rotate_coord(Vec, Delta_Psi=, Euler_Matrix=, Inco=, Outco=, Stokes_Parameters=, 
+;                             /Free_Norm, /Help )
 ;
 ; 
 ; INPUTS:
@@ -49,7 +58,13 @@ function rotate_coord, in_uvec, inco=in_coord, outco=out_coord, euler_matrix=eul
 ;
 ;
 ; OPTIONAL INPUTS:
-;    Help:  if set, prints the documentation header and exits
+;    Delta_Psi: vector of size N containing on output the change in azimuth
+;       in Radians resulting from the rotation
+;       (measured with respect to the local meridian, from South to East) 
+;       so that for a field of spin s the output Q',U' is related to the input Q,U via
+;                  Q' = Q cos(s psi)  -  U sin (s psi)
+;                  U' = U cos(s psi)  +  Q sin (s psi)
+;       with s=2 for polarization Stokes parameters
 ;
 ;    Euler_matrix : 3x3 matrix of the active rotation
 ;      (see eg, Euler_matrix_new routine)
@@ -62,19 +77,33 @@ function rotate_coord, in_uvec, inco=in_coord, outco=out_coord, euler_matrix=eul
 ;    Outco : output coordinate system (must be used with Inco)
 ;      one of 'G', 'E', 'C', 'Q'
 ;
-;    Stokes_parameters : (N x 2) array, values of Stokes parameters Q
-;     and U at the location of the input vector vec.
-;     where Q measures the polarisation along or across the meridian, 
-;     and U the polarisation at 45deg of the meridian
-;     On output contain the value of Q and U resulting from the rotation
+;    Stokes_Parameters : (N x 2) array
+;     * On input: contains the values of Stokes parameters Q and U 
+;      at the location of the input vector vec;
+;      where Q measures the polarisation along or across the meridian, 
+;      and U the polarisation at 45deg of the meridian.
+;     * On output: contains the values of Q and U resulting from the rotation
+;
+;          
+;      
+; KEYWORDS:
+;     /Free_Norm: if set (and Stokes_Parameters and/or Delta_Psi are present)
+;        the input (and output) coordinate vectors are *not* assumed to be normalized to 1.
+;        Using this option is therefore safer, but 20 to 30% slower.
+;        (3D vectors produced by ang2vec, pix2vec_nest and pix2vec_ring *are* properly normalized).
+;        Ignored when Stokes_parameters and Delta_Psi are both absent.
+;
+;    /Help:  if set, prints the documentation header and exits
+;
 ;      
 ;
 ; OUTPUTS:
-;    Result : a (N x 3) array of coordinates
+;    Result : a (N x 3) array of coordinates, with the same norm as the input ones
 ;
 ;
 ; OPTIONAL OUTPUTS:
-;   Stokes_parameters is modified on output
+;   Stokes_Parameters is modified on output
+;   Delta_Psi         can be output
 ;
 ;
 ; COMMON BLOCKS:
@@ -101,6 +130,7 @@ function rotate_coord, in_uvec, inco=in_coord, outco=out_coord, euler_matrix=eul
 ; MODIFICATION HISTORY:
 ;    ???: EH, creation
 ;    2014-08-25: added Help keyword
+;    2018-07-20: addition of Delta_Psi and Free_Norm; fixed internal sign of psi
 ;-
 
 routine = 'rotate_coord'
@@ -112,7 +142,7 @@ endif
 
 if (n_params() ne 1) then begin
     message,'Invalid number of arguments',/noprefix,/infor
-    message,'result= '+routine+'(Vec, [Euler_Matrix=, HELP=, Inco=, Outco=, Stokes_parameters=])',/noprefix,/noname
+    message,'result= '+routine+'(Vec, [Euler_Matrix=, HELP=, Inco=, Outco=, Stokes_parameters=, Delta_Psi=, Free_Norm=])',/noprefix,/noname
 
 endif
 
@@ -122,7 +152,7 @@ endif
 
 vec0 = transpose([0.d0,0.d0,1.d0]) ; north pole of initial coordinate system
 
-nv = n_elements(in_uvec[*,0])
+nv = (size(in_uvec,/dim))[0]
 if (defined(in_coord) and defined(out_coord)) then begin
     ic = strupcase(strmid(in_coord, 0,1)) ; 1st letter, uppercase
     oc = strupcase(strmid(out_coord,0,1))
@@ -152,16 +182,24 @@ if (defined(eul_mat)) then begin
 
 endif
 
-if (defined(stokes)) then begin
-    ns = n_elements(stokes[*,0])
-    if (ns ne nv) then begin
-        message,'Number of Stokes parameter pairs (Q,U) should match number of 3D vectors',/noprefix,/inform
-        message,string([ns,nv],form='(2(i10))'),/noprefix
+
+do_psi    = arg_present(dpsi)
+do_stokes = defined(stokes)
+
+if (do_stokes || do_psi) then begin
+    do_renorm = keyword_set(Free_Norm)
+    if (do_stokes) then begin
+        ;ns = n_elements(stokes[*,0])
+        ns = (size(stokes,/dim))[0]
+        if (ns ne nv) then begin
+            message,'Number of Stokes parameter pairs (Q,U) should match number of 3D vectors',/noprefix,/inform
+            message,string([ns,nv],form='(2(i10))'),/noprefix
+        endif
     endif
     
     ; p = initial North Pole
-    ; e_phi   = p X r       / sqrt(1-z^2) : unit vector along parallel
-    ; e_theta = (p X r) X r / sqrt(1-z^2) : unit vector along meridian
+    ; e_phi   =  p X r      / sqrt(x^2+y^2) : unit vector along parallel, pointing East
+    ; e_theta = (p X r) X r / sqrt(x^2+y^2) : unit vector along meridian, pointing South
     ; R(e_phi), R(e_theta) : vectors after rotation
     ; R(e) . p = e . Rinv(p)
     ;
@@ -170,36 +208,55 @@ if (defined(stokes)) then begin
     ;  abs( p X r ) = sqrt(1-z*z)
     ;   Rinv(p) . r = p . R(r) = z'
     ;
-    ; sin(psi) = (p X r) . Rinv(p)      / sqrt(1-z^2) * C
-    ;          = -y*x0' + x*y0'         / sqrt(1-z^2) * C
-    ; cos(psi) = ((p X r) X r). Rinv(p) / sqrt(1-z^2) * C
-    ;          = (z'z - z0')            / sqrt(1-z^2) * C
+    ; sin(psi) = (p X r) . Rinv(p)       * C
+    ;          = -y*x0' + x*y0'          * C
+    ; cos(psi) = ((p X r) X r). Rinv(-p) * C
+    ;          = z0'(r.r) -z'z           * C
+    ;
+    ; with C = 1 / sqrt( (x^2+y^2) * (x'^2+y'^2) )
 
     ; not normalised SIN(psi) and COS(psi)
-    sin_psi = vec0[0,1]*in_uvec[*,0] - vec0[0,0]*in_uvec[*,1]
-    cos_psi = - vec0[0,2] + vec[*,2]*in_uvec[*,2]
+    if (do_renorm) then begin
+        r2 = total(in_uvec^2, 2, /double) ; x^2 + y^2 +z^2
+    endif else begin
+        r2 = 1.d0
+    endelse
+    sin_psi = (vec0[0,1]*in_uvec[*,0] - vec0[0,0]*in_uvec[*,1])*sqrt(r2)
+    cos_psi =  vec0[0,2]*r2           - vec [*,2]*in_uvec[*,2]
+;     if arg_present(junk) then begin
+;         print, 'compute junk'
+;         fudge_i = sqrt(in_uvec[*,0]^2 + in_uvec[*,1]^2)
+;         fudge_o = sqrt(    vec[*,0]^2 +     vec[*,1]^2)
+;         junk = [[sin_psi/fudge_i/fudge_o], [cos_psi/fudge_i/fudge_o]]
+;     endif
 
-    ; compute SIN(2*psi) and COS(2*psi)
-;     --- slower method, more accurate ?, less memory
-;     twopsi = 2.*atan(sin_psi, cos_psi)
-;     sin_psi = 0. & cos_psi = 0. ; free memory
-;     s2psi = sin(twopsi)
-;     c2psi = cos(twopsi)
-;     twopsi = 0. ; free memory
-;   --- faster method, less accurate ?, more memory
-    norm = sin_psi * sin_psi + cos_psi * cos_psi
-    s2psi =         2.0d0 * sin_psi * cos_psi / norm
-    cos_psi = 0.  ; free memory
-    c2psi = 1.0d0 - 2.0d0 * sin_psi * sin_psi / norm
-    sin_psi = 0.  ; free memory
-    norm    = 0.  ; free memory
+    if (do_psi) then begin
+        dpsi = atan( sin_psi, cos_psi)
+    endif
 
-    ; new Q and U
-    q = stokes[*,0] * c2psi + stokes[*,1] * s2psi
-    u = stokes[*,1] * c2psi - stokes[*,0] * s2psi
+    if (do_stokes) then begin
+        ; compute SIN(2*psi) and COS(2*psi)
+        if (do_psi) then begin
+;       --- slower method, more accurate ?, less memory
+            s2psi = sin(2.d0 * dpsi)
+            c2psi = cos(2.d0 * dpsi)
+        endif else begin
+;        --- faster method, less accurate ?, more memory
+            norm    = sin_psi * sin_psi + cos_psi * cos_psi
+            s2psi   =             2.0d0 * (sin_psi * cos_psi  / norm)
+            c2psi   = (cos_psi + sin_psi)*(cos_psi - sin_psi) / norm
+            cos_psi = 0.        ; free memory
+            sin_psi = 0.        ; free memory
+            norm    = 0.        ; free memory
+        endelse
 
-    stokes = [ [q], [u] ]
-    q = 0. & u = 0. ; free memory
+        ; new Q and U
+        q = stokes[*,0] * c2psi - stokes[*,1] * s2psi
+        u = stokes[*,1] * c2psi + stokes[*,0] * s2psi
+
+        stokes = [ [q], [u] ]
+        q = 0. & u = 0.         ; free memory
+    endif
 
 endif
 

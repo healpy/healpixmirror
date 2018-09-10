@@ -34,6 +34,7 @@ output from the \healpix facility \textbf{anafast}.
 \mylink{idl:fits2cl:multipoles}{MULTIPOLES=},  
 \mylink{idl:fits2cl:planck1}{/PLANCK1=}, 
 \mylink{idl:fits2cl:planck2}{/PLANCK2=}, 
+\mylink{idl:fits2cl:planck3}{/PLANCK3=}, 
 \mylink{idl:fits2cl:rshow}{/RSHOW}, 
 \mylink{idl:fits2cl:show}{/SHOW}, 
 \mylink{idl:fits2cl:silent}{/SILENT=}, 
@@ -63,6 +64,7 @@ output from the \healpix facility \textbf{anafast}.
     cases, $C(\ell)$ is returned. If {\tt fitsfile} is not set, then
 \mylink{idl:fits2cl:planck1}{\tt /PLANCK1},
 \mylink{idl:fits2cl:planck2}{\tt /PLANCK2},
+\mylink{idl:fits2cl:planck3}{\tt /PLANCK3},
 \mylink{idl:fits2cl:wmap1}{\tt /WMAP1},
 \mylink{idl:fits2cl:wmap5}{\tt /WMAP5} or
 \mylink{idl:fits2cl:wmap7}{\tt /WMAP7} 
@@ -103,7 +105,7 @@ must be set.
           model (\htmlref{!healpix}{idl:init_healpix}.path.test+\-'planck2013ext\_lcdm\_cl\_v1.fits'
 which matches !healpix.path.test+'cl\_planck1.fits') 
           defined up to lmax=4500, is read.\\
-          See !healpix.path.test+'README' for details
+          See \htmladdnormallink{!healpix.path.test+'README'}{\srcurl test/README} for details
 %
     \item[/PLANCK2] \mytarget{idl:fits2cl:planck2}%
            If set, and \mylink{idl:fits2cl:fitsfile}{\tt fitsfile} 
@@ -111,7 +113,16 @@ which matches !healpix.path.test+'cl\_planck1.fits')
           model (\htmlref{!healpix}{idl:init_healpix}.path.test+\-'planck2015\_lcdm\_cl\_v2.fits'
 which matches !healpix.path.test+'cl\_planck2.fits') 
           defined up to lmax=4900, is read.\\
-          See !healpix.path.test+'README' for details
+          See \htmladdnormallink{!healpix.path.test+'README'}{\srcurl test/README} for details
+%
+    \item[/PLANCK3] \mytarget{idl:fits2cl:planck3}%
+           If set, and \mylink{idl:fits2cl:fitsfile}{\tt fitsfile} 
+           is not provided, then a Planck 2018 data best fit
+          model %(\htmlref{!healpix}{idl:init_healpix}.path.test+\-'planck2018\_lcdm\_cl\_v3.fits'
+   (\htmladdnormallink{!healpix.path.test+\-'planck2018\_lcdm\_cl\_v3.fits'}{\srcurl planck2018_lcdm_cl_v3.fits}
+which matches \htmlref{!healpix}{idl:init_healpix}.path.test+'cl\_planck3.fits') 
+          defined up to lmax=5000, is read.\\
+          See \htmladdnormallink{!healpix.path.test+'README'}{\srcurl test/README} for details
 
     \item[/RSHOW] \mytarget{idl:fits2cl:rshow}%
 	If set, the raw power spectra $C(\ell)$ read from the file are plotted
@@ -127,7 +138,7 @@ which matches !healpix.path.test+'cl\_planck2.fits')
 (\htmlref{!healpix}{idl:init_healpix}.path.test+\-'wmap\_lcdm\_pl\_model\_yr1\_v1.fits'
 which currently matches !healpix.path.test+'cl.fits') 
           defined up to lmax=3000, is read.\\
-          See !healpix.path.test+'README' for details
+          See \htmladdnormallink{!healpix.path.test+'README'}{\srcurl test/README} for details
 %
     \item[/WMAP5] \mytarget{idl:fits2cl:wmap5}%
            If set, and \mylink{idl:fits2cl:fitsfile}{\tt fitsfile}
@@ -135,7 +146,7 @@ which currently matches !healpix.path.test+'cl.fits')
           model (\htmlref{!healpix}{idl:init_healpix}.path.test+\-'wmap\_lcdm\_sz\_lens\_wmap5\_cl\_v3.fits'
 which matches !healpix.path.test+'cl\_wmap5.fits') 
           defined up to lmax=2000, is read.\\
-          See !healpix.path.test+'README' for details
+          See \htmladdnormallink{!healpix.path.test+'README'}{\srcurl test/README} for details
 %
     \item[/WMAP7] \mytarget{idl:fits2cl:wmap7}%
            If set, and \mylink{idl:fits2cl:fitsfile}{\tt fitsfile}
@@ -146,7 +157,7 @@ which matches !healpix.path.test+'cl\_wmap7.fits')
           {\bf Note:} As opposed to the other WMAP spectra mentionned above, it includes
              a non-vanishing B (or CURL) power spectrum 
              induced by lensing of E (or GRAD) polarization.\\
-          See !healpix.path.test+'README' for details
+          See \htmladdnormallink{!healpix.path.test+'README'}{\srcurl test/README} for details
 %
     \item[XHDR =] \mytarget{idl:fits2cl:xhdr}%
 	String array containing on output the extension header

@@ -11,6 +11,7 @@
 %\renewcommand{\ell}{l}
 \input{hpxversion}
 \input{healpix_src_url}
+\input{hpxwebsites}
 \end{htmlonly}
 \usepackage{tocloft} % to indent sections in TOC https://texblog.org/2011/09/09/10-ways-to-customize-tocloflot/
 
@@ -32,7 +33,7 @@
 \begin{htmlonly}
 \renewcommand{\myequal}{$=$}
 \end{htmlonly}
-\newcommand{\healpixwebpage}{http://healpix.sourceforge.net}
+%\newcommand{\healpixwebpage}{http://healpix.sourceforge.net}
 
 % commands for arbitrary link
 \newcommand{\mylink}[2]{% \mylink{link_id}{link_text}
@@ -101,7 +102,8 @@ of the sphere  designed to support efficiently
 high resolution and large volume data sets, such as
 the WMAP and Planck CMB mission products.
 }
-\input{hpxwebsite}
+%\input{hpxwebsite}
+\defwebsite
 \date{\today}
 
 \frontpage
@@ -1120,6 +1122,7 @@ this local cartesian system to the global spherical one, as described below
 }
 \caption[Coordinate conventions]%
 {\label{fig:reftqu}%
+\label{intro:fig:reftqu}%
 Coordinate conventions for \healpix ({\em lhs} panels) and IAU ({\em rhs} panels). The
   upper panels illustrate how the spherical coordinates are measured, and the
   lower panel how the $Q$ and $U$ Stokes parameters are identified in the

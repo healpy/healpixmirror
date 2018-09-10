@@ -38,12 +38,13 @@
 ;
 ; CALLING SEQUENCE:
 ;       FITS2CL, cl_array, [fitsfile, EXTENSION=, HELP=, INTERACTIVE=, RSHOW=, SILENT =, SHOW=$
-;                                     PLANCK1=, PLANCK2=, WMAP1=, WMAP5=, WMAP7= ,$
+;                                     PLANCK1=, PLANCK2=, PLANCK3=, WMAP1=, WMAP5=, WMAP7= ,$
 ;                                     HDR =, LLFACTOR=, MULTIPOLES=, XHDR =]
 ; 
 ; INPUTS:
 ;       fitsfile = String containing the name of the file to be read  
-;          if not provided, then /WMAP1, /WMAP5, /WMAP7, /PLANCK1 or /PLANCK2 must be set.   
+;          if not provided, then /WMAP1, /WMAP5, /WMAP7, 
+;                                /PLANCK1, /PLANCK2 or /PLANCK3 must be set.   
 ;
 ; OPTIONAL INPUTS:
 ;       EXTENSION : extension unit to be read from FITS file: 
@@ -72,10 +73,16 @@
 ;          defined up to l=4500, is read
 ;          See !healpix.path.test+'README' for details
 ;
-;       PLANC21 = if set, and fitsfile is not provided, then the theoretical
+;       PLANCK2 = if set, and fitsfile is not provided, then the theoretical
 ;          Lambda CDM best fit to   Planck2015
 ;          (!healpix.path.test+'planck2015_lcdm_cl_v2.fits') 
 ;          defined up to l=4900, is read
+;          See !healpix.path.test+'README' for details
+;
+;       PLANCK3 = if set, and fitsfile is not provided, then the theoretical
+;          Lambda CDM best fit to   Planck2018
+;          (!healpix.path.test+'planck2018_lcdm_cl_v3.fits') 
+;          defined up to l=5000, is read
 ;          See !healpix.path.test+'README' for details
 ;
 ;       WMAP1 = if set, and fitsfile is not provided, then one WMAP-1yr best fit
@@ -152,7 +159,8 @@
 ;       Mar 2013: EH, added PLANCK1 keyword
 ;       Aug 2015: EH, can read files with 9 columns
 ;       Sep 2015: EH, added PLANCK2 keyword
-;       Sep 2016; EH, work with QuickPol W(l)
+;       Sep 2016: EH, work with QuickPol W(l)
+;       Sep 2018: EH, added PLANCK3 keyword
 ;
 ; requires the THE IDL ASTRONOMY USER'S LIBRARY 
 ; that can be found at http://idlastro.gsfc.nasa.gov/homepage.html
@@ -207,13 +215,14 @@ PRO FITS2CL, cl_array, fitsfile, $
              XHDR = xhdr, $
              PLANCK1=planck1, $
              PLANCK2=planck2, $
+             PLANCK3=planck3, $
              WMAP1=wmap1, WMAP5=wmap5, WMAP7=wmap7
 
 code = 'FITS2CL'
 syntax = ['Syntax : '+code+', cl_array, [fitsfile, ',$
           '         EXTENSION=, HELP=, INTERACTIVE=, RSHOW=, SILENT =, SHOW=', $
           '         HDR=, LLFACTOR=, MULTIPOLES=, XHDR=', $
-          '         PLANCK1=, PLANCK2=, WMAP1=, WMAP5=, WMAP7=]']
+          '         PLANCK1=, PLANCK2=, PLANCK3=, WMAP1=, WMAP5=, WMAP7=]']
 
 if keyword_set(help) then begin
       doc_library,code
@@ -225,12 +234,13 @@ read_wmap5   = keyword_set(wmap5)
 read_wmap7   = keyword_set(wmap7)
 read_planck1 = keyword_set(planck1)
 read_planck2 = keyword_set(planck2)
-read_internal  = (read_wmap1 || read_wmap5 || read_wmap7 || read_planck1 || read_planck2)
-multi_internal = (read_wmap1 +  read_wmap5 +  read_wmap7 +  read_planck1 +  read_planck2 gt 1)
+read_planck3 = keyword_set(planck3)
+read_internal  = (read_wmap1 || read_wmap5 || read_wmap7 || read_planck1 || read_planck2 || read_planck3)
+multi_internal = (read_wmap1 +  read_wmap5 +  read_wmap7 +  read_planck1 +  read_planck2 + read_planck3 gt 1)
 
 if ((defined(fitsfile) && read_internal) || multi_internal) then begin
     print,syntax,form='(a)'
-    print,'  choose either an external FITSfile *or* /WMAP1 *or* /WMAP5 *or* /WMAP7 *or* /PLANCK1 *or* /PLANCK2'
+    print,'  choose either an external FITSfile *or* /WMAP1 *or* /WMAP5 *or* /WMAP7 *or* /PLANCK1 *or* /PLANCK2  *or* /PLANCK3'
     print,'   file NOT read '
     goto, Exit
 endif
@@ -249,6 +259,7 @@ if (read_wmap5)   then myfitsfile = !healpix.path.test+'wmap_lcdm_sz_lens_wmap5_
 if (read_wmap7)   then myfitsfile = !healpix.path.test+'wmap_lcdm_sz_lens_wmap7_cl_v4.fits'
 if (read_planck1) then myfitsfile = !healpix.path.test+'planck2013ext_lcdm_cl_v1.fits'
 if (read_planck2) then myfitsfile = !healpix.path.test+'planck2015_lcdm_cl_v2.fits'
+if (read_planck3) then myfitsfile = !healpix.path.test+'planck2018_lcdm_cl_v3.fits'
 if (myfitsfile eq '') then myfitsfile = fitsfile
 
 if (datatype(cl_array) eq 'STR' or datatype(myfitsfile) ne 'STR') then begin
