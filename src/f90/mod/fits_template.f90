@@ -2333,7 +2333,7 @@ subroutine input_map8_KLOAD(filename, map, npixtot, nmaps, &
            qp4     = 4_i8b*qpix       ! number of pixels per ring
            ! fill the weight map
            do p=0,qp4-1
-              j4 = mod(p, qpix)
+              j4 = mod(p, qpix) ! g95: p and qpix must be of same type
               rpix = min(j4, qpix - shifted - j4) ! seesaw
               w8map(pnorth+p) = w8list(vpix + rpix)
            enddo
