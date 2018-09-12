@@ -2260,6 +2260,7 @@ subroutine input_map8_KLOAD(filename, map, npixtot, nmaps, &
 !
 ! adapted from unfold_weights.pro
 ! 2018-05-18
+! 2018-09-12: promoted qpix to I8B to avoid consistency problems during compilation with g95  
 !---------------------------------------
   subroutine unfold_weightslist_KLOAD(nside, won, w8list, w8map)
 
@@ -2271,8 +2272,8 @@ subroutine input_map8_KLOAD(filename, map, npixtot, nmaps, &
     real(KMAP), dimension(0:), intent(out) :: w8map
 
     integer(i8b) :: np, npix
-    integer(i8b) :: nf, nw8, pnorth, psouth, vpix, qp4, p
-    integer(i4b) :: ring, qpix, odd, shifted, rpix, wpix, j4, n4, it
+    integer(i8b) :: nf, nw8, pnorth, psouth, vpix, qp4, p, qpix
+    integer(i4b) :: ring, odd, shifted, rpix, wpix, j4, n4, it
 
     ! test nside
     npix = nside2npix(nside)
@@ -2328,7 +2329,7 @@ subroutine input_map8_KLOAD(filename, map, npixtot, nmaps, &
            qpix    = min(ring+1, nside) ! 1/4 of number of pixels per ring
            shifted = 0
            if (ring < (nside-1) .or. iand(ring+nside,1_i4b) == 1_i4b) shifted = 1
-           odd     = iand(qpix,1)
+           odd     = iand(qpix,1_i8b)
            qp4     = 4_i8b*qpix       ! number of pixels per ring
            ! fill the weight map
            do p=0,qp4-1
