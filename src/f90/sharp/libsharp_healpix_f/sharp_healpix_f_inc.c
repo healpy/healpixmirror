@@ -56,13 +56,17 @@ static void X(hp_map2alm_spin) (int nside, int lmax, int mmax, int spin,
   }
 
 static void X(hp_alm2map) (int nside, int lmax, int mmax, FLT *alm,
-  FLT *map)
+			   FLT *map, double *zbounds)
   {
   hpsharp_geom_info *ginfo;
   hpsharp_alm_info *ainfo;
 
   CHECK_STACK_ALIGN(8);
-  hpsharp_make_healpix_geom_info (nside, 1, &ginfo);
+  // hpsharp_make_healpix_geom_info (nside, 1, &ginfo);
+  int i,nrings=4*nside-1;
+  double *wgt=RALLOC(double,nrings);
+  for (i=0; i<nrings; ++i) { wgt[i] = 1.0; }
+  hpsharp_make_healpix_geom_info_2 (nside, wgt, zbounds[0], zbounds[1], &ginfo);
   hpsharp_make_rectangular_alm_info (lmax,mmax,1,&ainfo);
 
   hpsharp_execute(SHARP_ALM2MAP,0,&alm,&map,ginfo,ainfo,1,FLAG,0,0);
@@ -72,7 +76,7 @@ static void X(hp_alm2map) (int nside, int lmax, int mmax, FLT *alm,
   }
 
 static void X(hp_alm2map_pol) (int nside, int lmax, int mmax, FLT *alm,
-  FLT *map)
+			       FLT *map, double *zbounds)
   {
   hpsharp_geom_info *ginfo;
   hpsharp_alm_info *ainfo;
@@ -80,7 +84,11 @@ static void X(hp_alm2map_pol) (int nside, int lmax, int mmax, FLT *alm,
   void *mapptr[2], *almptr[2];
 
   CHECK_STACK_ALIGN(8);
-  hpsharp_make_healpix_geom_info (nside, 1, &ginfo);
+  // hpsharp_make_healpix_geom_info (nside, 1, &ginfo);
+  int i,nrings=4*nside-1;
+  double *wgt=RALLOC(double,nrings);
+  for (i=0; i<nrings; ++i) { wgt[i] = 1.0; }
+  hpsharp_make_healpix_geom_info_2 (nside, wgt, zbounds[0], zbounds[1], &ginfo);
   hpsharp_make_rectangular_alm_info (lmax,mmax,3,&ainfo);
 
   hpsharp_execute(SHARP_ALM2MAP,0,&alm,&map,ginfo,ainfo,1,FLAG,0,0);
@@ -93,7 +101,7 @@ static void X(hp_alm2map_pol) (int nside, int lmax, int mmax, FLT *alm,
   }
 
 static void X(hp_alm2map_spin) (int nside, int lmax, int mmax, int spin,
-  FLT *alm, FLT *map)
+  FLT *alm, FLT *map, double *zbounds)
   {
   hpsharp_geom_info *ginfo;
   hpsharp_alm_info *ainfo;
@@ -101,7 +109,11 @@ static void X(hp_alm2map_spin) (int nside, int lmax, int mmax, int spin,
   void *mapptr[2], *almptr[2];
 
   CHECK_STACK_ALIGN(8);
-  hpsharp_make_healpix_geom_info (nside, 1, &ginfo);
+  // hpsharp_make_healpix_geom_info (nside, 1, &ginfo); 
+  int i,nrings=4*nside-1;
+  double *wgt=RALLOC(double,nrings);
+  for (i=0; i<nrings; ++i) { wgt[i] = 1.0; }
+  hpsharp_make_healpix_geom_info_2 (nside, wgt, zbounds[0], zbounds[1], &ginfo);
   hpsharp_make_rectangular_alm_info (lmax,mmax,2,&ainfo);
 
   mapptr[0]=map; mapptr[1]=map+npix;
@@ -112,9 +124,12 @@ static void X(hp_alm2map_spin) (int nside, int lmax, int mmax, int spin,
   hpsharp_destroy_geom_info(ginfo);
   }
 
-FCALLSCSUB7(X(hp_map2alm),Y(SHARP_HP_MAP2ALM_X),Z(sharp_hp_map2alm_x),INT,INT,INT,PFLT,PFLT,PDOUBLE,PDOUBLE)
-FCALLSCSUB7(X(hp_map2alm_pol),Y(SHARP_HP_MAP2ALM_POL_X),Z(sharp_hp_map2alm_pol_x),INT,INT,INT,PFLT,PFLT,PDOUBLE,PDOUBLE)
+FCALLSCSUB7(X(hp_map2alm),     Y(SHARP_HP_MAP2ALM_X),     Z(sharp_hp_map2alm_x),     INT,INT,INT,    PFLT,PFLT,PDOUBLE,PDOUBLE)
+FCALLSCSUB7(X(hp_map2alm_pol), Y(SHARP_HP_MAP2ALM_POL_X), Z(sharp_hp_map2alm_pol_x), INT,INT,INT,    PFLT,PFLT,PDOUBLE,PDOUBLE)
 FCALLSCSUB8(X(hp_map2alm_spin),Y(SHARP_HP_MAP2ALM_SPIN_X),Z(sharp_hp_map2alm_spin_x),INT,INT,INT,INT,PFLT,PFLT,PDOUBLE,PDOUBLE)
-FCALLSCSUB5(X(hp_alm2map),Y(SHARP_HP_ALM2MAP_X),Z(sharp_hp_alm2map_x),INT,INT,INT,PFLT,PFLT)
-FCALLSCSUB5(X(hp_alm2map_pol),Y(SHARP_HP_ALM2MAP_POL_X),Z(sharp_hp_alm2map_pol_x),INT,INT,INT,PFLT,PFLT)
-FCALLSCSUB6(X(hp_alm2map_spin),Y(SHARP_HP_ALM2MAP_SPIN_X),Z(sharp_hp_alm2map_spin_x),INT,INT,INT,INT,PFLT,PFLT)
+//FCALLSCSUB5(X(hp_alm2map),     Y(SHARP_HP_ALM2MAP_X),     Z(sharp_hp_alm2map_x),     INT,INT,INT,    PFLT,PFLT)
+//FCALLSCSUB5(X(hp_alm2map_pol), Y(SHARP_HP_ALM2MAP_POL_X), Z(sharp_hp_alm2map_pol_x), INT,INT,INT,    PFLT,PFLT)
+//FCALLSCSUB6(X(hp_alm2map_spin),Y(SHARP_HP_ALM2MAP_SPIN_X),Z(sharp_hp_alm2map_spin_x),INT,INT,INT,INT,PFLT,PFLT)
+FCALLSCSUB6(X(hp_alm2map),     Y(SHARP_HP_ALM2MAP_X),     Z(sharp_hp_alm2map_x),     INT,INT,INT,    PFLT,PFLT,PDOUBLE)
+FCALLSCSUB6(X(hp_alm2map_pol), Y(SHARP_HP_ALM2MAP_POL_X), Z(sharp_hp_alm2map_pol_x), INT,INT,INT,    PFLT,PFLT,PDOUBLE)
+FCALLSCSUB7(X(hp_alm2map_spin),Y(SHARP_HP_ALM2MAP_SPIN_X),Z(sharp_hp_alm2map_spin_x),INT,INT,INT,INT,PFLT,PFLT,PDOUBLE)

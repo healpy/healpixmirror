@@ -123,6 +123,7 @@
 
   integer(i4b) :: deriv, n_pols, n_maps
   character(len=20) :: coordsys = ' '
+  real(DP), dimension(1:2) :: zbounds
 !  real :: ttime0, ttime1, ttime2
 
   !-----------------------------------------------------------------------
@@ -538,25 +539,32 @@
 
   PRINT *,"      "//code//"> Generating sky map(s) "
 
+  zbounds=(/-1.0_DP, 1.0_DP/) ! full sky  = default
   select case (plm_pol + polar*10 + deriv*100)
   case(0) ! temperature only
-     call alm2map(nsmax,nlmax,nmmax,alm_TGC,map_TQU(:,1))
+     call alm2map(nsmax,nlmax,nmmax,alm_TGC,map_TQU(:,1), &
+          &       zbounds=zbounds)
   case(1) ! temperature only with precomputed Ylm
-     call alm2map(nsmax,nlmax,nmmax,alm_TGC,map_TQU(:,1),plm(:,1))
+     call alm2map(nsmax,nlmax,nmmax,alm_TGC,map_TQU(:,1),plm=plm(:,1))
   case(10) ! T+P
-     call alm2map(nsmax,nlmax,nmmax,alm_TGC,map_TQU)
+     call alm2map(nsmax,nlmax,nmmax,alm_TGC,map_TQU, &
+                  zbounds=zbounds)
   case(11) ! T+P with precomputed Ylm_T
-     call alm2map(nsmax,nlmax,nmmax,alm_TGC,map_TQU,plm(:,1))
+     call alm2map(nsmax,nlmax,nmmax,alm_TGC,map_TQU,plm=plm(:,1))
    case(13)  ! T+P with precomputed Ylm
-     call alm2map(nsmax,nlmax,nmmax,alm_TGC,map_TQU,plm)
+     call alm2map(nsmax,nlmax,nmmax,alm_TGC,map_TQU,plm=plm)
   case(100)
-     call alm2map_der(nsmax,nlmax,nmmax,alm_TGC,map_TQU(:,1),map_TQU(:,2:3))
+     call alm2map_der(nsmax,nlmax,nmmax,alm_TGC,map_TQU(:,1),&
+                      der1=map_TQU(:,2:3), zbounds=zbounds)
   case(200)
-     call alm2map_der(nsmax,nlmax,nmmax,alm_TGC,map_TQU(:,1),map_TQU(:,2:3),map_TQU(:,4:6))
+     call alm2map_der(nsmax,nlmax,nmmax,alm_TGC,map_TQU(:,1),&
+          &           der1=map_TQU(:,2:3),der2=map_TQU(:,4:6), zbounds=zbounds)
   case(110)
-     call alm2map_der(nsmax,nlmax,nmmax,alm_TGC,map_TQU(:,1:3),map_TQU(:,4:9))
+     call alm2map_der(nsmax,nlmax,nmmax,alm_TGC,map_TQU(:,1:3),&
+                      der1=map_TQU(:,4:9), zbounds=zbounds)
   case(210)
-     call alm2map_der(nsmax,nlmax,nmmax,alm_TGC,map_TQU(:,1:3),map_TQU(:,4:9),map_TQU(:,10:18))
+     call alm2map_der(nsmax,nlmax,nmmax,alm_TGC,map_TQU(:,1:3),&
+          &           der1=map_TQU(:,4:9),der2=map_TQU(:,10:18), zbounds=zbounds)
   case default
      print*,'Not valid case'
      print*,'Polarisation:', polarisation

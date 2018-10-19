@@ -76,7 +76,7 @@
 !     * the recurrence of Ylm is the standard one (cf Num Rec)
 !     * the sum over m is done by FFT
   !=======================================================================
-  subroutine alm2map_sc_KLOAD(nsmax, nlmax, nmmax, alm, map)
+  subroutine alm2map_sc_KLOAD(nsmax, nlmax, nmmax, alm, map, zbounds)
     !=======================================================================
     !     computes a map form its alm for the HEALPIX pixelisation
     !      for the Temperature field
@@ -84,8 +84,14 @@
     integer(I4B), intent(IN)                   :: nsmax, nlmax, nmmax
     complex(KALMC), intent(IN),  dimension(1:1,0:nlmax,0:nmmax) :: alm
     real(KMAP),   intent(OUT), dimension(0:(12_i8b*nsmax)*nsmax-1) :: map
+    real(DP),     intent(IN),  dimension(1:2),         optional :: zbounds
+
+    real(DP), dimension(1:2)         :: zbounds_in
 #ifdef USE_SHARP
-    call sharp_hp_alm2map_x_KLOAD(nsmax,nlmax,nmmax,alm,map)
+    zbounds_in = (/-1.d0 , 1.d0/)
+    if (present(zbounds)) zbounds_in = zbounds
+
+    call sharp_hp_alm2map_x_KLOAD(nsmax,nlmax,nmmax,alm,map,zbounds_in)
 #else
 
     integer(I4B) :: l, m, ith                          ! alm related
@@ -110,6 +116,11 @@
     character(LEN=*), parameter :: code = 'ALM2MAP'
     integer(I4B) :: status
     !=======================================================================
+
+    if (present(zbounds)) then
+       call fatal_error(code//&
+            &': zbounds not supported if DONT_USE_SHARP is set at compilation.')
+    endif
 
     ! Healpix definitions
     nrings = 2*nsmax           ! number of isolatitude rings on N. hemisphere + equat
@@ -275,7 +286,7 @@
   end subroutine alm2map_sc_KLOAD
 
   !=======================================================================
-  subroutine alm2map_spin_KLOAD(nsmax, nlmax, nmmax, spin, alm, map)
+  subroutine alm2map_spin_KLOAD(nsmax, nlmax, nmmax, spin, alm, map, zbounds)
     !=======================================================================
     !     computes a map form its alm for the HEALPIX pixelisation
     !      for the Temperature field
@@ -283,7 +294,9 @@
     integer(I4B),   intent(IN)                   :: nsmax, nlmax, nmmax, spin
     complex(KALMC), intent(IN),  dimension(1:,0:,0:) :: alm
     real(KMAP),     intent(OUT), dimension(0:,1:) :: map
+    real(DP),       intent(IN),  dimension(1:2),   optional :: zbounds
 
+    real(DP), dimension(1:2)         :: zbounds_in
     integer(I4B) :: l, m, ith                          ! alm related
     integer(I8B) :: istart_south, istart_north, npix   ! map related
     integer(I4B) :: nrings, nphmx
@@ -310,14 +323,22 @@
     integer(I4B) :: aspin
 
 #ifdef USE_SHARP
+    zbounds_in = (/-1.d0 , 1.d0/)
+    if (present(zbounds)) zbounds_in = zbounds
+
     aspin = abs(spin)
     if ((aspin>0).and.(aspin<=100)) then
       call sharp_hp_alm2map_spin_x_KLOAD(nsmax,nlmax,nmmax,aspin, &
-        alm(1:2,0:nlmax,0:nmmax),map(0:12*nsmax*nsmax-1,1:2))
+        alm(1:2,0:nlmax,0:nmmax),map(0:12*nsmax*nsmax-1,1:2), zbounds_in)
       return
     endif
 #endif
     !=======================================================================
+
+    if (present(zbounds)) then
+       call fatal_error(code//&
+            &': zbounds not supported if DONT_USE_SHARP is set at compilation.')
+    endif
 
     ! Healpix definitions
     nrings = 2*nsmax           ! number of isolatitude rings on N. hemisphere + equat
@@ -524,222 +545,6 @@
     return
   end subroutine alm2map_spin_KLOAD
 
-!   !=======================================================================
-!   subroutine alm2map_sc_KLOAD(nsmax, nlmax, nmmax, alm, map)
-!     !=======================================================================
-!     !     computes a map form its alm for the HEALPIX pixelisation
-!     !      for the Temperature field
-!     !=======================================================================
-!     integer(I4B), intent(IN)                   :: nsmax, nlmax, nmmax
-!     complex(KALMC), intent(IN),  dimension(1:1,0:nlmax,0:nmmax) :: alm
-!     real(KMAP),   intent(OUT), dimension(    0:12*nsmax**2-1) :: map
-
-!     integer(I4B) :: l, m, ith, scalel, scalem ! alm related
-!     integer(I8B) :: istart_south, istart_north, npix   ! map related
-!     integer(I4B) :: nrings, nphmx
-
-!     integer(I4B)                              :: par_lm
-!     real(DP)              :: lam_mm, lam_lm, lam_0, lam_1, lam_2, corfac, cth_ring
-!     real(DP)                                  :: ovflow, unflow
-!     complex(DPC), dimension(-1:1)             :: b_ns
-!     real(DP),     dimension(:,:), allocatable :: dalm
-!     real(DP),     dimension(:),   allocatable :: mfac
-!     real(DP),     dimension(:,:), allocatable :: recfac
-
-!     integer(i4b)                                :: ll, l_min
-!     complex(DPC), dimension(:,:), allocatable :: b_north, b_south
-!     real(DP),     dimension(:),   allocatable :: ring
-!     integer(i4b)             :: nchunks, chunksize, ichunk, lchk, uchk, ithl, nphl
-!     integer(I8B), dimension(0:SMAXCHK-1) :: startpix
-!     integer(I4B), dimension(0:SMAXCHK-1) :: nph, kphi0
-!     real(DP),     dimension(0:SMAXCHK-1) :: cth, sth
-
-!     character(LEN=*), parameter :: code = 'ALM2MAP'
-!     integer(I4B) :: status
-!     !=======================================================================
-
-!     ! Healpix definitions
-!     nrings = 2*nsmax           ! number of isolatitude rings on N. hemisphere + equat
-!     npix   = (12_I8B*nsmax)*nsmax    ! total number of pixels on the sphere
-!     nphmx  = 4*nsmax           ! maximum number of pixels/ring
-
-!     !     --- allocates space for arrays ---
-!     nchunks   = nrings/SMAXCHK + 1  ! number of chunks
-!     chunksize = (nrings+nchunks-1)/nchunks ! <= SMAXCHK
-
-!     allocate(mfac(0:nmmax),stat = status)
-!     call assert_alloc(status,code,'mfac')
-
-!     allocate(b_north(0:nmmax, 0:chunksize-1),stat = status)
-!     call assert_alloc(status,code,'b_north')
-
-!     allocate(b_south(0:nmmax, 0:chunksize-1),stat = status)
-!     call assert_alloc(status,code,'b_south')
-
-!     if (.not.do_openmp()) then
-!        allocate(recfac(0:1,0:nlmax),stat = status)
-!        call assert_alloc(status,code,'recfac')
-!        allocate(dalm(0:1,0:nlmax), stat = status)
-!        call assert_alloc(status,code,'dalm')
-!        allocate(ring(0:nphmx-1),stat = status)
-!        call assert_alloc(status,code,'ring')
-!     endif
-!     !     ------------ initiate variables and arrays ----------------
-
-!     call gen_mfac(nmmax,mfac)
-
-!     call init_rescale()
-!     ovflow = rescale_tab(1)
-!     unflow = rescale_tab(-1)
-!     map = 0.0 ! set the whole map to zero
-
-!     ! loop on chunks
-!     do ichunk = 0, nchunks-1
-!        lchk = ichunk * chunksize + 1
-!        uchk = min(lchk+chunksize - 1, nrings)
-
-!        do ith = lchk, uchk
-!           ithl = ith - lchk !local index
-!           ! get pixel location information
-!           call get_pixel_layout(nsmax, ith, cth(ithl), sth(ithl), nph(ithl), startpix(ithl), kphi0(ithl))
-!        enddo
-!        !        -----------------------------------------------------
-!        !        for each theta, and each m, computes
-!        !        b(m,theta) = sum_over_l>m (lambda_l_m(theta) * a_l_m)
-!        !        ------------------------------------------------------
-!        !        lambda_mm tends to go down when m increases (risk of underflow)
-!        !        lambda_lm tends to go up   when l increases (risk of overflow)
-
-
-!        b_north(:,:) = 0_dpc ! pad with zeros
-!        b_south(:,:) = 0_dpc
-
-! !$OMP parallel default(none) &
-! !$OMP shared(nlmax, nmmax, lchk, uchk, rescale_tab, ovflow, unflow, &
-! !$OMP    cth, sth, mfac, alm, b_north, b_south) &
-! !$OMP private(recfac, dalm, b_ns, status, m, ithl, l_min,  &
-! !$OMP   scalem, scalel, corfac, par_lm, lam_mm, lam_lm, lam_0, lam_1, lam_2, &
-! !$OMP   cth_ring, l)
-
-!        if (do_openmp()) then
-!           allocate(recfac(0:1,0:nlmax),stat = status)
-!           call assert_alloc(status,code,'recfac')
-!           allocate(dalm(0:1,0:nlmax), stat = status)
-!           call assert_alloc(status,code,'dalm')
-!        endif
-
-! !$OMP do schedule(dynamic,1)
-!        do m = 0, nmmax
-!           ! generate recursion factors (recfac) for Ylm of degree m
-!           call gen_recfac(nlmax, m, recfac)
-
-!           ! extract needed alm under memory and CPU efficient form
-!           do ll = m, nlmax
-!              dalm(0,ll) =  real(alm(1,ll,m),kind=dp)
-!              dalm(1,ll) = aimag(alm(1,ll,m))
-!           enddo
-!           do ithl = 0, uchk - lchk
-!              l_min = l_min_ylm(m, sth(ithl))
-!              if (nlmax >= l_min) then ! skip calculations when Ylm too small
-!                 ! determine lam_mm
-!                 call compute_lam_mm(mfac(m), m, sth(ithl), lam_mm, corfac, scalem)
-               
-!                 !           ---------- l = m ----------
-!                 par_lm = 1  ! = (-1)^(l+m)
-
-!                 if (m >= l_min) then
-!                    lam_lm = corfac * lam_mm
-!                    b_ns( 1) = cmplx(lam_lm * dalm(0,m), lam_lm * dalm(1,m), kind=DP)
-!                    b_ns(-1) = 0.0_dpc
-!                 else
-!                    b_ns = 0.0_dpc
-!                 endif
-
-!                 !           ---------- l > m ----------
-!                 lam_0 = 0.0_dp
-!                 lam_1 = 1.0_dp
-!                 scalel=0
-!                 cth_ring = cth(ithl)
-!                 lam_2 = cth_ring * lam_1 * recfac(0,m)
-!                 do l = m+1, nlmax
-!                    par_lm = - par_lm  ! = (-1)^(l+m)
-!                    if (l >= l_min) then
-!                       lam_lm = lam_2 * corfac * lam_mm                   
-!                       b_ns(par_lm)  = b_ns(par_lm) &
-!                            &        + cmplx(lam_lm * dalm(0,l), lam_lm * dalm(1,l), kind=DP)  ! increment even or odd
-!                    endif
-
-!                    lam_0 = lam_1 * recfac(1,l-1)
-!                    lam_1 = lam_2
-!                    lam_2 = (cth_ring * lam_1 - lam_0) * recfac(0,l)
-!                    if (abs(lam_2) > OVFLOW) then
-!                       lam_1 = lam_1*UNFLOW
-!                       lam_2 = lam_2*UNFLOW
-!                       scalel= scalel + 1
-!                       corfac = rescale_tab(max(scalel+scalem,RSMIN))
-!                    elseif (abs(lam_2) < UNFLOW) then
-!                       lam_1 = lam_1*OVFLOW
-!                       lam_2 = lam_2*OVFLOW
-!                       scalel= scalel - 1
-!                       corfac = rescale_tab(max(scalel+scalem,RSMIN))
-!                    endif
-                   
-!                 enddo ! loop on l
-
-!                 b_north(m,ithl) = b_ns(1) + b_ns(-1)
-!                 b_south(m,ithl) = b_ns(1) - b_ns(-1)
-!              endif ! test on nlmax
-!           enddo ! loop on rings (ithl)
-!        enddo ! loop on m
-! !$OMP end do
-!        if (do_openmp()) then
-!           deallocate (recfac,dalm)
-!        endif
-! !$OMP end parallel
-
-! !$OMP parallel default(none) &
-! !$OMP  shared(nsmax, nlmax, nmmax, npix, nrings, nphmx, &
-! !$OMP      lchk, uchk, b_north, b_south, nph, startpix, kphi0, map) &
-! !$OMP  private(ithl, nphl, istart_north, istart_south, &
-! !$OMP      ith, ring, status)
-!        if (do_openmp()) then
-!           allocate(ring(0:nphmx-1),stat = status)
-!           call assert_alloc(status,code,'ring')
-!        endif
-! !$OMP do schedule(dynamic,1)
-!        do ithl = 0, uchk - lchk
-!           nphl = nph(ithl)
-!           istart_north = startpix(ithl)
-!           istart_south = npix-istart_north-nphl
-!           ith  = ithl + lchk
-!           !        ---------------------------------------------------------------
-!           !        sum_m  b(m,theta)*exp(i*m*phi)   -> f(phi,theta) by FFT
-!           !        ---------------------------------------------------------------
-!           call ring_synthesis(nsmax,nlmax,nmmax,b_north(0,ithl),nphl,ring,kphi0(ithl))   ! north hemisph. + equator
-!           map(istart_north:istart_north+nphl-1) = ring(0:nphl-1)
-
-!           if (ith < nrings) then
-!              call ring_synthesis(nsmax,nlmax,nmmax,b_south(0,ithl),nphl,ring,kphi0(ithl)) ! south hemisph. w/o equat
-!              map(istart_south:istart_south+nphl-1) = ring(0:nphl-1)
-!           endif
-!        enddo ! loop on ithl
-! !$OMP end do
-!        if (do_openmp()) then
-!           deallocate(ring)
-!        endif
-! !$OMP end parallel
-!     enddo    ! loop on chunks
-
-!     !     --------------------
-!     !     free memory and exit
-!     !     --------------------
-!     if (.not.do_openmp()) then
-!        deallocate (ring,recfac,dalm)
-!     endif
-!     deallocate(mfac)
-!     deallocate(b_north, b_south)
-!     return
-!   end subroutine alm2map_sc_KLOAD
 
 
   !=======================================================================
@@ -920,7 +725,7 @@
   end subroutine alm2map_sc_pre_KLOAD
 
   !=======================================================================
-  subroutine alm2map_pol_KLOAD(nsmax, nlmax, nmmax, alm_TGC, map_TQU)
+  subroutine alm2map_pol_KLOAD(nsmax, nlmax, nmmax, alm_TGC, map_TQU, zbounds)
     !=======================================================================
     !     computes a map form its alm for the HEALPIX pixelisation
     !      for the Temperature+Polarization field
@@ -928,9 +733,14 @@
     integer(I4B), intent(IN)                   :: nsmax, nlmax, nmmax
     complex(KALMC), intent(IN),  dimension(1:3,0:nlmax,0:nmmax) :: alm_TGC
     real(KMAP),   intent(OUT), dimension(0:(12_i8b*nsmax)*nsmax-1,1:3) :: map_TQU
+    real(DP),     intent(IN),  dimension(1:2),          optional :: zbounds
 
+    real(DP), dimension(1:2)         :: zbounds_in
 #ifdef USE_SHARP
-    call sharp_hp_alm2map_pol_x_KLOAD(nsmax,nlmax,nmmax,alm_TGC,map_TQU)
+    zbounds_in = (/-1.d0 , 1.d0/)
+    if (present(zbounds)) zbounds_in = zbounds
+
+    call sharp_hp_alm2map_pol_x_KLOAD(nsmax,nlmax,nmmax,alm_TGC,map_TQU,zbounds_in)
 #else
 
     integer(I4B) :: l, m, ith                    ! alm related
@@ -955,6 +765,11 @@
     character(LEN=*), parameter :: code = 'ALM2MAP'
     integer(I4B) :: status
     !=======================================================================
+
+    if (present(zbounds)) then
+       call fatal_error(code//&
+            &': zbounds not supported if DONT_USE_SHARP is set at compilation.')
+    endif
 
     ! Healpix definitions
     nrings = 2*nsmax           ! number of isolatitude rings on N. hemisphere + equat
@@ -1147,293 +962,6 @@
     return
 #endif
   end subroutine alm2map_pol_KLOAD
-!   !=======================================================================
-!   subroutine alm2map_pol_KLOAD(nsmax, nlmax, nmmax, alm_TGC, map_TQU)
-!     !=======================================================================
-!     !     computes a map form its alm for the HEALPIX pixelisation
-!     !      for the Temperature+Polarization field
-!     !=======================================================================
-!     integer(I4B), intent(IN)                   :: nsmax, nlmax, nmmax
-!     complex(KALMC), intent(IN),  dimension(1:3,0:nlmax,0:nmmax) :: alm_TGC
-!     real(KMAP),   intent(OUT), dimension(0:12*nsmax**2-1,1:3) :: map_TQU
-
-!     integer(I4B) :: l, m, ith, scalel, scalem ! alm related
-!     integer(I4B) :: istart_south, istart_north   ! map related
-!     integer(I4B) :: nrings, npix, nphmx
-
-!     integer(I4B)                              :: par_lm
-!     real(DP)            :: lam_mm, lam_lm, lam_0, lam_1, lam_2, corfac, cth_ring
-!     real(DP)                 :: lambda_w, lambda_x, normal_m, lam_lm1m
-!     real(DP)                 :: fm2, fl, flm1
-!     real(DP)                 :: a_w, b_w, a_x, fm_on_s2, two_on_s2, two_cth_ring
-!     real(DP)                 :: ovflow, unflow
-!     real(DP),     dimension(-3:8)             :: b_ns
-!     real(DP),     dimension(:,:), allocatable :: recfac, dalm
-!     real(DP),     dimension(:),   allocatable :: lam_fact
-!     real(DP),     dimension(:), allocatable :: mfac
-
-!     integer(i4b)                                :: ll, l_min
-!     real(DP),     dimension(:),     allocatable :: normal_l
-!     complex(DPC), dimension(:,:,:), allocatable :: b_TQU
-!     complex(DPC), dimension(:),     allocatable :: bsub
-!     real(DP),     dimension(:),     allocatable :: ring
-!     integer(i4b)        :: nchunks, chunksize, ichunk, lchk, uchk, ithl, nphl, i
-!     integer(I8B), dimension(0:SMAXCHK) :: startpix
-!     integer(I4B), dimension(0:SMAXCHK) :: nph, kphi0
-!     real(DP),     dimension(0:SMAXCHK) :: cth, sth
-!     real(DP),     dimension(0:SMAXCHK) :: one_on_s2, c_on_s2
-! !    real(sp) :: time0, time1, time2, time3, time4, tt1, tt2
-
-!     character(LEN=*), parameter :: code = 'ALM2MAP'
-!     integer(I4B) :: status
-!     !=======================================================================
-
-!     ! Healpix definitions
-!     nrings = 2*nsmax           ! number of isolatitude rings on N. hemisphere + equat
-!     npix   = (12_I8B*nsmax)*nsmax    ! total number of pixels on the sphere
-!     nphmx  = 4*nsmax           ! maximum number of pixels/ring
-
-!     !     --- allocates space for arrays ---
-!     nchunks   = nrings/SMAXCHK + 1  ! number of chunks
-!     chunksize = (nrings+nchunks-1)/nchunks ! <= SMAXCHK
-
-!     allocate(mfac(0:nmmax),stat = status)
-!     call assert_alloc(status,code,'mfac')
-
-!     allocate(normal_l(0:nlmax),stat = status)
-!     call assert_alloc(status,code,'normal_l')
-
-!     allocate(b_TQU(1:6, 0:nmmax, 0:chunksize-1),stat = status)
-!     call assert_alloc(status,code,'b_TQU')
-
-!     if (.not. do_openmp()) then
-!        allocate(recfac(0:1,0:nlmax), dalm(0:5,0:nlmax), lam_fact(0:nlmax),stat = status)
-!        call assert_alloc(status,code,'recfac, dalm & lam_fact')
-!        allocate(ring(0:nphmx-1),bsub(0:nlmax),stat = status)
-!        call assert_alloc(status,code,'ring & bsub')
-!     endif
-
-!     !     ------------ initiate variables and arrays ----------------
-
-!     call gen_mfac(nmmax,mfac)
-
-!     call init_rescale()
-!     ovflow = rescale_tab(1)
-!     unflow = rescale_tab(-1)
-!     map_TQU = 0.0 ! set the whole map to zero
-!     ! generate Polarization normalisation
-!     call gen_normpol(nlmax, normal_l)
-
-! !     call wall_clock_time(time3)
-! !     tt1 = 0 ; tt2 = 0
-!     ! loop on chunks
-!     do ichunk = 0, nchunks-1
-!        lchk = ichunk * chunksize + 1
-!        uchk = min(lchk+chunksize - 1, nrings)
-
-!        do ith = lchk, uchk
-!           ithl = ith - lchk !local index
-!           ! get pixel location information
-!           call get_pixel_layout(nsmax, ith, cth(ithl), sth(ithl), nph(ithl), startpix(ithl), kphi0(ithl))
-!           one_on_s2(ithl) =    1.0_dp / sth(ithl)**2
-!             c_on_s2(ithl) = cth(ithl) / sth(ithl)**2
-!        enddo
-!        !        -----------------------------------------------------
-!        !        for each theta, and each m, computes
-!        !        b(m,theta) = sum_over_l>m (lambda_l_m(theta) * a_l_m)
-!        !        ------------------------------------------------------
-!        !        lambda_mm tends to go down when m increases (risk of underflow)
-!        !        lambda_lm tends to go up   when l increases (risk of overflow)
-
-
-!        b_TQU = 0_dpc ! pad with zeros
-
-! !$OMP parallel default(none) &
-! !$OMP shared(nlmax, nmmax, lchk, uchk, &
-! !$OMP    rescale_tab, ovflow, unflow, &
-! !$OMP    cth, sth, mfac, normal_l, alm_TGC, b_TQU, one_on_s2, c_on_s2) &
-! !$OMP private(recfac, dalm, lam_fact, b_ns, status, &
-! !$OMP   m, ll, fm2, normal_m, ithl, l_min, &
-! !$OMP   scalem, scalel, corfac, par_lm, &
-! !$OMP   lam_mm, lam_lm, lam_lm1m, lambda_w, lambda_x, lam_0, lam_1, lam_2, &
-! !$OMP   cth_ring, fm_on_s2, two_on_s2, two_cth_ring, a_w, a_x, b_w,  &
-! !$OMP   l, fl, flm1)
-
-!        if (do_openmp()) then
-!           ! allocate thread safe arrays
-!           allocate(recfac(0:1,0:nlmax), dalm(0:5,0:nlmax), lam_fact(0:nlmax),stat = status)
-!           call assert_alloc(status,code,'recfac, dalm & lam_fact')
-!        endif
-
-! !$OMP do schedule(dynamic,1)
-!        do m = 0, nmmax
-!           ! generate recursion factors (recfac) for Ylm of degree m
-!           call gen_recfac(nlmax, m, recfac)
-!           ! generate Ylm relation factor for degree m
-!           call gen_lamfac(nlmax, m, lam_fact)
-!           fm2 = real(m * m, kind = DP)
-!           normal_m = (2.0_dp * m) * (1 - m)
-
-!           ! extract needed alm under memory and CPU efficient form
-!           do ll = m, nlmax
-!              dalm(0,ll) =  real(alm_TGC(1,ll,m),kind=dp) ! T, real
-!              dalm(1,ll) = aimag(alm_TGC(1,ll,m))         ! T, imag
-!              dalm(2,ll) =  real(alm_TGC(2,ll,m),kind=dp)*normal_l(ll) ! G, real
-!              dalm(3,ll) = aimag(alm_TGC(2,ll,m))        *normal_l(ll)
-!              dalm(4,ll) =  real(alm_TGC(3,ll,m),kind=dp)*normal_l(ll) ! C, real
-!              dalm(5,ll) = aimag(alm_TGC(3,ll,m))        *normal_l(ll)
-!           enddo
-!           do ithl = 0, uchk - lchk
-!              l_min =  l_min_ylm(m, sth(ithl)) ! lowest l of non-negligible Ylm
-!              if (nlmax >= l_min) then
-!                 ! determine lam_mm
-!                 call compute_lam_mm(mfac(m), m, sth(ithl), lam_mm, corfac, scalem)
-
-!                 !           ---------- l = m ----------
-!                 par_lm = 3  ! = 3 * (-1)^(l+m)
-!                 lam_lm = corfac * lam_mm !Actual lam_mm 
-
-!                 if (m >= l_min) then ! skip Ymm if too small
-!                    lambda_w =  (normal_m * lam_lm)  * ( 0.5_dp - one_on_s2(ithl) )
-!                    lambda_x =  (normal_m * lam_lm)  *            c_on_s2(ithl)
-
-!                    !      T =   alm_T * Ylm
-!                    !      Q = - alm_E * Wlm - i alm_B * Xlm
-!                    !      U = i alm_E * Xlm -   alm_B * Wlm
-!                    b_ns(-3:-2) = 0.0_dp               ! T odd
-!                    b_ns(-1: 0) =   lambda_x * (/   dalm(5,m), - dalm(4,m) /) ! Q odd
-!                    b_ns( 1: 2) =   lambda_x * (/ - dalm(3,m),   dalm(2,m) /) ! U odd
-! !                    b_ns(-1) =   lambda_x * dalm(5,m) ! Q odd
-! !                    b_ns( 0) =  -lambda_x * dalm(4,m) ! Q odd
-! !                    b_ns( 1) =  -lambda_x * dalm(3,m) ! U odd
-! !                    b_ns( 2) =   lambda_x * dalm(2,m) ! U odd
-
-!                    b_ns( 3: 4) =   lam_lm   * dalm(0:1,m) ! T even
-!                    b_ns( 5: 6) = - lambda_w * dalm(2:3,m) ! Q even
-!                    b_ns( 7: 8) = - lambda_w * dalm(4:5,m) ! U even
-!                 else
-!                    b_ns = 0.0_dp
-!                 endif
-
-!                 !           ---------- l > m ----------
-!                 lam_0 = 0.0_dp
-!                 lam_1 = 1.0_dp
-!                 scalel=0
-!                 cth_ring = cth(ithl)
-!                 lam_2 = cth_ring * lam_1 * recfac(0,m)
-!                 fm_on_s2     =      m * one_on_s2(ithl)
-!                 two_on_s2    = 2.0_dp * one_on_s2(ithl)
-!                 two_cth_ring = 2.0_dp * cth_ring
-!                 b_w          =  c_on_s2(ithl) 
-!                 do l = m+1, nlmax
-!                    par_lm   = - par_lm  ! = 3 * (-1)^(l+m)
-!                    lam_lm1m = lam_lm * lam_fact(l) ! must be incremented even if not used
-!                    lam_lm   = lam_2 * corfac * lam_mm
-!                    if (l >= l_min) then
-
-!                       fl = real(l, kind = DP)
-!                       flm1 = fl - 1.0_dp
-!                       a_w =  two_on_s2 * (fl - fm2)  + flm1 * fl
-!                       a_x =  two_cth_ring * flm1
-!                       lambda_w =                b_w * lam_lm1m - a_w * lam_lm 
-!                       lambda_x = fm_on_s2 * (         lam_lm1m - a_x * lam_lm)
-
-!                       b_ns(par_lm:  par_lm+1) = b_ns(par_lm:  par_lm+1) + lam_lm   * dalm(0:1,l) ! T even or odd
-!                       b_ns(par_lm+2:par_lm+5) = b_ns(par_lm+2:par_lm+5) - lambda_w * dalm(2:5,l) ! Q, U  even or odd
-!                       b_ns(2-par_lm) = b_ns(2-par_lm) + lambda_x * dalm(5,l) ! Q odd (or even)
-!                       b_ns(3-par_lm) = b_ns(3-par_lm) - lambda_x * dalm(4,l)
-!                       b_ns(4-par_lm) = b_ns(4-par_lm) - lambda_x * dalm(3,l) ! U odd (or even)
-!                       b_ns(5-par_lm) = b_ns(5-par_lm) + lambda_x * dalm(2,l)
-!                    endif
-
-!                    lam_0 = lam_1 * recfac(1,l-1)
-!                    lam_1 = lam_2
-!                    lam_2 = (cth_ring * lam_1 - lam_0) * recfac(0,l)
-!                    if (abs(lam_2) > OVFLOW) then
-!                       lam_1 = lam_1*UNFLOW
-!                       lam_2 = lam_2*UNFLOW
-!                       scalel= scalel + 1
-!                       corfac = rescale_tab(max(scalel+scalem,RSMIN))
-!                    elseif (abs(lam_2) < UNFLOW) then
-!                       lam_1 = lam_1*OVFLOW
-!                       lam_2 = lam_2*OVFLOW
-!                       scalel= scalel - 1
-!                       corfac = rescale_tab(max(scalel+scalem,RSMIN))
-!                    endif
-
-!                 enddo ! loop on l
-
-!                 b_TQU(1,m,ithl) = cmplx(b_ns(3) + b_ns(-3), b_ns(4) + b_ns(-2), kind = DP) ! T north
-!                 b_TQU(4,m,ithl) = cmplx(b_ns(3) - b_ns(-3), b_ns(4) - b_ns(-2), kind = DP) ! T south
-!                 b_TQU(2,m,ithl) = cmplx(b_ns(5) + b_ns(-1), b_ns(6) + b_ns( 0), kind = DP) ! Q n
-!                 b_TQU(5,m,ithl) = cmplx(b_ns(5) - b_ns(-1), b_ns(6) - b_ns( 0), kind = DP) ! Q s
-!                 b_TQU(3,m,ithl) = cmplx(b_ns(7) + b_ns( 1), b_ns(8) + b_ns( 2), kind = DP) ! U n
-!                 b_TQU(6,m,ithl) = cmplx(b_ns(7) - b_ns( 1), b_ns(8) - b_ns( 2), kind = DP) ! U s
-!              endif ! test on nlmax
-!           enddo ! loop on rings (ithl)
-!        enddo ! loop on m
-! !$OMP end do
-!        if (do_openmp()) deallocate (recfac,dalm, lam_fact)
-! !$OMP end parallel
-
-
-! !$OMP parallel default(none) &
-! !$OMP  shared(nsmax, nlmax, nmmax, npix, nrings, nphmx, &
-! !$OMP      lchk, uchk, b_TQU, nph, startpix, kphi0, map_TQU) &
-! !$OMP  private(ithl, nphl, istart_north, istart_south, &
-! !$OMP      ith, ring, bsub, i, status)
-
-!        if (do_openmp()) then
-!           allocate(ring(0:nphmx-1),bsub(0:nlmax),stat = status)
-!           call assert_alloc(status,code,'ring & bsub')
-!        endif
-
-! !$OMP do schedule(dynamic,1)
-! !        call wall_clock_time(time2)
-! !        tt2 = tt2 + time2 - time3
-!        do ithl = 0, uchk - lchk
-!           nphl = nph(ithl)
-!           istart_north = startpix(ithl)
-!           istart_south = npix-istart_north-nphl
-!           ith  = ithl + lchk
-!           !        ---------------------------------------------------------------
-!           !        sum_m  b(m,theta)*exp(i*m*phi)   -> f(phi,theta) by FFT
-!           !        ---------------------------------------------------------------
-!           do i=1,3
-!              bsub = b_TQU(i,:,ithl)
-!              call ring_synthesis(nsmax,nlmax,nmmax,bsub,nphl,ring,kphi0(ithl))   ! north hemisph. + equator
-!              map_TQU(istart_north:istart_north+nphl-1, i) = ring(0:nphl-1)
-!           enddo
-
-!           if (ith < nrings) then
-!              do i=1,3
-!                 bsub = b_TQU(3+i,:,ithl)
-!                 call ring_synthesis(nsmax,nlmax,nmmax,bsub,nphl,ring,kphi0(ithl)) ! south hemisph. w/o equat
-!                 map_TQU(istart_south:istart_south+nphl-1, i) = ring(0:nphl-1)
-!              enddo
-!           endif
-!        enddo ! loop on ithl
-! !$OMP end do
-!        if (do_openmp()) deallocate(ring, bsub)
-! !$OMP end parallel
-
-! !        call wall_clock_time(time3)
-! !        tt1 = tt1 + time3 - time2
-
-!     enddo    ! loop on chunks
-! !     print*,'FFT:',tt1
-! !     print*,'the rest:',tt2
-
-!     !     --------------------
-!     !     free memory and exit
-!     !     --------------------
-!     if (.not. do_openmp()) then
-!        deallocate(recfac, dalm, lam_fact, ring, bsub)
-!     endif
-!     deallocate(mfac, normal_l)
-!     deallocate(b_TQU)
-!     return
-!   end subroutine alm2map_pol_KLOAD
 
   !=======================================================================
   subroutine alm2map_pol_pre1_KLOAD(nsmax, nlmax, nmmax, alm_TGC, map_TQU, plm)
@@ -1900,7 +1428,7 @@
 
 
   !=======================================================================
-  subroutine alm2map_sc_der_KLOAD(nsmax, nlmax, nmmax, alm, map, der1, der2)
+  subroutine alm2map_sc_der_KLOAD(nsmax, nlmax, nmmax, alm, map, der1, der2, zbounds)
     !=======================================================================
     !     computes a map and its 1st and 2nd derivative 
     !       from its alm for the HEALPIX pixelisation
@@ -1916,10 +1444,12 @@
     real(KMAP),   INTENT(OUT), dimension(0:(12_i8b*nsmax)*nsmax-1)     :: map
     real(KMAP),   INTENT(OUT), dimension(0:(12_i8b*nsmax)*nsmax-1,1:2) :: der1
     real(KMAP),   INTENT(OUT), dimension(0:(12_i8b*nsmax)*nsmax-1,1:3), optional :: der2
+    real(DP),     intent(IN),  dimension(1:2),         optional :: zbounds
 
     integer(I4B) :: l, m, ith, scalel, scalem ! alm related
     integer(I8B) :: istart_south, istart_north, npix   ! map related
     integer(I4B) :: nrings, nphmx
+    real(DP), dimension(1:2)         :: zbounds_in
 
     integer(I4B)                              :: par_lm
     real(DP)             :: lam_mm, lam_lm, lam_0, lam_1, lam_2, corfac, cth_ring
@@ -1946,12 +1476,15 @@
     integer(I8B), dimension(0:SMAXCHK-1) :: startpix
     integer(I4B), dimension(0:SMAXCHK-1) :: nph,kphi0
     real(DP),     dimension(0:SMAXCHK-1) :: cth, sth, one_on_s
+    logical(LGT), dimension(0:SMAXCHK-1) :: keep_north, keep_south, keep_it
 
     character(len=*), parameter :: code = 'ALM2MAP_DER'
     logical(lgt) :: do_d2
     integer(I4B) :: status
     !=======================================================================
     do_d2 = (present(der2)) ! do 2nd derivative
+    zbounds_in = (/-1.d0 , 1.d0/)
+    if (present(zbounds)) zbounds_in = zbounds
 
     ! Healpix definitions
     nrings = 2*nsmax           ! number of isolatitude rings on N. hemisphere + equat
@@ -2004,6 +1537,8 @@
           ! get pixel location information
           call get_pixel_layout(nsmax, ith, cth(ithl), sth(ithl), nph(ithl), startpix(ithl), kphi0(ithl))
           one_on_s(ithl)  = 1.0_dp / sth(ithl)
+          ! find out which rings are to be synthetized
+          call select_rings(cth(ithl), zbounds_in, keep_north(ithl), keep_south(ithl), keep_it(ithl))
        enddo
        !        -----------------------------------------------------
        !        for each theta, and each m, computes
@@ -2027,7 +1562,8 @@
 !$OMP    cth, sth, mfac, alm, one_on_s,  &
 !$OMP      b_north, b_south, b_north_t, b_south_t, &
 !$OMP      b_north_p,  b_south_p,  b_north_tt, b_south_tt, &
-!$OMP      b_north_tp, b_south_tp, b_north_pp, b_south_pp, do_d2 ) &
+!$OMP      b_north_tp, b_south_tp, b_north_pp, b_south_pp, do_d2, &
+!$OMP      keep_north, keep_south, keep_it ) &
 !$OMP private(recfac, dalm, lam_fact, status, &
 !$OMP   m, ll, fm, f2m, fm2, ithl, l_min, &
 !$OMP   scalem, scalel, corfac, par_lm, &
@@ -2060,7 +1596,7 @@
 
           do ithl = 0, uchk - lchk
              l_min = l_min_ylm(m, sth(ithl))
-             if (nlmax >= l_min) then ! skip calculations when Ylm too small
+             if (keep_it(ithl) .and. nlmax >= l_min) then ! skip calculations when Ylm too small, and skip irrelevant rings
                 ! determine lam_mm
                 call compute_lam_mm(mfac(m), m, sth(ithl), lam_mm, corfac, scalem)
 
@@ -2157,18 +1693,24 @@
                 enddo ! loop on l
 
                 one_on_s1 = one_on_s(ithl)
-                b_north(m,ithl)   = cmplx(b_ns(1) + b_ns(-1), b_ns(2) + b_ns(0), kind=DP)
-                b_south(m,ithl)   = cmplx(b_ns(1) - b_ns(-1), b_ns(2) - b_ns(0), kind=DP)
-                b_north_t(m,ithl) = cmplx(b_ns_t(1) + b_ns_t(-1), b_ns_t(2) + b_ns_t(0), kind=DP)
-                b_south_t(m,ithl) = cmplx(b_ns_t(1) - b_ns_t(-1), b_ns_t(2) - b_ns_t(0), kind=DP)
-                b_north_p(m,ithl) = cmplx(b_ns_p(1) + b_ns_p(-1), b_ns_p(2) + b_ns_p(0), kind=DP)*one_on_s1
-                b_south_p(m,ithl) = cmplx(b_ns_p(1) - b_ns_p(-1), b_ns_p(2) - b_ns_p(0), kind=DP)*one_on_s1
-                if (do_d2) then
+                if (keep_north(ithl)) then
+                   b_north  (m,ithl) = cmplx(b_ns(1)   + b_ns(-1),   b_ns(2)   + b_ns(0),   kind=DP)
+                   b_north_t(m,ithl) = cmplx(b_ns_t(1) + b_ns_t(-1), b_ns_t(2) + b_ns_t(0), kind=DP)
+                   b_north_p(m,ithl) = cmplx(b_ns_p(1) + b_ns_p(-1), b_ns_p(2) + b_ns_p(0), kind=DP)*one_on_s1
+                endif
+                if (keep_south(ithl)) then
+                   b_south  (m,ithl) = cmplx(b_ns(1)   - b_ns(-1),   b_ns(2)   - b_ns(0),   kind=DP)
+                   b_south_t(m,ithl) = cmplx(b_ns_t(1) - b_ns_t(-1), b_ns_t(2) - b_ns_t(0), kind=DP)
+                   b_south_p(m,ithl) = cmplx(b_ns_p(1) - b_ns_p(-1), b_ns_p(2) - b_ns_p(0), kind=DP)*one_on_s1
+                endif
+                if (do_d2 .and. keep_north(ithl)) then
                    b_north_tt(m,ithl) = cmplx(b_ns_tt(1) + b_ns_tt(-1), b_ns_tt(2) + b_ns_tt(0), kind=DP)
-                   b_south_tt(m,ithl) = cmplx(b_ns_tt(1) - b_ns_tt(-1), b_ns_tt(2) - b_ns_tt(0), kind=DP)
-                   b_north_tp(m,ithl) = cmplx(b_ns_tp(1) + b_ns_tp(-1), b_ns_tp(2) + b_ns_tp(0), kind=DP)*one_on_s1
-                   b_south_tp(m,ithl) = cmplx(b_ns_tp(1) - b_ns_tp(-1), b_ns_tp(2) - b_ns_tp(0), kind=DP)*one_on_s1
                    b_north_pp(m,ithl) = cmplx(b_ns_pp(1) + b_ns_pp(-1), b_ns_pp(2) + b_ns_pp(0), kind=DP)*one_on_s2
+                   b_north_tp(m,ithl) = cmplx(b_ns_tp(1) + b_ns_tp(-1), b_ns_tp(2) + b_ns_tp(0), kind=DP)*one_on_s1
+                endif
+                if (do_d2 .and. keep_south(ithl)) then
+                   b_south_tt(m,ithl) = cmplx(b_ns_tt(1) - b_ns_tt(-1), b_ns_tt(2) - b_ns_tt(0), kind=DP)
+                   b_south_tp(m,ithl) = cmplx(b_ns_tp(1) - b_ns_tp(-1), b_ns_tp(2) - b_ns_tp(0), kind=DP)*one_on_s1
                    b_south_pp(m,ithl) = cmplx(b_ns_pp(1) - b_ns_pp(-1), b_ns_pp(2) - b_ns_pp(0), kind=DP)*one_on_s2
                 endif
              endif ! test on nlmax
@@ -2183,7 +1725,8 @@
 !$OMP      lchk, uchk, b_north, b_south, b_north_t, b_south_t, &
 !$OMP      b_north_p,  b_south_p,  b_north_tt, b_south_tt, &
 !$OMP      b_north_tp, b_south_tp, b_north_pp, b_south_pp, &
-!$OMP      nph, startpix, kphi0, map, der1, der2, do_d2) &
+!$OMP      nph, startpix, kphi0, map, der1, der2, do_d2, &
+!$OMP      keep_north, keep_south, keep_it ) &
 !$OMP  private(ithl, nphl, istart_north, istart_south, &
 !$OMP      ith, ring, status)
 
@@ -2203,23 +1746,25 @@
        !        ---------------------------------------------------------------
        !        sum_m  b(m,theta)*exp(i*m*phi)   -> f(phi,theta)
        !        ---------------------------------------------------------------
-          call ring_synthesis(nsmax,nlmax,nmmax,b_north(0,ithl),   nphl,ring,kphi0(ithl))   ! north hemisph. + equator
-          map(istart_north:istart_north+nphl-1) = ring(0:nphl-1)
+          if (keep_north(ithl)) then
+             call ring_synthesis(nsmax,nlmax,nmmax,b_north(0,ithl),   nphl,ring,kphi0(ithl))   ! north hemisph. + equator
+             map(istart_north:istart_north+nphl-1) = ring(0:nphl-1)
 
-          call ring_synthesis(nsmax,nlmax,nmmax,b_north_t(0,ithl), nphl,ring,kphi0(ithl))
-          der1(istart_north:istart_north+nphl-1,1) = ring(0:nphl-1)
-          call ring_synthesis(nsmax,nlmax,nmmax,b_north_p(0,ithl), nphl,ring,kphi0(ithl))
-          der1(istart_north:istart_north+nphl-1,2) = ring(0:nphl-1)
-          if (do_d2) then
-             call ring_synthesis(nsmax,nlmax,nmmax,b_north_tt(0,ithl),nphl,ring,kphi0(ithl))
-             der2(istart_north:istart_north+nphl-1,1) = ring(0:nphl-1)
-             call ring_synthesis(nsmax,nlmax,nmmax,b_north_tp(0,ithl),nphl,ring,kphi0(ithl))
-             der2(istart_north:istart_north+nphl-1,2) = ring(0:nphl-1)
-             call ring_synthesis(nsmax,nlmax,nmmax,b_north_pp(0,ithl),nphl,ring,kphi0(ithl))
-             der2(istart_north:istart_north+nphl-1,3) = ring(0:nphl-1)
+             call ring_synthesis(nsmax,nlmax,nmmax,b_north_t(0,ithl), nphl,ring,kphi0(ithl))
+             der1(istart_north:istart_north+nphl-1,1) = ring(0:nphl-1)
+             call ring_synthesis(nsmax,nlmax,nmmax,b_north_p(0,ithl), nphl,ring,kphi0(ithl))
+             der1(istart_north:istart_north+nphl-1,2) = ring(0:nphl-1)
+             if (do_d2) then
+                call ring_synthesis(nsmax,nlmax,nmmax,b_north_tt(0,ithl),nphl,ring,kphi0(ithl))
+                der2(istart_north:istart_north+nphl-1,1) = ring(0:nphl-1)
+                call ring_synthesis(nsmax,nlmax,nmmax,b_north_tp(0,ithl),nphl,ring,kphi0(ithl))
+                der2(istart_north:istart_north+nphl-1,2) = ring(0:nphl-1)
+                call ring_synthesis(nsmax,nlmax,nmmax,b_north_pp(0,ithl),nphl,ring,kphi0(ithl))
+                der2(istart_north:istart_north+nphl-1,3) = ring(0:nphl-1)
+             endif
           endif
           
-          if (ith < nrings) then
+          if (keep_south(ithl) .and. ith < nrings) then
              call ring_synthesis(nsmax,nlmax,nmmax,b_south(0,ithl),  nphl,ring,kphi0(ithl)) ! south hemisph. w/o equat
              map(istart_south:istart_south+nphl-1) = ring(0:nphl-1)
              
@@ -2263,7 +1808,7 @@
   end subroutine alm2map_sc_der_KLOAD
 
   !=======================================================================
-  subroutine alm2map_pol_der_KLOAD(nsmax, nlmax, nmmax, alm_TGC, map_TQU, der1, der2)
+  subroutine alm2map_pol_der_KLOAD(nsmax, nlmax, nmmax, alm_TGC, map_TQU, der1, der2, zbounds)
     !=======================================================================
     !     computes a map and its 1st and 2nd derivative 
     !       from its alm for the HEALPIX pixelisation
@@ -2284,10 +1829,12 @@
     real(KMAP),   INTENT(OUT), dimension(0:(12_i8b*nsmax)*nsmax-1,1:3)     :: map_TQU
     real(KMAP),   INTENT(OUT), dimension(0:(12_i8b*nsmax)*nsmax-1,1:6) :: der1
     real(KMAP),   INTENT(OUT), dimension(0:(12_i8b*nsmax)*nsmax-1,1:9), optional :: der2
+    real(DP),     intent(IN),  dimension(1:2),         optional :: zbounds
 
     integer(I4B) :: l, m, ith ! alm related
     integer(I8B) :: istart_south, istart_north, npix   ! map related
     integer(I4B) :: nrings, nphmx
+    real(DP), dimension(1:2)         :: zbounds_in
 
     integer(I4B)                              :: par_lm, k, k0, k1, di
     real(DP)             :: lam_mm, cth_ring
@@ -2311,12 +1858,15 @@
     integer(I8B), dimension(0:SMAXCHK-1) :: startpix
     integer(I4B), dimension(0:SMAXCHK-1) :: nph,kphi0
     real(DP),     dimension(0:SMAXCHK-1) :: cth, sth, one_on_s
+    logical(LGT), dimension(0:SMAXCHK-1) :: keep_north, keep_south, keep_it
 
     character(len=*), parameter :: code = 'ALM2MAP_DER'
     logical(lgt) :: do_d2
     integer(I4B) :: status
     !=======================================================================
     do_d2 = (present(der2)) ! do 2nd derivative
+    zbounds_in = (/-1.d0 , 1.d0/)
+    if (present(zbounds)) zbounds_in = zbounds
 
     ! Healpix definitions
     nrings = 2*nsmax           ! number of isolatitude rings on N. hemisphere + equat
@@ -2369,6 +1919,8 @@
           ! get pixel location information
           call get_pixel_layout(nsmax, ith, cth(ithl), sth(ithl), nph(ithl), startpix(ithl), kphi0(ithl))
           one_on_s(ithl)  = 1.0_dp / sth(ithl)
+          ! find out which rings are to be synthetized
+          call select_rings(cth(ithl), zbounds_in, keep_north(ithl), keep_south(ithl), keep_it(ithl))
        enddo
        !        -----------------------------------------------------
        !        for each theta, and each m, computes
@@ -2384,7 +1936,8 @@
 !$OMP shared(nlmax, nmmax, lchk, uchk, &
 !$OMP    rescale_tab, normal_l, &
 !$OMP    cth, sth, mfac, alm_TGC, one_on_s,  &
-!$OMP      b_d1, b_d2, do_d2 ) &
+!$OMP      b_d1, b_d2, do_d2, &
+!$OMP      keep_north, keep_south, keep_it ) &
 !$OMP private(recfac, dalm, lam_fact, lam_fact_der, status, &
 !$OMP   m, ll, fm, f2m, fm2, ithl, l_min, k, k0, k1, &
 !$OMP   par_lm, lam_lm, lam_lm1m, &
@@ -2424,7 +1977,7 @@
 
           do ithl = 0, uchk - lchk
              l_min = l_min_ylm(m, sth(ithl))
-             if (nlmax >= l_min) then ! skip calculations when Ylm too small
+             if (keep_it(ithl) .and. nlmax >= l_min) then ! skip calculations when Ylm too small, and skip irrelevant rings
 
                 ! compute lam_lm(p,theta) for all l>=m
                 call do_lam_lm_pol(nlmax, m, cth(ithl), sth(ithl), mfac(m), recfac, lam_fact, lam_lm)
@@ -2531,41 +2084,55 @@
                 do k=0,2 ! loop on T,Q,U
                    k0 = 2*k
                    k1 = k0+1
-                   ! fields
-                   b_d1(0+k,m,ithl)   = cmplx(b_ns(k0+3) + b_ns(k0-3), &
-                        &                     b_ns(k1+3) + b_ns(k1-3), kind=DP) ! north=Even+Odd
-                   b_d1(3+k,m,ithl)   = cmplx(b_ns(k0+3) - b_ns(k0-3), &
-                        &                     b_ns(k1+3) - b_ns(k1-3), kind=DP) ! south=Even-Odd
-                   ! dfield/dtheta
-                   b_d1(6+k,m,ithl)   = cmplx(b_ns_t(k0+3) + b_ns_t(k0-3), &
-                        &                     b_ns_t(k1+3) + b_ns_t(k1-3), kind=DP) ! north=Even+Odd
-                   b_d1(9+k,m,ithl)   = cmplx(b_ns_t(k0+3) - b_ns_t(k0-3), &
-                        &                     b_ns_t(k1+3) - b_ns_t(k1-3), kind=DP) ! south=Even-Odd
-                   ! dfield/dphi/sin(theta)
-                   b_d1(12+k,m,ithl)  = cmplx(b_ns_p(k0+3) + b_ns_p(k0-3), &
-                        &                     b_ns_p(k1+3) + b_ns_p(k1-3), kind=DP)*one_on_s1
-                   b_d1(15+k,m,ithl)  = cmplx(b_ns_p(k0+3) - b_ns_p(k0-3), &
-                        &                     b_ns_p(k1+3) - b_ns_p(k1-3), kind=DP)*one_on_s1
+                   if (keep_north(ithl)) then
+                      ! fields
+                      b_d1(0+k,m,ithl)   = cmplx(b_ns(k0+3) + b_ns(k0-3), &
+                           &                     b_ns(k1+3) + b_ns(k1-3), kind=DP) ! north=Even+Odd
+                      ! dfield/dtheta
+                      b_d1(6+k,m,ithl)   = cmplx(b_ns_t(k0+3) + b_ns_t(k0-3), &
+                           &                     b_ns_t(k1+3) + b_ns_t(k1-3), kind=DP) ! north=Even+Odd
+                      ! dfield/dphi/sin(theta)
+                      b_d1(12+k,m,ithl)  = cmplx(b_ns_p(k0+3) + b_ns_p(k0-3), &
+                           &                     b_ns_p(k1+3) + b_ns_p(k1-3), kind=DP)*one_on_s1
+                   endif
+                   if (keep_south(ithl)) then
+                      ! fields
+                      b_d1(3+k,m,ithl)   = cmplx(b_ns(k0+3) - b_ns(k0-3), &
+                           &                     b_ns(k1+3) - b_ns(k1-3), kind=DP) ! south=Even-Odd
+                      ! dfield/dtheta
+                      b_d1(9+k,m,ithl)   = cmplx(b_ns_t(k0+3) - b_ns_t(k0-3), &
+                           &                     b_ns_t(k1+3) - b_ns_t(k1-3), kind=DP) ! south=Even-Odd
+                      ! dfield/dphi/sin(theta)
+                      b_d1(15+k,m,ithl)  = cmplx(b_ns_p(k0+3) - b_ns_p(k0-3), &
+                           &                     b_ns_p(k1+3) - b_ns_p(k1-3), kind=DP)*one_on_s1
+                   endif
                 enddo
                 if (do_d2) then
                    do k=0,2 ! loop on T,Q,U
                       k0 = 2*k
                       k1 = k0+1
-                      ! dfield/dtheta^2
-                      b_d2(0+k,m,ithl)   = cmplx(b_ns_tt(k0+3) + b_ns_tt(k0-3), &
-                           &                     b_ns_tt(k1+3) + b_ns_tt(k1-3), kind=DP)
-                      b_d2(3+k,m,ithl)   = cmplx(b_ns_tt(k0+3) - b_ns_tt(k0-3), &
-                           &                     b_ns_tt(k1+3) - b_ns_tt(k1-3), kind=DP)
-                      ! dfield/dtheta/dphi/sin(theta)
-                      b_d2(6+k,m,ithl)   = cmplx(b_ns_tp(k0+3) + b_ns_tp(k0-3), &
-                           &                     b_ns_tp(k1+3) + b_ns_tp(k1-3), kind=DP)*one_on_s1
-                      b_d2(9+k,m,ithl)   = cmplx(b_ns_tp(k0+3) - b_ns_tp(k0-3), &
-                           &                     b_ns_tp(k1+3) - b_ns_tp(k1-3), kind=DP)*one_on_s1
-                      ! dfield/dphi&2/sin(theta)^2
-                      b_d2(12+k,m,ithl)  = cmplx(b_ns_pp(k0+3) + b_ns_pp(k0-3), &
+                      if (keep_north(ithl)) then
+                         ! dfield/dtheta^2
+                         b_d2(0+k,m,ithl)   = cmplx(b_ns_tt(k0+3) + b_ns_tt(k0-3), &
+                              &                     b_ns_tt(k1+3) + b_ns_tt(k1-3), kind=DP)
+                         ! dfield/dtheta/dphi/sin(theta)
+                         b_d2(6+k,m,ithl)   = cmplx(b_ns_tp(k0+3) + b_ns_tp(k0-3), &
+                              &                     b_ns_tp(k1+3) + b_ns_tp(k1-3), kind=DP)*one_on_s1
+                         ! dfield/dphi&2/sin(theta)^2
+                         b_d2(12+k,m,ithl)  = cmplx(b_ns_pp(k0+3) + b_ns_pp(k0-3), &
                            &                     b_ns_pp(k1+3) + b_ns_pp(k1-3), kind=DP)*one_on_s2
-                      b_d2(15+k,m,ithl)  = cmplx(b_ns_pp(k0+3) - b_ns_pp(k0-3), &
-                           &                     b_ns_pp(k1+3) - b_ns_pp(k1-3), kind=DP)*one_on_s2
+                      endif
+                      if (keep_south(ithl)) then 
+                         ! dfield/dtheta^2
+                         b_d2(3+k,m,ithl)   = cmplx(b_ns_tt(k0+3) - b_ns_tt(k0-3), &
+                              &                     b_ns_tt(k1+3) - b_ns_tt(k1-3), kind=DP)
+                         ! dfield/dtheta/dphi/sin(theta)
+                         b_d2(9+k,m,ithl)   = cmplx(b_ns_tp(k0+3) - b_ns_tp(k0-3), &
+                              &                     b_ns_tp(k1+3) - b_ns_tp(k1-3), kind=DP)*one_on_s1
+                         ! dfield/dphi&2/sin(theta)^2
+                         b_d2(15+k,m,ithl)  = cmplx(b_ns_pp(k0+3) - b_ns_pp(k0-3), &
+                              &                     b_ns_pp(k1+3) - b_ns_pp(k1-3), kind=DP)*one_on_s2
+                      endif
                    enddo
                 endif
              endif ! test on nlmax
@@ -2578,7 +2145,8 @@
 !$OMP parallel default(none) &
 !$OMP  shared(nsmax, nlmax, nmmax, npix, nrings, nphmx, &
 !$OMP      lchk, uchk, b_d1, b_d2, &
-!$OMP      nph, startpix, kphi0, map_TQU, der1, der2, do_d2) &
+!$OMP      nph, startpix, kphi0, map_TQU, der1, der2, do_d2, &
+!$OMP      keep_north, keep_south, keep_it ) &
 !$OMP  private(ithl, nphl, istart_north, istart_south, &
 !$OMP      ith, ring, bline, status, k0, di)
 
@@ -2600,23 +2168,25 @@
        !        ---------------------------------------------------------------
        !        sum_m  b(m,theta)*exp(i*m*phi)   -> f(phi,theta)
        !        ---------------------------------------------------------------
-          do k0=0,2
-             bline = b_d1(k0, 0:nmmax, ithl)
-             call ring_synthesis(nsmax,nlmax,nmmax,bline,   nphl,ring,kphi0(ithl))   ! north hemisph. + equator
-             map_TQU(istart_north:istart_north+nphl-1,k0+1) = ring(0:nphl-1)
-          enddo
-          do k0=0,2
-             bline = b_d1(6+k0, 0:nmmax, ithl)
-             call ring_synthesis(nsmax,nlmax,nmmax,bline,   nphl,ring,kphi0(ithl))   ! north hemisph. + equator
-             der1(istart_north:istart_north+nphl-1,k0+1) = ring(0:nphl-1)
-          enddo
-          do k0=0,2
-             bline = b_d1(12+k0, 0:nmmax, ithl)
-             call ring_synthesis(nsmax,nlmax,nmmax,bline,   nphl,ring,kphi0(ithl))   ! north hemisph. + equator
-             der1(istart_north:istart_north+nphl-1,k0+4) = ring(0:nphl-1)
-          enddo
+          if (keep_north(ithl)) then
+             do k0=0,2
+                bline = b_d1(k0, 0:nmmax, ithl)
+                call ring_synthesis(nsmax,nlmax,nmmax,bline,   nphl,ring,kphi0(ithl))   ! north hemisph. + equator
+                map_TQU(istart_north:istart_north+nphl-1,k0+1) = ring(0:nphl-1)
+             enddo
+             do k0=0,2
+                bline = b_d1(6+k0, 0:nmmax, ithl)
+                call ring_synthesis(nsmax,nlmax,nmmax,bline,   nphl,ring,kphi0(ithl))   ! north hemisph. + equator
+                der1(istart_north:istart_north+nphl-1,k0+1) = ring(0:nphl-1)
+             enddo
+             do k0=0,2
+                bline = b_d1(12+k0, 0:nmmax, ithl)
+                call ring_synthesis(nsmax,nlmax,nmmax,bline,   nphl,ring,kphi0(ithl))   ! north hemisph. + equator
+                der1(istart_north:istart_north+nphl-1,k0+4) = ring(0:nphl-1)
+             enddo
+          endif
 
-          if (ith < nrings) then
+          if (keep_south(ithl) .and. ith < nrings) then
              do k0=0,2
                 bline = b_d1(3+k0, 0:nmmax, ithl)
                 call ring_synthesis(nsmax,nlmax,nmmax,bline,   nphl,ring,kphi0(ithl))   ! south hemisph. w/o equat
@@ -2634,14 +2204,16 @@
              enddo
           endif
           if (do_d2) then
-             do di = 0,2
-                do k0=0,2
-                   bline = b_d2(k0+6*di, 0:nmmax, ithl)
-                   call ring_synthesis(nsmax,nlmax,nmmax,bline,   nphl,ring,kphi0(ithl))   ! north hemisph. + equator
-                   der2(istart_north:istart_north+nphl-1,k0+3*di+1) = ring(0:nphl-1)
+             if (keep_north(ithl)) then
+                do di = 0,2
+                   do k0=0,2
+                      bline = b_d2(k0+6*di, 0:nmmax, ithl)
+                      call ring_synthesis(nsmax,nlmax,nmmax,bline,   nphl,ring,kphi0(ithl))   ! north hemisph. + equator
+                      der2(istart_north:istart_north+nphl-1,k0+3*di+1) = ring(0:nphl-1)
+                   enddo
                 enddo
-             enddo
-             if (ith < nrings) then
+             endif
+             if (keep_south(ithl) .and. ith < nrings) then
                 do di = 0,2
                    do k0=0,2
                       bline = b_d2(k0+6*di+3, 0:nmmax, ithl)
@@ -2766,209 +2338,6 @@
     return
   end subroutine map2alm_old_pol2_KLOAD
 
-!   !=======================================================================
-!   subroutine map2alm_sc_test_KLOAD(nsmax, nlmax, nmmax, map, alm, zbounds, w8ring)
-!     !=======================================================================
-!     !     computes the a(l,m) from a Temperature map for the HEALPIX pixelisation
-!     !        all from scratch
-!     !=======================================================================
-!     integer(I4B), intent(IN)                    :: nsmax, nlmax, nmmax
-!     real(KMAP),   intent(IN),  dimension(    0:12*nsmax**2-1) :: map
-!     complex(KALMC), intent(OUT), dimension(1:1,0:nlmax,0:nmmax) :: alm
-!     real(DP),     intent(IN),  dimension(1:2),         optional :: zbounds
-!     real(DP),     intent(IN),  dimension(1:2*nsmax,1), optional :: w8ring
-
-!     real(DP), dimension(1:2)         :: zbounds_in
-!     real(DP), dimension(1:2*nsmax,1) :: w8ring_in
-!     integer(I4B) :: l, m, ith                   ! alm related
-!     integer(I4B) :: istart_south, istart_north  ! map related
-!     integer(I4B) :: nrings, npix, nphmx
-!     real(DP)     :: omega_pix
-
-!     real(DP),     dimension(-1:2)             :: phas_sd
-!     real(DP),     dimension(:,:), allocatable :: dalm, recfac
-!     real(DP),     dimension(:),   allocatable :: mfac, lam_lm
-
-!     integer(I4B)                              :: l_min, l_start
-!     complex(DPC)                              :: php, phm
-!     complex(DPC), dimension(:,:), allocatable :: phas_n, phas_s
-!     real(DP),     dimension(:),   allocatable :: ring
-!     integer(I4B)                   :: nchunks, chunksize, ichunk, lchk, uchk, ithl, nphl
-!     integer(I8B), dimension(0:SMAXCHK-1) :: startpix
-!     integer(I4B), dimension(0:SMAXCHK-1) :: nph, kphi0
-!     real(DP),     dimension(0:SMAXCHK-1) :: cth, sth
-!     logical(LGT), dimension(0:SMAXCHK-1) :: keep_north, keep_south, keep_it
-
-!     character(LEN=*), PARAMETER :: code = 'MAP2ALM'
-!     integer(I4B) :: status
-!     !=======================================================================
-
-!     zbounds_in = (/-1.d0 , 1.d0/)
-!     if (present(zbounds)) zbounds_in = zbounds
-!     w8ring_in  = 1.d0
-!     if (present(w8ring))  w8ring_in  = w8ring
-
-!     ! Healpix definitions
-!     nrings = 2*nsmax           ! number of isolatitude rings on N. hemisphere + equat
-!     npix   = (12_I8B*nsmax)*nsmax    ! total number of pixels on the sphere
-!     nphmx  = 4*nsmax           ! maximum number of pixels/ring
-!     omega_pix = FOURPI / real(npix, kind=DP)  ! pixel area (identical for all pixels)
-
-!     !     --- allocates space for arrays ---
-!     nchunks   = nrings/SMAXCHK + 1  ! number of chunks
-!     chunksize = (nrings+nchunks-1)/nchunks ! <= SMAXCHK
-
-!     allocate(mfac(0:nmmax),stat = status)
-!     call assert_alloc(status,code,'mfac')
-
-!     allocate(phas_n(0:nmmax,0:chunksize-1),stat = status)
-!     call assert_alloc(status,code,'phas_n')
-
-!     allocate(phas_s(0:nmmax,0:chunksize-1),stat = status)
-!     call assert_alloc(status,code,'phas_s')
-
-!     if (.not.do_openmp()) then
-!        allocate(ring(0:nphmx-1),stat = status)
-!        call assert_alloc(status,code,'ring')
-!        allocate(recfac(0:1,0:nlmax),stat = status)
-!        call assert_alloc(status,code,'recfac')
-!        allocate(dalm(1:2,0:nlmax),stat = status)
-!        call assert_alloc(status,code,'dalm')
-!        allocate(lam_lm(0:nlmax), stat = status)
-!        call assert_alloc(status,code,'lam_lm')
-!     endif
-!     !     ------------ initiate variables and arrays ----------------
-
-!     call gen_mfac(nmmax,mfac)
-
-!     call init_rescale()
-!     alm = 0.0 ! set the whole alm array to zero
-
-!     ! loop on chunks
-!     do ichunk = 0, nchunks-1
-!        lchk = ichunk * chunksize + 1
-!        uchk = min(lchk+chunksize - 1, nrings)
-
-!        do ith = lchk, uchk
-!           ithl = ith - lchk !local index
-!           ! get pixel location information
-!           call get_pixel_layout(nsmax, ith, cth(ithl), sth(ithl), nph(ithl), startpix(ithl), kphi0(ithl))
-!           ! find out which rings are to be analysed
-!           call select_rings(cth(ithl), zbounds_in, keep_north(ithl), keep_south(ithl), keep_it(ithl))
-!        enddo
-
-!        !-----------------------------------------------------------------------
-!        !  computes the integral in phi : phas_m(theta)
-!        !  for each parallele from Pole to Equator (use symmetry for S. Hemisphere)
-!        !-----------------------------------------------------------------------
-!        phas_n = 0_dpc
-!        phas_s = 0_dpc
-
-! !$OMP parallel default(none) &
-! !$OMP  shared(nsmax, nlmax, nmmax, npix, nrings, nphmx, &
-! !$OMP      lchk, uchk, nph, startpix, kphi0, w8ring_in, phas_n, phas_s, &
-! !$OMP      keep_north, keep_south, map) &
-! !$OMP  private(ithl, nphl, istart_north, istart_south, ith, ring, status)
-
-!        if (do_openmp())then
-!           allocate(ring(0:nphmx-1),stat = status)
-!           call assert_alloc(status,code,'ring')
-!        endif
-! !$OMP do schedule(dynamic,1)
-!        do ith = lchk, uchk
-!           ithl = ith - lchk !local index
-!           nphl = nph(ithl)
-!           istart_north = startpix(ithl)
-!           istart_south = npix-istart_north-nphl
-!           ! do Fourier Transform on rings
-!           if (keep_north(ithl)) then
-!              ring(0:nphl-1) = map(istart_north:istart_north+nphl-1) * w8ring_in(ith,1)
-!              call ring_analysis(nsmax, nlmax, nmmax, ring, nphl, phas_n(0,ithl), kphi0(ithl))
-!           endif
-
-!           if (ith < nrings .and. keep_south(ithl)) then
-!              ring(0:nphl-1) = map(istart_south:istart_south+nphl-1) * w8ring_in(ith,1)
-!              call ring_analysis(nsmax, nlmax, nmmax, ring, nphl, phas_s(0,ithl), kphi0(ithl))
-!           endif
-!        enddo ! loop on ring
-! !$OMP end do
-!        if (do_openmp()) then
-!           deallocate(ring)
-!        endif
-! !$OMP end parallel
-!        !-----------------------------------------------------------------------
-!        !              computes the a_lm by integrating over theta
-!        !                  lambda_lm(theta) * phas_m(theta)
-!        !                         for each m and l
-!        !-----------------------------------------------------------------------
-
-! !$OMP parallel default(none) &
-! !$OMP shared(nlmax, nmmax, lchk, uchk, rescale_tab, &
-! !$OMP    cth, sth, mfac, alm, phas_n, phas_s, keep_it, omega_pix) &
-! !$OMP private(recfac, dalm, lam_lm, phas_sd, status, m, l, ithl, l_min, l_start, php, phm)
-
-!        if (do_openmp()) then
-!           allocate(recfac(0:1,0:nlmax),stat = status)
-!           call assert_alloc(status,code,'recfac')
-!           allocate(dalm(1:2,0:nlmax),stat = status)
-!           call assert_alloc(status,code,'dalm')
-!           allocate(lam_lm(0:nlmax), stat = status)
-!           call assert_alloc(status,code,'lam_lm')
-!        endif
-
-! !$OMP do schedule(dynamic,1)
-!        do m = 0, nmmax
-!           ! generate recursion factors (recfac) for Ylm of degree m
-!           call gen_recfac(nlmax, m, recfac)
-
-!           ! introduce double precision vector to perform summation over ith for each l
-!           dalm(1:2, m:nlmax ) = 0.0_dp
-
-!           do ithl = 0, uchk - lchk
-!              l_min = l_min_ylm(m, sth(ithl))
-!              if (keep_it(ithl) .and. nlmax >= l_min) then ! avoid un-necessary calculations (EH, 09-2001)
-!                 ! compute lam_lm(theta) for all l>=m
-!                 call do_lam_lm(nlmax, m, cth(ithl), sth(ithl), mfac(m), recfac, lam_lm)
-
-!                 php = phas_n(m,ithl) + phas_s(m,ithl) ! sum  (if (l+m) even)
-!                 phm = phas_n(m,ithl) - phas_s(m,ithl) ! diff (if (l+m) odd)
-!                 phas_sd(-1:0) =  (/ real(phm, kind=dp), aimag(phm) /)
-!                 phas_sd( 1:2) =  (/ real(php, kind=dp), aimag(php) /)
-                
-!                 l_start = max(m, l_min) ! even values of (l+m)
-!                 if (mod(m+l_start,2) == 1) l_start = l_start + 1
-!                 do l = l_start, nlmax, 2
-!                    dalm(1:2, l) = dalm(1:2, l) + lam_lm(l) * phas_sd(1:2)
-!                 enddo
-!                 l_start = max(m+1, l_min) ! odd values of (l+m)
-!                 if (mod(m+l_start,2) == 0) l_start = l_start + 1
-!                 do l = l_start, nlmax, 2
-!                    dalm(1:2, l) = dalm(1:2, l) + lam_lm(l) * phas_sd(-1:0)
-!                 enddo
-
-!              endif ! test on cut sky and nlmax
-!           enddo ! loop on ithl
-!           do l = m, nlmax
-!              alm(1, l, m) = alm(1, l, m) + cmplx(dalm(1, l), dalm(2, l), kind=DP) * omega_pix
-!           enddo
-!        enddo ! loop on m
-! !$OMP end do
-!        if (do_openmp()) then
-!           deallocate (recfac,dalm,lam_lm)
-!        endif
-! !$OMP end parallel
-!     enddo ! loop on chunks
-
-!     !     --------------------
-!     !     free memory and exit
-!     !     --------------------
-!     deallocate(phas_n,phas_s)
-!     deallocate(mfac)
-!     if (.not.do_openmp()) then
-!        deallocate (recfac,dalm,lam_lm,ring)
-!     endif
-!     RETURN
-!   END subroutine map2alm_sc_test_KLOAD
 
   !=======================================================================
   subroutine map2alm_sc_KLOAD(nsmax, nlmax, nmmax, map, alm, zbounds, w8ring)
@@ -3672,243 +3041,6 @@
   END subroutine map2alm_sc_pre_KLOAD
 
 
-!   !=======================================================================
-!   subroutine map2alm_pol_test_KLOAD(nsmax, nlmax, nmmax, map_TQU,&
-!        &                     alm_TGC, zbounds, w8ring_TQU)
-!     !=======================================================================
-!     !     computes the a(l,m) from a polarized map for the HEALPIX pixelisation
-!     !       all from scratch
-!     !=======================================================================
-!     integer(I4B), intent(IN)                   :: nsmax, nlmax, nmmax
-!     real(KMAP),   intent(IN),  dimension(0:12*nsmax**2-1,1:3) :: map_TQU
-!     complex(KALMC), intent(OUT), dimension(1:3,0:nlmax,0:nmmax) :: alm_TGC
-!     real(DP),     intent(IN),  dimension(1:2)                 :: zbounds
-!     real(DP),     intent(IN), dimension(1:2*nsmax,1:3) :: w8ring_TQU
-
-!     integer(I4B) :: l, m, ith, nrings, nphmx
-!     integer(I8B) :: istart_south, istart_north, npix
-!     real(DP)     :: omega_pix
-
-!     real(DP),     dimension(-3:8)             :: phas_sd
-!     real(DP),     dimension(-3:6)             :: phas_sdx
-!     real(DP),     dimension(:,:), allocatable :: recfac, dalm, lam_lm
-!     real(DP),     dimension(:),   allocatable :: lam_fact, mfac
-
-!     integer(i4b)                              :: l_min, l_start
-!     real(DP),     dimension(:),   allocatable :: normal_l
-!     complex(DPC)                              :: php, phm
-!     complex(DPC), dimension(:,:,:), allocatable :: phas_ns
-!     real(DP),     dimension(:),   allocatable :: ring
-!     integer(i4b)    :: nchunks, chunksize, ichunk, lchk, uchk, ithl, nphl, i, ii
-!     integer(I8B), dimension(0:SMAXCHK) :: startpix
-!     integer(I4B), dimension(0:SMAXCHK) :: nph, kphi0
-!     real(DP),     dimension(0:SMAXCHK) :: cth, sth
-!     logical(LGT), dimension(0:SMAXCHK-1) :: keep_north, keep_south, keep_it
-!     real(DP), dimension(0:3) :: xone
-! !    real(sp) :: time0, time1, time2, time3, time4, tt1, tt2
-
-!     character(LEN=*), parameter :: code = 'MAP2ALM'
-!     integer(I4B) :: status
-!     !=======================================================================
-
-!     ! Healpix definitions
-!     nrings = 2*nsmax           ! number of isolatitude rings on N. hemisphere + equat
-!     npix   = (12_I8B*nsmax)*nsmax    ! total number of pixels on the sphere
-!     nphmx  = 4*nsmax           ! maximum number of pixels/ring
-!     omega_pix = FOURPI / real(npix, kind=DP)
-!     xone = (/ 1.0_dp, -1.0_dp, -1.0_dp, 1.0_dp /)
-
-!     !     --- allocates space for arrays ---
-!     nchunks   = nrings/SMAXCHK + 1  ! number of chunks
-!     chunksize = (nrings+nchunks-1)/nchunks ! <= SMAXCHK
-
-!     allocate(normal_l(0:nlmax),stat = status)
-!     call assert_alloc(status,code,'normal_l')
-
-!     allocate(mfac(0:nmmax),stat = status)
-!     call assert_alloc(status,code,'mfac')
-
-!     allocate(phas_ns(0:nlmax,0:5,0:chunksize-1),stat = status)
-!     call assert_alloc(status,code,'phas_ns')
-
-!     if (.not.do_openmp()) then
-!        allocate(ring(0:nphmx-1),stat = status)
-!        call assert_alloc(status,code,'ring')
-!        allocate(recfac(0:1,0:nlmax),stat = status)
-!        call assert_alloc(status,code,'recfac')
-!        allocate(dalm(0:5,0:nlmax), stat = status)
-!        call assert_alloc(status,code,'dalm')
-!        allocate(lam_fact(0:nlmax),stat = status)
-!        call assert_alloc(status,code,'lam_fact')
-!        allocate(lam_lm(1:3,0:nlmax),stat = status)
-!        call assert_alloc(status,code,'lam_lm')
-!     endif
-!     !     ------------ initiate variables and arrays ----------------
-
-!     call gen_mfac(nmmax,mfac)
-
-!     call init_rescale()
-!     alm_TGC = 0.0 ! set the whole alm array to zero
-
-!     ! generate Polarization normalisation
-!     call gen_normpol(nlmax, normal_l)
-
-! !    tt1 = 0
-!     ! loop on chunks
-!     do ichunk = 0, nchunks-1
-!        lchk = ichunk * chunksize + 1
-!        uchk = min(lchk+chunksize - 1, nrings)
-
-! !       call wall_clock_time(time1)
-!        do ith = lchk, uchk
-!           ithl = ith - lchk !local index
-!           ! get pixel location information
-!           call get_pixel_layout(nsmax, ith, cth(ithl), sth(ithl), nph(ithl), startpix(ithl), kphi0(ithl))
-!           ! find out which rings are to be analysed
-!           call select_rings(cth(ithl), zbounds, keep_north(ithl), keep_south(ithl), keep_it(ithl))
-!        enddo
-
-!        !-----------------------------------------------------------------------
-!        !  computes the integral in phi : phas_m(theta)
-!        !  for each parallele from Pole to Equator (use symmetry for S. Hemisphere)
-!        !-----------------------------------------------------------------------
-!        phas_ns = 0_dpc
-
-! !$OMP parallel default(none) &
-! !$OMP  shared(nsmax, nlmax, nmmax, npix, nrings, nphmx, &
-! !$OMP      lchk, uchk,nph, startpix, kphi0, w8ring_TQU, phas_ns, &
-! !$OMP      keep_north, keep_south, map_TQU) &
-! !$OMP  private(ithl, nphl, istart_north, istart_south, &
-! !$OMP      ith, ring, i, ii, status)
-!        if (do_openmp()) then
-!           allocate(ring(0:nphmx-1),stat = status)
-!           call assert_alloc(status,code,'ring')
-!        endif
-! !$OMP do schedule(dynamic,1)
-!        ! do Fourier Transform on rings
-!        do ith = lchk, uchk
-!           ithl = ith - lchk !local index
-!           nphl = nph(ithl)
-!           istart_north = startpix(ithl)
-!           istart_south = npix-istart_north-nphl
-!           if (keep_north(ithl)) then
-!              do i=1,3
-!                 ii = 2*(i-1) ! 0,2,4
-!                 ring(0:nphl-1) = map_TQU(istart_north:istart_north+nphl-1,i) * w8ring_TQU(ith,i)
-!                 call ring_analysis(nsmax, nlmax, nmmax, ring, nphl, phas_ns(0,ii,ithl), kphi0(ithl))
-!              enddo
-!           endif
-
-!           if (ith < nrings .and. keep_south(ithl)) then
-!              do i=1,3
-!                 ii = 2*i - 1 ! 1,3,5
-!                 ring(0:nphl-1) = map_TQU(istart_south:istart_south+nphl-1,i) * w8ring_TQU(ith,i)
-!                 call ring_analysis(nsmax, nlmax, nmmax, ring, nphl, phas_ns(0,ii,ithl), kphi0(ithl))
-!              enddo
-!           endif
-!        enddo
-! !$OMP end do
-!        if (do_openmp()) then
-!           deallocate (ring)
-!        endif
-! !$OMP end parallel
-
-! !       call wall_clock_time(time2)
-! !       tt1 = tt1 + time2 - time1
-
-! !$OMP parallel default(none) &
-! !$OMP shared(nlmax, nmmax, lchk, uchk, &
-! !$OMP    rescale_tab, omega_pix, &
-! !$OMP    cth, sth, keep_it, mfac, normal_l, alm_TGC, phas_ns, xone) &
-! !$OMP private(recfac, dalm, lam_fact, lam_lm, phas_sd, phas_sdx, phm, php, status, &
-! !$OMP   m, l, ithl, l_min, l_start )
-
-!        if (do_openmp()) then
-!           allocate(recfac(0:1,0:nlmax),stat = status)
-!           call assert_alloc(status,code,'recfac')
-!           allocate(dalm(0:5,0:nlmax), stat = status)
-!           call assert_alloc(status,code,'dalm')
-!           allocate(lam_fact(0:nlmax),stat = status)
-!           call assert_alloc(status,code,'lam_fact')
-!           allocate(lam_lm(1:3,0:nlmax),stat = status)
-!           call assert_alloc(status,code,'lam_lm')
-!        endif
-! !$OMP do schedule(dynamic,1)
-
-!        do m = 0, nmmax
-!           ! generate recursion factors (recfac) for Ylm of degree m
-!           call gen_recfac(nlmax, m, recfac)
-!           ! generate Ylm relation factor for degree m
-!           call gen_lamfac(nlmax, m, lam_fact)
-
-!           ! introduce double precision vector to perform summation over ith for each l
-!           dalm(0:5, m:nlmax) = 0.0_dp
-
-!           do ithl = 0, uchk - lchk
-!              l_min = l_min_ylm(m, sth(ithl)) ! lower l bound of non-negligible Ylm
-!              if (keep_it(ithl) .and. nlmax >= l_min) then ! avoid un-necessary calculations (EH, 09-2001)
-
-!                 do i=0,2 ! loop on T, Q, U
-!                    phm = phas_ns(m, 2*i, ithl) - phas_ns(m, 2*i+1, ithl) ! N-S: (l+m) odd
-!                    phas_sd(-3+2*i)   =  real(phm, kind=dp) 
-!                    phas_sd(-3+2*i+1) = aimag(phm)
-!                    php = phas_ns(m, 2*i, ithl) + phas_ns(m, 2*i+1, ithl) ! N+S: (l+m) even
-!                    phas_sd( 3+2*i)   =  real(php, kind=dp) 
-!                    phas_sd( 3+2*i+1) = aimag(php)
-!                 enddo
-!                 phas_sdx(-3: 0) = (/ phas_sd(8), - phas_sd(7), - phas_sd(6),   phas_sd(5) /)
-!                 phas_sdx( 3: 6) = (/ phas_sd(2), - phas_sd(1), - phas_sd(0),   phas_sd(-1) /)
-! !                 phas_sdx(-3: 0) = xone * phas_sd(8: 5:-1)
-! !                 phas_sdx( 3: 6) = xone * phas_sd(2:-1:-1)
-
-!                 ! compute lam_lm(p,theta) for all l>=m
-!                 call do_lam_lm_pol(nlmax, m, cth(ithl), sth(ithl), mfac(m), recfac, lam_fact, lam_lm)
-
-!                 ! alm_T = \int T Ylm
-!                 ! alm_G = \int ( - Q Wlm - i U Xlm )
-!                 ! alm_C = \int ( - U Wlm + i Q Xlm )
-
-!                 l_start = max(m, l_min) ! even values of (l+m)
-!                 if (mod(m+l_start,2) == 1) l_start = l_start + 1
-!                 do l = l_start, nlmax, 2
-!                    dalm(0:1, l) = dalm(0:1, l) + lam_lm(1,l) * phas_sd(3:4)
-!                    dalm(2:5, l) = dalm(2:5, l) - lam_lm(2,l) * phas_sd(5:8) &
-!                         &                      + lam_lm(3,l) * phas_sdx(3:6)
-!                 enddo
-!                 l_start = max(m+1, l_min) ! odd values of (l+m)
-!                 if (mod(m+l_start,2) == 0) l_start = l_start + 1
-!                 do l = l_start, nlmax, 2
-!                    dalm(0:1, l) = dalm(0:1, l) + lam_lm(1,l) * phas_sd(-3:-2)
-!                    dalm(2:5, l) = dalm(2:5, l) - lam_lm(2,l) * phas_sd(-1:2) &
-!                         &                      + lam_lm(3,l) * phas_sdx(-3:0)
-!                 enddo
-
-!              endif ! test on cut sky
-!           enddo ! loop on ithl
-!           do l = m, nlmax
-!              alm_TGC(1, l, m) = alm_TGC(1, l, m) + cmplx(dalm(0, l), dalm(1, l), kind=DP) * omega_pix
-!              alm_TGC(2, l, m) = alm_TGC(2, l, m) + cmplx(dalm(2, l), dalm(3, l), kind=DP) * (normal_l(l) * omega_pix)
-!              alm_TGC(3, l, m) = alm_TGC(3, l, m) + cmplx(dalm(4, l), dalm(5, l), kind=DP) * (normal_l(l) * omega_pix)
-!           enddo
-!        enddo ! loop on m
-! !$OMP end do
-!        if (do_openmp()) then
-!           deallocate (recfac,dalm,lam_fact,lam_lm)
-!        endif
-! !$OMP end parallel
-!     enddo    ! loop on chunks
-
-! !    print*,'FFT',tt1
-!     !     --------------------
-!     !     free memory and exit
-!     !     --------------------
-!     if (.not.do_openmp()) then
-!        deallocate (recfac,dalm,lam_fact,lam_lm,ring)
-!     endif
-!     deallocate(mfac, normal_l)
-!     deallocate(phas_ns)
-!     return
-!   end subroutine map2alm_pol_test_KLOAD
 
   !=======================================================================
   subroutine map2alm_pol_KLOAD(nsmax, nlmax, nmmax, map_TQU,&
@@ -4886,15 +4018,15 @@
        ! alm_2 -> map : reconstructed map
        select case (n_plms+polar*10)
        case(0)
-          call alm2map(nsmax, nlmax, nmmax, alm_TGC_out, p_map_1)
+          call alm2map(nsmax, nlmax, nmmax, alm_TGC_out, p_map_1, zbounds=zbounds_in)
        case(1)
-          call alm2map(nsmax, nlmax, nmmax, alm_TGC_out, p_map_1, p_plm_1)
+          call alm2map(nsmax, nlmax, nmmax, alm_TGC_out, p_map_1, plm=p_plm_1)
        case(10)
-          call alm2map(nsmax, nlmax, nmmax, alm_TGC_out, map_TQU)
+          call alm2map(nsmax, nlmax, nmmax, alm_TGC_out, map_TQU, zbounds=zbounds_in)
        case(11)
-          call alm2map(nsmax, nlmax, nmmax, alm_TGC_out, map_TQU, p_plm_1)
+          call alm2map(nsmax, nlmax, nmmax, alm_TGC_out, map_TQU, plm=p_plm_1)
        case(13)
-          call alm2map(nsmax, nlmax, nmmax, alm_TGC_out, map_TQU, plm)
+          call alm2map(nsmax, nlmax, nmmax, alm_TGC_out, map_TQU, plm=plm)
        case default 
           print*,'Invalid configuration'
           call fatal_error(code)

@@ -556,13 +556,13 @@
   case(0)
      call alm2map(nsmax,nlmax,nmmax,alm_TGC,map_TQU(:,1))
   case(1)
-     call alm2map(nsmax,nlmax,nmmax,alm_TGC,map_TQU(:,1),plm(:,1))
+     call alm2map(nsmax,nlmax,nmmax,alm_TGC,map_TQU(:,1),plm=plm(:,1))
   case(10)
      call alm2map(nsmax,nlmax,nmmax,alm_TGC,map_TQU)
   case(11)
-     call alm2map(nsmax,nlmax,nmmax,alm_TGC,map_TQU,plm(:,1))
+     call alm2map(nsmax,nlmax,nmmax,alm_TGC,map_TQU,plm=plm(:,1))
   case(13)
-     call alm2map(nsmax,nlmax,nmmax,alm_TGC,map_TQU,plm)
+     call alm2map(nsmax,nlmax,nmmax,alm_TGC,map_TQU,plm=plm)
   end select
 
   !-----------------------------------------------------------------------
