@@ -147,7 +147,7 @@ program process_mask
   ! print*,'hole minimal size (in pixels) :',new_min_size
 
   if (order == 1) then
-     write(*,*),code//'> Converting RING -> NESTED'
+     write(*,*) code//'> Converting RING -> NESTED'
      call convert_ring2nest(nside, map)
      !print*,'conversion done'
   endif

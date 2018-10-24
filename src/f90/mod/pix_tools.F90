@@ -59,6 +59,7 @@ module pix_tools
 !    2013-05-07: G95-compatible
 !    2015-09-02: added nest2uniq, uniq2nest
 !    2018-05-22: added nside2npweights
+!    2018-10-22: added apply_mask
 !==================================================================
   ! subroutine query_strip                          Done (To be Tested) depends on in_ring
   ! subroutine query_polygon                        Done (To be Tested) depends on isort
@@ -199,6 +200,10 @@ module pix_tools
 
   interface add_dipole
      module procedure add_dipole_real, add_dipole_double
+  end interface
+
+  interface apply_mask
+     module procedure apply_mask_real, apply_mask_double
   end interface
 
   interface convert_nest2ring
@@ -458,6 +463,8 @@ module pix_tools
   public :: nest2uniq, uniq2nest
 
   public :: nside2npweights
+
+  public :: apply_mask
 
 
 contains
@@ -1367,6 +1374,27 @@ contains
 
     return
   end subroutine add_dipole_double
+
+  !====================================================
+  ! apply_mask (map, order, mask=mask, zbounds=zbounds)
+  !   applies a mask and/or a zbounds to a TQU maps,
+  !   map and mask should have the same ordering
+  !  map :  SP/DP, INOUT,   (0:,1:)
+  !  order: I4B,   IN,  1=RING, 2=NESTED
+  !  mask:  SP/DP  IN, (0:,1:) optional
+  !  zbounds: DP   IN, (1:2) optional
+  !=====================================================================
+  subroutine apply_mask_real(map, order, mask, zbounds)
+    !=====================================================================
+    integer(I4B), parameter :: KMAP = SP
+    include 'apply_mask_inc.f90'
+  end subroutine apply_mask_real
+  !=====================================================================
+  subroutine apply_mask_double(map, order, mask, zbounds)
+    !=====================================================================
+    integer(I4B), parameter :: KMAP = DP
+    include 'apply_mask_inc.f90'
+  end subroutine apply_mask_double
   !====================================================
   ! medfiltmap
   !   compute the median filtered map of a given Healpix map

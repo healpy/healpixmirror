@@ -76,6 +76,26 @@
 !     * the recurrence of Ylm is the standard one (cf Num Rec)
 !     * the sum over m is done by FFT
   !=======================================================================
+  subroutine alm2map_sc_wrapper_KLOAD(nsmax, nlmax, nmmax, alm, map, zbounds,plm)
+    !=======================================================================
+    !     computes a map form its alm for the HEALPIX pixelisation
+    !      for the Temperature field
+    !=======================================================================
+    integer(I4B), intent(IN)                   :: nsmax, nlmax, nmmax
+    complex(KALMC), intent(IN),  dimension(1:1,0:nlmax,0:nmmax) :: alm
+    real(KMAP),   intent(OUT), dimension(0:(12_i8b*nsmax)*nsmax-1) :: map
+    real(DP),     intent(IN),  dimension(1:2),         optional :: zbounds
+    real(DP),     intent(IN),  dimension(0:),         optional :: plm
+
+    if (present(zbounds)) then 
+       call alm2map_sc_KLOAD(nsmax, nlmax, nmmax, alm, map, zbounds=zbounds)
+    endif
+    if (present(plm)) then 
+       call alm2map_sc_pre_KLOAD(nsmax, nlmax, nmmax, alm, map, plm=plm)
+    endif
+    return
+  end subroutine alm2map_sc_wrapper_KLOAD
+  !=======================================================================
   subroutine alm2map_sc_KLOAD(nsmax, nlmax, nmmax, alm, map, zbounds)
     !=======================================================================
     !     computes a map form its alm for the HEALPIX pixelisation
@@ -725,6 +745,25 @@
   end subroutine alm2map_sc_pre_KLOAD
 
   !=======================================================================
+  subroutine alm2map_pol_wrapper_KLOAD(nsmax, nlmax, nmmax, alm_TGC, map_TQU, zbounds, plm)
+    !=======================================================================
+    !=======================================================================
+    integer(I4B), intent(IN)                   :: nsmax, nlmax, nmmax
+    complex(KALMC), intent(IN),  dimension(1:3,0:nlmax,0:nmmax) :: alm_TGC
+    real(KMAP),   intent(OUT), dimension(0:(12_i8b*nsmax)*nsmax-1,1:3) :: map_TQU
+    real(DP),     intent(IN),  dimension(1:2),          optional :: zbounds
+    real(DP),     intent(IN),  dimension(0:), optional  :: plm
+
+    if (present(zbounds)) then
+       call alm2map_pol_KLOAD(nsmax, nlmax, nmmax, alm_TGC, map_TQU, zbounds=zbounds)
+    endif
+    if (present(plm)) then
+       call alm2map_pol_pre1_KLOAD(nsmax, nlmax, nmmax, alm_TGC, map_TQU, plm=plm)
+    endif
+    return
+  end subroutine alm2map_pol_wrapper_KLOAD
+
+  !=======================================================================
   subroutine alm2map_pol_KLOAD(nsmax, nlmax, nmmax, alm_TGC, map_TQU, zbounds)
     !=======================================================================
     !     computes a map form its alm for the HEALPIX pixelisation
@@ -973,6 +1012,7 @@
     complex(KALMC), intent(IN),  dimension(1:3,0:nlmax,0:nmmax) :: alm_TGC
     real(KMAP),   intent(OUT), dimension(0:(12_i8b*nsmax)*nsmax-1,1:3) :: map_TQU
     real(DP),     intent(IN),  dimension(0:) :: plm
+    !real(DP),     intent(IN),  dimension(1:2),          optional :: zbounds
 
     integer(I4B) :: l, m, ith
     integer(I8B) :: istart_south, istart_north, npix, n_lm, n_plm, i_mm
@@ -4062,6 +4102,270 @@
 
     return
   end subroutine map2alm_iterative_KLOAD
+
+  !=======================================================================
+  subroutine map2alm_iterative_test_KLOAD(nsmax, nlmax, nmmax, iter_order, map_TQU, alm_TGC, &
+       &   zbounds, w8ring, plm, mask)
+    ! 2008-07-10: bug correction on map2alm for T only map: only pass temperature weights
+    ! 2008-11-06: adjust w8ring_in 2nd dimension to actual w8ring
+    ! 2008-11-27: patch to ignore dimension of non presen optional array (plm)
+    ! 2008-12-03: use pointer toward map and plm section (avoid stack overloading)
+    ! 2015-03-06: replaced implicit loop with explicit one because of ifort 15.0.2
+  !=======================================================================
+
+    use statistics, only: tstats, compute_statistics
+    use pix_tools,  only: nside2npix, apply_mask
+    use long_intrinsic, only: long_size
+    implicit none
+    integer(I4B),   intent(IN)                       :: nsmax, nlmax, nmmax, iter_order
+    real(KMAP),     intent(INOUT),  dimension(0:,1:), target    :: map_TQU
+    complex(KALMC), intent(INOUT), dimension(1:,0:,0:) :: alm_TGC
+    real(DP),       intent(IN),  dimension(1:2),    optional :: zbounds
+    real(DP),       intent(IN),  dimension(1:,1:), optional :: w8ring
+    real(DP),       intent(IN),  dimension(0:,1:), optional, target :: plm
+    real(KMAP),     intent(IN),  dimension(0:,1:),   optional :: mask
+    ! local variables
+    real(DP), dimension(1:2)         :: zbounds_in, zbounds_full
+    real(DP), dimension(1:2*nsmax,3) :: w8ring_in
+    integer(I4B) :: n_maps, n_alms, n_pols, n_masks, n_plms, n_w8_2
+    integer(I4B) :: iter, status, polar, i, lbm, order
+    integer(I8B) :: npixtot, p
+    integer(I8B) :: n1_plm
+    real(kind=DP), dimension(1:3) :: rms
+    logical(LGT) :: do_mask, do_bounds
+    type(tstats) :: map_stat
+    real(KMAP),     allocatable, dimension(:,:)   :: map_TQU_in
+    complex(KALMC),allocatable,  dimension(:,:,:) :: alm_TGC_out
+
+    character(len=*), parameter :: code = 'map2alm_iterative'
+    real(KMAP), pointer, dimension(:) :: p_map_1
+    real(DP),   pointer, dimension(:) :: p_plm_1
+    !=======================================================================
+
+    n_maps = size(map_TQU,2)
+    if (n_maps /=1 .and. n_maps /=3) then
+       print*,'invalid 2nd dim for map: ',n_maps
+       print*,'(should be 1 or 3) '
+       call fatal_error(code)
+    endif
+    npixtot = nside2npix(nsmax)
+    if (long_size(map_TQU,1) /= npixtot) then
+       print*,'map 1st dim does not match nside ',size(map_TQU,1),npixtot,nsmax
+       call fatal_error(code)       
+    endif
+
+    n_alms = size(alm_TGC,1)
+    if (n_alms /=1 .and. n_alms /=3) then
+       print*,'invalid 1st dim for alm: ',n_alms
+       print*,'(should be 1 or 3) '
+       call fatal_error(code)
+    endif
+    if (size(alm_TGC, 2) /= (nlmax+1) .or. size(alm_TGC, 3) /= (nmmax+1)) then
+       print*,'alm dimensions do not match l_max, m_max'
+       print*,size(alm_TGC, 2),  (nlmax+1)
+       print*,size(alm_TGC, 3), (nmmax+1)
+       call fatal_error(code)
+    endif
+    polar = 0
+    n_pols = min(n_maps, n_alms)
+    if (n_pols == 3) polar=1
+
+    n_plms = 0
+    if (present(plm)) then
+       n1_plm =  (nmmax+1_I8B) * (2*nlmax-nmmax+2_I8B) * nsmax
+       if (size(plm,1) >= n1_plm) n_plms = size(plm,2) ! 1 or 3
+       if (n_plms /= 0 .and. n_plms /= 1 .and. n_plms /= 3) then
+          if (abs(n_plms) > 1000) then ! edited 2008-11-27
+             n_plms = 0 ! ignore Plm on compilers returning stupid values for dangling arrays
+          else
+             print*,'invalid 2nd dim for plm: ',n_plms
+             print*,'(should be 1 or 3) '
+             call fatal_error(code)
+          endif
+       endif
+    endif
+    if (polar == 0) n_plms = min(n_plms,1)
+
+    zbounds_full = (/-1.d0 , 1.d0/)
+    zbounds_in   = zbounds_full
+    do_bounds = .false.
+    if (present(zbounds)) then
+       zbounds_in = zbounds
+       do_bounds = .true.
+    endif
+
+    n_w8_2 = 0
+    w8ring_in  = 1.d0
+    if (present(w8ring)) then
+       if (size(w8ring,1) >= 2*nsmax) n_w8_2 = size(w8ring, 2)
+       if (n_w8_2 /= 0 .and. n_w8_2 /= 1 .and. n_w8_2 /= 3) then
+          print*,'invalid 2nd dim for w8ring: ',n_w8_2
+          print*,'(should be 1 or 3) '
+          call fatal_error(code)
+       endif
+       if (n_w8_2 /= 0) then
+          w8ring_in(1:2*nsmax,1:n_w8_2)  = w8ring(1:2*nsmax,1:n_w8_2) ! edited 2008-11-06
+       endif
+    endif
+
+    do_mask = .false.
+    n_masks = 0
+    if (present(mask)) then
+       do_mask = (long_size(mask,1) == npixtot)
+       n_masks = size(mask,2)
+       lbm = lbound(mask, dim=1)
+       if (n_masks > 3) then
+          print*,'Invalid 2nd dimension for mask:',n_masks
+          print*,'Should be 1, 2 or 3'
+          call fatal_error(code)
+       endif
+    endif
+
+
+    ! -------------------------------------
+    ! multiply map by mask
+    ! -------------------------------------
+!     if (do_mask) then
+!        do i=1,n_pols
+!          ! map_TQU(0:,i) = map_TQU(0:,i) * mask(lbm:, min(i, n_masks))
+!           do p=0, npixtot-1 ! explicit loop because of ifort 15.0.2 2015-03-06
+!              map_TQU(p,i) = map_TQU(p,i) * mask(lbm+p, min(i, n_masks))
+!           enddo
+!        enddo
+!     endif
+    order = 1 ! ring ordered
+    if (do_bounds .and. iter_order > 0) then
+       if (do_mask) then
+          call apply_mask(map_TQU, order, mask=mask, zbounds=zbounds_in)
+       else
+          call apply_mask(map_TQU, order,            zbounds=zbounds_in)
+       endif
+    else ! no iteration or no bounds, apply mask (if any) here, keep zbounds (if any) for map2alm
+       if (do_mask) then
+          call apply_mask(map_TQU, order, mask=mask)
+       endif
+    endif
+
+    ! -------------------------------------
+    ! allocate arrays required for iterations
+    ! -------------------------------------
+    if (iter_order > 0) then
+       ALLOCATE(alm_TGC_out(1:n_pols, 0:nlmax, 0:nmmax),stat = status)
+       call assert_alloc(status,code,"alm_TGC_out")
+
+       ALLOCATE(map_TQU_in(0:npixtot-1,1:n_pols),stat = status)
+       call assert_alloc(status,code,"map_TQU_in")
+
+       alm_TGC_out = 0.0_KALMC      ! final alm
+       map_TQU_in  = map_TQU        ! input map (masked)
+       alm_TGC     = 0.0_KALMC      ! intermediate alm
+    endif
+
+    if ( iter_order < 0) then
+       print*,'Iteration order must be non-negative'
+       call fatal_error(code)
+    endif
+
+    nullify(p_map_1, p_plm_1) ! for sanity
+    ! -------------------------------------
+    ! start iterative (Jacobi) analysis
+    ! a^(n) = a^(n-1) + A ( w m - S a^(n-1) )
+    ! a^(0) = A w m
+    ! with w = mask and zbounds
+    ! A = alm2map with quadrature weights
+    ! -------------------------------------
+    do iter = 0, iter_order
+       ! map -> alm
+       select case (n_plms+polar*10)
+       case(0) ! Temperature only
+          p_map_1 => map_TQU(:,1)
+          call map2alm(nsmax, nlmax, nmmax, p_map_1, alm_TGC, zbounds_in, w8ring_in(:,1:1))
+       case(1) ! T with precomputed Ylm
+          p_map_1 => map_TQU(:,1)
+          p_plm_1 => plm(:,1)
+          call map2alm(nsmax, nlmax, nmmax, p_map_1, alm_TGC, zbounds_in, w8ring_in(:,1:1), p_plm_1)
+       case(10) ! T+P
+          call map2alm(nsmax, nlmax, nmmax, map_TQU, alm_TGC, zbounds_in, w8ring_in)
+       case(11) ! T+P with precomputed Ylm_T
+          p_plm_1 => plm(:,1)
+          call map2alm(nsmax, nlmax, nmmax, map_TQU, alm_TGC, zbounds_in, w8ring_in, p_plm_1)
+       case(13) ! T+P with precomputed Ylm
+          call map2alm(nsmax, nlmax, nmmax, map_TQU, alm_TGC, zbounds_in, w8ring_in, plm)
+       case default 
+          print*,'Invalid configuration'
+          call fatal_error(code)
+       end select
+
+       ! if no iteration: exit
+       if (iter_order == 0) exit
+
+       ! if iterate, show residual amplitude
+       if (iter == 0 .and. iter_order > 0) then
+          PRINT *,"       Iterated map analysis "
+          PRINT *,"       input map StDev"
+          do i=1,n_pols
+             call compute_statistics(map_TQU(:,i), map_stat)
+             rms (i) = map_stat%rms
+          enddo
+          write(*,9111) iter,rms(1:n_pols)
+          PRINT *,"       residual map StDev"
+       endif
+9111   format(i3,3(g20.5))
+
+       ! alm_2 = alm_2 + alm : increment alms
+       map_TQU = 0.0_KMAP
+       alm_TGC_out = alm_TGC_out + alm_TGC
+
+       ! if final iteration: exit
+       if (iter == iter_order) exit
+
+       ! alm_2 -> map : reconstructed map
+       select case (n_plms+polar*10)
+       case(0)
+          call alm2map(nsmax, nlmax, nmmax, alm_TGC_out, p_map_1, zbounds=zbounds_full)
+       case(1)
+          call alm2map(nsmax, nlmax, nmmax, alm_TGC_out, p_map_1, plm=p_plm_1)
+       case(10)
+          call alm2map(nsmax, nlmax, nmmax, alm_TGC_out, map_TQU, zbounds=zbounds_full)
+       case(11)
+          call alm2map(nsmax, nlmax, nmmax, alm_TGC_out, map_TQU, plm=p_plm_1)
+       case(13)
+          call alm2map(nsmax, nlmax, nmmax, alm_TGC_out, map_TQU, plm=plm)
+       case default 
+          print*,'Invalid configuration'
+          call fatal_error(code)
+       end select
+
+       ! map = map_2 - map : residual map
+       ! multiply newly synthetized MAP by MASK in order to allow comparison with input MAP.
+       if (do_mask) then
+          do i=1,n_pols
+             map_TQU(0:,i) = map_TQU(0:,i) * mask(lbm:, min(i, n_masks))
+          enddo
+       endif
+       map_TQU = map_TQU_in - map_TQU
+
+       do i=1,n_pols
+          call compute_statistics(map_TQU(:,i), map_stat)
+          rms (i) = map_stat%rms
+       enddo
+       write(*,9111) iter,rms(1:n_pols)
+    enddo
+
+    ! -------------------------------------
+    ! clean up and exit
+    ! -------------------------------------
+    if (iter_order > 0) then
+       alm_TGC = alm_TGC_out ! final alms
+       map_TQU = map_TQU_in ! input map
+       deallocate(alm_TGC_out, map_TQU_in)
+    endif
+ 
+    if (associated(p_map_1)) nullify(p_map_1)
+    if (associated(p_plm_1)) nullify(p_plm_1)
+
+    return
+  end subroutine map2alm_iterative_test_KLOAD
 
 
   !**************************************************************************

@@ -156,10 +156,14 @@ module alm_tools
      ! (determined from the rank of the map_TQU array) or precomputed plms
      ! (scalar or tensor, determined from the rank of the plm array) are included,
      ! or whether the map and alm are single or double precision
-     module procedure alm2map_sc_s, alm2map_sc_pre_s, &
-          &           alm2map_pol_s, alm2map_pol_pre1_s, alm2map_pol_pre2_s, &
-          &           alm2map_sc_d, alm2map_sc_pre_d, &
-          &           alm2map_pol_d, alm2map_pol_pre1_d, alm2map_pol_pre2_d
+     module procedure alm2map_sc_wrapper_s, &
+          &           alm2map_pol_wrapper_s, alm2map_pol_pre2_s, &
+          &           alm2map_sc_wrapper_d, &
+          &           alm2map_pol_wrapper_d,  alm2map_pol_pre2_d
+!!!     module procedure alm2map_sc_s, alm2map_sc_pre_s, &
+!!!          &           alm2map_pol_s, alm2map_pol_pre1_s, alm2map_pol_pre2_s, &
+!!!          &           alm2map_sc_d, alm2map_sc_pre_d, &
+!!!          &           alm2map_pol_d, alm2map_pol_pre1_d, alm2map_pol_pre2_d
   end interface
 
   interface map2alm

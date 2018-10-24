@@ -480,7 +480,7 @@ contains
        deallocate(bordpix)
        deallocate(non_empty_low)
        if (n_invalid > 0) then
-          write(*,'(a,i7,a)'),'WARNING: Found ',n_invalid,' invalid distances: '
+          write(*,'(a,i7,a)') 'WARNING: Found ',n_invalid,' invalid distances: '
        endif
        if (do_clock) then
           call wall_clock_time(tend)
