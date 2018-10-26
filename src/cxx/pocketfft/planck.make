@@ -1,18 +1,16 @@
-PKG:=libfftpack
+PKG:=pocketfft
 
 SD:=$(SRCROOT)/$(PKG)
 OD:=$(BLDROOT)/$(PKG)
 
-FULL_INCLUDE+= -I$(SD)
+FULL_INCLUDE+= -I$(SRCROOT)
 
 HDR_$(PKG):=$(SD)/*.h
-LIB_$(PKG):=$(LIBDIR)/libfftpack.a
-OBJ:=fftpack.o bluestein.o ls_fft.o
+LIB_$(PKG):=$(LIBDIR)/libpocketfft.a
+OBJ:=pocketfft.o
 OBJ:=$(OBJ:%=$(OD)/%)
 
-ODEP:=$(HDR_$(PKG)) $(HDR_c_utils)
-
-$(OD)/fftpack.o: $(SD)/fftpack_inc.c
+ODEP:=$(HDR_$(PKG))
 
 $(OBJ): $(ODEP) | $(OD)_mkdir
 $(LIB_$(PKG)): $(OBJ)

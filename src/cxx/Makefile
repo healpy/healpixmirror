@@ -22,7 +22,7 @@ CXX_EXTRALIBS+=$(CFITSIO_EXT_LIB)
 FULL_INCLUDE+= $(CFITSIO_EXT_INC)
 
 include c_utils/planck.make
-include libfftpack/planck.make
+include pocketfft/planck.make
 include libsharp/planck.make
 include cxxsupport/planck.make
 include Healpix_cxx/planck.make

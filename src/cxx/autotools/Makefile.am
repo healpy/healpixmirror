@@ -9,13 +9,9 @@ src_c_utils = \
   c_utils/walltime_c.h \
   c_utils/trig_utils.c \
   c_utils/trig_utils.h
-src_libfftpack = \
-  libfftpack/bluestein.h \
-  libfftpack/bluestein.c \
-  libfftpack/fftpack.h \
-  libfftpack/fftpack.c \
-  libfftpack/ls_fft.h \
-  libfftpack/ls_fft.c
+src_libpocketfft = \
+  pocketfft/pocketfft.c \
+  pocketfft/pocketfft.h
 src_libsharp = \
   libsharp/sharp.c \
   libsharp/sharp.h \
@@ -24,6 +20,7 @@ src_libsharp = \
   libsharp/sharp_almhelpers.h \
   libsharp/sharp_complex_hacks.h \
   libsharp/sharp_core.c \
+  libsharp/sharp_core_avx.c \
   libsharp/sharp_core.h \
   libsharp/sharp_geomhelpers.c \
   libsharp/sharp_geomhelpers.h \
@@ -115,7 +112,7 @@ src_healpix_cxx_fits= \
   Healpix_cxx/moc_fitsio.cc
 
 EXTRA_DIST = \
-  libfftpack/fftpack_inc.c \
+  libsharp/sharp_core_inc0.c \
   libsharp/sharp_core_inc.c \
   libsharp/sharp_core_inc2.c \
   libsharp/sharp_core_inchelper.c \
@@ -158,7 +155,7 @@ include_HEADERS = \
   Healpix_cxx/moc_query.h \
   Healpix_cxx/weight_utils.h
 
-libhealpix_cxx_la_SOURCES = $(src_c_utils) $(src_libfftpack) $(src_libsharp) $(src_cxxsupport) $(src_cxxsupport_fits) $(src_healpix_cxx) $(src_healpix_cxx_fits) $(src_healpix_cxx_mod)
+libhealpix_cxx_la_SOURCES = $(src_c_utils) $(src_libpocketfft) $(src_libsharp) $(src_cxxsupport) $(src_cxxsupport_fits) $(src_healpix_cxx) $(src_healpix_cxx_fits) $(src_healpix_cxx_mod)
 libhealpix_cxx_la_LIBADD = $(CFITSIO_LIBS)
 libhealpix_cxx_la_LDFLAGS = -version-info 1:0:0
 
@@ -199,7 +196,7 @@ hpxtest_LDADD = libhealpix_cxx.la
 
 TESTS=hpxtest
 
-AM_CPPFLAGS = $(CFITSIO_CFLAGS) -I$(top_srcdir)/c_utils -I$(top_srcdir)/libfftpack -I$(top_srcdir)/libsharp -I$(top_srcdir)/cxxsupport
+AM_CPPFLAGS = $(CFITSIO_CFLAGS) -I$(top_srcdir)/c_utils -I$(top_srcdir) -I$(top_srcdir)/libsharp -I$(top_srcdir)/cxxsupport
 
 pkgconfigdir = $(libdir)/pkgconfig
 nodist_pkgconfig_DATA = @PACKAGE_NAME@.pc

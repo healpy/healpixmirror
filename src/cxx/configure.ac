@@ -70,7 +70,7 @@ AC_ARG_ENABLE(
 
 case $CCTYPE in
   gcc)
-    CCFLAGS="-O3 -ffast-math -fomit-frame-pointer -fno-tree-vectorize"
+    CCFLAGS="-O3 -fno-math-errno -fno-trapping-math -fno-rounding-math -fno-signaling-nans -fcx-limited-range -fomit-frame-pointer -fno-tree-vectorize"
     GCCVERSION="`$CC -dumpversion 2>&1`"
     echo "Using gcc version $GCCVERSION"
     AC_SUBST(GCCVERSION)
@@ -112,7 +112,7 @@ esac
 
 case $CXXTYPE in
   g++)
-    CXXCFLAGS="-std=c++11 -O2 -ffast-math -fomit-frame-pointer"
+    CXXCFLAGS="-std=c++11 -O2 -fno-math-errno -fno-trapping-math -fno-rounding-math -fno-signaling-nans -fcx-limited-range -fomit-frame-pointer"
     GXXVERSION="`$CXX -dumpversion 2>&1`"
     echo "Using g++ version $GXXVERSION"
     AC_SUBST(GXXVERSION)

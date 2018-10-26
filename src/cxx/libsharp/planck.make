@@ -7,7 +7,7 @@ FULL_INCLUDE+= -I$(SD)
 
 HDR_$(PKG):=$(SD)/*.h
 LIB_$(PKG):=$(LIBDIR)/libsharp.a
-LIBOBJ:=sharp_ylmgen_c.o sharp.o sharp_geomhelpers.o sharp_almhelpers.o sharp_core.o sharp_legendre_roots.o
+LIBOBJ:=sharp_ylmgen_c.o sharp.o sharp_geomhelpers.o sharp_almhelpers.o sharp_core.o sharp_core_avx.o sharp_legendre_roots.o
 LIBOBJ:=$(LIBOBJ:%=$(OD)/%)
 
 ODEP:=$(HDR_$(PKG)) $(HDR_libfftpack) $(HDR_c_utils)
