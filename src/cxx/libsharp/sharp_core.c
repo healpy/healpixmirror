@@ -34,6 +34,18 @@
 #undef ARCH
 
 #if (!defined(__AVX__)) && defined(__GNUC__) && defined (__x86_64__) && (__GNUC__>=5)
+
+static int have_avx(void)
+  {
+  static int res=-1;
+  if (res<0)
+    {
+    __builtin_cpu_init();
+    res = __builtin_cpu_supports("avx");
+    }
+  return res;
+  }
+
 void inner_loop_avx (sharp_job *job, const int *ispair,const double *cth,
   const double *sth, int llim, int ulim, sharp_Ylmgen_C *gen, int mi,
   const int *mlim);
@@ -44,8 +56,7 @@ void inner_loop (sharp_job *job, const int *ispair,const double *cth,
   const int *mlim)
   {
 #if (!defined(__AVX__)) && defined(__GNUC__) && defined (__x86_64__) && (__GNUC__>=5)
-  __builtin_cpu_init();
-  if (__builtin_cpu_supports("avx"))
+  if (have_avx())
     inner_loop_avx (job, ispair, cth, sth, llim, ulim, gen, mi, mlim);
   else
 #endif
@@ -55,8 +66,7 @@ void inner_loop (sharp_job *job, const int *ispair,const double *cth,
 int sharp_veclen(void)
   {
 #if (!defined(__AVX__)) && defined(__GNUC__) && defined (__x86_64__) && (__GNUC__>=5)
-  __builtin_cpu_init();
-  if (__builtin_cpu_supports("avx"))
+  if (have_avx())
     return 4;
   else
 #endif
