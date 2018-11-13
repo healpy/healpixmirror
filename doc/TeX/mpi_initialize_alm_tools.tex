@@ -54,10 +54,7 @@ nmmax\mytarget{sub:mpi_initialize_alm_tools:nmmax} & I4B & IN & the maximum $m$ 
 \begin{tabular}{p{0.4\hsize} p{0.05\hsize} p{0.05\hsize} p{0.40\hsize}} \hline  
 zbounds\mytarget{sub:mpi_initialize_alm_tools:zbounds}(1:2) & DP & IN & section of the map on which to perform the $a_{\ell m}$
                    analysis, expressed in terms of $z=\sin({\rm latitude}) =
-                   \cos(\theta)$. If zbounds(1)$<$zbounds(2), the analysis is
-                   performed {\em on} the strip zbounds(1)$<z<$zbounds(2); if not,
-                   it is performed {\em outside} of the strip
-                   zbounds(2)$<z<$zbounds(1). (OPTIONAL) \\
+                   \cos(\theta)$. \input{zbounds_sub} (OPTIONAL) \\
 polarization\mytarget{sub:mpi_initialize_alm_tools:polarization} & LGT & IN & if polarization is required, this should be
 set to true, else it should be set to false. (OPTIONAL) \\
 precompute\_plms\mytarget{sub:mpi_initialize_alm_tools:precompute_plms} & I4B & IN & 0 = do not pre-compute any $P_{\ell

@@ -25,15 +25,18 @@ $PERL = '/usr/bin/perl';
 # $DVIPS = '/sw2/bin/dvips';	# dvips
 # $LATEX = '/usr/local/texlive/2012/bin/x86_64-darwin/latex';	# LaTeX
 # $DVIPS = '/usr/local/texlive/2012/bin/x86_64-darwin/dvips';	# dvips
-$LATEX = '/usr/local/texlive/2017/bin/x86_64-darwin/latex';	# LaTeX
-$DVIPS = '/usr/local/texlive/2017/bin/x86_64-darwin/dvips';	# dvips
+# $LATEX = '/usr/local/texlive/2017/bin/x86_64-darwin/latex';	# LaTeX
+# $DVIPS = '/usr/local/texlive/2017/bin/x86_64-darwin/dvips';	# dvips
+$LATEX = '/usr/local/texlive/2018/bin/x86_64-darwin/latex';	# LaTeX
+$DVIPS = '/usr/local/texlive/2018/bin/x86_64-darwin/dvips';	# dvips
 
 
 #  give these too, to use the  -ldump  feature
 #
 #$TEX = "/sw2/bin/tex"; 			# TeX
 #$TEX = "/usr/local/texlive/2012/bin/x86_64-darwin/tex"; 			# TeX
-$TEX = "/usr/local/texlive/2017/bin/x86_64-darwin/tex"; 			# TeX
+#$TEX = "/usr/local/texlive/2017/bin/x86_64-darwin/tex"; 			# TeX
+$TEX = "/usr/local/texlive/2018/bin/x86_64-darwin/tex"; 			# TeX
 $INILATEX = " \"&latex\"";	# initex+latex
 
 

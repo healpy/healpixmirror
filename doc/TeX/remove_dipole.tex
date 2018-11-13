@@ -68,10 +68,7 @@ multipoles\mytarget{sub:remove_dipole:multipoles}(0:degree*degree-1) & DP & OUT 
                    units as the input map, the dipole as a 3D cartesian vector, in the same units. \\
 zbounds\mytarget{sub:remove_dipole:zbounds}(1:2) & DP & IN & section of the map on which to perform the
                    fit, expressed in terms of $z=\sin({\rm latitude}) =
-                   \cos(\theta)$. If zbounds(1)$<$zbounds(2), the fit is
-                   performed {\em on} the strip zbounds(1)$<z<$zbounds(2); if not, the
-                   fit is performed {\em outside} of the strip
-                   zbounds(2)$<z<$zbounds(1). \\
+                   \cos(\theta)$. \input{zbounds_sub} \\
 fmissval\mytarget{sub:remove_dipole:fmissval}  \hskip 4cm (OPTIONAL) & SP/ DP & IN & value used to flag bad pixel on input
                    \default{-1.6375e30}. Pixels with that value are ignored
                    during the fit, and left unchanged on output.\\

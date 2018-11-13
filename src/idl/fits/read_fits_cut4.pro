@@ -138,7 +138,9 @@ for i=x0,xf do begin
 ; open extension i+1 and get header
     fxbopen, lun, filename, i+1, xhdr
 
-    nside  = LONG(       SXPAR(xhdr,'NSIDE',count=count  ))
+    tfields=    long(sxpar(xhdr,'TFIELDS'))
+    nside  =    long(sxpar(xhdr,'NSIDE',count=count))
+    ttypes = strtrim(sxpar(xhdr,'TTYPE*'),2)
     if (count eq 0) then nside = -1
     ordering =  strupcase(strtrim(SXPAR(xhdr,'ORDERING', count=count),2))
     if (count eq 0) then ordering = ' '
@@ -152,12 +154,26 @@ for i=x0,xf do begin
 ; read extension data
     if (obs_npix le 0) then obs_npix = fits_npix
                                 ; simultaneous read of 4 columns
-    fxbreadm, lun, ['PIXEL','SIGNAL','N_OBS','SERROR'], pixel, signal, n_obs, serror,  status = status
+    goodnames = ['PIXEL','SIGNAL','N_OBS','SERROR']
+    fxbreadm, lun, goodnames, pixel, signal, n_obs, serror,  status = status
     fxbclose, lun
-    if (total(status) lt 2) then begin
-        print,'Wrong format for fits file '+filename
-        print,'only could read ',total(status),' columns'
-        stop
+    ncols = round(total(status))
+    if (ncols le 1) then begin
+        if (~status[0]) then begin ; exit if PIXEL not found
+            message,'No valid column found in '+filename
+        endif
+        message,/info,'WARNING: the columns do not have the expect names in '+filename
+        message,/info,'Got:      '+string(ttypes,    form='(10(a,:,", "))')
+        message,/info,'Expected: '+string(goodnames, form='(10(a,:,", "))')
+        fxbopen, lun, filename, i+1 ; read ignoring column names
+        fxbreadm,lun, lindgen(tfields)+1, pixel, signal, n_obs, serror, status = status2
+        fxbclose,lun
+        ncols2 = round(total(status2))
+        if (ncols2 le 1) then begin
+            message,/info,'Wrong format for fits file '+filename
+            message,'only could read '+strtrim(ncols2,2)+' columns'
+        endif
+        status = status2
     endif
     if (n_elements(pixel) eq n_elements(signal)) then begin ; standard explicit format
         if (obs_npix lt fits_npix) then begin
@@ -167,8 +183,7 @@ for i=x0,xf do begin
             if (status[3]) then serror = temporary(serror[0:obs_npix-1])
         endif
     endif else begin            ; compressed explicit format
-        print,'inconstitent pixel index and data value in '+filename
-        stop
+        message,'inconstitent pixel index and data value in '+filename
     endelse
 
     xheader = xhdr

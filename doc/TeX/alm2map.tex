@@ -30,7 +30,7 @@ The routines accept both single and double precision arrays for alm\_TGC and
 , \mylink{sub:alm2map:alm_TGC}{alm\_TGC}%
 , \mylink{sub:alm2map:map_TQU}{map\_TQU}%
  [, \mylink{sub:alm2map:plm}{plm}%
-]}
+$|$ \mylink{sub:alm2map:zbounds}{zbounds}]}
 \end{f90format}
 
 \begin{arguments}
@@ -49,18 +49,25 @@ alm\_TGC\mytarget{sub:alm2map:alm_TGC}(1:p, 0:nlmax, 0:nmmax) & SPC or DPC & IN 
 
 \begin{tabular}{p{0.4\hsize} p{0.05\hsize} p{0.1\hsize} p{0.35\hsize}}  \hline  
 map\_TQU\mytarget{sub:alm2map:map_TQU}(0:12*nsmax**2-1)      & SP or DP & OUT & if only a temperature map is
-to be synthesized, the map-array should be passed with this rank.  \\ 
+to be synthesized, the map-array should be passed with this rank.  
+\\ 
 map\_TQU(0:12*nsmax**2-1, 1:3) & SP or DP & OUT & if both temperature an 
 polarisation maps are to be synthesized, the map array should have this rank, 
-where the second index is (1,2,3) corresponding to (T,Q,U). \\ 
-plm\mytarget{sub:alm2map:plm}(0:n\_plm-1), \hskip 3cm OPTIONAL & DP & IN & If this optional matrix is passed with
-this rank, precomputed $P_{\ell m}(\theta)$ are used instead of recursion. (
-n\_plm = nsmax*(nmmax+1)*(2*nlmax-nmmax+2)
+where the second index is (1,2,3) corresponding to (T,Q,U). 
 \\ 
-plm(0:n\_plm-1,1:3), \hskip 3cm OPTIONAL & DP & IN & If this optional matrix is 
+plm\mytarget{sub:alm2map:plm}(0:n\_plm-1), \hskip 4cm OPTIONAL & DP & IN & If this optional matrix is passed with
+this rank, precomputed $P_{\ell m}(\theta)$ are used instead of recursion. (
+n\_plm = nsmax*(nmmax+1)*(2*nlmax-nmmax+2).
+\\ 
+plm(0:n\_plm-1,1:3), \hskip 4cm OPTIONAL & DP & IN & If this optional matrix is 
 passed with this rank, precomputed $P_{\ell m}(\theta)$ AND precomputed tensor
 harmonics are used instead of recursion. (n\_plm =
-nsmax*(nmmax+1)*(2*nlmax-nmmax+2) 
+nsmax*(nmmax+1)*(2*nlmax-nmmax+2). 
+\\
+zbounds\mytarget{sub:alm2map:zbounds}(1:2), \hskip 4cm OPTIONAL & DP & IN & section of the sphere on which to perform the map synthesis, expressed in terms of $z=\sin(\mathrm{latitude}) =
+                   \cos(\theta).$ \input{zbounds_sub}
+Currently, \mylink{sub:alm2map:zbounds}{zbounds} and \mylink{sub:alm2map:plm}{plm} can not be used together.
+\\
 \end{tabular}
 }
 \end{arguments}
@@ -105,8 +112,8 @@ be no recursions in the routine. However, this will most likely have a
   \item[\htmlref{assert\_alloc}{sub:assert}] routine to print error message, when an array can not be
   allocated properly
   \end{sulist}
-Note: Starting with \htmlref{version 2.20}{sub:new2p20}, {\tt libpsht} routines will be called when
-precomputed $P_{\ell m}$ are not provided.
+%Note: Starting with \htmlref{version 2.20}{sub:new2p20}, {\tt libpsht} routines will be called when precomputed $P_{\ell m}$ are not provided.
+Note: Starting with \htmlref{version 3.10}{sub:new3p10}, {\tt libsharp} routines will be called when precomputed $P_{\ell m}$ are not provided.
 \end{modules}
 
 \begin{related}

@@ -52,10 +52,7 @@ alm\_TGC\mytarget{sub:map2alm:alm_TGC}(1:p, 0:nlmax, 0:nmmax) & SPC/ DPC & OUT &
 %%    removes the equatorial ring.\\
 zbounds\mytarget{sub:map2alm:zbounds}(1:2) & DP & IN & section of the map on which to perform the $a_{\ell m}$
                    analysis, expressed in terms of $z=\sin(\mathrm{latitude}) =
-                   \cos(\theta).$ If zbounds(1)$<$zbounds(2), the analysis is
-                   performed {\em on} the strip zbounds(1)$<z<$zbounds(2); if not,
-                   it is performed {\em outside} of the strip
-                   zbounds(2)$<z<$zbounds(1). \\
+                   \cos(\theta).$ \input{zbounds_sub}\\
 w8ring\_TQU\mytarget{sub:map2alm:w8ring_TQU}(1:2*nsmax, 1:p) & DP & IN & ring weights for quadrature corrections. If ring weights are not used, this array should be 1 everywhere. p is 1 for a temperature analysis and 3 for (T,Q,U). \\
 {\small{plm(0:(nlmax+1)(nlmax+2)nsmax-1)}}\mytarget{sub:map2alm:plm}, \hskip 6cm OPTIONAL & DP & IN & If this optional matrix is passed with this rank, precomputed $P_{\ell m}(\theta)$ are used instead of recursion. Note that since version 2.20 this feature has become obsolete
 because of algorithm optimizations.\\ 
@@ -102,8 +99,8 @@ used while tensor harmonics are computed with a recursion.
   \item[\htmlref{assert\_alloc}{sub:assert}] routine to print error message when an array is not
   properly allocated		
   \end{sulist}
-Note: Starting with \htmlref{version 2.20}{sub:new2p20}, {\tt libpsht} routines will be called when
-precomputed $P_{\ell m}$ are not provided.
+%Note: Starting with \htmlref{version 2.20}{sub:new2p20}, {\tt libpsht} routines will be called when precomputed $P_{\ell m}$ are not provided.
+Note: Starting with \htmlref{version 3.10}{sub:new3p10}, {\tt libsharp} routines will be called when precomputed $P_{\ell m}$ are not provided.
 \end{modules}
 
 \begin{related}

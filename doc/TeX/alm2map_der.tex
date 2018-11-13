@@ -28,7 +28,7 @@ affecting the calculation of polarisation derivatives on past versions of this r
 , \mylink{sub:alm2map_der:map}{map}%
 , \mylink{sub:alm2map_der:der1}{der1}%
  [, \mylink{sub:alm2map_der:der2}{der2}%
-]}
+, \mylink{sub:alm2map_der:zbounds}{zbounds}]}
 \end{f90format}
 
 \begin{arguments}
@@ -57,7 +57,9 @@ $\left({\partial^2 T}/{\partial \theta^2}, {\partial^2 T}/{\partial
   \theta\partial\phi}/\sin\theta,\right.\myhtmlimage{}$ 
 $\left.{\partial^2 T}/{\partial \phi^2}/\sin^2\theta \right)\myhtmlimage{}$ or
 $\left({\partial^2 T}/{\partial \theta^2}, {\partial^2 Q}/{\partial \theta^2},
-{\partial^2 Q}/{\partial \theta^2}, \ldots \right)\myhtmlimage{}$ 
+{\partial^2 Q}/{\partial \theta^2}, \ldots \right)\myhtmlimage{}$%
+\\
+zbounds\mytarget{sub:alm2map_der:zbounds}(1:2), \hskip 4cm OPTIONAL & DP & IN & section of the sphere on which to perform the map synthesis, expressed in terms of $z=\sin(\mathrm{latitude}) = \cos(\theta).$ \input{zbounds_sub}
 
 \end{tabular}
 }

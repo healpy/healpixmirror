@@ -4093,7 +4093,7 @@
     ! -------------------------------------
     if (iter_order > 0) then
        alm_TGC = alm_TGC_out ! final alms
-       map_TQU = map_TQU_in ! input map
+       map_TQU = map_TQU_in ! input map (masked)
        deallocate(alm_TGC_out, map_TQU_in)
     endif
  
@@ -4111,6 +4111,7 @@
     ! 2008-11-27: patch to ignore dimension of non presen optional array (plm)
     ! 2008-12-03: use pointer toward map and plm section (avoid stack overloading)
     ! 2015-03-06: replaced implicit loop with explicit one because of ifort 15.0.2
+    ! 2018-11:    apply the mask (and zbounds) only on input map
   !=======================================================================
 
     use statistics, only: tstats, compute_statistics
@@ -4125,7 +4126,7 @@
     real(DP),       intent(IN),  dimension(0:,1:), optional, target :: plm
     real(KMAP),     intent(IN),  dimension(0:,1:),   optional :: mask
     ! local variables
-    real(DP), dimension(1:2)         :: zbounds_in, zbounds_full
+    real(DP), dimension(1:2)         :: zbounds_in, zbounds_full, zbounds_run
     real(DP), dimension(1:2*nsmax,3) :: w8ring_in
     integer(I4B) :: n_maps, n_alms, n_pols, n_masks, n_plms, n_w8_2
     integer(I4B) :: iter, status, polar, i, lbm, order
@@ -4193,6 +4194,7 @@
        zbounds_in = zbounds
        do_bounds = .true.
     endif
+    zbound_run = zbounds_in
 
     n_w8_2 = 0
     w8ring_in  = 1.d0
@@ -4223,16 +4225,8 @@
 
 
     ! -------------------------------------
-    ! multiply map by mask
+    ! multiply map by mask and apply zbounds
     ! -------------------------------------
-!     if (do_mask) then
-!        do i=1,n_pols
-!          ! map_TQU(0:,i) = map_TQU(0:,i) * mask(lbm:, min(i, n_masks))
-!           do p=0, npixtot-1 ! explicit loop because of ifort 15.0.2 2015-03-06
-!              map_TQU(p,i) = map_TQU(p,i) * mask(lbm+p, min(i, n_masks))
-!           enddo
-!        enddo
-!     endif
     order = 1 ! ring ordered
     if (do_bounds .and. iter_order > 0) then
        if (do_mask) then
@@ -4279,18 +4273,18 @@
        select case (n_plms+polar*10)
        case(0) ! Temperature only
           p_map_1 => map_TQU(:,1)
-          call map2alm(nsmax, nlmax, nmmax, p_map_1, alm_TGC, zbounds_in, w8ring_in(:,1:1))
+          call map2alm(nsmax, nlmax, nmmax, p_map_1, alm_TGC, zbounds_run, w8ring_in(:,1:1))
        case(1) ! T with precomputed Ylm
           p_map_1 => map_TQU(:,1)
           p_plm_1 => plm(:,1)
-          call map2alm(nsmax, nlmax, nmmax, p_map_1, alm_TGC, zbounds_in, w8ring_in(:,1:1), p_plm_1)
+          call map2alm(nsmax, nlmax, nmmax, p_map_1, alm_TGC, zbounds_run, w8ring_in(:,1:1), p_plm_1)
        case(10) ! T+P
-          call map2alm(nsmax, nlmax, nmmax, map_TQU, alm_TGC, zbounds_in, w8ring_in)
+          call map2alm(nsmax, nlmax, nmmax, map_TQU, alm_TGC, zbounds_run, w8ring_in)
        case(11) ! T+P with precomputed Ylm_T
           p_plm_1 => plm(:,1)
-          call map2alm(nsmax, nlmax, nmmax, map_TQU, alm_TGC, zbounds_in, w8ring_in, p_plm_1)
+          call map2alm(nsmax, nlmax, nmmax, map_TQU, alm_TGC, zbounds_run, w8ring_in, p_plm_1)
        case(13) ! T+P with precomputed Ylm
-          call map2alm(nsmax, nlmax, nmmax, map_TQU, alm_TGC, zbounds_in, w8ring_in, plm)
+          call map2alm(nsmax, nlmax, nmmax, map_TQU, alm_TGC, zbounds_run, w8ring_in, plm)
        case default 
           print*,'Invalid configuration'
           call fatal_error(code)
@@ -4298,6 +4292,9 @@
 
        ! if no iteration: exit
        if (iter_order == 0) exit
+
+       ! in case of iterations, analyze full sky map
+       zbounds_run = zbounds_full
 
        ! if iterate, show residual amplitude
        if (iter == 0 .and. iter_order > 0) then
@@ -4336,14 +4333,7 @@
           call fatal_error(code)
        end select
 
-       ! map = map_2 - map : residual map
-       ! multiply newly synthetized MAP by MASK in order to allow comparison with input MAP.
-       if (do_mask) then
-          do i=1,n_pols
-             map_TQU(0:,i) = map_TQU(0:,i) * mask(lbm:, min(i, n_masks))
-          enddo
-       endif
-       map_TQU = map_TQU_in - map_TQU
+       map_TQU = map_TQU_in - map_TQU ! residual map
 
        do i=1,n_pols
           call compute_statistics(map_TQU(:,i), map_stat)
@@ -4357,7 +4347,7 @@
     ! -------------------------------------
     if (iter_order > 0) then
        alm_TGC = alm_TGC_out ! final alms
-       map_TQU = map_TQU_in ! input map
+       map_TQU = map_TQU_in ! input map (masked)
        deallocate(alm_TGC_out, map_TQU_in)
     endif
  

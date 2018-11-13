@@ -86,10 +86,7 @@ case, the first index is (1,2,3) corresponding to (T,E,B). \\
 %
 zbounds\mytarget{sub:map2alm_iterative:zbounds}(1:2), \hskip 6cm OPTIONAL  & DP & IN & section of the map on which to perform the $a_{\ell m}$
                    analysis, expressed in terms of $z=\sin(\mathrm{latitude}) =
-                   \cos(\theta).$ If zbounds(1)$<$zbounds(2), the analysis is
-                   performed {\em on} the strip zbounds(1)$<z<$zbounds(2); if not,
-                   it is performed {\em outside} of the strip
-                   zbounds(2)$<z<$zbounds(1). If absent, the whole map is
+                   \cos(\theta).$ \input{zbounds_sub}. If absent, the whole map is
 analyzed\\
 %
 w8ring\_TQU\mytarget{sub:map2alm_iterative:w8ring_TQU}(1:2*nsmax,1:p), \hskip 6cm OPTIONAL  & DP & IN & ring weights for

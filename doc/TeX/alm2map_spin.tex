@@ -61,7 +61,7 @@ $s=0$, $\ _{0}a^+_{\ell m} = -a^T_{\ell m}$, $\ _{0}a^-_{\ell m} = 0$, $\ {_0}S^
 , \mylink{sub:alm2map_spin:spin}{spin}%
 , \mylink{sub:alm2map_spin:alm}{alm}%
 , \mylink{sub:alm2map_spin:map}{map}%
-}
+[, \mylink{sub:alm2map_spin:zbounds}{zbounds}]}
 \end{f90format}
 
 \begin{arguments}
@@ -76,7 +76,8 @@ spin\mytarget{sub:alm2map_spin:spin} & I4B & IN & spin $s$ of the maps to be gen
 is relevant). \\
 alm\mytarget{sub:alm2map_spin:alm}(1:2, 0:nlmax, 0:nmmax) & SPC/ DPC & IN & The ${_{|s|}}a^+_{\ell m}$ and ${_{|s|}}a^-_{\ell m}$ values to make the map
                    from.\\
-map\mytarget{sub:alm2map_spin:map}(0:12*nsmax**2-1, 1:2) & SP/ DP & OUT & ${_{|s|}}S^+$ and ${_{|s|}}S^-$ output maps
+map\mytarget{sub:alm2map_spin:map}(0:12*nsmax**2-1, 1:2) & SP/ DP & OUT & ${_{|s|}}S^+$ and ${_{|s|}}S^-$ output maps\\
+zbounds\mytarget{sub:alm2map_spin:zbounds}(1:2), \hskip 4cm OPTIONAL & DP & IN & section of the sphere on which to perform the map synthesis, expressed in terms of $z=\sin(\mathrm{latitude}) = \cos(\theta).$ \input{zbounds_sub}
 \end{tabular}
 }
 \end{arguments}
@@ -113,7 +114,8 @@ Make spin-4 maps from the $a_{\ell m}$ passed in alm. The maps have $\nside$ of 
   \item[\htmlref{assert\_alloc}{sub:assert}] routine to print error message, when an array can not be
   allocated properly
   \end{sulist}
-Note: Starting with \htmlref{version 2.20}{sub:new2p20}, {\tt libpsht} routines will be called if $0<|s|\le100$.
+%Note: Starting with \htmlref{version 2.20}{sub:new2p20}, {\tt libpsht} routines will be called if $0<|s|\le100$.
+Note: Starting with \htmlref{version 3.10}{sub:new3p10}, {\tt libsharp} routines will be called if $0<|s|\le100$.
 \end{modules}
 
 \begin{related}

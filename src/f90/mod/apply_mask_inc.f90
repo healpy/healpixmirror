@@ -31,6 +31,8 @@
 ! to be inserted as is in pix_tools.f90
 !
 ! 2018-10-22: creation
+! 2018-11-09: same behavior as remove_dipole, select_rings 
+!             and libsharp's hpsharp_make_healpix_geom_info_2
 !
 !--------------------------------------------------------------
 
@@ -70,7 +72,8 @@
 
   ! apply zbounds
   if (present(zbounds)) then
-     if (abs(zbounds(1)+1.0_dp) + abs(zbounds(2)-1.0_dp) > 1.d-15) then ! not (-1,1)
+     !!!!if (abs(zbounds(1)+1.0_dp) + abs(zbounds(2)-1.0_dp) > 1.d-15) then ! not (-1,1)
+     if ((zbounds(1)+1.0_dp)> EPSILON(1.0_DP) .or. (zbounds(2)-1.0_dp) < -EPSILON(1.0_DP)) then ! not (-1,1)
         nside = npix2nside(npix_map)
         if (zbounds(2) <= zbounds(1)) then ! remove one strip
            frac = (zbounds(1)-zbounds(2)) * 0.5_dp

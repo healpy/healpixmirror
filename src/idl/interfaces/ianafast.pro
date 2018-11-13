@@ -111,7 +111,7 @@ pro ianafast, map1_in, cl_out $
 ;    map2_in=: 2nd input map (FITS file or array), if provided, Cl_out will
 ;     contain the cross power spectra of the 2 maps [default: no 2nd map]
 ;
-;    maskfile=: pixel mask (FITS file or array)   [default: no mask]
+;    maskfile=: pixel mask (FITS file or array), F90 only   [default: no mask]
 ;
 ;    /nested=: if set, signals that *all* maps and mask read online are in
 ;      NESTED scheme (does not apply to FITS file), see also /ring and Ordering
@@ -140,7 +140,7 @@ pro ianafast, map1_in, cl_out $
 ;
 ;    /silent:    if set, works silently
 ;
-;    theta_cut_deg=: cut around the equatorial plane 
+;    theta_cut_deg=: cut around the equatorial plane, only in F90
 ;
 ;    tmpdir=:      directory in which are written temporary files 
 ;         [default: IDL_TMPDIR (see IDL documentation about IDL_TMPDIR)]
@@ -241,6 +241,13 @@ if (keyword_set(cxx) && keyword_set(won) && undefined(w8file)) then begin
     message,'w8file must be defined when setting won or weighted with C++ code (/cxx option).'
 endif
 
+if (keyword_set(cxx) && defined(theta_cut_deg)) then begin
+    message,/info,'WARNING: theta_cut_deg will be ignored by anafast_cxx'
+endif
+if (keyword_set(cxx) && defined(maskfile)) then begin
+    message,/info,'WARNING: maskfile will be ignored by anafast_cxx'
+endif
+
 ; deal with online data
 tmp_cl_out   = hpx_mem2file(with_cl_out ? (defined(cl_out)?cl_out :-1) : NoFile, /out)
 tmp_map1_in  = hpx_mem2file(set_parameter(map1_in, NoFile, /ifempty),  /in, /map, ring=ring, nested=nested, ordering=ordering)
@@ -272,7 +279,7 @@ if (~keyword_set(cxx)) then begin
     printf,lunit,hpx_add_parameter('w8filedir', w8dir, /expand,     /skip_if_not_set) ; F90 only
     printf,lunit,hpx_add_parameter('w8file',    w8file,             /skip_if_not_set) ; F90 only
 ;
-    printf,lunit,hpx_add_parameter('theta_cut_deg',theta_cut_deg, def=0.0, /ifempty)
+    printf,lunit,hpx_add_parameter('theta_cut_deg',theta_cut_deg, def=0.0, /ifempty) ; F90 only
     printf,lunit,hpx_add_parameter('won',           won,           def=1, /ifempty) ; F90 only
     printf,lunit,hpx_add_parameter('outfile_alms2', alm2_out,    def=NoFile, /expand, /force, /ifempty)
     printf,lunit,' '

@@ -109,6 +109,7 @@ module alm_tools
   ! make (front end) routines public
   public :: alm2map, map2alm, alm2map_der, alm2map_spin, map2alm_spin
   public :: map2alm_iterative
+  public :: map2alm_iterative_test
   public :: alter_alm, create_alm, alm2cl, rotate_alm
   public :: create_alm_old ! for tests only
   public :: plm_gen
@@ -181,6 +182,9 @@ module alm_tools
 
   interface map2alm_iterative
      module procedure map2alm_iterative_s, map2alm_iterative_d
+  end interface
+  interface map2alm_iterative_test
+     module procedure map2alm_iterative_test_s, map2alm_iterative_test_d
   end interface
 
   interface sub_map2ring
@@ -361,7 +365,7 @@ contains
     return
   end subroutine get_pixel_layout
   !=======================================================================
-  subroutine select_rings(z, zbounds, keep_north, keep_south, keep_either)
+  subroutine select_rings_old(z, zbounds, keep_north, keep_south, keep_either)
     !=======================================================================
     ! select rings laying within zbounds
     ! if zbounds(1) < zbounds(2) : keep  zbounds(1) < z < zbounds(2)
@@ -391,6 +395,43 @@ contains
        ! inner ring
        keep_north = (zn >= zbounds(1) .and. zn <= zbounds(2))
        keep_south = (zs >= zbounds(1) .and. zs <= zbounds(2))
+
+    else
+       ! outter ring
+       keep_north = (zn > zbounds(1) .or. zn < zbounds(2))
+       keep_south = (zs > zbounds(1) .or. zs < zbounds(2))
+    endif
+    keep_either   = keep_north .or. keep_south
+
+
+    return
+  end subroutine select_rings_old
+
+  !=======================================================================
+  subroutine select_rings(z, zbounds, keep_north, keep_south, keep_either)
+    !=======================================================================
+    ! select rings laying within zbounds
+    ! if zbounds(1) <  zbounds(2) : keep  zbounds(1) < z < zbounds(2)
+    ! if zbounds(2) <= zbounds(1) : keep z < zbounds(2) Union  zbounds(1) < z
+    ! input z should be >= 0
+    ! edited 2018-11-09 to be identical to remove_dipole, apply_mask 
+!             and libsharp's hpsharp_make_healpix_geom_info_2
+    !=======================================================================
+    real(DP)    , intent(in)  :: z
+    real(DP)    , intent(in), dimension(1:2)  :: zbounds
+    logical(LGT), intent(OUT) :: keep_north, keep_south, keep_either
+    !
+    real(DP) :: zn, zs
+    !=======================================================================
+
+
+    zn = abs(z)
+    zs = -zn
+
+    if (zbounds(1) < zbounds(2)) then
+       ! inner ring
+       keep_north = (zn > zbounds(1) .and. zn < zbounds(2))
+       keep_south = (zs > zbounds(1) .and. zs < zbounds(2))
 
     else
        ! outter ring

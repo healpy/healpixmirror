@@ -81,10 +81,7 @@ alm\mytarget{sub:map2alm_spin:alm}(1:2, 0:nlmax, 0:nmmax) & SPC/ DPC & OUT & The
 ${_{|s|}}a^-_{\ell m}$ output values. \\
 zbounds\mytarget{sub:map2alm_spin:zbounds}(1:2), \hskip 4cm OPTIONAL & DP & IN & section of the map on which to perform the $a_{\ell m}$
                    analysis, expressed in terms of $z=\sin(\mathrm{latitude}) =
-                   \cos(\theta).$ If zbounds(1)$<$zbounds(2), the analysis is
-                   performed {\em on} the strip zbounds(1)$<z<$zbounds(2); if not,
-                   it is performed {\em outside} of the strip
-                   zbounds(2)$<z<$zbounds(1). \\
+                   \cos(\theta).$ \input{zbounds_sub} \\
 w8ring\_TQU(1:2*nsmax,1:2)\mytarget{sub:map2alm_spin:w8ring_TQU}, \hskip 3cm OPTIONAL & DP & IN & ring weights for quadrature corrections. If ring weights are not used, this array should be 1 everywhere.
 \end{tabular}
 }
@@ -133,7 +130,8 @@ are returned in alm.
   \item[\htmlref{assert\_alloc}{sub:assert}] routine to print error message when an array is not
   properly allocated		
   \end{sulist}
-Note: Starting with \htmlref{version 2.20}{sub:new2p20}, {\tt libpsht} routines will be called if $0<|s|\le100$.
+%Note: Starting with \htmlref{version 2.20}{sub:new2p20}, {\tt libpsht} routines will be called if $0<|s|\le100$.
+Note: Starting with \htmlref{version 3.10}{sub:new3p10}, {\tt libsharp} routines will be called if $0<|s|\le100$.
 \end{modules}
 
 \begin{related}
