@@ -22,20 +22,20 @@
 <form action="https://www.google.com/search" class="searchform" method="get" target="_blank">
 <!-- form action="https://www.google.com/webhp" class="searchform" method="get" target="_blank" -->
 <!-- form action="https://www.google.com/cse" class="searchform" method="get" target="_blank" -->
-   <table width=100% border="0" cellpadding="0" cellspacing="0">
-   <tr align="center"><td colspan="2">
+   <table>
+   <tr style="text-align:center"><td colspan="1">
    <input type="text"   name="q" size="32" maxlength="255" value="" />
    </td></tr>
-<tr align="center"><td colspan="2">
+<tr style="text-align:center"><td colspan="1">
    <input class="button" type="submit" value="Search" />
    <input class="button" type="reset" value="Clear" />
    </td></tr>
-<tr><td align="center" style="font-size:100%">
+<tr style="text-align:center"><td colspan="1">
    <input type="checkbox"  name="sitesearch"
    value="http://healpix.sourceforge.net" checked /> only search this site<br />
 <!--   value="https://healpix.sourceforge.io" checked /> only search this site<br / -->
-</td></tr>
-<tr align="center"><td colspan="2" style="font-size:100%">
+   </td></tr>
+<tr style="text-align:center"><td colspan="1" style="font-size:100%">
    Search result will appear in a new tab
    </td></tr>
 </table>

@@ -1,8 +1,9 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!DOCTYPE html>
 
-<html xmlns="https://www.w3.org/1999/xhtml" lang="en">
+<html lang="en">
 
 <head>
+  <meta charset="utf-8">
   <!-- link rel="shortcut icon" href="images/healpix.ico" -->
   <link rel="apple-touch-icon" sizes="180x180" href="images/favicons/apple-touch-icon.png?v=2017">
   <link rel="icon" type="image/png" sizes="32x32" href="images/favicons/favicon-32x32.png?v=2017">
@@ -33,7 +34,6 @@
 ?>
   <meta name="description" content="Hierarchical Equal Area Iso Latitude pixelation of the sphere (HEALPix); Data Analysis, Simulations and Visualization on the Sphere" />
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta http-equiv="content-type" content="text/html; charset=utf-8" />
   <link rel="stylesheet" href="images/Healpix.css" type="text/css" />
 
 
@@ -93,4 +93,4 @@ if ($myhost == $httpshost) include_once("_gtag.php");
 	<!-- content-wrap starts -->
 	<div id="content-wrap">
 		<div id="main">
-			<a name="TemplateInfo"></a>
+			<a id="TemplateInfo"></a>

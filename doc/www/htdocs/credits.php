@@ -94,9 +94,7 @@
 		</li>
 		</ul>
 
-
-</p>
-<a name="team"></a>
+<a id="team"></a>
 <h2>HEALPix Team</h2>
 <p>
               The active support of HEALPix currently involves the following people (in alphabetical order):
@@ -129,11 +127,11 @@
 		C, C++ and Java developments;
 		</li>
 
-		<!---
+		<!--
 		<li>
 		C. Rosset: Python developments;
 		</li>
-		--->
+		-->
 
 		<li>
 		L. Singer: Python developments;
@@ -147,20 +145,16 @@
 
 
 	</ul>
-		<b>
-	<p>
+	<p><b>
                 This effort is not supported by any dedicated funds, and depends
                 entirely on the voluntary collaboration of the mentioned individuals.
-	</p>
-              </b>
-
-</p>
+	</b></p>
 
 
 <!-- *************************************************************************************  -->
 
 
-<A NAME="acknowledgments">
+<A id="acknowledgments">
 <h2>Acknowledgments</h2>
 </A>
 
@@ -168,9 +162,10 @@
 		We thank the following people for their contributions and/or suggestions, which
 		significantly helped us to improve HEALPix throughout its several releases
 
-            <table cellSpacing=0 cellPadding=0 border=0 width="601" class="tablelist">
-              <tr valign="top">
-                <td width="250" valign="top">
+            <!-- table cellSpacing=0 cellPadding=0 border=0 width="601" class="tablelist" -->
+            <table class="tablelist">
+              <tr style="vertical-align:top">
+                <td style="width:250px; vertical-align:top">
                     <ul>
                       <li>    Reza Ansari    			</li>
                       <li>    John Arballo    			</li>
@@ -209,7 +204,7 @@
                   &nbsp;
                 </td>
 -->
-                <td width="350" valign="top">
+                <td style="width:350px; vertical-align:top">
                     <ul>
                       <li>    Ted Kisner   			</li>
 		      <li>    Masakazu A.R. Kobayashi		</li>
@@ -246,10 +241,7 @@
               </tr>
             </table>
 
-
-</p>
-
-<a name="website">
+<a id="website">
 <h2>About this Web Site</h2>
 </a>
 <p>

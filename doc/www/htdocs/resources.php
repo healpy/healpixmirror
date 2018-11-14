@@ -68,7 +68,6 @@ An extensive list of
 </li>
 
 </ul>
-</ul>
 
 <!-- ********************** -->
 <h2>Applications related to HEALPix</h2>
@@ -77,7 +76,7 @@ An extensive list of
 <p>
 
 <ul>
-<!--   ------Data simulation--------  -->
+<!--   ******Data simulation******  -->
 <li>
 The 
 <a href="https://lambda.gsfc.nasa.gov/toolbox/tb_cmbfast_ov.cfm" >
@@ -114,9 +113,8 @@ and the diffuse emissions they produce (now compatible with HEALPix 3.11 and new
 Computation of photon fluxes from dark matter annihilation or decay in galaxy haloes
 </li>
 
-<br>
-<!--   ------Visualization--------  -->
-<li>
+<!--   ******Visualization******  -->
+<li style="margin-top:1.5em">
 Visualization tools supporting HEALPix maps in FITS format:
 <a href="https://aladin.u-strasbg.fr/">Aladin&nbsp;Sky&nbsp;Atlas</a> 
 (which can overlay any astronomical map or catalog)
@@ -140,9 +138,8 @@ to access, visualize and browse images, catalogues and cube data
 <!-- https://en.wikipedia.org/wiki/Montage_Image_Mosaic_Software -->
 </li>
 
-<br>
-<!--   ------Data analysis--------  -->
-<li>
+<!--   ******Data analysis******  -->
+<li  style="margin-top:1.5em">
 <a href="https://github.com/healpy/healpy">Healpy</a>: 
 python wrapper to HEALPix (now included in HEALPix package)
 </li>
@@ -201,7 +198,6 @@ by Anthony J. Banday
 -->
 
 </ul>
-</p>
 
 <!-- ********************** -->
 <h2>HEALPix in the literature</h2>
@@ -244,7 +240,7 @@ and
 
 </li>
 </ul>
-</p>
+
 <p>
 Misc
 <ul>
@@ -259,7 +255,6 @@ Misc
 <a href="https://www.google.com/search?q=healpix&pws=0&biw=1395&bih=710&tbm=shop&source=lnms&sa=X&ved=0ahUKEwixwtO39-_JAhXHOBoKHQ0_CFgQ_AUICCgC&dpr=2#q=healpix&pws=0&tbm=bks&start=0">Some books mentioning HEALPix according to Google</a> (and some not)
 </li>
 </ul>
-</p>
 
 
 

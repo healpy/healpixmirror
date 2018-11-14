@@ -19,7 +19,7 @@ For <a href="https://healpy.readthedocs.org/en/latest/">healpy</a> specific prob
 </p>
 <p>
 If everything else fails, send us an e-mail at 
-<script language="javascript"><!--
+<script><!--
 var n2 = '-support';var n1 = 'healpix';var p1 = 'ma';var p2 =  'ilto&';var p3 = '#58;';var dn1 = 'lists';var dn2 = 'sourceforge';var dn3 = 'net';
 document.write('<a href='+p1+p2+p3+n1+n2+'&#64;'+dn1+'&#46;'+dn2+'&#46;'+dn3+'>'+n1+n2+'&#64;'+dn1+'&#46;'+dn2+'&#46;'+dn3+'</a>') 
 --></script><noscript><em>[Enable javascript in your browser to see the email address]</em></noscript>

@@ -77,7 +77,7 @@ of a sphere. As suggested in the name, this pixelation produces a subdivision of
                   data, and any distribution based on the symmetries of the icosahedron).
                 </li>
               </ol>
-</p>
+
 
 <p>
             <img src="images/gorski_f1.jpg" alt="HEALPix Grid Examples" width="513" height="510"><br />
@@ -115,7 +115,7 @@ as can be seen from the <a href="resources.php">Resources</a> and <a href="galle
                 	<!-- br -->
                 	<li>
      Highly optimised Spherical Harmonics Transforms library 
-    (<a href="https://sourceforge.net/projects/libsharp"><tt>libsharp</tt></a>) 
+    (<a href="https://sourceforge.net/projects/libsharp"><kbd>libsharp</kbd></a>) 
      used by all implementations for better performance
                 	</li>
                 	<!-- br -->
@@ -176,8 +176,8 @@ as can be seen from the <a href="resources.php">Resources</a> and <a href="galle
                 	<li>
                   	Most critical routines are parallelized
                 	<!-- br -->
-			</ul>
 			</li>
+			</ul>
                 </li><!-- br -->
 		<li>
 		Visualization:
@@ -206,7 +206,6 @@ as can be seen from the <a href="resources.php">Resources</a> and <a href="galle
 			</ul>
                 </li><!-- br -->
 		</ul>
-</p>
 <p>
     For a detailed list of the new features added in the latest HEALPix release, see
     the <a href="downloads.php">Getting HEALPix page</a>.<br>
