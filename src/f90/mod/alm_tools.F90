@@ -109,7 +109,7 @@ module alm_tools
   ! make (front end) routines public
   public :: alm2map, map2alm, alm2map_der, alm2map_spin, map2alm_spin
   public :: map2alm_iterative
-  public :: map2alm_iterative_test
+  public :: map2alm_iterative_old
   public :: alter_alm, create_alm, alm2cl, rotate_alm
   public :: create_alm_old ! for tests only
   public :: plm_gen
@@ -183,8 +183,8 @@ module alm_tools
   interface map2alm_iterative
      module procedure map2alm_iterative_s, map2alm_iterative_d
   end interface
-  interface map2alm_iterative_test
-     module procedure map2alm_iterative_test_s, map2alm_iterative_test_d
+  interface map2alm_iterative_old
+     module procedure map2alm_iterative_old_s, map2alm_iterative_old_d
   end interface
 
   interface sub_map2ring

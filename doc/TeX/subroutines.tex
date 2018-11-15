@@ -220,9 +220,22 @@ $\mathbf{\phi}$ & The azimuthal angle on the sphere, $\phi\in[0,2\pi[$.\\
 %--------------------------------------------
 %-------------------------------------------- CHANGES
 %--------------------------------------------
-\section[Changes between releases 3.31 and \hpxversion]{Changes between releases 3.31 and
+\section[Changes between releases 3.40 and \hpxversion]{Changes between releases 3.40 and
 \hpxversion}
+\begin{itemize}
+\item correction of a bug in 
+\htmlref{\texttt{map2alm\_iterative}}{sub:map2alm_iterative},
+when a \mylink{sub:map2alm_iterative:mask}{\texttt{mask}} is used in combination with 
+\item addition of \mylink{sub:alm2map:zbounds}{\texttt{zbounds}} 
+  in \htmlref{\texttt{alm2map}}{sub:alm2map} 
+in order to simulate (faster) a signal on only a fraction of the sphere,
+\mylink{sub:map2alm_iterative:iter_order}{\texttt{iter\_order}} $> 0$,
+\item  \htmladdnormallink{improved support for version 18 and more of Intel C and F90 compilers}{https://sourceforge.net/p/healpix/bugs/78} in \texttt{configure} script,
+\item \htmladdnormallink{edition to fitstools.F90}{https://sourceforge.net/p/healpix/bugs/84} allowing a proper compilation with g95.
+\end{itemize}
 
+\section[Changes between releases 3.31 and 3.40]{Changes between releases 3.31 and
+3.40}
 \begin{itemize}
 \item The facilities 
 \htmlref{\texttt{anafast}}{fac:anafast} and 

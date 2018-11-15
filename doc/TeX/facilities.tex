@@ -238,11 +238,33 @@ with $X,Y \in \{T,E,B\}$.
 %--------------------------------------------
 %-------------------------------------------- CHANGES
 %--------------------------------------------
-\section[Changes between releases 3.31 and \hpxversion]{%
-Changes between releases 3.31 and \hpxversion}
+\section[Changes between releases 3.40 and \hpxversion]{%
+Changes between releases 3.40 and \hpxversion}
+\begin{itemize}
+\item correction of a bug in \mylinkext{sub:map2alm_iterative}{\texttt{map2alm\_iterative}}
+when a \mylinkext{sub:map2alm_iterative:mask}{\texttt{mask}} is used in combination with 
+\mylinkext{sub:map2alm_iterative:iter_order}{\texttt{iter\_order}} $> 0$,
+\item addition of \mylinkext{sub:alm2map:zbounds}{\texttt{zbounds}} 
+  in \mylinkext{sub:alm2map}{\texttt{alm2map}} in order to simulate (faster) a signal on only a fraction of the sphere,
+\item  \htmladdnormallink{improved support for version 18 and more of Intel C and F90 compilers}{https://sourceforge.net/p/healpix/bugs/78} in \texttt{configure} script,
+\item \htmladdnormallink{edition to fitstools.F90}{https://sourceforge.net/p/healpix/bugs/84} allowing a proper compilation with g95.
+\end{itemize}
+
+%--------------------------------------------
+\section[Older Changes]{Older Changes}
+%--------------------------------------------
+
+%%%%{\footnotesize{%
+{\mysmaller%
+\compresstext
+
+%-------------------------
+\subsubsection{Version 3.40}
+% \section[Changes between releases 3.31 and 3.40]{%
+% Changes between releases 3.31 and 3.40}
 
 %from install.tex
-\begin{itemize}
+\begin{itemize}\compresslist
 \item The facilities 
 \htmlref{\texttt{anafast}}{fac:anafast} and 
 \htmlref{\texttt{smoothing}}{fac:smoothing} now support pixel-based quadrature weights.
@@ -267,19 +289,11 @@ slightly different output when median is computed over an even number of pixels 
 the output is $d(n/2)$ instead of $(d(n/2)+d(n/2+1))/2$ previously. Result remains $d(n/2+1)$ for odd $n$.
 \end{itemize}
 
-%--------------------------------------------
-\section[Older Changes]{Older Changes}
-%--------------------------------------------
-
-%%%%{\footnotesize{%
-{\mysmaller%
-\compresstext
-%%%%%%%%%%%%%%%%%%%
-\subsection[Changes between releases 3.00 and 3.31]{%
-Changes between releases 3.00 and 3.31}
+%%%%%%
 
 %\setlength{\partopsep}{0}
 
+%-------------------------
 \subsubsection{Version 3.31}
 \begin{itemize}\compresslist
 	\item Bug correction in \htmlref{{\tt input\_map}}{sub:input_map} routine for reading of polarized multi-HDU cut sky FITS files;
@@ -288,6 +302,7 @@ Changes between releases 3.00 and 3.31}
 \mylink{fac:alteralm:windowfile_in}{{\tt windowfile\_*}} qualifiers in \htmlref{{\tt alteralm}}{fac:alteralm} facility.
 \end{itemize}
 
+%-------------------------
 \subsubsection{Version 3.30}
 \begin{itemize}\compresslist
 	\item \htmlref{{\tt anafast}}{fac:anafast} now produces nine spectra 
@@ -300,6 +315,7 @@ Changes between releases 3.00 and 3.31}
 % \subsection[Changes between releases 3.00 and 3.20]{%
 % Changes between releases 3.00 and 3.20}
 
+%-------------------------
 \subsubsection{Version 3.20}
 \begin{itemize}\compresslist
 	\item \healpixns-F90 routines and facilities can now also be compiled with

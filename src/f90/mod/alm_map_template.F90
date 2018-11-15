@@ -3859,7 +3859,7 @@
 
 
   !=======================================================================
-  subroutine map2alm_iterative_KLOAD(nsmax, nlmax, nmmax, iter_order, map_TQU, alm_TGC, &
+  subroutine map2alm_iterative_old_KLOAD(nsmax, nlmax, nmmax, iter_order, map_TQU, alm_TGC, &
        &   zbounds, w8ring, plm, mask)
     ! 2008-07-10: bug correction on map2alm for T only map: only pass temperature weights
     ! 2008-11-06: adjust w8ring_in 2nd dimension to actual w8ring
@@ -3891,7 +3891,7 @@
     real(KMAP),     allocatable, dimension(:,:)   :: map_TQU_in
     complex(KALMC),allocatable,  dimension(:,:,:) :: alm_TGC_out
 
-    character(len=*), parameter :: code = 'map2alm_iterative'
+    character(len=*), parameter :: code = 'map2alm_iterative_old'
     real(KMAP), pointer, dimension(:) :: p_map_1
     real(DP),   pointer, dimension(:) :: p_plm_1
     !=======================================================================
@@ -4101,10 +4101,10 @@
     if (associated(p_plm_1)) nullify(p_plm_1)
 
     return
-  end subroutine map2alm_iterative_KLOAD
+  end subroutine map2alm_iterative_old_KLOAD
 
   !=======================================================================
-  subroutine map2alm_iterative_test_KLOAD(nsmax, nlmax, nmmax, iter_order, map_TQU, alm_TGC, &
+  subroutine map2alm_iterative_KLOAD(nsmax, nlmax, nmmax, iter_order, map_TQU, alm_TGC, &
        &   zbounds, w8ring, plm, mask)
     ! 2008-07-10: bug correction on map2alm for T only map: only pass temperature weights
     ! 2008-11-06: adjust w8ring_in 2nd dimension to actual w8ring
@@ -4355,7 +4355,7 @@
     if (associated(p_plm_1)) nullify(p_plm_1)
 
     return
-  end subroutine map2alm_iterative_test_KLOAD
+  end subroutine map2alm_iterative_KLOAD
 
 
   !**************************************************************************

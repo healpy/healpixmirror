@@ -952,8 +952,8 @@ sub bot_navigation_panel {
 sub top_navigation_panel {
     local($_) = @_;
     local($top_panel) = '';
-    # change color
-    $top_panel .= "<body text=\"\#000000\" bgcolor=\"\#FFFFFA\">\n" ;
+    # # change color
+    # $top_panel .= "<body text=\"\#000000\" bgcolor=\"\#FFFFFA\">\n" ;
     #  Start with a descriptive comment
     $top_panel .= "<!--Navigation Panel-->" ;
     # Now add a few buttons, with a space between them

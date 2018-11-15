@@ -13,7 +13,8 @@ EOF
   exit
 fi
 
-trigger='<META NAME="Generator" CONTENT="LaTeX2HTML v2002-2-1">'
+#trigger='<META NAME="Generator" CONTENT="LaTeX2HTML v2002-2-1">'
+trigger='<META NAME="Generator" CONTENT="LaTeX2HTML'
 tmpfile='/tmp/html_favicons_edit.txt'
 insert_file='/tmp/insert_tmp.html'
 
@@ -40,8 +41,16 @@ for d in $* ; do
 	    # echo "editing HTML ${file}"
 	    sed "/${trigger}/ r ${insert_file}" ${file} > ${tmpfile}
 	    mv ${tmpfile} ${file}
+
+	    # change color, for html4
+	    sed 's|<BODY >|<body text="\#000000" bgcolor="\#FFFFFA">|g' ${file} > ${tmpfile}
+	    #sed 's|BODY |body              |g' ${file} > ${tmpfile}
+	    ## change color, for html5
+	    #sed 's|<BODY >|<body style="text-color:#000000; background-color:#FFFFFA">|g' ${file} > ${tmpfile}
+	    mv ${tmpfile} ${file}
+
 	else
-	    echo "       SKIP              ${file}"
+	    echo "       SKIP   ($0)           ${file}"
 	fi
     done
 done

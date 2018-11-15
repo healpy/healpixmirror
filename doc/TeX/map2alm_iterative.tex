@@ -27,7 +27,7 @@ synthesis (\htmlref{alm2map}{sub:alm2map})
 operators and  $\ba, \bm$ and $\bw$, the $a_{\ell m}$, map and pixel mask vectors, the
 Jacobi iterative process reads 
 \begin{equation}
-	\ba^{(n)} = \ba^{(n-1)} + \bA. \left( \bw.\bm - \bw . \bS .\ba^{(n-1)} \right),
+	\ba^{(n)} = \ba^{(n-1)} + \bA. \left( \bw.\bm - \bS .\ba^{(n-1)} \right),
 \end{equation}
 with
 \begin{equation}
@@ -35,8 +35,8 @@ with
 \end{equation}
 
 During the processing, the standard deviation of the input map $\left(\bw.\bm\right)$ 
-and the current residual map $\left(\bw.\bm - \bw . \bS .\ba^{(k)}\right)$ is printed out, with these numbers expected
-to get smaller and smaller.\\
+and the current residual map $\left(\bw.\bm - \bS .\ba^{(n-1)}\right)$ is printed out, with the latter expected
+to get smaller and smaller as $n$ increases.\\
 The standard deviation of map $x$ has the usual definition
 $\sigma \equiv \sqrt{\sum_{p=1}^{N}\frac{(x(p)-\bar{x})^2}{N-1}}$, where the mean is
 $\bar{x} \equiv  \sum_{p=1}^{N} \frac{x(p)}{N}$, and the index $p$ runs over all pixels.
@@ -86,8 +86,7 @@ case, the first index is (1,2,3) corresponding to (T,E,B). \\
 %
 zbounds\mytarget{sub:map2alm_iterative:zbounds}(1:2), \hskip 6cm OPTIONAL  & DP & IN & section of the map on which to perform the $a_{\ell m}$
                    analysis, expressed in terms of $z=\sin(\mathrm{latitude}) =
-                   \cos(\theta).$ \input{zbounds_sub}. If absent, the whole map is
-analyzed\\
+                   \cos(\theta).$ \input{zbounds_sub}\\
 %
 w8ring\_TQU\mytarget{sub:map2alm_iterative:w8ring_TQU}(1:2*nsmax,1:p), \hskip 6cm OPTIONAL  & DP & IN & ring weights for
 quadrature corrections. p is 1 for a temperature analysis and 3 for (T,Q,U). If absent, the

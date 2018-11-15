@@ -21,12 +21,12 @@ for d in $* ; do
 echo "--------- $d ---------"
 for file in `ls -1 ${d}*.htm` ; do
 found=`grep SECTION000 ${file} | wc -l`
-if [ ${found} > 0 ] ; then
+if [ ${found} != 0 ] ; then
     # echo "editing HTML ${file}"
     cat ${file} | sed  "s/SECTION000\([0-9]*\)00000000000000\"/SECTION\1\"/g" > ${tmpfile}
     mv ${tmpfile} ${file}
 else
-    echo "       SKIP              ${file}"
+    echo "       SKIP    ($0)          ${file}"
 fi
 done
 done

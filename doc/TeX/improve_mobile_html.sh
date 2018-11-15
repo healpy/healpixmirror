@@ -31,7 +31,7 @@ if [ ${found} == 0 ] ; then
 &/g" > ${tmpfile}
     mv ${tmpfile} ${file}
 else
-    echo "       SKIP              ${file}"
+    echo "       SKIP  ($0)            ${file}"
 fi
 done
 done

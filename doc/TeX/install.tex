@@ -668,11 +668,11 @@ is not a sky map}
 \begin{itemize}
 \item the input power spectrum (in {\tt
 Healpix\_\hpxversion/test/cl.fits}) used to generate the Fortran90 test maps
-is currently the WMAP 1yr best fit, in $(\mu$K$)^2$, and is therefore different from the one
+is currently the WMAP 1yr best fit, in $(\mu\mathrm{K})^2$, and is therefore different from the one
 included in releases 1.* (that can still be found in \texttt{cl\_old.fits}).
 % See \htmladdnormallink{\texttt{ http://lambda.gsfc.nasa.gov/}}{http://lambda.gsfc.nasa.gov/} 
 % for details on WMAP and its data products.
-\item Other input fiducial $C(\ell)$, all in $(\mu$K$)^2$ and defined on the multipole range $[0, \ell_\mathrm{max}]$, have been included for convenience in 
+\item Other input fiducial $C(\ell)$, all in $(\mu\mathrm{K})^2$ and defined on the multipole range $[0, \ell_\mathrm{max}]$, have been included for convenience in 
 \htmladdnormallink{\texttt{Healpix\_\hpxversion/test/}}{\srcurl test}
 in a \healpix compatible format.
 \\
@@ -1491,7 +1491,12 @@ However, the \mylinkext{idl:mollview:latex}{\texttt{Latex}} keyword will work pr
 	Fortran 90 \linklatexhtml{facilities}{facilities.pdf}{facilities.htm} and
 	\linklatexhtml{subroutines}{subroutines.pdf}{subroutines.htm}}
 \begin{itemize}
-\item  \htmladdnormallink{improved support of ifort18}{https://sourceforge.net/p/healpix/bugs/78} in \texttt{configure} script,
+\item correction of a bug in \mylinkext{sub:map2alm_iterative}{\texttt{map2alm\_iterative}}
+when a \mylinkext{sub:map2alm_iterative:mask}{\texttt{mask}} is used in combination with 
+\mylinkext{sub:map2alm_iterative:iter_order}{\texttt{iter\_order}} $> 0$,
+\item addition of \mylinkext{sub:alm2map:zbounds}{\texttt{zbounds}} 
+  in \mylinkext{sub:alm2map}{\texttt{alm2map}} in order to simulate (faster) a signal on only a fraction of the sphere,
+\item  \htmladdnormallink{improved support for version 18 and more of Intel C and F90 compilers}{https://sourceforge.net/p/healpix/bugs/78} in \texttt{configure} script,
 \item \htmladdnormallink{edition to fitstools.F90}{https://sourceforge.net/p/healpix/bugs/84} allowing a proper compilation with g95.
 \end{itemize}
 
@@ -1522,9 +1527,14 @@ to read best fit $C(\ell)$ model to Planck 2018 data;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %=========================================
-\subsection{Bug corrections and Improvements in Version 3.40 (2018-06)}%(2018-06-22)
+%%%%%%%%%%%%%%%%%%%%%%%%%%----------------------------------------------------
+\section{Appendix II: Older changes (versions 3.00 to 3.40)}
 
-\subsubsection[General]{General}
+{\mytiny{%
+
+\tinysubsection*{Bug corrections and Improvements in Version 3.40 (2018-06)}%(2018-06-22)
+
+\tinysubsubsection*[General]{General}
 \begin{itemize}
 \item A new set of (pixel-based) quadrature weights has been introduced, besides the older ring-based ones, to improve the accuracy of the Spherical Harmonics calculation. For maps
   containing a signal that is band-limited at $\lmax=1.5 \nside$, this allows
@@ -1536,9 +1546,9 @@ and the missing ones can be computed for any value of $\nside$ with the \texttt{
 \end{itemize}
 
 
-%%\subsubsection[C]{\linklatexhtml{C}{csub.pdf}{csub.htm}}
+%%\tinysubsubsection*[C]{\linklatexhtml{C}{csub.pdf}{csub.htm}}
 %
-\subsubsection[C++]{\htmladdnormallink{C++}{\healpixwebpage/html/index_cxx.htm}}
+\tinysubsubsection*[C++]{\htmladdnormallink{C++}{\healpixwebpage/html/index_cxx.htm}}
 \begin{itemize}
 \item IMPORTANT: the syntax for specifying ring weights and pixel windows has
   changed! This affects the facilities \texttt{anafast\_cxx}, \texttt{smoothing\_cxx},
@@ -1552,7 +1562,7 @@ and the missing ones can be computed for any value of $\nside$ with the \texttt{
 \end{itemize}
 
 %
-\subsubsection[Fortran]{Fortran 90 \linklatexhtml{facilities}{facilities.pdf}{facilities.htm} and
+\tinysubsubsection*[Fortran]{Fortran 90 \linklatexhtml{facilities}{facilities.pdf}{facilities.htm} and
 	\linklatexhtml{subroutines}{subroutines.pdf}{subroutines.htm}}
 \begin{itemize}
 \item The facilities 
@@ -1582,7 +1592,7 @@ slightly different output of \htmlref{\texttt{median\_filter}}{fac:median_filter
 the output is $d(n/2)$ instead of $(d(n/2)+d(n/2+1))/2$ previously. Result remains $d(n/2+1)$ for odd $n$.
 \end{itemize}
 %
-\subsubsection[IDL]{\linklatexhtml{IDL}{idl.pdf}{idl.htm}}
+\tinysubsubsection*[IDL]{\linklatexhtml{IDL}{idl.pdf}{idl.htm}}
 \begin{itemize}
 \item The routines \htmlref{\texttt{ianafast}}{idl:ianafast} and \htmlref{\texttt{ismoothing}}{idl:ismoothing}
 can now use pixel-based quadrature weights. Addition of the supporting functions 
@@ -1624,9 +1634,9 @@ visualization routines:
     routines (2018-05-15).
 \end{itemize}
 %
-%%\subsubsection[Java]{\htmladdnormallink{Java}{\healpixwebpage/html/java/index.html}}
+%%\tinysubsubsection*[Java]{\htmladdnormallink{Java}{\healpixwebpage/html/java/index.html}}
 %
-\subsubsection[Python]{\htmladdnormallink{Python}{https://healpy.readthedocs.io/en/latest/}}
+\tinysubsubsection*[Python]{\htmladdnormallink{Python}{https://healpy.readthedocs.io/en/latest/}}
 \begin{itemize}
 \item Switch to 
 	\htmladdnormallink{\texttt{healpy \hpyversion}}{\hpysite/releases} 
@@ -1636,10 +1646,7 @@ visualization routines:
 \end{itemize}
 
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%----------------------------------------------------
-\section{Appendix II: Older changes (versions 3.00 to 3.31)}
-
-{\mytiny{%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
 \tinysubsection*{Bug corrections and Improvements in Version 3.31 (2016-08)}%(2016-08-26)
@@ -1690,6 +1697,7 @@ visualization routines:
 	\end{itemize}
 
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \tinysubsection*{Bug corrections and Improvements in Version 3.30 (2015-10)}%(2015-10-08)
 
