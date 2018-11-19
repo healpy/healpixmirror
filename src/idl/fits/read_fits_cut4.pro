@@ -98,6 +98,7 @@ HDR = header, XHDR = xheader, NSIDE=nside, ORDERING=ordering, COORDSYS=coordsys,
 ;        Jan 2005: added NSIDE and ORDERING as outputs
 ;        Jan 2009: calls init_astrolib
 ;        Aug  2016: added HELP keyword
+;        Oct 2018: more robust column parsing
 ;-
 
 routine = 'READ_FITS_CUT4'
