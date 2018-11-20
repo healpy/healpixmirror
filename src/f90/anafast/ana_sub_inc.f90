@@ -402,6 +402,12 @@
   call parse_finish(handle)
   call brag_openmp()
 
+
+  if (iter_order > 0 .and. won==2) then
+     write(*,'(a,i3,a)') 'WARNING: iter_order>0 (currently ',iter_order,')'
+     write(*,*)          '         can not be used with won=2 (pixel-based weights)'
+  endif
+
   !-----------------------------------------------------------------------
   !              allocate space for arrays
   !-----------------------------------------------------------------------

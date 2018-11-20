@@ -33,13 +33,18 @@ with
 \begin{equation}
 	\ba^{(0)} = \bA.\bw.\bm.
 \end{equation}
-
+%
 During the processing, the standard deviation of the input map $\left(\bw.\bm\right)$ 
 and the current residual map $\left(\bw.\bm - \bS .\ba^{(n-1)}\right)$ is printed out, with the latter expected
 to get smaller and smaller as $n$ increases.\\
 The standard deviation of map $x$ has the usual definition
 $\sigma \equiv \sqrt{\sum_{p=1}^{N}\frac{(x(p)-\bar{x})^2}{N-1}}$, where the mean is
 $\bar{x} \equiv  \sum_{p=1}^{N} \frac{x(p)}{N}$, and the index $p$ runs over all pixels.
+
+Note that this iterative process is meaningful only if the 
+input map has (almost) no power outside the multipole range $[0, \lmax]$ of analysis.
+The application of a mask to the map will most likely break this assumption, 
+reducing the improvement to be expected from the iterations.
 }
 {\modAlmTools}
 \end{facility}
@@ -66,7 +71,7 @@ $\bar{x} \equiv  \sum_{p=1}^{N} \frac{x(p)}{N}$, and the index $p$ runs over all
 \textbf{name~\&~dimensionality} & \textbf{kind} & \textbf{in/out} & \textbf{description} \\ \hline
                    &   &   &                           \\ %%% for presentation
 nsmax\mytarget{sub:map2alm_iterative:nsmax} & I4B & IN & the $\nside$ value of the map to analyse. \\
-nlmax\mytarget{sub:map2alm_iterative:nlmax} & I4B & IN & the maximum $\ell$ value for the analysis. \\
+nlmax\mytarget{sub:map2alm_iterative:nlmax} & I4B & IN & the maximum $\ell$ value ($\lmax$) for the analysis. \\
 nmmax\mytarget{sub:map2alm_iterative:nmmax} & I4B & IN & the maximum $m$ value for the analysis. \\
 %
 iter\_order\mytarget{sub:map2alm_iterative:iter_order} & I4B & IN & the order of Jacobi iteration. Increasing that order

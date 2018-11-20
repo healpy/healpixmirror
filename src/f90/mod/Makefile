@@ -10,6 +10,7 @@ incpix = convert_inplace_1d_inc.f90 \
 	convert_ring2nest_nd_inc.f90 \
 	convert_ring2nest_1d_inc.f90 \
 	remove_dipole_inc.f90 \
+	apply_mask_inc.f90 \
 	pixel_routines.F90
 
 incfits = fits_s_inc.f90 fits_d_inc.f90

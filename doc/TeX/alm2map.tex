@@ -29,8 +29,8 @@ The routines accept both single and double precision arrays for alm\_TGC and
 , \mylink{sub:alm2map:nmmax}{nmmax}%
 , \mylink{sub:alm2map:alm_TGC}{alm\_TGC}%
 , \mylink{sub:alm2map:map_TQU}{map\_TQU}%
- [, \mylink{sub:alm2map:plm}{plm}%
-$|$ \mylink{sub:alm2map:zbounds}{zbounds}]}
+ [, \mylink{sub:alm2map:plm}{plm}=%
+$|$ \mylink{sub:alm2map:zbounds}{zbounds}=]}
 \end{f90format}
 
 \begin{arguments}
@@ -72,32 +72,60 @@ Currently, \mylink{sub:alm2map:zbounds}{zbounds} and \mylink{sub:alm2map:plm}{pl
 }
 \end{arguments}
 
+% \begin{example}
+% {
+% use healpix\_types \\
+% use pix\_tools, only : nside2npix \\
+% use alm\_tools, only : alm2map \\
+% integer(I4B) :: nside, lmax, mmax, npix, n\_plm\\
+% real(SP), dimension(:,:), allocatable :: map \\
+% complex(SPC), dimension(:,:,:), allocatable :: alm \\
+% real(DP), dimension(:,:), allocatable :: plm \\
+% \ldots \\
+% nside=256 ; lmax=512 ; mmax=lmax\\
+% npix=nside2npix(nside)\\
+% n\_plm=nside*(mmax+1)*(2*lmax-mmax+2)\\
+% allocate(alm(1:3,0:lmax,0:mmax))\\
+% allocate(map(0:npix-1,1:3))\\
+% allocate(plm(0:n\_plm-1,1:3))\\
+% \ldots \\
+% call alm2map(nside, lmax, mmax, alm, map, plm)  \\
+% }
+% {
+% Make temperature and polarisation maps from the scalar and tensor $a_{\ell m}$
+% passed in alm. The maps have $\nside$ of 256, and are constructed from
+% $a_{\ell m}$ values up to 512 in $\ell$ and $m$. Since the optional plm array is
+% passed with both precomputed $P_{\ell m}(\theta)$ AND tensor harmonics, there will
+% be no recursions in the routine. However, this will most likely have a
+% \emph{negative} impact on execution speed.
+% }
+% \end{example}
+
 \begin{example}
 {
 use healpix\_types \\
 use pix\_tools, only : nside2npix \\
 use alm\_tools, only : alm2map \\
-integer(I4B) :: nside, lmax, mmax, npix, n\_plm\\
+integer(I4B) :: nside, lmax, mmax, npix \\
 real(SP), dimension(:,:), allocatable :: map \\
 complex(SPC), dimension(:,:,:), allocatable :: alm \\
-real(DP), dimension(:,:), allocatable :: plm \\
+real(DP), dimension(1:2) :: zrange \\
 \ldots \\
 nside=256 ; lmax=512 ; mmax=lmax\\
 npix=nside2npix(nside)\\
-n\_plm=nside*(mmax+1)*(2*lmax-mmax+2)\\
 allocate(alm(1:3,0:lmax,0:mmax))\\
 allocate(map(0:npix-1,1:3))\\
-allocate(plm(0:n\_plm-1,1:3))\\
 \ldots \\
-call alm2map(nside, lmax, mmax, alm, map, plm)  \\
+zrange =(/ 0.0\_dp, 0.5\_dp /) \\
+call alm2map(nside, lmax, mmax, alm, map, zbounds=zrange)  \\
 }
 {
 Make temperature and polarisation maps from the scalar and tensor $a_{\ell m}$
 passed in alm. The maps have $\nside$ of 256, and are constructed from
-$a_{\ell m}$ values up to 512 in $\ell$ and $m$. Since the optional plm array is
-passed with both precomputed $P_{\ell m}(\theta)$ AND tensor harmonics, there will
-be no recursions in the routine. However, this will most likely have a
-\emph{negative} impact on execution speed.
+$a_{\ell m}$ values up to 512 in $\ell$ and $m$. In order to save time, 
+the maps are only generated on the range $0 < z < 0.5$ (leaving the other pixels to 0) 
+even though the input $a_{\ell m}$
+are those of a full sky map.
 }
 \end{example}
 

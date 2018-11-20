@@ -27,8 +27,8 @@ affecting the calculation of polarisation derivatives on past versions of this r
 , \mylink{sub:alm2map_der:alm}{alm}%
 , \mylink{sub:alm2map_der:map}{map}%
 , \mylink{sub:alm2map_der:der1}{der1}%
- [, \mylink{sub:alm2map_der:der2}{der2}%
-, \mylink{sub:alm2map_der:zbounds}{zbounds}]}
+ [, \mylink{sub:alm2map_der:der2}{der2}=%
+, \mylink{sub:alm2map_der:zbounds}{zbounds}=]}
 \end{f90format}
 
 \begin{arguments}
@@ -70,7 +70,7 @@ zbounds\mytarget{sub:alm2map_der:zbounds}(1:2), \hskip 4cm OPTIONAL & DP & IN & 
 use healpix\_types \\
 use pix\_tools, only : nside2npix \\
 use alm\_tools, only : alm2map\_der \\
-integer(I4B) :: nside, lmax, mmax, npix, n\_plm\\
+integer(I4B) :: nside, lmax, mmax, npix \\
 real(SP), dimension(:), allocatable :: map \\
 real(SP), dimension(:,:), allocatable :: der1, der2 \\
 complex(SPC), dimension(:,:,:), allocatable :: alm \\
@@ -81,7 +81,7 @@ allocate(alm(1:1,0:lmax,0:mmax))\\
 allocate(map(0:npix-1))\\
 allocate(der1(0:npix-1,1:2), der2(0:npix-1,1:3))\\
 \ldots \\
-call alm2map\_der(nside, lmax, mmax, alm, map, der1, der2)  \\
+call alm2map\_der(nside, lmax, mmax, alm, map, der1, der2=der2)  \\
 }
 {
 Make temperature maps and its derivatives from the $a_{\ell m}$ passed in alm. The maps have $\nside$ of 256, and are constructed from $a_{\ell m}$ values up to 512 in $\ell$ and $m$.

@@ -223,20 +223,34 @@ $\mathbf{\phi}$ & The azimuthal angle on the sphere, $\phi\in[0,2\pi[$.\\
 \section[Changes between releases 3.40 and \hpxversion]{Changes between releases 3.40 and
 \hpxversion}
 \begin{itemize}
+%
 \item correction of a bug in 
 \htmlref{\texttt{map2alm\_iterative}}{sub:map2alm_iterative},
 when a \mylink{sub:map2alm_iterative:mask}{\texttt{mask}} is used in combination with 
-\item addition of \mylink{sub:alm2map:zbounds}{\texttt{zbounds}} 
-  in \htmlref{\texttt{alm2map}}{sub:alm2map} 
-in order to simulate (faster) a signal on only a fraction of the sphere,
 \mylink{sub:map2alm_iterative:iter_order}{\texttt{iter\_order}} $> 0$,
+%
+\item addition of \mylink{sub:alm2map:zbounds}{\texttt{zbounds}} in 
+\htmlref{\texttt{alm2map}}{sub:alm2map},
+\htmlref{\texttt{alm2map\_der}}{sub:alm2map_der},
+\htmlref{\texttt{alm2map\_spin}}{sub:alm2map_spin}
+in order to simulate (faster) a signal on only a fraction of the sphere,
+%
 \item  \htmladdnormallink{improved support for version 18 and more of Intel C and F90 compilers}{https://sourceforge.net/p/healpix/bugs/78} in \texttt{configure} script,
+%
 \item \htmladdnormallink{edition to fitstools.F90}{https://sourceforge.net/p/healpix/bugs/84} allowing a proper compilation with g95.
 \end{itemize}
 
-\section[Changes between releases 3.31 and 3.40]{Changes between releases 3.31 and
-3.40}
-\begin{itemize}
+%--------------------------------------------
+\section{Older Changes}
+%--------------------------------------------
+
+{\mysmaller%
+\compresstext
+%--------------------------------------------
+\subsection[Changes between releases 3.00 and 3.40]{Changes between releases 3.00 and 3.40}
+%--------------------------------------------
+\subsubsection{Version 3.40}
+\begin{itemize}\compresslist
 \item The facilities 
 \htmlref{\texttt{anafast}}{fac:anafast} and 
 \htmlref{\texttt{smoothing}}{fac:smoothing} now support pixel-based quadrature weights.
@@ -256,16 +270,6 @@ as described in the \htmlref{note on POLCCONV}{intro:polcconv} in \linklatexhtml
 does not crash anymore when dealing with empty data sets.
 \end{itemize}
 
-%--------------------------------------------
-\section{Older Changes}
-%--------------------------------------------
-
-{\mysmaller%
-\compresstext
-%--------------------------------------------
-\subsection[Changes between releases 3.00 and 3.31]{Changes between releases 3.00 and
-3.31}
-%--------------------------------------------
 
 \subsubsection{Version 3.31}
 \begin{itemize}\compresslist

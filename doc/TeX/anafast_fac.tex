@@ -196,8 +196,8 @@ to be used. See the Recommendations for Users.
 one in which at least one pixel is non-zero will be used. This option can be
  used to, for instance, apply
 the WMAP Kp intensity mask to the data (see
-\htmladdnormallink{https://lambda.gsfc.nasa.gov}{https://lambda.gsfc.nasa.gov}
-), but it will {\em not} handle the WMAP composite mask correctly.
+\htmladdnormallink{https://lambda.gsfc.nasa.gov}{https://lambda.gsfc.nasa.gov}), 
+but it will {\em not} handle the WMAP composite mask correctly.
 Can be used in conjonction with {\tt theta\_cut\_deg}. Masked or weighted pixels
  will be correctly accounted when performing the monopole and dipole regression.\\
 {\em Note:} The mask's resolution ($\nside$) and ordering can be different from the input map(s)
@@ -215,6 +215,7 @@ that cut ($|b|<${\tt theta\_cut\_deg}) are ignored.
 iteration to be used. (default=0, no iteration).
 For details, see the \htmlref{{\tt map2alm\_iterative}}{sub:map2alm_iterative} routine
 described in the \linklatexhtml{''Fortran Subroutines''}{subroutines.pdf}{subroutines.htm} document.
+\mylink{fac:anafast:iter_order}{iter\_order}$>0$ can {\em not} be used together with \mylink{fac:anafast:won}{won}=2.
  \item[{outfile\_alms = }]\mytarget{fac:anafast:outfile_alms}%
  Defines the name of the file 
 containing the $a_{\ell m}$  coefficients of the first map
@@ -241,7 +242,8 @@ directories, see \htmlref{''Default file names and directories'' in introduction
 \item[{won = }]\mytarget{fac:anafast:won}%
  Set this to 1 if ring-based quadrature weight files are to be used,
  or to 2 to use pixel-based weight files instead;
-otherwise set it to 0. (default= 0)
+otherwise set it to 0. (default= 0).
+\mylink{fac:anafast:won}{won}=2 can {\em not} be used together with \mylink{fac:anafast:iter_order}{iter\_order}$>0$.
 \item[{regression = }]\mytarget{fac:anafast:regression}%
  {{Sets the degree of the regression made on the
 input map before doing the power spectrum analysis. 
@@ -249,7 +251,7 @@ The regression is a minimal variance fit (assuming a uniform noise)
 made on valid (unflagged and unmasked) pixels, out of the symmetric cut (if
 any). In case of cut sky analysis, such a regression reduces the monopole
 and dipole leakage to higher $\ell$'s.\\
-0 : no regression, does the a\_lm analysis on the raw map\\
+0 : no regression, does the $a\_{\ell m}$ analysis on the raw map\\
 1 : removes the best fit monopole first\\
 2 : removes the best fit monopole and dipole first\\
 default = 0.}}

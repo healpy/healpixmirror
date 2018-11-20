@@ -283,8 +283,8 @@ available at
   \textbf{Software Package} & \textbf{Source} \\ \hline
                             &                          \\ %%% for presentation
 IDL V \idlversion or more          & \htmladdnormallink{{\tt
-                            http://harrisgeospatial.com/\-ProductsandTechnology/\-Software/IDL.aspx}}{%
-			http://harrisgeospatial.com/ProductsandTechnology/Software/IDL.aspx}
+			https://www.harrisgeospatial.com/Software\--Technology/IDL}}{%
+https://www.harrisgeospatial.com/Software-Technology/IDL}
 			\\
                                    &                          \\ \hline %%% for presentation
 \end{tabular}\vspace{3ex}
@@ -340,9 +340,9 @@ The  \textbf{Python} \texttt{healpy} package requires
 \begin{tabular}{p{0.3\hsize} p{0.6\hsize}} \hline  
   \textbf{Software Package} & \textbf{Source} \\ \hline
                             &                          \\ %%% for presentation
-Python 2.6, 2.7, or 3.2--3.5         & \htmladdnormallink{\texttt{https://www.python.org}}{https://www.python.org}
+Python 2.7, or 3.5--3.6         & \htmladdnormallink{\texttt{https://www.python.org}}{https://www.python.org}
 			\\
-Numpy 1.0.1 or more         & \htmladdnormallink{\texttt{https://numpy.scipy.org}}{https://numpy.scipy.org}
+Numpy 1.13 or more         & \htmladdnormallink{\texttt{https://numpy.scipy.org}}{https://numpy.scipy.org}
 			\\
 Matplotlib 0.91.2 or more         & \htmladdnormallink{\texttt{https://matplotlib.sourceforge.net}}{https://matplotlib.sourceforge.net}
 			\\
@@ -360,7 +360,7 @@ https://pypi.org/project/pyfits/3.3}
 While not required, the 
 \texttt{IPython} (\htmladdnormallink{\texttt{https://ipython.org}}{https://ipython.org})
 and 
-\texttt{Cython} (\htmladdnormallink{\texttt{http://cython.org}}{http://cython.org})
+\texttt{Cython} (\htmladdnormallink{\texttt{https://cython.org}}{https://cython.org})
 softwares can also be useful.
 
 % For convenience we provide the freely available FFTPACK\footnote{At 
@@ -1464,7 +1464,7 @@ However, the \mylinkext{idl:mollview:latex}{\texttt{Latex}} keyword will work pr
 \section{Appendix I: Recent Changes and New Features}
 \label{sec:newfeatures}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% BEGIN LATEST CHANGES %%%%%%%%%%%%%
-\subsection{Bug corrections and Improvements in Version \hpxversion}
+\subsection{Bug corrections and Improvements in Version \hpxversion}%2018-11
 % \subsubsection[General]{General}
 % \subsubsection[C]{\linklatexhtml{C}{csub.pdf}{csub.htm}}
 % \subsubsection[C++]{\htmladdnormallink{C++}{\healpixwebpage/html/index_cxx.htm}}
@@ -1475,12 +1475,12 @@ However, the \mylinkext{idl:mollview:latex}{\texttt{Latex}} keyword will work pr
 % \subsubsection[Java]{\htmladdnormallink{Java}{\healpixwebpage/html/java/index.html}}
 % \subsubsection[Python]{\htmladdnormallink{Python}{https://healpy.readthedocs.io/en/latest/}}
 
-\subsubsection[General]{General}
-\begin{itemize}
-\item new \healpix web site \url{\hpxwebsite}
-\item addition of $\Lambda$-CDM best $C(\ell)$ fit to Planck 2018 CMB data in 
-\htmladdnormallink{\texttt{Healpix/data/planck2018\_lcdm\_cl\_v3.fits}}{\srcurl data/planck2018_lcdm_cl_v3.fits}
-\end{itemize}
+% \subsubsection[General]{General}
+% \begin{itemize}
+% \item new \healpix web site \url{\hpxwebsite}
+% \item addition of $\Lambda$-CDM best $C(\ell)$ fit to Planck 2018 CMB data in 
+% \htmladdnormallink{\texttt{Healpix/data/planck2018\_lcdm\_cl\_v3.fits}}{\srcurl data/planck2018_lcdm_cl_v3.fits}
+% \end{itemize}
 
 %
 % \subsubsection[C]{\linklatexhtml{C}{csub.pdf}{csub.htm}}
@@ -1491,25 +1491,41 @@ However, the \mylinkext{idl:mollview:latex}{\texttt{Latex}} keyword will work pr
 	Fortran 90 \linklatexhtml{facilities}{facilities.pdf}{facilities.htm} and
 	\linklatexhtml{subroutines}{subroutines.pdf}{subroutines.htm}}
 \begin{itemize}
-\item correction of a bug in \mylinkext{sub:map2alm_iterative}{\texttt{map2alm\_iterative}}
-when a \mylinkext{sub:map2alm_iterative:mask}{\texttt{mask}} is used in combination with 
-\mylinkext{sub:map2alm_iterative:iter_order}{\texttt{iter\_order}} $> 0$,
-\item addition of \mylinkext{sub:alm2map:zbounds}{\texttt{zbounds}} 
-  in \mylinkext{sub:alm2map}{\texttt{alm2map}} in order to simulate (faster) a signal on only a fraction of the sphere,
+%
+\item A bug affecting \mylinkext{sub:map2alm_iterative}{\texttt{map2alm\_iterative}}
+(when a \mylinkext{sub:map2alm_iterative:mask}{\texttt{mask}} is used in combination with 
+\mylinkext{sub:map2alm_iterative:iter_order}{\texttt{iter\_order}} $>0$)
+and
+\mylinkext{fac:anafast}{\texttt{anafast}} (when
+\mylinkext{fac:anafast:maskfile}{\texttt{maskfile}} or 
+\mylinkext{fac:anafast:theta_cut_deg}{\texttt{theta\_cut\_deg}}
+are used in combination with 
+\mylinkext{fac:anafast:iter_order}{\texttt{iter\_order}}$>0$) has been corrected,
+%
+\item addition of \mylinkext{sub:alm2map:zbounds}{\texttt{zbounds}} in 
+\mylinkext{sub:alm2map}{\texttt{alm2map}},
+\mylinkext{sub:alm2map_der}{\texttt{alm2map\_der}},
+\mylinkext{sub:alm2map_spin}{\texttt{alm2map\_spin}},
+in order to simulate (faster) a signal on only a fraction of the sphere,
+%
 \item  \htmladdnormallink{improved support for version 18 and more of Intel C and F90 compilers}{https://sourceforge.net/p/healpix/bugs/78} in \texttt{configure} script,
+%
 \item \htmladdnormallink{edition to fitstools.F90}{https://sourceforge.net/p/healpix/bugs/84} allowing a proper compilation with g95.
 \end{itemize}
 
 %
 \subsubsection[IDL]{\linklatexhtml{IDL}{idl.pdf}{idl.htm}}
 \begin{itemize}
-\item \htmlref{\texttt{fits2cl}}{idl:fits2cl}: addition of \mylinkext{idl:fits2cl:planck3}{\texttt{/PLANCK3}} keyword
-to read best fit $C(\ell)$ model to Planck 2018 data;
-\item \htmlref{rotate\_coord}{idl:rotate_coord}: addition of optional variable \mylinkext{idl:rotate_coord:delta_psi}{\texttt{Delta\_Psi}} containing rotation of polarization on output, and of keyword \mylinkext{idl:rotate_coord:free_norm}{\texttt{Free\_Norm}} to deal with un-normalized input coordinate vectors;
+\item \htmlref{\texttt{fits2cl}}{idl:fits2cl}: addition of \mylinkext{idl:fits2cl:planck3}{\texttt{/PLANCK3}} keyword to read the fiducial $\Lambda$-CDM $C(\ell)$ model which best fits the 2018 Planck data analysis (available from \htmladdnormallink{\texttt{Healpix/data/planck2018\_lcdm\_cl\_v3.fits}}{\srcurl data/planck2018_lcdm_cl_v3.fits});
+\item \htmlref{\texttt{rotate\_coord}}{idl:rotate_coord}: addition of optional variable \mylinkext{idl:rotate_coord:delta_psi}{\texttt{Delta\_Psi}} containing rotation of polarization on output, and of keyword \mylinkext{idl:rotate_coord:free_norm}{\texttt{Free\_Norm}} to deal with un-normalized input coordinate vectors;
 \item minor bugs correction in 
 \htmlref{\texttt{azeqview, cartview, gnomview, mollview, orthview}}{idl:mollview} (when 
 \mylinkext{idl:mollview:polarization}{\texttt{polarization=3}}) and 
 \htmlref{\texttt{alm2fits}}{idl:alm2fits} (user provided header now correctly processed).
+\item Update of the required
+    \htmladdnormallink{\texttt{IDL-astron} library}{https://idlastro.gsfc.nasa.gov/homepage.html}
+    routines, and \htmladdnormallink{\texttt{Coyote}}{http://www.idlcoyote.com} library
+    routines (2018-09-27).
 \end{itemize}
 %
 % \subsubsection[Java]{\htmladdnormallink{Java}{\healpixwebpage/html/java/index.html}}
@@ -1534,7 +1550,7 @@ to read best fit $C(\ell)$ model to Planck 2018 data;
 
 \tinysubsection*{Bug corrections and Improvements in Version 3.40 (2018-06)}%(2018-06-22)
 
-\tinysubsubsection*[General]{General}
+\tinysubsubsection*{General}
 \begin{itemize}
 \item A new set of (pixel-based) quadrature weights has been introduced, besides the older ring-based ones, to improve the accuracy of the Spherical Harmonics calculation. For maps
   containing a signal that is band-limited at $\lmax=1.5 \nside$, this allows
@@ -1544,11 +1560,10 @@ The weights for power-of-2 values of $\nside$ in $\{16,\ldots,2048\}$ are precom
 \htmladdnormallink{\texttt{Healpix/data/weight\_pixel\_n?????.fits}}{\srcurl data}, 
 and the missing ones can be computed for any value of $\nside$ with the \texttt{compute\_weights} C++ facility.
 \end{itemize}
-
-
-%%\tinysubsubsection*[C]{\linklatexhtml{C}{csub.pdf}{csub.htm}}
 %
-\tinysubsubsection*[C++]{\htmladdnormallink{C++}{\healpixwebpage/html/index_cxx.htm}}
+%%\tinysubsubsection*{\linklatexhtml{C}{csub.pdf}{csub.htm}}
+%
+\tinysubsubsection*{\htmladdnormallink{C++}{\healpixwebpage/html/index_cxx.htm}}
 \begin{itemize}
 \item IMPORTANT: the syntax for specifying ring weights and pixel windows has
   changed! This affects the facilities \texttt{anafast\_cxx}, \texttt{smoothing\_cxx},
@@ -1560,9 +1575,9 @@ and the missing ones can be computed for any value of $\nside$ with the \texttt{
   using the \texttt{pixelweights} parameter.
 \item Experimental \texttt{needlet\_tool} code for needlet analysis
 \end{itemize}
-
 %
-\tinysubsubsection*[Fortran]{Fortran 90 \linklatexhtml{facilities}{facilities.pdf}{facilities.htm} and
+%
+\tinysubsubsection*{Fortran 90 \linklatexhtml{facilities}{facilities.pdf}{facilities.htm} and
 	\linklatexhtml{subroutines}{subroutines.pdf}{subroutines.htm}}
 \begin{itemize}
 \item The facilities 
@@ -1592,7 +1607,9 @@ slightly different output of \htmlref{\texttt{median\_filter}}{fac:median_filter
 the output is $d(n/2)$ instead of $(d(n/2)+d(n/2+1))/2$ previously. Result remains $d(n/2+1)$ for odd $n$.
 \end{itemize}
 %
-\tinysubsubsection*[IDL]{\linklatexhtml{IDL}{idl.pdf}{idl.htm}}
+
+%\tinysubsubsection*{\linklatexhtml{IDL}{idl.pdf}{idl.htm}}
+\tinysubsubsection*{IDL}
 \begin{itemize}
 \item The routines \htmlref{\texttt{ianafast}}{idl:ianafast} and \htmlref{\texttt{ismoothing}}{idl:ismoothing}
 can now use pixel-based quadrature weights. Addition of the supporting functions 
@@ -1634,9 +1651,9 @@ visualization routines:
     routines (2018-05-15).
 \end{itemize}
 %
-%%\tinysubsubsection*[Java]{\htmladdnormallink{Java}{\healpixwebpage/html/java/index.html}}
+%\tinysubsubsection*{\htmladdnormallink{Java}{\healpixwebpage/html/java/index.html}}
 %
-\tinysubsubsection*[Python]{\htmladdnormallink{Python}{https://healpy.readthedocs.io/en/latest/}}
+\tinysubsubsection*{\htmladdnormallink{Python}{https://healpy.readthedocs.io/en/latest/}}
 \begin{itemize}
 \item Switch to 
 	\htmladdnormallink{\texttt{healpy \hpyversion}}{\hpysite/releases} 

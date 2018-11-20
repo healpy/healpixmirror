@@ -27,9 +27,9 @@ or without polarisation. }
 , \mylink{sub:map2alm:nmmax}{nmmax}%
 , \mylink{sub:map2alm:map_TQU}{map\_TQU}%
 , \mylink{sub:map2alm:alm_TGC}{alm\_TGC}%
-, \mylink{sub:map2alm:zbounds}{zbounds}%
-, \mylink{sub:map2alm:w8ring_TQU}{w8ring\_TQU}%
- [, \mylink{sub:map2alm:plm}{plm}%
+[, \mylink{sub:map2alm:zbounds}{zbounds}=%
+, \mylink{sub:map2alm:w8ring_TQU}{w8ring\_TQU}=%
+, \mylink{sub:map2alm:plm}{plm}=%
 ]}
 \end{f90format}
 
@@ -50,13 +50,13 @@ alm\_TGC\mytarget{sub:map2alm:alm_TGC}(1:p, 0:nlmax, 0:nmmax) & SPC/ DPC & OUT &
 %%    analysis. {\bf Note}: in order to have no cut at all cos\_theta\_cut needs to be
 %%    set to a {\em negative} value, as cos\_theta\_cut=$\cos(90^\circ)=0$ still
 %%    removes the equatorial ring.\\
-zbounds\mytarget{sub:map2alm:zbounds}(1:2) & DP & IN & section of the map on which to perform the $a_{\ell m}$
+zbounds\mytarget{sub:map2alm:zbounds}(1:2), \hskip 6cm OPTIONAL & DP & IN & section of the map on which to perform the $a_{\ell m}$
                    analysis, expressed in terms of $z=\sin(\mathrm{latitude}) =
                    \cos(\theta).$ \input{zbounds_sub}\\
-w8ring\_TQU\mytarget{sub:map2alm:w8ring_TQU}(1:2*nsmax, 1:p) & DP & IN & ring weights for quadrature corrections. If ring weights are not used, this array should be 1 everywhere. p is 1 for a temperature analysis and 3 for (T,Q,U). \\
-{\small{plm(0:(nlmax+1)(nlmax+2)nsmax-1)}}\mytarget{sub:map2alm:plm}, \hskip 6cm OPTIONAL & DP & IN & If this optional matrix is passed with this rank, precomputed $P_{\ell m}(\theta)$ are used instead of recursion. Note that since version 2.20 this feature has become obsolete
+w8ring\_TQU\mytarget{sub:map2alm:w8ring_TQU}(1:2*nsmax,~1:p), \hskip 6cm OPTIONAL & DP & IN & ring weights for quadrature corrections. If ring weights are not used, this array should be 1 everywhere. p is 1 for a temperature analysis and 3 for (T,Q,U). \\
+{\small{plm(0:(nlmax+1)*(nlmax+2)*nsmax-1)}},\mytarget{sub:map2alm:plm} \hskip 8cm OPTIONAL & DP & IN & If this optional matrix is passed with this rank, precomputed $P_{\ell m}(\theta)$ are used instead of recursion. Note that since version 2.20 this feature has become obsolete
 because of algorithm optimizations.\\ 
-{\small{plm(0:(nlmax+1)(nlmax+2)nsmax-1,1:3)}}, \hskip 6cm OPTIONAL & DP & IN & If this optional matrix is passed with this rank, precomputed $P_{\ell m}(\theta)$ AND precomputed tensor harmonics are used instead of recursion. \\
+{\small{plm(0:(nlmax+1)*(nlmax+2)*nsmax-1,~1:3)}}, \hskip 8cm OPTIONAL & DP & IN & If this optional matrix is passed with this rank, precomputed $P_{\ell m}(\theta)$ AND precomputed tensor harmonics are used instead of recursion. \\
 \end{tabular}
 }
 \end{arguments}
@@ -64,9 +64,10 @@ because of algorithm optimizations.\\
 
 \begin{example}
 {
-use \htmlref{healpix\_types}{sub:healpix_types}\\
-use alm\_tools\\
-use pix\_tools\\
+%use \htmlref{healpix\_types}{sub:healpix_types}\\
+use \htmlref{healpix\_modules}{sub:healpix_modules}\\
+% use alm\_tools\\
+% use pix\_tools\\
 integer(\htmlref{i4b}{sub:healpix_types}) :: nside, lmax \\
 real(\htmlref{dp}{sub:healpix_types}), allocatable, dimension(:,:) :: dw8 \\
 real(dp), dimension(2) :: z \\
@@ -79,16 +80,18 @@ allocate(map(0:nside2npix(nside)-1,1:3)) \\
 allocate(alm(1:3, 0:lmax, 0:lmax)\\
 dw8 = 1.0\_dp \\
 z = sin(10.0\_dp * \htmlref{DEG2RAD}{sub:healpix_types}) \\
-call map2alm(nside, lmax, lmax, map, alm, ($\backslash$ z, -z $\backslash$) , dw8, plm(0:(lmax+1)*(lmax+2)*nside-1))  \\
+call map2alm(nside, lmax, lmax, map, alm, ($\backslash$ z, -z $\backslash$) , dw8) \\
+%, plm(0:(lmax+1)*(lmax+2)*nside-1))  \\
 }
 {
 Analyses temperature and polarisation maps passed in map. The map has
 an $\nside$ of 256, and the analysis is performed up
 to 512 in $\ell$ and $m$. The resulting $a_{\ell m}$ coefficients for
 temperature and polarisation are returned in alm. A $10^\circ$ cut on
-each side of the equator is applied. Uniform weights are used. Since
-the optional plm array is provided with rank one, precomputed scalar $P_{\ell m}(\theta)$ are
-used while tensor harmonics are computed with a recursion.
+each side of the equator is applied. Uniform weights are used. 
+% Since
+% the optional plm array is provided with rank one, precomputed scalar $P_{\ell m}(\theta)$ are
+% used while tensor harmonics are computed with a recursion.
 }
 \end{example}
 

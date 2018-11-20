@@ -47,6 +47,7 @@
   integer(I8B),   dimension(:), allocatable :: cut_pixel8
   integer(I4B) :: nside
   character(len=*), parameter :: code = 'apply_mask'
+  logical(LGT) :: verbose = .false.
 !=====================================================================
 
   npix_map  = long_size(map,  1)
@@ -65,8 +66,10 @@
            enddo
         enddo
      else
-        print*,npix_map, npix_mask
-        print*,code//': mask is not applied'
+        if (verbose) then
+           print*,npix_map, npix_mask
+           print*,code//': mask is not applied'
+        endif
      endif
   endif
 
@@ -90,7 +93,9 @@
         enddo
         deallocate(cut_pixel8)
      else
-        print*,code//': zbounds is ignored'
+        if (verbose) then
+           print*,code//': zbounds is ignored'
+        endif
      endif
   endif
 

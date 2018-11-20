@@ -78,20 +78,29 @@
   !=======================================================================
   subroutine alm2map_sc_wrapper_KLOAD(nsmax, nlmax, nmmax, alm, map, zbounds,plm)
     !=======================================================================
-    !     computes a map form its alm for the HEALPIX pixelisation
-    !      for the Temperature field
+    !     gfortran gets confused between plm and zbounds
     !=======================================================================
     integer(I4B), intent(IN)                   :: nsmax, nlmax, nmmax
     complex(KALMC), intent(IN),  dimension(1:1,0:nlmax,0:nmmax) :: alm
     real(KMAP),   intent(OUT), dimension(0:(12_i8b*nsmax)*nsmax-1) :: map
-    real(DP),     intent(IN),  dimension(1:2),         optional :: zbounds
+    real(DP),     intent(IN),  dimension(1:2),        optional :: zbounds
     real(DP),     intent(IN),  dimension(0:),         optional :: plm
 
-    if (present(zbounds)) then 
-       call alm2map_sc_KLOAD(nsmax, nlmax, nmmax, alm, map, zbounds=zbounds)
-    endif
     if (present(plm)) then 
-       call alm2map_sc_pre_KLOAD(nsmax, nlmax, nmmax, alm, map, plm=plm)
+       if (present(zbounds)) then
+          if (       (zbounds(1)+1.0_dp) >  EPSILON(1.0_DP) &
+               &.or. (zbounds(2)-1.0_dp) < -EPSILON(1.0_DP)) then ! active zbounds
+             call fatal_error('ALM2MAP: ZBOUNDS and PLM not available simultaneously')
+          endif
+       else
+          call alm2map_sc_pre_KLOAD(nsmax, nlmax, nmmax, alm, map, plm)
+       endif
+    else
+       if (present(zbounds)) then 
+          call alm2map_sc_KLOAD(nsmax, nlmax, nmmax, alm, map, zbounds=zbounds)
+       else
+          call alm2map_sc_KLOAD(nsmax, nlmax, nmmax, alm, map)
+       endif
     endif
     return
   end subroutine alm2map_sc_wrapper_KLOAD
@@ -747,6 +756,7 @@
   !=======================================================================
   subroutine alm2map_pol_wrapper_KLOAD(nsmax, nlmax, nmmax, alm_TGC, map_TQU, zbounds, plm)
     !=======================================================================
+    !     gfortran gets confused between plm and zbounds
     !=======================================================================
     integer(I4B), intent(IN)                   :: nsmax, nlmax, nmmax
     complex(KALMC), intent(IN),  dimension(1:3,0:nlmax,0:nmmax) :: alm_TGC
@@ -754,11 +764,21 @@
     real(DP),     intent(IN),  dimension(1:2),          optional :: zbounds
     real(DP),     intent(IN),  dimension(0:), optional  :: plm
 
-    if (present(zbounds)) then
-       call alm2map_pol_KLOAD(nsmax, nlmax, nmmax, alm_TGC, map_TQU, zbounds=zbounds)
-    endif
     if (present(plm)) then
-       call alm2map_pol_pre1_KLOAD(nsmax, nlmax, nmmax, alm_TGC, map_TQU, plm=plm)
+       if (present(zbounds)) then
+          if (       (zbounds(1)+1.0_dp) >  EPSILON(1.0_DP) &
+               &.or. (zbounds(2)-1.0_dp) < -EPSILON(1.0_DP)) then ! active zbounds
+             call fatal_error('ALM2MAP: ZBOUNDS and PLM not available simultaneously')
+          endif
+       else
+          call alm2map_pol_pre1_KLOAD(nsmax, nlmax, nmmax, alm_TGC, map_TQU, plm)
+       endif
+    else
+       if (present(zbounds)) then
+          call alm2map_pol_KLOAD(nsmax, nlmax, nmmax, alm_TGC, map_TQU, zbounds=zbounds)
+       else
+          call alm2map_pol_KLOAD(nsmax, nlmax, nmmax, alm_TGC, map_TQU)
+       endif
     endif
     return
   end subroutine alm2map_pol_wrapper_KLOAD
@@ -4194,7 +4214,7 @@
        zbounds_in = zbounds
        do_bounds = .true.
     endif
-    zbound_run = zbounds_in
+    zbounds_run = zbounds_in
 
     n_w8_2 = 0
     w8ring_in  = 1.d0

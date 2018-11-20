@@ -241,12 +241,24 @@ with $X,Y \in \{T,E,B\}$.
 \section[Changes between releases 3.40 and \hpxversion]{%
 Changes between releases 3.40 and \hpxversion}
 \begin{itemize}
-\item correction of a bug in \mylinkext{sub:map2alm_iterative}{\texttt{map2alm\_iterative}}
-when a \mylinkext{sub:map2alm_iterative:mask}{\texttt{mask}} is used in combination with 
-\mylinkext{sub:map2alm_iterative:iter_order}{\texttt{iter\_order}} $> 0$,
-\item addition of \mylinkext{sub:alm2map:zbounds}{\texttt{zbounds}} 
-  in \mylinkext{sub:alm2map}{\texttt{alm2map}} in order to simulate (faster) a signal on only a fraction of the sphere,
+%
+% \item correction of a bug in \mylinkext{sub:map2alm_iterative}{\texttt{map2alm\_iterative}}
+% when a \mylinkext{sub:map2alm_iterative:mask}{\texttt{mask}} is used in combination with 
+% \mylinkext{sub:map2alm_iterative:iter_order}{\texttt{iter\_order}} $> 0$,
+\item correction of a bug in \htmlref{\texttt{anafast}}{fac:anafast} when
+\mylink{fac:anafast:maskfile}{\texttt{maskfile}} or 
+\mylink{fac:anafast:theta_cut_deg}{\texttt{theta\_cut\_deg}}
+are used in combination with 
+\mylink{fac:anafast:iter_order}{\texttt{iter\_order}}$>0$,
+%
+\item addition of \mylinkext{sub:alm2map:zbounds}{\texttt{zbounds}} in 
+\mylinkext{sub:alm2map}{\texttt{alm2map}},
+\mylinkext{sub:alm2map_der}{\texttt{alm2map\_der}},
+\mylinkext{sub:alm2map_spin}{\texttt{alm2map\_spin}},
+in order to simulate (faster) a signal on only a fraction of the sphere,
+%
 \item  \htmladdnormallink{improved support for version 18 and more of Intel C and F90 compilers}{https://sourceforge.net/p/healpix/bugs/78} in \texttt{configure} script,
+%
 \item \htmladdnormallink{edition to fitstools.F90}{https://sourceforge.net/p/healpix/bugs/84} allowing a proper compilation with g95.
 \end{itemize}
 
