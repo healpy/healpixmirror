@@ -26,25 +26,28 @@ analysis  (\htmlref{map2alm}{sub:map2alm}) and
 synthesis (\htmlref{alm2map}{sub:alm2map})
 operators and  $\ba, \bm$ and $\bw$, the $a_{\ell m}$, map and pixel mask vectors, the
 Jacobi iterative process reads 
-\begin{equation}
+\begin{eqnarray}
 	\ba^{(n)} = \ba^{(n-1)} + \bA. \left( \bw.\bm - \bS .\ba^{(n-1)} \right),
-\end{equation}
+\end{eqnarray}
 with
-\begin{equation}
+\begin{eqnarray}
 	\ba^{(0)} = \bA.\bw.\bm.
-\end{equation}
+\end{eqnarray}
 %
 During the processing, the standard deviation of the input map $\left(\bw.\bm\right)$ 
 and the current residual map $\left(\bw.\bm - \bS .\ba^{(n-1)}\right)$ is printed out, with the latter expected
 to get smaller and smaller as $n$ increases.\\
 The standard deviation of map $x$ has the usual definition
 $\sigma \equiv \sqrt{\sum_{p=1}^{N}\frac{(x(p)-\bar{x})^2}{N-1}}$, where the mean is
-$\bar{x} \equiv  \sum_{p=1}^{N} \frac{x(p)}{N}$, and the index $p$ runs over all pixels.
-
-Note that this iterative process is meaningful only if the 
-input map has (almost) no power outside the multipole range $[0, \lmax]$ of analysis.
-The application of a mask to the map will most likely break this assumption, 
-reducing the improvement to be expected from the iterations.
+$\bar{x} \equiv  \sum_{p=1}^{N} \frac{x(p)}{N}$, and the index $p$ runs over all pixels.%
+% Note that this iterative process is meaningful only if the 
+% input map has (almost) no power outside the multipole range $[0, \lmax]$ of analysis.
+% The application of a mask to the map will most likely break this assumption, 
+% reducing the improvement to be expected from the iterations.
+\\
+In \htmlref{version 3.50}{sub:new3p50} a bug affecting the result of \thedocid when a non-boolean \mylink{sub:map2alm_iterative:mask}{mask} (different from 0 or 1) 
+was used in conjunction with \mylink{sub:map2alm_iterative:iter_order}{iter\_order}$>0$
+has been fixed.
 }
 {\modAlmTools}
 \end{facility}
@@ -82,7 +85,7 @@ good compromise. \\
 %
 map\_TQU\mytarget{sub:map2alm_iterative:map_TQU}(0:12*nsmax**2-1, 1:p) & SP/ DP & INOUT & input map. $p$ is 1 or 3
 depending if temperature (T) only or temperature and polarisation (T, Q, U) are
-to be analysed. It will be altered on output if a mask is provided.\\
+to be analysed. It will be altered on output if a \mylink{sub:map2alm_iterative:mask}{mask} is provided and/or if \mylink{sub:map2alm_iterative:iter_order}{iter\_order}$>0$ and \mylink{sub:map2alm_iterative:zbounds}{zbounds} is provided.\\
 %
 alm\_TGC\mytarget{sub:map2alm_iterative:alm_TGC}(1:p, 0:nlmax, 0:nmmax) & SPC/ DPC & OUT & The $a_{\ell m}$ values output
 from the analysis. 
@@ -153,8 +156,9 @@ assumed. In order to improve the $a_{\ell m}$ accuracy, 2 Jacobi iterations are 
 
 \begin{modules}
   \begin{sulist}{} %%%% NOTE the ``extra'' brace here %%%%
-  \item[ring\_analysis] Performs FFT for the ring analysis.
-  \item[\htmlref{map2alm}{sub:map2alm}] Perform the alm analysis
+%  \item[ring\_analysis] Performs FFT for the ring analysis.
+  \item[\htmlref{map2alm}{sub:map2alm}] Performs the alm analysis
+  \item[\htmlref{alm2map}{sub:alm2map}] Performs the map synthesis
   \item[\textbf{misc\_util}] module, containing:
   \item[\htmlref{assert\_alloc}{sub:assert}] routine to print error message when an array is not
   properly allocated		
@@ -163,7 +167,7 @@ assumed. In order to improve the $a_{\ell m}$ accuracy, 2 Jacobi iterations are 
 
 \begin{related}
   \begin{sulist}{} %%%% NOTE the ``extra'' brace here %%%%
-  \item[anafast] executable using \thedocid \ to analyse maps.
+  \item[\htmlref{anafast}{fac:anafast}] executable using \thedocid \ to analyse maps.
   \item[\htmlref{alm2map}{sub:alm2map}] routine performing the inverse transform of \thedocid.
   \item[\htmlref{alm2map\_spin}{sub:alm2map_spin}] synthesize spin weighted
 maps.

@@ -15,7 +15,7 @@
 \usepackage[T1]{fontenc}% underscore searchable in PDF, but larger PDF http://latex-community.org/forum/viewtopic.php?t=8891
 \begin{htmlonly}
 % \renewcommand{\backslash}{\}
- \renewcommand{\ell}{l}
+% \renewcommand{\ell}{l} % not necessary with 2018's latex2html
  \renewcommand{\lq}{'}
  \input{hpxversion}
  \input{hpxwebsites}
@@ -225,12 +225,10 @@ magnetic (or curl) components of polarization.
 If not provided, $b_B(\ell)$ takes the value of $b_E(\ell)$ which itself defaults to $b_T(\ell)$.
 With these window functions, the (polarized) 
 map spherical harmonics coefficients and its power spectra are transformed according to
-\begin{equation}
-	a^{X}_{\ell m} \longrightarrow a^{X}_{\ell m} b_{X}(\ell),
-\end{equation}
-\begin{equation}
-	C^{XY}_{\ell m} \longrightarrow C^{XY}_{\ell m} b_{X}(\ell)b_{Y}(\ell),
-\end{equation}
+\begin{eqnarray}
+	a^{X}_{\ell m} &\longrightarrow& a^{X}_{\ell m} b_{X}(\ell),\\
+	C^{XY}_{\ell m} &\longrightarrow& C^{XY}_{\ell m} b_{X}(\ell)b_{Y}(\ell),
+\end{eqnarray}
 with $X,Y \in \{T,E,B\}$.
 
 \newpage

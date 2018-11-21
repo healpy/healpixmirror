@@ -5,6 +5,8 @@
 #
 # Changes:
 #   24-Mar-2015: created by EH
+# 
+# is now redundant with 2018's latex2html (2018-11-21)
 
 # Get the directory path or filename
 if [ -z "$1" ]; then
@@ -26,12 +28,12 @@ echo "--------- $d ---------"
 for file in `ls -1 ${d}*.htm` ; do
 found=`grep -i viewport ${file} | wc -l`
 if [ ${found} == 0 ] ; then
-    # echo "editing HTML ${file}"
+    echo "editing  ($0)  HTML ${file}"
     cat ${file} | sed "s/${trigger}/${magic}\\
 &/g" > ${tmpfile}
     mv ${tmpfile} ${file}
 else
-    echo "       SKIP  ($0)            ${file}"
+    #echo "       SKIP  ($0)            ${file}"
 fi
 done
 done

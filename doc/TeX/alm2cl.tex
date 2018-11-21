@@ -11,16 +11,16 @@
 \begin{facility}
 {This routine computes the auto (or cross) power spectra of a one (or two) sets of spherical harmonics
   coefficients $a_{\ell m}$,
-\begin{equation}
+\begin{eqnarray}
 C_{12}^{XY}(\ell) = \frac{1}{2 \ell +1}
 \sum_{m=-\ell}^{\ell} a_{1,\ell m}^X
   a_{2,\ell m}^{Y*},
-\end{equation}
+\end{eqnarray}
 with $X$ and $Y$ belonging to $T,E,B$. \\
 If requested, for $X \ne Y$, symmetrized power spectra
-\begin{equation}
+\begin{eqnarray}
   C_{\{12\}}^{\{XY\}}(\ell) \equiv \frac{C_{12}^{XY}(\ell)+C_{12}^{YX}(\ell)}{2} = \frac{C_{12}^{XY}(\ell)+C_{21}^{XY}(\ell)}{2}
-\end{equation}
+\end{eqnarray}
 are output.
 
 

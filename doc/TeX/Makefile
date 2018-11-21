@@ -24,7 +24,7 @@ L2HFLAGS := -dir $(HTMLDIR) -up_url main.htm -up_title "Main Page" \
 	-down_url main.htm -down_title "Main Page" \
 	-math -html_version $(HTMLVERSION) -antialias \
 	-bottom_navigation -short_extn -white -local_icons \
-	-noexternal_images -toc_depth 8 $(ADDRESS) # -debug -verbosity 2 # -show_section_numbers 
+	-noexternal_images  $(ADDRESS) # -debug -verbosity 2 # -show_section_numbers 
 #-math -html_version 4.1 
 #-short_index -long_titles 6 
 #-show_section_numbers -short_index 
@@ -152,7 +152,7 @@ install.html: $(style) healpix.perl cssfile
 	$(eval TTL    =  Installing_HEALPix)
 	mkdir -p $(HTMLDIR)
 	-cp $(HTMLDIR)/*labels.pl /tmp
-	-$(LATEX2HTML) $(L2HFLAGS) -split 3 -prefix $(FULL) -external_file ./$(FULL)  -t $(TITLE) $(LONGTITLES)    $(FULL)
+	-$(LATEX2HTML) $(L2HFLAGS) -toc_depth 8 -split 3 -prefix $(FULL) -external_file ./$(FULL)  -t $(TITLE) $(LONGTITLES)    $(FULL)
 	-$(EQNFIX)      $(HTMLDIR)/$(PREFIX) 1> /dev/null 2>&1
 	-$(SHORTEN)	$(HTMLDIR)/$(PREFIX)
 	-$(IMPROVEHTML) $(HTMLDIR)/$(PREFIX)
@@ -174,7 +174,7 @@ intro.html: $(style) healpix.perl cssfile
 	$(eval TTL    =  Introduction_HEALPix)
 	mkdir -p $(HTMLDIR)
 	-cp $(HTMLDIR)/*labels.pl /tmp
-	-$(LATEX2HTML) $(L2HFLAGS) -split 4 -prefix $(PREFIX) -external_file ./$(FULL) -t $(TITLE) $(LONGTITLES) $(FULL)
+	-$(LATEX2HTML) $(L2HFLAGS) -toc_depth 8 -split 4 -prefix $(PREFIX) -external_file ./$(FULL) -t $(TITLE) $(LONGTITLES) $(FULL)
 	-$(EQNFIX)      $(HTMLDIR)/$(PREFIX) 1> /dev/null 2>&1
 	-$(SHORTEN)	$(HTMLDIR)/$(PREFIX)
 	-$(IMPROVEHTML) $(HTMLDIR)/$(PREFIX)
@@ -197,7 +197,7 @@ idl.html: $(style) healpix.perl cssfile
 	$(eval TTL    =  HEALPix_IDL_subroutines)
 	mkdir -p $(HTMLDIR)
 	-cp $(HTMLDIR)/*labels.pl /tmp
-	-$(LATEX2HTML) $(L2HFLAGS) -split 4 -prefix $(PREFIX) -external_file ./$(FULL) -t $(TITLE) $(LONGTITLES) $(FULL)
+	-$(LATEX2HTML) $(L2HFLAGS) -toc_depth 8 -split 4 -prefix $(PREFIX) -external_file ./$(FULL) -t $(TITLE) $(LONGTITLES) $(FULL)
 	-$(EQNFIX)      $(HTMLDIR)/$(PREFIX) 1> /dev/null 2>&1
 	-$(SHORTEN)	$(HTMLDIR)/$(PREFIX)
 	-$(IMPROVEHTML) $(HTMLDIR)/$(PREFIX)
@@ -220,7 +220,7 @@ subroutines.html: $(style) healpix.perl cssfile
 	$(eval TTL    =  HEALPix_F90_subroutines)
 	mkdir -p $(HTMLDIR)
 	-cp $(HTMLDIR)/*labels.pl /tmp
-	-$(LATEX2HTML) $(L2HFLAGS) -split 4 -prefix $(PREFIX) -external_file ./$(FULL) -t $(TITLE) $(LONGTITLES) $(FULL)
+	-$(LATEX2HTML) $(L2HFLAGS) -toc_depth 6 -split 4 -prefix $(PREFIX) -external_file ./$(FULL) -t $(TITLE) $(LONGTITLES) $(FULL)
 	-$(EQNFIX)      $(HTMLDIR)/$(PREFIX) 1> /dev/null 2>&1
 	-$(SHORTEN)	$(HTMLDIR)/$(PREFIX)
 	-$(IMPROVEHTML) $(HTMLDIR)/$(PREFIX)
@@ -243,7 +243,7 @@ facilities.html: $(style) healpix.perl cssfile
 	$(eval TTL    =  HEALPix_F90_facilities)
 	mkdir -p $(HTMLDIR)
 	-cp $(HTMLDIR)/*labels.pl /tmp
-	-$(LATEX2HTML) $(L2HFLAGS) -split 4 -prefix $(PREFIX) -external_file ./$(FULL) -t $(TITLE) $(LONGTITLES) $(FULL)
+	-$(LATEX2HTML) $(L2HFLAGS) -toc_depth 8 -split 4 -prefix $(PREFIX) -external_file ./$(FULL) -t $(TITLE) $(LONGTITLES) $(FULL)
 	-$(EQNFIX)      $(HTMLDIR)/$(PREFIX) 1> /dev/null 2>&1
 	-$(SHORTEN)	$(HTMLDIR)/$(PREFIX)
 	-$(IMPROVEHTML) $(HTMLDIR)/$(PREFIX)
@@ -266,7 +266,7 @@ csub.html: $(style) healpix.perl cssfile
 	$(eval TTL    =  HEALPix_C_subroutines)
 	mkdir -p $(HTMLDIR)
 	-cp $(HTMLDIR)/*labels.pl /tmp
-	-$(LATEX2HTML) $(L2HFLAGS) -split 4 -prefix $(PREFIX) -external_file ./$(FULL) -t $(TITLE) $(LONGTITLES) $(FULL)
+	-$(LATEX2HTML) $(L2HFLAGS) -toc_depth 8 -split 4 -prefix $(PREFIX) -external_file ./$(FULL) -t $(TITLE) $(LONGTITLES) $(FULL)
 	-$(EQNFIX)      $(HTMLDIR)/$(PREFIX) 1> /dev/null 2>&1
 	-$(SHORTEN)	$(HTMLDIR)/$(PREFIX)
 	-$(IMPROVEHTML) $(HTMLDIR)/$(PREFIX)

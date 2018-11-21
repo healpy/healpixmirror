@@ -56,20 +56,20 @@
 
 \begin{codedescription}
 {Since an arbitrary beam is related to its SH Transform via
-\begin{equation}
+\begin{eqnarray}
 	\label{eq:bl2beam_idl:br}
 	b({\textbf{r}}) = \sum_{\ell m} b_{\ell m} Y_{\ell m}({\textbf{r}}),
-\end{equation}
+\end{eqnarray}
 a circular beam has a radial profile (as returned by \thedocid)
-\begin{equation}
+\begin{eqnarray}
 	\label{eq:bl2beam_idl:btheta}
 	b(\theta) = \sum_\ell  b(\ell) P_\ell(\theta) \frac{2\ell+1}{4 \pi},
-\end{equation}
+\end{eqnarray}
 where $P_l$ is Legendre Polynomial and 
-\begin{equation}
+\begin{eqnarray}
 	\label{eq:bl2beam_idl:bl}
 	b(\ell)=b_{\ell 0} \sqrt{\frac{4 \pi}{2\ell+1}}
-\end{equation}
+\end{eqnarray}
 is the beam window (or transfer)
 function, expected as input to \thedocid.%
 }

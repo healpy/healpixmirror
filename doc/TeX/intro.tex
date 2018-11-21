@@ -8,7 +8,7 @@
 \usepackage{ae,lmodern}% load vectorial font, keep PDF small *and* good quality when in T1 font
 \usepackage[T1]{fontenc}% underscore searchable in PDF, but larger PDF http://latex-community.org/forum/viewtopic.php?t=8891
 \begin{htmlonly}
-%\renewcommand{\ell}{l}
+%\renewcommand{\ell}{l} % not necessary with 2018's latex2html
 \input{hpxversion}
 \input{healpix_src_url}
 \input{hpxwebsites}
@@ -492,9 +492,9 @@ those with $\nside=2$ are in the range 16 to 63, and so on \citep{rh15},
 thus simplifying the handling of data with heteregenous $\nside$.
 Splitting the unique index $u$ into its original $\nside$ and $p$ is as simple as
 \begin{eqnarray}
-	\nside &\myequal& 2^{\mathrm{floor}\left( \log_2(u/4)/2 \right)}, \myhtmlimage{} \label{eq:ring2nest_a}\\
+	\nside &=& 2^{\mathrm{floor}\left( \log_2(u/4)/2 \right)}, \myhtmlimage{} \label{eq:ring2nest_a}\\
 %	     p_{\ } &\myequal& u - 4 \nside^2, \myhtmlimage{} \label{eq:ring2nest_b}
-	     p &\myequal& u - 4 \nside^2, \myhtmlimage{} \label{eq:ring2nest_b}
+	     p &=& u - 4 \nside^2, \myhtmlimage{} \label{eq:ring2nest_b}
 \end{eqnarray}
 giving immediate access to the usual pixel based tools.
 

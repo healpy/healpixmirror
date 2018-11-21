@@ -137,28 +137,28 @@ A random non-Gaussian white noise map is generated, using either
 %
 \item a simple linear harmonic oscillator, where the PDF of the pixel
 temperature $t$ is
-	\begin{equation}
+	\begin{eqnarray}
 	\rho_{\rm SHO}(t) = \left| \psi_n\right|^2 = e^{-t^2/2\sigma_0^2} \left|\sum_{i=0}^{n} \alpha_i
 C_i H_i \left(\frac{t}{\sqrt{2}\sigma_0}\right)\right|^2 \label{eq:nongauss_sho}
-	\end{equation}
+	\end{eqnarray}
 where $H_i$ are the Hermite polynomials, $C_i$ their normalization constants,
 $\sigma_0^2$ the variance of the (Gaussian) ground state $\left|\psi_0\right|^2,$
 $\alpha_i$ for $i\ge 1$ are free parameters, while $\alpha_0 =
 \left(1 - \sum_i^n |\alpha_i|^2\right)^{1/2}$ is constrained;
 %
 \item or, an even power of a gaussian PDF, where the temperature of pixel $q$ is
-	\begin{equation}
-	t_q = g_q^{2 P} \label{eq:nongauss_powgauss}
-	\end{equation}
+	\begin{eqnarray}
+	t_q = g_q^{2 P}\myhtmlimage{} \label{eq:nongauss_powgauss}
+	\end{eqnarray}
 where $g$ is a zero mean, unit variance Gaussian variable, and $P$ is
 a user-defined positive integer.
 \end{itemize}
 %--------
 The resulting map is analyzed into its $a_{\ell m}$ coefficients, which are then
 multiplied by the beam, pixel and spectrum window
-\begin{equation}
+\begin{eqnarray}
 	a_{\ell m} \longrightarrow a_{\ell m} \left[C(l)\right]^{1/2} B(\ell) w_{\rm pix}(\ell) \nonumber
-\end{equation}
+\end{eqnarray}
 The resulting $a_{\ell m}$ coefficients are turned back into a map, which is
 therefore non-gaussian, with an effective angular power spectrum $C(\ell) B(\ell)^2
 w_\mathrm{pix}(\ell)^2$ (Rocha et al, 2005).
