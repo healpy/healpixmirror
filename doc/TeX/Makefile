@@ -220,7 +220,7 @@ subroutines.html: $(style) healpix.perl cssfile
 	$(eval TTL    =  HEALPix_F90_subroutines)
 	mkdir -p $(HTMLDIR)
 	-cp $(HTMLDIR)/*labels.pl /tmp
-	-$(LATEX2HTML) $(L2HFLAGS) -toc_depth 6 -split 4 -prefix $(PREFIX) -external_file ./$(FULL) -t $(TITLE) $(LONGTITLES) $(FULL)
+	-$(LATEX2HTML) $(L2HFLAGS) -toc_depth 4 -toc_stars -split 4 -prefix $(PREFIX) -external_file ./$(FULL) -t $(TITLE) $(LONGTITLES) $(FULL)
 	-$(EQNFIX)      $(HTMLDIR)/$(PREFIX) 1> /dev/null 2>&1
 	-$(SHORTEN)	$(HTMLDIR)/$(PREFIX)
 	-$(IMPROVEHTML) $(HTMLDIR)/$(PREFIX)
