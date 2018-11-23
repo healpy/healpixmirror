@@ -1,0 +1,75 @@
+
+\sloppy
+
+
+\title{\healpix Fortran Subroutines Overview}
+\docid{apply\_mask} \section[apply\_mask]{ }
+\label{sub:apply_mask}
+\docrv{Version 2.1}
+\author{Eric Hivon}
+\abstract{This document describes the \healpix Fortran90 subroutine
+APPLY\_MASK.}
+
+\begin{facility}
+{This routine multiplies a \healpix map by an arbitrary pixel mask and/or sets to 0 pixels
+lying in or out a constant latitude strip}
+{\modPixTools}
+\end{facility}
+
+\begin{f90format}
+{ \mylink{sub:apply_mask:map}{map}%
+, \mylink{sub:apply_mask:ordering}{ordering}%
+[, \mylink{sub:apply_mask:mask}{mask}=%
+, \mylink{sub:apply_mask:zbounds}{zbounds}=%
+]}
+\end{f90format}
+
+\begin{arguments}
+{
+\begin{tabular}{p{0.32\hsize} p{0.05\hsize} p{0.08\hsize} p{0.45\hsize}} \hline  
+\textbf{name~\&~dimensionality} & \textbf{kind} & \textbf{in/out} & \textbf{description} \\ \hline
+                  &   &   &                           \\ %%% for presentation
+map\mytarget{sub:apply_mask:map}(0:npix-1,1:p) & SP/ DP & INOUT & \healpix map(s) on which the mask(s) and/or cut will be applied. The map will obviously be modified on output if either 
+\mylink{sub:apply_mask:mask}{mask} or 
+\mylink{sub:apply_mask:zbounds}{zbounds} are provided.\\
+%
+ordering\mytarget{sub:apply_mask:ordering} & I4B & IN & \healpix\ scheme of the map(s) (and mask(s)) 1:RING, 2: NESTED (relevant for \mylink{sub:apply_mask:zbounds}{zbounds}).   \\
+%
+mask\mytarget{sub:apply_mask:mask}(0:npix-1,1:q)  \hskip 4cm OPTIONAL& SP/ DP & IN & pixel mask(s). 
+Should have the same \mylink{sub:apply_mask:ordering}{ordering} 
+and number of pixels (npix) as \mylink{sub:apply_mask:map}{map}. If several maps are provided ($p>1$), each map is multiplied by its respective mask, and if there are fewer masks than maps ($q<p$) the last mask is duplicated as many times as necessary to match the number of maps. \\
+%
+zbounds\mytarget{sub:apply_mask:zbounds}(1:2)  \hskip 4cm OPTIONAL& DP & IN & section of the map to be set to 0, expressed in terms of $z=\sin({\rm latitude}) =
+                   \cos(\theta)$. \input{zbounds2_sub}
+\end{tabular}
+}
+\end{arguments}
+
+\newpage
+\begin{example}
+{
+s = sin(15.0\_dp * \mylink{sub:healpix_types:deg2rad}{DEG2RAD}) \\
+call \thedocid (map, 1, zbounds=($\backslash$ s, -s $\backslash$) )  \\
+}
+{
+Will set to 0 pixels of the input (RING ordered) map lying in the strip $|b| \le 15^o$.
+}
+\end{example}
+
+\begin{modules}
+  \begin{sulist}{} %%%% NOTE the ``extra'' brace here %%%%
+  \item[\textbf{pix\_tools}] module, containing:
+%  \item[\textbf{pix\_tools}] module, containing:
+  \end{sulist}
+\end{modules}
+
+% \begin{related}
+%   \begin{sulist}{} %%%% NOTE the ``extra'' brace here %%%%
+%   \item[\htmlref{add\_dipole}{sub:add_dipole}] routine to add a dipole and
+%   monopole to a map.
+%   \end{sulist}
+% \end{related}
+
+\rule{\hsize}{2mm}
+
+\newpage

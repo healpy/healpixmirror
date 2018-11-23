@@ -28,7 +28,7 @@ can be visualized with
 \htmladdnormallink{Google Earth}{https://earth.google.com/}
  or 
 \htmladdnormallink{Google Sky}{https://earth.google.com/sky/skyedu.html}%
-.}
+as well as with \htmladdnormallink{Oculus VR}{https://www.oculus.com/} headsets.}
 {src/idl/visu/hpx2gs.pro}
 \end{facility}
 
@@ -95,7 +95,7 @@ assumed to be celestial.\\
 \item [{/HELP} \mytarget{idl:hpx2gs:help}]  Prints out the documentation header 
 
 \item [{KML=} \mytarget{idl:hpx2gs:kml}] Name of the KML file to be created (if the {\tt .kml} suffix is missing,
-     it will be added automatically)
+     it will be added automatically). Used only by Google Earth and Google Sky.
      \default {{\tt 'hpx2googlesky.kml'}}
 
 \item [{PNG=} \mytarget{idl:hpx2gs:png}] Name of the PNG overlay file to be created. Only to be used if you want the
@@ -153,7 +153,7 @@ will appear in KML file {\tt GroundOverlay
 
 \begin{codedescription}
 {\thedocid\ reads in a \healpix sky map in FITS format or from a memory array and generates a
-cartesian projection of it in a PNG file, as well as a Google Sky compatible 
+cartesian (equirectangular) projection of it in a PNG file, as well as a Google Sky compatible 
 \htmladdnormallink{KML}{https://earth.google.com/kml}
 file. Missing or unobserved pixels in the input data will be
    totally 'transparent' in the output file.

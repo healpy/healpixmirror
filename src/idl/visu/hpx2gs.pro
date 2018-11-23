@@ -90,7 +90,8 @@ pro hpx2gs, file_in, select_in, $
 ;    HPX2GS
 ;
 ; PURPOSE:
-;    Turns a Healpix data set into a cartesian PNG file, and a KML folder file, usuable by Google Sky
+;    Turns a Healpix data set into a cartesian PNG file, 
+;    and a KML folder file, usuable by Google Sky, Google Sky and Oculus VR headsets
 ;
 ; CATEGORY:
 ;
@@ -139,8 +140,8 @@ pro hpx2gs, file_in, select_in, $
 ;
 ;   /HELP:  prints out this documentation
 ;
-;   KML= filename of the KML file to be created. (if the .kml suffix is missing,
-;     it will be added automatically)
+;   KML= filename of the KML file to be created (if the .kml suffix is missing,
+;     it will be added automatically). Used only by Google Earth and Google Sky.
 ;     Default: hpx2googlesky.kml
 ;
 ;   PNG= filename of the PNG file to be created. Only to be used if you want the

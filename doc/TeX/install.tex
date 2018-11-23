@@ -26,8 +26,8 @@
 	colorlinks=true}
 
 
-\newcommand{\nside}{N_\mathrm{side}}
-\newcommand{\npix}{N_\mathrm{pix}}
+\newcommand{\nside}{N_{\mathrm{side}}}
+\newcommand{\npix}{N_{\mathrm{pix}}}
 \newcommand{\lmax}{\ell_{\mathrm{max}}}
 \renewcommand{\contentsname}{{TABLE OF CONTENTS}}
 
@@ -668,17 +668,18 @@ is not a sky map}
 \begin{itemize}
 \item the input power spectrum (in {\tt
 Healpix\_\hpxversion/test/cl.fits}) used to generate the Fortran90 test maps
-is currently the WMAP 1yr best fit, in $(\mu\mathrm{K})^2$, and is therefore different from the one
+is currently the WMAP 1yr best fit, in $(\mu{\mathrm{K}})^2$, and is therefore different from the one
 included in releases 1.* (that can still be found in \texttt{cl\_old.fits}).
 % See \htmladdnormallink{\texttt{ http://lambda.gsfc.nasa.gov/}}{http://lambda.gsfc.nasa.gov/} 
 % for details on WMAP and its data products.
-\item Other input fiducial $C(\ell)$, all in $(\mu\mathrm{K})^2$ and defined on the multipole range $[0, \ell_\mathrm{max}]$, have been included for convenience in 
+\item Other input fiducial $C(\ell)$, all in $(\mu{\mathrm{K}})^2$ and defined on the multipole range 
+$[0, \lmax]$, have been included for convenience in 
 \htmladdnormallink{\texttt{Healpix\_\hpxversion/test/}}{\srcurl test}
 in a \healpix compatible format.
 \\
 \begin{tabular}{l l l l} 
 \hline 
-  \textbf{File name} & \textbf{alias} & \textbf{Origin} & $\ell_\mathrm{max}$\\ \hline
+  \textbf{File name} & \textbf{alias} & \textbf{Origin} & $\lmax$\\ \hline
 wmap\_lcdm\_pl\_model\_yr1\_v1.fits      & cl.fits             & 
  \htmladdnormallink{WMAP}{https://lambda.gsfc.nasa.gov/}-1yr (2005)   & 3000 \\
 wmap\_lcdm\_sz\_lens\_wmap5\_cl\_v3.fits & cl\_wmap5.fits      & WMAP-5yr (2008)   & 2000 \\
@@ -1479,7 +1480,7 @@ However, the \mylinkext{idl:mollview:latex}{\texttt{Latex}} keyword will work pr
 % \begin{itemize}
 % \item new \healpix web site \url{\hpxwebsite}
 % \item addition of $\Lambda$-CDM best $C(\ell)$ fit to Planck 2018 CMB data in 
-% \htmladdnormallink{\texttt{Healpix/data/planck2018\_lcdm\_cl\_v3.fits}}{\srcurl data/planck2018_lcdm_cl_v3.fits}
+% \htmladdnormallink{\texttt{Healpix/test/planck2018\_lcdm\_cl\_v3.fits}}{\srcurl test/planck2018_lcdm_cl_v3.fits}
 % \end{itemize}
 
 %
@@ -1492,21 +1493,24 @@ However, the \mylinkext{idl:mollview:latex}{\texttt{Latex}} keyword will work pr
 	\linklatexhtml{subroutines}{subroutines.pdf}{subroutines.htm}}
 \begin{itemize}
 %
-\item A bug affecting \mylinkext{sub:map2alm_iterative}{\texttt{map2alm\_iterative}}
+\item A bug affecting \htmlref{\texttt{map2alm\_iterative}}{sub:map2alm_iterative}
 (when a \mylinkext{sub:map2alm_iterative:mask}{\texttt{mask}} is used in combination with 
 \mylinkext{sub:map2alm_iterative:iter_order}{\texttt{iter\_order}} $>0$)
 and
-\mylinkext{fac:anafast}{\texttt{anafast}} (when
+\htmlref{\texttt{anafast}}{fac:anafast} (when
 \mylinkext{fac:anafast:maskfile}{\texttt{maskfile}} or 
 \mylinkext{fac:anafast:theta_cut_deg}{\texttt{theta\_cut\_deg}}
 are used in combination with 
 \mylinkext{fac:anafast:iter_order}{\texttt{iter\_order}}$>0$) has been corrected,
 %
 \item addition of \mylinkext{sub:alm2map:zbounds}{\texttt{zbounds}} in 
-\mylinkext{sub:alm2map}{\texttt{alm2map}},
-\mylinkext{sub:alm2map_der}{\texttt{alm2map\_der}},
-\mylinkext{sub:alm2map_spin}{\texttt{alm2map\_spin}},
+\htmlref{\texttt{alm2map}}{sub:alm2map},
+\htmlref{\texttt{alm2map\_der}}{sub:alm2map_der},
+\htmlref{\texttt{alm2map\_spin}}{sub:alm2map_spin},
 in order to simulate (faster) a signal on only a fraction of the sphere,
+%
+\item introduction of \htmlref{\texttt{apply\_mask}}{sub:apply_mask} to apply an arbitrary mask and/or
+a latitude cut to a map,
 %
 \item  \htmladdnormallink{improved support for version 18 and more of Intel C and F90 compilers}{https://sourceforge.net/p/healpix/bugs/78} in \texttt{configure} script,
 %
@@ -1516,7 +1520,7 @@ in order to simulate (faster) a signal on only a fraction of the sphere,
 %
 \subsubsection[IDL]{\linklatexhtml{IDL}{idl.pdf}{idl.htm}}
 \begin{itemize}
-\item \htmlref{\texttt{fits2cl}}{idl:fits2cl}: addition of \mylinkext{idl:fits2cl:planck3}{\texttt{/PLANCK3}} keyword to read the fiducial $\Lambda$-CDM $C(\ell)$ model which best fits the 2018 Planck data analysis (available from \htmladdnormallink{\texttt{Healpix/data/planck2018\_lcdm\_cl\_v3.fits}}{\srcurl data/planck2018_lcdm_cl_v3.fits});
+\item \htmlref{\texttt{fits2cl}}{idl:fits2cl}: addition of \mylinkext{idl:fits2cl:planck3}{\texttt{/PLANCK3}} keyword to read the fiducial $\Lambda$-CDM $C(\ell)$ model which best fits the 2018 Planck data analysis (available from \htmladdnormallink{\texttt{Healpix/test/planck2018\_lcdm\_cl\_v3.fits}}{\srcurl test/planck2018_lcdm_cl_v3.fits});
 \item \htmlref{\texttt{rotate\_coord}}{idl:rotate_coord}: addition of optional variable \mylinkext{idl:rotate_coord:delta_psi}{\texttt{Delta\_Psi}} containing rotation of polarization on output, and of keyword \mylinkext{idl:rotate_coord:free_norm}{\texttt{Free\_Norm}} to deal with un-normalized input coordinate vectors;
 \item minor bugs correction in 
 \htmlref{\texttt{azeqview, cartview, gnomview, mollview, orthview}}{idl:mollview} (when 
@@ -2973,6 +2977,8 @@ package (C. Rosset, A. Zonca et al.) is now part of \healpix
 % %%%%%%%%%%%%%%%%%%%
 % }}
 % %%%%%%%%%%%%%%%%%%%
+
+}} %end of mytiny
 
 \vfill\newpage
 

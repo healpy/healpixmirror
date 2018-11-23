@@ -45,10 +45,12 @@ $\bar{x} \equiv  \sum_{p=1}^{N} \frac{x(p)}{N}$, and the index $p$ runs over all
 % The application of a mask to the map will most likely break this assumption, 
 % reducing the improvement to be expected from the iterations.
 \\
-In \htmlref{version 3.50}{sub:new3p50} a bug affecting the result of \thedocid when a non-boolean \mylink{sub:map2alm_iterative:mask}{mask} (different from 0 or 1) 
-was used in conjunction with \mylink{sub:map2alm_iterative:iter_order}{iter\_order}$>0$
-has been fixed.
-}
+In \htmlref{version 3.50}{sub:new3p50} a bug affecting previously the result of \thedocid has been fixed.
+It occured when 
+\mylink{sub:map2alm_iterative:iter_order}{\texttt{iter\_order}}$>0$ was used in conjonction
+with a \mylink{sub:map2alm_iterative:mask}{\texttt{mask}} and/or a restrictive 
+\mylink{sub:map2alm_iterative:zbounds}{\texttt{zbounds}}). The result was correct when
+the mask (if any) was applied to the map prior to the \thedocid calling, or when no iteration was requested.}
 {\modAlmTools}
 \end{facility}
 
@@ -79,7 +81,7 @@ nmmax\mytarget{sub:map2alm_iterative:nmmax} & I4B & IN & the maximum $m$ value f
 %
 iter\_order\mytarget{sub:map2alm_iterative:iter_order} & I4B & IN & the order of Jacobi iteration. Increasing that order
 improves the accuracy of the final $a_{\ell m}$ but increases the computation time $
-T_\mathrm{CPU} \propto 1 + 2 \times $iter\_order. 
+T_{\mathrm{CPU}} \propto 1 + 2 \times $iter\_order. 
 iter\_order  $=0$ is a straight analysis, while iter\_order $=3$ is usually a
 good compromise. \\
 %

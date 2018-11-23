@@ -30,12 +30,12 @@
 %\fi
 
 
-\newcommand{\nside}{N_\mathrm{side}}
-\newcommand{\npix}{N_\mathrm{pix}}
+\newcommand{\nside}{N_{\mathrm{side}}}
+\newcommand{\npix}{N_{\mathrm{pix}}}
 \newcommand{\lmax}{\ell_{\mathrm{max}}}
 \newcommand{\mmax}{m_{\mathrm{max}}}
 \newcommand{\smax}{s_{\mathrm{max}}}
-\newcommand{\ntemplate}{N_\mathrm{template}}
+\newcommand{\ntemplate}{N_{\mathrm{template}}}
 %\newcommand{\myhtmlimage}[1]{\htmlimage{#1}}
 \newcommand{\myhtmlimage}[1]{ }
 \newcommand{\aboutoptional}{Arguments appearing in \optional{italic} are
@@ -71,7 +71,9 @@ optional.}
 \makeatletter
      \newcommand{\nop}[1]{\Hy@raisedlink{\hypertarget{#1}{}}}
 \makeatother
-\newcommand{\mytarget}[1]{\nop{#1}\phantomsection\label{#1}}%    \mytarget{id}
+\newcommand{\mytarget}[1]{%
+\nop{#1}%
+\phantomsection\label{#1}}%    \mytarget{id}
 \begin{htmlonly}
  \newcommand{\mytarget}[1]{\label{#1}}
 \end{htmlonly}
@@ -236,6 +238,9 @@ when a \mylink{sub:map2alm_iterative:mask}{\texttt{mask}} is used in combination
 \htmlref{\texttt{alm2map\_spin}}{sub:alm2map_spin}
 in order to simulate (faster) a signal on only a fraction of the sphere,
 %
+\item introduction of \htmlref{\texttt{apply\_mask}}{sub:apply_mask} to apply an arbitrary mask and/or
+a latitude cut to a map,
+%
 \item  \htmladdnormallink{improved support for version 18 and more of Intel C and F90 compilers}{https://sourceforge.net/p/healpix/bugs/78} in \texttt{configure} script,
 %
 \item \htmladdnormallink{edition to fitstools.F90}{https://sourceforge.net/p/healpix/bugs/84} allowing a proper compilation with g95.
@@ -368,7 +373,7 @@ variable {\tt DONT\_USE\_SHARP} must be set during compilation.}.
 % \subsection[Changes between releases 2.20 and 3.00]{Changes between releases 2.20
 % and 3.00}
 \subsection[Changes up to release 3.00]{Changes up to release 3.00}
-\subsubsection{Version 3.00}
+\subsubsection*{Version 3.00}
 \label{sub:new3p00}
 \begin{itemize}\compresslist
 	\item all {\em input} FITS files can now be compressed (with a 
@@ -398,7 +403,7 @@ mode.
 \end{itemize}
 
 %\subsection[Changes between releases 2.14 and 2.20]{Changes between releases 2.14 and 2.20}
-\subsubsection{Version 2.20}
+\subsubsection*{Version 2.20}
 \label{sub:new2p20}
 \begin{itemize}\compresslist
 \item Spherical Harmonics Transform routines now transparently call \htmladdnormallink{\tt
@@ -452,7 +457,7 @@ routines}{sub:pix_tools} are now up to 20\% faster.
 \end{itemize}
 
 %\subsection[Changes between releases 2.13 and 2.14]{Changes between releases 2.13 and 2.14}
-\subsubsection{Version 2.14}
+\subsubsection*{Version 2.14}
 \begin{itemize}\compresslist
 \item In \htmlref{alm2map\_der}{sub:alm2map_der} routine, a numerical bug affecting the accuracy of the Stokes parameter derivatives 
 $\partial X/\partial\theta$, 
@@ -463,7 +468,7 @@ Facilities''}{facilities.pdf}{facilities.htm} Appendix for details.
 \end{itemize}
 
 %\subsection[Changes between releases 2.0 and 2.13]{Changes between releases 2.0 and 2.13}
-\subsubsection{Versions 2.10 and 2.13}
+\subsubsection*{Versions 2.10 and 2.13}
 \begin{itemize}\compresslist
 \item New functions in version 2.13: 
 \begin{itemize}\compresslist
@@ -504,7 +509,7 @@ pixel weights.
 
 %--------------------------------------------
 %\subsection[Changes between releases 1.2 and 2.0]{Changes between releases 1.2 and 2.0}
-\subsubsection{Version 2.0}
+\subsubsection*{Version 2.0}
 Some new features have been added
 \begin{itemize}\compresslist
 \item Most routines dealing with maps and $a_{\ell m}$ (eg, create\_alm, map2alm, alm2map,
@@ -561,7 +566,7 @@ fatal\_error}{sub:assert},
 
 %--------------------------------------------
 %\subsection{Changes between releases 1.1 and 1.2}
-\subsubsection{Version 1.2}
+\subsubsection*{Version 1.2}
 Some new routines have been introduced since version 1.1, as listed below.
 % Most of the routines that already existed now have extended
 % capabilities.
@@ -630,6 +635,7 @@ smoothing\_getpar (initially in {\tt utilities} module).
 \include{alter_alm}
 \include{ang2vec}
 \include{angdist}
+\include{apply_mask}
 \include{assert}
 \include{brag_openmp}
 \include{complex_fft}

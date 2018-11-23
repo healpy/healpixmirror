@@ -28,7 +28,7 @@
 !--------------------------------------------------------------
 !
 ! generic body of the subroutines apply_mask_*
-! to be inserted as is in pix_tools.f90
+! to be inserted as is in pix_tools.F90
 !
 ! 2018-10-22: creation
 ! 2018-11-09: same behavior as remove_dipole, select_rings 

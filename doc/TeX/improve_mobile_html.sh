@@ -32,7 +32,7 @@ if [ ${found} == 0 ] ; then
     cat ${file} | sed "s/${trigger}/${magic}\\
 &/g" > ${tmpfile}
     mv ${tmpfile} ${file}
-else
+# else
     #echo "       SKIP  ($0)            ${file}"
 fi
 done

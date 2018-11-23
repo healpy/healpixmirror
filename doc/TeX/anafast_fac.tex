@@ -303,7 +303,13 @@ longer be used.
 
 When dealing with polarized signal maps, the \thedocid\ behavior will depend on the value of the \texttt{POLCCONV} FITS keyword
 (see \htmlref{note on POLCCONV}{intro:polcconv} in \linklatexhtml{The \healpix Primer}{intro.pdf}{intro.htm})
-}
+
+In \htmlref{version 3.50}{sub:new3p50} a bug affecting the result of \thedocid has been fixed.
+It occured previously when 
+\mylink{fac:anafast:iter_order}{\texttt{iter\_order}}$>0$ was used in conjonction
+with a \mylink{fac:anafast:maskfile}{\texttt{maskfile}} and/or a restrictive 
+\mylink{fac:anafast:theta_cut_deg}{\texttt{theta\_cut\_deg}}). The result was correct when
+the mask (if any) was applied to the map prior to the \thedocid calling, or when no iteration was requested.}
 \end{codedescription}
 
 \begin{datasets}

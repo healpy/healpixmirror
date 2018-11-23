@@ -1382,7 +1382,7 @@ contains
   !  map :  SP/DP, INOUT,   (0:,1:)
   !  order: I4B,   IN,  1=RING, 2=NESTED
   !  mask:  SP/DP  IN, (0:,1:) optional
-  !  zbounds: DP   IN, (1:2) optional
+  !  zbounds: DP   IN, (1:2)   optional
   !=====================================================================
   subroutine apply_mask_real(map, order, mask, zbounds)
     !=====================================================================
