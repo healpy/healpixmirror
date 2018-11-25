@@ -98,6 +98,13 @@
 
     \verbinclude map2tga.par.txt
 
+  \section alice3
+    This program visualizes spin-2 fields of the sphere using the line integral
+    convolution (LIC) technique.<br> It was originally written by David Larson and
+    has later been adjusted to output Healpix maps instead of image files.
+
+    \verbinclude alice3_usage.txt
+
   \section rotalm_cxx
     Performs a coordinate transformation on a set of \f$a_{lm}\f$.
 
@@ -136,7 +143,7 @@ Transform 1: Equatorial (2000) -> Galactic   (2000)
     (unpolarised or polarised) power spectrum or the unpolarised cross power
     spectrum, and outputs the result.
 
-    \verbatim Usage: calc_powspec <almfile1> [<almfile2>] <powspec_file>\endverbatim 
+    \verbatim Usage: calc_powspec <almfile1> [<almfile2>] <powspec_file>\endverbatim
 
   \section median_filter_cxx
     This program inputs a HEALPix map, runs a median filter with the desired

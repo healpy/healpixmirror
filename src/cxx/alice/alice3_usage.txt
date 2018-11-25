@@ -23,7 +23,7 @@ Usage:
   protected from shell expansion by a leading backslash).
 
   [texture=<fits file>] optional input background texture
-  if left empty, a texture is generated using the "ell" parametsr
+  if left empty, a texture is generated using the "ell" parameter
 
   [nside=<int>] nside of all generated maps
 
