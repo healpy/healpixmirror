@@ -1,6 +1,6 @@
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-  Copyright (C) 1997-2016  HEALPix collaboration
+  Copyright (C) 1997-2018  HEALPix collaboration
 
 
   HEALPix is free software; you can redistribute it and/or modify
@@ -17,7 +17,7 @@
   along with HEALPix; if not, write to the Free Software
   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-  For more information about HEALPix see http://healpix.sourceforge.net
+  For more information about HEALPix see https://healpix.sourceforge.io
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
@@ -46,7 +46,7 @@ HISTORY
  Benjamin D. Wandelt (bwandelt AT iap.fr).
 
  The HEALPix package is available at this address: 
- http://healpix.sourceforge.net
+ https://healpix.sourceforge.io
 
 COPYRIGHTS
 
@@ -153,9 +153,17 @@ COPYRIGHTS
  for the healpy package version 1.9.1
   All rights reserved.
 
+ Copyright 2018 by E. Hivon, M. Reinecke, W. O'Mullane, E. Joliet, K.M. Gorski, A.J. Banday
+ for the HEALPix package version 3.50
+  All rights reserved.
+
+ Copyright 2018 by A. Zonca, L. Singer, C. Rosset
+ for the healpy package version 1.12.5
+  All rights reserved.
+
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 ACKNOWLEDGMENTS
 
-See http://healpix.sourceforge.net/credits.php
+See https://healpix.sourceforge.io/credits.php
 

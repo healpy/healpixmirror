@@ -114,7 +114,7 @@ updateVersion () {
   echoBlu "editing src/cxx/docsrc/*.dox files"
   for p in src/cxx/docsrc/*.dox ; do
       cat $p |\
-	  sed "s|PROJECT_NUMBER.*$|PROJECT_NUMBER         = \"$version\"|g" > $tmpfile
+	  sed "s|PROJECT_NUMBER.*$|PROJECT_NUMBER         = $version|g" > $tmpfile
       mv $tmpfile $p
   done
   grep PROJECT_NUMBER src/cxx/docsrc/*.dox
