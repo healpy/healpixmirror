@@ -110,6 +110,15 @@ updateVersion () {
   mv  $tmpfile $infile
   grep release $infile
 
+  # update C++ Doxygen files
+  echoBlu "editing src/cxx/docsrc/*.dox files"
+  for p in src/cxx/docsrc/*.dox ; do
+      cat $p |\
+	  sed "s|PROJECT_NUMBER.*$|PROJECT_NUMBER         = \"$version\"|g" > $tmpfile
+      mv $tmpfile $p
+  done
+  grep PROJECT_NUMBER src/cxx/docsrc/*.dox
+
   # update test/*.par files (2013-09)
   echo "editing  test/*.par  files"
   inlist=`find test -name \*.par`
@@ -122,6 +131,7 @@ updateVersion () {
       grep "$outstring" $file
       \rm ${file}${suff}
   done
+  # run ~/healpix_private/extra/scripts/update_examples.sh
 
   # update test/README file (2014-01)
   file='test/README'
@@ -135,7 +145,7 @@ updateVersion () {
 
 
 gettingHealpy(){
-    HPY_VERSION=1.12.0
+    HPY_VERSION=1.12.5
     hpy_repo="https://pypi.python.org/packages/source/h/healpy"
     wrkdir=/tmp
     cd ${wrkdir}
