@@ -3,7 +3,7 @@
 
 
 \title{\healpix Fortran Subroutines Overview}
-\docid{map2alm\_iterative*} \section[map2alm\_iterative*]{ }
+\docid{map2alm\_iterative} \section[map2alm\_iterative*]{ }
 \label{sub:map2alm_iterative}
 \docrv{Version 2.1}
 \author{Eric Hivon}
@@ -45,12 +45,18 @@ $\bar{x} \equiv  \sum_{p=1}^{N} \frac{x(p)}{N}$, and the index $p$ runs over all
 % The application of a mask to the map will most likely break this assumption, 
 % reducing the improvement to be expected from the iterations.
 \\
-In \htmlref{version 3.50}{sub:new3p50} a bug affecting previously the result of \thedocid has been fixed.
-It occured when 
-\mylink{sub:map2alm_iterative:iter_order}{\texttt{iter\_order}}$>0$ was used in conjonction
-with a \mylink{sub:map2alm_iterative:mask}{\texttt{mask}} and/or a restrictive 
-\mylink{sub:map2alm_iterative:zbounds}{\texttt{zbounds}}). The result was correct when
-the mask (if any) was applied to the map prior to the \thedocid calling, or when no iteration was requested.}
+In \htmlref{version 3.50}{sub:new3p50} a bug affecting previous versions of \thedocid{} has been fixed.
+(It occured when 
+\mylink{sub:map2alm_iterative:iter_order}{\texttt{iter\_order}}$>0$ 
+was used in conjonction with a 
+\mylink{sub:map2alm_iterative:mask}{\texttt{mask}} 
+and/or a restrictive 
+\mylink{sub:map2alm_iterative:zbounds}{\texttt{zbounds}}, 
+with a magnitude that depended on each of those factors and was larger for non-boolean masks (ie, $\bw^2 \ne \bw$).
+To assess the impact of this bug on previous results, the old implementation remains available in 
+\texttt{map2alm\_iterative\_old}). 
+The result was correct when the mask (if any) was applied to the map prior to the 
+\thedocid{} calling, or when no iteration was requested.}
 {\modAlmTools}
 \end{facility}
 
@@ -98,6 +104,9 @@ zbounds\mytarget{sub:map2alm_iterative:zbounds}(1:2), \hskip 6cm OPTIONAL  & DP 
                    analysis, expressed in terms of $z=\sin(\mathrm{latitude}) =
                    \cos(\theta).$ \input{zbounds_sub}\\
 %
+\end{tabular}
+%
+\begin{tabular}{p{0.38\hsize} p{0.05\hsize} p{0.07\hsize} p{0.40\hsize}}   \hline  
 w8ring\_TQU\mytarget{sub:map2alm_iterative:w8ring_TQU}(1:2*nsmax,1:p), \hskip 6cm OPTIONAL  & DP & IN & ring weights for
 quadrature corrections. p is 1 for a temperature analysis and 3 for (T,Q,U). If absent, the
 ring weights are all set to 1.\\
@@ -106,9 +115,6 @@ plm\mytarget{sub:map2alm_iterative:plm}(0:,1:p), \hskip 6cm OPTIONAL & DP & IN &
 optional matrix is passed, precomputed scalar (and tensor) $P_{\ell m}(\theta)$ are
 used instead of recursion. \\
 %
-\end{tabular}
-
-\begin{tabular}{p{0.38\hsize} p{0.05\hsize} p{0.07\hsize} p{0.40\hsize}}   \hline  
 mask\mytarget{sub:map2alm_iterative:mask}(0:12*nsmax**2-1,1:q), \hskip 6cm OPTIONAL & SP/ DP & IN & pixel mask,
 assumed to have the same resolution (and RING ordering) as the map. The map {\tt
 map\_TQU} is

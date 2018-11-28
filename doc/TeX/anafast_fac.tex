@@ -304,12 +304,16 @@ longer be used.
 When dealing with polarized signal maps, the \thedocid\ behavior will depend on the value of the \texttt{POLCCONV} FITS keyword
 (see \htmlref{note on POLCCONV}{intro:polcconv} in \linklatexhtml{The \healpix Primer}{intro.pdf}{intro.htm})
 
-In \htmlref{version 3.50}{sub:new3p50} a bug affecting the result of \thedocid has been fixed.
-It occured previously when 
-\mylink{fac:anafast:iter_order}{\texttt{iter\_order}}$>0$ was used in conjonction
-with a \mylink{fac:anafast:maskfile}{\texttt{maskfile}} and/or a restrictive 
-\mylink{fac:anafast:theta_cut_deg}{\texttt{theta\_cut\_deg}}). The result was correct when
-the mask (if any) was applied to the map prior to the \thedocid calling, or when no iteration was requested.}
+In \htmlref{version 3.50}{sub:new3p50} a bug affecting previous versions of \thedocid{} has been fixed.
+(It occured previously when 
+\mylink{fac:anafast:iter_order}{\texttt{iter\_order}}$>0$ 
+was used in conjonction with a 
+\mylink{fac:anafast:maskfile}{\texttt{maskfile}} 
+and/or a restrictive 
+\mylink{fac:anafast:theta_cut_deg}{\texttt{theta\_cut\_deg}},
+see \htmlref{{\tt map2alm\_iterative}}{sub:map2alm_iterative} for details). 
+The result was correct when the mask (if any) was applied to the map prior to the 
+\thedocid{} calling, or when no iteration was requested.}
 \end{codedescription}
 
 \begin{datasets}
@@ -425,6 +429,7 @@ weights are not used.
 not {\tt mask\_file}  (\healpix 2.1)
     \item Bug correction: now correctly supports mask pro/down-grading
     \item Support for pixel-based quadrature weights when \mylink{fac:anafast:won}{\texttt{won=2}} (\healpix 3.40)
+    \item Correction of a bug in \htmlref{{\tt map2alm\_iterative}}{sub:map2alm_iterative} (\healpix 3.50)
   \end{relist}
 \end{release}
 
