@@ -116,7 +116,9 @@ EXTRA_DIST = \
   libsharp/sharp_core_inc.c \
   libsharp/sharp_core_inc2.c \
   libsharp/sharp_core_inchelper.c \
-  cxxsupport/font_data.inc
+  cxxsupport/font_data.inc \
+  pocketfft/LICENSE.md
+
 include_HEADERS = \
   libsharp/sharp.h \
   libsharp/sharp_lowlevel.h \
