@@ -1,3 +1,11 @@
+Changes since 3.40:
+- When compiled with a recent gcc (>=5.0) for an x86_64 target, a special
+  version for AVX-capable CPUs will always be compiled in addition to the more
+  portable SSE2 version. This means that whenever AVX is available on a CPU,
+  SHTs will run up to twice as fast than they did before (unless flags like
+  "-march=native" were used).
+- the FFT library used internally by libsharp was substantially redesigned.
+
 Changes since 3.30:
 - IMPORTANT: the syntax for specifying ring weights and pixel windows has
   changed! This affects the facilities anafast_cxx, smoothing_cxx,
