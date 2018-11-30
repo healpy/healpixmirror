@@ -25,7 +25,7 @@
 /*! \file sharp_geomhelpers.c
  *  Spherical transform library
  *
- *  Copyright (C) 2006-2016 Max-Planck-Society
+ *  Copyright (C) 2006-2018 Max-Planck-Society
  *  \author Martin Reinecke
  */
 
@@ -33,7 +33,7 @@
 #include "sharp_geomhelpers.h"
 #include "sharp_legendre_roots.h"
 #include "c_utils.h"
-#include "ls_fft.h"
+#include "pocketfft/pocketfft.h"
 
 void sharp_make_subset_healpix_geom_info (int nside, int stride, int nrings,
   const int *rings, const double *weight, sharp_geom_info **geom_info)
@@ -159,9 +159,9 @@ void sharp_make_fejer1_geom_info (int nrings, int ppring, double phi0,
     weight[2*k  ]=2./(1.-4.*k*k)*sin((k*pi)/nrings);
     }
   if ((nrings&1)==0) weight[nrings-1]=0.;
-  real_plan plan = make_real_plan(nrings);
-  real_plan_backward_fftpack(plan,weight);
-  kill_real_plan(plan);
+  rfft_plan plan = make_rfft_plan(nrings);
+  rfft_backward(plan,weight,1.);
+  destroy_rfft_plan(plan);
 
   for (int m=0; m<(nrings+1)/2; ++m)
     {
@@ -206,9 +206,9 @@ void sharp_make_cc_geom_info (int nrings, int ppring, double phi0,
   for (int k=1; k<=(n/2-1); ++k)
     weight[2*k-1]=2./(1.-4.*k*k) + dw;
   weight[2*(n/2)-1]=(n-3.)/(2*(n/2)-1) -1. -dw*((2-(n&1))*n-1);
-  real_plan plan = make_real_plan(n);
-  real_plan_backward_fftpack(plan,weight);
-  kill_real_plan(plan);
+  rfft_plan plan = make_rfft_plan(n);
+  rfft_backward(plan,weight,1.);
+  destroy_rfft_plan(plan);
   weight[n]=weight[0];
 
   for (int m=0; m<(nrings+1)/2; ++m)
@@ -254,9 +254,9 @@ void sharp_make_fejer2_geom_info (int nrings, int ppring, double phi0,
   for (int k=1; k<=(n/2-1); ++k)
     weight[2*k-1]=2./(1.-4.*k*k);
   weight[2*(n/2)-1]=(n-3.)/(2*(n/2)-1) -1.;
-  real_plan plan = make_real_plan(n);
-  real_plan_backward_fftpack(plan,weight);
-  kill_real_plan(plan);
+  rfft_plan plan = make_rfft_plan(n);
+  rfft_backward(plan,weight,1.);
+  destroy_rfft_plan(plan);
   for (int m=0; m<nrings; ++m)
     weight[m]=weight[m+1];
 

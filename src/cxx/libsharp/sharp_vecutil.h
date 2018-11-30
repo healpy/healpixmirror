@@ -25,7 +25,7 @@
 /*! \file sharp_vecutil.h
  *  Functionality related to vector instruction support
  *
- *  Copyright (C) 2012-2016 Max-Planck-Society
+ *  Copyright (C) 2012,2013 Max-Planck-Society
  *  \author Martin Reinecke
  */
 
@@ -46,25 +46,11 @@
 
 #endif
 
-#if (VLEN==1)
-#define VLEN_s 1
-#else
-#define VLEN_s (2*VLEN)
-#endif
-
 #ifndef USE_FMA4
 #ifdef __FMA4__
 #define USE_FMA4 1
 #else
 #define USE_FMA4 0
-#endif
-#endif
-
-#ifndef USE_FMA
-#ifdef __FMA__
-#define USE_FMA 1
-#else
-#define USE_FMA 0
 #endif
 #endif
 
