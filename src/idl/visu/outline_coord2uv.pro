@@ -125,14 +125,15 @@ pro outline_coord2uv, outline, coord_out, eul_mat, outline_uv, projection=projec
 ;       2013-02-08: replaced SYMCAT with CGSYMCAT
 ;       2014-06-23: allow different sub-structure to use different customized
 ;         symbols (via CGSYMCAT when PSYM in [9,46])
+;       2018-??: introduced COLOR
+;       2018-11-30: allow for large number of substructures
 ;-
 
 ; outline : from astro coordinate to uv plan
 
 identify_projection, projtype, projection=projection, mollweide=mollweide, gnomic=gnomic
 
-if keyword_set(flip) then flipconv=1 else flipconv = -1  ; longitude increase leftward by default (astro convention)
-
+flipconv = keyword_set(flip) ? 1 : -1  ; longitude increase leftward by default (astro convention)
 
 if (datatype(outline) ne 'STC') then return
 
@@ -143,8 +144,8 @@ if (datatype(outline.(0)) ne 'STC') then begin
     no_sub = 1
 endif
 
-ist = 0
-for i=0,n_outlines-1 do begin
+ist = 0L
+for i=0L,n_outlines-1 do begin
     if (no_sub eq 1) then c1 = outline else c1 = outline.(i)
     ;--------- parse structure fields ----------
     nc1 = n_tags(c1)
@@ -329,13 +330,13 @@ for i=0,n_outlines-1 do begin
             ;c1uv = create_struct('U',u_cont,'V',v_cont,'T',pcont_type,'ST',psym_type,'SS',ssize,'COL',colors)
             c1uv = {U:u_cont, V:v_cont, T:pcont_type, ST:psym_type, SS:ssize, COL:colors}
             ;tag = 's'+strtrim(string(ist,form='(i2)'),2)
-            tag = 's'+string(ist,form='(i4.4)')
+            tag = 's'+string(ist,form='(i6.6)')
             if (ist eq 0) then begin
                 outline_uv = create_struct(tag,c1uv) 
             endif else begin
                 outline_uv = create_struct(outline_uv,tag,c1uv)
             endelse
-            ist = ist + 1
+            ist += 1
         endif
     endfor ; loop on type
 endfor ; loop on outline
