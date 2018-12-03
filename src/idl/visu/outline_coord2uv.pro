@@ -343,7 +343,7 @@ endfor ; loop on outline
 
 if (keyword_set(show)) then begin
     n_outlines= n_tags(outline_uv)
-    for i=0,n_outlines-1 do begin
+    for i=0L,n_outlines-1 do begin
         c1 = outline_uv.(i)
         psym_type = c1.ST
         if (psym_type ge 9 && psym_type le 46) then  psym_type = cgsymcat(psym_type) ; call usersym and set psym_type to 8
