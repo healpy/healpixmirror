@@ -4,6 +4,28 @@
 #  before packing them up for a release (see ./pack)
 #
 
+NO_COLOR='\x1b[0m'
+RED_COLOR='\x1b[31;01m'
+GREEN_COLOR='\x1b[32;11m'
+YELLOW_COLOR='\x1b[33;11m'
+BLUE_COLOR='\x1b[34;11m'
+MAGENTA_COLOR='\x1b[35;11m'
+CYAN_COLOR='\x1b[36;11m'
+
+echoBlu (){
+    echo "${BLUE_COLOR}$1${NO_COLOR}"
+    }
+
+echoGrn (){
+    echo "${GREEN_COLOR}$1${NO_COLOR}"
+    }
+
+echoRed (){
+    echo "${RED_COLOR}$1${NO_COLOR}"
+    }
+#---------------
+
+WRKDIR="/tmp"
 healpytag="1.12.6"
 healpygit=0 # 1: uses GIT, 0: uses tar.gz
 healpyrepo="https://github.com/healpy/healpy.git"
@@ -31,7 +53,6 @@ fi
 healpixrepo="svn://svn.code.sf.net/p/healpix/code/" # read-only
 #healpixrepo="https://healpix.svn.sourceforge.net/svnroot/healpix/"
 #
-WRKDIR="/tmp"
 #
 current=`grep -v '#' ./Version`
 version=${current}
@@ -40,13 +61,13 @@ read answer
 [ "x$answer" != "x" ] && version="$answer"
 VERSION=$version
 
-echo "Version: ${VERSION}    in ${WRKDIR}"
+echoBlu "Version: ${VERSION}    in ${WRKDIR}"
 if [ ${healpygit} = 1 ] ; then
-    echo "healpy:   ${healpyrepo}   ${healpytag}"
+    echoBlu "healpy:   ${healpyrepo}   ${healpytag}"
 else
-    echo "healpy:   ${healpyarchive}   ${healpytag}"
+    echoBlu "healpy:   ${healpyarchive}   ${healpytag}"
 fi
-echo "healpix:  ${healpixrepo}${healpixbranch}"
+echoBlu "healpix:  ${healpixrepo}${healpixbranch}"
 [ ${healpixbranch_cxx}  != ${healpixbranch} ] && echo "   C++:   ${healpixrepo}${healpixbranch_cxx}"
 [ ${healpixbranch_java} != ${healpixbranch} ] && echo "   java:  ${healpixrepo}${healpixbranch_java}"
 printf "Do you want to proceed (y/n) [n]: "
@@ -61,22 +82,22 @@ if [ ${doit} = 1 ] ; then
     \rm -rf             ${WRKDIR}/healpy
 
     cd ${WRKDIR}
-    echo "-------------------- HEALPix ------------------"
+    echoGrn "-------------------- HEALPix ------------------"
     svn co     ${healpixrepo}${healpixbranch}               Healpix_${VERSION}
     if [ ${healpixbranch_cxx} != ${healpixbranch} ] ; then
-	echo "-------------------- C++ ------------------"
+	echoGrn "-------------------- C++ ------------------"
 	\rm -rf Healpix_${VERSION}/src/cxx
 	svn co ${healpixrepo}${healpixbranch_cxx}/src/cxx   Hc++_${VERSION}
 	mv Hc++_${VERSION}                                  Healpix_${VERSION}/src/cxx
     fi
     if [ ${healpixbranch_java} != ${healpixbranch} ] ; then
-	echo "-------------------- Java ------------------"
+	echoGrn "-------------------- Java ------------------"
 	\rm -rf Healpix_${VERSION}/src/java
 	svn co ${healpixrepo}${healpixbranch_java}/src/java Hjava_${VERSION}
 	mv Hjava_${VERSION}                                 Healpix_${VERSION}/src/java
     fi
 
-    echo "---------------------- Healpy ----------------"
+    echoGrn "---------------------- Healpy ----------------"
     if [ ${healpygit} = 1 ] ; then
 	git clone ${healpyrepo}  healpy 
 	cd healpy 
@@ -108,8 +129,9 @@ if [ ${doit} = 1 ] ; then
     if [ -d healpixsubmodule/src/cxx/autotools ] ; then # version 1.7* and above
 	cd  healpixsubmodule/src/cxx/autotools
 	\ln -sf ../../../../../cxx .
-	for dir in Healpix_cxx c_utils cxxsupport libfftpack libsharp ; do
-	    echo ${dir}
+	#for dir in Healpix_cxx c_utils cxxsupport libfftpack libsharp ; do
+	for dir in Healpix_cxx c_utils cxxsupport pocketfft libsharp ; do
+	    echoRed "Replacing ${dir}"
 	    \rm -r ${dir}
 	    \ln -sf cxx/${dir} .
 	done
@@ -120,25 +142,27 @@ if [ ${doit} = 1 ] ; then
 	ln -s ../../../cxx .
     fi
 
-    if [ ! -f cfitsio/License.txt ] ; then # put by hand cfitsio source
-	echo "Put CFITSIO source files"
-	\rm -rf cfitsio
-	cfitsio_tarball=cfitsio_3.36_for_healpy_1.9.x.tar.gz
-	cp -p ~/Healpix_releases/${cfitsio_tarball} .
-	tar -xvzpf ${cfitsio_tarball}
-	\rm ${cfitsio_tarball}
-    fi
+#     if [ ! -f cfitsio/License.txt ] ; then # put by hand cfitsio source
+# 	echo "Put CFITSIO source files"
+# 	\rm -rf cfitsio
+# 	cfitsio_tarball=cfitsio_3.36_for_healpy_1.9.x.tar.gz
+# 	cp -p ~/Healpix_releases/${cfitsio_tarball} .
+# 	tar -xvzpf ${cfitsio_tarball}
+# 	\rm ${cfitsio_tarball}
+#     fi
 
-    if [ ! -d healpixsubmodules/src ] ; then # put by hand cfitsio source
-	echo "Put links to HEALPix/C++ source files"
-	\rm -rf healpixsubmodules
-	hsm_tarball=healpixsubmodule_for_healpy_1.9.x.tar.gz
-	cp -p ~/Healpix_releases/${hsm_tarball} .
-	tar -xvzpf ${hsm_tarball}
-	\rm ${hsm_tarball}
-    fi
+#     if [ ! -d healpixsubmodules/src ] ; then # put by hand healpixsubmodules
+# 	echo "Put links to HEALPix/C++ source files"
+# 	\rm -rf healpixsubmodules
+# 	hsm_tarball=healpixsubmodule_for_healpy_1.9.x.tar.gz
+# 	cp -p ~/Healpix_releases/${hsm_tarball} .
+# 	tar -xvzpf ${hsm_tarball}
+# 	\rm ${hsm_tarball}
+#     fi
 
-    echo "-------------------- Done! ------------------"
+    echoBlu "--------- Discrepancy in healpy -------------"
+    diff -qr ${PWD} ~/healpy/healpy-${healpytag}
+    echoGrn "-------------------- Done! ------------------"
     cd ${WRKDIR}
 fi
 
