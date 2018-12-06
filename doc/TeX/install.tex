@@ -1487,9 +1487,7 @@ However, the \mylinkext{idl:mollview:latex}{\texttt{Latex}} keyword will work pr
 
 %
 % \subsubsection[C]{\linklatexhtml{C}{csub.pdf}{csub.htm}}
-%
-% \subsubsection[C++]{\htmladdnormallink{C++}{\healpixwebpage/html/index_cxx.htm}}
-%
+% ------
 \subsubsection[Fortran]{%
 	Fortran 90 \linklatexhtml{facilities}{facilities.pdf}{facilities.htm} and
 	\linklatexhtml{subroutines}{subroutines.pdf}{subroutines.htm}}
@@ -1518,8 +1516,13 @@ a latitude cut to a map,
 %
 \item \htmladdnormallink{edition to fitstools.F90}{https://sourceforge.net/p/healpix/bugs/84} allowing a proper compilation with g95.
 \end{itemize}
-
-%
+% ------
+\subsubsection[C++]{\htmladdnormallink{C++}{\healpixwebpage/html/index_cxx.htm}}
+\begin{itemize}
+	\item C implementation of \htmladdnormallink{fftpack}{https://www.netlib.org/fftpack} replaced with \htmladdnormallink{pocketfft}{https://gitlab.mpcdf.mpg.de/mtr/pocketfft}
+	\item online documentation for Line Integral Convolution code \texttt{alice3}
+\end{itemize}
+% ------
 \subsubsection[IDL]{\linklatexhtml{IDL}{idl.pdf}{idl.htm}}
 \begin{itemize}
 \item \htmlref{\texttt{fits2cl}}{idl:fits2cl}: addition of \mylinkext{idl:fits2cl:planck3}{\texttt{/PLANCK3}} keyword to read the fiducial $\Lambda$-CDM $C(\ell)$ model which best fits the 2018 Planck data analysis (available from \htmladdnormallink{\texttt{Healpix/test/planck2018\_lcdm\_cl\_v3.fits}}{\srcurl test/planck2018_lcdm_cl_v3.fits});
@@ -1533,15 +1536,16 @@ a latitude cut to a map,
     routines, and \htmladdnormallink{\texttt{Coyote}}{http://www.idlcoyote.com} library
     routines (2018-09-27).
 \end{itemize}
-%
+% ------
 % \subsubsection[Java]{\htmladdnormallink{Java}{\healpixwebpage/html/java/index.html}}
-%
+% ------
 \subsubsection[Python]{\htmladdnormallink{Python}{https://healpy.readthedocs.io/en/latest/}}
 \begin{itemize}
 \item Switch to 
 	\htmladdnormallink{\texttt{healpy \hpyversion}}{\hpysite/releases} 
 	(\htmladdnormallink{CHANGELOG}{\hpysite/blob/master/CHANGELOG.rst})
 \end{itemize}
+% ------
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% END LATEST CHANGES %%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
