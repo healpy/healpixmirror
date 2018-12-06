@@ -33,7 +33,7 @@
 #include "sharp_core_inc0.c"
 #undef ARCH
 
-#if (!defined(__AVX__)) && defined(__GNUC__) && defined (__x86_64__) && (__GNUC__>=5)
+#if (!defined(__AVX__)) && defined(__GNUC__) && defined (__x86_64__) && (__GNUC__>=6)
 
 static int have_avx(void)
   {
@@ -55,7 +55,7 @@ void inner_loop (sharp_job *job, const int *ispair,const double *cth,
   const double *sth, int llim, int ulim, sharp_Ylmgen_C *gen, int mi,
   const int *mlim)
   {
-#if (!defined(__AVX__)) && defined(__GNUC__) && defined (__x86_64__) && (__GNUC__>=5)
+#if (!defined(__AVX__)) && defined(__GNUC__) && defined (__x86_64__) && (__GNUC__>=6)
   if (have_avx())
     inner_loop_avx (job, ispair, cth, sth, llim, ulim, gen, mi, mlim);
   else
@@ -65,7 +65,7 @@ void inner_loop (sharp_job *job, const int *ispair,const double *cth,
 
 int sharp_veclen(void)
   {
-#if (!defined(__AVX__)) && defined(__GNUC__) && defined (__x86_64__) && (__GNUC__>=5)
+#if (!defined(__AVX__)) && defined(__GNUC__) && defined (__x86_64__) && (__GNUC__>=6)
   if (have_avx())
     return 4;
   else
