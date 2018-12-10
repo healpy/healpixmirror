@@ -88,6 +88,19 @@ For any problem, question or comment, see the <a href="support.php">Support</a> 
 
 <UL CLASS="ChildLinks">
 
+<LI><A ID="tex2html_350_26"
+  HREF="#SECTION_350_10000000000000000">Bug corrections and Improvements in Version 3.50</A>
+<UL>
+<LI><A ID="tex2html_350_27"
+  HREF="#SECTION_350_11000000000000000">Fortran</A>
+<LI><A ID="tex2html_350_28"
+  HREF="#SECTION_350_12000000000000000">C++</A>
+<LI><A ID="tex2html_350_29"
+  HREF="#SECTION_350_13000000000000000">IDL</A>
+<LI><A ID="tex2html_350_30"
+  HREF="#SECTION_350_14000000000000000">Python</A>
+</UL>
+
 <LI><A id="tex2html_340_33"
   HREF="#SECTION_340_10000000000000000">Bug corrections and Improvements in Version 3.40</A>
 <UL>
@@ -103,22 +116,128 @@ For any problem, question or comment, see the <a href="support.php">Support</a> 
   HREF="#SECTION_340_15000000000000000">Python</A>
 </UL>
 
-<LI><A id="tex2html_331_11"
-  HREF="#SECTION_331_10000000000000000">Bug corrections and Improvements in Version 3.31</A>
-<UL>
-<LI><A id="tex2html_331_12"
-  HREF="#SECTION_331_11000000000000000">General</A>
-<LI><A id="tex2html_331_13"
-  HREF="#SECTION_331_12000000000000000">C++</A>
-<LI><A id="tex2html_331_14"
-  HREF="#SECTION_331_13000000000000000">Fortran</A>
-<LI><A id="tex2html_331_15"
-  HREF="#SECTION_331_14000000000000000">IDL</A>
-<LI><A id="tex2html_331_16"
-  HREF="#SECTION_331_15000000000000000">Python</A>
-</UL>
 </ul>
 <!--End of Table of Child-Links-->
+
+<!-- ************************************************* -->
+
+<h3><A ID="SECTION_350_10000000000000000">
+Bug corrections and Improvements in Version 3.50</A>
+</h3>
+<P>
+
+<h4>Fortran 90 <A ID="tex2html_350_1"
+  HREF="./html/facilities.htm">facilities</A>
+and
+	<A ID="tex2html_350_2"
+  HREF="./html/subroutines.htm">subroutines</A>
+</h4>
+<UL><LI>
+ A bug affecting <A ID="tex2html_350_3"
+  HREF="./html/sub_map2alm_iterative.htm"><SPAN  style="font-family:monospace">map2alm_iterative</SPAN></A>
+(when a <SPAN  style="font-family:monospace">mask</SPAN> is used in combination with 
+<SPAN  style="font-family:monospace">iter_order</SPAN> <SPAN CLASS="MATH">&gt;0</SPAN>)
+and
+<A ID="tex2html_350_4"
+  HREF="./html/fac_anafast.htm"><SPAN  style="font-family:monospace">anafast</SPAN></A>
+(when
+<SPAN  style="font-family:monospace">maskfile</SPAN> or 
+<SPAN  style="font-family:monospace">theta_cut_deg</SPAN>
+are used in combination with 
+<SPAN  style="font-family:monospace">iter_order</SPAN><SPAN CLASS="MATH">&gt;0</SPAN>) has been corrected,
+<LI>
+ addition of <SPAN  style="font-family:monospace">zbounds</SPAN> in 
+<A ID="tex2html_350_5"
+  HREF="./html/sub_alm2map.htm"><SPAN  style="font-family:monospace">alm2map</SPAN></A>,
+<A ID="tex2html_350_6"
+  HREF="./html/sub_alm2map_der.htm"><SPAN  style="font-family:monospace">alm2map_der</SPAN></A>,
+<A ID="tex2html_350_7"
+  HREF="./html/sub_alm2map_spin.htm"><SPAN  style="font-family:monospace">alm2map_spin</SPAN></A>,
+in order to simulate (faster) a signal on only a fraction of the sphere,
+<LI>
+ introduction of <A ID="tex2html_350_8"
+  HREF="./html/sub_apply_mask.htm"><SPAN  style="font-family:monospace">apply_mask</SPAN></A>
+to apply an arbitrary mask and/or
+a latitude cut to a map,
+<LI>
+  <A ID="tex2html_350_9"
+  HREF="https://sourceforge.net/p/healpix/bugs/78">improved support for version 18 and more of Intel C and F90 compilers</A>
+in <SPAN  style="font-family:monospace">configure</SPAN> script,
+<LI>
+ <A ID="tex2html_350_10"
+  HREF="https://sourceforge.net/p/healpix/bugs/84">edition to fitstools.F90</A>
+allowing a proper compilation with g95.
+</UL>
+<A HREF=#top>    Back to Top</A><br><br>
+<P>
+
+<h4><A ID="SECTION_350_12000000000000000"></A>
+<BR>
+<A ID="tex2html_350_11"
+  HREF="http://healpix.sourceforge.net/html/index_cxx.htm">C++</A>
+</h4>
+<UL><LI>
+ C implementation of <A ID="tex2html_350_12"
+  HREF="https://www.netlib.org/fftpack">fftpack</A>
+replaced with <A ID="tex2html_350_13"
+  HREF="https://gitlab.mpcdf.mpg.de/mtr/pocketfft">pocketfft</A>
+<LI>
+ <A ID="tex2html_350_14"
+  HREF="http://healpix.sourceforge.net/html/Healpix_cxx/facilities.html">online documentation</A>
+for Line Integral Convolution code <SPAN  style="font-family:monospace">alice3</SPAN>
+</UL>
+<A HREF=#top>    Back to Top</A><br><br>
+<P>
+
+<h4><A ID="SECTION_350_13000000000000000"></A>
+<BR>
+<A ID="tex2html_350_15"
+  HREF="./html/idl.htm">IDL</A>
+</h4>
+<UL><LI>
+ <A ID="tex2html_350_16"
+  HREF="./html/idl_fits2cl.htm"><SPAN  style="font-family:monospace">fits2cl</SPAN></A>: addition of <SPAN  style="font-family:monospace">/PLANCK3</SPAN> keyword to read the fiducial 
+<!--SPAN CLASS="MATH"><IMG STYLE="height: 1.69ex; vertical-align: -0.10ex; " SRC="img1.png" ALT="&Lambda;"></SPAN-->
+  &Lambda;-CDM <SPAN CLASS="MATH"><I>C</I>(<I>l</I>)</SPAN> model which best fits the 2018 Planck data analysis (available from <A ID="tex2html_350_17"
+  HREF="https://sourceforge.net/p/healpix/code/HEAD/tree/trunk/test/planck2018_lcdm_cl_v3.fits"><SPAN  style="font-family:monospace">Healpix/test/planck2018_lcdm_cl_v3.fits</SPAN></A>);
+<LI>
+ <A ID="tex2html_350_18"
+  HREF="./html/idl_rotate_coord.htm"><SPAN  style="font-family:monospace">rotate_coord</SPAN></A>: addition of optional variable <SPAN  style="font-family:monospace">Delta_Psi</SPAN> containing rotation of polarization on output, and of keyword <SPAN  style="font-family:monospace">Free_Norm</SPAN> to deal with un-normalized input coordinate vectors;
+<LI>
+ minor bugs correction in 
+<A ID="tex2html_350_19"
+  HREF="./html/idl_mollview.htm"><SPAN  style="font-family:monospace">azeqview, cartview, gnomview, mollview, orthview</SPAN></A>
+(when 
+<SPAN  style="font-family:monospace">polarization=3</SPAN>) and 
+<A ID="tex2html_350_20"
+  HREF="./html/idl_alm2fits.htm"><SPAN  style="font-family:monospace">alm2fits</SPAN></A>
+(user provided header now correctly processed).
+<LI>
+ Update of the required
+    <A ID="tex2html_350_21"
+  HREF="https://idlastro.gsfc.nasa.gov/homepage.html"><SPAN  style="font-family:monospace">IDL-astron</SPAN> library</A>
+routines, and <A ID="tex2html_350_22"
+  HREF="http://www.idlcoyote.com"><SPAN  style="font-family:monospace">Coyote</SPAN></A>
+library
+    routines (2018-09-27).
+</UL>
+<A HREF=#top>    Back to Top</A><br><br>
+<P>
+
+<h4><A ID="SECTION_350_14000000000000000"></A>
+<BR>
+<A ID="tex2html_350_23"
+  HREF="https://healpy.readthedocs.io/en/latest/">Python</A>
+</h4>
+<UL><LI>
+ Switch to 
+	<A ID="tex2html_350_24"
+  HREF="https://github.com/healpy/healpy/releases"><SPAN  style="font-family:monospace">healpy 1.12.8 </SPAN></A>
+(<A ID="tex2html_350_25"
+  HREF="https://github.com/healpy/healpy/blob/master/CHANGELOG.rst">CHANGELOG</A>)
+</UL>
+<A HREF=#top>    Back to Top</A><br><br>
+<P>
 
 <!-- ************************************************* -->
 
@@ -308,115 +427,12 @@ library
   HREF="https://github.com/healpy/healpy/blob/master/CHANGELOG.rst">CHANGELOG</A>)
 <LI>
  Addition of the python facility <kbd>src/python/change_polcconv.py</kbd> to change the polarization convention 
-(see <A HREF="#install:idl:change_polcconv">IDL's <kbd>change_polcconv.pro</kbd> above</A>).
+(see <A HREF="#install:idl:change_polcconv">IDL&#039;s 
+<kbd>change_polcconv.pro</kbd> above</A>).
 </UL>
 <A HREF=#top>    Back to Top</A><br><br>
 
 <!-- ************************************************* -->
-
-<h3><A id="SECTION_331_10000000000000000">
-New Features in HEALPix 3.31</A>
-</h3>
-<P>
-
-<h4><A id="SECTION_331_11000000000000000">
-General</A>
-</h4>
-<UL>
-<LI>Detailed 
-<!--a href="http://healpix.sourceforge.net/html/install.htm#SECTION00082000000000000000">HOWTO</a--> 
-<a href="https://healpix.sourceforge.io/html/install.htm#sec:windows">HOWTO</a> 
-for installation under Windows;
-</LI>
-<LI>Interactive <kbd>configure</kbd> script now supports MINGW environment (for Windows), 
-		and better detects <kbd>gcc</kbd> and <kbd>python</kbd> versions;
-</LI>
-<LI>Improved cross-document linking in PDF documentation.
-</LI>
-</UL>
-
-<A HREF=#top>    Back to Top</A><br><br>
-<p>
-
-<h4><A id="SECTION_331_12000000000000000"></A>
-<A id="tex2html_331_1"
-  HREF="https://healpix.sourceforge.io/html/index_cxx.htm">C++</A>
-</h4>	
-<UL>
-<LI>Removal of C++11 features inadvertently introduced in Version 3.30 
-	(see <A id="tex2html_331_2"
-  HREF="https://sourceforge.net/p/healpix/bugs/72"><kbd>https://sourceforge.net/p/healpix/bugs/72</kbd></A>)	
-</LI>
-</UL>
-<A HREF=#top>    Back to Top</A><br><br>
-<p>
-
-<h4>Fortran 90 <A id="tex2html_331_3"
-  HREF="https://healpix.sourceforge.io/html/facilities.htm">facilities</A>
-and
- 	<A id="tex2html_331_4"
-  HREF="https://healpix.sourceforge.io/html/subroutines.htm">subroutines</A>
-</h4>
-<UL>
-<LI>Bug correction in <a href="https://healpix.sourceforge.io/html/sub_input_map.htm"><kbd>input_map</kbd></a> routine for reading of polarized multi-HDU cut sky FITS files;
-</LI>
-<LI>Introduction of 
-<kbd>winfiledir_*</kbd> and 
-<kbd>windowfile_*</kbd> qualifiers in <a href="https://healpix.sourceforge.io/html/fac_alteralm.htm"><kbd>alteralm</kbd></a> facility.	
-</LI>
-</UL>
-
-<A HREF=#top>    Back to Top</A><br><br>
-<p>
-
-<h4><A id="SECTION_331_14000000000000000"></A>
-<BR>
-<A id="tex2html_331_5"
-  HREF="https://healpix.sourceforge.io/html/idl.htm">IDL</A>
-</h4>
-<UL>
-<LI>Improved support for 
- <a href="https://healpix.sourceforge.io/html/install.htm#install:using_gdl">GDL</a>;
-</LI>
-<LI>update of the required
-    <A id="tex2html_331_6"
-  HREF="https://idlastro.gsfc.nasa.gov/homepage.html"><kbd>IDL-astron</kbd> library</A>
-routines, and <A id="tex2html_331_7"
-  HREF="http://www.idlcoyote.com"><kbd>Coyote</kbd></A>
-library
-    routines (2016-08-19).
-</LI>
-</UL>
-
-<A HREF=#top>    Back to Top</A><br><br>
-<p>
-
-<h4><A id="SECTION_331_15000000000000000"></A>
-<BR>
-<A id="tex2html_331_8"
-  HREF="https://healpy.readthedocs.org/en/latest/">Python</A>
-</h4>
-<UL>
-<LI>Switch to 
-	<A id="tex2html_331_9"
-  HREF="https://github.com/healpy/healpy/releases"><kbd>healpy 1.9.1</kbd></A>
-(<A id="tex2html_331_10"
-  HREF="https://github.com/healpy/healpy/blob/master/CHANGELOG.rst">CHANGELOG</A>)
-<UL>
-<LI>Removed C++ 11 features
-</LI>
-<LI>Streamlined setup.py
-</LI>
-<LI>Plotting fixes for Python 3
-</LI>
-<LI>Numpy 1.10 fix
-</LI>
-</UL>
-</LI>
-</UL>
-
-<A HREF=#top>    Back to Top</A><br><br>
-<p>
 
 
 <!-- ************************************************* -->

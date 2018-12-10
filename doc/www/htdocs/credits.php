@@ -50,7 +50,7 @@
               the first large release of the HEALPix software (Version 1.10).
               <br>
               <br>
-              The following releases of the HEALPix software (Versions 1.20 to 3.31) and the current one (Version 3.40) benefited
+              The following releases of the HEALPix software (Versions 1.20 to 3.40) and the current one (Version 3.50) benefited
               from:
 		<ul>
 		<li>
@@ -176,7 +176,8 @@
 		      <li>    Jean-Philippe 	Bernard	  	</li>
                       <li>    Snorre Boasson   			</li>
 		      <li>    Caroline 		Bot		</li>
-                      <li>    Michela Botti   			</li>
+                      <li>    Michela           Botti          	</li>
+		      <li>    Julien 		Carron  	</li>
 		      <li>    Anthony 		Challinor 	</li>
                       <li>    St&eacute;phane Colombi   	</li>
 		      <li>    Alain Coulais			</li>
@@ -197,6 +198,7 @@
                       <li>    Tess 		Jaffe   	</li>
 		      <li>    Reijo 		Keskitalo 	</li>
                       <li>    Alex Kim   			</li>
+                      <li>    Ted Kisner   			</li>
                     </ul>
                 </td>
 <!--
@@ -206,15 +208,16 @@
 -->
                 <td style="width:350px; vertical-align:top">
                     <ul>
-                      <li>    Ted Kisner   			</li>
 		      <li>    Masakazu A.R. Kobayashi		</li>
 		      <li>    Eiichiro Komatsu			</li>
 		      <li>    Wayne Landsman			</li>
                       <li>    Guy Le Meur   			</li>
 		      <li>    Samuel 		Leach		</li>
                       <li>    Antony Lewis   			</li>
+                      <li>    Thibaut Louis   			</li>
                       <li>    Davide Maino   			</li>
 		      <li>    Jean-Baptiste Marquette		</li>
+		      <li>    Marius Millea    		        </li>
 		      <li>    Marc-Antoine Miville-Deschenes  	</li>
                       <li>    Serge Monkewitz   		</li>
                       <li>    Ji&#345;&iacute; N&aacute;dvorn&iacute;k   			</li>
@@ -249,12 +252,11 @@
 	<!--
                         HEALPix documentation is a part of the HEALPix project and is released under the GNU General Public License<br />
 -->
-			PHP scripts and CSS layout adapted from <a href="http://gnudatalanguage.sourceforge.net">GDL website</a> and <i>Colourise</i> template by <a href="http://www.styleshout.com/">styleshout.com</a>.
+		        PHP (<?php echo (PHP_VERSION);?>) scripts and CSS layout adapted from <a href="http://gnudatalanguage.sourceforge.net">GDL website</a> and <i>Colourise</i> template by <a href="http://www.styleshout.com/">styleshout.com</a>.
 			<i>Sui Generis</i> font downloaded from <a href="https://www.urbanfonts.com">Urbanfonts.com</a><br>
 <!--
                         Hosted by <a href="https://sourceforge.net/">Sourceforge.net</a>
 -->
 </p>
-
 
 <?php require('_footer.inc.php'); ?>

@@ -27,6 +27,7 @@ echoRed (){
 
 WRKDIR="/tmp"
 healpytag="1.12.7"
+#healpytag="1.12.8"
 healpygit=0 # 1: uses GIT, 0: uses tar.gz
 healpyrepo="https://github.com/healpy/healpy.git"
 #healpyarchive="https://github.com/healpy/healpy/archive/" # git (maybe partial package)
