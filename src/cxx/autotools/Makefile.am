@@ -132,6 +132,7 @@ include_HEADERS = \
   cxxsupport/rangeset.h \
   cxxsupport/fitshandle.h \
   cxxsupport/alloc_utils.h \
+  cxxsupport/compress_utils.h \
   cxxsupport/math_utils.h \
   cxxsupport/error_handling.h \
   cxxsupport/lsconstants.h \
