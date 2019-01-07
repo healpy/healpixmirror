@@ -122,7 +122,6 @@ EXTRA_DIST = \
 include_HEADERS = \
   libsharp/sharp.h \
   libsharp/sharp_lowlevel.h \
-  libsharp/sharp_geomhelpers.c \
   libsharp/sharp_geomhelpers.h \
   cxxsupport/arr.h \
   cxxsupport/xcomplex.h \
