@@ -25,14 +25,14 @@
 /*! \file sharp_geomhelpers.h
  *  SHARP helper function for the creation of grid geometries
  *
- *  Copyright (C) 2006-2013 Max-Planck-Society
+ *  Copyright (C) 2006-2019 Max-Planck-Society
  *  \author Martin Reinecke
  */
 
 #ifndef PLANCK_SHARP_GEOMHELPERS_H
 #define PLANCK_SHARP_GEOMHELPERS_H
 
-#include "sharp_lowlevel.h"
+#include "sharp.h"
 
 #ifdef __cplusplus
 extern "C" {

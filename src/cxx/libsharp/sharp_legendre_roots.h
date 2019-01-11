@@ -24,7 +24,7 @@
 
 /*! \file sharp_legendre_roots.h
  *
- *  Copyright (C) 2006-2012 Max-Planck-Society
+ *  Copyright (C) 2006-2019 Max-Planck-Society
  *  \author Martin Reinecke
  */
 

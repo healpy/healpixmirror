@@ -6,9 +6,7 @@ src_c_utils = \
   c_utils/c_utils.c \
   c_utils/c_utils.h \
   c_utils/walltime_c.c \
-  c_utils/walltime_c.h \
-  c_utils/trig_utils.c \
-  c_utils/trig_utils.h
+  c_utils/walltime_c.h
 src_libpocketfft = \
   pocketfft/pocketfft.c \
   pocketfft/pocketfft.h
@@ -18,16 +16,16 @@ src_libsharp = \
   libsharp/sharp_cxx.h \
   libsharp/sharp_almhelpers.c \
   libsharp/sharp_almhelpers.h \
-  libsharp/sharp_complex_hacks.h \
   libsharp/sharp_core.c \
   libsharp/sharp_core_avx.c \
-  libsharp/sharp_core.h \
+  libsharp/sharp_core_avx2.c \
+  libsharp/sharp_core_avx512f.c \
+  libsharp/sharp_core_fma.c \
+  libsharp/sharp_core_fma4.c \
   libsharp/sharp_geomhelpers.c \
   libsharp/sharp_geomhelpers.h \
   libsharp/sharp_internal.h \
-  libsharp/sharp_lowlevel.h \
   libsharp/sharp_vecsupport.h \
-  libsharp/sharp_vecutil.h \
   libsharp/sharp_ylmgen_c.c \
   libsharp/sharp_ylmgen_c.h \
   libsharp/sharp_legendre_roots.c \
@@ -112,16 +110,12 @@ src_healpix_cxx_fits= \
   Healpix_cxx/moc_fitsio.cc
 
 EXTRA_DIST = \
-  libsharp/sharp_core_inc0.c \
   libsharp/sharp_core_inc.c \
-  libsharp/sharp_core_inc2.c \
-  libsharp/sharp_core_inchelper.c \
   cxxsupport/font_data.inc \
   pocketfft/LICENSE.md
 
 include_HEADERS = \
   libsharp/sharp.h \
-  libsharp/sharp_lowlevel.h \
   libsharp/sharp_geomhelpers.h \
   cxxsupport/arr.h \
   cxxsupport/xcomplex.h \

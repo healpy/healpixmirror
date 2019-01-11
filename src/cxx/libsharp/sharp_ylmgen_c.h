@@ -25,7 +25,7 @@
 /*! \file sharp_ylmgen_c.h
  *  Code for efficient calculation of Y_lm(phi=0,theta)
  *
- *  Copyright (C) 2005-2016 Max-Planck-Society
+ *  Copyright (C) 2005-2019 Max-Planck-Society
  *  \author Martin Reinecke
  */
 
@@ -41,8 +41,7 @@ static const double sharp_fbig=0x1p+800,sharp_fsmall=0x1p-800;
 static const double sharp_ftol=0x1p-60;
 static const double sharp_fbighalf=0x1p+400;
 
-typedef struct { double f[2]; } sharp_ylmgen_dbl2;
-typedef struct { double f[3]; } sharp_ylmgen_dbl3;
+typedef double sharp_ylmgen_dbl2[2];
 
 typedef struct
   {
@@ -54,15 +53,16 @@ typedef struct
 /* for public use; will typically change after call to Ylmgen_prepare() */
   int m;
 
+  double *alpha;
+  sharp_ylmgen_dbl2 *coef;
+
 /* used if s==0 */
-  double *mfac;
-  sharp_ylmgen_dbl2 *rf;
+  double *mfac, *eps;
 
 /* used if s!=0 */
   int sinPow, cosPow, preMinus_p, preMinus_m;
   double *prefac;
   int *fscale;
-  sharp_ylmgen_dbl3 *fx;
 
 /* internal usage only */
 /* used if s==0 */

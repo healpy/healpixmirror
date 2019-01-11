@@ -25,7 +25,7 @@
 /*
  *  Helper code for efficient calculation of Y_lm(theta,phi=0)
  *
- *  Copyright (C) 2005-2016 Max-Planck-Society
+ *  Copyright (C) 2005-2019 Max-Planck-Society
  *  Author: Martin Reinecke
  */
 
@@ -69,31 +69,34 @@ void sharp_Ylmgen_init (sharp_Ylmgen_C *gen, int l_max, int m_max, int spin)
   gen->m = -1;
   if (spin==0)
     {
-    gen->rf = RALLOC(sharp_ylmgen_dbl2,gen->lmax+1);
     gen->mfac = RALLOC(double,gen->mmax+1);
     gen->mfac[0] = inv_sqrt4pi;
     for (int m=1; m<=gen->mmax; ++m)
       gen->mfac[m] = gen->mfac[m-1]*sqrt((2*m+1.)/(2*m));
-    gen->root = RALLOC(double,2*gen->lmax+5);
-    gen->iroot = RALLOC(double,2*gen->lmax+5);
-    for (int m=0; m<2*gen->lmax+5; ++m)
+    gen->root = RALLOC(double,2*gen->lmax+8);
+    gen->iroot = RALLOC(double,2*gen->lmax+8);
+    for (int m=0; m<2*gen->lmax+8; ++m)
       {
       gen->root[m] = sqrt(m);
       gen->iroot[m] = (m==0) ? 0. : 1./gen->root[m];
       }
+    gen->eps=RALLOC(double, gen->lmax+4);
+    gen->alpha=RALLOC(double, gen->lmax/2+2);
+    gen->coef=RALLOC(sharp_ylmgen_dbl2, gen->lmax/2+2);
     }
   else
     {
     gen->m=gen->mlo=gen->mhi=-1234567890;
-    ALLOC(gen->fx,sharp_ylmgen_dbl3,gen->lmax+2);
-    for (int m=0; m<gen->lmax+2; ++m)
-      gen->fx[m].f[0]=gen->fx[m].f[1]=gen->fx[m].f[2]=0.;
-    ALLOC(gen->inv,double,gen->lmax+1);
+    ALLOC(gen->coef,sharp_ylmgen_dbl2,gen->lmax+3);
+    for (int m=0; m<gen->lmax+3; ++m)
+      gen->coef[m][0]=gen->coef[m][1]=0.;
+    ALLOC(gen->alpha,double,gen->lmax+3);
+    ALLOC(gen->inv,double,gen->lmax+2);
     gen->inv[0]=0;
-    for (int m=1; m<gen->lmax+1; ++m) gen->inv[m]=1./m;
-    ALLOC(gen->flm1,double,2*gen->lmax+1);
-    ALLOC(gen->flm2,double,2*gen->lmax+1);
-    for (int m=0; m<2*gen->lmax+1; ++m)
+    for (int m=1; m<gen->lmax+2; ++m) gen->inv[m]=1./m;
+    ALLOC(gen->flm1,double,2*gen->lmax+3);
+    ALLOC(gen->flm2,double,2*gen->lmax+3);
+    for (int m=0; m<2*gen->lmax+3; ++m)
       {
       gen->flm1[m] = sqrt(1./(m+1.));
       gen->flm2[m] = sqrt(m/(m+1.));
@@ -131,16 +134,17 @@ void sharp_Ylmgen_destroy (sharp_Ylmgen_C *gen)
   {
   DEALLOC(gen->cf);
   DEALLOC(gen->powlimit);
+  DEALLOC(gen->alpha);
+  DEALLOC(gen->coef);
   if (gen->s==0)
     {
-    DEALLOC(gen->rf);
     DEALLOC(gen->mfac);
     DEALLOC(gen->root);
     DEALLOC(gen->iroot);
+    DEALLOC(gen->eps);
     }
   else
     {
-    DEALLOC(gen->fx);
     DEALLOC(gen->prefac);
     DEALLOC(gen->fscale);
     DEALLOC(gen->flm1);
@@ -157,13 +161,20 @@ void sharp_Ylmgen_prepare (sharp_Ylmgen_C *gen, int m)
 
   if (gen->s==0)
     {
-    gen->rf[m].f[0] = gen->root[2*m+3];
-    gen->rf[m].f[1] = 0.;
-    for (int l=m+1; l<=gen->lmax; ++l)
+    gen->eps[m] = 0.;
+    for (int l=m+1; l<gen->lmax+4; ++l)
+      gen->eps[l] = gen->root[l+m]*gen->root[l-m]
+                   *gen->iroot[2*l+1]*gen->iroot[2*l-1];
+    gen->alpha[0] = 1./gen->eps[m+1];
+    gen->alpha[1] = gen->eps[m+1]/(gen->eps[m+2]*gen->eps[m+3]);
+    for (int il=1, l=m+2; l<gen->lmax+1; ++il, l+=2)
+      gen->alpha[il+1]= ((il&1) ? -1 : 1)
+                       /(gen->eps[l+2]*gen->eps[l+3]*gen->alpha[il]);
+    for (int il=0, l=m; l<gen->lmax+2; ++il, l+=2)
       {
-      double tmp=gen->root[2*l+3]*gen->iroot[l+1+m]*gen->iroot[l+1-m];
-      gen->rf[l].f[0] = tmp*gen->root[2*l+1];
-      gen->rf[l].f[1] = tmp*gen->root[l+m]*gen->root[l-m]*gen->iroot[2*l-1];
+      gen->coef[il][0] = ((il&1) ? -1 : 1)*gen->alpha[il]*gen->alpha[il];
+      double t1 = gen->eps[l+2], t2 = gen->eps[l+1];
+      gen->coef[il][1] = -gen->coef[il][0]*(t1*t1+t2*t2);
       }
     }
   else
@@ -176,17 +187,25 @@ void sharp_Ylmgen_prepare (sharp_Ylmgen_C *gen, int m)
 
     if (!ms_similar)
       {
-      for (int l=gen->mhi; l<gen->lmax; ++l)
+      gen->alpha[gen->mhi] = 1.;
+      gen->coef[gen->mhi][0] = gen->coef[gen->mhi][1] = 0.;
+      for (int l=gen->mhi; l<gen->lmax+1; ++l)
         {
         double t = gen->flm1[l+gen->m]*gen->flm1[l-gen->m]
                   *gen->flm1[l+gen->s]*gen->flm1[l-gen->s];
         double lt = 2*l+1;
         double l1 = l+1;
-        gen->fx[l+1].f[0]=l1*lt*t;
-        gen->fx[l+1].f[1]=gen->m*gen->s*gen->inv[l]*gen->inv[l+1];
+        double flp10=l1*lt*t;
+        double flp11=gen->m*gen->s*gen->inv[l]*gen->inv[l+1];
         t = gen->flm2[l+gen->m]*gen->flm2[l-gen->m]
            *gen->flm2[l+gen->s]*gen->flm2[l-gen->s];
-        gen->fx[l+1].f[2]=t*l1*gen->inv[l];
+        double flp12=t*l1*gen->inv[l];
+        if (l>gen->mhi)
+          gen->alpha[l+1] = gen->alpha[l-1]*flp12;
+        else
+          gen->alpha[l+1] = 1.;
+        gen->coef[l+1][0] = flp10*gen->alpha[l]/gen->alpha[l+1];
+        gen->coef[l+1][1] = flp11*gen->coef[l+1][0];
         }
       }
 

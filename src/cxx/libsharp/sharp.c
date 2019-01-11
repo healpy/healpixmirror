@@ -35,8 +35,6 @@
 #include "sharp_ylmgen_c.h"
 #include "sharp_internal.h"
 #include "c_utils.h"
-#include "sharp_core.h"
-#include "sharp_vecutil.h"
 #include "walltime_c.h"
 #include "sharp_almhelpers.h"
 #include "sharp_geomhelpers.h"
@@ -110,15 +108,16 @@ NOINLINE static void ringhelper_update (ringhelper *self, int nph, int mmax, dou
       RESIZE (self->shiftarr,dcmplx,mmax+1);
       self->s_shift = mmax+1;
       self->phi0_ = phi0;
+// FIXME: improve this by using sincos2pibyn(nph) etc.
       for (int m=0; m<=mmax; ++m)
         self->shiftarr[m] = cos(m*phi0) + _Complex_I*sin(m*phi0);
 //      double *tmp=(double *) self->shiftarr;
 //      sincos_multi (mmax+1, phi0, &tmp[1], &tmp[0], 2);
       }
-  if (!self->plan) self->plan=make_rfft_plan(nph);
+//  if (!self->plan) self->plan=make_rfft_plan(nph);
   if (nph!=(int)self->length)
     {
-    destroy_rfft_plan(self->plan);
+    if (self->plan) destroy_rfft_plan(self->plan);
     self->plan=make_rfft_plan(nph);
     self->length=nph;
     }
@@ -487,10 +486,10 @@ NOINLINE static void init_output (sharp_job *job)
   {
   if (job->flags&SHARP_ADD) return;
   if (job->type == SHARP_MAP2ALM)
-    for (int i=0; i<job->ntrans*job->nalm; ++i)
+    for (int i=0; i<job->nalm; ++i)
       clear_alm (job->ainfo,job->alm[i],job->flags);
   else
-    for (int i=0; i<job->ntrans*job->nmaps; ++i)
+    for (int i=0; i<job->nmaps; ++i)
       clear_map (job->ginfo,job->map[i],job->flags);
   }
 
@@ -498,24 +497,24 @@ NOINLINE static void alloc_phase (sharp_job *job, int nm, int ntheta)
   {
   if (job->type==SHARP_MAP2ALM)
     {
-    job->s_m=2*job->ntrans*job->nmaps;
+    job->s_m=2*job->nmaps;
     if (((job->s_m*16*nm)&1023)==0) nm+=3; // hack to avoid critical strides
     job->s_th=job->s_m*nm;
     }
   else
     {
-    job->s_th=2*job->ntrans*job->nmaps;
+    job->s_th=2*job->nmaps;
     if (((job->s_th*16*ntheta)&1023)==0) ntheta+=3; // hack to avoid critical strides
     job->s_m=job->s_th*ntheta;
     }
-  job->phase=RALLOC(dcmplx,2*job->ntrans*job->nmaps*nm*ntheta);
+  job->phase=RALLOC(dcmplx,2*job->nmaps*nm*ntheta);
   }
 
 static void dealloc_phase (sharp_job *job)
   { DEALLOC(job->phase); }
 
 static void alloc_almtmp (sharp_job *job, int lmax)
-  { job->almtmp=RALLOC(dcmplx,job->ntrans*job->nalm*(lmax+1)); }
+  { job->almtmp=RALLOC(dcmplx,job->nalm*(lmax+2)); }
 
 static void dealloc_almtmp (sharp_job *job)
   { DEALLOC(job->almtmp); }
@@ -526,14 +525,16 @@ NOINLINE static void alm2almtmp (sharp_job *job, int lmax, int mi)
 #define COPY_LOOP(real_t, source_t, expr_of_x)              \
   {                                                         \
   for (int l=m; l<lmin; ++l)                                \
-    for (int i=0; i<job->ntrans*job->nalm; ++i)             \
-      job->almtmp[job->ntrans*job->nalm*l+i] = 0;           \
+    for (int i=0; i<job->nalm; ++i)             \
+      job->almtmp[job->nalm*l+i] = 0;           \
   for (int l=lmin; l<=lmax; ++l)                            \
-    for (int i=0; i<job->ntrans*job->nalm; ++i)             \
+    for (int i=0; i<job->nalm; ++i)             \
       {                                                     \
       source_t x = *(source_t *)(((real_t *)job->alm[i])+ofs+l*stride); \
-      job->almtmp[job->ntrans*job->nalm*l+i] = expr_of_x;   \
+      job->almtmp[job->nalm*l+i] = expr_of_x;   \
       }                                                     \
+  for (int i=0; i<job->nalm; ++i)             \
+    job->almtmp[job->nalm*(lmax+1)+i] = 0;           \
   }
 
   if (job->type!=SHARP_MAP2ALM)
@@ -586,8 +587,8 @@ NOINLINE static void alm2almtmp (sharp_job *job, int lmax, int mi)
       }
     }
   else
-    memset (job->almtmp+job->ntrans*job->nalm*job->ainfo->mval[mi], 0,
-      job->ntrans*job->nalm*(lmax+1-job->ainfo->mval[mi])*sizeof(dcmplx));
+    memset (job->almtmp+job->nalm*job->ainfo->mval[mi], 0,
+      job->nalm*(lmax+2-job->ainfo->mval[mi])*sizeof(dcmplx));
 
 #undef COPY_LOOP
   }
@@ -597,9 +598,9 @@ NOINLINE static void almtmp2alm (sharp_job *job, int lmax, int mi)
 
 #define COPY_LOOP(real_t, target_t, expr_of_x)               \
   for (int l=lmin; l<=lmax; ++l)                             \
-    for (int i=0; i<job->ntrans*job->nalm; ++i)              \
+    for (int i=0; i<job->nalm; ++i)              \
       {                                                      \
-        dcmplx x = job->almtmp[job->ntrans*job->nalm*l+i];   \
+        dcmplx x = job->almtmp[job->nalm*l+i];   \
         *(target_t *)(((real_t *)job->alm[i])+ofs+l*stride) += expr_of_x; \
       }
 
@@ -660,7 +661,7 @@ NOINLINE static void ringtmp2ring (sharp_job *job, sharp_ringinfo *ri,
   if (job->flags & SHARP_DP)
     {
     double **dmap = (double **)job->map;
-    for (int i=0; i<job->ntrans*job->nmaps; ++i)
+    for (int i=0; i<job->nmaps; ++i)
       {
       double *restrict p1=&dmap[i][ri->ofs];
       const double *restrict p2=&ringtmp[i*rstride+1];
@@ -680,7 +681,7 @@ NOINLINE static void ringtmp2ring (sharp_job *job, sharp_ringinfo *ri,
   else
     {
     float  **fmap = (float  **)job->map;
-    for (int i=0; i<job->ntrans*job->nmaps; ++i)
+    for (int i=0; i<job->nmaps; ++i)
       for (int m=0; m<ri->nph; ++m)
         fmap[i][ri->ofs+m*ri->stride] += (float)ringtmp[i*rstride+m+1];
     }
@@ -690,7 +691,7 @@ NOINLINE static void ring2ringtmp (sharp_job *job, sharp_ringinfo *ri,
   double *ringtmp, int rstride)
   {
   if (job->flags & SHARP_DP)
-    for (int i=0; i<job->ntrans*job->nmaps; ++i)
+    for (int i=0; i<job->nmaps; ++i)
       {
       double *restrict p1=&ringtmp[i*rstride+1],
              *restrict p2=&(((double *)(job->map[i]))[ri->ofs]);
@@ -701,7 +702,7 @@ NOINLINE static void ring2ringtmp (sharp_job *job, sharp_ringinfo *ri,
           p1[m] = p2[m*ri->stride];
       }
   else
-    for (int i=0; i<job->ntrans*job->nmaps; ++i)
+    for (int i=0; i<job->nmaps; ++i)
       for (int m=0; m<ri->nph; ++m)
         ringtmp[i*rstride+m+1] = ((float *)(job->map[i]))[ri->ofs+m*ri->stride];
   }
@@ -711,7 +712,7 @@ static void ring2phase_direct (sharp_job *job, sharp_ringinfo *ri, int mmax,
   {
   if (ri->nph<0)
     {
-    for (int i=0; i<job->ntrans*job->nmaps; ++i)
+    for (int i=0; i<job->nmaps; ++i)
       for (int m=0; m<=mmax; ++m)
         phase[2*i+job->s_m*m]=0.;
     }
@@ -721,7 +722,7 @@ static void ring2phase_direct (sharp_job *job, sharp_ringinfo *ri, int mmax,
     double wgt = (job->flags&SHARP_USE_WEIGHTS) ? (ri->nph*ri->weight) : 1.;
     if (job->flags&SHARP_REAL_HARMONICS)
       wgt *= sqrt_two;
-    for (int i=0; i<job->ntrans*job->nmaps; ++i)
+    for (int i=0; i<job->nmaps; ++i)
       for (int m=0; m<=mmax; ++m)
         phase[2*i+job->s_m*m]= (job->flags & SHARP_DP) ?
           ((dcmplx *)(job->map[i]))[ri->ofs+m*ri->stride]*wgt :
@@ -738,7 +739,7 @@ static void phase2ring_direct (sharp_job *job, sharp_ringinfo *ri, int mmax,
   double wgt = (job->flags&SHARP_USE_WEIGHTS) ? (ri->nph*ri->weight) : 1.;
   if (job->flags&SHARP_REAL_HARMONICS)
     wgt *= sqrt_one_half;
-  for (int i=0; i<job->ntrans*job->nmaps; ++i)
+  for (int i=0; i<job->nmaps; ++i)
     for (int m=0; m<=mmax; ++m)
       if (job->flags & SHARP_DP)
         dmap[i][ri->ofs+m*ri->stride] += wgt*phase[2*i+job->s_m*m];
@@ -769,19 +770,19 @@ NOINLINE static void map2phase (sharp_job *job, int mmax, int llim, int ulim)
     ringhelper helper;
     ringhelper_init(&helper);
     int rstride=job->ginfo->nphmax+2;
-    double *ringtmp=RALLOC(double,job->ntrans*job->nmaps*rstride);
+    double *ringtmp=RALLOC(double,job->nmaps*rstride);
 #pragma omp for schedule(dynamic,1)
     for (int ith=llim; ith<ulim; ++ith)
       {
       int dim2 = job->s_th*(ith-llim);
       ring2ringtmp(job,&(job->ginfo->pair[ith].r1),ringtmp,rstride);
-      for (int i=0; i<job->ntrans*job->nmaps; ++i)
+      for (int i=0; i<job->nmaps; ++i)
         ringhelper_ring2phase (&helper,&(job->ginfo->pair[ith].r1),
           &ringtmp[i*rstride],mmax,&job->phase[dim2+2*i],pstride,job->flags);
       if (job->ginfo->pair[ith].r2.nph>0)
         {
         ring2ringtmp(job,&(job->ginfo->pair[ith].r2),ringtmp,rstride);
-        for (int i=0; i<job->ntrans*job->nmaps; ++i)
+        for (int i=0; i<job->nmaps; ++i)
           ringhelper_ring2phase (&helper,&(job->ginfo->pair[ith].r2),
            &ringtmp[i*rstride],mmax,&job->phase[dim2+2*i+1],pstride,job->flags);
         }
@@ -814,18 +815,18 @@ NOINLINE static void phase2map (sharp_job *job, int mmax, int llim, int ulim)
     ringhelper helper;
     ringhelper_init(&helper);
     int rstride=job->ginfo->nphmax+2;
-    double *ringtmp=RALLOC(double,job->ntrans*job->nmaps*rstride);
+    double *ringtmp=RALLOC(double,job->nmaps*rstride);
 #pragma omp for schedule(dynamic,1)
     for (int ith=llim; ith<ulim; ++ith)
       {
       int dim2 = job->s_th*(ith-llim);
-      for (int i=0; i<job->ntrans*job->nmaps; ++i)
+      for (int i=0; i<job->nmaps; ++i)
         ringhelper_phase2ring (&helper,&(job->ginfo->pair[ith].r1),
           &ringtmp[i*rstride],mmax,&job->phase[dim2+2*i],pstride,job->flags);
       ringtmp2ring(job,&(job->ginfo->pair[ith].r1),ringtmp,rstride);
       if (job->ginfo->pair[ith].r2.nph>0)
         {
-        for (int i=0; i<job->ntrans*job->nmaps; ++i)
+        for (int i=0; i<job->nmaps; ++i)
           ringhelper_phase2ring (&helper,&(job->ginfo->pair[ith].r2),
             &ringtmp[i*rstride],mmax,&job->phase[dim2+2*i+1],pstride,job->flags);
         ringtmp2ring(job,&(job->ginfo->pair[ith].r2),ringtmp,rstride);
@@ -852,8 +853,8 @@ NOINLINE static void sharp_execute_job (sharp_job *job)
   init_output (job);
 
   int nchunks, chunksize;
-  get_chunk_info(job->ginfo->npairs,(job->flags&SHARP_NVMAX)*VLEN,&nchunks,
-    &chunksize);
+  get_chunk_info(job->ginfo->npairs,sharp_veclen()*sharp_max_nvec(job->spin),
+                 &nchunks,&chunksize);
 //FIXME: needs to be changed to "nm"
   alloc_phase (job,mmax+1,chunksize);
 
@@ -918,10 +919,8 @@ NOINLINE static void sharp_execute_job (sharp_job *job)
 
 static void sharp_build_job_common (sharp_job *job, sharp_jobtype type,
   int spin, void *alm, void *map, const sharp_geom_info *geom_info,
-  const sharp_alm_info *alm_info, int ntrans, int flags)
+  const sharp_alm_info *alm_info, int flags)
   {
-  UTIL_ASSERT((ntrans>0)&&(ntrans<=SHARP_MAXTRANS),
-    "bad number of simultaneous transforms");
   if (type==SHARP_ALM2MAP_DERIV1) spin=1;
   if (type==SHARP_MAP2ALM) flags|=SHARP_USE_WEIGHTS;
   if (type==SHARP_Yt) type=SHARP_MAP2ALM;
@@ -936,24 +935,21 @@ static void sharp_build_job_common (sharp_job *job, sharp_jobtype type,
   job->ginfo = geom_info;
   job->ainfo = alm_info;
   job->flags = flags;
-  if ((job->flags&SHARP_NVMAX)==0)
-    job->flags|=sharp_nv_oracle (type, spin, ntrans);
   if (alm_info->flags&SHARP_REAL_HARMONICS)
     job->flags|=SHARP_REAL_HARMONICS;
   job->time = 0.;
   job->opcnt = 0;
-  job->ntrans = ntrans;
   job->alm=alm;
   job->map=map;
   }
 
 void sharp_execute (sharp_jobtype type, int spin, void *alm, void *map,
-  const sharp_geom_info *geom_info, const sharp_alm_info *alm_info, int ntrans,
+  const sharp_geom_info *geom_info, const sharp_alm_info *alm_info,
   int flags, double *time, unsigned long long *opcnt)
   {
   sharp_job job;
   sharp_build_job_common (&job, type, spin, alm, map, geom_info, alm_info,
-    ntrans, flags);
+    flags);
 
   sharp_execute_job (&job);
   if (time!=NULL) *time = job.time;
@@ -965,82 +961,31 @@ void sharp_set_chunksize_min(int new_chunksize_min)
 void sharp_set_nchunks_max(int new_nchunks_max)
   { nchunks_max=new_nchunks_max; }
 
-int sharp_get_nv_max (void)
-{ return 6; }
+#ifdef USE_MPI
+#include "sharp_mpi.c"
 
-static int sharp_oracle (sharp_jobtype type, int spin, int ntrans)
+int sharp_execute_mpi_maybe (void *pcomm, sharp_jobtype type, int spin,
+  void *alm, void *map, const sharp_geom_info *geom_info,
+  const sharp_alm_info *alm_info, int flags, double *time,
+  unsigned long long *opcnt)
   {
-  int lmax=511;
-  int mmax=(lmax+1)/2;
-  int nrings=(lmax+1)/4;
-  int ppring=1;
-
-  spin = (spin!=0) ? 2 : 0;
-
-  ptrdiff_t npix=(ptrdiff_t)nrings*ppring;
-  sharp_geom_info *tinfo;
-  sharp_make_gauss_geom_info (nrings, ppring, 0., 1, ppring, &tinfo);
-
-  ptrdiff_t nalms = ((mmax+1)*(mmax+2))/2 + (mmax+1)*(lmax-mmax);
-  int ncomp = ntrans*((spin==0) ? 1 : 2);
-
-  double **map;
-  ALLOC2D(map,double,ncomp,npix);
-  SET_ARRAY(map[0],0,npix*ncomp,0.);
-
-  sharp_alm_info *alms;
-  sharp_make_triangular_alm_info(lmax,mmax,1,&alms);
-
-  dcmplx **alm;
-  ALLOC2D(alm,dcmplx,ncomp,nalms);
-  SET_ARRAY(alm[0],0,nalms*ncomp,0.);
-
-  double time=1e30;
-  int nvbest=-1;
-
-  for (int nv=1; nv<=sharp_get_nv_max(); ++nv)
-    {
-    double time_acc=0.;
-    double jtime;
-    int ntries=0;
-    do
-      {
-      sharp_execute(type,spin,&alm[0],&map[0],tinfo,alms,ntrans,
-        nv|SHARP_DP|SHARP_NO_OPENMP,&jtime,NULL);
-
-      if (jtime<time) { time=jtime; nvbest=nv; }
-      time_acc+=jtime;
-      ++ntries;
-      }
-    while ((time_acc<0.02)&&(ntries<2));
-    }
-
-  DEALLOC2D(map);
-  DEALLOC2D(alm);
-
-  sharp_destroy_alm_info(alms);
-  sharp_destroy_geom_info(tinfo);
-  return nvbest;
+  MPI_Comm comm = *(MPI_Comm*)pcomm;
+  sharp_execute_mpi((MPI_Comm)comm, type, spin, alm, map, geom_info, alm_info,
+    flags, time, opcnt);
+  return 0;
   }
 
-int sharp_nv_oracle (sharp_jobtype type, int spin, int ntrans)
+#else
+
+int sharp_execute_mpi_maybe (void *pcomm, sharp_jobtype type, int spin,
+  void *alm, void *map, const sharp_geom_info *geom_info,
+  const sharp_alm_info *alm_info, int flags, double *time,
+  unsigned long long *opcnt)
   {
-  static const int maxtr = 6;
-  static int nv_opt[6][2][5] = {
-    {{0,0,0,0,0},{0,0,0,0,0}},
-    {{0,0,0,0,0},{0,0,0,0,0}},
-    {{0,0,0,0,0},{0,0,0,0,0}},
-    {{0,0,0,0,0},{0,0,0,0,0}},
-    {{0,0,0,0,0},{0,0,0,0,0}},
-    {{0,0,0,0,0},{0,0,0,0,0}} };
-
-  if (type==SHARP_ALM2MAP_DERIV1) spin=1;
-  UTIL_ASSERT(type<5,"bad type");
-  UTIL_ASSERT((ntrans>0),"bad number of simultaneous transforms");
-  UTIL_ASSERT(spin>=0, "bad spin");
-  ntrans=IMIN(ntrans,maxtr);
-
-  if (nv_opt[ntrans-1][spin!=0][type]==0)
-    nv_opt[ntrans-1][spin!=0][type]=sharp_oracle(type,spin,ntrans);
-  return nv_opt[ntrans-1][spin!=0][type];
+  /* Suppress unused warning: */
+  (void)pcomm; (void)type; (void)spin; (void)alm; (void)map; (void)geom_info;
+  (void)alm_info; (void)flags; (void)time; (void)opcnt;
+  return SHARP_ERROR_NO_MPI;
   }
+
+#endif

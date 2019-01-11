@@ -25,7 +25,7 @@
 /*! \file sharp_internal.h
  *  Internally used functionality for the spherical transform library.
  *
- *  Copyright (C) 2006-2013 Max-Planck-Society
+ *  Copyright (C) 2006-2019 Max-Planck-Society
  *  \author Martin Reinecke \author Dag Sverre Seljebotn
  */
 
@@ -36,7 +36,9 @@
 #error This header file cannot be included from C++, only from C
 #endif
 
+#include <complex.h>
 #include "sharp.h"
+#include "sharp_ylmgen_c.h"
 
 #define SHARP_MAXTRANS 100
 
@@ -55,12 +57,17 @@ typedef struct
   const sharp_geom_info *ginfo;
   const sharp_alm_info *ainfo;
   double time;
-  int ntrans;
   unsigned long long opcnt;
   } sharp_job;
 
-int sharp_get_nv_max (void);
-int sharp_nv_oracle (sharp_jobtype type, int spin, int ntrans);
 int sharp_get_mlim (int lmax, int spin, double sth, double cth);
+
+void inner_loop (sharp_job *job, const int *ispair,const double *cth,
+  const double *sth, int llim, int ulim, sharp_Ylmgen_C *gen, int mi,
+  const int *mlim);
+
+int sharp_veclen(void);
+int sharp_max_nvec(int spin);
+const char *sharp_architecture(void);
 
 #endif

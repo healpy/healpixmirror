@@ -25,7 +25,7 @@
 /*! \file sharp_cxx.h
  *  Spherical transform library
  *
- *  Copyright (C) 2012-2017 Max-Planck-Society
+ *  Copyright (C) 2012-2019 Max-Planck-Society
  *  \author Martin Reinecke
  */
 
@@ -33,7 +33,7 @@
 #define PLANCK_SHARP_CXX_H
 
 #include <complex>
-#include "sharp_lowlevel.h"
+#include "sharp.h"
 #include "sharp_geomhelpers.h"
 #include "sharp_almhelpers.h"
 
@@ -120,15 +120,13 @@ template<typename T> class sharp_cxxjob: public sharp_base
       {
       void *aptr=conv(alm), *mptr=conv(map);
       int flags=cxxjobhelper__<T>::val | (add ? SHARP_ADD : 0);
-      sharp_execute (SHARP_ALM2MAP, 0, &aptr, &mptr, ginfo, ainfo, 1,
-        flags,0,0);
+      sharp_execute (SHARP_ALM2MAP, 0, &aptr, &mptr, ginfo, ainfo, flags, 0, 0);
       }
     void alm2map (const std::complex<T> *alm, T *map, bool add) const
       {
       void *aptr=conv(alm), *mptr=conv(map);
       int flags=cxxjobhelper__<T>::val | (add ? SHARP_ADD : 0);
-      sharp_execute (SHARP_ALM2MAP, 0, &aptr, &mptr, ginfo, ainfo, 1,
-        flags,0,0);
+      sharp_execute (SHARP_ALM2MAP, 0, &aptr, &mptr, ginfo, ainfo, flags, 0, 0);
       }
     void alm2map_spin (const T *alm1, const T *alm2,
       T *map1, T *map2, int spin, bool add) const
@@ -137,7 +135,7 @@ template<typename T> class sharp_cxxjob: public sharp_base
       aptr[0]=conv(alm1); aptr[1]=conv(alm2);
       mptr[0]=conv(map1); mptr[1]=conv(map2);
       int flags=cxxjobhelper__<T>::val | (add ? SHARP_ADD : 0);
-      sharp_execute (SHARP_ALM2MAP,spin,aptr,mptr,ginfo,ainfo,1,flags,0,0);
+      sharp_execute (SHARP_ALM2MAP,spin,aptr,mptr,ginfo,ainfo,flags, 0, 0);
       }
     void alm2map_spin (const std::complex<T> *alm1, const std::complex<T> *alm2,
       T *map1, T *map2, int spin, bool add) const
@@ -146,14 +144,14 @@ template<typename T> class sharp_cxxjob: public sharp_base
       aptr[0]=conv(alm1); aptr[1]=conv(alm2);
       mptr[0]=conv(map1); mptr[1]=conv(map2);
       int flags=cxxjobhelper__<T>::val | (add ? SHARP_ADD : 0);
-      sharp_execute (SHARP_ALM2MAP,spin,aptr,mptr,ginfo,ainfo,1,flags,0,0);
+      sharp_execute (SHARP_ALM2MAP, spin, aptr, mptr, ginfo, ainfo, flags,0,0);
       }
     void alm2map_der1 (const T *alm, T *map1, T *map2, bool add) const
       {
       void *aptr=conv(alm), *mptr[2];
       mptr[0]=conv(map1); mptr[1]=conv(map2);
       int flags=cxxjobhelper__<T>::val | (add ? SHARP_ADD : 0);
-      sharp_execute (SHARP_ALM2MAP_DERIV1,1,&aptr,mptr,ginfo,ainfo,1,flags,0,0);
+      sharp_execute (SHARP_ALM2MAP_DERIV1,1,&aptr,mptr,ginfo,ainfo,flags,0,0);
       }
     void alm2map_der1 (const std::complex<T> *alm, T *map1, T *map2, bool add)
       const
@@ -161,19 +159,19 @@ template<typename T> class sharp_cxxjob: public sharp_base
       void *aptr=conv(alm), *mptr[2];
       mptr[0]=conv(map1); mptr[1]=conv(map2);
       int flags=cxxjobhelper__<T>::val | (add ? SHARP_ADD : 0);
-      sharp_execute (SHARP_ALM2MAP_DERIV1,1,&aptr,mptr,ginfo,ainfo,1,flags,0,0);
+      sharp_execute (SHARP_ALM2MAP_DERIV1,1,&aptr,mptr,ginfo,ainfo,flags,0,0);
       }
     void alm2map_adjoint (const T *map, T *alm, bool add) const
       {
       void *aptr=conv(alm), *mptr=conv(map);
       int flags=cxxjobhelper__<T>::val | (add ? SHARP_ADD : 0);
-      sharp_execute (SHARP_Yt,0,&aptr,&mptr,ginfo,ainfo,1,flags,0,0);
+      sharp_execute (SHARP_Yt,0,&aptr,&mptr,ginfo,ainfo,flags,0,0);
       }
     void alm2map_adjoint (const T *map, std::complex<T> *alm, bool add) const
       {
       void *aptr=conv(alm), *mptr=conv(map);
       int flags=cxxjobhelper__<T>::val | (add ? SHARP_ADD : 0);
-      sharp_execute (SHARP_Yt,0,&aptr,&mptr,ginfo,ainfo,1,flags,0,0);
+      sharp_execute (SHARP_Yt,0,&aptr,&mptr,ginfo,ainfo,flags,0,0);
       }
     void alm2map_spin_adjoint (const T *map1, const T *map2, T *alm1, T *alm2,
       int spin, bool add) const
@@ -182,7 +180,7 @@ template<typename T> class sharp_cxxjob: public sharp_base
       aptr[0]=conv(alm1); aptr[1]=conv(alm2);
       mptr[0]=conv(map1); mptr[1]=conv(map2);
       int flags=cxxjobhelper__<T>::val | (add ? SHARP_ADD : 0);
-      sharp_execute (SHARP_Yt,spin,aptr,mptr,ginfo,ainfo,1,flags,0,0);
+      sharp_execute (SHARP_Yt,spin,aptr,mptr,ginfo,ainfo,flags,0,0);
       }
     void alm2map_spin_adjoint (const T *map1, const T *map2,
       std::complex<T> *alm1, std::complex<T> *alm2, int spin, bool add) const
@@ -194,13 +192,13 @@ template<typename T> class sharp_cxxjob: public sharp_base
       {
       void *aptr=conv(alm), *mptr=conv(map);
       int flags=cxxjobhelper__<T>::val | (add ? SHARP_ADD : 0);
-      sharp_execute (SHARP_MAP2ALM,0,&aptr,&mptr,ginfo,ainfo,1,flags,0,0);
+      sharp_execute (SHARP_MAP2ALM,0,&aptr,&mptr,ginfo,ainfo,flags,0,0);
       }
     void map2alm (const T *map, std::complex<T> *alm, bool add) const
       {
       void *aptr=conv(alm), *mptr=conv(map);
       int flags=cxxjobhelper__<T>::val | (add ? SHARP_ADD : 0);
-      sharp_execute (SHARP_MAP2ALM,0,&aptr,&mptr,ginfo,ainfo,1,flags,0,0);
+      sharp_execute (SHARP_MAP2ALM,0,&aptr,&mptr,ginfo,ainfo,flags,0,0);
       }
     void map2alm_spin (const T *map1, const T *map2, T *alm1, T *alm2,
       int spin, bool add) const
@@ -209,7 +207,7 @@ template<typename T> class sharp_cxxjob: public sharp_base
       aptr[0]=conv(alm1); aptr[1]=conv(alm2);
       mptr[0]=conv(map1); mptr[1]=conv(map2);
       int flags=cxxjobhelper__<T>::val | (add ? SHARP_ADD : 0);
-      sharp_execute (SHARP_MAP2ALM,spin,aptr,mptr,ginfo,ainfo,1,flags,0,0);
+      sharp_execute (SHARP_MAP2ALM,spin,aptr,mptr,ginfo,ainfo,flags,0,0);
       }
     void map2alm_spin (const T *map1, const T *map2, std::complex<T> *alm1,
       std::complex<T> *alm2, int spin, bool add) const
@@ -218,7 +216,7 @@ template<typename T> class sharp_cxxjob: public sharp_base
       aptr[0]=conv(alm1); aptr[1]=conv(alm2);
       mptr[0]=conv(map1); mptr[1]=conv(map2);
       int flags=cxxjobhelper__<T>::val | (add ? SHARP_ADD : 0);
-      sharp_execute (SHARP_MAP2ALM,spin,aptr,mptr,ginfo,ainfo,1,flags,0,0);
+      sharp_execute (SHARP_MAP2ALM,spin,aptr,mptr,ginfo,ainfo,flags,0,0);
       }
   };
 

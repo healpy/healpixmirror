@@ -70,8 +70,8 @@
   libsharp supports shared-memory parallelisation via OpenMP; this feature will
   be automatically enabled if the compiler supports it.
 
-  Libsharp will also make use of SSE2 and AVX instructions when compiled for a
-  platform known to support them.
+  Libsharp will also make use of SSE2/AVX/AVX512 instructions when compiled
+  for a platform known to support them.
 
   Support for MPI-parallel transforms is also available; in this mode,
   every MPI task must provide a unique subset of the map and a_lm coefficients.

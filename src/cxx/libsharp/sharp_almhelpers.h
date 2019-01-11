@@ -25,14 +25,14 @@
 /*! \file sharp_almhelpers.h
  *  SHARP helper function for the creation of a_lm data structures
  *
- *  Copyright (C) 2008-2016 Max-Planck-Society
+ *  Copyright (C) 2008-2019 Max-Planck-Society
  *  \author Martin Reinecke
  */
 
 #ifndef PLANCK_SHARP_ALMHELPERS_H
 #define PLANCK_SHARP_ALMHELPERS_H
 
-#include "sharp_lowlevel.h"
+#include "sharp.h"
 
 #ifdef __cplusplus
 extern "C" {
