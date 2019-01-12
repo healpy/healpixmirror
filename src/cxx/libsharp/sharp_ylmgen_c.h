@@ -41,7 +41,7 @@ static const double sharp_fbig=0x1p+800,sharp_fsmall=0x1p-800;
 static const double sharp_ftol=0x1p-60;
 static const double sharp_fbighalf=0x1p+400;
 
-typedef double sharp_ylmgen_dbl2[2];
+typedef struct { double a, b; } sharp_ylmgen_dbl2;
 
 typedef struct
   {

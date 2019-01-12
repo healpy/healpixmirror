@@ -1105,18 +1105,21 @@ void check_alm2map2alm (int lmax, int mmax, int nside)
   Healpix_Map<double> mapT(nside,RING,SET_NSIDE), mapQ(nside,RING,SET_NSIDE),
     mapU(nside,RING,SET_NSIDE);
 
+  const double eps0=1e-11;
+  const double eps=1e-12;
+
   random_alm(oalmT,oalmG,oalmC,lmax,mmax);
   alm2map(oalmT,mapT);
-  map2alm_iter2(mapT,almT,1e-11,1e-11);
+  map2alm_iter2(mapT,almT,eps0,eps0);
   check_alm (oalmT, almT, epsilon);
 
   alm2map_spin(oalmG,oalmC,mapQ,mapU,1);
-  map2alm_spin_iter2(mapQ,mapU,almG,almC,1,1e-11,1e-11);
+  map2alm_spin_iter2(mapQ,mapU,almG,almC,1,eps,eps);
   check_alm (oalmG, almG, epsilon);
   check_alm (oalmC, almC, epsilon);
 
   alm2map_pol(oalmT,oalmG,oalmC,mapT,mapQ,mapU);
-  map2alm_pol_iter2(mapT,mapQ,mapU,almT,almG,almC,1e-11,1e-11);
+  map2alm_pol_iter2(mapT,mapQ,mapU,almT,almG,almC,max(eps,eps0),max(eps,eps0));
   check_alm (oalmT, almT, epsilon);
   check_alm (oalmG, almG, epsilon);
   check_alm (oalmC, almC, epsilon);

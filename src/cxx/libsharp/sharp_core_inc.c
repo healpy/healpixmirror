@@ -22,7 +22,7 @@
  *  (DLR).
  */
 
-/*! \file sharp_core.c
+/*! \file sharp_core_inc.c
  *  Computational core
  *
  *  Copyright (C) 2012-2019 Max-Planck-Society
@@ -190,8 +190,8 @@ NOINLINE static void iter_to_ieee(const sharp_Ylmgen_C * restrict gen,
     {
     if (l+4>gen->lmax) {*l_=gen->lmax+1;return;}
     below_limit=1;
-    Tv a1=vload(gen->coef[il  ][0]), b1=vload(gen->coef[il  ][1]);
-    Tv a2=vload(gen->coef[il+1][0]), b2=vload(gen->coef[il+1][1]);
+    Tv a1=vload(gen->coef[il  ].a), b1=vload(gen->coef[il  ].b);
+    Tv a2=vload(gen->coef[il+1].a), b2=vload(gen->coef[il+1].b);
     for (int i=0; i<nv2; ++i)
       {
       d->lam1[i] = (a1*d->csq[i] + b1)*d->lam2[i] + d->lam1[i];
@@ -216,8 +216,8 @@ NOINLINE static void alm2map_kernel(s0data_v * restrict d,
       Tv ar2=vload(creal(alm[l+1])), ai2=vload(cimag(alm[l+1]));
       Tv ar3=vload(creal(alm[l+2])), ai3=vload(cimag(alm[l+2]));
       Tv ar4=vload(creal(alm[l+3])), ai4=vload(cimag(alm[l+3]));
-      Tv a1=vload(coef[il  ][0]), b1=vload(coef[il  ][1]);
-      Tv a2=vload(coef[il+1][0]), b2=vload(coef[il+1][1]);
+      Tv a1=vload(coef[il  ].a), b1=vload(coef[il  ].b);
+      Tv a2=vload(coef[il+1].a), b2=vload(coef[il+1].b);
       for (int i=0; i<nv0; ++i)
         {
         d->p1r[i] += d->lam2[i]*ar1;
@@ -241,8 +241,8 @@ NOINLINE static void alm2map_kernel(s0data_v * restrict d,
       Tv ar2=vload(creal(alm[l+1])), ai2=vload(cimag(alm[l+1]));
       Tv ar3=vload(creal(alm[l+2])), ai3=vload(cimag(alm[l+2]));
       Tv ar4=vload(creal(alm[l+3])), ai4=vload(cimag(alm[l+3]));
-      Tv a1=vload(coef[il  ][0]), b1=vload(coef[il  ][1]);
-      Tv a2=vload(coef[il+1][0]), b2=vload(coef[il+1][1]);
+      Tv a1=vload(coef[il  ].a), b1=vload(coef[il  ].b);
+      Tv a2=vload(coef[il+1].a), b2=vload(coef[il+1].b);
       for (int i=0; i<nv2; ++i)
         {
         d->p1r[i] += d->lam2[i]*ar1;
@@ -262,7 +262,7 @@ NOINLINE static void alm2map_kernel(s0data_v * restrict d,
     {
     Tv ar1=vload(creal(alm[l  ])), ai1=vload(cimag(alm[l  ]));
     Tv ar2=vload(creal(alm[l+1])), ai2=vload(cimag(alm[l+1]));
-    Tv a=vload(coef[il][0]), b=vload(coef[il][1]);
+    Tv a=vload(coef[il].a), b=vload(coef[il].b);
     for (int i=0; i<nv2; ++i)
       {
       d->p1r[i] += d->lam2[i]*ar1;
@@ -299,7 +299,7 @@ NOINLINE static void calc_alm2map (sharp_job * restrict job,
     {
     Tv ar1=vload(creal(alm[l  ])), ai1=vload(cimag(alm[l  ]));
     Tv ar2=vload(creal(alm[l+1])), ai2=vload(cimag(alm[l+1]));
-    Tv a=vload(coef[il][0]), b=vload(coef[il][1]);
+    Tv a=vload(coef[il].a), b=vload(coef[il].b);
     full_ieee=1;
     for (int i=0; i<nv2; ++i)
       {
@@ -332,8 +332,8 @@ NOINLINE static void map2alm_kernel(s0data_v * restrict d,
   {
   for (; l<=lmax-2; il+=2, l+=4)
     {
-    Tv a1=vload(coef[il  ][0]), b1=vload(coef[il  ][1]);
-    Tv a2=vload(coef[il+1][0]), b2=vload(coef[il+1][1]);
+    Tv a1=vload(coef[il  ].a), b1=vload(coef[il  ].b);
+    Tv a2=vload(coef[il+1].a), b2=vload(coef[il+1].b);
     Tv atmp1[4] = {vzero, vzero, vzero, vzero};
     Tv atmp2[4] = {vzero, vzero, vzero, vzero};
     for (int i=0; i<nv2; ++i)
@@ -354,7 +354,7 @@ NOINLINE static void map2alm_kernel(s0data_v * restrict d,
     }
   for (; l<=lmax; ++il, l+=2)
     {
-    Tv a=vload(coef[il][0]), b=vload(coef[il][1]);
+    Tv a=vload(coef[il].a), b=vload(coef[il].b);
     Tv atmp[4] = {vzero, vzero, vzero, vzero};
     for (int i=0; i<nv2; ++i)
       {
@@ -391,7 +391,7 @@ NOINLINE static void calc_map2alm (sharp_job * restrict job,
 
   while((!full_ieee) && (l<=lmax))
     {
-    Tv a=vload(coef[il][0]), b=vload(coef[il][1]);
+    Tv a=vload(coef[il].a), b=vload(coef[il].b);
     Tv atmp[4] = {vzero, vzero, vzero, vzero};
     full_ieee=1;
     for (int i=0; i<nv2; ++i)
@@ -474,8 +474,8 @@ NOINLINE static void iter_to_ieee_spin (const sharp_Ylmgen_C * restrict gen,
     {
     if (l+2>gen->lmax) {*l_=gen->lmax+1;return;}
     below_limit=1;
-    Tv fx10=vload(fx[l+1][0]),fx11=vload(fx[l+1][1]);
-    Tv fx20=vload(fx[l+2][0]),fx21=vload(fx[l+2][1]);
+    Tv fx10=vload(fx[l+1].a),fx11=vload(fx[l+1].b);
+    Tv fx20=vload(fx[l+2].a),fx21=vload(fx[l+2].b);
     for (int i=0; i<nv2; ++i)
       {
       d->l1p[i] = (d->cth[i]*fx10 - fx11)*d->l2p[i] - d->l1p[i];
@@ -500,8 +500,8 @@ NOINLINE static void alm2map_spin_kernel(sxdata_v * restrict d,
   int lsave = l;
   while (l<=lmax)
     {
-    Tv fx10=vload(fx[l+1][0]),fx11=vload(fx[l+1][1]);
-    Tv fx20=vload(fx[l+2][0]),fx21=vload(fx[l+2][1]);
+    Tv fx10=vload(fx[l+1].a),fx11=vload(fx[l+1].b);
+    Tv fx20=vload(fx[l+2].a),fx21=vload(fx[l+2].b);
     Tv agr1=vload(creal(alm[2*l  ])), agi1=vload(cimag(alm[2*l  ])),
        acr1=vload(creal(alm[2*l+1])), aci1=vload(cimag(alm[2*l+1]));
     Tv agr2=vload(creal(alm[2*l+2])), agi2=vload(cimag(alm[2*l+2])),
@@ -525,8 +525,8 @@ NOINLINE static void alm2map_spin_kernel(sxdata_v * restrict d,
   l=lsave;
   while (l<=lmax)
     {
-    Tv fx10=vload(fx[l+1][0]),fx11=vload(fx[l+1][1]);
-    Tv fx20=vload(fx[l+2][0]),fx21=vload(fx[l+2][1]);
+    Tv fx10=vload(fx[l+1].a),fx11=vload(fx[l+1].b);
+    Tv fx20=vload(fx[l+2].a),fx21=vload(fx[l+2].b);
     Tv agr1=vload(creal(alm[2*l  ])), agi1=vload(cimag(alm[2*l  ])),
        acr1=vload(creal(alm[2*l+1])), aci1=vload(cimag(alm[2*l+1]));
     Tv agr2=vload(creal(alm[2*l+2])), agi2=vload(cimag(alm[2*l+2])),
@@ -572,8 +572,8 @@ NOINLINE static void calc_alm2map_spin (sharp_job * restrict job,
 
   while((!full_ieee) && (l<=lmax))
     {
-    Tv fx10=vload(fx[l+1][0]),fx11=vload(fx[l+1][1]);
-    Tv fx20=vload(fx[l+2][0]),fx21=vload(fx[l+2][1]);
+    Tv fx10=vload(fx[l+1].a),fx11=vload(fx[l+1].b);
+    Tv fx20=vload(fx[l+2].a),fx21=vload(fx[l+2].b);
     Tv agr1=vload(creal(alm[2*l  ])), agi1=vload(cimag(alm[2*l  ])),
        acr1=vload(creal(alm[2*l+1])), aci1=vload(cimag(alm[2*l+1]));
     Tv agr2=vload(creal(alm[2*l+2])), agi2=vload(cimag(alm[2*l+2])),
@@ -636,8 +636,8 @@ NOINLINE static void map2alm_spin_kernel(sxdata_v * restrict d,
   int lsave=l;
   while (l<=lmax)
     {
-    Tv fx10=vload(fx[l+1][0]),fx11=vload(fx[l+1][1]);
-    Tv fx20=vload(fx[l+2][0]),fx21=vload(fx[l+2][1]);
+    Tv fx10=vload(fx[l+1].a),fx11=vload(fx[l+1].b);
+    Tv fx20=vload(fx[l+2].a),fx21=vload(fx[l+2].b);
     Tv agr1=vzero, agi1=vzero, acr1=vzero, aci1=vzero;
     Tv agr2=vzero, agi2=vzero, acr2=vzero, aci2=vzero;
     for (int i=0; i<nv2; ++i)
@@ -660,8 +660,8 @@ NOINLINE static void map2alm_spin_kernel(sxdata_v * restrict d,
   l=lsave;
   while (l<=lmax)
     {
-    Tv fx10=vload(fx[l+1][0]),fx11=vload(fx[l+1][1]);
-    Tv fx20=vload(fx[l+2][0]),fx21=vload(fx[l+2][1]);
+    Tv fx10=vload(fx[l+1].a),fx11=vload(fx[l+1].b);
+    Tv fx20=vload(fx[l+2].a),fx21=vload(fx[l+2].b);
     Tv agr1=vzero, agi1=vzero, acr1=vzero, aci1=vzero;
     Tv agr2=vzero, agi2=vzero, acr2=vzero, aci2=vzero;
     for (int i=0; i<nv2; ++i)
@@ -714,8 +714,8 @@ NOINLINE static void calc_map2alm_spin (sharp_job * restrict job,
 
   while((!full_ieee) && (l<=lmax))
     {
-    Tv fx10=vload(fx[l+1][0]),fx11=vload(fx[l+1][1]);
-    Tv fx20=vload(fx[l+2][0]),fx21=vload(fx[l+2][1]);
+    Tv fx10=vload(fx[l+1].a),fx11=vload(fx[l+1].b);
+    Tv fx20=vload(fx[l+2].a),fx21=vload(fx[l+2].b);
     Tv agr1=vzero, agi1=vzero, acr1=vzero, aci1=vzero;
     Tv agr2=vzero, agi2=vzero, acr2=vzero, aci2=vzero;
     full_ieee=1;
@@ -766,8 +766,8 @@ NOINLINE static void alm2map_deriv1_kernel(sxdata_v * restrict d,
   {
   while (l<=lmax)
     {
-    Tv fx10=vload(fx[l+1][0]),fx11=vload(fx[l+1][1]);
-    Tv fx20=vload(fx[l+2][0]),fx21=vload(fx[l+2][1]);
+    Tv fx10=vload(fx[l+1].a),fx11=vload(fx[l+1].b);
+    Tv fx20=vload(fx[l+2].a),fx21=vload(fx[l+2].b);
     Tv ar1=vload(creal(alm[l  ])), ai1=vload(cimag(alm[l  ])),
        ar2=vload(creal(alm[l+1])), ai2=vload(cimag(alm[l+1]));
     for (int i=0; i<nv2; ++i)
@@ -816,8 +816,8 @@ NOINLINE static void calc_alm2map_deriv1(sharp_job * restrict job,
 
   while((!full_ieee) && (l<=lmax))
     {
-    Tv fx10=vload(fx[l+1][0]),fx11=vload(fx[l+1][1]);
-    Tv fx20=vload(fx[l+2][0]),fx21=vload(fx[l+2][1]);
+    Tv fx10=vload(fx[l+1].a),fx11=vload(fx[l+1].b);
+    Tv fx20=vload(fx[l+2].a),fx21=vload(fx[l+2].b);
     Tv ar1=vload(creal(alm[l  ])), ai1=vload(cimag(alm[l  ])),
        ar2=vload(creal(alm[l+1])), ai2=vload(cimag(alm[l+1]));
     full_ieee=1;
@@ -1148,6 +1148,9 @@ NOINLINE static void inner_loop_m2a(sharp_job *job, const int *ispair,
 
 void XARCH(inner_loop) (sharp_job *job, const int *ispair,
   const double *cth_, const double *sth_, int llim, int ulim,
+  sharp_Ylmgen_C *gen, int mi, const int *mlim);
+void XARCH(inner_loop) (sharp_job *job, const int *ispair,
+  const double *cth_, const double *sth_, int llim, int ulim,
   sharp_Ylmgen_C *gen, int mi, const int *mlim)
   {
   (job->type==SHARP_MAP2ALM) ?
@@ -1157,11 +1160,13 @@ void XARCH(inner_loop) (sharp_job *job, const int *ispair,
 
 #undef VZERO
 
+int XARCH(sharp_veclen)(void);
 int XARCH(sharp_veclen)(void)
   {
   return VLEN;
   }
 
+int XARCH(sharp_max_nvec)(int spin);
 int XARCH(sharp_max_nvec)(int spin)
   {
   return (spin==0) ? nv0 : nvx;
@@ -1169,6 +1174,7 @@ int XARCH(sharp_max_nvec)(int spin)
 
 #define xstr(a) str(a)
 #define str(a) #a
+const char *XARCH(sharp_architecture)(void);
 const char *XARCH(sharp_architecture)(void)
   {
   return xstr(ARCH);
