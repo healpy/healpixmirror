@@ -157,7 +157,7 @@ libhealpix_cxx_la_LDFLAGS = -version-info 2:1:0
 
 bin_PROGRAMS = alm2map_cxx anafast_cxx calc_powspec hotspots_cxx map2tga \
   median_filter_cxx mult_alm rotalm_cxx smoothing_cxx syn_alm_cxx udgrade_cxx \
-  udgrade_harmonic_cxx compute_weights needlet_tool
+  udgrade_harmonic_cxx compute_weights needlet_tool alice3
 check_PROGRAMS = hpxtest
 alm2map_cxx_SOURCES = Healpix_cxx/alm2map_cxx.cc Healpix_cxx/alm2map_cxx_module.cc
 alm2map_cxx_LDADD = libhealpix_cxx.la
@@ -187,6 +187,8 @@ compute_weights_SOURCES = Healpix_cxx/compute_weights.cc Healpix_cxx/compute_wei
 compute_weights_LDADD = libhealpix_cxx.la
 needlet_tool_SOURCES = Healpix_cxx/needlet_tool.cc Healpix_cxx/needlet_tool_module.cc
 needlet_tool_LDADD = libhealpix_cxx.la
+alice3_SOURCES = Healpix_cxx/alice3.cc
+alice3_LDADD = libhealpix_cxx.la
 hpxtest_SOURCES=Healpix_cxx/hpxtest.cc
 hpxtest_LDADD = libhealpix_cxx.la
 
