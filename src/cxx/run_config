@@ -1,0 +1,4 @@
+#!/bin/sh
+
+. config/config.${HEALPIX_TARGET}
+./configure

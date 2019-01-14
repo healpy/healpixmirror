@@ -4,11 +4,11 @@
 
 # ------------------------------ global variables --------------------------
 
-ALL       = c-void cpp-void f90-void healpy-void 
-TESTS     = c-void cpp-void f90-void healpy-void 
-CLEAN     = c-void cpp-void f90-void healpy-void 
-TIDY      = c-void cpp-void f90-void healpy-void 
-DISTCLEAN = c-void cpp-void f90-void healpy-void 
+ALL       = c-void cpp-void f90-void healpy-void
+TESTS     = c-void cpp-void f90-void healpy-void
+CLEAN     = c-void cpp-void f90-void healpy-void
+TIDY      = c-void cpp-void f90-void healpy-void
+DISTCLEAN = c-void cpp-void f90-void healpy-void
 
 RM	= rm -f
 
@@ -17,24 +17,24 @@ HEALPIX=
 F90_BINDIR	=
 F90_INCDIR	=
 F90_LIBDIR	=
-FITSDIR	= 
-LIBFITS	= 
+FITSDIR	=
+LIBFITS	=
 F90_BUILDDIR    =
 
-F90_FFTSRC  = 
-F90_ADDUS   = 
+F90_FFTSRC  =
+F90_ADDUS   =
 
 F90_PARALL  =
 
-F90_FC	= 
-F90_FFLAGS	= 
-F90_CC	= 
-F90_CFLAGS	= 
+F90_FC	=
+F90_FFLAGS	=
+F90_CC	=
+F90_CFLAGS	=
 F90_LDFLAGS	=
-F90_AR      = 
+F90_AR      =
 F90_PPFLAGS =
-F90_I8FLAG  = 
-F90_LIBSUFFIX = 
+F90_I8FLAG  =
+F90_LIBSUFFIX =
 F90_FLAGNAMELIB =
 
 F90_PGFLAG  =
@@ -56,21 +56,21 @@ F90_MKFLAGS	= FC="$(F90_FC)" FFLAGS="$(F90_FFLAGS)" LDFLAGS="$(F90_LDFLAGS)" \
 # ------------------------------ variables for C --------------------------
 #
 # Compiler Options
-C_CC  = 
-C_PIC = 
-C_OPT = 
+C_CC  =
+C_PIC =
+C_OPT =
 #
 # Where you want to install the library and header file
-C_LIBDIR = 
-C_INCDIR = 
-C_AR     = 
+C_LIBDIR =
+C_INCDIR =
+C_AR     =
 #
 # Where you have the cfitsio installation
-C_WITHOUT_CFITSIO = 
-C_CFITSIO_INCDIR = 
-C_CFITSIO_LIBDIR = 
-C_WLRPATH = 
-C_EXTRA_LIB = 
+C_WITHOUT_CFITSIO =
+C_CFITSIO_INCDIR =
+C_CFITSIO_LIBDIR =
+C_WLRPATH =
+C_EXTRA_LIB =
 #
 # Libraries to install (static, shared, dynamic)
 C_ALL =
@@ -80,7 +80,7 @@ C_MKFLAGS = CC="$(C_CC)" PIC="$(C_PIC)" OPT="$(C_OPT)" \
 	WITHOUT_CFITSIO="$(C_WITHOUT_CFITSIO)" CFITSIO_INCDIR="$(C_CFITSIO_INCDIR)" \
 	CFITSIO_LIBDIR="$(C_CFITSIO_LIBDIR)" WLRPATH="$(C_WLRPATH)" \
 	EXTRA_LIB="$(C_EXTRA_LIB)" \
-	RM="$(RM)" 
+	RM="$(RM)"
 
 # ------------------------------ variables for C++ --------------------------
 
@@ -124,7 +124,7 @@ f90-all: $(f90-libs) $(f90-progs)
 # itemized list instead of loop to allow parallel compiling
 
 # libraries
-f90-libsharp: 
+f90-libsharp:
 	@cd src/f90/sharp; $(MAKE) $(F90_MKFLAGS)
 
 f90-modules: f90-libsharp
@@ -255,7 +255,7 @@ c-tidy:
 	$(MAKE) tidy $(C_MKFLAGS); \
 	cd ../../..
 
-c-distclean: 
+c-distclean:
 	@cd src/C/subs; \
 	$(MAKE) distclean $(C_MKFLAGS); \
 	cd ../../..
@@ -271,12 +271,12 @@ cpp-all:
 
 cpp-test: cpp-all
 	@cd src/cxx;   \
-	$(MAKE) test ; \
+	$(MAKE) check ; \
 	cd ../..
 
 cpp-clean:
 	@cd src/cxx ; \
-	$(MAKE) distclean; \
+	$(MAKE) clean; \
 	cd ../..
 
 cpp-tidy:

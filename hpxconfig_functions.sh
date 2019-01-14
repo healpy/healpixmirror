@@ -21,7 +21,7 @@
 # 2009-06-26: replace echoLn with printf
 # 2009-07-10: debugging on MacOS, libgif -> libhpxgif
 # 2009-10-12: replace gfortran -dumpversion -> gfortran --version
-# 2009-10-21: removed bashisms: 
+# 2009-10-21: removed bashisms:
 #               replaced ' == ' tests with ' = ' or ' -eq '
 #               got rid of arrays in pickCppCompilation
 # 2010-06-22: supports zsh (M. Tomasi)
@@ -80,7 +80,7 @@ checkDir () {
 	    crashAndBurn
 	fi
     fi
-}    
+}
 #-------------
 echoLn () {
 #     if [ "${OS}" = "Linux" -o "${OS}" = "Darwin" ]; then
@@ -96,7 +96,7 @@ findFITSLib () {
 	if [ -r "${dir}/lib${LIBFITS}.a" -o -r "${dir}/lib${LIBFITS}.so" -o -r "${dir}/lib${LIBFITS}.dylib" ] ; then
 	    FITSDIR=$dir
 	    break
-	fi	    
+	fi
     done
 }
 #-------------
@@ -115,7 +115,7 @@ findFITSPrefix () {
 	if ( ([ -r "${testlib}.a" ] || [ -r "${testlib}.so" ] || [ -r "${testlib}.dylib" ]) && [ -r "${dir}/include/fitsio.h" ] ) ; then
 	    FITSPREFIX=$dir
 	    break
-	fi	    
+	fi
     done
 }
 #-------------
@@ -136,13 +136,13 @@ askMake () {
 if [ "${MAKESET}" = 0 ] ; then
     echoLn "Enter make command ($MAKE): "
     read answer
-    [ "x$answer" != "x" ] && MAKE=$answer    
+    [ "x$answer" != "x" ] && MAKE=$answer
     MAKESET=1
 fi
 }
 #-------------
 goodBye () {
-    echo     
+    echo
     if [ -s Makefile -a ${edited_makefile} -eq 1 ] ; then
 	echo
 	echo "You can run \"(GNU)make\" to build all the packages configured so far,"
@@ -199,7 +199,7 @@ setCDefaults () {
 	Linux)
 	    WLRPATH="-Wl,-R"
 	;;
-    esac	    
+    esac
 
     LIBDIR=$HEALPIX/lib
     INCDIR=$HEALPIX/include
@@ -232,11 +232,11 @@ askCUserMisc () {
     [ "x$answer" != "x" ] && CC=$answer
 
     add64bitCFlags
-    
+
     echoLn "enter options for C compiler ($OPT): "
     read answer
     [ "x$answer" != "x" ] && OPT=$answer
-    
+
     echoLn "enter archive creation (and indexing) command ($C_AR): "
     read answer
     [ "x$answer" != "x" ] && C_AR=$answer
@@ -388,7 +388,7 @@ setCppDefaults () {
 }
 #-------------
 pickCppCompilation() {
-    
+
     echo 'Available configurations for C++ compilation are:'
     cd $CXXCONFDIR
     list=`${LS} -1 config.* | ${GREP} -v \.in$ | ${GREP} -v healpy | ${AWK} -F. '{print $2}'`
@@ -402,7 +402,7 @@ pickCppCompilation() {
     echo "   You can create your own C++ configuration in $CXXCONFDIR/config.* "
     echoLn "Choose one number: "
     read answer
-    if [  "x$answer" = "x0"  ]; then 
+    if [  "x$answer" = "x0"  ]; then
 	target_chosen=0
 	cd $HEALPIX
     else
@@ -438,6 +438,7 @@ editCppMakefile () {
     [ "${OS}" = "Darwin" ]  && CPPWLRPATH="-Wl,-rpath "
 
 
+    cd src/cxx; export $HEALPIX_TARGET; . ./run_config || crashAndBurn; cd ../..
     mv -f Makefile Makefile_tmp
     ${CAT} Makefile_tmp |\
 	${SED} "s|^HEALPIX_TARGET\(.*\)|HEALPIX_TARGET = ${HEALPIX_TARGET}|" |\
@@ -448,7 +449,7 @@ editCppMakefile () {
 	${SED} "s|^CLEAN\(.*\) cpp-void \(.*\)|CLEAN\1 cpp-clean \2|" |\
 	${SED} "s|^DISTCLEAN\(.*\) cpp-void \(.*\)|DISTCLEAN\1 cpp-distclean \2|" |\
 	${SED} "s|^TIDY\(.*\) cpp-void \(.*\)|TIDY\1 cpp-tidy \2|" > Makefile
-	
+
     echo " done."
     edited_makefile=1
 
@@ -567,7 +568,7 @@ Cpp_config () {
 # 	${SED} "s|^CLEAN\(.*\) healpy-void\(.*\)|CLEAN\1 healpy-clean \2|" |\
 # 	${SED} "s|^DISTCLEAN\(.*\) healpy-void\(.*\)|DISTCLEAN\1 healpy-distclean \2|" |\
 # 	${SED} "s|^TIDY\(.*\) healpy-void\(.*\)|TIDY\1 healpy-tidy \2|" > Makefile
-	
+
 #     echo " done."
 #     edited_makefile=1
 
@@ -647,7 +648,7 @@ editHealpyMakefile () {
 	${SED} "s|^CLEAN\(.*\) healpy-void\(.*\)|CLEAN\1 healpy-clean \2|" |\
 	${SED} "s|^DISTCLEAN\(.*\) healpy-void\(.*\)|DISTCLEAN\1 healpy-distclean \2|" |\
 	${SED} "s|^TIDY\(.*\) healpy-void\(.*\)|TIDY\1 healpy-tidy \2|" > Makefile
-	
+
     echo " done."
     edited_makefile=1
 
@@ -718,7 +719,7 @@ askGif () {
     else
 	gif_scom=$gif_com
     fi
-    
+
 }
 #-------------
 generateProIdlFile () {
@@ -946,7 +947,7 @@ setIdlDefaults () {
     [ "${OS}" = "Darwin" ]  && gif_com="open"
     [ "${OS}" = "Darwin" ]  && pdf_com="open"
     previewfile=$HEALPIX/src/idl/visu/idl_default_previewer.pro
-   
+
 #     # if IDL_PATH is undefined, then set it to +IDL_DIR
 #     if [ -z "${IDL_PATH}" ] ; then
 # 	if [ -z "${IDL_DIR}" ] ; then
@@ -1114,7 +1115,7 @@ EOF
        IFCVERSION="ifcnew"
    fi
 
-   ${RM}  ${tmpfile}.* 
+   ${RM}  ${tmpfile}.*
    ${RM}  TO_BE_REMOVED.*
 }
 
@@ -1125,14 +1126,14 @@ checkF90Fitsio () {
     if [ $sanity -gt 0 ] ; then
 	check=`${NM} ${cfitsiolib} 2> ${DEVNULL} | ${GREP} ftgkey | ${GREP} T | ${WC} -l` # count ftgkey definition
 	if [ $check -eq 0 ] ; then
-	    echo 
+	    echo
 	    echo "*WARNING*: the cfitsio library ${cfitsiolib}"
 	    echo "does not seem to include the Fortran interface;"
 	    echo "this will prevent compilation of the Healpix F90 package."
-	    echo 
+	    echo
 	    echo "When installing cfitsio, make sure that a Fortran compiler is known"
 	    echo "to the cfitsio configure script."
-	    echo 
+	    echo
 	fi
     fi
 
@@ -1182,7 +1183,7 @@ EOF
 
     # clean up
     ${RM} ${tmpfile}.*
-    
+
 
 }
 # ----------------
@@ -1207,20 +1208,20 @@ EOF
     CFITSIOVREC="3.44"            # recommended  version of CFITSIO (according to NASA)
     # run if executable
     if [ -x ${tmpfile}.x ]; then
-	CFITSIOVERSION=`${tmpfile}.x` # available version of CFITSIO 
+	CFITSIOVERSION=`${tmpfile}.x` # available version of CFITSIO
 	v1=`echo ${CFITSIOVERSION} | ${AWK} '{print $1*1000}'` # multiply by 1000 to get integer
 	v2=`echo ${CFITSIOVREQ}    | ${AWK} '{print $1*1000}'`
 	v3=`echo ${CFITSIOVREC}    | ${AWK} '{print $1*1000}'`
 	${RM} ${tmpfile}.*
 	if [ $v1 -lt $v2 ]; then
-	    echo 
+	    echo
 	    echo "CFITSIO version in ${FITSDIR}/lib${LIBFITS}.a  is  $CFITSIOVERSION "
 	    echo "CFITSIO >= ${CFITSIOVREQ} is expected for Healpix-F90"
 	    echo
 	    crashAndBurn
 	fi
 	if [ $v1 -lt $v3 ]; then
-	    echo 
+	    echo
 	    echo "WARNING: CFITSIO version in ${FITSDIR}/lib${LIBFITS}.a  is  $CFITSIOVERSION "
 	    echo "         CFITSIO >= ${CFITSIOVREC} is recommended by NASA security team"
 	    echo
@@ -1231,10 +1232,10 @@ EOF
 
     # clean up
     ${RM} ${tmpfile}.*
-    
+
 
 }
- 
+
 # -----------------------------------------------------------------
 
 GuessF90Compiler () {
@@ -1375,7 +1376,7 @@ askF90PIC () {
 	else
 	    echo "PIC compilation flag not known for  \"$FCNAME\" under \"$OS\" "
 	    echo "standard static compilation will be performed"
-	fi 
+	fi
     fi
 }
 
@@ -1385,7 +1386,7 @@ patchF90 (){
 
 # F90 compiler: nothing!
 
-# C compiler: 
+# C compiler:
 #  *  add -fno-tree-fre for GCC 4.4* versions (adapted from autoconf)
 #  *  add -fno-tree-fre for GCC 4.3.4 version (detected at NERSC)
     GCCVERSION="`$CC -dumpversion 2>&1`"
@@ -1594,7 +1595,7 @@ IdentifyF90Compiler () {
                 FFLAGS="$FFLAGS -DNAG -strict95"
 		FI8FLAG="-double" # change default INTEGER and FLOAT to 64 bits
 		MODDIR="-mdir " # output location of modules
-        elif [ $nifc != 0 ] ; then 
+        elif [ $nifc != 0 ] ; then
 		ifc_modules
                 FCNAME="Intel Fortran Compiler"
 		junk=`$FC -v 2>&1 | grep -i version | sed "s|[ifort,version,Version, ]||g"`
@@ -1688,7 +1689,7 @@ IdentifyF90Compiler () {
 	        FCNAME="PathScale EKOPath compiler"
 		FFLAGS="$FFLAGS"
 		OFLAGS="-O"
-		CC="pathcc"	    
+		CC="pathcc"
 		PRFLAGS="-mp" # Open MP enabled
 		FI8FLAG="-i8" # change default INTEGER to 64 bits
 		#FI8FLAG="-default64" # change default INTEGER and FLOAT to 64 bits
@@ -1786,7 +1787,7 @@ EOF
 	echo "can not be executed."
 	echo "Most likely, some compiler related dynamic libraries are not found."
 	echo "(Check the LD_LIBRAY_PATH variable and read the compiler documentation.)"
-	echo 
+	echo
 	echo "That can affect negatively the result of this configuration script."
 	echo
 	echo
@@ -2156,7 +2157,7 @@ Version: ${HPX_VERSION}
 URL: https://healpix.sourceforge.io
 Requires: cfitsio >= ${CFITSIOVREQ}
 Libs: -L\${libdir} -lhealpix -lhpxgif
-Cflags: -I\${includedir} ${PRFLAGS} ${F90PIC} 
+Cflags: -I\${includedir} ${PRFLAGS} ${F90PIC}
 
 EOF
 
@@ -2232,7 +2233,7 @@ mainMenu () {
     echoLn "Enter your choice (configuration of packages can be done in any order): "
     read answer
     case x$answer in
-	x1) 
+	x1)
 	  eval idlconffile=$HPX_CONF_IDL
 	  eval gdlconffile=$HPX_CONF_GDL
 	  eval flconffile=$HPX_CONF_FL
@@ -2260,7 +2261,7 @@ mainMenu () {
 	   echo "unknown answer !"
 	   echo
 	   crashAndBurn;;
-    esac	
+    esac
 }
 #-------------
 installProfile () {
@@ -2319,7 +2320,7 @@ makeTopConf(){
     sh|ksh|bash|zsh)
 	${CAT}<<EOF >| ${HPX_CONF_MAIN}
 # configuration for Healpix $HPXVERSION
-HEALPIX=${HEALPIX} ; export HEALPIX 
+HEALPIX=${HEALPIX} ; export HEALPIX
 HPX_CONF_DIR=${HPX_CONF_DIR}
 if [ -r ${HPX_CONF_IDL} ] ; then . ${HPX_CONF_IDL} ; fi
 if [ -r ${HPX_CONF_GDL} ] ; then . ${HPX_CONF_GDL} ; fi
@@ -2344,7 +2345,7 @@ EOF
     echo ' '  ;;
     *) ;;
     esac
-      
+
 }
 #-------------
 readyTopMakefile () {
@@ -2445,7 +2446,7 @@ setConfDir () {
     HPX_CONF_CPP=\${HPX_CONF_DIR}/cpp.${suffix}
     HPX_CONF_C=\${HPX_CONF_DIR}/c.${suffix}
 
-    
+
 }
 
 #----------------------------------------

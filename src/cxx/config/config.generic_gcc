@@ -1,0 +1,4 @@
+CFLAGS="-O3 -ffast-math -fomit-frame-pointer -fno-tree-vectorize -fno-tree-fre -g -Wall -Wextra -Wno-long-long -Wno-unknown-pragmas -Wshadow -Wmissing-prototypes -Wfatal-errors"
+CXXFLAGS="-O3 -ffast-math -fomit-frame-pointer -fno-tree-vectorize -fno-tree-fre -g -Wall -Wextra -Wstrict-aliasing=2 -Wundef -Wshadow -Wwrite-strings -Wredundant-decls -Woverloaded-virtual -Wcast-qual -Wcast-align -Wpointer-arith -Wold-style-cast -Wno-unknown-pragmas -Wfatal-errors"
+
+export CFLAGS CXXFLAGS
