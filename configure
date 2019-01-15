@@ -8,11 +8,11 @@
 #          Bourne-Again Shell (bash)
 #          Korn Shell         (ksh)
 #          Z Shell            (zsh)
-# and most versions of 
+# and most versions of
 #          Debian Almquist Shell (dash)
 #
 # If is crashes unexpectedly, try replacing the first line above
-# from   #! /bin/sh 
+# from   #! /bin/sh
 # to     #! /bin/bash
 # or     #! /bin/ksh
 # or     #! /bin/zsh
@@ -24,7 +24,7 @@
 #
 
 # version number
-HPXVERSION=3.40
+HPXVERSION=3.50
 
 #-------------
 welcome () {
@@ -55,7 +55,7 @@ if [ ${#} -gt 0 ]; then
     one=${arg%${arg#?}}
     two=${arg%${arg#??}}
     if [ "${one}" != "-"  -o  "${two}" = "--"  -o "${arg}" = "-"  -o "x${arg}" = "x?" ]; then
-	echo 
+	echo
 	echo "${usage}"
 	echo
 	echo "${usage2}"
@@ -67,17 +67,17 @@ fi
 while getopts 'hLv' OPTION
 do
     case ${OPTION} in
-	h) 
+	h)
 	echo
 	echo "Configure script for Healpix ${HPXVERSION}"
 	echo
 	echo "${usage}"
 	echo
-	echo "?   Print usage and exit" 
+	echo "?   Print usage and exit"
 	echo
-	echo "-h  Print this help message and exit" 
+	echo "-h  Print this help message and exit"
 	echo
-	echo "-L  Put the configuration directory in ${HPX_CONF_DIR_INPLACE}" 
+	echo "-L  Put the configuration directory in ${HPX_CONF_DIR_INPLACE}"
 	echo "    (instead of installer's home: ${HPX_CONF_DIR_HOME})."
 	echo "    Recommended when doing a system wide installation to be used by several users."
 	echo
@@ -87,7 +87,7 @@ do
 	;;
 	L)
         HPX_CONF_DIR=${HPX_CONF_DIR_INPLACE}
-	echo 
+	echo
         echo "Note: the configuration directory will be ${HPX_CONF_DIR}"
 	echo
 	;;
@@ -117,7 +117,7 @@ readyTopMakefile
 #installProfile
 
 # loop over main menu
-while [ true ]  ; do 
+while [ true ]  ; do
 	mainMenu
 done
 

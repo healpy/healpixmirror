@@ -384,66 +384,51 @@ C_config () {
 setCppDefaults () {
 
     CXXDIR=${HEALPIX}/src/cxx
-    CXXCONFDIR=${CXXDIR}/config
+    CC="gcc"
+    CFLAGS="-O3 -ffast-math"
+    CXX="g++"
+    CXXFLAGS="-O3 -ffast-math"
+    LDFLAGS=""
+
+    CXXPREFIX=$HEALPIX
 }
 #-------------
-pickCppCompilation() {
+askCppUserMisc () {
 
-    echo 'Available configurations for C++ compilation are:'
-    cd $CXXCONFDIR
-    list=`${LS} -1 config.* | ${GREP} -v \.in$ | ${GREP} -v healpy | ${AWK} -F. '{print $2}'`
-    ii=1
-    for option in $list ; do
-	echo "   ${ii}: ${option}"
-	#ii=`expr $ii + 1`
-	ii=$((ii+1))
-    done
-    echo "   0: None of the above (will send you back to main menu)."
-    echo "   You can create your own C++ configuration in $CXXCONFDIR/config.* "
-    echoLn "Choose one number: "
+    echoLn "enter C compiler you want to use ($CC): "
     read answer
-    if [  "x$answer" = "x0"  ]; then
-	target_chosen=0
-	cd $HEALPIX
-    else
-	ii=1
-	for option in $list ; do
-	    [ $answer -eq $ii ] && target=$option
-	    ii=$((ii+1))
-	done
-	echo "will compile with ${target} configuration"
-	HEALPIX_TARGET=${target} ; export HEALPIX_TARGET
-	target_chosen=1
-	cd $HEALPIX
-    fi
+    [ "x$answer" != "x" ] && CC=$answer
 
-}
-#-------------
-installCppPackage () {
+    echoLn "enter options for C compiler ($CFLAGS): "
+    read answer
+    [ "x$answer" != "x" ] && CFLAGS=$answer
 
-    echo $HEALPIX_TARGET
-    cd $CXXDIR
-    askMake
-    ${MAKE} || crashAndBurn
-    ${MAKE} doc || crashAndBurn
-    cd $HEALPIX
+    echoLn "enter C++ compiler you want to use ($CXX): "
+    read answer
+    [ "x$answer" != "x" ] && CXX=$answer
+
+    echoLn "enter options for C++ compiler ($CXXFLAGS): "
+    read answer
+    [ "x$answer" != "x" ] && CXXFLAGS=$answer
+
+    echoLn "enter include flags for libcfitsio, if it is not found automatically\n"
+    echoLn "(e.g. '-I/usr/local/include'): "
+    read answer
+    [ "x$answer" != "x" ] && CXXFLAGS="$answer $CXXFLAGS"
+
+    echoLn "enter linker flags for libcfitsio, if it is not found automatically\n"
+    echoLn "(e.g. '-L/usr/local/lib -lcfitsio'): "
+    read answer
+    [ "x$answer" != "x" ] && LDFLAGS="$answer $CXXFLAGS"
 }
 #-------------
 editCppMakefile () {
-
-
     echoLn "edit top Makefile for C++ ..."
 
-    CPPWLRPATH="-Wl,-R"
-    [ "${OS}" = "Darwin" ]  && CPPWLRPATH="-Wl,-rpath "
-
-
-    cd src/cxx; export $HEALPIX_TARGET; . ./run_config || crashAndBurn; cd ../..
+    cd src/cxx; \
+    CC=${CC} CFLAGS="${CFLAGS}" CXX="${CXX}" CXXFLAGS="${CXXFLAGS}" LDFLAGS="${LDFLAGS}" ./configure --prefix=${CXXPREFIX} || crashAndBurn; cd ../..
     mv -f Makefile Makefile_tmp
     ${CAT} Makefile_tmp |\
-	${SED} "s|^HEALPIX_TARGET\(.*\)|HEALPIX_TARGET = ${HEALPIX_TARGET}|" |\
-	${SED} "s|^CFITSIO_EXT_LIB\(.*\)|CFITSIO_EXT_LIB = -L${FITSDIR} -l${LIBFITS} ${CFITSIOCURL} ${CPPWLRPATH}${FITSDIR}|" |\
-	${SED} "s|^CFITSIO_EXT_INC\(.*\)|CFITSIO_EXT_INC = -I${FITSINC}|" |\
 	${SED} "s|^ALL\(.*\) cpp-void \(.*\)|ALL\1 cpp-all \2|" |\
 	${SED} "s|^TESTS\(.*\) cpp-void \(.*\)|TESTS\1 cpp-test \2|" |\
 	${SED} "s|^CLEAN\(.*\) cpp-void \(.*\)|CLEAN\1 cpp-clean \2|" |\
@@ -452,7 +437,6 @@ editCppMakefile () {
 
     echo " done."
     edited_makefile=1
-
 }
 #-------------
 generateConfCppFile () {
@@ -463,15 +447,13 @@ generateConfCppFile () {
     case $SHELL in
     csh|tcsh)
 	${CAT} <<EOF >>$HPX_CONF_CPP
-setenv HEALPIX_TARGET ${HEALPIX_TARGET}
-setenv PATH \${HEALPIX}/src/cxx/\${HEALPIX_TARGET}/bin:\${PATH}
+setenv PATH \${CXXPREFIX}/bin:\${PATH}
 EOF
 	;;
     sh|ksh|bash|zsh)
 	${CAT} <<EOF >>$HPX_CONF_CPP
-HEALPIX_TARGET=${HEALPIX_TARGET}
-PATH="\${HEALPIX}/src/cxx/\${HEALPIX_TARGET}/bin:\${PATH}"
-export HEALPIX_TARGET PATH
+PATH="\${CXXPREFIX}/bin:\${PATH}"
+export PATH
 EOF
 	;;
     *)
@@ -486,40 +468,11 @@ Cpp_config () {
 
     HPX_CONF_CPP=$1
     setCppDefaults
-
-    LIBFITS=cfitsio
-
-    findFITSLib $LIBDIR $FITSDIR
-    echoLn "enter location of cfitsio library ($FITSDIR): "
-    read answer
-    [ "x$answer" != "x" ] && FITSDIR=$answer
-
-    fullPath FITSDIR
-    guess1=${FITSDIR}
-    guess2=`${DIRNAME} ${guess1}`
-    guess3="${guess2}/include"
-
-    checkFitsioCurl "${FITSDIR}/lib${LIBFITS}.*"
-
-    findFITSInclude $INCDIR ${guess1} ${guess2} ${guess3} $FITSINC
-    echoLn "enter location of cfitsio header fitsio.h ($FITSINC): "
-    read answer
-    [ "x$answer" != "x" ] && FITSINC=$answer
-    fullPath FITSINC
-
-    inc="${FITSINC}/fitsio.h"
-    if [ ! -r $inc ]; then
-	echo "error: cfitsio include file $inc not found"
-	crashAndBurn
-    fi
-
-    pickCppCompilation
-    if  [ ${target_chosen} = 1 ];    then
+    askCppUserMisc
 	generateConfCppFile
 	#installCppPackage
 	editCppMakefile
 	[ $NOPROFILEYET = 1 ] && installProfile
-    fi
 }
 
 #=====================================
