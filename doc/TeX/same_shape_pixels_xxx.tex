@@ -25,8 +25,8 @@ The template pixels are all located in the Northern Hemisphere, or on the
 They are chosen to have their center located at
 \begin{eqnarray}
 	\label{eq:same_shape_pixel_xxx}
-     z=\cos(\theta)\ge 2/3,  &\ &    0< \phi \leq \pi/2,   \nonumber\\            %[Nside*(Nside+2)/4]
-     2/3 > z \geq 0,  &\ & \phi=0, \quad{\rm or}\quad  \phi=\frac{\pi}{4\nside}.  %\nonumber %[Nside]
+     z=\cos(\theta)\ge 2/3 \mycomma    0< \phi \leq \pi/2,   \nonumber \\            %[Nside*(Nside+2)/4]
+     2/3 > z \geq 0 \mycomma \phi=0, \quad{\rm or}\quad  \phi=\frac{\pi}{4\nside}.  %\nonumber %[Nside]
 \myhtmlimage{}
 \end{eqnarray}
  They are numbered continuously from 0, starting at the North Pole, with the index
@@ -87,13 +87,30 @@ nrep\mytarget{sub:same_shape_pixels_xxx:nrep} \hskip 4cm OPTIONAL & I4B/ I8B  & 
 
 \begin{example}
 {
-call same\_shape\_pixels\_ring(256, 1234, list, reflexion, np)  \\
+use \htmlref{healpix\_modules}{sub:healpix_modules} \\
+integer, parameter :: IXB = I4B  ! for nside <= 8192\\
+!integer, parameter :: IXB = I8B  ! for any valid nside\\
+integer(I4B):: nside\\
+integer(IXB):: template, nrep\\
+integer(I4B), dimension(:), pointer :: listref\\
+integer(IXB), dimension(:), pointer :: listpix\\
+\\
+allocate(listref(0:0)) ! only the lower bound matters\\
+allocate(listpix(0:0)) ! only the lower bound matters\\
+nside = 256\\
+template = 1234\\
+call same\_shape\_pixels\_ring(nside, template, list=listpix, reflexion=listref, nrep=nrep) \\
+print*,nrep\\
+print*,listpix(0:nrep-1)\\
+print*,listref(0:nrep-1)\\
 }
 {
-Returns in {\tt list} the RING-scheme index of the all the pixels having
-the same shape as the template \#1234 for $\nside=256$. Upon return {\tt reflexion} will
+Returns in {\tt listpix} the RING-scheme index of the all the pixels having
+the same shape as the template \#1234 for $\nside=256$. Upon return {\tt listref} will
 contain the rotation/reflexions to apply to each pixel returned to match the template,
-and {\tt np} will contain the number of pixels having that same shape (16 in that case).
+and {\tt nrep} will contain the number of pixels having that same shape (16 in that case).
+Note that some variables (corresponding to arguments \texttt{template}, \texttt{list} and \texttt{nrep})
+must be of type \texttt{I8B} instead of \texttt{I4B} if $\nside>8192$ is to be used.
 }
 \end{example}
 \begin{related}

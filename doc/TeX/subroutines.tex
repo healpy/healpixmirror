@@ -84,6 +84,10 @@ optional.}
 \begin{htmlonly}
  \renewcommand{\myequal}{$=$}
 \end{htmlonly}
+\newcommand{\mycomma}{,&\ &}
+\begin{htmlonly}
+ \renewcommand{\mycomma}{&$,$&\quad\quad}
+\end{htmlonly}
 %path to F90 modules
 \newcommand{\modAlmTools}{src/f90/mod/alm\_tools.F90}
 \newcommand{\modCoordVConvert}{src/f90/mod/coord\_v\_convert.f90}
@@ -502,7 +506,8 @@ the poles, {\em only} the pixels overlapping with the disc are now returned.
 pixel weights.
 \item \htmlref{parse\_init}{sub:parse_xxx}: silent mode
 \item \htmlref{parse\_string}{sub:parse_xxx}: can expand environment variables
-(\$\{XXX\}) and leading \verb+~+$\!${\tt /}
+(\$\{XXX\}) and leading %\verb+~+$\!${\tt /}
+\texttt{\textasciitilde/}
 \end{itemize}
 
 \end{itemize}

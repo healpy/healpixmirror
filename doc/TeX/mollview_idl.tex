@@ -276,11 +276,10 @@ The accepted inputs are \\
 {\tt CBAR.TY}: vertical offset of the text (min, max and units labels) with respect to the color bar \default{0};\\
 \textbf{Note:} the character size of the text accompanying the color bar is fully determined by the keyword \mylink{idl:mollview:charsize}{Charsize},\\
 {\tt CBAR.BOX}: thickness of the black box drawn around the color bar \default{0: no box}; 
-the final thickness is \texttt{2* cbar.box*!p.thick} in 
+the final thickness is \texttt{F*cbar.box*!p.thick} with \texttt{F}=2 in
 \mylink{idl:mollview:pdf}{PDF} and 
-\mylink{idl:mollview:ps}{PS}, 
-and \texttt{cbar.box*!p.thick} otherwise, 
-where \texttt{!p.thick} is assumed to have a value of 1.0 unless specified otherwise.\\
+\mylink{idl:mollview:ps}{PS}, or \texttt{F}=1 otherwise, 
+while \texttt{!p.thick} is assumed to have a value of 1.0 unless specified otherwise.\\
 {\tt CRING.DX, CRING.XLL, CRING.YLL}: radius and X,Y location of lower left corner of the color disc showing the polarization direction when \mylink{idl:mollview:polarization}{POLARIZATION=3}\\
 {\tt PDF.DEBUG}: if set to 1, and \mylink{idl:mollview:silent}{SILENT} is not set, then debugging information on the \mylink{idl:mollview:pdf}{PDF} generation will be printed (when applicable), 
 and the intermediate Postscript file will be kept\\
@@ -687,6 +686,7 @@ is hidden; \seealso \mylink{idl:mollview:customize}{CUSTOMIZE} \\
             -- 'DEC': Dec/latitude coordinates of the contour vertices (array or
 scalar)\\
 	and can optionally contain the fields: \\
+            -- 'COL[OR]': (optional, scalar or 2-element vector) index in [0,255] of the colors used to draw the lines and symbols. \default{[!p.color, !p.background], ie black and white}\\
 	    -- 'LINE[STYLE]': (optional, scalar) {\bf +2}: black dashes, {\bf
 +1}: black dots, {\bf 0}: black solid (default), {\bf -1}: black dots on white background, {\bf -2}: black dashes on
 	white background\\
@@ -699,7 +699,10 @@ scalar)\\
                     \default {0} \\
             -- 'SYM[SIZE]': (optional, scalar) vertice symbol size (same meaning
 as SYMSIZE in IDL), \default {1}\\
-	The line and symbol thickness can be controlled (indirectly) via !P.THICK.\\
+	    -- 'THI[CK]': (optional, scalar) thickness factor of the lines and symbols. The final thickness is
+	{\texttt{3*F*outline.thick*!P.thick}} with \texttt{F}=2 in
+\mylink{idl:mollview:pdf}{PDF} and 
+\mylink{idl:mollview:ps}{PS}, or \texttt{F}=1 otherwise.\\
 	Notes: when applicable, the vertices are connected by segments of geodesics. To
 	obtain a better looking outline, increase the number of vertices
 	provided. The outline does not have to be closed. The procedure will NOT
@@ -977,8 +980,9 @@ backing store to use for direct graphics windows in \{0,1,2\}.
 {SILHOUETTE=}\mytarget{idl:mollview:silhouette} & \mylink{idl:mollview:routines}{---MO}  & \parbox[t]{\hsize}{
   if set to a scalar or 2-element vector with silhouette[0] $\ne 0$,
           a silhouette is drawn around the map.\\
-          Its thickness is proportional to abs(silhouette[0])
-           (and also depends in a device dependent manner on \texttt{!P.THICK})\\
+          Its thickness is \texttt{F*abs(silhouette[0])*!P.THICK} with \texttt{F}=2 in
+\mylink{idl:mollview:pdf}{PDF} and 
+\mylink{idl:mollview:ps}{PS}, or \texttt{F}=1 otherwise.\\
           Its color is determined by abs(silhouette[1]) in [0,255] \default{0:\mylink{idl:mollview:fg_color}{FG\_COLOR}}.\\
 See \mylink{idl:mollview:example7}{Example \#7} \latexhtml{on page~\pageref{page:moll_customize}}{below}.}\\
 

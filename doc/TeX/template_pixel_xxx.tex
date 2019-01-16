@@ -24,8 +24,8 @@ The template pixels are all located in the Northern Hemisphere, or on the
 They are chosen to have their center located at
 \begin{eqnarray}
 	\label{eq:template_pixel_xxx}
-     z=\cos(\theta)\ge 2/3,  &\ &    0< \phi \leq \pi/2,   \nonumber\\            %[Nside*(Nside+2)/4]
-     2/3 > z \geq 0,  &\ & \phi=0, \quad{\rm or}\quad  \phi=\frac{\pi}{4\nside}.  %\nonumber %[Nside]
+     z=\cos(\theta)\ge 2/3 \mycomma    0< \phi \leq \pi/2,   \nonumber\\            %[Nside*(Nside+2)/4]
+     2/3 > z \geq 0 \mycomma \phi=0, \quad{\rm or}\quad  \phi=\frac{\pi}{4\nside}.  %\nonumber %[Nside]
 \myhtmlimage{}
 \end{eqnarray}
  They are numbered continuously from 0, starting at the North Pole, with the index
@@ -78,7 +78,14 @@ reflexion\mytarget{sub:template_pixel_xxx:reflexion} & I4B & OUT & in \{0, 3\} e
 
 \begin{example}
 {
-call template\_pixel\_ring(256, 500000, template, reflexion)  \\
+use \htmlref{healpix\_modules}{sub:healpix_modules} \\
+integer(I4B):: nside, reflexion\\
+integer(I4B):: pixel, template ! for nside <= 8192\\
+!integer(I8B):: pixel, template ! for any valid nside\\
+nside = 256\\
+pixel = 500000\\
+call template\_pixel\_ring(nside, pixel, template, reflexion)\\
+print*, template, reflexion\\
 }
 {
 Returns in {\tt template} the index of the template pixel (16663) whose shape matches
@@ -86,6 +93,9 @@ that of the pixel \#500000 for $\nside=256$. Upon return {\tt reflexion} will
 contain 2, meaning that the template must be reflected around a meridian and
 around the equator (and then rotated around the polar axis) in order to match
 the pixel.
+Note that the variables \texttt{pixel} and \texttt{template}
+must be of type \texttt{I8B} instead of \texttt{I4B} if $\nside>8192$ is to be used.
+
 }
 \end{example}
 \begin{related}
