@@ -33,8 +33,9 @@ welcome () {
     echo " Welcome to Healpix $HPXVERSION"
     echo "*************************"
     echo
-    echo "This script takes care of the configuration and compilation"
+    echo "This interactive script takes care of the configuration and compilation"
     echo "of the C, C++, F90, IDL and Python packages of the Healpix distribution."
+    echo "Default answers are shown in brakets []."
 
 }
 

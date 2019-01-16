@@ -65,7 +65,7 @@ checkDir () {
 	for d in $l; do
 	    echo "$d"
 	done
-	echoLn "Should I attempt to create these directories (Y|n)? "
+	echoLn "Should I attempt to create these directories (y|n) [y]? "
 	read answer
 	if [ "x$answer" != "xn"  -a  "x$answer" != "xN"  ]; then
 	    for d in $l; do
@@ -213,7 +213,7 @@ setCDefaults () {
 add64bitCFlags () {
 
     if [ "x$CF64$AR64" != "x" ]; then
-	echo "Do you want to make a 64 bit compilation ? [y/N]"
+	echo "Do you want to make a 64 bit compilation ? (y|n) [n]: "
 	read answer
 	if [ "x$answer" = "xy" -o "x$answer" = "xY" ]; then
 	    OPT="$OPT $CF64"
@@ -227,30 +227,30 @@ askCUserMisc () {
     checkDir $INCDIR $LIBDIR
     fullPath INCDIR LIBDIR
 
-    echoLn "enter C compiler you want to use ($CC): "
+    echoLn "enter C compiler you want to use [$CC]: "
     read answer
     [ "x$answer" != "x" ] && CC=$answer
 
     add64bitCFlags
 
-    echoLn "enter options for C compiler ($OPT): "
+    echoLn "enter options for C compiler [$OPT]: "
     read answer
     [ "x$answer" != "x" ] && OPT=$answer
 
-    echoLn "enter archive creation (and indexing) command ($C_AR): "
+    echoLn "enter archive creation (and indexing) command [$C_AR]: "
     read answer
     [ "x$answer" != "x" ] && C_AR=$answer
 
-    echoLn "do you want the HEALPix/C library to include CFITSIO-related functions ? (Y|n): "
+    echoLn "do you want the HEALPix/C library to include CFITSIO-related functions ? (y|n) [y]: "
     read answer
     if [ "x$answer" = "x" -o "x$answer" = "xY" -o "x$answer" = "xy" -o "x$answer" = "x1" ]; then
 	C_WITHOUT_CFITSIO=0
-	echoLn "enter full name of cfitsio library (lib${LIBFITS}.a): "
+	echoLn "enter full name of cfitsio library [lib${LIBFITS}.a]: "
 	read answer
 	[ "x$answer" != "x" ] && LIBFITS=`${BASENAME} $answer ".a" | ${SED} "s/^lib//"`
 
 	findFITSLib $LIBDIR $FITSDIR
-	echoLn "enter location of cfitsio library ($FITSDIR): "
+	echoLn "enter location of cfitsio library [$FITSDIR]: "
 	read answer
 	[ "x$answer" != "x" ] && FITSDIR=$answer
 	fullPath FITSDIR
@@ -269,7 +269,7 @@ askCUserMisc () {
 	guess3="${guess2}/include"
 
 	findFITSInclude $INCDIR ${guess1} ${guess2} ${guess3} $FITSINC
-	echoLn "enter location of cfitsio header fitsio.h ($FITSINC): "
+	echoLn "enter location of cfitsio header fitsio.h [$FITSINC]: "
 	read answer
 	[ "x$answer" != "x" ] && FITSINC=$answer
 	fullPath FITSINC
@@ -285,11 +285,11 @@ askCUserMisc () {
 
     echoLn "A static library is produced by default. Do you also want a shared library ? "
     if [ ${DO_C_SHARED} -eq 1 ]; then
-	echoLn "(Y|n) "
+	echoLn "(y|n) [y]: "
 	read answer
 	[ "x$answer" = "xn" -o "x$answer" = "xN" ] && DO_C_SHARED=0
     else
-	echoLn "(y|N) "
+	echoLn "(y|n) [n]: "
 	read answer
 	[ "x$answer" = "xy" -o "x$answer" = "xY" ] && DO_C_SHARED=1
     fi
@@ -395,19 +395,19 @@ setCppDefaults () {
 #-------------
 askCppUserMisc () {
 
-    echoLn "enter C compiler you want to use ($CC): "
+    echoLn "enter C compiler you want to use [$CC]: "
     read answer
     [ "x$answer" != "x" ] && CC=$answer
 
-    echoLn "enter options for C compiler ($CFLAGS): "
+    echoLn "enter options for C compiler [$CFLAGS]: "
     read answer
     [ "x$answer" != "x" ] && CFLAGS=$answer
 
-    echoLn "enter C++ compiler you want to use ($CXX): "
+    echoLn "enter C++ compiler you want to use [$CXX]: "
     read answer
     [ "x$answer" != "x" ] && CXX=$answer
 
-    echoLn "enter options for C++ compiler ($CXXFLAGS): "
+    echoLn "enter options for C++ compiler [$CXXFLAGS]: "
     read answer
     [ "x$answer" != "x" ] && CXXFLAGS=$answer
 
@@ -1287,7 +1287,7 @@ askOpenMP () {
     echo "Do you want to use :"
     echo " 0) the standard serial implementation ?"
     echo " 1) the parallel implementation "
-    echoLn "Enter choice                                      ($OpenMP): "
+    echoLn "Enter choice                                      [$OpenMP]: "
     read answer
     [ "x$answer" != "x" ] && OpenMP="$answer"
     if [ $OpenMP = 1 ] ; then
@@ -1314,7 +1314,7 @@ askF90PIC () {
     DoF90PIC="1"
     echo " "
     echo " Do you want a Position Independent Compilation  (option  \"$F90PIC\") "
-    echoLn "(recommended if the Healpix-F90 library is to be linked to external codes)  (Y|n): "
+    echoLn "(recommended if the Healpix-F90 library is to be linked to external codes) (y|n) [Y]: "
     read answer
     if [ "x$answer" = "xy"  -o "x$answer" = "xY"  -o "x$answer" = "x" ]; then
 	if [ "x$F90PIC" != "x" ] ; then
@@ -1772,7 +1772,7 @@ EOF
 # -----------------------------------------------------------------
 
 askUserF90 () {
-    echoLn "enter name of your F90 compiler ($FC): "
+    echoLn "enter name of your F90 compiler [$FC]: "
     read answer
     [ "x$answer" != "x" ] && FC="$answer"
 }
@@ -1811,7 +1811,7 @@ askUserMisc () {
     add64bitF90Flags
 
     showDefaultDirs
-    echoLn "enter suffix for directories ($DIRSUFF): "
+    echoLn "enter suffix for directories [$DIRSUFF]: "
     read answer
     [ "x$answer" != "x" ] && DIRSUFF="$answer"
     updateDirs
@@ -1822,11 +1822,11 @@ askUserMisc () {
 
     echoLn " "
 
-    echoLn "enter compilation flags for $FC compiler ($FFLAGS): "
+    echoLn "enter compilation flags for $FC compiler [$FFLAGS]: "
     read answer
     [ "x$answer" != "x" ] && FFLAGS="$answer"
 
-    echoLn "enter optimisation flags for $FC compiler ($OFLAGS): "
+    echoLn "enter optimisation flags for $FC compiler [$OFLAGS]: "
     read answer
     [ "x$answer" != "x" ] && OFLAGS="$answer"
 
@@ -1843,12 +1843,12 @@ askUserMisc () {
     echo "  Fortran code will be compiled with $FC $FFLAGS"
 
 
-    echoLn "enter name of your C compiler ($CC): "
+    echoLn "enter name of your C compiler [$CC]: "
     read answer
     [ "x$answer" != "x" ] && CC="$answer"
     IdentifyCCompiler
 
-    echoLn "enter compilation/optimisation flags for C compiler ($CFLAGS): "
+    echoLn "enter compilation/optimisation flags for C compiler [$CFLAGS]: "
     read answer
     [ "x$answer" != "x" ] && CFLAGS="$answer"
 
@@ -1875,7 +1875,7 @@ askUserMisc () {
 	    echo "F90 compiler generates 32 bit code, "
 	    echo "while C compiler generates 64 bit code"
 	fi
-	echoLn "you may want to change the C compilation options ($CFLAGS): "
+	echoLn "you may want to change the C compilation options [$CFLAGS]: "
 	read answer
 	[ "x$answer" != "x" ] && CFLAGS="$answer"
 	echoLn "or the F90 compilations options ($FFLAGS): "
@@ -1885,16 +1885,16 @@ askUserMisc () {
     fi
     echo "  C subroutines will be compiled with $CC $CFLAGS"
 
-    echoLn "enter command for library archiving ($F90_AR): "
+    echoLn "enter command for library archiving [$F90_AR]: "
     read answer
     [ "x$answer" != "x" ] && F90_AR="$answer"
 
-    echoLn "enter full name of cfitsio library (lib${LIBFITS}.a): "
+    echoLn "enter full name of cfitsio library [lib${LIBFITS}.a]: "
     read answer
     [ "x$answer" != "x" ] && LIBFITS=`${BASENAME} $answer ".a" | ${SED} "s/^lib//"`
 
     findFITSLib $LIBDIR $FITSDIR
-    echoLn "enter location of cfitsio library ($FITSDIR): "
+    echoLn "enter location of cfitsio library [$FITSDIR]: "
     read answer
     [ "x$answer" != "x" ] && FITSDIR=$answer
     fullPath FITSDIR
@@ -1930,7 +1930,7 @@ askPgplot () {
     echo "produce plots of the maps Prob. Dens. Function using PGPLOT."
     echo "Do you want to enable this option ? "
 #    echo " (the ng_sims code will run just as well without it,)  "
-    echoLn "(this assumes that PGPLOT is already installed on your computer) (y|N)"
+    echoLn "(this assumes that PGPLOT is already installed on your computer) (y|n) [n]: "
     read answer
     if [ "x$answer" = "xy"  -o "x$answer" = "xY" ]; then
 	PGFLAG="${FPP}PGPLOT" # set preprocessing variable
@@ -2065,11 +2065,11 @@ f90_shared () {
     echoLn "A static library is produced by default. Do you rather want a shared/dynamic library ?"
     DO_F90_SHARED=0
     if [ ${DO_F90_SHARED} -eq 1 ]; then
-	echoLn " (Y|n) "
+	echoLn " (y|n) [y]: "
 	read answer
 	[ "x$answer" = "xn" -o "x$answer" = "xN" ] && DO_F90_SHARED=0
     else
-	echoLn " (y|N) "
+	echoLn " (y|n) [n]: "
 	read answer
 	[ "x$answer" = "xy" -o "x$answer" = "xY" ] && DO_F90_SHARED=1
     fi
@@ -2185,7 +2185,7 @@ mainMenu () {
     echo "     (will *REMOVE* the Makefile and configuration files, and exit)"
     echo "(0): exit"
     echo
-    echoLn "Enter your choice (configuration of packages can be done in any order): "
+    echoLn "Enter your choice (configuration of packages can be done in any order) [0]: "
     read answer
     case x$answer in
 	x1)
@@ -2208,6 +2208,8 @@ mainMenu () {
 	x9)
 	   installProfile;;
 	x0)
+	   goodBye;;
+	x)
 	   goodBye;;
 	"x-1")
 	   restartFromScratch
@@ -2250,7 +2252,7 @@ EOF
 ${CAT} ${HPX_CONF_MAIN}
 
 	echo ""
-	echoLn "Do you want this modification to be done (y|N)? "
+	echoLn "Do you want this modification to be done (y|n)? [n]: "
 	read answer
 	if [ "x$answer" = "xy" -o "x$answer" = "xY" ]; then
 	    ${CP} $prof ${prof}".save"
