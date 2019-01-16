@@ -411,22 +411,24 @@ askCppUserMisc () {
     read answer
     [ "x$answer" != "x" ] && CXXFLAGS=$answer
 
-    echoLn "enter include flags for libcfitsio, if it is not found automatically\n"
-    echoLn "(e.g. '-I/usr/local/include'): "
+    CFITSIO_CFLAGS=""
+    echoLn "if fitsio.h is in a nonstandard include path, enter it here\n"
+    echoLn "(e.g. '/usr/local/include'): "
     read answer
-    [ "x$answer" != "x" ] && CXXFLAGS="$answer $CXXFLAGS"
+    [ "x$answer" != "x" ] && CFITSIO_CFLAGS="-I$answer"
 
-    echoLn "enter linker flags for libcfitsio, if it is not found automatically\n"
-    echoLn "(e.g. '-L/usr/local/lib -lcfitsio'): "
+    CFITSIO_LIBS=""
+    echoLn "if the cfitsio library is in a nonstandard path, enter it here\n"
+    echoLn "(e.g. '/usr/local/lib'): "
     read answer
-    [ "x$answer" != "x" ] && LDFLAGS="$answer $CXXFLAGS"
+    [ "x$answer" != "x" ] && CFITSIO_LIBS="-L$answer -lcfitsio"
 }
 #-------------
 editCppMakefile () {
     echoLn "edit top Makefile for C++ ..."
 
     cd src/cxx; \
-    CC=${CC} CFLAGS="${CFLAGS}" CXX="${CXX}" CXXFLAGS="${CXXFLAGS}" LDFLAGS="${LDFLAGS}" ./configure --prefix=${CXXPREFIX} || crashAndBurn; cd ../..
+    CC=${CC} CFLAGS="${CFLAGS}" CXX="${CXX}" CXXFLAGS="${CXXFLAGS}" LDFLAGS="${LDFLAGS}" CFITSIO_CFLAGS="${CFITSIO_CFLAGS}" CFITSIO_LIBS="${CFITSIO_LIBS}" ./configure --prefix=${CXXPREFIX} || crashAndBurn; cd ../..
     mv -f Makefile Makefile_tmp
     ${CAT} Makefile_tmp |\
 	${SED} "s|^ALL\(.*\) cpp-void \(.*\)|ALL\1 cpp-all \2|" |\

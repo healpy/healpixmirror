@@ -266,7 +266,7 @@ c-void:
 
 cpp-all:
 	@cd src/cxx; \
-	$(MAKE) ; \
+	$(MAKE) install; \
 	cd ../..
 
 cpp-test: cpp-all
