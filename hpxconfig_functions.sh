@@ -182,7 +182,7 @@ whereisCmd () {
 
 setCDefaults () {
 
-    CC="gcc"
+    CC="${CC-gcc}" # gcc unless already defined
     OPT="-O2 -Wall"
     C_AR="ar -rsv"
     PIC="-fPIC" # works with gcc, icc and clang
@@ -384,9 +384,9 @@ C_config () {
 setCppDefaults () {
 
     CXXDIR=${HEALPIX}/src/cxx
-    CC="gcc"
+    CC="${CC-gcc}" # gcc unless already defined
     CFLAGS="-O3 -ffast-math"
-    CXX="g++"
+    CXX="${CXX-g++}" # g++ unless already defined
     CXXFLAGS="-O3 -ffast-math"
     LDFLAGS=""
 
@@ -428,7 +428,7 @@ editCppMakefile () {
     echoLn "edit top Makefile for C++ ..."
 
     cd src/cxx; \
-    CC=${CC} CFLAGS="${CFLAGS}" CXX="${CXX}" CXXFLAGS="${CXXFLAGS}" LDFLAGS="${LDFLAGS}" CFITSIO_CFLAGS="${CFITSIO_CFLAGS}" CFITSIO_LIBS="${CFITSIO_LIBS}" ./configure --prefix=${CXXPREFIX} || crashAndBurn; cd ../..
+    CC="${CC}" CFLAGS="${CFLAGS}" CXX="${CXX}" CXXFLAGS="${CXXFLAGS}" LDFLAGS="${LDFLAGS}" CFITSIO_CFLAGS="${CFITSIO_CFLAGS}" CFITSIO_LIBS="${CFITSIO_LIBS}" ./configure --prefix=${CXXPREFIX} || crashAndBurn; cd ../..
     mv -f Makefile Makefile_tmp
     ${CAT} Makefile_tmp |\
 	${SED} "s|^ALL\(.*\) cpp-void \(.*\)|ALL\1 cpp-all \2|" |\
@@ -539,6 +539,8 @@ Healpy_config () {  # for healpy 1.7.0
     HPY_SETUP='setup.py' # default setup
     HPY_SETUP2='setup2.py' # backup setup
     HPY_DIR='src/healpy/'
+    CC="${CC-gcc}" # gcc unless already defined
+    CXX="${CXX-g++}" # g++ unless already defined
 
     # ask for python command
     echoLn "Enter python command [$HPY_PYTHON] "
@@ -550,7 +552,8 @@ Healpy_config () {  # for healpy 1.7.0
     #python_version=`${CAT} ${tmpfile} | ${AWK} '{print \$NF}'` # current version (last field)
     python_version=`${CAT} ${tmpfile} | ${AWK} '{print \$2}'` # current version (2nd field)
     #python_reqrd="2.4" # minimal version supported
-    python_reqrd="2.6" # minimal version supported
+    #python_reqrd="2.6" # minimal version supported
+    python_reqrd="2.7" # minimal version supported (1.12.8)
     p_v1=`echo ${python_version} | ${AWK} '{print $1*10}'`
     p_v2=`echo ${python_reqrd}   | ${AWK} '{print $1*10}'`
     ${RM} ${tmpfile}
@@ -561,28 +564,39 @@ Healpy_config () {  # for healpy 1.7.0
 	crashAndBurn
     fi
 
-    # special treatement for MacOSX
-    if [ "${OS}" = "Darwin" ]; then
-	# find out compiler and options used by python (and therefore healpy in setup.py)
-	HPY_CC=`${HPY_PYTHON}   -c "from distutils.sysconfig import get_config_var ; print get_config_var('CC')"`
-	HPY_OPTS=`${HPY_PYTHON} -c "from distutils.sysconfig import get_config_var ; print get_config_var('CFLAGS')"`
+    
+#     # special treatement for MacOSX
+#     if [ "${OS}" = "Darwin" ]; then
+# 	# find out compiler and options used by python (and therefore healpy in setup.py)
+# 	HPY_CC=`${HPY_PYTHON}   -c "from distutils.sysconfig import get_config_var ; print get_config_var('CC')"`
+# 	HPY_OPTS=`${HPY_PYTHON} -c "from distutils.sysconfig import get_config_var ; print get_config_var('CFLAGS')"`
 
-	# test these options on a C code
-${CAT} > ${tmpfile}.c <<EOF
-int main(){
-}
-EOF
-	${HPY_CC} -E ${HPY_OPTS} ${tmpfile}.c -o ${tmpfile}.p  1>${DEVNULL} 2>&1
-	# if test fails, create back up setup2.py and make sure it will be used
-	if [ ! -e ${tmpfile}.p ] ; then
-	    cat ${HPY_DIR}${HPY_SETUP} | \
-		sed "s|'--disable-shared',|'--disable-shared', '--disable-dependency-tracking',|g" > \
-		${HPY_DIR}${HPY_SETUP2}
-	    HPY_SETUP=${HPY_SETUP2}
-	fi
-	# clean up
-	${RM}  ${tmpfile}.*
-    fi
+# 	# test these options on a C code
+# ${CAT} > ${tmpfile}.c <<EOF
+# int main(){
+# }
+# EOF
+# 	${HPY_CC} -E ${HPY_OPTS} ${tmpfile}.c -o ${tmpfile}.p  1>${DEVNULL} 2>&1
+# 	# if test fails, create back up setup2.py and make sure it will be used
+# 	if [ ! -e ${tmpfile}.p ] ; then
+# 	    cat ${HPY_DIR}${HPY_SETUP} | \
+# 		sed "s|'--disable-shared',|'--disable-shared', '--disable-dependency-tracking',|g" > \
+# 		${HPY_DIR}${HPY_SETUP2}
+# 	    HPY_SETUP=${HPY_SETUP2}
+# 	fi
+# 	# clean up
+# 	${RM}  ${tmpfile}.*
+#     fi
+
+    echoLn "enter C compiler you want to use [$CC]: "
+    read answer
+    [ "x$answer" != "x" ] && CC=$answer
+    HPY_CC="${CC}"
+
+    echoLn "enter C++ compiler you want to use [$CXX]: "
+    read answer
+    [ "x$answer" != "x" ] && CXX=$answer
+    HPY_CXX="${CXX}"
 
     # apply
     editHealpyMakefile
@@ -594,10 +608,12 @@ editHealpyMakefile () {
 
     echoLn "edit top Makefile for Python (healpy) ..."
     echo ${HPY_SETUP}
+    HPY_VARS="CC=\"${HPY_CC}\" CXX=\"${HPY_CXX}\" "
     mv -f Makefile Makefile_tmp
     ${CAT} Makefile_tmp |\
 	${SED} "s|^HPY_SETUP.*$|HPY_SETUP    = ${HPY_SETUP}|" |\
 	${SED} "s|^HPY_PYTHON.*$|HPY_PYTHON   = ${HPY_PYTHON}|" |\
+	${SED} "s|^HPY_VARS.*$|HPY_VARS     = ${HPY_VARS}|" |\
 	${SED} "s|^ALL\(.*\) healpy-void\(.*\)|ALL\1 healpy-all \2|" |\
 	${SED} "s|^TESTS\(.*\) healpy-void\(.*\)|TESTS\1 healpy-test \2|" |\
 	${SED} "s|^CLEAN\(.*\) healpy-void\(.*\)|CLEAN\1 healpy-clean \2|" |\
@@ -973,7 +989,7 @@ idl_config () {
 #-------------
 setF90Defaults () {
     FC="f90"
-    CC="cc"
+    CC="${CC-gcc}" # gcc unless already defined
     FFLAGS="-I\$(F90_INCDIR)"
     #CFLAGS="-O"
     CFLAGS="-O3 -std=c99"  # OK for gcc, icc and clang

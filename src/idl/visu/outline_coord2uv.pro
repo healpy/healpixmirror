@@ -38,7 +38,7 @@ endif
 return
 end
 
-pro outline_coord2uv, outline, coord_out, eul_mat, outline_uv, projection=projection, mollweide=mollweide, gnomic=gnomic, cartesian=cartesian, orthographic=orthographic, flip = flip, show=show, half_sky=half_sky, _extra = oplot_kw
+pro outline_coord2uv, outline, coord_out, eul_mat, outline_uv, projection=projection, mollweide=mollweide, gnomic=gnomic, cartesian=cartesian, orthographic=orthographic, flip = flip, show=show, half_sky=half_sky, thick_default = thick_default, _extra = oplot_kw
 ;+
 ; NAME:
 ;     outline_coord2uv
@@ -80,6 +80,7 @@ pro outline_coord2uv, outline, coord_out, eul_mat, outline_uv, projection=projec
 ;          if >0, only the vertices are shown
 ;          (default = 0)
 ;       - (SYM*) symbol size (same meaning as SYMSIZE in IDL)
+;       - (COL*) 1 or 2 color index in [0,255]
 ;
 ;     Coord_Out, Eul_Mat
 ;
@@ -229,7 +230,16 @@ for i=0L,n_outlines-1 do begin
         invalid_tags[iw] = 0
     endif
 
-
+    thick_factor = 1.0
+    iw = index_word(names,'THI',err=errword)
+    if (errword eq 0) then begin
+        thick_factor = c1.(iw)
+        nc1 = nc1 - 1
+        invalid_tags[iw] = 0
+    endif
+    ocuv_assert_scalar,thick_factor,'THICK', error=err_assert
+    ;;;;;;print,'THICK: ',thick_factor,thick_default,!P.thick
+    
     if (err_assert ne 0) then begin
         message,/info,'No outline is plotted'
         return
@@ -345,7 +355,7 @@ for i=0L,n_outlines-1 do begin
             endif 
             if do_show then begin
                 if (psym_type ge 9 && psym_type le 46) then  psym_type = cgsymcat(psym_type) ; call usersym and set psym_type to 8
-                oplot_sphere, u_cont, v_cont, line_type=pcont_type, _extra = oplot_kw, psym=psym_type, symsize=ssize, color=colors
+                oplot_sphere, u_cont, v_cont, line_type=pcont_type, _extra = oplot_kw, psym=psym_type, symsize=ssize, color=colors, thick= thick_default * thick_factor
             endif
         endif
     endfor ; loop on type

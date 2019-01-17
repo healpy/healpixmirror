@@ -929,7 +929,7 @@ endif else begin
 ; outlines on the map
     if (keyword_set(outline)) then begin
         for iol=0, n_elements(outline)-1 do begin
-            outline_coord2uv, outline[iol], coord_out, eul_mat, projection=proj_small, flip = flip, /show, thick = 3.*thick_dev, half_sky=half_sky
+            outline_coord2uv, outline[iol], coord_out, eul_mat, projection=proj_small, flip = flip, /show, thick_default = 3.*thick_dev, half_sky=half_sky
         endfor
     endif
 

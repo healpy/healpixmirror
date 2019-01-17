@@ -94,6 +94,7 @@ export HEALPIX_TARGET EXTERNAL_CFITSIO CFITSIO_EXT_LIB CFITSIO_EXT_INC
 
 HPY_SETUP  =
 HPY_PYTHON =
+HPY_VARS   =
 # ------------------------------- global rules -------------------------
 
 all: $(ALL)
@@ -292,7 +293,7 @@ cpp-void:
 
 healpy-all:
 	@cd src/healpy; \
-	$(HPY_PYTHON) $(HPY_SETUP) build ; \
+	$(HPY_VARS) $(HPY_PYTHON) $(HPY_SETUP) build ; \
 	$(HPY_PYTHON) $(HPY_SETUP) install --user --prefix=; \
 	cd ../..
 
