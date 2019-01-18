@@ -182,7 +182,6 @@ whereisCmd () {
 
 setCDefaults () {
 
-    CC="${CC-gcc}" # gcc unless already defined
     OPT="-O2 -Wall"
     C_AR="ar -rsv"
     PIC="-fPIC" # works with gcc, icc and clang
@@ -384,9 +383,7 @@ C_config () {
 setCppDefaults () {
 
     CXXDIR=${HEALPIX}/src/cxx
-    CC="${CC-gcc}" # gcc unless already defined
     CFLAGS="-O3 -ffast-math"
-    CXX="${CXX-g++}" # g++ unless already defined
     CXXFLAGS="-O3 -ffast-math"
     LDFLAGS=""
 
@@ -411,17 +408,44 @@ askCppUserMisc () {
     read answer
     [ "x$answer" != "x" ] && CXXFLAGS=$answer
 
+
+    echo "${FITSINC} ${FITSDIR}"
     CFITSIO_CFLAGS=""
-    echoLn "if fitsio.h is in a nonstandard include path, enter it here\n"
-    echoLn "(e.g. '/usr/local/include'): "
-    read answer
+    echoLn "enter path to fitsio.h"
+    if [ "$FITSINC" = "/usr/local/include" ]; then
+	echoLn ", in case of blank answer, autotools will look in standard locations []: "
+	read answer
+    else
+	echoLn " [$FITSINC]: "
+	read answer
+	[ "x$answer" = "x" ] && CFITSIO_CFLAGS="-I${FITSINC}"
+    fi
     [ "x$answer" != "x" ] && CFITSIO_CFLAGS="-I$answer"
 
     CFITSIO_LIBS=""
-    echoLn "if the cfitsio library is in a nonstandard path, enter it here\n"
-    echoLn "(e.g. '/usr/local/lib'): "
-    read answer
+    echoLn "enter path to cfitsio library"
+    if [ "$FITSDIR" = "/usr/local/lib" ]; then
+	echoLn ", in case of blank answer, autotools will look in standard locations []: "
+	read answer
+    else
+	echoLn "[$FITSDIR]: "
+	read answer
+	[ "x$answer" = "x" ] && CFITSIO_LIBS="-L${FITSDIR} -lcfitsio"
+    fi
     [ "x$answer" != "x" ] && CFITSIO_LIBS="-L$answer -lcfitsio"
+    echo $CFITSIO_CFLAGS  $CFITSIO_LIBS
+
+#     CFITSIO_CFLAGS=""
+#     echoLn "if fitsio.h is in a nonstandard include path, enter it here\n"
+#     echoLn "(e.g. '/usr/local/include'): "
+#     read answer
+#     [ "x$answer" != "x" ] && CFITSIO_CFLAGS="-I$answer"
+
+#     CFITSIO_LIBS=""
+#     echoLn "if the cfitsio library is in a nonstandard path, enter it here\n"
+#     echoLn "(e.g. '/usr/local/lib'): "
+#     read answer
+#     [ "x$answer" != "x" ] && CFITSIO_LIBS="-L$answer -lcfitsio"
 }
 #-------------
 editCppMakefile () {
@@ -539,8 +563,6 @@ Healpy_config () {  # for healpy 1.7.0
     HPY_SETUP='setup.py' # default setup
     HPY_SETUP2='setup2.py' # backup setup
     HPY_DIR='src/healpy/'
-    CC="${CC-gcc}" # gcc unless already defined
-    CXX="${CXX-g++}" # g++ unless already defined
 
     # ask for python command
     echoLn "Enter python command [$HPY_PYTHON] "
@@ -910,10 +932,11 @@ EOF
 #-------------
 setIdlDefaults () {
 
-    papersize="letter"
+    papersize="${papersize-letter}"
     media=" "
-    ps_com="gv"
-    gif_com="netscape"
+    ps_com="${ps_com-gv}"
+    pdf_com="${pdf_com-xpdf}"
+    gif_com="${gif_com-netscape}"
     [ "${OS}" = "Linux" ]   && gif_com="display"
     [ "${OS}" = "Darwin" ]  && gif_com="open"
     [ "${OS}" = "Darwin" ]  && pdf_com="open"
@@ -989,7 +1012,6 @@ idl_config () {
 #-------------
 setF90Defaults () {
     FC="f90"
-    CC="${CC-gcc}" # gcc unless already defined
     FFLAGS="-I\$(F90_INCDIR)"
     #CFLAGS="-O"
     CFLAGS="-O3 -std=c99"  # OK for gcc, icc and clang
@@ -2360,6 +2382,8 @@ setTopDefaults() {
     AWK="awk"
     BASENAME="basename"
     CAT="cat"
+    CC="${CC-gcc}"   # gcc unless already defined
+    CXX="${CXX-g++}" # g++ unless already defined
     CP="cp"
     DEVNULL="/dev/null"
     DIRNAME="dirname"
@@ -2388,8 +2412,8 @@ setTopDefaults() {
     MAKESET=0
 
     LIBFITS="cfitsio"
-    FITSDIR="/usr/local/lib"
-    FITSINC="/usr/local/include"
+    FITSDIR="${FITSDIR-/usr/local/lib}"
+    FITSINC="${FITSINC-/usr/local/include}"
     FITSPREFIX="/usr/local"
 
     edited_makefile=0
