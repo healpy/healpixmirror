@@ -1,4 +1,4 @@
-# input Makefile
+# input Makefile for HEALPix _HPV_
 # DO NOT EDIT!
 # Run ./configure to produce the Makefile instead.
 
@@ -17,9 +17,9 @@ HEALPIX=
 F90_BINDIR	=
 F90_INCDIR	=
 F90_LIBDIR	=
+F90_BUILDDIR    =
 FITSDIR	=
 LIBFITS	=
-F90_BUILDDIR    =
 
 F90_FFTSRC  =
 F90_ADDUS   =
@@ -312,3 +312,6 @@ healpy-tidy: healpy-clean
 healpy-distclean: healpy-tidy
 
 healpy-void:
+
+# ------------------------------- The End ----------------------------
+

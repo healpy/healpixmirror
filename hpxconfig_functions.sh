@@ -43,6 +43,14 @@
 # 2016-06-02: debugged gcc detection in IdentifyCCompiler
 # 2016-08-10: 1st attempt to better detect python version
 # 2017-06-21: deal with FL (Fawlty Language) IDL clone (generateConfFlFile)
+# 2019-01-21: call autotool configure for C++;
+#             read system variables
+#                            FITSDIR, FITSINC,  (used in C/C++/F90/python)
+#                            CC, CXX,           (C/C++/F90/python)
+#                            FC, DIRSUFF        (F90)
+#                            PYTHON             (python)
+#                            papersize, ps_com, pdf_com, gif_com  (IDL)
+#             to define proposed default values.
 #=====================================
 #=========== General usage ===========
 #=====================================
@@ -558,7 +566,7 @@ Cpp_config () {
 #-------------
 Healpy_config () {  # for healpy 1.7.0
 
-    HPY_PYTHON='python'
+    HPY_PYTHON="$PYTHON"
     tmpfile=to_be_removed
     HPY_SETUP='setup.py' # default setup
     HPY_SETUP2='setup2.py' # backup setup
@@ -1011,7 +1019,6 @@ idl_config () {
 #
 #-------------
 setF90Defaults () {
-    FC="f90"
     FFLAGS="-I\$(F90_INCDIR)"
     #CFLAGS="-O"
     CFLAGS="-O3 -std=c99"  # OK for gcc, icc and clang
@@ -1021,7 +1028,7 @@ setF90Defaults () {
     F90_INCDIR="./include"
     F90_LIBDIR="./lib"
     F90_BUILDDIR="./build"
-    DIRSUFF=""
+    DIRSUFF="${DIRSUFF}"
     MOD="mod"
     #OS=`uname -s`
     FFTSRC="healpix_fft"
@@ -1048,13 +1055,15 @@ setF90Defaults () {
 
     case $OS in
 	AIX)
-	    FC="xlf90_r";;
+	    FC="${FC-xlf90_r}";;
 	Linux)
-	    FC="";;
+	    FC="${FC}";;
 	Darwin)
-	    FC="";;
+	    FC="${FC}";;
 	SUPER-UX)
-	    FC="f90";;
+	    FC="${FC-f90}";;
+	*)
+	    FC="${FC-f90}";;
     esac
 
     FCNAME="$OS Native compiler"
@@ -1996,6 +2005,10 @@ editF90Makefile () {
     echoLn "Editing top Makefile for F90 ..."
 #    [ -r Makefile ] && mv Makefile Makefile.bak
 
+    F90_BINDIR_H=`echo ${F90_BINDIR} | sed "s|${HEALPIX}|\\$(HEALPIX)|g"`
+    F90_INCDIR_H=`echo ${F90_BINDIR} | sed "s|${HEALPIX}|\\$(HEALPIX)|g"`
+    F90_LIBDIR_H=`echo ${F90_BINDIR} | sed "s|${HEALPIX}|\\$(HEALPIX)|g"`
+    F90_BUILDDIR_H=`echo ${F90_BUILDDIR} | sed "s|${HEALPIX}|\\$(HEALPIX)|g"`
     mv -f Makefile Makefile_tmp
     ${CAT} Makefile_tmp |\
 	${SED} "s|^F90_FC.*$|F90_FC	= $FC|" |\
@@ -2006,10 +2019,14 @@ editF90Makefile () {
 	${SED} "s|^HEALPIX=.*$|HEALPIX	= $HEALPIX|" |\
 	${SED} "s|^FITSDIR.*$|FITSDIR	= $FITSDIR|" |\
 	${SED} "s|^LIBFITS.*$|LIBFITS	= $LIBFITS|" |\
-	${SED} "s|^F90_BINDIR.*$|F90_BINDIR	= $F90_BINDIR|" |\
-	${SED} "s|^F90_INCDIR.*$|F90_INCDIR	= $F90_INCDIR|" |\
-	${SED} "s|^F90_LIBDIR.*$|F90_LIBDIR	= $F90_LIBDIR|" |\
-	${SED} "s|^F90_BUILDDIR.*$|F90_BUILDDIR	= $F90_BUILDDIR|" |\
+# 	${SED} "s|^F90_BINDIR.*$|F90_BINDIR	= $F90_BINDIR|" |\
+# 	${SED} "s|^F90_INCDIR.*$|F90_INCDIR	= $F90_INCDIR|" |\
+# 	${SED} "s|^F90_LIBDIR.*$|F90_LIBDIR	= $F90_LIBDIR|" |\
+# 	${SED} "s|^F90_BUILDDIR.*$|F90_BUILDDIR	= $F90_BUILDDIR|" |\
+	${SED} "s|^F90_BINDIR.*$|F90_BINDIR	= $F90_BINDIR_H|" |\
+	${SED} "s|^F90_INCDIR.*$|F90_INCDIR	= $F90_INCDIR_H|" |\
+	${SED} "s|^F90_LIBDIR.*$|F90_LIBDIR	= $F90_LIBDIR_H|" |\
+	${SED} "s|^F90_BUILDDIR.*$|F90_BUILDDIR	= $F90_BUILDDIR_H|" |\
 	${SED} "s|^F90_AR.*$|F90_AR        = $F90_AR|" |\
 	${SED} "s|^F90_FFTSRC.*$|F90_FFTSRC	= $FFTSRC|" |\
 	${SED} "s|^F90_ADDUS.*$|F90_ADDUS	= $ADDUS|" |\
@@ -2396,6 +2413,7 @@ setTopDefaults() {
     NM="nm"
     PRINTF="printf"
     PWD="pwd"
+    PYTHON="${PYTHON-python}" # python unless already defined
     RM="/bin/rm -f"
     RMDIR="rmdir"
     SED="sed"
