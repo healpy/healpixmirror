@@ -17,11 +17,7 @@ src_libsharp = \
   libsharp/sharp_almhelpers.c \
   libsharp/sharp_almhelpers.h \
   libsharp/sharp_core.c \
-  libsharp/sharp_core_avx.c \
-  libsharp/sharp_core_avx2.c \
-  libsharp/sharp_core_avx512f.c \
-  libsharp/sharp_core_fma.c \
-  libsharp/sharp_core_fma4.c \
+  libsharp/sharp_core_inc.c \
   libsharp/sharp_geomhelpers.c \
   libsharp/sharp_geomhelpers.h \
   libsharp/sharp_internal.h \
@@ -110,7 +106,6 @@ src_healpix_cxx_fits= \
   Healpix_cxx/moc_fitsio.cc
 
 EXTRA_DIST = \
-  libsharp/sharp_core_inc.c \
   cxxsupport/font_data.inc \
   pocketfft/LICENSE.md
 
@@ -152,7 +147,31 @@ include_HEADERS = \
   Healpix_cxx/weight_utils.h
 
 libhealpix_cxx_la_SOURCES = $(src_c_utils) $(src_libpocketfft) $(src_libsharp) $(src_cxxsupport) $(src_cxxsupport_fits) $(src_healpix_cxx) $(src_healpix_cxx_fits) $(src_healpix_cxx_mod)
+
+if HAVE_MULTIARCH
+
+libavx_la_SOURCES = libsharp/sharp_core_inc.c
+libavx2_la_SOURCES = libsharp/sharp_core_inc.c
+libfma_la_SOURCES = libsharp/sharp_core_inc.c
+libfma4_la_SOURCES = libsharp/sharp_core_inc.c
+libavx512f_la_SOURCES = libsharp/sharp_core_inc.c
+
+noinst_LTLIBRARIES = libavx.la libavx2.la libfma.la libfma4.la libavx512f.la
+
+libavx_la_CFLAGS = ${AM_CFLAGS} -mavx -DARCH=avx
+libavx2_la_CFLAGS = ${AM_CFLAGS} -mavx2 -DARCH=avx2
+libfma_la_CFLAGS = ${AM_CFLAGS} -mfma -DARCH=fma
+libfma4_la_CFLAGS = ${AM_CFLAGS} -mfma4 -DARCH=fma4
+libavx512f_la_CFLAGS = ${AM_CFLAGS} -mavx512f -DARCH=avx512f
+
+libhealpix_cxx_la_LIBADD = libavx.la libavx2.la libfma.la libfma4.la libavx512f.la $(CFITSIO_LIBS)
+
+else
+
 libhealpix_cxx_la_LIBADD = $(CFITSIO_LIBS)
+
+endif
+
 libhealpix_cxx_la_LDFLAGS = -version-info 2:1:0
 
 bin_PROGRAMS = alm2map_cxx anafast_cxx calc_powspec hotspots_cxx map2tga \

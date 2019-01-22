@@ -1,9 +1,7 @@
-#define XCONCATX(a,b) a##_##b
-#define XCONCATX2(a,b) XCONCATX(a,b)
-#define XARCH(a) XCONCATX2(a,ARCH)
-
 #define ARCH default
+#define GENERIC_ARCH
 #include "sharp_core_inc.c"
+#undef GENERIC_ARCH
 #undef ARCH
 
 typedef void (*t_inner_loop) (sharp_job *job, const int *ispair,
@@ -18,7 +16,12 @@ static t_veclen veclen_ = NULL;
 static t_max_nvec max_nvec_ = NULL;
 static t_architecture architecture_ = NULL;
 
-#if defined(__GNUC__) && defined (__x86_64__) && (__GNUC__>=6)
+#ifdef MULTIARCH
+
+#if (defined(___AVX512F__) || defined(__FMA4__) || defined(__FMA__) || \
+     defined(__AVX2__) || defined(__AVX__))
+#error MULTIARCH specified but platform-specific flags detected
+#endif
 
 #define DECL(arch) \
 static int XCONCATX2(have,arch)(void) \
@@ -39,27 +42,17 @@ int XCONCATX2(sharp_veclen,arch) (void); \
 int XCONCATX2(sharp_max_nvec,arch) (int spin); \
 const char *XCONCATX2(sharp_architecture,arch) (void);
 
-#if (!defined(__AVX512F__))
 DECL(avx512f)
-#endif
-#if (!defined(__FMA4__))
 DECL(fma4)
-#endif
-#if (!defined(__FMA__))
 DECL(fma)
-#endif
-#if (!defined(__AVX2__))
 DECL(avx2)
-#endif
-#if (!defined(__AVX__))
 DECL(avx)
-#endif
 
 #endif
 
 static void assign_funcs(void)
   {
-#if defined(__GNUC__) && defined (__x86_64__) && (__GNUC__>=6)
+#ifdef MULTIARCH
 #define DECL2(arch) \
   if (XCONCATX2(have,arch)()) \
     { \
@@ -69,21 +62,11 @@ static void assign_funcs(void)
     architecture_ = XCONCATX2(sharp_architecture,arch); \
     return; \
     }
-#if (!defined(__AVX512F__))
 DECL2(avx512f)
-#endif
-#if (!defined(__FMA4__))
 DECL2(fma4)
-#endif
-#if (!defined(__FMA__))
 DECL2(fma)
-#endif
-#if (!defined(__AVX2__))
 DECL2(avx2)
-#endif
-#if (!defined(__AVX__))
 DECL2(avx)
-#endif
 #endif
   inner_loop_ = inner_loop_default;
   veclen_ = sharp_veclen_default;

@@ -29,6 +29,12 @@
  *  \author Martin Reinecke
  */
 
+#if (defined(MULTIARCH) || defined(GENERIC_ARCH))
+
+#define XCONCATX(a,b) a##_##b
+#define XCONCATX2(a,b) XCONCATX(a,b)
+#define XARCH(a) XCONCATX2(a,ARCH)
+
 #include <complex.h>
 #include <math.h>
 #include <string.h>
@@ -764,6 +770,7 @@ NOINLINE static void alm2map_deriv1_kernel(sxdata_v * restrict d,
   const sharp_ylmgen_dbl2 * restrict fx, const dcmplx * restrict alm,
   int l, int lmax, int nv2)
   {
+  int lsave=l;
   while (l<=lmax)
     {
     Tv fx10=vload(fx[l+1].a),fx11=vload(fx[l+1].b);
@@ -773,20 +780,30 @@ NOINLINE static void alm2map_deriv1_kernel(sxdata_v * restrict d,
     for (int i=0; i<nv2; ++i)
       {
       d->l1p[i] = (d->cth[i]*fx10 - fx11)*d->l2p[i] - d->l1p[i];
-      d->l1m[i] = (d->cth[i]*fx10 + fx11)*d->l2m[i] - d->l1m[i];
-      Tv lw=d->l2p[i]+d->l2m[i];
-      d->p1pr[i] += ar1*lw;
-      d->p1pi[i] += ai1*lw;
-      Tv lx=d->l2m[i]-d->l2p[i];
-      d->p2mr[i] += ai1*lx;
-      d->p2mi[i] -= ar1*lx;
-      lw=d->l1p[i]+d->l1m[i];
-      d->p2pr[i] += ar2*lw;
-      d->p2pi[i] += ai2*lw;
-      lx=d->l1m[i]-d->l1p[i];
-      d->p1mr[i] += ai2*lx;
-      d->p1mi[i] -= ar2*lx;
+      d->p1pr[i] += ar1*d->l2p[i];
+      d->p1pi[i] += ai1*d->l2p[i];
+
+      d->p1mr[i] -= ai2*d->l1p[i];
+      d->p1mi[i] += ar2*d->l1p[i];
       d->l2p[i] = (d->cth[i]*fx20 - fx21)*d->l1p[i] - d->l2p[i];
+      }
+    l+=2;
+    }
+  l=lsave;
+  while (l<=lmax)
+    {
+    Tv fx10=vload(fx[l+1].a),fx11=vload(fx[l+1].b);
+    Tv fx20=vload(fx[l+2].a),fx21=vload(fx[l+2].b);
+    Tv ar1=vload(creal(alm[l  ])), ai1=vload(cimag(alm[l  ])),
+       ar2=vload(creal(alm[l+1])), ai2=vload(cimag(alm[l+1]));
+    for (int i=0; i<nv2; ++i)
+      {
+      d->l1m[i] = (d->cth[i]*fx10 + fx11)*d->l2m[i] - d->l1m[i];
+      d->p2mr[i] += ai1*d->l2m[i];
+      d->p2mi[i] -= ar1*d->l2m[i];
+
+      d->p2pr[i] += ar2*d->l1m[i];
+      d->p2pi[i] += ai2*d->l1m[i];
       d->l2m[i] = (d->cth[i]*fx20 + fx21)*d->l1m[i] - d->l2m[i];
       }
     l+=2;
@@ -801,7 +818,7 @@ NOINLINE static void calc_alm2map_deriv1(sharp_job * restrict job,
   iter_to_ieee_spin(gen, d, &l, nv2);
   job->opcnt += (l-gen->mhi) * 7*nth;
   if (l>lmax) return;
-  job->opcnt += (lmax+1-l) * 17*nth;
+  job->opcnt += (lmax+1-l) * 15*nth;
 
   const sharp_ylmgen_dbl2 * restrict fx = gen->coef;
   const dcmplx * restrict alm=job->almtmp;
@@ -825,34 +842,32 @@ NOINLINE static void calc_alm2map_deriv1(sharp_job * restrict job,
       {
       d->l1p[i] = (d->cth[i]*fx10 - fx11)*d->l2p[i] - d->l1p[i];
       d->l1m[i] = (d->cth[i]*fx10 + fx11)*d->l2m[i] - d->l1m[i];
-      Tv lw=d->l2p[i]*d->cfp[i]+d->l2m[i]*d->cfm[i];
-      d->p1pr[i] += ar1*lw;
-      d->p1pi[i] += ai1*lw;
-      Tv lx=d->l2m[i]*d->cfm[i]-d->l2p[i]*d->cfp[i];
-      d->p2mr[i] += ai1*lx;
-      d->p2mi[i] -= ar1*lx;
-      lw=d->l1p[i]*d->cfp[i]+d->l1m[i]*d->cfm[i];
-      d->p2pr[i] += ar2*lw;
-      d->p2pi[i] += ai2*lw;
-      lx=d->l1m[i]*d->cfm[i]-d->l1p[i]*d->cfp[i];
-      d->p1mr[i] += ai2*lx;
-      d->p1mi[i] -= ar2*lx;
+
+      Tv l2p=d->l2p[i]*d->cfp[i], l2m=d->l2m[i]*d->cfm[i];
+      Tv l1m=d->l1m[i]*d->cfm[i], l1p=d->l1p[i]*d->cfp[i];
+
+      d->p1pr[i] += ar1*l2p;
+      d->p1pi[i] += ai1*l2p;
+      d->p1mr[i] -= ai2*l1p;
+      d->p1mi[i] += ar2*l1p;
+
+      d->p2pr[i] += ar2*l1m;
+      d->p2pi[i] += ai2*l1m;
+      d->p2mr[i] += ai1*l2m;
+      d->p2mi[i] -= ar1*l2m;
+
       d->l2p[i] = (d->cth[i]*fx20 - fx21)*d->l1p[i] - d->l2p[i];
       d->l2m[i] = (d->cth[i]*fx20 + fx21)*d->l1m[i] - d->l2m[i];
       if (rescale(&d->l1p[i], &d->l2p[i], &d->scp[i], vload(sharp_ftol)))
-        {
         getCorfac(d->scp[i], &d->cfp[i], gen->cf);
-        full_ieee &= vallTrue(vge(d->scp[i],vload(sharp_minscale)));
-        }
+      full_ieee &= vallTrue(vge(d->scp[i],vload(sharp_minscale)));
       if (rescale(&d->l1m[i], &d->l2m[i], &d->scm[i], vload(sharp_ftol)))
-        {
         getCorfac(d->scm[i], &d->cfm[i], gen->cf);
-        full_ieee &= vallTrue(vge(d->scm[i],vload(sharp_minscale)));
-        }
+      full_ieee &= vallTrue(vge(d->scm[i],vload(sharp_minscale)));
       }
     l+=2;
     }
-  if (l>lmax) return;
+//  if (l>lmax) return;
 
   for (int i=0; i<nv2; ++i)
     {
@@ -862,6 +877,15 @@ NOINLINE static void calc_alm2map_deriv1(sharp_job * restrict job,
     d->l2m[i] *= d->cfm[i];
     }
   alm2map_deriv1_kernel(d, fx, alm, l, lmax, nv2);
+
+  for (int i=0; i<nv2; ++i)
+    {
+    Tv tmp;
+    tmp = d->p1pr[i]; d->p1pr[i] -= d->p2mi[i]; d->p2mi[i] += tmp;
+    tmp = d->p1pi[i]; d->p1pi[i] += d->p2mr[i]; d->p2mr[i] -= tmp;
+    tmp = d->p1mr[i]; d->p1mr[i] += d->p2pi[i]; d->p2pi[i] -= tmp;
+    tmp = d->p1mi[i]; d->p1mi[i] -= d->p2pr[i]; d->p2pr[i] += tmp;
+    }
   }
 
 
@@ -1179,3 +1203,5 @@ const char *XARCH(sharp_architecture)(void)
   {
   return xstr(ARCH);
   }
+
+#endif

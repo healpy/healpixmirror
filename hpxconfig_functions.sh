@@ -391,8 +391,8 @@ C_config () {
 setCppDefaults () {
 
     CXXDIR=${HEALPIX}/src/cxx
-    CFLAGS="-O3 -ffast-math"
-    CXXFLAGS="-O3 -ffast-math"
+    CFLAGS="-DMULTIARCH -O3 -ffast-math -fopenmp"
+    CXXFLAGS="-O3 -ffast-math -fopenmp"
     LDFLAGS=""
 
     CXXPREFIX=$HEALPIX
@@ -510,7 +510,7 @@ Cpp_config () {
 }
 
 #=====================================
-#=========== healpy Python pakage ===========
+#=========== healpy Python package ===========
 #=====================================
 # #-------------
 # Healpy_config () {
@@ -594,7 +594,7 @@ Healpy_config () {  # for healpy 1.7.0
 	crashAndBurn
     fi
 
-    
+
 #     # special treatement for MacOSX
 #     if [ "${OS}" = "Darwin" ]; then
 # 	# find out compiler and options used by python (and therefore healpy in setup.py)

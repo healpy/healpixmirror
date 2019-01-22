@@ -24,15 +24,6 @@ dnl Enable silent build rules if this version of Automake supports them
 dnl
 m4_ifdef([AM_SILENT_RULES], [AM_SILENT_RULES([yes])])
 
-dnl
-dnl Introduce --enable-native-optimizations command line argument to turn on
-dnl -march=native compiler flag, disabled by default.
-dnl
-AC_ARG_ENABLE(
-    [native-optimizations],
-    [AS_HELP_STRING([--enable-native-optimizations], [Enable non-portable optimizations for your own CPU by compiling with -march=native @<:@default=no@:>@])]
-)
-
 AC_PROG_CC_C99
 AC_OPENMP
 CPPFLAGS="$CPPFLAGS $OPENMP_CFLAGS"
@@ -44,6 +35,9 @@ AX_CXX_COMPILE_STDCXX_11
 AC_OPENMP
 CXXFLAGS="$CXXFLAGS $OPENMP_CFLAGS"
 AC_LANG_POP([C++])
+
+tmpval=`echo $CFLAGS | grep -c '\-DMULTIARCH'`
+AM_CONDITIONAL([HAVE_MULTIARCH], [test $tmpval -gt 0])
 
 dnl
 dnl Determine the compiler flags (CFITSIO_CFLAGS)
