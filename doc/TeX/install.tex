@@ -457,6 +457,17 @@ An online help is available with
 \texttt{./configure~-v} 
 will return the \healpix release number (currently \hpxversion) and exit.
 
+Starting with version 3.60, if the environment variables 
+      \texttt{FITSDIR, FITSINC},  (relevant for C/C++/F90/python),
+      \texttt{CC, CXX},           (C/C++/F90/python),
+      \texttt{FC, DIRSUFF}        (F90),
+      \texttt{PYTHON}             (python),
+  and \texttt{papersize, ps\_com, pdf\_com, gif\_com}  (IDL)
+%see configure -h
+are defined prior to calling the \texttt{configure} script, they will be used
+as default values in the interactive configuration process.
+
+
 \subsubsection{Configuration profile}
 \label{subsub:conf}
 A feature introduced in previous releases and enhanced since v2.10, is that 

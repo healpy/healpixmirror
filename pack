@@ -49,6 +49,14 @@ updateVersion () {
       $tmpfile
   mv $tmpfile $infile
 
+  # update Makefile.in
+  infile='./Makefile.in'
+  echoBlu "editing ${infile}"
+  cat $infile |\
+      sed "s|_HPV_|$version|g" >\
+      $tmpfile
+  mv $tmpfile $infile
+
   # update main directory Version file
   infile='./Version'
   echoBlu "editing ${infile}"
@@ -56,6 +64,7 @@ updateVersion () {
       sed "s|$current|$version|g" >\
       $tmpfile
   mv $tmpfile $infile
+
 
   # update IDL init_healpix file
   infile='./src/idl/misc/init_healpix.pro'

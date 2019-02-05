@@ -26,6 +26,17 @@
 # version number
 HPXVERSION=3.50
 
+#----------------------------------------
+usage="Usage: ./$(basename $0) ['?'|-h|-L|-v]"
+usage2="Type    ./$(basename $0) -h    for extended help"
+usage3="    If the environment variables\n\tFITSDIR, FITSINC,\t\t(used in C/C++/F90/python)\n \
+    \tCC, CXX,\t\t\t(C/C++/F90/python)\n\
+    \tFC, DIRSUFF\t\t\t(F90)\n\
+    \tPYTHON\t\t\t\t(python)\n\
+    \tpapersize, ps_com, pdf_com, gif_com  (IDL)\n\
+ are defined prior to calling 'configure', they will \n\
+ be used as default values in the interactive configuration process."
+# see install.pdf
 #-------------
 welcome () {
     echo
@@ -36,6 +47,9 @@ welcome () {
     echo "This interactive script takes care of the configuration and compilation"
     echo "of the C, C++, F90, IDL and Python packages of the Healpix distribution."
     echo "Default answers are shown in brakets []."
+    echo
+    echo "${usage3}"
+    echo
 
 }
 
@@ -48,8 +62,6 @@ setTopDefaults
 HPX_CONF_DIR=${HPX_CONF_DIR_HOME}
 
 # ----------------- options parsing ----------------------
-usage="Usage: ./$(basename $0) [?|-h|-L|-v]"
-usage2="Type    ./$(basename $0) -h    for extended help"
 # do not accept options starting with a non-dash or with double dash
 if [ ${#} -gt 0 ]; then
     arg=$1
@@ -74,7 +86,7 @@ do
 	echo
 	echo "${usage}"
 	echo
-	echo "?   Print usage and exit"
+	echo "'?'   Print usage and exit"
 	echo
 	echo "-h  Print this help message and exit"
 	echo
@@ -83,6 +95,8 @@ do
 	echo "    Recommended when doing a system wide installation to be used by several users."
 	echo
 	echo "-v  Print Healpix version and exit"
+	echo
+	echo "${usage3}"
 	echo
 	exit 0
 	;;
