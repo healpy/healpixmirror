@@ -42,7 +42,9 @@ int XCONCATX2(sharp_veclen,arch) (void); \
 int XCONCATX2(sharp_max_nvec,arch) (int spin); \
 const char *XCONCATX2(sharp_architecture,arch) (void);
 
+#if (!defined(__APPLE__))
 DECL(avx512f)
+#endif
 DECL(fma4)
 DECL(fma)
 DECL(avx2)
@@ -62,7 +64,9 @@ static void assign_funcs(void)
     architecture_ = XCONCATX2(sharp_architecture,arch); \
     return; \
     }
+#if (!defined(__APPLE__))
 DECL2(avx512f)
+#endif
 DECL2(fma4)
 DECL2(fma)
 DECL2(avx2)

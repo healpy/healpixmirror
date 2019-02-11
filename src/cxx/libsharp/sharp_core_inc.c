@@ -29,6 +29,9 @@
  *  \author Martin Reinecke
  */
 
+// FIXME: special ugly workaround for problems on OSX
+#if (!defined(__APPLE__)) || (!defined(__AVX512F__))
+
 #if (defined(MULTIARCH) || defined(GENERIC_ARCH))
 
 #define XCONCATX(a,b) a##_##b
@@ -1203,5 +1206,7 @@ const char *XARCH(sharp_architecture)(void)
   {
   return xstr(ARCH);
   }
+
+#endif
 
 #endif
