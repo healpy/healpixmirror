@@ -2052,8 +2052,8 @@ editF90Makefile () {
 #    [ -r Makefile ] && mv Makefile Makefile.bak
 
     F90_BINDIR_H=`echo ${F90_BINDIR} | sed "s|${HEALPIX}|\\$(HEALPIX)|g"`
-    F90_INCDIR_H=`echo ${F90_BINDIR} | sed "s|${HEALPIX}|\\$(HEALPIX)|g"`
-    F90_LIBDIR_H=`echo ${F90_BINDIR} | sed "s|${HEALPIX}|\\$(HEALPIX)|g"`
+    F90_INCDIR_H=`echo ${F90_INCDIR} | sed "s|${HEALPIX}|\\$(HEALPIX)|g"`
+    F90_LIBDIR_H=`echo ${F90_LIBDIR} | sed "s|${HEALPIX}|\\$(HEALPIX)|g"`
     F90_BUILDDIR_H=`echo ${F90_BUILDDIR} | sed "s|${HEALPIX}|\\$(HEALPIX)|g"`
     mv -f Makefile Makefile_tmp
     ${CAT} Makefile_tmp |\
