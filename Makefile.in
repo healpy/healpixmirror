@@ -82,7 +82,11 @@ C_MKFLAGS = CC="$(C_CC)" PIC="$(C_PIC)" OPT="$(C_OPT)" \
 	EXTRA_LIB="$(C_EXTRA_LIB)" \
 	RM="$(RM)"
 
+# ------------------------------ variables for libsharp ---------------------
+# sharp configuration
+
 # ------------------------------ variables for C++ --------------------------
+# C++ configuration
 
 HEALPIX_TARGET =
 EXTERNAL_CFITSIO=yes

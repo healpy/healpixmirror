@@ -419,7 +419,8 @@ editSharpMakefile () {
 	${SED} "s|^TESTS\(.*\) sharp-void \(.*\)|TESTS\1 sharp-test \2|" |\
 	${SED} "s|^CLEAN\(.*\) sharp-void \(.*\)|CLEAN\1 sharp-clean \2|" |\
 	${SED} "s|^DISTCLEAN\(.*\) sharp-void \(.*\)|DISTCLEAN\1 sharp-distclean \2|" |\
-	${SED} "s|^TIDY\(.*\) sharp-void \(.*\)|TIDY\1 sharp-tidy \2|" > Makefile
+	${SED} "s|^TIDY\(.*\) sharp-void \(.*\)|TIDY\1 sharp-tidy \2|" |\
+	${SED} "s|^# sharp configuration.*|# sharp configuration: cd src/common_libraries/libsharp; CC=\"${CC}\" CFLAGS=\"${CFLAGS}\" LDFLAGS=\"${LDFLAGS}\" ./configure --prefix=${SHARPPREFIX}|" > Makefile
 
     echo " done."
     edited_makefile=1
@@ -466,7 +467,7 @@ askCppUserMisc () {
     [ "x$answer" != "x" ] && CXXFLAGS=$answer
 
 
-    echo "${FITSINC} ${FITSDIR}"
+    #echo "${FITSINC} ${FITSDIR}"
     CFITSIO_CFLAGS=""
     echoLn "enter path to fitsio.h"
     if [ "$FITSINC" = "/usr/local/include" ]; then
@@ -496,15 +497,16 @@ askCppUserMisc () {
 editCppMakefile () {
     echoLn "edit top Makefile for C++ ..."
 
-    cd src/cxx; \
-    CC="${CC}" CFLAGS="${CFLAGS}" CXX="${CXX}" CXXFLAGS="${CXXFLAGS}" LDFLAGS="${LDFLAGS}" CFITSIO_CFLAGS="${CFITSIO_CFLAGS}" CFITSIO_LIBS="${CFITSIO_LIBS}" ./configure --prefix=${CXXPREFIX} || crashAndBurn; cd ../..
+    (cd src/cxx; \
+    CC="${CC}" CFLAGS="${CFLAGS}" CXX="${CXX}" CXXFLAGS="${CXXFLAGS}" LDFLAGS="${LDFLAGS}" CFITSIO_CFLAGS="${CFITSIO_CFLAGS}" CFITSIO_LIBS="${CFITSIO_LIBS}" ./configure --prefix=${CXXPREFIX} || crashAndBurn)
     mv -f Makefile Makefile_tmp
     ${CAT} Makefile_tmp |\
 	${SED} "s|^ALL\(.*\) cpp-void \(.*\)|ALL\1 cpp-all \2|" |\
 	${SED} "s|^TESTS\(.*\) cpp-void \(.*\)|TESTS\1 cpp-test \2|" |\
 	${SED} "s|^CLEAN\(.*\) cpp-void \(.*\)|CLEAN\1 cpp-clean \2|" |\
 	${SED} "s|^DISTCLEAN\(.*\) cpp-void \(.*\)|DISTCLEAN\1 cpp-distclean \2|" |\
-	${SED} "s|^TIDY\(.*\) cpp-void \(.*\)|TIDY\1 cpp-tidy \2|" > Makefile
+	${SED} "s|^TIDY\(.*\) cpp-void \(.*\)|TIDY\1 cpp-tidy \2|" |\
+	${SED} "s|^# C++ configuration.*$|# C++ configuration: cd src/cxx; CC=\"${CC}\" CFLAGS=\"${CFLAGS}\" CXX=\"${CXX}\" CXXFLAGS=\"${CXXFLAGS}\" LDFLAGS=\"${LDFLAGS}\" CFITSIO_CFLAGS=\"${CFITSIO_CFLAGS}\" CFITSIO_LIBS=\"${CFITSIO_LIBS}\" ./configure --prefix=${CXXPREFIX}|"> Makefile
 
     echo " done."
     edited_makefile=1
