@@ -1,4 +1,4 @@
-static void X(hp_map2alm) (int nside, int lmax, int mmax, FLT *map,
+void X(map2alm) (int nside, int lmax, int mmax, FLT *map,
   FLT *alm, double *zbounds, double *wgt)
   {
   sharp_geom_info *ginfo;
@@ -14,7 +14,7 @@ static void X(hp_map2alm) (int nside, int lmax, int mmax, FLT *map,
   sharp_destroy_geom_info(ginfo);
   }
 
-static void X(hp_map2alm_pol) (int nside, int lmax, int mmax, FLT *map,
+void X(map2alm_pol) (int nside, int lmax, int mmax, FLT *map,
   FLT *alm, double *zbounds, double *wgt)
   {
   sharp_geom_info *ginfo;
@@ -35,7 +35,7 @@ static void X(hp_map2alm_pol) (int nside, int lmax, int mmax, FLT *map,
   sharp_destroy_geom_info(ginfo);
   }
 
-static void X(hp_map2alm_spin) (int nside, int lmax, int mmax, int spin,
+void X(map2alm_spin) (int nside, int lmax, int mmax, int spin,
   FLT *map, FLT *alm, double *zbounds, double *wgt)
   {
   sharp_geom_info *ginfo;
@@ -55,7 +55,7 @@ static void X(hp_map2alm_spin) (int nside, int lmax, int mmax, int spin,
   sharp_destroy_geom_info(ginfo);
   }
 
-static void X(hp_alm2map) (int nside, int lmax, int mmax, FLT *alm,
+void X(alm2map) (int nside, int lmax, int mmax, FLT *alm,
 			   FLT *map, double *zbounds)
   {
   sharp_geom_info *ginfo;
@@ -75,7 +75,7 @@ static void X(hp_alm2map) (int nside, int lmax, int mmax, FLT *alm,
   sharp_destroy_geom_info(ginfo);
   }
 
-static void X(hp_alm2map_pol) (int nside, int lmax, int mmax, FLT *alm,
+void X(alm2map_pol) (int nside, int lmax, int mmax, FLT *alm,
 			       FLT *map, double *zbounds)
   {
   sharp_geom_info *ginfo;
@@ -100,7 +100,7 @@ static void X(hp_alm2map_pol) (int nside, int lmax, int mmax, FLT *alm,
   sharp_destroy_geom_info(ginfo);
   }
 
-static void X(hp_alm2map_spin) (int nside, int lmax, int mmax, int spin,
+void X(alm2map_spin) (int nside, int lmax, int mmax, int spin,
   FLT *alm, FLT *map, double *zbounds)
   {
   sharp_geom_info *ginfo;
