@@ -16,11 +16,7 @@
  *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-/*
- *  libsharp is being developed at the Max-Planck-Institut fuer Astrophysik
- *  and financially supported by the Deutsches Zentrum fuer Luft- und Raumfahrt
- *  (DLR).
- */
+/* libsharp is being developed at the Max-Planck-Institut fuer Astrophysik */
 
 /*! \file sharp_core_inc.c
  *  Computational core
@@ -41,10 +37,10 @@
 #include <complex.h>
 #include <math.h>
 #include <string.h>
-#include "sharp_vecsupport.h"
-#include "sharp.h"
-#include "sharp_internal.h"
-#include "c_utils.h"
+#include "libsharp/sharp_vecsupport.h"
+#include "libsharp/sharp.h"
+#include "libsharp/sharp_internal.h"
+#include "c_utils/c_utils.h"
 
 typedef complex double dcmplx;
 

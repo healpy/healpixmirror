@@ -16,21 +16,17 @@
  *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-/*
- *  libsharp is being developed at the Max-Planck-Institut fuer Astrophysik
- *  and financially supported by the Deutsches Zentrum fuer Luft- und Raumfahrt
- *  (DLR).
- */
+/* libsharp is being developed at the Max-Planck-Institut fuer Astrophysik */
 
 /*! \file sharp_almhelpers.c
  *  Spherical transform library
  *
- *  Copyright (C) 2008-2016 Max-Planck-Society
+ *  Copyright (C) 2008-2019 Max-Planck-Society
  *  \author Martin Reinecke
  */
 
-#include "sharp_almhelpers.h"
-#include "c_utils.h"
+#include "libsharp/sharp_almhelpers.h"
+#include "c_utils/c_utils.h"
 
 void sharp_make_triangular_alm_info (int lmax, int mmax, int stride,
   sharp_alm_info **alm_info)

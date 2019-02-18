@@ -33,7 +33,7 @@
 #include "alm.h"
 #include "healpix_map.h"
 #include "xcomplex.h"
-#include "sharp_cxx.h"
+#include "libsharp/sharp_cxx.h"
 
 using namespace std;
 

@@ -263,6 +263,32 @@ c-distclean:
 
 c-void:
 
+# ------------------------------- libsharp rules ----------------------------
+
+sharp-all:
+	@cd src/common_libraries/libsharp; \
+	$(MAKE) install; \
+	cd ../../..
+
+sharp-test: cpp-all
+	@cd src/common_libraries/libsharp;   \
+	$(MAKE) check ; \
+	cd ../../..
+
+sharp-clean:
+	@cd src/common_libraries/libsharp; \
+	$(MAKE) clean; \
+	cd ../../..
+
+sharp-tidy:
+	@cd src/common_libraries/libsharp; \
+	$(MAKE) distclean ; \
+	cd ../../..
+
+sharp-distclean: sharp-tidy
+
+sharp-void:
+
 # ------------------------------- C++ rules ----------------------------
 
 cpp-all:

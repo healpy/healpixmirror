@@ -49,7 +49,7 @@
 #include "alm_healpix_tools.h"
 #include "weight_utils.h"
 #include "alm.h"
-#include "sharp_cxx.h"
+#include "libsharp/sharp_cxx.h"
 #include "lsconstants.h"
 
 using namespace std;

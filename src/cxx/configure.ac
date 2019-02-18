@@ -36,9 +36,6 @@ AC_OPENMP
 CXXFLAGS="$CXXFLAGS $OPENMP_CFLAGS"
 AC_LANG_POP([C++])
 
-tmpval=`echo $CFLAGS | grep -c '\-DMULTIARCH'`
-AM_CONDITIONAL([HAVE_MULTIARCH], [test $tmpval -gt 0])
-
 dnl
 dnl Determine the compiler flags (CFITSIO_CFLAGS)
 dnl and linker flags (CFITSIO_LIBS) required to build against libcfitsio.

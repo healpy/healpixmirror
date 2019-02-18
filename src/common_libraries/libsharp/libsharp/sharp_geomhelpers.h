@@ -16,11 +16,7 @@
  *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-/*
- *  libsharp is being developed at the Max-Planck-Institut fuer Astrophysik
- *  and financially supported by the Deutsches Zentrum fuer Luft- und Raumfahrt
- *  (DLR).
- */
+/* libsharp is being developed at the Max-Planck-Institut fuer Astrophysik */
 
 /*! \file sharp_geomhelpers.h
  *  SHARP helper function for the creation of grid geometries
@@ -32,7 +28,7 @@
 #ifndef PLANCK_SHARP_GEOMHELPERS_H
 #define PLANCK_SHARP_GEOMHELPERS_H
 
-#include "sharp.h"
+#include "libsharp/sharp.h"
 
 #ifdef __cplusplus
 extern "C" {

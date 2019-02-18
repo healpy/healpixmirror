@@ -7,8 +7,8 @@
     - tweaked Newton iteration to obtain higher accuracy */
 
 #include <math.h>
-#include "sharp_legendre_roots.h"
-#include "c_utils.h"
+#include "libsharp/sharp_legendre_roots.h"
+#include "c_utils/c_utils.h"
 
 static inline double one_minus_x2 (double x)
   { return (fabs(x)>0.1) ? (1.+x)*(1.-x) : 1.-x*x; }

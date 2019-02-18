@@ -7,25 +7,6 @@ src_c_utils = \
   c_utils/c_utils.h \
   c_utils/walltime_c.c \
   c_utils/walltime_c.h
-src_libpocketfft = \
-  pocketfft/pocketfft.c \
-  pocketfft/pocketfft.h
-src_libsharp = \
-  libsharp/sharp.c \
-  libsharp/sharp.h \
-  libsharp/sharp_cxx.h \
-  libsharp/sharp_almhelpers.c \
-  libsharp/sharp_almhelpers.h \
-  libsharp/sharp_core.c \
-  libsharp/sharp_core_inc.c \
-  libsharp/sharp_geomhelpers.c \
-  libsharp/sharp_geomhelpers.h \
-  libsharp/sharp_internal.h \
-  libsharp/sharp_vecsupport.h \
-  libsharp/sharp_ylmgen_c.c \
-  libsharp/sharp_ylmgen_c.h \
-  libsharp/sharp_legendre_roots.c \
-  libsharp/sharp_legendre_roots.h
 src_cxxsupport = \
   cxxsupport/announce.cc \
   cxxsupport/geom_utils.cc \
@@ -106,12 +87,9 @@ src_healpix_cxx_fits= \
   Healpix_cxx/moc_fitsio.cc
 
 EXTRA_DIST = \
-  cxxsupport/font_data.inc \
-  pocketfft/LICENSE.md
+  cxxsupport/font_data.inc
 
 include_HEADERS = \
-  libsharp/sharp.h \
-  libsharp/sharp_geomhelpers.h \
   cxxsupport/arr.h \
   cxxsupport/xcomplex.h \
   cxxsupport/datatypes.h \
@@ -146,31 +124,9 @@ include_HEADERS = \
   Healpix_cxx/moc_query.h \
   Healpix_cxx/weight_utils.h
 
-libhealpix_cxx_la_SOURCES = $(src_c_utils) $(src_libpocketfft) $(src_libsharp) $(src_cxxsupport) $(src_cxxsupport_fits) $(src_healpix_cxx) $(src_healpix_cxx_fits) $(src_healpix_cxx_mod)
-
-if HAVE_MULTIARCH
-
-libavx_la_SOURCES = libsharp/sharp_core_inc.c
-libavx2_la_SOURCES = libsharp/sharp_core_inc.c
-libfma_la_SOURCES = libsharp/sharp_core_inc.c
-libfma4_la_SOURCES = libsharp/sharp_core_inc.c
-libavx512f_la_SOURCES = libsharp/sharp_core_inc.c
-
-noinst_LTLIBRARIES = libavx.la libavx2.la libfma.la libfma4.la libavx512f.la
-
-libavx_la_CFLAGS = ${AM_CFLAGS} -mavx -DARCH=avx
-libavx2_la_CFLAGS = ${AM_CFLAGS} -mavx2 -DARCH=avx2
-libfma_la_CFLAGS = ${AM_CFLAGS} -mfma -DARCH=fma
-libfma4_la_CFLAGS = ${AM_CFLAGS} -mfma4 -DARCH=fma4
-libavx512f_la_CFLAGS = ${AM_CFLAGS} -mavx512f -DARCH=avx512f
-
-libhealpix_cxx_la_LIBADD = libavx.la libavx2.la libfma.la libfma4.la libavx512f.la $(CFITSIO_LIBS)
-
-else
+libhealpix_cxx_la_SOURCES = $(src_c_utils) $(src_libpocketfft) $(src_cxxsupport) $(src_cxxsupport_fits) $(src_healpix_cxx) $(src_healpix_cxx_fits) $(src_healpix_cxx_mod)
 
 libhealpix_cxx_la_LIBADD = $(CFITSIO_LIBS)
-
-endif
 
 libhealpix_cxx_la_LDFLAGS = -version-info 2:1:0
 

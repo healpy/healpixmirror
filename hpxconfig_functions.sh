@@ -384,6 +384,55 @@ C_config () {
 
 
 #=====================================
+#========= libsharp package ==========
+#=====================================
+#   setSharpDefaults: default variables for libsharp
+#-------------
+setSharpDefaults () {
+
+    SHARPDIR=${HEALPIX}/src/common_libraries/libsharp
+    CFLAGS="-DMULTIARCH -O3 -ffast-math -fopenmp"
+    LDFLAGS=""
+
+    SHARPPREFIX=$HEALPIX
+}
+#-------------
+askSharpUserMisc () {
+
+    echoLn "enter C compiler you want to use [$CC]: "
+    read answer
+    [ "x$answer" != "x" ] && CC=$answer
+
+    echoLn "enter options for C compiler [$CFLAGS]: "
+    read answer
+    [ "x$answer" != "x" ] && CFLAGS=$answer
+}
+#-------------
+editSharpMakefile () {
+    echoLn "edit top Makefile for libsharp ..."
+
+    (cd src/common_libraries/libsharp; \
+    CC="${CC}" CFLAGS="${CFLAGS}" LDFLAGS="${LDFLAGS}" ./configure --prefix=${SHARPPREFIX} || crashAndBurn)
+    mv -f Makefile Makefile_tmp
+    ${CAT} Makefile_tmp |\
+	${SED} "s|^ALL\(.*\) sharp-void \(.*\)|ALL\1 sharp-all \2|" |\
+	${SED} "s|^TESTS\(.*\) sharp-void \(.*\)|TESTS\1 sharp-test \2|" |\
+	${SED} "s|^CLEAN\(.*\) sharp-void \(.*\)|CLEAN\1 sharp-clean \2|" |\
+	${SED} "s|^DISTCLEAN\(.*\) sharp-void \(.*\)|DISTCLEAN\1 sharp-distclean \2|" |\
+	${SED} "s|^TIDY\(.*\) sharp-void \(.*\)|TIDY\1 sharp-tidy \2|" > Makefile
+
+    echo " done."
+    edited_makefile=1
+}
+#-------------
+Sharp_config () {
+
+    setSharpDefaults
+    askSharpUserMisc
+    editSharpMakefile
+}
+
+#=====================================
 #=========== C++ package ===========
 #=====================================
 #   setCppDefaults: defaults variables for C++
@@ -391,9 +440,9 @@ C_config () {
 setCppDefaults () {
 
     CXXDIR=${HEALPIX}/src/cxx
-    CFLAGS="-DMULTIARCH -O3 -ffast-math -fopenmp"
-    CXXFLAGS="-O3 -ffast-math -fopenmp"
-    LDFLAGS=""
+    CFLAGS="-O3 -ffast-math -fopenmp"
+    CXXFLAGS="-O3 -ffast-math -fopenmp -I${HEALPIX}/include -L${HEALPIX}/lib -lsharp"
+    LDFLAGS="-L${HEALPIX}/lib -lsharp"
 
     CXXPREFIX=$HEALPIX
 }
@@ -442,18 +491,6 @@ askCppUserMisc () {
     fi
     [ "x$answer" != "x" ] && CFITSIO_LIBS="-L$answer -lcfitsio"
     echo $CFITSIO_CFLAGS  $CFITSIO_LIBS
-
-#     CFITSIO_CFLAGS=""
-#     echoLn "if fitsio.h is in a nonstandard include path, enter it here\n"
-#     echoLn "(e.g. '/usr/local/include'): "
-#     read answer
-#     [ "x$answer" != "x" ] && CFITSIO_CFLAGS="-I$answer"
-
-#     CFITSIO_LIBS=""
-#     echoLn "if the cfitsio library is in a nonstandard path, enter it here\n"
-#     echoLn "(e.g. '/usr/local/lib'): "
-#     read answer
-#     [ "x$answer" != "x" ] && CFITSIO_LIBS="-L$answer -lcfitsio"
 }
 #-------------
 editCppMakefile () {
@@ -2229,6 +2266,7 @@ mainMenu () {
     echo
     echo "Do you want to:"
     echo "(0): exit"
+    echo "(X): configure libsharp package"
     echo "(1): configure Healpix IDL package"
     echo "(2): configure Healpix C package, and edit Makefile"
     echo "(3): configure Healpix F90 package, and edit Makefile"
@@ -2243,6 +2281,8 @@ mainMenu () {
     echoLn "Enter your choice (configuration of packages can be done in any order) [0]: "
     read answer
     case x$answer in
+	xX)
+	  Sharp_config;;
 	x1)
 	  eval idlconffile=$HPX_CONF_IDL
 	  eval gdlconffile=$HPX_CONF_GDL

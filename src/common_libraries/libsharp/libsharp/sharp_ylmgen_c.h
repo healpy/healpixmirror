@@ -16,11 +16,7 @@
  *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-/*
- *  libsharp is being developed at the Max-Planck-Institut fuer Astrophysik
- *  and financially supported by the Deutsches Zentrum fuer Luft- und Raumfahrt
- *  (DLR).
- */
+/* libsharp is being developed at the Max-Planck-Institut fuer Astrophysik */
 
 /*! \file sharp_ylmgen_c.h
  *  Code for efficient calculation of Y_lm(phi=0,theta)

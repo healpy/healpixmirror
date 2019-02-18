@@ -6,7 +6,7 @@
 /*
  *  Main implementation file.
  *
- *  Copyright (C) 2004-2018 Max-Planck-Society
+ *  Copyright (C) 2004-2019 Max-Planck-Society
  *  \author Martin Reinecke
  */
 

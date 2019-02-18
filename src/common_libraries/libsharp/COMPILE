@@ -1,0 +1,85 @@
+Libsharp is configured, compiled and installed using GNU autotools.
+
+If you have cloned the libsharp repository, you have to run
+"autoreconf -i" before starting the configuration, which requires several
+GNU developer tools to be available on your system.
+
+When using a release tarball, configuration is done via
+
+[CC=...] [CFLAGS=...] ./configure
+
+The following sections briefly describe possible choices for compilers and
+flags.
+
+
+Fast math
+---------
+
+Specifying "-ffast-math" is important for all compilers, since it allows the
+compiler to fuse multiplications and additions into FMA instructions, which is
+forbidden by the C99 standard. Since FMAs are a central aspect of the algorithm,
+they are needed for optimum performance.
+
+If you are calling libsharp from other code which requires strict adherence
+to the C99 standard, you should still be able to compile libsharp with
+"-ffast-math" without any problems.
+
+
+Runtime CPU selection with gcc
+------------------------------
+
+When using a recent gcc (6.0 and newer) or a recent clang (successfully tested
+with versions 6 and 7) on an x86_64 platform, the build machinery can compile
+the time-critical functions for several different architectures (SSE2, AVX,
+AVX2, FMA3, FMA4, AVX512F), and the appropriate implementation will be selected
+at runtime.
+This is enabled by passing "-DMULTIARCH" as part of the CFLAGS.
+If this is enabled, please do _not_ specify "-march=native" or
+"-mtarget=avx" or similar!
+If you are compiling libsharp for a particular target CPU only, or if you are
+using a different compiler, however, "-march-native" should be used. The
+resulting binary will most likely not run on other computers, though.
+
+
+OpenMP
+------
+
+OpenMP should be switched on for maximum performance, and at runtime
+OMP_NUM_THREADS should be set to the number of hardware threads (not physical
+cores) of the system.
+(Usually this is  already the default setting when OMP_NUM_THREADS is not
+specified.)
+
+
+MPI
+---
+
+MPI support is enabled by using the MPI compiler (typically "mpicc") _and_
+adding the flag "-DUSE_MPI".
+When using MPI and OpenMP simultaneously, the product of MPI tasks per node
+and OMP_NUM_THREADS should be equal to the number of hardware threads available
+on the node. One MPI task per node should result in the best performance.
+
+
+Example configure invocations
+=============================
+
+GCC, OpenMP, portable binary:
+CFLAGS="-DMULTIARCH -std=c99 -O3 -ffast-math -fopenmp" ./configure
+
+GCC, no OpenMP, portable binary:
+CFLAGS="-DMULTIARCH -std=c99 -O3 -ffast-math" ./configure
+
+Clang, OpenMP, portable binary:
+CC=clang CFLAGS="-DMULTIARCH -std=c99 -O3 -ffast-math -fopenmp" ./configure
+
+Intel C compiler, OpenMP, nonportable binary:
+CC=icc CFLAGS="-std=c99 -O3 -march=native -ffast-math -fopenmp -D__PURE_INTEL_C99_HEADERS__" ./configure
+
+MPI support, nonportable binary:
+CC=mpicc CFLAGS="-DUSE_MPI -std=c99 -O3 -march=native -ffast-math" ./configure
+
+Additional GCC flags for pedantic warning and debugging:
+
+-Wall -Wextra -Wshadow -Wmissing-prototypes -Wfatal-errors -pedantic -g
+-fsanitize=address

@@ -16,11 +16,7 @@
  *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-/*
- *  libsharp is being developed at the Max-Planck-Institut fuer Astrophysik
- *  and financially supported by the Deutsches Zentrum fuer Luft- und Raumfahrt
- *  (DLR).
- */
+/* libsharp is being developed at the Max-Planck-Institut fuer Astrophysik */
 
 /*! \file sharp_internal.h
  *  Internally used functionality for the spherical transform library.
@@ -37,10 +33,8 @@
 #endif
 
 #include <complex.h>
-#include "sharp.h"
-#include "sharp_ylmgen_c.h"
-
-#define SHARP_MAXTRANS 100
+#include "libsharp/sharp.h"
+#include "libsharp/sharp_ylmgen_c.h"
 
 typedef struct
   {

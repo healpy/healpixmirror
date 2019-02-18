@@ -16,11 +16,7 @@
  *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-/*
- *  libsharp is being developed at the Max-Planck-Institut fuer Astrophysik
- *  and financially supported by the Deutsches Zentrum fuer Luft- und Raumfahrt
- *  (DLR).
- */
+/* libsharp is being developed at the Max-Planck-Institut fuer Astrophysik */
 
 /*! \file sharp_cxx.h
  *  Spherical transform library
@@ -33,9 +29,9 @@
 #define PLANCK_SHARP_CXX_H
 
 #include <complex>
-#include "sharp.h"
-#include "sharp_geomhelpers.h"
-#include "sharp_almhelpers.h"
+#include "libsharp/sharp.h"
+#include "libsharp/sharp_geomhelpers.h"
+#include "libsharp/sharp_almhelpers.h"
 
 class sharp_base
   {
@@ -89,9 +85,6 @@ class sharp_base
       if (ainfo) sharp_destroy_alm_info(ainfo);
       sharp_make_triangular_alm_info (lmax, mmax, 1, &ainfo);
       }
-
-    const sharp_geom_info* get_geom_info() const { return ginfo; }
-    const sharp_alm_info* get_alm_info() const { return ainfo; }
   };
 
 template<typename T> struct cxxjobhelper__ {};

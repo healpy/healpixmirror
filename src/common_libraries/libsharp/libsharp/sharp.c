@@ -16,28 +16,24 @@
  *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-/*
- *  libsharp is being developed at the Max-Planck-Institut fuer Astrophysik
- *  and financially supported by the Deutsches Zentrum fuer Luft- und Raumfahrt
- *  (DLR).
- */
+/* libsharp is being developed at the Max-Planck-Institut fuer Astrophysik */
 
 /*! \file sharp.c
  *  Spherical transform library
  *
- *  Copyright (C) 2006-2016 Max-Planck-Society
+ *  Copyright (C) 2006-2019 Max-Planck-Society
  *  \author Martin Reinecke \author Dag Sverre Seljebotn
  */
 
 #include <math.h>
 #include <string.h>
 #include "pocketfft/pocketfft.h"
-#include "sharp_ylmgen_c.h"
-#include "sharp_internal.h"
-#include "c_utils.h"
-#include "walltime_c.h"
-#include "sharp_almhelpers.h"
-#include "sharp_geomhelpers.h"
+#include "libsharp/sharp_ylmgen_c.h"
+#include "libsharp/sharp_internal.h"
+#include "c_utils/c_utils.h"
+#include "c_utils/walltime_c.h"
+#include "libsharp/sharp_almhelpers.h"
+#include "libsharp/sharp_geomhelpers.h"
 
 typedef complex double dcmplx;
 typedef complex float  fcmplx;

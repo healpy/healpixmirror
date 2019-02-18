@@ -6,7 +6,7 @@
 /*! \file pocketfft.h
  *  Public interface of the pocketfft library
  *
- *  Copyright (C) 2008-2018 Max-Planck-Society
+ *  Copyright (C) 2008-2019 Max-Planck-Society
  *  \author Martin Reinecke
  */
 
