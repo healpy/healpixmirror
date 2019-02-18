@@ -124,7 +124,7 @@ distclean: $(DISTCLEAN)
 f90-progs = map2gif anafast smoothing synfast ud_grade hotspot plmgen alteralm median_filter ngsims_full_sky process_mask
 f90-libs  = f90-modules f90-libgif
 
-f90-all: $(f90-libs) $(f90-progs)
+f90-all: sharp-all $(f90-libs) $(f90-progs)
 
 # itemized list instead of loop to allow parallel compiling
 
@@ -292,7 +292,7 @@ sharp-void:
 
 # ------------------------------- C++ rules ----------------------------
 
-cpp-all:
+cpp-all: sharp-all
 	@cd src/cxx; \
 	$(MAKE) install; \
 	cd ../..
