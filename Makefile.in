@@ -4,11 +4,11 @@
 
 # ------------------------------ global variables --------------------------
 
-ALL       = c-void cpp-void f90-void healpy-void
-TESTS     = c-void cpp-void f90-void healpy-void
-CLEAN     = c-void cpp-void f90-void healpy-void
-TIDY      = c-void cpp-void f90-void healpy-void
-DISTCLEAN = c-void cpp-void f90-void healpy-void
+ALL       = sharp-void c-void cpp-void f90-void healpy-void
+TESTS     = sharp-void c-void cpp-void f90-void healpy-void
+CLEAN     = sharp-void c-void cpp-void f90-void healpy-void
+TIDY      = sharp-void c-void cpp-void f90-void healpy-void
+DISTCLEAN = sharp-void c-void cpp-void f90-void healpy-void
 
 RM	= rm -f
 

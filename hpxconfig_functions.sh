@@ -441,8 +441,8 @@ setCppDefaults () {
 
     CXXDIR=${HEALPIX}/src/cxx
     CFLAGS="-O3 -ffast-math -fopenmp"
-    CXXFLAGS="-O3 -ffast-math -fopenmp -I${HEALPIX}/include -L${HEALPIX}/lib -lsharp"
-    LDFLAGS="-L${HEALPIX}/lib -lsharp"
+    CXXFLAGS="-O3 -ffast-math -fopenmp -I${HEALPIX}/include -L${HEALPIX}/lib"
+    LDFLAGS="-L${HEALPIX}/lib"
 
     CXXPREFIX=$HEALPIX
 }
@@ -536,7 +536,13 @@ EOF
 }
 #-------------
 Cpp_config () {
-
+	sharp_configured=`grep -c "^ALL\(.*\) sharp-all" Makefile`
+  if [ $sharp_configured = "0" ] ; then
+    echo "Configuring the libsharp library first, since this is a dependency:"
+    Sharp_config
+    echo
+    echo "Now configuring Healpix C++ itself:"
+  fi
     HPX_CONF_CPP=$1
     setCppDefaults
     askCppUserMisc
@@ -2216,6 +2222,13 @@ EOF
 # -----------------------------------------------------------------
 
 f90_config () {
+	sharp_configured=`grep -c "^ALL\(.*\) sharp-all" Makefile`
+  if [ $sharp_configured = "0" ] ; then
+    echo "Configuring the libsharp library first, since this is a dependency:"
+    Sharp_config
+    echo
+    echo "Now configuring Healpix F90 itself:"
+  fi
     HPX_CONF_F90=$1
     setF90Defaults
     askUserF90
@@ -2266,12 +2279,12 @@ mainMenu () {
     echo
     echo "Do you want to:"
     echo "(0): exit"
-    echo "(X): configure libsharp package"
     echo "(1): configure Healpix IDL package"
     echo "(2): configure Healpix C package, and edit Makefile"
     echo "(3): configure Healpix F90 package, and edit Makefile"
     echo "(4): configure Healpix C++ package, and edit Makefile"
     echo "(5): configure Healpix Python (healpy) package, and edit Makefile"
+    echo "(7): configure libsharp package"
     echo "(8): see what configuration files have been created so far"
     echo "(9): edit your shell configuration file to have easier access to Healpix codes"
     echo "(-1): reset"
@@ -2281,8 +2294,6 @@ mainMenu () {
     echoLn "Enter your choice (configuration of packages can be done in any order) [0]: "
     read answer
     case x$answer in
-	xX)
-	  Sharp_config;;
 	x1)
 	  eval idlconffile=$HPX_CONF_IDL
 	  eval gdlconffile=$HPX_CONF_GDL
@@ -2298,6 +2309,8 @@ mainMenu () {
 	   Cpp_config $cppconffile;;
  	x5)
  	   Healpy_config;;
+	x7)
+	  Sharp_config;;
 	x8)
 	   checkConfFiles;;
 	x9)

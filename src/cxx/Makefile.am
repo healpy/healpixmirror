@@ -126,7 +126,7 @@ include_HEADERS = \
 
 libhealpix_cxx_la_SOURCES = $(src_c_utils) $(src_libpocketfft) $(src_cxxsupport) $(src_cxxsupport_fits) $(src_healpix_cxx) $(src_healpix_cxx_fits) $(src_healpix_cxx_mod)
 
-libhealpix_cxx_la_LIBADD = $(CFITSIO_LIBS)
+libhealpix_cxx_la_LIBADD = -lsharp $(CFITSIO_LIBS)
 
 libhealpix_cxx_la_LDFLAGS = -version-info 2:1:0
 
