@@ -1584,7 +1584,7 @@ IdentifyCCompiler () {
     nclang=`$CC --version 2>&1 | ${GREP} clang       | ${WC} -l` # clang
     npgc=`$CC -V 2>&1          | ${GREP} -i portland | ${WC} -l` # portland C
     npath=`$CC -v 2>&1         | ${GREP} -i ekopath  | ${WC} -l` # pathscale EKOPath
-	ExtendCFLAGS "-I$(HEALPIX)/include"
+	ExtendCFLAGS "-I\$(HEALPIX)/include"
     if [ $ngcc != 0 ] ; then
 	echo "$CC: GCC compiler"
 	ExtendCFLAGS "-O3 -std=c99"
