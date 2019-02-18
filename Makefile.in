@@ -122,17 +122,14 @@ distclean: $(DISTCLEAN)
 
 
 f90-progs = map2gif anafast smoothing synfast ud_grade hotspot plmgen alteralm median_filter ngsims_full_sky process_mask
-f90-libs  = f90-libsharp f90-modules f90-libgif
+f90-libs  = f90-modules f90-libgif
 
 f90-all: $(f90-libs) $(f90-progs)
 
 # itemized list instead of loop to allow parallel compiling
 
 # libraries
-f90-libsharp:
-	@cd src/f90/sharp; $(MAKE) $(F90_MKFLAGS)
-
-f90-modules: f90-libsharp
+f90-modules:
 	@cd src/f90/mod; $(MAKE) $(F90_MKFLAGS)
 
 f90-libgif: f90-modules
@@ -198,7 +195,7 @@ f90-test: f90-all
 	echo "success rate: `ls -1 test*fits | wc -l`/12"
 
 f90-clean:
-	for p in $(f90-progs) lib mod sharp; do \
+	for p in $(f90-progs) lib mod; do \
 	$(RM) src/f90/$$p/*.o src/f90/$$p/*.$(F90_MOD) src/f90/$$p/lib*.a src/f90/$$p/*.pc src/f90/$$p/*.pcl src/f90/$$p/*.il ; \
 	done
 	$(RM) -r $(F90_BUILDDIR)

@@ -19,18 +19,17 @@ incudgrade = udgrade_s_inc.f90 udgrade_d_inc.f90
 
 incnumrec = source_gen_sort_inc.f90
 
-obj0  = healpix_types.o cgetEnvironment.o indmed.o utilities.o 
+obj0  = healpix_types.o cgetEnvironment.o indmed.o utilities.o
 obj1  = bit_manipulation.o extension.o long_intrinsic.o obsolete.o ran_tools_dist.o rngmod.o
 obj2  = healpix_fft.o misc_utils.o
-obj3  = head_fits.o num_rec.o statistics.o paramfile_io.o 
-#obj3  = head_fits.o num_rec.o statistics_stack.o paramfile_io.o 
-obj4  = pix_tools.o 
-obj5  = coord_v_convert.o fitstools.o udgrade_nr.o 
+obj3  = head_fits.o num_rec.o statistics.o paramfile_io.o
+#obj3  = head_fits.o num_rec.o statistics_stack.o paramfile_io.o
+obj4  = pix_tools.o
+obj5  = coord_v_convert.o fitstools.o udgrade_nr.o
 obj6  = mask_tools.o alm_tools.o
 obj7  = healpix_modules.o
 
-obj   = $(obj0) $(obj1) $(obj2) $(obj3) $(obj4) $(obj5) $(obj6) $(obj7)
-objsharp = $(BUILDDIR)/sharp/libsharp_all.o
+obj   = sharp_healpix_f.o healpix_sharp_f90.o $(obj0) $(obj1) $(obj2) $(obj3) $(obj4) $(obj5) $(obj6) $(obj7)
 
 fac = mod
 MKDIR   = mkdir -p
@@ -43,7 +42,7 @@ LIB:=$(LIBDIR)/libhealpix$(LIBSUFFIX)
 ifneq ($(strip $(FLAGNAMELIB)),)
 NAMELIB = $(FLAGNAMELIB)$(notdir $(LIB))
 else
-NAMELIB = 
+NAMELIB =
 endif
 
 # library creation
@@ -51,15 +50,15 @@ endif
 
 all: $(OD)_mkdir $(LIB)
 
-$(LIB): $(OBJ) $(objsharp) $(incpix) $(incalm) $(incfits) $(incudgrade)
-	$(AR) $@ $(NAMELIB) $(OBJ) $(objsharp)
+$(LIB): $(OBJ) $(incpix) $(incalm) $(incfits) $(incudgrade)
+	$(AR) $@ $(NAMELIB) $(OBJ)
 	@for p in $(OD)/*.$(MOD); do \
 	cp $$p $(INCDIR)/; \
 	done
 
 # create build sub-directory
 %_mkdir:
-	@if [ ! -d $* ]; then $(MKDIR) $* ; fi 
+	@if [ ! -d $* ]; then $(MKDIR) $* ; fi
 
 # objects creation
 $(obj1:%=$(OD)/%): $(obj0:%=$(OD)/%)
@@ -70,7 +69,7 @@ $(obj5:%=$(OD)/%): $(obj4:%=$(OD)/%)
 $(obj6:%=$(OD)/%): $(obj5:%=$(OD)/%)
 $(obj7:%=$(OD)/%): $(obj6:%=$(OD)/%)
 
-$(OD)/%.o: $(SD)/%.c 
+$(OD)/%.o: $(SD)/%.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
 $(OD)/%.o: $(SD)/%.f90

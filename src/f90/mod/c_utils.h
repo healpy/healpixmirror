@@ -16,16 +16,12 @@
  *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-/*
- *  libc_utils is being developed at the Max-Planck-Institut fuer Astrophysik
- *  and financially supported by the Deutsches Zentrum fuer Luft- und Raumfahrt
- *  (DLR).
- */
+/* libc_utils is being developed at the Max-Planck-Institut fuer Astrophysik */
 
 /*! \file c_utils.h
  *  Convenience functions
  *
- *  Copyright (C) 2008, 2009, 2010, 2011 Max-Planck-Society
+ *  Copyright (C) 2008-2019 Max-Planck-Society
  *  \author Martin Reinecke
  *  \note This file should only be included from .c files, NOT from .h files.
  */
@@ -45,10 +41,6 @@ void util_fail_ (const char *file, int line, const char *func, const char *msg);
 void util_warn_ (const char *file, int line, const char *func, const char *msg);
 void *util_malloc_ (size_t sz);
 void util_free_ (void *ptr);
-
-void announce_c (const char *name);
-void module_startup_c (const char *name, int argc, int argc_expected,
-  const char *argv_expected, int verbose);
 
 #if defined (__GNUC__)
 #define UTIL_FUNC_NAME__ __func__
@@ -146,6 +138,12 @@ void module_startup_c (const char *name, int argc, int argc_expected,
 
 #ifdef __cplusplus
 }
+#endif
+
+#ifdef __GNUC__
+#define NOINLINE __attribute__((noinline))
+#else
+#define NOINLINE
 #endif
 
 #endif

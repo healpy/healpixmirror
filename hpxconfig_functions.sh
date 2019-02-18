@@ -1068,7 +1068,7 @@ setF90Defaults () {
     #CFLAGS="-O"
     CFLAGS="-O3 -std=c99"  # OK for gcc, icc and clang
     #LDFLAGS="-L\$(F90_LIBDIR) -L\$(FITSDIR) -lhealpix -lhpxgif -lsharp_healpix_f -l\$(LIBFITS)"
-    LDFLAGS="-L\$(F90_LIBDIR) -L\$(FITSDIR) -lhealpix -lhpxgif -l\$(LIBFITS)"
+    LDFLAGS="-L\$(F90_LIBDIR) -L\$(FITSDIR) -lhealpix -lhpxgif -lsharp -l\$(LIBFITS)"
     F90_BINDIR="./bin"
     F90_INCDIR="./include"
     F90_LIBDIR="./lib"
@@ -1584,6 +1584,7 @@ IdentifyCCompiler () {
     nclang=`$CC --version 2>&1 | ${GREP} clang       | ${WC} -l` # clang
     npgc=`$CC -V 2>&1          | ${GREP} -i portland | ${WC} -l` # portland C
     npath=`$CC -v 2>&1         | ${GREP} -i ekopath  | ${WC} -l` # pathscale EKOPath
+	ExtendCFLAGS "-I$(HEALPIX)/include"
     if [ $ngcc != 0 ] ; then
 	echo "$CC: GCC compiler"
 	ExtendCFLAGS "-O3 -std=c99"

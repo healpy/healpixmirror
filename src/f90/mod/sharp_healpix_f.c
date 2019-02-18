@@ -1,11 +1,10 @@
+#include "libsharp/sharp.h"
+#include "libsharp/sharp_geomhelpers.h"
+#include "libsharp/sharp_almhelpers.h"
 #include "c_utils.h"
-#include "sharp.h"
-#include "sharp_geomhelpers.h"
-#include "sharp_almhelpers.h"
-#include "ls_cfortran.h"
 
-static void hpsharp_make_healpix_geom_info_2 (int nside, double *wgt,
-  double z1, double z2, hpsharp_geom_info **geom_info)
+static void sharp_make_healpix_geom_info_2 (int nside, double *wgt,
+  double z1, double z2, sharp_geom_info **geom_info)
   {
   const double pi=3.141592653589793238462643383279502884197;
   ptrdiff_t npix=(ptrdiff_t)nside*nside*12;
@@ -66,7 +65,7 @@ static void hpsharp_make_healpix_geom_info_2 (int nside, double *wgt,
     }
     }
 
-  hpsharp_make_geom_info (m, nph, ofs, stride, phi0, theta, weight, geom_info);
+  sharp_make_geom_info (m, nph, ofs, stride, phi0, theta, weight, geom_info);
 
   DEALLOC(theta);
   DEALLOC(weight);
@@ -81,28 +80,16 @@ static void hpsharp_make_healpix_geom_info_2 (int nside, double *wgt,
 #define FLT double
 #define FLAG SHARP_DP
 #define X(arg) CONCAT(sharpd_,arg)
-#define Y(arg) CONCAT(arg,_D)
-#define Z(arg) CONCAT(arg,_d)
-#define PFLT PDOUBLE
 #include "sharp_healpix_f_inc.c"
-#undef PFLT
 #undef FLT
 #undef FLAG
-#undef Z
-#undef Y
 #undef X
 
 #define FLT float
 #define FLAG 0
 #define X(arg) CONCAT(sharps_,arg)
-#define Y(arg) CONCAT(arg,_S)
-#define Z(arg) CONCAT(arg,_s)
-#define PFLT PFLOAT
 #include "sharp_healpix_f_inc.c"
-#undef PFLT
 #undef FLT
-#undef Z
-#undef Y
 #undef X
 
 #undef CONCAT

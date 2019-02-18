@@ -1,8 +1,8 @@
 !-----------------------------------------------------------------------------
 !
 !  Copyright (C) 1997-2013 Krzysztof M. Gorski, Eric Hivon,
-!                          Benjamin D. Wandelt, Anthony J. Banday, 
-!                          Matthias Bartelmann, Hans K. Eriksen, 
+!                          Benjamin D. Wandelt, Anthony J. Banday,
+!                          Matthias Bartelmann, Hans K. Eriksen,
 !                          Frode K. Hansen, Martin Reinecke
 !
 !
@@ -26,6 +26,12 @@
 !
 !-----------------------------------------------------------------------------
 module alm_tools
+#ifndef DONT_USE_SHARP
+#define USE_SHARP
+#endif
+#ifdef USE_SHARP
+use healpix_sharp_f90
+#endif
   !   Scalar+Open_MP implementation
   !
   !   function do_opemp
@@ -123,15 +129,15 @@ module alm_tools
   interface sub_alm2cl
      module procedure sub_alm2cl_s, sub_alm2cl_d
   end interface
- 
+
   interface rotate_alm
      module procedure rotate_alm_s, rotate_alm_d
   end interface
- 
+
   interface alter_alm
      module procedure alter_alm_s, alter_alm_d
   end interface
- 
+
   interface create_alm
      module procedure create_alm_s, create_alm_d, create_alm_v12_s, create_alm_v12_d
   end interface
@@ -139,7 +145,7 @@ module alm_tools
   interface create_alm_old ! for tests only
      module procedure create_alm_old_s, create_alm_old_d
   end interface
- 
+
   interface alm2map_der
      module procedure alm2map_sc_der_s, alm2map_sc_der_d, alm2map_pol_der_s, alm2map_pol_der_d
   end interface
@@ -247,7 +253,7 @@ module alm_tools
   ! May 2005: pixel window returns 1. if nside = 0 (interpreted as infinitely small pixel)
   ! Aug 2005: added alm2map_pol_der
   ! ------post 2.00
-  ! Sep-Oct 2005: made internal subroutines public so they can be called by mpi_alm, 
+  ! Sep-Oct 2005: made internal subroutines public so they can be called by mpi_alm,
   !              corrected OpenMP+SGI bug in alm2map_pol_der
   ! Feb 2006: added select_rings to public routines (for MPI use)
   ! Sep 2006: corrected resetting of lam_fact in gen_lamfac
@@ -297,7 +303,7 @@ contains
 
     return
   end function do_openmp
-  
+
   !================================================
   subroutine init_rescale()
     !================================================
@@ -414,7 +420,7 @@ contains
     ! if zbounds(1) <  zbounds(2) : keep  zbounds(1) < z < zbounds(2)
     ! if zbounds(2) <= zbounds(1) : keep z < zbounds(2) Union  zbounds(1) < z
     ! input z should be >= 0
-    ! edited 2018-11-09 to be identical to remove_dipole, apply_mask 
+    ! edited 2018-11-09 to be identical to remove_dipole, apply_mask
 !             and libsharp's hpsharp_make_healpix_geom_info_2
     !=======================================================================
     real(DP)    , intent(in)  :: z
@@ -447,7 +453,7 @@ contains
   !=======================================================================
   subroutine gen_recfac( l_max, m, recfac)
   !=======================================================================
-    ! generates recursion factors used to computes the Ylm of degree m 
+    ! generates recursion factors used to computes the Ylm of degree m
     ! for all l in m<=l<=l_max
     !=======================================================================
     integer(I4B), intent(IN)                            :: l_max, m
@@ -522,7 +528,7 @@ contains
        fl2 = fl * fl
        lam_fact(l) = 2.0_dp * SQRT( (2.0_dp * fl + 1.0_dp) / (2.0_dp * fl - 1.0_dp) * (fl2-fm2) )
     enddo
-    
+
     return
   end subroutine gen_lamfac
 
@@ -546,7 +552,7 @@ contains
        lam_fact(l) = SQRT( (2.0_dp * fl + 1.0_dp) / (2.0_dp * fl - 1.0_dp) * (fl2-fm2) )
        ! different normalization than polarization factor
     enddo
-    
+
     return
   end subroutine gen_lamfac_der
 
@@ -569,7 +575,7 @@ contains
 
     ! Log_2 ( fact(m) / sqrt(4 Pi) )
     do m=0,m_max
-       m_fact(m) = log(SQ4PI_INV * m_fact(m)) * ALN2_INV 
+       m_fact(m) = log(SQ4PI_INV * m_fact(m)) * ALN2_INV
     enddo
 
     return
@@ -604,7 +610,7 @@ contains
 
     ! Log_2 ( fact(m)  / sqrt(4 Pi))
     do m=0,m_max
-       m_fact(m) = log(SQ4PI_INV * m_fact(m)) * ALN2_INV 
+       m_fact(m) = log(SQ4PI_INV * m_fact(m)) * ALN2_INV
     enddo
 
     return
@@ -632,14 +638,14 @@ contains
 
     return
   end subroutine compute_lam_mm
-  
+
   !=======================================================================
   subroutine do_lam_lm(lmax, m, cth, sth, mfac, recfac, lam_lm)
     !=======================================================================
     ! computes scalar lambda_lm(theta) for all l in [m,lmax] for a given m, and given theta
     ! input: lmax, m, cos(theta), sin(theta)
     !        mfac: precomputed (by gen_mfac) quantity useful for lambda_mm calculation
-    !        recfac: precomputed (by gen_recfac) quantities useful for 
+    !        recfac: precomputed (by gen_recfac) quantities useful for
     !            lambda_lm recursion for a given m
     ! output: lam_lm
     ! the routine also needs the array rescale_tac initialized by init_rescale
@@ -660,14 +666,14 @@ contains
     unflow = rescale_tab(-1)
     l_min = l_min_ylm(m, sth)
     dlog2lg = real(LOG2LG, kind=DP)
-    
+
     ! computes lamba_mm
     log2val = mfac + m*log(sth) * ALN2_INV ! log_2(lam_mm)
     scalel = int (log2val / dlog2lg)
     corfac = rescale_tab(max(scalel,RSMIN))
     lam_mm = 2.0_dp **(log2val - scalel * dlog2lg) ! rescaled lam_mm
     if (IAND(m,1)>0) lam_mm = -lam_mm ! negative for odd m
-    
+
     lam_lm(0:lmax) = 0.0_dp
     ! --- l = m ---
     lam_lm(m) = lam_mm * corfac
@@ -697,7 +703,7 @@ contains
           scalel= scalel - 1
           corfac = rescale_tab(max(scalel,RSMIN))
        endif
-                   
+
     enddo ! loop on l
   end subroutine do_lam_lm
   !=======================================================================
@@ -707,7 +713,7 @@ contains
     ! input: lmax, m, spin, cos(theta), sin(theta)
     !        mfac: precomputed (by gen_mfac) quantity useful for lambda_mm calculation
     !        mfac_spin: precomputed (by gen_mfac_spin) quantity useful for lambda_mm calculation
-    !        recfac_spin: precomputed (by gen_recfac_spin) quantities useful for 
+    !        recfac_spin: precomputed (by gen_recfac_spin) quantities useful for
     !            lambda_lm recursion for a given m
     ! output: lam_lm
     ! the routine also needs the array rescale_tab initialized by init_rescale
@@ -736,7 +742,7 @@ contains
     unflow = rescale_tab(-1)
     l_min = l_min_ylm(m, sth)
     dlog2lg = real(LOG2LG, kind=DP)
-    
+
     thetao2 = atan2(sth, cth)/2.d0
     ttho2 = tan(thetao2)
     stho2 = sin(thetao2) ! sqrt(1-cth)/sqrt(2)
@@ -805,7 +811,7 @@ contains
 
     ! compute functions with fixed parity
     ! beware: the first one is always the half sum
-    !         the second one is always the half difference, independently of spin 
+    !         the second one is always the half difference, independently of spin
     do l=0, lmax
        tmp1 = lam_lm_spin(1,l) * 0.5_dp
        tmp2 = lam_lm_spin(2,l) * 0.5_dp
@@ -820,7 +826,7 @@ contains
     ! computes temperature&polar lambda_lm(p,theta) for all l in [m,lmax] for a given m, and given theta
     ! input: lmax, m, cos(theta), sin(theta)
     !        mfac: precomputed (by gen_mfac) quantity useful for lambda_mm calculation
-    !        recfac: precomputed (by gen_recfac) quantities useful for 
+    !        recfac: precomputed (by gen_recfac) quantities useful for
     !            lambda_lm recursion for a given m
     !        lam_fact: precomputed (by gen_lamfac) factor useful for polarised lambda recursion
     ! output: lam_lm for T and P
@@ -846,7 +852,7 @@ contains
     unflow = rescale_tab(-1)
     l_min = l_min_ylm(m, sth)
     dlog2lg = real(LOG2LG, kind=DP)
-    
+
     fm2       = real(m * m, kind = DP)
     normal_m  = (2.0_dp * m) * (1 - m)
     two_cth   = 2.0_dp * cth
@@ -854,8 +860,8 @@ contains
     fm_on_s2  =      m * one_on_s2
     two_on_s2 = 2.0_dp * one_on_s2
     c_on_s2   = cth    * one_on_s2
-    b_w       =  c_on_s2 
-    
+    b_w       =  c_on_s2
+
 
     ! computes lamba_mm
     log2val = mfac + m*log(sth) * ALN2_INV ! log_2(lam_mm)
@@ -863,10 +869,10 @@ contains
     corfac = rescale_tab(max(scalel,RSMIN))
     lam_mm = 2.0_dp **(log2val - scalel * dlog2lg) ! rescaled lam_mm
     if (IAND(m,1)>0) lam_mm = -lam_mm ! negative for odd m
-    
+
     lam_lm(1:3,m:lmax) = 0.0_dp
     ! --- l = m ---
-    lam_lm(1,m) = corfac * lam_mm !Actual lam_mm 
+    lam_lm(1,m) = corfac * lam_mm !Actual lam_mm
 
     if (m >= l_min) then ! skip Ymm if too small
        lam_lm(2,m) =  (normal_m * lam_lm(1,m))  * ( 0.5_dp - one_on_s2 )
@@ -906,14 +912,14 @@ contains
           scalel= scalel - 1
           corfac = rescale_tab(max(scalel,RSMIN))
        endif
-                   
+
     enddo ! loop on l
   end subroutine do_lam_lm_pol
   !=======================================================================
   subroutine gen_normpol(l_max, normal_l)
     !=======================================================================
     ! generates normalisaton factors for polarisation basis functions
-    ! for all l 
+    ! for all l
     !=======================================================================
     integer(I4B), intent(IN)                       :: l_max
     real(DP),     intent(OUT), dimension(0:l_max)  :: normal_l
@@ -940,7 +946,7 @@ contains
     ! m_cut(theta, l) = theta * l * e / 2 + | ln(eps)| + ln(l)/2
     ! if eps = 1.e-15 and l < 1.e4
     ! m_cut(theta, l) = theta * l * 1.35 + 40
-    ! the choice of 1.35 (or larger) 
+    ! the choice of 1.35 (or larger)
     ! also insures that the equatorial rings will have all their Ylm's computed
     ! default parameters are HPX_MXL0 = 40 and HPX_MXL1 = 1.35_DP
     !======================================================
@@ -1162,7 +1168,7 @@ contains
 
   ! double precision routines
 #include "alm_map_dd_inc.F90"
-  
+
 
   !**************************************************************************
   !
@@ -1299,8 +1305,8 @@ contains
              ! determine lam_mm
              call compute_lam_mm(mfac(m), m, sth(ithl), lam_mm, corfac, scalem)
              ! ---------- l = m ----------
-             !           temperature 
-             lam_lm = corfac * lam_mm !Actual lam_mm 
+             !           temperature
+             lam_lm = corfac * lam_mm !Actual lam_mm
              plm_sub(1, m, ithl) = lam_lm
 
              lam_0 = 0.0_dp
@@ -1317,14 +1323,14 @@ contains
                 fm_on_s2     =      m * one_on_s2(ithl)
                 two_on_s2    = 2.0_dp * one_on_s2(ithl)
                 two_cth_ring = 2.0_dp * cth_ring
-                b_w          =  c_on_s2(ithl) 
+                b_w          =  c_on_s2(ithl)
              endif
              ! ---------- l > m ----------
              do l = m+1, nlmax
                 if (polarisation) lam_lm1m = lam_lm * lam_fact(l)
                 lam_lm = lam_2 * corfac * lam_mm
                 plm_sub(1, l, ithl) = lam_lm
-                
+
                 if (polarisation) then
                    fl = real(l, kind = DP)
                    flm1 = fl - 1.0_dp
@@ -1497,7 +1503,7 @@ contains
        endif
 
        ! read file according to its type
-       if (type < 0) then 
+       if (type < 0) then
           ! ordinary ascii file ?
           lunit = 32
           iline = 0 ! line index

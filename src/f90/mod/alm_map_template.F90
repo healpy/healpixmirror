@@ -1,8 +1,8 @@
 !-----------------------------------------------------------------------------
 !
 !  Copyright (C) 1997-2013 Krzysztof M. Gorski, Eric Hivon,
-!                          Benjamin D. Wandelt, Anthony J. Banday, 
-!                          Matthias Bartelmann, Hans K. Eriksen, 
+!                          Benjamin D. Wandelt, Anthony J. Banday,
+!                          Matthias Bartelmann, Hans K. Eriksen,
 !                          Frode K. Hansen, Martin Reinecke
 !
 !
@@ -86,7 +86,7 @@
     real(DP),     intent(IN),  dimension(1:2),        optional :: zbounds
     real(DP),     intent(IN),  dimension(0:),         optional :: plm
 
-    if (present(plm)) then 
+    if (present(plm)) then
        if (present(zbounds)) then
           if (       (zbounds(1)+1.0_dp) >  EPSILON(1.0_DP) &
                &.or. (zbounds(2)-1.0_dp) < -EPSILON(1.0_DP)) then ! active zbounds
@@ -96,7 +96,7 @@
           call alm2map_sc_pre_KLOAD(nsmax, nlmax, nmmax, alm, map, plm)
        endif
     else
-       if (present(zbounds)) then 
+       if (present(zbounds)) then
           call alm2map_sc_KLOAD(nsmax, nlmax, nmmax, alm, map, zbounds=zbounds)
        else
           call alm2map_sc_KLOAD(nsmax, nlmax, nmmax, alm, map)
@@ -696,7 +696,7 @@
                 if (mod(m+l_start,2) == 1) l_start = l_start+1
                 do l = l_start, nlmax, 2
                    b_ns(1)  = b_ns(1) + &
-                        & cmplx(plm(i_mm+l-m) * dalm(0,l), plm(i_mm+l-m)*dalm(1,l),kind=DP) 
+                        & cmplx(plm(i_mm+l-m) * dalm(0,l), plm(i_mm+l-m)*dalm(1,l),kind=DP)
                 enddo ! loop on l
 
                 b_north(m,ithl) = b_ns(1) + b_ns(-1)
@@ -946,7 +946,7 @@
                    b_ns( 7)    = b_ns( 7)    - lam_lm(3,l) * dalm(3,l) ! U even
                    b_ns( 8)    = b_ns( 8)    + lam_lm(3,l) * dalm(2,l)
                 enddo
-               
+
                 b_TQU(1,m,ithl) = cmplx(b_ns(3) + b_ns(-3), b_ns(4) + b_ns(-2), kind = DP) ! T north
                 b_TQU(4,m,ithl) = cmplx(b_ns(3) - b_ns(-3), b_ns(4) - b_ns(-2), kind = DP) ! T south
                 b_TQU(2,m,ithl) = cmplx(b_ns(5) + b_ns(-1), b_ns(6) + b_ns( 0), kind = DP) ! Q n
@@ -1176,7 +1176,7 @@
                 fm_on_s2     =      m * one_on_s2(ithl)
                 two_on_s2    = 2.0_dp * one_on_s2(ithl)
                 two_cth_ring = 2.0_dp * cth_ring
-                b_w          =  c_on_s2(ithl) 
+                b_w          =  c_on_s2(ithl)
                 do l = m+1, nlmax
                    par_lm = - par_lm  ! = 3 * (-1)^(l+m)
                    if (l >= l_min) then
@@ -1187,7 +1187,7 @@
                       flm1 = fl - 1.0_dp
                       a_w =  two_on_s2 * (fl - fm2)  + flm1 * fl
                       a_x =  two_cth_ring * flm1
-                      lambda_w =                b_w * lam_lm1m - a_w * lam_lm 
+                      lambda_w =                b_w * lam_lm1m - a_w * lam_lm
                       lambda_x = fm_on_s2 * (         lam_lm1m - a_x * lam_lm)
 
                       b_ns(par_lm:  par_lm+1) = b_ns(par_lm:  par_lm+1) + lam_lm   * dalm(0:1,l) ! T even or odd
@@ -1360,9 +1360,9 @@
              dalm(0,ll) =  real(alm_TGC(1,ll,m),kind=dp) ! T, real
              dalm(1,ll) = aimag(alm_TGC(1,ll,m))         ! T, imag
              dalm(2,ll) =  real(alm_TGC(2,ll,m),kind=dp) ! G, real
-             dalm(3,ll) = aimag(alm_TGC(2,ll,m))        
+             dalm(3,ll) = aimag(alm_TGC(2,ll,m))
              dalm(4,ll) =  real(alm_TGC(3,ll,m),kind=dp) ! C, real
-             dalm(5,ll) = aimag(alm_TGC(3,ll,m))        
+             dalm(5,ll) = aimag(alm_TGC(3,ll,m))
           enddo
           do ithl = 0, uchk - lchk
              l_min =  l_min_ylm(m, sth(ithl)) ! lowest l of non-negligible Ylm
@@ -1400,7 +1400,7 @@
 !                       b_ns(4-par_lm) = b_ns(4-par_lm) - plm_sub(3,l) * dalm(3,l) ! U odd (or even)
 !                       b_ns(5-par_lm) = b_ns(5-par_lm) + plm_sub(3,l) * dalm(2,l)
 !                    endif
-                   
+
                 l_start = max(m+1, l_min) ! odd values of (l+m)
                 if (mod(m+l_start,2) == 0) l_start = l_start+1
                 do l = l_start, nlmax, 2
@@ -1415,7 +1415,7 @@
                 l_start = max(m+2, l_min) ! even values of (l+m)
                 if (mod(m+l_start,2) == 1) l_start = l_start+1
                 do l = l_start, nlmax, 2
-                   b_ns(3:4) = b_ns(3:4) + plm_sub(1,l) * dalm(0:1,l) ! T even 
+                   b_ns(3:4) = b_ns(3:4) + plm_sub(1,l) * dalm(0:1,l) ! T even
                    b_ns(5:8) = b_ns(5:8) - plm_sub(2,l) * dalm(2:5,l) ! Q, U  even
                    b_ns(-1)  = b_ns(-1)  + plm_sub(3,l) * dalm(5,l) ! Q odd
                    b_ns( 0)  = b_ns( 0)  - plm_sub(3,l) * dalm(4,l)
@@ -1490,7 +1490,7 @@
   !=======================================================================
   subroutine alm2map_sc_der_KLOAD(nsmax, nlmax, nmmax, alm, map, der1, der2, zbounds)
     !=======================================================================
-    !     computes a map and its 1st and 2nd derivative 
+    !     computes a map and its 1st and 2nd derivative
     !       from its alm for the HEALPIX pixelisation
     !      for the Temperature field
     !
@@ -1823,11 +1823,11 @@
                 der2(istart_north:istart_north+nphl-1,3) = ring(0:nphl-1)
              endif
           endif
-          
+
           if (keep_south(ithl) .and. ith < nrings) then
              call ring_synthesis(nsmax,nlmax,nmmax,b_south(0,ithl),  nphl,ring,kphi0(ithl)) ! south hemisph. w/o equat
              map(istart_south:istart_south+nphl-1) = ring(0:nphl-1)
-             
+
              call ring_synthesis(nsmax,nlmax,nmmax,b_south_t(0,ithl),nphl,ring,kphi0(ithl)) ! south hemisph. w/o equat
              der1(istart_south:istart_south+nphl-1,1) = ring(0:nphl-1)
              call ring_synthesis(nsmax,nlmax,nmmax,b_south_p(0,ithl),nphl,ring,kphi0(ithl)) ! south hemisph. w/o equat
@@ -1870,7 +1870,7 @@
   !=======================================================================
   subroutine alm2map_pol_der_KLOAD(nsmax, nlmax, nmmax, alm_TGC, map_TQU, der1, der2, zbounds)
     !=======================================================================
-    !     computes a map and its 1st and 2nd derivative 
+    !     computes a map and its 1st and 2nd derivative
     !       from its alm for the HEALPIX pixelisation
     !      for the Temperature and polarisation fields
     !
@@ -2086,7 +2086,7 @@
                       ! dX_lm/dtheta = (l/tan(theta)*X_lm - S*m/l/sin(theta)*W_lm -fact/sin(theta)*sqrt(1-S^2/l^2)*X_l-1m
                       a0 = fl * cotanth          ! l/tan(theta)
                       at = lam_fact_der(l) * one_on_s1 ! sqrt((2l+1)/(2l-1)*(l^2-m^2))/sin(theta)
-                      derY   = a0 * lam_lm(1,l) - at * lam_lm(1,l-1)                   
+                      derY   = a0 * lam_lm(1,l) - at * lam_lm(1,l-1)
                       b_ns_t( -par_lm:1-par_lm) = b_ns_t( -par_lm:1-par_lm) + derY * dalm(0:1,l) ! T odd
                    endif
                    if (l > 1) then
@@ -2182,7 +2182,7 @@
                          b_d2(12+k,m,ithl)  = cmplx(b_ns_pp(k0+3) + b_ns_pp(k0-3), &
                            &                     b_ns_pp(k1+3) + b_ns_pp(k1-3), kind=DP)*one_on_s2
                       endif
-                      if (keep_south(ithl)) then 
+                      if (keep_south(ithl)) then
                          ! dfield/dtheta^2
                          b_d2(3+k,m,ithl)   = cmplx(b_ns_tt(k0+3) - b_ns_tt(k0-3), &
                               &                     b_ns_tt(k1+3) - b_ns_tt(k1-3), kind=DP)
@@ -2311,12 +2311,12 @@
   !**************************************************************************
   !
   !             MAP2ALM
-  ! 
+  !
   !**************************************************************************
   !=======================================================================
   !  map2alm(nsmax, nlmax, nmmax, map, alm [, zbound, w8ring ,plm])
   !
-  !     computes the a(l,m) from a map (temperature only or polarized) 
+  !     computes the a(l,m) from a map (temperature only or polarized)
   !           for the HEALPIX pixelisation
   !
   !     For the Temperature field
@@ -2349,7 +2349,7 @@
     real(DP),     intent(IN),  dimension(0:), optional          :: plm
     !
     real(DP),     dimension(1:2) :: zbounds
-    
+
     call warning_oldbounds(cos_theta_cut, zbounds)
     if (present(plm)) then
        call map2alm(nsmax, nlmax, nmmax, map, alm, zbounds, w8ring, plm)
@@ -2370,7 +2370,7 @@
     real(DP),     intent(IN),  dimension(0:), optional          :: plm
     !
     real(DP),     dimension(1:2) :: zbounds
-    
+
     call warning_oldbounds(cos_theta_cut, zbounds)
     if (present(plm)) then
        call map2alm(nsmax, nlmax, nmmax, map_TQU, alm_TGC, zbounds, w8ring, plm)
@@ -2391,7 +2391,7 @@
     real(DP),     intent(IN),  dimension(0:,1:)         :: plm
     !
     real(DP),     dimension(1:2) :: zbounds
-    
+
     call warning_oldbounds(cos_theta_cut, zbounds)
     call map2alm(nsmax, nlmax, nmmax, map_TQU, alm_TGC, zbounds, w8ring, plm)
 
@@ -2587,9 +2587,9 @@
                 phm = phas_n(m,ithl) - phas_s(m,ithl) ! diff (if (l+m) odd)
                 phas_sd(-1:0) =  (/ real(phm, kind=dp), aimag(phm) /)
                 phas_sd( 1:2) =  (/ real(php, kind=dp), aimag(php) /)
-                
+
                 if (m >= l_min) then
-                   lam_lm = corfac * lam_mm !Actual lam_mm 
+                   lam_lm = corfac * lam_mm !Actual lam_mm
                    dalm(1:2, m) = dalm(1:2, m) + lam_lm * phas_sd(par_lm:par_lm+1)
                 endif
 
@@ -2861,7 +2861,7 @@
 
                 phas_sd1(-1:2) =  (/ real(phm1, kind=dp), aimag(phm1), real(php1, kind=dp), aimag(php1) /)
                 phas_sd2(-1:2) =  (/ real(phm2, kind=dp), aimag(phm2), real(php2, kind=dp), aimag(php2) /)
-                
+
                 l_start = max(m, l_min) ! even values of (l+m)
                 if (mod(m+l_start,2) == 1) l_start = l_start + 1
                 do l = l_start, nlmax, 2
@@ -3060,7 +3060,7 @@
                 phm = phas_n(m,ithl) - phas_s(m,ithl) ! diff (if (l+m) odd)
                 phas_sd(-1:0) =  (/ real(phm, kind=dp), aimag(phm) /)
                 phas_sd( 1:2) =  (/ real(php, kind=dp), aimag(php) /)
-                
+
                 !           ---------- l >= m ----------
                 l_start = max(m, l_min) ! even values of (l+m)
                 if (mod(m+l_start,2) == 1) l_start = l_start+1
@@ -3311,10 +3311,10 @@
 
                 do i=0,2 ! loop on T, Q, U
                    phm = phas_ns(m, 2*i, ithl) - phas_ns(m, 2*i+1, ithl) ! N-S: (l+m) odd
-                   phas_sd(-3+2*i)   =  real(phm, kind=dp) 
+                   phas_sd(-3+2*i)   =  real(phm, kind=dp)
                    phas_sd(-3+2*i+1) = aimag(phm)
                    php = phas_ns(m, 2*i, ithl) + phas_ns(m, 2*i+1, ithl) ! N+S: (l+m) even
-                   phas_sd( 3+2*i)   =  real(php, kind=dp) 
+                   phas_sd( 3+2*i)   =  real(php, kind=dp)
                    phas_sd( 3+2*i+1) = aimag(php)
                 enddo
                 phas_sdx(-3: 0) = (/ phas_sd(8), - phas_sd(7), - phas_sd(6),   phas_sd(5) /)
@@ -3346,7 +3346,7 @@
                 fm_on_s2     =      m * one_on_s2(ithl)
                 two_on_s2    = 2.0_dp * one_on_s2(ithl)
                 two_cth_ring = 2.0_dp * cth_ring
-                b_w          =  c_on_s2(ithl) 
+                b_w          =  c_on_s2(ithl)
                 do l = m+1, nlmax
                    par_lm   = - par_lm  ! = 3 * (-1)^(l+m)
                    lam_lm1m = lam_lm * lam_fact(l) ! must be incremented, even if not used
@@ -3357,7 +3357,7 @@
                       flm1 = fl - 1.0_dp
                       a_w =  two_on_s2 * (fl - fm2)  + flm1 * fl
                       a_x =  two_cth_ring * flm1
-                      lambda_w =                b_w * lam_lm1m - a_w * lam_lm 
+                      lambda_w =                b_w * lam_lm1m - a_w * lam_lm
                       lambda_x = fm_on_s2 * (         lam_lm1m - a_x * lam_lm)
 
                       dalm(0:1, l) = dalm(0:1, l) + lam_lm * phas_sd(par_lm:par_lm+1)
@@ -3380,7 +3380,7 @@
                       scalel= scalel - 1
                       corfac = rescale_tab(max(scalel+scalem,RSMIN))
                    endif
-                   
+
                 enddo ! loop on l
              endif ! test on cut sky
           enddo ! loop on ithl
@@ -3585,10 +3585,10 @@
 
                 do i=0,2 ! loop on T, Q, U
                    phm = phas_ns(m, 2*i, ithl) - phas_ns(m, 2*i+1, ithl) ! N-S: (l+m) odd
-                   phas_sd(-3+2*i)   =  real(phm, kind=dp) 
+                   phas_sd(-3+2*i)   =  real(phm, kind=dp)
                    phas_sd(-3+2*i+1) = aimag(phm)
                    php = phas_ns(m, 2*i, ithl) + phas_ns(m, 2*i+1, ithl) ! N+S: (l+m) even
-                   phas_sd( 3+2*i)   =  real(php, kind=dp) 
+                   phas_sd( 3+2*i)   =  real(php, kind=dp)
                    phas_sd( 3+2*i+1) = aimag(php)
                 enddo
                 phas_sdx(-3: 0) = (/ phas_sd(8), - phas_sd(7), - phas_sd(6),   phas_sd(5) /)
@@ -3616,7 +3616,7 @@
                 fm_on_s2     =      m * one_on_s2(ithl)
                 two_on_s2    = 2.0_dp * one_on_s2(ithl)
                 two_cth_ring = 2.0_dp * cth_ring
-                b_w          =  c_on_s2(ithl) 
+                b_w          =  c_on_s2(ithl)
                 do l = m+1, nlmax
                    par_lm = - par_lm  ! = 3 * (-1)^(l+m)
                    if (l >= l_min) then
@@ -3627,7 +3627,7 @@
                       flm1 = fl - 1.0_dp
                       a_w =  two_on_s2 * (fl - fm2)  + flm1 * fl
                       a_x =  two_cth_ring * flm1
-                      lambda_w =                b_w * lam_lm1m - a_w * lam_lm 
+                      lambda_w =                b_w * lam_lm1m - a_w * lam_lm
                       lambda_x = fm_on_s2 * (         lam_lm1m - a_x * lam_lm)
 
                       dalm(0:1, l) = dalm(0:1, l) + lam_lm * phas_sd(par_lm:par_lm+1)
@@ -3795,7 +3795,7 @@
        endif
 !$OMP do schedule(dynamic,1)
 
-       do m = 0, nmmax 
+       do m = 0, nmmax
 
           ! introduce double precision vector to perform summation over ith for each l
           dalm(0:5, m:nlmax) = 0.0_dp
@@ -3812,10 +3812,10 @@
 
                 do i=0,2 ! loop on T, Q, U
                    phm = phas_ns(m, 2*i, ithl) - phas_ns(m, 2*i+1, ithl) ! N-S: (l+m) odd
-                   phas_sd(-3+2*i)   =  real(phm, kind=dp) 
+                   phas_sd(-3+2*i)   =  real(phm, kind=dp)
                    phas_sd(-3+2*i+1) = aimag(phm)
                    php = phas_ns(m, 2*i, ithl) + phas_ns(m, 2*i+1, ithl) ! N+S: (l+m) even
-                   phas_sd( 3+2*i)   =  real(php, kind=dp) 
+                   phas_sd( 3+2*i)   =  real(php, kind=dp)
                    phas_sd( 3+2*i+1) = aimag(php)
                 enddo
                 phas_sdx(-3: 0) = (/ phas_sd(8), - phas_sd(7), - phas_sd(6),   phas_sd(5) /)
@@ -3823,7 +3823,7 @@
 
                 !           ---------- l = m ----------
                 if (m >= l_min) then
-                   
+
                    ! alm_T = \int T Ylm
                    ! alm_G = \int ( - Q Wlm - i U Xlm )
                    ! alm_C = \int ( - U Wlm + i Q Xlm )
@@ -3925,7 +3925,7 @@
     npixtot = nside2npix(nsmax)
     if (size(map_TQU,1) /= npixtot) then
        print*,'map 1st dim does not match nside ',size(map_TQU,1),npixtot,nsmax
-       call fatal_error(code)       
+       call fatal_error(code)
     endif
 
     n_alms = size(alm_TGC,1)
@@ -4047,7 +4047,7 @@
           call map2alm(nsmax, nlmax, nmmax, map_TQU, alm_TGC, zbounds_in, w8ring_in, p_plm_1)
        case(13) ! T+P with precomputed Ylm
           call map2alm(nsmax, nlmax, nmmax, map_TQU, alm_TGC, zbounds_in, w8ring_in, plm)
-       case default 
+       case default
           print*,'Invalid configuration'
           call fatal_error(code)
        end select
@@ -4087,7 +4087,7 @@
           call alm2map(nsmax, nlmax, nmmax, alm_TGC_out, map_TQU, plm=p_plm_1)
        case(13)
           call alm2map(nsmax, nlmax, nmmax, alm_TGC_out, map_TQU, plm=plm)
-       case default 
+       case default
           print*,'Invalid configuration'
           call fatal_error(code)
        end select
@@ -4116,7 +4116,7 @@
        map_TQU = map_TQU_in ! input map (masked)
        deallocate(alm_TGC_out, map_TQU_in)
     endif
- 
+
     if (associated(p_map_1)) nullify(p_map_1)
     if (associated(p_plm_1)) nullify(p_plm_1)
 
@@ -4172,7 +4172,7 @@
     npixtot = nside2npix(nsmax)
     if (long_size(map_TQU,1) /= npixtot) then
        print*,'map 1st dim does not match nside ',size(map_TQU,1),npixtot,nsmax
-       call fatal_error(code)       
+       call fatal_error(code)
     endif
 
     n_alms = size(alm_TGC,1)
@@ -4305,7 +4305,7 @@
           call map2alm(nsmax, nlmax, nmmax, map_TQU, alm_TGC, zbounds_run, w8ring_in, p_plm_1)
        case(13) ! T+P with precomputed Ylm
           call map2alm(nsmax, nlmax, nmmax, map_TQU, alm_TGC, zbounds_run, w8ring_in, plm)
-       case default 
+       case default
           print*,'Invalid configuration'
           call fatal_error(code)
        end select
@@ -4348,7 +4348,7 @@
           call alm2map(nsmax, nlmax, nmmax, alm_TGC_out, map_TQU, plm=p_plm_1)
        case(13)
           call alm2map(nsmax, nlmax, nmmax, alm_TGC_out, map_TQU, plm=plm)
-       case default 
+       case default
           print*,'Invalid configuration'
           call fatal_error(code)
        end select
@@ -4370,7 +4370,7 @@
        map_TQU = map_TQU_in ! input map (masked)
        deallocate(alm_TGC_out, map_TQU_in)
     endif
- 
+
     if (associated(p_map_1)) nullify(p_map_1)
     if (associated(p_plm_1)) nullify(p_plm_1)
 
@@ -4387,7 +4387,7 @@
   !=======================================================================
   subroutine alter_alm_KLOAD(nsmax, nlmax, nmmax, fwhm_arcmin, alm, beam_file, window)
     !=======================================================================
-    !     multiply the alm by a gaussian function of FWHM fwhm_arcmin, 
+    !     multiply the alm by a gaussian function of FWHM fwhm_arcmin,
     !        or a beam_file or an arbitrary window
     !     --> equivalent to a convolution in real sphere
     !=======================================================================
@@ -4821,7 +4821,7 @@
     !       (respectively Temp, Grad or Electric component
     !        and Curl or Magnetic one)
     !
-    ! 2014-05-28: support of POLAR=2, in which the unconventional  
+    ! 2014-05-28: support of POLAR=2, in which the unconventional
     ! TC (=TB) and GC (=EB) spectra (if available in the input FITS file),
     ! are taken into account
     !
@@ -4881,7 +4881,7 @@
        bcoupling    = .false.
     elseif (polar == 2) then
        polarisation = .true.
-       bcoupling    = .true.       
+       bcoupling    = .true.
     else
        print*,code//'> wrong choice of polar: '//trim(string(polar))
        print*,code//'> must be 0, 1 or 2'
@@ -4922,7 +4922,7 @@
     if (polarisation .and. bcoupling) ncl = 6
 
     junk = getsize_fits(filename, nmaps=ncl_file)
-    if (ncl_file < ncl) then 
+    if (ncl_file < ncl) then
        print*,code//'> Only '//trim(string(ncl_file))//' spectra found in '//trim(filename)
        print*,code//'> Expected at least '//trim(string(ncl))
        print*,code//'> WARNING: absent (cross-)spectra will be set to 0'
@@ -5098,7 +5098,7 @@
           zeta1   = CMPLX(zeta1_r, zeta1_i, kind=KALM)
           alm_TGC(1, l, m)                   = zeta1 * rms_tt
           if (polarisation) alm_TGC(2, l, m) = zeta1 * rms_g1
-          if (bcoupling)    alm_TGC(3, l, m) = zeta1 * rms_c1 
+          if (bcoupling)    alm_TGC(3, l, m) = zeta1 * rms_c1
        enddo
     enddo
 
@@ -5127,7 +5127,7 @@
                 rms_g2 = sqrt( var_g2 )
                 rms_c2 = ( cls_gc(l) - cls_tc(l) * (cls_tg(l) / cls_tt(l)) ) / rms_g2
              endif
-             var_c3 = cls_cc(l) - rms_c1**2 - rms_c2**2 
+             var_c3 = cls_cc(l) - rms_c1**2 - rms_c2**2
              if (var_c3 <= ZERO) then
                 if (abs(var_c3) > abs(1.e-8*cls_cc(l))) then
                    print*,code//'> Inconsistent spectra at l=',l
@@ -5208,14 +5208,14 @@
   !========================================================
     ! computes C(l) from a_lm1, a_lm2, in the order
     ! TT, [EE, TE, BB, [TB, EB, [ET, BT, BE]]]
-    ! TE= alm1_T * alm2_E 
+    ! TE= alm1_T * alm2_E
     ! unless symmetric is set : TE = (alm1_T * alm2_E + alm1_E * alm2_T)/2
     !=======================================================
     integer(I4B),                        intent(in) :: nlmax, nmmax
     complex(KALMC), dimension(1:,0:,0:), intent(in) :: alm1, alm2
     real(KALM)    , dimension(0:, 1: ),  intent(out):: cl
     logical(LGT),   optional,            intent(in) :: symmetric
-    ! 
+    !
     integer(I4B) :: ncl, na1, na2, k1, k2
     real(DP), parameter :: half = 0.500000000000000000_dp
     logical(LGT) :: polarisation, bcoupling, do_sym, asympol
@@ -5247,11 +5247,11 @@
        ! GG or EE power spectrum
        k1 = 2_i4b
        call sub_alm2cl(alm1, k1, alm2, k1, cl, k1)
-       
+
        ! CC or BB power spectrum
        k1 = 3_i4b
        call sub_alm2cl(alm1, k1, alm2, k1, cl, k1)
-       
+
        ! TG or TE power spectrum
        call sub_alm2cl(alm1, 1_i4b, alm2, 2_i4b, cl_work, 1_i4b)
        call sub_alm2cl(alm1, 2_i4b, alm2, 1_i4b, cl_work, 2_i4b)
@@ -5278,7 +5278,7 @@
           if (asympol) cl(0:,k2) =                cl_work(0:,2)
           if (do_sym ) cl(0:,k1) = (cl_work(0:,1)+cl_work(0:,2)) * half
        endif
-    endif 
+    endif
 
     if (allocated(cl_work)) deallocate(cl_work)
 
@@ -5293,7 +5293,7 @@
     integer(I4B),                      intent(in) :: nlmax, nmmax
     complex(KALMC), dimension(1:,0:,0:), intent(in) :: alm1
     real(KALM)    , dimension(0:, 1: ),  intent(out):: cl
-    ! 
+    !
     integer(I4B) :: ncl
     !========================================================
 
@@ -5326,7 +5326,7 @@
     ! based on equation (4.4.1) in Edmonds (1957).
     ! the Risbo's scatter scheme has been repladed by a gather scheme for
     ! better computing efficiency
-    ! the size of the matrix is divided by 2 using Edmonds Eq.(4.2.5) 
+    ! the size of the matrix is divided by 2 using Edmonds Eq.(4.2.5)
     ! to speed up calculations
     ! the loop on j has been unrolled for further speed-up
     ! EH, March--April 2005
@@ -5346,7 +5346,7 @@
     real(DP)     :: p, q, pj, qj, fj, temp
     character(len=*), parameter :: code = 'ROTATE_ALM'
     !==========================================================
-    
+
     if (abs(psi) > 2.d0*PI .or. abs(phi) > 2.d0*PI .or. abs(theta) > 2.d0*PI) then
        write(*,'(a,3(g12.4))') code,psi,theta,phi
        call fatal_error(code//': angles should be in Radians')
@@ -5369,7 +5369,7 @@
     call assert_alloc(status,code,'alm1 & alm2')
     allocate(tsign(0:lmax+1), stat = status)
     call assert_alloc(status,code,'tsign')
-    
+
     do i=0, lmax,2
        tsign(i)   =  1.0_dp
        tsign(i+1) = -1.0_dp
@@ -5513,7 +5513,7 @@
     !==============================================================================
     ! extract one ring from a 1-dim RING ordered map, applying weight
     ! or build a ring from a list of pixels and signal (if partial is set and pixels is defined)
-    !==============================================================================    
+    !==============================================================================
     real(KMAP),   intent(IN),  dimension(0:)     :: map
     integer(I8B), intent(IN)                     :: start_pix
     integer(I4B), intent(IN)                     :: np_in_ring
@@ -5559,8 +5559,8 @@
     !==============================================================================
     ! extract one ring from a N-dim RING ordered map, applying weight
     ! or build a ring from a list of pixels and signal (if partial is set and pixels is defined)
-    !==============================================================================    
-    
+    !==============================================================================
+
     real(KMAP),   intent(IN),  dimension(0:,1:)  :: map
     integer(I8B), intent(IN)                     :: start_pix
     integer(I4B), intent(IN)                     :: np_in_ring, idim
@@ -5607,7 +5607,7 @@
     !==============================================================================
     ! puts one ring into a 1-dim RING ordered map
     ! or extract signal corresponding to a list of pixels from a ring (if partial is set and pixels is defined)
-    !==============================================================================    
+    !==============================================================================
     real(DP),     intent(IN),  dimension(0:)     :: ring
     real(KMAP),   intent(OUT), dimension(0:)     :: map
     integer(I8B), intent(IN)                     :: start_pix
@@ -5640,7 +5640,7 @@
        enddo
 
     else ! full sky case
-       map(start_pix: end_pix) = ring(0:np_in_ring-1) 
+       map(start_pix: end_pix) = ring(0:np_in_ring-1)
     endif
 
     return
@@ -5652,7 +5652,7 @@
     !==============================================================================
     ! puts one ring into a n-dim RING ordered map
     ! or extract signal corresponding to a list of pixels from a ring (if partial is set and pixels is defined)
-    !==============================================================================    
+    !==============================================================================
     real(DP),     intent(IN),  dimension(0:)     :: ring
     real(KMAP),   intent(OUT), dimension(0:,1:)  :: map
     integer(I8B), intent(IN)                     :: start_pix
@@ -5685,7 +5685,7 @@
        enddo
 
     else ! full sky case
-       map(start_pix: end_pix, idim) = ring(0:np_in_ring-1) 
+       map(start_pix: end_pix, idim) = ring(0:np_in_ring-1)
     endif
 
     return
