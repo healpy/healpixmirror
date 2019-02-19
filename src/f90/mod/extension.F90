@@ -1,8 +1,8 @@
 !-----------------------------------------------------------------------------
 !
 !  Copyright (C) 1997-2013 Krzysztof M. Gorski, Eric Hivon,
-!                          Benjamin D. Wandelt, Anthony J. Banday, 
-!                          Matthias Bartelmann, Hans K. Eriksen, 
+!                          Benjamin D. Wandelt, Anthony J. Banday,
+!                          Matthias Bartelmann, Hans K. Eriksen,
 !                          Frode K. Hansen, Martin Reinecke
 !
 !
@@ -41,117 +41,49 @@ module extension
   ! 2013-05-07: G95-compatible
   ! 2015-07-31: G95-compatible
   ! 2016-05: edited for __GFORTRAN__
-  
-#ifdef NAG
-  USE f90_unix, ONLY : iargc, getarg, exit
-#endif
-!VF  USE dflib, ONLY : nargs, getarg
 
   USE healpix_types, ONLY : I4B, I8B
   IMPLICIT none
 
-#if ((!defined(NAG)) && (!defined(GFORTRAN)) && (!defined(__GFORTRAN__)))
-interface
-  function iargc()
-    integer iargc
-  end function
-
-  subroutine getarg (num, res)
-    integer, intent(in) :: num
-    character(len=*), intent(out) :: res
-  end subroutine
-end interface
-#endif
-
-! work-around G95 bug (2013-05-07)
-  integer(kind=I4B), parameter, private :: arg_shift = 0
-!  integer(kind=I4B), private :: arg_shift = 0
-!VF  integer(kind=I4B), private :: arg_shift = 1
-
-#ifdef NO64BITS
-  interface exit_with_status
-     module procedure exit_with_status
-  end interface
-#else
-  interface exit_with_status
-     module procedure exit_with_status, exit_with_status_8
-  end interface
-#endif
   private
   public :: getEnvironment, getArgument, nArguments, exit_with_status
 
-  contains
-
-#if (defined (GFORTRAN) || defined(__GFORTRAN__) )
-
-    ! ===========================================================
-    function iargc ()
-    ! ===========================================================
-       integer iargc
-       ! ===========================================================
-
-       iargc=command_argument_count()
-    end function
-
-    ! ===========================================================
-    subroutine getarg(num, res)
-    ! ===========================================================
-       !integer, intent(in) :: num ! G95, 2015-07-30
-       integer(i4b), intent(in) :: num
-       character(len=*), intent(out) :: res
-       integer num1, l, err
-       ! ===========================================================
-       num1 = num
-       call get_command_argument(num1,res,l,err)
+  ! interface for the exit() method, which is part of the C library and
+  ! should be linked automatically to Fortran programs
+  interface
+    subroutine exit(status) bind(C, name="exit")
+    use iso_c_binding
+    integer(c_int), value :: status
     end subroutine
+  end interface
 
-#endif
+  contains
 
     ! ===========================================================
     function nArguments() result(narg)
       ! ===========================================================
       integer(kind=I4B) :: narg
       ! ===========================================================
-
-      narg = iargc() - arg_shift
-!VF      narg = nargs() - arg_shift
-
-      return
+      narg = command_argument_count()
     end function nArguments
     ! ===========================================================
     subroutine getEnvironment(name, value)
       ! ===========================================================
       character(len=*), intent(in) :: name
       character(len=*), intent(out) :: value
-      integer(kind=I4B) :: inull, lnstr
-!       character(len=200) :: name1
-      ! ===========================================================
-      ! call C routine after adding a trailing NULL to input
-      value = ""
-      call cgetenvironment(trim(adjustl(name))//char(0), value)
-      ! remove trailing NULL (\0) created by C routine on output
-      lnstr = len(value)
-      inull = index(value, char(0), back=.true.)
-      if (inull > 0 .and. inull < lnstr) value(inull:inull) = " "
-
-      return
+      value=""
+      CALL get_environment_variable(name, value)
     end subroutine getEnvironment
     ! ===========================================================
     subroutine getArgument(index, argument)
       ! ===========================================================
       integer(kind=I4B), intent(in) :: index
       character(len=*), intent(out) :: argument
-      integer(kind=I4B) :: i1
       ! ===========================================================
-      i1 = index + arg_shift
-      call getarg(i1, argument)
-
-      return
+      argument=""
+      call get_command_argument(index, argument)
     end subroutine getArgument
 
-
-
-! i4b and i8b versions of exit_with_status   ! G95 2015-07-30
     ! ===========================================================
     subroutine exit_with_status (code, msg)
       ! ===========================================================
@@ -160,30 +92,7 @@ end interface
       ! ===========================================================
       if (present(msg)) print *,trim(msg)
       print *,'program exits with exit code ', code
-#if (defined (RS6000))
-      call exit_ (code)
-#else
       call exit (code)
-#endif
     end subroutine exit_with_status
-
-#ifndef NO64BITS
-    ! ===========================================================
-    subroutine exit_with_status_8 (code, msg)
-      ! ===========================================================
-      integer(i8b), intent(in) :: code
-      character (len=*), intent(in), optional :: msg
-      ! ===========================================================
-      if (present(msg)) print *,trim(msg)
-      print *,'program exits with exit code ', code
-#if (defined (RS6000))
-      call exit_ (code)
-#else
-      call exit (code)
-#endif
-    end subroutine exit_with_status_8
-#endif
-
-
 
 end module extension
