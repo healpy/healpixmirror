@@ -21,7 +21,6 @@ void gifstr  (
   int        i,j,c;
   int        xs, ys;
   int        *ct;
-  char       *f;
 
   if (*nx < 300) {
     ft = gdFontTiny;
@@ -57,11 +56,11 @@ void gifstr  (
 
   ys = *sy - ft->h / 2;
   if (*or < 0) {
-    xs = *sx - ((strlen(f) + 1) * ft->w);
+    xs = *sx - ((strlen(fn) + 1) * ft->w);
   } else if (*or > 0) {
     xs = *sx + ft->w;
   } else {
-    xs = *sx - (strlen(f) * ft->w / 2);
+    xs = *sx - (strlen(fn) * ft->w / 2);
   }
 
   gdImageString(im, ft,	xs, ys,	fn, ct[0]);
