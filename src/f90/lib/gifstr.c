@@ -4,7 +4,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "chopst.h"
 #include "gd.h"
 #include "gdfontt.h"
 #include "gdfonts.h"
@@ -12,15 +11,11 @@
 #include "gdfontl.h"
 #include "gdfontg.h"
 
-#ifdef RS6000
 void gifstr  (
-#else
-void gifstr_ (
-#endif
 	      int *x, int *nx, int *ny,
 	      int *sx, int *sy,
 	      int *nc, int *r, int *g, int *b,
-	      int *or, char *fn, int n) {
+	      int *or, char *fn) {
   gdImagePtr im;
   gdFontPtr  ft;
   int        i,j,c;
@@ -40,10 +35,6 @@ void gifstr_ (
     ft = gdFontGiant;
   }
 
-  /* chop off last character from file name */
-
-  f = (char *)chopst(fn,n);
-  
   /* create a new image with appropriate dimensions */
 
   im = gdImageCreate(*nx, *ny);
@@ -73,7 +64,7 @@ void gifstr_ (
     xs = *sx - (strlen(f) * ft->w / 2);
   }
 
-  gdImageString(im, ft,	xs, ys,	f, ct[0]);
+  gdImageString(im, ft,	xs, ys,	fn, ct[0]);
 
   for (i = 0; i < *nx; i++) {
     for (j = 0; j < *ny; j++) {

@@ -2,8 +2,8 @@
 !-----------------------------------------------------------------------------
 !
 !  Copyright (C) 1997-2013 Krzysztof M. Gorski, Eric Hivon,
-!                          Benjamin D. Wandelt, Anthony J. Banday, 
-!                          Matthias Bartelmann, Hans K. Eriksen, 
+!                          Benjamin D. Wandelt, Anthony J. Banday,
+!                          Matthias Bartelmann, Hans K. Eriksen,
 !                          Frode K. Hansen, Martin Reinecke
 !
 !
@@ -28,11 +28,10 @@
 !-----------------------------------------------------------------------------
 
 ! ---------------------------------------------------------------------
-! Module [gifmod] provides six subroutines: [setcol] to set color
+! Module [gifmod] provides five subroutines: [setcol] to set color
 !   tables, [addbar] to add a color bar, [addttl] to add a title
 !   string, [imgscl] to scale an image array to the color table,
-!   [gifmap] to write an array as a GIF file, and [gifget] to read a
-!   GIF file into an array.
+!   and [gifmap] to write an array as a GIF file.
 !
 !
 ! Matthias Bartelmann and Anthony J. Banday, Dec. 1998
@@ -44,6 +43,7 @@
 ! ---------------------------------------------------------------------
 
 module gifmod
+   use iso_c_binding
    use healpix_types
    use misc_utils
    implicit none
@@ -209,7 +209,23 @@ module gifmod
    end interface
 
    private
-   public addbar,addttl,setcol,imgscl,gifmap,gifget
+   public addbar,addttl,setcol,imgscl,gifmap
+
+   interface
+     subroutine gifout(x,nx,ny,r,g,b,nc,fn) bind(C, name="gifout")
+     use iso_c_binding
+     implicit none
+     integer (c_int), intent(in) :: x(*), nx, ny, r(*), g(*), b(*), nc
+     character(c_char), intent(in) :: fn(*)
+     end subroutine
+     subroutine gifstr(x,nx,ny,sx,sy,nc,r,g,b,or_,fn) bind(C, name="gifstr")
+     use iso_c_binding
+     implicit none
+     integer (c_int), intent(out) :: x(*)
+     integer (c_int), intent(in) :: nx, ny, sx, sy, nc, r(*), g(*), b(*), or_
+     character(c_char), intent(in) :: fn(*)
+     end subroutine
+   end interface
 
 contains
 
@@ -239,7 +255,7 @@ contains
       do j=1, ny
          arvs(:,ny-j+1) = a(:,j)
       enddo
-      call gifout(arvs, nx, ny, r, g, b, nc, fn)
+      call gifout(arvs, nx, ny, r, g, b, nc, trim(fn)//C_NULL_CHAR)
       deallocate(arvs)
 
    end subroutine gifmap
@@ -301,7 +317,7 @@ contains
          enddo
 !$OMP END DO
 !$OMP END PARALLEL
-            
+
 
       else
          amax = maxval(a)
@@ -485,37 +501,8 @@ contains
       nx = size(a,1)
       ny = size(a,2)
 
-      call gifstr(a(:,ny:1:-1),nx,ny,i,j,nc,r,g,b,or,trim(s))
+      call gifstr(a(:,ny:1:-1),nx,ny,i,j,nc,r,g,b,or,trim(s)//C_NULL_CHAR)
 
    end subroutine addstr
-
-   ! ------------------------------------------------------------------
-   ! gifget: reads GIF image from file [fn] as an integer array [ia];
-   !         the three components of [ia] are red, green, and blue;
-   ! ------------------------------------------------------------------
-
-   subroutine gifget(a,fn)
-      use healpix_types
-      implicit none
-      integer(i4b) :: nx,ny
-      integer(i4b), allocatable, dimension(:) :: rc,gc,bc
-      integer(i4b), allocatable, dimension(:) :: x
-      integer(i4b), pointer, dimension(:,:) :: a
-      character(len=*), intent(in) :: fn
-
-      call gifdim(nx,ny,nc,fn)
-
-      allocate(x(nx*ny))
-      allocate(rc(nc),gc(nc),bc(nc))
-
-      call gifarr(x,nx,ny,rc,gc,bc,nc,fn)
-      call setcol(rc,gc,bc)
-
-      allocate(a(nx,ny))
-      a = reshape(x,(/nx,ny/))
-
-      deallocate(x,rc,gc,bc)
-
-   end subroutine gifget
 
 end module gifmod

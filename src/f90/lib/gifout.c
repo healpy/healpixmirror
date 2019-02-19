@@ -3,27 +3,18 @@
    M. Bartelmann, Nov. 25, 1998 */
 
 #include "gd.h"
-#include "chopst.h"
 #include <stdio.h>
 #include <stdlib.h>
 
-#ifdef RS6000
 void gifout  (
-#else
-void gifout_ (
-#endif
 	      int *x, int *nx, int *ny,
-	      int *r, int *g, int *b, int *nc, char *fn, int n) {
+	      int *r, int *g, int *b, int *nc, char *fn) {
 
   gdImagePtr im;
   FILE       *out;
   int        i, j, c;
   int        *ct;
   char       *f;
-
-  /* chop off last character from file name */
-
-  f  = (char *)chopst(fn, n);
 
   /* create a new image with appropriate dimensions */
 
@@ -47,7 +38,7 @@ void gifout_ (
 
   /* write image to gif file */
 
-  out = fopen(f, "wb");
+  out = fopen(fn, "wb");
   gdImageGif(im, out);
   fclose(out);
 

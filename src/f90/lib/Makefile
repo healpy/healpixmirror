@@ -1,12 +1,12 @@
 # -*- Makefile -*-
 
 fac	= lib
-inc     = 
+inc     =
 VPATH	= $(BINDIR)
 #exec	= $(BINDIR)/$(fac)
 #src	= $(fac).f90
 modobj	= gifmod.o
-gifobj	= gifout.o gifarr.o gifdim.o gifstr.o chopst.o
+gifobj	= gifout.o gifstr.o
 libobj	= gd.o gdfontt.o gdfonts.o gdfontmb.o gdfontl.o gdfontg.o
 obj 	= $(libobj) $(gifobj) $(modobj)
 
@@ -20,7 +20,7 @@ LIB:=$(LIBDIR)/libhpxgif$(LIBSUFFIX)
 ifneq ($(strip $(FLAGNAMELIB)),)
 NAMELIB = $(FLAGNAMELIB)$(notdir $(LIB))
 else
-NAMELIB = 
+NAMELIB =
 endif
 
 # library creation
@@ -37,7 +37,7 @@ $(LIB): $(OBJ)
 
 # create build sub-directory
 %_mkdir:
-	@if [ ! -d $* ]; then $(MKDIR) $* ; fi 
+	@if [ ! -d $* ]; then $(MKDIR) $* ; fi
 
 
 # objects creation
