@@ -38,7 +38,7 @@
      specific task.
    - Specify the required libraries when linking your executable. For this
      release of the software, this should be (order is important!):
-     \verbatim-lhealpix_cxx -lcxxsupport -lsharp -lfftpack -lc_utils -lcfitsio\endverbatim
+     \verbatim-lhealpix_cxx -lcxxsupport -lsharp -lcfitsio\endverbatim
 */
 
 /*! \page facilities HEALPix C++ facilities

@@ -233,8 +233,7 @@ SKIP_FUNCTION_MACROS   = YES
 #---------------------------------------------------------------------------
 # Configuration::additions related to external references
 #---------------------------------------------------------------------------
-TAGFILES               = libfftpack.tag=../libfftpack \
-                         cxxsupport.tag=../cxxsupport
+TAGFILES               =
 GENERATE_TAGFILE       = Healpix_cxx.tag
 ALLEXTERNALS           = NO
 EXTERNAL_GROUPS        = YES

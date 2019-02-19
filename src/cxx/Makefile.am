@@ -174,4 +174,7 @@ AM_CPPFLAGS = $(CFITSIO_CFLAGS) -I$(top_srcdir)/c_utils -I$(top_srcdir) -I$(top_
 pkgconfigdir = $(libdir)/pkgconfig
 nodist_pkgconfig_DATA = @PACKAGE_NAME@.pc
 
+doc:
+	cd $(top_srcdir)/docsrc && for i in cxxsupport Healpix_cxx; do doxygen $${i}.dox; mv htmldoc $${i}; done
+
 DISTCLEANFILES=@PACKAGE_NAME@.pc @PACKAGE_NAME@.pc.in  @PACKAGE_NAME@-uninstalled.pc  @PACKAGE_NAME@-uninstalled.sh

@@ -233,7 +233,7 @@ SKIP_FUNCTION_MACROS   = YES
 #---------------------------------------------------------------------------
 # Configuration::additions related to external references
 #---------------------------------------------------------------------------
-TAGFILES               = c_utils.tag=../c_utils libfftpack.tag=../libfftpack
+TAGFILES               =
 GENERATE_TAGFILE       = cxxsupport.tag
 ALLEXTERNALS           = NO
 EXTERNAL_GROUPS        = YES
