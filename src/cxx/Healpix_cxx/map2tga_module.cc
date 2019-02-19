@@ -25,14 +25,14 @@
  */
 
 /*
- *  Copyright (C) 2003-2015 Max-Planck-Society
+ *  Copyright (C) 2003-2019 Max-Planck-Society
  *  Author: Martin Reinecke
  */
 
 #include <sstream>
 #include <iomanip>
 #include <cstdlib>
-#include "safe_ptr.h"
+#include <memory>
 #include "healpix_map.h"
 #include "healpix_map_fitsio.h"
 #include "rotmatrix.h"
@@ -200,7 +200,7 @@ int map2tga_module (int argc, const char **argv)
     "    [-res <float>] [-title <string>] [-flippal] [-gnomonic]\n"
     "    [-interpol] [-equalize] [-viewer <viewer>]\n\n");
 
-  safe_ptr<paramfile> params;
+  unique_ptr<paramfile> params;
   if (argc>2)
     {
     vector<string> leading;

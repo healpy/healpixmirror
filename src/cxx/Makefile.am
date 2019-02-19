@@ -39,7 +39,6 @@ src_cxxsupport = \
   cxxsupport/crangeset.h \
   cxxsupport/rotmatrix.h \
   cxxsupport/safe_cast.h \
-  cxxsupport/safe_ptr.h \
   cxxsupport/share_utils.h \
   cxxsupport/sse_utils_cxx.h \
   cxxsupport/string_utils.h \
