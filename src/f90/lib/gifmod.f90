@@ -40,6 +40,7 @@
 !     replaced WHERE structure by loops in imgscl
 !     used loop to flip A array in gifmap
 ! 2013-05-07: G95-compatible
+! 2019-02-19: simplified C binding (M. Reinecke)
 ! ---------------------------------------------------------------------
 
 module gifmod

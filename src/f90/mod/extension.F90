@@ -41,6 +41,7 @@ module extension
   ! 2013-05-07: G95-compatible
   ! 2015-07-31: G95-compatible
   ! 2016-05: edited for __GFORTRAN__
+  ! 2019-02: M.R. replaced C with Fortran2003 commands
 
   USE healpix_types, ONLY : I4B, I8B
   IMPLICIT none
