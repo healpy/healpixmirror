@@ -88,11 +88,6 @@ C_MKFLAGS = CC="$(C_CC)" PIC="$(C_PIC)" OPT="$(C_OPT)" \
 # ------------------------------ variables for C++ --------------------------
 # C++ configuration
 
-HEALPIX_TARGET =
-EXTERNAL_CFITSIO=yes
-CFITSIO_EXT_LIB=
-CFITSIO_EXT_INC=
-export HEALPIX_TARGET EXTERNAL_CFITSIO CFITSIO_EXT_LIB CFITSIO_EXT_INC
 
 # ------------------------------ variables for Python healpy --------------------------
 

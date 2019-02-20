@@ -100,7 +100,7 @@ echoLn () {
 }
 #-------------
 findFITSLib () {
-    for dir in $* /usr/lib /usr/lib64 /usr/local/lib /usr/local/lib64 /usr/local/lib/cfitsio /usr/local/lib64/cftisio /usr/local/src/cfitsio ${HOME}/lib ${HOME}/lib64 ./src/cxx/${HEALPIX_TARGET}/lib/ /softs/cfitsio/3.4*/lib /softs/cfitsio/3.3*/lib /softs/cfitsio/3.2*/lib /usr/common/usg/cfitsio/3.4*/lib /usr/common/usg/cfitsio/3.3*/lib ; do
+    for dir in $* /usr/lib /usr/lib64 /usr/local/lib /usr/local/lib64 /usr/local/lib/cfitsio /usr/local/lib64/cftisio /usr/local/src/cfitsio ${HOME}/lib ${HOME}/lib64 /softs/cfitsio/3.4*/lib /softs/cfitsio/3.3*/lib /softs/cfitsio/3.2*/lib /usr/common/usg/cfitsio/3.4*/lib /usr/common/usg/cfitsio/3.3*/lib ; do
 	if [ -r "${dir}/lib${LIBFITS}.a" -o -r "${dir}/lib${LIBFITS}.so" -o -r "${dir}/lib${LIBFITS}.dylib" ] ; then
 	    FITSDIR=$dir
 	    break
@@ -109,7 +109,7 @@ findFITSLib () {
 }
 #-------------
 findFITSInclude () {
-    for dir in $* /usr/include /usr/local/include /usr/local/src/cfitsio ${HOME}/include ${HOME}/include64 ./src/cxx/${HEALPIX_TARGET}/include/ /softs/cfitsio/3.4*/include /softs/cfitsio/3.3*/include /softs/cfitsio/3.2*/include /usr/common/usg/cfitsio/3.4*/include /usr/common/usg/cfitsio/3.3*/include /usr/common/usg/cfitsio/3.2*/include ; do
+    for dir in $* /usr/include /usr/local/include /usr/local/src/cfitsio ${HOME}/include ${HOME}/include64 /softs/cfitsio/3.4*/include /softs/cfitsio/3.3*/include /softs/cfitsio/3.2*/include /usr/common/usg/cfitsio/3.4*/include /usr/common/usg/cfitsio/3.3*/include /usr/common/usg/cfitsio/3.2*/include ; do
 	if [ -r "${dir}/fitsio.h" ] ; then
 	    FITSINC=$dir
 	    break
@@ -442,8 +442,7 @@ setCppDefaults () {
 
     CXXDIR=${HEALPIX}/src/cxx
     CFLAGS="-O3 -ffast-math -fopenmp"
-    CXXFLAGS="-O3 -ffast-math -fopenmp -I${HEALPIX}/include -L${HEALPIX}/lib"
-    LDFLAGS="-L${HEALPIX}/lib"
+    CXXFLAGS="-O3 -ffast-math -fopenmp"
 
     CXXPREFIX=$HEALPIX
 }
@@ -498,7 +497,7 @@ editCppMakefile () {
     echoLn "edit top Makefile for C++ ..."
 
     (cd src/cxx; \
-    CC="${CC}" CFLAGS="${CFLAGS}" CXX="${CXX}" CXXFLAGS="${CXXFLAGS}" LDFLAGS="${LDFLAGS}" CFITSIO_CFLAGS="${CFITSIO_CFLAGS}" CFITSIO_LIBS="${CFITSIO_LIBS}" ./configure --prefix=${CXXPREFIX} || crashAndBurn)
+    CC="${CC}" CFLAGS="${CFLAGS}" CXX="${CXX}" CXXFLAGS="${CXXFLAGS}" SHARP_CFLAGS="-I${HEALPIX}/include" SHARP_LIBS="-L${HEALPIX}/lib -lsharp" CFITSIO_CFLAGS="${CFITSIO_CFLAGS}" CFITSIO_LIBS="${CFITSIO_LIBS}" ./configure --prefix=${CXXPREFIX} || crashAndBurn)
     mv -f Makefile Makefile_tmp
     ${CAT} Makefile_tmp |\
 	${SED} "s|^ALL\(.*\) cpp-void \(.*\)|ALL\1 cpp-all \2|" |\
@@ -506,7 +505,7 @@ editCppMakefile () {
 	${SED} "s|^CLEAN\(.*\) cpp-void \(.*\)|CLEAN\1 cpp-clean \2|" |\
 	${SED} "s|^DISTCLEAN\(.*\) cpp-void \(.*\)|DISTCLEAN\1 cpp-distclean \2|" |\
 	${SED} "s|^TIDY\(.*\) cpp-void \(.*\)|TIDY\1 cpp-tidy \2|" |\
-	${SED} "s|^# C++ configuration.*$|# C++ configuration: cd src/cxx; CC=\"${CC}\" CFLAGS=\"${CFLAGS}\" CXX=\"${CXX}\" CXXFLAGS=\"${CXXFLAGS}\" LDFLAGS=\"${LDFLAGS}\" CFITSIO_CFLAGS=\"${CFITSIO_CFLAGS}\" CFITSIO_LIBS=\"${CFITSIO_LIBS}\" ./configure --prefix=${CXXPREFIX}|"> Makefile
+	${SED} "s|^# C++ configuration.*$|# C++ configuration: cd src/cxx; CC=\"${CC}\" CFLAGS=\"${CFLAGS}\" CXX=\"${CXX}\" CXXFLAGS=\"${CXXFLAGS}\"  SHARP_CFLAGS=\"-I${HEALPIX}/include\" SHARP_LIBS=\"-L${HEALPIX}/lib -lsharp\" CFITSIO_CFLAGS=\"${CFITSIO_CFLAGS}\" CFITSIO_LIBS=\"${CFITSIO_LIBS}\" ./configure --prefix=${CXXPREFIX}|"> Makefile
 
     echo " done."
     edited_makefile=1
@@ -592,9 +591,6 @@ Cpp_config () {
 
 #     mv -f Makefile Makefile_tmp
 #     ${CAT} Makefile_tmp |\
-# # 	${SED} "s|^P_CFITSIO_EXT_LIB\(.*\)|P_CFITSIO_EXT_LIB = ${FITSDIR}/lib${LIBFITS}.a|" |\
-# # 	${SED} "s|^P_CFITSIO_EXT_INC\(.*\)|P_CFITSIO_EXT_INC = ${FITSINC}|" |\
-#  	${SED} "s|^CFITSIO_EXT_PREFIX\(.*\)|CFITSIO_EXT_PREFIX = ${FITSPREFIX}|" |\
 # 	${SED} "s|^ALL\(.*\) healpy-void\(.*\)|ALL\1 healpy-all \2|" |\
 # 	${SED} "s|^TESTS\(.*\) healpy-void\(.*\)|TESTS\1 healpy-test \2|" |\
 # 	${SED} "s|^CLEAN\(.*\) healpy-void\(.*\)|CLEAN\1 healpy-clean \2|" |\
@@ -1724,11 +1720,9 @@ IdentifyF90Compiler () {
 		DO_F90_SHARED=1
 	elif [ $ngfortran != 0 ] ; then
 	        FCNAME="gfortran compiler"
-		FFLAGS="$FFLAGS -DGFORTRAN -fno-second-underscore"
 		OFLAGS="-O3"
 		PRFLAGS="-fopenmp" # Open MP enabled
 		CC="gcc"
-		CFLAGS="$CFLAGS -DgFortran" # to combine C and F90
 		FI8FLAG="-fdefault-integer-8" # change default INTEGER to 64 bits
 		[ $OS = "Linux" ] && WLRPATH="-Wl,-R"
 		MODDIR="-J" # output location of modules

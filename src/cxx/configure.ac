@@ -76,12 +76,52 @@ AC_CHECK_HEADERS([fitsio.h], [:], AC_MSG_ERROR([could not find the cfitsio heade
 CFLAGS=$save_CFLAGS
 LIBS=$save_LIBS
 
+dnl
+dnl Determine the compiler flags (SHARP_CFLAGS)
+dnl and linker flags (SHARP_LIBS) required to build against libcfitsio.
+dnl
+dnl Add help messages to describe the variables SHARP_CFLAGS and SHARP_LIBS,
+dnl which can be provided as environment variables or as command-line arguments.
+dnl These are output variables of PKG_CHECK_MODULES, but they can be overridden.
+dnl
+AC_ARG_VAR([SHARP_CFLAGS], [compiler flags needed for building with libsharp, if not found by pkg-config])
+AC_ARG_VAR([SHARP_LIBS], [linker flags needed for building with libsharp, if not found by pkg-config])
+dnl
+dnl Now check for libsharp using pkg-config. If libsharp is not found with
+dnl pkg-config, SHARP_LIBS defaults to "-lsharp".
+dnl
+PKG_CHECK_MODULES([SHARP], [sharp], , [SHARP_LIBS=-lsharp])
+dnl
+dnl Linking against libsharp requires libm too.
+dnl
+SHARP_LIBS="$SHARP_LIBS -lm"
+dnl
+dnl With pkg-config < 0.24, PKG_CHECK_MODULES does not AC_SUBST the _CFLAGS
+dnl and _LIBS variables.
+dnl
+AC_SUBST([SHARP_CFLAGS])
+AC_SUBST([SHARP_LIBS])
+dnl
+dnl Perform a test compile and link to determine if libsharp is usable. If
+dnl pkg-config did not find libsharp, then the user may still have provided
+dnl SHARP_CFLAGS and SHARP_LIBS manually. If pkg-config did find libsharp,
+dnl it does not hurt to test that libsharp is usable.
+dnl
+save_CFLAGS=$CFLAGS
+save_LIBS=$LIBS
+CFLAGS="$CFLAGS $SHARP_CFLAGS"
+LIBS="$LIBS $SHARP_LIBS"
+AC_CHECK_LIB([sharp], [sharp_execute], [:], AC_MSG_ERROR([could not find the libsharp library]))
+AC_CHECK_HEADERS([libsharp/sharp.h], [:], AC_MSG_ERROR([could not find the libsharp header file]))
+CFLAGS=$save_CFLAGS
+LIBS=$save_LIBS
+
 AC_PROG_LIBTOOL
 
 dnl
 dnl Create pkgconfig .pc file.
 dnl
-AX_CREATE_PKGCONFIG_INFO(,,,,[$OPENMP_CFLAGS $CFITSIO_CFLAGS])
+AX_CREATE_PKGCONFIG_INFO(,,,,[$OPENMP_CFLAGS $SHARP_CFLAGS $CFITSIO_CFLAGS])
 
 AC_CONFIG_FILES([Makefile])
 AC_OUTPUT
