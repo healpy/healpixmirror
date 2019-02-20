@@ -18,13 +18,13 @@ obj1 	= sky_sub.o  sub_ngpdf_powergauss.o  sub_ngpdf_sho.o  sky_ng_sim.o
 	case $(OS) in \
 	Darwin ) \
 	ln -s -f $< $*.junk.F90; \
-	$(FC) $(FFLAGS) $(ADDUS) $(PPFLAGS) -c $*.junk.F90 -o $@; \
+	$(FC) $(FFLAGS) $(PPFLAGS) -c $*.junk.F90 -o $@; \
 	rm $*.junk.F90;; \
 	OSF ) \
 	ln -s -f $< $*.f90; \
-	$(FC) $(FFLAGS) $(ADDUS) -cpp -c $(basename $<).f90 -o $@;; \
+	$(FC) $(FFLAGS) -cpp -c $(basename $<).f90 -o $@;; \
 	* ) \
-	$(FC) $(FFLAGS) $(ADDUS) $(PPFLAGS) -c $< -o $@;; \
+	$(FC) $(FFLAGS) $(PPFLAGS) -c $< -o $@;; \
 	esac
 
 default: $(exec1)

@@ -19,7 +19,7 @@ incudgrade = udgrade_s_inc.f90 udgrade_d_inc.f90
 
 incnumrec = source_gen_sort_inc.f90
 
-obj0  = healpix_types.o cgetEnvironment.o indmed.o utilities.o
+obj0  = healpix_types.o indmed.o utilities.o
 obj1  = bit_manipulation.o extension.o long_intrinsic.o obsolete.o ran_tools_dist.o rngmod.o
 obj2  = healpix_fft.o misc_utils.o
 obj3  = head_fits.o num_rec.o statistics.o paramfile_io.o
@@ -80,13 +80,13 @@ $(OD)/%.o: $(SD)/%.F90
 	@case $(OS) in \
 	Darwin ) \
 	ln -s -f $< $*.junk.F90; \
-	$(FC) $(FFLAGS) $(ADDUS) $(PPFLAGS) -c $*.junk.F90 -o $@ $(MODDIR)$(OD) ; \
+	$(FC) $(FFLAGS) $(PPFLAGS) -c $*.junk.F90 -o $@ $(MODDIR)$(OD) ; \
 	rm $*.junk.F90;; \
 	OSF ) \
 	ln -s -f $< $*.f90; \
-	$(FC) $(FFLAGS) $(ADDUS) -cpp       -c $(basename $<).f90 -o $@ $(MODDIR)$(OD) ;; \
+	$(FC) $(FFLAGS) -cpp       -c $(basename $<).f90 -o $@ $(MODDIR)$(OD) ;; \
 	* ) \
-	$(FC) $(FFLAGS) $(ADDUS) $(PPFLAGS) -c $< -o $@  $(MODDIR)$(OD);; \
+	$(FC) $(FFLAGS) $(PPFLAGS) -c $< -o $@  $(MODDIR)$(OD);; \
 	esac
 
 $(OD)/long_intrinsic.o: $(SD)/long_intrinsic.F90
@@ -94,13 +94,13 @@ $(OD)/long_intrinsic.o: $(SD)/long_intrinsic.F90
 	@case $(OS) in \
 	Darwin ) \
 	ln -s -f $< long_intrinsic.junk.F90; \
-	$(FC) $(FFLAGS) $(ADDUS) $(PPFLAGS) $(FI8FLAG) -c long_intrinsic.junk.F90 -o $@ $(MODDIR)$(OD); \
+	$(FC) $(FFLAGS) $(PPFLAGS) $(FI8FLAG) -c long_intrinsic.junk.F90 -o $@ $(MODDIR)$(OD); \
 	rm long_intrinsic.junk.F90;; \
 	OSF ) \
 	ln -s -f $< long_intrinsic.f90; \
-	$(FC) $(FFLAGS) $(ADDUS) -cpp $(FI8FLAG) -c $(basename $<).f90 -o $@ $(MODDIR)$(OD) ;; \
+	$(FC) $(FFLAGS) -cpp $(FI8FLAG) -c $(basename $<).f90 -o $@ $(MODDIR)$(OD) ;; \
 	* ) \
-	$(FC) $(FFLAGS) $(ADDUS) $(PPFLAGS) $(FI8FLAG) -c $< -o $@ $(MODDIR)$(OD) ;; \
+	$(FC) $(FFLAGS) $(PPFLAGS) $(FI8FLAG) -c $< -o $@ $(MODDIR)$(OD) ;; \
 	esac
 
 $(OD)/pix_tools.o:pix_tools.F90  $(incpix)

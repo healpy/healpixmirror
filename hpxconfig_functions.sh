@@ -58,7 +58,6 @@
 #             is necessary
 #   echoLn:
 #   findFITSLib: search for FITSIO library
-#   findFFTW: search for FFTW library
 #   fullPath: convert relative to absolute directory names
 #
 #
@@ -126,12 +125,6 @@ findFITSPrefix () {
 	fi
     done
 }
-#-------------
-# findFFTW () {
-#     for dir in /usr/lib /usr/local/lib $1; do
-# 	[ -r "${dir}/lib${LIBFFTW}.a" ] && FFTWDIR=$dir
-#     done
-# }
 #-------------
 fullPath () {
     t='TEMP=`cd $TEMP; pwd`'
@@ -1035,11 +1028,9 @@ idl_config () {
 #   checkF90FitsioVersion: check that CFITSIO library is recent enough
 #   checkCParall: check that C compiler supports OpenMP
 #   GuessF90Compiler: tries to guess compiler from operating system
-#####   askFFT: ask user for his choice of fft, find fftw library
 #   askOpenMP: ask user for compilation of OpenMP source files
 #   askF90PIC: ask user for -fPIC compilation of code
 #   patchF90: all patches to apply to F90 and/or C compilers
-#   countUnderScore: match trailing underscores with fftw
 #   IdentifyCParallCompiler: identify C compiler used for parallel compilation of SHT routines
 #   IdentifyF90Compiler : identify Non native f90 compiler
 #   add64bitF90Flags: add 64 bit flags to F90 (and C) compiler
@@ -1063,9 +1054,7 @@ idl_config () {
 #-------------
 setF90Defaults () {
     FFLAGS="-I\$(F90_INCDIR)"
-    #CFLAGS="-O"
     CFLAGS="-O3 -std=c99"  # OK for gcc, icc and clang
-    #LDFLAGS="-L\$(F90_LIBDIR) -L\$(FITSDIR) -lhealpix -lhpxgif -lsharp_healpix_f -l\$(LIBFITS)"
     #LDFLAGS="-L\$(F90_LIBDIR) -L\$(FITSDIR) -lhealpix -lhpxgif -lsharp -l\$(LIBFITS)"
     LDFLAGS="-L\$(F90_LIBDIR) -L\$(FITSDIR) -L\$(SHARPLDIR) -lhealpix -lhpxgif -lsharp -l\$(LIBFITS)"
     F90_BINDIR="./bin"
@@ -1074,11 +1063,6 @@ setF90Defaults () {
     F90_BUILDDIR="./build"
     DIRSUFF="${DIRSUFF}"
     MOD="mod"
-    #OS=`uname -s`
-    FFTSRC="healpix_fft"
-    FFTLD=" "
-    ADDUS=" "
-    LIBFFTW="dfftw"
     FPP="-D"
     PARALL=""
     PRFLAGS=""
@@ -1331,42 +1315,6 @@ GuessF90Compiler () {
 
 # -----------------------------------------------------------------
 
-# askFFT () {
-#     FFT="0"
-#     echo "Which FFT do you want to use ?"
-#     echo " 0) the one already contained in the Healpix package "
-#     echo " 1) FFTW (see www.fftw.org)"
-#     echo "   (it requires the double precision FFTW to be installed)"
-# ###    echo "   (it can NOT be used with the OpenMP implementation of Healpix)"
-#     echoLn "Enter choice                                      ($FFT): "
-#     read answer
-#     [ "x$answer" != "x" ] && FFT="$answer"
-#     if [ $FFT = 1 ] ; then
-# 	echoLn "enter full name of fftw library (lib${LIBFFTW}.a): "
-# 	read answer
-# 	[ "x$answer" != "x" ] && LIBFFTW=`${BASENAME} $answer ".a" | sed "s/^lib//"`
-
-# 	findFFTW $LIBDIR
-# 	echoLn "enter location of fftw library ($FFTWDIR): "
-# 	read answer
-# 	[ "x$answer" != "x" ] && FFTWDIR=$answer
-
-# 	lib="${FFTWDIR}/lib${LIBFFTW}.a"
-# 	if [ ! -r $lib ]; then
-# 	    echo "error: fftw library $lib not found"
-# 	    crashAndBurn
-# 	fi
-
-# 	FFTSRC="healpix_fftw"
-# 	FFTLD="-L${FFTWDIR} -l${LIBFFTW}"
-
-# 	countUnderScore
-#     fi
-#     LDFLAGS="$LDFLAGS $FFTLD"
-# }
-
-# -----------------------------------------------------------------
-
 askOpenMP () {
     OpenMP="1"
     echo " The Spherical Harmonics Transform (C and F90) routines used by "
@@ -1447,62 +1395,6 @@ patchF90 (){
     if test $gcc434 -gt 0; then
 	CFLAGS="$CFLAGS -fno-tree-fre"
     fi
-
-}
-# -----------------------------------------------------------------
-
-countUnderScore () {
-tmpfile=to_be_removed
-suffix=.f90
-${CAT} > ${tmpfile}${suffix} << EOF
-    subroutine sub1()
-      return
-    end subroutine sub1
-EOF
- case $FTYPE in
-  xlf)
-    $FC -qsuffix=f=f90 -c ${tmpfile}${suffix} -o ${tmpfile}.o  > ${DEVNULL} 2>&1 ;;
-  *)
-    $FC -c ${tmpfile}${suffix} -o ${tmpfile}.o  > ${DEVNULL} 2>&1 ;;
- esac
-
-    stwo=`${NM} ${tmpfile}.o | ${GREP} sub1__ | ${WC} -l`
-    sone=`${NM} ${tmpfile}.o | ${GREP} sub1_  | ${WC} -l`
-    ltwo=`${NM} $lib | ${GREP} fftw_f77_one__ | ${WC} -l`
-    lone=`${NM} $lib | ${GREP} fftw_f77_one_  | ${WC} -l`
-
-    if [ $ltwo != 0 ] ; then
-      if [ $stwo != 0 ] ; then
-        ADDUS="$FPP""ADD0US"
-      elif [ $sone != 0 ] ; then
-        ADDUS="$FPP""ADD1US"
-      else
-        ADDUS="$FPP""ADD2US"
-      fi
-    elif [ $lone != 0 ] ; then
-      if [ $stwo != 0 ] ; then
-        echo "uncompatible trailing underscores"
-        crashAndBurn
-      elif [ $sone != 0 ] ; then
-        ADDUS="$FPP""ADD0US"
-      else
-        ADDUS="$FPP""ADD1US"
-      fi
-    else
-      if [ $stwo != 0 ] ; then
-        echo "uncompatible trailing underscores"
-	crashAndBurn
-      elif [ $sone != 0 ] ; then
-        echo "uncompatible trailing underscores"
-	crashAndBurn
-      else
-        ADDUS="$FPP""ADD0US"
-      fi
-    fi
-
-#      echo $ADDUS
-   ${RM}  ${tmpfile}.*
-
 
 }
 # -----------------------------------------------------------------
@@ -1616,31 +1508,24 @@ IdentifyF90Compiler () {
         npgf=`$FC -V 2>&1 | ${GREP} -i portland | ${WC} -l`
 	nlah=`$FC --version 2>&1 | ${GREP} -i lahey | ${WC} -l`
 	nfuj=`$FC -V 2>&1 | ${GREP} -i fujitsu | ${WC} -l`
-#	nvas=`$FC | ${GREP} -i sierra | ${WC} -l`
-#  	nxlf=`man $FC | ${HEAD} -10 | ${GREP} XL | ${WC} -l`
 	nxlf=`$FC --help 2>&1 | ${HEAD} -15 | ${GREP} XL | ${WC} -l`
-#	nxlf=`$FC -qversion 2>&1 | ${GREP} XL | ${WC} -l` # to be tested
 	nabs=`$FC -V 2>&1 | ${GREP} 'Pro Fortran' | ${WC} -l`
 	ng95=`$FC -dumpversion 2>&1 | ${GREP} 'g95' | ${WC} -l`
-#	ngfortran=`$FC -dumpversion 2>&1 | ${GREP} 'GNU Fortran' | ${GREP} 'GCC' | ${WC} -l` # corrected 2008-11-17
-#	ngfortran=`$FC -dumpversion 2>&1 | ${GREP} 'GNU Fortran' | ${WC} -l` # corrected 2009-10-12
 	ngfortran=`$FC --version 2>&1 | ${GREP} 'GNU Fortran' | ${WC} -l`
 	npath=`$FC -v 2>&1 | ${GREP} -i ekopath | ${WC} -l`
 	nflang=`$FC --version | ${GREP} clang | ${WC} -l`
         if [ $nima != 0 ] ; then
                 FCNAME="Imagine F compiler"
-                FFLAGS="$FFLAGS -DNAG -w -dusty -mismatch_all"
+                FFLAGS="$FFLAGS -w -dusty -mismatch_all"
 		echo "$FCNAME is not supported yet"
 		crashAndBurn
         elif [ $nnag != 0 ] ; then
                 FCNAME="NAGWare compiler"
 		PPFLAGS="-fpp"
-# very sloppy compiler flags: no longer needed
-#                FFLAGS="$FFLAGS -DNAG -w -dusty -mismatch_all"
 # compiler flags for very thorough checking. use for debugging
-#                FFLAGS="$FFLAGS -DNAG -strict95 -g -gline -C=all -u -colour"
+#                FFLAGS="$FFLAGS -strict95 -g -gline -C=all -u -colour"
 # standard flags
-                FFLAGS="$FFLAGS -DNAG -strict95"
+                FFLAGS="$FFLAGS -strict95"
 		FI8FLAG="-double" # change default INTEGER and FLOAT to 64 bits
 		MODDIR="-mdir " # output location of modules
         elif [ $nifc != 0 ] ; then
@@ -2048,13 +1933,6 @@ askPgplot () {
 
 # -----------------------------------------------------------------
 
-#  checkNAG () {
-#      [ "x`$FC -V 2>&1 | ${GREP} NAG`" != "x" ] && \
-#  	FFLAGS="$FFLAGS -DLINUX -w -dusty -mismatch_all"
-#  }
-
-# -----------------------------------------------------------------
-
 editF90Makefile () {
 
     echoLn "Editing top Makefile for F90 ..."
@@ -2074,21 +1952,13 @@ editF90Makefile () {
 	${SED} "s|^HEALPIX=.*$|HEALPIX	= $HEALPIX|" |\
 	${SED} "s|^FITSDIR.*$|FITSDIR	= $FITSDIR|" |\
 	${SED} "s|^LIBFITS.*$|LIBFITS	= $LIBFITS|" |\
-# 	${SED} "s|^F90_BINDIR.*$|F90_BINDIR	= $F90_BINDIR|" |\
-# 	${SED} "s|^F90_INCDIR.*$|F90_INCDIR	= $F90_INCDIR|" |\
-# 	${SED} "s|^F90_LIBDIR.*$|F90_LIBDIR	= $F90_LIBDIR|" |\
-# 	${SED} "s|^F90_BUILDDIR.*$|F90_BUILDDIR	= $F90_BUILDDIR|" |\
 	${SED} "s|^F90_BINDIR.*$|F90_BINDIR	= $F90_BINDIR_H|" |\
 	${SED} "s|^F90_INCDIR.*$|F90_INCDIR	= $F90_INCDIR_H|" |\
 	${SED} "s|^F90_LIBDIR.*$|F90_LIBDIR	= $F90_LIBDIR_H|" |\
 	${SED} "s|^F90_BUILDDIR.*$|F90_BUILDDIR	= $F90_BUILDDIR_H|" |\
 	${SED} "s|^F90_AR.*$|F90_AR        = $F90_AR|" |\
-	${SED} "s|^F90_FFTSRC.*$|F90_FFTSRC	= $FFTSRC|" |\
-	${SED} "s|^F90_ADDUS.*$|F90_ADDUS	= $ADDUS|" |\
-####	${SED} "s|^F90_PARALL.*$|F90_PARALL	= $PARALL|" |\
 	${SED} "s|^F90_MODDIR[[:space:]=].*$|F90_MODDIR	= \"$MODDIR\"|" |\
 	${SED} "s|^F90_MOD[[:space:]=].*$|F90_MOD	= $MOD|" |\
-###	${SED} "s|^F90_FTYPE.*$|F90_FTYPE	= $FTYPE|" |\
 	${SED} "s|^F90_PPFLAGS.*$|F90_PPFLAGS	= $PPFLAGS|" |\
 	${SED} "s|^F90_PGFLAG.*$|F90_PGFLAG  = $PGFLAG|" |\
 	${SED} "s|^F90_PGLIBS.*$|F90_PGLIBS  = $PGLIBS|" |\

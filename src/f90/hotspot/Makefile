@@ -1,7 +1,7 @@
 # -*- Makefile -*-
 
 fac	= hotspot
-inc     = 
+inc     =
 VPATH	= $(BINDIR)
 exec	= $(BINDIR)/$(fac)
 #src	= maxima_tools.f90 HotSpots.F90
@@ -15,7 +15,7 @@ LIB:=$(LIBDIR)/libhealpix$(LIBSUFFIX)
 
 
 %_mkdir:
-	@if [ ! -d $* ]; then $(MKDIR) $* ; fi 
+	@if [ ! -d $* ]; then $(MKDIR) $* ; fi
 
 
 $(OD)/%.o: $(SD)/%.f90 $(inc) $(OD)_mkdir
@@ -26,16 +26,16 @@ $(OD)/%.o: $(SD)/%.F90 $(inc) $(OD)_mkdir
 	@case $(OS) in \
 	Darwin ) \
 	ln -s -f $< $*.junk.F90; \
-	$(FC) $(FFLAGS) $(ADDUS) $(PPFLAGS) -c $*.junk.F90 -o $@ $(MODDIR)$(OD) ; \
+	$(FC) $(FFLAGS) $(PPFLAGS) -c $*.junk.F90 -o $@ $(MODDIR)$(OD) ; \
 	rm $*.junk.F90;; \
 	OSF ) \
 	ln -s -f $< $*.f90; \
-	$(FC) $(FFLAGS) $(ADDUS) -cpp       -c $(basename $<).f90 -o $@ $(MODDIR)$(OD) ;; \
+	$(FC) $(FFLAGS) -cpp       -c $(basename $<).f90 -o $@ $(MODDIR)$(OD) ;; \
 	* ) \
-	$(FC) $(FFLAGS) $(ADDUS) $(PPFLAGS) -c $< -o $@  $(MODDIR)$(OD);; \
+	$(FC) $(FFLAGS) $(PPFLAGS) -c $< -o $@  $(MODDIR)$(OD);; \
 	esac
 
-default:  $(exec) 
+default:  $(exec)
 
 $(exec): $(OBJ) $(LIB)
 	$(FC) $(FFLAGS) -o $(exec) $(OBJ) $(LDFLAGS)

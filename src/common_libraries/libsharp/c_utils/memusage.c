@@ -53,7 +53,7 @@ double VmHWM(void)
     if (!strncmp(word, "VmHWM:", 6))
       {
       if (fscanf(f,"%lf%2s",&res,word)<0)
-	{ fclose(f); return -1.0; }
+        { fclose(f); return -1.0; }
       if (strncmp(word, "kB", 2))
         { fclose(f); return -1.0; }
       res *=1024;
