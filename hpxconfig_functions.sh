@@ -411,6 +411,7 @@ askSharpUserMisc () {
 editSharpMakefile () {
     echoLn "edit top Makefile for libsharp ..."
 
+    SHARPLDIR=${SHARPPREFIX}/lib
     (cd src/common_libraries/libsharp; \
     CC="${CC}" CFLAGS="${CFLAGS}" LDFLAGS="${LDFLAGS}" ./configure --prefix=${SHARPPREFIX} || crashAndBurn)
     mv -f Makefile Makefile_tmp
@@ -420,6 +421,7 @@ editSharpMakefile () {
 	${SED} "s|^CLEAN\(.*\) sharp-void \(.*\)|CLEAN\1 sharp-clean \2|" |\
 	${SED} "s|^DISTCLEAN\(.*\) sharp-void \(.*\)|DISTCLEAN\1 sharp-distclean \2|" |\
 	${SED} "s|^TIDY\(.*\) sharp-void \(.*\)|TIDY\1 sharp-tidy \2|" |\
+        ${SED} "s|^SHARPLDIR.*|SHARPLDIR=${SHARPLDIR}|" |\
 	${SED} "s|^# sharp configuration.*|# sharp configuration: cd src/common_libraries/libsharp; CC=\"${CC}\" CFLAGS=\"${CFLAGS}\" LDFLAGS=\"${LDFLAGS}\" ./configure --prefix=${SHARPPREFIX}|" > Makefile
 
     echo " done."
@@ -1064,7 +1066,8 @@ setF90Defaults () {
     #CFLAGS="-O"
     CFLAGS="-O3 -std=c99"  # OK for gcc, icc and clang
     #LDFLAGS="-L\$(F90_LIBDIR) -L\$(FITSDIR) -lhealpix -lhpxgif -lsharp_healpix_f -l\$(LIBFITS)"
-    LDFLAGS="-L\$(F90_LIBDIR) -L\$(FITSDIR) -lhealpix -lhpxgif -lsharp -l\$(LIBFITS)"
+    #LDFLAGS="-L\$(F90_LIBDIR) -L\$(FITSDIR) -lhealpix -lhpxgif -lsharp -l\$(LIBFITS)"
+    LDFLAGS="-L\$(F90_LIBDIR) -L\$(FITSDIR) -L\$(SHARPLDIR) -lhealpix -lhpxgif -lsharp -l\$(LIBFITS)"
     F90_BINDIR="./bin"
     F90_INCDIR="./include"
     F90_LIBDIR="./lib"
@@ -1623,6 +1626,7 @@ IdentifyF90Compiler () {
 #	ngfortran=`$FC -dumpversion 2>&1 | ${GREP} 'GNU Fortran' | ${WC} -l` # corrected 2009-10-12
 	ngfortran=`$FC --version 2>&1 | ${GREP} 'GNU Fortran' | ${WC} -l`
 	npath=`$FC -v 2>&1 | ${GREP} -i ekopath | ${WC} -l`
+	nflang=`$FC --version | ${GREP} clang | ${WC} -l`
         if [ $nima != 0 ] ; then
                 FCNAME="Imagine F compiler"
                 FFLAGS="$FFLAGS -DNAG -w -dusty -mismatch_all"
@@ -1720,6 +1724,15 @@ IdentifyF90Compiler () {
 		DO_F90_SHARED=1
 	elif [ $ngfortran != 0 ] ; then
 	        FCNAME="gfortran compiler"
+		OFLAGS="-O3"
+		PRFLAGS="-fopenmp" # Open MP enabled
+		CC="gcc"
+		FI8FLAG="-fdefault-integer-8" # change default INTEGER to 64 bits
+		[ $OS = "Linux" ] && WLRPATH="-Wl,-R"
+		MODDIR="-J" # output location of modules
+		DO_F90_SHARED=1
+	elif [ $nflang != 0 ] ; then
+	        FCNAME="flang compiler"
 		OFLAGS="-O3"
 		PRFLAGS="-fopenmp" # Open MP enabled
 		CC="gcc"
@@ -1996,8 +2009,10 @@ askUserMisc () {
 
     # add option on where to search runtime libraries, on compilers supporting it
     if [ "x$WLRPATH" != "x" ] ; then
-	WLRPATH_="${WLRPATH} ${FITSDIR}" # expand $FITSDIR
-	WLRPATH="${WLRPATH}\$(FITSDIR)"  # keep $(FITSDIR)
+#	WLRPATH_="${WLRPATH} ${FITSDIR}" # expand $FITSDIR
+#	WLRPATH="${WLRPATH}\$(FITSDIR)"  # keep $(FITSDIR)
+	WLRPATH_="${WLRPATH} ${FITSDIR} ${WLRPATH} ${SHARPLDIR}" # expand $FITSDIR
+	WLRPATH="${WLRPATH}\$(FITSDIR) ${WLRPATH}\$(SHARPLDIR)"  # keep $(FITSDIR)
 	LDFLAGS="${LDFLAGS} ${WLRPATH}"
     fi
 

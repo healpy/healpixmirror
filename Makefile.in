@@ -11,9 +11,9 @@ TIDY      = sharp-void c-void cpp-void f90-void healpy-void
 DISTCLEAN = sharp-void c-void cpp-void f90-void healpy-void
 
 RM	= rm -f
-
-# ------------------------------ variables for F90 --------------------------
 HEALPIX=
+SHARPLDIR = 
+# ------------------------------ variables for F90 --------------------------
 F90_BINDIR	=
 F90_INCDIR	=
 F90_LIBDIR	=
