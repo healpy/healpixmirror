@@ -436,8 +436,8 @@ Sharp_config () {
 setCppDefaults () {
 
     CXXDIR=${HEALPIX}/src/cxx
-    CFLAGS="-O3 -ffast-math -fopenmp"
-    CXXFLAGS="-O3 -ffast-math -fopenmp"
+    CFLAGS="-O3 -fopenmp"
+    CXXFLAGS="-O3 -fopenmp"
 
     CXXPREFIX=$HEALPIX
 }
