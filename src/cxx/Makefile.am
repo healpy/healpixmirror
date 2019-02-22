@@ -106,6 +106,7 @@ include_HEADERS = \
   cxxsupport/rotmatrix.h \
   cxxsupport/sse_utils_cxx.h \
   cxxsupport/string_utils.h \
+  cxxsupport/planck_rng.h \
   Healpix_cxx/alm.h \
   Healpix_cxx/alm_fitsio.h \
   Healpix_cxx/alm_healpix_tools.h \
