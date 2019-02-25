@@ -262,20 +262,39 @@ cd $here
 #cp -pr src/java/healpixdocs doc/html/java
 #\rm -r src/java/healpixdocs/* # re-instated 2010-02-22
 
+echoRed "in libsharp..."  # Healpix 3.60 and more
+cd src/common_libraries/libsharp
+autoreconf -i
+cd $here
+
 echoRed "cleaning up C++..."
 cd src/cxx
-export HEALPIX_TARGET=generic_gcc
-make doc || exit
+autoreconf -i  # Healpix 3.60 and more
+cd docsrc
+doxygen cxxsupport.dox
+mv htmldoc cxxsupport
+doxygen Healpix_cxx.dox
+mv htmldoc Healpix_cxx
+\rm *.dox
+\rm *.tag # ??? double check ???
+\rm footer.html
+ln -s index_code.html index_cxx.html
+ln -s index_code.html index_cxx.htm
 cd $here
-# rm -r src/cxx/doc
-mv src/cxx/doc/index.html src/cxx/doc/index_cxx.htm
-cp src/cxx/doc/index_cxx.htm src/cxx/doc/index_cxx.html
-mv src/cxx/doc/* doc/html
-rmdir src/cxx/doc
-cd src/cxx
-[ -r Makefile ] && make tidy
-\rm -rf ${HEALPIX_TARGET}
-\rm -rf build.${HEALPIX_TARGET}
+mv    src/cxx/docsrc/* doc/html
+rmdir src/cxx/docsrc
+# export HEALPIX_TARGET=generic_gcc # Healpix 3.50 and before
+# make doc || exit
+# cd $here
+# # rm -r src/cxx/doc
+# mv src/cxx/doc/index.html    src/cxx/doc/index_cxx.htm
+# cp src/cxx/doc/index_cxx.htm src/cxx/doc/index_cxx.html
+# mv src/cxx/doc/*             doc/html
+# rmdir src/cxx/doc
+# cd src/cxx
+# [ -r Makefile ] && make tidy
+# \rm -rf ${HEALPIX_TARGET}
+# \rm -rf build.${HEALPIX_TARGET}
 #\rm -rf config/config.healpy # remove config.healpy (2011-01-31)
 cd $here
 

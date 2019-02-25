@@ -58,8 +58,20 @@ blockquote {
 
 tt { 
 	font-family: "Lucida Console", "Lucida Sans Typewriter", Courier, sans-serif, monospace;
-	font-size: larger;
+	font-size: 100%;
 }
+kbd { 
+	font-family: "Lucida Console", "Lucida Sans Typewriter", Courier, sans-serif, monospace;
+	font-size: 100%;
+}
+SPAN.texttt { 
+	font-family: "Lucida Console", "Lucida Sans Typewriter", Courier, sans-serif, monospace ; 
+	font-size: 100%}
+pre { 
+	font-family: "Lucida Console", "Lucida Sans Typewriter", Courier, sans-serif, monospace;
+	font-size: 100%;
+}
+
 
 /* heading styles */
 h1, h2, h3, h4, h5 {

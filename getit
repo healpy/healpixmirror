@@ -130,7 +130,8 @@ if [ ${doit} = 1 ] ; then
 	cd  healpixsubmodule/src/cxx/autotools
 	\ln -sf ../../../../../cxx .
 	#for dir in Healpix_cxx c_utils cxxsupport libfftpack libsharp ; do
-	for dir in Healpix_cxx c_utils cxxsupport pocketfft libsharp ; do
+	#for dir in Healpix_cxx c_utils cxxsupport pocketfft libsharp ; do
+	for dir in Healpix_cxx c_utils cxxsupport ; do
 	    echoRed "Replacing ${dir}"
 	    \rm -r ${dir}
 	    \ln -sf cxx/${dir} .

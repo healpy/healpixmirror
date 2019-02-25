@@ -830,14 +830,17 @@ In case of problems, see \htmladdnormallink{\tt
 
 \subsection{Free Fortran90/95 Compilers}
 \label{sec:freef90compilers}
-The {\bf free} Fortran90/95 compilers that can be used to compile \healpix include: 
+Some {\bf free} Fortran90/95 compilers that can be used to compile \healpix are listed below.
+They all support the few Fortran 2003 features used in \healpixns. 
     \begin{itemize}
-      \item {\bf Intel Fortran} Compiler for Linux based computers (versions
+%
+      \item {\bf Intel Fortran} compiler (\texttt{ifort}) for Linux based computers (versions
 11.* to 19.*\footnote{problems have been reported with one of the code (\texttt{sky\_ng\_sim}) when compiled with
 \texttt{ifort 14.0.1.106}}) \hfill \\
          \htmladdnormallink{{\tt
         https://software.intel.com/en-us/fortran-compilers}}{https://software.intel.com/en-us/fortran-compilers}
         %%%%%http://www.intel.com/software/products/compilers/downloads/forlin.htm}}{http://www.intel.com/software/products/compilers/downloads/forlin.htm}
+%
       \item {\bf GNU Fortran 95} compiler (\texttt{gfortran}) included in GNU Compiler Collection {\em GCC} version 4.0.0
          and up and available for Linux, Mac OSX, Windows, Sun ... platforms
          \hfill \\
@@ -847,11 +850,19 @@ The {\bf free} Fortran90/95 compilers that can be used to compile \healpix inclu
          Please note that only recent versions of \texttt{gfortran} (Aug 2005
          and later) compile \healpix correctly, and v4.2.1 and more have given satisfying
          results so far, including native OpenMP support.
-     \item {\bf G95} compiler available for Linux, Mac OSX, Windows, Sun and HP platforms with 32 and 64 bit architectures (eg, x86 and x86-64). In the latter case, the '32bit default integer' (32bit DI) version of \texttt{g95} {\em must} be used.
+%
+     \item {\bf Nvidia's LLVM-based Fortran} compiler (\texttt{flang}) available as pre-compiled executables and libraries for Linux \hfill \\
+\htmladdnormallink{\texttt{https://www.scivision.co/flang-compiler-build-tips}}{https://www.scivision.co/flang-compiler-build-tips} \hfill \\
+and as source files for all platforms \hfill \\
+\htmladdnormallink{\texttt{https://github.com/flang-compiler/flang/wiki/Building-Flang}}{https://github.com/flang-compiler/flang/wiki/Building-Flang}.
+%
+     \item {\bf G95} compiler available for Linux, Mac OSX, Windows, Sun and HP platforms with 32 and 64 bit architectures (eg, x86 and x86-64). In the latter case, the '32bit default integer' (32bit DI) version of \texttt{g95} {\em must} be used. Note that this compiler was last released in 2013, and it generally generates slower codes 
+than the compilers listed above.
          \hfill \\ \htmladdnormallink{\texttt{http://www.g95.org}}{http://www.g95.org}
     \end{itemize}
+See \url{http://fortranwiki.org/fortran/show/Compilers} for an exhaustive list of free and commercial Fortran compilers.
 
-\newpage %------------ TEMPORARY 
+%\newpage %------------ TEMPORARY 
 \subsection{Installation under Microsoft Windows}
 \label{sec:windows}
 Detailed instructions to install \healpix on Windows 7 using Cygwin, kindly provided by John Arballo, 
@@ -1225,6 +1236,7 @@ Facilities"}{idl.pdf}{idl.htm}).
 
 %------------------
 \subsection{Using GDL instead of IDL}
+\label{sec:using_gdl}
 \label{install:using_gdl}
 \mytarget{install:using_gdl}
 
@@ -1371,6 +1383,7 @@ All other features work properly, including the \mylinkext{idl:mollview:latex}{\
 
 %------------------
 \subsection{Using FL instead of IDL}
+\label{sec:using_fl}
 \label{install:using_fl}
 \mytarget{install:using_fl}
 Fawlty Language (FL) is a black-box implementation of IDL 8.0, for which precompiled self-contained packages
