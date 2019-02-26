@@ -29,6 +29,7 @@
 \newcommand{\nside}{N_{\mathrm{side}}}
 \newcommand{\npix}{N_{\mathrm{pix}}}
 \newcommand{\lmax}{\ell_{\mathrm{max}}}
+\newcommand{\doubledash}{\latexhtml{-{}-}{-{\rm -}-}}
 \renewcommand{\contentsname}{{TABLE OF CONTENTS}}
 
 % in LaTeX2HTML:
@@ -785,11 +786,12 @@ allowing the corrected version to be added.
 \label{sec:pkg-config}
 Starting with \healpix 3.12, \texttt{pkg-config} (\texttt{.pc}) files are generated
 during the configuration of the 
-C, C++ and F90 packages, and are initially located respectively in
-\texttt{\$\{HEALPIX\}/lib/chealpix.pc},
-{\em install\_lib\_directory}\texttt{/pkgconfig/healpix\_cxx.pc}
-and 
-\texttt{\$\{HEALPIX\}/lib}{\em suffix}\texttt{/healpix.pc}.
+libsharp, C, C++ and F90 packages, and are initially located respectively in
+\texttt{\$\{HEALPIX\}/lib/pkgconfig/libsharp.pc},
+\texttt{\$\{HEALPIX\}/lib/pkgconfig/chealpix.pc},
+\texttt{\$\{HEALPIX\}/lib/pkgconfig/healpix\_cxx.pc},
+and \hfill \\
+\texttt{\$\{HEALPIX\}/lib}{\em suffix}\texttt{/pkgconfig/healpix.pc}.
 If the 
 \htmladdnormallink{\texttt{pkg-config} software}{https://en.wikipedia.org/wiki/Pkg-config} 
 is available on your system (see 
@@ -797,19 +799,19 @@ is available on your system (see
 https://www.freedesktop.org/wiki/Software/pkg-config/} to download, install and
 use it) and if the location of
 the \healpix \texttt{pkg-config} files above are known to it (either by moving/copying them
-to one of the standard locations returned by \\
-\texttt{pkg-config --variable pc\_path pkg-config}\\
-or by customizing the environment variable \texttt{PKG\_CONFIG\_PATH}\footnote{a
-third option is provide the location of the \texttt{.pc} file in full at each
+to one of the standard locations returned by \hfill \\
+\texttt{pkg-config \doubledash variable=pc\_path pkg-config}\\
+or by customizing the environment variable \texttt{PKG\_CONFIG\_PATH}%
+\footnote{a third option is provide the location of the \texttt{.pc} file in full at each
 \texttt{pkg-config} invocation : {\it eg}\\ {\tt
-pkg-config --cflags --libs }{\em full\_path}\texttt{/healpix.pc}}) then linking
-your own code with the 
+pkg-config \doubledash cflags \doubledash libs }{\em full\_path}\texttt{/healpix.pc}}), 
+then linking your own code with the 
 C,
 C++,
 F90 \healpix library simply becomes \\
-\texttt{cc `pkg-config --cflags --libs chealpix` mycode.c -o mycode} \\
-\texttt{c++ `pkg-config --cflags --libs healpix\_cxx` mycode.cpp -o mycode} \\
-{\em FC} `\texttt{pkg-config --cflags --libs healpix` mycode.f90 -o mycode}\\
+\texttt{cc `pkg-config \doubledash cflags \doubledash libs chealpix` mycode.c -o mycode} \\
+\texttt{c++ `pkg-config \doubledash cflags \doubledash libs healpix\_cxx` mycode.cpp -o mycode} \\
+{\em FC} \texttt{ `pkg-config \doubledash cflags \doubledash libs healpix` mycode.f90 -o mycode}\\
 (where {\em FC} has to be replaced by the Fortran compiler used to generate the
 \healpix library).
 
@@ -860,7 +862,7 @@ and as source files for all platforms \hfill \\
 than the compilers listed above.
          \hfill \\ \htmladdnormallink{\texttt{http://www.g95.org}}{http://www.g95.org}
     \end{itemize}
-See \url{http://fortranwiki.org/fortran/show/Compilers} for an exhaustive list of free and commercial Fortran compilers.
+See \url{http://fortranwiki.org/fortran/show/Compilers} for an extended list of free, freemium and commercial Fortran compilers.
 
 %\newpage %------------ TEMPORARY 
 \subsection{Installation under Microsoft Windows}
@@ -926,7 +928,7 @@ double-click on the setup-x86*.exe file to run it.
   \mycode{\textbf{\$} cd /usr/local/src}\\ 
   \mycode{\textbf{\$} tar zxvf cfitsio\_latest.tar.gz}\\ 
   \mycode{\textbf{\$} cd cfitsio}\\ 
-  \mycode{\textbf{\$} ./configure --prefix=/usr}\\ 
+  \mycode{\textbf{\$} ./configure \doubledash prefix=/usr}\\ 
   \mycode{\textbf{\$} make}\\ 
   \mycode{\textbf{\$} make install}\\ 
   \mycode{\textbf{\$} cd ../}

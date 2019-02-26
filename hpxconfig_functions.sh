@@ -337,7 +337,9 @@ editCMakefile () {
 }
 # -----------------------------------------------------------------
 writeCpkgconfigFile (){
-    pkgconfigFile=${HEALPIX}/lib/chealpix.pc
+    #pkgconfigFile=${HEALPIX}/lib/chealpix.pc
+    pkgconfigFile=${HEALPIX}/lib/pkgconfig/chealpix.pc
+    ${MKDIR} -p `${DIRNAME} ${pkgconfigFile}`
     echo
     echo "Writing pkgconfig file: ${pkgconfigFile}"
 
@@ -349,7 +351,7 @@ writeCpkgconfigFile (){
     echo " "                                   >> ${pkgconfigFile}
     echo "Name: chealpix"                      >> ${pkgconfigFile}
     echo "Description: C library for HEALPix (Hierarchical Equal-Area iso-Latitude) pixelisation of the sphere" >> ${pkgconfigFile}
-    echo "Version: ${HPX_VERSION}"             >> ${pkgconfigFile}
+    echo "Version: ${HPXVERSION}"             >> ${pkgconfigFile}
     echo "URL: https://healpix.sourceforge.io" >> ${pkgconfigFile}
     if [ ${C_WITHOUT_CFITSIO} -eq 0 ] ; then
 	echo "Requires: cfitsio"               >> ${pkgconfigFile}
@@ -384,7 +386,8 @@ C_config () {
 setSharpDefaults () {
 
     SHARPDIR=${HEALPIX}/src/common_libraries/libsharp
-    CFLAGS="-DMULTIARCH -O3 -ffast-math -fopenmp"
+    #CFLAGS="-DMULTIARCH -O3 -ffast-math -fopenmp" # reserve for multiplatform compilation
+    CFLAGS="-O3 -ffast-math -fopenmp"
     LDFLAGS=""
 
     SHARPPREFIX=$HEALPIX
@@ -402,11 +405,14 @@ askSharpUserMisc () {
 }
 #-------------
 editSharpMakefile () {
-    echoLn "edit top Makefile for libsharp ..."
 
     SHARPLDIR=${SHARPPREFIX}/lib
-    (cd src/common_libraries/libsharp; \
+    SHARPCDIR=src/common_libraries/libsharp
+    echo " "
+    echo "Running configure in ${SHARPCDIR} ... "
+    (cd ${SHARPCDIR}; \
     CC="${CC}" CFLAGS="${CFLAGS}" LDFLAGS="${LDFLAGS}" ./configure --prefix=${SHARPPREFIX} || crashAndBurn)
+    echo "edit top Makefile for libsharp ..."
     mv -f Makefile Makefile_tmp
     ${CAT} Makefile_tmp |\
 	${SED} "s|^ALL\(.*\) sharp-void \(.*\)|ALL\1 sharp-all \2|" |\
@@ -415,7 +421,7 @@ editSharpMakefile () {
 	${SED} "s|^DISTCLEAN\(.*\) sharp-void \(.*\)|DISTCLEAN\1 sharp-distclean \2|" |\
 	${SED} "s|^TIDY\(.*\) sharp-void \(.*\)|TIDY\1 sharp-tidy \2|" |\
         ${SED} "s|^SHARPLDIR.*|SHARPLDIR=${SHARPLDIR}|" |\
-	${SED} "s|^# sharp configuration.*|# sharp configuration: cd src/common_libraries/libsharp; CC=\"${CC}\" CFLAGS=\"${CFLAGS}\" LDFLAGS=\"${LDFLAGS}\" ./configure --prefix=${SHARPPREFIX}|" > Makefile
+	${SED} "s|^# sharp configuration.*|# sharp configuration: (cd ${SHARPCDIR}; CC=\"${CC}\" CFLAGS=\"${CFLAGS}\" LDFLAGS=\"${LDFLAGS}\" ./configure --prefix=${SHARPPREFIX})|" > Makefile
 
     echo " done."
     edited_makefile=1
@@ -489,10 +495,12 @@ askCppUserMisc () {
 }
 #-------------
 editCppMakefile () {
-    echoLn "edit top Makefile for C++ ..."
 
+    echo " "
+    echo "Running configure in src/cxx ... "
     (cd src/cxx; \
     CC="${CC}" CFLAGS="${CFLAGS}" CXX="${CXX}" CXXFLAGS="${CXXFLAGS}" SHARP_CFLAGS="-I${HEALPIX}/include" SHARP_LIBS="-L${HEALPIX}/lib -lsharp" CFITSIO_CFLAGS="${CFITSIO_CFLAGS}" CFITSIO_LIBS="${CFITSIO_LIBS}" ./configure --prefix=${CXXPREFIX} || crashAndBurn)
+    echo "edit top Makefile for C++ ..."
     mv -f Makefile Makefile_tmp
     ${CAT} Makefile_tmp |\
 	${SED} "s|^ALL\(.*\) cpp-void \(.*\)|ALL\1 cpp-all \2|" |\
@@ -500,7 +508,7 @@ editCppMakefile () {
 	${SED} "s|^CLEAN\(.*\) cpp-void \(.*\)|CLEAN\1 cpp-clean \2|" |\
 	${SED} "s|^DISTCLEAN\(.*\) cpp-void \(.*\)|DISTCLEAN\1 cpp-distclean \2|" |\
 	${SED} "s|^TIDY\(.*\) cpp-void \(.*\)|TIDY\1 cpp-tidy \2|" |\
-	${SED} "s|^# C++ configuration.*$|# C++ configuration: cd src/cxx; CC=\"${CC}\" CFLAGS=\"${CFLAGS}\" CXX=\"${CXX}\" CXXFLAGS=\"${CXXFLAGS}\"  SHARP_CFLAGS=\"-I${HEALPIX}/include\" SHARP_LIBS=\"-L${HEALPIX}/lib -lsharp\" CFITSIO_CFLAGS=\"${CFITSIO_CFLAGS}\" CFITSIO_LIBS=\"${CFITSIO_LIBS}\" ./configure --prefix=${CXXPREFIX}|"> Makefile
+	${SED} "s|^# C++ configuration.*$|# C++ configuration: (cd src/cxx; CC=\"${CC}\" CFLAGS=\"${CFLAGS}\" CXX=\"${CXX}\" CXXFLAGS=\"${CXXFLAGS}\"  SHARP_CFLAGS=\"-I${HEALPIX}/include\" SHARP_LIBS=\"-L${HEALPIX}/lib -lsharp\" CFITSIO_CFLAGS=\"${CFITSIO_CFLAGS}\" CFITSIO_LIBS=\"${CFITSIO_LIBS}\" ./configure --prefix=${CXXPREFIX})|"> Makefile
 
     echo " done."
     edited_makefile=1
@@ -2073,7 +2081,9 @@ f90_shared () {
 }
 # -----------------------------------------------------------------
 writeF90pkgconfigFile (){
-    pkgconfigFile=${HEALPIX}/lib${DIRSUFF}/healpix.pc
+    #pkgconfigFile=${HEALPIX}/lib${DIRSUFF}/healpix.pc
+    pkgconfigFile=${HEALPIX}/lib${DIRSUFF}/pkgconfig/healpix.pc
+    ${MKDIR} -p `${DIRNAME} ${pkgconfigFile}`
     echo
     echo "Writing pkgconfig file: ${pkgconfigFile}"
     ${CAT}<<EOF > ${pkgconfigFile}
@@ -2084,14 +2094,15 @@ prefix=${HEALPIX}
 suffix=${DIRSUFF}
 exec_prefix=\${prefix}/bin\${suffix}
 libdir=\${prefix}/lib\${suffix}
+sharpdir=\${prefix}/lib
 includedir=\${prefix}/include\${suffix}
 
 Name: HEALPix
 Description: F90 library for HEALPix (Hierarchical Equal-Area iso-Latitude) pixelisation of the sphere
-Version: ${HPX_VERSION}
+Version: ${HPXVERSION}
 URL: https://healpix.sourceforge.io
 Requires: cfitsio >= ${CFITSIOVREQ}
-Libs: -L\${libdir} -lhealpix -lhpxgif
+Libs: -L\${libdir} -L\${sharpdir} -lhealpix -lhpxgif -lsharp
 Cflags: -I\${includedir} ${PRFLAGS} ${F90PIC}
 
 EOF
