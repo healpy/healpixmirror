@@ -387,7 +387,7 @@ setSharpDefaults () {
 
     SHARPDIR=${HEALPIX}/src/common_libraries/libsharp
     #CFLAGS="-DMULTIARCH -O3 -ffast-math -fopenmp" # reserve for multiplatform compilation
-    CFLAGS="-O3 -ffast-math -fopenmp"
+    CFLAGS="-O3 -ffast-math -march=native -fopenmp"
     LDFLAGS=""
 
     SHARPPREFIX=$HEALPIX
@@ -399,7 +399,13 @@ askSharpUserMisc () {
     read answer
     [ "x$answer" != "x" ] && CC=$answer
 
-    echoLn "enter options for C compiler [$CFLAGS]: "
+    echo "enter options for C compiler: "
+    echo "For optimal performance, this should include '-ffast-math'"
+    echo "and '-march=native' (or your compiler's equivalent options)."
+    echo "(If you are using gcc or clang and you want to produce a portable,"
+    echo "high-performance library, you can also replace '-march=native'"
+    echo "by '-DMULTIARCH'.)"
+    echoLn "[$CFLAGS]: "
     read answer
     [ "x$answer" != "x" ] && CFLAGS=$answer
 }
