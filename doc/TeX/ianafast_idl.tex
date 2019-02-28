@@ -77,7 +77,8 @@ file or a memory array
 
 \item[binpath\mytarget{idl:ianafast:binpath}%
 =] full path to back-end routine \default {\$HEXE/anafast, then \$HEALPIX\-/bin/anafast 
-                or \$HEALPIX\-/src/cxx/\$HEALPIX\_TARGET\-/bin/anafast\_\-cxx, then \$HEALPIX\-/src/cxx/generic\_gcc\-/bin/anafast\_\-cxx if cxx is set}\\
+%%%%                or \$HEALPIX\-/src/cxx/\$HEALPIX\_TARGET\-/bin/anafast\_\-cxx, then \$HEALPIX\-/src/cxx/generic\_gcc\-/bin/anafast\_\-cxx if cxx is set}\\
+                or \$HEALPIX\-/bin/anafast\_\-cxx if \mylink{idl:ianafast:cxx}{cxx} is set}\\
               -- a binpath starting with / (or $\backslash$), $~$ or \$ is interpreted as absolute\\
               -- a binpath starting with ./ is interpreted as relative to current directory\\
               -- all other binpaths are relative to \$HEALPIX

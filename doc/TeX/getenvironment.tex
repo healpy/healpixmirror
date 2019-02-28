@@ -3,14 +3,15 @@
 \title{\healpix Fortran Subroutines Overview}
 \docid{getEnvironment} \section[getEnvironment]{ }
 \label{sub:getenvironment}
-\docrv{Version 1.1}
+\docrv{Version 1.2}
 \author{Eric Hivon}
 \abstract{This document describes the \healpix Fortran90 subroutine
 getEnvironment.}
 
 \begin{facility}
 {This subroutine emulates the C routine {\tt getenv}, which returns the value of
-an environment variable.}
+an environment variable.\\
+Starting with release 3.60, it calls the F2003 extension subroutine \texttt{get\_environment\_variable}.}
 {\modExtension}
 \end{facility}
 

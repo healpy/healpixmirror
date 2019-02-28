@@ -62,23 +62,22 @@ pro init_healpix, verbose=verbose
 ; 2009-09-14: v2.12e, correct typo
 ; 2009-10-07: v2.12f, add !healpix.path.doc.(*) sub-structure
 ; 2015-03-17: v2.20,  add !healpix.path.src sub-structure
+; 2019-02-28: v2.30,  adapted to Healpix 3.60 new C++ structure
 ;-
 
 ; system variable name
 healpix_sysvar = '!HEALPIX'
 
 ; Healpix version
-version = '3.40pre'
+version = '3.60pre'
 
 ; release data
-date = '2017-mm-dd'
+date = '2019-mm-dd'
 
 
 ; Healpix directory
 directory = getenv('HEALPIX')
 hexe      = getenv('HEXE')
-target    = getenv('HEALPIX_TARGET')
-if strtrim(target,2) eq '' then target = 'generic_gcc'
 
 hpx_path_data     = defined_sysvar('!hpx_path_data')    ? !hpx_path_data    : set_default_hpx_path('HEALPIX',['data'])
 hpx_path_src      = defined_sysvar('!hpx_path_src')     ? !hpx_path_src     : set_default_hpx_path('HEALPIX',['src'])
@@ -107,7 +106,13 @@ if defined_sysvar('!hpx_path_bin_cxx') then begin
     hpx_path_bin_cxx = !hpx_path_bin_cxx
 endif else begin
     if (strtrim(directory,2) ne '') then begin
-        hpx_path_bin_cxx = set_default_hpx_path('HEALPIX',['src','cxx',target,'bin'])
+        if (float(version) le 3.501) then begin
+            target    = getenv('HEALPIX_TARGET')
+            if strtrim(target,2) eq '' then target = 'generic_gcc'
+            hpx_path_bin_cxx = set_default_hpx_path('HEALPIX',['src','cxx',target,'bin']) ;up to 3.50
+        endif else begin
+            hpx_path_bin_cxx = set_default_hpx_path('HEALPIX',['bin']) ; 3.60 and above
+        endelse
     endif
 endelse
 

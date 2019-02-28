@@ -29,7 +29,7 @@
 \newcommand{\nside}{N_{\mathrm{side}}}
 \newcommand{\npix}{N_{\mathrm{pix}}}
 \newcommand{\lmax}{\ell_{\mathrm{max}}}
-\newcommand{\doubledash}{\latexhtml{-{}-}{-{\rm -}-}}
+\newcommand{\doubledash}{\latexhtml{-{}-}{-{}--}}
 \renewcommand{\contentsname}{{TABLE OF CONTENTS}}
 
 % in LaTeX2HTML:
@@ -195,7 +195,8 @@ configuration which is beyond our control.
 \linklatexhtml{"IDL Facilities"}{idl.pdf}{idl.htm}\\
  & & \\
 %
-  C++     & This document, or \phantom{filling up --} \texttt{src/cxx/README.compilation} & 
+  C++     & This document & 
+%  C++     & This document, or \phantom{filling up --} \texttt{src/cxx/README.compilation} & 
 %\htmladdnormallink{"C++ Facilities and Subroutines"}{index_cxx.html}
 \linklatexhtml{"C++ Facilities and Subroutines"}{../html/index_cxx.html}{index_cxx.html}
  (HTML only)\\
@@ -236,15 +237,19 @@ that at least version \idlversion is required), \textbf{Java} and \textbf{Python
 also available in \textbf{C}. \\
 Starting with version 3.0, the
 \linklatexhtml{healpy}{\gdlsite}{\gdlsite}
-(HEALPix in Python) library has been integrated into \healpix releases. Since it
+(HEALPix in \textbf{Python}) library has been integrated into \healpix releases. Since it
 is, to a large extent, a
 wrapper to the C++ routines, installing it also requires a C++ compiler (on top
 of \texttt{python} and a few supporting Python libraries) but it will perform
-its own compilation of the current \healpix C++ library.
+its own compilation of the current \healpix C++ library.\\
+Starting with version 3.10, all the (computation intensive) Spherical Harmonics 
+operations required by the C++, Fortran and Python routines
+are performed with the higly optimized C-written \texttt{libsharp} library, 
+also included in the package.
 
 {\em This section and the next focus on the compilation and installation of the
   \textbf{C}, \textbf{C++}, \textbf{Fortran~90}, \textbf{IDL} and
-\textbf{Python} routines. For more information on the 
+\textbf{Python} routines and \textbf{libsharp} library. For more information on the 
 \textbf{Java} routines see table~\ref{tab:allpackages}.}
 
 The configure script is written in the Bourne shell. The script
@@ -506,38 +511,15 @@ in \texttt{\$\{HEALPIX\}/lib/chealpix.*}\ .
 
 \subsubsection{C++ configuration}
 \label{sec:cpp_config}
-Two options are available:
-\begin{itemize}
-\item The interactive \texttt{./configure} script will 
-ask for the full path to an installed \texttt{cfitsio} library to link to, and then provide a choice of
-predefined targets corresponding to different combinations of C++ compilers and
-options. Each of those targets is defined in a configuration file located in
-\texttt{Healpix\_\hpxversion/src/cxx/config/config.}{\em target}.
-The user can therefore add new targets or edit existing ones, and the
-\texttt{./configure} script will update its menu accordingly.
-If a fairly recent version
-(4.2 or higher) of gcc and g++ is installed on the system, the target
-"generic\_gcc" should always work, except under MacOSX, where "osx" target is
-required.  \\
-The environment variables EXTERNAL\_CFITSIO, 
-CFITSIO\_EXT\_LIB, 
-CFITSIO\_EXT\_INC and 
-HEALPIX\_TARGET 
-will be set according to the choices made above.
+Starting with version 3.60, the interactive configure script will be used to
+provide information (like the choice of C++ compiler and options) 
+to an automated (\texttt{autoconf} generated) configure script, 
+(located in \texttt{src/cxx/configure}), which will take care of the configuration.
+The configuration of \texttt{libsharp} will be also taken care at this stage.\\
+At odds with previous versions, the C++ binaries, libraries and header files will be installed in the \texttt{bin}, \texttt{lib} and \texttt{include} directories respectively.
 \\
 If the \healpix configuration file is sourced as described in \S\ref{subsub:conf}, the full path to the C++
 executables will be added to the environment PATH variable.
-
-\item Starting with \healpix 3.0, an automated (\texttt{autoconf} generated) \texttt{configure} script is 
-available in \texttt{Healpix\_\hpxversion/src/cxx/configure}. To use it (and also make the compilation, and test it) 
-do\\
-\mycode{cd src/cxx}\\
-\mycode{./configure}\\
-\mycode{make}\\
-\mycode{make test}\\
-which will put the compilation products in \texttt{Healpix\_\hpxversion/src/cxx/auto}.
-\end{itemize}
-
 
 
 \subsubsection{Fortran 90 configuration}
@@ -557,6 +539,7 @@ information.}.
 From our experience,
 we have not found significant accumulation of numerical error even
 when using the most aggressive optimisation level available. \\
+The configuration of \texttt{libsharp} will be also taken care at this stage.\\
 If the \healpix configuration file is sourced as described in \S\ref{subsub:conf}, the full path to the F90
 executables will be added to the environment PATH variable.
 
@@ -599,17 +582,24 @@ Note that during the compilation with \texttt{make} (see below), the
  \texttt{src/cxx/*} libraries, with all the options necessary to Python linkage, and
  can be done independently of the C++ installation described above.
 
+\subsubsection{libsharp library}
+The libsharp library for optimized Spherical Harmonics operations, 
+is used by the C++, Fortran and healpy packages. 
+It will be configured (only once) at the same time as any of these packages,
+ but can also be configured on its own.
+
 \subsection{Compilation and installation}
 
 The \\
 \mycode{make} \\
-command will compile one or several of the C, C++, F90 and Python packages
+command will compile one or several of the C, C++, F90, libsharp and Python packages
 depending on what was configured with the \texttt{./configure} script.
 Specific packages can be compiled with the respective commands 
 \begin{verbatim}
    make c-all
    make cpp-all
    make f90-all
+   make sharp-all
    make healpy-all
 \end{verbatim}
 
@@ -638,8 +628,10 @@ respectively
    make c-test
    make cpp-test
    make f90-test
+   make sharp-test
+   make healpy-test
 \end{verbatim}
-For the latter, Table~\ref{tab:f90_tests} lists the codes tested with the
+For \texttt{f90-test}, Table~\ref{tab:f90_tests} lists the codes tested with the
 parameter files used, as well as the data files produced and the respective
 reference files.
 
@@ -955,15 +947,15 @@ double-click on the setup-x86*.exe file to run it.
   In the Cygwin terminal, type the following commands at the
   '\textbf{\$}' prompt\\ (use the names of the Healpix directories for
   the version you installed):\\ 
-	\mycode{\textbf{\$} cd Healpix\_3.30\_2015Oct08}\\ 
-	\mycode{\textbf{\$} cd Healpix\_3.30}\\ 
+	\mycode{\textbf{\$} cd Healpix\_3.60\_*}\\ 
+	\mycode{\textbf{\$} cd Healpix\_3.60}\\ 
 	\mycode{\textbf{\$} ./configure}\\ 
 	Select an option from the menu (e.g., `2' for the C
   package) and accept all of the defaults except that
   the first time
   you run configure, you'll be prompted at the end to modify your
   home shell profile ('.profile'). Enter `y' at this prompt.\\
-  If you want to install the C++ package of \healpix (option 4), pick \texttt{generic\_gcc} when prompted for a C++ configuration.\\
+%%%%  If you want to install the C++ package of \healpix (option 4), pick \texttt{generic\_gcc} when prompted for a C++ configuration.\\
   	\mycode{\textbf{\$} make}\\ 
 	\mycode{\textbf{\$} make test}\\ 
 	\mycode{\textbf{\$} make tidy}

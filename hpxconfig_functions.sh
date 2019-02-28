@@ -528,12 +528,12 @@ generateConfCppFile () {
     case $SHELL in
     csh|tcsh)
 	${CAT} <<EOF >>$HPX_CONF_CPP
-setenv PATH \${CXXPREFIX}/bin:\${PATH}
+setenv PATH \${HEALPIX}/bin:\${PATH}
 EOF
 	;;
     sh|ksh|bash|zsh)
 	${CAT} <<EOF >>$HPX_CONF_CPP
-PATH="\${CXXPREFIX}/bin:\${PATH}"
+PATH="\${HEALPIX}/bin:\${PATH}"
 export PATH
 EOF
 	;;

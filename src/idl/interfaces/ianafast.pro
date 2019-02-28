@@ -89,7 +89,7 @@ pro ianafast, map1_in, cl_out $
 ;                must be a FITS file
 ;
 ;   binpath=: full path to back-end routine [default: $HEXE/anafast, then $HEALPIX/bin/anafast 
-;                   or $HEALPIX/src/cxx/$HEALPIX_TARGET/bin/anafast_cxx, then $HEALPIX/src/cxx/generic_gcc/bin/anafast_cxx if cxx is set]
+;                   or $HEALPIX/bin/anafast_cxx if cxx is set]
 ;                 a binpath starting with / (or \), ~ or $ is interpreted as absolute
 ;                 a binpath starting with ./ is interpreted as relative to current directory
 ;                 all other binpaths are relative to $HEALPIX

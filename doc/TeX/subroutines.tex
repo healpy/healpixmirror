@@ -226,10 +226,29 @@ $\mathbf{\phi}$ & The azimuthal angle on the sphere, $\phi\in[0,2\pi[$.\\
 %--------------------------------------------
 %-------------------------------------------- CHANGES
 %--------------------------------------------
-\section[Changes between releases 3.40 and \hpxversion]{Changes between releases 3.40 and
+\section[Changes between releases 3.50 and \hpxversion]{Changes between releases 3.50 and
 \hpxversion}
-\label{sub:new3p50}
+\label{sub:new3p60}
 \begin{itemize}
+\item The routines and function 
+\htmlref{\texttt{getArgument}}{sub:getargument},
+\htmlref{\texttt{getEnvironment}}{sub:getenvironment}
+and
+\htmlref{\texttt{nArguments}}{sub:narguments}
+now calls F2003 extensions instead of external C routines.
+\end{itemize}
+
+%--------------------------------------------
+\section{Older Changes}
+%--------------------------------------------
+{\mysmaller%
+\compresstext
+%--------------------------------------------
+\subsection[Changes between releases 3.00 and 3.50]{Changes between releases 3.00 and 3.50}
+%--------------------------------------------
+\subsubsection{Version 3.50}
+\label{sub:new3p50}
+\begin{itemize}\compresslist
 %
 \item correction of a bug in 
 \htmlref{\texttt{map2alm\_iterative}}{sub:map2alm_iterative},
@@ -250,15 +269,6 @@ a latitude cut to a map,
 \item \htmladdnormallink{edition to fitstools.F90}{https://sourceforge.net/p/healpix/bugs/84} allowing a proper compilation with g95.
 \end{itemize}
 
-%--------------------------------------------
-\section{Older Changes}
-%--------------------------------------------
-
-{\mysmaller%
-\compresstext
-%--------------------------------------------
-\subsection[Changes between releases 3.00 and 3.40]{Changes between releases 3.00 and 3.40}
-%--------------------------------------------
 \subsubsection{Version 3.40}
 \begin{itemize}\compresslist
 \item The facilities 
