@@ -253,25 +253,21 @@ orthview}}{idl:mollview} visualization routines: support for color and thickness
 %--------------------------------
 
 \section{Previous changes}
-{\mysmaller%
+{\mysmaller%% (itemize)
 \compresstext
 \subsubsection{Changes between release 3.40 and 3.50}%2018-12
 %--------------------------------
-\begin{itemize}
+\begin{itemize} %--------0
 %--------------------------------
 \item \htmlref{{\tt fits2cl}}{idl:fits2cl}: addition of \mylink{idl:fits2cl:planck3}{{\tt /PLANCK3}} keyword to read the fiducial $\Lambda$-CDM $C(\ell)$ model which best fits the 2018 Planck data analysis (available from \htmladdnormallink{\texttt{Healpix/data/planck2018\_lcdm\_cl\_v3.fits}}{\srcurl data/planck2018_lcdm_cl_v3.fits});
 \item \htmlref{\texttt{rotate\_coord}}{idl:rotate_coord}: addition of optional variable \mylink{idl:rotate_coord:delta_psi}{{\tt Delta\_Psi}} containing rotation of polarization on output, and of keyword \mylink{idl:rotate_coord:free_norm}{{\tt Free\_Norm}} to deal with un-normalized input coordinate vectors
 %--------------------------------
-\end{itemize}
+\end{itemize} %--------0
 %--------------------------------
 
-
-\section{Previous changes}
-{\mysmaller%
-\compresstext
 \subsubsection{Changes between release 3.31 and 3.40}%2018-06
 %--------------------------------
-\begin{itemize}
+\begin{itemize} %--------0
 %--------------------------------
 \item The routines \htmlref{\texttt{ianafast}}{idl:ianafast} and \htmlref{\texttt{ismoothing}}{idl:ismoothing}
 can now use pixel-based quadrature weights. Addition of the supporting functions 
@@ -293,7 +289,7 @@ An equivalent python facility \texttt{change\_polcconv.py} is now available as w
 %
 \item \htmlref{{\tt azeqview, cartview, gnomview, mollview,
 orthview}}{idl:mollview} visualization routines:
-\begin{itemize}
+\begin{itemize} %--------1
    \item addition of the keywords 
 	\mylink{idl:mollview:customize}{{\tt CUSTOMIZE}} and 
 	\mylink{idl:mollview:default_settings}{{\tt DEFAULT\_SETTINGS}}
@@ -303,20 +299,20 @@ orthview}}{idl:mollview} visualization routines:
 	(and presence) of labels on the parallel and meridian graticules
    \item fine control of polarisation rods thickness with \mylink{idl:mollview:polarization}{{\tt POLARIZATION}}
    \item addition of the \mylink{idl:mollview:silhouette}{{\tt SILHOUETTE}} keyword to add a tunable silhouette around the projected map (\htmlref{{\tt mollview} and {\tt orthview} only}{idl:mollview})
-\end{itemize}
+\end{itemize} %--------1
 \item Improved support for \htmlref{GDL}{install:using_gdl} and \htmlref{FL (Fawlty Language)}{install:using_fl}.
 \item Update of the required
     \htmladdnormallink{\texttt{IDL-astron} library}{https://idlastro.gsfc.nasa.gov/homepage.html}
     routines, and \htmladdnormallink{\texttt{Coyote}}{http://www.idlcoyote.com} library
     routines (2018-05-15).
 %--------------------------------
-\end{itemize}
+\end{itemize} %--------0
 %--------------------------------
 
 
 \subsubsection{Changes between releases 3.30 and 3.31}
 %--------------------------------
-\begin{itemize}
+\begin{itemize} %--------0
 %--------------------------------
 	\item Improved support for \htmlref{GDL}{install:using_gdl};
 %(see \htmlref{Using GDL instead of IDL}{install:using_gdl})
@@ -325,18 +321,18 @@ orthview}}{idl:mollview} visualization routines:
     routines, and \htmladdnormallink{\tt Coyote}{http://www.idlcoyote.com} library
     routines (2016-08-19).
 %--------------------------------
-\end{itemize}
+\end{itemize} %--------0
 %--------------------------------
 
 \subsubsection{Changes between releases 3.20 and 3.30}
 %--------------------------------
-\begin{itemize}
+\begin{itemize} %--------0
 %--------------------------------
 
 %
 \item \htmlref{{\tt azeqview, cartview, gnomview, mollview,
 orthview}}{idl:mollview} visualization routines:
-\begin{itemize}
+\begin{itemize} %--------1
  \item addition of \mylink{idl:mollview:pdf}{{\tt PDF}} keyword for production of Adobe PDF outputs;
  \item addition of \mylink{idl:mollview:latex}{{\tt LATEX}} keyword for genuine 
  or emulated \LaTeX\ processing of character strings;
@@ -346,7 +342,7 @@ origin and type of character font;
   the \mylink{idl:mollview:nobar}{{\tt NOBAR}} keyword now removes the color bar {\em or} the polarization color wheel, as applicable; %
   correct EQUINOX date in header of output \mylink{idl:mollview:fits}{FITS} map; %
   the double precision maps and those with constant value are now correctly handled.
-\end{itemize}
+\end{itemize} %--------1
 %
 \item \htmlref{{\tt fits2cl}}{idl:fits2cl}: addition of \mylink{idl:fits2cl:planck2}{{\tt /PLANCK2}} keyword
 to read best fit $C(\ell)$ model to Planck 2015 data.
@@ -361,12 +357,14 @@ to read best fit $C(\ell)$ model to Planck 2015 data.
     routines, and \htmladdnormallink{\tt Coyote}{http://www.idlcoyote.com} library
     routines (2015-09-23).
 %
-\end{itemize}
+%--------------------------------
+\end{itemize} %--------0
+%--------------------------------
 
 %-------------------------------------------
 \subsubsection{Changes between releases 3.11 and 3.20}
 %-------------------------------------------
-\begin{itemize}
+\begin{itemize}%--------0
 %
 \item addition of \htmlref{{\tt ialteralm}}{{idl:ialteralm}} to modify Spherical
 Harmonics coefficients ($a_{\ell m}$).
@@ -376,7 +374,7 @@ current color table to one used in Planck 2013 publications.
 %
 \item \htmlref{{\tt cartview, gnomview, mollview,
 orthview}}{idl:mollview}: 
-\begin{itemize} 
+\begin{itemize}  %--------1
 \item addition of  
 \mylink{idl:mollview:bad_color}{{\tt BAD\_COLOR}},
 \mylink{idl:mollview:bg_color}{{\tt BG\_COLOR}} and
@@ -386,7 +384,7 @@ missing pixels, background and foreground labels and lines.
 \mylink{idl:mollview:colt}{{\tt COLT='planck1'}} and 
 \mylink{idl:mollview:colt}{{\tt COLT='planck2'}} to use the Planck color tables
 defined in \htmlref{{\tt planck\_colors}}{{idl:planck_colors}}
-\end{itemize}
+\end{itemize} %--------1
 %
 \item Bugs correction in 
 \htmlref{{\tt bin\_llcl}}{idl:bin_llcl},
@@ -397,12 +395,12 @@ defined in \htmlref{{\tt planck\_colors}}{{idl:planck_colors}}
     routines, and their supporting \htmladdnormallink{\tt Coyote}{http://www.idlcoyote.com}
     routines (2014-11-10).
 %
-\end{itemize}
+\end{itemize}%--------0
 
 %-------------------------------------------
 \subsubsection{Changes between releases 3.00 and 3.11}
 %--------------------------------
-\begin{itemize}
+\begin{itemize}%--------0
 %--------------------------------
 
 %Several routines have been added or improved since version 3.00, as listed below.
@@ -410,15 +408,15 @@ defined in \htmlref{{\tt planck\_colors}}{{idl:planck_colors}}
 %\begin{itemize}
 %
 \item Latest edition (version 3.11)
-\begin{itemize}
+\begin{itemize} %--------1
 	\item %
 		\htmlref{{\tt ang2pix\_ring}}{{idl:pix_tools}} and
 		\htmlref{{\tt pix2ang\_nest}}{{idl:pix_tools}} routines
 		now accept scalar arguments
-\end{itemize}
+\end{itemize} %--------1
 %
 \item Previous edition (version 3.10)
-\begin{itemize}
+\begin{itemize} %--------1
 	\item bug corrections: 
 	\htmlref{{\tt query\_disc}}{{idl:query_disc}}: correct handling of empty disc; 
 	\htmlref{{\tt bin\_llcl}}{{idl:bin_llcl}}: correct handling of optional argument.
@@ -443,15 +441,15 @@ to read best fit $C(\ell)$ model to Planck 2013 + external data.
 	\htmladdnormallink{{\tt IDL-astron} library}{https://idlastro.gsfc.nasa.gov/homepage.html}
 	routines, and their supporting \htmladdnormallink{\tt Coyote}{http://www.idlcoyote.com}
 	routines (2013-02-08).
-\end{itemize}
-\end{itemize}
+\end{itemize} %--------1
+\end{itemize}%--------0
 
 \subsubsection{Changes between releases 2.20 and 3.00}
 %--------------------------------
-\begin{itemize}
+\begin{itemize}%--------0
 %--------------------------------
 \item Previous edition (version 3.0)
-\begin{itemize}
+\begin{itemize} %--------1
 %
 	\item New routines to go from circular beam profile to transfer function
 (\htmlref{{\tt beam2bl}}{idl:beam2bl}), 
@@ -497,8 +495,8 @@ to read best fit $C(\ell)$ model to WMAP 7yr data.
 $\nside$=8192 \healpix maps and is generally faster than previously for smaller
 maps
 	\item update of {\tt astron} library routines (01-Feb-2012).
-\end{itemize}
-\end{itemize}
+\end{itemize} %--------1
+\end{itemize}%--------0
 
 \subsubsection{Changes between release 2.0 and 2.20}
 Several routines have been added or improved since version 2.0, as listed below.
@@ -510,17 +508,11 @@ from $2^{13}=8192$ to $2^{29}=536870912$, corresponding to $3.46\ 10^{18}$
 pixels on the sphere.
 
 
-%\begin{itemize}
-
-%
-%
-%
 %--------------------------------
-%\end{itemize}
-\begin{itemize}
+\begin{itemize}%--------0
 %--------------------------------
 \item Recent edition (versions 2.20 and 2.20a)
-\begin{itemize}
+  \begin{itemize}%--------1
 	\item \htmlref{{\tt fits2cl}}{idl:fits2cl}: addition of {\tt WMAP1} and
 {\tt WMAP5} keywords to read
 	best fit $C(\ell)$ model to WMAP 1st and 5yr data respectively,
@@ -529,12 +521,12 @@ pixels on the sphere.
 symbols with {\tt PSYM} $> 8$, using
 \htmladdnormallink{\tt cgsymcat}{http://http://www.idlcoyote.com/programs/cgsymcat.pro}
 symbols definition.
-\end{itemize}
+  \end{itemize}%--------1
 
 \item Recent editions (versions 2.15 and 2.15a)
-\begin{itemize}
+  \begin{itemize}%--------1
 	\item \htmlref{{\tt cartview, gnomview, mollview, orthview}}{idl:mollview}:
-        \begin{itemize} 
+        \begin{itemize} %--------2
 		\item export of projected map into a FITS file (\mylink{idl:mollview:fits}{{\tt FITS}} keyword), or an
 IDL array (\mylink{idl:mollview:fits}{{\tt MAP\_OUT}} option) now available with all viewing routines,
 		\item added \mylink{idl:mollview:charthick}{{\tt CHARTHICK}}
@@ -545,7 +537,7 @@ of structures,
 		\item correction of a bug (in {\tt loaddata\_healpix}) that was
 affecting the behavior of these viewing routines after consecutive calls with
 very partial cut-sky {\em and then} full-sky data sets [2.15a];
-	\end{itemize}
+	\end{itemize} %--------2
 	\item \htmlref{{\tt remove\_dipole}}{idl:remove_dipole} now outputs the monopole and dipole
 \mylink{idl:remove_dipole:covariance_matrix}{covariance matrix};
 	\item 
@@ -554,18 +546,18 @@ very partial cut-sky {\em and then} full-sky data sets [2.15a];
 \htmlref{{\tt write\_fits\_sb}}{idl:write_fits_sb}: {\tt
 BAD\_DATA} keyword added to FITS header;
         \item update of {\tt astron} library routines (24-May-2010) for improved WCS support.
-\end{itemize}
+  \end{itemize} %--------1
 
 
 \item Previous edition (version 2.14a)
- \begin{itemize}
+ \begin{itemize} %--------1
 	\item \htmlref{{\tt cartview, gnomview, mollview, orthview}}{idl:mollview}:
-        \begin{itemize}
+        \begin{itemize} %--------2
 		\item {\tt OUTLINE=}, {\tt GRATICULE=}, {\tt IGRATICULE=} work
 again with virtual windows ({\tt WINDOW}$<0$)
 		\item {\tt YPOS=} and {\tt RETAIN=} keywords active again
 		\item {\tt PS=} keyword fixed % 2.14a
-	\end{itemize}
+	\end{itemize} %--------2
 	\item \htmlref{{\tt orthview}}{idl:mollview}:
 		fixed problems with {\tt /SHADE} keyword, which now
 outputs 8-byte (instead of 16-byte) PNG files
@@ -579,19 +571,19 @@ Precision input maps
 	\item \htmlref{{\tt remove\_dipole}}{idl:remove_dipole}: 
 {\tt COORD\_IN=} and {\tt COORD\_OUT=} now
 accept lower case values; {\tt /SILENT} keyword added.
- \end{itemize}
+ \end{itemize} %--------1
 
 \item Old edition (version 2.13)
-   \begin{itemize}
+   \begin{itemize} %--------1
 	\item new \htmlref{{\tt healpix\_doc}}{idl:healpix_doc} routine to
 browse HTML and PDF documentations
 	\item \htmlref{{\tt cartview, gnomview, mollview, orthview}}{idl:mollview}:
-        \begin{itemize}
+        \begin{itemize} %--------2
 		\item introduction of the {\tt TRUECOLORS=} keyword to generate
 color image from 3 channel map
 		\item extended capability of the {\tt TRANSPARENT=} keyword
 		\item addition of {\tt MAP\_OUT=} to {\tt gnomview}
-	\end{itemize}
+	\end{itemize} %--------2
 	\item improved compatibility with 
 \htmladdnormallink{GDL}{\gdlsite}
  (free IDL clone). See \linklatexhtml{''\healpix Installation Document''}{install.pdf}{install.htm} for current GDL limitations.
@@ -606,24 +598,24 @@ substructure with complete path to \healpix subdirectories (test, data, bin)
 	\item \htmlref{{\tt ianafast}}{idl:ianafast}, 
               \htmlref{{\tt ismoothing}}{idl:ismoothing}: solved problem with {\tt
 W8DIR=} keyword.
-   \end{itemize}
+   \end{itemize} %--------1
 
 \item Older editions (versions 2.11 and 2.12a)
-   \begin{itemize}
+   \begin{itemize} %--------1
 	\item \htmlref{{\tt ianafast}}{idl:ianafast}, 
               \htmlref{{\tt ismoothing}}{idl:ismoothing}, 
               \htmlref{{\tt isynfast}}{idl:isynfast}: the {\tt
 TMPDIR} keyword now works properly, and {\tt \$IDL\_TMPDIR} is used as the
 default temporary directory ; more stable behaviour of these routines
 	\item \htmlref{{\tt ud\_grade}}{idl:ud_grade}: 
-	\begin{itemize} 
+	\begin{itemize}  %--------2
 		\item correctly flags bad output pixels with {\tt bad\_data}
 value when upgrading maps
 		\item cut sky map: improved, faster routine, now works for Nside $>$
 8192
-	\end{itemize}
+	\end{itemize} %--------2
 	\item \htmlref{{\tt cartview, gnomview, mollview, orthview}}{idl:mollview}:
-        \begin{itemize}
+        \begin{itemize} %--------2
 		\item using a virtual window (ie, setting {\tt WINDOW} to a
 negative value) now allows faster generation of GIF and PNG files (especially useful over remote connections); 
 		\item addition of {\tt RETAIN=} keyword; 
@@ -632,24 +624,25 @@ negative value) now allows faster generation of GIF and PNG files (especially us
 		\item polarization norm map can be offset ({\tt POLARIZATION=1} mode)
 		\item original color table and plot settings are restored when
 leaving these routines
-	\end{itemize}
+	\end{itemize} %--------2
 	\item \htmlref{{\tt orthview}}{idl:mollview}: addition of 
               %\htmlref{{\tt /SHADED}}{kw:mol_shaded} 
               {\tt /SHADED}
 	keyword for 3D rendering
 	\item issues warning when non-integer pixel indexes are fed to \htmlref{{\tt nest2ring, ring2nest, pix2ang\_*, pix2vec\_*,}}{idl:pix_tools}   ...
 	\item {\tt ximview}:
-		\begin{itemize}
+		\begin{itemize} %--------2
 		\item fixed problem with cut-sky FITS files
 		\item color scale bar added to PNG output
 		\item version 0.6.2, fixed bug in pixel coordinates
-		\end{itemize}
+		\end{itemize} %--------2
 	\item cosmetic editions to {\tt remove\_dipole}
-   \end{itemize}
+   \end{itemize} %--------1
+
 
 %
 \item New routines in version 2.10 include
-\begin{itemize}
+\begin{itemize} %--------1
  \item {{\tt ximview}}: visualisation routine developed by J. P. Leahy intended for quick-look inspection of HEALPix images 
 (as well as ordinary 2-D images) at the level of individual pixels. Features
 include panning, zooming, blinking, image statistics and peak finding.
@@ -670,47 +663,48 @@ FITS file
    find immediate neighbours of a given pixel
  \item \htmlref{{\tt query\_strip}}{idl:query_strip}: %
    find pixels lying within a colatitude strip
-\end{itemize}	
+\end{itemize} %--------1	
 %
 \item Routines with extended/improved user interface or new functionalities include
-\begin{itemize}
-\item \htmlref{{\tt mollview, gnomview, cartview, orthview}}{idl:mollview}: 
-\begin{itemize}
-\item {\tt ONLINE} keyword is now redundant, 
-\item introduction of {\tt GLSIZE} and {\tt IGLSIZE} to
+ \begin{itemize} %--------1
+  \item \htmlref{{\tt mollview, gnomview, cartview, orthview}}{idl:mollview}: 
+  \begin{itemize} %--------2
+   \item {\tt ONLINE} keyword is now redundant, 
+   \item introduction of {\tt GLSIZE} and {\tt IGLSIZE} to
   	control automatic labeling of graticules,
 	see Fig.~\ref{fig:plot_example_execute} on page~\pageref{page:plot_example_execute}
-\item addition of {\tt SILENT} and {\tt EXECUTE} keywords,
+   \item addition of {\tt SILENT} and {\tt EXECUTE} keywords,
 	see Fig.~\ref{fig:plot_example_execute} on
 	page~\pageref{page:plot_example_execute}
-\item addition of {\tt ASINH} keyword to allow better visualisation of highly
-contrasted maps; see Figure~\ref{fig:merge_wmapKband} on page~\pageref{page:merge_wmapKband},
-\item under certain circumstances, can process high resolution cut sky data sets
+   \item addition of {\tt ASINH} keyword to allow better visualisation of highly
+     contrasted maps; see Figure~\ref{fig:merge_wmapKband} on page~\pageref{page:merge_wmapKband},
+   \item under certain circumstances, can process high resolution cut sky data sets
 	without creating full sky dummy maps,
-\item accept gzip compressed FITS files,
-\item accept polarized cut sky maps,
-\item accept multi-dimensional online arrays,
-\item more robust {\tt OUTLINE} option.
-\end{itemize}
+   \item accept gzip compressed FITS files,
+   \item accept polarized cut sky maps,
+   \item accept multi-dimensional online arrays,
+   \item more robust {\tt OUTLINE} option.
+  \end{itemize} %--------2
 
-\item \htmlref{{\tt median\_filter}}{idl:median_filter}: bugs correction
-\item \htmlref{{\tt ud\_grade}}{idl:ud_grade}: more robust user interface
-\item \htmlref{{\tt change\_polcconv}}{idl:change_polcconv}: new {\tt /FORCE} keyword
-\item \htmlref{{\tt remove\_dipole}}{idl:remove_dipole}: more accurate
-\item \htmlref{{\tt query\_disc}}{idl:query_disc}: when the disc center is
-located at one of
-the poles, {\em only} the pixels overlapping with the disc are now returned.
-\end{itemize}
+  \item \htmlref{{\tt median\_filter}}{idl:median_filter}: bugs correction
+  \item \htmlref{{\tt ud\_grade}}{idl:ud_grade}: more robust user interface
+  \item \htmlref{{\tt change\_polcconv}}{idl:change_polcconv}: new {\tt /FORCE} keyword
+  \item \htmlref{{\tt remove\_dipole}}{idl:remove_dipole}: more accurate
+  \item \htmlref{{\tt query\_disc}}{idl:query_disc}: when the disc center is
+    located at one of the poles, {\em only} the pixels overlapping with the disc are now returned.
+  \end{itemize} %--------1
 %
-\item Miscellaneous
-\begin{itemize}
-\item \htmlref{{\tt mollcursor, gnomcursor...}}{idl:mollcursor}: an X11 patch is
+ \item Miscellaneous
+  \begin{itemize} %--------1
+    \item \htmlref{{\tt mollcursor, gnomcursor...}}{idl:mollcursor}: an X11 patch is
 given so that these routines work under Mac OS X 10.4 and 10.5.
-\end{itemize}
-\end{itemize}
+  \end{itemize} %--------1
+\end{itemize} %--------0
+
 %--------------------------------
-} %% end of mysmaller
+} %% end of mysmaller (itemize)
 %--------------------------------
+
 
 % \subsubsection{Changes between release 1.2 and 2.0}
 % Some new routines have been introduced since version 1.2, as listed below.

@@ -25,7 +25,7 @@
 ;  For more information about HEALPix see http://healpix.sourceforge.net
 ;
 ; -----------------------------------------------------------------------------
-function healpixwindow, nside, dim, directory = dir_usr, help=help
+function healpixwindow, nside, dim, directory = dir_usr, help=help, lmax=lmax_usr
 ;+
 ; NAME:
 ;   healpixwindow
@@ -36,7 +36,7 @@ function healpixwindow, nside, dim, directory = dir_usr, help=help
 ; CATEGORY:
 ;
 ; CALLING SEQUENCE:
-;   result = healpixwindow(nside, [dim, DIRECTORY=, HELP=])
+;   result = healpixwindow(nside, [dim, DIRECTORY=, HELP=, LMAX=])
 ;
 ; INPUTS:
 ;   nside : scalar integer, should be a power of 2 in {2,4,8,16,...,8192}
@@ -57,6 +57,10 @@ function healpixwindow, nside, dim, directory = dir_usr, help=help
 ;
 ;   HELP: if set, this documentation header is printed out and the routine exits
 ;
+;   LMAX: maximum multipole included in output.
+;         Negative values are silently ignored.
+;         Default: read from input data file, usually  4 * nside
+;
 ; OUTPUTS:
 ;   result = Healpix pixel window corresponding to resolution parameter Nside
 ;
@@ -75,10 +79,11 @@ function healpixwindow, nside, dim, directory = dir_usr, help=help
 ;  2009-09-09: uses !healpix.path.data
 ;  2009-10-28: replaced findfile with file_test
 ;  2010-12-09: added HELP keyword
+;  2019-03-15: added LMAX keyword
 ;-
 
 routine = 'HEALPIXWINDOW'
-syntax = 'Window = healpixwindow (nside [, dim, DIRECTORY=, HELP=])'
+syntax = 'Window = healpixwindow (nside [, dim, DIRECTORY=, HELP=, LMAX=])'
 
 if keyword_set(help) then begin
     doc_library,routine
@@ -110,6 +115,7 @@ if (ns le 1) then begin
     print,routine +print,'Nside out of range ',nside
     return,-1
 endif
+
 
 ; form file name
 snside = string(ns,form='(i4.4)')
@@ -181,6 +187,17 @@ if (n_params() eq 2) then begin
 endif else begin
     wpix = w1
 endelse
+
+; check Lmax
+lmax = (size(wpix,/dim))[0]-1 ; 4*nside
+if (defined(lmax_usr) && lmax_usr ge 0) then begin
+    if (lmax_usr gt lmax) then begin
+        message,/info,"Pixel window truncated at Lmax="+strtrim(lmax,2)+" instead of requested "+strtrim(lmax_usr,2)
+    endif
+    lmax <= lmax_usr
+endif
+; apply Lmax
+wpix = wpix[0:lmax,*]
 
 ; exit
 return,wpix

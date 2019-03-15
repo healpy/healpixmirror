@@ -26,28 +26,34 @@ Healpix pixel of resolution Nside.}
 \end{facility}
 
 \begin{IDLformat}
-{wpix=\FACNAME(Nside [, \mylink{idl:healpixwindow:Dim}{Dim}%
-, Directory])}
+{\mylink{idl:healpixwindow:wpix}{wpix}=\FACNAME(\mylink{idl:healpixwindow:nside}{Nside} 
+[, \mylink{idl:healpixwindow:Dim}{Dim}, 
+\mylink{idl:healpixwindow:directory}{DIRECTORY=},
+\mylink{idl:healpixwindow:help}{HELP=},
+\mylink{idl:healpixwindow:help}{LMAX=}])}
 \end{IDLformat}
 
 \begin{qualifiers}
   \begin{qulist}{} %%%% NOTE the ``extra'' brace here %%%%
-    \item[Nside] resolution parameter
-    \item[Wpix] the pixel window function, computed for the multipoles $\ell$ in \{0,...,4Nside\}
-    \item[Dim\mytarget{idl:healpixwindow:Dim}%
-] scalar integer, optional. \\
+    \item[Nside\mytarget{idl:healpixwindow:nside}] resolution parameter
+    \item[Wpix\mytarget{idl:healpixwindow:wpix}] the pixel window function, computed for the multipoles $\ell$ in \{0,...,\mylink{idl:healpixwindow:help}{\texttt{LMAX}}\}
+    \item[Dim\mytarget{idl:healpixwindow:Dim}] scalar integer, optional. \\
      If absent or set to 0 or 1,
-          the output has size (4 Nside+1) and is the temperature
+          the output has size (\mylink{idl:healpixwindow:help}{\texttt{LMAX}}+1) and is the temperature
     window function;\\
      if set to $2 \le$ Dim $\le 4$ ,
-          the output has size (4 Nside+1,Dim)
+          the output has size (\mylink{idl:healpixwindow:help}{\texttt{LMAX}}+1,Dim)
           and contains in that order : \\
 	  the TEMPERATURE window function,\\
           the GRAD/ELECTRIC polarization one\\
           the CURL/MAGNETIC polarization one\\
           the TEMPERATURE*GRAD one.
-   \item[Directory] directory in which the precomputed pixel window file is looked for.\\
-          \default \$HEALPIX/data/ 
+   \item[DIRECTORY=\mytarget{idl:healpixwindow:directory}] directory in which the precomputed pixel window file is looked for.\\
+          \default{\htmlref{\texttt{!healpix.path.data}}{idl:init_healpix}}
+   \item[LMAX=\mytarget{idl:healpixwindow:lmax}] maximum multipole included in Wpix. 
+	Must be in [0, 4 Nside].
+        Negative values are ignored.
+	\default{4 Nside}.
   \end{qulist}
 \end{qualifiers}
 
@@ -76,9 +82,9 @@ This routine reads some FITS files located in the subdirectory {\tt data/} of th
     \item[idl] version \idlversion or more is necessary to run \facname
     \item[\htmlref{gaussbeam}{idl:gaussbeam}] computes the $\ell$ space window function associated with
     a gaussian beam
-    \item[synfast] f90 code to generate CMB maps of given power spectrum at a
+    \item[synfast] F90 code to generate CMB maps of given power spectrum at a
     given resolution (=pixel size)
-    \item[anafast] f90 code to compute the power spectrum of a \healpix sky map
+    \item[anafast] F90 code to compute the power spectrum of a \healpix sky map
   \end{sulist}
 \end{related}
 

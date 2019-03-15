@@ -2084,6 +2084,7 @@
                       ! dY_lm/dtheta = (l/tan(theta)*Y_lm                         -fact/sin(theta)*Y_l-1m)
                       ! dW_lm/dtheta = (l/tan(theta)*W_lm - S*m/l/sin(theta)*X_lm -fact/sin(theta)*sqrt(1-S^2/l^2)*W_l-1m
                       ! dX_lm/dtheta = (l/tan(theta)*X_lm - S*m/l/sin(theta)*W_lm -fact/sin(theta)*sqrt(1-S^2/l^2)*X_l-1m
+                      ! S = -2
                       a0 = fl * cotanth          ! l/tan(theta)
                       at = lam_fact_der(l) * one_on_s1 ! sqrt((2l+1)/(2l-1)*(l^2-m^2))/sin(theta)
                       derY   = a0 * lam_lm(1,l) - at * lam_lm(1,l-1)
