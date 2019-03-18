@@ -91,7 +91,7 @@ PRO ALM2FITS, index, alm_array, fitsfile, HDR = hdr, XHDR = xhdr, HELP=help
 ;       Jan 2009: calls init_astrolib
 ;       Jan 2010: added HELP keyword
 ;       Aug 2018: user provided HDR is not ignored anymore
-;       Mar 2019: fix bug introduced on Aufg 2018
+;       Mar 2019: fixed bug introduced on Aug 2018
 ;-
 
 if (keyword_set(help)) then begin
