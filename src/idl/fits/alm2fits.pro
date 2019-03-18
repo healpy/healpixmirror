@@ -91,6 +91,7 @@ PRO ALM2FITS, index, alm_array, fitsfile, HDR = hdr, XHDR = xhdr, HELP=help
 ;       Jan 2009: calls init_astrolib
 ;       Jan 2010: added HELP keyword
 ;       Aug 2018: user provided HDR is not ignored anymore
+;       Mar 2019: fix bug introduced on Aufg 2018
 ;-
 
 if (keyword_set(help)) then begin
@@ -118,13 +119,18 @@ fdate = today_fits()
 SXADDPAR,h0,'DATE',fdate,' Creation date (CCYY-MM-DD) of FITS header'
 
 ; add header information given by user
+h1 = h0  ; March 2019
 if (STRMID(hdr[0],0,1) NE ' ') then begin
-  iend = WHERE( STRUPCASE(STRMID(h0,0,8)) EQ 'END     ', nend)
-  if (nend eq 1) then begin
-    h1 = [h0[0:iend[0]-1], hdr]
-  endif else begin
-    h1 = h0
-  endelse
+    ; clean user provided header
+    myhdr = hdr
+    sxdelpar,myhdr,'NAXIS'
+    sxdelpar,myhdr,'EXTEND'
+    sxdelpar,myhdr,'BITPIX'
+    ; remove END from default user
+    iend = WHERE( STRUPCASE(STRMID(h1,0,8)) EQ 'END     ', nend)
+    if (nend eq 1) then h1 = h1[0:iend[0]-1]
+    ; add user provided user, after default one
+    h1 = [h1, myhdr]  ; March 2019
 endif
 
 ; initial write of minimal primary header and null image
