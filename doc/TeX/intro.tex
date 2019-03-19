@@ -2,6 +2,7 @@
 %% \usepackage{healpix,psfig,html,graphicx,htmllist,makeidx,color,apalike} %heqn
 %\usepackage{xr-hyper,healpix,html,graphicx,makeidx,color,apalike} %heqn
 \usepackage{xr-hyper,healpix,html,graphicx,makeidx,color,natbib} %heqn
+%\usepackage{natbib,healpix,html,graphicx,makeidx,color,xr-hyper} %heqn
 %\usepackage{healpix,html,graphicx,makeidx,color,natbib} %heqn
 %%\usepackage{healpix,html,graphicx,makeidx,color,apalike,heqn}
 %\newif\ifpdf\ifx\pdfoutput\undefined\pdffalse\else\pdfoutput=1\pdftrue\fi
@@ -21,7 +22,11 @@
 	pdfkeywords={HEALPix, Introduction, Properties, Conventions},%
 	colorlinks=true,
 	citecolor=[rgb]{0.0,0.7,0.0},
+	hypertexnames=true,
 	pagebackref=true}
+
+%\usepackage[verbose]{backref}
+%\backrefsetup{verbose=true}
 
 %\newcommand{\myhtmlimage}[1]{\htmlimage{#1}}
 \newcommand{\myhtmlimage}[1]{ }
@@ -205,8 +210,7 @@ properties of our proposed approach for a high resolution numerical
 representation of  functions on the sphere
  --- the Hierarchical
 Equal Area and iso-Latitude Pixelation  (\healpixns, see 
-\htmladdnormallink{\texttt{\healpixwebpage}}
-{\healpixwebpage}), 
+\url{\healpixwebpage}), 
 and the associated multi-purpose computer 
 software package. 
  
@@ -510,13 +514,12 @@ Routines implementing Eqs~(\ref{eq:nest2uniq}) and (\ref{eq:ring2nest_a}, \ref{e
 
 
 \section{The \healpix Software Package}
-
+\subsection{Contents and purposes}
 We have developed a package of \healpix based mathematical software, consisting
 of C, C++, Fortran90, IDL/GDL, Java and Python source codes as well as documentation and
 examples. Successful installation produces a set of facilities using standardised
 FITS I/O interfaces 
-(\htmladdnormallink{\texttt{https://heasarc.gsfc.nasa.gov/docs/software/fitsio}}
-{https://heasarc.gsfc.nasa.gov/docs/software/fitsio}) 
+(\url{https://heasarc.gsfc.nasa.gov/docs/software/fitsio}) 
 as well as 
 libraries  which users can link to their own applications.
 Among the tasks performed by the  components of the 
@@ -548,21 +551,18 @@ projections of the whole sky or small areas of it.
 The package includes documents which describe the installation
 process, the facilities available and a large number of 
 subroutines contained in the various libraries. It is
-available to the scientific community  at \htmladdnormallink{\texttt{\healpixwebpage}}
-{\healpixwebpage}.
+available to the scientific community  at \url{\healpixwebpage}.
 
 \healpix was the format chosen by the \textbf{WMAP}
 collaboration 
 for the production
 of sky maps (see 
-\htmladdnormallink{\texttt{
-https://map.gsfc.nasa.gov/news/index.html}}{https://map.gsfc.nasa.gov/news/index.html})
+\url{https://map.gsfc.nasa.gov/news/index.html})
  from the mission data. 
 
 \healpix software and format have been used by the HFI and LFI consortia of \textbf{Planck}
 collaboration for the simulation, analysis and data release of \textbf{Planck} data
-(see \htmladdnormallink{\texttt{https://www.cosmos.esa.int/web/planck}}%
-{https://www.cosmos.esa.int/web/planck}).
+(see \url{https://www.cosmos.esa.int/web/planck}).
 
 \healpix software has been selected by the \textbf{GAIA} satellite mission currently surveying our Galaxy
 (see \url{https://www.esa.int/Our_Activities/Space_Science/Gaia_overview})
@@ -573,6 +573,23 @@ collaboration for the simulation, analysis and data release of \textbf{Planck} d
 % \url{http://oberon.roma1.infn.it/boomerang/})
 % and \textbf{Archeops} (
 % \url{http://archeops01.free.fr/main_archeops/index_english.html}).
+
+\subsection{Licensing}
+The full-fledged \healpix software package described above is available under 
+\htmladdnormallink{version 2 of the GNU General Public License (GPLv2)}{https://www.gnu.org/licenses/old-licenses/gpl-2.0.en.html}
+and can be downloaded from 
+\url{https://sourceforge.net/projects/healpix/files/latest/download}.\\
+\\
+Beside this, a subset of C routines, called \texttt{healpix\_bare} and providing support for back and forth conversion between
+pixel indexes and angular or vector coordinates on the sphere, 
+and between RING and NESTED pixel indexes, is available from 
+\url{https://sourceforge.net/projects/healpix/files/healpix_bare_1.0} under a more permissive
+\htmladdnormallink{3-clause BSD license}{https://opensource.org/licenses/BSD-3-Clause}.
+It was developed with a focus on accuracy, reliability and clarity, with good timing performances, 
+and is intended for developers of BSD-licensed \healpix related codes, so that they won't 
+have to reimplement some central algorithms.\\
+However, for ultimate optimization, and to get all the features of \healpixns, the GPLv2-licensed
+package must be used.
 
 \newpage
 \appendix
@@ -672,8 +689,7 @@ fluctuations about the average CMB temperature.
 \label{subsec:cmbfast}
 A widely used  solver of the Boltzmann equations for the computation
 of theoretical predictions of the spectrum of CMB anisotropy used to be CMBFAST
-(\htmladdnormallink{\texttt{https://lambda.gsfc.nasa.gov/toolbox/tb\_cmbfast\_ov.cfm}}
-{https://lambda.gsfc.nasa.gov/toolbox/tb_cmbfast_ov.cfm}).
+(\url{https://lambda.gsfc.nasa.gov/toolbox/tb_cmbfast_ov.cfm}).
 
 CMBFAST made its outputs in ASCII files, which instead
 of $C_{X,\ell}$ contain quantities defined as
@@ -721,10 +737,10 @@ inherited by the simulated map.
 Newer and actively maintained Boltzmann codes currently include 
 \texttt{camb} and \texttt{class}:
 \begin{itemize}
-\item \texttt{camb} (\htmladdnormallink{\texttt{https://camb.info}}{https://camb.info}) 
+\item \texttt{camb} (\url{https://camb.info}) 
 is written in Fortran 90 with a python wrapper, and can optionally output into FITS files 
 the $C_X(\ell)$ power spectra in [K]$^2$ in a format directly usable by \healpixns;\\
-\item \texttt{class} (\htmladdnormallink{\texttt{http://class-code.net}}{http://class-code.net}) 
+\item \texttt{class} (\url{http://class-code.net}) 
 is written in C and C++, and only outputs $\frac{\ell(\ell+1)}{2\pi}C_X(\ell)$ in plain text files 
 (optionally in [$\mu$K]$^2$ and in a order of columns for polarized spectra matching the one of \texttt{camb}).
 \end{itemize}
@@ -1346,7 +1362,7 @@ and supersedes the previous RNG (which is still available at
 It produces double precision real numbers $x$ with $x\in]0,1[$ and is based 
 on a xorshift method described by Marsaglia in 
 Journal of Statistical Software 2003, vol 8
-(cf. \htmladdnormallink{\texttt{https://www.cs.hku.hk/}}{https://www.cs.hku.hk/}).
+(cf. \url{https://www.cs.hku.hk/}).
 It accepts up to four different seeds simultaneously, allowing each sequence to
 have a
 theoretical period of $2^{128}-1 \approx 3.4 10^{38}$. A Gaussian deviate RNG is
@@ -1370,43 +1386,50 @@ Please note that we have not extensively tested this generator
 \newpage
 
 %\printindex
-
 \bibliographystyle{apalike}
+\latexhtml{\phantomsection
+\addcontentsline{toc}{section}{References}}{}
 \begin{thebibliography}{99}
 %
-%%%\backrefparscanfalse
+\backrefparscanfalse%because automatic pagebackref does not work properly
 
 \bibitem[Ansari {et~al.}(2003)]{ansari}
 Ansari, R., et al, 2003, {\em Planck parameter definition document} (DRAFT
 2003-10-23), Technical Report PL-COM-IAS-SD-L2.02.005, ESA.
+\backrefprint%because automatic pagebackref does not work properly
 %
 \bibitem[Baumgardner \& Frederickson(1985)]{baum}
 Baumgardner, J.R. and Frederickson, P.O., 1985, SIAM J. Numerical Analysis, Vol. 22,
 No. 6, p. 1107
+\backrefprint%because automatic pagebackref does not work properly
 %
 \bibitem[Boch {et~al.}(2014)]{moc}
 Boch, T., Donaldson, T., Durand, D., et al. 2014, 
 ``{\em MOC-HEALPix Multi-Order Coverage map}'', 
-\htmladdnormallink{http://ivoa.net/documents/MOC/}{http://ivoa.net/documents/MOC/}
+\url{http://ivoa.net/documents/MOC/}
+\backrefprint%because automatic pagebackref does not work properly
 
 \bibitem[Chandrasekhar(1960)]{chandra}  
 Chandrasekhar, S. 1960, in Radiative Transfer (Dover: New York) 
+\backrefprint%because automatic pagebackref does not work properly
 
 \bibitem[Chon {et~al.}(2004)]{polspice}
 Chon, G., Challinor, A., Prunet, S., Hivon, E. \& Szapudi, I., 2004, 
 \htmladdnormallink{MNRAS, 350, 914}{http://adsabs.harvard.edu/abs/2004MNRAS.350..914C}.
-PolSpice code available at \htmladdnormallink{http://www2.iap.fr/users/hivon/software/PolSpice/}{%
-http://www2.iap.fr/users/hivon/software/PolSpice/}
+PolSpice code available at \url{http://www2.iap.fr/users/hivon/software/PolSpice/}
 %http://cdsads.u-strasbg.fr/abs/2004MNRAS.350..914C
+\backrefprint%because automatic pagebackref does not work properly
 
 
 %   eprint = {astro-ph/0303414},
 
 \bibitem[Crittenden {et~al.}(1995)]{crco}
 Crittenden, R.G., Coulson, D. \&  Turok, N.G., 1995, Phys.Rev. D52, 5402
+\backrefprint%because automatic pagebackref does not work properly
 
 \bibitem[Crittenden \& Turok(1998)]{crtu}
 Crittenden, R. and Turok, N.G., 1998, \htmladdnormallink{astro-ph/9806374}{https://arxiv.org/abs/astro-ph/9806374}
+\backrefprint%because automatic pagebackref does not work properly
 
 \bibitem[Doroshkevich {et~al.}(2005)]{glesp}
 Doroshkevich, A.G.,
@@ -1418,99 +1441,123 @@ Novikov,     I.D.,
 Christensen, P.R. \&
 Chiang,	     L.-Y., 2005,
 IJMPD, 14, 2, 275, \htmladdnormallink{astro-ph/0305537}{https://arxiv.org/abs/astro-ph/0305537}
+\backrefprint%because automatic pagebackref does not work properly
 
 \bibitem[Driscoll \& Healy(1994)]{drhea}
 Driscoll, J.R. and Healy, D., 1994, Adv. in Appl. Math., Vol. 15, p.202
+\backrefprint%because automatic pagebackref does not work properly
 
 \bibitem[Edmonds(1957)]{edmonds}
 Edmonds, A.R., 1957, {\em Angular Momentum in Quantum Mechanics}, Princeton
 University Press
+\backrefprint%because automatic pagebackref does not work properly
 
 \bibitem[Goldberg(1967)]{goldberg} 
 Goldberg, J. N., et al. 1967, J. Math. Phys. 8, 2155
+\backrefprint%because automatic pagebackref does not work properly
 
 \bibitem[G{\'o}rski {et~al.}(2005)]{gorskihealpix05}
   G\'orski, K.M., Hivon, E., Banday, A.~J., Wandelt,
   B.~D., Hansen, F.~K., Reinecke, M. \& Bartelmann, M., 2005, 
 \htmladdnormallink{ApJ, 622, 759}{http://adsabs.harvard.edu/cgi-bin/nph-bib_query?bibcode=2005ApJ...622..759G&amp;db_key=AST&amp;high=41069202cf02947}, 
 \htmladdnormallink{astro-ph/0409513}{https://arxiv.org/abs/astro-ph/0409513}
+\backrefprint%because automatic pagebackref does not work properly
 
 \bibitem[Hamaker \& Bregman(1996)]{hambreg}
 Hamaker, J.P. \& Bregman, J.D., 1996, A\&AS 117, 161
+\backrefprint%because automatic pagebackref does not work properly
 
 \bibitem[Hamaker \& Leahy(2003)]{hamakerleahy}
   Hamaker, J.P. \& Leahy, J.P., 2003, {\em ``A study of CMB differencing
   polarimetry with particular reference to {\em Planck}}'', {\sc ESA Report SCI-A/2003.312/jt}
+\backrefprint%because automatic pagebackref does not work properly
 
 \bibitem[Hivon {et~al.}(2002)]{master}
 Hivon, E., G{\'o}rski, K, M., Netterfield, C. B., Crill, B. P., Prunet, S. \& Hansen, F., 
 2002, \htmladdnormallink{ApJ, 567, 2}{http://adsabs.harvard.edu/abs/2002ApJ...567....2H}, 
 \htmladdnormallink{astro-ph/0105302}{https://arxiv.org/abs/astro-ph/0105302}
+\backrefprint%because automatic pagebackref does not work properly
 
 \bibitem[Hu \& White(1997)]{primer}
 Hu, W. \& White, M., 1997, NewA, 2, 323
+\backrefprint%because automatic pagebackref does not work properly
 
 \bibitem[IAU(1974)]{iau74}
 IAU, 1974, Transactions of the IAU Vol. 15B (1973) 166
+\backrefprint%because automatic pagebackref does not work properly
 
 \bibitem[Kamionkowski {et~al.}(1997)]{kks}
 Kamionkowski, M., Kosowsky, A., Stebbins, A., 1997, Ph.Rev. D, 55, 7368 (KKS)
+\backrefprint%because automatic pagebackref does not work properly
 
 \bibitem[Muciaccia, Natoli \& Vittorio(1998)]{munavi}
 Mucaccia, P.F, Natoli, P. and Vittorio, N., 1998, ApJ, 488, L63
+\backrefprint%because automatic pagebackref does not work properly
 
 \bibitem[Planck 2015-XI(2015)]{planck2015-11}
 Planck Collaboration, 2015-XI, \htmladdnormallink{arXiv:1507.02704v1}{https://arxiv.org/abs/1507.02704v1}
+\backrefprint%because automatic pagebackref does not work properly
 
 \bibitem[Reinecke \& Hivon(2015)]{rh15}
 Reinecke, M. and Hivon, E., 2015, 
 \htmladdnormallink{A\&A, 580, A132}{http://adsabs.harvard.edu/abs/2015A\%26A...580A.132R}, 
 \htmladdnormallink{arXiv:1505.04632v2}{https://arxiv.org/abs/1505.04632}
+\backrefprint%because automatic pagebackref does not work properly
 
 \bibitem[Rocha {et~al.}(2009)]{xfaster}
 Rocha, G., Contaldi, C.R., Bond, J.R. \& G\'orski, K.M., 2009,
 \htmladdnormallink{arXiv:0912.4059v2}{https://arxiv.org/abs/0912.4059}
+\backrefprint%because automatic pagebackref does not work properly
 
 \bibitem[Saff \& Kuijlaars(1997)]{mathint}
 Saff, E.B. and Kuijlaars, A.B.J., 1997, The Mathematical 
 Intelligencer, 19, \#1, p.5
+\backrefprint%because automatic pagebackref does not work properly
 
 \bibitem[Seljak \& Zaldarriaga(1997)]{longspin}
 Seljak, U. \& Zaldarriaga, M., Phys. Rev. Lett. \textbf{78}, 2054 (1997).   
+\backrefprint%because automatic pagebackref does not work properly
 
 \bibitem[Szalay \& Brunner(1998)]{szalay}
 Szalay, A.S. and Brunner, R.J., 1998, 
 \htmladdnormallink{astro-ph/9812335}{https://arxiv.org/abs/astro-ph/9812335}, to appear in 
 a special issue of the Elsevier journal "Future Generation Computer Systems"
+\backrefprint%because automatic pagebackref does not work properly
 
 \bibitem[Tegmark(1996)]{teg}
 Tegmark, M., 1996, ApJ, 470, L81
+\backrefprint%because automatic pagebackref does not work properly
 
 \bibitem[Tristram {et~al.}(2005)]{xspect}
 Tristram, M., Macias-Perez, J.F., Renault, C., \& Santos, D., 2005, 
 \htmladdnormallink{MNRAS, 358, 833}{http://adsabs.harvard.edu/abs/2005MNRAS.358..833T}
+\backrefprint%because automatic pagebackref does not work properly
 
 \bibitem[Wandelt, Hivon \& G\'orski(1998)]{whg}
 Wandelt, B.D., Hivon, E. and G\'orski, K.M., 1998, 
 \htmladdnormallink{astro-ph/9803317}{https://arxiv.org/abs/astro-ph/9803317}, in
  "Fundamental Parameters in Cosmology", proceedings of the XXXIIIrd Rencontres
 de Moriond, Tr{\^a}n Thanh V{\^a}n (ed.)
+\backrefprint%because automatic pagebackref does not work properly
 
 \bibitem[Wandelt, Hivon \& G\'orski(2001)]{whg2001}
 Wandelt, B.D., Hivon, E. and G\'orski, K.M., 2001, 
 \htmladdnormallink{Phys. Rev. D, 64, 083003}{http://adsabs.harvard.edu/abs/2001PhRvD..64h3003W},
 \htmladdnormallink{astro-ph/9808292v1}{https://arxiv.org/abs/astro-ph/9808292v1}
+\backrefprint%because automatic pagebackref does not work properly
 
 %% \bibitem{fastah} Wandelt, B.D., G\'orski, K.M., Hivon, E.\ and Hansen,
 %% F.\, in preparation
  
 \bibitem[Zaldarriaga(1998)]{zalda} 
 Zaldarriaga, M., 1998, ApJ, 503, 1
+\backrefprint%because automatic pagebackref does not work properly
 
 \bibitem[Zaldarriaga~\&~Seljak(1997)]{spinlong}
 Zaldarriaga, M. \& Seljak, U., Phys. Rev. D \textbf{55} 1830 (1997)
+\backrefprint%because automatic pagebackref does not work properly
 
-%% \backrefprint\backrefparscantrue
+\backrefparscantrue
 
 \end{thebibliography}
 

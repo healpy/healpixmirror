@@ -449,7 +449,7 @@ setCppDefaults () {
 
     CXXDIR=${HEALPIX}/src/cxx
     CFLAGS="-O3 -fopenmp"
-    CXXFLAGS="-O3 -fopenmp"
+    CXXFLAGS="${CXXFLAGS--O3 -fopenmp}" # -O3 -fopenmp unless already defined
 
     CXXPREFIX=$HEALPIX
 }
@@ -990,11 +990,11 @@ EOF
 #-------------
 setIdlDefaults () {
 
-    papersize="${papersize-letter}"
+    papersize="${papersize-letter}" # letter   unless already defined
     media=" "
-    ps_com="${ps_com-gv}"
-    pdf_com="${pdf_com-xpdf}"
-    gif_com="${gif_com-netscape}"
+    ps_com="${ps_com-gv}"           # gv       unless already defined
+    pdf_com="${pdf_com-xpdf}"       # xpdf     unless already defined
+    gif_com="${gif_com-netscape}"   # netscape unless already defined
     [ "${OS}" = "Linux" ]   && gif_com="display"
     [ "${OS}" = "Darwin" ]  && gif_com="open"
     [ "${OS}" = "Darwin" ]  && pdf_com="open"
@@ -1097,15 +1097,15 @@ setF90Defaults () {
 
     case $OS in
 	AIX)
-	    FC="${FC-xlf90_r}";;
+	    FC="${FC-xlf90_r}";; # xlf90_r unless already defined
 	Linux)
 	    FC="${FC}";;
 	Darwin)
 	    FC="${FC}";;
 	SUPER-UX)
-	    FC="${FC-f90}";;
+	    FC="${FC-f90}";; # f90 unless already defined
 	*)
-	    FC="${FC-f90}";;
+	    FC="${FC-f90}";; # f90 unless already defined
     esac
 
     FCNAME="$OS Native compiler"
@@ -2382,8 +2382,8 @@ setTopDefaults() {
     MAKESET=0
 
     LIBFITS="cfitsio"
-    FITSDIR="${FITSDIR-/usr/local/lib}"
-    FITSINC="${FITSINC-/usr/local/include}"
+    FITSDIR="${FITSDIR-/usr/local/lib}"     # /usr/local/lib     unless already defined
+    FITSINC="${FITSINC-/usr/local/include}" # /usr/local/include unless already defined
     FITSPREFIX="/usr/local"
 
     edited_makefile=0

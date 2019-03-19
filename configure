@@ -30,7 +30,8 @@ HPXVERSION=3.50
 usage="Usage: ./$(basename $0) ['?'|-h|-L|-v]"
 usage2="Type    ./$(basename $0) -h    for extended help"
 usage3="    If the environment variables\n\tFITSDIR, FITSINC,\t\t(used in C/C++/F90/python)\n \
-    \tCC, CXX,\t\t\t(C/C++/F90/python)\n\
+    \tCC\t\t\t\t(C/C++/F90/python/sharp)\n\
+    \tCXX, CXXFLAGS\t\t\t(C++)\n\
     \tFC, DIRSUFF\t\t\t(F90)\n\
     \tPYTHON\t\t\t\t(python)\n\
     \tpapersize, ps_com, pdf_com, gif_com  (IDL)\n\

@@ -244,8 +244,9 @@ of \texttt{python} and a few supporting Python libraries) but it will perform
 its own compilation of the current \healpix C++ library.\\
 Starting with version 3.10, all the (computation intensive) Spherical Harmonics 
 operations required by the C++, Fortran and Python routines
-are performed with the higly optimized C-written \texttt{libsharp} library, 
-also included in the package.
+are performed with the highly optimized C-written \texttt{libsharp} library, 
+also included in the package, and which was further optimized in 
+\mylink{install:v360}{version 3.60}.
 
 {\em This section and the next focus on the compilation and installation of the
   \textbf{C}, \textbf{C++}, \textbf{Fortran~90}, \textbf{IDL} and
@@ -427,7 +428,8 @@ tailored to the user environment.
 These different steps are detailed below.
 
 \subsection{./configure [-L]}
-
+\label{sub:configure}
+\mytarget{install:configure}
 The \texttt{./configure} script manages the configuration of the C, C++,
 Fortran90, IDL and Python suites of routines and facilities.
 
@@ -442,9 +444,10 @@ An online help is available with
 \texttt{./configure~-v} 
 will return the \healpix release number (currently \hpxversion) and exit.
 
-Starting with version 3.60, if the environment variables 
-      \texttt{FITSDIR, FITSINC},  (relevant for C/C++/F90/python),
-      \texttt{CC, CXX},           (C/C++/F90/python),
+Starting with \mylink{install:v360}{version 3.60}, if the environment variables 
+      \texttt{FITSDIR, FITSINC}   (relevant for C/C++/F90/python),
+      \texttt{CC}                 (C/C++/F90/python/sharp),
+      \texttt{CXX, CXXFLAGS}      (C++),
       \texttt{FC, DIRSUFF}        (F90),
       \texttt{PYTHON}             (python),
   and \texttt{papersize, ps\_com, pdf\_com, gif\_com}  (IDL)
@@ -479,29 +482,37 @@ the package}.
 % containing the executables, libraries and include files.
 
 \subsubsection{C configuration}
-
+\mytarget{install:C:config}
 The \texttt{./configure} script will ask for the C compiler and options to
 be used, and for the full path of an installed \texttt{cfitsio} library to link to.
 By default, only a static library is created, but the user can also ask for
  a shared (Unix/Linux systems) or dynamic (Darwin) library. \\
 After compilation
 (see \texttt{make} section) and linking, all libraries will be 
-in \texttt{\$\{HEALPIX\}/lib/chealpix.*}\ .
+in \texttt{\$\{HEALPIX\}/lib/chealpix.*}\ .\\
+See also \S\ref{sec:pkg-config} on \mylink{install:pkg-config}{\texttt{pkg-config}}.
+
 
 \subsubsection{C++ configuration}
 \label{sec:cpp_config}
-Starting with version 3.60, the interactive configure script will be used to
+\mytarget{install:cpp_config}
+Starting with \mylink{install:v360}{version 3.60}, the interactive configure script will be used to
 provide information (like the choice of C++ compiler and options) 
 to an automated (\texttt{autoconf} generated) configure script, 
 (located in \texttt{src/cxx/configure}), which will take care of the configuration.
-The configuration of \texttt{libsharp} will be also taken care at this stage.\\
-At odds with previous versions, the C++ binaries, libraries and header files will be installed in the \texttt{bin}, \texttt{lib} and \texttt{include} directories respectively.
+The configuration of \mylink{install:libsharp:config}{\texttt{libsharp}} will be also taken care at this stage.\\
+At odds with previous versions, the C++ binaries, libraries and header files will be installed in 
+\texttt{\$\{HEALPIX\}/bin}, 
+\texttt{\$\{HEALPIX\}/lib} and 
+\texttt{\$\{HEALPIX\}/include} directories respectively.
 \\
 If the \healpix configuration file is sourced as described in \S\ref{subsub:conf}, the full path to the C++
-executables will be added to the environment PATH variable.
+executables will be added to the environment PATH variable.\\
+See also \S\ref{sec:pkg-config} on \mylink{install:pkg-config}{\texttt{pkg-config}}.
 
 
 \subsubsection{Fortran 90 configuration}
+\mytarget{install:f90:config}
 When you run \texttt{./configure} on a supported system 
 you will be prompted to enter compiler optimisation flags.
 We have not attempted to provide the best optimisation flags for all
@@ -518,9 +529,10 @@ information.}.
 From our experience,
 we have not found significant accumulation of numerical error even
 when using the most aggressive optimisation level available. \\
-The configuration of \texttt{libsharp} will be also taken care at this stage.\\
+The configuration of \mylink{install:libsharp:config}{\texttt{libsharp}} will be also taken care at this stage.\\
 If the \healpix configuration file is sourced as described in \S\ref{subsub:conf}, the full path to the F90
-executables will be added to the environment PATH variable.
+executables will be added to the environment PATH variable.\\
+See also \S\ref{sec:pkg-config} on \mylink{install:pkg-config}{\texttt{pkg-config}}.
 
 \subsubsection{IDL/GDL/FL configuration}
 \label{install:idlgdlconfig}
@@ -540,10 +552,12 @@ information on using \healpix IDL/GDL/FL together with other IDL libraries, and 
 
 
 \subsubsection{Java installation}
+\mytarget{install:java:config}
 The configuration and installation of the \healpix Java package is currently
 handled separately. See table~\ref{tab:allpackages} for more information.
 
 \subsubsection{Python (healpy) installation}
+\mytarget{install:healpy:config}
 % The \texttt{./configure} script will 
 % ask for the parent directory containing the \texttt{lib/libcfitsio.*} library and
 % the {\tt
@@ -562,10 +576,21 @@ Note that during the compilation with \texttt{make} (see below), the
  can be done independently of the C++ installation described above.
 
 \subsubsection{libsharp library}
-The libsharp library for optimized Spherical Harmonics operations, 
+\mytarget{install:libsharp:config}
+The \texttt{libsharp} C library for optimized Spherical Harmonics operations, 
 is used by the C++, Fortran and healpy packages. 
-It will be configured (only once) at the same time as any of these packages,
- but can also be configured on its own.
+Starting with \mylink{install:v360}{version 3.60}, a new, faster, implementation is used, 
+and will be configured (only once) at the same time as any of these packages,
+ but can also be configured on its own.\\
+For optimal performance, the C compilation flags should include \texttt{-ffast-math}
+and \texttt{-march=native} (or your compiler's equivalent options).
+If you are using \texttt{gcc} or \texttt{clang} and you want to produce a portable,
+high-performance library, and if you compiler and assembler support it,
+you can also replace \texttt{-march=native} by \texttt{-DMULTIARCH}.\\
+After compilation and installation, the resulting library will be in
+\texttt{\$\{HEALPIX\}/lib/libsharp*} and the header files in
+\texttt{\$\{HEALPIX\}/include/libsharp/sharp*.h}.\\
+See also \S\ref{sec:pkg-config} on \mylink{install:pkg-config}{\texttt{pkg-config}}.
 
 \subsection{Compilation and installation}
 
@@ -755,9 +780,13 @@ allowing the corrected version to be added.
 
 \section{Pkg-config files}
 \label{sec:pkg-config}
+\mytarget{install:pkg-config}
 Starting with \healpix 3.12, \texttt{pkg-config} (\texttt{.pc}) files are generated
 during the configuration of the 
-libsharp, C, C++ and F90 packages, and are initially located respectively in
+\mylink{install:libsharp:config}{libsharp}, 
+\mylink{install:C:config}{C}, 
+\mylink{install:cpp_config}{C++} and 
+\mylink{install:f90:config}{F90} packages, and are initially located respectively in
 \texttt{\$\{HEALPIX\}/lib/pkgconfig/libsharp.pc},
 \texttt{\$\{HEALPIX\}/lib/pkgconfig/chealpix.pc},
 \texttt{\$\{HEALPIX\}/lib/pkgconfig/healpix\_cxx.pc},
@@ -789,7 +818,7 @@ F90 \healpix library simply becomes \\
 \label{sec:troubleshoot}
 This section contains a list of difficulties which we have dealt
 with. It is by no means exhaustive. 
-In case of problems, see \url{\healpixsupport}{\healpixsupport} or contact \healpixmail
+In case of problems, see \url{\healpixsupport} or contact \healpixmail
 % A troubleshooting forum has
 % been established at \htmladdnormallink{{\tt \healpixwebpage/healpixSoftwareProblemsBugsSolutions.shtml}}{\healpixwebpage/healpixSoftwareProblemsBugsSolutions.shtml}, where we 
 % list current questions and solutions to known problems (for
@@ -1462,7 +1491,9 @@ However, the \mylinkext{idl:mollview:latex}{\texttt{Latex}} keyword will work pr
 \section{Appendix I: Recent Changes and New Features}
 \label{sec:newfeatures}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% BEGIN LATEST CHANGES %%%%%%%%%%%%%
-\subsection{Bug corrections and Improvements in Version \hpxversion}%2018-11
+\subsection{Bug corrections and Improvements in Version \hpxversion}%2019-??
+\label{sec:v360}
+\mytarget{install:v360}
 % \subsubsection[General]{General}
 % \subsubsection[C]{\linklatexhtml{C}{csub.pdf}{csub.htm}}
 % \subsubsection[C++]{\htmladdnormallink{C++}{\healpixwebpage/html/index_cxx.htm}}
@@ -1473,17 +1504,65 @@ However, the \mylinkext{idl:mollview:latex}{\texttt{Latex}} keyword will work pr
 % \subsubsection[Java]{\htmladdnormallink{Java}{\healpixwebpage/html/java/index.html}}
 % \subsubsection[Python]{\htmladdnormallink{Python}{https://healpy.readthedocs.io/en/latest/}}
 
-% \subsubsection[General]{General}
-% \begin{itemize}
-% \item new \healpix web site \url{\hpxwebsite}
-% \item addition of $\Lambda$-CDM best $C(\ell)$ fit to Planck 2018 CMB data in 
-% \htmladdnormallink{\texttt{Healpix/test/planck2018\_lcdm\_cl\_v3.fits}}{\srcurl test/planck2018_lcdm_cl_v3.fits}
-% \end{itemize}
+\subsubsection[General]{General}
+\begin{itemize}
+\item Implementation of a faster \mylink{install:libsharp:config}{\texttt{libsharp}}
+C-written library for the Spherical Harmonics computations in C++ and F90, 
+reducing for instance the computation time of a map synthesis or analysis 
+by about 30\% at $\nside=2048$ and $\lmax=4096$,
+with the same memory footprint and numerical accuracy as previously.
+\item If the environment variables 
+      \texttt{FITSDIR, FITSINC},
+      \texttt{CC},
+      \texttt{CXX, CXXFLAGS},
+      \texttt{FC, DIRSUFF},
+      \texttt{PYTHON},
+  or \texttt{papersize, ps\_com, pdf\_com, gif\_com}
+are defined \mylink{install:configure}{prior to calling the \texttt{configure} script}, they will be used
+as default values in the interactive configuration process.%
+\end{itemize}
 
-%
 % \subsubsection[C]{\linklatexhtml{C}{csub.pdf}{csub.htm}}
-% ------
+%
+\subsubsection[C++]{\htmladdnormallink{C++}{\healpixwebpage/html/index_cxx.htm}}
+\begin{itemize}
+  \item Link to the new \mylink{install:libsharp:config}{\texttt{libsharp}} library
+  \item Simpler configuration \mylink{install:cpp_config}{with the systematic use of \texttt{autoconf} tools}
+  \item The C++ binaries, libraries and header files now installed in 
+\texttt{\$\{HEALPIX\}/bin}, 
+\texttt{\$\{HEALPIX\}/lib} and 
+\texttt{\$\{HEALPIX\}/include} directories respectively.
+\end{itemize}
+%
 \subsubsection[Fortran]{%
+ 	Fortran 90 \linklatexhtml{facilities}{facilities.pdf}{facilities.htm} and
+ 	\linklatexhtml{subroutines}{subroutines.pdf}{subroutines.htm}}
+\begin{itemize}
+  \item Link to the new \mylink{install:libsharp:config}{\texttt{libsharp}} library
+  \item Some external C routines replaced by Fortran 2003 extensions.
+\end{itemize}
+%
+\subsubsection[IDL]{\linklatexhtml{IDL}{idl.pdf}{idl.htm}}
+%
+% \subsubsection[Java]{\htmladdnormallink{Java}{\healpixwebpage/html/java/index.html}}
+%
+\subsubsection[Python]{\htmladdnormallink{Python}{https://healpy.readthedocs.io/en/latest/}}
+%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% END LATEST CHANGES %%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% ------
+%----------------------------------------------------
+\section{Appendix II: Older changes (versions 3.00 to 3.50)}
+
+{\mytiny{%
+\tinysubsection*{Bug corrections and Improvements in Version 3.50}%2018-11
+
+\tinysubsubsection*{%
 	Fortran 90 \linklatexhtml{facilities}{facilities.pdf}{facilities.htm} and
 	\linklatexhtml{subroutines}{subroutines.pdf}{subroutines.htm}}
 \begin{itemize}
@@ -1512,13 +1591,13 @@ a latitude cut to a map,
 \item \htmladdnormallink{edition to fitstools.F90}{https://sourceforge.net/p/healpix/bugs/84} allowing a proper compilation with g95.
 \end{itemize}
 % ------
-\subsubsection[C++]{\htmladdnormallink{C++}{\healpixwebpage/html/index_cxx.htm}}
+\tinysubsubsection*{\htmladdnormallink{C++}{\healpixwebpage/html/index_cxx.htm}}
 \begin{itemize}
 	\item C implementation of \htmladdnormallink{fftpack}{https://www.netlib.org/fftpack} replaced with \htmladdnormallink{pocketfft}{https://gitlab.mpcdf.mpg.de/mtr/pocketfft}
 	\item \htmladdnormallink{online documentation}{\healpixwebpage/html/Healpix_cxx/facilities.html} for Line Integral Convolution code \texttt{alice3}
 \end{itemize}
 % ------
-\subsubsection[IDL]{\linklatexhtml{IDL}{idl.pdf}{idl.htm}}
+\tinysubsubsection*{\linklatexhtml{IDL}{idl.pdf}{idl.htm}}
 \begin{itemize}
 \item \htmlref{\texttt{fits2cl}}{idl:fits2cl}: addition of \mylinkext{idl:fits2cl:planck3}{\texttt{/PLANCK3}} keyword to read the fiducial $\Lambda$-CDM $C(\ell)$ model which best fits the 2018 Planck data analysis (available from \htmladdnormallink{\texttt{Healpix/test/planck2018\_lcdm\_cl\_v3.fits}}{\srcurl test/planck2018_lcdm_cl_v3.fits});
 \item \htmlref{\texttt{rotate\_coord}}{idl:rotate_coord}: addition of optional variable \mylinkext{idl:rotate_coord:delta_psi}{\texttt{Delta\_Psi}} containing rotation of polarization on output, and of keyword \mylinkext{idl:rotate_coord:free_norm}{\texttt{Free\_Norm}} to deal with un-normalized input coordinate vectors;
@@ -1532,9 +1611,9 @@ a latitude cut to a map,
     routines (2018-09-27).
 \end{itemize}
 % ------
-% \subsubsection[Java]{\htmladdnormallink{Java}{\healpixwebpage/html/java/index.html}}
+% \tinysubsubsection*{\htmladdnormallink{Java}{\healpixwebpage/html/java/index.html}}
 % ------
-\subsubsection[Python]{\htmladdnormallink{Python}{https://healpy.readthedocs.io/en/latest/}}
+\tinysubsubsection*{\htmladdnormallink{Python}{https://healpy.readthedocs.io/en/latest/}}
 \begin{itemize}
 \item Switch to 
 	\htmladdnormallink{\texttt{healpy \hpyversion}}{\hpysite/releases} 
@@ -1542,16 +1621,8 @@ a latitude cut to a map,
 \end{itemize}
 % ------
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% END LATEST CHANGES %%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %=========================================
-%%%%%%%%%%%%%%%%%%%%%%%%%%----------------------------------------------------
-\section{Appendix II: Older changes (versions 3.00 to 3.40)}
-
-{\mytiny{%
+%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \tinysubsection*{Bug corrections and Improvements in Version 3.40 (2018-06)}%(2018-06-22)
 
