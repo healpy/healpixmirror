@@ -150,4 +150,10 @@ Transform 1: Equatorial (2000) -> Galactic   (2000)
     radius on it and saves the result to another file.
 
     \verbatim Usage: median_filter_cxx <input map> <output map> <radius in arcmin>\endverbatim
+
+  \section needlet_tool
+    This program separates a_lm coefficients into different needlet bands, or
+    reassembles various bands to full a_lm sets.
+
+    \verbinclude needlet_tool.par.txt
 */
