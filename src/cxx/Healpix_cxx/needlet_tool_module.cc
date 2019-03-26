@@ -249,10 +249,9 @@ class cosine: public needlet_base
 
 template<typename T> void needlet_tool (paramfile &params)
   {
-  string infile = params.template find<string>("infile");
-  string outfile = params.template find<string>("outfile");
   string mode = params.template find<string>("mode");
-  planck_assert ((mode=="split") || (mode=="assemble"),"invalid mode");
+  planck_assert ((mode=="split") || (mode=="assemble") ||
+                 (mode=="write_coefficients"), "invalid mode");
   bool split = mode=="split";
   unique_ptr<needlet_base> needgen;
   string ntype = params.template find<string>("needlet_type");
@@ -274,13 +273,28 @@ template<typename T> void needlet_tool (paramfile &params)
   int loband=params.template find<int>("minband");
   int hiband=params.template find<int>("maxband")+1;
 
+  if (mode=="write_coefficients")
+    {
+    for (int i=loband; i<hiband; ++i)
+      {
+      fitshandle out;
+      out.create (params.template find<string>("outfile_needlets")
+                  +intToString(i,3)+".fits");
+      vector<fitscolumn> cols;
+      cols.push_back(fitscolumn("coeff","[none]",1,PLANCK_FLOAT64));
+      out.insert_bintab(cols);
+      out.write_column(1,needgen->getBand(i));
+      }
+    return;
+    }
+
+  string infile = params.template find<string>("infile");
+  string outfile = params.template find<string>("outfile");
   bool polarisation = params.template find<bool>("polarisation");
   if (!polarisation)
     {
     if (split)
       {
-      string outfile_needlets = params.template find<string>
-        ("outfile_needlets","");
       int nlmax, nmmax;
       get_almsize(infile, nlmax, nmmax);
       auto alm = read_Alm_from_fits<T>(infile,nlmax,nmmax);
@@ -295,15 +309,6 @@ template<typename T> void needlet_tool (paramfile &params)
         atmp.ScaleL(needgen->getBand(i));
         write_Alm_to_fits (outfile+intToString(i,3)+".fits",atmp,lmax_t,mmax_t,
           planckType<T>());
-        if (outfile_needlets!="")
-          {
-          fitshandle out;
-          out.create (outfile_needlets+intToString(i,3)+".fits");
-          vector<fitscolumn> cols;
-          cols.push_back(fitscolumn("coeff","[none]",1,PLANCK_FLOAT64));
-          out.insert_bintab(cols);
-          out.write_column(1,needgen->getBand(i));
-          }
         }
       }
     else

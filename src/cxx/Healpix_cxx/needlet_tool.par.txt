@@ -1,8 +1,12 @@
 Parameters read by needlet_tool:
 
 mode (string):
-  split   : a single a_lm file is input and split into needlet bands
-  assemble: multiple needlet bands are read and combined into a single a_lm file
+  split:
+      a single a_lm file is input and split into needlet bands
+  assemble:
+      multiple needlet bands are read and combined into a single a_lm file
+  write_coefficients:
+      needlet coefficients are written to a FITS file
 
 needlet_type (string):
   needatool: use needlets as defined by Pietrobon et al., ApJ 723, 1 (2010),
@@ -36,22 +40,26 @@ endif
 minband, maxband (integer):
   the minimum and maximum needlet scales requested for the operation
 
-infile (string):
-  if mode=="split"   : input file containing the a_lm
-  if mode=="assemble": root name for the input a_lm files
-                       Full names are "<infile>###.fits",
-                       where ### is the three-digit number of the band
+if (mode=="write_coefficients"):
+  outfile_needlets(string): output file name root for needlet coefficients
+else
+  infile (string):
+    if mode=="split"   : input file containing the a_lm
+    if mode=="assemble": root name for the input a_lm files
+                         Full names are "<infile>###.fits",
+                         where ### is the three-digit number of the band
 
-outfile (string):
-  if mode=="split"   : root name for the output a_lm files
-                       Full names are "<outfile>###.fits",
-                       where ### is the three-digit number of the band
-  if mode=="assemble": output file containing the assembled a_lm
+  outfile (string):
+    if mode=="split"   : root name for the output a_lm files
+                         Full names are "<outfile>###.fits",
+                         where ### is the three-digit number of the band
+    if mode=="assemble": output file containing the assembled a_lm
 
-polarisation (bool):
-  if false, only the intensity a_lm are processed,
-  if true, the code currently exits with an error message,
-  since polarisation is not yet supported.
+  polarisation (bool):
+    if false, only the intensity a_lm are processed,
+    if true, the code currently exits with an error message,
+    since polarisation is not yet supported.
+endif
 
 double_precision (bool, default=false):
   if false, a_lm are read/written in single precision,
