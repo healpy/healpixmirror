@@ -55,7 +55,7 @@ else
                          where ### is the three-digit number of the band
     if mode=="assemble": output file containing the assembled a_lm
 
-  polarisation (bool):
+  polarisation (bool, default=false):
     if false, only the intensity a_lm are processed,
     if true, the code currently exits with an error message,
     since polarisation is not yet supported.

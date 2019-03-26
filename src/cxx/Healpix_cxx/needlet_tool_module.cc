@@ -290,7 +290,7 @@ template<typename T> void needlet_tool (paramfile &params)
 
   string infile = params.template find<string>("infile");
   string outfile = params.template find<string>("outfile");
-  bool polarisation = params.template find<bool>("polarisation");
+  bool polarisation = params.template find<bool>("polarisation", false);
   if (!polarisation)
     {
     if (split)
