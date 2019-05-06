@@ -2,7 +2,7 @@
 
 \documentclass[12pt,twoside]{article}
 %\usepackage{titlesec,xr-hyper,healpix,graphicx,html,makeidx}
-\usepackage{xr-hyper,healpix,graphicx,html,makeidx}
+\usepackage{xr-hyper,healpix,graphicx,html,makeidx,dirtree}
 %xr-hyper first to have correct Equation and Figure cross-referencing in html
 %putting hyperref first screws up references in html
 %%%
@@ -148,14 +148,20 @@ or \hfill\\
 creating a directory named \texttt{Healpix\_\hpxversion}\ whose structure is shown in Figure
 \ref{fig:dirtree}.
 
+
 \begin{figure}[!ht]
-%\centerline{\psfig{figure=fig/dir_tree.eps,width=\textwidth}}
 \latexhtml{%for latex
 % cf extratbb -vO image_file
-%\centerline{\includegraphics[bb=0pt 0pt 562pt 478pt,width=\textwidth,clip]{fig/dir_tree.pdf}}
-\centerline{\includegraphics[bb=0 0 506 430,width=\textwidth,clip]{fig/dir_tree.pdf}}
+\centerline{\includegraphics[bb=0 0 418 284,width=\textwidth,clip]{fig/new_dir_tree.pdf}}
 }{%for html
-\centerline{\includegraphics[width=0.5\textwidth]{fig/dir_tree}}
+\centerline{\includegraphics[width=0.5\textwidth]{fig/new_dir_tree}}
+% %\centerline{\psfig{figure=fig/dir_tree.eps,width=\textwidth}}
+% \latexhtml{%for latex
+% % cf extratbb -vO image_file
+% %\centerline{\includegraphics[bb=0pt 0pt 562pt 478pt,width=\textwidth,clip]{fig/dir_tree.pdf}}
+% \centerline{\includegraphics[bb=0 0 506 430,width=\textwidth,clip]{fig/dir_tree.pdf}}
+% }{%for html
+% \centerline{\includegraphics[width=0.5\textwidth]{fig/dir_tree}}
 }
 \caption[Directory structure]{%
 \label{page:dirtree}
