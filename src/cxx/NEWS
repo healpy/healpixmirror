@@ -4,7 +4,7 @@ Changes since 3.50:
   discoveries made by Keiichi Ishioka
   (https://www.jstage.jst.go.jp/article/jmsj/96/2/96_2018-019/_article
   and personal communication).
-- libsharp can now be buit with simultaneous support for different x86 CPU
+- libsharp can now be built with simultaneous support for different x86 CPU
   features (SSE2, AVX, AVX2, FMA3, FMA4, AVX512F); the appropriate set of
   subroutines is then selected automatically at runtime
 - added documentation for the module "needlet_tool".
