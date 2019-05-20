@@ -90,7 +90,7 @@ dnl
 dnl Now check for libsharp using pkg-config. If libsharp is not found with
 dnl pkg-config, SHARP_LIBS defaults to "-lsharp".
 dnl
-PKG_CHECK_MODULES([SHARP], [sharp], , [SHARP_LIBS=-lsharp])
+PKG_CHECK_MODULES([SHARP], [libsharp], , [SHARP_LIBS=-lsharp])
 dnl
 dnl Linking against libsharp requires libm too.
 dnl

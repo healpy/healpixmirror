@@ -34,11 +34,23 @@
 #include <cstdio>
 #include <cmath>
 #include <algorithm>
+#include <chrono>
 #include "walltimer.h"
-#include "walltime_c.h"
 #include "error_handling.h"
 
 using namespace std;
+
+namespace {
+
+using clock = std::chrono::steady_clock;
+
+double wallTime()
+  {
+  static clock::time_point starttime(clock::now());
+  return chrono::duration<double>(clock::now() - starttime).count();
+  }
+
+} // unnamed namespace
 
 void wallTimer::start()
   { start(wallTime()); }

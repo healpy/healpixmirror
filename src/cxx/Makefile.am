@@ -2,11 +2,6 @@ ACLOCAL_AMFLAGS = -I m4
 
 lib_LTLIBRARIES = libhealpix_cxx.la
 
-src_c_utils = \
-  c_utils/c_utils.c \
-  c_utils/c_utils.h \
-  c_utils/walltime_c.c \
-  c_utils/walltime_c.h
 src_cxxsupport = \
   cxxsupport/announce.cc \
   cxxsupport/geom_utils.cc \
@@ -123,10 +118,14 @@ include_HEADERS = \
   Healpix_cxx/moc_query.h \
   Healpix_cxx/weight_utils.h
 
-libhealpix_cxx_la_SOURCES = $(src_c_utils) $(src_cxxsupport) $(src_cxxsupport_fits) $(src_healpix_cxx) $(src_healpix_cxx_fits) $(src_healpix_cxx_mod)
+libhealpix_cxx_la_SOURCES = $(src_cxxsupport) $(src_cxxsupport_fits) $(src_healpix_cxx) $(src_healpix_cxx_fits) $(src_healpix_cxx_mod)
 
 libhealpix_cxx_la_LIBADD = $(SHARP_LIBS) $(CFITSIO_LIBS)
 
+# format is "current:revision:age"
+# - Always increase the revision value.
+# - Increase the current value whenever an interface has been added, removed or changed.
+# - Increase the age value only if the changes made to the ABI are backward compatible.
 libhealpix_cxx_la_LDFLAGS = -version-info 2:1:0
 
 bin_PROGRAMS = alm2map_cxx anafast_cxx calc_powspec hotspots_cxx map2tga \
@@ -168,7 +167,7 @@ hpxtest_LDADD = libhealpix_cxx.la
 
 TESTS=hpxtest
 
-AM_CPPFLAGS = $(CFITSIO_CFLAGS) $(SHARP_CFLAGS) -I$(top_srcdir)/c_utils -I$(top_srcdir) -I$(top_srcdir)/cxxsupport
+AM_CPPFLAGS = $(CFITSIO_CFLAGS) $(SHARP_CFLAGS) -I$(top_srcdir) -I$(top_srcdir)/cxxsupport
 
 pkgconfigdir = $(libdir)/pkgconfig
 nodist_pkgconfig_DATA = @PACKAGE_NAME@.pc
