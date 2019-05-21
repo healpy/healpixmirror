@@ -575,6 +575,7 @@ collaboration for the simulation, analysis and data release of \textbf{Planck} d
 % \url{http://archeops01.free.fr/main_archeops/index_english.html}).
 
 \subsection{Licensing}
+\label{intro:licensing}
 The full-fledged \healpix software package described above and in the accompanying documentation
 can be downloaded from  \url{https://sourceforge.net/projects/healpix/files/latest/download} under 
 \htmladdnormallink{version 2 of the GNU General Public License (\textbf{GPLv2})}%
@@ -608,21 +609,28 @@ with $\ell>\lmax$ and introduce the  notation that all sums over $m$ run from
 $-\lmax$ to $\lmax$ but all quantities with index ${\ell m}$ vanish
 for $m>\ell$. Our conventions for $Y_{\ell m}$ are defined in subsection
 \ref{sphericalstuff} below.
+The spherical harmomics coefficients are then
+\begin{eqnarray}
+	a_{\ell m}\equiv \int d\gamma Y^\ast_{\ell m}(\gamma) f(\gamma),\myhtmlimage{}\label{eq:alms_def}
+\end{eqnarray}
+where, the integral is done over the whole sphere, 
+and the superscript star denotes complex  conjugation.
 
 Pixelating $f({\gamma})$ corresponds to sampling it at $\npix$
  locations $\gamma_{p}$, $p\in[0,\npix-1]$. The sample
 function values $f_p$ can then be used  
-to estimate  $a_{\ell m}$. A straightforward estimator is
+to estimate  $a_{\ell m}$.
+A straightforward estimator is
 \begin{eqnarray}
   \hat{a}_{\ell m}&\myequal& \frac{4\pi}{\npix}\sum_{p=0}^{\npix-1}
   Y^\ast_{\ell m}(\gamma_p) f(\gamma_p),\myhtmlimage{}\label{eq:hata}
 %  \hat{a}_{\ell m}&\myequal& \frac{4\pi}{N_{\rm{pix}}}\sum_{p=0}^{N_{\rm{pix}}-1} 
 %  Y^\ast_{\ell m}(\gamma_p) f(\gamma_p),\label{eq:hata}
 \end{eqnarray}
-where the superscript star denotes complex  conjugation, and an equal weight was assumed for each pixel. This
-zeroth order estimator, as well as  higher order  estimators, are implemented in the
-Fortran90 facility \htmlref{\texttt{anafast}}{fac:anafast}, included in the
-package. 
+where an equal weight was assumed for each pixel. This
+zeroth order estimator, as well as  higher order  estimators, are implemented in various
+Fortran90, C++, IDL, and python facilities included in the package, 
+such as \htmlref{\texttt{anafast}}{fac:anafast} or \texttt{anafast\_cxx}.
 %Publications discussing these estimators and the  generalised
 %quadrature problem on the sphere (Hivon {\em et al.~}) are  in preparation.
 

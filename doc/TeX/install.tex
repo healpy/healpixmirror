@@ -563,6 +563,7 @@ The configuration and installation of the \healpix Java package is currently
 handled separately. See table~\ref{tab:allpackages} for more information.
 
 \subsubsection{Python (healpy) installation}
+\label{install:healpy:config}
 \mytarget{install:healpy:config}
 % The \texttt{./configure} script will 
 % ask for the parent directory containing the \texttt{lib/libcfitsio.*} library and
@@ -582,11 +583,12 @@ Note that during the compilation with \texttt{make} (see below), the
  can be done independently of the C++ installation described above.
 
 \subsubsection{libsharp library}
+\label{install:libsharp:config}
 \mytarget{install:libsharp:config}
-The \texttt{libsharp} C library for optimized Spherical Harmonics operations, 
-is used by the C++, Fortran and healpy packages. 
-Starting with \mylink{install:v360}{version 3.60}, a new, faster, implementation is used, 
-and will be configured (only once) at the same time as any of these packages,
+The \texttt{libsharp} C-written library for optimized Spherical Harmonics operations
+is used by the C++, Fortran, IDL and healpy routines and facilities. 
+Starting with \mylink{install:v360}{version 3.60}, a new, faster, implementation is in use, 
+and will be configured (only once) at the same time as any of the C++ or Fortran packages,
  but can also be configured on its own.\\
 For optimal performance, the C compilation flags should include \texttt{-ffast-math}
 and \texttt{-march=native} (or your compiler's equivalent options).
@@ -1512,10 +1514,18 @@ However, the \mylinkext{idl:mollview:latex}{\texttt{Latex}} keyword will work pr
 
 \subsubsection[General]{General}
 \begin{itemize}
-\item Implementation of a faster \mylink{install:libsharp:config}{\texttt{libsharp}}
-C-written library for the Spherical Harmonics computations in C++ and F90, 
-reducing for instance the computation time of a map synthesis or analysis 
-by about 30\% at $\nside=2048$ and $\lmax=4096$,
+\item Major performance increase for Spherical Harmonics Transforms 
+in the \mylink{install:libsharp:config}{\texttt{libsharp}} C-written library
+called by the C++, F90, IDL and python routines and facilities,
+thanks to ideas of Keiichi Ishioka
+  (\url{https://doi.org/10.2151/jmsj.2018-019}\ 
+%\url{https://www.jstage.jst.go.jp/article/jmsj/96/2/96_2018-019/_article}
+  and personal communication);
+\item \texttt{libsharp} can now be built with simultaneous support for different x86 CPU
+  features (SSE2, AVX, AVX2, FMA3, FMA4, AVX512F); the appropriate set of
+  subroutines is then selected automatically at runtime;
+\item Consequently, the computation time of a map synthesis or analysis is reduced
+by at least 30\% at $\nside=2048$ and $\lmax=4096$,
 with the same memory footprint and numerical accuracy as previously.
 \item If the environment variables 
       \texttt{FITSDIR, FITSINC},
@@ -1532,23 +1542,31 @@ as default values in the interactive configuration process.%
 %
 \subsubsection[C++]{\htmladdnormallink{C++}{\healpixwebpage/html/index_cxx.htm}}
 \begin{itemize}
-  \item Link to the new \mylink{install:libsharp:config}{\texttt{libsharp}} library
-  \item Simpler configuration \mylink{install:cpp_config}{with the systematic use of \texttt{autoconf} tools}
+  \item Link to the new and faster \mylink{install:libsharp:config}{\texttt{libsharp}} library
+  \item Simpler configuration \mylink{install:cpp_config}{with the systematic use of \texttt{autotools}}
   \item The C++ binaries, libraries and header files now installed in 
 \texttt{\$\{HEALPIX\}/bin}, 
 \texttt{\$\{HEALPIX\}/lib} and 
 \texttt{\$\{HEALPIX\}/include} directories respectively.
+  \item Added documentation for the module \texttt{needlet\_tool}.
 \end{itemize}
 %
 \subsubsection[Fortran]{%
  	Fortran 90 \linklatexhtml{facilities}{facilities.pdf}{facilities.htm} and
  	\linklatexhtml{subroutines}{subroutines.pdf}{subroutines.htm}}
 \begin{itemize}
-  \item Link to the new \mylink{install:libsharp:config}{\texttt{libsharp}} library
+  \item Link to the new and faster \mylink{install:libsharp:config}{\texttt{libsharp}} library
   \item Some external C routines replaced by Fortran 2003 extensions.
 \end{itemize}
 %
 \subsubsection[IDL]{\linklatexhtml{IDL}{idl.pdf}{idl.htm}}
+%--------------------------------
+\begin{itemize}
+  \item addition of \htmlref{\texttt{outline\_earth}}{idl:outline_earth} to create a structure outlining Earth features such as coastlines, rivers, country boundaries, ...
+  \item \htmlref{{\tt azeqview, cartview, gnomview, mollview,
+orthview}}{idl:mollview} visualization routines: support for color and thickness in \mylinkext{idl:mollview:outline}{\texttt{outline}} keyword
+\end{itemize}
+%--------------------------------
 %
 % \subsubsection[Java]{\htmladdnormallink{Java}{\healpixwebpage/html/java/index.html}}
 %

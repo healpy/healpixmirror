@@ -30,19 +30,19 @@ Healpix pixel of resolution Nside.}
 [, \mylink{idl:healpixwindow:Dim}{Dim}, 
 \mylink{idl:healpixwindow:directory}{DIRECTORY=},
 \mylink{idl:healpixwindow:help}{HELP=},
-\mylink{idl:healpixwindow:help}{LMAX=}])}
+\mylink{idl:healpixwindow:lmax}{LMAX=}])}
 \end{IDLformat}
 
 \begin{qualifiers}
   \begin{qulist}{} %%%% NOTE the ``extra'' brace here %%%%
     \item[Nside\mytarget{idl:healpixwindow:nside}] resolution parameter
-    \item[Wpix\mytarget{idl:healpixwindow:wpix}] the pixel window function, computed for the multipoles $\ell$ in \{0,...,\mylink{idl:healpixwindow:help}{\texttt{LMAX}}\}
+    \item[Wpix\mytarget{idl:healpixwindow:wpix}] the pixel window function, computed for the multipoles $\ell$ in \{0,...,\mylink{idl:healpixwindow:lmax}{\texttt{LMAX}}\}
     \item[Dim\mytarget{idl:healpixwindow:Dim}] scalar integer, optional. \\
      If absent or set to 0 or 1,
-          the output has size (\mylink{idl:healpixwindow:help}{\texttt{LMAX}}+1) and is the temperature
+          the output has size (\mylink{idl:healpixwindow:lmax}{\texttt{LMAX}}+1) and is the temperature
     window function;\\
      if set to $2 \le$ Dim $\le 4$ ,
-          the output has size (\mylink{idl:healpixwindow:help}{\texttt{LMAX}}+1,Dim)
+          the output has size (\mylink{idl:healpixwindow:lmax}{\texttt{LMAX}}+1,Dim)
           and contains in that order : \\
 	  the TEMPERATURE window function,\\
           the GRAD/ELECTRIC polarization one\\
@@ -50,8 +50,10 @@ Healpix pixel of resolution Nside.}
           the TEMPERATURE*GRAD one.
    \item[DIRECTORY=\mytarget{idl:healpixwindow:directory}] directory in which the precomputed pixel window file is looked for.\\
           \default{\htmlref{\texttt{!healpix.path.data}}{idl:init_healpix}}
+   \item[HELP=\mytarget{idl:healpixwindow:help}] if set, a documentatin header is printed out, 
+    and the routine exits
    \item[LMAX=\mytarget{idl:healpixwindow:lmax}] maximum multipole included in Wpix. 
-	Must be in [0, 4 Nside].
+	Must be in [0, 4 \mylink{idl:healpixwindow:nside}{Nside}].
         Negative values are ignored.
 	\default{4 Nside}.
   \end{qulist}

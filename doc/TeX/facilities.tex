@@ -84,6 +84,7 @@
 \externallabels{.}{/tmp/introlabels.pl}
 \externallabels{.}{/tmp/intro_labels.pl}
 \externallabels{.}{/tmp/installlabels.pl}
+\externallabels{.}{/tmp/install_labels.pl}
 \externallabels{.}{/tmp/csublabels.pl}
 \externallabels{.}{/tmp/csub_labels.pl}
 \externallabels{.}{/tmp/idllabels.pl}
@@ -236,8 +237,26 @@ with $X,Y \in \{T,E,B\}$.
 %--------------------------------------------
 %-------------------------------------------- CHANGES
 %--------------------------------------------
-\section[Changes between releases 3.40 and \hpxversion]{%
-Changes between releases 3.40 and \hpxversion}
+\section[Changes between releases 3.50 and \hpxversion]{%
+Changes between releases 3.50 and \hpxversion}
+\begin{itemize}
+\item Faster Spherical Harmonics Transforms 
+in 
+\htmlref{\texttt{anafast}}{fac:anafast},
+\htmlref{\texttt{smoothing}}{fac:smoothing},
+and \htmlref{\texttt{synfast}}{fac:synfast}
+thanks to the \htmlref{new \texttt{libsharp} library}{install:libsharp:config}.
+\end{itemize}
+
+
+%--------------------------------------------
+\section[Older Changes]{Older Changes}
+%--------------------------------------------
+
+%%%%{\footnotesize{%
+{\mysmaller%
+\compresstext
+\subsubsection{Version 3.50}
 \begin{itemize}
 %
 % \item correction of a bug in \mylinkext{sub:map2alm_iterative}{\texttt{map2alm\_iterative}}
@@ -260,13 +279,6 @@ in order to simulate (faster) a signal on only a fraction of the sphere,
 \item \htmladdnormallink{edition to fitstools.F90}{https://sourceforge.net/p/healpix/bugs/84} allowing a proper compilation with g95.
 \end{itemize}
 
-%--------------------------------------------
-\section[Older Changes]{Older Changes}
-%--------------------------------------------
-
-%%%%{\footnotesize{%
-{\mysmaller%
-\compresstext
 
 %-------------------------
 \subsubsection{Version 3.40}
