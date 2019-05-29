@@ -154,8 +154,7 @@ creating a directory named \texttt{Healpix\_\hpxversion}\ whose structure is sho
 % cf extratbb -vO image_file
 \centerline{\includegraphics[bb=0 0 418 284,width=\textwidth,clip]{fig/new_dir_tree.pdf}}
 }{%for html
-\centerline{\includegraphics[width=0.5\textwidth]{fig/new_dir_tree}}
-% %\centerline{\psfig{figure=fig/dir_tree.eps,width=\textwidth}}
+\centerline{\includegraphics[]{fig/new_dir_tree}}% %\centerline{\psfig{figure=fig/dir_tree.eps,width=\textwidth}}
 % \latexhtml{%for latex
 % % cf extratbb -vO image_file
 % %\centerline{\includegraphics[bb=0pt 0pt 562pt 478pt,width=\textwidth,clip]{fig/dir_tree.pdf}}
@@ -1400,7 +1399,7 @@ are available for Linux, Windows, MacOSX and more from
 \url{\flsitea}.
 
 Most of the IDL routines and features have been implemented, with a few exceptions 
-(like \texttt{xloadct}) and the restrictions listed below.
+(like \texttt{xloadct}, or \texttt{xyouts} with TrueType fonts) and the restrictions listed below.
 
 \subsubsection*{FL+\healpix specific requirements}
 To fully enjoy FL capabilities
@@ -1562,9 +1561,14 @@ as default values in the interactive configuration process.%
 \subsubsection[IDL]{\linklatexhtml{IDL}{idl.pdf}{idl.htm}}
 %--------------------------------
 \begin{itemize}
+  \item Faster \htmlref{\texttt{isynfast}}{idl:isynfast}, \htmlref{\texttt{ianafast}}{idl:ianafast}, \htmlref{\texttt{ismoothing}}{idl:ismoothing} routines
   \item addition of \htmlref{\texttt{outline\_earth}}{idl:outline_earth} to create a structure outlining Earth features such as coastlines, rivers, country boundaries, ...
   \item \htmlref{{\tt azeqview, cartview, gnomview, mollview,
 orthview}}{idl:mollview} visualization routines: support for color and thickness in \mylinkext{idl:mollview:outline}{\texttt{outline}} keyword
+  \item Update of the required
+    \htmladdnormallink{\texttt{IDL-astron} library}{https://idlastro.gsfc.nasa.gov/homepage.html}
+    routines, and \htmladdnormallink{\texttt{Coyote}}{http://www.idlcoyote.com} library
+    routines (2019-05-28).
 \end{itemize}
 %--------------------------------
 %

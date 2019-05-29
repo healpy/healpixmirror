@@ -2,11 +2,13 @@
 
 set directory = /tmp/Healpix_3.60 # to be changed
 set finalfile = fig/new_dir_tree
-set topdir = "Healpix_\hpxversion/"
+set topdir = "Healpix_\\hpxversion/"
 #set topdir = "Healpix_3.60/"
 
-set file   = /tmp/tmp_mytree
-set file2  = /tmp/tmp_mytree2
+# set file   = /tmp/tmp_mytree
+# set file2  = /tmp/tmp_mytree2
+set file   = /tmp/dir_tree
+set file2  = /tmp/dir_tree_tmp
 set wrkdir = `dirname $file`
 set here = $cwd
 
@@ -14,8 +16,8 @@ cat >! ${file}.tex <<EOF
 %======================
 \documentclass{article}
 \usepackage{dirtree}
-\textheight = 15cm
-\textwidth = 15cm
+\textheight = 14cm
+\textwidth = 14cm
 \oddsidemargin = 0cm
 \topmargin = -2cm
 \input{hpxversion}
@@ -24,7 +26,7 @@ cat >! ${file}.tex <<EOF
 \thispagestyle{empty}
 \small{
 \fbox{
-\parbox{0.95\textwidth}{
+\parbox{0.97\textwidth}{
 \dirtree{%
 EOF
 cd ${directory} ; tree -d -L 3 -n -F  | \
@@ -60,10 +62,16 @@ cat ${file}.tex
 cp -f hpxversion.tex ${wrkdir}
 pdflatex -output-directory ${wrkdir} ${file}
 pdflatex -output-directory ${wrkdir} ${file}
+cp -p ${file}.tex ${finalfile}.tex
 pdfcrop ${file}.pdf ${finalfile}.pdf
-pdf2png_med ${finalefile}.pdf ${finalfile}.png
+#pdf2png_med ${finalfile}.pdf ${finalfile}.png
+#pdf2png_hi ${finalfile}.pdf ${finalfile}.png
+gm convert -density 180 ${finalfile}.pdf[0] ${finalfile}.png
+ls -lrt ${finalfile}.*
 #mv -f ${file}_crop.pdf ${file}.pdf
-open -a Skim ${finalfile}.pdf
-display ${finalfile}.png
+#open -a Skim ${finalfile}.pdf
+open ${finalfile}.pdf
+# display ${finalfile}.png
+gm display ${finalfile}.png
 
 exit

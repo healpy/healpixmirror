@@ -411,13 +411,14 @@ from ring to ring with increasing distance
 from the poles by one pixel within each quadrant. 
 
 Pixel boundaries are non-geodesic and take the very simple 
-forms $\cos \theta = a \pm b \cdot \phi  $ in the equatorial zone, 
+forms $\cos \theta = a \pm b \cdot \phi  $ in the equatorial zone 
+($|\cos \theta| \le 2/3$), 
 and $\cos \theta = a + b / \phi^2  $, or
   $\cos \theta = a + b / (\pi/2 - \phi) ^2  $,
 %\htmlimage
-in the polar caps. 
+in the polar caps, with $\theta$ being the co-latitude, and $\phi$ the longitude.
 This allows one to explicitly check by simple analytical integration the 
-exact area equality among pixels,
+exact area equality among pixels \citep{gorskihealpix05},
 and to compute efficiently more complex objects, 
 e.g. the Fourier transforms of individual pixels.
 
