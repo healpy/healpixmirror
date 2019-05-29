@@ -244,3 +244,13 @@ FITS_INFO FXADDPAR MATCH MRDFITS SXADDPAR SXPAR WRITEFITS
 
 ----------------
 
+1 routine updated in astron(7)  FXBREAD
+1 routine added in astron(7)    MINMAX
+
+ (7) This version of astron requires IDL v6.4 or newer.
+      Done with version 2019-05-28
+
+ 2019-05-28
+
+----------------
+
