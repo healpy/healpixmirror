@@ -140,23 +140,11 @@ faithfully represent deterministic functions as well as realizations of
 random variates both
 in configuration and Fourier space while maintaining computational efficiency.
 
+%---
 We illustrate these points using as an example the field which is particularly 
 close to the authors' hearts, Cosmic Microwave Background (CMB)
-anisotropies. Here we are in the happy situation of expecting an explosion
-of available data within the next decade.
-The  Microwave Anisotropy Probe (MAP) (NASA) and Planck Surveyor (ESA)
-missions are aiming
-to provide multi-frequency, high resolution, full sky measurements of the anisotropy in
-both temperature and polarization of the cosmic microwave
-background radiation.
-The ultimate data products of these missions ---
-multiple microwave sky maps, each of which will have to comprise 
-more than $\sim $ $10^6$ pixels in order to render the angular 
-resolution of the instruments ---
-will present serious challenges to those involved in the
-analysis and scientific exploitation of the results of both surveys.
- 
-As we have learned while working with the {\it COBE} mission products, 
+anisotropies. 
+As some of us had learned while working with the {\it COBE} mission (launched by NASA in 1989) products
 the digitised
 sky map is an essential intermediate 
 stage in information processing between 
@@ -172,7 +160,24 @@ of physical parameters of interest.
 three frequency bands, two channels each, 6144 pixels per map)
 were considered large at the time of their release.
 
-As for ongoing CMB maps, a whole sky CMB survey  
+In the following decade, we saw an explosion
+of available data.
+The  Wilkinson Microwave Anisotropy Probe (WMAP, launched by NASA in 2001) and Planck Surveyor 
+(launched by ESA in 2009)
+were aiming
+at providing multi-frequency, high resolution, full sky measurements of the anisotropy in
+both temperature and polarization of the cosmic microwave
+background radiation.
+The ultimate data products of these missions ---
+multiple microwave sky maps, each of which comprises
+more than $\sim $ $10^6$ pixels in order to render the angular 
+resolution of the instruments ---
+presented serious challenges to those involved in the
+analysis and scientific exploitation of the results of both surveys, and motived
+the development of many new theoretical and numerical tools.
+ 
+
+As for ongoing and future CMB maps, a whole sky CMB survey  
 at the angular resolution
 of $\sim 10'$ (FWHM), discretised with 
 a few pixels per resolution element 
@@ -190,6 +195,61 @@ final coadded maps are made for each frequency band) to render
 an approximate expected
 size of the already very compressed form of survey data which is
 the input to the astrophysical analysis pipeline. 
+%---
+
+
+% %---
+% We illustrate these points using as an example the field which is particularly 
+% close to the authors' hearts, Cosmic Microwave Background (CMB)
+% anisotropies. Here we are in the happy situation of expecting an explosion
+% of available data within the next decade.
+% The  Microwave Anisotropy Probe (MAP) (NASA) and Planck Surveyor (ESA)
+% missions are aiming
+% to provide multi-frequency, high resolution, full sky measurements of the anisotropy in
+% both temperature and polarization of the cosmic microwave
+% background radiation.
+% The ultimate data products of these missions ---
+% multiple microwave sky maps, each of which will have to comprise 
+% more than $\sim $ $10^6$ pixels in order to render the angular 
+% resolution of the instruments ---
+% will present serious challenges to those involved in the
+% analysis and scientific exploitation of the results of both surveys.
+ 
+% As we have learned while working with the {\it COBE} mission products, 
+% the digitised
+% sky map is an essential intermediate 
+% stage in information processing between 
+% the entry point of data acquisition by the 
+% instruments --- very large time ordered data streams,
+% and the final stage of astrophysical analysis --- 
+% typically producing a 
+% %$\lq$few'
+% 'few'
+%  numerical values
+% of physical parameters of interest. 
+% {\it COBE}-DMR sky maps (angular resolution of $7^\circ$ (FWHM) in
+% three frequency bands, two channels each, 6144 pixels per map)
+% were considered large at the time of their release.
+
+% As for ongoing CMB maps, a whole sky CMB survey  
+% at the angular resolution
+% of $\sim 10'$ (FWHM), discretised with 
+% a few pixels per resolution element 
+% (so that the discretisation effects on the signal are  
+% sub-dominant with respect to the effects of instrument's angular response),
+% require map sizes of at least 
+% $\npix \sim  10^7$ pixels.
+% More pixels than that are needed to represent the Planck-HFI higher 
+% resolution channels.
+% This estimate, $\npix$, should be multiplied by  the number of frequency bands 
+% (or, indeed, by the number of individual
+% observing channels --- 74 in the case of Planck --- for the analysis work 
+% to be done before the
+% final coadded maps are made for each frequency band) to render 
+% an approximate expected
+% size of the already very compressed form of survey data which is
+% the input to the astrophysical analysis pipeline. 
+%---
 
 It appears to us that very careful
 attention ought to be given to devising  high resolution CMB map
@@ -1393,6 +1453,29 @@ Please note that we have not extensively tested this generator
 %% not willing to enter any bets. Its calling interface is
 %% identical to ``ran2'' and it should therefore be trivial to replace it
 %% with the RNG of your choice.
+
+\section{Finite precision and cross-platform reproducibility}
+Note that, due to finite precision of floating-point arithmetics and
+differences between numerical libraries, the result of \healpix functions
+like \texttt{ang2pix} (which converts the angular coordinates of a point into the index 
+of the pixel to which it belongs) 
+may depend on the underlying hardware, compilers,
+compiler options and linked libraries, {\em if} the requested position is very
+close to (roughly $10^{-15}$ radians or less) a pixel border. The result
+will always be one of the (two to four) adjacent pixels, and we are
+confident that it is strictly reproducible within the same binary on the
+same hardware platform, but if one of the components is changed, the
+result may change as well.
+This may be surprising when testing apparently "simple" locations like
+the poles.\\
+This issue is not specific to \healpixns, but shared by any library
+performing nontrivial floating-point operations, and in particular any
+pixelisation library or facility 
+(on any manifold, at any number of dimensions and for any pixelisation scheme), 
+{\em in the vicinity of pixel boundaries}.
+
+
+
 \newpage
 
 %\printindex

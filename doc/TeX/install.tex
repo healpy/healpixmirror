@@ -763,6 +763,13 @@ As a consequence, \texttt{make clean} can be used after a successful compilation
 while
 \texttt{make tidy} should be used between consecutive (failed) attempts with different compilers, compiler versions or compiler options, to avoid any conflict between new and pre-existing files.
 
+\subsection{Linking a code with \healpix library}
+Third party or user-developed codes may require \healpix as an external library.
+An easy way to achieve this linking is to use the \texttt{pkg-config} facility 
+(now available on many systems, including Linux, Unix*, MacOS and MS Windows),
+following the procedure described in \S\ref{sec:pkg-config} on \mylink{install:pkg-config}{\texttt{pkg-config}}.
+ 
+
 % \section{Upgrading from 2.0 to 2.1}
 
 % The internal structure of release 2.1 is quite different from release 2.0 and to
@@ -776,6 +783,8 @@ while
 % \section{Upgrading from 2.10 to 2.11}
 
 %% See the \htmladdnormallink{\healpix Primer}{intro.htm} for a note on the change of convention for polarization.
+
+
 
 \section{A Note on {\it Re}-installation}
 
@@ -799,6 +808,7 @@ during the configuration of the
 \texttt{\$\{HEALPIX\}/lib/pkgconfig/healpix\_cxx.pc},
 and \hfill \\
 \texttt{\$\{HEALPIX\}/lib}{\em suffix}\texttt{/pkgconfig/healpix.pc}.
+
 If the 
 \htmladdnormallink{\texttt{pkg-config} software}{https://en.wikipedia.org/wiki/Pkg-config} 
 is available on your system (see 
@@ -811,7 +821,7 @@ or by customizing the environment variable \texttt{PKG\_CONFIG\_PATH}%
 \footnote{a third option is provide the location of the \texttt{.pc} file in full at each
 \texttt{pkg-config} invocation : {\it eg}\\ {\tt
 pkg-config \doubledash cflags \doubledash libs }{\em full\_path}\texttt{/healpix.pc}}), 
-then linking your own code with the 
+then linking your own or third-party code with the 
 C,
 C++,
 F90 \healpix library simply becomes \\
@@ -885,11 +895,12 @@ The three steps (installation of Cygwin, cfitsio and \healpix respectively) must
 \item Go to \url{https://www.cygwin.com/}
 and click on `Install Cygwin' in the menu on the left.
 
-\item Click on setup-x86.exe (for 32-bit installation) or setup-x86\_64.exe
+\item Click on \texttt{setup-x86.exe} (for 32-bit installation) or 
+\texttt{setup-x86\_64.exe}
 (for 64-bit installation) and then `Save File' when prompted.
 
 \item Go to your Downloads folder (or wherever you saved setup-x86*.exe) and
-double-click on the setup-x86*.exe file to run it.
+double-click on the \texttt{setup-x86*.exe} file to run it.
 
 \item Accept all defaults, except:
 
@@ -921,7 +932,7 @@ double-click on the setup-x86*.exe file to run it.
   Get the latest source code package from NASA's HEASARC website
   (\url{https://heasarc.gsfc.nasa.gov/FTP/software/fitsio/c/cfitsio_latest.tar.gz}).
   When prompted to save the file, in the Save dialog window, navigate to
-  C:\textbackslash{}cygwin64\textbackslash{}usr\textbackslash{}local
+  \texttt{C:\textbackslash{}cygwin64\textbackslash{}usr\textbackslash{}local}
   (assuming you accepted the defaults when installing Cygwin), click on
   `New folder' and~ name it `src', go into that folder and `Save'.
 \item
@@ -949,11 +960,11 @@ double-click on the setup-x86*.exe file to run it.
   Get the latest version of HEALPix from SourceForge
   (\url{https://sourceforge.net/projects/healpix/files/latest/download}). When
   prompted to save the file, save it in
-  C:\textbackslash{}cygwin64\textbackslash{}usr\textbackslash{}local\textbackslash{}src.
+  \texttt{C:\textbackslash{}cygwin64\textbackslash{}usr\textbackslash{}local\textbackslash{}src}.
 \item
   In Windows Explorer, navigate to
   C:\textbackslash{}cygwin64\textbackslash{}usr\textbackslash{}local\textbackslash{}src,
-  right-click on Healpix\_\hpxversion\_*.zip and `Extract all\ldots{}'. Accept the
+  right-click on \texttt{Healpix\_\hpxversion\_*.zip} and `Extract all\ldots{}'. Accept the
   default location.
 \item
   In the Cygwin terminal, type the following commands at the
@@ -1523,10 +1534,14 @@ thanks to ideas of Keiichi Ishioka
 \item \texttt{libsharp} can now be built with simultaneous support for different x86 CPU
   features (SSE2, AVX, AVX2, FMA3, FMA4, AVX512F); the appropriate set of
   subroutines is then selected automatically at runtime;
-\item Consequently, the computation time of a map synthesis or analysis is reduced
+\item consequently, the computation time of a map synthesis or analysis is reduced
 by at least 30\% at $\nside=2048$ and $\lmax=4096$,
 with the same memory footprint and numerical accuracy as previously.
-\item If the environment variables 
+\item The interactive \mylink{install:configure}{\texttt{configure}} script will ensure
+a single and seamless configuration, compilation and installation
+of the \mylink{install:libsharp:config}{\texttt{libsharp}} library, 
+even if several language implementations of \healpix are compiled;
+\item if the environment variables 
       \texttt{FITSDIR, FITSINC},
       \texttt{CC},
       \texttt{CXX, CXXFLAGS},
