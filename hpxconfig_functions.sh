@@ -1354,7 +1354,7 @@ askOpenMP () {
 	    fi
 	else
 	    echo "WARNING: Healpix+OpenMP not tested for  \"$FCNAME\" under \"$OS\" "
-	    echo "Contact us (http://healpix.sf.net/support.php) "
+	    echo "Contact us (https://healpix.sourceforge.io/support.php) "
 	    echo "if you already used OpenMP in this configuration."
 	    echo "Will perform serial implementation of C and F90 routines instead."
 	fi
@@ -2096,6 +2096,7 @@ writeF90pkgconfigFile (){
 # HEALPix/F90 pkg-config file
 # compiled with ${FC}
 
+compiler=${FC}
 prefix=${HEALPIX}
 suffix=${DIRSUFF}
 exec_prefix=\${prefix}/bin\${suffix}
