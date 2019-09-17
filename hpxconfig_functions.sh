@@ -46,9 +46,10 @@
 # 2019-01-21: call autotool configure for C++;
 #             read system variables
 #                            FITSDIR, FITSINC,  (used in C/C++/F90/python)
-#                            CC, CXX,           (C/C++/F90/python)
-#                            FC, DIRSUFF        (F90)
-#                            PYTHON             (python)
+#                            CC,                (        C/C++/F90/python)
+#                            CXX,               (          C++/    python)
+#                            FC, DIRSUFF        (              F90       )
+#                            PYTHON             (                  python)
 #                            papersize, ps_com, pdf_com, gif_com  (IDL)
 #             to define proposed default values.
 #=====================================
@@ -166,7 +167,7 @@ crashAndBurn () {
 whereisCmd () {
     for d in $*; do
 	CMD=`${WHEREIS} $d`
-	if [ "x${CMD}" != "x" ] ; then
+	if [ "x${CMD}" != "x"  -a "x${CMD}" != "x${d}:"] ; then
 	    break
 	fi
     done
@@ -386,8 +387,13 @@ C_config () {
 setSharpDefaults () {
 
     SHARPDIR=${HEALPIX}/src/common_libraries/libsharp
-    #CFLAGS="-DMULTIARCH -O3 -ffast-math -fopenmp" # reserve for multiplatform compilation
-    CFLAGS="-O3 -ffast-math -march=native -fopenmp"
+    npgc=`$CC -V 2>&1          | ${GREP} PGI | ${WC} -l` # PGI C
+    if [ $npgc != 0 ] ; then
+	CFLAGS="-O3 -fast -mp"
+    else
+	#CFLAGS="-DMULTIARCH -O3 -ffast-math -fopenmp" # reserve for multiplatform compilation
+	CFLAGS="-O3 -ffast-math -march=native -fopenmp"
+    fi
     LDFLAGS=""
 
     SHARPPREFIX=$HEALPIX
@@ -401,7 +407,7 @@ askSharpUserMisc () {
 
     echo "enter options for C compiler: "
     echo "For optimal performance, this should include '-ffast-math'"
-    echo "and '-march=native' (or your compiler's equivalent options)."
+    echo "and '-march=native' (in gcc or clang, or your compiler's equivalent options)."
     echo "(If you are using gcc or clang and you want to produce a portable,"
     echo "high-performance library, you can also replace '-march=native'"
     echo "by '-DMULTIARCH'.)"
@@ -1164,6 +1170,11 @@ EOF
 }
 
 #----------
+par2curly () {
+    # replace () with {}
+    echo `echo "$*" | ${SED} "s|(|{|g" | sed "s|)|}|g"`
+}
+#----------
 checkF90Fitsio () {
     cfitsiolib=$1
     sanity=`${NM} ${cfitsiolib} 2> ${DEVNULL} | ${GREP} read | ${GREP} T | ${WC} -l` # make sure that nm, grep and wc are understood
@@ -1192,6 +1203,18 @@ checkFitsioCurl () {
 	    check=`${NM} ${cfitsiolib} 2> ${DEVNULL} | ${GREP} curl_ | ${WC} -l` # count curl calls
 	    if [ $check -gt 0 ] ; then
 		CFITSIOCURL="-lcurl"
+ 		CURLCONFIG='curl-config' # use curl-config to find non /usr/lib*/ installations
+ 		testcurl=`${WHEREIS} ${CURLCONFIG}`
+		#echo "TESTCURL:  $testcurl"
+		if [ "x${testcurl}" != "x" -a "x{testcurl}" != "x${CURLCONFIG}:" ] ; then
+		    pathcurl=`${CURLCONFIG} --prefix`
+		    #echo "${pathcurl}"
+		    if [ "${pathcurl:0:2}" = "-L" ] ; then
+ 			PATHCURL="${pathcurl}"
+ 			CFITSIOCURL="${PATHCURL} ${CFITSIOCURL}"
+ 		    fi
+		fi
+
 		# adding -lcurl is necessary if the cfitsio library is static
 		#echo "WARNING: his version of CFITSIO must be linked with libcurl (flag -lcurl will be added)"
 	    fi
@@ -1212,8 +1235,9 @@ cat > ${tmpfile}${suffix} << EOF
     end program needs_fitsio
 EOF
     # compile and link
-    ${FC} ${FFLAGS}  ${tmpfile}${suffix} -o ${tmpfile}.x -L${FITSDIR} -l${LIBFITS} ${CFITSIOCURL} #${WLRPATH}
-
+    FFLAGS_=`par2curly  ${FFLAGS}`  # $() -> ${}
+    FFLAGS_=`eval echo ${FFLAGS_}` # ${} -> value
+    ${FC} ${FFLAGS_}  ${tmpfile}${suffix} -o ${tmpfile}.x -L${FITSDIR} -l${LIBFITS} ${CFITSIOCURL} #${WLRPATH}
     # test
     if [ ! -s ${tmpfile}.x ]; then
 	echo
@@ -1222,6 +1246,10 @@ EOF
 	echo " - the Fortran wrappers were correctly compiled, and"
 	echo " - the library (C routines and F90 wrappers) was compiled "
 	echo "   with a number of bits compatible with ${FC} ${FFLAGS}"
+	if [ "x${CFITSIOCURL}x" != "x x" ] ; then
+	    echo "Make sure that libcurl is properly installed"
+	    echo "(see HEALPix installation documentation for more details)"
+	fi
 	crashAndBurn
     fi
 
@@ -1245,7 +1273,9 @@ cat > ${tmpfile}${suffix} << EOF
     end program date_fitsio
 EOF
     # compile and link
-    ${FC} ${FFLAGS}  ${tmpfile}${suffix} -o ${tmpfile}.x -L${FITSDIR} -l${LIBFITS} ${CFITSIOCURL} ${WLRPATH_}
+    FFLAGS_=`par2curly  ${FFLAGS}`  # $() -> ${}
+    FFLAGS_=`eval echo ${FFLAGS_}` # ${} -> value
+    ${FC} ${FFLAGS_}  ${tmpfile}${suffix} -o ${tmpfile}.x -L${FITSDIR} -l${LIBFITS} ${CFITSIOCURL} ${WLRPATH_}
 
     #CFITSIOVREQ="3.14"            # required  version of CFITSIO (in Healpix 3.00)
     CFITSIOVREQ="3.20"            # required  version of CFITSIO (in Healpix 3.30)
@@ -1367,7 +1397,7 @@ askF90PIC () {
     DoF90PIC="1"
     echo " "
     echo " Do you want a Position Independent Compilation  (option  \"$F90PIC\") "
-    echoLn "(recommended if the Healpix-F90 library is to be linked to external codes) (y|n) [Y]: "
+    echoLn "(recommended if the Healpix-F90 library is to be linked to external codes) (y|n) [y]: "
     read answer
     if [ "x$answer" = "xy"  -o "x$answer" = "xY"  -o "x$answer" = "x" ]; then
 	if [ "x$F90PIC" != "x" ] ; then
@@ -1445,9 +1475,10 @@ IdentifyCParallCompiler () {
 # add OpenMP flag for C compiler (currently only gcc, icc and clang-omp)
 # http://openmp.org/wp/openmp-compilers/
     nicc=`$CC -V 2>&1          | ${GREP} -i intel | ${WC} -l`
-    ngcc=`$CC --version 2>&1   | ${GREP} -i 'GCC' | ${WC} -l`
+    ngcc=`$CC --version 2>&1   | ${GREP} -i 'GCC' | ${GREP} -v pgcc | ${WC} -l`
     nclang=`$CC --version 2>&1 | ${GREP}  'clang' | ${WC} -l`
-    npgc=`$CC -V 2>&1          | ${GREP} -i portland | ${WC} -l` # portland C
+    #npgc=`$CC -V 2>&1          | ${GREP} -i portland | ${WC} -l` # portland C
+    npgc=`$CC -V 2>&1          | ${GREP} PGI | ${WC} -l` # PGI C
     npath=`$CC -v 2>&1         | ${GREP} -i ekopath  | ${WC} -l` # pathscale EKOPath
     PRCFLAGS=""
     if [ $nicc != 0 ] ; then
@@ -1484,10 +1515,11 @@ CFLAGS=$tmp
 
 IdentifyCCompiler () {
 #    ngcc=`$CC --version 2>&1   | ${GREP} '(GCC)'     | ${WC} -l` # gcc
-    ngcc=`$CC --version 2>&1   | ${GREP} -i 'GCC'    | ${WC} -l` # gcc
+    ngcc=`$CC --version 2>&1   | ${GREP} -i 'GCC'  | grep -v pgcc   | ${WC} -l` # gcc
     nicc=`$CC -V 2>&1          | ${GREP} -i intel    | ${WC} -l` # intel C compiler
     nclang=`$CC --version 2>&1 | ${GREP} clang       | ${WC} -l` # clang
-    npgc=`$CC -V 2>&1          | ${GREP} -i portland | ${WC} -l` # portland C
+    #npgc=`$CC -V 2>&1          | ${GREP} -i portland | ${WC} -l` # portland C
+    npgc=`$CC -V 2>&1          | ${GREP} PGI | ${WC} -l` # PGI C
     npath=`$CC -v 2>&1         | ${GREP} -i ekopath  | ${WC} -l` # pathscale EKOPath
 	ExtendCFLAGS "-I\$(HEALPIX)/include"
     if [ $ngcc != 0 ] ; then
@@ -1500,8 +1532,10 @@ IdentifyCCompiler () {
 	echo "$CC: clang C compiler"
 	ExtendCFLAGS "-O3 -std=c99"
     elif [ $npgc != 0 ] ; then
-	echo "$CC: Portland Group C compiler"
-	ExtendCFLAGS "-O3"
+	#echo "$CC: PGI C compiler"
+	echo "$CC: PGI C compiler"
+	CFLAGS=`echo $CFLAGS | ${SED} 's|-std=c99||g'`
+	ExtendCFLAGS "-O3 -c99"
     elif [ $npath != 0 ] ; then
 	echo "$CC: Pathscale EKOPath C compiler"
 	ExtendCFLAGS "-O3"
@@ -1519,7 +1553,8 @@ IdentifyF90Compiler () {
         nima=`$FC -V 2>&1 | ${GREP} -i imagine1 | ${WC} -l`
         nnag=`$FC -V 2>&1 | ${GREP} -i nagware  | ${WC} -l`
         nifc=`$FC -V 2>&1 | ${GREP} -i intel    | ${WC} -l`
-        npgf=`$FC -V 2>&1 | ${GREP} -i portland | ${WC} -l`
+        #npgf=`$FC -V 2>&1 | ${GREP} -i portland | ${WC} -l`
+        npgf=`$FC -V 2>&1 | ${GREP} PGI | ${WC} -l`
 	nlah=`$FC --version 2>&1 | ${GREP} -i lahey | ${WC} -l`
 	nfuj=`$FC -V 2>&1 | ${GREP} -i fujitsu | ${WC} -l`
 	nxlf=`$FC --help 2>&1 | ${HEAD} -15 | ${GREP} XL | ${WC} -l`
@@ -1564,7 +1599,10 @@ IdentifyF90Compiler () {
 		[ $OS = "Linux" ] && WLRPATH="-Wl,-R"
 		DO_F90_SHARED=1
         elif [ $npgf != 0 ] ; then
-                FCNAME="Portland Group Compiler"
+                #FCNAME="Portland Group Compiler"
+                FCNAME="PGI Compiler"
+  		OFLAGS="-O3"
+		FI8FLAG="-i8" # change default INTEGER and LOGICAL to 64 bits
 		PRFLAGS="-mp" # Open MP enabled, to be tested
 		MODDIR="-module " # output location of modules
 		CFLAGS="$CFLAGS -DpgiFortran" # to combine C and F90
@@ -1683,7 +1721,9 @@ countF90Bits () {
 program test
 end program test
 EOF
-    ${FC} ${FFLAGS} ${tmpfile}${suffix} -o ${tmpfile} 1>${DEVNULL} 2>&1
+    FFLAGS_=`par2curly  ${FFLAGS}`  # $() -> ${}
+    FFLAGS_=`eval echo ${FFLAGS_}` # ${} -> value
+    ${FC} ${FFLAGS_} ${tmpfile}${suffix} -o ${tmpfile} 1>${DEVNULL} 2>&1
     f90_ok=0
     [ -s ${tmpfile} ] && f90_ok=1
     f90_64=`${FILE} ${tmpfile} | ${GREP} 64 | ${WC} -l`
@@ -1718,7 +1758,9 @@ end program test
 EOF
     canrun=0
     cancompile=0
-    $FC $FFLAGS ${tmpfile}${suffix} -o ${tmpfile}  1>${DEVNULL} 2>&1
+    FFLAGS_=`par2curly  ${FFLAGS}`  # $() -> ${}
+    FFLAGS_=`eval echo ${FFLAGS_}` # ${} -> value
+    ${FC} ${FFLAGS_} ${tmpfile}${suffix} -o ${tmpfile}  1>${DEVNULL} 2>&1
     [ -s ${tmpfile} ] && cancompile=1
     if [ -x ${tmpfile} ] ; then
 	canrun=`${tmpfile} | grep hello | ${WC} -l`
@@ -1761,7 +1803,9 @@ program test
 end program test
 EOF
     longlong=0
-    $FC $FFLAGS ${tmpfile}${suffix} -o ${tmpfile}  1>${DEVNULL} 2>&1
+    FFLAGS_=`par2curly  ${FFLAGS}`  # $() -> ${}
+    FFLAGS_=`eval echo ${FFLAGS_}` # ${} -> value
+    ${FC} ${FFLAGS_} ${tmpfile}${suffix} -o ${tmpfile}  1>${DEVNULL} 2>&1
     if [ -x ${tmpfile} ] ; then
 	longlong=`${tmpfile} | grep OK | ${WC} -l`
     fi

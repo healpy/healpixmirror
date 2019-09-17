@@ -458,7 +458,12 @@ Starting with \mylink{install:v360}{version 3.60}, if the environment variables
   and \texttt{papersize, ps\_com, pdf\_com, gif\_com}  (IDL)
 %see configure -h
 are defined prior to calling the \texttt{configure} script, they will be used
-as default values in the interactive configuration process.
+as default values in the interactive configuration process.\\
+For instance, in Bourne related shell (eg, \texttt{sh, bash, ksh, zsh}), the command\\
+\texttt{FC=ifort CC=icc ./configure}\\
+and in C related shell (eg, \texttt{csh, tcsh})\\
+\texttt{setenv FC ifort ; setenv CC icc ; ./configure}\\
+will run the \texttt{configure} script with the Intel fortan and C compilers proposed as default.
 
 
 \subsubsection{Configuration profile}
@@ -872,6 +877,9 @@ They all support the few Fortran 2003 features used in \healpixns.
 and as source files for all platforms \hfill \\
 \url{https://github.com/flang-compiler/flang/wiki/Building-Flang}.
 %
+     \item {\bf Nvidia's PGI Fortran} (formerly Portland Group) compilers (\texttt{pgf90}) available as freemium (without support) or commercially for Linux, Mac OSX and Windows from 
+\hfill \\ \url{https://www.pgroup.com/index.htm}.
+%
      \item {\bf G95} compiler available for Linux, Mac OSX, Windows, Sun and HP platforms with 32 and 64 bit architectures (eg, x86 and x86-64). In the latter case, the '32bit default integer' (32bit DI) version of \texttt{g95} {\em must} be used. Note that this compiler was last released in 2013, and it generally generates slower codes 
 than the compilers listed above.
          \hfill \\ \url{http://www.g95.org}
@@ -1143,7 +1151,8 @@ Starting with version 3.42, CFITSIO is by default linked with the
 curl library (\url{https://curl.haxx.se/libcurl},
 used to read remote FITS files via https) whenever it is available.
 This shared or dynamic library is pretty standard on modern systems, 
-and often located in \texttt{/usr/lib} or \texttt{/usr/lib64}.
+and often located in \texttt{/usr/lib} or \texttt{/usr/lib64}, and the command \texttt{curl-config} 
+can be used to determine its location.
 In this case, when executing the \healpix\ code, 
 the system must know where to find this library at runtime as explained for instance 
 \htmladdnormallink{here}{https://amir.rachum.com/blog/2016/09/17/shared-libraries/\#debugging-cheat-sheet}

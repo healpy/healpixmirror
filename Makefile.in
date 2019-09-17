@@ -200,8 +200,9 @@ f90-vclean: f90-clean
 	done
 	$(RM) $(F90_BINDIR)/sky_ng_sim*
 	$(RM) $(F90_INCDIR)/*.$(F90_MOD)
-	$(RM) $(F90_INCDIR)/*.pc $(F90_INCDIR)/*.pcl
-	$(RM) $(F90_LIBDIR)/*.a $(F90_LIBDIR)/*$(F90_LIBSUFFIX) $(F90_LIBDIR)/*.pc
+	$(RM) $(F90_INCDIR)/*.pc $(F90_INCDIR)/*.pcl $(F90_LIBDIR)/*.pc
+	$(RM) $(F90_LIBDIR)/*.a $(F90_LIBDIR)/*$(F90_LIBSUFFIX) $(F90_LIBDIR)/*.so $(F90_LIBDIR)/*.dylib 
+	
 
 f90-tidy: f90-vclean
 	$(RM) Makefile.bak test/test*
