@@ -78,7 +78,7 @@ if [ ${#} -gt 0 ]; then
     fi
 fi
 
-while getopts 'hLv' OPTION
+while getopts '\?hLv' OPTION
 do
     case ${OPTION} in
 	h)

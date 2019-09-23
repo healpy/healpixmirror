@@ -45,11 +45,13 @@
 # 2017-06-21: deal with FL (Fawlty Language) IDL clone (generateConfFlFile)
 # 2019-01-21: call autotool configure for C++;
 #             read system variables
-#                            FITSDIR, FITSINC,  (used in C/C++/F90/python)
-#                            CC,                (        C/C++/F90/python)
-#                            CXX,               (          C++/    python)
-#                            FC, DIRSUFF        (              F90       )
-#                            PYTHON             (                  python)
+#                            FITSDIR,       (used in C/      C++/F90       )
+#                            FITSINC,       (        C/      C++/          )
+#                            CC,            (        C/sharp/C++/F90/healpy)
+#                            CXX,           (                C++/    healpy)
+#                            SHARP_COPT     (          sharp               )
+#                            FC, DIRSUFF, FLIB_SHARED    (       F90       )
+#                            PYTHON         (                        healpy)
 #                            papersize, ps_com, pdf_com, gif_com  (IDL)
 #             to define proposed default values.
 #=====================================
@@ -73,20 +75,30 @@ checkDir () {
 	for d in $l; do
 	    echo "$d"
 	done
-	echoLn "Should I attempt to create these directories (y|n) [y]? "
-	read answer
-	if [ "x$answer" != "xn"  -a  "x$answer" != "xN"  ]; then
-	    for d in $l; do
-		${MKDIR} $d 1>${DEVNULL} 2>&1
-		if [ $? -gt 0 ]; then
-		    echo "Error: Could not create directory $d"
-		    crashAndBurn
-		fi
-	    done
-	else
-	    echo "Create installation directories first."
-	    crashAndBurn
-	fi
+	# remove extra question, to make script more predictable
+	echoLn "They now will be created ... "
+	for d in $l; do
+	    ${MKDIR} $d 1>${DEVNULL} 2>&1
+	    if [ $? -gt 0 ]; then
+		echo "Error: Could not create directory $d"
+		crashAndBurn
+	    fi
+	done
+	echo "done."
+# 	echoLn "Should I attempt to create these directories (y|n) [y]? "
+# 	read answer
+# 	if [ "x$answer" != "xn"  -a  "x$answer" != "xN"  ]; then
+# 	    for d in $l; do
+# 		${MKDIR} $d 1>${DEVNULL} 2>&1
+# 		if [ $? -gt 0 ]; then
+# 		    echo "Error: Could not create directory $d"
+# 		    crashAndBurn
+# 		fi
+# 	    done
+# 	else
+# 	    echo "Create installation directories first."
+# 	    crashAndBurn
+# 	fi
     fi
 }
 #-------------
@@ -389,10 +401,10 @@ setSharpDefaults () {
     SHARPDIR=${HEALPIX}/src/common_libraries/libsharp
     npgc=`$CC -V 2>&1          | ${GREP} PGI | ${WC} -l` # PGI C
     if [ $npgc != 0 ] ; then
-	CFLAGS="-O3 -fast -mp"
+	SHARP_COPT="${SHARP_COPT--O3 -fast -mp}" # -O3 -fast -mp  unless already defined
     else
-	#CFLAGS="-DMULTIARCH -O3 -ffast-math -fopenmp" # reserve for multiplatform compilation
-	CFLAGS="-O3 -ffast-math -march=native -fopenmp"
+	#SHARP_COPT="-DMULTIARCH -O3 -ffast-math -fopenmp" # reserve for multiplatform compilation
+	SHARP_COPT="${SHARP_COPT--O3 -ffast-math -march=native -fopenmp}" # -O3 -ffast-math -march=native -fopenmp unless already defined
     fi
     LDFLAGS=""
 
@@ -411,9 +423,10 @@ askSharpUserMisc () {
     echo "(If you are using gcc or clang and you want to produce a portable,"
     echo "high-performance library, you can also replace '-march=native'"
     echo "by '-DMULTIARCH'.)"
-    echoLn "[$CFLAGS]: "
+    #echoLn "[$CFLAGS]: "
+    echoLn "[$SHARP_COPT]: "
     read answer
-    [ "x$answer" != "x" ] && CFLAGS=$answer
+    [ "x$answer" != "x" ] && SHARP_COPT=$answer
 }
 #-------------
 editSharpMakefile () {
@@ -423,7 +436,7 @@ editSharpMakefile () {
     echo " "
     echo "Running configure in ${SHARPCDIR} ... "
     (cd ${SHARPCDIR}; \
-    CC="${CC}" CFLAGS="${CFLAGS}" LDFLAGS="${LDFLAGS}" ./configure --prefix=${SHARPPREFIX} || crashAndBurn)
+    CC="${CC}" CFLAGS="${SHARP_COPT}" LDFLAGS="${LDFLAGS}" ./configure --prefix=${SHARPPREFIX} || crashAndBurn)
     echo "edit top Makefile for libsharp ..."
     mv -f Makefile Makefile_tmp
     ${CAT} Makefile_tmp |\
@@ -433,7 +446,7 @@ editSharpMakefile () {
 	${SED} "s|^DISTCLEAN\(.*\) sharp-void \(.*\)|DISTCLEAN\1 sharp-distclean \2|" |\
 	${SED} "s|^TIDY\(.*\) sharp-void \(.*\)|TIDY\1 sharp-tidy \2|" |\
         ${SED} "s|^SHARPLDIR.*|SHARPLDIR=${SHARPLDIR}|" |\
-	${SED} "s|^# sharp configuration.*|# sharp configuration: (cd ${SHARPCDIR}; CC=\"${CC}\" CFLAGS=\"${CFLAGS}\" LDFLAGS=\"${LDFLAGS}\" ./configure --prefix=${SHARPPREFIX})|" > Makefile
+	${SED} "s|^# sharp configuration.*|# sharp configuration: (cd ${SHARPCDIR}; CC=\"${CC}\" CFLAGS=\"${SHARP_COPT}\" LDFLAGS=\"${LDFLAGS}\" ./configure --prefix=${SHARPPREFIX})|" > Makefile
 
     echo " done."
     edited_makefile=1
@@ -1606,6 +1619,8 @@ IdentifyF90Compiler () {
 		PRFLAGS="-mp" # Open MP enabled, to be tested
 		MODDIR="-module " # output location of modules
 		CFLAGS="$CFLAGS -DpgiFortran" # to combine C and F90
+		[ $OS = "Linux" ] && WLRPATH="-Wl,-R"
+		DO_F90_SHARED=1
         elif [ $nlah != 0 ] ; then
                 FCNAME="Lahey/Fujitsu Compiler"
 #  		FFLAGS="$FFLAGS --nap --nchk --npca --ntrace --tpp --trap dio"
@@ -2101,8 +2116,8 @@ f90_shared () {
     echo " "
     echo " Experimental feature: "
     echoLn "A static library is produced by default. Do you rather want a shared/dynamic library ?"
-    DO_F90_SHARED=0
-    if [ ${DO_F90_SHARED} -eq 1 ]; then
+    DO_F90_SHARED=${FLIB_SHARED-0} # 0 unless already defined
+    if [ ${DO_F90_SHARED} -eq 1  -o "${DO_F90_SHARED}" = "y" -o "${DO_F90_SHARED}" = "Y" ]; then
 	echoLn " (y|n) [y]: "
 	read answer
 	[ "x$answer" = "xn" -o "x$answer" = "xN" ] && DO_F90_SHARED=0
