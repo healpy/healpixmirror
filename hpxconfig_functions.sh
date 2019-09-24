@@ -47,12 +47,15 @@
 #             read system variables
 #                            FITSDIR,       (used in C/      C++/F90       )
 #                            FITSINC,       (        C/      C++/          )
+#                            C_FITS, C_SHARED  (     C                     )
 #                            CC,            (        C/sharp/C++/F90/healpy)
 #                            CXX,           (                C++/    healpy)
+#                            CXXFLAGS       (                C++)
 #                            SHARP_COPT     (          sharp               )
-#                            FC, DIRSUFF, FLIB_SHARED    (       F90       )
+#                            FC, DIRSUFF, F_SHARED, F_PARAL    ( F90       )
 #                            PYTHON         (                        healpy)
-#                            papersize, ps_com, pdf_com, gif_com  (IDL)
+#                            EDIT_PROFILE   (        C/      C++/F90/      IDL)
+#                            papersize, ps_com, pdf_com, gif_com  (        IDL)
 #             to define proposed default values.
 #=====================================
 #=========== General usage ===========
@@ -75,30 +78,34 @@ checkDir () {
 	for d in $l; do
 	    echo "$d"
 	done
-	# remove extra question, to make script more predictable
-	echoLn "They now will be created ... "
-	for d in $l; do
-	    ${MKDIR} $d 1>${DEVNULL} 2>&1
-	    if [ $? -gt 0 ]; then
-		echo "Error: Could not create directory $d"
+	if [ $INTERACTIVE -eq 1 ] ; then 
+	    echoLn "Should I attempt to create these directories (y|n) [y]? "
+	    read answer
+	    if [ "x$answer" != "xn"  -a  "x$answer" != "xN"  ]; then
+		for d in $l; do
+		    ${MKDIR} $d 1>${DEVNULL} 2>&1
+		    if [ $? -gt 0 ]; then
+			echo "Error: Could not create directory $d"
+			crashAndBurn
+		    fi
+		done
+	    else
+		echo "Create installation directories first."
 		crashAndBurn
 	    fi
-	done
-	echo "done."
-# 	echoLn "Should I attempt to create these directories (y|n) [y]? "
-# 	read answer
-# 	if [ "x$answer" != "xn"  -a  "x$answer" != "xN"  ]; then
-# 	    for d in $l; do
-# 		${MKDIR} $d 1>${DEVNULL} 2>&1
-# 		if [ $? -gt 0 ]; then
-# 		    echo "Error: Could not create directory $d"
-# 		    crashAndBurn
-# 		fi
-# 	    done
-# 	else
-# 	    echo "Create installation directories first."
-# 	    crashAndBurn
-# 	fi
+	else 
+	    # remove extra question in automated mode, to make script more predictable
+	    echoLn "They now will be created ... "
+	    for d in $l; do
+		${MKDIR} $d 1>${DEVNULL} 2>&1
+		if [ $? -gt 0 ]; then
+		    echo "Error: Could not create directory $d"
+		    crashAndBurn
+		fi
+	    done
+	    echo "done."
+	fi
+
     fi
 }
 #-------------
@@ -184,6 +191,118 @@ whereisCmd () {
 	fi
     done
 }
+#-------------
+isTrue () {
+    [ "$1" = "1"  -o "$1" = "y"  -o "$1" = "Y" -o "$1" = "t"  -o "$1" = "T" ] && echo 1 || echo 0
+}
+#-------------
+isFalse () {
+    [ "$1" = "0"  -o "$1" = "n"  -o "$1" = "N" -o "$1" = "f"  -o "$1" = "F" ] && echo 1 || echo 0
+}
+#=================
+# automatic mode
+#=================
+fillFile () { #$1=leading line, $2=number of blank lines, $3=output file
+    lead=$1
+    rep=$2
+    multicr='XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX'
+    string=$(echo $multicr | ${AWK} -v var=$rep '{ string=substr($0, 1, var); print string; }' )
+    printf `echo ${lead}X${string} | sed 's|X|\\\n|g'` >> $3
+}
+
+processAutoList(){
+
+    autofile=$1
+    autolist=$2
+
+
+    do_profile=0
+    do_c=0
+    do_cxx=0
+    do_f90=0
+    do_idl=0
+    do_healpy=0
+    do_sharp=0
+
+    # ---- parse list ----
+    #autolist=${autolist/,/ } # not in dash
+    autolist=`${SED} 's|,| |g' <<< $autolist`
+    for item in $autolist; do
+	case $item in
+	    all)
+            do_profile=1
+            do_c=1
+            do_sharp=1
+            do_cxx=1
+            do_f90=1
+            do_idl=1
+            do_healpy=1
+            ;;
+	    profile)
+            do_profile=1
+            ;;
+	    c)
+	    do_profile=1
+	    do_c=1
+            ;;
+	    cxx)
+	    do_profile=1
+	    do_sharp=1
+	    do_cxx=1
+            ;;
+	    f90)
+	    do_profile=1
+	    do_sharp=1
+	    do_f90=1
+            ;;
+	    idl)
+	    do_profile=1
+	    do_idl=1
+            ;;
+	    healpy)
+	    do_healpy=1
+            ;;
+	    sharp)
+	    do_sharp=1
+            ;;
+	    *)
+	    echo "Unknown item listed in automatic mode: $item"
+	    echo "must be among: ${usage4}"
+	    crashAndBurn
+	esac
+    done
+
+    # ---- fill file ----
+    ${RM} -f ${autofile}
+    touch    ${autofile}
+    #
+    [ $do_profile -eq 1 ] && fillFile 9 1 ${autofile}
+    [ $do_sharp   -eq 1 ] && fillFile 7 2 ${autofile}
+    if [ $do_c    -eq 1 ]; then
+	if [ `isTrue $C_FITS` -eq 1 ]; then
+	    fillFile 2 8 ${autofile}
+	else
+	    fillFile 2 5 ${autofile}
+	fi
+    fi
+    [ $do_cxx -eq 1 ]    && fillFile 4 6  ${autofile}
+    [ $do_f90 -eq 1 ]    && fillFile 3 13 ${autofile}
+    [ $do_idl -eq 1 ]    && fillFile 1 4  ${autofile}
+    [ $do_healpy -eq 1 ] && fillFile 5 3  ${autofile}
+
+    # ---- apply file ----
+    cat ${autofile}
+    $0 < ${autofile}
+
+    do_profile=0
+    do_c=0
+    do_cxx=0
+    do_f90=0
+    do_idl=0
+    do_healpy=0
+    do_sharp=0
+
+}
 #=====================================
 #=========== C package ===========
 #=====================================
@@ -220,7 +339,7 @@ setCDefaults () {
 
     FITSINC="/usr/local/include"
 
-    DO_C_SHARED=0
+    #DO_C_SHARED=0
 }
 # -------------
 add64bitCFlags () {
@@ -254,10 +373,17 @@ askCUserMisc () {
     read answer
     [ "x$answer" != "x" ] && C_AR=$answer
 
-    echoLn "do you want the HEALPix/C library to include CFITSIO-related functions ? (y|n) [y]: "
-    read answer
-    if [ "x$answer" = "x" -o "x$answer" = "xY" -o "x$answer" = "xy" -o "x$answer" = "x1" ]; then
-	C_WITHOUT_CFITSIO=0
+    echoLn "do you want the HEALPix/C library to include CFITSIO-related functions ? (y|n)"
+    if [ `isTrue ${C_FITS}` -eq 1 ] ; then
+	echoLn " [y]: "
+	read answer
+	[ `isFalse ${answer}` -eq 1 ] && C_WITHOUT_CFITSIO=1 || C_WITHOUT_CFITSIO=0
+    else
+	echoLn " [n]: "
+	read answer
+	[ `isTrue ${answer}` -eq 1 ] && C_WITHOUT_CFITSIO=0 || C_WITHOUT_CFITSIO=1
+    fi
+    if [ ${C_WITHOUT_CFITSIO} -eq 0 ]; then
 	echoLn "enter full name of cfitsio library [lib${LIBFITS}.a]: "
 	read answer
 	[ "x$answer" != "x" ] && LIBFITS=`${BASENAME} $answer ".a" | ${SED} "s/^lib//"`
@@ -297,14 +423,14 @@ askCUserMisc () {
     fi
 
     echoLn "A static library is produced by default. Do you also want a shared library ? "
-    if [ ${DO_C_SHARED} -eq 1 ]; then
+    if [ `isTrue $C_SHARED` -eq 1 ]; then
 	echoLn "(y|n) [y]: "
 	read answer
-	[ "x$answer" = "xn" -o "x$answer" = "xN" ] && DO_C_SHARED=0
+	[ `isFalse $answer` -eq 1 ] && DO_C_SHARED=0 || DO_C_SHARED=1
     else
 	echoLn "(y|n) [n]: "
 	read answer
-	[ "x$answer" = "xy" -o "x$answer" = "xY" ] && DO_C_SHARED=1
+	[ `isTrue $answer` -eq 1 ] && DO_C_SHARED=1 || DO_C_SHARED=0
     fi
 }
 #-------------
@@ -1012,11 +1138,9 @@ setIdlDefaults () {
     papersize="${papersize-letter}" # letter   unless already defined
     media=" "
     ps_com="${ps_com-gv}"           # gv       unless already defined
-    pdf_com="${pdf_com-xpdf}"       # xpdf     unless already defined
-    gif_com="${gif_com-netscape}"   # netscape unless already defined
-    [ "${OS}" = "Linux" ]   && gif_com="display"
-    [ "${OS}" = "Darwin" ]  && gif_com="open"
-    [ "${OS}" = "Darwin" ]  && pdf_com="open"
+    [ "${OS}" = "Darwin" ]  && pdf_com="${pdf_com-open}"  || pdf_com="${pdf_com-xpdf}" # open or xpdf unless already defined
+    #gif_com="${gif_com-netscape}"   # netscape unless already defined
+    [ "${OS}" = "Darwin" ]  && gif_com="${gif_com-open}"  || gif_com="${gif_com-display}" # open or display unless already defined
     previewfile=$HEALPIX/src/idl/visu/idl_default_previewer.pro
 
 #     # if IDL_PATH is undefined, then set it to +IDL_DIR
@@ -1118,9 +1242,9 @@ setF90Defaults () {
 	AIX)
 	    FC="${FC-xlf90_r}";; # xlf90_r unless already defined
 	Linux)
-	    FC="${FC}";;
+	    FC="${FC-gfortran}";;
 	Darwin)
-	    FC="${FC}";;
+	    FC="${FC-gfortran}";;
 	SUPER-UX)
 	    FC="${FC-f90}";; # f90 unless already defined
 	*)
@@ -1373,7 +1497,7 @@ GuessF90Compiler () {
 # -----------------------------------------------------------------
 
 askOpenMP () {
-    OpenMP="1"
+    OpenMP=`isTrue ${F_PARAL}`
     echo " The Spherical Harmonics Transform (C and F90) routines used by "
     echo "synfast/anafast/smoothing/plmgen"
     echo "and some routines used by ud_grade and alteralm respectively"
@@ -1385,7 +1509,9 @@ askOpenMP () {
     echo " 1) the parallel implementation "
     echoLn "Enter choice                                      [$OpenMP]: "
     read answer
-    [ "x$answer" != "x" ] && OpenMP="$answer"
+#    [ "x$answer" != "x" ] && OpenMP="$answer"
+    [ {$OPenMP} = 0 -a `isTrue ${answer}`  = 1 ] && OpenMP=1
+    [ {$OPenMP} = 1 -a `isFalse ${answer}` = 1 ] && OpenMP=0
     if [ $OpenMP = 1 ] ; then
 
 	# deal with C and F90 flags
@@ -2116,17 +2242,21 @@ f90_shared () {
     echo " "
     echo " Experimental feature: "
     echoLn "A static library is produced by default. Do you rather want a shared/dynamic library ?"
-    DO_F90_SHARED=${FLIB_SHARED-0} # 0 unless already defined
-    if [ ${DO_F90_SHARED} -eq 1  -o "${DO_F90_SHARED}" = "y" -o "${DO_F90_SHARED}" = "Y" ]; then
+    if [ `isTrue ${F_SHARED}` -eq 1 ]; then
 	echoLn " (y|n) [y]: "
 	read answer
-	[ "x$answer" = "xn" -o "x$answer" = "xN" ] && DO_F90_SHARED=0
+	[ `isFalse $[answer}` -eq 1 ] && DO_F90_SHARED=0  || DO_F90_SHARED=1
     else
 	echoLn " (y|n) [n]: "
 	read answer
-	[ "x$answer" = "xy" -o "x$answer" = "xY" ] && DO_F90_SHARED=1
+	[ `isTrue ${answer}` -eq 1 ] && DO_F90_SHARED=1  || DO_F90_SHARED=0
     fi
-
+    echo "============================"
+    echo "F_SHARED =  ${F_SHARED}"
+    echo "answer=${answer}."  
+    echo "DO_F90_SHARED =  ${DO_F90_SHARED}"
+    #echo `isTrue ${answer}` `isFalse $[answer}`
+    echo "============================"
     if [ ${DO_F90_SHARED} -eq 1 ]; then
 	case $OS in
 	    Darwin)
@@ -2319,9 +2449,16 @@ EOF
 ${CAT} ${HPX_CONF_MAIN}
 
 	echo ""
-	echoLn "Do you want this modification to be done (y|n)? [n]: "
-	read answer
-	if [ "x$answer" = "xy" -o "x$answer" = "xY" ]; then
+	if [ `isFalse ${EDIT_PROFILE}` -eq 1 ] ; then
+	    echoLn "Do you want this modification to be done (y|n)? [n]: "
+	    read answer
+	    [ `isTrue ${answer}` -eq 1 ] && edit_prof=1 || edit_prof=0
+	else
+	    echoLn "Do you want this modification to be done (y|n)? [y]: "
+	    read answer
+	    [ `isFalse ${answer}` -eq 1 ] && edit_prof=0 || edit_prof=1
+        fi
+	if [ ${edit_prof} -eq 1 ] ; then
 	    ${CP} $prof ${prof}".save"
 	    echo "" >> $prof
 	    echo "# modifications by HEALPixAutoConf ${HPXVERSION}" >> $prof
@@ -2332,6 +2469,9 @@ ${CAT} ${HPX_CONF_MAIN}
     else
 	echo "Your home shell profile ($prof)"
 	echo "has already been edited."
+	if [ ${INTERACTIVE} -eq 0 ] ; then
+	    read answer  # just to keep number of questions unchanged
+	fi
     fi
     NOPROFILEYET=0
 }
@@ -2441,10 +2581,18 @@ setTopDefaults() {
 
     MAKESET=0
 
+    F_SHARED=${F_SHARED-0} # 0 unless already defined
+    F_PARAL=${F_PARAL-1}   # 1 unless already defined
     LIBFITS="cfitsio"
     FITSDIR="${FITSDIR-/usr/local/lib}"     # /usr/local/lib     unless already defined
     FITSINC="${FITSINC-/usr/local/include}" # /usr/local/include unless already defined
     FITSPREFIX="/usr/local"
+    #C_WITHOUT_CFITSIO="${C_WITHOUT_CFITSIO-0}" # 0 unless already defined
+
+    C_SHARED=${C_SHARED-0} # 0 unless already defined
+    C_FITS="${C_FITS-1}" # 1 unless already defined
+
+    EDIT_PROFILE="${EDIT_PROFILE-n}" # n unless already defined
 
     edited_makefile=0
 

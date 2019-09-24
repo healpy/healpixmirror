@@ -1,7 +1,7 @@
 #! /bin/sh
 #
 # configuration script for Healpix
-# will configure (and compile) the C, C++, F90 and IDL packages
+# will configure (and compile) the C, C++, F90, IDL and healpy packages
 #
 # It is free of bashims, and should work with
 #          Bourne Shell       (sh)
@@ -11,7 +11,7 @@
 # and most versions of
 #          Debian Almquist Shell (dash)
 #
-# If is crashes unexpectedly, try replacing the first line above
+# If is crashes unexpectedly, try replacing the top line
 # from   #! /bin/sh
 # to     #! /bin/bash
 # or     #! /bin/ksh
@@ -27,16 +27,32 @@
 HPXVERSION=3.50
 
 #----------------------------------------
-usage="Usage: ./$(basename $0) ['?'|-h|-L|-v]"
+usage="Usage: ./$(basename $0) ['?'|-h|-v] [-L] [--auto=<list>]"
 usage2="Type    ./$(basename $0) -h    for extended help"
-usage3="    If the environment variables\n\tFITSDIR, FITSINC,\t\t(used in C/C++/F90/python)\n \
-    \tCC\t\t\t\t(C/C++/F90/python/sharp)\n\
-    \tCXX, CXXFLAGS\t\t\t(C++)\n\
-    \tFC, DIRSUFF\t\t\t(F90)\n\
-    \tPYTHON\t\t\t\t(python)\n\
-    \tpapersize, ps_com, pdf_com, gif_com  (IDL)\n\
- are defined prior to calling 'configure', they will \n\
- be used as default values in the interactive configuration process."
+# usage3="    If the environment variables\n\tFITSDIR, FITSINC,\t\t(used in C/C++/F90/python)\n \
+#     \tCC\t\t\t\t(C/C++/F90/python/sharp)\n\
+#     \tCXX, CXXFLAGS\t\t\t(C++)\n\
+#     \tFC, DIRSUFF\t\t\t(F90)\n\
+#     \tPYTHON\t\t\t\t(python)\n\
+#     \tpapersize, ps_com, pdf_com, gif_com  (IDL)\n\
+#  are defined prior to calling 'configure', they will \n\
+#  be used as default values in the interactive configuration process."
+usage3="    If the environment variables\n\
+        FITSDIR,       (used in C/      C++/F90)        \n\
+        FITSINC,               (C/      C++)           \n\
+        C_FITS, C_SHARED       (C)                     
+        CC,                    (C/sharp/C++/F90/healpy) \n\
+        CXX,                           (C++/    healpy) \n\
+        CXXFLAGS                       (C++) \n\
+        SHARP_COPT               (sharp)                \n\
+        FC, DIRSUFF, F_SHARED, F_PARAL     (F90)        \n\
+        PYTHON                                 (healpy) \n\
+        EDIT_PROFILE           (C/      C++/F90/      IDL) \n\
+        papersize, ps_com, pdf_com, gif_com          (IDL) \n\
+  are defined prior to calling 'configure', they will \n\
+  be used as default values in the interactive or automated configuration process."
+usage4="all, c, cxx, f90, healpy, idl, sharp, profile"
+
 # see install.pdf
 #-------------
 welcome () {
@@ -48,6 +64,8 @@ welcome () {
     echo "This interactive script takes care of the configuration and compilation"
     echo "of the C, C++, F90, IDL and Python packages of the Healpix distribution."
     echo "Default answers are shown in brakets []."
+    echo "An automatic mode is accessible with the flag --auto="
+    echo "See  $0 -h  for more information."
     echo
     printf "${usage3}"
     echo
@@ -58,30 +76,17 @@ welcome () {
 # read functions definition
 . ./hpxconfig_functions.sh
 
+
 # foreplay1
 setTopDefaults
 HPX_CONF_DIR=${HPX_CONF_DIR_HOME}
 
 # ----------------- options parsing ----------------------
-# do not accept options starting with a non-dash or with double dash
-if [ ${#} -gt 0 ]; then
-    arg=$1
-    one=${arg%${arg#?}}
-    two=${arg%${arg#??}}
-    if [ "${one}" != "-"  -o  "${two}" = "--"  -o "${arg}" = "-"  -o "x${arg}" = "x?" ]; then
-	echo
-	echo "${usage}"
-	echo
-	echo "${usage2}"
-	echo
-	exit -1
-    fi
-fi
 
-while getopts '\?hLv' OPTION
-do
-    case ${OPTION} in
-	h)
+INTERACTIVE=1
+for i in $@ ; do 
+  case $i in 
+      -h)
 	echo
 	echo "Configure script for Healpix ${HPXVERSION}"
 	echo
@@ -96,31 +101,69 @@ do
 	echo "    Recommended when doing a system wide installation to be used by several users."
 	echo
 	echo "-v  Print Healpix version and exit"
+	echo 
+	echo "--auto=<list>"
+	echo "     performs automatic configuration using default answers "
+	echo "     (possibly customized with environment variables described below)"
+	echo "     with <list> a comma separated list of items among"
+	echo "     ${usage4}"
 	echo
-	printf "${usage3}"
+	echo "     all:     configures everything, "
+	echo "      --auto=all is the same as --auto=profile,sharp,c,cxx,f90,idl,healpy"
+	echo "     c:       configures C   + required items, same as profile,c"
+	echo "     cxx:     configures C++ + required items, same as profile,sharp,cxx"
+	echo "     f90:     configures F90 + required items, same as profile,sharp,f90"
+	echo "     idl:     configures IDL + required items, same as profile,idl"
+	echo "     sharp:   configures libsharp (required by F90 and C++)"
+	echo "     profile: configures user or system configuration files (required C,C++,F90,IDL)"
+	echo "     healpy:  configures healpy"
 	echo
+	echo " for instance $0 --auto=cxx,f90  will configure  profile, libsharp, C++ and F90 items"
+	echo  
+	echo
+	echoLn "${usage3}"
+	echo
+	echo "Current default values:"
+	setSharpDefaults
+	setCppDefaults
+	setF90Defaults > /dev/null
+	setIdlDefaults
+	for v in FITSDIR FITSINC CC C_FITS C_SHARED CXX CXXFLAGS SHARP_COPT FC DIRSUFF F_SHARED F_PARAL PYTHON EDIT_PROFILE papersize ps_com pdf_com gif_com ; do
+	     eval echo "$v=\$$v"
+	done
+	echo "Missing values are determined by the script depending on previous choices"
+	echo "Boolean variables accept 1,y,Y,t or T as meaning Yes,  or 0,n,N,f or F as meaning No."
 	exit 0
 	;;
-	L)
+      -L)
         HPX_CONF_DIR=${HPX_CONF_DIR_INPLACE}
 	echo
         echo "Note: the configuration directory will be ${HPX_CONF_DIR}"
 	echo
 	;;
-	v)
-	echo "${HPXVERSION}"
+      -v)
+        echo "${HPXVERSION}"
 	exit 0
 	;;
-	?)
-	echo
-	echo "${usage}"
-	echo
-	echo "${usage2}"
-	echo
+      '?')
+	echoLn "\n${usage}\n\n${usage2}\n\n"
 	exit -1
 	;;
-   esac
+      --auto=*)
+	echo 'automatic mode'
+        list="${i#*=}" # remove --auto=
+	# echo $list
+	INTERACTIVE=0
+	processAutoList "/tmp/Healpix_autolist.txt"  ${list}
+	exit 0
+	;;
+      *)
+        echo "Unknown option: $i"
+	echoLn "\n${usage}\n\n${usage2}\n\n"
+	exit -1
+  esac
 done
+
 # --------------------------------------------------------
 
 #-------------
