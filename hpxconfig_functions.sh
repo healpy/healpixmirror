@@ -215,7 +215,6 @@ processAutoList(){
     autofile=$1
     autolist=$2
 
-
     do_profile=0
     do_c=0
     do_cxx=0
@@ -226,7 +225,8 @@ processAutoList(){
 
     # ---- parse list ----
     #autolist=${autolist/,/ } # not in dash
-    autolist=`${SED} 's|,| |g' <<< $autolist`
+    #autolist=`${SED} 's|,| |g' <<< $autolist` # not in dash
+    autolist=`echo $autolist | ${SED} 's/,/ /g'`
     for item in $autolist; do
 	case $item in
 	    all)
