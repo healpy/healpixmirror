@@ -119,7 +119,7 @@ echoLn () {
 }
 #-------------
 findFITSLib () {
-    for dir in $* /usr/lib /usr/lib64 /usr/local/lib /usr/local/lib64 /usr/local/lib/cfitsio /usr/local/lib64/cftisio /usr/local/src/cfitsio ${HOME}/lib ${HOME}/lib64 /softs/cfitsio/3.4*/lib /softs/cfitsio/3.3*/lib /softs/cfitsio/3.2*/lib /usr/common/usg/cfitsio/3.4*/lib /usr/common/usg/cfitsio/3.3*/lib ; do
+    for dir in $* /usr/lib /usr/lib64 /usr/local/lib /usr/local/lib64 /usr/local/lib/cfitsio /usr/local/lib64/cftisio /usr/local/src/cfitsio ${HOME}/lib ${HOME}/lib64 /softs/cfitsio/lib `${LS} -dr /softs/cfitsio/*/lib 2> ${DEVNULL}` `${LS} -dr /usr/common/usg/cfitsio/*/lib 2> ${DEVNULL}` ; do
 	if [ -r "${dir}/lib${LIBFITS}.a" -o -r "${dir}/lib${LIBFITS}.so" -o -r "${dir}/lib${LIBFITS}.dylib" ] ; then
 	    FITSDIR=$dir
 	    break
@@ -128,7 +128,7 @@ findFITSLib () {
 }
 #-------------
 findFITSInclude () {
-    for dir in $* /usr/include /usr/local/include /usr/local/src/cfitsio ${HOME}/include ${HOME}/include64 /softs/cfitsio/3.4*/include /softs/cfitsio/3.3*/include /softs/cfitsio/3.2*/include /usr/common/usg/cfitsio/3.4*/include /usr/common/usg/cfitsio/3.3*/include /usr/common/usg/cfitsio/3.2*/include ; do
+    for dir in $* /usr/include /usr/local/include /usr/local/src/cfitsio ${HOME}/include ${HOME}/include64 /soft/cfitsio/include `${LS} -dr /softs/cfitsio/*/include 2> ${DEVNULL}` `${LS} -dr /usr/common/usg/cfitsio/*/include 2> ${DEVNULL}` ; do
 	if [ -r "${dir}/fitsio.h" ] ; then
 	    FITSINC=$dir
 	    break
@@ -1072,8 +1072,8 @@ generateConfFlFile () {
 	    fl_path="\${FL_DIR}/Contents/MacOS/fl64_cmd"
 	    flde_path="\${FL_DIR}/Contents/MacOS/fl64_gui"
 	else
-	    fl_path=`ls ${FL_DIR}/bin/fl??_cmd`
-	    flde_path=`ls ${FL_DIR}/bin/fl??_gui`
+	    fl_path=`${LS} ${FL_DIR}/bin/fl??_cmd`
+	    flde_path=`${LS} ${FL_DIR}/bin/fl??_gui`
 	fi
     else
 	whereisCmd fl64_cmd fl32_cmd
@@ -2564,7 +2564,7 @@ setTopDefaults() {
     MKDIR="mkdir"
     NM="nm"
     PRINTF="printf"
-    PWD="pwd"
+    #PWD="pwd"
     PYTHON="${PYTHON-python}" # python unless already defined
     RM="/bin/rm -f"
     RMDIR="rmdir"
@@ -2584,8 +2584,9 @@ setTopDefaults() {
     F_SHARED=${F_SHARED-0} # 0 unless already defined
     F_PARAL=${F_PARAL-1}   # 1 unless already defined
     LIBFITS="cfitsio"
-    findFITSLib /usr/local/lib#     define FITSDIR with /usr/local/lib as initial guess
-    findFITSInclude /usr/local/include# define FITSINC with /usr/local/include as initial guess
+    # define FITSDIR and FITSINC with /usr/local/lib and /usr/local/include as initial guess
+    findFITSLib /usr/local/lib
+    findFITSInclude /usr/local/include `cd ${FITSDIR}/../include ; pwd`
     # FITSDIR="${FITSDIR-/usr/local/lib}"     # /usr/local/lib     unless already defined
     # FITSINC="${FITSINC-/usr/local/include}" # /usr/local/include unless already defined
     FITSPREFIX="/usr/local"
