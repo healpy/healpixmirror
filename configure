@@ -82,7 +82,6 @@ setTopDefaults
 HPX_CONF_DIR=${HPX_CONF_DIR_HOME}
 
 # ----------------- options parsing ----------------------
-
 INTERACTIVE=1
 for i in $@ ; do 
   case $i in 
@@ -150,17 +149,23 @@ for i in $@ ; do
 	exit -1
 	;;
       --auto=*)
-	echo 'automatic mode'
-        list="${i#*=}" # remove --auto=
-	# echo $list
 	INTERACTIVE=0
-	processAutoList "/tmp/Healpix_autolist.txt"  ${list}
+        list="${i#*=}" #  remove '--auto='  from argument
+	# echo 'automatic mode'
+	# echo $list
+	batchfile="/tmp/Healpix_autolist.txt"
+	processAutoList ${batchfile} ${list}
+	$0 --feed < ${batchfile}
 	exit 0
+	;;
+      --feed)
+        INTERACTIVE=0
 	;;
       *)
         echo "Unknown option: $i"
 	echoLn "\n${usage}\n\n${usage2}\n\n"
 	exit -1
+	;;
   esac
 done
 

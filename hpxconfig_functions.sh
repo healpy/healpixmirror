@@ -289,10 +289,7 @@ processAutoList(){
     [ $do_f90 -eq 1 ]    && fillFile 3 13 ${autofile}
     [ $do_idl -eq 1 ]    && fillFile 1 4  ${autofile}
     [ $do_healpy -eq 1 ] && fillFile 5 3  ${autofile}
-
-    # ---- apply file ----
-    cat ${autofile}
-    $0 < ${autofile}
+    fillFile 0 0 ${autofile} # to exit gracefully
 
     do_profile=0
     do_c=0
@@ -361,16 +358,19 @@ askCUserMisc () {
 
     echoLn "enter C compiler you want to use [$CC]: "
     read answer
+    [ $INTERACTIVE -eq 0 ] && echo $answer
     [ "x$answer" != "x" ] && CC=$answer
 
     add64bitCFlags
 
     echoLn "enter options for C compiler [$OPT]: "
     read answer
+    [ $INTERACTIVE -eq 0 ] && echo $answer
     [ "x$answer" != "x" ] && OPT=$answer
 
     echoLn "enter archive creation (and indexing) command [$C_AR]: "
     read answer
+    [ $INTERACTIVE -eq 0 ] && echo $answer
     [ "x$answer" != "x" ] && C_AR=$answer
 
     echoLn "do you want the HEALPix/C library to include CFITSIO-related functions ? (y|n)"
@@ -383,14 +383,17 @@ askCUserMisc () {
 	read answer
 	[ `isTrue ${answer}` -eq 1 ] && C_WITHOUT_CFITSIO=0 || C_WITHOUT_CFITSIO=1
     fi
+    [ $INTERACTIVE -eq 0 ] && echo $answer
     if [ ${C_WITHOUT_CFITSIO} -eq 0 ]; then
 	echoLn "enter full name of cfitsio library [lib${LIBFITS}.a]: "
 	read answer
+	[ $INTERACTIVE -eq 0 ] && echo $answer
 	[ "x$answer" != "x" ] && LIBFITS=`${BASENAME} $answer ".a" | ${SED} "s/^lib//"`
 
 	findFITSLib $LIBDIR $FITSDIR
 	echoLn "enter location of cfitsio library [$FITSDIR]: "
 	read answer
+	[ $INTERACTIVE -eq 0 ] && echo $answer
 	[ "x$answer" != "x" ] && FITSDIR=$answer
 	fullPath FITSDIR
 
@@ -410,6 +413,7 @@ askCUserMisc () {
 	findFITSInclude $INCDIR ${guess1} ${guess2} ${guess3} $FITSINC
 	echoLn "enter location of cfitsio header fitsio.h [$FITSINC]: "
 	read answer
+	[ $INTERACTIVE -eq 0 ] && echo $answer
 	[ "x$answer" != "x" ] && FITSINC=$answer
 	fullPath FITSINC
 
@@ -432,6 +436,7 @@ askCUserMisc () {
 	read answer
 	[ `isTrue $answer` -eq 1 ] && DO_C_SHARED=1 || DO_C_SHARED=0
     fi
+    [ $INTERACTIVE -eq 0 ] && echo $answer
 }
 #-------------
 editCMakefile () {
@@ -541,6 +546,7 @@ askSharpUserMisc () {
 
     echoLn "enter C compiler you want to use [$CC]: "
     read answer
+    [ $INTERACTIVE -eq 0 ] && echo $answer
     [ "x$answer" != "x" ] && CC=$answer
 
     echo "enter options for C compiler: "
@@ -552,6 +558,7 @@ askSharpUserMisc () {
     #echoLn "[$CFLAGS]: "
     echoLn "[$SHARP_COPT]: "
     read answer
+    [ $INTERACTIVE -eq 0 ] && echo $answer
     [ "x$answer" != "x" ] && SHARP_COPT=$answer
 }
 #-------------
@@ -603,18 +610,22 @@ askCppUserMisc () {
 
     echoLn "enter C compiler you want to use [$CC]: "
     read answer
+    [ $INTERACTIVE -eq 0 ] && echo $answer
     [ "x$answer" != "x" ] && CC=$answer
 
     echoLn "enter options for C compiler [$CFLAGS]: "
     read answer
+    [ $INTERACTIVE -eq 0 ] && echo $answer
     [ "x$answer" != "x" ] && CFLAGS=$answer
 
     echoLn "enter C++ compiler you want to use [$CXX]: "
     read answer
+    [ $INTERACTIVE -eq 0 ] && echo $answer
     [ "x$answer" != "x" ] && CXX=$answer
 
     echoLn "enter options for C++ compiler [$CXXFLAGS]: "
     read answer
+    [ $INTERACTIVE -eq 0 ] && echo $answer
     [ "x$answer" != "x" ] && CXXFLAGS=$answer
 
 
@@ -629,6 +640,7 @@ askCppUserMisc () {
 	read answer
 	[ "x$answer" = "x" ] && CFITSIO_CFLAGS="-I${FITSINC}"
     fi
+    [ $INTERACTIVE -eq 0 ] && echo $answer
     [ "x$answer" != "x" ] && CFITSIO_CFLAGS="-I$answer"
 
     CFITSIO_LIBS=""
@@ -641,6 +653,7 @@ askCppUserMisc () {
 	read answer
 	[ "x$answer" = "x" ] && CFITSIO_LIBS="-L${FITSDIR} -lcfitsio"
     fi
+    [ $INTERACTIVE -eq 0 ] && echo $answer
     [ "x$answer" != "x" ] && CFITSIO_LIBS="-L$answer -lcfitsio"
     echo $CFITSIO_CFLAGS  $CFITSIO_LIBS
 }
@@ -770,6 +783,7 @@ Healpy_config () {  # for healpy 1.7.0
     # ask for python command
     echoLn "Enter python command [$HPY_PYTHON] "
     read answer
+    [ $INTERACTIVE -eq 0 ] && echo $answer
     [ "x$answer" != "x" ] && HPY_PYTHON="$answer"
 
     # test python version number
@@ -815,11 +829,13 @@ Healpy_config () {  # for healpy 1.7.0
 
     echoLn "enter C compiler you want to use [$CC]: "
     read answer
+    [ $INTERACTIVE -eq 0 ] && echo $answer
     [ "x$answer" != "x" ] && CC=$answer
     HPY_CC="${CC}"
 
     echoLn "enter C++ compiler you want to use [$CXX]: "
     read answer
+    [ $INTERACTIVE -eq 0 ] && echo $answer
     [ "x$answer" != "x" ] && CXX=$answer
     HPY_CXX="${CXX}"
 
@@ -860,6 +876,7 @@ askPaperSize () {
     echo "using for your Postscript printouts (eg: a4/letter)"
     echoLn "Enter choice [$papersize]       "
     read answer
+    [ $INTERACTIVE -eq 0 ] && echo $answer
     [ "x$answer" != "x" ] && papersize="$answer"
     echo "Note: the plot bounding box (BBox) rather than the paper size "
     echo "will be used when previewing a Postcript file"
@@ -872,6 +889,7 @@ askPS () {
     echo  " (eg: gs, ghostview, gv, ggv, kghostview, evince)"
     echoLn "Enter choice [$ps_com]        "
     read answer
+    [ $INTERACTIVE -eq 0 ] && echo $answer
     [ "x$answer" != "x" ] && ps_com="$answer"
     ngs=`$ps_com -v 2>&1 | ${GREP} -i ghostscript | ${WC} -l`
     ngv=`$ps_com -v 2>&1 | ${GREP} -i gv | ${WC} -l`
@@ -895,6 +913,7 @@ askPDF () {
     echo  " (eg: gv, xpdf, kpdf, open)"
     echoLn "Enter choice [$pdf_com]        "
     read answer
+    [ $INTERACTIVE -eq 0 ] && echo $answer
     [ "x$answer" != "x" ] && pdf_com="$answer"
     pdf_scom=$pdf_com
 }
@@ -907,6 +926,7 @@ askGif () {
     echo "Note that xv may not be able to deal with PNG files"
     echoLn "Enter choice [$gif_com]       "
     read answer
+    [ $INTERACTIVE -eq 0 ] && echo $answer
     [ "x$answer" != "x" ] && gif_com="$answer"
     nnet=`$gif_com -version 2>&1 | ${GREP} -i netscape | ${WC} -l`
 
@@ -1141,7 +1161,7 @@ setIdlDefaults () {
     [ "${OS}" = "Darwin" ]  && pdf_com="${pdf_com-open}"  || pdf_com="${pdf_com-xpdf}" # open or xpdf unless already defined
     #gif_com="${gif_com-netscape}"   # netscape unless already defined
     [ "${OS}" = "Darwin" ]  && gif_com="${gif_com-open}"  || gif_com="${gif_com-display}" # open or display unless already defined
-    previewfile=$HEALPIX/src/idl/visu/idl_default_previewer.pro
+    previewfile=${HEALPIX}/src/idl/visu/idl_default_previewer.pro
 
 #     # if IDL_PATH is undefined, then set it to +IDL_DIR
 #     if [ -z "${IDL_PATH}" ] ; then
@@ -1958,6 +1978,7 @@ EOF
 askUserF90 () {
     echoLn "enter name of your F90 compiler [$FC]: "
     read answer
+    [ $INTERACTIVE -eq 0 ] && echo $answer    
     [ "x$answer" != "x" ] && FC="$answer"
 }
 
@@ -1997,6 +2018,7 @@ askUserMisc () {
     showDefaultDirs
     echoLn "enter suffix for directories [$DIRSUFF]: "
     read answer
+    [ $INTERACTIVE -eq 0 ] && echo $answer
     [ "x$answer" != "x" ] && DIRSUFF="$answer"
     updateDirs
     showActualDirs
@@ -2008,10 +2030,12 @@ askUserMisc () {
 
     echoLn "enter compilation flags for $FC compiler [$FFLAGS]: "
     read answer
+    [ $INTERACTIVE -eq 0 ] && echo $answer
     [ "x$answer" != "x" ] && FFLAGS="$answer"
 
     echoLn "enter optimisation flags for $FC compiler [$OFLAGS]: "
     read answer
+    [ $INTERACTIVE -eq 0 ] && echo $answer
     [ "x$answer" != "x" ] && OFLAGS="$answer"
 
     checkF90Compilation
@@ -2029,11 +2053,13 @@ askUserMisc () {
 
     echoLn "enter name of your C compiler [$CC]: "
     read answer
+    [ $INTERACTIVE -eq 0 ] && echo $answer
     [ "x$answer" != "x" ] && CC="$answer"
     IdentifyCCompiler
 
     echoLn "enter compilation/optimisation flags for C compiler [$CFLAGS]: "
     read answer
+    [ $INTERACTIVE -eq 0 ] && echo $answer
     [ "x$answer" != "x" ] && CFLAGS="$answer"
 
     countF90Bits
@@ -2071,15 +2097,18 @@ askUserMisc () {
 
     echoLn "enter command for library archiving [$F90_AR]: "
     read answer
+    [ $INTERACTIVE -eq 0 ] && echo $answer
     [ "x$answer" != "x" ] && F90_AR="$answer"
 
     echoLn "enter full name of cfitsio library [lib${LIBFITS}.a]: "
     read answer
+    [ $INTERACTIVE -eq 0 ] && echo $answer
     [ "x$answer" != "x" ] && LIBFITS=`${BASENAME} $answer ".a" | ${SED} "s/^lib//"`
 
     findFITSLib $LIBDIR $FITSDIR
     echoLn "enter location of cfitsio library [$FITSDIR]: "
     read answer
+    [ $INTERACTIVE -eq 0 ] && echo $answer
     [ "x$answer" != "x" ] && FITSDIR=$answer
     fullPath FITSDIR
 
@@ -2251,6 +2280,7 @@ f90_shared () {
 	read answer
 	[ `isTrue ${answer}` -eq 1 ] && DO_F90_SHARED=1  || DO_F90_SHARED=0
     fi
+    [ $INTERACTIVE -eq 0 ] && echo $answer
     echo "============================"
     echo "F_SHARED =  ${F_SHARED}"
     echo "answer=${answer}."  
@@ -2382,6 +2412,7 @@ mainMenu () {
     echo
     echoLn "Enter your choice (configuration of packages can be done in any order) [0]: "
     read answer
+    [ $INTERACTIVE -eq 0 ] && echo $answer
     case x$answer in
 	x1)
 	  eval idlconffile=$HPX_CONF_IDL
@@ -2458,6 +2489,7 @@ ${CAT} ${HPX_CONF_MAIN}
 	    read answer
 	    [ `isFalse ${answer}` -eq 1 ] && edit_prof=0 || edit_prof=1
         fi
+	[ $INTERACTIVE -eq 0 ] && echo $answer
 	if [ ${edit_prof} -eq 1 ] ; then
 	    ${CP} $prof ${prof}".save"
 	    echo "" >> $prof
@@ -2573,7 +2605,7 @@ setTopDefaults() {
     OS=`uname -s`
     WHEREIS="whereis"
 
-    HEALPIX=`${PWD}`
+    HEALPIX=`pwd`
     #echo "HEALPIX ${HEALPIX}"
 
     NOPROFILEYET=1
