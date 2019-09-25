@@ -2584,13 +2584,15 @@ setTopDefaults() {
     F_SHARED=${F_SHARED-0} # 0 unless already defined
     F_PARAL=${F_PARAL-1}   # 1 unless already defined
     LIBFITS="cfitsio"
-    FITSDIR="${FITSDIR-/usr/local/lib}"     # /usr/local/lib     unless already defined
-    FITSINC="${FITSINC-/usr/local/include}" # /usr/local/include unless already defined
+    findFITSLib /usr/local/lib#     define FITSDIR with /usr/local/lib as initial guess
+    findFITSInclude /usr/local/include# define FITSINC with /usr/local/include as initial guess
+    # FITSDIR="${FITSDIR-/usr/local/lib}"     # /usr/local/lib     unless already defined
+    # FITSINC="${FITSINC-/usr/local/include}" # /usr/local/include unless already defined
     FITSPREFIX="/usr/local"
-    #C_WITHOUT_CFITSIO="${C_WITHOUT_CFITSIO-0}" # 0 unless already defined
 
     C_SHARED=${C_SHARED-0} # 0 unless already defined
     C_FITS="${C_FITS-1}" # 1 unless already defined
+    #C_WITHOUT_CFITSIO="${C_WITHOUT_CFITSIO-0}" # 0 unless already defined
 
     EDIT_PROFILE="${EDIT_PROFILE-n}" # n unless already defined
 
