@@ -52,7 +52,7 @@
 #                            CXX,           (                C++/    healpy)
 #                            CXXFLAGS       (                C++)
 #                            SHARP_COPT     (          sharp               )
-#                            FC, DIRSUFF, F_SHARED, F_PARAL    ( F90       )
+#                            FC, F_OPT, F_DIRSUFF, F_SHARED, F_PARAL  ( F90  )
 #                            PYTHON         (                        healpy)
 #                            EDIT_PROFILE   (        C/      C++/F90/      IDL)
 #                            papersize, ps_com, pdf_com, gif_com  (        IDL)
@@ -1238,7 +1238,7 @@ setF90Defaults () {
     F90_INCDIR="./include"
     F90_LIBDIR="./lib"
     F90_BUILDDIR="./build"
-    DIRSUFF="${DIRSUFF}"
+    F_DIRSUFF="${F_DIRSUFF}"
     MOD="mod"
     FPP="-D"
     PARALL=""
@@ -1481,7 +1481,7 @@ GuessF90Compiler () {
 	IRIX*)
 	    OS="IRIX"
 	    LDFLAGS="$LDFLAGS -lm"
-	    OFLAGS="-O"
+	    OFLAGS="-fast-O"
 	    PRFLAGS="-mp";;
 	Linux)
 	    F90_AR="ar -rsv" # archive with index table
@@ -1512,6 +1512,8 @@ GuessF90Compiler () {
 	    echo "\"$OS\" is not supported yet"
 	    crashAndBurn;;
     esac
+    # override final OFLAGS with user provided F_OPT, if any
+    [  -z "${F_OPT}"  ] && F_OPT="${OFLAGS}" || OFLAGS="${F_OPT}"
 }
 
 # -----------------------------------------------------------------
@@ -1994,10 +1996,10 @@ showDefaultDirs () {
 }
 
 updateDirs () {
-    F90_BINDIR=${F90_BINDIR}${DIRSUFF}
-    F90_INCDIR=${F90_INCDIR}${DIRSUFF}
-    F90_LIBDIR=${F90_LIBDIR}${DIRSUFF}
-    F90_BUILDDIR=${F90_BUILDDIR}${DIRSUFF}
+    F90_BINDIR=${F90_BINDIR}${F_DIRSUFF}
+    F90_INCDIR=${F90_INCDIR}${F_DIRSUFF}
+    F90_LIBDIR=${F90_LIBDIR}${F_DIRSUFF}
+    F90_BUILDDIR=${F90_BUILDDIR}${F_DIRSUFF}
 }
 
 showActualDirs () {
@@ -2016,10 +2018,10 @@ askUserMisc () {
     add64bitF90Flags
 
     showDefaultDirs
-    echoLn "enter suffix for directories [$DIRSUFF]: "
+    echoLn "enter suffix for directories [$F_DIRSUFF]: "
     read answer
     [ $INTERACTIVE -eq 0 ] && echo $answer
-    [ "x$answer" != "x" ] && DIRSUFF="$answer"
+    [ "x$answer" != "x" ] && F_DIRSUFF="$answer"
     updateDirs
     showActualDirs
 
@@ -2201,9 +2203,9 @@ editF90Makefile () {
 	${SED} "s|^TIDY\(.*\) f90-void\(.*\)|TIDY\1 f90-tidy\2|" > Makefile
 
 
-# 	if [ "x$DIRSUFF" != "x" ] ; then
-# 	    if [ "x$DIRSUFF" != "x.in" ] ; then
-# 		${CP} Makefile Makefile$DIRSUFF
+# 	if [ "x$F_DIRSUFF" != "x" ] ; then
+# 	    if [ "x$F_DIRSUFF" != "x.in" ] ; then
+# 		${CP} Makefile Makefile$F_DIRSUFF
 # 	    fi
 # 	fi
 
@@ -2281,12 +2283,12 @@ f90_shared () {
 	[ `isTrue ${answer}` -eq 1 ] && DO_F90_SHARED=1  || DO_F90_SHARED=0
     fi
     [ $INTERACTIVE -eq 0 ] && echo $answer
-    echo "============================"
-    echo "F_SHARED =  ${F_SHARED}"
-    echo "answer=${answer}."  
-    echo "DO_F90_SHARED =  ${DO_F90_SHARED}"
-    #echo `isTrue ${answer}` `isFalse $[answer}`
-    echo "============================"
+#     echo "============================"
+#     echo "F_SHARED =  ${F_SHARED}"
+#     echo "answer=${answer}."  
+#     echo "DO_F90_SHARED =  ${DO_F90_SHARED}"
+#     #echo `isTrue ${answer}` `isFalse $[answer}`
+#     echo "============================"
     if [ ${DO_F90_SHARED} -eq 1 ]; then
 	case $OS in
 	    Darwin)
@@ -2306,8 +2308,8 @@ f90_shared () {
 }
 # -----------------------------------------------------------------
 writeF90pkgconfigFile (){
-    #pkgconfigFile=${HEALPIX}/lib${DIRSUFF}/healpix.pc
-    pkgconfigFile=${HEALPIX}/lib${DIRSUFF}/pkgconfig/healpix.pc
+    #pkgconfigFile=${HEALPIX}/lib${F_DIRSUFF}/healpix.pc
+    pkgconfigFile=${HEALPIX}/lib${F_DIRSUFF}/pkgconfig/healpix.pc
     ${MKDIR} -p `${DIRNAME} ${pkgconfigFile}`
     echo
     echo "Writing pkgconfig file: ${pkgconfigFile}"
@@ -2317,7 +2319,7 @@ writeF90pkgconfigFile (){
 
 compiler=${FC}
 prefix=${HEALPIX}
-suffix=${DIRSUFF}
+suffix=${F_DIRSUFF}
 exec_prefix=\${prefix}/bin\${suffix}
 libdir=\${prefix}/lib\${suffix}
 sharpdir=\${prefix}/lib
@@ -2613,8 +2615,8 @@ setTopDefaults() {
 
     MAKESET=0
 
-    F_SHARED=${F_SHARED-0} # 0 unless already defined
-    F_PARAL=${F_PARAL-1}   # 1 unless already defined
+    F_SHARED="${F_SHARED-0}" # 0 unless already defined
+    F_PARAL="${F_PARAL-1}"   # 1 unless already defined
     LIBFITS="cfitsio"
     # define FITSDIR and FITSINC with /usr/local/lib and /usr/local/include as initial guess
     findFITSLib /usr/local/lib

@@ -32,7 +32,7 @@ usage2="Type    ./$(basename $0) -h    for extended help"
 # usage3="    If the environment variables\n\tFITSDIR, FITSINC,\t\t(used in C/C++/F90/python)\n \
 #     \tCC\t\t\t\t(C/C++/F90/python/sharp)\n\
 #     \tCXX, CXXFLAGS\t\t\t(C++)\n\
-#     \tFC, DIRSUFF\t\t\t(F90)\n\
+#     \tFC, F_DIRSUFF\t\t\t(F90)\n\
 #     \tPYTHON\t\t\t\t(python)\n\
 #     \tpapersize, ps_com, pdf_com, gif_com  (IDL)\n\
 #  are defined prior to calling 'configure', they will \n\
@@ -45,7 +45,7 @@ usage3="    If the environment variables\n\
         CXX,                           (C++/    healpy) \n\
         CXXFLAGS                       (C++) \n\
         SHARP_COPT               (sharp)                \n\
-        FC, DIRSUFF, F_SHARED, F_PARAL     (F90)        \n\
+        FC, F_DIRSUFF, F_OPT, F_SHARED, F_PARAL     (F90) \n\
         PYTHON                                 (healpy) \n\
         EDIT_PROFILE           (C/      C++/F90/      IDL) \n\
         papersize, ps_com, pdf_com, gif_com          (IDL) \n\
@@ -126,8 +126,9 @@ for i in $@ ; do
 	setSharpDefaults
 	setCppDefaults
 	setF90Defaults > /dev/null
+	GuessF90Compiler
 	setIdlDefaults
-	for v in FITSDIR FITSINC CC C_FITS C_SHARED CXX CXXFLAGS SHARP_COPT FC DIRSUFF F_SHARED F_PARAL PYTHON EDIT_PROFILE papersize ps_com pdf_com gif_com ; do
+	for v in FITSDIR FITSINC CC C_FITS C_SHARED CXX CXXFLAGS SHARP_COPT FC DIRSUFF F_OPT F_SHARED F_PARAL PYTHON EDIT_PROFILE papersize ps_com pdf_com gif_com  ; do
 	     eval echo "$v=\$$v"
 	done
 	echo "Missing values are determined by the script depending on previous choices"
