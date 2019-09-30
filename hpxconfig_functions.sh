@@ -202,12 +202,15 @@ isFalse () {
 #=================
 # automatic mode
 #=================
+# fillFile () { #$1=leading line, $2=number of blank lines, $3=output file
+#     lead=$1
+#     rep=$2
+#     multicr='XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX'
+#     string=$(echo $multicr | ${AWK} -v var=$rep '{ string=substr($0, 1, var); print string; }' )
+#     printf `echo ${lead}X${string} | sed 's|X|\\\n|g'` >> $3
+# }
 fillFile () { #$1=leading line, $2=number of blank lines, $3=output file
-    lead=$1
-    rep=$2
-    multicr='XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX'
-    string=$(echo $multicr | ${AWK} -v var=$rep '{ string=substr($0, 1, var); print string; }' )
-    printf `echo ${lead}X${string} | sed 's|X|\\\n|g'` >> $3
+    echo $1 $2 | ${AWK} '{print $1} {while ($2--) print ""}' >> $3
 }
 
 processAutoList(){
@@ -222,6 +225,8 @@ processAutoList(){
     do_idl=0
     do_healpy=0
     do_sharp=0
+    sharp_configured=0
+    test_Sharp
 
     # ---- parse list ----
     #autolist=${autolist/,/ } # not in dash
@@ -247,12 +252,12 @@ processAutoList(){
             ;;
 	    cxx)
 	    do_profile=1
-	    do_sharp=1
+	    [ "$sharp_configured" = "0" ] && do_sharp=1 # only if not already configured
 	    do_cxx=1
             ;;
 	    f90)
 	    do_profile=1
-	    do_sharp=1
+	    [ "$sharp_configured" = "0" ] && do_sharp=1 # only if not already configured
 	    do_f90=1
             ;;
 	    idl)
@@ -592,6 +597,13 @@ Sharp_config () {
     editSharpMakefile
 }
 
+test_Sharp () {
+    sharp_configured=0
+    if [ -s Makefile ] ; then
+	sharp_configured=`${CAT} Makefile | ${GREP} -c "^ALL\(.*\) sharp-all"`
+    fi
+}
+
 #=====================================
 #=========== C++ package ===========
 #=====================================
@@ -704,20 +716,20 @@ EOF
 }
 #-------------
 Cpp_config () {
-	sharp_configured=`grep -c "^ALL\(.*\) sharp-all" Makefile`
-  if [ $sharp_configured = "0" ] ; then
-    echo "Configuring the libsharp library first, since this is a dependency:"
-    Sharp_config
-    echo
-    echo "Now configuring Healpix C++ itself:"
-  fi
+    test_Sharp
+    if [ $sharp_configured = "0" ] ; then
+	echo "Configuring the libsharp library first, since this is a dependency:"
+	Sharp_config
+	echo
+	echo "Now configuring Healpix C++ itself:"
+    fi
     HPX_CONF_CPP=$1
     setCppDefaults
     askCppUserMisc
-	generateConfCppFile
-	#installCppPackage
-	editCppMakefile
-	[ $NOPROFILEYET = 1 ] && installProfile
+    generateConfCppFile
+    #installCppPackage
+    editCppMakefile
+    [ $NOPROFILEYET = 1 ] && installProfile
 }
 
 #=====================================
@@ -2343,13 +2355,13 @@ EOF
 # -----------------------------------------------------------------
 
 f90_config () {
-	sharp_configured=`grep -c "^ALL\(.*\) sharp-all" Makefile`
-  if [ $sharp_configured = "0" ] ; then
-    echo "Configuring the libsharp library first, since this is a dependency:"
-    Sharp_config
-    echo
-    echo "Now configuring Healpix F90 itself:"
-  fi
+    test_Sharp
+    if [ $sharp_configured = "0" ] ; then
+	echo "Configuring the libsharp library first, since this is a dependency:"
+	Sharp_config
+	echo
+	echo "Now configuring Healpix F90 itself:"
+    fi
     HPX_CONF_F90=$1
     setF90Defaults
     askUserF90

@@ -417,7 +417,7 @@ tailored to the user environment.
 
 \begin{flushright}
 \begin{tabular}{p{0.3\hsize} p{0.60\hsize}}
-\texttt{\% ./configure} {\em [-L]}    & uses \texttt{Makefile.in} as a template to build 
+\texttt{\% ./configure} {\em [-L] [\doubledash auto=<list>]}    & uses \texttt{Makefile.in} as a template to build 
                          the correct Makefile (from user inputs as required), it
                          will also configure the IDL/GDL/FL routines\\
 \texttt{\% make}           & builds all the facilities \\
@@ -432,24 +432,43 @@ tailored to the user environment.
 \end{flushright}
 These different steps are detailed below.
 
-\subsection{./configure [-L]}
+\subsection{./configure [-L] [\doubledash auto=<list>]}
 \label{sub:configure}
 \mytarget{install:configure}
 The \texttt{./configure} script manages the configuration of the C, C++,
 Fortran90, IDL and Python suites of routines and facilities.
-
-Since v2.11, it accepts the \texttt{-L} option to write the \healpix specific configuration files
-into the \healpix directory itself rather than in installer's home directory (see
-\S\ref{subsub:conf}).
-Using the \texttt{-L} option is recommended when doing a {\em project} or {\em system wide} installation of
-\healpix to be accessed by several different users.
 
 An online help is available with 
 \texttt{./configure~-h}, while 
 \texttt{./configure~-v} 
 will return the \healpix release number (currently \hpxversion) and exit.
 
-Starting with \mylink{install:v360}{version 3.60}, if the environment variables 
+The \texttt{-L} option can be used to write the \healpix specific configuration files
+into the \healpix directory itself rather than in installer's home directory (see
+\S\ref{subsub:conf}).
+Using the \texttt{-L} option is recommended when doing a {\em project} or {\em system wide} installation of
+\healpix to be accessed by several different users.
+
+Two new features have been introduced in \mylink{install:v360}{version 3.60}.
+\begin{itemize}
+\item The \texttt{configure} script now supports the \texttt{\doubledash auto=}{\it <list>} 
+option to perform an automated (batch) configuration of the various packages using default answers
+provided the script (possibly customized with environment variables described below)
+where {\it <list>} is a comma separated list of items to be configured, to be chosen (and combined)
+among
+\begin{itemize}
+\item    \texttt{all}:     configures everything, \\
+    \texttt{\doubledash auto=all} is the same as \texttt{\doubledash auto=profile,sharp,c,cxx,f90,idl,healpy}
+\item    \texttt{c}:       configures C and the required items, same as \texttt{profile,c}
+\item    \texttt{cxx}:     configures C++ and the required items, same as \texttt{profile,sharp,cxx}
+\item    \texttt{f90}:     configures F90 and the required items, same as \texttt{profile,sharp,f90}
+\item    \texttt{idl}:     configures IDL and the required items, same as \texttt{profile,idl}
+\item    \texttt{sharp}:   configures libsharp (required by F90 and C++)
+\item    \texttt{profile}: configures user or system configuration files (required C,C++,F90,IDL)
+\item    \texttt{healpy}:  configures healpy
+\end{itemize}
+
+\item If the environment variables 
       \texttt{FITSDIR, FITSINC}   (relevant for C/C++/F90/python),
       \texttt{CC}                 (C/C++/F90/python/sharp),
       \texttt{CXX, CXXFLAGS}      (C++),
@@ -458,12 +477,17 @@ Starting with \mylink{install:v360}{version 3.60}, if the environment variables
   and \texttt{papersize, ps\_com, pdf\_com, gif\_com}  (IDL)
 %see configure -h
 are defined prior to calling the \texttt{configure} script, they will be used
-as default values in the interactive configuration process.\\
-For instance, in Bourne related shell (eg, \texttt{sh, bash, dash, ksh, zsh}), the command\\
-\texttt{FC=ifort CC=icc ./configure}\\
-and in C related shell (eg, \texttt{csh, tcsh})\\
-\texttt{setenv FC ifort ; setenv CC icc ; ./configure}\\
-will run the \texttt{configure} script with the Intel fortan and C compilers proposed as default.
+as default values in the (interactive or automated) configuration process.\\
+The online help \texttt{./configure~-h} can be used to know the current value of these variables.
+\end{itemize}
+These two new features can of course be combined.
+For instance, in Bourne related shells (eg, \texttt{sh, bash, dash, ksh, zsh}), the command\\
+\texttt{FC=ifort CC=icc ./configure \doubledash auto=f90}\\
+and in C related shells (eg, \texttt{csh, tcsh})\\
+\texttt{setenv FC ifort ; setenv CC icc ; ./configure \doubledash auto=f90}\\
+will automatically run the \texttt{configure} script for the \texttt{libsharp} (if not previously done) 
+and \texttt{f90} package items, using the Intel fortan and Intel C compilers.
+
 
 
 \subsubsection{Configuration profile}
@@ -1533,23 +1557,27 @@ However, the \mylinkext{idl:mollview:latex}{\texttt{Latex}} keyword will work pr
 
 \subsubsection[General]{General}
 \begin{itemize}
-\item Major performance increase for Spherical Harmonics Transforms 
+\item The computation time of a map synthesis or analysis is reduced
+by at least 30\% at $\nside=2048$ and $\lmax=4096$,
+with the same memory footprint and numerical accuracy as previously, thanks to
+\begin{itemize}
+\item major performance increase for Spherical Harmonics Transforms 
 in the \mylink{install:libsharp:config}{\texttt{libsharp}} C-written library
 called by the C++, F90, IDL and python routines and facilities,
 thanks to ideas of Keiichi Ishioka
   (\url{https://doi.org/10.2151/jmsj.2018-019}\ 
 %\url{https://www.jstage.jst.go.jp/article/jmsj/96/2/96_2018-019/_article}
   and personal communication);
-\item \texttt{libsharp} can now be built with simultaneous support for different x86 CPU
+\item the possibility of building the \texttt{libsharp} library with simultaneous support for different x86 CPU
   features (SSE2, AVX, AVX2, FMA3, FMA4, AVX512F); the appropriate set of
-  subroutines is then selected automatically at runtime;
-\item consequently, the computation time of a map synthesis or analysis is reduced
-by at least 30\% at $\nside=2048$ and $\lmax=4096$,
-with the same memory footprint and numerical accuracy as previously.
-\item The interactive \mylink{install:configure}{\texttt{configure}} script will ensure
+  subroutines being selected automatically at runtime.
+\end{itemize}
+
+\item The \mylink{install:configure}{\texttt{configure}} script will ensure
 a single and seamless configuration, compilation and installation
 of the \mylink{install:libsharp:config}{\texttt{libsharp}} library, 
 even if several language implementations of \healpix are compiled;
+
 \item if the environment variables 
       \texttt{FITSDIR, FITSINC},
       \texttt{CC},
