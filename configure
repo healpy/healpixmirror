@@ -29,26 +29,18 @@ HPXVERSION=3.50
 #----------------------------------------
 usage="Usage: ./$(basename $0) ['?'|-h|-v] [-L] [--auto=<list>]"
 usage2="Type    ./$(basename $0) -h    for extended help"
-# usage3="    If the environment variables\n\tFITSDIR, FITSINC,\t\t(used in C/C++/F90/python)\n \
-#     \tCC\t\t\t\t(C/C++/F90/python/sharp)\n\
-#     \tCXX, CXXFLAGS\t\t\t(C++)\n\
-#     \tFC, F_DIRSUFF\t\t\t(F90)\n\
-#     \tPYTHON\t\t\t\t(python)\n\
-#     \tpapersize, ps_com, pdf_com, gif_com  (IDL)\n\
-#  are defined prior to calling 'configure', they will \n\
-#  be used as default values in the interactive configuration process."
-usage3="    If the environment variables\n\
-        FITSDIR,       (used in C/      C++/F90)        \n\
-        FITSINC,               (C/      C++)           \n\
-        C_FITS, C_SHARED       (C)                     
-        CC,                    (C/sharp/C++/F90/healpy) \n\
+usage3=" If the environment variables\n\
+        CC,            (used in C/sharp/C++/F90/healpy) \n\
+        C_FITS, C_SHARED       (C)                      \n\
         CXX,                           (C++/    healpy) \n\
-        CXXFLAGS                       (C++) \n\
+        CXXFLAGS                       (C++)            \n\
         SHARP_COPT               (sharp)                \n\
-        FC, F_DIRSUFF, F_OPT, F_SHARED, F_PARAL     (F90) \n\
+        FC, F_DIRSUFF, F_OPT, F_PARAL, F_SHARED   (F90) \n\
+        FITSDIR,               (C/      C++/F90)        \n\
+        FITSINC,               (C/      C++)            \n\
         PYTHON                                 (healpy) \n\
-        EDIT_PROFILE           (C/      C++/F90/      IDL) \n\
-        papersize, ps_com, pdf_com, gif_com          (IDL) \n\
+        PROFILE_EDIT           (profile)                \n\
+        papersize, ps_com, pdf_com, gif_com       (IDL) \n\
   are defined prior to calling 'configure', they will \n\
   be used as default values in the interactive or automated configuration process."
 usage4="all, c, cxx, f90, healpy, idl, sharp, profile"
@@ -107,32 +99,37 @@ for i in $@ ; do
 	echo "     with <list> a comma separated list of items among"
 	echo "     ${usage4}"
 	echo
-	echo "     all:     configures everything, "
-	echo "      --auto=all is the same as --auto=profile,sharp,c,cxx,f90,idl,healpy"
-	echo "     c:       configures C   + required items, same as profile,c"
-	echo "     cxx:     configures C++ + required items, same as profile,sharp,cxx"
-	echo "     f90:     configures F90 + required items, same as profile,sharp,f90"
-	echo "     idl:     configures IDL + required items, same as profile,idl"
-	echo "     sharp:   configures libsharp (required by F90 and C++)"
-	echo "     profile: configures user or system configuration files (required C,C++,F90,IDL)"
-	echo "     healpy:  configures healpy"
+	echo "     all:     (re-)configures everything, "
+	echo "      --auto=all is the same as --auto=profile,sharp,c,cxx,f90,idl,healpy;"
+	echo "     c:       configures C   + required items, same as profile,c;"
+	echo "     cxx:     configures C++ + required items, same as profile,cxx,"
+	echo "          libsharp will also be configured if it was not previously done;"
+	echo "     f90:     configures F90 + required items, same as profile,f90"
+	echo "          libsharp will also be configured if it was not previously done;"
+	echo "     idl:     configures IDL + required items, same as profile,idl;"
+	echo "     sharp:   forces the (re-)configuration of libsharp (required by F90 and C++);"
+	echo "     profile: configures user or system configuration files (required C,C++,F90,IDL);"
+	echo "     healpy:  configures healpy;"
 	echo
-	echo " for instance $0 --auto=cxx,f90  will configure  profile, libsharp, C++ and F90 items"
+	echo "  for instance $0 --auto=cxx,f90  will configure  "
+	echo "      profile, libsharp (if necessary), C++ and F90 items"
 	echo  
 	echo
 	echoLn "${usage3}"
 	echo
-	echo "Current default values:"
+	echo "  Current default values:"
 	setSharpDefaults
 	setCppDefaults
 	setF90Defaults > /dev/null
 	GuessF90Compiler
 	setIdlDefaults
-	for v in FITSDIR FITSINC CC C_FITS C_SHARED CXX CXXFLAGS SHARP_COPT FC DIRSUFF F_OPT F_SHARED F_PARAL PYTHON EDIT_PROFILE papersize ps_com pdf_com gif_com  ; do
+	for v in CC C_FITS C_SHARED CXX CXXFLAGS FC F_DIRSUFF F_OPT F_PARAL F_SHARED FITSDIR FITSINC PYTHON PROFILE_EDIT SHARP_COPT papersize ps_com pdf_com gif_com  ; do
 	     eval echo "$v=\$$v"
 	done
-	echo "Missing values are determined by the script depending on previous choices"
-	echo "Boolean variables accept 1,y,Y,t or T as meaning Yes,  or 0,n,N,f or F as meaning No."
+	echo 
+	echo "Missing values are determined by the script, depending on previous choices."
+	echo "Boolean variables accept 1,y,Y,t and T as meaning Yes,  or   0,n,N,f and F as meaning No."
+	echo "For more information, see the HEALPix documentation."
 	exit 0
 	;;
       -L)

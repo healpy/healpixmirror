@@ -453,32 +453,43 @@ Two new features have been introduced in \mylink{install:v360}{version 3.60}.
 \begin{itemize}
 \item The \texttt{configure} script now supports the \texttt{\doubledash auto=}{\it <list>} 
 option to perform an automated (batch) configuration of the various packages using default answers
-provided the script (possibly customized with environment variables described below)
+provided by the script (possibly customized with environment variables described below)
 where {\it <list>} is a comma separated list of items to be configured, to be chosen (and combined)
 among
 \begin{itemize}
-\item    \texttt{all}:     configures everything, \\
-    \texttt{\doubledash auto=all} is the same as \texttt{\doubledash auto=profile,sharp,c,cxx,f90,idl,healpy}
-\item    \texttt{c}:       configures C and the required items, same as \texttt{profile,c}
-\item    \texttt{cxx}:     configures C++ and the required items, same as \texttt{profile,sharp,cxx}
-\item    \texttt{f90}:     configures F90 and the required items, same as \texttt{profile,sharp,f90}
-\item    \texttt{idl}:     configures IDL and the required items, same as \texttt{profile,idl}
-\item    \texttt{sharp}:   configures libsharp (required by F90 and C++)
-\item    \texttt{profile}: configures user or system configuration files (required C,C++,F90,IDL)
-\item    \texttt{healpy}:  configures healpy
+\item    \texttt{all}:    (re-)configures everything; \\
+    \texttt{\doubledash auto=all} is the same as \texttt{\doubledash auto=profile,sharp,c,cxx,f90,idl,healpy};
+\item    \texttt{c}:       configures C and the required items, same as \texttt{profile,c};
+\item    \texttt{cxx}:     configures C++ and the required items, same as \texttt{profile,cxx},\\
+ libsharp will also be configured if it was not previously done;
+\item    \texttt{f90}:     configures F90 and the required items, same as \texttt{profile,f90},\\
+ libsharp will also be configured if it was not previously done;
+\item    \texttt{idl}:     configures IDL and the required items, same as \texttt{profile,idl};
+\item    \texttt{sharp}:   forces the (re-)configuration of libsharp (required by F90 and C++);
+\item    \texttt{profile}: configures user or system configuration files (required by C, C++, F90 and IDL);
+\item    \texttt{healpy}:  configures healpy.
 \end{itemize}
 
 \item If the environment variables 
-      \texttt{FITSDIR, FITSINC}   (relevant for C/C++/F90/python),
-      \texttt{CC}                 (C/C++/F90/python/sharp),
-      \texttt{CXX, CXXFLAGS}      (C++),
-      \texttt{FC, DIRSUFF}        (F90),
-      \texttt{PYTHON}             (python),
-  and \texttt{papersize, ps\_com, pdf\_com, gif\_com}  (IDL)
+      \texttt{CC}                 (relevant for C/C++/F90/python/sharp),
+      \texttt{C\_FITS}, \texttt{C\_SHARED} (\mylink{install:C:config}{C}),
+      \texttt{CXX}, \texttt{CXXFLAGS}      (\mylink{install:cpp_config}{C++}),
+      \texttt{FC},  \texttt{F\_DIRSUFF}, \texttt{F\_OPT}, 
+      \texttt{F\_PARAL}, \texttt{F\_SHARED}         (\mylink{install:f90:config}{F90}),
+      \texttt{FITSDIR},   \texttt{FITSINC}   (C/C++/F90),
+      \texttt{PYTHON}             (\mylink{install:healpy:config}{healpy}),
+      \texttt{PROFILE\_EDIT} (\mylink{install:profile}{profile}),
+      \texttt{SHARP\_COPT} (\mylink{install:libsharp:config}{sharp}),
+  and \texttt{papersize}, \texttt{ps\_com}, \texttt{pdf\_com}, \texttt{gif\_com}  (\mylink{install:idlgdlconfig}{IDL})
 %see configure -h
 are defined prior to calling the \texttt{configure} script, they will be used
 as default values in the (interactive or automated) configuration process.\\
-The online help \texttt{./configure~-h} can be used to know the current value of these variables.
+As \mytarget{install:configure:boolean} detailed futher down, several of these variables are boolean in nature, with the values
+\texttt{1}, \texttt{y}, \texttt{Y}, \texttt{t} or \texttt{T} meaning 'yes',
+and 
+\texttt{0}, \texttt{n}, \texttt{N}, \texttt{f} or \texttt{F} meaning 'no'.\\
+The online help \texttt{./configure~-h} can be used to show the current value of these variables,
+which are inter-dependent and depend on the operating system.
 \end{itemize}
 These two new features can of course be combined.
 For instance, in Bourne related shells (eg, \texttt{sh, bash, dash, ksh, zsh}), the command\\
@@ -490,8 +501,10 @@ and \texttt{f90} package items, using the Intel fortan and Intel C compilers.
 
 
 
-\subsubsection{Configuration profile}
-\label{subsub:conf}
+\mytarget{install:profile}%
+\subsubsection{Configuration profile}%
+\label{subsub:conf}%
+%
 A feature introduced in previous releases and enhanced since v2.10, is that 
 the configure script creates a shell configuration file \hfill\\
 (located in
@@ -502,9 +515,12 @@ or in
 if \texttt{./configure -L} was used)
 according to shell
 type in which various environment variables and aliases are defined
-for your convenience. If you agree upon prompting, it will also
-change your default system profile during installation to
-automatically source this profile. If you do not agree to this change,
+for your convenience. If you agree upon prompting
+(or set the \mylink{install:configure:boolean}{boolean} 
+environment variable \texttt{PROFILE\_EDIT} to an affirmative value), 
+it will also change your default system profile during installation to
+automatically source this profile. If you do not agree to this change 
+(or set the \mylink{install:configure:boolean}{boolean} environment variable \texttt{PROFILE\_EDIT} to a negative value),
 you will need to explicitly source the configuration file above for any session in
 which you intend to run \healpix facilities. {\bf In particular, you will
 have to make sure that the \texttt{HEALPIX} system variable is correctly
@@ -515,26 +531,32 @@ the package}.
 % the Healpix routines to coexist by letting the user choose the name of directories
 % containing the executables, libraries and include files.
 
-\subsubsection{C configuration}
-\mytarget{install:C:config}
+\mytarget{install:C:config}%
+\subsubsection{C configuration}%
+%
 The \texttt{./configure} script will ask for the C compiler and options to
-be used, and for the full path of an installed \texttt{cfitsio} library to link to.
+be used, and for the full path of an installed \texttt{cfitsio} library to (optionally) link to.
 By default, only a static library is created, but the user can also ask for
  a shared (Unix/Linux systems) or dynamic (Darwin) library. \\
+The environment variables \texttt{CC}, \texttt{C\_FITS} (\mylink{install:configure:boolean}{boolean}), \texttt{FITSDIR}, \texttt{FITSINC} 
+and \texttt{C\_SHARED} (\mylink{install:configure:boolean}{boolean}) can be used to control the script behavior.\\
 After compilation
 (see \texttt{make} section) and linking, all libraries will be 
 in \texttt{\$\{HEALPIX\}/lib/chealpix.*}\ .\\
 See also \S\ref{sec:pkg-config} on \mylink{install:pkg-config}{\texttt{pkg-config}}.
 
 
-\subsubsection{C++ configuration}
-\label{sec:cpp_config}
-\mytarget{install:cpp_config}
-Starting with \mylink{install:v360}{version 3.60}, the interactive configure script will be used to
+\mytarget{install:cpp_config}%
+\subsubsection{C++ configuration}%
+\label{sec:cpp_config}%
+%
+Starting with \mylink{install:v360}{version 3.60}, the \texttt{./configure} script will be used to
 provide information (like the choice of C++ compiler and options) 
 to an automated (\texttt{autoconf} generated) configure script, 
-(located in \texttt{src/cxx/configure}), which will take care of the configuration.
-The configuration of \mylink{install:libsharp:config}{\texttt{libsharp}} will be also taken care at this stage.\\
+(located in \texttt{src/cxx/configure}), which will take care of the configuration.\\
+The environment variables \texttt{CC}, \texttt{CXX}, \texttt{CXXFLAGS}, \texttt{FITSDIR} and \texttt{FITSINC}
+can be used to customize the whole process.\\
+The configuration of \mylink{install:libsharp:config}{\texttt{libsharp}} will be also taken care of at this stage.\\
 At odds with previous versions, the C++ binaries, libraries and header files will be installed in 
 \texttt{\$\{HEALPIX\}/bin}, 
 \texttt{\$\{HEALPIX\}/lib} and 
@@ -545,8 +567,9 @@ executables will be added to the environment PATH variable.\\
 See also \S\ref{sec:pkg-config} on \mylink{install:pkg-config}{\texttt{pkg-config}}.
 
 
-\subsubsection{Fortran 90 configuration}
-\mytarget{install:f90:config}
+\mytarget{install:f90:config}%
+\subsubsection{Fortran 90 configuration}%
+%
 When you run \texttt{./configure} on a supported system 
 you will be prompted to enter compiler optimisation flags.
 We have not attempted to provide the best optimisation flags for all
@@ -563,17 +586,22 @@ information.}.
 From our experience,
 we have not found significant accumulation of numerical error even
 when using the most aggressive optimisation level available. \\
-The configuration of \mylink{install:libsharp:config}{\texttt{libsharp}} will be also taken care at this stage.\\
+The environment variable \texttt{FITSDIR}, \texttt{CC}, \texttt{FC}, \texttt{F\_DIRSUFF}, \texttt{F\_OPT}, 
+\texttt{F\_SHARED} (\mylink{install:configure:boolean}{boolean}) and \texttt{F\_PARAL} (\mylink{install:configure:boolean}{boolean}) can be used to customize the configuration.\\
+The configuration of \mylink{install:libsharp:config}{\texttt{libsharp}} will be also taken care of at this stage.\\
 If the \healpix configuration file is sourced as described in \S\ref{subsub:conf}, the full path to the F90
 executables will be added to the environment PATH variable.\\
 See also \S\ref{sec:pkg-config} on \mylink{install:pkg-config}{\texttt{pkg-config}}.
 
-\subsubsection{IDL/GDL/FL configuration}
-\label{install:idlgdlconfig}
-\mytarget{install:idlgdlconfig}
+\mytarget{install:idlgdlconfig}%
+\subsubsection{IDL/GDL/FL configuration}%
+\label{install:idlgdlconfig}%
+%
 You will be asked for the external applications, such as \texttt{gv}, \texttt{xpdf}, \texttt{display},
 $\ldots$ you want to use to visualize the
 GIF, JPEG, PDF, Postscript and PNG files \mylinkext{idl:mollview:preview}{created by IDL, GDL or FL}. \\
+The environment variables \texttt{papersize}, \texttt{ps\_com}, \texttt{pdf\_com} and \texttt{gif\_com} can be
+used to customize this configuration.\\
 If the \healpix configuration file is
 sourced as described in \S\ref{subsub:conf}, the aliases 
 \texttt{hidl} (\texttt{hidlde}), 
@@ -585,14 +613,16 @@ See the \linklatexhtml{\healpix IDL Document}{idl.pdf}{idl.htm} for more
 information on using \healpix IDL/GDL/FL together with other IDL libraries, and \S\ref{install:using_gdl},\ref{install:using_fl} on using GDL or FL instead of IDL.
 
 
-\subsubsection{Java installation}
-\mytarget{install:java:config}
+\subsubsection{Java installation}%
+\mytarget{install:java:config}%
+%
 The configuration and installation of the \healpix Java package is currently
 handled separately. See table~\ref{tab:allpackages} for more information.
 
-\subsubsection{Python (healpy) installation}
-\label{install:healpy:config}
-\mytarget{install:healpy:config}
+\mytarget{install:healpy:config}%
+\subsubsection{Python (healpy) installation}%
+\label{install:healpy:config}%
+%
 % The \texttt{./configure} script will 
 % ask for the parent directory containing the \texttt{lib/libcfitsio.*} library and
 % the {\tt
@@ -604,20 +634,24 @@ handled separately. See table~\ref{tab:allpackages} for more information.
 % not handled by the \texttt{configure} script: see table~\ref{tab:allpackages} for more
 % information. 
 The \texttt{./configure} script will ask for the Python command you want to use 
-(in case many coexist on your computer) and will check that its version number meets the \texttt{healpy} requirements (see above).
+(in case many coexist on your computer) and will check that its version number meets the \texttt{healpy} requirements (see above), as well as for C and C++ compilers.\\
+The environment variables \texttt{PYTHON}, \texttt{C} and \texttt{CXX} can be used to customize the configuration process.\\
 Note that during the compilation with \texttt{make} (see below), the 
  \texttt{src/healpy/setup.py} Python script will be invoked to automatically prompt a {\em fresh} compilation of the
  \texttt{src/cxx/*} libraries, with all the options necessary to Python linkage, and
  can be done independently of the C++ installation described above.
 
-\subsubsection{libsharp library}
-\label{install:libsharp:config}
-\mytarget{install:libsharp:config}
+\mytarget{install:libsharp:config}%
+\subsubsection{libsharp library}%
+\label{install:libsharp:config}%
+%
 The \texttt{libsharp} C-written library for optimized Spherical Harmonics operations
 is used by the C++, Fortran, IDL and healpy routines and facilities. 
 Starting with \mylink{install:v360}{version 3.60}, a new, faster, implementation is in use, 
 and will be configured (only once) at the same time as any of the C++ or Fortran packages,
  but can also be configured on its own.\\
+The environment variables \texttt{CC} and \texttt{SHARP\_COPT} can be used to pick the C compiler
+and its options proposed during the interactive or automated configuration process.\\
 For optimal performance, the C compilation flags should include \texttt{-ffast-math}
 and \texttt{-march=native} (or your compiler's equivalent options).
 If you are using \texttt{gcc} or \texttt{clang} and you want to produce a portable,
@@ -1576,17 +1610,22 @@ thanks to ideas of Keiichi Ishioka
 \item The \mylink{install:configure}{\texttt{configure}} script will ensure
 a single and seamless configuration, compilation and installation
 of the \mylink{install:libsharp:config}{\texttt{libsharp}} library, 
-even if several language implementations of \healpix are compiled;
+even if several language implementations of \healpix are compiled.
 
-\item if the environment variables 
-      \texttt{FITSDIR, FITSINC},
-      \texttt{CC},
-      \texttt{CXX, CXXFLAGS},
-      \texttt{FC, DIRSUFF},
-      \texttt{PYTHON},
-  or \texttt{papersize, ps\_com, pdf\_com, gif\_com}
-are defined \mylink{install:configure}{prior to calling the \texttt{configure} script}, they will be used
-as default values in the interactive configuration process.%
+\item The \mylink{install:configure}{\texttt{configure}} script now supports
+an automated mode beside the usual interactive mode, and some environment variables
+can be used to customize its behavior in both modes 
+(eg, choice of compilers and their options).
+
+% \item if the environment variables 
+%       \texttt{FITSDIR, FITSINC},
+%       \texttt{CC},
+%       \texttt{CXX, CXXFLAGS},
+%       \texttt{FC, DIRSUFF},
+%       \texttt{PYTHON},
+%   or \texttt{papersize, ps\_com, pdf\_com, gif\_com}
+% are defined \mylink{install:configure}{prior to calling the \texttt{configure} script}, they will be used
+% as default values in the interactive configuration process.%
 \end{itemize}
 
 % \subsubsection[C]{\linklatexhtml{C}{csub.pdf}{csub.htm}}

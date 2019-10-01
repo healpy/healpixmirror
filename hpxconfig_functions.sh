@@ -45,18 +45,19 @@
 # 2017-06-21: deal with FL (Fawlty Language) IDL clone (generateConfFlFile)
 # 2019-01-21: call autotool configure for C++;
 #             read system variables
-#                            FITSDIR,       (used in C/      C++/F90       )
-#                            FITSINC,       (        C/      C++/          )
-#                            C_FITS, C_SHARED  (     C                     )
-#                            CC,            (        C/sharp/C++/F90/healpy)
-#                            CXX,           (                C++/    healpy)
-#                            CXXFLAGS       (                C++)
-#                            SHARP_COPT     (          sharp               )
-#                            FC, F_OPT, F_DIRSUFF, F_SHARED, F_PARAL  ( F90  )
-#                            PYTHON         (                        healpy)
-#                            EDIT_PROFILE   (        C/      C++/F90/      IDL)
-#                            papersize, ps_com, pdf_com, gif_com  (        IDL)
+#                CC,            (used in C/sharp/C++/F90/healpy) 
+#                C_FITS, C_SHARED       (C)                      
+#                CXX,                           (C++/    healpy) 
+#                CXXFLAGS                       (C++)            
+#                SHARP_COPT               (sharp)                
+#                FC, F_DIRSUFF, F_OPT, F_PARAL, F_SHARED   (F90) 
+#                FITSDIR,               (C/      C++/F90)        
+#                FITSINC,               (C/      C++)            
+#                PYTHON                                 (healpy) 
+#                PROFILE_EDIT           (profile)                
+#                papersize, ps_com, pdf_com, gif_com       (IDL) 
 #             to define proposed default values.
+# 2019-10-01: addition and documentation of --auto=list   mode
 #=====================================
 #=========== General usage ===========
 #=====================================
@@ -2494,7 +2495,7 @@ EOF
 ${CAT} ${HPX_CONF_MAIN}
 
 	echo ""
-	if [ `isFalse ${EDIT_PROFILE}` -eq 1 ] ; then
+	if [ `isFalse ${PROFILE_EDIT}` -eq 1 ] ; then
 	    echoLn "Do you want this modification to be done (y|n)? [n]: "
 	    read answer
 	    [ `isTrue ${answer}` -eq 1 ] && edit_prof=1 || edit_prof=0
@@ -2641,7 +2642,7 @@ setTopDefaults() {
     C_FITS="${C_FITS-1}" # 1 unless already defined
     #C_WITHOUT_CFITSIO="${C_WITHOUT_CFITSIO-0}" # 0 unless already defined
 
-    EDIT_PROFILE="${EDIT_PROFILE-n}" # n unless already defined
+    PROFILE_EDIT="${PROFILE_EDIT-n}" # n unless already defined
 
     edited_makefile=0
 
