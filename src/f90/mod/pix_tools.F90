@@ -456,6 +456,7 @@ module pix_tools
   public :: medfiltmap
 
   public :: intrs_intrv, in_ring, ring_num, ring2z ! arcane usage
+  public :: cheap_isqrt
   public :: process_intervals, fudge_query_radius, discphirange_at_z
 
   public :: getdisc_ring  ! obsolete

@@ -55,6 +55,7 @@
 ! 2012-02-23: correction of a possible bug with index writing in dump_alms and write_alms
 ! 2013-12-13: increased MAXDIM from 40 to MAXDIM_TOP
 ! 2018-05-22: added unfold_weights, unfold_weightslist
+! 2019-10-14: can write TTYPE??? (ie with up to 3 digits) in write_* and dump_alms
 !
 
 !=======================================================================
@@ -980,8 +981,8 @@ subroutine input_map8_KLOAD(filename, map, npixtot, nmaps, &
     do i=1,nlheader
        card = header(i)
        if (card(1:5) == 'TTYPE') then ! if TTYPEi is explicitely given
-          stn = card(6:7)
-          read(stn,'(i2)') itn
+          stn = card(6:8)
+          read(stn,'(i3)') itn
           ! discard at their original location:
           call ftdkey(unit,'TTYPE'//stn,status)  ! old TTYPEi and
           status = 0
@@ -1144,10 +1145,11 @@ subroutine input_map8_KLOAD(filename, map, npixtot, nmaps, &
     do i=1,nlheader
        card = header(i)
        if (card(1:5) == 'TTYPE') then ! if TTYPE1 is explicitely given
-          stn = card(6:7)
-          read(stn,'(i2)') itn
+          stn = card(6:8)
+          read(stn,'(i3)') itn
           ! discard at their original location:
-          call ftdkey(unit,card(1:6),status)  !         old TTYPEi
+          !!!!!!!call ftdkey(unit,card(1:6),status)  !         old TTYPEi 2019-10-14
+          call ftdkey(unit,'TTYPE'//stn,status)  !         old TTYPEi
           status = 0
           call ftdkey(unit,'TFORM'//stn,status) !           TFORMi
           status = 0
@@ -1313,8 +1315,8 @@ subroutine input_map8_KLOAD(filename, map, npixtot, nmaps, &
     do i=1,nlheader
        card = header(i)
        if (card(1:5) == 'TTYPE') then ! if TTYPEi is explicitely given
-          stn = card(6:7)
-          read(stn,'(i2)') itn
+          stn = card(6:8)
+          read(stn,'(i3)') itn
           ! discard at their original location:
           call ftdkey(unit,'TTYPE'//stn,status)  ! old TTYPEi and  ! remove
           status = 0
@@ -1499,8 +1501,8 @@ subroutine input_map8_KLOAD(filename, map, npixtot, nmaps, &
     do i=1,nlheader
        card = header(i)
        if (card(1:5) == 'TTYPE') then ! if TTYPEi is explicitely given
-          stn = card(6:7)
-          read(stn,'(i2)') itn
+          stn = card(6:8)
+          read(stn,'(i3)') itn
           ! discard at their original location:
           call ftdkey(unit,'TTYPE'//stn,status)  ! old TTYPEi and  ! remove
           status = 0
@@ -2092,8 +2094,8 @@ subroutine input_map8_KLOAD(filename, map, npixtot, nmaps, &
        DO i=1,nlheader
           card = header(i)
           IF (card(1:5) == 'TTYPE') THEN ! if TTYPE1 is explicitely given
-             stn = card(6:7)
-             READ(stn,'(i2)') itn
+             stn = card(6:8)
+             READ(stn,'(i3)') itn
              ! discard at their original location:
              call ftdkey(unit,'TTYPE'//stn,status)  ! old TTYPEi and
              status = 0
