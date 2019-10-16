@@ -5,6 +5,7 @@
 %xr-hyper first to have correct Equation and Figure cross-referencing in html
 %putting hyperref first screws up references in html
 %
+%\usepackage{setspace}
 \usepackage{ae,lmodern}% load vectorial font, keep PDF small *and* good quality when in T1 font
 \usepackage[T1]{fontenc}% underscore searchable in PDF, but larger PDF http://latex-community.org/forum/viewtopic.php?t=8891
 %%%%%% ----- HTML only commands -------
@@ -50,6 +51,7 @@
 \newcommand{\mmax}{m_{\mathrm{max}}}
 \newcommand{\smax}{s_{\mathrm{max}}}
 \newcommand{\ntemplate}{N_{\mathrm{template}}}
+\newcommand{\doubledash}{\latexhtml{-{}-}{-{}--}}
 %\newcommand{\myhtmlimage}[1]{\htmlimage{#1}}
 \newcommand{\myhtmlimage}[1]{ }
 \renewcommand{\contentsname}{{TABLE OF CONTENTS}}
@@ -110,7 +112,9 @@
 \end{htmlonly}
 
 % macros for old changes
-\newcommand{\mysmaller}{% small in LaTeX, normal in html
+\newcommand{\mysmall}{% scriptsize in LaTeX, normal in html
+\latexhtml{\footnotesize}{\normalsize}}
+\newcommand{\mysmaller}{% scriptsize in LaTeX, normal in html
 \latexhtml{\scriptsize}{\normalsize}}
 \newcommand{\compresstext}{% smaller vertical spacing in LaTeX, normal in html
 \latexhtml{%

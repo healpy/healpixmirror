@@ -432,7 +432,7 @@ tailored to the user environment.
 \end{flushright}
 These different steps are detailed below.
 
-\subsection{./configure [-L] [\doubledash auto=<list>]}
+\subsection{./configure [-L] [\doubledash auto=<list>] [-h] [-v]}
 \label{sub:configure}
 \mytarget{install:configure}
 The \texttt{./configure} script manages the configuration of the C, C++,
@@ -471,7 +471,7 @@ among
 \end{itemize}
 
 \item If the environment variables 
-      \texttt{CC}                 (relevant for C/C++/F90/python/sharp),
+      \texttt{CC}                 (C compiler, relevant for C/C++/F90/python/sharp),
       \texttt{C\_FITS}, \texttt{C\_SHARED} (\mylink{install:C:config}{C}),
       \texttt{CXX}, \texttt{CXXFLAGS}      (\mylink{install:cpp_config}{C++}),
       \texttt{FC},  \texttt{F\_DIRSUFF}, \texttt{F\_OPT}, 
@@ -482,14 +482,14 @@ among
       \texttt{SHARP\_COPT} (\mylink{install:libsharp:config}{sharp}),
   and \texttt{papersize}, \texttt{ps\_com}, \texttt{pdf\_com}, \texttt{gif\_com}  (\mylink{install:idlgdlconfig}{IDL})
 %see configure -h
-are defined prior to calling the \texttt{configure} script, they will be used
-as default values in the (interactive or automated) configuration process.\\
-As \mytarget{install:configure:boolean} detailed futher down, several of these variables are boolean in nature, with the values
-\texttt{1}, \texttt{y}, \texttt{Y}, \texttt{t} or \texttt{T} meaning 'yes',
+are defined prior to calling the \texttt{configure} script, they will change the
+default values proposed in the (interactive or automated) configuration process.\\
+\mytarget{install:configure:boolean}%
+\textbf{The online help \texttt{./configure~-h} will show the current value of these variables.}\\
+As detailed futher down, several of these variables are boolean in nature, with the values
+\texttt{1}, \texttt{y}, \texttt{Y}, \texttt{t} or \texttt{T} meaning 'true',
 and 
-\texttt{0}, \texttt{n}, \texttt{N}, \texttt{f} or \texttt{F} meaning 'no'.\\
-The online help \texttt{./configure~-h} can be used to show the current value of these variables,
-which are inter-dependent and depend on the operating system.
+\texttt{0}, \texttt{n}, \texttt{N}, \texttt{f} or \texttt{F} meaning 'false'.
 \end{itemize}
 These two new features can of course be combined.
 For instance, in Bourne related shells (eg, \texttt{sh, bash, dash, ksh, zsh}), the command\\
@@ -520,7 +520,7 @@ for your convenience. If you agree upon prompting
 environment variable \texttt{PROFILE\_EDIT} to an affirmative value), 
 it will also change your default system profile during installation to
 automatically source this profile. If you do not agree to this change 
-(or set the \mylink{install:configure:boolean}{boolean} environment variable \texttt{PROFILE\_EDIT} to a negative value),
+(or set the \mylink{install:configure:boolean}{boolean} environment variable \texttt{PROFILE\_EDIT} to a false value),
 you will need to explicitly source the configuration file above for any session in
 which you intend to run \healpix facilities. {\bf In particular, you will
 have to make sure that the \texttt{HEALPIX} system variable is correctly
@@ -555,7 +555,8 @@ provide information (like the choice of C++ compiler and options)
 to an automated (\texttt{autoconf} generated) configure script, 
 (located in \texttt{src/cxx/configure}), which will take care of the configuration.\\
 The environment variables \texttt{CC}, \texttt{CXX}, \texttt{CXXFLAGS}, \texttt{FITSDIR} and \texttt{FITSINC}
-can be used to customize the whole process.\\
+can be used to customize the whole process. If the latter two are not explicitely set, 
+the autoconf configure script will look for a \texttt{cfitsio} installation on its own.\\
 The configuration of \mylink{install:libsharp:config}{\texttt{libsharp}} will be also taken care of at this stage.\\
 At odds with previous versions, the C++ binaries, libraries and header files will be installed in 
 \texttt{\$\{HEALPIX\}/bin}, 
@@ -650,8 +651,8 @@ is used by the C++, Fortran, IDL and healpy routines and facilities.
 Starting with \mylink{install:v360}{version 3.60}, a new, faster, implementation is in use, 
 and will be configured (only once) at the same time as any of the C++ or Fortran packages,
  but can also be configured on its own.\\
-The environment variables \texttt{CC} and \texttt{SHARP\_COPT} can be used to pick the C compiler
-and its options proposed during the interactive or automated configuration process.\\
+The environment variables \texttt{CC} and \texttt{SHARP\_COPT} can be used to set respectively
+the C compiler and its options proposed during the interactive or automated configuration process.\\
 For optimal performance, the C compilation flags should include \texttt{-ffast-math}
 and \texttt{-march=native} (or your compiler's equivalent options).
 If you are using \texttt{gcc} or \texttt{clang} and you want to produce a portable,
@@ -1331,7 +1332,8 @@ Both the source code and precompiled executables for various platforms are avail
 
 When used to run IDL-Healpix routines, GDL \gdlversion\ or more gives
 very satisfactory results\footnote{All the caveats listed below have been noticed in
-GDL 0.9.7 (released in Jan 2017) and 
+GDL 0.9.7 (released in Jan 2017), 
+0.9.8 (March 2018) and 
 \gdlversion\ (\gdlreldate) and may be solved in subsequent versions. Please send all your questions
 {\em on} GDL and/or its installation directly to GDL developpers at 
 \url{\gdlsite/issues}.}. 

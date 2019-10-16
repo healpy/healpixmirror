@@ -703,17 +703,25 @@ as SYMSIZE in IDL), \default {1}\\
 	{\texttt{3*F*outline.thick*!P.thick}} with \texttt{F}=2 in
 \mylink{idl:mollview:pdf}{PDF} and 
 \mylink{idl:mollview:ps}{PS}, or \texttt{F}=1 otherwise.\\
-	Notes: when applicable, the vertices are connected by segments of geodesics. To
+See for instance the function \htmlref{Outline\_earth}{idl:outline_earth} and 
+Fig.~\ref{fig:outline_earth}\latexhtml{ on page~\pageref{page:outline_earth}}{}
+to create a structure outlining the Earth continents, rivers and/or countries.
+\\
+{\mysmall{\begin{minipage}[t]{\hsize}
+{\bf Note 1:} when applicable, the vertices are connected by segments of geodesics. To
 	obtain a better looking outline, increase the number of vertices
 	provided. The outline does not have to be closed. The procedure will NOT
 	attempt to close the outline. See 
 \mylink{idl:mollview:example2}{Example \#2} below.
-\\{\bf Note:}\mytarget{idl:mollview:outline:note} several outlines 
+\\{\bf Note 2:}\mytarget{idl:mollview:outline:note} several outlines 
 (let's say {\tt circle} and \mylink{idl:mollview:example2}{{\tt triangle}})
  can be overplotted at once by gathering the respective structures into an array 
 ({\tt outline=[circle,triangle]}) if they have the same features and in particular the same number of vertices, or in
-one meta-structure ({\tt outline=\{s1:circle,s2:triangle\}}) in all cases.\\ \seealso{\mylink{idl:mollview:coord}{Coord}, \mylink{idl:mollview:graticule}{Graticule}}} \\
- 
+one meta-structure ({\tt outline=\{s1:circle,s2:triangle\}}) in all cases.
+\end{minipage}}}
+\\
+\seealso{\mylink{idl:mollview:coord}{Coord}, \mylink{idl:mollview:graticule}{Graticule}}
+}
 
 %%%%%%%%%%%%%%%%%
 \end{tabular}
