@@ -128,7 +128,7 @@ for i in $@ ; do
 	done
 	echo 
 	echo "Missing values are determined by the script, depending on previous choices."
-	echo "Boolean variables accept 1,y,Y,t and T as meaning Yes,  or   0,n,N,f and F as meaning No."
+	echo "Boolean variables accept 1,y,Y,t or T as meaning True,  and   0,n,N,f and F as meaning False."
 	echo "For more information, see the HEALPix documentation."
 	exit 0
 	;;

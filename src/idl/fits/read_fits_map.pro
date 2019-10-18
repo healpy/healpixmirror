@@ -181,10 +181,11 @@ if (filetype eq 3) then begin
     message,/info,'WARNING: input file '+filename+' is in cut-sky format, which can be read properly with READ_FITS_CUT4.'
     message,/info,'Here a full sky map will be generated, replacing missing data with 0.'
     read_fits_cut4, filename, pix, c2, c3, c4, extension=extension_id
-    T_sky = make_array(nside2npix(nside), 3, type=size(c2,/type))
+    ncol = 1 + defined(c3) + defined(c4)
+    T_sky = make_array(nside2npix(nside), ncol, type=size(c2,/type))
     T_sky[pix,0] = c2
-    T_sky[pix,1] = c3
-    T_sky[pix,2] = c4   
+    if defined(c3) then T_sky[pix,1] = c3
+    if defined(c4) then T_sky[pix,2] = c4   
 endif else begin
     selectread, filename, T_sky, extension=extension_id, /no_pdu
 endelse

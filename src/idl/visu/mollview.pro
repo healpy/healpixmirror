@@ -426,7 +426,9 @@ pro mollview, file_in, select_in, $
 ;           - 'SYM[SIZE]' symbol size (same meaning as SYMSIZE in IDL), (default = 1)
 ;          The line and symbol thickness are controlled (indirectly) via !P.THICK.
 ;          Outline can be either a single structure, or an array of structures,
-;          or a structure of structures
+;          or a structure of structures.
+;           See for instance the function Outline_Earth to create a structure outlining
+;          the Earth continents, rivers and/or countries.
 ;
 ;	PDF : string containing the name of a PDF output
 ;             if set to 0 or not set : output to screen
