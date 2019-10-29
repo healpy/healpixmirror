@@ -66,7 +66,8 @@ src_healpix_cxx= \
   Healpix_cxx/moc_query.h \
   Healpix_cxx/moc_query.cc \
   Healpix_cxx/weight_utils.h \
-  Healpix_cxx/weight_utils.cc
+  Healpix_cxx/weight_utils.cc \
+  Healpix_cxx/mask_tools.cc
 src_healpix_cxx_fits= \
   Healpix_cxx/healpix_data_io.cc \
   Healpix_cxx/healpix_data_io.h \
@@ -116,7 +117,8 @@ include_HEADERS = \
   Healpix_cxx/moc.h \
   Healpix_cxx/moc_fitsio.h \
   Healpix_cxx/moc_query.h \
-  Healpix_cxx/weight_utils.h
+  Healpix_cxx/weight_utils.h \
+  Healpix_cxx/mask_tools.h
 
 libhealpix_cxx_la_SOURCES = $(src_cxxsupport) $(src_cxxsupport_fits) $(src_healpix_cxx) $(src_healpix_cxx_fits) $(src_healpix_cxx_mod)
 
