@@ -25,7 +25,7 @@
  */
 
 /*! \file healpix_map.h
- *  Copyright (C) 2003-2013 Max-Planck-Society
+ *  Copyright (C) 2003-2019 Max-Planck-Society
  *  \author Martin Reinecke
  */
 
@@ -183,6 +183,7 @@ template<typename T> class Healpix_Map: public Healpix_Base
 
       arr<int> cycle=swap_cycles();
 
+#pragma omp parallel for schedule(dynamic,1)
       for (tsize m=0; m<cycle.size(); ++m)
         {
         int istart = cycle[m];
