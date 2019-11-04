@@ -26,7 +26,7 @@
 
 /*! \file weight_utils.h
  *
- *  Copyright (C) 2016-2018 Max-Planck-Society
+ *  Copyright (C) 2016-2019 Max-Planck-Society
  *  \author Martin Reinecke
  */
 
@@ -34,6 +34,7 @@
 #define PLANCK_WEIGHT_UTILS_H
 
 #include <vector>
+#include <memory>
 #include "healpix_map.h"
 
 /*! Applies the vector \a wgt containing compressed full weights to \a map. */
@@ -57,5 +58,25 @@ std::vector<double> get_fullweights(int nside, int lmax, double epsilon,
     \note \a lmax must be even; odd \a l do not contribute to the weights. */
 std::vector<double> get_ringweights(int nside, int lmax, double epsilon,
   int itmax, double &epsilon_out);
+
+namespace weight_utils_detail {
+
+class FullWeightImpl;
+
+}
+
+class FullWeightComputer
+  {
+  private:
+    std::unique_ptr<weight_utils_detail::FullWeightImpl> impl;
+  public:
+    FullWeightComputer(int nside, int lmax);
+    ~FullWeightComputer();
+    void iterate(int niter);
+    std::vector<double> current_alm() const;
+    std::vector<double> alm2wgt(const std::vector<double> &alm) const;
+    double current_epsilon() const;
+    int current_iter() const;
+  };
 
 #endif

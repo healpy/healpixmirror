@@ -38,7 +38,7 @@
  *  Agonizing Pain
  *    (https://www.cs.cmu.edu/~quake-papers/painless-conjugate-gradient.pdf)
  *
- *  Copyright (C) 2016-2018 Max-Planck-Society
+ *  Copyright (C) 2016-2019 Max-Planck-Society
  *  \author Martin Reinecke
  */
 
@@ -75,7 +75,9 @@ using namespace std;
    a_lm sets, because there is no libsharp support for this kind of symmetries
    yet. */
 
-namespace {
+namespace weight_utils_detail {
+
+using namespace std;
 
 // inner product of two vectors
 double dprod(const vector<double> &a, const vector<double> &b)
@@ -283,7 +285,57 @@ template<typename M> double cg_solve (const M &A, typename M::vectype &x,
   return sqrt(deltanew/delta0);
   }
 
-} // unnamed namespace
+class FullWeightImpl
+  {
+  private:
+    STS_hpwgt mat;
+    vector<double> x, rhs, r, d;
+    double delta0, delta_cur;
+    int iter;
+
+  public:
+    FullWeightImpl(int nside, int lmax)
+      : mat(lmax, lmax, nside), x(n_weightalm(lmax,lmax),0.), iter(0)
+      {
+      planck_assert((lmax&1)==0,"lmax must be even");
+      rhs = mat.ST(vector<double>(n_fullweights(nside),-1.));
+      rhs[0]+=12*nside*nside/sqrt(4*pi);
+      r=muladd(-1.,mat.apply(x),rhs);
+      d=r;
+      delta0=dprod(r,r);
+      delta_cur=delta0;
+      }
+    void iterate(int niter)
+      {
+      int iend=iter+niter;
+      for (; iter<iend; ++iter)
+        {
+        auto q=mat.apply(d);
+        double alpha = delta_cur/dprod(d,q);
+        x=muladd(alpha,d,x);
+        if (iter%300==0) // get accurate residual
+          r=muladd(-1.,mat.apply(x),rhs);
+        else
+          r=muladd(-alpha,q,r);
+        double deltaold=delta_cur;
+        delta_cur=dprod(r,r);
+        cout << "\rIteration " << iter
+             << ": residual=" << sqrt(delta_cur/delta0)
+             << "                    " << flush;
+        double beta=delta_cur/deltaold;
+        d=muladd(beta,d,r);
+        }
+      }
+    std::vector<double> current_alm() const { return x; }
+    std::vector<double> alm2wgt(const vector<double> &alm) const
+      { return mat.S(alm); }
+    double current_epsilon() const { return sqrt(delta_cur/delta0); }
+    int current_iter() const { return iter; }
+  };
+
+} //namespace weight_utils_detail;
+
+using namespace weight_utils_detail;
 
 vector<double> get_fullweights(int nside, int lmax, double epsilon, int itmax,
   double &epsilon_out)
@@ -296,6 +348,25 @@ vector<double> get_fullweights(int nside, int lmax, double epsilon, int itmax,
   epsilon_out=cg_solve(mat, x, rhs, epsilon, itmax);
   return mat.S(x);
   }
+
+FullWeightComputer::FullWeightComputer(int nside, int lmax)
+  : impl(new FullWeightImpl(nside, lmax)) {}
+
+FullWeightComputer::~FullWeightComputer() {}
+
+void FullWeightComputer::iterate(int niter) { impl->iterate(niter); }
+
+std::vector<double> FullWeightComputer::current_alm() const
+  { return impl->current_alm(); }
+
+std::vector<double> FullWeightComputer::alm2wgt(const vector<double> &alm) const
+  { return impl->alm2wgt(alm); }
+
+double FullWeightComputer::current_epsilon() const
+  { return impl->current_epsilon(); }
+
+int FullWeightComputer::current_iter() const
+  { return impl->current_iter(); }
 
 template <typename T> void apply_fullweights (Healpix_Map<T> &map,
   const vector<double> &wgt)

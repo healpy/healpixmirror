@@ -25,16 +25,54 @@
  */
 
 /*
- *  Copyright (C) 2016-2018 Max-Planck-Society
+ *  Copyright (C) 2016-2019 Max-Planck-Society
  *  Author: Martin Reinecke
  */
 
+#include <chrono>
 #include "paramfile.h"
 #include "fitshandle.h"
 #include "announce.h"
 #include "weight_utils.h"
 
 using namespace std;
+
+class SimpleTimer
+  {
+  private:
+    using clock = std::chrono::steady_clock;
+    clock::time_point starttime;
+
+  public:
+    SimpleTimer()
+      : starttime(clock::now()) {}
+    double operator()() const
+      {
+      return std::chrono::duration<double>(clock::now() - starttime).count();
+      }
+  };
+
+void write_fullfile(const string &name, int nside, int nlmax, double epsilon,
+  const vector<double> &wgt)
+  {
+  fitshandle out;
+  out.create (name);
+  vector<fitscolumn> cols;
+  int repcount = 1;
+  cols.push_back (fitscolumn ("COMPRESSED PIXEL WEIGHTS","1",repcount,
+    PLANCK_FLOAT64));
+  out.insert_bintab(cols);
+  out.set_key ("CREATOR",string("compute_weights"),
+    "Software creating the FITS file");
+  out.set_key ("NSIDE",nside,"Resolution parameter for HEALPix");
+  out.set_key ("MAX_LPOL",nlmax,"Maximum l multipole");
+  double val=*max_element(wgt.begin(),wgt.end());
+  out.set_key("MAXVAL1",val,"maximum value of pixel weights");
+  val=*min_element(wgt.begin(),wgt.end());
+  out.set_key("MINVAL1",val,"minimum value of pixel weights");
+  out.set_key("EPSILON",epsilon,"epsilon reached after minimization");
+  out.write_column(1,wgt);
+  }
 
 int compute_weights_module (int argc, const char **argv)
   {
@@ -87,25 +125,34 @@ int compute_weights_module (int argc, const char **argv)
     }
   if (params.param_present("outfile_full"))
     {
-    double epsilon_out;
-    vector<double> wgt=get_fullweights(nside,nlmax,epsilon,itmax,epsilon_out);
-    fitshandle out;
-    out.create (params.find<string>("outfile_full"));
-    vector<fitscolumn> cols;
-    int repcount = 1;
-    cols.push_back (fitscolumn ("COMPRESSED PIXEL WEIGHTS","1",repcount,
-      PLANCK_FLOAT64));
-    out.insert_bintab(cols);
-    out.set_key ("CREATOR",string("compute_weights"),
-      "Software creating the FITS file");
-    out.set_key ("NSIDE",nside,"Resolution parameter for HEALPix");
-    out.set_key ("MAX_LPOL",nlmax,"Maximum l multipole");
-    double val=*max_element(wgt.begin(),wgt.end());
-    out.set_key("MAXVAL1",val,"maximum value of pixel weights");
-    val=*min_element(wgt.begin(),wgt.end());
-    out.set_key("MINVAL1",val,"minimum value of pixel weights");
-    out.set_key("EPSILON",epsilon_out,"epsilon reached after minimization");
-    out.write_column(1,wgt);
+    FullWeightComputer comp(nside,nlmax);
+    auto name = params.find<string>("outfile_full");
+    double lasteps=2, dumpeps=2;
+    SimpleTimer t;
+    auto t_old = t();
+    vector<double> best;
+    while((comp.current_iter()<itmax) && (comp.current_epsilon()>epsilon))
+      {
+      comp.iterate(1);
+      double eps=comp.current_epsilon();
+      if (eps<lasteps)
+        {
+        best = comp.current_alm();
+        lasteps=eps;
+        }
+      if ((t()-t_old>120) && (dumpeps>lasteps))
+        {
+        cout << "\nwriting output file. eps=" << lasteps << endl;
+        write_fullfile(name, nside, nlmax, lasteps, comp.alm2wgt(best));
+        t_old=t();
+        dumpeps=lasteps;
+        }
+      }
+    if (dumpeps>lasteps)
+      {
+      cout << "\nwriting output file. eps=" << lasteps << endl;
+      write_fullfile(name, nside, nlmax, lasteps, comp.alm2wgt(best));
+      }
     }
   return 0;
   }
