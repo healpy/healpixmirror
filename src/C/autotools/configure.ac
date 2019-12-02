@@ -1,4 +1,4 @@
-AC_INIT([chealpix], [3.30.0])
+AC_INIT([chealpix], [3.60.0])
 AM_INIT_AUTOMAKE([foreign -Wall -Werror])
 
 dnl

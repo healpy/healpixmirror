@@ -1,4 +1,4 @@
-AC_INIT([healpix_cxx], [3.50.0])
+AC_INIT([healpix_cxx], [3.60.0])
 AM_INIT_AUTOMAKE([foreign subdir-objects -Wall -Werror])
 AM_MAINTAINER_MODE([enable])
 
