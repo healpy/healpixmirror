@@ -1,6 +1,8 @@
 #! /bin/csh
 
-set directory = /tmp/Healpix_3.60 # to be changed
+printf "Enter Healpix directory: "
+set directory = $<
+echo ${directory}
 set finalfile = fig/new_dir_tree
 set topdir = "Healpix_\\hpxversion/"
 #set topdir = "Healpix_3.60/"
@@ -66,7 +68,8 @@ cp -p ${file}.tex ${finalfile}.tex
 pdfcrop ${file}.pdf ${finalfile}.pdf
 #pdf2png_med ${finalfile}.pdf ${finalfile}.png
 #pdf2png_hi ${finalfile}.pdf ${finalfile}.png
-gm convert -density 180 ${finalfile}.pdf[0] ${finalfile}.png
+#gm convert -density 180 ${finalfile}.pdf[0] ${finalfile}.png
+gm convert -density 180 ${finalfile}.pdf ${finalfile}.png
 ls -lrt ${finalfile}.*
 #mv -f ${file}_crop.pdf ${file}.pdf
 #open -a Skim ${finalfile}.pdf
