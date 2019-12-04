@@ -1674,6 +1674,11 @@ orthview}}{idl:mollview} visualization routines: support for color and thickness
 \item Switch to 
 	\htmladdnormallink{\texttt{healpy \hpyversion}}{\hpysite/releases} 
 	(\htmladdnormallink{CHANGELOG}{\hpysite/blob/master/CHANGELOG.rst})
+\begin{itemize}
+\item different handling of default dtype in \texttt{read\_cl}, \texttt{write\_cl} and \texttt{read\_map}
+\item implemented \texttt{dist2holes}, distance from pixel center to closest invalid pixel
+\item allow not-power-of-2 $\nside$ for RING
+\end{itemize}
 \end{itemize}
 %
 

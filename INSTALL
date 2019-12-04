@@ -17,11 +17,12 @@ or
 
 All packages, expect the java one (see further down), can be configured, 
 compiled and tested with the commands
-./configure [-L]
+./configure [-L]  [--auto=all]
  make
  make test
 
 the 'configure' script lets you pick which package(s) you want to configure.
+The option '--auto=all' will start the automated configuration of all packages.
 Type 'configure -h' for more information on that script online options.
 
 
@@ -35,10 +36,11 @@ for a detailled description of the installation procedure
 and the list of requirements.
 
 If those requirements are met, simply running
-   ./configure [-L]
+   ./configure [-L]   [--auto=f90]
    make f90-all
    make f90-test
 should be enough to install and test the package.
+The configure script is interactive, unless the flag --auto=f90  is set.
 
 More information on the F90 package can be found at
   doc/pdf/facilities.pdf
@@ -52,7 +54,7 @@ Configuring the IDL package
 ---------------------------
 
 The 
-   ./configure [-L]
+   ./configure [-L]   [--auto=idl]
 script *must* be run to ensure that the HEALPix IDL routines will be available
 and to select the softwares used to visualize the images (Postscript and Png) 
 created by those routines.
@@ -76,7 +78,7 @@ Installing the C package
 ------------------------
 
 The sequence
-  ./configure [-L]
+  ./configure [-L]   [--auto=c]
   make c-all
   make c-test
 should do the job.
@@ -97,7 +99,7 @@ Installing the C++ package
 
 To install the C++ package, do
 
-   ./configure [-L]
+   ./configure [-L]   [--auto=cxx]
    make cpp-all
    make cpp-test
 or
@@ -133,7 +135,7 @@ Installing the python package (healpy)
 
 To install healpy, do
 
-   ./configure [-L]
+   ./configure [-L]   [--auto=healpy]
    make healpy-all
    make healpy-test
 
