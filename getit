@@ -26,7 +26,7 @@ echoRed (){
 #---------------
 
 WRKDIR="/tmp"
-healpytag="1.12.9"
+healpytag="1.13.0"
 healpygit=0 # 1: uses GIT, 0: uses tar.gz
 healpyrepo="https://github.com/healpy/healpy.git"
 #healpyarchive="https://github.com/healpy/healpy/archive/" # git (maybe partial package)
@@ -56,7 +56,7 @@ healpixrepo="svn://svn.code.sf.net/p/healpix/code/" # read-only
 #
 current=`grep -v '#' ./Version`
 version=${current}
-printf "Enter version number ($current) "
+printf "Enter version number [$current] "
 read answer
 [ "x$answer" != "x" ] && version="$answer"
 VERSION=$version
@@ -126,24 +126,46 @@ if [ ${doit} = 1 ] ; then
 
     \rm -rf .git*
     
-    if [ -d healpixsubmodule/src/cxx/autotools ] ; then # version 1.7* and above
-	cd  healpixsubmodule/src/cxx/autotools
-	\ln -sf ../../../../../cxx .
-	#for dir in Healpix_cxx c_utils cxxsupport libfftpack libsharp ; do
-	#for dir in Healpix_cxx c_utils cxxsupport pocketfft libsharp ; do
-	for dir in Healpix_cxx c_utils cxxsupport ; do
+    if [ -d healpixsubmodule/src/common_libraries ] ; then # version 1.13.0 and above
+	cd  healpixsubmodule/src/common_libraries/libsharp
+	echoBlu "in ${PWD}"
+	for dir in c_utils libsharp pocketfft ; do
+	    echoRed "Replacing ${dir}"
+	    \rm -r ${dir}
+	    \ln -sf ../../../../../common_libraries/libsharp/${dir} .
+	    ls -l ${dir}
+	done
+	cd -
+	cd  healpixsubmodule/src/cxx
+	echoBlu "in ${PWD}"
+	\ln -sf ../../../../cxx .
+	for dir in Healpix_cxx cxxsupport ; do
 	    echoRed "Replacing ${dir}"
 	    \rm -r ${dir}
 	    \ln -sf cxx/${dir} .
+	    ls -l ${dir}
 	done
 	cd -
-    elif [ -d healpixcxx ] ; then # deprecated
-	\rm -rf healpixcxx .git*
-	mkdir -p healpixcxx/src
-	cd healpixcxx/src
-	ln -s ../../../cxx .
-	cd -
     fi
+
+#     if [ -d healpixsubmodule/src/cxx/autotools ] ; then # version 1.7* and above
+# 	cd  healpixsubmodule/src/cxx/autotools
+# 	\ln -sf ../../../../../cxx .
+# 	#for dir in Healpix_cxx c_utils cxxsupport libfftpack libsharp ; do
+# 	#for dir in Healpix_cxx c_utils cxxsupport pocketfft libsharp ; do
+# 	for dir in Healpix_cxx c_utils cxxsupport ; do
+# 	    echoRed "Replacing ${dir}"
+# 	    \rm -r ${dir}
+# 	    \ln -sf cxx/${dir} .
+# 	done
+# 	cd -
+#     elif [ -d healpixcxx ] ; then # deprecated
+# 	\rm -rf healpixcxx .git*
+# 	mkdir -p healpixcxx/src
+# 	cd healpixcxx/src
+# 	ln -s ../../../cxx .
+# 	cd -
+#     fi
 
 #     if [ ! -f cfitsio/License.txt ] ; then # put by hand cfitsio source
 # 	echo "Put CFITSIO source files"

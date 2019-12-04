@@ -25,7 +25,7 @@ updateVersion () {
   # versions number
   current=`grep -v '#' ./Version`
   version=${current}
-  echoLn "Enter version number ($current) "
+  echoLn "Enter version number [$current] "
   read answer
   [ "x$answer" != "x" ] && version="$answer"
   #verstex=`echo $version | sed "s|\.|\\\\\\_|g"`
@@ -218,7 +218,7 @@ revision=`svnversion . | sed "s|[A-Z]*||g"`
 echo "Revision=${revision}"
 setTopDefaults
 echo "This script will destroy several files and subdirectories"
-echoLn "Are you sure you want to proceed ? [NO/yes] "
+echoLn "Are you sure you want to proceed ? (no/yes) [no] "
 read answer
 if [ "$answer" != "yes" ]; then
     echo "Exiting."
