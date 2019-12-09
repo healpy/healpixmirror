@@ -254,3 +254,12 @@ FITS_INFO FXADDPAR MATCH MRDFITS SXADDPAR SXPAR WRITEFITS
 
 ----------------
 
+6 routines updated in astron(8)  CHECK_FITS CHECKSUM32 FITS_ADD_CHECKSUM FXADDPAR FXPAR FXWRITE
+
+ (7) This version of astron requires IDL v6.4 or newer.
+      Done with version 2019-10-30
+
+ 2019-12-09
+
+----------------
+

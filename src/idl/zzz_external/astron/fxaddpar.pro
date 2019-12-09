@@ -83,6 +83,14 @@
 ;                 /NULL keyword.  Setting MISSING to a value implies /NULL.
 ;                 Cannot be used with string or complex values.
 ;
+;       MULTIVALUE = Allow multivalue keywords.  This option was added to
+;                    support the DPj, DQi keywords introduced in the WCS
+;                    distortions paper.  With the /MULTIVALUE keyword, each new
+;                    instance of a keyword is added immediately after the
+;                    previous instance, for example:
+;
+;                    FOR I=0,N_ELEMENTS(DQ1) DO FXADDPAR,HEADER,'DQ1',DQ1[I]
+;
 ;	ERRMSG	 = If defined and passed, then any error messages will be
 ;		   returned to the user in this parameter rather than
 ;		   depending on the MESSAGE routine in IDL, e.g.
@@ -166,8 +174,13 @@
 ;               comment
 ;       Version 10, 21-Jun-2018, W. Thompson, for backward compatibility, save
 ;               non-finite values (e.g. NaN) as strings if /NULL not set
+;       Version 11, 03-Jun-2019, W. Thompson, added /MULTIVALUE
+;       Version 12, 13-Sep-2019, M Löfdahl, make /MULTIVALUE work for
+;               CONTINUEd keywords.
+;       Version 13, 29-Oct-2019, W. Thompson, M Löfdahl, ensure floating point
+;               uses E instead of e for exponentials.
 ; Version     : 
-;       Version 10, 21-Jun-2018
+;       Version 13, 29-Oct-2019
 ;-
 ;
 
@@ -286,7 +299,8 @@ END
 
 PRO FXADDPAR, HEADER, NAME, VALUE, COMMENT, BEFORE=BEFORE,      $
               AFTER=AFTER, FORMAT=FORMAT, NOCONTINUE = NOCONTINUE, $
-              ERRMSG=ERRMSG, NOLOGICAL=NOLOGICAL, MISSING=MISSING, NULL=NULL
+              ERRMSG=ERRMSG, NOLOGICAL=NOLOGICAL, MISSING=MISSING, NULL=NULL, $
+              MULTIVALUE=MULTIVALUE
         COMPILE_OPT IDL2
         ON_ERROR,2                              ;Return to caller
 ;
@@ -437,10 +451,25 @@ PRO FXADDPAR, HEADER, NAME, VALUE, COMMENT, BEFORE=BEFORE,      $
 ;
 ;  Find location to insert keyword.  If the keyword is already in the header,
 ;  then simply replace it.  If no new comment is passed, then retain the old
-;  one.
+;  one.  When the /MULTIVALUE keyword is set, insert the new keyword
+;  immediately after the previous one.
 ;
         IPOS  = WHERE(KEYWRD EQ NN,NFOUND)
         IF NFOUND GT 0 THEN BEGIN
+                IF KEYWORD_SET(MULTIVALUE) THEN BEGIN
+                   I = MAX(IPOS) 
+                   ;; Advance I if the existing keyword is CONTINUEd
+                   REPEAT BEGIN
+                      I++
+                      QUOTE1 = STRPOS(HEADER[I-1],"'")
+                      IF QUOTE1 EQ 10 THEN BEGIN
+                         ;; String value. Continued?
+                         QUOTE2 = STRPOS(STRMID(HEADER[I-1], QUOTE1+1),"'")
+                         NOT_CONTINUED = STRMID(HEADER[I-1], QUOTE1+QUOTE2,1) NE '&'
+                      ENDIF ELSE NOT_CONTINUED = 1
+                   ENDREP UNTIL NOT_CONTINUED
+                   GOTO, INSERT
+                ENDIF
                 I = IPOS[0]
                 IF COMMENT EQ '' THEN BEGIN
                         SLASH = STRPOS(HEADER[I],'/')
@@ -716,8 +745,8 @@ REPLACE:
                 IF STYPE EQ 6 THEN VR = FLOAT(VALUE) ELSE VR = DOUBLE(VALUE)
                 VI = IMAGINARY(VALUE)
                 IF N_ELEMENTS(FORMAT) EQ 1 THEN BEGIN   ;use format keyword
-                        VR = STRING(VR, '('+STRUPCASE(FORMAT)+')')
-                        VI = STRING(VI, '('+STRUPCASE(FORMAT)+')')
+                        VR = STRUPCASE(STRING(VR, '('+FORMAT+')'))
+                        VI = STRUPCASE(STRING(VI, '('+FORMAT+')'))
                  END ELSE BEGIN
                         VR = STRTRIM(VR, 2)
                         VI = STRTRIM(VI, 2)
@@ -750,6 +779,7 @@ REPLACE:
                         V = STRTRIM(SVALUE,2) ;default format
                     ENDELSE
                 ENDELSE
+                IF (STYPE EQ 4) OR (STYPE EQ 5) THEN V = STRUPCASE(V)
                 S = STRLEN(V)                 ;right justify
                 STRPUT,H,V,(30-S)>10          ;insert
             ENDIF
