@@ -88,6 +88,21 @@ For any problem, question or comment, see the <a href="support.php">Support</a> 
 
 <UL CLASS="ChildLinks">
 
+<LI><A ID="tex2html_360_15"
+  HREF="#SECTION_360_10000000000000000">Bug corrections and Improvements in Version 3.60</A>
+<UL>
+<LI><A ID="tex2html_360_16"
+  HREF="#SECTION_360_11000000000000000">General</A>
+<LI><A ID="tex2html_360_17"
+  HREF="#SECTION_360_12000000000000000">C++</A>
+<LI><A ID="tex2html_360_18"
+  HREF="#SECTION_360_13000000000000000">Fortran</A>
+<LI><A ID="tex2html_360_19"
+  HREF="#SECTION_360_14000000000000000">IDL</A>
+<LI><A ID="tex2html_360_20"
+  HREF="#SECTION_360_15000000000000000">Python</A>
+</UL>
+
 <LI><A ID="tex2html_350_26"
   HREF="#SECTION_350_10000000000000000">Bug corrections and Improvements in Version 3.50</A>
 <UL>
@@ -119,7 +134,137 @@ For any problem, question or comment, see the <a href="support.php">Support</a> 
 </ul>
 <!--End of Table of Child-Links-->
 
-<!-- ************************************************* -->
+<!-- ******************************************************  -->
+<!-- *** 3.60 ********************************************** -->
+
+<h3><A ID="SECTION_360_10000000000000000">
+Bug corrections and Improvements in Version 3.60</A>
+</h3>
+<P>
+
+<h4><A ID="SECTION_360_11000000000000000">
+General</A>
+</h4>
+<UL><LI>
+ The computation time of a map synthesis or analysis has been reduced
+(for instance, by at least 30% at <SPAN CLASS="MATH"><I>N</I><SUB><I>side</I></SUB>=2048</SPAN> and <SPAN CLASS="MATH"><I>l</I><SUB><I>max</I></SUB>=4096</SPAN>),
+with the same memory footprint and numerical accuracy as previously, thanks to
+<UL><LI>
+ major performance increase for Spherical Harmonics Transforms 
+in the <A HREF="#install:libsharp:config"><SPAN  style="font-family:monospace">libsharp</SPAN></A> C-written library
+called by the C++, F90, IDL and python routines and facilities,
+thanks to ideas of Keiichi Ishioka
+  (<kbd><A ID="tex2html_360_1"
+  HREF="https://doi.org/10.2151/jmsj.2018-019">https://doi.org/10.2151/jmsj.2018-019</A></kbd> 
+and personal communication);
+<LI>
+ the possibility of building the <SPAN  style="font-family:monospace">libsharp</SPAN> library with simultaneous support for different x86 CPU
+  features (SSE2, AVX, AVX2, FMA3, FMA4, AVX512F); the appropriate set of
+  subroutines being selected automatically at runtime.
+</UL>
+
+<P>
+<LI>
+ The <A HREF="#install:configure"><SPAN  style="font-family:monospace">configure</SPAN></A> script will ensure
+a single and seamless configuration, compilation and installation
+of the <A HREF="#install:libsharp:config"><SPAN  style="font-family:monospace">libsharp</SPAN></A> library, 
+even if several language implementations of <b>HEALPix</b> are compiled.
+
+<P>
+<LI>
+ The <A HREF="#install:configure"><SPAN  style="font-family:monospace">configure</SPAN></A> script now supports
+an automated mode beside the usual interactive mode, and some environment variables
+can be used to customize its behavior in both modes 
+(eg, choice of compilers and their options).
+</UL>
+<A HREF=#top>    Back to Top</A><br><br>
+
+<h4><A ID="SECTION_360_12000000000000000"></A>
+<BR>
+<A ID="tex2html_360_2"
+  HREF="http://healpix.sourceforge.net/html/index_cxx.htm">C++</A>
+</h4>
+<UL><LI>
+ Link to the new and faster <A HREF="#install:libsharp:config"><SPAN  style="font-family:monospace">libsharp</SPAN></A> library
+  <LI>
+ Simpler configuration <A HREF="#install:cpp_config">with the systematic use of <SPAN  style="font-family:monospace">autotools</SPAN></A>
+  <LI>
+ The C++ binaries, libraries and header files now installed in 
+<SPAN  style="font-family:monospace">${HEALPIX}/bin</SPAN>, 
+<SPAN  style="font-family:monospace">${HEALPIX}/lib</SPAN> and 
+<SPAN  style="font-family:monospace">${HEALPIX}/include</SPAN> directories respectively.
+  <LI>
+ Added documentation for the module <SPAN  style="font-family:monospace">needlet_tool</SPAN>.
+</UL>
+<A HREF=#top>    Back to Top</A><br><br>
+
+<h4>Fortran 90 <A ID="tex2html_360_3"
+  HREF="./html/facilities.htm">facilities</A>
+and
+ 	<A ID="tex2html_360_4"
+  HREF="./html/subroutines.htm">subroutines</A>
+</h4>
+<UL><LI>
+ Link to the new and faster <A HREF="#install:libsharp:config"><SPAN  style="font-family:monospace">libsharp</SPAN></A> library
+  <LI>
+ Some external C routines replaced by Fortran 2003 extensions.
+</UL>
+<A HREF=#top>    Back to Top</A><br><br>
+
+<h4><A ID="SECTION_360_14000000000000000"></A>
+<BR>
+<A ID="tex2html_360_5"
+  HREF="./html/idl.htm">IDL</A>
+</h4>
+<UL><LI>
+ Faster <A ID="tex2html_360_6"
+  HREF="./html/idl_isynfast.htm"><SPAN  style="font-family:monospace">isynfast</SPAN></A>, <A ID="tex2html_360_7"
+  HREF="./html/idl_ianafast.htm"><SPAN  style="font-family:monospace">ianafast</SPAN></A>, <A ID="tex2html_360_8"
+  HREF="./html/idl_ismoothing.htm"><SPAN  style="font-family:monospace">ismoothing</SPAN></A>
+routines
+
+<LI>
+ addition of <A ID="tex2html_360_9"
+  HREF="./html/idl_outline_earth.htm"><SPAN  style="font-family:monospace">outline_earth</SPAN></A>
+to create a structure outlining Earth features such as coastlines, rivers, country boundaries, ...
+  <LI>
+ <A HREF="#idl:mollview"><kbd>azeqview, cartview, gnomview, mollview,
+orthview</kdb></A> visualization routines: support for color and thickness in <SPAN  style="font-family:monospace">outline</SPAN> keyword
+  <LI>
+ Update of the required
+    <A ID="tex2html_360_10"
+  HREF="https://idlastro.gsfc.nasa.gov/homepage.html"><SPAN  style="font-family:monospace">IDL-astron</SPAN> library</A>
+routines, and <A ID="tex2html_360_11"
+  HREF="http://www.idlcoyote.com"><SPAN  style="font-family:monospace">Coyote</SPAN></A>
+library
+    routines (2019-10-30).
+</UL>
+<A HREF=#top>    Back to Top</A><br><br>
+
+<h4><A ID="SECTION_360_15000000000000000"></A>
+<BR>
+<A ID="tex2html_360_12"
+  HREF="https://healpy.readthedocs.io/en/latest/">Python</A>
+</h4>
+<UL><LI>
+ Switch to 
+	<A ID="tex2html_360_13"
+  HREF="https://github.com/healpy/healpy/releases"><SPAN  style="font-family:monospace">healpy 1.13.0 </SPAN></A>
+(<A ID="tex2html_360_14"
+  HREF="https://github.com/healpy/healpy/blob/master/CHANGELOG.rst">CHANGELOG</A>)
+<UL><LI>
+
+different handling of default dtype in <SPAN  style="font-family:monospace">read_cl</SPAN>, <SPAN  style="font-family:monospace">write_cl</SPAN> and <SPAN  style="font-family:monospace">read_map</SPAN>
+<LI>
+ implemented <SPAN  style="font-family:monospace">dist2holes</SPAN>, distance from pixel center to closest invalid pixel
+<LI>
+ allow not-power-of-2 <SPAN CLASS="MATH"><I>N</I><SUB><I>side</I></SUB></SPAN> for RING
+</UL>
+</UL>
+<A HREF=#top>    Back to Top</A><br><br>
+
+
+<!-- *** 3.50 ********************************************** -->
 
 <h3><A ID="SECTION_350_10000000000000000">
 Bug corrections and Improvements in Version 3.50</A>
@@ -169,7 +314,7 @@ in <SPAN  style="font-family:monospace">configure</SPAN> script,
 allowing a proper compilation with g95.
 </UL>
 <A HREF=#top>    Back to Top</A><br><br>
-<P>
+
 
 <h4><A ID="SECTION_350_12000000000000000"></A>
 <BR>
@@ -187,7 +332,7 @@ replaced with <A ID="tex2html_350_13"
 for Line Integral Convolution code <SPAN  style="font-family:monospace">alice3</SPAN>
 </UL>
 <A HREF=#top>    Back to Top</A><br><br>
-<P>
+
 
 <h4><A ID="SECTION_350_13000000000000000"></A>
 <BR>
@@ -222,7 +367,7 @@ library
     routines (2018-09-27).
 </UL>
 <A HREF=#top>    Back to Top</A><br><br>
-<P>
+
 
 <h4><A ID="SECTION_350_14000000000000000"></A>
 <BR>
@@ -237,9 +382,9 @@ library
   HREF="https://github.com/healpy/healpy/blob/master/CHANGELOG.rst">CHANGELOG</A>)
 </UL>
 <A HREF=#top>    Back to Top</A><br><br>
-<P>
 
-<!-- ************************************************* -->
+
+<!-- *** 3.40 ********************************************** -->
 
 <h3><A id="SECTION_340_10000000000000000">
 Bug corrections and Improvements in Version 3.40</A>
@@ -264,7 +409,6 @@ The weights for power-of-2 values of <SPAN CLASS="MATH"><I>N</I><SUB><I>side</I>
 </UL>
 <A HREF=#top>    Back to Top</A><br><br>
 
-<P>
 
 <h4><A id="SECTION_340_12000000000000000"></A>
 <BR>
@@ -286,7 +430,6 @@ The weights for power-of-2 values of <SPAN CLASS="MATH"><I>N</I><SUB><I>side</I>
 </UL>
 <A HREF=#top>    Back to Top</A><br><br>
 
-<P>
 
 <h4><A id="SECTION_340_13000000000000000">
 Fortran 90 </A><A id="tex2html_340_3"

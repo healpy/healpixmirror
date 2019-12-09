@@ -50,7 +50,7 @@
               the first large release of the HEALPix software (Version 1.10).
               <br>
               <br>
-              The following releases of the HEALPix software (Versions 1.20 to 3.40) and the current one (Version 3.50) benefited
+              The following releases of the HEALPix software (Versions 1.20 to 3.50) and the current one (Version 3.60) benefited
               from:
 		<ul>
 		<li>
@@ -194,11 +194,11 @@
                       <li>    Tuhin 		Ghosh   	</li>
                       <li>    Giovanna 		Giardino   	</li>
                       <li>    Jean-Christophe 	Hamilton   	</li>
+		      <li>    Keiichi           Ishioka         </li>
                       <li>    Andrew 		Jaffe   	</li>
                       <li>    Tess 		Jaffe   	</li>
 		      <li>    Reijo 		Keskitalo 	</li>
-                      <li>    Alex Kim   			</li>
-                      <li>    Ted Kisner   			</li>
+                      <li>    Alex              Kim   		</li>
                     </ul>
                 </td>
 <!--
@@ -208,6 +208,7 @@
 -->
                 <td style="width:350px; vertical-align:top">
                     <ul>
+                      <li>    Ted               Kisner   	</li>
 		      <li>    Masakazu A.R. Kobayashi		</li>
 		      <li>    Eiichiro Komatsu			</li>
 		      <li>    Wayne Landsman			</li>
