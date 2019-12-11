@@ -251,7 +251,7 @@ processAutoList(){
 	    do_profile=1
 	    do_c=1
             ;;
-	    cxx)
+	    cxx|cpp)
 	    do_profile=1
 	    [ "$sharp_configured" = "0" ] && do_sharp=1 # only if not already configured
 	    do_cxx=1
@@ -536,6 +536,7 @@ C_config () {
 setSharpDefaults () {
 
     SHARPDIR=${HEALPIX}/src/common_libraries/libsharp
+    SHARPBLD=${SHARPDIR}/build
     npgc=`$CC -V 2>&1          | ${GREP} PGI | ${WC} -l` # PGI C
     if [ $npgc != 0 ] ; then
 	SHARP_COPT="${SHARP_COPT--O3 -fast -mp}" # -O3 -fast -mp  unless already defined
@@ -571,11 +572,14 @@ askSharpUserMisc () {
 editSharpMakefile () {
 
     SHARPLDIR=${SHARPPREFIX}/lib
-    SHARPCDIR=src/common_libraries/libsharp
+    SHARPCDIR=${HEALPIX}/src/common_libraries/libsharp
+    SHARPBLD=${SHARPCDIR}/build
     echo " "
-    echo "Running configure in ${SHARPCDIR} ... "
-    (cd ${SHARPCDIR}; \
-    CC="${CC}" CFLAGS="${SHARP_COPT}" LDFLAGS="${LDFLAGS}" ./configure --prefix=${SHARPPREFIX} || crashAndBurn)
+    echo "Running configure in ${SHARPBLD} ... "
+    (\rm -rf ${SHARPBLD}; \
+    mkdir ${SHARPBLD}; \
+    cd ${SHARPBLD}; \
+    CC="${CC}" CFLAGS="${SHARP_COPT}" LDFLAGS="${LDFLAGS}" ${SHARPCDIR}/configure --prefix=${SHARPPREFIX} || crashAndBurn)
     echo "edit top Makefile for libsharp ..."
     mv -f Makefile Makefile_tmp
     ${CAT} Makefile_tmp |\
@@ -585,7 +589,8 @@ editSharpMakefile () {
 	${SED} "s|^DISTCLEAN\(.*\) sharp-void \(.*\)|DISTCLEAN\1 sharp-distclean \2|" |\
 	${SED} "s|^TIDY\(.*\) sharp-void \(.*\)|TIDY\1 sharp-tidy \2|" |\
         ${SED} "s|^SHARPLDIR.*|SHARPLDIR=${SHARPLDIR}|" |\
-	${SED} "s|^# sharp configuration.*|# sharp configuration: (cd ${SHARPCDIR}; CC=\"${CC}\" CFLAGS=\"${SHARP_COPT}\" LDFLAGS=\"${LDFLAGS}\" ./configure --prefix=${SHARPPREFIX})|" > Makefile
+	${SED} "s|^SHARPBLD.*|SHARPBLD=${SHARPBLD}|" |\
+	${SED} "s|^# sharp configuration.*|# sharp configuration: (\rm -rf ${SHARPBLD}; mkdir ${SHARPBLD}; cd ${SHARPBLD}; CC=\"${CC}\" CFLAGS=\"${SHARP_COPT}\" LDFLAGS=\"${LDFLAGS}\" ${SHARPCDIR}/configure --prefix=${SHARPPREFIX})|" > Makefile
 
     echo " done."
     edited_makefile=1
@@ -613,6 +618,7 @@ test_Sharp () {
 setCppDefaults () {
 
     CXXDIR=${HEALPIX}/src/cxx
+    CXXBLD=${CXXDIR}/build
     CFLAGS="-O3 -fopenmp"
     CXXFLAGS="${CXXFLAGS--O3 -fopenmp}" # -O3 -fopenmp unless already defined
 
@@ -674,9 +680,11 @@ askCppUserMisc () {
 editCppMakefile () {
 
     echo " "
-    echo "Running configure in src/cxx ... "
-    (cd src/cxx; \
-    CC="${CC}" CFLAGS="${CFLAGS}" CXX="${CXX}" CXXFLAGS="${CXXFLAGS}" SHARP_CFLAGS="-I${HEALPIX}/include" SHARP_LIBS="-L${HEALPIX}/lib -lsharp" CFITSIO_CFLAGS="${CFITSIO_CFLAGS}" CFITSIO_LIBS="${CFITSIO_LIBS}" ./configure --prefix=${CXXPREFIX} || crashAndBurn)
+    echo "Running configure in ${CXXBLD} ... "
+    (\rm -rf ${CXXBLD} ; \
+    mkdir ${CXXBLD} ; \
+    cd ${CXXBLD}; \
+    CC="${CC}" CFLAGS="${CFLAGS}" CXX="${CXX}" CXXFLAGS="${CXXFLAGS}" SHARP_CFLAGS="-I${HEALPIX}/include" SHARP_LIBS="-L${HEALPIX}/lib -lsharp" CFITSIO_CFLAGS="${CFITSIO_CFLAGS}" CFITSIO_LIBS="${CFITSIO_LIBS}" ${CXXDIR}/configure --prefix=${CXXPREFIX} || crashAndBurn)
     echo "edit top Makefile for C++ ..."
     mv -f Makefile Makefile_tmp
     ${CAT} Makefile_tmp |\
@@ -685,7 +693,8 @@ editCppMakefile () {
 	${SED} "s|^CLEAN\(.*\) cpp-void \(.*\)|CLEAN\1 cpp-clean \2|" |\
 	${SED} "s|^DISTCLEAN\(.*\) cpp-void \(.*\)|DISTCLEAN\1 cpp-distclean \2|" |\
 	${SED} "s|^TIDY\(.*\) cpp-void \(.*\)|TIDY\1 cpp-tidy \2|" |\
-	${SED} "s|^# C++ configuration.*$|# C++ configuration: (cd src/cxx; CC=\"${CC}\" CFLAGS=\"${CFLAGS}\" CXX=\"${CXX}\" CXXFLAGS=\"${CXXFLAGS}\"  SHARP_CFLAGS=\"-I${HEALPIX}/include\" SHARP_LIBS=\"-L${HEALPIX}/lib -lsharp\" CFITSIO_CFLAGS=\"${CFITSIO_CFLAGS}\" CFITSIO_LIBS=\"${CFITSIO_LIBS}\" ./configure --prefix=${CXXPREFIX})|"> Makefile
+	${SED} "s|^CXXBLD.*|CXXBLD=${CXXBLD}|" |\
+	${SED} "s|^# C++ configuration.*$|# C++ configuration: (\rm -rf ${CXXBLD} ; mkdir ${CXXBLD} ; cd ${CXXBLD}; CC=\"${CC}\" CFLAGS=\"${CFLAGS}\" CXX=\"${CXX}\" CXXFLAGS=\"${CXXFLAGS}\"  SHARP_CFLAGS=\"-I${HEALPIX}/include\" SHARP_LIBS=\"-L${HEALPIX}/lib -lsharp\" CFITSIO_CFLAGS=\"${CFITSIO_CFLAGS}\" CFITSIO_LIBS=\"${CFITSIO_LIBS}\" ${CXXDIR}/configure --prefix=${CXXPREFIX})|"> Makefile
 
     echo " done."
     edited_makefile=1

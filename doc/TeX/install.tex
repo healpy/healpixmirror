@@ -641,7 +641,10 @@ The environment variables \texttt{PYTHON}, \texttt{C} and \texttt{CXX} can be us
 Note that during the compilation with \texttt{make} (see below), the 
  \texttt{src/healpy/setup.py} Python script will be invoked to automatically prompt a {\em fresh} compilation of the
  \texttt{src/cxx/*} libraries, with all the options necessary to Python linkage, and
- can be done independently of the C++ installation described above.
+ can be done independently of the C++ installation described above.\\
+Note also that the \texttt{healpy} compilation will very likely 
+require an active network connection in order
+to download on the fly some of the required Python ancillary packages.
 
 \mytarget{install:libsharp:config}%
 \subsubsection{libsharp library}%
@@ -679,7 +682,7 @@ Specific packages can be compiled with the respective commands
    make healpy-all
 \end{verbatim}
 
-To perform several compilation jobs simultaneously, the command \texttt{make -j [jobs]}
+To perform several compilation jobs simultaneously, the command \texttt{make -j }\textit{[number\_of\_jobs]}
 can be used.
 
 Please neglect any possible warnings at compile time. If you run into

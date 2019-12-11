@@ -427,6 +427,7 @@ echo "https://sourceforge.net/projects/healpix"  > ${rnfile}
 allsums ${tar_package} >> ${rnfile}
 allsums ${zip_package} >> ${rnfile}
 
+echo "sources: https://healpix.sourceforge.io/src/${version}/" >> ${rnfile}
 echo "SVN url: svn://svn.code.sf.net/p/healpix/code/branches/" >> ${rnfile}
 echo "SVN revision: ${revision}" >> ${rnfile}
 cat $rnfile

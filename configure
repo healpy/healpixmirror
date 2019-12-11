@@ -104,6 +104,7 @@ for i in $@ ; do
 	echo "     c:       configures C   + required items, same as profile,c;"
 	echo "     cxx:     configures C++ + required items, same as profile,cxx,"
 	echo "          libsharp will also be configured if it was not previously done;"
+	echo "     cpp:     same as cxx;"
 	echo "     f90:     configures F90 + required items, same as profile,f90"
 	echo "          libsharp will also be configured if it was not previously done;"
 	echo "     idl:     configures IDL + required items, same as profile,idl;"

@@ -83,10 +83,11 @@ C_MKFLAGS = CC="$(C_CC)" PIC="$(C_PIC)" OPT="$(C_OPT)" \
 
 # ------------------------------ variables for libsharp ---------------------
 # sharp configuration
+SHARPBLD = 
 
 # ------------------------------ variables for C++ --------------------------
 # C++ configuration
-
+CXXBLD = 
 
 # ------------------------------ variables for Python healpy --------------------------
 
@@ -111,6 +112,9 @@ distclean: $(DISTCLEAN)
 	$(RM) Makefile
 	$(RM) Makefile_tmp
 	$(RM) Makefile_bk*
+	$(RM) -r include
+	$(RM) -r lib
+	
 
 # ------------------------------- F90 rules ----------------------------
 
@@ -123,7 +127,7 @@ f90-all: sharp-all $(f90-libs) $(f90-progs)
 # itemized list instead of loop to allow parallel compiling
 
 # libraries
-f90-modules:
+f90-modules: sharp-all
 	@cd src/f90/mod; $(MAKE) $(F90_MKFLAGS)
 
 f90-libgif: f90-modules
@@ -202,7 +206,6 @@ f90-vclean: f90-clean
 	$(RM) $(F90_INCDIR)/*.$(F90_MOD)
 	$(RM) $(F90_INCDIR)/*.pc $(F90_INCDIR)/*.pcl $(F90_LIBDIR)/*.pc
 	$(RM) $(F90_LIBDIR)/*.a $(F90_LIBDIR)/*$(F90_LIBSUFFIX) $(F90_LIBDIR)/*.so $(F90_LIBDIR)/*.dylib 
-	
 
 f90-tidy: f90-vclean
 	$(RM) Makefile.bak test/test*
@@ -262,24 +265,24 @@ c-void:
 # ------------------------------- libsharp rules ----------------------------
 
 sharp-all:
-	@cd src/common_libraries/libsharp; \
+	@cd $(SHARPBLD); \
 	$(MAKE) install; \
-	cd ../../..
+	cd ../../../..
 
 sharp-test: cpp-all
-	@cd src/common_libraries/libsharp;   \
+	@cd $(SHARPBLD);   \
 	$(MAKE) check ; \
-	cd ../../..
+	cd ../../../..
 
 sharp-clean:
-	@cd src/common_libraries/libsharp; \
+	@cd $(SHARPBLD); \
 	$(MAKE) clean; \
-	cd ../../..
+	cd ../../../..
 
 sharp-tidy:
-	@cd src/common_libraries/libsharp; \
+	@cd $(SHARPBLD); \
 	$(MAKE) distclean ; \
-	cd ../../..
+	cd ../../../..
 
 sharp-distclean: sharp-tidy
 
@@ -288,24 +291,24 @@ sharp-void:
 # ------------------------------- C++ rules ----------------------------
 
 cpp-all: sharp-all
-	@cd src/cxx; \
+	@cd $(CXXBLD); \
 	$(MAKE) install; \
-	cd ../..
+	cd ../../..
 
 cpp-test: cpp-all
-	@cd src/cxx;   \
+	@cd $(CXXBLD);   \
 	$(MAKE) check ; \
-	cd ../..
+	cd ../../..
 
 cpp-clean:
-	@cd src/cxx ; \
+	@cd $(CXXBLD); \
 	$(MAKE) clean; \
-	cd ../..
+	cd ../../..
 
 cpp-tidy:
-	@cd src/cxx ; \
+	@cd $(CXXBLD) ; \
 	$(MAKE) distclean ; \
-	cd ../..
+	cd ../../..
 
 cpp-distclean: cpp-tidy
 
