@@ -475,6 +475,7 @@ editCMakefile () {
 	${SED} "s|^C_EXTRA_LIB.*$|C_EXTRA_LIB = $CFITSIOCURL|" |\
 	${SED} "s|^C_WLRPATH.*$|C_WLRPATH = $WLRPATH|" |\
 	${SED} "s|^C_ALL.*|C_ALL     = ${clibtypes}|" |\
+	${SED} "s|^HEALPIX=.*$|HEALPIX	= $HEALPIX|" |\
 	${SED} "s|^ALL\(.*\) c-void \(.*\)|ALL\1 c-all \2|" |\
 	${SED} "s|^TESTS\(.*\) c-void \(.*\)|TESTS\1 c-test \2|" |\
 	${SED} "s|^CLEAN\(.*\) c-void \(.*\)|CLEAN\1 c-clean \2|" |\
@@ -588,6 +589,7 @@ editSharpMakefile () {
 	${SED} "s|^CLEAN\(.*\) sharp-void \(.*\)|CLEAN\1 sharp-clean \2|" |\
 	${SED} "s|^DISTCLEAN\(.*\) sharp-void \(.*\)|DISTCLEAN\1 sharp-distclean \2|" |\
 	${SED} "s|^TIDY\(.*\) sharp-void \(.*\)|TIDY\1 sharp-tidy \2|" |\
+	${SED} "s|^HEALPIX=.*$|HEALPIX	= $HEALPIX|" |\
         ${SED} "s|^SHARPLDIR.*|SHARPLDIR=${SHARPLDIR}|" |\
 	${SED} "s|^SHARPBLD.*|SHARPBLD=${SHARPBLD}|" |\
 	${SED} "s|^# sharp configuration.*|# sharp configuration: (\rm -rf ${SHARPBLD}; mkdir ${SHARPBLD}; cd ${SHARPBLD}; CC=\"${CC}\" CFLAGS=\"${SHARP_COPT}\" LDFLAGS=\"${LDFLAGS}\" ${SHARPCDIR}/configure --prefix=${SHARPPREFIX})|" > Makefile
@@ -680,11 +682,12 @@ askCppUserMisc () {
 editCppMakefile () {
 
     echo " "
-    echo "Running configure in ${CXXBLD} ... "
-    (\rm -rf ${CXXBLD} ; \
-    mkdir ${CXXBLD} ; \
-    cd ${CXXBLD}; \
-    CC="${CC}" CFLAGS="${CFLAGS}" CXX="${CXX}" CXXFLAGS="${CXXFLAGS}" SHARP_CFLAGS="-I${HEALPIX}/include" SHARP_LIBS="-L${HEALPIX}/lib -lsharp" CFITSIO_CFLAGS="${CFITSIO_CFLAGS}" CFITSIO_LIBS="${CFITSIO_LIBS}" ${CXXDIR}/configure --prefix=${CXXPREFIX} || crashAndBurn)
+#     echo "Running configure in ${CXXBLD} ... "
+#     (\rm -rf ${CXXBLD}; \
+#     mkdir ${CXXBLD}; \
+#     cd ${CXXBLD}; \
+#     CC="${CC}" CFLAGS="${CFLAGS}" CXX="${CXX}" CXXFLAGS="${CXXFLAGS}" SHARP_CFLAGS="-I${HEALPIX}/include" SHARP_LIBS="-L${HEALPIX}/lib -lsharp" CFITSIO_CFLAGS="${CFITSIO_CFLAGS}" CFITSIO_LIBS="${CFITSIO_LIBS}" ${CXXDIR}/configure --prefix=${CXXPREFIX} || crashAndBurn)
+
     echo "edit top Makefile for C++ ..."
     mv -f Makefile Makefile_tmp
     ${CAT} Makefile_tmp |\
@@ -693,9 +696,21 @@ editCppMakefile () {
 	${SED} "s|^CLEAN\(.*\) cpp-void \(.*\)|CLEAN\1 cpp-clean \2|" |\
 	${SED} "s|^DISTCLEAN\(.*\) cpp-void \(.*\)|DISTCLEAN\1 cpp-distclean \2|" |\
 	${SED} "s|^TIDY\(.*\) cpp-void \(.*\)|TIDY\1 cpp-tidy \2|" |\
-	${SED} "s|^CXXBLD.*|CXXBLD=${CXXBLD}|" |\
-	${SED} "s|^# C++ configuration.*$|# C++ configuration: (\rm -rf ${CXXBLD} ; mkdir ${CXXBLD} ; cd ${CXXBLD}; CC=\"${CC}\" CFLAGS=\"${CFLAGS}\" CXX=\"${CXX}\" CXXFLAGS=\"${CXXFLAGS}\"  SHARP_CFLAGS=\"-I${HEALPIX}/include\" SHARP_LIBS=\"-L${HEALPIX}/lib -lsharp\" CFITSIO_CFLAGS=\"${CFITSIO_CFLAGS}\" CFITSIO_LIBS=\"${CFITSIO_LIBS}\" ${CXXDIR}/configure --prefix=${CXXPREFIX})|"> Makefile
+	${SED} "s|^HEALPIX=.*$|HEALPIX	= $HEALPIX|" |\
+	${SED} "s|^CXXBLD.*|CXXBLD=${CXXBLD}|" > Makefile
 
+#     mv -f Makefile Makefile_tmp
+#     ${CAT} Makefile_tmp |\
+# 	${SED} "s|^# C++ configuration.*$|# C++ configuration: (\rm -rf ${CXXBLD} ; mkdir ${CXXBLD} ; cd ${CXXBLD}; CC=\"${CC}\" CFLAGS=\"${CFLAGS}\" CXX=\"${CXX}\" CXXFLAGS=\"${CXXFLAGS}\"  SHARP_CFLAGS=\"-I${HEALPIX}/include\" SHARP_LIBS=\"-L${HEALPIX}/lib -lsharp\" CFITSIO_CFLAGS=\"${CFITSIO_CFLAGS}\" CFITSIO_LIBS=\"${CFITSIO_LIBS}\" ${CXXDIR}/configure --prefix=${CXXPREFIX})|"> Makefile
+
+    mv -f Makefile Makefile_tmp
+    ${CAT} Makefile_tmp |\
+	${SED} "s|^cpp-config.*$|cpp-config: sharp-all\\
+	mkdir -p \$(CXXBLD); \\\ \\
+	\$(RM) -r  \$(CXXBLD)/*; \\\ \\
+	cd \$(CXXBLD); \\\\ \\
+	CC=\"${CC}\" CFLAGS=\"${CFLAGS}\" CXX=\"${CXX}\" CXXFLAGS=\"${CXXFLAGS}\"  SHARP_CFLAGS=\"-I${HEALPIX}/include\" SHARP_LIBS=\"-L${HEALPIX}/lib -lsharp\" CFITSIO_CFLAGS=\"${CFITSIO_CFLAGS}\" CFITSIO_LIBS=\"${CFITSIO_LIBS}\" ${CXXDIR}/configure --prefix=${CXXPREFIX}; \\\ \\
+	cd \$(HEALPIX)|" > Makefile
     echo " done."
     edited_makefile=1
 }
@@ -881,6 +896,7 @@ editHealpyMakefile () {
 	${SED} "s|^TESTS\(.*\) healpy-void\(.*\)|TESTS\1 healpy-test \2|" |\
 	${SED} "s|^CLEAN\(.*\) healpy-void\(.*\)|CLEAN\1 healpy-clean \2|" |\
 	${SED} "s|^DISTCLEAN\(.*\) healpy-void\(.*\)|DISTCLEAN\1 healpy-distclean \2|" |\
+	${SED} "s|^HEALPIX=.*$|HEALPIX	= $HEALPIX|" |\
 	${SED} "s|^TIDY\(.*\) healpy-void\(.*\)|TIDY\1 healpy-tidy \2|" > Makefile
 
     echo " done."

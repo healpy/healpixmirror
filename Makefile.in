@@ -106,15 +106,15 @@ clean: $(CLEAN)
 
 
 tidy: $(TIDY)
+	$(RM) include/*
+	$(RM) lib/*
 
-
-distclean: $(DISTCLEAN)
+distclean: $(DISTCLEAN) tidy
 	$(RM) Makefile
 	$(RM) Makefile_tmp
 	$(RM) Makefile_bk*
 	$(RM) -r include
 	$(RM) -r lib
-	
 
 # ------------------------------- F90 rules ----------------------------
 
@@ -128,45 +128,71 @@ f90-all: sharp-all $(f90-libs) $(f90-progs)
 
 # libraries
 f90-modules: sharp-all
-	@cd src/f90/mod; $(MAKE) $(F90_MKFLAGS)
+	@cd src/f90/mod; \
+	$(MAKE) $(F90_MKFLAGS); \
+	cd $(HEALPIX)
 
 f90-libgif: f90-modules
-	@cd src/f90/lib; $(MAKE) $(F90_MKFLAGS)
+	@cd src/f90/lib; \
+	$(MAKE) $(F90_MKFLAGS); \
+	cd $(HEALPIX)
 
 # visualization code
 map2gif: $(f90-libs)
-	@cd src/f90/$@; $(MAKE) $(F90_MKFLAGS)
+	@cd src/f90/$@; \
+	$(MAKE) $(F90_MKFLAGS); \
+	cd $(HEALPIX)
 
 # processing codes
 anafast: $(f90-libs)
-	@cd src/f90/$@; $(MAKE) $(F90_MKFLAGS)
+	@cd src/f90/$@; \
+	$(MAKE) $(F90_MKFLAGS); \
+	cd $(HEALPIX)
 
 smoothing: $(f90-libs)
-	@cd src/f90/$@; $(MAKE) $(F90_MKFLAGS)
+	@cd src/f90/$@; \
+	$(MAKE) $(F90_MKFLAGS); \
+	cd $(HEALPIX)
 
 synfast: $(f90-libs)
-	@cd src/f90/$@; $(MAKE) $(F90_MKFLAGS)
+	@cd src/f90/$@; \
+	$(MAKE) $(F90_MKFLAGS); \
+	cd $(HEALPIX)
 
 ud_grade: $(f90-libs)
-	@cd src/f90/$@; $(MAKE) $(F90_MKFLAGS)
+	@cd src/f90/$@; \
+	$(MAKE) $(F90_MKFLAGS); \
+	cd $(HEALPIX)
 
 hotspot: $(f90-libs)
-	@cd src/f90/$@; $(MAKE) $(F90_MKFLAGS)
+	@cd src/f90/$@; \
+	$(MAKE) $(F90_MKFLAGS); \
+	cd $(HEALPIX)
 
 plmgen: $(f90-libs)
-	@cd src/f90/$@; $(MAKE) $(F90_MKFLAGS)
+	@cd src/f90/$@; \
+	$(MAKE) $(F90_MKFLAGS); \
+	cd $(HEALPIX)
 
 alteralm: $(f90-libs)
-	@cd src/f90/$@; $(MAKE) $(F90_MKFLAGS)
+	@cd src/f90/$@; \
+	$(MAKE) $(F90_MKFLAGS); \
+	cd $(HEALPIX)
 
 median_filter: $(f90-libs)
-	@cd src/f90/$@; $(MAKE) $(F90_MKFLAGS)
+	@cd src/f90/$@; \
+	$(MAKE) $(F90_MKFLAGS); \
+	cd $(HEALPIX)
 
 ngsims_full_sky: $(f90-libs)
-	@cd src/f90/$@; $(MAKE) $(F90_MKFLAGS)
+	@cd src/f90/$@; \
+	$(MAKE) $(F90_MKFLAGS); \
+	cd $(HEALPIX)
 
 process_mask: $(f90-libs)
-	@cd src/f90/$@; $(MAKE) $(F90_MKFLAGS)
+	@cd src/f90/$@; \
+	$(MAKE) $(F90_MKFLAGS); \
+	cd $(HEALPIX)
 
 f90-test: f90-all
 	@cd test; \
@@ -175,26 +201,26 @@ f90-test: f90-all
 	$(F90_BINDIR)/map2gif -inp test_map.fits -out test_map.gif -bar t -ttl 'CMB Map'; \
 	$(F90_BINDIR)/smoothing smo.par; \
 	$(F90_BINDIR)/map2gif -inp test_sm.fits -out test_sm.gif -bar t -ttl 'Smoothed CMB Map'; \
-	$(F90_BINDIR)/ud_grade udg.par ; \
+	$(F90_BINDIR)/ud_grade udg.par; \
 	$(F90_BINDIR)/map2gif -inp test_LOres.fits -out test_LOres.gif -bar t -ttl 'Degraded Map'; \
-	$(F90_BINDIR)/hotspot hot.par ; \
+	$(F90_BINDIR)/hotspot hot.par; \
 	$(F90_BINDIR)/map2gif -inp test_ext.fits -out test_ext.gif -bar t -ttl 'Extrema Only Map'; \
 	$(F90_BINDIR)/anafast ana.par; \
-        $(F90_BINDIR)/anafast ana2maps.par ; \
-        $(F90_BINDIR)/anafast ana_w2.par ; \
+        $(F90_BINDIR)/anafast ana2maps.par; \
+        $(F90_BINDIR)/anafast ana_w2.par; \
 	$(F90_BINDIR)/alteralm alt.par; \
-	$(F90_BINDIR)/median_filter med.par ; \
+	$(F90_BINDIR)/median_filter med.par; \
 	$(F90_BINDIR)/map2gif -inp test_mf.fits -out test_mf.gif -bar t -ttl 'Median Filtered Map'; \
-	$(F90_BINDIR)/sky_ng_sim ngfs.par ; \
+	$(F90_BINDIR)/sky_ng_sim ngfs.par; \
 	$(F90_BINDIR)/map2gif -inp test_ngfs.fits -out test_ngfs.gif -bar t -ttl 'Non-Gaussian Map'; \
-	$(F90_BINDIR)/process_mask prmask.par ; \
+	$(F90_BINDIR)/process_mask prmask.par; \
 	$(F90_BINDIR)/map2gif -inp test_distmask.fits -out test_distmask.gif -bar t -ttl 'Distance to mask border'; \
-	echo "Healpix F90 tests done" ; \
+	echo "Healpix F90 tests done"; \
 	echo "success rate: `ls -1 test*fits | wc -l`/12"
 
 f90-clean:
 	for p in $(f90-progs) lib mod; do \
-	$(RM) src/f90/$$p/*.o src/f90/$$p/*.$(F90_MOD) src/f90/$$p/lib*.a src/f90/$$p/*.pc src/f90/$$p/*.pcl src/f90/$$p/*.il ; \
+	$(RM) src/f90/$$p/*.o src/f90/$$p/*.$(F90_MOD) src/f90/$$p/lib*.a src/f90/$$p/*.pc src/f90/$$p/*.pcl src/f90/$$p/*.il; \
 	done
 	$(RM) -r $(F90_BUILDDIR)
 
@@ -223,42 +249,42 @@ c-all: $(C_ALL)
 
 c-static:      # all flavors
 	@cd src/C/subs; \
-	$(MAKE) static  $(C_MKFLAGS)  ; \
-	$(MAKE) install $(C_MKFLAGS)  ; \
-	cd ../../..
+	$(MAKE) static  $(C_MKFLAGS); \
+	$(MAKE) install $(C_MKFLAGS); \
+	cd $(HEALPIX)
 
 c-dynamic:     # Mac OS only
 	@cd src/C/subs; \
-	$(MAKE) dynamic $(C_MKFLAGS) PIC="$(C_PIC)" ; \
-	$(MAKE) install $(C_MKFLAGS) PIC="$(C_PIC)" ; \
-	cd ../../..
+	$(MAKE) dynamic $(C_MKFLAGS) PIC="$(C_PIC)"; \
+	$(MAKE) install $(C_MKFLAGS) PIC="$(C_PIC)"; \
+	cd $(HEALPIX)
 
 c-shared:      # Other Unix/Linux
 	@cd src/C/subs; \
-	$(MAKE) shared  $(C_MKFLAGS) PIC="$(C_PIC)" ; \
-	$(MAKE) install $(C_MKFLAGS) PIC="$(C_PIC)" ; \
-	cd ../../..
+	$(MAKE) shared  $(C_MKFLAGS) PIC="$(C_PIC)"; \
+	$(MAKE) install $(C_MKFLAGS) PIC="$(C_PIC)"; \
+	cd $(HEALPIX)
 
 c-test:    # will only test *static* library
 	@cd src/C/subs; \
-	$(MAKE) static  $(C_MKFLAGS)  ; \
-	$(MAKE) tests   $(C_MKFLAGS)  ; \
-	cd ../../..
+	$(MAKE) static  $(C_MKFLAGS); \
+	$(MAKE) tests   $(C_MKFLAGS); \
+	cd $(HEALPIX)
 
 c-clean:
 	@cd src/C/subs; \
 	$(MAKE) clean $(C_MKFLAGS); \
-	cd ../../..
+	cd $(HEALPIX)
 
 c-tidy:
 	@cd src/C/subs; \
 	$(MAKE) tidy $(C_MKFLAGS); \
-	cd ../../..
+	cd $(HEALPIX)
 
 c-distclean:
 	@cd src/C/subs; \
 	$(MAKE) distclean $(C_MKFLAGS); \
-	cd ../../..
+	cd $(HEALPIX)
 
 c-void:
 
@@ -267,22 +293,23 @@ c-void:
 sharp-all:
 	@cd $(SHARPBLD); \
 	$(MAKE) install; \
-	cd ../../../..
+	cd $(HEALPIX)
 
 sharp-test: cpp-all
 	@cd $(SHARPBLD);   \
-	$(MAKE) check ; \
-	cd ../../../..
+	$(MAKE) check; \
+	cd $(HEALPIX)
 
 sharp-clean:
 	@cd $(SHARPBLD); \
 	$(MAKE) clean; \
-	cd ../../../..
+	cd $(HEALPIX)
 
 sharp-tidy:
 	@cd $(SHARPBLD); \
-	$(MAKE) distclean ; \
-	cd ../../../..
+	$(MAKE) distclean; \
+	cd $(HEALPIX)
+	$(RM) -r $(SHARPBLD)
 
 sharp-distclean: sharp-tidy
 
@@ -290,25 +317,28 @@ sharp-void:
 
 # ------------------------------- C++ rules ----------------------------
 
-cpp-all: sharp-all
+cpp-config: sharp-all
+
+cpp-all: sharp-all cpp-config
 	@cd $(CXXBLD); \
 	$(MAKE) install; \
-	cd ../../..
+	cd $(HEALPIX)
 
 cpp-test: cpp-all
 	@cd $(CXXBLD);   \
-	$(MAKE) check ; \
-	cd ../../..
+	$(MAKE) check; \
+	cd $(HEALPIX)
 
 cpp-clean:
 	@cd $(CXXBLD); \
 	$(MAKE) clean; \
-	cd ../../..
+	cd $(HEALPIX)
 
 cpp-tidy:
-	@cd $(CXXBLD) ; \
-	$(MAKE) distclean ; \
-	cd ../../..
+	@cd $(CXXBLD); \
+	$(MAKE) distclean; \
+	cd $(HEALPIX)
+	$(RM) -r $(CXXBLD)
 
 cpp-distclean: cpp-tidy
 
@@ -318,19 +348,19 @@ cpp-void:
 
 healpy-all:
 	@cd src/healpy; \
-	$(HPY_VARS) $(HPY_PYTHON) $(HPY_SETUP) build ; \
+	$(HPY_VARS) $(HPY_PYTHON) $(HPY_SETUP) build; \
 	$(HPY_PYTHON) $(HPY_SETUP) install --user --prefix=; \
-	cd ../..
+	cd $(HEALPIX)
 
 healpy-test: healpy-all
-	@cd /tmp ; \
-	$(HPY_PYTHON) -c "import pylab; import healpy; import numpy ; hpv=healpy.__version__ ; print ('\n\n Welcome to Healpy %s! \n\n'%(hpv)); healpy.mollview(numpy.arange(12),title='Healpy %s'%(hpv)); pylab.show()" ; \
+	@cd /tmp; \
+	$(HPY_PYTHON) -c "import pylab; import healpy; import numpy; hpv=healpy.__version__; print ('\n\n Welcome to Healpy %s! \n\n'%(hpv)); healpy.mollview(numpy.arange(12),title='Healpy %s'%(hpv)); pylab.show()"; \
 	cd $(HEALPIX)
 
 healpy-clean:
-	@cd src/healpy ; \
-	$(HPY_PYTHON) $(HPY_SETUP) clean --all ; \
-	cd ../..
+	@cd src/healpy; \
+	$(HPY_PYTHON) $(HPY_SETUP) clean --all; \
+	cd $(HEALPIX)
 
 healpy-tidy: healpy-clean
 

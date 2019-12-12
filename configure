@@ -30,14 +30,14 @@ HPXVERSION=3.50
 usage="Usage: ./$(basename $0) ['?'|-h|-v] [-L] [--auto=<list>]"
 usage2="Type    ./$(basename $0) -h    for extended help"
 usage3=" If the environment variables\n\
-        CC,            (used in C/sharp/C++/F90/healpy) \n\
+        CC,            (used in C,sharp,C++,F90,healpy) \n\
         C_FITS, C_SHARED       (C)                      \n\
-        CXX,                           (C++/    healpy) \n\
+        CXX,                           (C++,    healpy) \n\
         CXXFLAGS                       (C++)            \n\
         SHARP_COPT               (sharp)                \n\
         FC, F_DIRSUFF, F_OPT, F_PARAL, F_SHARED   (F90) \n\
-        FITSDIR,               (C/      C++/F90)        \n\
-        FITSINC,               (C/      C++)            \n\
+        FITSDIR,               (C,      C++,F90)        \n\
+        FITSINC,               (C,      C++)            \n\
         PYTHON                                 (healpy) \n\
         PROFILE_EDIT           (profile)                \n\
         papersize, ps_com, pdf_com, gif_com       (IDL) \n\

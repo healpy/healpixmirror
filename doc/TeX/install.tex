@@ -463,6 +463,7 @@ among
 \item    \texttt{c}:       configures C and the required items, same as \texttt{profile,c};
 \item    \texttt{cxx}:     configures C++ and the required items, same as \texttt{profile,cxx},\\
  libsharp will also be configured if it was not previously done;
+\item    \texttt{cpp}:     same as \texttt{cxx} (see above);
 \item    \texttt{f90}:     configures F90 and the required items, same as \texttt{profile,f90},\\
  libsharp will also be configured if it was not previously done;
 \item    \texttt{idl}:     configures IDL and the required items, same as \texttt{profile,idl};
@@ -472,12 +473,12 @@ among
 \end{itemize}
 
 \item If the environment variables 
-      \texttt{CC}                 (C compiler, relevant for C/C++/F90/python/sharp),
+      \texttt{CC}                 (C compiler, relevant for C,C++,F90,healpy,sharp),
       \texttt{C\_FITS}, \texttt{C\_SHARED} (\mylink{install:C:config}{C}),
       \texttt{CXX}, \texttt{CXXFLAGS}      (\mylink{install:cpp_config}{C++}),
       \texttt{FC},  \texttt{F\_DIRSUFF}, \texttt{F\_OPT}, 
       \texttt{F\_PARAL}, \texttt{F\_SHARED}         (\mylink{install:f90:config}{F90}),
-      \texttt{FITSDIR},   \texttt{FITSINC}   (C/C++/F90),
+      \texttt{FITSDIR},   \texttt{FITSINC}   (C,C++,F90),
       \texttt{PYTHON}             (\mylink{install:healpy:config}{healpy}),
       \texttt{PROFILE\_EDIT} (\mylink{install:profile}{profile}),
       \texttt{SHARP\_COPT} (\mylink{install:libsharp:config}{sharp}),
@@ -523,8 +524,8 @@ it will also change your default system profile during installation to
 automatically source this profile. If you do not agree to this change 
 (or set the \mylink{install:configure:boolean}{boolean} environment variable \texttt{PROFILE\_EDIT} to a false value),
 you will need to explicitly source the configuration file above for any session in
-which you intend to run \healpix facilities. {\bf In particular, you will
-have to make sure that the \texttt{HEALPIX} system variable is correctly
+which you intend to run \healpix facilities. 
+\textbf{In particular, you will have to make sure that the \texttt{HEALPIX} system variable is correctly
 defined (as the full path to the \healpix directory) before running
 the package}.
 
