@@ -604,7 +604,18 @@ Sharp_config () {
     askSharpUserMisc
     editSharpMakefile
 }
+#-------------
+Sharp_install () {
+    echo "Installing libsharp"
+    makejobs=''
+    ngnumake=`${MAKE} -v 2>&1   | ${GREP} GNU | ${WC} -l`
+    [ $ngnumake != 0 ] && makejobs='-j'  # parallel make for GNUmake
+    cd ${SHARPBLD}
+    ${MAKE} ${makejobs} install || crashAndBurn
+    cd ${HEALPIX}
+}
 
+#-------------
 test_Sharp () {
     sharp_configured=0
     if [ -s Makefile ] ; then
@@ -682,11 +693,11 @@ askCppUserMisc () {
 editCppMakefile () {
 
     echo " "
-#     echo "Running configure in ${CXXBLD} ... "
-#     (\rm -rf ${CXXBLD}; \
-#     mkdir ${CXXBLD}; \
-#     cd ${CXXBLD}; \
-#     CC="${CC}" CFLAGS="${CFLAGS}" CXX="${CXX}" CXXFLAGS="${CXXFLAGS}" SHARP_CFLAGS="-I${HEALPIX}/include" SHARP_LIBS="-L${HEALPIX}/lib -lsharp" CFITSIO_CFLAGS="${CFITSIO_CFLAGS}" CFITSIO_LIBS="${CFITSIO_LIBS}" ${CXXDIR}/configure --prefix=${CXXPREFIX} || crashAndBurn)
+    echo "Running configure in ${CXXBLD} ... "
+    (\rm -rf ${CXXBLD}; \
+    mkdir ${CXXBLD}; \
+    cd ${CXXBLD}; \
+    CC="${CC}" CFLAGS="${CFLAGS}" CXX="${CXX}" CXXFLAGS="${CXXFLAGS}" SHARP_CFLAGS="-I${HEALPIX}/include" SHARP_LIBS="-L${HEALPIX}/lib -lsharp" CFITSIO_CFLAGS="${CFITSIO_CFLAGS}" CFITSIO_LIBS="${CFITSIO_LIBS}" ${CXXDIR}/configure --prefix=${CXXPREFIX} || crashAndBurn)
 
     echo "edit top Makefile for C++ ..."
     mv -f Makefile Makefile_tmp
@@ -699,18 +710,18 @@ editCppMakefile () {
 	${SED} "s|^HEALPIX=.*$|HEALPIX	= $HEALPIX|" |\
 	${SED} "s|^CXXBLD.*|CXXBLD=${CXXBLD}|" > Makefile
 
-#     mv -f Makefile Makefile_tmp
-#     ${CAT} Makefile_tmp |\
-# 	${SED} "s|^# C++ configuration.*$|# C++ configuration: (\rm -rf ${CXXBLD} ; mkdir ${CXXBLD} ; cd ${CXXBLD}; CC=\"${CC}\" CFLAGS=\"${CFLAGS}\" CXX=\"${CXX}\" CXXFLAGS=\"${CXXFLAGS}\"  SHARP_CFLAGS=\"-I${HEALPIX}/include\" SHARP_LIBS=\"-L${HEALPIX}/lib -lsharp\" CFITSIO_CFLAGS=\"${CFITSIO_CFLAGS}\" CFITSIO_LIBS=\"${CFITSIO_LIBS}\" ${CXXDIR}/configure --prefix=${CXXPREFIX})|"> Makefile
-
     mv -f Makefile Makefile_tmp
     ${CAT} Makefile_tmp |\
-	${SED} "s|^cpp-config.*$|cpp-config: sharp-all\\
-	mkdir -p \$(CXXBLD); \\\ \\
-	\$(RM) -r  \$(CXXBLD)/*; \\\ \\
-	cd \$(CXXBLD); \\\\ \\
-	CC=\"${CC}\" CFLAGS=\"${CFLAGS}\" CXX=\"${CXX}\" CXXFLAGS=\"${CXXFLAGS}\"  SHARP_CFLAGS=\"-I${HEALPIX}/include\" SHARP_LIBS=\"-L${HEALPIX}/lib -lsharp\" CFITSIO_CFLAGS=\"${CFITSIO_CFLAGS}\" CFITSIO_LIBS=\"${CFITSIO_LIBS}\" ${CXXDIR}/configure --prefix=${CXXPREFIX}; \\\ \\
-	cd \$(HEALPIX)|" > Makefile
+	${SED} "s|^# C++ configuration.*$|# C++ configuration: (\rm -rf ${CXXBLD} ; mkdir ${CXXBLD} ; cd ${CXXBLD}; CC=\"${CC}\" CFLAGS=\"${CFLAGS}\" CXX=\"${CXX}\" CXXFLAGS=\"${CXXFLAGS}\"  SHARP_CFLAGS=\"-I${HEALPIX}/include\" SHARP_LIBS=\"-L${HEALPIX}/lib -lsharp\" CFITSIO_CFLAGS=\"${CFITSIO_CFLAGS}\" CFITSIO_LIBS=\"${CFITSIO_LIBS}\" ${CXXDIR}/configure --prefix=${CXXPREFIX})|"> Makefile
+
+#     mv -f Makefile Makefile_tmp
+#     ${CAT} Makefile_tmp |\
+# 	${SED} "s|^cpp-config.*$|cpp-config: sharp-all\\
+# 	mkdir -p \$(CXXBLD); \\\ \\
+# 	\$(RM) -r  \$(CXXBLD)/*; \\\ \\
+# 	cd \$(CXXBLD); \\\\ \\
+# 	CC=\"${CC}\" CFLAGS=\"${CFLAGS}\" CXX=\"${CXX}\" CXXFLAGS=\"${CXXFLAGS}\"  SHARP_CFLAGS=\"-I${HEALPIX}/include\" SHARP_LIBS=\"-L${HEALPIX}/lib -lsharp\" CFITSIO_CFLAGS=\"${CFITSIO_CFLAGS}\" CFITSIO_LIBS=\"${CFITSIO_LIBS}\" ${CXXDIR}/configure --prefix=${CXXPREFIX}; \\\ \\
+# 	cd \$(HEALPIX)|" > Makefile
     echo " done."
     edited_makefile=1
 }
@@ -745,6 +756,7 @@ Cpp_config () {
     if [ $sharp_configured = "0" ] ; then
 	echo "Configuring the libsharp library first, since this is a dependency:"
 	Sharp_config
+	Sharp_install
 	echo
 	echo "Now configuring Healpix C++ itself:"
     fi
@@ -2385,6 +2397,7 @@ f90_config () {
     if [ $sharp_configured = "0" ] ; then
 	echo "Configuring the libsharp library first, since this is a dependency:"
 	Sharp_config
+	Sharp_install
 	echo
 	echo "Now configuring Healpix F90 itself:"
     fi
@@ -2470,7 +2483,8 @@ mainMenu () {
  	x5)
  	   Healpy_config;;
 	x7)
-	  Sharp_config;;
+	  Sharp_config
+	  Sharp_install;;
 	x8)
 	   checkConfFiles;;
 	x9)
@@ -2632,7 +2646,7 @@ setTopDefaults() {
     GREP="grep"
     HEAD="head" # introduced 2008-11-21
     LS="ls"
-    MAKE="make"
+    MAKE="${MAKE-make}" # make unless already defined
     MKDIR="mkdir"
     NM="nm"
     PRINTF="printf"

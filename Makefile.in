@@ -106,8 +106,8 @@ clean: $(CLEAN)
 
 
 tidy: $(TIDY)
-	$(RM) include/*
-	$(RM) lib/*
+	$(RM) include/*.h include/*/*.h
+	$(RM) lib/*/*.* lib/*.*
 
 distclean: $(DISTCLEAN) tidy
 	$(RM) Makefile
@@ -307,19 +307,20 @@ sharp-clean:
 
 sharp-tidy:
 	@cd $(SHARPBLD); \
-	$(MAKE) distclean; \
+	$(MAKE) clean; \
 	cd $(HEALPIX)
-	$(RM) -r $(SHARPBLD)
 
 sharp-distclean: sharp-tidy
+	@cd $(SHARPBLD); \
+	$(MAKE) distclean; \
+	cd $(HEALPIX)
+#	$(RM) -r $(SHARPBLD)
 
 sharp-void:
 
 # ------------------------------- C++ rules ----------------------------
 
-cpp-config: sharp-all
-
-cpp-all: sharp-all cpp-config
+cpp-all: sharp-all
 	@cd $(CXXBLD); \
 	$(MAKE) install; \
 	cd $(HEALPIX)
@@ -338,9 +339,9 @@ cpp-tidy:
 	@cd $(CXXBLD); \
 	$(MAKE) distclean; \
 	cd $(HEALPIX)
-	$(RM) -r $(CXXBLD)
 
 cpp-distclean: cpp-tidy
+#	$(RM) -r $(CXXBLD)
 
 cpp-void:
 
