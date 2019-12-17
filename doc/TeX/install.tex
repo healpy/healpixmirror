@@ -462,12 +462,12 @@ among
     \texttt{\doubledash auto=all} is the same as \texttt{\doubledash auto=profile,sharp,c,cxx,f90,idl,healpy};
 \item    \texttt{c}:       configures C and the required items, same as \texttt{profile,c};
 \item    \texttt{cxx}:     configures C++ and the required items, same as \texttt{profile,cxx},\\
- libsharp will also be configured if it was not previously done;
+ libsharp will also be configured, compiled and installed if it was not previously done;
 \item    \texttt{cpp}:     same as \texttt{cxx} (see above);
 \item    \texttt{f90}:     configures F90 and the required items, same as \texttt{profile,f90},\\
- libsharp will also be configured if it was not previously done;
+ libsharp will also be configured, compiled and installed if it was not previously done;
 \item    \texttt{idl}:     configures IDL and the required items, same as \texttt{profile,idl};
-\item    \texttt{sharp}:   forces the (re-)configuration of libsharp (required by F90 and C++);
+\item    \texttt{sharp}:   forces the (re-)configuration, compilation and installation of libsharp (required by F90 and C++);
 \item    \texttt{profile}: configures user or system configuration files (required by C, C++, F90 and IDL);
 \item    \texttt{healpy}:  configures healpy.
 \end{itemize}
@@ -663,7 +663,9 @@ and \texttt{-march=native} (or your compiler's equivalent options).
 If you are using \texttt{gcc} or \texttt{clang} and you want to produce a portable,
 high-performance library, and if you compiler and assembler support it,
 you can also replace \texttt{-march=native} by \texttt{-DMULTIARCH}.\\
-After compilation and installation, the resulting library will be in
+After compilation and installation (which, for \texttt{libsharp} only,
+ are done as early as the \texttt{configure} step) 
+the resulting library will be in
 \texttt{\$\{HEALPIX\}/lib/libsharp*} and the header files in
 \texttt{\$\{HEALPIX\}/include/libsharp/sharp*.h}.\\
 See also \S\ref{sec:pkg-config} on \mylink{install:pkg-config}{\texttt{pkg-config}}.

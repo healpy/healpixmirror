@@ -84,6 +84,8 @@ C_MKFLAGS = CC="$(C_CC)" PIC="$(C_PIC)" OPT="$(C_OPT)" \
 # ------------------------------ variables for libsharp ---------------------
 # sharp configuration
 SHARPBLD = 
+SHARPLIB = 
+SHARPMKF = 
 
 # ------------------------------ variables for C++ --------------------------
 # C++ configuration
@@ -290,12 +292,21 @@ c-void:
 
 # ------------------------------- libsharp rules ----------------------------
 
-sharp-all:
+sharp-all: $(SHARPLIB)
+
+$(SHARPLIB): $(SHARPMKF)
 	@cd $(SHARPBLD); \
 	$(MAKE) install; \
 	cd $(HEALPIX)
 
-sharp-test: cpp-all
+$(SHARPMKF):
+	@echo "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"; \
+	echo "libsharp was not properly configured.";\
+	echo "Rerun configure.";\
+	echo "See  ./configure -h";\
+	echo "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
+
+sharp-test: sharp-all
 	@cd $(SHARPBLD);   \
 	$(MAKE) check; \
 	cd $(HEALPIX)

@@ -575,6 +575,8 @@ editSharpMakefile () {
     SHARPLDIR=${SHARPPREFIX}/lib
     SHARPCDIR=${HEALPIX}/src/common_libraries/libsharp
     SHARPBLD=${SHARPCDIR}/build
+    SHARPLIB=${SHARPLDIR}/libsharp.a
+    SHARPMKF=${SHARPBLD}/Makefile
     echo " "
     echo "Running configure in ${SHARPBLD} ... "
     (\rm -rf ${SHARPBLD}; \
@@ -591,8 +593,19 @@ editSharpMakefile () {
 	${SED} "s|^TIDY\(.*\) sharp-void \(.*\)|TIDY\1 sharp-tidy \2|" |\
 	${SED} "s|^HEALPIX=.*$|HEALPIX	= $HEALPIX|" |\
         ${SED} "s|^SHARPLDIR.*|SHARPLDIR=${SHARPLDIR}|" |\
-	${SED} "s|^SHARPBLD.*|SHARPBLD=${SHARPBLD}|" |\
+	${SED} "s|^SHARPBLD.*|SHARPBLD =${SHARPBLD}|" |\
+	${SED} "s|^SHARPLIB.*|SHARPLIB =${SHARPLIB}|" |\
+	${SED} "s|^SHARPMKF.*|SHARPMKF =${SHARPMKF}|" |\
 	${SED} "s|^# sharp configuration.*|# sharp configuration: (\rm -rf ${SHARPBLD}; mkdir ${SHARPBLD}; cd ${SHARPBLD}; CC=\"${CC}\" CFLAGS=\"${SHARP_COPT}\" LDFLAGS=\"${LDFLAGS}\" ${SHARPCDIR}/configure --prefix=${SHARPPREFIX})|" > Makefile
+
+#     mv -f Makefile Makefile_tmp
+#     ${CAT} Makefile_tmp |\
+#  	${SED} 's|^$(SHARPMKF).*$|$(SHARPMKF):\\
+# 	mkdir -p $(SHARPBLD); \\\ \\
+# 	\$(RM) -r  $(SHARPBLD)/*; \\\ \\
+# 	cd $(SHARPBLD); \\\\ \\
+# 	CC=${CC} CFLAGS=${SHARP_COPT} LDFLAGS=${LDFLAGS} ${SHARPCDIR}/configure --prefix=${SHARPPREFIX}; \\\ \\
+# 	cd \$(HEALPIX)|' > Makefile
 
     echo " done."
     edited_makefile=1
@@ -606,13 +619,12 @@ Sharp_config () {
 }
 #-------------
 Sharp_install () {
-    echo "Installing libsharp"
+    echo
+    echo "Compiling and installing libsharp"
     makejobs=''
     ngnumake=`${MAKE} -v 2>&1   | ${GREP} GNU | ${WC} -l`
     [ $ngnumake != 0 ] && makejobs='-j'  # parallel make for GNUmake
-    cd ${SHARPBLD}
-    ${MAKE} ${makejobs} install || crashAndBurn
-    cd ${HEALPIX}
+    ( cd ${SHARPBLD} && ${MAKE} ${makejobs} install || crashAndBurn )
 }
 
 #-------------
