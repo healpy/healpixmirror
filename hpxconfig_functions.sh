@@ -169,6 +169,8 @@ goodBye () {
 	echo
 	echo "You can run \"(GNU)make\" to build all the packages configured so far,"
 	echo "        and \"(GNU)make test\" to test them."
+	echo " If supported, \"make -j\" will parallelize the tasks"
+	echo "and speed up the compilation and installation"
 	echo
     fi
     echo "Good Bye !"
@@ -2464,11 +2466,11 @@ mainMenu () {
     echo "Do you want to:"
     echo "(0): exit"
     echo "(1): configure Healpix IDL package"
-    echo "(2): configure Healpix C package, and edit Makefile"
+    echo "(2): configure Healpix C   package, and edit Makefile"
     echo "(3): configure Healpix F90 package, and edit Makefile"
     echo "(4): configure Healpix C++ package, and edit Makefile"
     echo "(5): configure Healpix Python (healpy) package, and edit Makefile"
-    echo "(7): configure libsharp package"
+    echo "(7): configure, compile and install libsharp package, and edit Makefile"
     echo "(8): see what configuration files have been created so far"
     echo "(9): edit your shell configuration file to have easier access to Healpix codes"
     echo "(-1): reset"

@@ -1,6 +1,6 @@
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-  Copyright (C) 1997-2018  HEALPix collaboration
+  Copyright (C) 1997-2019  HEALPix collaboration
 
 
   HEALPix is free software; you can redistribute it and/or modify
@@ -35,7 +35,7 @@ HISTORY
  The  HEALPix-based  methods  contained  in  the  present  package,  their 
  implementation in Fortran90, IDL, C, C++ and java routines and codes, and documentation 
  were developed jointly by: 
- Anthony J. Banday (banday AT mpa-garching.mpg.de),
+ Anthony J. Banday (anthony.banday AT irap.omp.eu),
  Matthias Bartelmann (mbartelmann AT ita.uni-heidelberg.de),
  Hans Kristian Eriksen (h.k.k.eriksen AT astro.uio.no),
  Krzysztof M. Gorski (krzysztof.m.gorski AT jpl.nasa.gov),
@@ -159,6 +159,14 @@ COPYRIGHTS
 
  Copyright 2018 by A. Zonca, L. Singer, C. Rosset
  for the healpy package version 1.12.5
+  All rights reserved.
+
+ Copyright 2019 by E. Hivon, M. Reinecke, W. O'Mullane, E. Joliet, K.M. Gorski, A.J. Banday
+ for the HEALPix package version 3.60
+  All rights reserved.
+
+ Copyright 2019 by A. Zonca, L. Singer, C. Rosset
+ for the healpy package version 1.13.0
   All rights reserved.
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
