@@ -660,9 +660,13 @@ The environment variables \texttt{CC} and \texttt{SHARP\_COPT} can be used to se
 the C compiler and its options proposed during the interactive or automated configuration process.\\
 For optimal performance, the C compilation flags should include \texttt{-ffast-math}
 and \texttt{-march=native} (or your compiler's equivalent options).
-If you are using \texttt{gcc} or \texttt{clang} and you want to produce a portable,
+If you are using \texttt{gcc} or \texttt{clang} (see below) and you want to produce a portable,
 high-performance library, and if you compiler and assembler support it,
 you can also replace \texttt{-march=native} by \texttt{-DMULTIARCH}.\\
+If you are using \texttt{clang} to compile \texttt{libsharp},
+make sure it supports OpenMP (as in version 3.7 or more), and that OpenMP
+is enabled (possibly requiring the flag \texttt{-fopemp=libomp} instead of the usual \texttt{-fopemp}
+or by specifying the location of the OpenMP libraries during compilation and at run time).\\
 After compilation and installation (which, for \texttt{libsharp} only,
  are done as early as the \texttt{configure} step) 
 the resulting library will be in

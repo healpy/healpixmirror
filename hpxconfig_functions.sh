@@ -1847,7 +1847,7 @@ IdentifyF90Compiler () {
 		FCNAME="IBM XL Fortran"
 		FFLAGS="$FFLAGS -qsuffix=f=f90:cpp=F90"
 		OFLAGS="-O"
-		#####CC="gcc"
+		#CC="gcc"
 		CFLAGS="$CFLAGS -DRS6000" # to combine C and F90
 		FPP="-WF,-D"
 		PRFLAGS="-qsmp=omp" # Open MP enabled
@@ -1860,7 +1860,7 @@ IdentifyF90Compiler () {
 		FCNAME="IBM XL Fortran for Mac OS"
 		FFLAGS="$FFLAGS -qfree=f90 -qsuffix=f=f90:cpp=F90"
 		OFLAGS="-O"
-		CC="gcc"
+		#CC="gcc"
 		CFLAGS="$CFLAGS -DRS6000" # to combine C and F90
 		#### FPP="-WF,-D"
 		PRFLAGS="-qsmp=omp" # Open MP enabled
@@ -1874,13 +1874,13 @@ IdentifyF90Compiler () {
 		OFLAGS="-O3 -cpu:host"
 		LDFLAGS="$LDFLAGS -lU77"
 		CFLAGS="$CFLAGS -DAbsoftProFortran"  # to combine C and F90
-		CC="gcc"
+		#CC="gcc"
 		MODDIR="-YMOD_OUT_DIR=" # output location of modules
 	elif [ $ng95 != 0 ] ; then
 	        FCNAME="g95 compiler"
 		FFLAGS="$FFLAGS -DGFORTRAN -DG95 -w -ffree-form -fno-second-underscore"
 		OFLAGS="-O3"
-		CC="gcc"
+		#CC="gcc"
 		CFLAGS="$CFLAGS -DgFortran" # to combine C and F90
 		FI8FLAG="-i8" # change default INTEGER to 64 bits
 		[ $OS = "Linux" ] && WLRPATH="-Wl,-R"
@@ -1890,7 +1890,7 @@ IdentifyF90Compiler () {
 	        FCNAME="gfortran compiler"
 		OFLAGS="-O3"
 		PRFLAGS="-fopenmp" # Open MP enabled
-		CC="gcc"
+		#CC="gcc"
 		FI8FLAG="-fdefault-integer-8" # change default INTEGER to 64 bits
 		[ $OS = "Linux" ] && WLRPATH="-Wl,-R"
 		MODDIR="-J" # output location of modules
@@ -1899,7 +1899,7 @@ IdentifyF90Compiler () {
 	        FCNAME="flang compiler"
 		OFLAGS="-O3"
 		PRFLAGS="-fopenmp" # Open MP enabled
-		CC="gcc"
+		#CC="gcc"
 		FI8FLAG="-fdefault-integer-8" # change default INTEGER to 64 bits
 		[ $OS = "Linux" ] && WLRPATH="-Wl,-R"
 		MODDIR="-J" # output location of modules
@@ -1908,7 +1908,7 @@ IdentifyF90Compiler () {
 	        FCNAME="PathScale EKOPath compiler"
 		FFLAGS="$FFLAGS"
 		OFLAGS="-O"
-		CC="pathcc"
+		#CC="pathcc"
 		PRFLAGS="-mp" # Open MP enabled
 		FI8FLAG="-i8" # change default INTEGER to 64 bits
 		#FI8FLAG="-default64" # change default INTEGER and FLOAT to 64 bits

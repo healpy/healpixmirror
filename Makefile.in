@@ -13,6 +13,7 @@ DISTCLEAN = sharp-void c-void cpp-void f90-void healpy-void
 RM	= rm -f
 HEALPIX=
 SHARPLDIR = 
+
 # ------------------------------ variables for F90 --------------------------
 F90_BINDIR	=
 F90_INCDIR	=
@@ -96,6 +97,8 @@ CXXBLD =
 HPY_SETUP  =
 HPY_PYTHON =
 HPY_VARS   =
+
+# ----------------------------------------------------------------------
 # ------------------------------- global rules -------------------------
 
 all: $(ALL)
