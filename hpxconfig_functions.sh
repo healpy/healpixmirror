@@ -579,12 +579,14 @@ editSharpMakefile () {
     SHARPBLD=${SHARPCDIR}/build
     SHARPLIB=${SHARPLDIR}/libsharp.a
     SHARPMKF=${SHARPBLD}/Makefile
-    echo " "
+    echo
     echo "Running configure in ${SHARPBLD} ... "
     (\rm -rf ${SHARPBLD}; \
     mkdir ${SHARPBLD}; \
     cd ${SHARPBLD}; \
-    CC="${CC}" CFLAGS="${SHARP_COPT}" LDFLAGS="${LDFLAGS}" ${SHARPCDIR}/configure --prefix=${SHARPPREFIX} || crashAndBurn)
+    CC="${CC}" CFLAGS="${SHARP_COPT}" LDFLAGS="${LDFLAGS}" ${SHARPCDIR}/configure --prefix=${SHARPPREFIX} || crashAndBurn) || crashAndBurn
+    echo "done."
+    echo 
     echo "edit top Makefile for libsharp ..."
     mv -f Makefile Makefile_tmp
     ${CAT} Makefile_tmp |\
@@ -622,11 +624,12 @@ Sharp_config () {
 #-------------
 Sharp_install () {
     echo
-    echo "Compiling and installing libsharp"
+    echo "Compiling and installing libsharp ..."
     makejobs=''
     ngnumake=`${MAKE} -v 2>&1   | ${GREP} GNU | ${WC} -l`
     [ $ngnumake != 0 ] && makejobs='-j'  # parallel make for GNUmake
     ( cd ${SHARPBLD} && ${MAKE} ${makejobs} install || crashAndBurn )
+    echo "done."
 }
 
 #-------------
@@ -706,13 +709,15 @@ askCppUserMisc () {
 #-------------
 editCppMakefile () {
 
-    echo " "
+    echo
     echo "Running configure in ${CXXBLD} ... "
     (\rm -rf ${CXXBLD}; \
     mkdir ${CXXBLD}; \
     cd ${CXXBLD}; \
     CC="${CC}" CFLAGS="${CFLAGS}" CXX="${CXX}" CXXFLAGS="${CXXFLAGS}" SHARP_CFLAGS="-I${HEALPIX}/include" SHARP_LIBS="-L${HEALPIX}/lib -lsharp" CFITSIO_CFLAGS="${CFITSIO_CFLAGS}" CFITSIO_LIBS="${CFITSIO_LIBS}" ${CXXDIR}/configure --prefix=${CXXPREFIX} || crashAndBurn)
+    echo "done"
 
+    echo 
     echo "edit top Makefile for C++ ..."
     mv -f Makefile Makefile_tmp
     ${CAT} Makefile_tmp |\
@@ -909,9 +914,9 @@ Healpy_config () {  # for healpy 1.7.0
 #-------------
 editHealpyMakefile () {
 
-
-    echoLn "edit top Makefile for Python (healpy) ..."
-    echo ${HPY_SETUP}
+    echo 
+    echo "edit top Makefile for Python (healpy) ..."
+    #echo ${HPY_SETUP}
     HPY_VARS="CC=\"${HPY_CC}\" CXX=\"${HPY_CXX}\" "
     mv -f Makefile Makefile_tmp
     ${CAT} Makefile_tmp |\
@@ -1847,7 +1852,7 @@ IdentifyF90Compiler () {
 		FCNAME="IBM XL Fortran"
 		FFLAGS="$FFLAGS -qsuffix=f=f90:cpp=F90"
 		OFLAGS="-O"
-		#CC="gcc"
+		CC="${CC-gcc}"   # gcc unless already defined
 		CFLAGS="$CFLAGS -DRS6000" # to combine C and F90
 		FPP="-WF,-D"
 		PRFLAGS="-qsmp=omp" # Open MP enabled
@@ -1860,7 +1865,7 @@ IdentifyF90Compiler () {
 		FCNAME="IBM XL Fortran for Mac OS"
 		FFLAGS="$FFLAGS -qfree=f90 -qsuffix=f=f90:cpp=F90"
 		OFLAGS="-O"
-		#CC="gcc"
+		CC="${CC-gcc}"   # gcc unless already defined
 		CFLAGS="$CFLAGS -DRS6000" # to combine C and F90
 		#### FPP="-WF,-D"
 		PRFLAGS="-qsmp=omp" # Open MP enabled
@@ -1874,13 +1879,13 @@ IdentifyF90Compiler () {
 		OFLAGS="-O3 -cpu:host"
 		LDFLAGS="$LDFLAGS -lU77"
 		CFLAGS="$CFLAGS -DAbsoftProFortran"  # to combine C and F90
-		#CC="gcc"
+		CC="${CC-gcc}"   # gcc unless already defined
 		MODDIR="-YMOD_OUT_DIR=" # output location of modules
 	elif [ $ng95 != 0 ] ; then
 	        FCNAME="g95 compiler"
 		FFLAGS="$FFLAGS -DGFORTRAN -DG95 -w -ffree-form -fno-second-underscore"
 		OFLAGS="-O3"
-		#CC="gcc"
+		CC="${CC-gcc}"   # gcc unless already defined
 		CFLAGS="$CFLAGS -DgFortran" # to combine C and F90
 		FI8FLAG="-i8" # change default INTEGER to 64 bits
 		[ $OS = "Linux" ] && WLRPATH="-Wl,-R"
@@ -1890,7 +1895,7 @@ IdentifyF90Compiler () {
 	        FCNAME="gfortran compiler"
 		OFLAGS="-O3"
 		PRFLAGS="-fopenmp" # Open MP enabled
-		#CC="gcc"
+		CC="${CC-gcc}"   # gcc unless already defined
 		FI8FLAG="-fdefault-integer-8" # change default INTEGER to 64 bits
 		[ $OS = "Linux" ] && WLRPATH="-Wl,-R"
 		MODDIR="-J" # output location of modules
@@ -1899,7 +1904,7 @@ IdentifyF90Compiler () {
 	        FCNAME="flang compiler"
 		OFLAGS="-O3"
 		PRFLAGS="-fopenmp" # Open MP enabled
-		#CC="gcc"
+		CC="${CC-gcc}"   # gcc unless already defined
 		FI8FLAG="-fdefault-integer-8" # change default INTEGER to 64 bits
 		[ $OS = "Linux" ] && WLRPATH="-Wl,-R"
 		MODDIR="-J" # output location of modules
@@ -1909,6 +1914,7 @@ IdentifyF90Compiler () {
 		FFLAGS="$FFLAGS"
 		OFLAGS="-O"
 		#CC="pathcc"
+		CC="${CC-pathcc}"   # pathcc unless already defined
 		PRFLAGS="-mp" # Open MP enabled
 		FI8FLAG="-i8" # change default INTEGER to 64 bits
 		#FI8FLAG="-default64" # change default INTEGER and FLOAT to 64 bits
