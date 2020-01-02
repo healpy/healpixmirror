@@ -47,7 +47,8 @@ nobase_include_HEADERS = \
   libsharp/sharp_cxx.h
 
 EXTRA_DIST = \
-  runtest.sh
+  runtest.sh \
+  COMPILE
 
 check_PROGRAMS = sharp_testsuite
 sharp_testsuite_SOURCES = libsharp/sharp_testsuite.c c_utils/memusage.c c_utils/memusage.h
