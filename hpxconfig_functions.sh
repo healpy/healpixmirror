@@ -58,6 +58,7 @@
 #                papersize, ps_com, pdf_com, gif_com       (IDL) 
 #             to define proposed default values.
 # 2019-10-01: addition and documentation of --auto=list   mode
+# 2020-01-06: added missing space in whereisCmd
 #=====================================
 #=========== General usage ===========
 #=====================================
@@ -189,7 +190,7 @@ crashAndBurn () {
 whereisCmd () {
     for d in $*; do
 	CMD=`${WHEREIS} $d`
-	if [ "x${CMD}" != "x"  -a "x${CMD}" != "x${d}:"] ; then
+	if [ "x${CMD}" != "x"  -a "x${CMD}" != "x${d}:" ] ; then
 	    break
 	fi
     done
