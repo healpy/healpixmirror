@@ -59,6 +59,7 @@
 #             to define proposed default values.
 # 2019-10-01: addition and documentation of --auto=list   mode
 # 2020-01-06: added missing space in whereisCmd
+# 2020-01-14: removed spurious \r in a some comments
 #=====================================
 #=========== General usage ===========
 #=====================================
@@ -601,7 +602,7 @@ editSharpMakefile () {
 	${SED} "s|^SHARPBLD.*|SHARPBLD =${SHARPBLD}|" |\
 	${SED} "s|^SHARPLIB.*|SHARPLIB =${SHARPLIB}|" |\
 	${SED} "s|^SHARPMKF.*|SHARPMKF =${SHARPMKF}|" |\
-	${SED} "s|^# sharp configuration.*|# sharp configuration: (\rm -rf ${SHARPBLD}; mkdir ${SHARPBLD}; cd ${SHARPBLD}; CC=\"${CC}\" CFLAGS=\"${SHARP_COPT}\" LDFLAGS=\"${LDFLAGS}\" ${SHARPCDIR}/configure --prefix=${SHARPPREFIX})|" > Makefile
+	${SED} "s|^# sharp configuration.*|# sharp configuration: (rm -rf ${SHARPBLD}; mkdir ${SHARPBLD}; cd ${SHARPBLD}; CC=\"${CC}\" CFLAGS=\"${SHARP_COPT}\" LDFLAGS=\"${LDFLAGS}\" ${SHARPCDIR}/configure --prefix=${SHARPPREFIX})|" > Makefile
 
 #     mv -f Makefile Makefile_tmp
 #     ${CAT} Makefile_tmp |\
@@ -732,7 +733,7 @@ editCppMakefile () {
 
     mv -f Makefile Makefile_tmp
     ${CAT} Makefile_tmp |\
-	${SED} "s|^# C++ configuration.*$|# C++ configuration: (\rm -rf ${CXXBLD} ; mkdir ${CXXBLD} ; cd ${CXXBLD}; CC=\"${CC}\" CFLAGS=\"${CFLAGS}\" CXX=\"${CXX}\" CXXFLAGS=\"${CXXFLAGS}\"  SHARP_CFLAGS=\"-I${HEALPIX}/include\" SHARP_LIBS=\"-L${HEALPIX}/lib -lsharp\" CFITSIO_CFLAGS=\"${CFITSIO_CFLAGS}\" CFITSIO_LIBS=\"${CFITSIO_LIBS}\" ${CXXDIR}/configure --prefix=${CXXPREFIX})|"> Makefile
+	${SED} "s|^# C++ configuration.*$|# C++ configuration: (rm -rf ${CXXBLD} ; mkdir ${CXXBLD} ; cd ${CXXBLD}; CC=\"${CC}\" CFLAGS=\"${CFLAGS}\" CXX=\"${CXX}\" CXXFLAGS=\"${CXXFLAGS}\"  SHARP_CFLAGS=\"-I${HEALPIX}/include\" SHARP_LIBS=\"-L${HEALPIX}/lib -lsharp\" CFITSIO_CFLAGS=\"${CFITSIO_CFLAGS}\" CFITSIO_LIBS=\"${CFITSIO_LIBS}\" ${CXXDIR}/configure --prefix=${CXXPREFIX})|"> Makefile
 
 #     mv -f Makefile Makefile_tmp
 #     ${CAT} Makefile_tmp |\
