@@ -39,6 +39,8 @@
 !    subroutine write_bintabh_KLOAD         (8)
 !    subroutine unfold_weights_KLOAD
 !    subroutine unfold_weightslist_KLOAD
+!    subroutine read_fits_partial_KLOAD     (4/8)
+!    subroutine write_fits_partial_KLOAD     (4)
 !
 !
 ! K M A P   : map kind                 either SP or DP
@@ -2357,3 +2359,571 @@ subroutine input_map8_KLOAD(filename, map, npixtot, nmaps, &
     return
   end subroutine unfold_weightslist_KLOAD
 
+  !=======================================================================
+  ! read_fits_partial(filename, pixel, cutmap, [header, extno])
+  !   routine to read FITS file with cut sky data : PIXEL, ?, ?, ?, ?, ...
+  !=======================================================================
+#ifndef NO64BITS
+  !=======================================================================
+  subroutine read_fits_partial4_KLOAD(filename, pixel, cutmap, header, extno)
+    !=======================================================================
+    use long_intrinsic, only: long_size
+    character(len=*),                     intent(in)            :: filename
+    integer(I4B),     dimension(0:),      intent(out)           :: pixel
+    real(KMAP),       dimension(0:,1:),   intent(out)           :: cutmap
+    character(len=*), dimension(1:),      intent(out), optional :: header
+    integer(I4B),                         intent(in),  optional :: extno
+    !
+    integer(i8b),     dimension(:), allocatable :: pixel8
+    integer(i8b) :: npix
+    character(len=*), parameter :: code = 'read_fits_partial'
+    !---------------------------------------------------------------------
+    npix = long_size(pixel)
+    if (npix > MAX_I4b) then
+       call fatal_error(code//': PIXEL must be of type I8B to read '//trim(filename))
+    endif
+    allocate(pixel8(0:npix-1))
+    call read_fits_partial8_KLOAD(filename, pixel8, cutmap, header, extno)
+    if (maxval(pixel8) > MAX_I4B) then
+       call fatal_error(code//': PIXEL must be of type I8B to read '//trim(filename))       
+    endif
+    pixel(0:npix-1) = pixel8(0:npix-1)
+    deallocate(pixel8)
+    return
+
+  end subroutine read_fits_partial4_KLOAD
+#endif
+  !=======================================================================
+  subroutine read_fits_partial8_KLOAD(filename, pixel, cutmap, header, extno)
+    !=======================================================================
+    use long_intrinsic, only: long_size
+    character(len=*),                     intent(in)            :: filename
+    integer(I8B),     dimension(0:),      intent(out)           :: pixel
+    real(KMAP),       dimension(0:,1:),   intent(out)           :: cutmap
+    character(len=*), dimension(1:),      intent(out), optional :: header
+    integer(I4B),                         intent(in),  optional :: extno
+
+    integer(I8B) :: obs_npix, npixtot, npix
+
+    integer(I4B), parameter :: MAXDIM = MAXDIM_TOP !number of columns in the extension
+    integer(I4B) :: blocksize, datacode
+    integer(I4B) :: firstpix, frow, hdutype
+    integer(I4B) :: naxis, nfound, nmove, nrows, nmaps, nmr, i, npix_4
+    integer(I4B) :: readwrite, status, tfields, unit, varidat, width
+    integer(I4B) :: repeat, repeat1, repeat2
+    logical(LGT) :: anynull, extend
+    character(len=20), dimension(MAXDIM) :: ttype, tform, tunit
+    character(len=20) :: extname
+    character(len=80) :: comment
+    real(KMAP) :: nullval
+    !=======================================================================
+
+    npixtot = min(long_size(pixel),long_size(cutmap,1))
+    nmaps   = size(cutmap,2)
+    status=0
+
+    unit = 150
+    nfound = -1
+    anynull = .false.
+
+    readwrite=0
+    call ftopen(unit,filename,readwrite,blocksize,status)
+    if (status > 0) call printerror(status)
+
+    !     determines the presence of image
+    call ftgkyj(unit,'NAXIS', naxis, comment, status)
+    if (status > 0) call printerror(status)
+    if (naxis > 0) then ! there is an image
+       print*,'an image was found in the FITS file '//filename
+       print*,'... it is ignored.'
+    endif
+
+    !     determines the presence of an extension
+    call ftgkyl(unit,'EXTEND', extend, comment, status)
+    if (status > 0) then 
+       print*,'extension expected and not found in FITS file '//filename
+       print*,'abort code'
+       call fatal_error
+    endif
+
+    nmove = +1
+    if (present(extno)) nmove = +1 + extno
+    call ftmrhd(unit, nmove, hdutype, status)
+
+    call assert (hdutype==2, 'this is not a binary table')
+
+    ! reads all the FITS related keywords
+    call ftghbn(unit, MAXDIM, &
+         &        nrows, tfields, ttype, tform, tunit, extname, varidat, &
+         &        status)
+
+    if (.not.  (trim(ttype(1)) == 'PIXEL' &
+         & .or. trim(ttype(1)) == 'PIX'  ) ) call fatal_error('did not find PIXEL column in '//filename)
+    
+
+    if (present(header)) then 
+       header = ""
+       status = 0
+       !call fitstools_mp_get_clean_header(unit, header, filename, status)
+       call get_clean_header(unit, header, filename, status)
+    endif
+
+!     if (present(units)) then 
+!        ! the second column contains the SIGNAL, for which we 
+!        ! already read the units from the header
+!        units = adjustl(tunit(2))
+!     endif
+
+    !        finds the bad data value
+    call f90ftgky_(unit, 'BAD_DATA', nullval, comment, status)
+    if (status == 202) then ! bad_data not found
+       if (KMAP == SP) nullval = s_bad_value ! default value
+       if (KMAP == DP) nullval = d_bad_value ! default value
+       status = 0
+    endif
+
+    frow = 1
+    firstpix = 1
+    !        parse TFORM keyword to find out the length of the column vector
+    repeat1 = 1
+    repeat2 = 1
+    call ftbnfm(tform(1), datacode, repeat1, width, status)
+    if (tfields > 1) call ftbnfm(tform(2), datacode, repeat2, width, status)
+    repeat = max(repeat1, repeat2)
+
+    !call ftgkyj(unit,'OBS_NPIX',obs_npix,comment,status) ! I4B
+    !call ftgkyk(unit,'OBS_NPIX',obs_npix,comment,status) ! I8B
+    call f90ftgky_(unit,'OBS_NPIX',obs_npix,comment,status) ! generic
+    if (status == 202) then ! obs_npix not found
+       obs_npix = int(nrows, kind=i8b) * repeat
+       status = 0
+    endif
+
+    npix   = min(npixtot, obs_npix)
+    npix_4 = npix
+    nmr    = min(nmaps,   tfields-1)
+    !call ftgcvj   (unit, 1_i4b, frow, firstpix, npix_4, i_bad_value, pixel(0), anynull, status) ! I4B
+    !call ftgcvk   (unit, 1_i4b, frow, firstpix, npix_4, l_bad_value, pixel(0), anynull, status) ! I8B
+    call f90ftgcv_(unit, 1_i4b, frow, firstpix, npix_4, l_bad_value, pixel, anynull, status) ! generic
+    do i=1,nmr
+       call f90ftgcv_(unit, i+1_i4b, frow, firstpix, npix_4, nullval, cutmap(0:npix-1,i), anynull, status)
+    enddo
+
+    !     close the file
+    call ftclos(unit, status)
+
+    !     check for any error, and if so print out error messages
+    if (status > 0) call printerror(status)
+
+    return
+  end subroutine read_fits_partial8_KLOAD
+
+
+  !=======================================================================
+  ! writes a fits file for (polarized) sky data set with columns:
+  !  PIXEL, TEMPERATURE, [Q_POLARISATION, U_POLARISATION]
+  ! 
+  ! write_fits_partial(filename, pixel, cutmap, &
+  !         [, header, coord, nside, order, units, extno])
+  !=======================================================================
+#ifndef NO64BITS
+  subroutine write_fits_partial4_KLOAD(filename, pixel, cutmap, &
+       &                     header, coord, nside, order, units, extno)
+    !=======================================================================
+    character(len=*),                   intent(in)           :: filename
+    integer(I4B),     dimension(0:),    intent(in)           :: pixel
+    real(KMAP),       dimension(0:,1:), intent(in)           :: cutmap
+    character(len=*), dimension(1:),    intent(in), optional :: header
+    integer(I4B),                       intent(in), optional :: nside, order
+    character(len=*),                   intent(in), optional :: coord, units
+    integer(I4B),                       intent(in), optional :: extno !, polarisation
+    character(len=*), parameter :: routine = 'write_fits_partial'
+    call sub_write_fits_partial_KLOAD(filename, cutmap, pixel4=pixel, &
+         header=header, coord=coord, nside=nside, order=order, units=units, extno=extno)
+  end subroutine write_fits_partial4_KLOAD
+#endif
+  !=======================================================================
+  subroutine write_fits_partial8_KLOAD(filename, pixel, cutmap, &
+       &                     header, coord, nside, order, units, extno)
+    !=======================================================================
+    character(len=*),                   intent(in)           :: filename
+    integer(I8B),     dimension(0:),    intent(in)           :: pixel
+    real(KMAP),       dimension(0:,1:), intent(in)           :: cutmap
+    character(len=*), dimension(1:),    intent(in), optional :: header
+    integer(I4B),                       intent(in), optional :: nside, order
+    character(len=*),                   intent(in), optional :: coord, units
+    integer(I4B),                       intent(in), optional :: extno !, polarisation
+    character(len=*), parameter :: routine = 'write_fits_partial'
+    call sub_write_fits_partial_KLOAD(filename, cutmap, pixel8=pixel, &
+         header=header, coord=coord, nside=nside, order=order, units=units, extno=extno)
+  end subroutine write_fits_partial8_KLOAD
+  !=======================================================================
+  subroutine sub_write_fits_partial_KLOAD(filename, cutmap, &
+       &                     pixel4, pixel8, &
+       &                     header, coord, nside, order, units, extno)
+    !=======================================================================
+    use long_intrinsic, only: long_size
+    use pix_tools, only: nside2npix
+
+    character(len=*),                   intent(in)           :: filename
+    real(KMAP),       dimension(0:,1:), intent(in)           :: cutmap
+    integer(I4B),     dimension(0:),    intent(in), optional :: pixel4
+    integer(I8B),     dimension(0:),    intent(in), optional :: pixel8
+    character(len=*), dimension(1:),    intent(in), optional :: header
+    integer(I4B),                       intent(in), optional :: nside, order
+    character(len=*),                   intent(in), optional :: coord, units
+    integer(I4B),                       intent(in), optional :: extno !, polarisation
+
+    character(len=*), parameter :: routine = 'write_fits_partial'
+    ! --- healpix/fits related variables ----
+    integer(I4B)     :: ncol, grain, nd2
+    integer(I4B)     :: npix_hd, nside_hd, i
+    integer(I4B)     :: maxpix, minpix
+    character(len=1) :: char1, coord_usr
+!    character(len=8) :: char8
+    character(len=20) :: units_usr
+    logical(LGT)     :: done_nside, done_order, done_coord, done_polar, polar_flag
+    integer(I4B)     :: nlheader, extno_i
+
+    ! --- cfitsio related variables ----
+    integer(I4B) ::  status, unit, blocksize, bitpix, naxis, naxes(1)
+    logical(LGT) ::  simple, extend
+    character(LEN=80) :: svalue, comment
+
+    integer(I4B), parameter :: MAXDIM = MAXDIM_TOP !number of columns in the extension
+    integer(I4B) :: nrows, tfields, varidat
+    integer(I4B) :: frow,  felem, repeat, repeatg, hdutype
+    character(len=20) :: ttype(MAXDIM), tform(MAXDIM), tunit(MAXDIM), extname
+    character(len=20), dimension(1:3) :: extnames
+    character(len=80) ::  card
+    character(len=4) :: srepeat, srepeatg
+    character(len=1) :: pform1, pform2
+    character(len=filenamelen) sfilename
+    integer(I8B)     :: obs_npix8, npix_final, nside_final
+    integer(I4B)     :: obs_npix4, kpix
+
+    integer(I8B), save :: nside_old
+    !=======================================================================
+    if (KMAP == SP)  pform2='E'
+    if (KMAP == DP)  pform2='D'
+    if (present(pixel4) .eqv. present(pixel8)) then
+       call fatal_error(routine//': choose either PIXEL4 or PIXEL8')
+    endif
+    if (present(pixel4)) then
+       kpix = I4B
+       pform1='J'
+    elseif (present(pixel8)) then
+       kpix = I8B
+       pform1='K' ! <<< double check
+    endif
+
+    obs_npix8 = long_size(cutmap, 1)
+    obs_npix4 = int(obs_npix8, kind=I4B)
+    nd2 = size(cutmap,2)
+    ncol = 1 + nd2
+    grain = 1
+    status=0
+    unit = 149
+    blocksize=1
+
+    nlheader = 0
+    if (present(header)) nlheader = size(header)
+    units_usr = ' '
+    if (present(units)) units_usr = units
+    extno_i = 0
+    if (present(extno)) extno_i = extno
+    polar_flag = .false.
+    done_polar = .false.
+!     if (present(polarisation)) then
+!        polar_flag = (polarisation /= 0)
+!        done_polar = .true. ! will ignore the header provided value of POLAR
+!     endif
+
+    if (extno_i == 0) then
+       !*************************************
+       !     create the new empty FITS file
+       !*************************************
+       call ftinit(unit,filename,blocksize,status)
+       if (status > 0) call fatal_error("Error while creating file " &
+            & //trim(filename) &
+            & //". Check path and/or access rights.")
+
+       !     -----------------------------------------------------
+       !     initialize parameters about the FITS image
+       simple=.true.
+       bitpix=32     ! integer*4
+       naxis=0       ! no image
+       naxes(1)=0
+       extend=.true. ! there is an extension
+
+       !     ----------------------
+       !     primary header
+       !     ----------------------
+       !     write the required header keywords
+       call ftphpr(unit,simple,bitpix,naxis,naxes,0_i4b,1_i4b,extend,status)
+
+       !     write the current date
+       call ftpdat(unit,status) ! format ccyy-mm-dd
+
+    else
+       !*********************************************
+       !     reopen an existing file and go to the end
+       !*********************************************
+       ! remove the leading '!' (if any) when reopening the same file
+       sfilename = adjustl(filename)
+       if (sfilename(1:1) == '!') sfilename = sfilename(2:filenamelen)
+       call ftopen(unit,sfilename,1_i4b,blocksize,status)
+       ! move to last extension written
+       call ftmahd(unit, 1_i4b+ extno_i, hdutype, status)
+
+    endif
+
+       
+    !     ----------------------
+    !     new extension
+    !     ----------------------
+    call ftcrhd(unit, status)
+
+       !     writes required keywords
+       !     repeat = 1024
+    repeat = 1
+    nrows    = (obs_npix8 + repeat - 1)/ repeat ! naxis1
+    if (obs_npix8 < repeat) repeat = 1
+    write(srepeat,'(i4)') repeat
+    srepeat = adjustl(srepeat)
+
+    repeatg = repeat * grain
+    write(srepeatg,'(i4)') repeatg
+    srepeatg = adjustl(srepeatg)
+
+    tfields  = ncol
+    ttype(1) = 'PIXEL'
+    if (nd2  == 1) then
+       done_polar = .true.
+       polar_flag = .false.
+       ttype(2)   = 'TEMPERATURE  '
+    elseif (nd2  == 3) then
+       done_polar = .true.
+       polar_flag = .true.
+       ttype(2:4) = (/'TEMPERATURE   ' , & 
+            &         'Q_POLARISATION' , &
+            &         'U_POLARISATION' /)
+    else
+       do i=2,ncol
+          ttype(i) = 'C'//string(i-1, format='(i2.2)') ! C01, C02, ...
+       enddo
+    endif
+
+    tform(1)      = trim(srepeat) //pform1
+    tform(2:ncol) = trim(srepeatg)//pform2
+
+    tunit =  ' '      ! optional, will not appear
+    tunit(2:ncol) = units_usr
+
+    extname  = 'SKY_OBSERVATION'      ! default, will be overridden by user provided one if any
+    ! if (polar_flag) extname = extnames(1+extno_i)
+    varidat  = 0
+    call ftphbn(unit, nrows, tfields, ttype, tform, tunit, &
+         &     extname, varidat, status)
+
+    call ftpcom(unit,'------------------------------------------',status)
+    call ftpcom(unit,'          Pixelisation Specific Keywords    ',status)
+    call ftpcom(unit,'------------------------------------------',status)
+    call ftpkys(unit,'PIXTYPE','HEALPIX ',' HEALPIX Pixelisation',status)      
+    call ftpkyu(unit,'NSIDE',   ' ',status) ! place holder, will be updated later on
+    call ftpkyu(unit,'ORDERING',' ',status)
+    call ftpkys(unit,'COORDSYS',' ',' ',status)
+    call ftpcom(unit,'  G = Galactic, E = ecliptic, C = celestial = equatorial', status)   
+    call ftpkyl(unit,'POLAR',polar_flag,'Polarisation included in file (T/F)',status)
+    call ftpcom(unit,'------------------------------------------',status)
+    call ftpcom(unit,'          Data Specific Keywords    ',status)
+    call ftpcom(unit,'------------------------------------------',status)
+    call ftpkys(unit,'INDXSCHM','EXPLICIT',' Indexing : IMPLICIT or EXPLICIT', status)
+    call ftpkyj(unit,'GRAIN',  grain,     ' Grain of pixel indexing',status)
+    call ftpcom(unit,'GRAIN=0 : no indexing of pixel data (IMPLICIT) ',status)
+    call ftpcom(unit,'GRAIN=1 : 1 pixel index -> 1 pixel data (EXPLICIT)',status)
+    call ftpcom(unit,'GRAIN>1 : 1 pixel index -> data of GRAIN consecutive pixels (EXPLICIT)',status)
+    call ftpkys(unit,'OBJECT','PARTIAL ',' Sky coverage represented by data',status)   
+    if (KPIX == I4B) then
+       call ftpkyj(unit,'OBS_NPIX',obs_npix4, ' Number of pixels observed and recorded',status)
+    else
+       call ftpkyk(unit,'OBS_NPIX',obs_npix8, ' Number of pixels observed and recorded',status)
+    endif
+
+    ! add required Healpix keywords (NSIDE, ORDER) if provided by user
+    done_order = .false.
+    if (present(order)) then
+       !        char8 = order
+       !        call ftupch(char8)
+       !        if (char8(1:4) == 'RING') then
+       if (order == 1) then
+          call ftukys(unit, 'ORDERING','RING',' Pixel ordering scheme, either RING or NESTED',status)
+          done_order = .true.
+          !        elseif (char8(1:4) == 'NEST') then
+       elseif (order == 2) then
+          call ftukys(unit, 'ORDERING','NESTED',' Pixel ordering scheme, either RING or NESTED ',status)
+          done_order = .true.
+       else
+          print*,'Invalid ORDER given : ',order, ' instead of 1 (RING) or 2 (NESTED)'
+       endif
+    endif
+
+    done_nside = .false.
+    if (present(nside)) then
+       if (nside2npix(nside) > 0) then ! valid nside
+          call ftukyj(unit,'NSIDE',nside,' Resolution parameter for HEALPIX', status)
+          done_nside = .true.
+          nside_final = nside
+       else
+          print*,'Invalid NSIDE given : ',nside
+       endif
+    endif
+
+    ! add non required Healpix keyword (COORD)
+    done_coord = .false.
+    if (present(coord)) then
+       coord_usr = adjustl(coord)
+       char1 = coord_usr(1:1)
+       call ftupch(char1) ! uppercase
+       if (char1 == 'C' .or. char1 == 'Q') then
+          coord_usr = 'C'
+          done_coord = .true.
+       elseif (char1 == 'G') then
+          coord_usr = 'G'
+          done_coord = .true.
+       elseif (char1 == 'E' ) then
+          coord_usr='E'
+          done_coord = .true.
+       else
+          print*,'Unrecognised COORD given : ',coord,' instead of C, G, or E'
+          print*,'Proceed at you own risks '
+          coord_usr = char1
+          done_coord = .true.
+       endif
+       if (done_coord) then
+          call ftukys(unit, 'COORDSYS',coord_usr,' Pixelisation coordinate system',status)
+       endif
+    endif
+
+
+    !    write the user provided header literally, except for  PIXTYPE, TFORM*, TTYPE*, TUNIT* and INDXSCHM
+    !    copy NSIDE, ORDERING and COORDSYS and POLAR if they are valid and not already given
+    do i=1,nlheader
+       card = header(i)
+       if (card(1:5) == 'TTYPE' .or. card(1:5) == 'TFORM' .or. card(1:7) == 'PIXTYPE') then
+          continue ! don't keep them
+       else if (card(1:8) == 'INDXSCHM') then
+          continue
+       else if (card(1:5) == 'TUNIT') then 
+          if (trim(units_usr) == '') then
+             call ftucrd(unit,'TUNIT'//card(6:7),card, status) !update TUNIT2 and above
+          endif
+       else if (card(1:5) == 'NSIDE') then
+          call ftpsvc(card, svalue, comment, status)
+          read(svalue,*) nside_hd
+          npix_hd = nside2npix(nside_hd)
+          if (.not. done_nside .and. npix_hd > 0) then
+             call ftucrd(unit,'NSIDE',card, status) !update NSIDE
+             done_nside = .true.
+             nside_final = nside_hd
+          endif
+       else if (card(1:8) == 'ORDERING') then
+          call ftpsvc(card, svalue, comment, status)
+          svalue = adjustl(svalue)
+          svalue = svalue(2:8) ! remove leading quote
+          call ftupch(svalue)
+          if (.not. done_order .and. (svalue(1:4)=='RING' .or. svalue(1:6) == 'NESTED')) then
+             call ftucrd(unit,'ORDERING',card, status) !update ORDERING
+             done_order = .true.
+          endif
+       else if (card(1:8) == 'COORDSYS') then
+          if (.not. done_coord) call putrec(unit,card, status)
+          done_coord = .true.
+       else if (card(1:5) == 'POLAR') then
+          if (.not. done_polar) then
+             call ftucrd(unit,'POLAR', card, status) ! update POLAR
+             done_polar = .true.
+          endif
+       else if (card(1:7) == 'EXTNAME') then
+          call ftucrd(unit, 'EXTNAME', card, status)
+       else if (card(1:1) /= ' ') then ! if none of the above, copy to FITS file
+          call putrec(unit, card, status)
+       endif
+10     continue
+    enddo
+
+
+    ! test that required keywords have been provided in some way
+    if (.not. done_nside) then
+       print*,routine//'> NSIDE is a Healpix required keyword, '
+       print*,routine//'>  it was NOT provided either as routine argument or in the input header'
+       print*,routine//'>  abort execution, file not written'
+       call fatal_error
+    endif
+    if (.not. done_order) then
+       print*,routine//'> ORDER is a Healpix required keyword, '
+       print*,routine//'>  it was NOT provided either as routine argument or in the input header'
+       print*,routine//'>  abort execution, file not written'
+       call fatal_error
+    endif
+!     if ((.not. done_polar) .and. extno_i >=2) then
+!        print*,routine//'> Warning: POLAR keyword not set while 3 extensions have been written'
+!     endif
+
+    ! check that NSIDE is the same for all extensions
+    if (extno_i == 0) then
+       nside_old = nside_final
+    else
+       if (nside_final /= nside_old) then
+          print*,routine//'> Inconsistent NSIDE: ',nside_final, nside_old
+          print*,routine//'> Should use same NSIDE for all extensions'
+       endif
+    endif
+
+    ! check validity of PIXEL
+    npix_final = nside2npix(nside_final)
+    if (kpix == I4B) then
+       minpix = minval(pixel4(0:obs_npix8-1))
+       maxpix = maxval(pixel4(0:obs_npix8-1))
+    else
+       minpix = minval(pixel8(0:obs_npix8-1))
+       maxpix = maxval(pixel8(0:obs_npix8-1))
+    endif
+    if (minpix < 0 .or. maxpix > npix_final-1) then
+       print*,routine//'> Actual pixel range = ',minpix,maxpix
+       print*,routine//'> expected range (for Nside =',nside_final,') : 0, ',npix_final-1
+       print*,routine//'> ABORT execution, file not written.'
+       call fatal_error
+    endif
+    if (obs_npix8 > npix_final) then 
+       print*,routine//'> The actual number of pixels ',obs_npix8
+       print*,routine//'> is larger than the number of pixels over the whole sky : ',npix_final
+       print*,routine//'> for Nside = ',nside_final
+       print*,routine//'> ABORT execution, file not written.'
+       call fatal_error
+    endif
+
+    !     write the extension one column by one column
+    frow   = 1  ! starting position (row)
+    felem  = 1  ! starting position (element)
+    if (kpix == I4B) then
+       call f90ftpcl_(unit, 1_i4b, frow, felem, obs_npix4, pixel4, status)
+    else
+       call f90ftpcl_(unit, 1_i4b, frow, felem, obs_npix4, pixel8, status)
+    endif
+    do i=1, nd2
+       call f90ftpcl_(unit, i+1_i4b, frow, felem, obs_npix4, cutmap(0:,i), status)
+    enddo
+
+    !     ----------------------
+    !     close and exit
+    !     ----------------------
+
+    !     close the file and free the unit number
+    call ftclos(unit, status)
+
+    !     check for any error, and if so print out error messages
+    if (status > 0) call printerror(status)
+
+    return
+  end subroutine sub_write_fits_partial_KLOAD

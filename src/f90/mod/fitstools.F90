@@ -84,6 +84,8 @@ module fitstools
   ! subroutine read_bintod
   ! subroutine write_bintabh
   ! subroutine unfold_weights
+  ! subroutine read_fits_partial
+  ! subroutine write_fits_partial
   ! ----------------------------------
   !
   ! subroutine read_fits_cut4               ?
@@ -119,6 +121,7 @@ module fitstools
   real(kind=SP),     private, parameter :: s_bad_value = HPX_SBADVAL
   real(kind=DP),     private, parameter :: d_bad_value = HPX_DBADVAL
   integer(kind=I4B), private, parameter :: i_bad_value = -1637500000
+  integer(kind=I8B), private, parameter :: l_bad_value = -1637500000_I8B
   integer(I4B) ,     private, parameter :: nchunk_max  = 12000
   integer(I4B),      private, parameter :: MAXDIM_TOP  = 199 ! < 999
 
@@ -164,6 +167,24 @@ module fitstools
      module procedure read_bintab8_s, read_bintab8_d
 #else
      module procedure read_bintab8_s, read_bintab8_d, read_bintab4_s, read_bintab4_d
+#endif
+  end interface
+
+  interface read_fits_partial
+#ifdef NO64BITS
+     module procedure read_fits_partial8_s, read_fits_partial8_d
+#else
+     module procedure read_fits_partial8_s, read_fits_partial8_d, &
+          & read_fits_partial4_s, read_fits_partial4_d
+#endif
+  end interface
+
+  interface write_fits_partial
+#ifdef NO64BITS
+     module procedure write_fits_partial8_s, write_fits_partial8_d
+#else
+     module procedure write_fits_partial8_s, write_fits_partial8_d, &
+          & write_fits_partial4_s, write_fits_partial4_d
 #endif
   end interface
 
@@ -217,11 +238,11 @@ module fitstools
   end interface
 
   interface f90ftpcl_
-     module procedure f90ftpcle, f90ftpcld
+     module procedure f90ftpcle, f90ftpcld, f90ftpclj, f90ftpclk
   end interface
 
   interface f90ftgcv_
-     module procedure f90ftgcve, f90ftgcvd
+     module procedure f90ftgcve, f90ftgcvd, f90ftgcvj, f90ftgcvk
   end interface
 
   interface f90ftgpv_
@@ -229,7 +250,7 @@ module fitstools
   end interface
 
   interface f90ftgky_
-     module procedure f90ftgkye, f90ftgkyd
+     module procedure f90ftgkye, f90ftgkyd, f90ftgkyj, f90ftgkyk
   end interface
 
   interface map_bad_pixels
@@ -249,6 +270,7 @@ module fitstools
   public :: read_fits_cut4, write_fits_cut4, & 
        & input_map, read_bintab,  &
        & output_map, write_bintab
+  public :: read_fits_partial, write_fits_partial
   public :: write_plm
   public :: fits2cl, read_asctab, write_asctab
   public :: read_dbintab, write_dbintab
@@ -262,7 +284,7 @@ module fitstools
 contains
 
   !-------------------------------------------------------------------------------
-  ! generic interface F90FTPCL_ for FITSIO's FTPCLE and FTPCLD
+  ! generic interface F90FTPCL_ for FITSIO's FTPCL[E,D,J,K]
   !           writes data in ASCTAB or BINTAB
   subroutine f90ftpcle(unit, colnum, frow, felem, np, data, status)
     integer(I4B), intent(in)  :: unit, colnum, frow, felem, np
@@ -278,8 +300,22 @@ contains
     call ftpcld(unit, colnum, frow, felem, np, data, status)
     return
   end subroutine f90ftpcld
+  subroutine f90ftpclj(unit, colnum, frow, felem, np, data, status)
+    integer(I4B), intent(in)  :: unit, colnum, frow, felem, np
+    integer(I4B), intent(out) :: status
+    integer(I4B), intent(in), dimension(0:)  :: data
+    call ftpclj(unit, colnum, frow, felem, np, data, status)
+    return
+  end subroutine f90ftpclj
+  subroutine f90ftpclk(unit, colnum, frow, felem, np, data, status)
+    integer(I4B), intent(in)  :: unit, colnum, frow, felem, np
+    integer(I4B), intent(out) :: status
+    integer(I8B), intent(in), dimension(0:)  :: data
+    call ftpclk(unit, colnum, frow, felem, np, data, status)
+    return
+  end subroutine f90ftpclk
   !-------------------------------------------------------------------------------
-  ! generic interface F90FTGCV_ for FITSIO's FTGCVE and FTGCVD
+  ! generic interface F90FTGCV_ for FITSIO's FTGCV[E,D,J,K]
   !           reads data from BINTAB
   subroutine f90ftgcve(unit, colnum, frow, felem, np, nullval, data, anynull, status)
     integer(I4B), intent(in)  :: unit, colnum, frow, felem, np
@@ -299,6 +335,24 @@ contains
     call ftgcvd(unit, colnum, frow, felem, np, nullval, data, anynull, status)
     return
   end subroutine f90ftgcvd
+  subroutine f90ftgcvj(unit, colnum, frow, felem, np, nullval, data, anynull, status)
+    integer(I4B), intent(in)  :: unit, colnum, frow, felem, np
+    integer(I4B), intent(out) :: status
+    logical(LGT), intent(out) :: anynull
+    integer(I4B), intent(out), dimension(0:) :: data
+    integer(I4B), intent(in)                 :: nullval
+    call ftgcvj(unit, colnum, frow, felem, np, nullval, data, anynull, status)
+    return
+  end subroutine f90ftgcvj
+  subroutine f90ftgcvk(unit, colnum, frow, felem, np, nullval, data, anynull, status)
+    integer(I4B), intent(in)  :: unit, colnum, frow, felem, np
+    integer(I4B), intent(out) :: status
+    logical(LGT), intent(out) :: anynull
+    integer(I8B), intent(out), dimension(0:) :: data
+    integer(I8B), intent(in)                 :: nullval
+    call ftgcvk(unit, colnum, frow, felem, np, nullval, data, anynull, status)
+    return
+  end subroutine f90ftgcvk
   !-------------------------------------------------------------------------------
   ! generic interface F90FTGPV_ for FITSIO's FTGPVE and FTGPVD
   !           reads data from IMAGE
@@ -321,7 +375,7 @@ contains
     return
   end subroutine f90ftgpvd
   !-------------------------------------------------------------------------------
-  ! generic interface F90FTGKY_ for FITSIO's FTGKYE and FTGKYD
+  ! generic interface F90FTGKY_ for FITSIO's FTGKY[E,D,J,K]
   !           reads a keyword
   subroutine f90ftgkye(unit, keyword, value, comment, status)
     integer(I4B),     intent(in)  :: unit
@@ -341,6 +395,24 @@ contains
     call ftgkyd(unit, keyword, value, comment, status)
     return
   end subroutine f90ftgkyd
+  subroutine f90ftgkyj(unit, keyword, value, comment, status)
+    integer(I4B),     intent(in)  :: unit
+    character(len=*), intent(in)  :: keyword
+    integer(I4B),     intent(out) :: status
+    character(len=*), intent(out) :: comment
+    integer(I4B),     intent(out) :: value
+    call ftgkyj(unit, keyword, value, comment, status)
+    return
+  end subroutine f90ftgkyj
+  subroutine f90ftgkyk(unit, keyword, value, comment, status)
+    integer(I4B),     intent(in)  :: unit
+    character(len=*), intent(in)  :: keyword
+    integer(I4B),     intent(out) :: status
+    character(len=*), intent(out) :: comment
+    integer(I8B),     intent(out) :: value
+    call ftgkyk(unit, keyword, value, comment, status)
+    return
+  end subroutine f90ftgkyk
   !-------------------------------------------------------------------------------
 
 
@@ -633,7 +705,7 @@ contains
     tunit =  ' '      ! optional, will not appear
     tunit(2) = units_usr
     tunit(4) = units_usr
-    extname  = 'SKY_OBSERVATION'      ! default, will be overide by user provided one if any
+    extname  = 'SKY_OBSERVATION'      ! default, will be overridden by user provided one if any
     if (polar_flag) extname = extnames(1+extno_i)
     varidat  = 0
     call ftphbn(unit, nrows, tfields, ttype, tform, tunit, &
