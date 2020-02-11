@@ -177,19 +177,23 @@ subroutine input_map8_KLOAD(filename, map, npixtot, nmaps, &
 
     LOGICAL(LGT) :: anynull, do_polcconv
     ! Note : read_fits_cut4 still SP and I4B only
-    integer(I4B), dimension(:), allocatable :: pixel
-!     real(KMAP),     dimension(:), allocatable :: signal
-    real(SP),     dimension(:), allocatable :: signal
+    integer(I4B), dimension(:),   allocatable :: pixel4
+    real(SP),     dimension(:),   allocatable :: signal
+    ! while read_fits_partial is SP/DP and I4B/I8B
+    integer(I8B), dimension(:),   allocatable :: pixel8
+    real(KMAP),   dimension(:,:), allocatable :: iqu
     integer(I4B) :: status
     integer(I4B) :: type_fits, nmaps_fits
     CHARACTER(LEN=80)  :: units1
     CHARACTER(LEN=80),dimension(1:30)  :: unitsm
     character(len=80), dimension(:), allocatable  :: hbuffer
 !    CHARACTER(LEN=80),dimension(:), allocatable  :: unitsm
-    integer(I4B) :: extno_i, extno_f
+    integer(I4B) :: extno_i, extno_f, n_ext
     CHARACTER(LEN=80)  :: polcconv
     integer(I4B)       :: ipolcconv, polar, nside_fits
     character(len=*), parameter :: primer_url = 'http://healpix.sf.net/pdf/intro.pdf'
+    character(len=*), parameter :: code = 'input_map'
+    
     !-----------------------------------------------------------------------
 
     units1    = ' '
@@ -210,6 +214,7 @@ subroutine input_map8_KLOAD(filename, map, npixtot, nmaps, &
        do_polcconv = .not. ignore_polcconv
     endif
 
+    n_ext = getnumext_fits(filename)
     obs_npix = getsize_fits(filename, nmaps = nmaps_fits, type=type_fits, extno=extno_i, &
          polcconv=ipolcconv, polarisation=polar, nside=nside_fits)
 
@@ -230,47 +235,70 @@ subroutine input_map8_KLOAD(filename, map, npixtot, nmaps, &
           units(1:size(units)) = unitsm(1:size(units))
        endif
        call map_bad_pixels(map, fmissing, fmiss_effct, imissing, verbose=.false.)
-!        do imap = 1, nmaps
-!           anynull = .true.
-!           if (anynull) then
-!              imissing = 0
-!              do i=0,npixtot-1
-!                 if ( ABS(map(i,imap)/fmissing -1.) < 1.e-5 ) then
-!                    map(i,imap) = fmiss_effct
-!                    imissing = imissing + 1
-!                 endif
-!              enddo
-!           endif
-!        enddo
        if (imissing > 0) write(*,'(a,1pe11.4)') 'blank value : ' ,fmissing
-    else if (type_fits == 3 .and. (nmaps == 1 .or. nmaps == 3)) then
-       ! cut sky FITS file, reading 1 map (I) or 3 maps (I,Q,U), each from a different extension
+    else if (type_fits == 3 .and. (nmaps == 1 .or. nmaps == 3) &
+         & .and. (nmaps_fits > nmaps) .and. n_ext == 1) then
+       ! partial FITS file, reading 1 map (I) or 3 maps (I,Q,U) from the same extension
+       obs_npix = getsize_fits(filename)
+       allocate(pixel8(0:obs_npix-1),          stat = status)
+       call assert_alloc(status, code, "pixel8")
+       allocate(iqu   (0:obs_npix-1, 1:nmaps), stat = status)
+       call assert_alloc(status, code, "iqu")
+       call read_fits_partial(filename, pixel8, iqu, header=hbuffer)
+       if (present(header)) then
+          do i=1,nlheader
+             header(i) = hbuffer(i)
+          enddo
+       endif
+       if (present(units)) then
+          do imap=1,min(size(units),nmaps-1)
+             call get_card(hbuffer,'TUNIT'//string(imap+1,format='(i0.0)'), units(imap))
+          enddo
+       endif
+       maxpix = maxval(pixel8)
+       minpix = maxval(pixel8)
+       if (maxpix > (npixtot-1) .or. minpix < 0) then
+          print*,'map constructed from file '//trim(filename)//', with pixels in ',minpix,maxpix
+          print*,' wont fit in array with ',npixtot,' elements'
+          call fatal_error
+       endif
+       map(:,:)        = fmiss_effct
+       do imap=1,nmaps
+          map(pixel8(:),imap) = iqu(:,imap)
+       enddo
+       imissing = npixtot - obs_npix
+       deallocate(iqu)
+       deallocate(pixel8)
+!     else if (type_fits == 3 .and. (nmaps == 1 .or. nmaps == 3) .and. n_ext == nmaps) then
+!        ! cut sky FITS file, reading 1 map (I) or 3 maps (I,Q,U), each from a different extension
+    else if (type_fits == 3 .and. (nmaps == 3) .and. n_ext == nmaps) then
+       ! cut sky FITS file, reading 3 maps (I,Q,U), each from a different extension
        do imap = 1, nmaps
           extno_f  = extno_i + imap - 1 ! 2016-08-16
           obs_npix = getsize_fits(filename, extno = extno_f)       
           ! one partial map (in binary table with explicit pixel indexing)
-          allocate(pixel(0:obs_npix-1), stat = status)
+          allocate(pixel4(0:obs_npix-1), stat = status)
           allocate(signal(0:obs_npix-1), stat = status)
           call read_fits_cut4(filename, int(obs_npix,kind=i4b), &
-               &              pixel, signal, header=hbuffer, units=units1, extno=extno_f)
+               &              pixel4, signal, header=hbuffer, units=units1, extno=extno_f)
           if (present(header) .and. imap == 1) then
              do i=1,nlheader
                 header(i) = hbuffer(i)
              enddo
           endif
           if (present(units)) units(imap) = trim(units1)
-          maxpix = maxval(pixel)
-          minpix = maxval(pixel)
+          maxpix = maxval(pixel4)
+          minpix = maxval(pixel4)
           if (maxpix > (npixtot-1) .or. minpix < 0) then
              print*,'map constructed from file '//trim(filename)//', with pixels in ',minpix,maxpix
              print*,' wont fit in array with ',npixtot,' elements'
              call fatal_error
           endif
           map(:,imap)        = fmiss_effct
-          map(pixel(:),imap) = signal(:)
+          map(pixel4(:),imap) = signal(:)
           imissing = npixtot - obs_npix
           deallocate(signal)
-          deallocate(pixel)
+          deallocate(pixel4)
        enddo
     else 
        print*,'Unable to read the ',nmaps,' required  map(s) from file '//trim(filename)
@@ -2526,7 +2554,6 @@ subroutine input_map8_KLOAD(filename, map, npixtot, nmaps, &
   ! write_fits_partial(filename, pixel, cutmap, &
   !         [, header, coord, nside, order, units, extno])
   !=======================================================================
-#ifndef NO64BITS
   subroutine write_fits_partial4_KLOAD(filename, pixel, cutmap, &
        &                     header, coord, nside, order, units, extno)
     !=======================================================================
@@ -2541,8 +2568,8 @@ subroutine input_map8_KLOAD(filename, map, npixtot, nmaps, &
     call sub_write_fits_partial_KLOAD(filename, cutmap, pixel4=pixel, &
          header=header, coord=coord, nside=nside, order=order, units=units, extno=extno)
   end subroutine write_fits_partial4_KLOAD
-#endif
   !=======================================================================
+#ifndef NO64BITS
   subroutine write_fits_partial8_KLOAD(filename, pixel, cutmap, &
        &                     header, coord, nside, order, units, extno)
     !=======================================================================
@@ -2557,6 +2584,7 @@ subroutine input_map8_KLOAD(filename, map, npixtot, nmaps, &
     call sub_write_fits_partial_KLOAD(filename, cutmap, pixel8=pixel, &
          header=header, coord=coord, nside=nside, order=order, units=units, extno=extno)
   end subroutine write_fits_partial8_KLOAD
+#endif
   !=======================================================================
   subroutine sub_write_fits_partial_KLOAD(filename, cutmap, &
        &                     pixel4, pixel8, &
@@ -2599,10 +2627,10 @@ subroutine input_map8_KLOAD(filename, map, npixtot, nmaps, &
     character(len=4) :: srepeat, srepeatg
     character(len=1) :: pform1, pform2
     character(len=filenamelen) sfilename
-    integer(I8B)     :: obs_npix8, npix_final, nside_final
-    integer(I4B)     :: obs_npix4, kpix
+    integer(I8B)     :: obs_npix8, npix_final
+    integer(I4B)     :: obs_npix4, kpix, nside_final
 
-    integer(I8B), save :: nside_old
+    integer(I4B), save :: nside_old
     !=======================================================================
     if (KMAP == SP)  pform2='E'
     if (KMAP == DP)  pform2='D'
@@ -2687,8 +2715,8 @@ subroutine input_map8_KLOAD(filename, map, npixtot, nmaps, &
        !     writes required keywords
        !     repeat = 1024
     repeat = 1
-    nrows    = (obs_npix8 + repeat - 1)/ repeat ! naxis1
     if (obs_npix8 < repeat) repeat = 1
+    nrows    = (obs_npix8 + repeat - 1)/ repeat ! naxis1
     write(srepeat,'(i4)') repeat
     srepeat = adjustl(srepeat)
 

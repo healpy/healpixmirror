@@ -60,6 +60,7 @@
 # 2019-10-01: addition and documentation of --auto=list   mode
 # 2020-01-06: added missing space in whereisCmd
 # 2020-01-14: removed spurious \r in a some comments
+# 2020-01-23: removed bashism, improved FITSDIR behavior
 #=====================================
 #=========== General usage ===========
 #=====================================
@@ -122,7 +123,7 @@ echoLn () {
 }
 #-------------
 findFITSLib () {
-    for dir in $* /usr/lib /usr/lib64 /usr/local/lib /usr/local/lib64 /usr/local/lib/cfitsio /usr/local/lib64/cftisio /usr/local/src/cfitsio ${HOME}/lib ${HOME}/lib64 /softs/cfitsio/lib `${LS} -dr /softs/cfitsio/*/lib 2> ${DEVNULL}` `${LS} -dr /usr/common/usg/cfitsio/*/lib 2> ${DEVNULL}` ; do
+    for dir in $* /usr/lib /usr/lib64 /usr/local/lib /usr/local/lib64 /usr/local/lib/cfitsio /usr/local/lib64/cftisio /usr/local/src/cfitsio ${HOME}/lib ${HOME}/lib64 /softs/cfitsio/lib `${LS} -dr /softs/cfitsio/*/lib 2> ${DEVNULL}` `${LS} -dr /usr/common/usg/cfitsio/*/lib 2> ${DEVNULL}` `${LS} -dr ${HOME}/?oft*/cfitsio*/ 2> ${DEVNULL}` ; do
 	if [ -r "${dir}/lib${LIBFITS}.a" -o -r "${dir}/lib${LIBFITS}.so" -o -r "${dir}/lib${LIBFITS}.dylib" ] ; then
 	    FITSDIR=$dir
 	    break
@@ -131,7 +132,7 @@ findFITSLib () {
 }
 #-------------
 findFITSInclude () {
-    for dir in $* /usr/include /usr/local/include /usr/local/src/cfitsio ${HOME}/include ${HOME}/include64 /soft/cfitsio/include `${LS} -dr /softs/cfitsio/*/include 2> ${DEVNULL}` `${LS} -dr /usr/common/usg/cfitsio/*/include 2> ${DEVNULL}` ; do
+    for dir in $* /usr/include /usr/local/include /usr/local/src/cfitsio ${HOME}/include ${HOME}/include64 /soft/cfitsio/include `${LS} -dr /softs/cfitsio/*/include 2> ${DEVNULL}` `${LS} -dr /usr/common/usg/cfitsio/*/include 2> ${DEVNULL}` `${LS} -dr ${HOME}/?oft*/cfitsio*/ 2> ${DEVNULL}` ; do
 	if [ -r "${dir}/fitsio.h" ] ; then
 	    FITSINC=$dir
 	    break
@@ -1435,9 +1436,11 @@ checkFitsioCurl () {
  		testcurl=`${WHEREIS} ${CURLCONFIG}`
 		#echo "TESTCURL:  $testcurl"
 		if [ "x${testcurl}" != "x" -a "x{testcurl}" != "x${CURLCONFIG}:" ] ; then
-		    pathcurl=`${CURLCONFIG} --prefix`
-		    #echo "${pathcurl}"
-		    if [ "${pathcurl:0:2}" = "-L" ] ; then
+		    #pathcurl=`${CURLCONFIG} --prefix`
+		    #pcloc=${pathcurl:0:2} # bashism !!
+		    pathcurl=`${CURLCONFIG} --libs`
+		    pcloc=`echo $pathcurl | awk '{ print substr($0, 1, 2); }'`
+		    if [ "pcloc}" = "-L" ] ; then
  			PATHCURL="${pathcurl}"
  			CFITSIOCURL="${PATHCURL} ${CFITSIOCURL}"
  		    fi
@@ -2692,9 +2695,13 @@ setTopDefaults() {
     F_SHARED="${F_SHARED-0}" # 0 unless already defined
     F_PARAL="${F_PARAL-1}"   # 1 unless already defined
     LIBFITS="cfitsio"
+    # look for libcfitsio.* in various directories starting with /usr/local/lib or user defined value
+    findFITSLib     ${FITSDIR-/usr/local/lib}
+    # look for fitsio.h in various directories starting with /usr/local/lib or user defined value
+    findFITSInclude ${FITSINC-/usr/local/include}
     # define FITSDIR and FITSINC with /usr/local/lib and /usr/local/include as initial guess
-    findFITSLib /usr/local/lib
-    findFITSInclude /usr/local/include `cd ${FITSDIR}/../include ; pwd`
+    # findFITSLib /usr/local/lib
+    # findFITSInclude /usr/local/include `cd ${FITSDIR}/../include ; pwd`
     # FITSDIR="${FITSDIR-/usr/local/lib}"     # /usr/local/lib     unless already defined
     # FITSINC="${FITSINC-/usr/local/include}" # /usr/local/include unless already defined
     FITSPREFIX="/usr/local"

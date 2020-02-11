@@ -198,7 +198,7 @@ can be used to customize its behavior in both modes
 </UL>
 <A HREF=#top>    Back to Top</A><br><br>
 
-<h4>Fortran 90 <A ID="tex2html_360_3"
+<h4><A ID="SECTION_360_13000000000000000">Fortran 90</A> <A ID="tex2html_360_3"
   HREF="./html/facilities.htm">facilities</A>
 and
  	<A ID="tex2html_360_4"
@@ -271,7 +271,7 @@ Bug corrections and Improvements in Version 3.50</A>
 </h3>
 <P>
 
-<h4>Fortran 90 <A ID="tex2html_350_1"
+<h4><A ID="SECTION_350_11000000000000000">Fortran 90</A> <A ID="tex2html_350_1"
   HREF="./html/facilities.htm">facilities</A>
 and
 	<A ID="tex2html_350_2"

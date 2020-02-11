@@ -1229,6 +1229,26 @@ the system must know where to find this library at runtime as explained for inst
 for Linux/Unix or 
 \htmladdnormallink{there}{https://developer.apple.com/library/archive/documentation/DeveloperTools/Conceptual/DynamicLibraries/100-Articles/UsingDynamicLibraries.html} for MacOSX.
 
+\subsubsection*{CFITSIO from Heasoft}
+\label{install:heasoft}
+%
+The Heasoft suite of software packages for High Energy Astrophysics, 
+also hosted at HEASARC and available as source files or precompiled binaries, 
+includes a cfitsio library and its header files.
+However, trying to link \healpix to that installation of cfitsio will generally fail, because
+\begin{itemize}
+\item the {\em precompiled} cfitsio library may not be properly detected during the configuration of 
+\healpix (in C, C++ and F90),
+\item the Heasoft header files 
+\texttt{rotmatrix.h} and 
+\texttt{pointing.h} found in 
+\texttt{\$\{HEADAS\}/include} (like
+\texttt{fitsio.h}) will conflict with the ones provided in 
+\texttt{\$\{HEALPIX\}/src/cxx/cxxsupport},
+preventing the compilation of \healpix C++ routines.
+\end{itemize}
+It is therefore recommended to link \healpix to a cfitsio library compiled 
+locally and {\em not} included in Heasoft.
 
 % \subsection{fft.f compilation}
 

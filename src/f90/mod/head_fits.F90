@@ -524,7 +524,7 @@ contains
           endif
        endif
     enddo
-    if (verbose) print*,' >>>>> keyword '//kwd//' not found <<<<< '
+    if (verbose) print*,' >>>>> keyword '//trim(kwd)//' not found <<<<< '
     if (present(comment)) comment = ' '
     if (present(count))   count = count_in
     return
@@ -563,7 +563,7 @@ contains
           endif
        endif
     enddo
-    if (verbose) print*,' >>>>> keyword '//kwd//' not found <<<<< '
+    if (verbose) print*,' >>>>> keyword '//trim(kwd)//' not found <<<<< '
     if (present(comment)) comment = ' '
     if (present(count))   count = count_in
     return
@@ -673,7 +673,7 @@ contains
           return
        endif
     enddo
-    if (verbose) print*,' >>>>> keyword '//kwd//' not found <<<<< '
+    if (verbose) print*,' >>>>> keyword '//trim(kwd)//' not found <<<<< '
     if (present(comment)) comment = ' '
     if (present(count))   count = count_in
     return
@@ -712,7 +712,7 @@ contains
           endif
        endif
     enddo
-    if (verbose) print*,' >>>>> keyword '//kwd//' not found <<<<< '
+    if (verbose) print*,' >>>>> keyword '//trim(kwd)//' not found <<<<< '
     if (present(comment)) comment = ' '
     if (present(count))   count = count_in
     return
@@ -753,7 +753,7 @@ contains
           endif
        endif
     enddo
-    if (verbose) print*,' >>>>> keyword '//kwd//' not found <<<<< '
+    if (verbose) print*,' >>>>> keyword '//trim(kwd)//' not found <<<<< '
     if (present(comment)) comment = ' '
     if (present(count))   count = count_in
     return
@@ -792,7 +792,7 @@ contains
           endif
        endif
     enddo
-    if (verbose) print*,' >>>>> keyword '//kwd//' not found <<<<< '
+    if (verbose) print*,' >>>>> keyword '//trim(kwd)//' not found <<<<< '
     if (present(comment)) comment = ' '
     if (present(count))   count = count_in
     return

@@ -25,10 +25,10 @@
 ;  For more information about HEALPix see http://healpix.sourceforge.net
 ;
 ; -----------------------------------------------------------------------------
-function getsize_fits, filename, nmaps = nmaps, nside = nside, mlpol = mlpol, ordering = order, obs_npix =obs_npix, type = type, header = header, tags = tags, extension=extension_id, help=help
+function getsize_fits, filename, nmaps = nmaps, nside = nside, mlpol = mlpol, ordering = order, obs_npix =obs_npix, type = type, header = header, tags = tags, extension=extension_id, polarisation=polar, help=help
 ;+
 ;  result = getsize_fits(filename, [nmaps=, nside=, mlpol=, ordering=,
-;  obs_npix=, type=, header=, tags=, extension=, help=])
+;  obs_npix=, type=, header=, tags=, extension=, polarisation=, help=])
 ;
 ;     Get the number of pixels stored in a map FITS file.
 ;     Each pixel is counted only once 
@@ -75,6 +75,11 @@ function getsize_fits, filename, nmaps = nmaps, nside = nside, mlpol = mlpol, or
 ;                        (result <= 12 * nside * nside)
 ;                999  : unable to determine the type
 ;
+;      polarisation = (OPTIONAL, OUT)
+;                   -1 : not found
+;                    0 : unpolarized data
+;                    1 :   polarized data
+;
 ;      adapted from F90 getsize_fits
 ;      EH, 2000-11
 ;      2008-04-01: accepts compressed files
@@ -82,10 +87,11 @@ function getsize_fits, filename, nmaps = nmaps, nside = nside, mlpol = mlpol, or
 ;      2013-01-11: parse header for LMAX (on top of MAX-LPOL)
 ;            Extension can now be a string as well as a number
 ;      2013-07-15: accepts number-free TFORM (eg, 'E', 'I', 'D')
+;      2020-01-24: added polarisation
 ;-
 
 routine = 'getsize_fits'
-syntax = 'Syntax : size='+routine+'(filename, [nmaps= , nside= , mlpol= , ordering= , obs_npix=, type= , header=, tags=, extension=, help=])'
+syntax = 'Syntax : size='+routine+'(filename, [nmaps= , nside= , mlpol= , ordering= , obs_npix=, type= , header=, tags=, extension=, polarisation=, help=])'
 
 if (keyword_set(help)) then begin
     doc_library,routine
@@ -109,6 +115,7 @@ mlpol =  0
 obs_npix = -1
 order = ''
 fake = 0 ; <<<< bug correction Feb 13, 2003
+polar = -1
 
 from_header = 0
 if keyword_set(header) then begin
@@ -281,11 +288,33 @@ endif else begin
                 if (type ne 999) then goto, found
             endif
         endif
-        
     endif
-
 found:
 
+    junk  = sxpar(xhdr,'POLAR',count=countfits,/silent)
+    if (countfits ne 0) then begin
+        polar = junk
+    endif else begin
+        if (type eq 1) then begin ; ASCII table
+            defpol = [["GRA","E-M","POW","EE "],$
+                      ["CUR","B-M","POW","BB "]]
+        endif
+        if (type gt 1) then begin ; BIN table
+            defpol = [["Q-P","Q_P","Q P", "Q-S","Q_S", "Q  ", "GRA","E-M","POW","EE " ],$
+                      ["U-P","U_P","U P", "U-S","U_S", "U  ", "CUR","B-M","POW","BB " ]]
+        endif
+        ttypes = strmid(sxpar(xhdr,'TTYPE*',count=countfits),0,3)
+        pfound = 0
+        p1 = 0
+        for k=1,n_elements(ttypes)-1 do begin ; skip 1st column, usually Temperature
+            pfound = pfound or strcmp(ttypes[k],defpol,3,/fold_case)
+            p1 = array_equal(max(pfound,dimension=1), [1,1])
+            if (p1) then goto, found_pol
+        endfor
+found_pol:
+        polar = p1
+    endelse
+              
 endelse
 
 if (from_file && use_fxb) then begin

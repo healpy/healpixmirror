@@ -122,9 +122,13 @@ junk = getsize_fits(header,/header,type = fits_type, nside = nside_head, tags=ta
 ; nside_head = long(sxpar(header,'NSIDE',Count=flag_nside))
 if (fits_type eq 3) then begin
     ; partial sky coverage: create a full sky map, setting missing pixels to BAD
-    select_def = defined(select_in) ? select_in : 'SIGNAL'
     select_pix = index_word(tag_names(stc), 'PIXEL',   value=select_name2, err=error2)
+    select_def = defined(select_in) ? select_in : 'SIGNAL'
     select_map = index_word(tag_names(stc), select_def,value=select_name,  err=error1)
+    if (error1 eq 3) then begin
+        select_def = 2
+        select_map = index_word(tag_names(stc), select_def,value=select_name,  err=error1)
+    endif
     if (error1 ne 0 || error2 ne 0 || select_map le 0 || select_pix le 0) then begin
         print,'wrong select in '+routine
         print,'PIXEL',select_def,tag_names(stc)
@@ -429,22 +433,30 @@ if (from_file) then begin ; fits file
     select = iw - ntags_before ; column number within extension
     select_name = all_ttype_tags[iw] ; name based on FITS column name
     ;
-    junk = getsize_fits(file_in, type = fits_type)
+    junk = getsize_fits(file_in, type = fits_type, polar=polar)
+    fits_info, file_in, /silent, n_ext = n_ext
     if (fits_type eq 3) then begin ; cut sky -> do structure
         file_keep = file_in
         if (polarization[0] ge 1 && polarization[0] le 3) then begin ; polarised data
-            read_fits_s, file_keep, st_t, /merge, ext = 0
-            read_fits_s, file_keep, st_q, /merge, ext = 1
-            read_fits_s, file_keep, st_u, /merge, ext = 2
-            iw_signal = (index_word(all_ttype_tags, 'SIGNAL', err= error))[0]
-            iw_pixel  = (index_word(all_ttype_tags, 'PIXEL', err= error))[0]
-            file_in = {JUNK:st_t.(0), PIXEL:st_t.(iw_pixel), TEMPERATURE:st_t.(iw_signal), $
-                                      Q_POLARISATION:st_q.(iw_signal), $
-                                      U_POLARISATION:st_u.(iw_signal)}
-            if (n_elements(file_in.(2)) ne n_elements(file_in.(3)) || $
-                n_elements(file_in.(2)) ne n_elements(file_in.(4))) then begin
-                message,'Unconsistent I, Q & U fields in cut-sky FITS file:'+file_keep
-            endif
+            if (polar && n_ext eq 1) then begin
+                read_fits_partial, file_keep, pixel, iqu, hdr=hdr, xhdr=xhdr
+                file_in = {JUNK:xhdr, PIXEL:pixel, TEMPERATURE:iqu[*,0], $
+                           Q_POLARISATION:iqu[*,1], $
+                           U_POLARISATION:iqu[*,2]}
+            endif else begin
+                read_fits_s, file_keep, st_t, /merge, ext = 0
+                read_fits_s, file_keep, st_q, /merge, ext = 1
+                read_fits_s, file_keep, st_u, /merge, ext = 2
+                iw_signal = (index_word(all_ttype_tags, 'SIGNAL', err= error))[0]
+                iw_pixel  = (index_word(all_ttype_tags, 'PIXEL', err= error))[0]
+                file_in = {JUNK:st_t.(0), PIXEL:st_t.(iw_pixel), TEMPERATURE:st_t.(iw_signal), $
+                           Q_POLARISATION:st_q.(iw_signal), $
+                           U_POLARISATION:st_u.(iw_signal)}
+                if (n_elements(file_in.(2)) ne n_elements(file_in.(3)) || $
+                    n_elements(file_in.(2)) ne n_elements(file_in.(4))) then begin
+                    message,'Unconsistent I, Q & U fields in cut-sky FITS file:'+file_keep
+                endif
+            endelse
         endif else begin ; temperature only
             read_fits_s, file_keep, file_in, /merge, ext = ext2read
             ; select_in = select

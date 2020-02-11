@@ -1,6 +1,6 @@
 <h2>HEALPix Software</h2>
 <p>
-  2019-12-16: <a href="downloads.php">HEALPix 3.60 released</a><br />
+  2019-12-18: <a href="downloads.php">HEALPix 3.60 released</a><br />
   2018-12-06: <a href="downloads.php">HEALPix 3.50 released</a><br />
   2018-06-22: <a href="downloads.php">HEALPix 3.40 released</a><br />
 <!--  2017-01-06: Fixed dangling links in <a href="documentation.php">web-based documentation</a><br /> -->
