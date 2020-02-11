@@ -8,42 +8,43 @@
 #
 # To build the static library, type
 #
-# % make [static] [CC=<cc>] [OPT=<opt>] [AR=<ar>] [CFITSIO_INCDIR=<cfitsio_incdir>] [CFITSIO_LIBDIR=<cfitsio_libdir>]
-#
+# % make [static] [CC=<cc>] [OPT=<opt>] [PIC=<pic>] [AR=<ar>] [WITHOUT_CFITSIO=] [CFITSIO_INCDIR=<cfitsio_incdir>] [CFITSIO_LIBDIR=<cfitsio_libdir>] [EXTRA_LIB=] [AR=<ar>] [WLRPATH=] [RM=]
 # where
 #  CC     is the C compiler you want to use (default: gcc)
 #  OPT    compilation option
+#  PIC    Position Independent Compilation,     default: -fPIC
 #  WITHOUT_CFITSIO=1: cfitsio integration will not be built
 #  CFITSIO_INCDIR is where the header files for the 'cfitsio' library is kept
 #  CFITSIO_LIBDIR is where the 'cfitsio' library archive is kept
 #  EXTRA_LIB extra libraries required (like libcurl by cfitsio >= 3.42)
-#  AR is the command to create the archive with its index table
-#      default = ar -rsv
+#  AR is the command to create the archive with its index table,   default = ar -rsv
+#  WLRPATH: directory with external shared library passed to linker
+#  RM:     command to remove files
 #
 # For example:
 #  % make CFITSIO_INCDIR=/scr/kmg/include
+# ---------
 #
-# To build the shared(dynamical) library, type
+# To build the shared (on Unix,Linux) or dynamic (MacOS), type respectively
 #
-# % make shared [CC=<cc>] [OPT=<opt>] [AR=<ar>] [CFITSIO_INCDIR=<cfitsio_incdir>] [CFITSIO_LIBDIR=<cfitsio_libdir>]
+# % make shared  [same options as above]
+# % make dynamic [same options as above]
 #
 # For example:
-#  % make shared CFITSIO_INCDIR=/scr/kmg/include
+#  % make dynamic CFITSIO_INCDIR=/scr/kmg/include
+# ---------
 #
 # To install the files, type
 #
-# % make install [INCDIR=<incdir>] [LIBDIR=<libdir>] [RANLIB=<ranlib>] 
+# % make install [INCDIR=<incdir>] [LIBDIR=<libdir>]
 #
 # For example:
-#  % make install LIBDIR=/home/kmg/lib INCDIR=/home/kmg/include RANLIB="ar -ts"
+#  % make install LIBDIR=/home/kmg/lib INCDIR=/home/kmg/include
 #
 # where
 #  INCDIR is the directory in which you want to install the header files
 #  LIBDIR is the directory in which you want to install the library files
-#  RANLIB is the 'ranlib' command to be used for the static library archive.
-#         It defaults to 'ranlib', but if your
-#         system does not have or need this, you should use something like
-#         RANLIB="ar -ts" 
+# ---------
 #
 # You could also build the package by directly editing the Makefile
 #  (not recommended unless you're going to do it a lot and don't think
@@ -65,6 +66,7 @@ AR = ar -rsv
 WITHOUT_CFITSIO = 0
 WITH_HIGHRES = 0
 FLAGS = $(OPT)
+PIC = -fPIC
 
 ifeq ($(WITHOUT_CFITSIO), 0)
   FLAGS += -DENABLE_FITSIO 
@@ -74,10 +76,9 @@ ifeq ($(WITHOUT_CFITSIO), 0)
   ifdef CFITSIO_LIBDIR
     CFITSIO_LIBS += -L$(CFITSIO_LIBDIR) 
   endif
-  CFITSIO_LIBS += -lcfitsio $(EXTRA_LIB)
+  CFITSIO_LIBS += -lcfitsio $(EXTRA_LIB) $(WLRPATH)
 endif
 
-PIC = -fPIC
 #
 SHLIB_LD =      $(CC) $(FLAGS) $(PIC) -shared
 SHLIB_SUFFIX =  .so
