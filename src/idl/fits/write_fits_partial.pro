@@ -30,7 +30,8 @@ pro write_fits_partial, filename, pixel, iqu,  $
                      Coordsys=coordsys, $
                      Nested=nested, Ring=ring, Ordering=ordering, $
                      Nside = nside_usr, $
-                     Units = units, Help=help, colnames=colnames_usr, verbose=verbose
+                     Units = units, Help=help, colnames=colnames_usr, verbose=verbose, $
+                     Extension = extension_id
 ;+
 ; NAME:
 ;         write_fits_cut4
@@ -45,7 +46,7 @@ pro write_fits_partial, filename, pixel, iqu,  $
 ; CALLING SEQUENCE:
 ;      write_fits_partial, Filename, Pixel, IQU, [HDR=, XHDR=, 
 ;                       COORDSYS=, NESTED=, RING=, ORDERING=, NSIDE =,
-;                       UNITS=, HELP, COLNAMES=]
+;                       UNITS=, HELP, COLNAMES=, VERBOSE=, EXTENSION=]
 ;
 ; INPUTS:
 ;       Filename : STRING scalar,      
@@ -86,6 +87,9 @@ pro write_fits_partial, filename, pixel, iqu,  $
 ;          if needed, the last UNITS provided will be replicated for the remaining columns
 ;      
 ;
+;       EXTENSION=: (0 based) extension number in which to write data
+;           default = 0
+;       
 ;      COLNAMES=: STRING vector with column names (beside PIXEL) (not case sensitive: [A-Z,0-9,_])
 ;         Default:  TEMPERATURE (for 1 column), 
 ;                   TEMPERATURE, Q_POLARISATION, U_POLARISATION  (for 3 columns)
@@ -132,7 +136,7 @@ endif
 
 syntax1 = 'SYNTAX: '+routine+', filename, pixel, IQU, '
 syntax2 = '                   [HDR=, XHDR=, COORDSYS=, NESTED=, RING=, ORDERING=, NSIDE =, '
-syntax3 = '                   UNITS=, HELP=, VERBOSE= ]'
+syntax3 = '                   UNITS=, EXTENSION=, HELP=, VERBOSE= ]'
 if n_params() lt 3 then begin
     print,syntax1,syntax2,syntax3,format='(a)'
     if n_params() ne 0 then print,' ********* file not written ! ***********'
@@ -167,6 +171,17 @@ if (undefined(nside_usr) and c_nside eq 0) then begin
 endif
 nside = defined(nside_usr) ? nside_usr : nside_fits
 
+
+; check pixel
+pix_type = size(/tname, pixel)
+pix_min  = min(pixel, max=pix_max)
+if ( (pix_type ne 'INT' && pix_type ne 'LONG' && pix_type ne 'LONG64') || (pix_min lt 0)) then begin
+    message,/info,'PIXEL array must be a 2, 4 or 8-byte signed integer >=0'
+    message,/info,'Currently: type = '+pix_type
+    message,/info,'           min  = '+strtrim(pix_min)
+    message,/info,'           max  = '+strtrim(pix_max)
+    message,'Abort'
+endif
 
 ; check consistency
 npix = n_elements(pixel)
@@ -213,6 +228,7 @@ if defined(colnames_usr) then begin
 endif else begin
     colnames = ['TEMPERATURE', 'Q_POLARISATION', 'U_POLARISATION']
     if (nc eq 3) then sxaddpar, local_header, 'POLAR', 'T'
+    if (nc eq 1) then sxaddpar, local_header, 'POLAR', 'F'
     if (nc ne 1 && nc ne 3) then begin
         colnames = 'C'+string(lindgen(nc)+1,form='(i2.2)') ; [C01, C02, C03, ...]
     endif
@@ -226,14 +242,14 @@ endif
 
 ; create structures
 prim_st  = defined(prim_header) ? {HDR:prim_header} : 0
-exten_st = {HDR: local_header, PIXEL: round(pixel)}
+exten_st = {HDR: local_header, PIXEL: pixel}
 for ic=0,nc-1 do begin
     exten_st = create_struct(exten_st, colnames[ic], iqu[*,ic])
 endfor
 
 ; write file
 write_fits_sb, filename, prim_st, exten_st,  $
-  Coordsys=coordsys, Nside = nside_usr, /partial ;, extension=extension_id 
+  Coordsys=coordsys, Nside = nside_usr, /partial, extension=extension_id 
 
 
 return

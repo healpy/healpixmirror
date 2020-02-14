@@ -1,11 +1,16 @@
-#! /usr/bin/env python
+#! /usr/bin/env python3
 
 from __future__ import print_function # so that print outputs look the same in python 2 and 3
 #
 import sys, getopt, os, time
-import astropy.io.fits as pf
 import healpy          as hp
 from datetime  import datetime
+
+#
+try:
+    import astropy.io.fits as pf
+except:
+    import pyfits as pf
 #
 try:
     import pytz
@@ -22,11 +27,13 @@ except:
    Changing this convention will change the sign of the U Stokes parameter,
    and swap the POLCCONV FITS keyword between "IAU" and "COSMO"
 
-   Can be called from within python:
+   Can be called from within python (2 and 3):
       change_polcconv(file_in, file_out, ctype, force=False)
 
    or as a shell command:
-      > python change_pollconv.py [--force] [--c2c|--c2i|--i2c|--i2i] file_in file_out
+      > python change_polcconv.py [--force] [--c2c|--c2i|--i2c|--i2i] file_in file_out
+   or simply (if python3 is available):
+      > ./change_polcconv.py [--force] [--c2c|--c2i|--i2c|--i2i] file_in file_out
 
    with:
       file_in:  input  HEALPix map FITS file
@@ -71,6 +78,7 @@ except:
 
    HISTORY: 2018-05: v1.0, E. Hivon
                      adapted from HEALPix/IDL change_polcconv.pro
+            2020-02: v1.1, process partial P,T,Q,U files
 
 '''
 
@@ -188,6 +196,9 @@ def change_polcconv(file_in, file_out, ctype, force=False):
         in_xxx = True ; in_iau = False ; in_cos = False
         str_ext = 'extension #%s (%s)'%(str(ext),extname)
         nmaps = len(names)
+        xxQU= (nmaps >= 4 and     # first 4 column names are *,*,Q*,U*
+               names[2].startswith(('Q','q')) and
+               names[3].startswith(('U','u')) )
         xQU = (nmaps >= 3 and     # first 3 column names are *,Q*,U*
                names[1].startswith(('Q','q')) and
                names[2].startswith(('U','u')) )
@@ -206,6 +217,7 @@ def change_polcconv(file_in, file_out, ctype, force=False):
         done    = False
         non_pol = False
         do_edit = False
+        head_only = False
 
         if not force:
             if ((in_cos and do_i2i) or (in_iau and do_c2c)):
@@ -221,8 +233,13 @@ def change_polcconv(file_in, file_out, ctype, force=False):
         # change sign of U and related quantities
             clist = [] ; do_edit = False
             if (ftype == 3):
-                if (ext == 3): # cut sky format: change sign of U (last extension)
-                    clist = [1] ; do_edit = True
+                if (xxQU):           # change sign of U (4th column of P,T,Q,U)
+                    clist = [3] ; do_edit = True
+                else:
+                    if (ext == 3): # change sign of U (2nd column of P,S,N,S; last extension)
+                        clist = [1] ; do_edit = True
+                    else:
+                        head_only = (n_ext == 3) # update header of 1st and 2nd extensions
             else:
                 if (nmaps <= 1):
                     non_pol = True
@@ -289,7 +306,7 @@ def change_polcconv(file_in, file_out, ctype, force=False):
                     print (' Flip sign of %s in %s'%(str_col,str_ext))
                     xhdr.add_history('modified %s to match coord. conv. (%s)'%(str_col,kw_pol))
                 
-        if ( (do_edit or in_xxx or force) and not non_pol):
+        if ( (do_edit or in_xxx or force or head_only) and not non_pol):
             new_cconv = kw_cos if (do_c2c or do_i2c) else kw_iau
             xhdr[kw_pol]= (new_cconv, ' Coord. convention for polarisation (COSMO/IAU)')
             print (' %s keyword %s=%s in header of %s'%((in_xxx and 'Add' or 'Update'),kw_pol,new_cconv,str_ext))

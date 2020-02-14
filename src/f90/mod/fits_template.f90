@@ -2591,7 +2591,8 @@ subroutine input_map8_KLOAD(filename, map, npixtot, nmaps, &
        &                     header, coord, nside, order, units, extno)
     !=======================================================================
     use long_intrinsic, only: long_size
-    use pix_tools, only: nside2npix
+    use pix_tools,      only: nside2npix
+    use misc_utils,     only: assert
 
     character(len=*),                   intent(in)           :: filename
     real(KMAP),       dimension(0:,1:), intent(in)           :: cutmap
@@ -2627,7 +2628,7 @@ subroutine input_map8_KLOAD(filename, map, npixtot, nmaps, &
     character(len=4) :: srepeat, srepeatg
     character(len=1) :: pform1, pform2
     character(len=filenamelen) sfilename
-    integer(I8B)     :: obs_npix8, npix_final
+    integer(I8B)     :: obs_npix8, npix_final, obs_npp
     integer(I4B)     :: obs_npix4, kpix, nside_final
 
     integer(I4B), save :: nside_old
@@ -2640,14 +2641,16 @@ subroutine input_map8_KLOAD(filename, map, npixtot, nmaps, &
     if (present(pixel4)) then
        kpix = I4B
        pform1='J'
+       obs_npp = long_size(pixel4)
     elseif (present(pixel8)) then
        kpix = I8B
-       pform1='K' ! <<< double check
+       pform1='K'
+       obs_npp = long_size(pixel8)
     endif
-
     obs_npix8 = long_size(cutmap, 1)
+    nd2       =      size(cutmap, 2)
     obs_npix4 = int(obs_npix8, kind=I4B)
-    nd2 = size(cutmap,2)
+    call assert( obs_npix8 == obs_npp, routine//': mismatched size for PIXEL and DATA')
     ncol = 1 + nd2
     grain = 1
     status=0
@@ -2767,10 +2770,10 @@ subroutine input_map8_KLOAD(filename, map, npixtot, nmaps, &
     call ftpcom(unit,'          Data Specific Keywords    ',status)
     call ftpcom(unit,'------------------------------------------',status)
     call ftpkys(unit,'INDXSCHM','EXPLICIT',' Indexing : IMPLICIT or EXPLICIT', status)
-    call ftpkyj(unit,'GRAIN',  grain,     ' Grain of pixel indexing',status)
-    call ftpcom(unit,'GRAIN=0 : no indexing of pixel data (IMPLICIT) ',status)
-    call ftpcom(unit,'GRAIN=1 : 1 pixel index -> 1 pixel data (EXPLICIT)',status)
-    call ftpcom(unit,'GRAIN>1 : 1 pixel index -> data of GRAIN consecutive pixels (EXPLICIT)',status)
+!     call ftpkyj(unit,'GRAIN',  grain,     ' Grain of pixel indexing',status)
+!     call ftpcom(unit,'GRAIN=0 : no indexing of pixel data                         (IMPLICIT)',status)
+!     call ftpcom(unit,'GRAIN=1 : 1 pixel index -> 1 pixel data                     (EXPLICIT)',status)
+!     call ftpcom(unit,'GRAIN>1 : 1 pixel index -> data of GRAIN consecutive pixels (EXPLICIT)',status)
     call ftpkys(unit,'OBJECT','PARTIAL ',' Sky coverage represented by data',status)   
     if (KPIX == I4B) then
        call ftpkyj(unit,'OBS_NPIX',obs_npix4, ' Number of pixels observed and recorded',status)
@@ -2834,13 +2837,17 @@ subroutine input_map8_KLOAD(filename, map, npixtot, nmaps, &
     endif
 
 
-    !    write the user provided header literally, except for  PIXTYPE, TFORM*, TTYPE*, TUNIT* and INDXSCHM
+    !    write the user provided header literally, except for  PIXTYPE, TFORM*, TTYPE*, TUNIT*, INDXSCHM and GRAIN
     !    copy NSIDE, ORDERING and COORDSYS and POLAR if they are valid and not already given
     do i=1,nlheader
        card = header(i)
        if (card(1:5) == 'TTYPE' .or. card(1:5) == 'TFORM' .or. card(1:7) == 'PIXTYPE') then
           continue ! don't keep them
        else if (card(1:8) == 'INDXSCHM') then
+          continue
+       else if (card(1:5) == 'GRAIN') then ! already written above
+          continue
+       else if (card(1:13) == 'COMMENT GRAIN' .or. card(1:14) == 'COMMENT  GRAIN') then ! already written above
           continue
        else if (card(1:5) == 'TUNIT') then 
           if (trim(units_usr) == '') then

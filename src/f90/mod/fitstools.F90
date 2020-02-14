@@ -742,10 +742,10 @@ contains
     call ftpcom(unit,'          Data Specific Keywords    ',status)
     call ftpcom(unit,'------------------------------------------',status)
     call ftpkys(unit,'INDXSCHM','EXPLICIT',' Indexing : IMPLICIT or EXPLICIT', status)
-    call ftpkyj(unit,'GRAIN',  grain,     ' Grain of pixel indexing',status)
-    call ftpcom(unit,'GRAIN=0 : no indexing of pixel data (IMPLICIT) ',status)
-    call ftpcom(unit,'GRAIN=1 : 1 pixel index -> 1 pixel data (EXPLICIT)',status)
-    call ftpcom(unit,'GRAIN>1 : 1 pixel index -> data of GRAIN consecutive pixels (EXPLICIT)',status)
+!     call ftpkyj(unit,'GRAIN',  grain,     ' Grain of pixel indexing',status)
+!     call ftpcom(unit,'GRAIN=0 : no indexing of pixel data                         (IMPLICIT)',status)
+!     call ftpcom(unit,'GRAIN=1 : 1 pixel index -> 1 pixel data                     (EXPLICIT)',status)
+!     call ftpcom(unit,'GRAIN>1 : 1 pixel index -> data of GRAIN consecutive pixels (EXPLICIT)',status)
     call ftpkys(unit,'OBJECT','PARTIAL ',' Sky coverage represented by data',status)     
     call ftpkyj(unit,'OBS_NPIX',obs_npix, ' Number of pixels observed and recorded',status)
 
@@ -806,13 +806,17 @@ contains
     endif
 
 
-    !    write the user provided header literally, except for  PIXTYPE, TFORM*, TTYPE*, TUNIT* and INDXSCHM
+    !    write the user provided header literally, except for  PIXTYPE, TFORM*, TTYPE*, TUNIT*, INDXSCHM and GRAIN
     !    copy NSIDE, ORDERING and COORDSYS and POLAR if they are valid and not already given
     do i=1,nlheader
        card = header(i)
        if (card(1:5) == 'TTYPE' .or. card(1:5) == 'TFORM' .or. card(1:7) == 'PIXTYPE') then
           continue ! don't keep them
        else if (card(1:8) == 'INDXSCHM') then
+          continue
+       else if (card(1:5) == 'GRAIN') then ! already written above
+          continue
+       else if (card(1:13) == 'COMMENT GRAIN' .or. card(1:14) == 'COMMENT  GRAIN') then ! already written above
           continue
        else if (card(1:5) == 'TUNIT') then 
           if ((card(6:6) == '2' .or. card(6:6) == '4') .and. trim(units_usr) == '') then

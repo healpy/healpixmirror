@@ -134,10 +134,10 @@ for i=x0,xf do begin
 
     tfields=    long(sxpar(xhdr,'TFIELDS'))
     nside  =    long(sxpar(xhdr,'NSIDE',count=count))
-    ttypes = strtrim(sxpar(xhdr,'TTYPE*'),2)
-    tunits = strtrim(sxpar(xhdr,'TUNIT*'),2)
-    tforms = strtrim(sxpar(xhdr,'TFORM*'),2)
     if (count eq 0) then nside = -1
+    ttypes = strtrim(sxpar(xhdr,'TTYPE*'),2)
+    tunits = strtrim(sxpar(xhdr,'TUNIT*', count=n_units),2)
+    tforms = strtrim(sxpar(xhdr,'TFORM*'),2)
     ordering =  strupcase(strtrim(SXPAR(xhdr,'ORDERING', count=count),2))
     if (count eq 0) then ordering = ' '
     coordsys = sxpar(xhdr,'COORDSYS', count=count)
@@ -201,7 +201,14 @@ for i=x0,xf do begin
     endwhile
     data = 0
     tbfree, tab_xhdr
-    units = tunits[1:*]         ; drop out units of PIXEL column
+
+    ; deal with units
+    if (arg_present(units)) then begin
+        units = strarr(nmaps) ; '' as default value
+        if (n_units gt 0 && n_elements(tunits) gt 1) then begin
+            units = tunits[1:*] ; drop out units of PIXEL column
+        endif
+    endif
 
 ;     fxbread, lun, pixel, 1
 ;     nc = tfields-1

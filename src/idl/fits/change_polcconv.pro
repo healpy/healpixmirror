@@ -109,8 +109,9 @@ pro change_polcconv, file_in, file_out, i2c=i2c, c2i=c2i, c2c=c2c, i2i=i2i, forc
 ;
 ; MODIFICATION HISTORY:
 ;          v1.0, May 2005, Eric Hivon
-;          v1.1, Oct 2006, Eric Hivon: added /force
-;          v2.0, Oct 2017, Eric Hivon: supports Planck formats
+;          v1.1, Oct 2006, EH: added /force
+;          v2.0, Oct 2017, EH: supports Planck formats
+;          v2.1, Feb 2020, EH: deal with cut sky file containing IQU in 1st extension
 ;-
 
 t0 = systime(1)
@@ -166,6 +167,20 @@ if ~ (type eq 2 || type eq 3) then begin
     return
 endif
 
+my_type = type
+if (type eq 3) then begin
+    xhdr  = headfits(File_In,ext=1)
+    names = sxpar(xhdr,'TTYPE*')
+    if ( array_equal(strupcase(strmid(names[0:3],0,1)),['P','S','N','S']) ) then my_type = 30
+    if ( array_equal(strupcase(strmid(names[0:3],0,1)),['P','T','Q','U']) ) then my_type = 31
+    if (my_type lt 30) then begin
+        message,/info,'Input file could not be properly identified'
+        message,/info,'File will be copied unchanged'
+        file_copy, file_in, file_out, /overwrite
+        return
+    endif
+endif
+
 ; if (n_ext ne 3 and type eq 3) then begin
 ;     message,'Unpolarised format cut sky format. No changes made',/info
 ;     return
@@ -175,13 +190,14 @@ modify_map = (do_c2i || do_i2c)
 
 for i=0,n_ext-1 do begin
     ; read data
-    if (type eq 3) then begin
-        read_fits_cut4, File_In, pixel, signal, n_obs, serror, hdr=hdr, xhdr=xhdr, ext = i
-    endif else begin
-        ;read_tqu, File_In, tqu, hdr=hdr, xhdr = xhdr, ext = i
-        read_fits_s, File_In, prim, xtn, ext=i
-        hdr = prim.hdr  & xhdr = xtn.hdr
-    endelse
+    case my_type of
+        30: read_fits_cut4,    File_In, pixel, signal, n_obs, serror, hdr=hdr, xhdr=xhdr, ext = i
+        31: read_fits_partial, File_In, pixel, iqu,                   hdr=hdr, xhdr=xhdr, ext = i
+        else:begin
+            read_fits_s, File_In, prim, xtn, ext=i
+            hdr = prim.hdr  & xhdr = xtn.hdr
+        end
+    endcase
     names   = sxpar(xhdr,'TTYPE*')
     extname = sxpar(xhdr,'EXTNAME')
     nside   = long(sxpar(xhdr,'NSIDE'))
@@ -191,6 +207,7 @@ for i=0,n_ext-1 do begin
     str_ext = 'extension #'+strtrim(i,2)+' ('+strtrim(extname,2)+')'
     ;nmaps = n_elements(tqu[0,*])
     nmaps = n_elements(names)
+    xxQU= (nmaps ge 4) ? product(strcmp(names[2:3],['Q','U'],1,/fold_case),/preserve):0 ; first 4 column names are *,*,Q*,U*
     xQU = (nmaps ge 3) ? product(strcmp(names[1:2],['Q','U'],1,/fold_case),/preserve):0 ; first 3 column names are *,Q*,U*
      QU = (nmaps eq 2) ? product(strcmp(names[0:1],['Q','U'],1,/fold_case),/preserve):0 ; first 2 column names are Q*,U*
     
@@ -209,6 +226,7 @@ for i=0,n_ext-1 do begin
     done = 0
     non_pol = 0 ; assume polarization
     do_edit = 0
+    head_only = 0
     if (~ do_force) then begin
         if ((in_cos && do_i2i) || (in_iau && do_c2c)) then begin
             print,'in FITS file: ',strtrim(File_In)
@@ -221,112 +239,123 @@ for i=0,n_ext-1 do begin
 
     if (modify_map && ~done) then begin
         ; change sign of U and related quantities
-        if (type eq 3) then begin ; cut sky format (pixel, T, hT, sT; pixel, Q, hQ, sQ; pixel, U, hU, sU)
-            if (i eq 2) then begin
-                clist   = [1] ;change sign of U (last extension)
-                do_edit = 1
-            endif
-        endif else begin
-            clist = [-1]
-
-            if (nmaps le 1) then non_pol = 1
-
-            if (nmaps eq 2) then begin
-                if (n_ext eq 1 && QU) then begin
-                    ; Planck 2 columns (Q*, U*)
-                    clist   = [1] ; change sign of U
+        case my_type of
+            30: begin ; cut sky format (pixel, T, hT, sT; pixel, Q, hQ, sQ; pixel, U, hU, sU)
+                if (i eq 2) then begin
+                    clist   = [1] ;change sign of U (2nd column of last extension)
                     do_edit = 1
                 endif else begin
-                    non_pol = 1
+                    head_only = (n_ext eq 3) ; update header of 1st and 2nd extensions
                 endelse
-            endif
-            
-            if (nmaps eq 3) then begin
-                                ; standard Healpix full sky format (T, Q, U;   TT, QQ, UU;  QU, TU, TQ)
-                                ; should NOT affect unpolarized Planck maps (I_Stokes ,HITS, II_COV) 
-                if (i eq 0) then begin
-                    if (xQU) then begin
-                        clist   = [2] ; change sign of U
+            end
+            31: begin
+                if (xxQU) then begin
+                    clist   = [3] ;change sign of U (4th column)
+                    do_edit = 1
+                endif
+            end
+            else: begin
+                clist = [-1]
+
+                if (nmaps le 1) then non_pol = 1
+                
+                if (nmaps eq 2) then begin
+                    if (n_ext eq 1 && QU) then begin
+                                ; Planck 2 columns (Q*, U*)
+                        clist   = [1] ; change sign of U
                         do_edit = 1
                     endif else begin
                         non_pol = 1
                     endelse
                 endif
-                if (i eq 2) then begin
-                    clist   = [0, 1] ; change sign of QU and of TU
-                    do_edit = 1
+            
+                if (nmaps eq 3) then begin
+                                ; standard Healpix full sky format (T, Q, U;   TT, QQ, UU;  QU, TU, TQ)
+                                ; should NOT affect unpolarized Planck maps (I_Stokes ,HITS, II_COV) 
+                    if (i eq 0) then begin
+                        if (xQU) then begin
+                            clist   = [2] ; change sign of U
+                            do_edit = 1
+                        endif else begin
+                            non_pol = 1
+                        endelse
+                    endif
+                    if (i eq 2) then begin
+                        clist   = [0, 1] ; change sign of QU and of TU
+                        do_edit = 1
+                    endif
                 endif
-            endif
-
-            if (n_ext ge 1 && nmaps eq 5) then begin
+                
+                if (n_ext ge 1 && nmaps eq 5) then begin
                                 ; Planck 5 cols (I_STOKES, Q_STOKES, U_STOKES, TMASK, PMASK) + BEAM_TF extension
-                if (i eq 0 && xQU) then begin
-                    clist   = [2] ; change sign of U
-                    do_edit = 1
-                endif
-            endif
-
-            if (n_ext eq 1 && nmaps eq 10) then begin
-                                ; Planck R3 (2017) 10 cols (I_STOKES, Q_STOKES, U_STOKES, HIT, II_COV, IQ_COV, IU_COV, QQ_COV, QU_COV, UU_COV)
-                if (i eq 0 && xQU) then begin
-                    clist = [2, 6, 8] ; change sign of U, IU, QU
-                    do_edit = 1
-                endif
-            endif
-
-
-            if (nside le 512 && n_ext eq 2) then begin
-                                ; WMAP: https://lambda.gsfc.nasa.gov/product/map/dr5/skymap_file_format_info.cfm
-                if (nmaps ge 5) then begin
-                                ; WMAP (I,Q,U,S) format (T, Q, U, S, N_OBS ; 
-                                ;      N_OBS, M11=SS, M12=SQ, M13=SU, M23=QU, M22=QQ, M33=UU)
-                    if (i eq 0 && nmaps eq 5  && xQU) then begin
+                    if (i eq 0 && xQU) then begin
                         clist   = [2] ; change sign of U
                         do_edit = 1
                     endif
-                    if (i eq 1 && nmaps eq 7) then begin
-                        clist   = [3,4] ; change sign of SU and QU
+                endif
+                
+                if (n_ext eq 1 && nmaps eq 10) then begin
+                                ; Planck R3 (2017) 10 cols (I_STOKES, Q_STOKES, U_STOKES, HIT, II_COV, IQ_COV, IU_COV, QQ_COV, QU_COV, UU_COV)
+                    if (i eq 0 && xQU) then begin
+                        clist = [2, 6, 8] ; change sign of U, IU, QU
                         do_edit = 1
                     endif
                 endif
-               
-                if (nmaps eq 4) then begin 
-                                ; WMAP (I,Q,U) format (T, Q, U, N_OBS ; N_OBS, QQ, QU, UU)
-                    clist   = [2] ; change sign of U and of N_QU
-                    do_edit = 1
-                endif
-            endif
-            
-            if (~do_edit) then begin
-                if (non_pol) then begin
-                    print,' Unpolarised format, no change in '+str_ext
-                endif else begin
-                    print,'WARNING: unrecognised format in '+str_ext
-                    print,nmaps,n_ext
-                    print,names
-                    done = 1
-                endelse
-            endif
 
-        endelse
+
+                if (nside le 512 && n_ext eq 2) then begin
+                                ; WMAP: https://lambda.gsfc.nasa.gov/product/map/dr5/skymap_file_format_info.cfm
+                    if (nmaps ge 5) then begin
+                                ; WMAP (I,Q,U,S) format (T, Q, U, S, N_OBS ; 
+                                ;      N_OBS, M11=SS, M12=SQ, M13=SU, M23=QU, M22=QQ, M33=UU)
+                        if (i eq 0 && nmaps eq 5  && xQU) then begin
+                            clist   = [2] ; change sign of U
+                            do_edit = 1
+                        endif
+                        if (i eq 1 && nmaps eq 7) then begin
+                            clist   = [3,4] ; change sign of SU and QU
+                            do_edit = 1
+                        endif
+                    endif
+                
+                    if (nmaps eq 4) then begin 
+                                ; WMAP (I,Q,U) format (T, Q, U, N_OBS ; N_OBS, QQ, QU, UU)
+                        clist   = [2] ; change sign of U and of N_QU
+                        do_edit = 1
+                    endif
+                endif
+                
+                if (~do_edit) then begin
+                    if (non_pol) then begin
+                        print,' Unpolarised format, no change in '+str_ext
+                    endif else begin
+                        print,'WARNING: unrecognised format in '+str_ext
+                        print,nmaps,n_ext
+                        print,names
+                        done = 1
+                    endelse
+                endif
+            
+            end
+        endcase
+
         if (do_edit) then begin
             sxaddpar, xhdr, 'HISTORY',strtrim(file_in)
             sxaddpar, xhdr, 'HISTORY','edited on '+today_fits(/utc,/time)+' UTC'
             for kc=0,n_elements(clist)-1 do begin
                 column = clist[kc]
-                if (type eq 3) then begin
-                    signal *= -1
-                endif else begin
-                    ;tqu[*, column] *= -1
-                    xtn.(column+1) *= -1
-                endelse
-                str_col = 'column #'+strtrim(column+1,2)+' ('+names[column]+')'
+                case my_type of
+                    30:   signal         *= -1
+                    31:   iqu[*,column-1] *= -1
+                    else: xtn.(column+1) *= -1
+                endcase
+                str_col = 'column #'+strtrim(column+1,2)+' ('+strtrim(names[column],2)+')'
                 print,' Flip sign of '+str_col+' in '+str_ext
                 sxaddpar, xhdr, 'HISTORY','modified '+str_col+' to match coord. conv. ('+kw_pol+')'
             endfor
         endif
     endif
-    if ( (do_edit || in_xxx || do_force) && ~non_pol) then begin
+    if ( (do_edit || in_xxx || do_force || head_only) && ~non_pol) then begin
         new_cconv = (do_c2c || do_i2c) ? KW_COS : KW_IAU
         sxaddpar, xhdr, KW_POL, new_cconv,' Coord. convention for polarisation (COSMO/IAU)'
         print, (in_xxx ? ' Add ' : ' Update ') + 'keyword '+strtrim(KW_POL)+'='+new_cconv+' in header of '+str_ext
@@ -335,13 +364,15 @@ for i=0,n_ext-1 do begin
     endelse
 
     ; write new data
-    if (type eq 3) then begin
-        write_fits_cut4, File_Out, pixel, signal, n_obs, serror, hdr=hdr, xhdr=xhdr, /pol, ext=i
-    endif else begin
-        ;if (nmaps eq 1) then tqu = reform(tqu, n_elements(tqu), 1, /overwrite)
-        ;write_tqu,      File_Out, tqu, hdr=hdr, xhdr=xhdr, ext = i
-        write_fits_sb, File_Out, prim, xtn, ext = i, xthdr=xhdr, /nothealpix
-    endelse
+    case my_type of
+        30: write_fits_cut4,    File_Out, pixel, signal, n_obs, serror, hdr=hdr, xhdr=xhdr, /pol, ext=i
+        31: write_fits_partial, File_Out, pixel, iqu,                   hdr=hdr, xhdr=xhdr,       ext=i
+        else: begin
+            ; if (nmaps eq 1) then tqu = reform(tqu, n_elements(tqu), 1, /overwrite)
+            ; write_tqu,      File_Out, tqu, hdr=hdr, xhdr=xhdr, ext = i
+            write_fits_sb, File_Out, prim, xtn, ext = i, xthdr=xhdr, /nothealpix
+        end
+    endcase
 endfor
 
 spawn,/sh,'ls -l '+strtrim(file_in,2)+' '+strtrim(file_out,2)

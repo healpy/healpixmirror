@@ -878,14 +878,15 @@ contains
     character(len=80), dimension(1:20) :: my_units
     character(len=8) :: my_ordering
     character(len=FILENAMELEN) :: udtype, my_beam_leg
-    logical(LGT) :: do_full, do_alm, do_cl, do_cut, do_polar, &
-         & do_bcross, do_reset, do_asym
+    logical(LGT) :: do_full, do_alm, do_cl, do_cut, do_partial, &
+         & do_polar, do_bcross, do_reset, do_asym, do_map
 
     character(len=*), parameter :: code = 'write_minimal_header'
     !--------------------------------------------------------------------------------
     ! find out type of data to be contained in FITS file
     udtype = strupcase(dtype)
-    do_alm = .false. ; do_cl  = .false. ; do_full = .false. ; do_cut = .false.
+    do_alm = .false. ; do_cl  = .false. ; do_full = .false. 
+    do_cut = .false. ; do_partial = .false.
     select case (trim(udtype))
     case ('ALM')
        do_alm = .true.
@@ -895,11 +896,14 @@ contains
        do_full = .true.
     case ('CUTMAP')
        do_cut = .true.
+    ! case ('PARTIAL')
+       do_partial = .true.
     case default
        print*,'Invalid choice of datatype:'//trim(dtype)
        print*,'Should be one of: ALM, alm, CL, cl, CUTMAP, cutmap, MAP, map'
        call fatal_error(code)
     end select
+    do_map = (do_cut .or. do_full .or. do_partial)
 
     !
     if (present(order) .and. present(ordering)) then
@@ -908,7 +912,7 @@ contains
     endif
 
     ! check for required keywords for map
-    if (do_cut .or. do_full) then
+    if (do_map) then
        if (.not. present(nside)) then
           print*,'NSIDE required for maps in '//code
           call fatal_error(code)
@@ -1108,7 +1112,7 @@ contains
 
     endif ! cl
 
-    if (do_full .or. do_cut) then
+    if (do_map) then
        !--------------------------------------------------------------------------------------------
        !                            minimal header for FULL SKY MAP and CUT SKY MAP
        !--------------------------------------------------------------------------------------------
@@ -1156,27 +1160,54 @@ contains
           call add_card(header,"COMMENT","Full sky data")
           call add_card(header,"OBJECT","FULLSKY")
           call add_card(header,"INDXSCHM","IMPLICIT"," Indexing : IMPLICIT or EXPLICIT")
-          call add_card(header,"GRAIN", 0, " Grain of pixel indexing")
+!          call add_card(header,"GRAIN", 0, " Grain of pixel indexing")
        endif
-       if (do_cut)  then
+       if (do_cut .or. do_partial)  then
           call add_card(header,"EXTNAME","'CUT SKY MAP'",update=.true.)
           call add_card(header,"COMMENT","Cut sky data")
           call add_card(header,"OBJECT","PARTIAL")
           call add_card(header,"INDXSCHM","EXPLICIT"," Indexing : IMPLICIT or EXPLICIT")
-          call add_card(header,"GRAIN", 1, " Grain of pixel indexing")
+!          call add_card(header,"GRAIN", 1, " Grain of pixel indexing")
        endif
-       call add_card(header,"COMMENT","GRAIN=0 : no indexing of pixel data                         (IMPLICIT)")
-       call add_card(header,"COMMENT","GRAIN=1 : 1 pixel index -> 1 pixel data                     (EXPLICIT)")
-       call add_card(header,"COMMENT","GRAIN>1 : 1 pixel index -> data of GRAIN consecutive pixels (EXPLICIT)")
+!        call add_card(header,"COMMENT","GRAIN=0 : no indexing of pixel data                         (IMPLICIT)")
+!        call add_card(header,"COMMENT","GRAIN=1 : 1 pixel index -> 1 pixel data                     (EXPLICIT)")
+!        call add_card(header,"COMMENT","GRAIN>1 : 1 pixel index -> data of GRAIN consecutive pixels (EXPLICIT)")
        call add_card(header) ! blank line
        call add_card(header,"POLAR",do_polar," Polarisation included (True/False)")
        if (do_cut) then
+          call add_card(header) ! blank line
+          call add_card(header,"TTYPE1", "PIXEL","pixel index")
+          call add_card(header,"TUNIT1", "",     "")
+          call add_card(header)
           if (present(units)) then
              my_units = units
-             call add_card(header,"TUNIT2", my_units(1),"physical unit of signal map")
-             call add_card(header,"TUNIT4", my_units(1),"physical unit of error map")
+             call add_card(header,"TUNIT2", my_units(1),"physical units of map")
+             call add_card(header,"TUNIT4", my_units(1),"physical units of map")
           endif
        endif
+!        if (do_partial) then
+!           if (present(units)) my_units = units
+!           it = 1 ; iq = 1 ; iu = 1
+!           call add_card(header) ! blank line
+!           call add_card(header,"TTYPE1", "PIXEL","pixel index")
+!           call add_card(header,"TUNIT1", "",     "")
+!           call add_card(header)
+
+!           call add_card(header) ! blank line
+!           call add_card(header,"TTYPE2", "TEMPERATURE","Temperature map")
+!           call add_card(header,"TUNIT2", my_units(it), "physical units of map")
+!           call add_card(header)
+
+!           if (do_polar) then
+!              call add_card(header,"TTYPE3", "Q_POLARISATION","Q Polarisation map")
+!              call add_card(header,"TUNIT3", my_units(iq),    "physical units of map")
+!              call add_card(header)
+
+!              call add_card(header,"TTYPE4", "U_POLARISATION","U Polarisation map")
+!              call add_card(header,"TUNIT4", my_units(iu),    "physical units unit")
+!              call add_card(header)
+!           endif
+!        endif
        if (do_full) then
           call add_card(header,"DERIV",my_deriv," Derivative included (0, 1 or 2)")
 
@@ -1199,12 +1230,10 @@ contains
           call add_card(header)
 
           if (do_polar) then
-             !call add_card(header,"TTYPE2", "Q-POLARISATION","Q Polarisation map")
              call add_card(header,"TTYPE2", "Q_POLARISATION","Q Polarisation map")
              call add_card(header,"TUNIT2", my_units(iq),"map unit")
              call add_card(header)
 
-             !call add_card(header,"TTYPE3", "U-POLARISATION","U Polarisation map")
              call add_card(header,"TTYPE3", "U_POLARISATION","U Polarisation map")
              call add_card(header,"TUNIT3", my_units(iu),"map unit")
              call add_card(header)

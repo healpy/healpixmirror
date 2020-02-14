@@ -173,7 +173,7 @@ if nserror eq 0 then serror = replicate(0.,npix)
 if nserror eq 1 then serror = replicate(float(serror[0]),npix)
 
 
-; chek consistency
+; check consistency
 nn_obs  = n_elements(n_obs)
 nserror = n_elements(serror)
 nsignal = n_elements(signal)
@@ -197,7 +197,7 @@ if (error ne 0) then message,'Error while writing header'
 ; insert polarisation related information if more than one extension
 extname = ['TEMPERATURE', 'Q_POLARISATION', 'U_POLARISATION']
 if undefined(extension_id) then extension_id = 0
-if ((extension_id gt 0 and extension_id lt 3) or keyword_set(polar_in)) then begin
+if ((extension_id ge 0 and extension_id lt 3) or keyword_set(polar_in)) then begin
     sxaddpar,local_header, 'POLAR','T'
     sxaddpar,local_header, 'EXTNAME',extname[extension_id],after='TFIELDS'
     if (extension_id gt 0) then begin
