@@ -13,6 +13,7 @@ DISTCLEAN = sharp-void c-void cpp-void f90-void healpy-void
 RM	= rm -f
 HEALPIX=
 SHARPLDIR = 
+TOPDIR = `pwd`
 
 # ------------------------------ variables for F90 --------------------------
 F90_BINDIR	=
@@ -135,69 +136,69 @@ f90-all: sharp-all $(f90-libs) $(f90-progs)
 f90-modules: sharp-all
 	@cd src/f90/mod; \
 	$(MAKE) $(F90_MKFLAGS); \
-	cd $(HEALPIX)
+	cd $(TOPDIR)
 
 f90-libgif: f90-modules
 	@cd src/f90/lib; \
 	$(MAKE) $(F90_MKFLAGS); \
-	cd $(HEALPIX)
+	cd $(TOPDIR)
 
 # visualization code
 map2gif: $(f90-libs)
 	@cd src/f90/$@; \
 	$(MAKE) $(F90_MKFLAGS); \
-	cd $(HEALPIX)
+	cd $(TOPDIR)
 
 # processing codes
 anafast: $(f90-libs)
 	@cd src/f90/$@; \
 	$(MAKE) $(F90_MKFLAGS); \
-	cd $(HEALPIX)
+	cd $(TOPDIR)
 
 smoothing: $(f90-libs)
 	@cd src/f90/$@; \
 	$(MAKE) $(F90_MKFLAGS); \
-	cd $(HEALPIX)
+	cd $(TOPDIR)
 
 synfast: $(f90-libs)
 	@cd src/f90/$@; \
 	$(MAKE) $(F90_MKFLAGS); \
-	cd $(HEALPIX)
+	cd $(TOPDIR)
 
 ud_grade: $(f90-libs)
 	@cd src/f90/$@; \
 	$(MAKE) $(F90_MKFLAGS); \
-	cd $(HEALPIX)
+	cd $(TOPDIR)
 
 hotspot: $(f90-libs)
 	@cd src/f90/$@; \
 	$(MAKE) $(F90_MKFLAGS); \
-	cd $(HEALPIX)
+	cd $(TOPDIR)
 
 plmgen: $(f90-libs)
 	@cd src/f90/$@; \
 	$(MAKE) $(F90_MKFLAGS); \
-	cd $(HEALPIX)
+	cd $(TOPDIR)
 
 alteralm: $(f90-libs)
 	@cd src/f90/$@; \
 	$(MAKE) $(F90_MKFLAGS); \
-	cd $(HEALPIX)
+	cd $(TOPDIR)
 
 median_filter: $(f90-libs)
 	@cd src/f90/$@; \
 	$(MAKE) $(F90_MKFLAGS); \
-	cd $(HEALPIX)
+	cd $(TOPDIR)
 
 ngsims_full_sky: $(f90-libs)
 	@cd src/f90/$@; \
 	$(MAKE) $(F90_MKFLAGS); \
-	cd $(HEALPIX)
+	cd $(TOPDIR)
 
 process_mask: $(f90-libs)
 	@cd src/f90/$@; \
 	$(MAKE) $(F90_MKFLAGS); \
-	cd $(HEALPIX)
+	cd $(TOPDIR)
 
 f90-test: f90-all
 	@cd test; \
@@ -256,40 +257,40 @@ c-static:      # all flavors
 	@cd src/C/subs; \
 	$(MAKE) static  $(C_MKFLAGS); \
 	$(MAKE) install $(C_MKFLAGS); \
-	cd $(HEALPIX)
+	cd $(TOPDIR)
 
 c-dynamic:     # Mac OS only
 	@cd src/C/subs; \
 	$(MAKE) dynamic $(C_MKFLAGS) PIC="$(C_PIC)"; \
 	$(MAKE) install $(C_MKFLAGS) PIC="$(C_PIC)"; \
-	cd $(HEALPIX)
+	cd $(TOPDIR)
 
 c-shared:      # Other Unix/Linux
 	@cd src/C/subs; \
 	$(MAKE) shared  $(C_MKFLAGS) PIC="$(C_PIC)"; \
 	$(MAKE) install $(C_MKFLAGS) PIC="$(C_PIC)"; \
-	cd $(HEALPIX)
+	cd $(TOPDIR)
 
 c-test:    # will only test *static* library
 	@cd src/C/subs; \
 	$(MAKE) static  $(C_MKFLAGS); \
 	$(MAKE) tests   $(C_MKFLAGS); \
-	cd $(HEALPIX)
+	cd $(TOPDIR)
 
 c-clean:
 	@cd src/C/subs; \
 	$(MAKE) clean $(C_MKFLAGS); \
-	cd $(HEALPIX)
+	cd $(TOPDIR)
 
 c-tidy:
 	@cd src/C/subs; \
 	$(MAKE) tidy $(C_MKFLAGS); \
-	cd $(HEALPIX)
+	cd $(TOPDIR)
 
 c-distclean:
 	@cd src/C/subs; \
 	$(MAKE) distclean $(C_MKFLAGS); \
-	cd $(HEALPIX)
+	cd $(TOPDIR)
 
 c-void:
 
@@ -300,7 +301,7 @@ sharp-all: $(SHARPLIB)
 $(SHARPLIB): $(SHARPMKF)
 	@cd $(SHARPBLD); \
 	$(MAKE) install; \
-	cd $(HEALPIX)
+	cd $(TOPDIR)
 
 $(SHARPMKF):
 	@echo "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"; \
@@ -312,22 +313,22 @@ $(SHARPMKF):
 sharp-test: sharp-all
 	@cd $(SHARPBLD);   \
 	$(MAKE) check; \
-	cd $(HEALPIX)
+	cd $(TOPDIR)
 
 sharp-clean:
 	@cd $(SHARPBLD); \
 	$(MAKE) clean; \
-	cd $(HEALPIX)
+	cd $(TOPDIR)
 
 sharp-tidy:
 	@cd $(SHARPBLD); \
 	$(MAKE) clean; \
-	cd $(HEALPIX)
+	cd $(TOPDIR)
 
 sharp-distclean: sharp-tidy
 	@cd $(SHARPBLD); \
 	$(MAKE) distclean; \
-	cd $(HEALPIX)
+	cd $(TOPDIR)
 #	$(RM) -r $(SHARPBLD)
 
 sharp-void:
@@ -337,22 +338,22 @@ sharp-void:
 cpp-all: sharp-all
 	@cd $(CXXBLD); \
 	$(MAKE) install; \
-	cd $(HEALPIX)
+	cd $(TOPDIR)
 
 cpp-test: cpp-all
 	@cd $(CXXBLD);   \
 	$(MAKE) check; \
-	cd $(HEALPIX)
+	cd $(TOPDIR)
 
 cpp-clean:
 	@cd $(CXXBLD); \
 	$(MAKE) clean; \
-	cd $(HEALPIX)
+	cd $(TOPDIR)
 
 cpp-tidy:
 	@cd $(CXXBLD); \
 	$(MAKE) distclean; \
-	cd $(HEALPIX)
+	cd $(TOPDIR)
 
 cpp-distclean: cpp-tidy
 #	$(RM) -r $(CXXBLD)
@@ -365,17 +366,17 @@ healpy-all:
 	@cd src/healpy; \
 	$(HPY_VARS) $(HPY_PYTHON) $(HPY_SETUP) build; \
 	$(HPY_PYTHON) $(HPY_SETUP) install --user --prefix=; \
-	cd $(HEALPIX)
+	cd $(TOPDIR)
 
 healpy-test: healpy-all
 	@cd /tmp; \
 	$(HPY_PYTHON) -c "import pylab; import healpy; import numpy; hpv=healpy.__version__; print ('\n\n Welcome to Healpy %s! \n\n'%(hpv)); healpy.mollview(numpy.arange(12),title='Healpy %s'%(hpv)); pylab.show()"; \
-	cd $(HEALPIX)
+	cd $(TOPDIR)
 
 healpy-clean:
 	@cd src/healpy; \
 	$(HPY_PYTHON) $(HPY_SETUP) clean --all; \
-	cd $(HEALPIX)
+	cd $(TOPDIR)
 
 healpy-tidy: healpy-clean
 

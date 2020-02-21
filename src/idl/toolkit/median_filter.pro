@@ -92,6 +92,7 @@
 ;      March 2006: M.A. Miville-Deschenes (IAS) and EH (IAP): bugs correction
 ;      July 2006: EH corrected definition of do_nest (pointed out by Kwangil Seon)
 ;      May 2017: replaced obsolete DATATYPE() with IDL's SIZE(/TNAME)
+;      Frb 2020: use FINITE() to deal with NaN; deal with partial sky maps
 ;-
 
 pro medfilt_sub, in_map, radius_radian, med_map, ring=ring, nested=nested, ordering=ordering, $
@@ -144,7 +145,7 @@ for p=0L, npix-1 do begin
     ; if even number of valid pixels, take average of 2 pixels closest to median
     if (nlist gt 0) then begin
         for j=0, nmaps-1 do begin
-            if (in_map[p, j] ne NaN or dofill) then begin
+            if (finite(in_map[p, j]) or dofill) then begin
                 med_map[p, j] = median(in_map[list,j], /even)
             endif
         endfor
@@ -153,9 +154,9 @@ for p=0L, npix-1 do begin
 endfor
 
 ; replace NaN pixels by original bad pixel flag
-if (nbad gt 0 and bad_data ne NaN) then begin
+if (nbad gt 0 and finite(bad_data)) then begin
     in_map[bad] = bad_data
-    bad2 = where(med_map eq bad_data, nbad2)
+    bad2 = where(med_map eq bad_data or finite(med_map,/nan), nbad2)
     if (nbad2 gt 0) then med_map[bad2] = bad_data
 endif
 
@@ -204,9 +205,22 @@ endif else begin
             read_fits_map, file_in, data_in, h, xh, /silent, nside=nside, ordering=ordering
         end
         3: begin ; cut sky
-            read_fits_cut4, file_in, pixel, signal, n_obs, serror, hdr=h, xhdr=xh, nside=nside, ordering=ordering
-            data_in = replicate(!healpix.bad_value, nside2npix(nside))
-            data_in[pixel] = signal
+;             read_fits_cut4, file_in, pixel, signal, n_obs, serror, hdr=h, xhdr=xh, nside=nside, ordering=ordering
+;             data_in = replicate(!healpix.bad_value, nside2npix(nside))
+;             data_in[pixel] = signal
+            names  = sxpar(headfits(file_in, ext=1),'TTYPE*')
+            cut4 = array_equal(strupcase(strmid(names[0:3],0,1)),['P','S','N','S'])
+            if (cut4) then begin
+                read_fits_cut4, file_in, pixel, signal, n_obs, serror, hdr=h, xhdr=xh, nside=nside, ordering=ordering
+                data_in = replicate(!healpix.bad_value, nside2npix(nside))
+                data_in[pixel] = signal
+            endif else begin
+                read_fits_partial, file_in, pixel, tmp, hdr=h, xhdr=xh, nside=nside, ordering=ordering
+                ncol = (size(tmp,/dim))[1]
+                data_in = replicate(!healpix.bad_value, nside2npix(nside), ncol)
+                help,pixel,tmp,data_in
+                for i=0,ncol-1 do data_in[pixel, i] = tmp[*,i]
+            endelse
         end
         else: begin
             message,'wrong file type for '+file_in
@@ -229,9 +243,15 @@ endif else begin
             endcase
         end
         3: begin
-            pixel = where(data_out ne !healpix.bad_value, obs_npix)
-            signal = data_out[pixel]
-            write_fits_cut4, file_out, pixel, signal, hdr=h, xhdr=xh, nside=nside
+            pixel = where(data_out[*,0] ne !healpix.bad_value, obs_npix)
+            print,obs_npix, minmax(data_out)
+            if (cut4) then begin
+                signal = data_out[pixel]
+                write_fits_cut4, file_out, pixel, signal, hdr=h, xhdr=xh, nside=nside
+            endif else begin
+                tmp = data_out[pixel,0:ncol-1]
+                write_fits_partial, file_out, pixel, tmp, hdr=h, xhdr=xh, nside=nside
+            endelse
         end
     endcase
     

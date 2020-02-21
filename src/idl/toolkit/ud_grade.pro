@@ -127,7 +127,7 @@ if undefined(bad_data) then bad_data = !healpix.bad_value
 ;bad = where(map_in eq bad_data, nbad)
 ; test for bad pixels less sensitive to input map precision (2010-02-17)
 threshold = abs(1.e-7 * bad_data)
-bad = where(abs(map_in - bad_data) lt threshold, nbad)
+bad = where(abs(map_in - bad_data) lt threshold  or finite(map_in,/nan), nbad)
 
 ratio = 1
 if defined(power) then ratio = (float(nside_out)/float(nside_in)) ^ power 
@@ -247,6 +247,7 @@ pro ud_grade, map_in, map_out, nside_out=nside_out, order_in=order_in, order_out
 ;    2010-02-17: bad pixels correctly identified in DP map
 ;    2012-03-16: added HELP keyword
 ;    2017-05-30: replaced obsolete DATATYPE() with IDL's SIZE(/TNAME)
+;    2020-02-19: process partial sky FITS files containing TQU data
 ;-
 
 routine = 'UD_GRADE'
@@ -300,7 +301,7 @@ if dtype_in eq 'STRING' then begin
     fits_info, map_in, /silent, n_ext = n_ext
 
     if ~(keyword_set(order_out) || arg_present(order_out)) then order_out = order_in
-    ord_in  = decode_ordering(order_in, full=ford_in) ; strupcase(strmid(order_in,0,4))
+    ord_in  = decode_ordering(order_in,  full=ford_in) ; strupcase(strmid(order_in,0,4))
     ord_out = decode_ordering(order_out, full=ford_out) ; strupcase(strmid(order_out,0,4))
 
     npix_in = nside2npix(nside_in, err = error)
@@ -313,27 +314,58 @@ if dtype_in eq 'STRING' then begin
 
     if (ftype_in eq 3) then begin
         ; ------- cut sky -------
-        for i_ext = 0, n_ext-1 do begin
-            if (n_ext gt 1) then print,'Extension: ',i_ext
-            read_fits_cut4, map_in, pixel, signal, n_obs, serror, xh = xhdr, ext= i_ext
+        names = sxpar(headfits(map_in, ext=1),'TTYPE*')
+        cut4  = array_equal(strupcase(strmid(names[0:3],0,1)),['P','S','N','S'])
+        if (cut4) then begin
+            for i_ext = 0, n_ext-1 do begin
+                if (n_ext gt 1) then print,'Extension: ',i_ext
+                read_fits_cut4, map_in, pixel, signal, n_obs, serror, xh = xhdr, ext= i_ext
                                 ; update header
-            sxaddpar,          xhdr,'NSIDE',nside_out
-            add_ordering_fits, xhdr, ordering=ord_out
-            sxaddpar,          xhdr,'HISTORY','    PROCESSED BY '+routine
-            if (nside_out ne nside_in) then sxaddpar,          xhdr,'HISTORY', $
-              string('       NSIDE: ',nside_in,' -> ',nside_out,form='(a,i5,a,i5)')
-            if (ord_in ne ord_out) then sxaddpar,          xhdr,'HISTORY', $
-              '    ORDERING: '+ford_in+' -> '+ford_out
-            
-            ud_grade_cut4, pixel, signal, n_obs, serror, nside_in = nside_in, $
-              nside_out = nside_out, order_in = ord_in, order_out = ord_out
-
+                sxaddpar,          xhdr,'NSIDE',nside_out
+                add_ordering_fits, xhdr, ordering=ord_out
+                sxaddpar,          xhdr,'HISTORY','    PROCESSED BY '+routine
+                if (nside_out ne nside_in) then sxaddpar,          xhdr,'HISTORY', $
+                  string('       NSIDE: ',nside_in,' -> ',nside_out,form='(a,i5,a,i5)')
+                if (ord_in ne ord_out) then sxaddpar,          xhdr,'HISTORY', $
+                  '    ORDERING: '+ford_in+' -> '+ford_out
+                                ; process data
+                ud_grade_cut4, pixel, signal, n_obs, serror, nside_in = nside_in, $
+                               nside_out = nside_out, order_in = ord_in, order_out = ord_out                
                                 ; write file
-            write_fits_cut4, map_out, pixel, signal, n_obs, serror, xh = xhdr, ext= i_ext
-        endfor
-
+                write_fits_cut4, map_out, pixel, signal, n_obs, serror, xh = xhdr, ext= i_ext
+            endfor
+        endif else begin
+            if undefined(bad_data) then bad_data = !healpix.bad_value
+            for i_ext = 0, n_ext-1 do begin
+                if (n_ext gt 1) then print,'Extension: ',i_ext
+                read_fits_partial, map_in, pixel, tmp, xh = xhdr, ext= i_ext
+                                ; update header
+                sxaddpar,          xhdr,'NSIDE',nside_out
+                add_ordering_fits, xhdr, ordering=ord_out
+                sxaddpar,          xhdr,'HISTORY','    PROCESSED BY '+routine
+                if (nside_out ne nside_in) then sxaddpar,          xhdr,'HISTORY', $
+                  string('       NSIDE: ',nside_in,' -> ',nside_out,form='(a,i5,a,i5)')
+                if (ord_in ne ord_out) then sxaddpar,          xhdr,'HISTORY', $
+                  '    ORDERING: '+ford_in+' -> '+ford_out
+                                ; process data
+                ncol = (size(tmp,/dim))[1]  & mtype = size(tmp,/type)
+                map1 = make_array(npix_in,  ncol, type=mtype)
+                map1[*] = bad_data
+                map1[pixel,0:ncol-1] = tmp
+                map2 = make_array(npix_out, ncol, type=mtype)
+                index_in  = reorder(lindgen(npix_in), in=ord_in,out='NEST')
+                index_out = reorder(lindgen(npix_out),in='NEST',out=ord_out)
+                for i=0,ncol-1 do begin
+                    map2[0,i] = sub_ud_grade(map1[index_in,i], nside_in, nside_out, bad_data=bad_data, pessimistic=pessimistic)
+                    map2[0,i] = map2[index_out,i]
+                endfor
+                pixel_out = where(map2[*,0] ne bad_data and finite(map2[*,0]), ngood)
+                                ; write file
+                write_fits_partial, map_out, pixel_out, map2[pixel_out,0:ncol-1], xh=xhdr, ext = i_ext
+            endfor
+        endelse
     endif else if (ftype_in eq 0 || ftype_in eq 2) then begin
-        if (n_ext gt 1) then message,'Can not curently deal with multiple extension in this format'
+        if (n_ext gt 1) then message,'Can not currently deal with multiple extension in this format'
         ; ----- full sky -----
         if (ftype_in eq 0) then begin ; image
             read_fits_s, map_in, xten

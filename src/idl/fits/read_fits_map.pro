@@ -108,7 +108,7 @@ PRO READ_FITS_MAP, filename, T_sky, hdr, exthdr, $
 ;  Jan 2013: added HELP= and EXTENSION= keywords
 ;  Aug 2017: produces a full-sky map (with empty pixels set to 0) when reading
 ;           a FITS file in cut-sky format
-;
+;  Feb 2020: uses READ_FITS_PARTIAL instead of READ_FITS_CUT4 for partial maps
 ; requires the THE IDL ASTRONOMY USER'S LIBRARY 
 ; that can be found at http://idlastro.gsfc.nasa.gov/homepage.html
 ;
@@ -178,14 +178,20 @@ if (count eq 0) then coordsys = ' ' else coordsys = strtrim(coordsys,2)
 ; actual reading
 obsnpix = getsize_fits(exthdr,/header,type=filetype)
 if (filetype eq 3) then begin
-    message,/info,'WARNING: input file '+filename+' is in cut-sky format, which can be read properly with READ_FITS_CUT4.'
+;     message,/info,'WARNING: input file '+filename+' is in cut-sky format, which can be read properly with READ_FITS_CUT4.'
+;     message,/info,'Here a full sky map will be generated, replacing missing data with 0.'
+;     read_fits_cut4, filename, pix, c2, c3, c4, extension=extension_id
+;     ncol = 1 + defined(c3) + defined(c4)
+;     T_sky = make_array(nside2npix(nside), ncol, type=size(c2,/type))
+;     T_sky[pix,0] = c2
+;     if defined(c3) then T_sky[pix,1] = c3
+;     if defined(c4) then T_sky[pix,2] = c4   
+    message,/info,'WARNING: input file '+filename+' is in partial sky format, which can be read properly with READ_FITS_PARTIAL.'
     message,/info,'Here a full sky map will be generated, replacing missing data with 0.'
-    read_fits_cut4, filename, pix, c2, c3, c4, extension=extension_id
-    ncol = 1 + defined(c3) + defined(c4)
-    T_sky = make_array(nside2npix(nside), ncol, type=size(c2,/type))
-    T_sky[pix,0] = c2
-    if defined(c3) then T_sky[pix,1] = c3
-    if defined(c4) then T_sky[pix,2] = c4   
+    read_fits_partial, filename, pix, tmp, extension=extension_id
+    ncol = (size(tmp,/dim))[1]
+    T_sky = make_array(nside2npix(nside), ncol, type=size(tmp,/type))
+    for i=0,ncol-1 do T_sky[pix,i] = tmp[*,i]
 endif else begin
     selectread, filename, T_sky, extension=extension_id, /no_pdu
 endelse

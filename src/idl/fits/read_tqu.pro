@@ -28,15 +28,23 @@
 pro selectread_wrapper, file, map, header=header, extension=extension_id, no_pdu=no_pdu, level=level,silent=silent
 obsnpix = getsize_fits(file, type=filetype,nside=nside)
 if (filetype eq 3) then begin
+;     if ~keyword_set(silent) then begin
+;         message,/info,level=level,'WARNING: input file '+file+' is in cut-sky format, which can be read properly with READ_FITS_CUT4.'
+;         message,/info,level=level,'Here a full sky map will be generated, replacing missing data with 0.'
+;     endif
+;     read_fits_cut4, file, pix, c2, c3, c4, extension=extension_id, xhdr=header
+;     map = make_array(nside2npix(nside), 3, type=size(c2,/type))
+;     map[pix,0] = c2
+;     map[pix,1] = c3
+;     map[pix,2] = c4   
     if ~keyword_set(silent) then begin
-        message,/info,level=level,'WARNING: input file '+file+' is in cut-sky format, which can be read properly with READ_FITS_CUT4.'
+        message,/info,level=level,'WARNING: input file '+file+' is in partial sky format, which can be read properly with READ_FITS_PARTIAL.'
         message,/info,level=level,'Here a full sky map will be generated, replacing missing data with 0.'
     endif
-    read_fits_cut4, file, pix, c2, c3, c4, extension=extension_id, xhdr=header
-    map = make_array(nside2npix(nside), 3, type=size(c2,/type))
-    map[pix,0] = c2
-    map[pix,1] = c3
-    map[pix,2] = c4   
+    read_fits_partial, file, pix, tmp, extension=extension_id, xhdr=header
+    ncol = (size(tmp,/dim))[1]
+    map = make_array(nside2npix(nside), ncol, type=size(tmp,/type))
+    for i=0,ncol-1 do map[pix,i] = tmp[*,i]
 endif else begin
     selectread, file, map, extension=extension_id, no_pdu=no_pdu, header=header
 endelse
@@ -112,6 +120,7 @@ PRO read_tqu, fitsfile, TQU, EXTENSION=extension_id, HDR = hdr, XHDR = xhdr, HEL
 ;       Jan 2013: allows Extension to be a string
 ;       Aug 2017: produces a full-sky map (with empty pixels set to 0) when reading
 ;           a FITS file in cut-sky format
+;       Feb 2020: uses READ_FITS_PARTIAL instead of READ_FITS_CUT4 for partial maps
 ;
 ; requires the THE IDL ASTRONOMY USER'S LIBRARY 
 ; that can be found at http://idlastro.gsfc.nasa.gov/homepage.html
