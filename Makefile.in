@@ -13,7 +13,7 @@ DISTCLEAN = sharp-void c-void cpp-void f90-void healpy-void
 RM	= rm -f
 HEALPIX=
 SHARPLDIR = 
-TOPDIR = `pwd`
+TOPDIR    = $(shell pwd)
 
 # ------------------------------ variables for F90 --------------------------
 F90_BINDIR	=

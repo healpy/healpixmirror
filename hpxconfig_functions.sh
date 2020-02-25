@@ -123,7 +123,15 @@ echoLn () {
 }
 #-------------
 findFITSLib () {
-    for dir in $* /usr/lib /usr/lib64 /usr/local/lib /usr/local/lib64 /usr/local/lib/cfitsio /usr/local/lib64/cftisio /usr/local/src/cfitsio ${HOME}/lib ${HOME}/lib64 /softs/cfitsio/lib `${LS} -dr /softs/cfitsio/*/lib 2> ${DEVNULL}` `${LS} -dr /usr/common/usg/cfitsio/*/lib 2> ${DEVNULL}` `${LS} -dr ${HOME}/?oft*/cfitsio*/ 2> ${DEVNULL}` ; do
+    for dir in $* /usr/lib /usr/lib64 /usr/local/lib /usr/local/lib64 \
+    /usr/local/lib/cfitsio /usr/local/lib64/cftisio /usr/local/src/cfitsio \
+    ${HOME}/lib ${HOME}/lib64 \
+    `${LS} -dr /softs/cfitsio*/lib 2> ${DEVNULL}` \
+    `${LS} -dr /softs/cfitsio/*/lib 2> ${DEVNULL}` \
+    `${LS} -dr /usr/common/usg/cfitsio/*/lib 2> ${DEVNULL}` \
+    `${LS} -dr ${HOME}/?oft*/cfitsio*/ 2> ${DEVNULL}` \
+    `${LS} -dr ${HOME}/?oft*/cfitsio*/lib 2> ${DEVNULL}` \
+    `${LS} -dr ${HEADAS}/../heacore/*-*-*/lib 2> ${DEVNULL}` ; do
 	if [ -r "${dir}/lib${LIBFITS}.a" -o -r "${dir}/lib${LIBFITS}.so" -o -r "${dir}/lib${LIBFITS}.dylib" ] ; then
 	    FITSDIR=$dir
 	    break
@@ -132,7 +140,15 @@ findFITSLib () {
 }
 #-------------
 findFITSInclude () {
-    for dir in $* /usr/include /usr/local/include /usr/local/src/cfitsio ${HOME}/include ${HOME}/include64 /soft/cfitsio/include `${LS} -dr /softs/cfitsio/*/include 2> ${DEVNULL}` `${LS} -dr /usr/common/usg/cfitsio/*/include 2> ${DEVNULL}` `${LS} -dr ${HOME}/?oft*/cfitsio*/ 2> ${DEVNULL}` ; do
+    for dir in $* /usr/include /usr/local/include \
+    /usr/local/src/cfitsio \
+    ${HOME}/include ${HOME}/include64 \
+    `${LS} -dr /softs/cfitsio*/include 2> ${DEVNULL}` \
+    `${LS} -dr /softs/cfitsio/*/include 2> ${DEVNULL}` \
+    `${LS} -dr /usr/common/usg/cfitsio/*/include 2> ${DEVNULL}` \
+    `${LS} -dr ${HOME}/?oft*/cfitsio*/ 2> ${DEVNULL}` \
+    `${LS} -dr ${HOME}/?oft*/cfitsio*/include 2> ${DEVNULL}` \
+    `${LS} -dr ${HEADAS}/../heacore/*-*-*/include 2> ${DEVNULL}` ; do
 	if [ -r "${dir}/fitsio.h" ] ; then
 	    FITSINC=$dir
 	    break
@@ -326,7 +342,7 @@ setCDefaults () {
     OPT="-O2 -Wall"
     C_AR="ar -rsv"
     PIC="-fPIC" # works with gcc, icc and clang
-    WLRPATH=""
+    C_WLRPATH=""
 
     case $OS in
         AIX)
@@ -337,7 +353,7 @@ setCDefaults () {
             AR64="-X64"
 	;;
 	Linux)
-	    WLRPATH="-Wl,-R"
+	    C_WLRPATH="-Wl,-R"
 	;;
     esac
 
@@ -408,7 +424,7 @@ askCUserMisc () {
 	[ "x$answer" != "x" ] && FITSDIR=$answer
 	fullPath FITSDIR
 
-	[ "x$WLRPATH" != "x" ] && WLRPATH="${WLRPATH}${FITSDIR}"
+	[ "x$C_WLRPATH" != "x" ] && C_WLRPATH="${C_WLRPATH}${FITSDIR}"
 
 	lib="${FITSDIR}/lib${LIBFITS}.a"
 	if [ ! -r $lib ]; then
@@ -478,7 +494,7 @@ editCMakefile () {
 	${SED} "s|^C_CFITSIO_INCDIR.*$|C_CFITSIO_INCDIR = $FITSINC|" |\
 	${SED} "s|^C_CFITSIO_LIBDIR.*$|C_CFITSIO_LIBDIR = $FITSDIR|" |\
 	${SED} "s|^C_EXTRA_LIB.*$|C_EXTRA_LIB = $CFITSIOCURL|" |\
-	${SED} "s|^C_WLRPATH.*$|C_WLRPATH = $WLRPATH|" |\
+	${SED} "s|^C_WLRPATH.*$|C_WLRPATH = $C_WLRPATH|" |\
 	${SED} "s|^C_ALL.*|C_ALL     = ${clibtypes}|" |\
 	${SED} "s|^HEALPIX=.*$|HEALPIX	= $HEALPIX|" |\
 	${SED} "s|^ALL\(.*\) c-void \(.*\)|ALL\1 c-all \2|" |\
@@ -550,9 +566,12 @@ setSharpDefaults () {
 	#SHARP_COPT="-DMULTIARCH -O3 -ffast-math -fopenmp" # reserve for multiplatform compilation
 	SHARP_COPT="${SHARP_COPT--O3 -ffast-math -march=native -fopenmp}" # -O3 -ffast-math -march=native -fopenmp unless already defined
     fi
-    LDFLAGS=""
+    SHARP_LDFLAGS=""
+    if [ "${OS}" = "Darwin" -a `isTrue ${USE_ATRPATH}` ]; then
+	SHARP_LDFLAGS="-Wl,-install_name,@rpath/libsharp.0.dylib"
+	# requires to add -Wl,-rpath,${HEALPIX}/lib to C++ flags ($CXXFLAGS)
+    fi
 
-    SHARPPREFIX=$HEALPIX
 }
 #-------------
 askSharpUserMisc () {
@@ -577,7 +596,6 @@ askSharpUserMisc () {
 #-------------
 editSharpMakefile () {
 
-    SHARPLDIR=${SHARPPREFIX}/lib
     SHARPCDIR=${HEALPIX}/src/common_libraries/libsharp
     SHARPBLD=${SHARPCDIR}/build
     SHARPLIB=${SHARPLDIR}/libsharp.a
@@ -587,7 +605,7 @@ editSharpMakefile () {
     (\rm -rf ${SHARPBLD}; \
     mkdir ${SHARPBLD}; \
     cd ${SHARPBLD}; \
-    CC="${CC}" CFLAGS="${SHARP_COPT}" LDFLAGS="${LDFLAGS}" ${SHARPCDIR}/configure --prefix=${SHARPPREFIX} || crashAndBurn) || crashAndBurn
+    CC="${CC}" CFLAGS="${SHARP_COPT}" LDFLAGS="${SHARP_LDFLAGS}" ${SHARPCDIR}/configure --prefix=${SHARPPREFIX} || crashAndBurn) || crashAndBurn
     echo "done."
     echo 
     echo "edit top Makefile for libsharp ..."
@@ -603,7 +621,7 @@ editSharpMakefile () {
 	${SED} "s|^SHARPBLD.*|SHARPBLD =${SHARPBLD}|" |\
 	${SED} "s|^SHARPLIB.*|SHARPLIB =${SHARPLIB}|" |\
 	${SED} "s|^SHARPMKF.*|SHARPMKF =${SHARPMKF}|" |\
-	${SED} "s|^# sharp configuration.*|# sharp configuration: (rm -rf ${SHARPBLD}; mkdir ${SHARPBLD}; cd ${SHARPBLD}; CC=\"${CC}\" CFLAGS=\"${SHARP_COPT}\" LDFLAGS=\"${LDFLAGS}\" ${SHARPCDIR}/configure --prefix=${SHARPPREFIX})|" > Makefile
+	${SED} "s|^# sharp configuration.*|# sharp configuration: (rm -rf ${SHARPBLD}; mkdir ${SHARPBLD}; cd ${SHARPBLD}; CC=\"${CC}\" CFLAGS=\"${SHARP_COPT}\" LDFLAGS=\"${SHARP_LDFLAGS}\" ${SHARPCDIR}/configure --prefix=${SHARPPREFIX})|" > Makefile
 
 #     mv -f Makefile Makefile_tmp
 #     ${CAT} Makefile_tmp |\
@@ -611,7 +629,7 @@ editSharpMakefile () {
 # 	mkdir -p $(SHARPBLD); \\\ \\
 # 	\$(RM) -r  $(SHARPBLD)/*; \\\ \\
 # 	cd $(SHARPBLD); \\\\ \\
-# 	CC=${CC} CFLAGS=${SHARP_COPT} LDFLAGS=${LDFLAGS} ${SHARPCDIR}/configure --prefix=${SHARPPREFIX}; \\\ \\
+# 	CC=${CC} CFLAGS=${SHARP_COPT} LDFLAGS=${SHARP_LDFLAGS} ${SHARPCDIR}/configure --prefix=${SHARPPREFIX}; \\\ \\
 # 	cd \$(HEALPIX)|' > Makefile
 
     echo " done."
@@ -650,12 +668,17 @@ test_Sharp () {
 #-------------
 setCppDefaults () {
 
-    CXXDIR=${HEALPIX}/src/cxx
-    CXXBLD=${CXXDIR}/build
     CFLAGS="-O3 -fopenmp"
-    CXXFLAGS="${CXXFLAGS--O3 -fopenmp}" # -O3 -fopenmp unless already defined
 
-    CXXPREFIX=$HEALPIX
+    CXXBLD=${CXXDIR}/build
+    CXX_LDFLAGS=""
+    CXXFLAGS="${CXXFLAGS--O3 -fopenmp}" # -O3 -fopenmp unless already defined
+    if [ "${OS}" = "Darwin" -a `isTrue ${USE_ATRPATH}` ]; then
+	CXX_LDFLAGS="-Wl,-install_name,@rpath/libhealpix_cxx.2.dylib"
+	# requires to add -Wl,-rpath,${HEALPIX}/lib to C++ flags ($CXXFLAGS)
+	CXXFLAGS="${CXXFLAGS} -Wl,-rpath,${HEALPIX}/lib"
+    fi
+
 }
 #-------------
 askCppUserMisc () {
@@ -717,7 +740,7 @@ editCppMakefile () {
     (\rm -rf ${CXXBLD}; \
     mkdir ${CXXBLD}; \
     cd ${CXXBLD}; \
-    CC="${CC}" CFLAGS="${CFLAGS}" CXX="${CXX}" CXXFLAGS="${CXXFLAGS}" SHARP_CFLAGS="-I${HEALPIX}/include" SHARP_LIBS="-L${HEALPIX}/lib -lsharp" CFITSIO_CFLAGS="${CFITSIO_CFLAGS}" CFITSIO_LIBS="${CFITSIO_LIBS}" ${CXXDIR}/configure --prefix=${CXXPREFIX} || crashAndBurn)
+    CC="${CC}" CFLAGS="${CFLAGS}" CXX="${CXX}" CXXFLAGS="${CXXFLAGS}" LDFLAGS="${CXX_LDFLAGS}" SHARP_CFLAGS="-I${HEALPIX}/include" SHARP_LIBS="-L${HEALPIX}/lib -lsharp" CFITSIO_CFLAGS="${CFITSIO_CFLAGS}" CFITSIO_LIBS="${CFITSIO_LIBS}" ${CXXDIR}/configure --prefix=${CXXPREFIX} || crashAndBurn)
     echo "done"
 
     echo 
@@ -734,7 +757,7 @@ editCppMakefile () {
 
     mv -f Makefile Makefile_tmp
     ${CAT} Makefile_tmp |\
-	${SED} "s|^# C++ configuration.*$|# C++ configuration: (rm -rf ${CXXBLD} ; mkdir ${CXXBLD} ; cd ${CXXBLD}; CC=\"${CC}\" CFLAGS=\"${CFLAGS}\" CXX=\"${CXX}\" CXXFLAGS=\"${CXXFLAGS}\"  SHARP_CFLAGS=\"-I${HEALPIX}/include\" SHARP_LIBS=\"-L${HEALPIX}/lib -lsharp\" CFITSIO_CFLAGS=\"${CFITSIO_CFLAGS}\" CFITSIO_LIBS=\"${CFITSIO_LIBS}\" ${CXXDIR}/configure --prefix=${CXXPREFIX})|"> Makefile
+	${SED} "s|^# C++ configuration.*$|# C++ configuration: (rm -rf ${CXXBLD} ; mkdir ${CXXBLD} ; cd ${CXXBLD}; CC=\"${CC}\" CFLAGS=\"${CFLAGS}\" CXX=\"${CXX}\" CXXFLAGS=\"${CXXFLAGS}\"  LDFLAGS=\"${CXX_LDFLAGS}\" SHARP_CFLAGS=\"-I${HEALPIX}/include\" SHARP_LIBS=\"-L${HEALPIX}/lib -lsharp\" CFITSIO_CFLAGS=\"${CFITSIO_CFLAGS}\" CFITSIO_LIBS=\"${CFITSIO_LIBS}\" ${CXXDIR}/configure --prefix=${CXXPREFIX})|"> Makefile
 
 #     mv -f Makefile Makefile_tmp
 #     ${CAT} Makefile_tmp |\
@@ -1304,8 +1327,8 @@ idl_config () {
 setF90Defaults () {
     FFLAGS="-I\$(F90_INCDIR)"
     CFLAGS="-O3 -std=c99"  # OK for gcc, icc and clang
-    #LDFLAGS="-L\$(F90_LIBDIR) -L\$(FITSDIR) -lhealpix -lhpxgif -lsharp -l\$(LIBFITS)"
-    LDFLAGS="-L\$(F90_LIBDIR) -L\$(FITSDIR) -L\$(SHARPLDIR) -lhealpix -lhpxgif -lsharp -l\$(LIBFITS)"
+    #f90_LDFLAGS="-L\$(F90_LIBDIR) -L\$(FITSDIR) -lhealpix -lhpxgif -lsharp -l\$(LIBFITS)"
+    F90_LDFLAGS="-L\$(F90_LIBDIR) -L\$(FITSDIR) -L\$(SHARPLDIR) -lhealpix -lhpxgif -lsharp -l\$(LIBFITS)"
     F90_BINDIR="./bin"
     F90_INCDIR="./include"
     F90_LIBDIR="./lib"
@@ -1324,7 +1347,7 @@ setF90Defaults () {
     PGFLAG=""
     PGLIBS=""
     PGLIBSDEF="-L/usr/local/pgplot -lpgplot -L/usr/X11R6/lib -lX11"
-    WLRPATH="" # to add a directory to the (linker) runtime library search path
+    F90_WLRPATH="" # to add a directory to the (linker) runtime library search path
     F90PIC="-fPIC"
     F90_LIBSUFFIX=".a" # static library by default
 
@@ -1468,7 +1491,7 @@ EOF
     # compile and link
     FFLAGS_=`par2curly  ${FFLAGS}`  # $() -> ${}
     FFLAGS_=`eval echo ${FFLAGS_}` # ${} -> value
-    ${FC} ${FFLAGS_}  ${tmpfile}${suffix} -o ${tmpfile}.x -L${FITSDIR} -l${LIBFITS} ${CFITSIOCURL} #${WLRPATH}
+    ${FC} ${FFLAGS_}  ${tmpfile}${suffix} -o ${tmpfile}.x -L${FITSDIR} -l${LIBFITS} ${CFITSIOCURL} ${F90_WLRPATH}
     # test
     if [ ! -s ${tmpfile}.x ]; then
 	echo
@@ -1506,23 +1529,30 @@ EOF
     # compile and link
     FFLAGS_=`par2curly  ${FFLAGS}`  # $() -> ${}
     FFLAGS_=`eval echo ${FFLAGS_}` # ${} -> value
-    ${FC} ${FFLAGS_}  ${tmpfile}${suffix} -o ${tmpfile}.x -L${FITSDIR} -l${LIBFITS} ${CFITSIOCURL} ${WLRPATH_}
-
+    ${FC} ${FFLAGS_}  ${tmpfile}${suffix} -o ${tmpfile}.x -L${FITSDIR} -l${LIBFITS} ${CFITSIOCURL} ${F90_WLRPATH_}
     #CFITSIOVREQ="3.14"            # required  version of CFITSIO (in Healpix 3.00)
     CFITSIOVREQ="3.20"            # required  version of CFITSIO (in Healpix 3.30)
     CFITSIOVREC="3.44"            # recommended  version of CFITSIO (according to NASA)
     # run if executable
     if [ -x ${tmpfile}.x ]; then
-	CFITSIOVERSION=`${tmpfile}.x` # available version of CFITSIO
+	CFITSIOVERSION=`${tmpfile}.x` || CFITSIOVERSION=-1 # available version of CFITSIO
 	v1=`echo ${CFITSIOVERSION} | ${AWK} '{print $1*1000}'` # multiply by 1000 to get integer
 	v2=`echo ${CFITSIOVREQ}    | ${AWK} '{print $1*1000}'`
 	v3=`echo ${CFITSIOVREC}    | ${AWK} '{print $1*1000}'`
-	${RM} ${tmpfile}.*
+	if [ $v1 -lt 0   ]; then
+	    echo
+	    echo "The code compiled with"
+	    echo "${FC} ${FFLAGS_}  ${tmpfile}${suffix} -o ${tmpfile}.x -L${FITSDIR} -l${LIBFITS} ${CFITSIOCURL} ${F90_WLRPATH_}"
+	    echo "can not be executed."
+	    echo "(missing shared/dynamic library ?)"
+	    crashAndBurn
+	fi
 	if [ $v1 -lt $v2 ]; then
 	    echo
 	    echo "CFITSIO version in ${FITSDIR}/lib${LIBFITS}.a  is  $CFITSIOVERSION "
 	    echo "CFITSIO >= ${CFITSIOVREQ} is expected for Healpix-F90"
 	    echo
+	    ${RM} ${tmpfile}.*
 	    crashAndBurn
 	fi
 	if [ $v1 -lt $v3 ]; then
@@ -1530,9 +1560,11 @@ EOF
 	    echo "WARNING: CFITSIO version in ${FITSDIR}/lib${LIBFITS}.a  is  $CFITSIOVERSION "
 	    echo "         CFITSIO >= ${CFITSIOVREC} is recommended by NASA security team"
 	    echo
+	    ${RM} ${tmpfile}.*
 	fi
     else
 	echo "Warning: unable to check that CFITSIO is recent enough (>= ${CFITSIOVREQ})"
+	${RM} ${tmpfile}.*
     fi
 
     # clean up
@@ -1550,11 +1582,11 @@ GuessF90Compiler () {
 	SunOS)
 	    sun_modules
 	    FFLAGS=`echo $FFLAGS | ${SED} "s/-I/-M/g"`
-	    LDFLAGS="$LDFLAGS -lm -lnsl -lsocket"
+	    F90_LDFLAGS="$F90_LDFLAGS -lm -lnsl -lsocket"
 	    OFLAGS="-fast";;
 	IRIX*)
 	    OS="IRIX"
-	    LDFLAGS="$LDFLAGS -lm"
+	    F90_LDFLAGS="$F90_LDFLAGS -lm"
 	    OFLAGS="-fast-O"
 	    PRFLAGS="-mp";;
 	Linux)
@@ -1817,7 +1849,8 @@ IdentifyF90Compiler () {
                 FCNAME="Intel Fortran Compiler"
 		junk=`$FC -v 2>&1 | grep -i version | sed "s|[ifort,version,Version, ]||g"`
 		intelversion=`echo $junk | awk -F. '{print $1}'`
-		if [ $intelversion -le 17 ] ; then # old syntax, supported up to version 17 included
+		#if [ $intelversion -le 17 ] ; then # old syntax, supported up to version 17 included
+		if [ $intelversion -lt 15 ] ; then # old syntax, supported up to version 17 included
 		    FFLAGS="$IFCINC -cm -w -sox -vec_report0"
 		    PRFLAGS="-openmp -openmp_report0" # Open MP enabled # June 2007
 		else # new syntax, supported since version 15, required in 18
@@ -1831,7 +1864,8 @@ IdentifyF90Compiler () {
 ##		FI8FLAG="-integer-size 64" # change default INTEGER to 64 bits
 		CFLAGS="$CFLAGS -DINTEL_COMPILER" # to combine C and F90
 		MODDIR="-module " # output location of modules
-		[ $OS = "Linux" ] && WLRPATH="-Wl,-R"
+		[ $OS = "Linux" ]  && F90_WLRPATH="-Wl,-R"
+		[ $OS = "Darwin" ] && F90_WLRPATH="-Wl,-rpath,"
 		DO_F90_SHARED=1
         elif [ $npgf != 0 ] ; then
                 #FCNAME="Portland Group Compiler"
@@ -1841,7 +1875,8 @@ IdentifyF90Compiler () {
 		PRFLAGS="-mp" # Open MP enabled, to be tested
 		MODDIR="-module " # output location of modules
 		CFLAGS="$CFLAGS -DpgiFortran" # to combine C and F90
-		[ $OS = "Linux" ] && WLRPATH="-Wl,-R"
+		[ $OS = "Linux" ]  && F90_WLRPATH="-Wl,-R"
+		[ $OS = "Darwin" ] && F90_WLRPATH="-Wl,-rpath,"
 		DO_F90_SHARED=1
         elif [ $nlah != 0 ] ; then
                 FCNAME="Lahey/Fujitsu Compiler"
@@ -1882,7 +1917,7 @@ IdentifyF90Compiler () {
 		FFLAGS=`echo $FFLAGS | ${SED} "s/-I/-p/g"`
 		FFLAGS="$FFLAGS -YEXT_NAMES=LCS -YEXT_SFX=_ -q"
 		OFLAGS="-O3 -cpu:host"
-		LDFLAGS="$LDFLAGS -lU77"
+		F90_LDFLAGS="$F90_LDFLAGS -lU77"
 		CFLAGS="$CFLAGS -DAbsoftProFortran"  # to combine C and F90
 		CC="${CC-gcc}"   # gcc unless already defined
 		MODDIR="-YMOD_OUT_DIR=" # output location of modules
@@ -1893,7 +1928,8 @@ IdentifyF90Compiler () {
 		CC="${CC-gcc}"   # gcc unless already defined
 		CFLAGS="$CFLAGS -DgFortran" # to combine C and F90
 		FI8FLAG="-i8" # change default INTEGER to 64 bits
-		[ $OS = "Linux" ] && WLRPATH="-Wl,-R"
+		[ $OS = "Linux" ]  && F90_WLRPATH="-Wl,-R"
+		[ $OS = "Darwin" ] && F90_WLRPATH="-Wl,-rpath,"
 		MODDIR="-fmod=" # output location of modules
 		DO_F90_SHARED=1
 	elif [ $ngfortran != 0 ] ; then
@@ -1902,7 +1938,8 @@ IdentifyF90Compiler () {
 		PRFLAGS="-fopenmp" # Open MP enabled
 		CC="${CC-gcc}"   # gcc unless already defined
 		FI8FLAG="-fdefault-integer-8" # change default INTEGER to 64 bits
-		[ $OS = "Linux" ] && WLRPATH="-Wl,-R"
+		[ $OS = "Linux" ]  && F90_WLRPATH="-Wl,-R"
+		[ $OS = "Darwin" ] && F90_WLRPATH="-Wl,-rpath,"
 		MODDIR="-J" # output location of modules
 		DO_F90_SHARED=1
 	elif [ $nflang != 0 ] ; then
@@ -1911,7 +1948,8 @@ IdentifyF90Compiler () {
 		PRFLAGS="-fopenmp" # Open MP enabled
 		CC="${CC-gcc}"   # gcc unless already defined
 		FI8FLAG="-fdefault-integer-8" # change default INTEGER to 64 bits
-		[ $OS = "Linux" ] && WLRPATH="-Wl,-R"
+		[ $OS = "Linux" ]  && F90_WLRPATH="-Wl,-R"
+		[ $OS = "Darwin" ] && F90_WLRPATH="-Wl,-rpath,"
 		MODDIR="-J" # output location of modules
 		DO_F90_SHARED=1
 	elif [ $npath != 0 ] ; then
@@ -2198,17 +2236,15 @@ askUserMisc () {
     fi
 
     # add option on where to search runtime libraries, on compilers supporting it
-    if [ "x$WLRPATH" != "x" ] ; then
-#	WLRPATH_="${WLRPATH} ${FITSDIR}" # expand $FITSDIR
-#	WLRPATH="${WLRPATH}\$(FITSDIR)"  # keep $(FITSDIR)
-	WLRPATH_="${WLRPATH} ${FITSDIR} ${WLRPATH} ${SHARPLDIR}" # expand $FITSDIR
-	WLRPATH="${WLRPATH}\$(FITSDIR) ${WLRPATH}\$(SHARPLDIR)"  # keep $(FITSDIR)
-	LDFLAGS="${LDFLAGS} ${WLRPATH}"
+    if [ "x$F90_WLRPATH" != "x" ] ; then
+	F90_WLRPATH_="${F90_WLRPATH}${FITSDIR} ${F90_WLRPATH}${SHARPLDIR} ${F90_WLRPATH}${F90_LIBDIR}" # expand $FITSDIR,$SHARPLDIR,F90_LIBDIR
+	F90_WLRPATH="${F90_WLRPATH}\$(FITSDIR) ${F90_WLRPATH}\$(SHARPLDIR) ${F90_WLRPATH}\$(F90_LIBDIR)"  # keep $(FITSDIR), ...
+	F90_LDFLAGS="${F90_LDFLAGS} ${F90_WLRPATH}"
     fi
 
     checkF90Fitsio  ${lib}
     checkFitsioCurl ${lib}
-    LDFLAGS="$LDFLAGS $CFITSIOCURL"
+    F90_LDFLAGS="$F90_LDFLAGS $CFITSIOCURL"
     checkF90FitsioLink
     checkF90FitsioVersion
 
@@ -2251,7 +2287,7 @@ editF90Makefile () {
     ${CAT} Makefile_tmp |\
 	${SED} "s|^F90_FC.*$|F90_FC	= $FC|" |\
 	${SED} "s|^F90_FFLAGS.*$|F90_FFLAGS	= $FFLAGS|" |\
-	${SED} "s|^F90_LDFLAGS.*$|F90_LDFLAGS	= $LDFLAGS|" |\
+	${SED} "s|^F90_LDFLAGS.*$|F90_LDFLAGS	= $F90_LDFLAGS|" |\
 	${SED} "s|^F90_CC.*$|F90_CC	= $CC|" |\
 	${SED} "s|^F90_CFLAGS.*$|F90_CFLAGS	= $CFLAGS|" |\
 	${SED} "s|^HEALPIX=.*$|HEALPIX	= $HEALPIX|" |\
@@ -2351,7 +2387,7 @@ f90_shared () {
     if [ `isTrue ${F_SHARED}` -eq 1 ]; then
 	echoLn " (y|n) [y]: "
 	read answer
-	[ `isFalse $[answer}` -eq 1 ] && DO_F90_SHARED=0  || DO_F90_SHARED=1
+	[ `isFalse ${answer}` -eq 1 ] && DO_F90_SHARED=0  || DO_F90_SHARED=1
     else
 	echoLn " (y|n) [n]: "
 	read answer
@@ -2362,14 +2398,20 @@ f90_shared () {
 #     echo "F_SHARED =  ${F_SHARED}"
 #     echo "answer=${answer}."  
 #     echo "DO_F90_SHARED =  ${DO_F90_SHARED}"
-#     #echo `isTrue ${answer}` `isFalse $[answer}`
+#     #echo `isTrue ${answer}` `isFalse ${answer}`
 #     echo "============================"
     if [ ${DO_F90_SHARED} -eq 1 ]; then
 	case $OS in
 	    Darwin)
-		F90_AR="${FC} ${F90PIC} -dynamiclib -Wl,-undefined,dynamic_lookup -o "
-		F90_FLAGNAMELIB="" #"-Wl,-install_name,"
-		F90_LIBSUFFIX=".dylib";;
+		F90_LIBSUFFIX=".dylib"
+		if [ `isTrue ${USE_ATRPATH}` -eq 1 ]; then
+		    F90_AR="${FC} ${F90PIC} -dynamiclib -Wl,-undefined,dynamic_lookup -Wl,-rpath,\$(F90_LIBDIR) -o "
+		    F90_FLAGNAMELIB="-Wl,-install_name,@rpath/"
+		else
+		    F90_AR="${FC} ${F90PIC} -dynamiclib -Wl,-undefined,dynamic_lookup -o "
+		    F90_FLAGNAMELIB=""
+		fi
+		;;
 	    Linux)
 		F90_AR="${FC} ${F90PIC} -shared -o "
 		F90_FLAGNAMELIB="-Wl,-soname,"
@@ -2686,7 +2728,12 @@ setTopDefaults() {
 
     HEALPIX=`pwd`
     #echo "HEALPIX ${HEALPIX}"
+    SHARPPREFIX=$HEALPIX
+    SHARPLDIR=${SHARPPREFIX}/lib
+    CXXPREFIX=$HEALPIX
+    CXXDIR=${HEALPIX}/src/cxx
 
+    USE_ATRPATH=0 # if set (on MacOS), use @rpath for location of libsharp.dylib, libhealpix_cxx.dylib, libhealpix.dylib
     NOPROFILEYET=1
     SHELL=`${BASENAME} ${SHELL-/bin/sh}`
 
