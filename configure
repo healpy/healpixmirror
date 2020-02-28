@@ -21,10 +21,11 @@
 # 2009-01-08: added comments on shells above
 # 2014-03-10: more portable substring parsing
 # 2015-05-12: updated this header
+# 2020-02-28: deal with properly with -L and --auto set together
 #
 
 # version number
-HPXVERSION=3.50
+HPXVERSION=3.60
 
 #----------------------------------------
 usage="Usage: ./$(basename $0) ['?'|-h|-v] [-L] [--auto=<list>]"
@@ -75,7 +76,24 @@ HPX_CONF_DIR=${HPX_CONF_DIR_HOME}
 
 # ----------------- options parsing ----------------------
 INTERACTIVE=1
-for i in $@ ; do 
+# ----  deal with -L
+args="$@"
+FEED='--feed'
+for i in $args ; do
+  case $i in
+      -L)
+	HPX_CONF_DIR=${HPX_CONF_DIR_INPLACE}
+	echo
+	echo "Note: the configuration directory will be ${HPX_CONF_DIR}"
+	echo
+	FEED='--feedL'
+	args=`echo "${args}" | ${SED} 's|-L||g'` # remove -L from options
+	;;
+      *);;
+  esac
+done
+# ----  deal with other options
+for i in $args ; do 
   case $i in 
       -h)
 	echo
@@ -136,12 +154,6 @@ for i in $@ ; do
 	echo "For more information, see the HEALPix documentation."
 	exit 0
 	;;
-      -L)
-        HPX_CONF_DIR=${HPX_CONF_DIR_INPLACE}
-	echo
-        echo "Note: the configuration directory will be ${HPX_CONF_DIR}"
-	echo
-	;;
       -v)
         echo "${HPXVERSION}"
 	exit 0
@@ -153,14 +165,16 @@ for i in $@ ; do
       --auto=*)
 	INTERACTIVE=0
         list="${i#*=}" #  remove '--auto='  from argument
-	# echo 'automatic mode'
-	# echo $list
 	batchfile="/tmp/Healpix_autolist.txt"
 	processAutoList ${batchfile} ${list}
-	$0 --feed < ${batchfile}
+	$0 ${FEED} < ${batchfile}
 	exit 0
 	;;
       --feed)
+        INTERACTIVE=0
+	;;
+      --feedL)
+        HPX_CONF_DIR=${HPX_CONF_DIR_INPLACE}
         INTERACTIVE=0
 	;;
       *)
