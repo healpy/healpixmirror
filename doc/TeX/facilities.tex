@@ -238,17 +238,16 @@ with $X,Y \in \{T,E,B\}$.
 %--------------------------------------------
 %-------------------------------------------- CHANGES
 %--------------------------------------------
-\section[Changes between releases 3.50 and \hpxversion]{%
-Changes between releases 3.50 and \hpxversion}
+\section[Changes between releases 3.60 and \hpxversion]{%
+Changes between releases 3.60 and \hpxversion}
 \begin{itemize}
-\item Faster Spherical Harmonics Transforms 
-in 
-\htmlref{\texttt{anafast}}{fac:anafast},
-\htmlref{\texttt{smoothing}}{fac:smoothing},
-and \htmlref{\texttt{synfast}}{fac:synfast}
-thanks to the \htmlref{new \texttt{libsharp} library}{install:libsharp:config}.
+\item Addition of the subroutines
+\mylinkext{sub:read_fits_partial}{\texttt{read\_fits\_partial}},
+and 
+\mylinkext{sub:write_fits_partial}{\texttt{write\_fits\_partial}},
+to read and write
+polarized or unpolarized map defined on a fraction of the sky.
 \end{itemize}
-
 
 %--------------------------------------------
 \section[Older Changes]{Older Changes}
@@ -257,6 +256,18 @@ thanks to the \htmlref{new \texttt{libsharp} library}{install:libsharp:config}.
 %%%%{\footnotesize{%
 {\mysmaller%
 \compresstext
+%
+\subsubsection{Version 3.60}
+\begin{itemize}
+\item Faster Spherical Harmonics Transforms 
+in 
+\htmlref{\texttt{anafast}}{fac:anafast},
+\htmlref{\texttt{smoothing}}{fac:smoothing},
+and \htmlref{\texttt{synfast}}{fac:synfast}
+thanks to the \htmlref{new \texttt{libsharp} library}{install:libsharp:config}.
+\end{itemize}
+%
+%-------------------------
 \subsubsection{Version 3.50}
 \begin{itemize}
 %

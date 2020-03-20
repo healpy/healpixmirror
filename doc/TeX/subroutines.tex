@@ -228,10 +228,31 @@ $\mathbf{\phi}$ & The azimuthal angle on the sphere, $\phi\in[0,2\pi[$.\\
 %--------------------------------------------
 %-------------------------------------------- CHANGES
 %--------------------------------------------
-\section[Changes between releases 3.50 and \hpxversion]{Changes between releases 3.50 and
-\hpxversion}
-\label{sub:new3p60}
+\section[Changes between releases 3.60 and \hpxversion]{Changes between releases 3.60 and
+\hpxversion} %2020-??
+\label{sub:new3p70}
 \begin{itemize}
+\item Addition of the subroutines
+\htmlref{\texttt{read\_fits\_partial}}{sub:read_fits_partial}
+and 
+\htmlref{\texttt{write\_fits\_partial}}{sub:write_fits_partial} 
+to read and write
+polarized or unpolarized map defined on a fraction of the sky.
+\end{itemize}
+
+%--------------------------------------------
+\section{Older Changes}
+%--------------------------------------------
+{\mysmaller%
+\compresstext
+%--------------------------------------------
+%--------------------------------------------
+\subsection[Changes between releases 3.00 and 3.60]{Changes between releases 3.00 and 3.60}
+%--------------------------------------------
+
+\subsubsection{Version 3.60} %2019-12
+\label{sub:new3p60}
+\begin{itemize}\compresslist
 \item Faster Spherical Harmonics Transforms
 in 
 \htmlref{\texttt{alm2map}}{sub:alm2map},
@@ -248,14 +269,6 @@ and
 now calls F2003 extensions instead of external C routines.
 \end{itemize}
 
-%--------------------------------------------
-\section{Older Changes}
-%--------------------------------------------
-{\mysmaller%
-\compresstext
-%--------------------------------------------
-\subsection[Changes between releases 3.00 and 3.50]{Changes between releases 3.00 and 3.50}
-%--------------------------------------------
 \subsubsection{Version 3.50}
 \label{sub:new3p50}
 \begin{itemize}\compresslist
@@ -735,6 +748,7 @@ smoothing\_getpar (initially in {\tt utilities} module).
 \include{read_conbintab}
 \include{read_dbintab}
 \include{read_fits_cut4}
+\include{read_fits_partial}
 \include{read_par}
 \include{real_fft}
 \include{remove_dipole}
@@ -759,6 +773,7 @@ smoothing\_getpar (initially in {\tt utilities} module).
 \include{write_bintabh}
 \include{write_dbintab}
 \include{write_fits_cut4}
+\include{write_fits_partial}
 \include{write_minimal_header}
 \include{write_plm}
 \include{xcc_v_convert}

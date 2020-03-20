@@ -44,9 +44,10 @@ pro write_fits_partial, filename, pixel, iqu,  $
 ;        fits I/O for Healpix
 ;
 ; CALLING SEQUENCE:
-;      write_fits_partial, Filename, Pixel, IQU, [HDR=, XHDR=, 
-;                       COORDSYS=, NESTED=, RING=, ORDERING=, NSIDE =,
-;                       UNITS=, HELP, COLNAMES=, VERBOSE=, EXTENSION=]
+;      write_fits_partial, Filename, Pixel, IQU, [COLNAMES=, COORDSYS=, 
+;                       EXTENSION=,  HDR=, HELP, 
+;                       NESTED=, NSIDE =, ORDERING=, RING=, 
+;                       UNITS=, VERBOSE=,  XHDR=]
 ;
 ; INPUTS:
 ;       Filename : STRING scalar,      
@@ -61,21 +62,30 @@ pro write_fits_partial, filename, pixel, iqu,  $
 ;
 ;      
 ; KEYWORD PARAMETERS:
-;       HDR=: primary header
-;
-;       XHDR=: STRING vector 
-;                FITS like header to be inserted in the FITS file
-;                and containing extra information on e.g, data origin, data
-;                processing ...
+;       COLNAMES=: STRING vector with column names (beside PIXEL) (not case sensitive: [A-Z,0-9,_])
+;         Default:  TEMPERATURE (for 1 column), 
+;                   TEMPERATURE, Q_POLARISATION, U_POLARISATION  (for 3 columns)
+;                   C01, C02, C03, C04, ... (otherwise)
+;         If provided the number of COLNAMES must be >= the number of columns
 ;
 ;       COORDSYS=: STRING scalar, either 'C', 'G' or 'E' 
 ;                  coordinate system
+;
+;       EXTENSION=: (0 based) extension number in which to write data
+;           default = 0
+;
+;       HDR=: primary header
+;
+;       HELP=: if set, an extensive help (this IDL header) is printed
+;
 ;       NESTED=: if set, the Healpix NESTED scheme is used
-;       RING=: if set, the Healpix RING scheme is used
+;
 ;       ORDERING=: STRING scalar, either 'RING' or 'NESTED'
 ;            the information on the ORDERING scheme has to be given to the routine, either using
 ;            the keywords NESTED, RING or ORDERING, or filling in the Header
 ;            with the relevant keywords
+;
+;       RING=: if set, the Healpix RING scheme is used
 ;       
 ;       NSIDE=: Healpix resolution parameter
 ;            the information on the resolution NSIDE has to be given to the routine, either using
@@ -85,20 +95,14 @@ pro write_fits_partial, filename, pixel, iqu,  $
 ;          if scalar, same for all
 ;          if vector, each column can have its own units
 ;          if needed, the last UNITS provided will be replicated for the remaining columns
+;
+;       VERBOSE=: if set, be verbose while the file is written
 ;      
-;
-;       EXTENSION=: (0 based) extension number in which to write data
-;           default = 0
+;       XHDR=: STRING vector 
+;                FITS like header to be inserted in the FITS file
+;                and containing extra information on e.g, data origin, data
+;                processing ...
 ;       
-;      COLNAMES=: STRING vector with column names (beside PIXEL) (not case sensitive: [A-Z,0-9,_])
-;         Default:  TEMPERATURE (for 1 column), 
-;                   TEMPERATURE, Q_POLARISATION, U_POLARISATION  (for 3 columns)
-;                   C01, C02, C03, C04, ... (otherwise)
-;         If provided the number of COLNAMES must be >= the number of columns
-;       
-;       
-;       HELP=: if set, an extensive help (this IDL header) is printed
-;
 ;       VERBOSE=: if set, be verbose
 ;
 ;
@@ -135,8 +139,8 @@ if (keyword_set(help)) then begin
 endif
 
 syntax1 = 'SYNTAX: '+routine+', filename, pixel, IQU, '
-syntax2 = '                   [HDR=, XHDR=, COORDSYS=, NESTED=, RING=, ORDERING=, NSIDE =, '
-syntax3 = '                   UNITS=, EXTENSION=, HELP=, VERBOSE= ]'
+syntax2 = '                   [HDR=, XHDR=, COLNAMES=, COORDSYS=, EXTENSION=, HELP=, '
+syntax3 = '                   NESTED=, NSIDE =, ORDERING=, RING=, UNITS=, VERBOSE= ]'
 if n_params() lt 3 then begin
     print,syntax1,syntax2,syntax3,format='(a)'
     if n_params() ne 0 then print,' ********* file not written ! ***********'

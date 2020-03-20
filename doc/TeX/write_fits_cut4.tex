@@ -42,8 +42,7 @@ information relative to the Stokes parameters I, Q and U are placed in extension
 \begin{tabular}{p{0.3\hsize} p{0.05\hsize} p{0.05\hsize} p{0.5\hsize}} \hline  
 \textbf{name\&dimensionality} & \textbf{kind} & \textbf{in/out} & \textbf{description} \\ \hline
                    &   &   &                           \\ %%% for presentation
-filename\mytarget{sub:write_fits_cut4:filename}(LEN=\filenamelen) & CHR & IN & FITS file to be read from,
-                   containing a cut sky map \\
+filename\mytarget{sub:write_fits_cut4:filename}(LEN=\filenamelen) & CHR & IN & FITS file into which the cut sky map will be written\\
 np\mytarget{sub:write_fits_cut4:np}           & I4B & IN & number of pixels to be written in the file \\
 pixel\mytarget{sub:write_fits_cut4:pixel}(0:np-1)    & I4B & IN & index of observed (or valid) pixels \\
 signal\mytarget{sub:write_fits_cut4:signal}(0:np-1)    & SP & IN & value of signal in each observed pixel\\

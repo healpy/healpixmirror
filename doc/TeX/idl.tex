@@ -245,9 +245,30 @@ in \linklatexhtml{the Installation Document}{install.pdf}{install.htm} for more 
 %%%%%%%
 \newpage
 
-\section{Changes in release \hpxversion}%2019-12
+\section{Changes in release \hpxversion} %2020-??
 %--------------------------------
 \begin{itemize}
+%--------------------------------
+\item addition of 
+\htmlref{\texttt{read\_fits\_partial}}{idl:read_fits_partial}  and 
+\htmlref{\texttt{write\_fits\_partial}}{idl:write_fits_partial} 
+to create read and write FITS files containing polarized or unpolarized maps defined on a fraction of the sky.
+% \item \htmlref{{\tt azeqview, cartview, gnomview, mollview,
+% orthview}}{idl:mollview} visualization routines: support for color and thickness in \mylink{idl:mollview:outline}{\texttt{outline}} keyword
+%\item Update of the required
+%    \htmladdnormallink{\texttt{IDL-astron} library}{https://idlastro.gsfc.nasa.gov/homepage.html}
+%    routines, and \htmladdnormallink{\texttt{Coyote}}{http://www.idlcoyote.com} library
+%    routines (2019-10-30).
+%--------------------------------
+\end{itemize}
+%--------------------------------
+
+\section{Previous changes}
+{\mysmaller%% (itemize)
+\compresstext
+\subsubsection{Changes between release 3.50 and 3.60}%2019-12
+%--------------------------------
+\begin{itemize} %--------0
 %--------------------------------
 \item addition of \htmlref{\texttt{outline\_earth}}{idl:outline_earth} to create a structure outlining Earth features such as coastlines, rivers, country boundaries, ...
 \item \htmlref{{\tt azeqview, cartview, gnomview, mollview,
@@ -257,13 +278,10 @@ orthview}}{idl:mollview} visualization routines: support for color and thickness
     routines, and \htmladdnormallink{\texttt{Coyote}}{http://www.idlcoyote.com} library
     routines (2019-10-30).
 %--------------------------------
-\end{itemize}
+\end{itemize} %--------0
 %--------------------------------
 
-\section{Previous changes}
-{\mysmaller%% (itemize)
-\compresstext
-\subsubsection{Changes between release 3.40 and 3.50}%2018-12
+\subsubsection{Changes between releases 3.40 and 3.50}%2018-12
 %--------------------------------
 \begin{itemize} %--------0
 %--------------------------------
@@ -273,7 +291,7 @@ orthview}}{idl:mollview} visualization routines: support for color and thickness
 \end{itemize} %--------0
 %--------------------------------
 
-\subsubsection{Changes between release 3.31 and 3.40}%2018-06
+\subsubsection{Changes between releases 3.31 and 3.40}%2018-06
 %--------------------------------
 \begin{itemize} %--------0
 %--------------------------------
@@ -868,6 +886,7 @@ given so that these routines work under Mac OS X 10.4 and 10.5.
 \include{query_triangle_idl}
 \include{read_fits_cut4_idl}
 \include{read_fits_map_idl}
+\include{read_fits_partial_idl}
 \include{read_fits_s_idl}
 \include{read_tqu_idl}
 \include{remove_dipole_idl}
@@ -881,6 +900,7 @@ given so that these routines work under Mac OS X 10.4 and 10.5.
 \include{vec2ang_idl}
 \include{write_fits_cut4_idl}
 \include{write_fits_map_idl}
+\include{write_fits_partial_idl}
 \include{write_fits_sb_idl}
 \include{write_tqu_idl}
 

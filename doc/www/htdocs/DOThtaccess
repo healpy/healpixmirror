@@ -4,8 +4,10 @@ ErrorDocument 404 /notfound.html
 # -------- redirect src to svn repository
 # trunk
 RedirectMatch 301 ^/src/trunk/(.*)$ https://sourceforge.net/p/healpix/code/HEAD/tree/trunk/$1
+RedirectMatch 301 ^/src/3.70/(.*)$  https://sourceforge.net/p/healpix/code/HEAD/tree/trunk/$1
 # under dev. To trunk until branch is created
 # RedirectMatch 301 ^/src/4.00/(.*)$  https://sourceforge.net/p/healpix/code/HEAD/tree/trunk/$1
 # RedirectMatch 301 ^/src/3.60/(.*)$  https://sourceforge.net/p/healpix/code/HEAD/tree/trunk/$1
 # released version. To tagged branch
 RedirectMatch 301 ^/src/3.60/(.*)$  https://sourceforge.net/p/healpix/code/HEAD/tree/branches/branch_v360r1104/$1
+#RedirectMatch 301 ^/src/3.70/(.*)$  https://sourceforge.net/p/healpix/code/HEAD/tree/branches/branch_v370r????/$1

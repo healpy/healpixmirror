@@ -11,7 +11,7 @@
 
 \begin{facility}
 {This routine reads a \healpix map from a FITS file. This can deal with full sky
-as well as cut sky maps.}
+as well as cut sky maps, but always outputs a full sky map (with possibly many empty pixels).}
 {\modFitstools}
 \end{facility}
 
@@ -86,6 +86,8 @@ is its default value).
   \item[\htmlref{read\_bintab}{sub:read_bintab}] routine to read a binary table
   from a FITS file
   \item[\htmlref{read\_fits\_cut4}{sub:read_fits_cut4}] routine to read cut sky
+  map from a FITS file
+  \item[\htmlref{read\_fits\_partial}{sub:read_fits_partial}] routine to read a partial sky
   map from a FITS file
   \item[\textbf{cfitsio}] library for FITS file handling.
   \end{sulist}

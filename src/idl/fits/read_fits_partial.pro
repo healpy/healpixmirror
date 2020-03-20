@@ -41,7 +41,7 @@ HDR = header, XHDR = xheader, NSIDE=nside, ORDERING=ordering, COORDSYS=coordsys,
 ;
 ; CALLING SEQUENCE:
 ;        read_fits_partial, Filename, Pixel, IQU, 
-;        [HDR=, XHDR=, NSIDE=, ORDERING=, COORDSYS=, EXTENSION=, UNITS=, HELP=]
+;        [COORDSYS=, EXTENSION=, HDR=, HELP=, NSIDE=, ORDERING=, UNITS=, XHDR=]
 ; 
 ; INPUTS:
 ;       Filename  : STRING scalar,      
@@ -51,7 +51,7 @@ HDR = header, XHDR = xheader, NSIDE=nside, ORDERING=ordering, COORDSYS=coordsys,
 ;       EXTENSION= number (0 based) of extension to be read
 ;
 ; OUTPUTS:
-;       Pixel   : LONG vector of length np
+;       Pixel   : INT, LONG or LONG64 vector of length np
 ;                   index of Healpix pixel
 ;
 ;       IQU   : FLOAT or DOUBLE array of size (np, nc)
@@ -60,11 +60,11 @@ HDR = header, XHDR = xheader, NSIDE=nside, ORDERING=ordering, COORDSYS=coordsys,
 ;
 ; OPTIONAL OUTPUTS:
 ;      
+;       COORDSYS= astrophysical coordinate system used, as read from FITS
+;           header (value of keywords COORDSYS or SKYCOORD)
+;
 ;       HDR= : STRING vector 
 ;                contains the FITS header of the primary unit
-;
-;       XHDR= : STRING vector 
-;                contains the FITS header of the extension (the most informative)
 ;
 ;       NSIDE= Healpix resolution parameter read from FITS file, set to -1 if
 ;          not found
@@ -72,10 +72,11 @@ HDR = header, XHDR = xheader, NSIDE=nside, ORDERING=ordering, COORDSYS=coordsys,
 ;       ORDERING= pixel ordering, as read from FITS header, either 'RING' or
 ;          'NESTED' or ' ' (unkwnown)
 ;
-;       COORDSYS= astrophysical coordinate system used, as read from FITS
-;           header (value of keywords COORDSYS or SKYCOORD)
 ;
 ;       UNITS = physical units of each column of the table (except PIXEL)
+;
+;       XHDR= : STRING vector 
+;                contains the FITS header of the extension (the most informative)
 ;
 ; KEYWORD PARAMETERS:
 ;
@@ -84,7 +85,7 @@ HDR = header, XHDR = xheader, NSIDE=nside, ORDERING=ordering, COORDSYS=coordsys,
 ; RESTRICTIONS:
 ;
 ; PROCEDURE:
-;      calls fxbreadm
+;      calls fits_read
 ;
 ; EXAMPLE:
 ;
@@ -97,7 +98,7 @@ if (keyword_set(help)) then begin
     doc_library,routine
     return
 endif
-syntax = 'Syntax : '+routine+', filename, pixel, IQU, [HDR=, XHDR=, NSIDE=, ORDERING=, COORDSYS=, EXTENSION=, HELP=]'
+syntax = 'Syntax : '+routine+', filename, pixel, IQU, [HDR=, XHDR=, COORDSYS=, EXTENSION=, HELP=, NSIDE=, ORDERING=, UNITS=]'
 if N_params() LT 3 then begin
       print,syntax
       return
