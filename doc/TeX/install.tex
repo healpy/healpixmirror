@@ -1248,7 +1248,17 @@ However, trying to link \healpix to that installation of cfitsio will generally 
 preventing the compilation of \healpix C++ routines.
 \end{itemize}
 It is therefore recommended to link \healpix to a cfitsio library compiled 
-locally and {\em not} included in Heasoft.
+locally and {\em not} included in Heasoft.\\
+If Heasoft's cfitsio is to be used, 
+Heasoft must have been compiled locally from source files,
+and the paths provided during the \healpix configuration must be
+\texttt{FITSDIR=\$\{HEADAS\}/../heacore/}PLATFORM\texttt{/lib} and
+\texttt{FITSINC=\$\{HEADAS\}/../heacore/}PLATFORM\texttt{/include}
+(\emph{instead} of the expected 
+\texttt{FITSDIR=\$\{HEADAS\}/lib} and
+\texttt{FITSINC=\$\{HEADAS\}/include})
+where PLATFORM depends on your computer and operating system and may look like \texttt{x86\_64-pc-linux-gnu-libc2.29}.
+
 
 % \subsection{fft.f compilation}
 

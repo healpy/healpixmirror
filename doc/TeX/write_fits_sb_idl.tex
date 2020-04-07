@@ -197,7 +197,7 @@ If {\tt Nothealpix} is set, the restrictions on Nside are void.}}
 npix =  \htmlref{nside2npix}{idl:nside2npix}(128) \\
 f=  randomn(seed,npix) \\
 n=  lindgen(npix)+3 \\
-map\_FN =  create\_struct('HDR',[' '],'FLUX',f,'NUMBER',n) \\
+map\_FN =  create\_struct('HDR',['~'],'FLUX',f,'NUMBER',n) \\
 \thedocid,  'map\_fluxnumber.fits', 0, map\_FN, coord='G', /ring\\
 \end{tabular}
 }

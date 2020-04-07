@@ -11,6 +11,7 @@ coefficients.
 %
 A (complex) map $S$ of spin $s$ is a linear combination of the spin weighted harmonics ${_s}Y_{\ell m}$
 \begin{eqnarray}
+	\label{eq:alm2map_spin_a}
 	{_s}S(p) = \sum_{\ell m} {_s}a_{\ell m}\ \ {_s}Y_{\ell m}(p)
 \end{eqnarray}
 % \begin{eqnarray}
@@ -32,20 +33,23 @@ ${_s}a_{\ell m}^* = (-1)^{s+m} {_{-s}}a_{\ell -m}$.
 \thedocid\ expects the alm coefficients to be provided as
 	%typo correction on spin sign of second term of RHS, 2009-09-03
 \begin{eqnarray}
-	{_{|s|}}a^{+}_{\ell m} &\myequal& - ( {_{|s|}}a_{\ell m} + (-1)^s {_{-|s|}}a_{\ell m} )/2 \\
-	{_{|s|}}a^{-}_{\ell m} &\myequal& - ( {_{|s|}}a_{\ell m} - (-1)^s {_{-|s|}}a_{\ell m} )/(2i)
+	\label{eq:alm2map_spin_b}
+	{_{|s|}}a^{+}_{\ell m} &=& - ( {_{|s|}}a_{\ell m} + (-1)^s {_{-|s|}}a_{\ell m} )/2 \nonumber \\
+	{_{|s|}}a^{-}_{\ell m} &=& - ( {_{|s|}}a_{\ell m} - (-1)^s {_{-|s|}}a_{\ell m} )/(2i)\nonumber
 \end{eqnarray}
 for $m\ge 0$, knowing that, just as for spin 0 maps, the
 coefficients for $m<0$ are given by 
 \begin{eqnarray}
-{_{|s|}}a^{+}_{\ell-m} &\myequal& (-1)^m {_{|s|}}a^{+*}_{\ell m}, \\
-{_{|s|}}a^{-}_{\ell-m} &\myequal& (-1)^m {_{|s|}}a^{-*}_{\ell m}.
+	\label{eq:alm2map_spin_c}
+	{_{|s|}}a^{+}_{\ell-m} &=& (-1)^m {_{|s|}}a^{+*}_{\ell m}, \nonumber\\
+	{_{|s|}}a^{-}_{\ell-m} &=& (-1)^m {_{|s|}}a^{-*}_{\ell m}. \nonumber
 \end{eqnarray}
 %
 The two (real) maps produced by \thedocid\ are defined respectively as
 \begin{eqnarray}
-	{_{|s|}}S^+ &\myequal& ({_{|s|}}S + {_{-|s|}}S)/2 \\
-	{_{|s|}}S^- &\myequal& ({_{|s|}}S - {_{-|s|}}S)/(2i).
+	\label{eq:alm2map_spin_d}
+	{_{|s|}}S^+ &=& ({_{|s|}}S + {_{-|s|}}S)/2    \nonumber\\
+	{_{|s|}}S^- &=& ({_{|s|}}S - {_{-|s|}}S)/(2i).\nonumber
 \end{eqnarray}
 %
 With these definitions, ${_2}a^{+}$, ${_2}a^{-}$, ${_2}S^+$ and ${_2}S^-$

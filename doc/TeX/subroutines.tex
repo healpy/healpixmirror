@@ -82,8 +82,12 @@ optional.}
 % to make sure that in html, the &=& in eqnarray appears normally,
 % replace &=& with &\myequal& hereafter
 \newcommand{\myequal}{=}
+\newcommand{\AmyequalA}{&=&}
 \begin{htmlonly}
- \renewcommand{\myequal}{$=$}
+%\renewcommand{\myequal}{$=$} % best for latex2html
+% \renewcommand{\AmyequalA}{&$=$&} % OK for latexhtml and ebook-convert
+ \renewcommand{\myequal}{=} % OK for latexhtml and ebook-convert
+ \renewcommand{\AmyequalA}{& &=} % OK for latexhtml and ebook-convert
 \end{htmlonly}
 \newcommand{\mycomma}{,&\ &}
 \begin{htmlonly}

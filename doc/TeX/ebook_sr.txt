@@ -1,0 +1,18 @@
+(?s)<DIV CLASS="navigation">\s*(.*?)</DIV>
+
+<TD CLASS="eqno" WIDTH=10 ALIGN="RIGHT">
+<TD CLASS="eqno" WIDTH=50 ALIGN="RIGHT">
+(?s)<!--Table of Child-Links-->(.*?)<A ID="CHILD_LINKS"><STRONG>Subsections</STRONG></A>(.*?)<!--End of Table of Child-Links-->
+
+(?s)<ADDRESS>(.*?)</ADDRESS>
+
+(?s)This document was generated using the\s*(.*?)</kbd>
+
+The translation was initiated on 2020-\d\d-\d\d
+Translated from html files using calibre's ebook-convert
+_About_this_document
+_footnode
+About this document \.\.\.
+Footnotes
+(?s)<PRE>\..\..\..\..\..\..\..\..\..\..\..\..\..\..\..\..\..\..\..\..\..\..\..\..\..\..\..\..\..
+<PRE>
