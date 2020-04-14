@@ -85,9 +85,12 @@ $x = \sin\theta\cos\phi$, $y=\sin\theta\sin\phi$, $z=\cos\theta$}
 \begin{example}
 {
 \begin{tabular}{ll} %%%% use this tabular format %%%%
+vec2ang, [[0.,0.],[0.,0.],[1.,-10.]], lat, lon, /astro\\
+print,lat\\
+print,lon\\
 \end{tabular}
 }
-{
+{will return \texttt{90.0000, -90.0000} and \texttt{0.00000, 0.00000}, the latitudes and longitudes in Degrees
+or the North and South poles. Note that in this example the input 3D location of South pole was not normalized.
 }
 \end{example}
-

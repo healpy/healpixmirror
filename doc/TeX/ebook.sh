@@ -23,6 +23,8 @@ for llprefix in ${list} ; do
     maxlevel=1
     dofootnotes=1
     extra_sr=""
+    basefontsize=10
+    fontsizemapping="6,6,6,10,10,10,13,20"
     [ "${sprefix}" = "install" ] && maxlevel=0
     [ "${sprefix}" = "csub" ]    && dofootnotes=0
     [ "${sprefix}" = "intro" ]   && dofootnotes=0
@@ -61,7 +63,7 @@ for llprefix in ${list} ; do
 	--pubdate ${today} \
 	--language 'English' \
 	--comments 'Healpix/IDL' \
-	--base-font-size 10 \
+	--base-font-size ${basefontsize} \
 	--page-breaks-before "//*[name()='h1']" \
 	--max-toc-links 0 \
 	--search-replace ${srfile}
@@ -75,6 +77,7 @@ fi
 exit
 
 
+##--font-size-mapping ${fontsizemapping} \
 
 # ebook-convert install.htm install.epub --breadth-first --max-levels 0 --authors 'HEALPix Team' --base-font-size 10 --search-replace /Users/hivon/healpix_svn/doc/TeX/ebook_sr.txt --page-breaks-before "//*[name()='h1']"
 

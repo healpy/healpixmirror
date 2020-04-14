@@ -227,10 +227,17 @@ magnetic (or curl) components of polarization.
 If not provided, $b_B(\ell)$ takes the value of $b_E(\ell)$ which itself defaults to $b_T(\ell)$.
 With these window functions, the (polarized) 
 map spherical harmonics coefficients and its power spectra are transformed according to
+\latexhtml{
 \begin{eqnarray}
 	a^{X}_{\ell m} &\longrightarrow& a^{X}_{\ell m} b_{X}(\ell),\\
 	C^{XY}_{\ell m} &\longrightarrow& C^{XY}_{\ell m} b_{X}(\ell)b_{Y}(\ell),
+\end{eqnarray}%
+}{%
+\begin{eqnarray}
+	a^{X}_{\ell m} & &\longrightarrow a^{X}_{\ell m} b_{X}(\ell),\\
+	C^{XY}_{\ell m} & &\longrightarrow C^{XY}_{\ell m} b_{X}(\ell)b_{Y}(\ell),
 \end{eqnarray}
+}
 with $X,Y \in \{T,E,B\}$.
 
 \newpage
