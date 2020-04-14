@@ -28,6 +28,7 @@ L2HFLAGS := -dir $(HTMLDIR) -up_url main.htm -up_title "Main Page" \
 #-math -html_version 4.1 
 #-short_index -long_titles 6 
 #-show_section_numbers -short_index 
+EBOOK := ./ebook.sh
 
 EQNFIX      := ./eqnfix.sh
 IMPROVEHTML := ./improve_mobile_html.sh
@@ -47,6 +48,7 @@ cross := $(docs:.tex=.cross) pdf_index.cross
 chtml := $(docs:.tex=.chtml)
 vpdf  := $(docs:.tex=.vpdf)
 html  := $(docs:.tex=.html)
+epub  := $(addprefix ./epub/, $(docs:.tex=.epub) )
 incs  := hpxversion.tex idlversion.tex gdlversion.tex hpxwebsite.tex healpix_src_url.tex
 
 # define color output if needed
@@ -278,10 +280,31 @@ csub.html: $(style) healpix.perl cssfile
 	@echo "created$(BLUE_COLOR) $(HTMLDIR)/$(FULL).htm $(NO_COLOR)"
 
 #----------------------------------
+epub: $(epub)
+	$(EBOOK)
+
+intro.epub:
+	$(EBOOK) intro
+
+install.epub:
+	$(EBOOK) install
+
+idl.epub:
+	$(EBOOK) idl
+
+facilities.epub:
+	$(EBOOK) facilities
+
+subroutines.epub:
+	$(EBOOK) subroutines
+
+csub.epub:
+	$(EBOOK) csub
+
+#----------------------------------
 
 t1:	
 	@export PATH=${OLDPATH}:${MAGICPATH} ; echo $$PATH ; ppmquant
-	#ppmquant
 	@echo $$PATH
 
 clean: 
