@@ -16,6 +16,7 @@ VERSION =  $(shell grep "^\\\\newcommand" hpxversion.tex | grep hpxversion | sed
 DOCDIR  := ../../healpix-dynamicPages
 HTMLDIR := $(DOCDIR)/html
 PDFDIR  := $(DOCDIR)/pdf
+EPUBDIR := $(DOCDIR)/epub
 ADDRESS := -address "Version $(VERSION), `date +%Y-%m-%d`" -info 1
 HTMLVERSION := 4.1
 #HTMLVERSION := "5.0"
@@ -70,6 +71,7 @@ default:
 	@echo "       pdf"
 	@echo "     crosshtml"
 	@echo "       html"
+	@echo "     epub"
 	@echo "     empty"
 	@echo "       tidy, nopdf, clean"
 
@@ -280,10 +282,16 @@ csub.html: $(style) healpix.perl cssfile
 	@echo "created$(BLUE_COLOR) $(HTMLDIR)/$(FULL).htm $(NO_COLOR)"
 
 #----------------------------------
+# all EPUB
 epub: $(epub)
+	@echo "$(GREEN_COLOR)==================================$(NO_COLOR)"
+	@echo "$(GREEN_COLOR)        Generating ebooks         $(NO_COLOR)"
+	@echo "$(GREEN_COLOR)==================================$(NO_COLOR)"
 	$(EBOOK)
+	@mkdir -p $(EPUBDIR)
+	@cp $(epub) $(EPUBDIR)
 
-intro.epub:
+intro.epub: 
 	$(EBOOK) intro
 
 install.epub:
@@ -328,12 +336,12 @@ empty: nops nopdf
 allpdf: empty crossref
 	@echo "$(GREEN_COLOR)           All PDF Done !         $(NO_COLOR)"
 
-all: empty crossref crosshtml
-	@echo "$(GREEN_COLOR)        All PDF+HTML Done !      $(NO_COLOR)"
+all: empty crossref crosshtml epub
+	@echo "$(GREEN_COLOR)        All PDF+HTML+EPUB Done !      $(NO_COLOR)"
 
 package: all
 	cd $(DOCDIR) ; \
-	tar -czpf doc_$(VERSION).tar.gz pdf html ; \
+	tar -czpf doc_$(VERSION).tar.gz pdf html epub ; \
 	pwd
 	@echo "$(GREEN_COLOR)  $(DOCDIR)/doc_$(VERSION).tar.gz  written   $(NO_COLOR)"
 
