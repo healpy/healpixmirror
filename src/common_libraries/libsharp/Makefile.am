@@ -38,6 +38,12 @@ libavx512f_la_CFLAGS = ${AM_CFLAGS} -mavx512f -DARCH=avx512f
 
 libsharp_la_LIBADD = libavx.la libavx2.la libfma.la libfma4.la libavx512f.la
 
+# format is "current:revision:age"
+# - Always increase the revision value.
+# - Increase the current value whenever an interface has been added, removed or changed.
+# - Increase the age value only if the changes made to the ABI are backward compatible.
+libsharp_la_LDFLAGS = -version-info 1:1:0
+
 endif
 
 nobase_include_HEADERS = \
