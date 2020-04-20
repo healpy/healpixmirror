@@ -33,8 +33,10 @@ with versions 6 and 7) on an x86_64 platform, the build machinery can compile
 the time-critical functions for several different architectures (SSE2, AVX,
 AVX2, FMA3, FMA4, AVX512F), and the appropriate implementation will be selected
 at runtime.
-This is enabled by passing "-DMULTIARCH" as part of the CFLAGS.
-If this is enabled, please do _not_ specify "-march=native" or
+This feature is enabled automatically by the configure cript on x86_64
+platforms. If it fails, please use the "--disable-multiarch" flag in the
+configure invocation.
+If this feature is enabled, please do _not_ specify "-march=native" or
 "-mtarget=avx" or similar!
 If you are compiling libsharp for a particular target CPU only, or if you are
 using a different compiler, however, "-march-native" should be used. The
@@ -65,19 +67,19 @@ Example configure invocations
 =============================
 
 GCC, OpenMP, portable binary:
-CFLAGS="-DMULTIARCH -std=c99 -O3 -ffast-math -fopenmp" ./configure
+CFLAGS="-std=c99 -O3 -ffast-math -fopenmp" ./configure
 
 GCC, no OpenMP, portable binary:
-CFLAGS="-DMULTIARCH -std=c99 -O3 -ffast-math" ./configure
+CFLAGS="-std=c99 -O3 -ffast-math" ./configure
 
 Clang, OpenMP, portable binary:
-CC=clang CFLAGS="-DMULTIARCH -std=c99 -O3 -ffast-math -fopenmp" ./configure
+CC=clang CFLAGS="-std=c99 -O3 -ffast-math -fopenmp" ./configure
 
 Intel C compiler, OpenMP, nonportable binary:
-CC=icc CFLAGS="-std=c99 -O3 -march=native -ffast-math -fopenmp -D__PURE_INTEL_C99_HEADERS__" ./configure
+CC=icc CFLAGS="-std=c99 -O3 -march=native -ffast-math -fopenmp -D__PURE_INTEL_C99_HEADERS__" ./configure --disable-multiarch
 
 MPI support, nonportable binary:
-CC=mpicc CFLAGS="-DUSE_MPI -std=c99 -O3 -march=native -ffast-math" ./configure
+CC=mpicc CFLAGS="-DUSE_MPI -std=c99 -O3 -march=native -ffast-math" ./configure --disable-multiarch
 
 Additional GCC flags for pedantic warning and debugging:
 
