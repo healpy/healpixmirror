@@ -567,8 +567,10 @@ setSharpDefaults () {
 	SHARP_COPT="${SHARP_COPT--O3 -ffast-math -march=native -fopenmp}" # -O3 -ffast-math -march=native -fopenmp unless already defined
     fi
     SHARP_LDFLAGS=""
-    if [ "${OS}" = "Darwin" -a `isTrue ${USE_ATRPATH}` ]; then
-	SHARP_LDFLAGS="-Wl,-install_name,@rpath/libsharp.0.dylib"
+    if [ "${OS}" = "Darwin" -a `isTrue ${USE_ATRPATH}` -eq 1 ]; then
+	#SHARP_LDFLAGS="-Wl,-install_name,@rpath/libsharp.0.dylib"
+	SHARP_LDFLAGS="-Wl,-install_name,@rpath/libsharp.1.dylib"
+	#SHARP_LDFLAGS="-Wl,-install_name,@rpath/libsharp.1.dylib,-compatibility_version,1,-current_version,1"
 	# requires to add -Wl,-rpath,${HEALPIX}/lib to C++ flags ($CXXFLAGS)
     fi
 
@@ -673,7 +675,7 @@ setCppDefaults () {
     CXXBLD=${CXXDIR}/build
     CXX_LDFLAGS=""
     CXXFLAGS="${CXXFLAGS--O3 -fopenmp}" # -O3 -fopenmp unless already defined
-    if [ "${OS}" = "Darwin" -a `isTrue ${USE_ATRPATH}` ]; then
+    if [ "${OS}" = "Darwin" -a `isTrue ${USE_ATRPATH}` -eq 1 ]; then
 	CXX_LDFLAGS="-Wl,-install_name,@rpath/libhealpix_cxx.2.dylib"
 	# requires to add -Wl,-rpath,${HEALPIX}/lib to C++ flags ($CXXFLAGS)
 	CXXFLAGS="${CXXFLAGS} -Wl,-rpath,${HEALPIX}/lib"
