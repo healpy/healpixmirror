@@ -484,13 +484,15 @@ sub do_env_kwlist{
 }
 
 sub do_env_relist{
-  &do_env_mylist_bullet(@_," COMPACT", "BlueBall");
+  &do_env_mylist(@_," COMPACT");
+######  &do_env_mylist_bullet(@_," COMPACT", "BlueBall"); # 2020-04-24
 }
 
 sub do_env_itemize{
   #local($_) = @_;
   #print "itemize ($_)";
-  &do_env_mylist_bullet(@_," COMPACT", "GreenBall");
+  &do_env_mylist(@_," COMPACT");
+######  &do_env_mylist_bullet(@_," COMPACT", "GreenBall"); # 2020-04-24
 }
 
 #--------------------
@@ -551,7 +553,8 @@ sub do_env_mylist{
 	} elsif ($item_len < $desc_len) {
 	    /\\item$delimiter_rx/;
 	    push(@items_done,&translate_commands($`),
-		    "<DT>$imagemark\n<DD>$1");
+######		    "<DT>$imagemark\n<DD>$1");
+		    "<DD>&#9632 $1"); # 2020-04-24
 		$_=$';
 	} else  {
 	    /$item_description_rx\s*($labels_rx8)?\s*/;

@@ -27,10 +27,12 @@ synthesis (\htmlref{alm2map}{sub:alm2map})
 operators and  $\ba, \bm$ and $\bw$, the $a_{\ell m}$, map and pixel mask vectors, the
 Jacobi iterative process reads 
 \begin{eqnarray}
+	\label{eq:map2alm_it_a}
 	\ba^{(n)} = \ba^{(n-1)} + \bA. \left( \bw.\bm - \bS .\ba^{(n-1)} \right),
 \end{eqnarray}
 with
 \begin{eqnarray}
+	\label{eq:map2alm_it_b}
 	\ba^{(0)} = \bA.\bw.\bm.
 \end{eqnarray}
 %

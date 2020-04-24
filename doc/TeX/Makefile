@@ -283,7 +283,7 @@ csub.html: $(style) healpix.perl cssfile
 
 #----------------------------------
 # all EPUB
-epub: $(epub)
+epub: $(epub) main.html
 	@echo "$(GREEN_COLOR)==================================$(NO_COLOR)"
 	@echo "$(GREEN_COLOR)        Generating ebooks         $(NO_COLOR)"
 	@echo "$(GREEN_COLOR)==================================$(NO_COLOR)"

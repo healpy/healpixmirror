@@ -1345,7 +1345,7 @@ type
 \end{itemize}
 \item with Xquartz (default under Moutain Lion (10.8.*), Mavericks (10.9.*) and Yosemite (10.10.*), 
 available for download for 
-El Capitan (10.11.*), Sierra (10.12.*) and High Sierra (10.13.*)):\\
+El Capitan (10.11.*), Sierra (10.12.*), High Sierra (10.13.*), Mojave (10.14.*) and Catalina (10.15.*)):\\
 {\texttt{defaults write org.macosforge.xquartz.X11 wm\_click\_through -bool true}}
 \item with MacPort's X11 (package xorg-server):\\
 {\texttt{defaults write org.macports.X11 wm\_click\_through -bool true}}
@@ -1621,8 +1621,8 @@ However, the \mylinkext{idl:mollview:latex}{\texttt{Latex}} keyword will work pr
 \label{sec:newfeatures}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% BEGIN LATEST CHANGES %%%%%%%%%%%%%
 \subsection{Bug corrections and Improvements in Version \hpxversion}%2019-12
-\label{sec:v360}
-\mytarget{install:v360}
+\label{sec:v361}\mytarget{install:v361}
+\label{sec:v370}\mytarget{install:v370}
 % \subsubsection[General]{General}
 % \subsubsection[C]{\linklatexhtml{C}{csub.pdf}{csub.htm}}
 % \subsubsection[C++]{\htmladdnormallink{C++}{\healpixwebpage/html/index_cxx.htm}}
@@ -1632,8 +1632,53 @@ However, the \mylinkext{idl:mollview:latex}{\texttt{Latex}} keyword will work pr
 % \subsubsection[IDL]{\linklatexhtml{IDL}{idl.pdf}{idl.htm}}
 % \subsubsection[Java]{\htmladdnormallink{Java}{\healpixwebpage/html/java/index.html}}
 % \subsubsection[Python]{\htmladdnormallink{Python}{https://healpy.readthedocs.io/en/latest/}}
-
+%
 \subsubsection[General]{General}
+\begin{itemize}
+   \item Fixed several bugs in the \mylink{install:configure}{\texttt{configure}} script
+\end{itemize}
+%
+% \subsubsection[C]{\linklatexhtml{C}{csub.pdf}{csub.htm}}
+% \subsubsection[C++]{\htmladdnormallink{C++}{\healpixwebpage/html/index_cxx.htm}}
+%
+\subsubsection[Fortran]{%
+ 	Fortran 90 \linklatexhtml{facilities}{facilities.pdf}{facilities.htm} and
+ 	\linklatexhtml{subroutines}{subroutines.pdf}{subroutines.htm}}
+\begin{itemize}
+    \item Addition of the subroutines
+    \htmlref{\texttt{read\_fits\_partial}}{sub:read_fits_partial} and 
+    \htmlref{\texttt{write\_fits\_partial}}{sub:write_fits_partial} 
+    to read and write FITS files containing polarized or unpolarized maps defined on a fraction of the sky.
+\end{itemize}
+%
+\subsubsection[IDL]{\linklatexhtml{IDL}{idl.pdf}{idl.htm}}
+\begin{itemize}
+   \item Addition of 
+   \htmlref{\texttt{read\_fits\_partial}}{idl:read_fits_partial}  and 
+   \htmlref{\texttt{write\_fits\_partial}}{idl:write_fits_partial} 
+    to read and write FITS files containing polarized or unpolarized maps defined on a fraction of the sky.
+\end{itemize}
+%
+% \subsubsection[Java]{\htmladdnormallink{Java}{\healpixwebpage/html/java/index.html}}
+% \subsubsection[Python]{\htmladdnormallink{Python}{https://healpy.readthedocs.io/en/latest/}}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% END LATEST CHANGES %%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% ------
+%----------------------------------------------------
+\section{Appendix II: Older changes (versions 3.00 to 3.60)}
+%
+{\mytiny{%
+%
+\tinysubsection*{Bug corrections and Improvements in Version 3.60 (2019-12)}%2019-12
+\label{sec:v360}
+\mytarget{install:v360}
+\tinysubsubsection*{General}
 \begin{itemize}
 \item The computation time of a map synthesis or analysis has been reduced
 (for instance, by at least 30\% at $\nside=2048$ and $\lmax=4096$),
@@ -1672,9 +1717,9 @@ can be used to customize its behavior in both modes
 % as default values in the interactive configuration process.%
 \end{itemize}
 
-% \subsubsection[C]{\linklatexhtml{C}{csub.pdf}{csub.htm}}
+% \tinysubsubsection[C]{\linklatexhtml{C}{csub.pdf}{csub.htm}}
 %
-\subsubsection[C++]{\htmladdnormallink{C++}{\healpixwebpage/html/index_cxx.htm}}
+\tinysubsubsection*{\htmladdnormallink{C++}{\healpixwebpage/html/index_cxx.htm}}
 \begin{itemize}
   \item Link to the new and faster \mylink{install:libsharp:config}{\texttt{libsharp}} library
   \item Simpler configuration \mylink{install:cpp_config}{with the systematic use of \texttt{autotools}}
@@ -1685,7 +1730,7 @@ can be used to customize its behavior in both modes
   \item Added documentation for the module \texttt{needlet\_tool}.
 \end{itemize}
 %
-\subsubsection[Fortran]{%
+\tinysubsubsection*{%
  	Fortran 90 \linklatexhtml{facilities}{facilities.pdf}{facilities.htm} and
  	\linklatexhtml{subroutines}{subroutines.pdf}{subroutines.htm}}
 \begin{itemize}
@@ -1693,7 +1738,7 @@ can be used to customize its behavior in both modes
   \item Some external C routines replaced by Fortran 2003 extensions.
 \end{itemize}
 %
-\subsubsection[IDL]{\linklatexhtml{IDL}{idl.pdf}{idl.htm}}
+\tinysubsubsection*{\linklatexhtml{IDL}{idl.pdf}{idl.htm}}
 %--------------------------------
 \begin{itemize}
   \item Faster \htmlref{\texttt{isynfast}}{idl:isynfast}, \htmlref{\texttt{ianafast}}{idl:ianafast}, \htmlref{\texttt{ismoothing}}{idl:ismoothing} routines
@@ -1707,9 +1752,9 @@ orthview}}{idl:mollview} visualization routines: support for color and thickness
 \end{itemize}
 %--------------------------------
 %
-% \subsubsection[Java]{\htmladdnormallink{Java}{\healpixwebpage/html/java/index.html}}
+% \tinysubsubsection[Java]{\htmladdnormallink{Java}{\healpixwebpage/html/java/index.html}}
 %
-\subsubsection[Python]{\htmladdnormallink{Python}{https://healpy.readthedocs.io/en/latest/}}
+\tinysubsubsection*{\htmladdnormallink{Python}{https://healpy.readthedocs.io/en/latest/}}
 \begin{itemize}
 \item Switch to 
 	\htmladdnormallink{\texttt{healpy \hpyversion}}{\hpysite/releases} 
@@ -1722,18 +1767,8 @@ orthview}}{idl:mollview} visualization routines: support for color and thickness
 \end{itemize}
 %
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% END LATEST CHANGES %%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%
-% ------
-%----------------------------------------------------
-\section{Appendix II: Older changes (versions 3.00 to 3.50)}
 
-{\mytiny{%
-\tinysubsection*{Bug corrections and Improvements in Version 3.50}%2018-11
+\tinysubsection*{Bug corrections and Improvements in Version 3.50 (2018-11)}%2018-11
 
 \tinysubsubsection*{%
 	Fortran 90 \linklatexhtml{facilities}{facilities.pdf}{facilities.htm} and

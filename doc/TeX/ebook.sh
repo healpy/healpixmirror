@@ -6,6 +6,13 @@ else
     list=$@
 fi
 
+
+cssfile='/tmp/ebook.css'
+# H2: default (1.5) reduced
+cat > ${cssfile} <<EOF
+h2 { font-size: 1.25em;  }
+EOF
+
 #cd html
 texdir='/Users/hivon/healpix_svn/doc/TeX/'
 htmldir=${texdir}'html'
@@ -24,7 +31,8 @@ for llprefix in ${list} ; do
     dofootnotes=1
     extra_sr=""
     basefontsize=10
-    fontsizemapping="6,6,6,10,10,10,13,20"
+    #fontsizemapping="6,6,6,10,10,10,13,20"
+    epubversion="3"
     [ "${sprefix}" = "install" ] && maxlevel=0
     [ "${sprefix}" = "csub" ]    && dofootnotes=0
     [ "${sprefix}" = "intro" ]   && dofootnotes=0
@@ -39,7 +47,8 @@ for llprefix in ${list} ; do
     \rm -f ${workdir}/*.png ${workdir}/*.htm ${workdir}/*.css ${workdir}/*.pl ${workdir}/*.epub 
     cd ${htmldir} #------
     cp -pf ${sprefix}*.png  ${sprefix}*.htm ${sprefix}*.css ${sprefix}*.pl        ${workdir}
-    cp -pf *ball.png crossref.png                                   ${workdir}
+    #cp -pf *ball.png                                                ${workdir}
+    cp -pf crossref.png                                             ${workdir}
     cp -pf merge*png plot*png planck*png moll*png outline_earth.png ${workdir}
     cp -pf error_der*png new_dir_tree.png quad_tree.png intro*png   ${workdir}
     # cp ${texdir}/fig/healpix.png ${workdir}/healpix_cover.png
@@ -56,6 +65,7 @@ for llprefix in ${list} ; do
     fi
     #echo ${extra_sr}
     ebook-convert ${llprefix}.htm ${outfile} \
+	--epub-version ${epubversion} \
 	--breadth-first \
 	--max-levels ${maxlevel} \
 	--authors 'HEALPix Team' \
@@ -66,7 +76,8 @@ for llprefix in ${list} ; do
 	--base-font-size ${basefontsize} \
 	--page-breaks-before "//*[name()='h1']" \
 	--max-toc-links 0 \
-	--search-replace ${srfile}
+	--search-replace ${srfile} \
+	--extra-css=${cssfile}
     cd ${epubdir}
 done
 ls -lrt ${epubdir}*.epub
