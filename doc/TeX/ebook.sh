@@ -21,6 +21,7 @@ wrktop='/tmp/'
 srfile=${texdir}'ebook_sr.txt'
 #here=`pwd -L`
 today=`date +%Y-%m-%d` # yyyy-mm-dd
+#cover=${texdir}'fig/drawing_Healpix_0002.png'
 
 mkdir -p ${epubdir}
 
@@ -33,6 +34,7 @@ for llprefix in ${list} ; do
     basefontsize=10
     #fontsizemapping="6,6,6,10,10,10,13,20"
     epubversion="3"
+    cover="${texdir}fig/cover_${llprefix}.png"
     [ "${sprefix}" = "install" ] && maxlevel=0
     [ "${sprefix}" = "csub" ]    && dofootnotes=0
     [ "${sprefix}" = "intro" ]   && dofootnotes=0
@@ -53,31 +55,38 @@ for llprefix in ${list} ; do
     cp -pf error_der*png new_dir_tree.png quad_tree.png intro*png   ${workdir}
     # cp ${texdir}/fig/healpix.png ${workdir}/healpix_cover.png
     cd ${workdir} #-----
+    #nchapters=`ls -1 ${sprefix}*.htm | wc -l`
+    nchapters=`grep "HREF=\"${sprefix}" ${llprefix}.htm | grep -vE 'TABLE|STYLESHEET|footnode' | wc -l`
     \rm -f ${lprefix}About_this_document.htm
     \rm -f ${lprefix}TABLE_CONTENTS.htm
     if [ "${sprefix}" = "install" ]; then
 	sed "/<DL>/,/<\/DL>/!d" ${lprefix}footnode.htm  > ${lprefix}fninsert.txt # extract
 	sed -i.bak "/<\/ADDRESS>/ r ${lprefix}fninsert.txt" ${sprefix}.htm # insert
 	sed -i.bak2 "/<!--Table of Child-Links-->/,/<!--End of Table of Child-Links-->/d" ${sprefix}.htm # remove
+	let "nchapters = ${nchapters} / 2"
     fi
     if [ "${dofootnotes}" = "1" ]; then
 	cp -p ${lprefix}footnode.htm ${lprefix}About_this_document.htm
     fi
+    let "nc1 = ${nchapters} + 0"
+    let "nc2 = ${nchapters} + 1"
     #echo ${extra_sr}
     ebook-convert ${llprefix}.htm ${outfile} \
 	--epub-version ${epubversion} \
 	--breadth-first \
 	--max-levels ${maxlevel} \
 	--authors 'HEALPix Team' \
-	--no-default-epub-cover \
 	--pubdate ${today} \
 	--language 'English' \
-	--comments 'Healpix/IDL' \
+	--comments 'Healpix/documentation' \
 	--base-font-size ${basefontsize} \
 	--page-breaks-before "//*[name()='h1']" \
-	--max-toc-links 0 \
+	--max-toc-links ${nc2} \
+	--toc-threshold ${nc1} \
 	--search-replace ${srfile} \
-	--extra-css=${cssfile}
+	--extra-css=${cssfile} \
+	--cover=${cover} \
+	--no-default-epub-cover
     cd ${epubdir}
 done
 ls -lrt ${epubdir}*.epub
@@ -87,6 +96,7 @@ fi
 
 exit
 
+#	--toc-filter '[A-Z]*=|/[A-Z]*' \
 
 ##--font-size-mapping ${fontsizemapping} \
 

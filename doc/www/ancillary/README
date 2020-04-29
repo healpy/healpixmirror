@@ -1,8 +1,11 @@
 
 
-banner1.pro:
+banner1.pro:  (2013-02)
   generate banner image, using IDL and Image magick script 'vignette' from 
 http://www.fmwconcepts.com/imagemagick
+
+banner2.pro:  (2020-04)
+  same a banner1.pro, using Planck spectrum and color table
 
 
 convert -resize '1000x5!' footer-top.jpg footer-top.png
