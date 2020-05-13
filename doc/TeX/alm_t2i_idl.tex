@@ -23,8 +23,8 @@ indexed list of alm that can be written into a FITS file with \htmlref{alm2fits}
 \mylink{idl:alm_t2i:index}{Index}, 
 \mylink{idl:alm_t2i:alm_vec}{Alm\_vec},
 [%
-\mylink{idl:alm_t2i:help}{/HELP},
-\mylink{idl:alm_t2i:mfirst}{/MFIRST}%
+\mylink{idl:alm_t2i:help}{HELP=},
+\mylink{idl:alm_t2i:mfirst}{MFIRST=}%
 ])}
 \end{IDLformat}
 
@@ -53,16 +53,17 @@ Output array of $a_{\ell m}$ coefficients, with dimension (ni, 2 [,$\smax+1$])
 
 \begin{keywords}
   \begin{kwlist}{} %%% extra brace
-    \item[/HELP] \mytarget{idl:alm_t2i:help}%
+    \item[HELP=] \mytarget{idl:alm_t2i:help}%
 	if set, prints out the help header and exits
-    \item[/MFIRST] \mytarget{idl:alm_t2i:mfirst}%
+    \item[MFIRST=] \mytarget{idl:alm_t2i:mfirst}%
  if set, the input array is a(m,l) instead of a(l,m)
   \end{kwlist}
 \end{keywords}  
 
 \begin{codedescription}
 {%
-\thedocid\ turns a real or complex tabular array of a(l,m) (or a(m,l) is \htmlref{{\tt MFIRST}}{idl:alm_t2i:mfirst} is
+\thedocid\ turns a real or complex tabular array of a(l,m) (or a(m,l) if 
+\mylink{idl:alm_t2i:mfirst}{\texttt{MFIRST}} is
 set) into a real list of $a_{\ell m}$ (with the real and imaginary parts separated)
 and its index $i=\ell^2+\ell+m+1$. The unphysical $m>\ell$ elements of the input
 table are dropped from the output list.

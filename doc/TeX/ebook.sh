@@ -10,7 +10,11 @@ fi
 cssfile='/tmp/ebook.css'
 # H2: default (1.5) reduced
 cat > ${cssfile} <<EOF
+caption { font-size: 8pt; }
+caption.bottom { font-size: 8pt; }
+small { font-size: 8pt; }
 h2 { font-size: 1.25em;  }
+table { font-size: 9pt; }
 EOF
 
 #cd html
@@ -22,6 +26,7 @@ srfile=${texdir}'ebook_sr.txt'
 #here=`pwd -L`
 today=`date +%Y-%m-%d` # yyyy-mm-dd
 #cover=${texdir}'fig/drawing_Healpix_0002.png'
+epubversion="2"
 
 mkdir -p ${epubdir}
 
@@ -33,8 +38,7 @@ for llprefix in ${list} ; do
     extra_sr=""
     basefontsize=10
     #fontsizemapping="6,6,6,10,10,10,13,20"
-    epubversion="3"
-    cover="${texdir}fig/cover_${llprefix}.png"
+    cover="${texdir}fig/cover_${llprefix}.jpg"
     [ "${sprefix}" = "install" ] && maxlevel=0
     [ "${sprefix}" = "csub" ]    && dofootnotes=0
     [ "${sprefix}" = "intro" ]   && dofootnotes=0
@@ -63,13 +67,13 @@ for llprefix in ${list} ; do
 	sed "/<DL>/,/<\/DL>/!d" ${lprefix}footnode.htm  > ${lprefix}fninsert.txt # extract
 	sed -i.bak "/<\/ADDRESS>/ r ${lprefix}fninsert.txt" ${sprefix}.htm # insert
 	sed -i.bak2 "/<!--Table of Child-Links-->/,/<!--End of Table of Child-Links-->/d" ${sprefix}.htm # remove
-	let "nchapters = ${nchapters} / 2"
+	let "nchapters = ${nchapters} / 2 - 5"
     fi
     if [ "${dofootnotes}" = "1" ]; then
 	cp -p ${lprefix}footnode.htm ${lprefix}About_this_document.htm
     fi
     let "nc1 = ${nchapters} + 0"
-    let "nc2 = ${nchapters} + 1"
+    let "nc2 = ${nchapters} + 0"
     #echo ${extra_sr}
     ebook-convert ${llprefix}.htm ${outfile} \
 	--epub-version ${epubversion} \
@@ -91,7 +95,8 @@ for llprefix in ${list} ; do
 done
 ls -lrt ${epubdir}*.epub
 if [ "$#" = "1" ]; then
-    open ${outfile} &
+    #open ${outfile} &
+    ebook-viewer ${outfile} &
 fi
 
 exit

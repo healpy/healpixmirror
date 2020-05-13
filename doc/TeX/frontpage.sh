@@ -1,18 +1,24 @@
 #! /bin/sh
 
-list='intro install idl subroutines facilities csub'
+if [ "$#" = "0" ]; then
+    list='intro install idl subroutines facilities csub top'
+else
+    list=$@
+fi
 template='fig/cover_template.svg'
-#version="Release 3.70"
 
 for llprefix in ${list} ; do
     svgout="/tmp/${llprefix}.svg"
     pngout="fig/cover_${llprefix}.png"
+    jpgout="fig/cover_${llprefix}.jpg"
     htmlfile="html/${llprefix}.htm"
-    echo ${htmlfile} ${svgout}  ${pngout}
+    [ "${llprefix}" = "top" ] && htmlfile="html/intro.htm"
+    echo ${htmlfile} ${svgout}  ${pngout} ${jpgout}
     cp -f ${template} ${svgout}
 
     version=`grep 'Version [0-9]\.[0-9][0-9],'  ${htmlfile} | grep -v address`
     words=`grep 'H1 ALIGN' ${htmlfile} | sed -e "s|<H1 ALIGN=CENTER>||" -e "s|<b>||" -e "s|</b>||" -e "s|</H1>||"`
+    [ "${llprefix}" = "top" ] && words='HEALPix Documentation Anthology'
     nw=`echo $words | wc -w`
     #echo "VERSION = $version"
 
@@ -31,7 +37,9 @@ for llprefix in ${list} ; do
     sed -i.bak -e "s|${keys[0]}||" -e "s|${keys[1]}||" -e "s|${keys[3]}||" -e "s|${keys[4]}||"  ${svgout} # empty unused keys
 
     inkscape --export-filename=${pngout} ${svgout}
-    open ${pngout}
+    gm convert ${pngout} ${jpgout}
+    #open ${pngout}
+    open ${jpgout}
 done
 
 
