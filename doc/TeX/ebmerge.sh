@@ -4,6 +4,7 @@ list='intro install idl subroutines facilities csub'
 #list='install'
 
 name='ebmerge'
+finalname='HEALPixDocumentation'
 texdir='/Users/hivon/healpix_svn/doc/TeX/'
 htmldir=${texdir}'html'
 epubdir=${texdir}'epub/'
@@ -16,6 +17,9 @@ f_toc=${wrkdir}/toc.ncx
 f_content=${wrkdir}/content.opf
 f_c1=${wrkdir}/ct.txt
 f_cover=${wrkdir}/cover.xhtml
+myuuid=`uuidgen  | tr '[A-Z]' '[a-z]'`
+mydate=` date -u "+%Y-%m-%dT%T%z"`
+echo ${myuuid} ${mydate}
 
 mkdir -p ${wrkdir}
 \rm -rf ${wrkdir}/*
@@ -49,6 +53,7 @@ for llprefix in ${list} ; do
 		   -e "s|href=\"fac|href=\"\.\./fac/fac|g" \
 		   -e "s|href=\"\./csub_|href=\"\.\./csub/csub_|g" \
 		   -e "s|href=\"csub|href=\"\.\./csub/csub|g" \
+		   -e "s|installfootnode\.htm|install\.htm|g" \
 		   $f
     done
     #grep 'href=\".*.htm' *.htm
@@ -88,36 +93,35 @@ echo "creating ${f_content}"
 cat <<EOF > ${f_content}
 <?xml version="1.0" encoding="UTF-8"?>
 <package xmlns="http://www.idpf.org/2007/opf" unique-identifier="uuid_id" version="2.0">
-  <metadata xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:opf="http://www.idpf.org/2007/opf">
+ <metadata xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:opf="http://www.idpf.org/2007/opf">
     <dc:title>HEALPix Documentation Anthology</dc:title>
     <dc:description>&lt;p&gt;HEALPix Documentation Anthology containing:&lt;/p&gt;Introduction to HEALPix&lt;br/&gt;Installing HEALPix&lt;br/&gt;HEALPix/IDL subroutines&lt;br/&gt;HEALPix/F90 subroutines&lt;br/&gt;HEALPix/F90 facilities&lt;br/&gt;HEALPix/C subroutines</dc:description>
     <dc:creator opf:role="aut" opf:file-as="HEALPix Team">HEALPix Team</dc:creator>
-    <dc:date>2020-05-06T22:00:00+00:00</dc:date>
+    <dc:date>${mydate}</dc:date>
     <dc:language>en</dc:language>
-    <dc:identifier id="uuid_id" opf:scheme="uuid">b1c6d9cf-f12f-446c-95d0-c299cf94c426</dc:identifier>
-    <meta name="timestamp" content="2020-05-07T15:13:53.346646+00:00"/>
+    <dc:identifier id="uuid_id" opf:scheme="uuid">${myuuid}</dc:identifier>
+    <meta name="timestamp" content="${mydate}"/>
     <dc:creator opf:file-as="Unknown" opf:role="aut">HEALPix Team</dc:creator>
     <meta name="cover" content="coverimageid"/>
-  </metadata>
+ </metadata>
 EOF
 
-echo "<manifest>"  >> ${f_content}
+echo " <manifest>"  >> ${f_content}
 echo '    <item href="cover.xhtml" id="cover" media-type="application/xhtml+xml"/>' >> ${f_content}
 echo '    <item href="cover.jpg" id="coverimageid" media-type="image/jpeg"/>'       >> ${f_content}
 cat ${f_manifest}  >> ${f_content}
 echo '    <item href="toc.ncx" id="ncx" media-type="application/x-dtbncx+xml"/>'    >> ${f_content}
 cat ${f_c1}        >> ${f_content}
-echo "</manifest>" >> ${f_content}
+echo " </manifest>" >> ${f_content}
 #
-# echo "<spine>"                    >> ${f_content}  # epub 3
-echo '<spine toc="ncx">'            >> ${f_content} # epub 2
+echo ' <spine toc="ncx">'           >> ${f_content} # epub 2
 echo '    <itemref idref="cover"/>' >> ${f_content}
 cat ${f_spine}                      >> ${f_content}
-echo "</spine>"                     >> ${f_content}
+echo " </spine>"                    >> ${f_content}
 #
-echo "<guide>"     >> ${f_content}
+echo " <guide>"     >> ${f_content}
 echo '    <reference href="cover.xhtml" title="Cover" type="cover"/>' >> ${f_content}
-echo "  </guide>" >> ${f_content}
+echo " </guide>"   >> ${f_content}
 #
 echo "</package>"  >> ${f_content}
 \rm -f ${f_manifest} ${f_spine} ${f_c1}
@@ -130,7 +134,7 @@ cat <<EOF > ${f_toc}
 <?xml version="1.0" encoding="utf-8"?>
 <ncx version="2005-1" xmlns="http://www.daisy.org/z3986/2005/ncx/">
    <head>
-      <meta content="b1c6d9cf-f12f-446c-95d0-c299cf94c426" name="dtb:uid"/>
+      <meta content="${myuuid}" name="dtb:uid"/>
       <meta content="2" name="dtb:depth"/>
       <meta content="0" name="dtb:totalPageCount"/>
       <meta content="0" name="dtb:maxPageNumber"/>
@@ -169,31 +173,9 @@ echo "packaging"
 zip -q ${name}.epub * */*
 \ls -lrt
 /usr/local/bin/ebook-viewer ${name}.epub
+cp -pr ${name}.epub ${epubdir}/${finalname}.epub
+
+#/usr/local/bin/ebook-viewer ${epubdir}/${finalname}.epub
 
 exit
 
-# replace
-#  <docTitle>
-#    <text>HEALPix</text>
-#  </docTitle>
-# ...
-#  <docTitle>
-#    <text>Installing HEALPix</text>
-#  </docTitle>
-#
-# with
-#
-#
-#  <navPoint id="book000" playOrder="1">
-#         <navLabel>
-#            <text>HEALPix</text>
-#         </navLabel>
-# <content src="1/titlepage.xhtml"/>
-# ...
-#  </navPoint>
-#  <navPoint id="book001" playOrder="27">
-#         <navLabel>
-#            <text>Installing HEALPix</text>
-#         </navLabel>
-#   <content src="2/titlepage.xhtml"/>
-           

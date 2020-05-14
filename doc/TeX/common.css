@@ -58,8 +58,9 @@ blockquote {
 
 caption { 
 	font-size: 92%;
-	color: #401030;
 	vertical-align: bottom;
+/*	color: #401030; */
+
 }
 
 tt { 

@@ -52,7 +52,7 @@ for llprefix in ${list} ; do
     mkdir -p ${workdir}
     \rm -f ${workdir}/*.png ${workdir}/*.htm ${workdir}/*.css ${workdir}/*.pl ${workdir}/*.epub 
     cd ${htmldir} #------
-    cp -pf ${sprefix}*.png  ${sprefix}*.htm ${sprefix}*.css ${sprefix}*.pl        ${workdir}
+    cp -pf ${sprefix}*.png  ${sprefix}*.htm ${llprefix}.css ${sprefix}*.pl        ${workdir}
     #cp -pf *ball.png                                                ${workdir}
     cp -pf crossref.png                                             ${workdir}
     cp -pf merge*png plot*png planck*png moll*png outline_earth.png ${workdir}
@@ -90,7 +90,8 @@ for llprefix in ${list} ; do
 	--search-replace ${srfile} \
 	--extra-css=${cssfile} \
 	--cover=${cover} \
-	--no-default-epub-cover
+	--no-default-epub-cover \
+	--dont-split-on-page-breaks 
     cd ${epubdir}
 done
 ls -lrt ${epubdir}*.epub

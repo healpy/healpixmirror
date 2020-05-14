@@ -6,6 +6,8 @@ else
     list=$@
 fi
 template='fig/cover_template.svg'
+#template='fig/drawing_Healpix_0004.svg' # A4 
+#template='fig/drawing_Healpix_0005.svg' # letter + white BG
 
 for llprefix in ${list} ; do
     svgout="/tmp/${llprefix}.svg"
@@ -23,7 +25,8 @@ for llprefix in ${list} ; do
     #echo "VERSION = $version"
 
     sed -i.bak -e "s|Comment||"    -e "s|Release|${version}|" ${svgout}
-    #sed -i.bak -e 's|pagecolor="#ffffff"|pagecolor="#ffaaaa"|' ${svgout}
+    #sed -i.bak -e 's|pagecolor="#ffffff"|pagecolor="#ffffffff"|' ${svgout}
+    #sed -i.bak -e "s|pageopacity=\"0\.0\"|pageopacity=\"1\.0\"|" ${svgout}
 
     keys=(_k0_ _k1_ _k2_ _k3_ _k4_) # bashism ! https://opensource.com/article/18/5/you-dont-know-bash-intro-bash-arrays
     let "i = 5 - $nw"         # bashism ! https://ryanstutorials.net/bash-scripting-tutorial/bash-arithmetic.php
@@ -37,7 +40,7 @@ for llprefix in ${list} ; do
     sed -i.bak -e "s|${keys[0]}||" -e "s|${keys[1]}||" -e "s|${keys[3]}||" -e "s|${keys[4]}||"  ${svgout} # empty unused keys
 
     inkscape --export-filename=${pngout} ${svgout}
-    gm convert ${pngout} ${jpgout}
+    gm convert -background red ${pngout} ${jpgout}
     #open ${pngout}
     open ${jpgout}
 done
