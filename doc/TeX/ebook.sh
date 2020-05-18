@@ -1,11 +1,14 @@
 #! /bin/sh
 
+full=0
 if [ "$#" = "0" ]; then
-    list='intro install idl subroutines facilities csub'
+    list='intro install facilities subroutines idl csub'
+    full=1
 else
     list=$@
 fi
 
+./frontpage.sh "$list top"
 
 cssfile='/tmp/ebook.css'
 # H2: default (1.5) reduced
@@ -98,6 +101,11 @@ ls -lrt ${epubdir}*.epub
 if [ "$#" = "1" ]; then
     #open ${outfile} &
     ebook-viewer ${outfile} &
+fi
+
+if [ "$full" = "1" ]; then
+    cd ${texdir}
+    ./ebmerge.sh
 fi
 
 exit

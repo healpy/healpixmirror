@@ -1,7 +1,7 @@
 #! /bin/sh
 
 if [ "$#" = "0" ]; then
-    list='intro install idl subroutines facilities csub top'
+    list='intro install facilities subroutines idl csub top'
 else
     list=$@
 fi
@@ -40,9 +40,9 @@ for llprefix in ${list} ; do
     sed -i.bak -e "s|${keys[0]}||" -e "s|${keys[1]}||" -e "s|${keys[3]}||" -e "s|${keys[4]}||"  ${svgout} # empty unused keys
 
     inkscape --export-filename=${pngout} ${svgout}
-    gm convert -background red ${pngout} ${jpgout}
+    gm convert -background white ${pngout} ${jpgout}
     #open ${pngout}
-    open ${jpgout}
+    #open ${jpgout}
 done
 
 

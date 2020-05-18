@@ -1,6 +1,7 @@
 #! /bin/sh
 
-list='intro install idl subroutines facilities csub'
+#####list='intro install idl subroutines facilities csub'
+list='intro install facilities subroutines idl csub'
 #list='install'
 
 name='ebmerge'
@@ -18,7 +19,7 @@ f_content=${wrkdir}/content.opf
 f_c1=${wrkdir}/ct.txt
 f_cover=${wrkdir}/cover.xhtml
 myuuid=`uuidgen  | tr '[A-Z]' '[a-z]'`
-mydate=` date -u "+%Y-%m-%dT%T%z"`
+mydate=`date -u "+%Y-%m-%dT%T%z" | sed -e "s|0000|00:00|g"`
 echo ${myuuid} ${mydate}
 
 mkdir -p ${wrkdir}
@@ -27,6 +28,16 @@ mkdir -p ${wrkdir}
 \rm -f ${f_manifest} ${f_spine} ${f_toc1} ${f_c1}
 cd ${wrkdir}
 let "idbook = 0"
+
+sdir='main'
+cd ${wrkdir}
+mkdir -p ${sdir}
+cd ${sdir}
+cp ${texdir}'main_epub.html' main.html
+ebook-convert main.html main.epub --no-default-epub-cover --authors 'HEALPix Team' --language 'English'
+rm main.html
+unzip main.epub
+rm main.epub
 
 for llprefix in ${list} ; do
     lprefix=`echo ${llprefix} | sed -e 's|intro|intro_|' -e 's|idl|idl_|' -e 's|subroutines|sub_|' -e 's|facilities|fac_|' -e 's|csub|csub_|'` 
@@ -55,6 +66,7 @@ for llprefix in ${list} ; do
 		   -e "s|href=\"csub|href=\"\.\./csub/csub|g" \
 		   -e "s|installfootnode\.htm|install\.htm|g" \
 		   $f
+##### -e "s|width=\"50\">|width=\"200\">|g" \
     done
     #grep 'href=\".*.htm' *.htm
     \rm *.htm.bak
@@ -63,7 +75,7 @@ for llprefix in ${list} ; do
 	sed -e "s|href=\"|href=\"${sprefix}/|g"  \
 	    -e "s|id=\"|id=\"${sprefix}|g" >> ${f_manifest}
 
-    echo "   <item href='${sprefix}/content.opf' id='${sprefix}rootfile' media-type="origrootfile/xml"/>" >> ${f_c1}
+    echo "    <item href=\"${sprefix}/content.opf\" id=\"${sprefix}rootfile\" media-type=\"origrootfile/xml\"/>" >> ${f_c1}
 
     sed '/<spine/,/<\/spine>/!d'       content.opf | grep -v spine |\
 	sed -e "s|idref=\"|idref=\"${sprefix}|g" >> ${f_spine}
@@ -109,15 +121,19 @@ EOF
 echo " <manifest>"  >> ${f_content}
 echo '    <item href="cover.xhtml" id="cover" media-type="application/xhtml+xml"/>' >> ${f_content}
 echo '    <item href="cover.jpg" id="coverimageid" media-type="image/jpeg"/>'       >> ${f_content}
+echo '    <item href="main/main.html" id="mainhtml" media-type="application/xhtml+xml"/>' >> ${f_content}
 cat ${f_manifest}  >> ${f_content}
 echo '    <item href="toc.ncx" id="ncx" media-type="application/x-dtbncx+xml"/>'    >> ${f_content}
 cat ${f_c1}        >> ${f_content}
+echo '    <item href="main/main.html" id="mainhtml2" media-type="application/xhtml+xml"/>' >> ${f_content}
 echo " </manifest>" >> ${f_content}
 #
-echo ' <spine toc="ncx">'           >> ${f_content} # epub 2
-echo '    <itemref idref="cover"/>' >> ${f_content}
-cat ${f_spine}                      >> ${f_content}
-echo " </spine>"                    >> ${f_content}
+echo ' <spine toc="ncx">'               >> ${f_content} # epub 2
+echo '    <itemref idref="cover"/>'     >> ${f_content}
+echo '    <itemref idref="mainhtml"/>'  >> ${f_content}
+cat ${f_spine}                          >> ${f_content}
+echo '    <itemref idref="mainhtml2"/>' >> ${f_content}
+echo " </spine>"                        >> ${f_content}
 #
 echo " <guide>"     >> ${f_content}
 echo '    <reference href="cover.xhtml" title="Cover" type="cover"/>' >> ${f_content}
@@ -170,11 +186,12 @@ EOF
 echo "packaging"
 # -----------------------------
 \rm -rf ${name}.epub
-zip -q ${name}.epub * */*
+#zip -q ${name}.epub * */*
+zip -qrX "${name}.epub" mimetype $(ls|xargs echo|sed 's/mimetype//g') -x *.DS_Store
+# https://ebooks.stackexchange.com/questions/257/how-to-repack-an-epub-file-from-command-line
 \ls -lrt
-/usr/local/bin/ebook-viewer ${name}.epub
 cp -pr ${name}.epub ${epubdir}/${finalname}.epub
-
+#/usr/local/bin/ebook-viewer ${name}.epub
 #/usr/local/bin/ebook-viewer ${epubdir}/${finalname}.epub
 
 exit

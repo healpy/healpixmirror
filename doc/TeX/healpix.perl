@@ -696,20 +696,24 @@ sub do_env_eqnarray {
 	($sarray, $elcell, $srcell, $erow, $earray, $sempty) = ( 
 	    "\n<SPAN CLASS=\"MATH\">\n<TABLE$env_id$lang CELLPADDING=\"0\" ALIGN=\"CENTER\""
 	    , "</TD>\n<TD ALIGN=\"CENTER\" NOWRAP>"
-	    , "</TD>\n<TD ALIGN=\"LEFT\" WIDTH=\"50%\" NOWRAP>"
+	    #, "</TD>\n<TD ALIGN=\"LEFT\" WIDTH=\"50%\" NOWRAP>"  # 2020-05-15
+	    , "</TD>\n<TD ALIGN=\"LEFT\" WIDTH=\"46%\" NOWRAP>"
 	    , "</TD></TR>", "\n</TABLE>\n</SPAN>", "</TD>\n<TD>" );
 	$env_id = '';
 	$sarray .= (($no_eqn_numbers) ? ">" :  " WIDTH=\"100%\">" );
-	local($seqno) = join('',"\n<TD$eqno_class WIDTH=10 ALIGN=\""
+	#local($seqno) = join('',"\n<TD$eqno_class WIDTH=10 ALIGN=\""  # 2020-05-15
+	local($seqno) = join('',"\n<TD$eqno_class WIDTH=\"8%\" ALIGN=\""
 		, (($EQN_TAGS =~ /L/)? 'LEFT': 'RIGHT')
 		, "\">\n");
 	if ($EQN_TAGS =~ /L/) { # number on left
 	    ($srow, $slcell, $ercell) = (
 		"\n<TR$valign>" . $seqno
-		, "</TD>\n<TD NOWRAP WIDTH=\"50%\" ALIGN=", '');
+		#, "</TD>\n<TD NOWRAP WIDTH=\"50%\" ALIGN=", '');  # 2020-05-15
+		, "</TD>\n<TD NOWRAP WIDTH=\"46%\" ALIGN=", '');
 	} else { # equation number on right
 	    ($srow, $slcell, $ercell) = ("\n<TR$valign>"
-		, "<TD NOWRAP WIDTH=\"50%\" ALIGN="
+		#, "<TD NOWRAP WIDTH=\"50%\" ALIGN="  # 2020-05-15
+		, "<TD NOWRAP WIDTH=\"46%\" ALIGN="
 		, '</TD>'. $seqno );
 	}
 
