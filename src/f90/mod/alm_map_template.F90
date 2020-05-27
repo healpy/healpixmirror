@@ -2420,7 +2420,6 @@
     if (present(zbounds)) zbounds_in = zbounds
     w8ring_in  = 1.d0
     if (present(w8ring))  w8ring_in  = w8ring
-
     call sharp_hp_map2alm_x_KLOAD(nsmax,nlmax,nmmax,map,alm,zbounds_in,w8ring_in)
 #else
 

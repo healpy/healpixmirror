@@ -20,8 +20,8 @@ h2 { font-size: 1.25em;  }
 table { font-size: 9pt; }
 EOF
 
-#cd html
-texdir='/Users/hivon/healpix_svn/doc/TeX/'
+# texdir='/Users/hivon/healpix_svn/doc/TeX/'
+texdir=`/bin/pwd`/
 htmldir=${texdir}'html'
 epubdir=${texdir}'epub/'
 wrktop='/tmp/'
@@ -38,7 +38,8 @@ for llprefix in ${list} ; do
     sprefix=`echo ${lprefix} | sed 's|_||g'`
     maxlevel=1
     dofootnotes=1
-    extra_sr=""
+    extra_options=""
+    tocfilter=""
     basefontsize=10
     #fontsizemapping="6,6,6,10,10,10,13,20"
     cover="${texdir}fig/cover_${llprefix}.jpg"
@@ -63,21 +64,31 @@ for llprefix in ${list} ; do
     # cp ${texdir}/fig/healpix.png ${workdir}/healpix_cover.png
     cd ${workdir} #-----
     #nchapters=`ls -1 ${sprefix}*.htm | wc -l`
-    nchapters=`grep "HREF=\"${sprefix}" ${llprefix}.htm | grep -vE 'TABLE|STYLESHEET|footnode' | wc -l`
-    \rm -f ${lprefix}About_this_document.htm
-    \rm -f ${lprefix}TABLE_CONTENTS.htm
+    nchapters=`grep "HREF=\"${sprefix}" ${llprefix}.htm | grep -vE 'TABLE|STYLESHEET|Contents|footnode' | wc -l`
+    \rm -f ${lprefix}TABLE_CONTENTS.htm # intro_, fac_, idl_, sub_
+    \rm -f ${lprefix}Contents.htm       # csub_
     if [ "${sprefix}" = "install" ]; then
 	sed "/<DL>/,/<\/DL>/!d" ${lprefix}footnode.htm  > ${lprefix}fninsert.txt # extract
 	sed -i.bak "/<\/ADDRESS>/ r ${lprefix}fninsert.txt" ${sprefix}.htm # insert
 	sed -i.bak2 "/<!--Table of Child-Links-->/,/<!--End of Table of Child-Links-->/d" ${sprefix}.htm # remove
-	let "nchapters = ${nchapters} / 2 - 5"
+	let "nchapters = ${nchapters} / 2 - 6"
     fi
     if [ "${dofootnotes}" = "1" ]; then
-	cp -p ${lprefix}footnode.htm ${lprefix}About_this_document.htm
+	\rm -f ${lprefix}About_this_document.htm
+	cp  -p ${lprefix}footnode.htm ${lprefix}About_this_document.htm
+	extra_options='--toc-filter Footnotes'
+    else 
+	extra_options='--toc-filter Footnotes --sr1-search Footnotes --sr1-replace AboutThisDocument... --sr2-search _footnode --sr2-replace _About_this_document'
     fi
+    [ "${sprefix}" = "install" ] && extra_options=''
+
     let "nc1 = ${nchapters} + 0"
     let "nc2 = ${nchapters} + 0"
-    #echo ${extra_sr}
+#     if [ "${sprefix}" = "intro" ]; then
+# 	let "nc1 = ${nc1} - 2"
+# 	let "nc2 = ${nc2} - 2"
+#     fi
+    echo "${nchapters} ${nc1} ${nc2} ==============="
     ebook-convert ${llprefix}.htm ${outfile} \
 	--epub-version ${epubversion} \
 	--breadth-first \
@@ -89,7 +100,7 @@ for llprefix in ${list} ; do
 	--base-font-size ${basefontsize} \
 	--page-breaks-before "//*[name()='h1']" \
 	--max-toc-links ${nc2} \
-	--toc-threshold ${nc1} \
+	--toc-threshold ${nc1} ${extra_options} \
 	--search-replace ${srfile} \
 	--extra-css=${cssfile} \
 	--cover=${cover} \
@@ -112,14 +123,11 @@ exit
 
 #	--toc-filter '[A-Z]*=|/[A-Z]*' \
 
-##--font-size-mapping ${fontsizemapping} \
+# #--font-size-mapping ${fontsizemapping} \
 
 # ebook-convert install.htm install.epub --breadth-first --max-levels 0 --authors 'HEALPix Team' --base-font-size 10 --search-replace /Users/hivon/healpix_svn/doc/TeX/ebook_sr.txt --page-breaks-before "//*[name()='h1']"
 
 # ebook-convert intro.htm intro.epub --breadth-first --max-levels 1 --authors 'Me&You' --base-font-size 10 --search-replace /Users/hivon/healpix_svn/doc/TeX/ebook_sr.txt --page-breaks-before "//*[name()='h1']"
-
-
-
 #    --cover 'healpix_cover.png' \
 # --sr1-search '(?s)<DIV CLASS="navigation">\s*(.*?)</DIV>' --sr1-replace '' --sr2-search '(?s)<A ID="CHILD_LINKS"><STRONG>Subsections</STRONG></A>(.*?)<UL CLASS="ChildLinks">(.*?)</UL>' --sr2-replace ''
 # --sr2-search '(?s)<UL CLASS="ChildLinks">\s*(.*?)</UL>' --sr2-replace '' --sr3-search '<A ID="CHILD_LINKS"><STRONG>Subsections</STRONG></A>' --sr3-replace '' 

@@ -34,7 +34,7 @@ pro write_fits_partial, filename, pixel, iqu,  $
                      Extension = extension_id
 ;+
 ; NAME:
-;         write_fits_cut4
+;         write_fits_partial
 ;
 ; PURPOSE:
 ;        writes a FITS file for incomplete (polarized) sky coverage with a 4 column format

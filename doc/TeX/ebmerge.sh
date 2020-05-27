@@ -6,7 +6,8 @@ list='intro install facilities subroutines idl csub'
 
 name='ebmerge'
 finalname='HEALPixDocumentation'
-texdir='/Users/hivon/healpix_svn/doc/TeX/'
+# texdir='/Users/hivon/healpix_svn/doc/TeX/'
+texdir=`/bin/pwd`/
 htmldir=${texdir}'html'
 epubdir=${texdir}'epub/'
 wrktop='/tmp/'

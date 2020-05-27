@@ -16,5 +16,9 @@ About this document \.\.\.
 Footnotes
 (?s)<PRE>\..\..\..\..\..\..\..\..\..\..\..\..\..\..\..\..\..\..\..\..\..\..\..\..\..\..\..\..\..\..
 <PRE>
+(?s)<LI><A(.*?)TABLE OF CONTENTS</A>
+
 (?s)<LI><A(.*?)TABLE_CONTENTS.htm(.*?)</A>
+
+(?s)<LI><A(.*?)_Contents.htm(.*?)</A>
 

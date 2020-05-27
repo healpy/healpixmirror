@@ -33,7 +33,11 @@ The parameters defined in \thedocid\ include
 \item
 'kind' parameters, used when defining the type of a variable, 
 
-\begin{mytable}{%
+%\begin{mytable}{%
+\begin{minipage}{\linewidth}{%
+\renewcommand{\thefootnote}{\fnsymbol{footnote}}%
+\renewcommand{\footnoterule}{}%
+%
 \begin{tabularx}{\linewidth}{lcc X}
 name & type & value\footnote{\label{fn:healpix_types:kind}%
 actual value may depend on hardware or compiler} & definition \\
@@ -57,13 +61,18 @@ numbers covering the range $10^{-30}$ to $10^{30}$ with the least margin
 \hline
 \end{tabularx}
 }%
-\end{mytable}
+\end{minipage}
+%\end{mytable}
 
 
 \item
 largest accessible numbers, 
 
-\begin{mytable}{%
+%\begin{mytable}{%
+\begin{minipage}{\linewidth}{%
+\renewcommand{\thefootnote}{\fnsymbol{footnote}}%
+\renewcommand{\footnoterule}{}%
+%
 \begin{tabularx}{\linewidth}{lcc X}
 name & type or kind & value\footnote{\label{fn:healpix_types:max}%
 actual value may depend on hardware or compiler} & definition \\
@@ -77,8 +86,9 @@ MAX\_SP & SP & $\simeq 3.40\ 10^{38}$ & same as above for {\tt SP} floating-poin
 MAX\_DP & DP & $\simeq 1.80\ 10^{308}$ & same as above for {\tt DP} floating-point\\
 \hline
 \end{tabularx}
-}
-\end{mytable}
+}%
+\end{minipage}
+%\end{mytable}
 
 \item
 mathematical definitions,%
