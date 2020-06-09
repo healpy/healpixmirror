@@ -6,7 +6,8 @@ PDFTEX  := pdflatex
 TEXFLAGS := 
 DVIFLAGS :=
 PDFFLAGS :=
-LATEX2HTML := export L2HCONFIG=./my_l2hconf5.pm ; export PATH=$(PATH):/usr/local/bin ; ./latex2html5
+LATEX2HTML := export L2HCONFIG=./my_l2hconf5.pm ; export PATH=$(PATH):/usr/local/bin ; ./latex2html5_v2
+#LATEX2HTML := export L2HCONFIG=./my_l2hconf5.pm ; export PATH=$(PATH):/usr/local/bin ; ./latex2html5
 #LATEX2HTML := export L2HCONFIG=./my_l2hconf.pm ; export PATH=$(PATH):/usr/local/bin ; ./latex2html
 #LATEX2HTML := export L2HCONFIG=./my_l2hconf.pm ; export PATH=$(PATH):/sw2/bin ; ./latex2html
 #LATEX2HTML := export L2HCONFIG=./my_l2hconf_test.pm ; export PATH=$(PATH):/tmp/netpbm/bin ; ./latex2html
@@ -18,14 +19,14 @@ HTMLDIR := $(DOCDIR)/html
 PDFDIR  := $(DOCDIR)/pdf
 EPUBDIR := $(DOCDIR)/epub
 ADDRESS := -address "Version $(VERSION), `date +%Y-%m-%d`" -info 1
-HTMLVERSION := 4.1
-#HTMLVERSION := "5.0"
+#HTMLVERSION := 4.1
+HTMLVERSION := "5.0,latin1"
 #L2HFLAGS := -dir $(HTMLDIR) -up_url main.htm -up_title "Main Page" -math -html_version 4.0 -bottom_navigation -short_extn -white -local_icons -noexternal_images -toc_depth 8 $(ADDRESS) # -debug -verbosity 2  -show_section_numbers 
 L2HFLAGS := -dir $(HTMLDIR) -up_url main.htm -up_title "Main Page" \
 	-down_url main.htm -down_title "Main Page" \
 	-math -html_version $(HTMLVERSION) -antialias \
 	-bottom_navigation -short_extn -white -local_icons \
-	-noexternal_images  $(ADDRESS) # -debug -verbosity 2 # -show_section_numbers 
+	-noexternal_images  $(ADDRESS)# -debug -verbosity 2 # -show_section_numbers 
 #-math -html_version 4.1 
 #-short_index -long_titles 6 
 #-show_section_numbers -short_index 
@@ -157,13 +158,13 @@ install.html: $(style) healpix.perl cssfile
 	mkdir -p $(HTMLDIR)
 	-cp $(HTMLDIR)/*labels.pl /tmp
 	-$(LATEX2HTML) $(L2HFLAGS) -toc_depth 8 -split 3 -prefix $(FULL) -external_file ./$(FULL)  -t $(TITLE) $(LONGTITLES)    $(FULL)
-	-$(EQNFIX)      $(HTMLDIR)/$(PREFIX) 1> /dev/null 2>&1
+	###-$(EQNFIX)      $(HTMLDIR)/$(PREFIX) 1> /dev/null 2>&1
 	-$(SHORTEN)	$(HTMLDIR)/$(PREFIX)
 	-$(IMPROVEHTML) $(HTMLDIR)/$(PREFIX)
 	-$(INSERTFAVICONS) $(HTMLDIR)/$(PREFIX)
 	mv -f $(HTMLDIR)/WARNINGS $(HTMLDIR)/WARNINGS_$(FULL)
 	ln -sf $(CSSFILE)          $(HTMLDIR)/$(FULL).css
-	#ln -sf $(PREFIX)$(TTL).htm $(HTMLDIR)/$(FULL).htm
+	#######ln -sf $(PREFIX)$(TTL).htm $(HTMLDIR)/$(FULL).htm
 	-cp $(HTMLDIR)/*labels.pl /tmp
 	@echo "created$(BLUE_COLOR) $(HTMLDIR)/$(FULL).htm $(NO_COLOR)"
 
@@ -179,7 +180,7 @@ intro.html: $(style) healpix.perl cssfile
 	mkdir -p $(HTMLDIR)
 	-cp $(HTMLDIR)/*labels.pl /tmp
 	-$(LATEX2HTML) $(L2HFLAGS) -toc_depth 8 -split 4 -prefix $(PREFIX) -external_file ./$(FULL) -t $(TITLE) $(LONGTITLES) $(FULL)
-	-$(EQNFIX)      $(HTMLDIR)/$(PREFIX) 1> /dev/null 2>&1
+	###-$(EQNFIX)      $(HTMLDIR)/$(PREFIX) 1> /dev/null 2>&1
 	-$(SHORTEN)	$(HTMLDIR)/$(PREFIX)
 	-$(IMPROVEHTML) $(HTMLDIR)/$(PREFIX)
 	-$(INSERTFAVICONS) $(HTMLDIR)/$(PREFIX)
@@ -202,7 +203,7 @@ idl.html: $(style) healpix.perl cssfile
 	mkdir -p $(HTMLDIR)
 	-cp $(HTMLDIR)/*labels.pl /tmp
 	-$(LATEX2HTML) $(L2HFLAGS) -toc_depth 8 -split 4 -prefix $(PREFIX) -external_file ./$(FULL) -t $(TITLE) $(LONGTITLES) $(FULL)
-	-$(EQNFIX)      $(HTMLDIR)/$(PREFIX) 1> /dev/null 2>&1
+	###-$(EQNFIX)      $(HTMLDIR)/$(PREFIX) 1> /dev/null 2>&1
 	-$(SHORTEN)	$(HTMLDIR)/$(PREFIX)
 	-$(IMPROVEHTML) $(HTMLDIR)/$(PREFIX)
 	-$(INSERTFAVICONS) $(HTMLDIR)/$(PREFIX)
@@ -225,7 +226,7 @@ subroutines.html: $(style) healpix.perl cssfile
 	mkdir -p $(HTMLDIR)
 	-cp $(HTMLDIR)/*labels.pl /tmp
 	-$(LATEX2HTML) $(L2HFLAGS) -toc_depth 4 -toc_stars -split 4 -prefix $(PREFIX) -external_file ./$(FULL) -t $(TITLE) $(LONGTITLES) $(FULL)
-	-$(EQNFIX)      $(HTMLDIR)/$(PREFIX) 1> /dev/null 2>&1
+	###-$(EQNFIX)      $(HTMLDIR)/$(PREFIX) 1> /dev/null 2>&1
 	-$(SHORTEN)	$(HTMLDIR)/$(PREFIX)
 	-$(IMPROVEHTML) $(HTMLDIR)/$(PREFIX)
 	-$(INSERTFAVICONS) $(HTMLDIR)/$(PREFIX)
@@ -248,7 +249,7 @@ facilities.html: $(style) healpix.perl cssfile
 	mkdir -p $(HTMLDIR)
 	-cp $(HTMLDIR)/*labels.pl /tmp
 	-$(LATEX2HTML) $(L2HFLAGS) -toc_depth 8 -split 4 -prefix $(PREFIX) -external_file ./$(FULL) -t $(TITLE) $(LONGTITLES) $(FULL)
-	-$(EQNFIX)      $(HTMLDIR)/$(PREFIX) 1> /dev/null 2>&1
+	###-$(EQNFIX)      $(HTMLDIR)/$(PREFIX) 1> /dev/null 2>&1
 	-$(SHORTEN)	$(HTMLDIR)/$(PREFIX)
 	-$(IMPROVEHTML) $(HTMLDIR)/$(PREFIX)
 	-$(INSERTFAVICONS) $(HTMLDIR)/$(PREFIX)
@@ -271,7 +272,7 @@ csub.html: $(style) healpix.perl cssfile
 	mkdir -p $(HTMLDIR)
 	-cp $(HTMLDIR)/*labels.pl /tmp
 	-$(LATEX2HTML) $(L2HFLAGS) -toc_depth 8 -split 4 -prefix $(PREFIX) -external_file ./$(FULL) -t $(TITLE) $(LONGTITLES) $(FULL)
-	-$(EQNFIX)      $(HTMLDIR)/$(PREFIX) 1> /dev/null 2>&1
+	###-$(EQNFIX)      $(HTMLDIR)/$(PREFIX) 1> /dev/null 2>&1
 	-$(SHORTEN)	$(HTMLDIR)/$(PREFIX)
 	-$(IMPROVEHTML) $(HTMLDIR)/$(PREFIX)
 	-$(INSERTFAVICONS) $(HTMLDIR)/$(PREFIX)

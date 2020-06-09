@@ -9,7 +9,7 @@
 
 
 \title{\healpix IDL Facility User Guidelines}
-\docid{healpix\_doc} \section[healpix\_doc: PDF and HTML documentation]{ }
+\docid{healpix\_doc} \section[healpix\_doc: PDF, HTML and EPUB documentation]{ }
 \label{idl:healpix_doc}
 \docrv{Version 1.0}
 \author{Eric Hivon}
@@ -26,6 +26,7 @@
 \begin{IDLformat}
 {\thedocid, [\mylink{idl:healpix_doc:HTML}{HTML=}%
  {\tt |} \mylink{idl:healpix_doc:PDF}{PDF=}%
+ {\tt |} \mylink{idl:healpix_doc:EPUB}{EPUB=}%
 ] [, \mylink{idl:healpix_doc:HELP}{HELP=}%
 ,  \mylink{idl:healpix_doc:WHOLE}{WHOLE=}%
 ] }
@@ -33,25 +34,29 @@
 
 \begin{keywords}
   \begin{kwlist}{} %%% extra brace
-    \item[HELP\mytarget{idl:healpix_doc:HELP}%
-=] if set, an extensive help on \thedocid{} is displayed.
-    \item[HTML\mytarget{idl:healpix_doc:HTML}%
-=]  if set, the \healpix (IDL) HTML documentation is shown with a web browser.
+    \item[HELP\mytarget{idl:healpix_doc:HELP}=] if set, an extensive help on \thedocid{} is displayed.
+    \item[EPUB\mytarget{idl:healpix_doc:EPUB}=] if set, the (whole) \healpix EPUB documentation is shown with an ebook reader.
+    \item[HTML\mytarget{idl:healpix_doc:HTML}=] if set, the \healpix (IDL) HTML documentation is shown with a web browser.
             If the browser is already in use, a new tab is open.
-    \item[PDF\mytarget{idl:healpix_doc:PDF}%
-=]   if set, the \healpix (IDL) PDF documentation is shown with a pdf viewer.\\
-            Either HTML or PDF must be set.
-    \item[WHOLE\mytarget{idl:healpix_doc:WHOLE}%
-=]  if set, the whole \healpix documentation is accessible,
+    \item[PDF\mytarget{idl:healpix_doc:PDF}=]   if set, the \healpix (IDL) PDF documentation is shown with a pdf viewer.\\
+            Either EPUB, HTML or PDF must be set.
+    \item[WHOLE\mytarget{idl:healpix_doc:WHOLE}=]  if set, the whole \healpix documentation is accessible,
               not just the IDL related part.
   \end{kwlist}
 \end{keywords}  
 
+% \begin{codedescription}
+% {\thedocid{}  calls {\tt Online\_help} to open either the HTML or PDF \healpix
+% documentation. The browser and viewer used are those found by the 
+% {\tt \$IDL\_DIR/bin/online\_help\_html} and 
+% {\tt \$IDL\_DIR/bin/online\_help\_pdf} scripts respectively.
+% The content of the {\tt !healpix} system variable is used to
+% determine the documentation path.}
+% \end{codedescription}
+
 \begin{codedescription}
-{\thedocid{}  calls {\tt Online\_help} to open either the HTML or PDF \healpix
-documentation. The browser and viewer used are those found by the 
-{\tt \$IDL\_DIR/bin/online\_help\_html} and 
-{\tt \$IDL\_DIR/bin/online\_help\_pdf} scripts respectively.
+{\thedocid{}  calls the script {\tt \$HEALPIX/healpix\_doc} to open either the EPUB, HTML or PDF \healpix
+documentation. 
 The content of the {\tt !healpix} system variable is used to
 determine the documentation path.}
 \end{codedescription}
@@ -82,6 +87,15 @@ determine the documentation path.}
 \end{tabular}
 }
 {will open the IDL related \healpix PDF documentation.
+}
+\end{examples}
+\begin{examples}{3}
+{
+\begin{tabular}{ll} %%%% use this tabular format %%%%
+\thedocid, /epub
+\end{tabular}
+}
+{will open the whole \healpix EPUB documentation.
 }
 \end{examples}
 

@@ -43,50 +43,42 @@ vector & double & --- & 3D cartesian position vector $(x,y,z)$. The north pole i
 \textsc{\large{\textbf{ROUTINES: }}}\hfill\newline
 {\tt void  pix2ang\_ring(long nside, long ipring, double *theta, double *phi);} 
 
- \begin{tabular}{@{}p{0.3\hsize}@{\hspace{1ex}}
-                        p{0.7\hsize}@{}}
+ \begin{tabular}{@{}p{0.3\hsize}@{\hspace{1ex}}p{0.7\hsize}@{}}
                                          & renders {\em theta} and {\em phi} coordinates of the nominal pixel center given the pixel number {\em ipring} and a map resolution parameter {\em nside}. \\
      \end{tabular}\\\\
 {\tt void  pix2vec\_ring(long nside, long ipring, double *vector);} 
 
-  \begin{tabular}{@{}p{0.3\hsize}@{\hspace{1ex}}
-                         p{0.7\hsize}@{}}
+  \begin{tabular}{@{}p{0.3\hsize}@{\hspace{1ex}}p{0.7\hsize}@{}}
                                           & renders cartesian vector coordinates of the nominal pixel center given the pixel number {\em ipring} and a map resolution parameter {\em nside}. Optionally renders cartesian vector coordinates of the considered pixel four vertices.\\
       \end{tabular}\\\\
 {\tt void  ang2pix\_ring(long nside, double theta, double phi, long *ipring);} 
 
- \begin{tabular}{@{}p{0.3\hsize}@{\hspace{1ex}}
-                        p{0.7\hsize}@{}}
+ \begin{tabular}{@{}p{0.3\hsize}@{\hspace{1ex}}p{0.7\hsize}@{}}
                                          & renders the pixel number {\em ipring} for a pixel which, given the map resolution parameter {\em nside}, contains the point on the sphere at angular coordinates {\em theta} and {\em phi}. \\
      \end{tabular}\\\\
 {\tt void  vec2pix\_ring(long nside, double *vector, long *ipring);} 
 
- \begin{tabular}{@{}p{0.3\hsize}@{\hspace{1ex}}
-                        p{0.7\hsize}@{}}
+ \begin{tabular}{@{}p{0.3\hsize}@{\hspace{1ex}}p{0.7\hsize}@{}}
                                          & renders the pixel number {\em ipring} for a pixel which, given the map resolution parameter {\em nside}, contains the point on the sphere at cartesian coordinates {\em vector}. \\
      \end{tabular}\\\\
 {\tt void  pix2ang\_nest(long nside, long ipnest, double *theta, double *phi);} 
 
- \begin{tabular}{@{}p{0.3\hsize}@{\hspace{1ex}}
-                        p{0.7\hsize}@{}}
+ \begin{tabular}{@{}p{0.3\hsize}@{\hspace{1ex}}p{0.7\hsize}@{}}
                                          & renders {\em theta} and {\em phi} coordinates of the nominal pixel center given the pixel number {\em ipnest} and a map resolution parameter {\em nside}. \\
      \end{tabular}\\\\
 {\tt void  pix2vec\_nest(long nside, long ipnest, double *vector);} 
 
- \begin{tabular}{@{}p{0.3\hsize}@{\hspace{1ex}}
-                        p{0.7\hsize}@{}}
+ \begin{tabular}{@{}p{0.3\hsize}@{\hspace{1ex}}p{0.7\hsize}@{}}
                                          & renders cartesian vector coordinates of the nominal pixel center given the pixel number {\em ipnest} and a map resolution parameter {\em nside}. Optionally renders cartesian vector coordinates of the considered pixel four vertices.\\
      \end{tabular}\\\\
 {\tt void  ang2pix\_nest(long nside, double theta, double phi, long *ipnest);} 
 
- \begin{tabular}{@{}p{0.3\hsize}@{\hspace{1ex}}
-                        p{0.7\hsize}@{}}
+ \begin{tabular}{@{}p{0.3\hsize}@{\hspace{1ex}}p{0.7\hsize}@{}}
                                          & renders the pixel number {\em ipnest} for a pixel which, given the map resolution parameter {\em nside}, contains the point on the sphere at angular coordinates {\em theta} and {\em phi}. \\
      \end{tabular}\\\\
 {\tt void  vec2pix\_nest(long nside, double *vector, long *ipnest)} 
 
- \begin{tabular}{@{}p{0.3\hsize}@{\hspace{1ex}}
-                        p{0.7\hsize}@{}}
+ \begin{tabular}{@{}p{0.3\hsize}@{\hspace{1ex}}p{0.7\hsize}@{}}
                                          & renders the pixel number
                         {\em ipnest} for a pixel which, given the map
                         resolution parameter {\em nside}, contains the
@@ -96,14 +88,12 @@ vector & double & --- & 3D cartesian position vector $(x,y,z)$. The north pole i
 
 {\tt void  nest2ring(long nside, long ipnest, long *ipring);} 
 
- \begin{tabular}{@{}p{0.3\hsize}@{\hspace{1ex}}
-                        p{0.7\hsize}@{}}
+ \begin{tabular}{@{}p{0.3\hsize}@{\hspace{1ex}}p{0.7\hsize}@{}}
                                          & performs conversion from NESTED to RING pixel number. \\
      \end{tabular}\\\\
 {\tt void  ring2nest(long nside, long ipring, long *ipnest);} 
 
- \begin{tabular}{@{}p{0.3\hsize}@{\hspace{1ex}}
-                        p{0.7\hsize}@{}}
+ \begin{tabular}{@{}p{0.3\hsize}@{\hspace{1ex}}p{0.7\hsize}@{}}
                                          & performs conversion from RING to NESTED pixel number. \\
      \end{tabular}\\\\
 

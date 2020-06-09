@@ -15,7 +15,8 @@ use vars qw(%used_icons);
 # $PERL='/usr/local/bin/perl';
 #
 $PERL = '/usr/bin/perl';
-
+$NO_UTF = 1;       # 2020-06-06
+#$ACCENT_IMAGES = "circ,ast"; # 2020-06-06
 # ############### THESE VARIABLES ARE DETERMINED BY CONFIGURE ################
 
 #  Give the paths to latex and dvips on your system:

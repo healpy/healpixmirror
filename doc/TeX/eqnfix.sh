@@ -24,6 +24,7 @@ fi
 dir=/usr/local/bin/
 # Fix each PNG image
 for file in `ls -1 $1*.png`
+
 do
 #  echo Fixing $file...
   ${dir}pngtopnm $file | \

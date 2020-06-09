@@ -63,6 +63,7 @@ pro init_healpix, verbose=verbose
 ; 2009-10-07: v2.12f, add !healpix.path.doc.(*) sub-structure
 ; 2015-03-17: v2.20,  add !healpix.path.src sub-structure
 ; 2019-02-28: v2.30,  adapted to Healpix 3.60 new C++ structure
+; 2020-06-09: v2.40,  added path to doc/epub
 ;-
 
 ; system variable name
@@ -84,6 +85,7 @@ hpx_path_src      = defined_sysvar('!hpx_path_src')     ? !hpx_path_src     : se
 hpx_path_test     = defined_sysvar('!hpx_path_test')    ? !hpx_path_test    : set_default_hpx_path('HEALPIX',['test'])
 hpx_path_doc_html = defined_sysvar('!hpx_path_doc_html')? !hpx_path_doc_html: set_default_hpx_path('HEALPIX',['doc','html'])
 hpx_path_doc_pdf  = defined_sysvar('!hpx_path_doc_pdf') ? !hpx_path_doc_pdf : set_default_hpx_path('HEALPIX',['doc','pdf'])
+hpx_path_doc_epub = defined_sysvar('!hpx_path_doc_epub')? !hpx_path_doc_epub: set_default_hpx_path('HEALPIX',['doc','epub'])
 
 hpx_path_bin_f90 = ''
 if defined_sysvar('!hpx_path_bin_f90') then begin
@@ -123,7 +125,7 @@ if (strtrim(directory,2) eq '' && defined_sysvar('!hpx_path_bin_f90')) then begi
 endif
 
 stc_bin  = {cxx:hpx_path_bin_cxx,   f90:hpx_path_bin_f90}
-stc_doc  = {html:hpx_path_doc_html, pdf:hpx_path_doc_pdf}
+stc_doc  = {html:hpx_path_doc_html, pdf:hpx_path_doc_pdf, epub:hpx_path_doc_epub}
 stc_path = {bin:stc_bin, data: hpx_path_data, doc:stc_doc, src:hpx_path_src, test: hpx_path_test}
 
 
@@ -142,7 +144,7 @@ comment = ['This system variable contains some information on Healpix :', $
            healpix_sysvar+'.PATH.BIN.CXX  =     C++',$
            healpix_sysvar+'.PATH.BIN.F90  =     Fortran90',$
            healpix_sysvar+'.PATH.DATA = path to data subdirectory,',$
-           healpix_sysvar+'.PATH.DOC  = path to doc subdirectories (.html, .pdf),',$
+           healpix_sysvar+'.PATH.DOC  = path to doc subdirectories (.html, .pdf, .epub),',$
            healpix_sysvar+'.PATH.SRC  = path to src subdirectory,',$
            healpix_sysvar+'.PATH.TEST = path to test subdirectory,',$
            healpix_sysvar+'.NSIDE     = list of all valid values of Nside parameter,',$

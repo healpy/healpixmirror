@@ -163,12 +163,59 @@ BROWSER=$HEALPIX_HTML_BROWSER
 }
 
 # ======================================================================
+
+test_epub_viewer () {
+    if [ "$EPUB_VIEWER" = "" ]; then
+	found=`which $1 2> /dev/null`
+	[ "$found" ] && EPUB_VIEWER=$1
+    fi
+}
+
+open_epub_viewer () {
+    this_code=open_epub_viewer 
+    
+
+# If viewer is not specified by the environment variable, choose a default
+    EPUB_VIEWER=$HEALPIX_EPUB_VIEWER
+    if [ \( "$EPUB_VIEWER" = "" \) -a \( `uname` = "Darwin" \) ]; then
+	EPUB_VIEWER=darwin_open
+    fi
+
+    test_epub_viewer "ebook-viewer"
+    test_epub_viewer "FBReader"
+    test_epub_viewer "fbreader"
+    test_epub_viewer "okular"
+    test_epub_viewer "lucidor"
+    test_epub_viewer "buka"
+
+    if [ "x$EPUB_VIEWER" = "x" ]; then
+    # No view in evidence.
+	echo "EPUB viewer (ebook-viewer, FBReader, okular, lucidar, buka) not found in user's PATH" 1>&2
+	aboutCustomization
+	exit 1
+    fi
+  
+    case $EPUB_VIEWER in
+	darwin_open)
+        open $1 &
+	;;
+
+	*)
+	$EPUB_VIEWER $1 &
+	;;
+
+    esac
+
+}
+
+# ======================================================================
 aboutCustomization(){
     echo ""
-    echo "Be default, $0 will look for a PDF viewer and HTML browser among the standard ones,"
-    echo "unless the variables \$HEALPIX_PDF_VIEWER and \$HEALPIX_HTML_BROWSER are set by the user."
+    echo "By default, $0 will look for PDF and EPUB viewers and HTML browser among the standard ones,"
+    echo "unless the variables \$HEALPIX_PDF_VIEWER, \$HEALPIX_EPUB_VIEWER and \$HEALPIX_HTML_BROWSER are set by the user."
     echo "Currently: "
-    echo "HEALPIX_PDF_VIEWER = $HEALPIX_PDF_VIEWER"
+    echo "HEALPIX_EPUB_VIEWER  = $HEALPIX_EPUB_VIEWER"
+    echo "HEALPIX_PDF_VIEWER   = $HEALPIX_PDF_VIEWER"
     echo "HEALPIX_HTML_BROWSER = $HEALPIX_HTML_BROWSER"
     echo ""
 }
@@ -230,16 +277,18 @@ while [ ${type} -le 0 ]; do
     if [ ${#} = 0 -o ${type} = -1 ]; then
 	echo " Healpix on line documentation "
 	echo
-	echo " healpix_doc [-h|-p] "
+	echo " healpix_doc [-e|-h|-p] "
+	echo "   -e:  view   EPUB documentation "  
 	echo "   -h:  browse HTML documentation "          
 	echo "   -p:  view   PDF  documentation "  
 	echo 
-	printf " Enter your choice:  h, p, ? (getting help) or 0 (to exit): "
+	printf " Enter your choice:  e, h, p, ? (getting help) or 0 (to exit): "
 	read answer
 	if [ "x$answer" = "x0" ]; then
 	    echo "Bye ..."
 	    exit 0
 	fi
+	[ "x$answer" = "xE" -o "x$answer" = "xe" ] && type=3
 	[ "x$answer" = "xH" -o "x$answer" = "xh" ] && type=1
 	[ "x$answer" = "xP" -o "x$answer" = "xp" ] && type=2
 	if [ "x$answer" = "x?" ]; then
@@ -252,6 +301,7 @@ while [ ${type} -le 0 ]; do
 	fi
     else
 	type=-1
+	[ "${1:0:2}" = "-e" ] && type=3
 	[ "${1:0:2}" = "-h" ] && type=1
 	[ "${1:0:2}" = "-p" ] && type=2
     fi
@@ -273,6 +323,13 @@ case $type in
 	[ "x$file" != "x" ] && deffile=${file}
 	open_pdf_viewer    ${deffile}
 	[ ${verbose} -eq 1 ] && echo "viewer: ${VIEWER}"
+    ;;
+    3)
+	echo "opening HEALPIX EPUB documention"
+	deffile=${docdir}/epub/HEALPixDocumentation.epub
+	[ "x$file" != "x" ] && deffile=${file}
+	open_epub_viewer    ${deffile}
+	[ ${verbose} -eq 1 ] && echo "viewer: ${EPUB_VIEWER}"
     ;;
     *)
     echo "Unknown option"

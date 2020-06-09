@@ -19,8 +19,12 @@ for llprefix in ${list} ; do
     cp -f ${template} ${svgout}
 
     version=`grep 'Version [0-9]\.[0-9][0-9],'  ${htmlfile} | grep -v address`
-    words=`grep 'H1 ALIGN' ${htmlfile} | sed -e "s|<H1 ALIGN=CENTER>||" -e "s|<b>||" -e "s|</b>||" -e "s|</H1>||"`
+    #words=`grep 'H1 ALIGN' ${htmlfile} | sed -e "s|<H1 ALIGN=CENTER>||" -e "s|<b>||" -e "s|</b>||" -e "s|</H1>||"`
+    words=`grep '<H1 class="center">' ${htmlfile} | sed -e s'|<H1 class="center">||' -e "s|<b>||" -e "s|</b>||" -e "s|</H1>||"`
     [ "${llprefix}" = "top" ] && words='HEALPix Documentation Anthology'
+    echo '-----------------------'
+    echo $words
+    echo '-----------------------'
     nw=`echo $words | wc -w`
     #echo "VERSION = $version"
 

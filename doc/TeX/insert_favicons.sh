@@ -20,6 +20,7 @@ insert_file='/tmp/insert_tmp.html'
 
 # Fix each HTML file by inserting insert_file after trigger
 cat > ${insert_file} <<EOF
+<!--Begin favicon-->
    <link rel='apple-touch-icon' sizes='180x180' href='images/favicons/apple-touch-icon.png?v=2017'>
    <link rel='icon' type='image/png' sizes='32x32' href='images/favicons/favicon-32x32.png?v=2017'>
    <link rel='icon' type='image/png' sizes='16x16' href='images/favicons/favicon-16x16.png?v=2017'>
@@ -30,6 +31,7 @@ cat > ${insert_file} <<EOF
    <meta name='application-name' content='HEALPix'>
    <meta name='msapplication-config' content='images/favicons/browserconfig.xml?v=2017'>
    <meta name='theme-color' content='#ffffff'>
+<!--End favicon-->
 EOF
 
 
@@ -43,10 +45,10 @@ for d in $* ; do
 	    mv ${tmpfile} ${file}
 
 	    # change color, for html4
-	    sed 's|<BODY >|<body text="\#000000" bgcolor="\#FFFFFA">|g' ${file} > ${tmpfile}
+	    #sed 's|<BODY >|<body text="\#000000" bgcolor="\#FFFFFA">|g' ${file} > ${tmpfile}
 	    #sed 's|BODY |body              |g' ${file} > ${tmpfile}
 	    ## change color, for html5
-	    #sed 's|<BODY >|<body style="text-color:#000000; background-color:#FFFFFA">|g' ${file} > ${tmpfile}
+	    sed 's|<BODY >|<body style="text-color:#000000; background-color:#FFFFFA">|g' ${file} > ${tmpfile}
 	    mv ${tmpfile} ${file}
 
 	else

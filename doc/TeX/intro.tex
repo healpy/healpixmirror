@@ -1,7 +1,7 @@
 \documentclass[12pt,twoside]{article}
 %% \usepackage{healpix,psfig,html,graphicx,htmllist,makeidx,color,apalike} %heqn
 %\usepackage{xr-hyper,healpix,html,graphicx,makeidx,color,apalike} %heqn
-\usepackage{xr-hyper,healpix,html,graphicx,makeidx,color,natbib} %heqn
+\usepackage{xr-hyper,healpix,html,graphicx,makeidx,color,natbib,amsmath} %heqn
 %\usepackage{natbib,healpix,html,graphicx,makeidx,color,xr-hyper} %heqn
 %\usepackage{healpix,html,graphicx,makeidx,color,natbib} %heqn
 %%\usepackage{healpix,html,graphicx,makeidx,color,apalike,heqn}
@@ -99,7 +99,7 @@
 \title{The \healpix Primer}
 \docid{An Overview of the \healpix concept.}
 \docrv{Version \hpxversion}
-\author{Krzysztof M.~G\'orski, Benjamin D.~Wandelt, Eric Hivon, Frode K.~Hansen,
+\author{Krzysztof M.~G{\oacute}rski, Benjamin D.~Wandelt, Eric Hivon, Frode K.~Hansen,
 and Anthony J. Banday}
 \abstract{%
 \healpix is a Hierarchical, Equal Area, and iso-Latitude Pixelation 
@@ -160,7 +160,7 @@ typically producing a
 'few'
  numerical values
 of physical parameters of interest. 
-{\it COBE}-DMR sky maps (angular resolution of $7^\circ$ (FWHM) in
+{\it COBE}-DMR sky maps (angular resolution of 7\degr (FWHM) in
 three frequency bands, two channels each, 6144 pixels per map)
 were considered large at the time of their release.
 
@@ -231,7 +231,7 @@ the input to the astrophysical analysis pipeline.
 % 'few'
 %  numerical values
 % of physical parameters of interest. 
-% {\it COBE}-DMR sky maps (angular resolution of $7^\circ$ (FWHM) in
+% {\it COBE}-DMR sky maps (angular resolution of 7\degr (FWHM) in
 % three frequency bands, two channels each, 6144 pixels per map)
 % were considered large at the time of their release.
 
@@ -552,18 +552,21 @@ its resolution or size parameter $\nside = 2^k$ (where $k$ is a integer sometime
 and its index $p$ lying in $[0, 12\nside^2-1]$.
 Since some applications require to process simultaneously pixels of different resolutions, it is possible
 to merge the resolution $\nside$ and index $p$ into a single unique number $u$
-\begin{eqnarray}
-	u &=& p + 4 \nside^2, \myhtmlimage{} \label{eq:nest2uniq}
-\end{eqnarray}
+% \begin{eqnarray}
+% 	u &=& p + 4 \nside^2, \myhtmlimage{} \label{eq:nest2uniq}
+% \end{eqnarray}
+\begin{align}
+	& u = p + 4 \nside^2, \myhtmlimage{} \label{eq:nest2uniq}
+\end{align}
 so that all pixels with $\nside=1$ have the unique indices 4 to 15, 
 those with $\nside=2$ are in the range 16 to 63, and so on \citep{rh15}, 
 thus simplifying the handling of data with heteregenous $\nside$.
 Splitting the unique index $u$ into its original $\nside$ and $p$ is as simple as
-\begin{eqnarray}
-	\nside &=& 2^{\mathrm{floor}\left( \log_2(u/4)/2 \right)}, \myhtmlimage{} \label{eq:ring2nest_a}\\
+\begin{align}
+	\nside &= 2^{\mathrm{floor}\left( \log_2(u/4)/2 \right)}, \myhtmlimage{} \label{eq:ring2nest_a}\\
 %	     p_{\ } &\myequal& u - 4 \nside^2, \myhtmlimage{} \label{eq:ring2nest_b}
-	     p &=& u - 4 \nside^2, \myhtmlimage{} \label{eq:ring2nest_b}
-\end{eqnarray}
+	     p &= u - 4 \nside^2, \myhtmlimage{} \label{eq:ring2nest_b}
+\end{align}
 giving immediate access to the usual pixel based tools.
 
 This unique indexing could in principle be applied to both the RING and NESTED schemes, 
@@ -665,11 +668,11 @@ package must be used.
 A bandlimited function $f$ on the sphere can
 be expanded in spherical harmonics, $Y_{\ell m}$,
 as
-\begin{eqnarray}
+\begin{align}
   \label{eq:alms}
-  f({ \gamma}) &=& \sum_{\ell =0}^{\lmax}\sum_{m}a_{\ell m}Y_{\ell m}(\gamma),%%%  f({ \gamma})&\myequal&\sum_{\ell =0}^{\lmax}\sum_{m}a_{\ell m}Y_{\ell m}(\gamma),
+  & f({ \gamma}) = \sum_{\ell =0}^{\lmax}\sum_{m}a_{\ell m}Y_{\ell m}(\gamma),%%%  f({ \gamma})&\myequal&\sum_{\ell =0}^{\lmax}\sum_{m}a_{\ell m}Y_{\ell m}(\gamma),
 %%%  f({ \gamma})&\myequal&\sum_{\ell =0}^{\lmax}\sum_{m}a_{\ell m}Y_{\ell m}(\gamma),\myhtmlimage{}\label{eq:alms}
-\end{eqnarray}
+\end{align}
 where ${{\gamma}}$ denotes a unit vector pointing at polar angle $\theta\in[0,\pi]$ and
 azimuth $\phi\in[0,2\pi)$. Here we have assumed that there is insignificant signal power in modes
 with $\ell>\lmax$ and introduce the  notation that all sums over $m$ run from
@@ -677,9 +680,9 @@ $-\lmax$ to $\lmax$ but all quantities with index ${\ell m}$ vanish
 for $m>\ell$. Our conventions for $Y_{\ell m}$ are defined in subsection
 \ref{sphericalstuff} below.
 The spherical harmomics coefficients are then
-\begin{eqnarray}
-	a_{\ell m} \equiv \int d\gamma Y^\ast_{\ell m}(\gamma) f(\gamma),\myhtmlimage{}\label{eq:alms_def}
-\end{eqnarray}
+\begin{align}
+ & a_{\ell m} \equiv \int d\gamma Y^\ast_{\ell m}(\gamma) f(\gamma),\myhtmlimage{}\label{eq:alms_def}
+\end{align}
 where, the integral is done over the whole sphere, 
 and the superscript star denotes complex  conjugation.
 
@@ -688,12 +691,12 @@ Pixelating $f({\gamma})$ corresponds to sampling it at $\npix$
 function values $f_p$ can then be used  
 to estimate  $a_{\ell m}$.
 A straightforward estimator is
-\begin{eqnarray}
-  \hat{a}_{\ell m} &=& \frac{4\pi}{\npix}\sum_{p=0}^{\npix-1}
+\begin{align}
+  & \hat{a}_{\ell m} = \frac{4\pi}{\npix}\sum_{p=0}^{\npix-1}
   Y^\ast_{\ell m}(\gamma_p) f(\gamma_p),\myhtmlimage{}\label{eq:hata}
 %  \hat{a}_{\ell m}&\myequal& \frac{4\pi}{N_{\rm{pix}}}\sum_{p=0}^{N_{\rm{pix}}-1} 
 %  Y^\ast_{\ell m}(\gamma_p) f(\gamma_p),\label{eq:hata}
-\end{eqnarray}
+\end{align}
 where an equal weight was assumed for each pixel. This
 zeroth order estimator, as well as  higher order  estimators, are implemented in various
 Fortran90, C++, IDL, and python facilities included in the package, 
@@ -712,10 +715,10 @@ such as \htmlref{\texttt{anafast}}{fac:anafast} or \texttt{anafast\_cxx}.
 %\warnhtml
 These $\hat{a}_{\ell m}$ can be used to compute estimates of the angular power spectrum
  $\hat{C}_\ell$ as 
-\begin{eqnarray}
-  \hat{C}_\ell &=&\frac{1}{2\ell +1}\sum_{m} \vert\hat{a}_{\ell m}\vert^2.\myhtmlimage{}\label{eq:hatC}
+\begin{align}
+  & \hat{C}_\ell =\frac{1}{2\ell +1}\sum_{m} \vert\hat{a}_{\ell m}\vert^2.\myhtmlimage{}\label{eq:hatC}
 %  \hat{C}_\ell&=&\frac{1}{2l +1}\sum_{m} \vert\hat{a}_{\ell m}\vert^2.\label{eq:hatC}
-\end{eqnarray}
+\end{align}
 Equations (\ref{eq:hata}) and (\ref{eq:hatC}) above do not consider the impact of a pixel masking or weighting 
 $f(\gamma_p) \longrightarrow f(\gamma_p) w(\gamma_p)$ 
 on the power spectrum estimation of $f$, which is described in 
@@ -769,9 +772,9 @@ of theoretical predictions of the spectrum of CMB anisotropy used to be CMBFAST
 
 CMBFAST made its outputs in ASCII files, which instead
 of $C_{X,\ell}$ contain quantities defined as
-\begin{eqnarray}
-  D_{X,\ell} &=& \frac{\ell(\ell+1)}{(2\pi)T_{CMB}^2}C_{X,\ell},\myhtmlimage{}
-\end{eqnarray}
+\begin{align}
+& D_{X,\ell} = \frac{\ell(\ell+1)}{(2\pi)T_{CMB}^2}C_{X,\ell},\myhtmlimage{}
+\end{align}
 where $T_{CMB}=2.726K$ is the temperature of the CMB today and $X$ stands for T,
 E, B or C (see \S~\ref{subsec:pol}).  
 
@@ -1027,14 +1030,14 @@ Using the fact that, when $\beta \rightarrow 0$, $P_\ell(\cos\beta) \rightarrow 
 \beta) \rightarrow \sin^2 \beta \frac{(\ell+2)!}{8 (\ell-2)!}$, 
 the definitions above imply that the variances of the temperature and
 polarization are related to the power spectra by
-\begin{eqnarray}
-\langle TT \rangle &=& \sum_\ell {2\ell+1 \over 4 \pi}
+\begin{align}
+\langle TT \rangle &= \sum_\ell {2\ell+1 \over 4 \pi}
 C_{T\ell}  \nonumber \\ 
-\langle QQ \rangle + \langle UU\rangle &=& \sum_l {2\ell+1 \over 4 \pi} \left(C_{E\ell}
+\langle QQ \rangle + \langle UU\rangle &= \sum_l {2\ell+1 \over 4 \pi} \left(C_{E\ell}
 +C_{B\ell}\right)  \nonumber \\ 
-\langle TQ\rangle = \langle TU\rangle &=& 0.\myhtmlimage{}
+\langle TQ\rangle = \langle TU\rangle &= 0.\myhtmlimage{}
 \label{var}
-\end{eqnarray}
+\end{align}
 
 It is also worth noting that with these conventions, the cross power $C_{C\ell}$
 for scalar perturbations
@@ -1045,10 +1048,10 @@ spots) as it is expected from scalar perturbations \citep{crco}.
 %----------- addition, 2008-07-15 --------
 Note that Eq.~(\ref{Pexpansion2}) implies that, if the Stokes parameters are
 rotated {\em everywhere} via
-\begin{eqnarray}
-\left(\begin{array}{c} 
+\begin{align}
+& \left(\begin{array}{c} 
 	Q'\\U'
-\end{array}\right) &=& 
+\end{array}\right) =
 \left(\begin{array}{c c}
   	\cos2\psi & \sin2\psi \\ 
 	-\sin2\psi & \cos2\psi
@@ -1056,12 +1059,12 @@ rotated {\em everywhere} via
 \left(\begin{array}{c} 
 	Q\\U
 \end{array} \right),\label{eq:rotateQU} %\nonumber
-\end{eqnarray}
+\end{align}
 then the polarized $a_{\ell m}$ coefficients are submittted to the same rotation
-\begin{eqnarray}
-\left(\begin{array}{c} 
+\begin{align}
+& \left(\begin{array}{c} 
 	a_{E,\ell m}'\\a_{B,\ell m}'
-\end{array}\right) &=& 
+\end{array}\right) = 
 \left(\begin{array}{c c}
 	\cos2\psi & \sin2\psi \\ 
 	-\sin2\psi & \cos2\psi
@@ -1069,7 +1072,7 @@ then the polarized $a_{\ell m}$ coefficients are submittted to the same rotation
 \left(\begin{array}{c} 
 	a_{E,\ell m}\\a_{B,\ell m}
 \end{array} \right).\label{eq:rotateEB} %\nonumber
-\end{eqnarray}
+\end{align}
 %-------------------- end of addition ---------
 
 Finally, with these conventions, a polarization with ($Q>0,U=0$) will be along the
@@ -1085,7 +1088,7 @@ convention for the polarization in its previous releases. The tensor harmonics a
 the current spin weighted spherical harmonics. These two approaches differ by
 the normalisation and sign of the basis functions used, which in turns change
 the normalisation of the power spectra.
-Table 1 summarize the relations between the CMB power spectra in the different
+Table 1 summarizes the relations between the CMB power spectra in the different
 releases. 
 See \S~\ref{subsec:cmbfast} about the interface between \healpix and CMBFAST.
 
@@ -1104,7 +1107,7 @@ See \S~\ref{subsec:cmbfast} about the interface between \healpix and CMBFAST.
 {\small {Table 1: Relation between CMB power spectra conventions used in HEALPix, CMBFAST and
 KKS. The power spectra on the same row are equal.}}
 \vskip .2cm
-\begin{tabular}{|p{3.3cm}| c | c | c || c |}
+\begin{tabular}{|p{3.3cm}|c|c|c||c|}
 \hline
 Component\push	 & \healpix $\ge$ 1.2\footnote{Version 1.2 (Feb 2003) or more recent of \healpix package}   & CMBFAST 		& KKS 	& \healpix $\le$ 1.1\footnote{Version 1.1 or older of \healpix package} \\ \hline
 Temperature\push & $\Chl{TEMP}    $        & $\Czl{T}  $	&  $\Cl{T}   $         	&  $\Chl{TEMP}   $       \\ \hline
@@ -1296,43 +1299,43 @@ an existing FITS file.
 \label{sphericalstuff}
 
 The Spherical Harmonics are defined as
-\begin{eqnarray}
-	Y_{\ell m}(\theta,\phi) &=& \lambda_{\ell m}(\cos\theta) e^{{i}
+\begin{align}
+	& Y_{\ell m}(\theta,\phi) = \lambda_{\ell m}(\cos\theta) e^{{i}
 	m\phi} \label{eq:ylm_def} \myhtmlimage{}
-\end{eqnarray}
+\end{align}
 where 
-\begin{eqnarray}
-	\lambda_{\ell m}(x) &=& \sqrt{ \frac{2\ell+1}{4\pi}
+\begin{align}
+	\lambda_{\ell m}(x) &= \sqrt{ \frac{2\ell+1}{4\pi}
 	\frac{(\ell-m)!}{(\ell+m)!} } P_{\ell m}(x), \quad\textrm{for~}
 	m\ge 0 	\label{eq:lam_def} \\
 %
-	\lambda_{\ell m} &=& (-1)^m \lambda_{\ell |m|}, \quad\textrm{for~}
+	\lambda_{\ell m} &= (-1)^m \lambda_{\ell |m|}, \quad\textrm{for~}
 	m <  0, \nonumber \\
 %
-	\lambda_{\ell m} &=& 0, \quad\textrm{for}\, |m| > \ell.\nonumber
+	\lambda_{\ell m} &= 0, \quad\textrm{for}\, |m| > \ell.\nonumber
 	\myhtmlimage{}
-\end{eqnarray}
+\end{align}
 
 Introducing $x\equiv\cos\theta$, the associated Legendre Polynomials $P_{\ell m}$ 
 solve the differential equation
-\begin{eqnarray}
-	(1-x^2)\frac{d^2}{dx^2}P_{\ell m} - 2x \frac{d}{dx}P_{\ell m}
-	+ \left(\ell(\ell+1) - \frac{m^2}{1-x^2}\right) P_{\ell m} &=& 0.
+\begin{align}
+	& (1-x^2)\frac{d^2}{dx^2}P_{\ell m} - 2x \frac{d}{dx}P_{\ell m}
+	+ \left(\ell(\ell+1) - \frac{m^2}{1-x^2}\right) P_{\ell m} = 0.
 	\myhtmlimage{}
 \label{eq:diff_eq}
-\end{eqnarray}
+\end{align}
 They are related to the ordinary Legendre Polynomials $P_\ell$ by
-\begin{eqnarray}
-	P_{\ell m} &=& (-1)^m (1-x^2)^{m/2} \frac{d^m}{dx^m} P_{\ell}(x),
+\begin{align}
+	& P_{\ell m} = (-1)^m (1-x^2)^{m/2} \frac{d^m}{dx^m} P_{\ell}(x),
 	\myhtmlimage{}
 \label{eq:legendreass}
-\end{eqnarray}
+\end{align}
 which are given by the Rodrigues formula
-\begin{eqnarray}
-	P_{\ell}(x) &=& \frac{1}{2^\ell \ell!}\frac{d^\ell}{dx^\ell} (x^2-1)^\ell.
+\begin{align}
+	& P_{\ell}(x) = \frac{1}{2^\ell \ell!}\frac{d^\ell}{dx^\ell} (x^2-1)^\ell.
 	\myhtmlimage{}
 \label{eq:rodrigues}
-\end{eqnarray}
+\end{align}
 
 Note that our $Y_{\ell m}$ are identical to those of \citet{edmonds},
 even though our definition of the $P_{\ell m}$ differ from his by a factor
@@ -1556,8 +1559,8 @@ University Press
 Goldberg, J. N., et al. 1967, J. Math. Phys. 8, 2155
 \backrefprint%because automatic pagebackref does not work properly
 
-\bibitem[G{\'o}rski {et~al.}(2005)]{gorskihealpix05}
-  G\'orski, K.M., Hivon, E., Banday, A.~J., Wandelt,
+\bibitem[G{\oacute}rski {et~al.}(2005)]{gorskihealpix05}
+  G{\oacute}rski, K.M., Hivon, E., Banday, A.~J., Wandelt,
   B.~D., Hansen, F.~K., Reinecke, M. \& Bartelmann, M., 2005, 
 \htmladdnormallink{ApJ, 622, 759}{http://adsabs.harvard.edu/cgi-bin/nph-bib_query?bibcode=2005ApJ...622..759G&amp;db_key=AST&amp;high=41069202cf02947}, 
 \htmladdnormallink{astro-ph/0409513}{https://arxiv.org/abs/astro-ph/0409513}
@@ -1573,7 +1576,7 @@ Hamaker, J.P. \& Bregman, J.D., 1996, A\&AS 117, 161
 \backrefprint%because automatic pagebackref does not work properly
 
 \bibitem[Hivon {et~al.}(2002)]{master}
-Hivon, E., G{\'o}rski, K, M., Netterfield, C. B., Crill, B. P., Prunet, S. \& Hansen, F., 
+Hivon, E., G{\oacute}rski, K, M., Netterfield, C. B., Crill, B. P., Prunet, S. \& Hansen, F., 
 2002, \htmladdnormallink{ApJ, 567, 2}{http://adsabs.harvard.edu/abs/2002ApJ...567....2H}, 
 \htmladdnormallink{astro-ph/0105302}{https://arxiv.org/abs/astro-ph/0105302}
 \backrefprint%because automatic pagebackref does not work properly
@@ -1605,7 +1608,7 @@ Reinecke, M. and Hivon, E., 2015,
 \backrefprint%because automatic pagebackref does not work properly
 
 \bibitem[Rocha {et~al.}(2009)]{xfaster}
-Rocha, G., Contaldi, C.R., Bond, J.R. \& G\'orski, K.M., 2009,
+Rocha, G., Contaldi, C.R., Bond, J.R. \& G{\oacute}rski, K.M., 2009,
 \htmladdnormallink{arXiv:0912.4059v2}{https://arxiv.org/abs/0912.4059}
 \backrefprint%because automatic pagebackref does not work properly
 
@@ -1633,20 +1636,20 @@ Tristram, M., Macias-Perez, J.F., Renault, C., \& Santos, D., 2005,
 \htmladdnormallink{MNRAS, 358, 833}{http://adsabs.harvard.edu/abs/2005MNRAS.358..833T}
 \backrefprint%because automatic pagebackref does not work properly
 
-\bibitem[Wandelt, Hivon \& G\'orski(1998)]{whg}
-Wandelt, B.D., Hivon, E. and G\'orski, K.M., 1998, 
+\bibitem[Wandelt, Hivon \& G{\oacute}rski(1998)]{whg}
+Wandelt, B.D., Hivon, E. and G{\oacute}rski, K.M., 1998, 
 \htmladdnormallink{astro-ph/9803317}{https://arxiv.org/abs/astro-ph/9803317}, in
  "Fundamental Parameters in Cosmology", proceedings of the XXXIIIrd Rencontres
 de Moriond, Tr{\^a}n Thanh V{\^a}n (ed.)
 \backrefprint%because automatic pagebackref does not work properly
 
-\bibitem[Wandelt, Hivon \& G\'orski(2001)]{whg2001}
-Wandelt, B.D., Hivon, E. and G\'orski, K.M., 2001, 
+\bibitem[Wandelt, Hivon \& G{\oacute}rski(2001)]{whg2001}
+Wandelt, B.D., Hivon, E. and G{\oacute}rski, K.M., 2001, 
 \htmladdnormallink{Phys. Rev. D, 64, 083003}{http://adsabs.harvard.edu/abs/2001PhRvD..64h3003W},
 \htmladdnormallink{astro-ph/9808292v1}{https://arxiv.org/abs/astro-ph/9808292v1}
 \backrefprint%because automatic pagebackref does not work properly
 
-%% \bibitem{fastah} Wandelt, B.D., G\'orski, K.M., Hivon, E.\ and Hansen,
+%% \bibitem{fastah} Wandelt, B.D., G{\oacute}rski, K.M., Hivon, E.\ and Hansen,
 %% F.\, in preparation
  
 \bibitem[Zaldarriaga(1998)]{zalda} 

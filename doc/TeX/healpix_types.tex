@@ -16,7 +16,7 @@
 \end{facility}
 
 
-%---------------------
+%--------------------- not properly emulated in latex2html
 \newenvironment{mytable}[1]{%
 \begin{minipage}[b]{\linewidth}{%
 \renewcommand{\thefootnote}{\fnsymbol{footnote}}
@@ -35,10 +35,10 @@ The parameters defined in \thedocid\ include
 
 %\begin{mytable}{%
 \begin{minipage}{\linewidth}{%
-\renewcommand{\thefootnote}{\fnsymbol{footnote}}%
+%\renewcommand{\thefootnote}{\fnsymbol{footnote}}%
 \renewcommand{\footnoterule}{}%
 %
-\begin{tabularx}{\linewidth}{lcc X}
+\begin{tabularx}{\linewidth}{lccX}
 name & type & value\footnote{\label{fn:healpix_types:kind}%
 actual value may depend on hardware or compiler} & definition \\
 \hline
@@ -70,10 +70,10 @@ largest accessible numbers,
 
 %\begin{mytable}{%
 \begin{minipage}{\linewidth}{%
-\renewcommand{\thefootnote}{\fnsymbol{footnote}}%
+%\renewcommand{\thefootnote}{\fnsymbol{footnote}}%
 \renewcommand{\footnoterule}{}%
 %
-\begin{tabularx}{\linewidth}{lcc X}
+\begin{tabularx}{\linewidth}{lccX}
 name & type or kind & value\footnote{\label{fn:healpix_types:max}%
 actual value may depend on hardware or compiler} & definition \\
 \hline
@@ -95,8 +95,9 @@ mathematical definitions,%
 \mytarget{sub:healpix_types:deg2rad}%
 \mytarget{sub:healpix_types:rad2deg}
 
-\begin{mytable}{%
-\begin{tabularx}{\linewidth}{lcc X}
+%\begin{mytable}{%
+\begin{minipage}{\linewidth}{%
+\begin{tabularx}{\linewidth}{lccX}
 name & kind & value & definition \\
 \hline
 QUARTPI & DP & $\pi/4$ & \\
@@ -113,13 +114,15 @@ RAD2DEG & DP & $180/\pi$ & Radians to Degrees conversion factor\\
 \hline
 \end{tabularx}
 }
-\end{mytable}
+\end{minipage}
+%\end{mytable}
 
 \item
 and \healpix specific definitions, 
 
-\begin{mytable}{%
-\begin{tabularx}{\linewidth}{lcc X}
+%\begin{mytable}{%
+\begin{minipage}{\linewidth}{%
+\begin{tabularx}{\linewidth}{lccX}
 name & type or kind & value & definition \\
 \hline
 \mytarget{sub:healpix_types:hpx_sbadval}HPX\_SBADVAL & SP & $-1.6375\ 10^{30}$ & default sentinel value given to missing
@@ -133,9 +136,12 @@ HEALPIX\_VERSION & character & ``\hpxversion'' & current \healpix package versio
 \hline
 \end{tabularx}
 }
-\end{mytable}
+\end{minipage}
+%\end{mytable}
 
 \end{itemize}
+
+%---------------------
 
 \begin{example}
 {

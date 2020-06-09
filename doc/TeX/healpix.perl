@@ -143,7 +143,23 @@ sub do_cmd_healpixns{
 
 sub do_cmd_filenamelen{
   local($_) = @_;
-  "<tt>filenamelen</tt>" . $_;
+#  "<tt>filenamelen</tt>" . $_;
+  "<kbd>filenamelen</kbd>" . $_; # 2020-06-08
+}
+
+sub do_cmd_degr{
+  local($_) = @_;
+  join('','&deg;',$_);
+}
+
+sub do_cmd_S{
+  local($_) = @_;
+  join('','&sect',$_);
+}
+
+sub do_cmd_oacute{
+  local($_) = @_;
+  join('','&#243',$_);
 }
 
 # sub do_cmd_myell{
@@ -179,14 +195,16 @@ sub do_cmd_fileparam {
     local($_) = @_;
     s/$next_pair_pr_rx//o;
     ($t_param) = &translate_commands($&);
-    "<tt>$t_param</tt><br>$_";
+#    "<tt>$t_param</tt><br>$_";
+    "<kbd>$t_param</kbd><br>$_";  # 2020-06-08
 }
 
 sub do_cmd_mycode {
     local($_) = @_;
     s/$next_pair_pr_rx//o;
     ($t_code) = &translate_commands($&);
-    "<tt>  &nbsp;&nbsp;&nbsp;&nbsp; $t_code &nbsp;&nbsp;&nbsp;&nbsp; </tt> $_";
+#    "<tt>  &nbsp;&nbsp;&nbsp;&nbsp; $t_code &nbsp;&nbsp;&nbsp;&nbsp; </tt> $_";
+    "<kbd>  &nbsp;&nbsp;&nbsp;&nbsp; $t_code &nbsp;&nbsp;&nbsp;&nbsp; </kbd> $_";  # 2020-06-08
 }
 
 #-----------
@@ -390,7 +408,8 @@ sub do_env_example {
 #      "<HR><H1>EXAMPLE:</H1><FONT COLOR=\"\#00CC00\"><FONT SIZE=+2>$t_example</font></font><BR><blockquote>$t_bla</blockquote>" ;
 #    "<HR><H1>EXAMPLE:</H1><tt><FONT SIZE=+1>$t_example</font></tt>\n<blockquote>$t_bla</blockquote>" ;
 #    "<HR><H1>EXAMPLE:</H1> \n<tt>$t_example</tt>\n<blockquote>$t_bla</blockquote>" ;
-    "<HR><H2>EXAMPLE:</H2> \n<tt>$t_example</tt>\n<blockquote>$t_bla</blockquote>" ;
+#    "<HR><H2>EXAMPLE:</H2> \n<tt>$t_example</tt>\n<blockquote>$t_bla</blockquote>" ;
+    "<HR><H2>EXAMPLE:</H2> \n<kbd>$t_example</kbd>\n<blockquote>$t_bla</blockquote>" ; # 2020-06-08
 }
 
 sub do_env_examples {
@@ -409,7 +428,8 @@ sub do_env_examples {
 #      "<hr><H1>EXAMPLE # $t_num:</H1><FONT COLOR=\"\#00CC00\"><FONT SIZE=+2>$t_example</font></font><BR><blockquote>$t_bla</blockquote>" ;
 #    "<hr><H1>EXAMPLE # $t_num:</H1><tt><FONT SIZE=+1>$t_example</font></tt>\n<blockquote>$t_bla</blockquote>" ;
 #    "<hr><H1>EXAMPLE # $t_num:</H1> \n<tt>$t_example</tt>\n<blockquote>$t_bla</blockquote>" ;
-    "<hr><H2>EXAMPLE # $t_num:</H2> \n<tt>$t_example</tt>\n<blockquote>$t_bla</blockquote>" ;
+#    "<hr><H2>EXAMPLE # $t_num:</H2> \n<tt>$t_example</tt>\n<blockquote>$t_bla</blockquote>" ;
+    "<hr><H2>EXAMPLE # $t_num:</H2> \n<kbd>$t_example</kbd>\n<blockquote>$t_bla</blockquote>" ; # 2020-06-08
 }
 
 sub do_env_mytable{
@@ -488,12 +508,12 @@ sub do_env_relist{
 ######  &do_env_mylist_bullet(@_," COMPACT", "BlueBall"); # 2020-04-24
 }
 
-sub do_env_itemize{
-  #local($_) = @_;
-  #print "itemize ($_)";
-  &do_env_mylist(@_," COMPACT");
-######  &do_env_mylist_bullet(@_," COMPACT", "GreenBall"); # 2020-04-24
-}
+# sub do_env_itemize{
+#   #local($_) = @_;
+#   #print "itemize ($_)";
+#   &do_env_mylist(@_," COMPACT");
+# ######  &do_env_mylist_bullet(@_," COMPACT", "GreenBall"); # 2020-04-24
+# }
 
 #--------------------
 # copied from htmllist
@@ -554,7 +574,9 @@ sub do_env_mylist{
 	    /\\item$delimiter_rx/;
 	    push(@items_done,&translate_commands($`),
 ######		    "<DT>$imagemark\n<DD>$1");
-		    "<DD>&#9632 $1"); # 2020-04-24
+######		    "<DD>&#9632 $1"); # 2020-04-24
+		    "<DD>&#9632; $1"); # 2020-06-08
+#		    "<DIV>&#9632; $1</DIV>"); # 2020-06-08
 		$_=$';
 	} else  {
 	    /$item_description_rx\s*($labels_rx8)?\s*/;
@@ -938,19 +960,24 @@ sub do_cmd_frontpage {
     local($_) = @_;
     local($the_title) = '';
     if ($t_title) {
-        $the_title .= "<H1 ALIGN=CENTER>$t_title</H1>\n";
+#       $the_title .= "<H1 ALIGN=CENTER>$t_title</H1>\n";
+        $the_title .= "<H1 class=\"center\">$t_title</H1>\n";  # 2020-06-08
     } else { &write_warnings("This document has no title."); }
     if ($t_abstract) {
- 	$the_title .= "<div id=abstract align=center>$t_abstract</div>\n";
+# 	$the_title .= "<div id=abstract align=center>$t_abstract</div>\n";
+ 	$the_title .= "<div id=abstract class=\"center\">$t_abstract</div>\n";  # 2020-06-08
 # 	$the_title .= "<DIV>$t_abstract</DIV>\n";
     }
     if ($t_author) {
-        $the_title .= "<P ALIGN=CENTER><STRONG>$t_author</STRONG></P>\n";
+#       $the_title .= "<P ALIGN=CENTER><STRONG>$t_author</STRONG></P>\n";
+        $the_title .= "<P class=\"center\"><STRONG>$t_author</STRONG></P>\n";
     } else { &write_warnings("There is no author for this document."); }
     if (($t_date)&&!($t_date=~/^\s*(($O|$OP)\d+($C|$CP))\s*\1\s*$/)) {
-        $the_title .= "<BR><P ALIGN=CENTER><I>Revision: </I>$t_docrv; $t_date</P>\n";}
+#       $the_title .= "<BR><P ALIGN=CENTER><I>Revision: </I>$t_docrv; $t_date</P>\n";}
+        $the_title .= "<BR><P class=\"center\"><I>Revision: </I>$t_docrv; $t_date</P>\n";}
     if ($t_website) {
-      $the_title .= "<P ALIGN=CENTER>$t_website</P>\n";
+#     $the_title .= "<P ALIGN=CENTER>$t_website</P>\n";
+      $the_title .= "<P class=\"center\">$t_website</P>\n";
     }
  
     $the_title . $_ ;

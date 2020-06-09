@@ -88,7 +88,7 @@ for llprefix in ${list} ; do
 # 	let "nc1 = ${nc1} - 2"
 # 	let "nc2 = ${nc2} - 2"
 #     fi
-    echo "${nchapters} ${nc1} ${nc2} ==============="
+#    echo "${nchapters} ${nc1} ${nc2} ==============="
     ebook-convert ${llprefix}.htm ${outfile} \
 	--epub-version ${epubversion} \
 	--breadth-first \

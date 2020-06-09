@@ -1,4 +1,4 @@
-(?s)<DIV CLASS="navigation">\s*(.*?)</DIV>
+(?s)<DIV CLASS="navigation">\s*(.*?)<!--End of Navigation Panel-->
 
 <TD CLASS="eqno" WIDTH=10 ALIGN="RIGHT">
 <TD CLASS="eqno" WIDTH=50 ALIGN="RIGHT">
@@ -21,4 +21,6 @@ Footnotes
 (?s)<LI><A(.*?)TABLE_CONTENTS.htm(.*?)</A>
 
 (?s)<LI><A(.*?)_Contents.htm(.*?)</A>
+
+(?s)<!--Begin favicon-->\s*(.*?)<!--End favicon-->
 

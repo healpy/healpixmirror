@@ -35,8 +35,8 @@ format \hskip 3cm OPTIONAL & CHR & IN & character string describing Fortran
 \textsc{\large{\textbf{FUNCTIONS: }}}\hfill\newline
 {\tt outstring = string(number [,format])} 
 
- \begin{tabular}{@{}p{0.3\hsize}@{\hspace{1ex}}
-                        p{0.7\hsize}@{}} & returns in {\tt outstring} its argument {\tt number} converted to a
+ \begin{tabular}{@{}p{0.3\hsize}@{\hspace{1ex}}p{0.7\hsize}@{}}
+                         & returns in {\tt outstring} its argument {\tt number} converted to a
                                          character string. If {\tt format} is provided it is used to
                                          format the output, if not, the fortran default format
                                          matching {\tt number}'s type is used. \\
@@ -44,16 +44,16 @@ format \hskip 3cm OPTIONAL & CHR & IN & character string describing Fortran
 
 {\tt outstring = strlowcase(instring)} 
 
- \begin{tabular}{@{}p{0.3\hsize}@{\hspace{1ex}}
-                        p{0.7\hsize}@{}} & returns in {\tt outstring} its argument {\tt instring}
+ \begin{tabular}{@{}p{0.3\hsize}@{\hspace{1ex}}p{0.7\hsize}@{}}
+                         & returns in {\tt outstring} its argument {\tt instring}
                                          converted to lowercase. ASCII characters in the [A-Z] range
                                          are mapped to [a-z], while all others remain unchanged.\\
      \end{tabular}\\\\
 
 {\tt outstring = strupcase(instring)} 
 
- \begin{tabular}{@{}p{0.3\hsize}@{\hspace{1ex}}
-                        p{0.7\hsize}@{}} & returns in {\tt outstring} its argument {\tt instring}
+ \begin{tabular}{@{}p{0.3\hsize}@{\hspace{1ex}}p{0.7\hsize}@{}}
+                         & returns in {\tt outstring} its argument {\tt instring}
                                          converted to uppercase. ASCII characters in the [a-z] range
                                          are mapped to [A-Z], while all others remain unchanged.\\
      \end{tabular}\\\\
