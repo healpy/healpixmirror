@@ -183,9 +183,9 @@ div { margin: 0pt; padding: 0pt; }
 </div></body></html>
 EOF
 
-# -----------------------------
-echo "packaging"
-# -----------------------------
+echo "------------------------------"
+echo "packaging  ${name}.epub  ${epubdir}/${finalname}.epub"
+echo "------------------------------"
 \rm -rf ${name}.epub
 #zip -q ${name}.epub * */*
 zip -qrX "${name}.epub" mimetype $(ls|xargs echo|sed 's/mimetype//g') -x *.DS_Store

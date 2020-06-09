@@ -50,8 +50,8 @@ cross := $(docs:.tex=.cross) pdf_index.cross
 chtml := $(docs:.tex=.chtml)
 vpdf  := $(docs:.tex=.vpdf)
 html  := $(docs:.tex=.html)
-#epub  := $(addprefix ./epub/, $(docs:.tex=.epub) )
-epub  := $(docs:.tex=.epub)
+epub  := $(addprefix ./epub/, $(docs:.tex=.epub) )
+#epub  := $(docs:.tex=.epub)
 incs  := hpxversion.tex idlversion.tex gdlversion.tex hpxwebsite.tex healpix_src_url.tex
 
 # define color output if needed
@@ -292,7 +292,7 @@ epub: main.html
 	@echo "$(GREEN_COLOR)==================================$(NO_COLOR)"
 	$(EBOOK)
 	@mkdir -p $(EPUBDIR)
-	@cp $(epub) $(EPUBDIR)
+	#@cp $(epub) $(EPUBDIR)
 
 intro.epub: 
 	$(EBOOK) intro
