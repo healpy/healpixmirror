@@ -318,6 +318,9 @@ mkdir -p ${docautodir}/epub
 \rm -f ${docautodir}/html/*
 \rm -f ${docautodir}/epub/*
 cd doc/TeX
+ln -s ../../${docautodir}/pdf  .
+ln -s ../../${docautodir}/html .
+ln -s ../../${docautodir}/epub .
 make crossref || exit
 make crosshtml > /dev/null || exit
 make epub || exit
@@ -333,6 +336,7 @@ echoRed "removing doc/TeX and doc/*.txt..."
 \rm -f doc/*.txt
 mv ${docautodir}/html/* doc/html
 mv ${docautodir}/pdf/*  doc/pdf
+mv ${docautodir}/epub/H* doc/epub
 \rm -rf ${docautodir}/
 \rm -rf DONE.txt TODO Bugs.txt
 \rm -rf include bin lib
