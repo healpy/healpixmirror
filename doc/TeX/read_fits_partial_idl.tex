@@ -1,0 +1,152 @@
+% -*- LaTeX -*-
+
+
+\renewcommand{\facname}{{read\_fits\_partial}}
+\renewcommand{\FACNAME}{{READ\_FITS\_PARTIAL}}
+\sloppy
+
+
+
+\title{\healpix IDL Facility User Guidelines}
+\docid{\facname} \section[\facname]{ }
+\label{idl:read_fits_partial}
+\docrv{Version 1.2}
+\author{Eric Hivon}
+\abstract{This document describes the \healpix facility \facname.}
+
+
+
+
+\begin{facility}
+{This IDL facility reads FITS file containing incomplete (polarized) sky map.}
+{src/idl/fits/read\_fits\_partial.pro}
+\end{facility}
+
+\begin{IDLformat}
+{\FACNAME, \mylink{idl:read_fits_partial:File}{File}%
+, \mylink{idl:read_fits_partial:Pixel}{Pixel}%
+, \mylink{idl:read_fits_partial:IQU}{IQU}%
+ [%
+, \mylink{idl:read_fits_partial:COORDSYS}{COORDSYS=}%
+, \mylink{idl:read_fits_partial:EXTENSION}{EXTENSION=}%
+, \mylink{idl:read_fits_partial:HDR}{HDR=}%
+, \mylink{idl:read_fits_partial:HELP}{HELP=}%
+, \mylink{idl:read_fits_partial:NSIDE}{NSIDE=}%
+, \mylink{idl:read_fits_partial:ORDERING}{ORDERING=}%
+, \mylink{idl:read_fits_partial:UNITS}{UNITS=}%
+, \mylink{idl:read_fits_partial:XHDR}{XHDR=}%
+]
+}
+\end{IDLformat}
+
+\begin{qualifiers}
+  \begin{qulist}{} %%%% NOTE the ``extra'' brace here %%%%
+ 	\item[{File}]  \mytarget{idl:read_fits_partial:File}
+          name of a FITS file in which the map is to be written
+
+ 	\item[{Pixel}]  \mytarget{idl:read_fits_partial:Pixel}
+	 (OUT: INT, LONG or LONG64 vector of length $n_{\rm p}$), \\ index of observed (or valid) pixels
+
+ 	\item[{IQU}]  \mytarget{idl:read_fits_partial:IQU}
+	 (OUT: FLOAT or DOUBLE array of size ($n_{\rm p}$, $n_{\rm c}$)), \\ 
+	value of $I$ or $I,Q,U$ signal in each observed pixel
+
+  \end{qulist}
+\end{qualifiers}
+
+\begin{keywords}
+  \begin{kwlist}{} %%% extra brace
+	 \item[{COORDSYS=}] \mytarget{idl:read_fits_partial:COORDSYS}
+	        (OUT, optional), \\
+	        returns on output the astrophysical coordinate system used, 
+		as read from FITS header (value of keywords COORDSYS or SKYCOORD)
+
+    	\item[EXTENSION=]\mytarget{idl:read_fits_partial:EXTENSION}%
+		(IN, optional), \\
+		0 based number of extension to read. \default{0} 
+
+    	\item[HDR=]\mytarget{idl:read_fits_partial:HDR}%
+		(OUT, optional), \\
+		String array containing the primary header. 
+
+	\item[{HELP=}] \mytarget{idl:read_fits_partial:HELP}
+	        (IN, optional), \\ if set, an extensive help is displayed, and no file is read
+
+	 \item[{NSIDE=}]  \mytarget{idl:read_fits_partial:NSIDE}
+		(OUT, optional), \\
+	        returns on output the \healpix resolution parameter, as read
+		from the FITS header. Set to -1 if not found
+
+	 \item[{ORDERING=}] \mytarget{idl:read_fits_partial:ORDERING}
+	        (OUT, optional), \\
+	        returns on output the pixel ordering, as read from the FITS
+	        header. Either 'RING' or 'NESTED' or ' ' (if not found).
+
+	 \item[{UNITS=}] \mytarget{idl:read_fits_partial:UNITS}
+	        (OUT, optional), \\ physical units of each column of the table (except PIXEL)
+
+    	\item[XHDR=]\mytarget{idl:read_fits_partial:XHDR}%
+		(OUT, optional), \\
+		String array containing the extension header. 
+
+  \end{kwlist}
+\end{keywords}
+
+%% \begin{keywords}
+%%   \begin{kwlist}{} %%% extra brace
+%% 	\item[{Nested}] if set, specifies that the map is in the NESTED ordering
+%% 	scheme\\
+%% 	\seealso Ordering and Ring 
+%% 	\item[{Ring}] if set, specifies that the map is in the RING ordering
+%% 	scheme\\
+%% 	\seealso Ordering and Nested
+%%    \end{kwlist}
+%% \end{keywords}
+
+\begin{codedescription}
+{For more information on the FITS file format supported in \healpix, 
+including the one implemented in \facname,
+see \url{\hpxfitsdoc}}
+% {\parbox[t]{\hsize}{\facname writes out the information contained in {\tt Prim\_stc} and {\tt
+% Exten\_stc} in the primary unit and extension of the FITS file
+% {\tt File} respectively . Coordinate systems can also be specified by {\tt Coordsys}. Specifying the
+% ordering scheme is compulsary and can be done either in {\tt Header} or by setting {\tt
+% Ordering} or {\tt Nested} or {\tt Ring} to the correct value. If {\tt
+% Ordering} or {\tt Nested} or {\tt Ring} is set, its value overrides what is
+% given in {\tt Header}. \\
+
+% The data is assumed to represent a full sky data set with 
+% the number of data points npix = 12*Nside*Nside
+% unless   
+% \\Partial is set OR the input fits header contains OBJECT =
+%                'PARTIAL' \\
+%        AND \\
+%          the Nside qualifier is given a valid value OR the FITS header contains
+%                  a NSIDE}}
+\end{codedescription}
+
+
+
+\begin{related}
+  \begin{sulist}{} %%%% NOTE the ``extra'' brace here %%%%
+  \item[idl] version \idlversion or more is necessary to run \facname
+  \item[\htmlref{write\_fits\_partial}{idl:write_fits_partial}] This \healpix IDL
+facility can be used to generate the FITS format partial maps complient
+with \healpix convention and readable by \facname.
+\input{item_read_fits_idl}
+    \item[sxpar] This IDL routine (included in \healpix package) can be
+  used to extract FITS keywords from the header(s) HDR or XHDR read with \facname.
+  \end{sulist}
+\end{related}
+
+
+% \begin{example}
+% {
+% \begin{tabular}{ll} %%%% use this tabular format %%%%
+% \end{tabular}
+% }
+% {
+% }
+% \end{example}
+
+
