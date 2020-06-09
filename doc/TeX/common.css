@@ -94,7 +94,7 @@ p.center {text-align: center;}
 address { font-size: smaller }
 
 /* mathematics styles */
-DIV.displaymath		{ }	/* math displays */
+DIV.displaymath		{ text-align:center; }	/* math displays */
 TD.eqno			{ }	/* equation-number cells */
 
 

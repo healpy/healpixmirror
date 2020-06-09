@@ -1,0 +1,238 @@
+% -*- LaTeX -*-
+
+
+\renewcommand{\facname}{{write\_fits\_partial}}
+\renewcommand{\FACNAME}{{WRITE\_FITS\_PARTIAL}}
+\sloppy
+
+
+
+\title{\healpix IDL Facility User Guidelines}
+\docid{\facname} \section[\facname]{ }
+\label{idl:write_fits_partial}
+\docrv{Version 1.0}
+\author{Eric Hivon}
+\abstract{This document describes the \healpix facility \facname.}
+
+
+
+
+\begin{facility}
+{This IDL facility writes out a unpolarized or polarized \healpix map into a FITS file 
+for a fraction of the sky.}
+{src/idl/fits/write\_fits\_partial.pro}
+\end{facility}
+
+\begin{IDLformat}
+{\FACNAME, \mylink{idl:write_fits_partial:File}{File}%
+, \mylink{idl:write_fits_partial:Pixel}{Pixel}%
+, \mylink{idl:write_fits_partial:IQU}{IQU}
+ [% 
+, \mylink{idl:write_fits_partial:COLNAMES}{COLNAMES=}%
+, \mylink{idl:write_fits_partial:COORDSYS}{COORDSYS=}%
+, \mylink{idl:write_fits_partial:EXTENSION}{EXTENSION=}%
+, \mylink{idl:write_fits_partial:HDR}{HDR=}%
+, \mylink{idl:write_fits_partial:HELP}{HELP=}%
+, \mylink{idl:write_fits_partial:NESTED}{/NESTED}%
+, \mylink{idl:write_fits_partial:NSIDE}{NSIDE=}%
+, \mylink{idl:write_fits_partial:ORDERING}{ORDERING=}%
+% , 
+% \mylink{idl:write_fits_partial:POLARISATION}{/POLARISATION}%
+, \mylink{idl:write_fits_partial:RING}{/RING}%
+, \mylink{idl:write_fits_partial:UNITS}{UNITS=}%
+, \mylink{idl:write_fits_partial:VERBOSE}{VERBOSE=}%
+, \mylink{idl:write_fits_partial:XHDR}{XHDR=}%
+]
+}
+\end{IDLformat}
+
+\begin{qualifiers}
+  \begin{qulist}{} %%%% NOTE the ``extra'' brace here %%%%
+ 	\item[{File}] \mytarget{idl:write_fits_partial:File}
+          name of a FITS file in which the map is to be written
+
+ 	\item[{Pixel}] \mytarget{idl:write_fits_partial:Pixel}
+	 (INT, LONG or LONG64 vector of length $n_{\rm p}$), \\ index of observed (or valid) pixels. Will be the first column of the FITS binary table
+
+ 	\item[{IQU}]  \mytarget{idl:write_fits_partial:IQU}
+	 (FLOAT or DOUBLE array of size ($n_{\rm p}$, $n_{\rm c}$)), \\ 
+		$I$, $Q$ and $U$ Stokes parameters of each pixel (if $n_{\rm c}=3$),
+		or $I$ of each pixel (if $n_{\rm c}=1$)
+
+  \end{qulist}
+\end{qualifiers}
+
+\begin{keywords}
+  \begin{kwlist}{} %%% extra brace
+       \item[{COLNAMES=}] \mytarget{idl:write_fits_partial:COLNAMES}
+%		  (optional), \\
+STRING vector with FITS table column names (beside PIXEL) (not case sensitive: [A-Z,0-9,\_])\\
+         \default{\texttt{TEMPERATURE}, for 1 column, \\
+                   \texttt{TEMPERATURE}, \texttt{Q\_POLARISATION}, \texttt{U\_POLARISATION}, for 3 columns,\\
+                   or \texttt{C01}, \texttt{C02}, \texttt{C03}, \texttt{C04}, ... otherwise}\\
+         If provided the number of COLNAMES must be $\ge$ the number of columns
+
+       \item[{COORDSYS=}] \mytarget{idl:write_fits_partial:COORDSYS}
+%		  (optional), \\
+		if set to either 'C', 'E' or 'G',  specifies that the
+		Healpix coordinate system is respectively Celestial=equatorial,
+		  Ecliptic or Galactic.
+		(The relevant keyword is then added/updated in the extension
+		  header, but the map is NOT rotated)
+
+	\item[{EXTENSION=}] \mytarget{idl:write_fits_partial:EXTENSION}
+%		  (optional), \\
+	  (0 based) extension number in which to write data. \default{0}.
+	  If set to 0 (or not set) {\em a new file is written from scratch}.
+	  If set to a value
+		  larger than 1, the corresponding extension is added or
+		  updated, as long as all previous extensions already exist.
+		  All extensions of the same file should use the same ORDERING,
+		  NSIDE and COORDSYS.
+
+    	\item[HDR=] \mytarget{idl:write_fits_partial:HDR}%	
+%		(optional), \\
+		String array containing the information to be put in
+		the primary header. 
+
+    	\item[HELP=] \mytarget{idl:write_fits_partial:HELP}%
+%		(optional), \\
+		if set, an extensive help is displayed, and no file is written
+
+	\item[{/NESTED}]\mytarget{idl:write_fits_partial:NESTED}%
+%	(optional), \\
+         if set, specifies that the map is in the NESTED ordering
+	scheme\\
+	\seealso \mylink{idl:write_fits_partial:ORDERING}{Ordering} 
+	and \mylink{idl:write_fits_partial:RING}{Ring}
+
+	\item[{NSIDE=}]  \mytarget{idl:write_fits_partial:NSIDE}
+%		(optional), \\
+		scalar integer, \healpix resolution parameter of the
+		data set. The resolution parameter should be made
+		available to the FITS file, either thru this
+		qualifier, or via the header (see XHDR).
+
+	\item[{ORDERING=}] \mytarget{idl:write_fits_partial:ORDERING}
+%		  (optional), \\
+		if set to either 'ring' or 'nested' (case un-sensitive),
+		  specifies that the map is respectively in RING or NESTED
+		  ordering scheme\\
+		\seealso \mylink{idl:write_fits_partial:NESTED}{Nested} 
+		and \mylink{idl:write_fits_partial:RING}{Ring} \\
+	The ordering information should be made
+		available to the FITS file, either thru a combination
+		  of Ordering/Ring/Nested, or via the header (see XHDR).
+
+% 	\item[{/POLARISATION}] \mytarget{idl:write_fits_partial:POLARISATION}
+% 	  specifies that file will contain the I, Q and U polarisation
+%            Stokes parameter in extensions 0, 1 and 2 respectively, and sets the
+% FITS header keywords accordingly
+
+	\item[{/RING}]  \mytarget{idl:write_fits_partial:RING} 
+%		  (optional), \\
+	if set, specifies that the map is in the RING ordering
+	scheme\\
+	\seealso \mylink{idl:write_fits_partial:ORDERING}{Ordering} 
+	and \mylink{idl:write_fits_partial:NESTED}{Nested}
+
+	\item[{UNITS=}] \mytarget{idl:write_fits_partial:UNITS}
+%		(optional), \\
+		STRING scalar or vector describing the physical units of the table columns 
+	(except for the PIXEL one)
+		if scalar, same units for all columns;
+	if vector, each column can have its own units; if needed, 
+	the last UNITS provided will be replicated for the remaining columns
+
+	\item[{VERBOSE=}] \mytarget{idl:write_fits_partial:VERBOSE}
+%		(optional), \\
+		if set, the routine is verbose while writing the FITS file
+
+    	\item[XHDR=] \mytarget{idl:write_fits_partial:XHDR}%
+%		(optional), \\
+		String array containing the information to be put in
+		the extension header. 
+
+
+   \end{kwlist}
+\end{keywords}
+
+\begin{codedescription}
+{For more information on the FITS file format supported in \healpix, 
+including the one implemented in \facname,
+see \url{\hpxfitsdoc}}
+% {\parbox[t]{\hsize}{\facname writes out the information contained in {\tt Prim\_stc} and {\tt
+% Exten\_stc} in the primary unit and extension of the FITS file
+% {\tt File} respectively . Coordinate systems can also be specified by {\tt Coordsys}. Specifying the
+% ordering scheme is compulsary and can be done either in {\tt Header} or by setting {\tt
+% Ordering} or {\tt Nested} or {\tt Ring} to the correct value. If {\tt
+% Ordering} or {\tt Nested} or {\tt Ring} is set, its value overrides what is
+% given in {\tt Header}. \\
+
+% The data is assumed to represent a full sky data set with 
+% the number of data points npix = 12*Nside*Nside
+% unless   
+% \\Partial is set OR the input fits header contains OBJECT =
+%                'PARTIAL' \\
+%        AND \\
+%          the Nside qualifier is given a valid value OR the FITS header contains
+%                  a NSIDE}}
+\end{codedescription}
+
+
+
+\begin{related}
+  \begin{sulist}{} %%%% NOTE the ``extra'' brace here %%%%
+  \item[idl] version \idlversion or more is necessary to run \facname
+  \item[\htmlref{read\_fits\_partial}{idl:read_fits_partial}] This \healpix IDL facility can be used to read in maps
+  written by \facname.
+\input{item_write_fits_idl}
+  \item[sxaddpar] This IDL routine (included in \healpix package) can be used to update
+  or add FITS keywords to the header in {\tt HDR} and {\tt XHDR}
+  \end{sulist}
+\end{related}
+
+
+\begin{example}
+{
+\begin{tabular}{l} %%%% use this tabular format %%%%
+nside = 512\\
+pixel = lindgen(nside2npix(nside)/10)\\
+\thedocid, 'map\_part\_T.fits', pixel, pixel*100., \$\\
+\hspace{1em}		    nside=nside, units='K', /ring\\
+\thedocid, 'map\_part\_TQU.fits', pixel, pixel{\#}[100.,1.,1.],  \$\\
+\hspace{1em}		      nside=nside, units='K', /ring\\
+\thedocid, 'map\_part\_xxxx.fits', pixel, pixel{\#}[1.,-2.,3.,-4.], \$\\
+\hspace{1em}		       nside=nside,colnames=['c1',B2','xx','POWER'],units=['K','m','s','W'],\$\\
+\hspace{1em} /ring\\
+\end{tabular}
+}
+{will write in 'map\_part\_T.fits' a FITS binary table with the columns PIXEL and TEMPERATURE;
+in 'map\_part\_TQU.fits' a table with the columns PIXEL, TEMPERATURE, Q\_POLARISATION and U\_POLARISATION;
+and in 'map\_part\_xxxx.fits' a table with the columns PIXEL, C1, B2, XX and POWER.}
+\end{example}
+%
+% \begin{examples}{2}
+% {
+% \begin{tabular}{l} %%%% use this tabular format %%%%
+% nside = 512\\
+% pixel = lindgen(nside2npix(nside)/10)\\
+% \thedocid,  'map\_part\_TQU.fits',pixel, pixel#[100.,1.,1.],    nside=nside, units='K'\\
+% \end{tabular}
+% }
+% {creates in 'map\_part\_TQU.fits'
+% }% a FITS binary table with the columns PIXEL, TEMPERATURE, Q\_POLARISATION and U\_POLARISATION}
+% \end{examples}
+% %
+% \begin{examples}{3}
+% {
+% \begin{tabular}{l} %%%% use this tabular format %%%%
+% nside = 512\\
+% pixel = lindgen(nside2npix(nside)/10)\\
+% \thedocid,  'map\_part\_xxxx.fits',pixel, pixel#[1.,-2.,3.,-4.],    nside=nside, colnames=['c1',B2','xx','POWER'],units=['K','m','s','W']\\
+% \end{tabular}
+% }
+% {creates in 'map\_part\_xxxx.fits' a FITS binary table with the columns PIXEL, C1, B2, XX and POWER}
+% \end{examples}
+
+
