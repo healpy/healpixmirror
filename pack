@@ -313,11 +313,14 @@ echoRed "generating documentations"
 # recreate directory receiving doc from doc/TeX/Makefile
 mkdir -p ${docautodir}/pdf
 mkdir -p ${docautodir}/html
+mkdir -p ${docautodir}/epub
 \rm -f ${docautodir}/pdf/*
 \rm -f ${docautodir}/html/*
+\rm -f ${docautodir}/epub/*
 cd doc/TeX
 make crossref || exit
 make crosshtml > /dev/null || exit
+make epub || exit
 cd $here
 
 echoGrn "dealing with Ximview doc"
