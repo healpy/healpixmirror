@@ -47,8 +47,12 @@ for d in $* ; do
 	    # change color, for html4
 	    #sed 's|<BODY >|<body text="\#000000" bgcolor="\#FFFFFA">|g' ${file} > ${tmpfile}
 	    #sed 's|BODY |body              |g' ${file} > ${tmpfile}
+
 	    ## change color, for html5
-	    sed 's|<BODY >|<body style="text-color:#000000; background-color:#FFFFFA">|g' ${file} > ${tmpfile}
+	    #sed 's|<BODY >|<body style="text-color:#000000; background-color:#FFFFFA">|g' ${file} > ${tmpfile}
+
+	    # html5: let CSS do the work
+	    sed 's|<BODY >|<body>|g'  ${file} > ${tmpfile}
 	    mv ${tmpfile} ${file}
 
 	else

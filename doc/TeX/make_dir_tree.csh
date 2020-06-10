@@ -79,4 +79,10 @@ open ${finalfile}.pdf
 # display ${finalfile}.png
 gm display ${finalfile}.png
 
+echo "Bounding boxes"
+echo "PDF"
+extractbb -vO ${finalfile}.pdf
+echo "PNG"
+extractbb -vO ${finalfile}.png
+
 exit

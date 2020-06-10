@@ -4,7 +4,7 @@
 body { color: #000000;
 	background: #FFFFFA;
 	margin: 10px 10px 10px 10px;
-	font: 85% 'Lucida Grande', Geneva, Verdana, Arial, Helvetica, sans-serif;
+	font: 85% 'Lucida Grande', Geneva, Verdana, Arial, Helvetica, Tahoma, sans-serif;
 	line-height: normal;
 }
 	/* font: small 'Lucida Grande', Geneva, Verdana, Arial, Helvetica, sans-serif; */
@@ -126,7 +126,7 @@ SPAN.textit	{ font-style: italic  }
 TABLE.PAD TD	{ padding:3px; }
 TABLE.BORDER TH	{ 
 	border:1px solid black; 
-	background-color: #fefefe;}
+	background-color: #fafafa;}
 TABLE.BORDER TD	{ border:1px solid black; }
 TABLE.BORDER TR:nth-child(even) { background-color: #fffff0;}
 TABLE.BORDER TR:nth-child(odd)  { background-color: #fffffa;}

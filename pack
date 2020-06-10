@@ -249,6 +249,7 @@ sleep 10
 
 mkdir -p doc/html
 mkdir -p doc/pdf
+mkdir -p doc/epub
 
 echoGrn "installing java Documentation"
 cd src/java
