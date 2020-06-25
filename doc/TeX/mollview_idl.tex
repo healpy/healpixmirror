@@ -71,8 +71,8 @@ IDL arrays.}
 
 %\vskip 1cm
 \mytarget{idl:mollview:routines}%{}
-Several visualization routines have a similar interface. Their {\bf qualifiers} and
-{\bf keywords} are all listed here, and the routines to which they apply are coded
+Several visualization routines have a similar interface. Their \textbf{qualifiers} and
+\textbf{keywords} are all listed here, and the routines to which they apply are coded
 in the 'routine' column as: \\
 A: \htmlref{azeqview}{idl:azeqview},
 C: \htmlref{cartview}{idl:cartview},
@@ -82,17 +82,16 @@ O: \htmlref{orthview}{idl:orthview} and all: all of them
 %\vskip 2cm 
 \vskip 0.4cm
 
-{\bf Qualifiers} should appear in the order indicated. They can take a range of values, and some of them are optional.\\
-{\bf Keywords} are optional, and can appear in any order. They take the form {\tt keyword=value} and can be abbreviated to a non ambiguous form
-(ie, {\tt factor=10.0} can be replaced by {\tt fac = 10.0}). They generally can take a range of values, but
-some of them (noted as {\tt /keyword} below) are boolean switches: they are either present (or set to 1) or absent (or set
+\textbf{Qualifiers} should appear in the order indicated. They can take a range of values, and some of them are optional.\\
+\textbf{Keywords} are optional, and can appear in any order. They take the form \texttt{keyword=value} and can be abbreviated to a non ambiguous form
+(ie, \texttt{factor=10.0} can be replaced by \texttt{fac = 10.0}). They generally can take a range of values, but
+some of them (noted as \texttt{/keyword} below) are boolean switches: they are either present (or set to 1) or absent (or set
 to 0).
 
 % \vfill
 % \newpage
 \begin{qualifiers_mollview}
 \begin{tabular}{p{\sizeone} p{\sizetwo} p{\sizethr}}
-%% \begin{tabular}{p{0.14\hsize} p{0.08\hsize} p{0.75\hsize}}
 \hline  
 \textbf{name} & \textbf{routines} & \textbf{\ description} \\ \hline
 %                    &   &                            \\ %%% for presentation
@@ -103,10 +102,10 @@ File \mytarget{idl:mollview:file}  & \mylink{idl:mollview:routines}{all}   & \pa
           {\em or}\  \  name of an {\em online} variable (either array or
 structure) containing the (RING or \mylink{idl:mollview:nested}{NESTED} ordered) \healpix\ map (See note below);\\
           if Save is set   :    name of an IDL saveset file containing
-               the \healpix\ map stored under the variable  {\tt data} \\
+               the \healpix\ map stored under the variable  \texttt{data} \\
 	\nodefault\\
 \underline{Note on online data}: in order to preserve the integrity of the input data, 
-		the content of the array or structure {\tt File} is replicated
+		the content of the array or structure \texttt{File} is replicated
 before being possibly altered by the map making process. 
 Therefore plotting online data will require more memory than reading the data from disc directly, and is not recommended
 		to visualize data sets of size comparable to that of the
@@ -115,10 +114,10 @@ computer memory.\\
 than 50\% of the sky is observed), can be processed with a minimal memory
 foot-print, by not allocating fake full map. In the current release, two
 restrictions apply: the input data set must be read from a FITS file in 'cut4'
-format, and the \mylink{idl:mollview:polarization}{\tt POLARIZATION} IDL keyword
+format, and the \mylink{idl:mollview:polarization}{\texttt{POLARIZATION}} IDL keyword
 (described below) must be 0 (default value). See 
 \mylink{idl:mollview:example4}{Example \#4} \latexhtml{on page~\pageref{page:example_hires_cutsky}}{below}. \\
-\seealso \mylink{idl:mollview:truecolors}{\tt TrueColors}.}\\
+\seealso \mylink{idl:mollview:truecolors}{\texttt{TrueColors}}.}\\
 
 Select \mytarget{idl:mollview:select}  & \mylink{idl:mollview:routines}{all}  & \parbox[t]{0.95\hsize}{Optional\\
 		  column of the BIN FITS table to be plotted, can be either  \\
@@ -127,13 +126,14 @@ Select \mytarget{idl:mollview:select}  & \mylink{idl:mollview:routines}{all}  & 
                         (only letters, digits and underscore are valid) \\
                -- an integer        : number i of the column
                             containing the data, starting with 1 (also valid if
-		  \mylink{idl:mollview:file}{{\tt File}} is an online array) \\
+		  \mylink{idl:mollview:file}{\texttt{File}} is an online array) \\
                    \default {1 for full sky maps, 'SIGNAL' column for FITS files
 		  containing cut sky maps}
                (see the Examples below)}\\
 
 \end{tabular}
 \end{qualifiers_mollview}
+
 \vskip 1cm
 \mollbacktotop
 %======================================================
@@ -146,20 +146,19 @@ Select \mytarget{idl:mollview:select}  & \mylink{idl:mollview:routines}{all}  & 
 {ASINH=}\mytarget{idl:mollview:asinh}   & \mylink{idl:mollview:routines}{all}& \parbox[t]{\hsize}{  if set, the
             color table is altered to emulate an non-linear mapping of the input
             data enhancing the low contrast regions. \\
-            If {\tt asinh=1} the mapping is $y=\sinh^{-1} (x)$, such that $y \approx x$ when $x\ll 1$ and $y\approx \ln(2x)$ when $x\gg 1$.\\
-            If {\tt asinh=2} the mapping is $y=\sinh^{-1} (x/2)/\ln(10)$, such that
+            If \texttt{asinh=1} the mapping is $y=\sinh^{-1} (x)$, such that $y \approx x$ when $x\ll 1$ and $y\approx \ln(2x)$ when $x\gg 1$.\\
+            If \texttt{asinh=2} the mapping is $y=\sinh^{-1} (x/2)/\ln(10)$, such that
 $y \approx 0.21 x$ when $x\ll 1$ and $y\approx \log(x)$ when $x\gg 1$. \\
 	Here $x$ is the input data, optionally altered by 
-	\mylink{idl:mollview:factor}{\tt Factor} and \mylink{idl:mollview:offset}{\tt Offset}. \\
+	\mylink{idl:mollview:factor}{\texttt{Factor}} and \mylink{idl:mollview:offset}{\texttt{Offset}}. \\
             This option can {\em not} be used in conjonction with
-\mylink{idl:mollview:log}{\tt /LOG} nor \mylink{idl:mollview:hist_equal}{\tt /HIST\_EQUAL}.}\\
+\mylink{idl:mollview:log}{\texttt{/LOG}} nor \mylink{idl:mollview:hist_equal}{\texttt{/HIST\_EQUAL}}.}\\
 	
 
 {BAD\_COLOR=}\mytarget{idl:mollview:bad_color}  & \mylink{idl:mollview:routines}{all} & 
 \parbox[t]{\hsize}{color given to missing pixels (having
-\htmlref{{\tt
-!healpix.bad\_value}}{idl:init_healpix} ($=-1.6375\,10^{30}$) 
-      or {\tt NaN} value on input).
+\htmlref{\texttt{!healpix.bad\_value}}{idl:init_healpix} ($=-1.6375\,10^{30}$) 
+      or \texttt{NaN} value on input).
    The color can be provided as either:\\
     -- a single integer in [0,255], specifying the index to be used in
       the color table chosen via \mylink{idl:mollview:colt}{COLT} (in which the indexes 0, 1 and 2
@@ -188,7 +187,7 @@ $y \approx 0.21 x$ when $x\ll 1$ and $y\approx \log(x)$ when $x\gg 1$. \\
 {CHARTHICK=}\mytarget{idl:mollview:charthick} & \mylink{idl:mollview:routines}{all}& character thickness (in
 \mylink{idl:mollview:titleplot}{TITLEPLOT}, \mylink{idl:mollview:subtitle}{SUBTITLE} and
 color bar labeling). Other characters thickness (such as
-\mylink{idl:mollview:glsize}{graticule labels}), can be controlled with {\tt !P.CHARTHICK}.
+\mylink{idl:mollview:glsize}{graticule labels}), can be controlled with \texttt{!P.CHARTHICK}.
                 \default {1} \\
 
 % {COLT=}\mytarget{idl:mollview:colt}  & \mylink{idl:mollview:routines}{all}  & \parbox[t]{\hsize}{ color table number, in [-40,40]. If colt$<0$, the IDL color
@@ -212,27 +211,26 @@ color bar labeling). Other characters thickness (such as
 index: \\
 -- Indexes in [0,40] are reserved for standard IDL color tables, while
   [41,255] are used for user defined color tables read from disc (created and
-  written to disc with {\tt MODIFYCT}), if any. \\
--- Indexes 1001 (or {\tt 'planck1'}, case insensitive) and 1002 (or {\tt 'planck2'}) are
-reserved for Planck color tables 1 and 2 generated by \htmlref{{\tt
-planck\_colors}}{idl:planck_colors}. 
+  written to disc with \texttt{MODIFYCT}), if any. \\
+-- Indexes 1001 (or \texttt{'planck1'}, case insensitive) and 1002 (or \texttt{'planck2'}) are
+reserved for Planck color tables 1 and 2 generated by \htmlref{\texttt{planck\_colors}}{idl:planck_colors}. 
 See \mylink{idl:mollview:example6}{Example \#6} \latexhtml{on page~\pageref{page:planck_colors_217}}{below}.\\
 -- If the index does not match any existing table, or if it is above 255, 
-  the current online table (modifiable with {\tt TVLCT}, {\tt XLOADCT}, {\tt XPALETTE}, ... 
+  the current online table (modifiable with \texttt{TVLCT}, \texttt{XLOADCT}, \texttt{XPALETTE}, ... 
   or eg, J. Davenport's 
 \htmladdnormallink%
-{{\tt cubehelix.pro}}%
+{\texttt{cubehelix.pro}}%
 {http://www.astro.washington.edu/users/jrad/cubehelix.pro}
    implementation of D. Green 's
 \htmladdnormallink%
 {cubehelix color scheme}%
 {https://www.mrao.cam.ac.uk/~dag/CUBEHELIX/}%
 ) is used instead. \\
---If {\tt colt}$<0$, the IDL color table ABS(colt) is used, but the scale is
+--If \texttt{colt}$<0$, the IDL color table ABS(colt) is used, but the scale is
  reversed (ie a red to blue scale becomes a blue to red scale).
  Note: -0.1 can be used as negative 0.\\
         	\default {33 (Blue-Red)} \\
-\seealso \mylink{idl:mollview:truecolors}{\tt TrueColors}}\\ 
+\seealso \mylink{idl:mollview:truecolors}{\texttt{TrueColors}}}\\ 
 %--------
 
 
@@ -270,29 +268,29 @@ See \mylink{idl:mollview:example6}{Example \#6} \latexhtml{on page~\pageref{page
 
 {CUSTOMIZE=}\mytarget{idl:mollview:customize}  & \mylink{idl:mollview:routines}{all}  & \parbox[t]{\hsize}{User provided structure containing customization parameters of the produced output, whose default values are listed in \mylink{idl:mollview:default_settings}{DEFAULT\_SETTINGS}.
 The accepted inputs are \\
-{\tt ASPOS.X, ASPOS.Y}: X,Y location of astronomical coordinates label  (which can be removed altogether with \mylink{idl:mollview:noposition}{/NOPOSITION}, only applicable to \htmlref{gnomview}{idl:gnomview}),\\
-{\tt CBAR.DX, CBAR.DY}: length and width of color bar (which can be removed with \mylink{idl:mollview:nobar}{/NOBAR}), the bar is centered, at an automatically determined height\\
-{\tt CBAR.SPACES}: 3-element vector listing the strings to be inserted between the map minimum value label, the color bar, the map maximum value, and the map units (read from the FITS file or provided by \mylink{idl:mollview:units}{UNITS}) \default{3 single spaces}, \\
-{\tt CBAR.TY}: vertical offset of the text (min, max and units labels) with respect to the color bar \default{0};\\
+\texttt{ASPOS.X, ASPOS.Y}: X,Y location of astronomical coordinates label  (which can be removed altogether with \mylink{idl:mollview:noposition}{/NOPOSITION}, only applicable to \htmlref{gnomview}{idl:gnomview}),\\
+\texttt{CBAR.DX, CBAR.DY}: length and width of color bar (which can be removed with \mylink{idl:mollview:nobar}{/NOBAR}), the bar is centered, at an automatically determined height\\
+\texttt{CBAR.SPACES}: 3-element vector listing the strings to be inserted between the map minimum value label, the color bar, the map maximum value, and the map units (read from the FITS file or provided by \mylink{idl:mollview:units}{UNITS}) \default{3 single spaces}, \\
+\texttt{CBAR.TY}: vertical offset of the text (min, max and units labels) with respect to the color bar \default{0};\\
 \textbf{Note:} the character size of the text accompanying the color bar is fully determined by the keyword \mylink{idl:mollview:charsize}{Charsize},\\
-{\tt CBAR.BOX}: thickness of the black box drawn around the color bar \default{0: no box}; 
+\texttt{CBAR.BOX}: thickness of the black box drawn around the color bar \default{0: no box}; 
 the final thickness is \texttt{F*cbar.box*!p.thick} with \texttt{F}=2 in
 \mylink{idl:mollview:pdf}{PDF} and 
 \mylink{idl:mollview:ps}{PS}, or \texttt{F}=1 otherwise, 
 while \texttt{!p.thick} is assumed to have a value of 1.0 unless specified otherwise.\\
-{\tt CRING.DX, CRING.XLL, CRING.YLL}: radius and X,Y location of lower left corner of the color disc showing the polarization direction when \mylink{idl:mollview:polarization}{POLARIZATION=3}\\
-{\tt PDF.DEBUG}: if set to 1, and \mylink{idl:mollview:silent}{SILENT} is not set, then debugging information on the \mylink{idl:mollview:pdf}{PDF} generation will be printed (when applicable), 
+\texttt{CRING.DX, CRING.XLL, CRING.YLL}: radius and X,Y location of lower left corner of the color disc showing the polarization direction when \mylink{idl:mollview:polarization}{POLARIZATION=3}\\
+\texttt{PDF.DEBUG}: if set to 1, and \mylink{idl:mollview:silent}{SILENT} is not set, then debugging information on the \mylink{idl:mollview:pdf}{PDF} generation will be printed (when applicable), 
 and the intermediate Postscript file will be kept\\
-{\tt SUBTITLE.X, SUBTITLE.Y, SUBTITLE.CHARSIZE}: control the X,Y location of the plot 
+\texttt{SUBTITLE.X, SUBTITLE.Y, SUBTITLE.CHARSIZE}: control the X,Y location of the plot 
 \mylink{idl:mollview:subtitle}{subtitle} 
 (X=0 is left justified, X=0.5 is centered and X=1 is right justified), 
 and its final character size, which is the product of the number 
-{\tt SUBTITLE.CHARSIZE}
+\texttt{SUBTITLE.CHARSIZE}
 with the one provided in the keyword
 \mylink{idl:mollview:charsize}{Charsize}\\
-{\tt TITLE.X, TITLE.Y, TITLE.CHARSIZE}: same as above, applied to the plot title (\mylink{idl:mollview:titleplot}{titleplot}),\\
-{\tt VSCALE.X, VSCALE.Y}: X,Y location of scale calibrating the polarization rods (whose length and spacing in the main plotting area can be tuned with \mylink{idl:mollview:polarization}{POLARIZATION=[3, length, spacing]})\\
-{\tt VSCALE.TY}: vertical offset of the text next to the calibrating rod.\\
+\texttt{TITLE.X, TITLE.Y, TITLE.CHARSIZE}: same as above, applied to the plot title (\mylink{idl:mollview:titleplot}{titleplot}),\\
+\texttt{VSCALE.X, VSCALE.Y}: X,Y location of scale calibrating the polarization rods (whose length and spacing in the main plotting area can be tuned with \mylink{idl:mollview:polarization}{POLARIZATION=[3, length, spacing]})\\
+\texttt{VSCALE.TY}: vertical offset of the text next to the calibrating rod.\\
 See \mylink{idl:mollview:example7}{Example \#7} \latexhtml{on page~\pageref{page:moll_customize}}{below}.
 }\\
 
@@ -308,7 +306,7 @@ See \mylink{idl:mollview:example7}{Example \#7} \latexhtml{on page~\pageref{page
 
 \hspace{\sizeone}{DEFAULT\-\_SETTINGS=}\mytarget{idl:mollview:default_settings}  & \mylink{idl:mollview:routines}{all}  & \parbox[t]{\hsize}{Structure containing on output the default values (slightly projection dependent) of the plotting parameters that can be customized with 
 \mylink{idl:mollview:customize}{CUSTOMIZE}.\\
-As shown in \mylink{idl:mollview:example7}{Example \#7} \latexhtml{on page~\pageref{page:moll_customize}}{below}, the returned structure can be inspected with the routine \htmlref{{\tt help\_st}}{idl:help_st}.}\\
+As shown in \mylink{idl:mollview:example7}{Example \#7} \latexhtml{on page~\pageref{page:moll_customize}}{below}, the returned structure can be inspected with the routine \htmlref{\texttt{help\_st}}{idl:help_st}.}\\
 
 
 
@@ -362,8 +360,8 @@ when applicable, its orientation and coordinates by
 	For compatibility with standard FITS viewers (including 
 \htmladdnormallink{STIFF}{https://www.astromatic.net/category/softwareposts/stiff})%
 , unobserved pixels, and
-pixels outside the sphere, take the value {\tt NaN} (ie {\tt !values.f\_nan} in IDL).
-The resulting FITS file can be read in IDL with eg. map={\tt readfits}({\em filename}). 
+pixels outside the sphere, take the value \texttt{NaN} (ie \texttt{!values.f\_nan} in IDL).
+The resulting FITS file can be read in IDL with eg. map=\texttt{readfits}({\em filename}). 
 \\
 	\seealso \mylink{idl:mollview:map_out}{Map\_out}}\\
 
@@ -391,9 +389,9 @@ The resulting FITS file can be read in IDL with eg. map={\tt readfits}({\em file
 {GIF=}\mytarget{idl:mollview:gif}  & \mylink{idl:mollview:routines}{all}  & \parbox[t]{\hsize}{
 		string containing the name of a .GIF output \\
 	      if set to 1            : outputs the plot in 
-{\tt plot\_}{\em projection}{\tt .gif}, where {\em projection} is either
-{\tt azimequid}, {\tt cartesian}, {\tt gnomic}, {\tt mollweide} 
-or {\tt orthographic}, \\
+\texttt{plot\_}{\em projection}\texttt{.gif}, where {\em projection} is either
+\texttt{azimequid}, \texttt{cartesian}, \texttt{gnomic}, \texttt{mollweide} 
+or \texttt{orthographic}, \\
 	      if set to a file name  : outputs the plot in that file \\
 	Please note that the resulting GIF image might not always look
 	      as expected. The reason for this is a problem with
@@ -410,7 +408,7 @@ or {\tt orthographic}, \\
 
 
 {GLSIZE=}\mytarget{idl:mollview:glsize} & \mylink{idl:mollview:routines}{CGMO}& \parbox[t]{\hsize}{
-	character size of the graticule labels in units of {\tt Charsize}. \\
+	character size of the graticule labels in units of \texttt{Charsize}. \\
         Can be a scalar (which applies to both parallel and meridian labels),
         or a 2 element vector (interpreted as [meridian\_label\_size, parallel\_label\_size])\\
 	\default{0: no labeling of graticules}. \\
@@ -431,7 +429,7 @@ or {\tt orthographic}, \\
           orthview : gdef = 45, gmin = 10 \\
 	Note that the graticule will rotate with the sphere if Rot is set.
 	To outline only the equator set graticule=[360,90].
-	The automatic labeling of the graticule is controlled by {\tt Glsize}\\
+	The automatic labeling of the graticule is controlled by \texttt{Glsize}\\
 	The graticule line thickness is controlled via !P.THICK.\\
 	\default {0 [no graticule]} \\
 	\seealso \mylink{idl:mollview:igraticule}{Igraticule}, \mylink{idl:mollview:rot}{Rot}, \mylink{idl:mollview:coord}{Coord}, \mylink{idl:mollview:glsize}{Glsize}
@@ -487,7 +485,7 @@ boundaries with solid lines.
     		\default {26 cm $\simeq$ 10 in} \\               \seealso \mylink{idl:mollview:pxsize}{Pxsize}}\\
 
 {IGLSIZE=}\mytarget{idl:mollview:iglsize} & \mylink{idl:mollview:routines}{CGMO}& \parbox[t]{\hsize}{
-	character size of the input coordinates graticule labels in units of {\tt Charsize}. \\
+	character size of the input coordinates graticule labels in units of \texttt{Charsize}. \\
 	Either scalar or 2-element vector (see \mylink{idl:mollview:glsize}{Glsize}).\\
 	\default{0: no labeling of graticules}. \\
 	\seealso \mylink{idl:mollview:charsize}{Charsize}, \mylink{idl:mollview:igraticule}{Igraticule}
@@ -499,7 +497,7 @@ boundaries with solid lines.
 	See Graticule for conventions and details.
 	If both Graticule and Igraticule are set, the latter will
 	be represented with dashes.\\
-	The automatic labeling of the graticule is controlled by {\tt Iglsize}\\
+	The automatic labeling of the graticule is controlled by \texttt{Iglsize}\\
 	\default {0 [no graticule]} \\
 	\seealso \mylink{idl:mollview:graticule}{Graticule}, 
 \mylink{idl:mollview:rot}{Rot}, \mylink{idl:mollview:coord}{Coord}, 
@@ -519,9 +517,9 @@ boundaries with solid lines.
 {JPEG=}\mytarget{idl:mollview:jpeg}  & \mylink{idl:mollview:routines}{all}  & \parbox[t]{\hsize}{
 		string containing the name of a {\em lossless} .JPEG output file\\
 	      if set to 1            : outputs the plot in 
-{\tt plot\_}{\em projection}{\tt .jpeg}, where {\em projection} is either
-{\tt azimequid}, {\tt cartesian}, {\tt gnomic}, {\tt mollweide} 
-or {\tt orthographic}, \\
+\texttt{plot\_}{\em projection}\texttt{.jpeg}, where {\em projection} is either
+\texttt{azimequid}, \texttt{cartesian}, \texttt{gnomic}, \texttt{mollweide} 
+or \texttt{orthographic}, \\
 	      if set to a file name  : output the plot in that file \\
 % 	Please note that the resulting JPEG image might not always look
 % 	      as expected. The reason for this is problems with
@@ -558,10 +556,10 @@ packages as well as \htmladdnormallink{\tt dvips}{https://www.ctan.org/pkg/dvips
 In this case, the 
 \mylink{idl:mollview:pfonts}{Pfonts} settings will be ignored.\\
 Note that \htmladdnormallink{\tt cgPStoRASTER}{http://www.idlcoyote.com/programs/cgps2raster.pro},
-\htmladdnormallink{ImageMagick {\tt convert}}{https://www.imagemagick.org/script/index.php}
-and/or \htmladdnormallink{GraphicsMagick {\tt gm convert}}{http://www.graphicsmagick.org/convert.html}
+\htmladdnormallink{ImageMagick \texttt{convert}}{https://www.imagemagick.org/script/index.php}
+and/or \htmladdnormallink{GraphicsMagick \texttt{gm convert}}{http://www.graphicsmagick.org/convert.html}
 can be used to turn a PS or PDF file into high resolution GIF, JPEG or PNG file.\\
-Beware that the option {\tt latex=2} may not work properly under versions 0.9.5 and older of 
+Beware that the option \texttt{latex=2} may not work properly under versions 0.9.5 and older of 
 \htmlref{\tt gdl}{install:using_gdl}.\\
         -- if set to 1, with whatever output
 (%
@@ -594,8 +592,7 @@ when applicable, its orientation and coordinates by
 \mylink{idl:mollview:rot}{ROT} and 
 \mylink{idl:mollview:coord}{COORD} respectively, ... \\
 %
-Unobserved pixels, and pixels outside the sphere, take value \htmlref{{\tt
-!healpix.bad\_value}}{idl:init_healpix} ($=-1.6375\,10^{30}$).\\
+Unobserved pixels, and pixels outside the sphere, take value \htmlref{\texttt{!healpix.bad\_value}}{idl:init_healpix} ($=-1.6375\,10^{30}$).\\
 	\seealso \mylink{idl:mollview:fits}{Fits}}\\
 
 
@@ -714,10 +711,10 @@ to create a structure outlining the Earth continents, rivers and/or countries.
 	attempt to close the outline. See 
 \mylink{idl:mollview:example2}{Example \#2} below.
 \\{\bf Note 2:}\mytarget{idl:mollview:outline:note} several outlines 
-(let's say {\tt circle} and \mylink{idl:mollview:example2}{{\tt triangle}})
+(let's say \texttt{circle} and \mylink{idl:mollview:example2}{\texttt{triangle}})
  can be overplotted at once by gathering the respective structures into an array 
-({\tt outline=[circle,triangle]}) if they have the same features and in particular the same number of vertices, or in
-one meta-structure ({\tt outline=\{s1:circle,s2:triangle\}}) in all cases.
+(\texttt{outline=[circle,triangle]}) if they have the same features and in particular the same number of vertices, or in
+one meta-structure (\texttt{outline=\{s1:circle,s2:triangle\}}) in all cases.
 \end{minipage}}}
 \\
 \seealso{\mylink{idl:mollview:coord}{Coord}, \mylink{idl:mollview:graticule}{Graticule}}
@@ -737,18 +734,18 @@ one meta-structure ({\tt outline=\{s1:circle,s2:triangle\}}) in all cases.
 	      string containing the name of a .PDF output \\
 	      if set to 0            : no PDF output \\
 	      if set to 1            : outputs the plot in 
-{\tt plot\_}{\em projection}{\tt .pdf}, where {\em projection} is either
-{\tt azimequid}, {\tt cartesian}, {\tt gnomic}, {\tt mollweide} 
-or {\tt orthographic}, \\
+\texttt{plot\_}{\em projection}\texttt{.pdf}, where {\em projection} is either
+\texttt{azimequid}, \texttt{cartesian}, \texttt{gnomic}, \texttt{mollweide} 
+or \texttt{orthographic}, \\
 	      if set to a file name  : outputs the plot in that file \\
 		\default 0 \\
-The PDF file is produced from a PostScript file using the script \htmladdnormallink{{\tt epstopdf}}{https://tug.org/epstopdf/} now shipped with \healpixns. Note that {\tt epstopdf} usually requires a fully functional implementation of the fairly widespread {\tt gs}, aka
-\htmladdnormallink{{\tt Ghostscript}}{https://en.wikipedia.org/wiki/Ghostscript}, which may however not be available on the computation dedicated nodes of some computer clusters.\\
+The PDF file is produced from a PostScript file using the script \htmladdnormallink{\texttt{epstopdf}}{https://tug.org/epstopdf/} now shipped with \healpixns. Note that \texttt{epstopdf} usually requires a fully functional implementation of the fairly widespread \texttt{gs}, aka
+\htmladdnormallink{\texttt{Ghostscript}}{https://en.wikipedia.org/wiki/Ghostscript}, which may however not be available on the computation dedicated nodes of some computer clusters.\\
 If the resulting PDF file is not properly rotated (ie landscape orientation instead of portrait), 
 and/or has excessive white margins, the scripts
-\htmladdnormallink{{\tt pdf90}}{https://linux.die.net/man/1/pdf90}, part of the package 
-\htmladdnormallink{{\tt pdfjam}}{https://www2.warwick.ac.uk/fac/sci/statistics/staff/academic-research/firth/software/pdfjam/}, and/or 
-\htmladdnormallink{{\tt pdfcrop}}{http://pdfcrop.sourceforge.net}, 
+\htmladdnormallink{\texttt{pdf90}}{https://linux.die.net/man/1/pdf90}, part of the package 
+\htmladdnormallink{\texttt{pdfjam}}{https://www2.warwick.ac.uk/fac/sci/statistics/staff/academic-research/firth/software/pdfjam/}, and/or 
+\htmladdnormallink{\texttt{pdfcrop}}{http://pdfcrop.sourceforge.net}, 
 often included in PDFTeX installations, 
 can respectively prove very useful.\\
                \seealso 
@@ -786,11 +783,11 @@ The font can be changed within each string with embedded formatting commands, as
 http://www.exelisvis.com/docs/Fonts\_and\_Colors.html}{%
 http://www.exelisvis.com/docs/Fonts_and_Colors.html}.\\
 \default{[-1,6], corresponding to the Hershey vector font of type 'Complex Roman', and is equivalent to typing
-{\tt !p.font=-1} and prepending the
+\texttt{!p.font=-1} and prepending the
 \mylink{idl:mollview:subtitle}{Subtitle},
 \mylink{idl:mollview:titleplot}{Titleplot} and
 \mylink{idl:mollview:units}{Units} 
-strings with {\tt '!6'}}.\\
+strings with \texttt{'!6'}}.\\
 Note that PFONTS will be ignored if \mylink{idl:mollview:latex}{Latex}=2 {\em and} 
 \mylink{idl:mollview:pdf}{PDF} or \mylink{idl:mollview:ps}{PS} are set.
 }\\
@@ -799,9 +796,9 @@ Note that PFONTS will be ignored if \mylink{idl:mollview:latex}{Latex}=2 {\em an
 {PNG=}\mytarget{idl:mollview:png}  & \mylink{idl:mollview:routines}{all}  & \parbox[t]{\hsize}{
 		string containing the name of a .PNG output \\
 	      if set to 1            : outputs the plot in 
-{\tt plot\_}{\em projection}{\tt .png}, where {\em projection} is either
-{\tt azimequid}, {\tt cartesian}, {\tt gnomic}, {\tt mollweide} 
-or {\tt orthographic}, \\
+\texttt{plot\_}{\em projection}\texttt{.png}, where {\em projection} is either
+\texttt{azimequid}, \texttt{cartesian}, \texttt{gnomic}, \texttt{mollweide} 
+or \texttt{orthographic}, \\
 	      if set to a file name  : outputs the plot in that file \\
 	Please note that the resulting PNG image might not always look
 	      as expected. The reason for this is problems with
@@ -832,22 +829,24 @@ and \mylink{idl:mollview:retain}{Retain}}\\
 
 {POLARIZATION=}\mytarget{idl:mollview:polarization} & \mylink{idl:mollview:routines}{all}& \parbox[t]{\hsize}{
 	if set to
-	\begin{itemize}
-	 \setlength{\itemsep}{0pt}
-	 \setlength{\leftmargin}{.1cm}
-	 \setlength{\labelwidth}{.1cm}
-         \item[0:] no polarization information is plotted;
+% 	\begin{itemize}
+% 	 \latexhtml{\setlength{\itemsep}{0pt}\setlength{\leftmargin}{.1cm}\setlength{\labelwidth}{.1cm}}{}
+%         \item[0:] 
+	\\0: no polarization information is plotted;
 %
-         \item[1:]
+%         \item[1:]
+	\\1:
              the AMPLITUDE $P = \sqrt{U^2 + Q^2}$ of the polarization is plotted 
 	(as long as the input data contains polarization information
              (ie, Stokes parameter $Q$ and $U$ for each pixel));
 %
-         \item[2:]
+%         \item[2:]
+	\\2:
              the ANGLE $\phi = \tan^{-1}(U/Q) /2$ of the polarization is plotted \\
              Note: the angles are color coded with a fixed color table (independent of \mylink{idl:mollview:colt}{Colt});
 %
-         \item[3:]
+%         \item[3:]
+	\\3:
              --the temperature is color coded (with a color table defined by \mylink{idl:mollview:colt}{Colt}),\\
              --and the polarization is overplotted as small RODS (or headless VECTORS).\\
              \texttt{Polarization} can then be a 4-element vector (the first element being 3).
@@ -857,8 +856,9 @@ and \mylink{idl:mollview:retain}{Retain}}\\
              (which also depends in a device dependent manner on \texttt{!P.THICK}) \default{1}. 
              Non-positive values are replaced by 1.\\
 		\seealso \mylink{idl:mollview:customize}{Customize}
+	\\
 
-	\end{itemize}
+%	\end{itemize}
 	\default{0} \\
 	\textbf{Note 1:} The representation of the polarization direction (options 2 and 3 above),
         include the effects of the rotations and/or changes or astronomical coordinates
@@ -889,15 +889,15 @@ and \mylink{idl:mollview:retain}{Retain}}\\
 		\mylink{idl:mollview:pdf}{Pdf},
 		\mylink{idl:mollview:png}{Png},
 		or \mylink{idl:mollview:ps}{Ps} will be previewed with the 
-		visualisation applications (eg, {\tt gv}, {\tt display} or {\tt open}) 
+		visualisation applications (eg, \texttt{gv}, \texttt{display} or \texttt{open}) 
 		chosen during the \htmlref{\healpix IDL/GDL configuration step}{install:idlgdlconfig}}\\
 
 {PS=}\mytarget{idl:mollview:ps}  & \mylink{idl:mollview:routines}{all}  &  \parbox[t]{\hsize}{
 	      if set to 0            : no PostScript output \\
 	      if set to 1            : outputs the plot 
-{\tt plot\_}{\em projection}{\tt .ps}, where {\em projection} is either
-{\tt azimequid}, {\tt cartesian}, {\tt gnomic}, {\tt mollweide} 
-or {\tt orthographic}, \\
+\texttt{plot\_}{\em projection}\texttt{.ps}, where {\em projection} is either
+\texttt{azimequid}, \texttt{cartesian}, \texttt{gnomic}, \texttt{mollweide} 
+or \texttt{orthographic}, \\
 	      if set to a file name  : outputs the plot in that file \\
 		\default 0 \\
                \seealso 
@@ -996,11 +996,11 @@ See \mylink{idl:mollview:example7}{Example \#7} \latexhtml{on page~\pageref{page
 
 {STAGGER=}\mytarget{idl:mollview:stagger}  & \mylink{idl:mollview:routines}{---O}   & \parbox[t]{\hsize}{
 Scalar or 2 element vector:\\
-            -- if {\tt{stagger[0]}} is in $]0,2]$, 
-             three copies of the same sphere centered respectively at {\tt{[-stagger[0], 0, stagger[0]]}}
+            -- if {\texttt{stagger[0]}} is in $]0,2]$, 
+             three copies of the same sphere centered respectively at {\texttt{[-stagger[0], 0, stagger[0]]}}
              (expressed in radius units) along the plot horizontal axis are
              shown in ORTHOGRAPHIC projection\\
-             -- if set, {\tt stagger[1]} defines the angle of rotation (in degrees) applied
+             -- if set, \texttt{stagger[1]} defines the angle of rotation (in degrees) applied
                to the left and right partial spheres:
              the {\it lhs} sphere is rotated downward by the angle provided,
 while the {\it rhs} one
@@ -1022,8 +1022,7 @@ Currently {\bf can not} be used with
 \mylink{idl:mollview:latex}{Latex}, \mylink{idl:mollview:customize}{Customize}}\\
 
 {TRANSPARENT=}\mytarget{idl:mollview:transparent}  & \mylink{idl:mollview:routines}{all}  & \parbox[t]{\hsize}{
-		If set to 1, the input data pixels with value \htmlref{{\tt
-!healpix.bad\_value}}{idl:init_healpix} ($=-1.6375\,10^{30}$) 
+		If set to 1, the input data pixels with value \htmlref{\texttt{!healpix.bad\_value}}{idl:init_healpix} ($=-1.6375\,10^{30}$) 
 will appear totally transparent on the output PNG file (instead of the usual
 grey or \mylink{idl:mollview:bad_color}{BAD\_COLOR}).\\ 
 If set to 2, the background pixels will be transparent (instead of the usual
@@ -1366,7 +1365,9 @@ customized thickness and length of a boxed color bar,
 and modified location of the title (see Fig.~\ref{fig:moll_customize}\latexhtml{ on page~\pageref{page:moll_customize}}{}). 
 The default value (in the Mollweide projection) 
  of the available customization parameters is also listed as \\
-{\scriptsize{\texttt{ % put font size before font type to get line spacing right
+%{\scriptsize{
+\begin{scriptsize}
+\texttt{ % put font size before font type to get line spacing right
    ** Structure <.....>, 7 tags, length=128, data length=122, refs=1:
 \begin{tabular}{lll}
 .ASPOS.X                &     FLOAT     &       -1.00000\\
@@ -1390,9 +1391,10 @@ The default value (in the Mollweide projection)
 .VSCALE.Y               &     FLOAT     &      0.0200000\\
 .VSCALE.TY              &     FLOAT     &        0.00000
 \end{tabular}
-}}}
-\end{minipage}
 }
+\end{scriptsize}
+\end{minipage}}
+
 \end{examples}
 %
 \begin{figure}[h!]

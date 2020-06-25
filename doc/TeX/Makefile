@@ -33,6 +33,7 @@ L2HFLAGS := -dir $(HTMLDIR) -up_url main.htm -up_title "Main Page" \
 EBOOK := ./ebook.sh
 
 EQNFIX      := ./eqnfix.sh
+FIXHTML5    := ./fixhtml5.sh
 IMPROVEHTML := ./improve_mobile_html.sh
 SHORTEN     := ./shorten_section_tag.sh
 INSERTFAVICONS := ./insert_favicons.sh
@@ -160,6 +161,7 @@ install.html: $(style) healpix.perl cssfile
 	-cp $(HTMLDIR)/*labels.pl /tmp
 	-$(LATEX2HTML) $(L2HFLAGS) -toc_depth 8 -split 3 -prefix $(FULL) -external_file ./$(FULL)  -t $(TITLE) $(LONGTITLES)    $(FULL)
 	###-$(EQNFIX)      $(HTMLDIR)/$(PREFIX) 1> /dev/null 2>&1
+	-$(FIXHTML5)    $(HTMLDIR)/$(PREFIX)
 	-$(SHORTEN)	$(HTMLDIR)/$(PREFIX)
 	-$(IMPROVEHTML) $(HTMLDIR)/$(PREFIX)
 	-$(INSERTFAVICONS) $(HTMLDIR)/$(PREFIX)
@@ -182,6 +184,7 @@ intro.html: $(style) healpix.perl cssfile
 	-cp $(HTMLDIR)/*labels.pl /tmp
 	-$(LATEX2HTML) $(L2HFLAGS) -toc_depth 8 -split 4 -prefix $(PREFIX) -external_file ./$(FULL) -t $(TITLE) $(LONGTITLES) $(FULL)
 	###-$(EQNFIX)      $(HTMLDIR)/$(PREFIX) 1> /dev/null 2>&1
+	-$(FIXHTML5)    $(HTMLDIR)/$(PREFIX)
 	-$(SHORTEN)	$(HTMLDIR)/$(PREFIX)
 	-$(IMPROVEHTML) $(HTMLDIR)/$(PREFIX)
 	-$(INSERTFAVICONS) $(HTMLDIR)/$(PREFIX)
@@ -205,6 +208,7 @@ idl.html: $(style) healpix.perl cssfile
 	-cp $(HTMLDIR)/*labels.pl /tmp
 	-$(LATEX2HTML) $(L2HFLAGS) -toc_depth 8 -split 4 -prefix $(PREFIX) -external_file ./$(FULL) -t $(TITLE) $(LONGTITLES) $(FULL)
 	###-$(EQNFIX)      $(HTMLDIR)/$(PREFIX) 1> /dev/null 2>&1
+	-$(FIXHTML5)    $(HTMLDIR)/$(PREFIX)
 	-$(SHORTEN)	$(HTMLDIR)/$(PREFIX)
 	-$(IMPROVEHTML) $(HTMLDIR)/$(PREFIX)
 	-$(INSERTFAVICONS) $(HTMLDIR)/$(PREFIX)
@@ -228,6 +232,7 @@ subroutines.html: $(style) healpix.perl cssfile
 	-cp $(HTMLDIR)/*labels.pl /tmp
 	-$(LATEX2HTML) $(L2HFLAGS) -toc_depth 4 -toc_stars -split 4 -prefix $(PREFIX) -external_file ./$(FULL) -t $(TITLE) $(LONGTITLES) $(FULL)
 	###-$(EQNFIX)      $(HTMLDIR)/$(PREFIX) 1> /dev/null 2>&1
+	-$(FIXHTML5)    $(HTMLDIR)/$(PREFIX)
 	-$(SHORTEN)	$(HTMLDIR)/$(PREFIX)
 	-$(IMPROVEHTML) $(HTMLDIR)/$(PREFIX)
 	-$(INSERTFAVICONS) $(HTMLDIR)/$(PREFIX)
@@ -251,6 +256,7 @@ facilities.html: $(style) healpix.perl cssfile
 	-cp $(HTMLDIR)/*labels.pl /tmp
 	-$(LATEX2HTML) $(L2HFLAGS) -toc_depth 8 -split 4 -prefix $(PREFIX) -external_file ./$(FULL) -t $(TITLE) $(LONGTITLES) $(FULL)
 	###-$(EQNFIX)      $(HTMLDIR)/$(PREFIX) 1> /dev/null 2>&1
+	-$(FIXHTML5)    $(HTMLDIR)/$(PREFIX)
 	-$(SHORTEN)	$(HTMLDIR)/$(PREFIX)
 	-$(IMPROVEHTML) $(HTMLDIR)/$(PREFIX)
 	-$(INSERTFAVICONS) $(HTMLDIR)/$(PREFIX)
@@ -274,6 +280,7 @@ csub.html: $(style) healpix.perl cssfile
 	-cp $(HTMLDIR)/*labels.pl /tmp
 	-$(LATEX2HTML) $(L2HFLAGS) -toc_depth 8 -split 4 -prefix $(PREFIX) -external_file ./$(FULL) -t $(TITLE) $(LONGTITLES) $(FULL)
 	###-$(EQNFIX)      $(HTMLDIR)/$(PREFIX) 1> /dev/null 2>&1
+	-$(FIXHTML5)    $(HTMLDIR)/$(PREFIX)
 	-$(SHORTEN)	$(HTMLDIR)/$(PREFIX)
 	-$(IMPROVEHTML) $(HTMLDIR)/$(PREFIX)
 	-$(INSERTFAVICONS) $(HTMLDIR)/$(PREFIX)

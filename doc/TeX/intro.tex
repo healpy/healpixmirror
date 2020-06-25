@@ -555,9 +555,12 @@ to merge the resolution $\nside$ and index $p$ into a single unique number $u$
 % \begin{eqnarray}
 % 	u &=& p + 4 \nside^2, \myhtmlimage{} \label{eq:nest2uniq}
 % \end{eqnarray}
-\begin{align}
-	& u = p + 4 \nside^2, \myhtmlimage{} \label{eq:nest2uniq}
-\end{align}
+% \begin{align}
+% 	& u = p + 4 \nside^2, \myhtmlimage{} \label{eq:nest2uniq}
+% \end{align}
+\begin{equation}
+	u = p + 4 \nside^2, \myhtmlimage{} \label{eq:nest2uniq}
+\end{equation}
 so that all pixels with $\nside=1$ have the unique indices 4 to 15, 
 those with $\nside=2$ are in the range 16 to 63, and so on \citep{rh15}, 
 thus simplifying the handling of data with heteregenous $\nside$.
@@ -668,11 +671,11 @@ package must be used.
 A bandlimited function $f$ on the sphere can
 be expanded in spherical harmonics, $Y_{\ell m}$,
 as
-\begin{align}
+\begin{equation}
   \label{eq:alms}
-  & f({ \gamma}) = \sum_{\ell =0}^{\lmax}\sum_{m}a_{\ell m}Y_{\ell m}(\gamma),%%%  f({ \gamma})&\myequal&\sum_{\ell =0}^{\lmax}\sum_{m}a_{\ell m}Y_{\ell m}(\gamma),
+  f({ \gamma}) = \sum_{\ell =0}^{\lmax}\sum_{m}a_{\ell m}Y_{\ell m}(\gamma),%%%  f({ \gamma})&\myequal&\sum_{\ell =0}^{\lmax}\sum_{m}a_{\ell m}Y_{\ell m}(\gamma),
 %%%  f({ \gamma})&\myequal&\sum_{\ell =0}^{\lmax}\sum_{m}a_{\ell m}Y_{\ell m}(\gamma),\myhtmlimage{}\label{eq:alms}
-\end{align}
+\end{equation}
 where ${{\gamma}}$ denotes a unit vector pointing at polar angle $\theta\in[0,\pi]$ and
 azimuth $\phi\in[0,2\pi)$. Here we have assumed that there is insignificant signal power in modes
 with $\ell>\lmax$ and introduce the  notation that all sums over $m$ run from
@@ -680,9 +683,9 @@ $-\lmax$ to $\lmax$ but all quantities with index ${\ell m}$ vanish
 for $m>\ell$. Our conventions for $Y_{\ell m}$ are defined in subsection
 \ref{sphericalstuff} below.
 The spherical harmomics coefficients are then
-\begin{align}
- & a_{\ell m} \equiv \int d\gamma Y^\ast_{\ell m}(\gamma) f(\gamma),\myhtmlimage{}\label{eq:alms_def}
-\end{align}
+\begin{equation}
+ a_{\ell m} \equiv \int d\gamma Y^\ast_{\ell m}(\gamma) f(\gamma),\myhtmlimage{}\label{eq:alms_def}
+\end{equation}
 where, the integral is done over the whole sphere, 
 and the superscript star denotes complex  conjugation.
 
@@ -691,12 +694,12 @@ Pixelating $f({\gamma})$ corresponds to sampling it at $\npix$
 function values $f_p$ can then be used  
 to estimate  $a_{\ell m}$.
 A straightforward estimator is
-\begin{align}
-  & \hat{a}_{\ell m} = \frac{4\pi}{\npix}\sum_{p=0}^{\npix-1}
+\begin{equation}
+  \hat{a}_{\ell m} = \frac{4\pi}{\npix}\sum_{p=0}^{\npix-1}
   Y^\ast_{\ell m}(\gamma_p) f(\gamma_p),\myhtmlimage{}\label{eq:hata}
 %  \hat{a}_{\ell m}&\myequal& \frac{4\pi}{N_{\rm{pix}}}\sum_{p=0}^{N_{\rm{pix}}-1} 
 %  Y^\ast_{\ell m}(\gamma_p) f(\gamma_p),\label{eq:hata}
-\end{align}
+\end{equation}
 where an equal weight was assumed for each pixel. This
 zeroth order estimator, as well as  higher order  estimators, are implemented in various
 Fortran90, C++, IDL, and python facilities included in the package, 
@@ -715,10 +718,10 @@ such as \htmlref{\texttt{anafast}}{fac:anafast} or \texttt{anafast\_cxx}.
 %\warnhtml
 These $\hat{a}_{\ell m}$ can be used to compute estimates of the angular power spectrum
  $\hat{C}_\ell$ as 
-\begin{align}
-  & \hat{C}_\ell =\frac{1}{2\ell +1}\sum_{m} \vert\hat{a}_{\ell m}\vert^2.\myhtmlimage{}\label{eq:hatC}
+\begin{equation}
+  \hat{C}_\ell =\frac{1}{2\ell +1}\sum_{m} \vert\hat{a}_{\ell m}\vert^2.\myhtmlimage{}\label{eq:hatC}
 %  \hat{C}_\ell&=&\frac{1}{2l +1}\sum_{m} \vert\hat{a}_{\ell m}\vert^2.\label{eq:hatC}
-\end{align}
+\end{equation}
 Equations (\ref{eq:hata}) and (\ref{eq:hatC}) above do not consider the impact of a pixel masking or weighting 
 $f(\gamma_p) \longrightarrow f(\gamma_p) w(\gamma_p)$ 
 on the power spectrum estimation of $f$, which is described in 
@@ -772,9 +775,9 @@ of theoretical predictions of the spectrum of CMB anisotropy used to be CMBFAST
 
 CMBFAST made its outputs in ASCII files, which instead
 of $C_{X,\ell}$ contain quantities defined as
-\begin{align}
-& D_{X,\ell} = \frac{\ell(\ell+1)}{(2\pi)T_{CMB}^2}C_{X,\ell},\myhtmlimage{}
-\end{align}
+\begin{equation}
+ D_{X,\ell} = \frac{\ell(\ell+1)}{(2\pi)T_{CMB}^2}C_{X,\ell},\myhtmlimage{}
+\end{equation}
 where $T_{CMB}=2.726K$ is the temperature of the CMB today and $X$ stands for T,
 E, B or C (see \S~\ref{subsec:pol}).  
 
@@ -874,7 +877,7 @@ conventions as CMBFAST for the sign and normalization of the polarization power
 spectra, as exposed below (adapted from \citet{zalda}). How this relates to
 what was used in previous releases is exposed in~\ref{subsub:relatoldversion}.
 
-\begin{quotation}
+\begin{quotation}%=========================================
 \footnotesize
 The CMB radiation field is described by a $2\, \times \, 2$ 
 intensity tensor
@@ -893,10 +896,10 @@ $\psi$ such that
 ${\veceo}^{\prime}=\cos \psi \ {\veceo}+\sin\psi \ {\vecet}\myhtmlimage{}$ 
 and ${\vecet}^{\prime}=-\sin \psi \ {\veceo}+\cos\psi \ {\vecet}\myhtmlimage{}$
 the Stokes parameters change as
-\begin{eqnarray}
-  Q^{\prime} &=& \cos 2\psi \  Q + \sin 2\psi \ U \nonumber \myhtmlimage{} \\  
-  U^{\prime} &=& -\sin 2\psi \ Q + \cos 2\psi \ U     \myhtmlimage{}  \label{QUtrans} 
-\end{eqnarray}
+\begin{align}
+  Q^{\prime} &= \cos 2\psi \  Q + \sin 2\psi \ U \nonumber \myhtmlimage{} \\  
+  U^{\prime} &= -\sin 2\psi \ Q + \cos 2\psi \ U     \myhtmlimage{}  \label{QUtrans} 
+\end{align}
 
 To analyze the CMB temperature on the sky, it is natural to
 expand it in spherical harmonics. These are not appropriate 
@@ -905,14 +908,14 @@ the two combinations $Q\pm iU$ are quantities of spin $\pm 2$
 \citep{goldberg}. They 
 should be expanded in spin-weighted harmonics $\, _{\pm2}Y_l^m$ 
 \citep{spinlong, longspin},
-\begin{eqnarray}
-  T(\vecn) &=& \sum_{lm} a_{T,lm} Y_{lm}(\vecn) \nonumber \\
-  (Q+iU)(\vecn) &=& \sum_{lm} 
+\begin{align}
+  T(\vecn) &= \sum_{lm} a_{T,lm} Y_{lm}(\vecn) \nonumber \\
+  (Q+iU)(\vecn) &= \sum_{lm} 
   a_{2,lm}\;_2Y_{lm}(\vecn) \nonumber \myhtmlimage{} \\
-  (Q-iU)(\vecn) &=& \sum_{lm}
+  (Q-iU)(\vecn) &= \sum_{lm}
   a_{-2,lm}\;_{-2}Y_{lm}(\vecn).
   \myhtmlimage{}   \label{Pexpansion}
-\end{eqnarray}
+\end{align}
 To perform this expansion, $Q$ and $U$ in equation (\ref{Pexpansion})
 are measured relative to $(\veceo, \vecet)=(\vectheta, \vecphi)$, the unit vectors of the spherical coordinate system.
 Where $\vectheta$ is tangent to the local meridian and directed from North
@@ -924,10 +927,10 @@ can be
 predicted for different cosmological models. Instead of $_{\pm 2}a_{lm}$
 it is convenient
 to use their linear combinations
-\begin{eqnarray}
-a_{E,lm} &=& -(a_{2,lm}+a_{-2,lm})/2  \nonumber \myhtmlimage{} \\
-a_{B,lm} &=& -(a_{2,lm}-a_{-2,lm})/2i, \myhtmlimage{}
-\end{eqnarray}
+\begin{align}
+a_{E,lm} &= -(a_{2,lm}+a_{-2,lm})/2  \nonumber \myhtmlimage{} \\
+a_{B,lm} &= -(a_{2,lm}-a_{-2,lm})/2i, \myhtmlimage{}
+\end{align}
 which transform differently 
 under parity.
 Four power spectra are needed to
@@ -937,25 +940,25 @@ $T$, $E$ and $B$ and the cross correlation of $E$ and $T$.
 Because of parity considerations the cross-correlations
 between $B$ and the
 other quantities vanish and one is left with
-\begin{eqnarray}
+\begin{align}
   \langle a_{X,lm}^{*}
-  a_{X,lm^\prime}\rangle &=& \delta_{m,m^\prime}C_{Xl},\nonumber \\
-  \langle a_{T,lm}^{*}a_{E,lm}\rangle &=& \delta_{m,m^\prime}C_{Cl},\myhtmlimage{}\label{Cls} 
-\end{eqnarray}
+  a_{X,lm^\prime}\rangle &= \delta_{m,m^\prime}C_{Xl},\nonumber \\
+  \langle a_{T,lm}^{*}a_{E,lm}\rangle &= \delta_{m,m^\prime}C_{Cl},\myhtmlimage{}\label{Cls} 
+\end{align}
 where
 $X$ stands for $T$, $E$ or $B$, $\langle\cdots \rangle$
 means ensemble average and $\delta_{i,j}$ is the Kronecker delta.  
 
 We can rewrite 
 equation (\ref{Pexpansion}) as
-\begin{eqnarray}
- T(\vecn) &=& \sum_{lm} a_{T,lm} Y_{lm}(\vecn) \nonumber \\
- Q(\vecn) &=& -\sum_{lm} a_{E,lm} X_{1,lm} 
+\begin{align}
+ T(\vecn) &= \sum_{lm} a_{T,lm} Y_{lm}(\vecn) \nonumber \\
+ Q(\vecn) &= -\sum_{lm} a_{E,lm} X_{1,lm} 
    +i a_{B,lm}X_{2,lm} \nonumber \\
- U(\vecn) &=& -\sum_{lm} a_{B,lm} X_{1,lm}-i a_{E,lm} X_{2,lm}
+ U(\vecn) &= -\sum_{lm} a_{B,lm} X_{1,lm}-i a_{E,lm} X_{2,lm}
  \myhtmlimage{}
  \label{Pexpansion2}
-\end{eqnarray}
+\end{align}
 where we have introduced
 $X_{1,lm}(\vecn)=(\;_2Y_{lm}+\;_{-2}Y_{lm})/2$
 and $X_{2,lm}(\vecn)=(\;_2Y_{lm}-\;_{-2}Y_{lm})/ 2$.
@@ -970,21 +973,21 @@ $\myhtmlimage{} {X_{1,lm}(\vecn)=\sqrt{(2l+1) / 4\pi} F_{1,lm}(\theta)\ e^{im\ph
 and $\myhtmlimage{} {X_{2,lm}(\vecn)=\sqrt{(2l+1) / 4\pi} F_{2,lm}(\theta)\ e^{im\phi}}$, 
 $\myhtmlimage{} {F_{(1,2),lm}(\theta)}$ can be calculated in terms of Legendre
 polynomials \citep{kks} 
-\begin{eqnarray}
-F_{1,lm}(\theta) &=&  N_{lm}
+\begin{align}
+F_{1,lm}(\theta) &=  N_{lm}
 \left[ -\left({l-m^2 \over \sin^2\theta} 
 +{1 \over 2}l(l-1)\right)P_l^m(\cos \theta)
 +(l+m) {\cos \theta \over \sin^2 \theta} 
 P_{l-1}^m(\cos\theta)\right] \nonumber \\
-F_{2,lm}(\theta) &=&  N_{lm}{m \over
+F_{2,lm}(\theta) &=  N_{lm}{m \over
 \sin^2 \theta}
 [ -(l-1)\cos \theta P_l^m(\cos \theta)+(l+m) P_{l-1}^m(\cos\theta)], \myhtmlimage{}
 \label{def:basis}
-\end{eqnarray}
+\end{align}
 where 
-\begin{eqnarray}
-   N_{lm}(\theta) &=& 2 \sqrt{(l-2)!(l-m)! \over (l+2)!(l+m)!}.\myhtmlimage{}
-\end{eqnarray}
+\begin{equation}
+   N_{lm}(\theta) = 2 \sqrt{(l-2)!(l-m)! \over (l+2)!(l+m)!}.\myhtmlimage{}
+\end{equation}
 Note that $F_{2,lm}(\theta)=0$ if $m=0$, as it  must to make the
 Stokes parameters real.
 
@@ -997,33 +1000,33 @@ $\veceo $ vectors at each point are tangent to the great circle
 connecting these 2 points, with the $\vecet$ vectors being perpendicular to
 the $\veceo$ vectors.  With this choice of reference frames, and using 
 the addition theorem for the spin harmonics \citep{primer},
-\begin{eqnarray}
+\begin{equation}
 \sum_m \;_{s_1} Y_{lm}^*(\vecn_1) 
-\;_{s_2} Y_{lm}(\vecn_2) &=& \sqrt{2l+1 \over 4 \pi} 
+\;_{s_2} Y_{lm}(\vecn_2) = \sqrt{2l+1 \over 4 \pi} 
 \;_{s_2} Y_{l-s_1}(\beta,\psi_1)e^{-is_2\psi_2} \myhtmlimage{}
 \label{addtheo}
-\end{eqnarray}
+\end{equation}
 
 we have \citep{kks}
-\begin{eqnarray}
-\langle T_1T_2 \rangle &=& \sum_l {2l+1 \over 4 \pi}
+\begin{align}
+\langle T_1T_2 \rangle &= \sum_l {2l+1 \over 4 \pi}
 C_{Tl} P_l(\cos \beta) \nonumber \\ 
-\langle Q_{r}(1)Q_{r}(2) \rangle &=& \sum_l {2l+1 \over 4 \pi} [C_{El}
+\langle Q_{r}(1)Q_{r}(2) \rangle &= \sum_l {2l+1 \over 4 \pi} [C_{El}
 F_{1,l2}(\beta)-C_{Bl} F_{2,l2}(\beta)]  \nonumber \\ 
-\langle U_{r}(1)U_{r}(2) \rangle &=& \sum_l {2l+1 \over 4 \pi}
+\langle U_{r}(1)U_{r}(2) \rangle &= \sum_l {2l+1 \over 4 \pi}
 [C_{Bl} F_{1,l2}(\beta)-C_{El} F_{2,l2}(\beta) ] \nonumber \\ 
 \langle T(1)Q_{r}(2) 
-\rangle &=& - \sum_l {2l+1 \over 4 \pi} C_{Cl} F_{1,l0}(\beta)\nonumber \\
-\langle T(1)U_{r}(2) \rangle &=& 0.\myhtmlimage{}
+\rangle &= - \sum_l {2l+1 \over 4 \pi} C_{Cl} F_{1,l0}(\beta)\nonumber \\
+\langle T(1)U_{r}(2) \rangle &= 0.\myhtmlimage{}
 \label{QUr}
-\end{eqnarray}
+\end{align}
 The subscript $r$ 
 here indicate that the Stokes parameters are measured in this
 particular coordinate system.
 We can use the transformation laws in equation (\ref{QUtrans})
 to write $(Q,U)$ in terms of $(Q_r,U_r)$.
 \normalsize
-\end{quotation}
+\end{quotation}%=========================================
 \vskip .3cm
 
 Using the fact that, when $\beta \rightarrow 0$, $P_\ell(\cos\beta) \rightarrow 1$ and $P_\ell^2(\cos
@@ -1048,8 +1051,8 @@ spots) as it is expected from scalar perturbations \citep{crco}.
 %----------- addition, 2008-07-15 --------
 Note that Eq.~(\ref{Pexpansion2}) implies that, if the Stokes parameters are
 rotated {\em everywhere} via
-\begin{align}
-& \left(\begin{array}{c} 
+\begin{equation}
+ \left(\begin{array}{c} 
 	Q'\\U'
 \end{array}\right) =
 \left(\begin{array}{c c}
@@ -1059,10 +1062,10 @@ rotated {\em everywhere} via
 \left(\begin{array}{c} 
 	Q\\U
 \end{array} \right),\label{eq:rotateQU} %\nonumber
-\end{align}
+\end{equation}
 then the polarized $a_{\ell m}$ coefficients are submittted to the same rotation
-\begin{align}
-& \left(\begin{array}{c} 
+\begin{equation}
+ \left(\begin{array}{c} 
 	a_{E,\ell m}'\\a_{B,\ell m}'
 \end{array}\right) = 
 \left(\begin{array}{c c}
@@ -1072,7 +1075,7 @@ then the polarized $a_{\ell m}$ coefficients are submittted to the same rotation
 \left(\begin{array}{c} 
 	a_{E,\ell m}\\a_{B,\ell m}
 \end{array} \right).\label{eq:rotateEB} %\nonumber
-\end{align}
+\end{equation}
 %-------------------- end of addition ---------
 
 Finally, with these conventions, a polarization with ($Q>0,U=0$) will be along the
@@ -1120,36 +1123,36 @@ Temp.-Electric cross correlation & $\Chl{T-GRAD}\pushup   $        & $\Czl{C} $
 
 
 Introducing the matrices 
-\begin{eqnarray}
-  M_{\ell m} &=& \left( 
+\begin{equation}
+  M_{\ell m} = \left( 
   \begin{array}{cc}	X_{1,\ell m}  & i X_{2,\ell m} \\
     -i X_{2,\ell m} & X_{1,\ell m}
   \end{array}
   \right) 
   \myhtmlimage{}
-\end{eqnarray}
+\end{equation}
 where the basis functions $X_1$ and $X_2$ have been defined in
 Eqs.~(\ref{def:basis}) and above,
 the decomposition in spherical harmonics coefficients (\ref{Pexpansion2}) of a
 given map of the Stokes parameter
 $Q$ and $U$ can be written in the case of \healpix 1.2 as
-\begin{eqnarray}
-  \phantom{1.2}\mattwo{Q}{U} &=& \sum_{\ell m} M_{\ell m} \mattwo{-\alm{GRAD}}{-\alm{CURL}}.\myhtmlimage{}\label{QU:12}
-\end{eqnarray}
+\begin{equation}
+  \phantom{1.2}\mattwo{Q}{U} = \sum_{\ell m} M_{\ell m} \mattwo{-\alm{GRAD}}{-\alm{CURL}}.\myhtmlimage{}\label{QU:12}
+\end{equation}
 
 For KKS, with the same definition of $M$, the decomposition reads
-\begin{eqnarray}
-\mattwo{Q}{-U} &=& \sum_{\ell m} M_{\ell m} \mattwo{\sqrt{2}\azlm{E}}{\sqrt{2}\azlm{B}},
+\begin{equation}
+\mattwo{Q}{-U} = \sum_{\ell m} M_{\ell m} \mattwo{\sqrt{2}\azlm{E}}{\sqrt{2}\azlm{B}},
 \myhtmlimage{}
 \label{QU:KKS}
-\end{eqnarray}
+\end{equation}
 %
 whereas in \healpix 1.1 it was
-\begin{eqnarray}
-\phantom{1.1}\mattwo{Q}{U} &=& \sum_{\ell m} M_{\ell m} \mattwo{-\sqrt{2}\alm{GRAD}}{\sqrt{2}\alm{CURL}}.
+\begin{equation}
+\phantom{1.1}\mattwo{Q}{U} = \sum_{\ell m} M_{\ell m} \mattwo{-\sqrt{2}\alm{GRAD}}{\sqrt{2}\alm{CURL}}.
 \myhtmlimage{}
 \label{QU:11}
-\end{eqnarray}
+\end{equation}
 The difference between KKS and 1.1 was due to an error of sign on one the basis functions.
 
 % The change of sign of the cross power spectra ($\Czl{C} $ and
@@ -1299,10 +1302,10 @@ an existing FITS file.
 \label{sphericalstuff}
 
 The Spherical Harmonics are defined as
-\begin{align}
-	& Y_{\ell m}(\theta,\phi) = \lambda_{\ell m}(\cos\theta) e^{{i}
+\begin{equation}
+	Y_{\ell m}(\theta,\phi) = \lambda_{\ell m}(\cos\theta) e^{{i}
 	m\phi} \label{eq:ylm_def} \myhtmlimage{}
-\end{align}
+\end{equation}
 where 
 \begin{align}
 	\lambda_{\ell m}(x) &= \sqrt{ \frac{2\ell+1}{4\pi}
@@ -1318,24 +1321,24 @@ where
 
 Introducing $x\equiv\cos\theta$, the associated Legendre Polynomials $P_{\ell m}$ 
 solve the differential equation
-\begin{align}
-	& (1-x^2)\frac{d^2}{dx^2}P_{\ell m} - 2x \frac{d}{dx}P_{\ell m}
+\begin{equation}
+	(1-x^2)\frac{d^2}{dx^2}P_{\ell m} - 2x \frac{d}{dx}P_{\ell m}
 	+ \left(\ell(\ell+1) - \frac{m^2}{1-x^2}\right) P_{\ell m} = 0.
 	\myhtmlimage{}
 \label{eq:diff_eq}
-\end{align}
+\end{equation}
 They are related to the ordinary Legendre Polynomials $P_\ell$ by
-\begin{align}
-	& P_{\ell m} = (-1)^m (1-x^2)^{m/2} \frac{d^m}{dx^m} P_{\ell}(x),
+\begin{equation}
+	P_{\ell m} = (-1)^m (1-x^2)^{m/2} \frac{d^m}{dx^m} P_{\ell}(x),
 	\myhtmlimage{}
 \label{eq:legendreass}
-\end{align}
+\end{equation}
 which are given by the Rodrigues formula
-\begin{align}
-	& P_{\ell}(x) = \frac{1}{2^\ell \ell!}\frac{d^\ell}{dx^\ell} (x^2-1)^\ell.
+\begin{equation}
+	P_{\ell}(x) = \frac{1}{2^\ell \ell!}\frac{d^\ell}{dx^\ell} (x^2-1)^\ell.
 	\myhtmlimage{}
 \label{eq:rodrigues}
-\end{align}
+\end{equation}
 
 Note that our $Y_{\ell m}$ are identical to those of \citet{edmonds},
 even though our definition of the $P_{\ell m}$ differ from his by a factor
@@ -1347,23 +1350,23 @@ $(-1)^m$ ({\it a.k.a.} Condon-Shortley phase).
 
 A pixelated signal $f(p)$ is the average within each pixel $p$ (with surface
 area $\Opix$) of the underlying signal 
-\begin{eqnarray}
-  f(p) &=& \int d\u w_p(\u)f(\u) \myhtmlimage{}
-\end{eqnarray}
+\begin{equation}
+  f(p) = \int d\u w_p(\u)f(\u) \myhtmlimage{}
+\end{equation}
 where $w_p$ is equal to $1/\Opix$ within the pixel, and equal to 0 outside, so
 that $\int d\u w_p(\u) = 1$.
 Eq.~(\ref{eq:alms}) then becomes
-\begin{eqnarray}
-  f(p) &=& \sum_{\ell =0}^{\lmax}\sum_{m}a_{\ell m}w_{\ell m}(p),
+\begin{equation}
+  f(p) = \sum_{\ell =0}^{\lmax}\sum_{m}a_{\ell m}w_{\ell m}(p),
 \myhtmlimage{}
-\end{eqnarray}
+\end{equation}
 where
 %% $\int d\u w_p(\u) = 1$
 %% The effect of the finite pixel size on the measured power of a pixelated map
 %% depends on the average of the Spherical Harmonic on pixel $p$ (of surface area $\Opix$), defined as
-\begin{eqnarray}
- 	w_{\ell m}(p) &=& \int d\u w_p(\u) Y_{\ell m}(\u), \myhtmlimage{} \label{eq:pixel_lmp} 
-\end{eqnarray}
+\begin{equation}
+ 	w_{\ell m}(p) = \int d\u w_p(\u) Y_{\ell m}(\u), \myhtmlimage{} \label{eq:pixel_lmp} 
+\end{equation}
 is the Spherical Harmonic Transform of the pixel $p$.
 %% where $w_p$ is equal to $1/\Opix$ within the pixel, and equal to 0 outside, such that
 %% $\int d\u w_p(\u) = 1$.
@@ -1375,28 +1378,28 @@ and some simplifying asumptions have to be
 made. If the pixel is small compared to the signal correlation length
 (determined by the beam size), the exact structure of the pixel can be ignored
 in the subsequent analysis and we can {\em assume}
-\begin{eqnarray}
-  w_{\ell m}(p) &=& w_\ell(p) Y_{\ell m}(p)\myhtmlimage{}
-\end{eqnarray}
+\begin{equation}
+  w_{\ell m}(p) = w_\ell(p) Y_{\ell m}(p)\myhtmlimage{}
+\end{equation}
 where we introduced the $m$-averaged window function
-\begin{eqnarray}
-	w_{\ell}(p) &=& \left(\frac{4 \pi}{2\ell+1}\sum_{m=-\ell}^{\ell} \left|w_{\ell m}(p)\right|^2\right)^{1/2},\myhtmlimage{}
+\begin{equation}
+	w_{\ell}(p) = \left(\frac{4 \pi}{2\ell+1}\sum_{m=-\ell}^{\ell} \left|w_{\ell m}(p)\right|^2\right)^{1/2},\myhtmlimage{}
 	\label{eq:pixel_lp} 
-\end{eqnarray}
+\end{equation}
 which is independent of the pixel location on the sky.
 
 If we assume all the pixels to be identical, the power spectrum of the
 pixelated map, $C_{\ell}^{\mathrm{pix}}$, is related to the hypothetical unpixelated
 one, $C_{\ell}^{\mathrm{unpix}}$, by 
-\begin{eqnarray}
-	C_{\ell}^\mathrm{pix} &=& w^2_{\ell} C_{\ell}^\mathrm{unpix} \myhtmlimage{}
+\begin{equation}
+	C_{\ell}^\mathrm{pix} = w^2_{\ell} C_{\ell}^\mathrm{unpix} \myhtmlimage{}
 	\label{eq:cl_pixel} 
-\end{eqnarray}
+\end{equation}
 where the effective pixel window function $w_{\ell}$ is defined as
-\begin{eqnarray}
-	w_{\ell} &=& \left(\frac{1}{\npix}\sum_{p=0}^{\npix-1} w^2_{\ell}(p)\right)^{1/2}.\myhtmlimage{}
+\begin{equation}
+	w_{\ell} = \left(\frac{1}{\npix}\sum_{p=0}^{\npix-1} w^2_{\ell}(p)\right)^{1/2}.\myhtmlimage{}
 	\label{eq:pixel_l} 
-\end{eqnarray}
+\end{equation}
 This function is provided with the \healpix package for $\ell\le 4\nside$ for each
 resolution parameter $\nside$.
 

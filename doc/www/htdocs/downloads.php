@@ -63,7 +63,7 @@ Use of the HEALPix software package <em>in any form</em> should be explicitly ac
               <ul>
                 <li>
                   an acknowledgment statement &ndash; "Some of the results in this paper have been derived using the HEALPix 
-(<!--a href="http://adsabs.harvard.edu/cgi-bin/nph-bib_query?bibcode=2005ApJ...622..759G&amp;db_key=AST&amp;high=41069202cf02947">K.M. G&oacute;rski et al., 2005, ApJ, 622, p759</a--><a href="https://ui.adsabs.harvard.edu/#abs/2005ApJ...622..759G/abstract">K.M. G&oacute;rski et al., 2005, ApJ, 622, p759</a>) 
+(<!--a href="http://adsabs.harvard.edu/cgi-bin/nph-bib_query?bibcode=2005ApJ...622..759G&amp;db_key=AST&amp;high=41069202cf02947">K.M. G&oacute;rski et al., 2005, ApJ, 622, p759</a--><a href="https://ui.adsabs.harvard.edu/abs/2005ApJ...622..759G/abstract">K.M. G&oacute;rski et al., 2005, ApJ, 622, p759</a>) 
 package", and
                 </li>
                 <li style="margin-top:1.5em">

@@ -2,7 +2,7 @@
 \sloppy
 
 
-\title{\healpix Fortran Subroutines Overview}
+%%%\title{\healpix Fortran Subroutines Overview}
 \docid{remove\_dipole*} \section[remove\_dipole*]{ }
 \label{sub:remove_dipole}
 \docrv{Version 2.1}
@@ -17,27 +17,27 @@ REMOVE\_DIPOLE.}
 \begin{facility}
 {This routine provides a means to fit and remove the dipole and monopole
 from a \healpix map. The fit is obtained by solving the linear system
-\begin{eqnarray}
+\begin{equation}
 	\label{eq:remove_dipole_a}
 	\sum_{j=0}^{d^2-1}\ A_{ij}\ f_j = b_i
-\end{eqnarray}
+\end{equation}
  with, $d=1$ or $2$, and
-\begin{eqnarray}
+\begin{equation}
 	\label{eq:remove_dipole_b}
 	b_i \equiv \sum_{p \in \calP} s_i(p) w(p) m(p),
-\end{eqnarray}
-\begin{eqnarray}
+\end{equation}
+\begin{equation}
 	\label{eq:remove_dipole_c}
 	A_{ij} \equiv \sum_{p \in \calP} s_i(p) w(p) s_j(p),
-\end{eqnarray}
+\end{equation}
  where $\calP$ is the set of
 valid, unmasked pixels, $m$ is the input map, $w$ is pixel weighting, while
 $s_0(p) = 1$ and $s_1(p)=x,\ s_2(p)=y,\ s_3(p)=z$ are
 respectively the monopole and dipole templates. The output map is then
-\begin{eqnarray}
+\begin{equation}
 	\label{eq:remove_dipole_d}
 	m'(p) = m(p) - \sum_{i=0}^{d^2-1} f_i s_i(p).
-\end{eqnarray}
+\end{equation}
 }
 {\modPixTools}
 \end{facility}

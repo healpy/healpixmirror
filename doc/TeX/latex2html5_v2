@@ -11841,6 +11841,7 @@ sub do_env_figure {
 		if $cap_width;
 	    local($table) = "<TABLE$env_id"; # WIDTH="65%"';
 	    $table .= " WIDTH=\"$pxs\"" if ($pxs);
+	    ###### $table .= " style=\"text-wdith:$pxspx\"" if ($pxs);
 	    if ($border) { $table .= " BORDER=\"$border\"" } # no checking !!
 	    $table .= ">";
 	    s/^\s*|\s*$//g;

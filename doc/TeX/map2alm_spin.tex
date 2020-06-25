@@ -2,7 +2,7 @@
 \sloppy
 
 
-\title{\healpix Fortran Subroutines Overview}
+%%%\title{\healpix Fortran Subroutines Overview}
 \docid{map2alm\_spin*} \section[map2alm\_spin*]{ }
 \label{sub:map2alm_spin}
 \docrv{Version 2.1}
@@ -13,10 +13,10 @@
 {This routine extracts the alm coefficients out of maps of spin $s$ and $-s$.
 %
 A (complex) map $S$ of spin $s$ is a linear combination of the spin weighted harmonics ${_s}Y_{\ell m}$
-\begin{eqnarray}
+\begin{equation}
 	\label{eq:map2alm_spin_a}
 	{_s}S(p) = \sum_{\ell m} {_s}a_{\ell m}\ \ {_s}Y_{\ell m}(p)
-\end{eqnarray}
+\end{equation}
 for $\ell \ge |m|, \ell \ge |s|$,
 and is such that ${_s}S^* = {_{-s}}S$.\\
 The 
@@ -29,26 +29,26 @@ and therefore
 ${_s}a_{\ell m}^* = (-1)^{s+m} {_{-s}}a_{\ell -m}$.
 %
 The two (real) input maps for \thedocid\ are defined respectively as
-\begin{eqnarray}
+\begin{align}
 	\label{eq:map2alm_spin_b}
-	{_{|s|}}S^+ &=& ({_{|s|}}S + {_{-|s|}}S)/2,\\
-	{_{|s|}}S^- &=& ({_{|s|}}S - {_{-|s|}}S)/(2i).
-\end{eqnarray}
+	{_{|s|}}S^+ &= ({_{|s|}}S + {_{-|s|}}S)/2,\\
+	{_{|s|}}S^- &= ({_{|s|}}S - {_{-|s|}}S)/(2i).
+\end{align}
 %
 \thedocid\ outputs the alm coefficients defined as
 	%typo correction on spin sign of second term of RHS, 2009-09-03
-\begin{eqnarray}
+\begin{align}
 	\label{eq:map2alm_spin_c}
-	{_{|s|}}a^{+}_{\ell m} &=& - ( {_{|s|}}a_{\ell m} + (-1)^s {_{-|s|}}a_{\ell m} )/2\\
-	{_{|s|}}a^{-}_{\ell m} &=& - ( {_{|s|}}a_{\ell m} - (-1)^s {_{-|s|}}a_{\ell m} )/(2i),
-\end{eqnarray}
+	{_{|s|}}a^{+}_{\ell m} &= - ( {_{|s|}}a_{\ell m} + (-1)^s {_{-|s|}}a_{\ell m} )/2\\
+	{_{|s|}}a^{-}_{\ell m} &= - ( {_{|s|}}a_{\ell m} - (-1)^s {_{-|s|}}a_{\ell m} )/(2i),
+\end{align}
 for $m\ge 0$, knowing that, just as for spin 0 maps, the
 coefficients for $m<0$ are given by 
-\begin{eqnarray}
+\begin{align}
 	\label{eq:map2alm_spin_c}
-	{_{|s|}}a^{+}_{\ell-m} &=& (-1)^m {_{|s|}}a^{+*}_{\ell m},\\
-	{_{|s|}}a^{-}_{\ell-m} &=& (-1)^m {_{|s|}}a^{-*}_{\ell m}.
-\end{eqnarray}
+	{_{|s|}}a^{+}_{\ell-m} &= (-1)^m {_{|s|}}a^{+*}_{\ell m},\\
+	{_{|s|}}a^{-}_{\ell-m} &= (-1)^m {_{|s|}}a^{-*}_{\ell m}.
+\end{align}
 %
 With these definitions, ${_2}a^{+}$, ${_2}a^{-}$, ${_2}S^+$ and ${_2}S^-$
 match \healpix  polarization $a^E, a^B, Q$ and $U$ respectively. However, for

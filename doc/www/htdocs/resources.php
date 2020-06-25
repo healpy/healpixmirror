@@ -11,7 +11,7 @@ The <a href="https://www.cosmos.esa.int/web/planck">Planck</a> satellite full sk
 <a href="https://www.cosmos.esa.int/web/planck/publications">observed at 30 to 857 GHz with unprecedented accuracy</a>, 
 and their decomposition in cosmological and astrophysical components are available in HEALPix format from ESA 
 <a href="https://www.cosmos.esa.int/web/planck/pla">Planck Legacy Archive</a>, 
-and NASA <a href="http://irsa.ipac.caltech.edu/Missions/planck.html">Infrared Science Archive</a>
+and NASA <a href="https://irsa.ipac.caltech.edu/Missions/planck.html">Infrared Science Archive</a>
 </li>
 
 <li>
@@ -53,11 +53,11 @@ The <a href="http://www.drao-ofr.hia-iha.nrc-cnrc.gc.ca/26msurvey/data.html"
 
 <li>
 The Schlegel, Finkbeiner, and Davis
-    (<a href="http://lanl.arxiv.org/abs/astro-ph/9710327">astro-ph/9710327</a>,
-     <a href="http://adsabs.harvard.edu/abs/1998ApJ...500..525S">ApJ. 500, p.525</a>),
+    (<a href="https://arxiv.org/abs/astro-ph/9710327">astro-ph/9710327</a>,
+ <a href="https://ui.adsabs.harvard.edu/abs/1998ApJ...500..525S/abstract">ApJ. 500, p.525</a>),
     combined
     <!--a href="http://astro.berkeley.edu/davis/dust/index.html"-->
-    <a href="http://irsa.ipac.caltech.edu/applications/DUST/docs/background.html">COBE/DIRBE-IRAS/SISSA dust emission map</a>
+    <a href="https://irsa.ipac.caltech.edu/applications/DUST/docs/background.html">COBE/DIRBE-IRAS/SISSA dust emission map</a>
 </li>
 
 <li>
@@ -197,6 +197,11 @@ by Anthony J. Banday
 </li>
 -->
 
+<!--   ******ASCL******  -->
+<li  style="margin-top:1.5em">
+<a href="https://ascl.net/code/search/healpix">Codes related to HEALPix</a> (<a href="https://ascl.net/1107.018">ascl:1107.018</a>) in 
+Astrophysics Source Code Library.
+</li>
 </ul>
 
 <!-- ********************** -->
@@ -207,29 +212,27 @@ by Anthony J. Banday
 Published articles using HEALPix: 
 <ul>
 <li>
-First HEALPix paper: <a href="http://adsabs.harvard.edu/cgi-bin/nph-bib_query?bibcode=2005ApJ...622..759G&amp;db_key=AST&amp;high=41069202cf02947">K.M. G&oacute;rski et al., 2005, ApJ, 622, p759</a>
+First HEALPix paper: <a href="https://ui.adsabs.harvard.edu/abs/2005ApJ...622..759G/abstract">K.M. G&oacute;rski et al., 2005, ApJ, 622, p759</a><br>(among the 10 <a href="http://cococubed.asu.edu/journal_pages/top50.shtml">most cited astronomical articles</a> published in 2005)
 </li>
 <li>HEALPix 
 on 
 
 <!-- a href="http://inspirebeta.net/search?ln=en&p=FIND+C+ASTRO-PH%2F9812350+or+refersto%3Arecid%3A659804+or+fulltext%3Ahealpix&f=&action_search=Search&sf=&so=d&rm=&rg=25&sc=0&of=hb">INSPIRE (High Energy Physics &amp; Cosmology)</a>,<br -->
-<a href="https://inspirehep.net/search?ln=en&p=FIND+C+ASTRO-PH%2F9812350+or+refersto%3Arecid%3A659804+or+fulltext%3Ahealpix&f=&action_search=Search&sf=&so=d&rm=&rg=25&sc=0&of=hb">INSPIRE (High Energy Physics &amp; Cosmology)</a>,<br>
+<a href="https://inspirehep.net/search?ln=en&p=FIND+C+ASTRO-PH%2F9812350+or+refersto%3Arecid%3A659804+or+fulltext%3Ahealpix&f=&action_search=Search&sf=&so=d&rm=&rg=25&sc=0&of=hb">INSPIRE (High Energy Physics &amp; Cosmology)</a>,
+<!-- br>
 <a href="http://adsabs.harvard.edu/cgi-bin/nph-ref_query?bibcode=2005ApJ...622..759G&amp;refs=CITATIONS&amp;db_key=AST">ADS Classic</a>
+&amp; -->
 
-&amp;
-
-<a href="https://ui.adsabs.harvard.edu/#search/q=full%3Ahealpix&sort=date%20desc">ADS beta</a>
+<a href="https://ui.adsabs.harvard.edu/#search/q=full%3Ahealpix&sort=date%20desc">ADS&nbsp;(Astrophysics)</a>,
 
 <!-- ADS 2.0 now deprecated
 &amp;
 <a href="http://adslabs.org/adsabs/search/?q=full%3A%22healpix%22&month_from=&year_from=&month_to=&year_to=&db_f=&nr=&bigquery=&re_sort_type=DATE&re_sort_dir=desc">ADS 2.0</a> 
 -->
 
-(Astrophysics),
+<!-- br -->
 
-<br>
-
-<a href="http://tinyurl.com/hyky2hy">Scopus</a>
+<a href="http://tinyurl.com/hyky2hy">Scopus</a> (requires an account)
 <!-- http://preview.tinyurl.com/hyky2hy -->
 
 and
@@ -245,14 +248,20 @@ and
 Misc
 <ul>
 <li>
-<a href="https://en.wikipedia.org/wiki/Healpix">Wikipedia Page on HEALPix</a>
+<a href="https://en.wikipedia.org/wiki/HEALPix">Wikipedia Page on HEALPix</a>
 </li>
 <li>
 	HEALPix on <a href="https://www.openhub.net/p/healpix">BlackDuck (previously Ohloh)</a> 
 <!-- commented out 2018-08-30   and <a href="http://www.digplanet.com/wiki/HEALPix#">digplanet</a>  -->
 </li>
 <li>
-<a href="https://www.google.com/search?q=healpix&pws=0&biw=1395&bih=710&tbm=shop&source=lnms&sa=X&ved=0ahUKEwixwtO39-_JAhXHOBoKHQ0_CFgQ_AUICCgC&dpr=2#q=healpix&pws=0&tbm=bks&start=0">Some books mentioning HEALPix according to Google</a> (and some not)
+<!-- a href="https://www.google.com/search?q=healpix&pws=0&biw=1395&bih=710&tbm=shop&source=lnms&sa=X&ved=0ahUKEwixwtO39-_JAhXHOBoKHQ0_CFgQ_AUICCgC&dpr=2#q=healpix&pws=0&tbm=bks&start=0">Some books mentioning HEALPix according to Google</a> (and some not)-->
+Some 
+<a href="https://www.google.com/search?q=healpix&tbm=nws">news</a>,
+<a href="https://www.google.com/search?q=healpix&tbm=isch">images</a>, 
+<a href="https://www.google.com/search?q=healpix&tbm=vid">videos</a>, 
+<a href="https://www.google.com/search?q=healpix&tbm=bks">books</a>, 
+ related to HEALPix according to Google
 </li>
 </ul>
 

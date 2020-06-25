@@ -10,10 +10,10 @@
 coefficients.
 %
 A (complex) map $S$ of spin $s$ is a linear combination of the spin weighted harmonics ${_s}Y_{\ell m}$
-\begin{eqnarray}
+\begin{equation}
 	\label{eq:alm2map_spin_a}
 	{_s}S(p) = \sum_{\ell m} {_s}a_{\ell m}\ \ {_s}Y_{\ell m}(p)
-\end{eqnarray}
+\end{equation}
 % \begin{eqnarray}
 % 	{_s}S(p) = \sum_{\ell m} {_s}a_{\ell m}\ \ {_s}Y_{\ell m}(p) \myhtmlimage{} \label{spinmap}
 % \end{eqnarray}
@@ -32,25 +32,25 @@ ${_s}a_{\ell m}^* = (-1)^{s+m} {_{-s}}a_{\ell -m}$.
 %
 \thedocid\ expects the alm coefficients to be provided as
 	%typo correction on spin sign of second term of RHS, 2009-09-03
-\begin{eqnarray}
+\begin{align}
 	\label{eq:alm2map_spin_b}
-	{_{|s|}}a^{+}_{\ell m} &=& - ( {_{|s|}}a_{\ell m} + (-1)^s {_{-|s|}}a_{\ell m} )/2,\\
-	{_{|s|}}a^{-}_{\ell m} &=& - ( {_{|s|}}a_{\ell m} - (-1)^s {_{-|s|}}a_{\ell m} )/(2i),
-\end{eqnarray}
+	{_{|s|}}a^{+}_{\ell m} &= - ( {_{|s|}}a_{\ell m} + (-1)^s {_{-|s|}}a_{\ell m} )/2,\\
+	{_{|s|}}a^{-}_{\ell m} &= - ( {_{|s|}}a_{\ell m} - (-1)^s {_{-|s|}}a_{\ell m} )/(2i),
+\end{align}
 for $m\ge 0$, knowing that, just as for spin 0 maps, the
 coefficients for $m<0$ are given by 
-\begin{eqnarray}
+\begin{align}
 	\label{eq:alm2map_spin_c}
-	{_{|s|}}a^{+}_{\ell-m} &=& (-1)^m {_{|s|}}a^{+*}_{\ell m},\\
-	{_{|s|}}a^{-}_{\ell-m} &=& (-1)^m {_{|s|}}a^{-*}_{\ell m}.
-\end{eqnarray}
+	{_{|s|}}a^{+}_{\ell-m} &= (-1)^m {_{|s|}}a^{+*}_{\ell m},\\
+	{_{|s|}}a^{-}_{\ell-m} &= (-1)^m {_{|s|}}a^{-*}_{\ell m}.
+\end{align}
 %
 The two (real) maps produced by \thedocid\ are defined respectively as
-\begin{eqnarray}
+\begin{align}
 	\label{eq:alm2map_spin_d}
-	{_{|s|}}S^+ &=& ({_{|s|}}S + {_{-|s|}}S)/2,\\
-	{_{|s|}}S^- &=& ({_{|s|}}S - {_{-|s|}}S)/(2i).
-\end{eqnarray}
+	{_{|s|}}S^+ &= ({_{|s|}}S + {_{-|s|}}S)/2,\\
+	{_{|s|}}S^- &= ({_{|s|}}S - {_{-|s|}}S)/(2i).
+\end{align}
 %
 With these definitions, ${_2}a^{+}$, ${_2}a^{-}$, ${_2}S^+$ and ${_2}S^-$
 match \healpix polarization $a^E, a^B, Q$ and $U$ respectively. However, for

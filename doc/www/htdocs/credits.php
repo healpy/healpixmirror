@@ -50,7 +50,7 @@
               the first large release of the HEALPix software (Version 1.10).
               <br>
               <br>
-              The following releases of the HEALPix software (Versions 1.20 to 3.50) and the current one (Version 3.60) benefited
+              The following releases of the HEALPix software (Versions 1.20 to 3.60) and the current one (Version 3.70) benefited
               from:
 		<ul>
 		<li>
@@ -83,7 +83,7 @@
 		<u>Andrea Zonca</u>&#039;s
 		(<a href="https://www.ucsb.edu/">UCSB</a>), and
 		<u>Leo Singer</u>&#039;s
-		(<a href="https://www.caltech.edu">Caltech</a>)
+		(<a href="https://www.nasa.gov/goddard">Goddard Space Flight Center</a>)
 		healpy package,
 		</li>
 		<li>
@@ -253,7 +253,7 @@
 	<!--
                         HEALPix documentation is a part of the HEALPix project and is released under the GNU General Public License<br />
 -->
-		        PHP (<?php echo (PHP_VERSION);?>) scripts and CSS layout adapted from <a href="http://gnudatalanguage.sourceforge.net">GDL website</a> and <i>Colourise</i> template by <a href="http://www.styleshout.com/">styleshout.com</a>.
+		        PHP (<?php echo (PHP_VERSION);?>) scripts and CSS layout adapted from <a href="http://gnudatalanguage.sourceforge.net">the now defunct GDL website</a> and <i>Colourise</i> template by <a href="https://www.styleshout.com/">styleshout.com</a>.
 			<i>Sui Generis</i> font downloaded from <a href="https://www.urbanfonts.com">Urbanfonts.com</a><br>
 <!--
                         Hosted by <a href="https://sourceforge.net/">Sourceforge.net</a>

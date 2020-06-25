@@ -22,16 +22,16 @@ body { color: #000000;
 .MATH SUP   { font-family: "Century Schoolbook", serif                     ; font-size: 90%; }
 .MATH SUP I { font-family: "Century Schoolbook", serif; font-style: italic ; font-size: 90%; }
 
-SMALL.XTINY		{ font-size : 50% } /*<small class="xtiny"> ... </small>*/
-SMALL.TINY		{ font-size : 60% }
-SMALL.SCRIPTSIZE	{ font-size : 70% }
-SMALL.FOOTNOTESIZE	{ font-size : 92% } /*in use  (was 85%) */
-SMALL.SMALL		{ font-size : 92% } /*in use*/
-BIG.LARGE		{ font-size : 106% } /*in use*/
-BIG.XLARGE		{ font-size : 112% } /*in use*/
-BIG.XXLARGE		{ font-size : 130% }
-BIG.HUGE		{ font-size : 150% }
-BIG.XHUGE		{ font-size : 200% } /*<big class="xhuge"> ... </big>*/
+SMALL.XTINY		{ font-size : 50% ;} /*<small class="xtiny"> ... </small>*/
+SMALL.TINY		{ font-size : 60% ;}
+SMALL.SCRIPTSIZE	{ font-size : 70% ;}
+SMALL.FOOTNOTESIZE	{ font-size : 92% ;} /*in use  (was 85%) */
+SMALL.SMALL		{ font-size : 92% ;} /*in use*/
+BIG.LARGE		{ font-size : 106% ;} /*in use*/
+BIG.XLARGE		{ font-size : 112% ;} /*in use*/
+BIG.XXLARGE		{ font-size : 130% ;}
+BIG.HUGE		{ font-size : 150% ;}
+BIG.XHUGE		{ font-size : 200% ;} /*<big class="xhuge"> ... </big>*/
 
 /* SMALL.XTINY		{ font-size : xx-small } */
 /* SMALL.TINY		{ font-size : x-small  }  */
@@ -73,7 +73,10 @@ kbd {
 }
 SPAN.texttt { 
 	font-family: "Lucida Console", "Lucida Sans Typewriter", Courier, sans-serif, monospace ; 
-	font-size: 100%}
+	font-size: 100%;}
+DIV.texttt { 
+	font-family: "Lucida Console", "Lucida Sans Typewriter", Courier, sans-serif, monospace ; 
+	font-size: 100%;}
 pre { 
 	font-family: "Lucida Console", "Lucida Sans Typewriter", Courier, sans-serif, monospace;
 	font-size: 100%;
@@ -111,16 +114,18 @@ DIV.small		{   }
 DIV.verse		{   }
 DIV.center	{text-align: center;}
 DIV.mathdisplay {text-align: center;}
+DIV.facility    {font-size: 400%; font-weight: bold;}
 
 SPAN.Alph		{   }
 SPAN.arabic		{   }
 SPAN.bf		{   }
 SPAN.it		{   }
 SPAN.sc		{   }
-SPAN.textbf		{ font-weight: bold  }
+SPAN.textbf		{ font-weight: bold;  }
 SPAN.tt		{   }
-SPAN.textit	{ font-style: italic  }
-
+SPAN.textit	{ font-style: italic;  }
+SPAN.colordoc   { color: #cc0000; } /* dark red */
+SPAN.scriptsize { font-size : 70% ; }/* color: #00cc00; } */
 
 
 TABLE.PAD TD	{ padding:3px; }
@@ -128,8 +133,8 @@ TABLE.BORDER TH	{
 	border:1px solid black; 
 	background-color: #fafafa;}
 TABLE.BORDER TD	{ border:1px solid black; }
-TABLE.BORDER TR:nth-child(even) { background-color: #fffff0;}
-TABLE.BORDER TR:nth-child(odd)  { background-color: #fffffa;}
+TABLE.BORDER TR:nth-child(even) { background-color: #fffff0; vertical-align:top;}
+TABLE.BORDER TR:nth-child(odd)  { background-color: #fffffa; vertical-align:top;}
 TABLE.equation	{ width:100%; text-align:center; }	/* place eq nos at right/left edge */
 TABLE.equation > *	{ vertical-align:baseline; }
 TABLE.equation TD	{ white-space:nowrap; text-align:center;}

@@ -108,7 +108,8 @@ sub do_cmd_docid {
     s/$next_pair_pr_rx//o;
     ($t_doc) = &translate_commands($&);
     $color= "CC0000"; # dark red
-    $t_docid = "<FONT COLOR=\"\#$color\">" . $t_doc . "</FONT>";
+    #$t_docid = "<FONT COLOR=\"\#$color\">" . $t_doc . "</FONT>";
+    $t_docid = "<SPAN CLASS=\"colordoc\">" . $t_doc . "</SPAN>"; # 2020-06-23 see common.css
     $_;
 }
 
@@ -131,13 +132,15 @@ sub do_cmd_thedocrv {
 
 sub do_cmd_healpix{
   local($_) = @_;
-  $out = '<b>HEALPix</b>';
+  #$out = '<b>HEALPix</b>'; # 2020-06-23
+  $out = '<strong>HEALPix</strong>';
   join('',$out,' ',$_);
 }
 
 sub do_cmd_healpixns{
   local($_) = @_;
-  $out = '<b>HEALPix</b>';
+  #$out = '<b>HEALPix</b>'; # 2020-06-23
+  $out = '<strong>HEALPix</strong>';
   join('',$out,$_);
 }
 
@@ -154,12 +157,12 @@ sub do_cmd_degr{
 
 sub do_cmd_S{
   local($_) = @_;
-  join('','&sect',$_);
+  join('','&sect;',$_);
 }
 
 sub do_cmd_oacute{
   local($_) = @_;
-  join('','&#243',$_);
+  join('','&#243;',$_);
 }
 
 # sub do_cmd_myell{
@@ -276,11 +279,13 @@ sub do_env_facility {
     local($_) = @_;
     local($descr) = efhpack(&get_next_argument);
     $_ = efhtrim(efhpp($_));
-    local($return) = "<b><font size=+6>$t_docid</font></b><hr>\n<H3>$descr</H3>\nLocation in HEALPix directory tree: ";
+    #local($return) = "<b><font size=+6>$t_docid</font></b><hr>\n<H3>$descr</H3>\nLocation in HEALPix directory tree: ";
+    #local($return) = "<div style=\"font-size:300%; font-weight:bold;\">$t_docid</div><hr>\n<H3>$descr</H3>\nLocation in HEALPix directory tree: ";
+    local($return) = "<div class=\"facility\">$t_docid</div><hr>\n<H3>$descr</H3>\nLocation in HEALPix directory tree: ";
     local(@items) = split(',');
     foreach my $vi (@items){
       $vi = efhtrim($vi);
-      $return .= "<a href=\"$srcurl$vi\"><b>$vi</b></a>&nbsp;  ";
+      $return .= "<a href=\"$srcurl$vi\"><strong>$vi</strong></a>&nbsp;  ";
     }
     $return;
 }
@@ -409,7 +414,8 @@ sub do_env_example {
 #    "<HR><H1>EXAMPLE:</H1><tt><FONT SIZE=+1>$t_example</font></tt>\n<blockquote>$t_bla</blockquote>" ;
 #    "<HR><H1>EXAMPLE:</H1> \n<tt>$t_example</tt>\n<blockquote>$t_bla</blockquote>" ;
 #    "<HR><H2>EXAMPLE:</H2> \n<tt>$t_example</tt>\n<blockquote>$t_bla</blockquote>" ;
-    "<HR><H2>EXAMPLE:</H2> \n<kbd>$t_example</kbd>\n<blockquote>$t_bla</blockquote>" ; # 2020-06-08
+#    "<HR><H2>EXAMPLE:</H2> \n<kbd>$t_example</kbd>\n<blockquote>$t_bla</blockquote>" ; # 2020-06-08
+    "<HR><H2>EXAMPLE:</H2> \n<div class=\"texttt\">$t_example</div>\n<blockquote>$t_bla</blockquote>" ; # 2020-06-23
 }
 
 sub do_env_examples {
@@ -429,7 +435,8 @@ sub do_env_examples {
 #    "<hr><H1>EXAMPLE # $t_num:</H1><tt><FONT SIZE=+1>$t_example</font></tt>\n<blockquote>$t_bla</blockquote>" ;
 #    "<hr><H1>EXAMPLE # $t_num:</H1> \n<tt>$t_example</tt>\n<blockquote>$t_bla</blockquote>" ;
 #    "<hr><H2>EXAMPLE # $t_num:</H2> \n<tt>$t_example</tt>\n<blockquote>$t_bla</blockquote>" ;
-    "<hr><H2>EXAMPLE # $t_num:</H2> \n<kbd>$t_example</kbd>\n<blockquote>$t_bla</blockquote>" ; # 2020-06-08
+#    "<hr><H2>EXAMPLE # $t_num:</H2> \n<kbd>$t_example</kbd>\n<blockquote>$t_bla</blockquote>" ; # 2020-06-08
+    "<hr><H2>EXAMPLE # $t_num:</H2> \n<div class=\"texttt\">$t_example</div>\n<blockquote>$t_bla</blockquote>" ; # 2020-06-23
 }
 
 sub do_env_mytable{
@@ -995,15 +1002,15 @@ sub bot_navigation_panel {
     # Line break    
     $bot_panel .= "\n<BR>" ;
     # ... and the ``previous'' title
-    $bot_panel .= ($PREVIOUS_TITLE ? "\n<B> Previous:</B> $PREVIOUS_TITLE\n" : undef) ;
+    $bot_panel .= ($PREVIOUS_TITLE ? "\n<strong> Previous:</strong> $PREVIOUS_TITLE\n" : undef) ;
     # Similarly with the ``up'' title ...
-    $bot_panel .= ($UP_TITLE ? "\n<B>Up:</B> $UP_TITLE\n" : undef) ;
+    $bot_panel .= ($UP_TITLE ? "\n<strong>Up:</strong> $UP_TITLE\n" : undef) ;
     # If ``next'' section exists, add its title to the navigation panel
-    $bot_panel .= ($NEXT_TITLE ? "\n<B> Next:</B> $NEXT_TITLE" : undef) ;
+    $bot_panel .= ($NEXT_TITLE ? "\n<strong> Next:</strong> $NEXT_TITLE" : undef) ;
     # If ``index'' section exists, add its title to the navigation panel
-    $bot_panel .= ($INDEX_TITLE ? "\n<B> Index:</B> $INDEX_TITLE" : undef) ;    
+    $bot_panel .= ($INDEX_TITLE ? "\n<strong> Index:</strong> $INDEX_TITLE" : undef) ;    
     # add "TOP" title to the navigation panel
-    $bot_panel .= "\n<B> Top:</B> <a href=\"main.htm\">Main Page</a>" ;
+    $bot_panel .= "\n<strong> Top:</strong> <a href=\"main.htm\">Main Page</a>" ;
 
     $bot_panel . $_ ;
 }
@@ -1020,15 +1027,15 @@ sub top_navigation_panel {
     # Line break    
     $top_panel .= "\n<BR>" ;
     # ... and the ``previous'' title
-    $top_panel .= ($PREVIOUS_TITLE ? "\n<B> Previous:</B> $PREVIOUS_TITLE\n" : undef) ;
+    $top_panel .= ($PREVIOUS_TITLE ? "\n<strong> Previous:</strong> $PREVIOUS_TITLE\n" : undef) ;
     # Similarly with the ``up'' title ...
-    $top_panel .= ($UP_TITLE ? "\n<B>Up:</B> $UP_TITLE\n" : undef) ;
+    $top_panel .= ($UP_TITLE ? "\n<strong>Up:</strong> $UP_TITLE\n" : undef) ;
     # If ``next'' section exists, add its title to the navigation panel
-    $top_panel .= ($NEXT_TITLE ? "\n<B> Next:</B> $NEXT_TITLE" : undef) ;
+    $top_panel .= ($NEXT_TITLE ? "\n<strong> Next:</strong> $NEXT_TITLE" : undef) ;
     # If ``index'' section exists, add its title to the navigation panel
-    $top_panel .= ($INDEX_TITLE ? "\n<B> Index:</B> $INDEX_TITLE" : undef) ;    
+    $top_panel .= ($INDEX_TITLE ? "\n<strong> Index:</strong> $INDEX_TITLE" : undef) ;    
     # add "TOP" title to the navigation panel
-    $top_panel .= "\n<B> Top:</B> <a href=\"main.htm\">Main Page</a>";
+    $top_panel .= "\n<strong> Top:</strong> <a href=\"main.htm\">Main Page</a>";
 
     $top_panel . $_ ;
 }
@@ -1060,13 +1067,17 @@ sub do_cmd_thetinysubsubsection {
 
 # hand made:
 sub do_cmd_tinysubsection {
-    return use_wrappers($_[0], '<b>', '</b>'); }
+    #return use_wrappers($_[0], '<b>', '</b>'); } # 2020-06-23
+    return use_wrappers($_[0], '<strong>', '</strong>'); }
 sub do_cmd_tinysubsubsection {
-    return use_wrappers($_[0], '<b>', '</b>'); }
+#    return use_wrappers($_[0], '<b>', '</b>'); } # 2020-06-23
+    return use_wrappers($_[0], '<strong>', '</strong>'); }
 sub do_cmd_tinysubsectionstar {
-    return use_wrappers($_[0], '<b>', '</b>'); }
+#    return use_wrappers($_[0], '<b>', '</b>'); } # 2020-06-23
+    return use_wrappers($_[0], '<strong>', '</strong>'); }
 sub do_cmd_tinysubsubsectionstar {
-    return use_wrappers($_[0], '<b>', '</b>'); }
+#    return use_wrappers($_[0], '<b>', '</b>'); } # 2020-06-23
+    return use_wrappers($_[0], '<strong>', '</strong>'); }
 
 
 # # turn-off tabular environment
