@@ -2735,7 +2735,7 @@ setTopDefaults() {
     CXXPREFIX=$HEALPIX
     CXXDIR=${HEALPIX}/src/cxx
 
-    USE_ATRPATH=0 # if set (on MacOS), use @rpath for location of libsharp.dylib, libhealpix_cxx.dylib, libhealpix.dylib
+    USE_ATRPATH="${USE_ATRPATH-0} # if set (on MacOS), use @rpath for location of libsharp.dylib, libhealpix_cxx.dylib, libhealpix.dylib
     NOPROFILEYET=1
     SHELL=`${BASENAME} ${SHELL-/bin/sh}`
 

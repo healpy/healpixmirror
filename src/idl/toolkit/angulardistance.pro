@@ -53,6 +53,12 @@ function angulardistance, v1, v2, help=help
 ;        Note: if V and W both are lists of vectors, 
 ;        they should be of the same length
 ;
+;        If V (and/or W) has the form (n,3,4) 
+;        (like the pixel corners returned by pix2vec\_*), 
+;        it should be preprocessed with
+;        V = reform( transpose(V, [0,2,1]), n_elements(V)/3, 3)
+;        to take the form (n*4,3) before being passed to angulardistance.  
+;
 ;
 ; OPTIONAL INPUTS:
 ;        None

@@ -31,13 +31,14 @@
     \item[W] \mytarget{idl:angulardistance:w}%
       3D-vector (of shape (3) or (1,3)) or list of n 3D-vectors (of shape
 (n,3))\\
-	It is {\bf not} necessary for {\tt V} and {\tt W} vectors to be normalised to 1
-        upon calling the function\\
-% 	If {\tt V} and {\tt W} both are lists of vectors, 
-%         they should be of the same length
+	It is {\bf not} necessary for \texttt{V} and \texttt{W} vectors to be normalised to 1
+        upon calling the function.\\
+ 	If \texttt{V} and \texttt{W} both are lists of vectors, 
+         they should be of the same length.\\
 If {\tt V} (and/or {\tt W}) has the form (n,3,4) (like the pixel {\em corners} returned by
  \htmlref{pix2vec\_*}{idl:pix_tools}), it should be preprocessed with
- {\tt V = reform( transpose(V, [0,2,1]), n\_elements(V)/3, 3)}
+ \texttt{V = reform( transpose(V, [0,2,1]), n\_elements(V)/3, 3)}
+ to take the form (n*4,3)
   before being passed to \thedocid.  
 \end{qulist}
 \end{qualifiers}
@@ -55,7 +56,7 @@ If {\tt V} (and/or {\tt W}) has the form (n,3,4) (like the pixel {\em corners} r
 {%
 After renormalizing the vectors, \thedocid\ computes the angular distance using
 $\cos^{-1}(\vecV.\vecW)$ in general, or
-$2 \sin^{-1}\left(||\vecV-\vecW||\right)/2$ when
+$2 \sin^{-1}\left(||\vecV-\vecW||/2\right)$ when
  $\vecV$ and $\vecW$ are almost aligned.\\
 If $\vecV$ (resp. $\vecW$) is a single vector, while $\vecW$ (resp. $\vecV$) is a list of vectors,
 then the result is a list of distances

@@ -395,12 +395,13 @@ We are providing one (both in \textbf{C++} and \textbf{F90}) which is an adaptat
 
 
 \section{\texttt{healpix\_doc}: an easy access to \healpix documentation}
+\mytarget{install:healpix_doc}
 The shell script \texttt{healpix\_doc} now is available to provide easy
 access to the HTML, PDF and/or EPUB documentation of {\em all} Healpix packages.
 It will automatically open a web browser, a PDF viewer, or an EPUB viewer (among those found on the
 system) on the documentation
 available locally (at \texttt{\$HEALPIX/doc}) or on remote web sites. To use it, simply type\\
-\mycode{\$HEALPIX/healpix\_doc -e}\\
+\mycode{\$HEALPIX/healpix\_doc -e} or\\
 \mycode{\$HEALPIX/healpix\_doc -h} or\\
 \mycode{\$HEALPIX/healpix\_doc -p}\\
 to access respectively the EPUB, HTML and PDF documentation. The default browser and
@@ -504,7 +505,7 @@ are defined prior to calling the \texttt{configure} script, they will change the
 default values proposed in the (interactive or automated) configuration process.\\
 \mytarget{install:configure:boolean}%
 \textbf{The online help \texttt{./configure~-h} will show the current value of these variables.}\\
-As detailed futher down, several of these variables are boolean in nature, with the values
+As detailed further down, several of these variables are \textbf{boolean} in nature, with the values
 \texttt{1}, \texttt{y}, \texttt{Y}, \texttt{t} or \texttt{T} meaning 'true',
 and 
 \texttt{0}, \texttt{n}, \texttt{N}, \texttt{f} or \texttt{F} meaning 'false'.
@@ -515,7 +516,7 @@ For instance, in Bourne related shells (eg, \texttt{sh, bash, dash, ksh, zsh}), 
 and in C related shells (eg, \texttt{csh, tcsh})\\
 \texttt{setenv FC ifort ; setenv CC icc ; ./configure \doubledash auto=f90}\\
 will automatically run the \texttt{configure} script for the \texttt{libsharp} (if not previously done) 
-and \texttt{f90} package items, using the Intel fortan and Intel C compilers.
+and \texttt{f90} package items, using Intel's Fortran and C compilers.
 
 
 
@@ -1646,7 +1647,7 @@ However, the \mylinkext{idl:mollview:latex}{\texttt{Latex}} keyword will work pr
 \section{Appendix I: Recent Changes and New Features}
 \label{sec:newfeatures}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% BEGIN LATEST CHANGES %%%%%%%%%%%%%
-\subsection{Bug corrections and Improvements in Version \hpxversion}%2019-12
+\subsection{Bug corrections and Improvements in Version \hpxversion}%2020-07
 \label{sec:v361}\mytarget{install:v361}
 \label{sec:v370}\mytarget{install:v370}
 % \subsubsection[General]{General}
@@ -1662,6 +1663,7 @@ However, the \mylinkext{idl:mollview:latex}{\texttt{Latex}} keyword will work pr
 \subsubsection[General]{General}
 \begin{itemize}
    \item Fixed several bugs in the \mylink{install:configure}{\texttt{configure}} script
+   \item Documentation now available in \mylink{install:healpix_doc}{EPUB format}
 \end{itemize}
 %
 % \subsubsection[C]{\linklatexhtml{C}{csub.pdf}{csub.htm}}
@@ -1684,6 +1686,10 @@ However, the \mylinkext{idl:mollview:latex}{\texttt{Latex}} keyword will work pr
    \htmlref{\texttt{read\_fits\_partial}}{idl:read_fits_partial}  and 
    \htmlref{\texttt{write\_fits\_partial}}{idl:write_fits_partial} 
     to read and write FITS files containing polarized or unpolarized maps defined on a fraction of the sky.
+  \item Update of the required
+    \htmladdnormallink{\texttt{IDL-astron} library}{https://idlastro.gsfc.nasa.gov/homepage.html}
+    routines, and \htmladdnormallink{\texttt{Coyote}}{http://www.idlcoyote.com} library
+    routines (2020-07-15).
 \end{itemize}
 %
 % \subsubsection[Java]{\htmladdnormallink{Java}{\healpixwebpage/html/java/index.html}}
