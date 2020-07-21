@@ -88,6 +88,18 @@ For any problem, question or comment, see the <a href="support.php">Support</a> 
 
 <UL CLASS="ChildLinks">
 
+<UL CLASS="ChildLinks">
+<LI><A ID="tex2html_370_7"
+  HREF="#SECTION_370_10000000000000000">Bug corrections and Improvements in Version 3.70</A>
+<UL>
+<LI><A ID="tex2html_370_8"
+  HREF="#SECTION_370_11000000000000000">General</A>
+<LI><A ID="tex2html_370_9"
+  HREF="#SECTION_370_12000000000000000">Fortran 90</A>
+<LI><A ID="tex2html_370_10"
+  HREF="#SECTION_370_13000000000000000">IDL</A>
+</UL>
+
 <LI><A ID="tex2html_360_15"
   HREF="#SECTION_360_10000000000000000">Bug corrections and Improvements in Version 3.60</A>
 <UL>
@@ -116,6 +128,7 @@ For any problem, question or comment, see the <a href="support.php">Support</a> 
   HREF="#SECTION_350_14000000000000000">Python</A>
 </UL>
 
+<!--   ================ comment out 3.40 ============
 <LI><A id="tex2html_340_33"
   HREF="#SECTION_340_10000000000000000">Bug corrections and Improvements in Version 3.40</A>
 <UL>
@@ -130,11 +143,71 @@ For any problem, question or comment, see the <a href="support.php">Support</a> 
 <LI><A id="tex2html_340_38"
   HREF="#SECTION_340_15000000000000000">Python</A>
 </UL>
-
+        ================ comment out 3.40 ============ --> 
 </ul>
 <!--End of Table of Child-Links-->
 
+<p>
+
 <!-- ******************************************************  -->
+<!-- *** 3.70 ********************************************** -->
+
+<h3><A ID="SECTION_370_10000000000000000">
+Bug corrections and Improvements in Version 3.70</A>
+</h3>
+
+<h4><A ID="SECTION_370_11000000000000000">
+General</A>
+</h4>
+
+<UL>
+<LI>Fixed several bugs in the <A HREF="#install:configure"><SPAN  style="font-family:monospace">configure</SPAN></A> script
+</LI>
+<LI>Documentation now available in EPUB format
+</LI>
+</UL>
+<A HREF=#top>    Back to Top</A><br><br>
+
+<h4><A ID="SECTION_370_12000000000000000">
+Fortran 90 facilities and subroutines</A>
+</h4>
+
+<UL>
+<LI>Addition of the subroutines
+    <A ID="tex2html_370_1"
+  HREF="./html/sub_read_fits_partial.htm"><SPAN  style="font-family:monospace">read_fits_partial</SPAN></A>
+and 
+    <A ID="tex2html_370_2"
+  HREF="./html/sub_write_fits_partial.htm"><SPAN  style="font-family:monospace">write_fits_partial</SPAN></A>
+to read and write FITS files containing polarized or unpolarized maps defined on a fraction of the sky.
+</LI>
+</UL>
+<A HREF=#top>    Back to Top</A><br><br>
+
+<h4><A ID="SECTION_370_13000000000000000">
+IDL</A>
+</h4>
+
+<UL>
+<LI>Addition of 
+   <A ID="tex2html_370_3"
+  HREF="./html/idl_read_fits_partial.htm"><SPAN  style="font-family:monospace">read_fits_partial</SPAN></A>
+and 
+   <A ID="tex2html_370_4"
+  HREF="./html/idl_write_fits_partial.htm"><SPAN  style="font-family:monospace">write_fits_partial</SPAN></A>
+to read and write FITS files containing polarized or unpolarized maps defined on a fraction of the sky.
+</LI>
+<LI>Update of the required
+    <A ID="tex2html_370_5"
+  HREF="https://idlastro.gsfc.nasa.gov/homepage.html"><SPAN  style="font-family:monospace">IDL-astron</SPAN> library</A>
+routines, and <A ID="tex2html_370_6"
+  HREF="http://www.idlcoyote.com"><SPAN  style="font-family:monospace">Coyote</SPAN></A>
+library
+    routines (2020-07-15).
+</LI>
+</UL>
+<A HREF=#top>    Back to Top</A><br><br>
+
 <!-- *** 3.60 ********************************************** -->
 
 <h3><A ID="SECTION_360_10000000000000000">
@@ -385,7 +458,6 @@ library
 
 
 <!-- *** 3.40 ********************************************** -->
-
 <h3><A id="SECTION_340_10000000000000000">
 Bug corrections and Improvements in Version 3.40</A>
 </h3>
@@ -396,19 +468,14 @@ General</A>
 </h4>
 <UL><LI>
  A new set of (pixel-based) quadrature weights has been introduced, besides the older ring-based ones, to improve the accuracy of the Spherical Harmonics calculation. For maps
-  containing a signal that is band-limited at <!-- MATH
- $l_{max}=1.5 N_{side}$
- -->
+  containing a signal that is band-limited at <!-- MATH $l_{max}=1.5 N_{side}$ -->
 <SPAN CLASS="MATH"><I>l</I><SUB><I>max</I></SUB>=1.5 <I>N</I><SUB><I>side</I></SUB></SPAN>, this allows
   recovery of the <SPAN CLASS="MATH"><I>a</I><SUB><I>lm</I></SUB></SPAN> at almost machine precision. They are supported by map-analysis routines in C++, Fortran, IDL and Python. 
-The weights for power-of-2 values of <SPAN CLASS="MATH"><I>N</I><SUB><I>side</I></SUB></SPAN> in <!-- MATH
- $\{16,...,2048\}$
- -->
+The weights for power-of-2 values of <SPAN CLASS="MATH"><I>N</I><SUB><I>side</I></SUB></SPAN> in <!-- MATH $\{16,...,2048\}$ -->
 <SPAN CLASS="MATH">{16,...,2048}</SPAN> are precomputed and shipped in <A id="tex2html_340_1"
   HREF="https://sourceforge.net/p/healpix/code/HEAD/tree/trunk/data"><kbd>Healpix/data/weight_pixel_n?????.fits</kbd></A>, and the missing ones can be computed for any value of <SPAN CLASS="MATH"><I>N</I><SUB><I>side</I></SUB></SPAN> with the <kbd>compute_weights</kbd> C++ facility.
 </UL>
 <A HREF=#top>    Back to Top</A><br><br>
-
 
 <h4><A id="SECTION_340_12000000000000000"></A>
 <BR>
