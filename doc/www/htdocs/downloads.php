@@ -88,15 +88,17 @@ For any problem, question or comment, see the <a href="support.php">Support</a> 
 
 <ul CLASS="ChildLinks">
 <!-- ****** Begin TOC of 3.70 ***** -->
-<LI><A ID="tex2html_370_7"
+<LI><A ID="tex2html_370_12"
   HREF="#SECTION_370_10000000000000000">Bug corrections and Improvements in Version 3.70</A>
 <UL>
-<LI><A ID="tex2html_370_8"
+<LI><A ID="tex2html_370_13"
   HREF="#SECTION_370_11000000000000000">General</A>
-<LI><A ID="tex2html_370_9"
+<LI><A ID="tex2html_370_14"
   HREF="#SECTION_370_12000000000000000">Fortran 90</A>
-<LI><A ID="tex2html_370_10"
+<LI><A ID="tex2html_370_15"
   HREF="#SECTION_370_13000000000000000">IDL</A>
+<LI><A ID="tex2html_370_16"
+  HREF="#SECTION_370_14000000000000000">Python</A>
 </UL>
 <!-- ****** END TOC of 3.70 ***** -->
 
@@ -178,13 +180,12 @@ Fortran 90 facilities and subroutines</A>
 
 <UL>
 <LI>Addition of the subroutines
-    <A ID="tex2html_370_1"
+    <A ID="tex2html_370_2"
   HREF="./html/sub_read_fits_partial.htm"><SPAN  style="font-family:monospace">read_fits_partial</SPAN></A>
 and 
-    <A ID="tex2html_370_2"
+    <A ID="tex2html_370_3"
   HREF="./html/sub_write_fits_partial.htm"><SPAN  style="font-family:monospace">write_fits_partial</SPAN></A>
-to read and write FITS files containing polarized or unpolarized maps defined on a fraction of the sky
- (see <kbd><A ID="tex2html_370_0001a"
+to read and write FITS files containing polarized or unpolarized maps defined on a fraction of the sky (see <kbd><A ID="tex2html_370_1"
   HREF="https://healpix.sourceforge.io/data/examples/healpix_fits_specs.pdf">https://healpix.sourceforge.io/data/examples/healpix_fits_specs.pdf</A></kbd>).
 </LI>
 </UL>
@@ -196,22 +197,51 @@ IDL</A>
 
 <UL>
 <LI>Addition of 
-   <A ID="tex2html_370_3"
+   <A ID="tex2html_370_5"
   HREF="./html/idl_read_fits_partial.htm"><SPAN  style="font-family:monospace">read_fits_partial</SPAN></A>
 and 
-   <A ID="tex2html_370_4"
+   <A ID="tex2html_370_6"
   HREF="./html/idl_write_fits_partial.htm"><SPAN  style="font-family:monospace">write_fits_partial</SPAN></A>
-to read and write FITS files containing polarized or unpolarized maps defined on a fraction of the sky 
-(see <kbd><A ID="tex2html_370_0001b"
+to read and write FITS files containing polarized or unpolarized maps defined on a fraction of the sky (see <kbd><A ID="tex2html_370_4"
   HREF="https://healpix.sourceforge.io/data/examples/healpix_fits_specs.pdf">https://healpix.sourceforge.io/data/examples/healpix_fits_specs.pdf</A></kbd>).
 </LI>
 <LI>Update of the required
-    <A ID="tex2html_370_5"
+    <A ID="tex2html_370_7"
   HREF="https://idlastro.gsfc.nasa.gov/homepage.html"><SPAN  style="font-family:monospace">IDL-astron</SPAN> library</A>
-routines, and <A ID="tex2html_370_6"
+routines, and <A ID="tex2html_370_8"
   HREF="http://www.idlcoyote.com"><SPAN  style="font-family:monospace">Coyote</SPAN></A>
 library
     routines (2020-07-15).
+</LI>
+</UL>
+<A HREF=#top>    Back to Top</A><br><br>
+
+<h4><A ID="SECTION_370_14000000000000000"></A>
+<A ID="tex2html_370_9"
+  HREF="https://healpy.readthedocs.io/en/latest/">Python</A>
+</h4>
+
+<UL>
+<LI>Switch to 
+	<A ID="tex2html_370_10"
+  HREF="https://github.com/healpy/healpy/releases"><SPAN  style="font-family:monospace">healpy 1.14.0</SPAN></A>
+(<A ID="tex2html_370_11"
+  HREF="https://github.com/healpy/healpy/blob/master/CHANGELOG.rst">CHANGELOG</A>)
+
+<UL>
+<LI>Line Integral Convolution plots to plot polarization,
+</LI>
+<LI>fixed FITS files that were left open,
+</LI>
+<LI>increased precision in coordinate transforms,
+</LI>
+<LI>fix propagation on mmax in smoothing,
+</LI>
+<LI>reworked verbose,
+</LI>
+<LI>and many other improvements and bugs fixes ...
+</LI>
+</UL>
 </LI>
 </UL>
 <A HREF=#top>    Back to Top</A><br><br>
