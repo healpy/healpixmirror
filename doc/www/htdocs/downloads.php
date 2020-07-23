@@ -86,9 +86,8 @@ For any problem, question or comment, see the <a href="support.php">Support</a> 
 <!--Table of Child-Links-->
 <A id="tocl"></A>
 
-<UL CLASS="ChildLinks">
-
-<UL CLASS="ChildLinks">
+<ul CLASS="ChildLinks">
+<!-- ****** Begin TOC of 3.70 ***** -->
 <LI><A ID="tex2html_370_7"
   HREF="#SECTION_370_10000000000000000">Bug corrections and Improvements in Version 3.70</A>
 <UL>
@@ -99,7 +98,9 @@ For any problem, question or comment, see the <a href="support.php">Support</a> 
 <LI><A ID="tex2html_370_10"
   HREF="#SECTION_370_13000000000000000">IDL</A>
 </UL>
+<!-- ****** END TOC of 3.70 ***** -->
 
+<!-- ****** Begin TOC of 3.60 ***** -->
 <LI><A ID="tex2html_360_15"
   HREF="#SECTION_360_10000000000000000">Bug corrections and Improvements in Version 3.60</A>
 <UL>
@@ -114,7 +115,9 @@ For any problem, question or comment, see the <a href="support.php">Support</a> 
 <LI><A ID="tex2html_360_20"
   HREF="#SECTION_360_15000000000000000">Python</A>
 </UL>
+<!-- ****** END TOC of 3.60 ***** -->
 
+<!-- ****** Begin TOC of 3.50 ***** -->
 <LI><A ID="tex2html_350_26"
   HREF="#SECTION_350_10000000000000000">Bug corrections and Improvements in Version 3.50</A>
 <UL>
@@ -127,6 +130,7 @@ For any problem, question or comment, see the <a href="support.php">Support</a> 
 <LI><A ID="tex2html_350_30"
   HREF="#SECTION_350_14000000000000000">Python</A>
 </UL>
+<!-- ****** END TOC of 3.50 ***** -->
 
 <!--   ================ comment out 3.40 ============
 <LI><A id="tex2html_340_33"
@@ -179,7 +183,9 @@ Fortran 90 facilities and subroutines</A>
 and 
     <A ID="tex2html_370_2"
   HREF="./html/sub_write_fits_partial.htm"><SPAN  style="font-family:monospace">write_fits_partial</SPAN></A>
-to read and write FITS files containing polarized or unpolarized maps defined on a fraction of the sky.
+to read and write FITS files containing polarized or unpolarized maps defined on a fraction of the sky
+ (see <kbd><A ID="tex2html_370_0001a"
+  HREF="https://healpix.sourceforge.io/data/examples/healpix_fits_specs.pdf">https://healpix.sourceforge.io/data/examples/healpix_fits_specs.pdf</A></kbd>).
 </LI>
 </UL>
 <A HREF=#top>    Back to Top</A><br><br>
@@ -195,7 +201,9 @@ IDL</A>
 and 
    <A ID="tex2html_370_4"
   HREF="./html/idl_write_fits_partial.htm"><SPAN  style="font-family:monospace">write_fits_partial</SPAN></A>
-to read and write FITS files containing polarized or unpolarized maps defined on a fraction of the sky.
+to read and write FITS files containing polarized or unpolarized maps defined on a fraction of the sky 
+(see <kbd><A ID="tex2html_370_0001b"
+  HREF="https://healpix.sourceforge.io/data/examples/healpix_fits_specs.pdf">https://healpix.sourceforge.io/data/examples/healpix_fits_specs.pdf</A></kbd>).
 </LI>
 <LI>Update of the required
     <A ID="tex2html_370_5"

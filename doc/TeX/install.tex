@@ -1238,7 +1238,7 @@ Makefile.
 Some problems have been reported on Debian/Linux systems during the
 linking to the CFITSIO library shipped with Linux. If these problems
 occur, try to recompile the CFITSIO library from scratch before linking
-to \healpix.
+to \healpixns.
 
 \subsubsection*{CFITSIO and \texttt{libcurl}}
 \label{install:curl}
@@ -1647,7 +1647,7 @@ However, the \mylinkext{idl:mollview:latex}{\texttt{Latex}} keyword will work pr
 \section{Appendix I: Recent Changes and New Features}
 \label{sec:newfeatures}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% BEGIN LATEST CHANGES %%%%%%%%%%%%%
-\subsection{Bug corrections and Improvements in Version \hpxversion}%2020-07
+\subsection{Bug corrections and Improvements in Version \hpxversion}%2020-07-24
 \label{sec:v361}\mytarget{install:v361}
 \label{sec:v370}\mytarget{install:v370}
 % \subsubsection[General]{General}
@@ -1676,7 +1676,7 @@ However, the \mylinkext{idl:mollview:latex}{\texttt{Latex}} keyword will work pr
     \item Addition of the subroutines
     \htmlref{\texttt{read\_fits\_partial}}{sub:read_fits_partial} and 
     \htmlref{\texttt{write\_fits\_partial}}{sub:write_fits_partial} 
-    to read and write FITS files containing polarized or unpolarized maps defined on a fraction of the sky.
+    to read and write FITS files containing polarized or unpolarized maps defined on a fraction of the sky (see \url{\hpxfitsdoc}).
 \end{itemize}
 %
 \subsubsection[IDL]{IDL}
@@ -1685,7 +1685,7 @@ However, the \mylinkext{idl:mollview:latex}{\texttt{Latex}} keyword will work pr
    \item Addition of 
    \htmlref{\texttt{read\_fits\_partial}}{idl:read_fits_partial}  and 
    \htmlref{\texttt{write\_fits\_partial}}{idl:write_fits_partial} 
-    to read and write FITS files containing polarized or unpolarized maps defined on a fraction of the sky.
+    to read and write FITS files containing polarized or unpolarized maps defined on a fraction of the sky (see \url{\hpxfitsdoc}).
   \item Update of the required
     \htmladdnormallink{\texttt{IDL-astron} library}{https://idlastro.gsfc.nasa.gov/homepage.html}
     routines, and \htmladdnormallink{\texttt{Coyote}}{http://www.idlcoyote.com} library
@@ -1693,7 +1693,20 @@ However, the \mylinkext{idl:mollview:latex}{\texttt{Latex}} keyword will work pr
 \end{itemize}
 %
 % \subsubsection[Java]{\htmladdnormallink{Java}{\healpixwebpage/html/java/index.html}}
-% \subsubsection[Python]{\htmladdnormallink{Python}{https://healpy.readthedocs.io/en/latest/}}
+\subsubsection[Python]{\htmladdnormallink{Python}{https://healpy.readthedocs.io/en/latest/}}
+\begin{itemize}
+\item Switch to 
+	\htmladdnormallink{\texttt{healpy \hpyversion}}{\hpysite/releases} 
+	(\htmladdnormallink{CHANGELOG}{\hpysite/blob/master/CHANGELOG.rst})
+\begin{itemize}
+\item Fixed FITS files that were left open,
+\item Line Integral Convolution plots to plot polarization,
+\item increased precision in coordinate transforms,
+\item fix propagation on mmax in smoothing,
+\item ...,
+\end{itemize}
+\end{itemize}
+% END of optional healpy
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% END LATEST CHANGES %%%%%%%%%%%%%
@@ -1791,7 +1804,7 @@ orthview}}{idl:mollview} visualization routines: support for color and thickness
 \tinysubsubsection*{\htmladdnormallink{Python}{https://healpy.readthedocs.io/en/latest/}}
 \begin{itemize}
 \item Switch to 
-	\htmladdnormallink{\texttt{healpy \hpyversion}}{\hpysite/releases} 
+	\htmladdnormallink{\texttt{healpy 1.13.0}}{\hpysite/releases} 
 	(\htmladdnormallink{CHANGELOG}{\hpysite/blob/master/CHANGELOG.rst})
 \begin{itemize}
 \item different handling of default dtype in \texttt{read\_cl}, \texttt{write\_cl} and \texttt{read\_map}
@@ -1858,7 +1871,7 @@ a latitude cut to a map,
 \tinysubsubsection*{\htmladdnormallink{Python}{https://healpy.readthedocs.io/en/latest/}}
 \begin{itemize}
 \item Switch to 
-	\htmladdnormallink{\texttt{healpy \hpyversion}}{\hpysite/releases} 
+	\htmladdnormallink{\texttt{healpy 1.12.8}}{\hpysite/releases} 
 	(\htmladdnormallink{CHANGELOG}{\hpysite/blob/master/CHANGELOG.rst})
 \end{itemize}
 % ------
@@ -1974,7 +1987,7 @@ visualization routines:
 \tinysubsubsection*{\htmladdnormallink{Python}{https://healpy.readthedocs.io/en/latest/}}
 \begin{itemize}
 \item Switch to 
-	\htmladdnormallink{\texttt{healpy \hpyversion}}{\hpysite/releases} 
+	\htmladdnormallink{\texttt{healpy 1.12.0}}{\hpysite/releases} 
 	(\htmladdnormallink{CHANGELOG}{\hpysite/blob/master/CHANGELOG.rst})
 \item Addition of the python facility \texttt{src/python/change\_polcconv.py} to change the polarization convention 
 (see \mylink{install:idl:change_polcconv}{IDL's \texttt{change\_polcconv.pro} above}).
@@ -2570,7 +2583,7 @@ maps
 	\setlength{\parsep}{0pt}
 	\item Core functionality has been reimplemented from scratch in the form of the
 "healpix.essentials" package. It is strongly recommended to use this package
-directly in future projects making use of Java \healpix.
+directly in future projects making use of Java \healpixns.
 "healpix.essentials" is a port of the Healpix C++ library and presents a very
 similar interface.
 
@@ -2756,7 +2769,7 @@ package (C. Rosset, A. Zonca et al.) is now part of \healpix
 % \begin{itemize}
 % 	\setlength{\itemsep}{0pt}
 % 	\setlength{\parsep}{0pt}
-% 	\item 64 bit java-\healpix, supports $\nside$ up to $ = 2^{29}$ = 536870912
+% 	\item 64 bit java-\healpixns, supports $\nside$ up to $ = 2^{29}$ = 536870912
 % 	\begin{itemize}
 % 	\setlength{\itemsep}{0pt}
 % 	\setlength{\parsep}{0pt}
