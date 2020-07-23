@@ -5,7 +5,7 @@
 
 rsync -avP -e ssh \
 	    --exclude=.svn \
-	    --exclude=html --exclude=pdf \
+	    --exclude=html --exclude=pdf --exclude=epub \
 	    --exclude='svn-commit*' \
 	    --exclude=tag_manager.txt \
 	    --exclude='doc?.pdf' \
