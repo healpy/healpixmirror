@@ -2062,7 +2062,8 @@ contains
     INTEGER(I4B) :: status,unit,readwrite,blocksize,naxis
     CHARACTER(LEN=80) :: comment, ttype1
     LOGICAL(LGT) ::  extend, anyf
-    INTEGER(I4B)::  nmove, hdutype, idmax, nrows
+    INTEGER(I4B)::  nmove, hdutype, nrows
+    integer(I4B), dimension(1) :: idmax ! because ftgcvj expects an array (2020-08-24)
 
     !-----------------------------------------------------------------------
     status=0
@@ -2109,9 +2110,9 @@ contains
           ttype1 = trim(strupcase(adjustl(ttype1)))
           if (trim(ttype1(1:5)) == 'INDEX') then
              call ftgkyj(unit, 'NAXIS2', nrows, comment, status) ! find number of rows
-             call ftgcvj(unit, 1_i4b, nrows, 1_i4b, 1_i4b, 0_i4b, idmax, anyf, status) ! read element on last row of first column
+             call ftgcvj(unit, 1_i4b, nrows, 1_i4b, 1_i4b, 0_i4b, idmax(1), anyf, status) ! read element on last row of first column
              if (status == 0) then
-                lmax = int(sqrt(   real(idmax-1, kind = DP)  ) )
+                lmax = int(sqrt(   real(idmax(1)-1, kind = DP)  ) )
                 if (lmax > 0) goto 1000
              endif
           endif
