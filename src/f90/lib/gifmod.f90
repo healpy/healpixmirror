@@ -222,7 +222,7 @@ module gifmod
      subroutine gifstr(x,nx,ny,sx,sy,nc,r,g,b,or_,fn) bind(C, name="gifstr")
      use iso_c_binding
      implicit none
-     integer (c_int), intent(out) :: x(*)
+     integer (c_int), intent(inout) :: x(*) ! 2020-08-25
      integer (c_int), intent(in) :: nx, ny, sx, sy, nc, r(*), g(*), b(*), or_
      character(c_char), intent(in) :: fn(*)
      end subroutine
@@ -485,8 +485,9 @@ contains
    end subroutine addttl
 
    ! ------------------------------------------------------------------
-   ! addstr: used exclusively by addbar to add labels to the ends of
-   !         color bar; [a] is the image array, [i] and [j] are the
+   ! addstr: used by addbar to add labels to the ends of color bar 
+   !          and by addttl to add title; 
+   !         [a] is the (modified) image array, [i] and [j] are the
    !         array positions where the string [s] should end if [or]
    !         is negative, or start if [or] is positive
    ! ------------------------------------------------------------------
@@ -494,10 +495,11 @@ contains
    subroutine addstr(a,i,j,or,s)
       use healpix_types
       implicit none
-      integer(i4b) :: nx,ny,i,j
+      integer(i4b), intent(inout), dimension(:,:) :: a
+      integer(i4b), intent(in) :: i,j
       integer(i4b), intent(in) :: or
-      integer(i4b), dimension(:,:) :: a
       character(len=*), intent(in) :: s
+      integer(i4b) :: nx,ny
 
       nx = size(a,1)
       ny = size(a,2)
