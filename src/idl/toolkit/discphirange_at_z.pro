@@ -50,7 +50,7 @@ function discphirange_at_z, vcenter, radius, z, phi0=phi0
 ;    will be negative if z is outsize the disc
 ;
 ; OPTIONAL OUTPUTS
-;    phi0: longitude of disc center in RADIANS
+;    phi0: longitude of disc center in RADIANS in [-Pi,Pi]
 ;
 ;
 ;

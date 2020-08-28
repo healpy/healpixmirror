@@ -30,9 +30,10 @@
 pro pixels_per_ring, nside, npr, kshift, npc
 ;-
 ; nside: input
-; npr: number of pixel per ring
-; kshift: shift in phi
-; npc: number of pixels between North pole and current ring
+; npr: number of pixel per ring, vector of length 4*nside+1
+; kshift: shift in phi (0 or 1), vector of length 4*nside+1
+; npc: number of pixels between North pole and current ring, vector of length 4*nside+1
+;   with ring=0 -> North Pole, ring=4*nside -> South Pole
 ;-
 nl3 = 3L*nside
 nl4 = 4L*nside
@@ -169,7 +170,7 @@ return
 end
 
 ;===============================================================
-pro find_pixel_bounds, nside, nsboost, iring, iphi, phiw, phie
+pro find_pixel_bounds, nside, nsboost, iring, iphi, phiw, phie, np=np
 
 common pixbounds, ns_old, nsb_old, npr, kshift, f
 if undefined(ns_old)  then ns_old  = -1
@@ -185,6 +186,7 @@ endif
 halfpi = !dpi * .5d0
 nq = npr[iring]/4 ; number of pixels on current ring in [0,Pi/2] (quadrant)
 transition = (iring eq nside || iring eq nside*3)
+np = npr[iring] ; number of pixel on  current ring
 
 if (nq eq nside || transition) then begin ; equatorial region (and transition rings)
     k0 = kshift[iring]*.5d0
@@ -245,19 +247,27 @@ sub0 = lindgen(2*nsboost+1) - nsboost - izlist[0]
 for i=0, ngr-1 do begin ; loop on low-res rings
     subrings = ringphi[i,0]* nsboost + sub0
     for k=-1,1,2 do begin ; West and East side of disc
+        nshrink = 0
         kk = (k+3)/2 ; 1 or 2
 rep:
-        if (ringphi[i,kk] ge 0 && ringphi[i,1] le ringphi[i,2]) then begin
-            find_pixel_bounds, nside, nsboost, ringphi[i,0], ringphi[i,kk], phiw, phie
-            phic = (phie+phiw)*.5d0
+;        if (ringphi[i,kk] ge 0 && ringphi[i,1] le ringphi[i,2]) then begin
+        if (ringphi[i,kk] ge 0) then begin ; corrected 2020-08-28
+            find_pixel_bounds, nside, nsboost, ringphi[i,0], ringphi[i,kk], phiw, phie,np=np
+            phic = (phie+phiw)*.5d0 ; in [0,2Pi[
             dphi = (phie-phiw)*.5d0
             ;print,nside,izlist[0],max(izlist),k,n_elements(dphilist),i,minmax(subrings)
             dd = abs(phi0list[subrings]-phic) ; distance from disc center to pixel border sample
             dd <= (2.d0 * !dpi - dd) ; in [0,Pi]
             touching = max(dd le (dphilist[subrings]+dphi)) ; 0:out or 1:in
-            if (~touching) then begin
-                ringphi[i,kk] -= k ; move edge pixel inwards
-                goto, rep ; repeat with next big pixel inward
+            if (~touching) then begin;  debugged 2020-08-28
+                ;ringphi[i,kk] -= k ; move edge pixel inwards
+                ringphi[i,kk] = (ringphi[i,kk] + np - k) MOD np ; move edge pixel inwards in [0,np-1]
+                nshrink += 1
+                if (nshrink le 2) then begin
+                    goto, rep   ; repeat with next big pixel inward
+                endif else begin
+                    ringphi[i,kk] = -999
+                endelse
             endif
         endif
     endfor
@@ -266,8 +276,10 @@ endfor
 ; print, ringphi
 
 ; remove empty rings
-diff = ringphi[*,2] - ringphi[*,1]
-valid = where(diff ne -2 and diff ne -1 and ringphi[*,1] ge 0 and ringphi[*,2] ge 0, ngr)
+; diff = ringphi[*,2] - ringphi[*,1]
+; bug correction 2020-08-28
+;valid = where(diff ne -2 and diff ne -1 and ringphi[*,1] ge 0 and ringphi[*,2] ge 0, ngr)
+valid = where(ringphi[*,1] ge 0 and ringphi[*,2] ge 0, ngr)
 if (ngr gt 0) then begin
     ringphi = ringphi[valid,*]
 endif else begin
@@ -365,6 +377,7 @@ pro query_disc, nside, vector0, radius_in, listpix, nlist, deg = deg, inclusive=
 ;     2013-01-14: avoid crashes is some configurations with empty Listpix list,
 ;            systematically returns Listpix=[-1], Nlist=0 in case of problem
 ;     2014-07-07: bug correction in discedge2fulldisc (reported by F. Atrio-Barandella)
+;     2020-08-28: bug correction in check_edge_pixels (reported by R. de Belsunce)
 ;-
 
 tstart = systime(1)
@@ -418,6 +431,7 @@ if (~yes) then init_healpix
 radius = keyword_set(deg) ? radius_in*!DPI/180.d0 : radius_in
 
 halfpi = !DPI*.5d0
+twopi  = !DPI*2.d0
 lnside = long(nside)
 
 radius_eff = do_inclusive ? fudge_query_radius(lnside, radius) : radius
@@ -455,7 +469,6 @@ dphilist = discphirange_at_z (vector0, radius_eff, zlist, phi0=phi0) ; phi range
 phi0list = replicate(phi0, nz)
 ; identify edge pixel at nominal resolution
 pixels_on_edge, lnside, izlist, phi0list, dphilist, ringphi, ngr
-
 if do_inclusive then begin
     nsboost = defined(boost) ? boost : 16
     wnside = (lnside * nsboost) <  max(!healpix.nside)
@@ -467,7 +480,7 @@ if do_inclusive then begin
     izlist = irmin + lindgen(nz) ; list of active rings
     zlist  = ring2z(wnside, izlist) ; list of z
     dphilist = discphirange_at_z (vector0, radius2, zlist, phi0=phi0) ; phi range in each ring
-    phi0list = replicate(phi0, nz)
+    phi0list = replicate((phi0 + twopi) mod twopi, nz)
 
 ;   check boundary of edge pixels
 ;   ringphi and ngr computed in non-inclusive configuration (with lnside) will be updated
