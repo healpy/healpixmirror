@@ -871,9 +871,11 @@ contains
     integer(i4b), dimension(1:,1:), intent(inout) :: ringphi
     integer(i4b),                   intent(inout) :: ngr
 
-    integer(i4b) :: i, j, k, kk, ngr_out, diff, iphi, i0, nrh
+    !integer(i4b) :: i, j, k, kk, ngr_out, diff, iphi, i0, nrh
+    integer(i4b) :: i, j, k, kk, ngr_out, iphi, i0, nrh, nshrink, np
     real(dp), dimension(1:2*nsboost+1) :: phiw, phie
     real(dp) :: dd, dph, phic
+    ! 2020-08-31: bug correction
 
   !=======================================================================
     if (nsboost <= 1) return
@@ -882,11 +884,13 @@ contains
     do i=1, ngr ! loop on low-res rings
        i0 = ringphi(1,i) * nsboost - nsboost - irmin
        do k=-1,1,2 ! West and East side of disc
+          nshrink = 0
           kk = (k+5)/2 ! 2 or 3
 222       continue
           iphi = ringphi(kk, i)
-          if (ringphi(2,i) <= ringphi(3,i) .and. iphi >= 0) then
-             call find_pixel_bounds(nside, nsboost, ringphi(1,i), iphi, phiw, phie)
+          !if (ringphi(2,i) <= ringphi(3,i) .and. iphi >= 0) then
+          if (iphi >= 0) then ! corrected 2020-08-31
+             call find_pixel_bounds(nside, nsboost, ringphi(1,i), iphi, phiw, phie, np=np)
              do j=1, 2*nsboost+1
                 if (i0+j >= 1 .and. i0+j <= nrh) then
                    phic = (phie(j)+phiw(j))*0.5_dp ! pixel center
@@ -896,18 +900,25 @@ contains
                    if (dd <= dph) goto 1000 ! pixel touched by disc, move to next one
                 endif
              enddo
-             ringphi(kk, i)= iphi - k ! pixel not in disc, move edge pixel inwards
-             goto 222 ! try next pixel inward
+             !ringphi(kk, i)= iphi - k ! pixel not in disc, move edge pixel inwards
+             ringphi(kk, i) = mod(iphi + np - k, np) ! pixel not in disc, move edge pixel inwards in [0,np-1]
+             nshrink = nshrink + 1
+             if (nshrink <= 2) then
+                goto 222 ! try next pixel inward
+             else
+                ringphi(kk,i) = -999
+             endif
 1000         continue
           endif
-       enddo ! loop on side
+       enddo ! loop on k East-West sides
     enddo ! loop on low-res rings
 
     ! remove empty rings
     ngr_out = 0
     do i=1,ngr
-       diff = ringphi(3,i) - ringphi(2,i)
-       if (ringphi(2,i) >=0 .and. ringphi(3,i) >=0 .and. diff /= -2 .and. diff /= -1) then
+!        diff = ringphi(3,i) - ringphi(2,i)
+!        if (ringphi(2,i) >=0 .and. ringphi(3,i) >=0 .and. diff /= -2 .and. diff /= -1) then
+       if (ringphi(2,i) >=0 .and. ringphi(3,i) >=0) then ! 2020-08-31
           ngr_out = ngr_out + 1
           ringphi(1:3, ngr_out) = ringphi(1:3, i)
        endif
@@ -921,10 +932,11 @@ contains
     return
   end subroutine check_edge_pixels
   !=======================================================================
-  subroutine find_pixel_bounds (nside, nsboost, iring, iphi, phiw, phie)
+  subroutine find_pixel_bounds (nside, nsboost, iring, iphi, phiw, phie, np)
     !=======================================================================
     integer(i4b),               intent(in)  :: nside, nsboost, iring, iphi
     real(dp),     dimension(1:2*nsboost+1), intent(out) :: phiw, phie
+    integer(i4b), optional,                 intent(out) :: np
     
     real(dp),     dimension(1:2*nsboost+1) :: f, f1, phiw_t, phie_t
     real(dp) :: c0, quad, phie1, phie2, phiw1, phiw2, cv
@@ -936,6 +948,7 @@ contains
     !f = ((/ (i,i=0,2*nsboost) /) - nsboost) / nsboost
     f = ((/ (i*1.d0,i=0,2*nsboost) /) - nsboost*1.d0) / nsboost
 
+    if (present(np)) np = npr
     nq = npr/4 ! number of pixels on current ring in [0,Pi/2] (quadrant)
     transition = (iring == nside .or. iring == nside*3)
 

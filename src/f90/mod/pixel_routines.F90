@@ -1920,6 +1920,7 @@
 ! New algorithm for Inclusive case: test boundary of edge pixels on each ring
 !    2013-04-02: bug correction in query_disc in inclusive mode
 !    2014-07-07: bug correction in discedge2fulldisc
+! 2020-08-31: bug correction in check_edge_pixels (reported by R. de Belsunce)
     !=======================================================================
 #ifdef DOI8B
   subroutine query_disc_8( nside, vector0, radius, listpix, nlist, nest, inclusive)
@@ -2016,8 +2017,9 @@
     call pixels_on_edge(nside, irmin, irmax, phi0, dphitab, ringphi, ngr)
     if (do_inclusive) then
        ! sample edge pixels at larger Nside
-       nsboost = 16
-       nsideh = min(NS_MAX8, nside * int(nsboost,i8b))
+       nsboost = 2**ceiling( log(1.1_DP/(radius*nside))/log(2.0_DP) ) ! make pixel smaller than disc (2020-08-31)
+       nsboost = max(nsboost,16)
+       nsideh  = min(NS_MAX8, nside * int(nsboost,i8b))
        radiush = fudge_query_radius(nsideh, radius, quadratic=.true.)
 
        irmin = ring_num(nsideh, zmax, shift=+1) ! shifted South
@@ -2028,6 +2030,7 @@
           zlist(iz-irmin+1) = ring2z(nsideh, iz)
        enddo
        call discphirange_at_z(vector0, radiush, zlist, nrh, dphilist, phi0)
+       phi0 = mod(phi0 + TWOPI, TWOPI) ! [-Pi,Pi] -> [0,2Pi]
        call check_edge_pixels(nside, nsboost, irmin, irmax, phi0, dphilist, ringphi, ngr)
        deallocate(zlist, dphilist)
     endif
