@@ -447,6 +447,7 @@ if (lnside gt 8192) then begin
 endif else begin
     work = lonarr(worksize)
 endelse
+;time1 = systime(1)
 
 ; circle center
 norm_vect0 = sqrt(total(vector0^2))
@@ -470,7 +471,9 @@ phi0list = replicate(phi0, nz)
 ; identify edge pixel at nominal resolution
 pixels_on_edge, lnside, izlist, phi0list, dphilist, ringphi, ngr
 if do_inclusive then begin
-    nsboost = defined(boost) ? boost : 16
+    boost_def  = 2L^ ceil( alog(1.1d0/(radius*lnside))/alog(2.d0) ) ; make pixel smaller than disc (2020-08-31)
+    boost_def >= 16 ; minimal boost
+    nsboost    = defined(boost) ? boost : boost_def ; user defined value of boost
     wnside = (lnside * nsboost) <  max(!healpix.nside)
     radius2 = fudge_query_radius(wnside, radius, /quadratic)
 
@@ -480,13 +483,14 @@ if do_inclusive then begin
     izlist = irmin + lindgen(nz) ; list of active rings
     zlist  = ring2z(wnside, izlist) ; list of z
     dphilist = discphirange_at_z (vector0, radius2, zlist, phi0=phi0) ; phi range in each ring
-    phi0list = replicate((phi0 + twopi) mod twopi, nz)
+    phi0list = replicate((phi0 + twopi) mod twopi, nz) ; in [0,2Pi] (2020-08-28)
 
 ;   check boundary of edge pixels
 ;   ringphi and ngr computed in non-inclusive configuration (with lnside) will be updated
     check_edge_pixels, lnside, wnside, izlist, phi0list, dphilist, ringphi, ngr
 endif
 
+;time2 = systime(1)
 nlist = 0LL
 discedge2fulldisc, lnside, ringphi, ngr, work, nlist
 
@@ -496,7 +500,9 @@ endif else begin
     listpix = -1L
 endelse
 
-walltime = systime(1) - tstart
+tend = systime(1)
+walltime = tend - tstart
+;;print,'total, init, find, fill:',walltime*1.e6,(time1-tstart)*1.e6,(time2-time1)*1.e6,(tend-time2)*1.e6
 return
 end
 
