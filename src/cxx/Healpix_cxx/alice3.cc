@@ -47,31 +47,10 @@ using namespace std;
 
 class PolarizationHolder
   {
-  private:
-    Healpix_Map<float> Q, U;
-
   public:
-    // Load a polarized fits file, with Q and U as the second
-    // and third columns (the standard form).
-    void load(const std::string &filename)
-      {
-      read_Healpix_map_from_fits(filename, Q, 2, 2);
-      read_Healpix_map_from_fits(filename, U, 3, 2);
-#if 0
-      Healpix_Map<float> mag(Q);
-      for (int i=0; i<Q.Npix(); ++i)
-        mag[i]=sqrt(Q[i]*Q[i] + U[i]*U[i]);
-      float mmin,mmax;
-      mag.minmax(mmin,mmax);
-      for (int i=0; i<Q.Npix(); ++i)
-        {
-        Q[i]/=mmax;
-        U[i]/=mmax;
-        }
-#endif
-      }
+    Healpix_Map<double> Q, U;
 
-    void getQU(const pointing &p, float &q, float &u) const
+    void getQU(const pointing &p, double &q, double &u) const
       {
       fix_arr<int,4> pix;
       fix_arr<double,4> wgt;
@@ -82,7 +61,7 @@ class PolarizationHolder
 
     vec3 getQUDir(const vec3 &loc) const
       {
-      float q,u;
+      double q,u;
       getQU(loc,q,u);
       vec3 east(1,0,0);
       if (abs(loc.x)+abs(loc.y) > 0.0)
@@ -93,9 +72,9 @@ class PolarizationHolder
       }
 
     // Return the magnitude of the polarization at some pointing.
-    float getQUMagnitude(const pointing& p) const
+    double getQUMagnitude(const pointing& p) const
       {
-      float q,u;
+      double q,u;
       getQU(p,q,u);
       return sqrt(q*q + u*u);
       }
@@ -172,8 +151,9 @@ void convolve(const arr<double> &kernel, const arr<double> &raw, arr<double> &co
     }
   }
 
-int lic_function(Healpix_Map<float> &hitcount, Healpix_Map<float> &texture,
-  const PolarizationHolder &ph, const Healpix_Map<float> &th, int steps,
+/*! Perform line integral convolution on sphere. */
+int lic_function(Healpix_Map<double> &hitcount, Healpix_Map<double> &texture,
+  const PolarizationHolder &ph, const Healpix_Map<double> &th, int steps,
   int kernel_steps, double step_radian)
   {
   arr<double> kernel(kernel_steps), convolution, rawtexture;
@@ -204,23 +184,62 @@ int lic_function(Healpix_Map<float> &hitcount, Healpix_Map<float> &texture,
   return num_curves;
   }
 
+/*! Expose line integral convolution for external use. */
+void lic_main(const Healpix_Map<double> &Q, const Healpix_Map<double> &U, const Healpix_Map<double> &th,
+  Healpix_Map<double> &hit, Healpix_Map<double> &tex, Healpix_Map<double> &mag,
+  int steps, int kernel_steps, double step_radian, double polmin, double polmax)
+  {
+  PolarizationHolder ph;
+  ph.Q = Q;
+  ph.U = U;
+
+  hit.fill(0.);
+
+  for (int i=0; i<mag.Npix(); i++)
+    {
+    pointing p = mag.pix2ang(i);
+
+    mag[i] = min(polmax,max(polmin,ph.getQUMagnitude(p)));
+    tex[i] = th.interpolated_value(p);
+    }
+
+  lic_function(hit, tex, ph, th, steps, kernel_steps, step_radian);
+
+  for (int i=0; i<tex.Npix(); ++i)
+    tex[i]/=hit[i];
+  double tmin,tmax,mmin,mmax;
+  tex.minmax(tmin,tmax);
+  mag.minmax(mmin,mmax);
+  for (int i=0; i<tex.Npix(); ++i)
+    {
+    mag[i]*=(tex[i]-tmin);
+    tex[i]=1.0-(tex[i]-tmin)/(tmax-tmin);
+    }
+  mag.minmax(mmin,mmax);
+  for (int i=0; i<mag.Npix(); ++i)
+    mag[i]=1.0-(mag[i]-mmin)/(mmax-mmin);
+  }
+
 int main(int argc, const char** argv)
   {
   module_startup ("alice3", argc, argv);
   paramfile params (getParamsFromCmdline(argc,argv));
 
-  PolarizationHolder ph;
-  ph.load(params.find<string>("in"));
+  Healpix_Map<double> Q, U;
+  // Load a polarized fits file, with Q and U as the second
+  // and third columns (the standard form).
+  read_Healpix_map_from_fits(params.find<string>("in"), Q, 2, 2);
+  read_Healpix_map_from_fits(params.find<string>("in"), U, 3, 2);
 
   int nside = params.find<int>("nside");
   int steps = params.find<int>("steps",100);
   double step_radian=arcmin2rad*params.find<double>("step_arcmin",10.);
   int kernel_steps = params.find<int>("kernel_steps",50);
-  float polmin = params.find<float>("polmin",-1e30),
-        polmax = params.find<float>("polmax",1e30);
+  double polmin = params.find<double>("polmin",-1e30),
+        polmax = params.find<double>("polmax",1e30);
   string out = params.find<string>("out");
 
-  Healpix_Map<float> th(nside,RING,SET_NSIDE);
+  Healpix_Map<double> th(nside,RING,SET_NSIDE);
   if (params.param_present("texture"))
     read_Healpix_map_from_fits(params.find<string>("texture"),th);
   else
@@ -230,7 +249,7 @@ int main(int argc, const char** argv)
       {
       int ell = params.find<int>("ell");
       if (ell<0) ell=2*nside;
-      Alm<xcomplex<float> > a(ell,ell);
+      Alm<xcomplex<double> > a(ell,ell);
       a.SetToZero();
       cout << "Background texture using ell = " << ell << endl;
 
@@ -246,37 +265,22 @@ int main(int argc, const char** argv)
       }
     }
 
-  Healpix_Map<float> hit(nside,RING,SET_NSIDE),
+  Healpix_Map<double> hit(nside,RING,SET_NSIDE),
                      tex(nside,RING,SET_NSIDE),
                      mag(nside,RING,SET_NSIDE);
 
-  hit.fill(0.);
+  {
+  PolarizationHolder ph;
+  ph.Q = Q;
+  ph.U = U;
 
   for (int i=0; i<mag.Npix(); i++)
-    {
-    pointing p = mag.pix2ang(i);
-
-    mag[i] = min(polmax,max(polmin,ph.getQUMagnitude(p)));
-    tex[i] = th.interpolated_value(p);
-    }
-
+    tex[i] = th.interpolated_value(mag.pix2ang(i));
   write_Healpix_map_to_fits(out+"_background.fits",tex,PLANCK_FLOAT32);
+  }
 
-  lic_function(hit, tex, ph, th, steps, kernel_steps, step_radian);
+  lic_main(Q, U, th, hit, tex, mag, steps, kernel_steps, step_radian, polmin, polmax);
 
-  for (int i=0; i<tex.Npix(); ++i)
-    tex[i]/=hit[i];
-  float tmin,tmax,mmin,mmax;
-  tex.minmax(tmin,tmax);
-  mag.minmax(mmin,mmax);
-  for (int i=0; i<tex.Npix(); ++i)
-    {
-    mag[i]*=(tex[i]-tmin);
-    tex[i]=1.0-(tex[i]-tmin)/(tmax-tmin);
-    }
-  mag.minmax(mmin,mmax);
-  for (int i=0; i<mag.Npix(); ++i)
-    mag[i]=1.0-(mag[i]-mmin)/(mmax-mmin);
   write_Healpix_map_to_fits(out+"_texture.fits",tex,PLANCK_FLOAT32);
   write_Healpix_map_to_fits(out+"_mod_texture.fits",mag,PLANCK_FLOAT32);
   }

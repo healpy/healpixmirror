@@ -118,7 +118,8 @@ include_HEADERS = \
   Healpix_cxx/moc_fitsio.h \
   Healpix_cxx/moc_query.h \
   Healpix_cxx/weight_utils.h \
-  Healpix_cxx/mask_tools.h
+  Healpix_cxx/mask_tools.h \
+  Healpix_cxx/alice3.h
 
 libhealpix_cxx_la_SOURCES = $(src_cxxsupport) $(src_cxxsupport_fits) $(src_healpix_cxx) $(src_healpix_cxx_fits) $(src_healpix_cxx_mod)
 
