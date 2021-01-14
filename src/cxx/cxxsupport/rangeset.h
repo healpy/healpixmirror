@@ -25,7 +25,7 @@
 /*! \file rangeset.h
  *  Class for storing sets of ranges of integer numbers
  *
- *  Copyright (C) 2011-2017 Max-Planck-Society
+ *  Copyright (C) 2011-2021 Max-Planck-Society
  *  \author Martin Reinecke
  */
 
@@ -43,8 +43,10 @@
 /*! Class for storing sets of ranges of integer numbers */
 template<typename T> class rangeset
   {
-  private:
+  public:
     typedef std::vector<T> rtype;
+
+  private:
     typedef typename rtype::iterator iterator;
     typedef typename rtype::const_iterator c_iterator;
     rtype r;

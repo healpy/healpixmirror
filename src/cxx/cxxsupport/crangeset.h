@@ -25,7 +25,7 @@
 /*! \file crangeset.h
  *  Class for storing sets of ranges of integer numbers
  *
- *  Copyright (C) 2015 Max-Planck-Society
+ *  Copyright (C) 2015-2021 Max-Planck-Society
  *  \author Martin Reinecke
  */
 
@@ -75,8 +75,10 @@ would be encoded as
     must be nonnegative! */
 template<typename T> class crangeset
   {
-  private:
+  public:
     typedef std::vector<T> rtype;
+
+  private:
     rtype r;
 
     struct abscomp
