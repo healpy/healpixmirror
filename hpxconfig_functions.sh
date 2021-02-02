@@ -61,6 +61,7 @@
 # 2020-01-06: added missing space in whereisCmd
 # 2020-01-14: removed spurious \r in a some comments
 # 2020-01-23: removed bashism, improved FITSDIR behavior
+# 2021-01-26: better handling of libcfitsio without libcurl
 #=====================================
 #=========== General usage ===========
 #=====================================
@@ -1455,7 +1456,7 @@ checkFitsioCurl () {
 	sanity=`${NM} ${cfitsiolib} 2> ${DEVNULL} | ${GREP} read | ${GREP} T | ${WC} -l` # make sure that nm, grep and wc are understood
 	if [ $sanity -gt 0 ] ; then
 	    check=`${NM} ${cfitsiolib} 2> ${DEVNULL} | ${GREP} curl_ | ${WC} -l` # count curl calls
-	    if [ $check -gt 0 ] ; then
+	    if [ $check -gt 1 ] ; then # curl_verbose does not count (2021-01-26)
 		CFITSIOCURL="-lcurl"
  		CURLCONFIG='curl-config' # use curl-config to find non /usr/lib*/ installations
  		testcurl=`${WHEREIS} ${CURLCONFIG}`
