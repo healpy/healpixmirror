@@ -3,9 +3,9 @@
 # EH, Dec 2004 -- Jan 2005
 
 SetDef(){
-template_file=fits_template.f90
-outfile_s=fits_s_inc.f90
-outfile_d=fits_d_inc.f90
+template_file=fits_template.F90
+outfile_s=fits_s_inc.F90
+outfile_d=fits_d_inc.F90
 }
 
 #--------
