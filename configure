@@ -34,8 +34,8 @@ usage3=" If the environment variables\n\
         CC,            (used in C,sharp,C++,F90,healpy) \n\
         C_FITS, C_SHARED       (C)                      \n\
         CXX,                           (C++,    healpy) \n\
-        CXXFLAGS                       (C++)            \n\
-        SHARP_COPT               (sharp)                \n\
+        CXXFLAGS, CXX_PARAL            (C++)            \n\
+        SHARP_COPT, SHARP_PARAL  (sharp)                \n\
         FC, F_DIRSUFF, F_OPT, F_PARAL, F_SHARED   (F90) \n\
         FITSDIR,               (C,      C++,F90)        \n\
         FITSINC,               (C,      C++)            \n\
@@ -145,8 +145,10 @@ for i in $args ; do
 	setF90Defaults > /dev/null
 	GuessF90Compiler
 	setIdlDefaults
-	for v in CC C_FITS C_SHARED CXX CXXFLAGS FC F_DIRSUFF F_OPT F_PARAL F_SHARED FITSDIR FITSINC PYTHON PROFILE_EDIT SHARP_COPT papersize ps_com pdf_com gif_com  ; do
-	     eval echo "$v=\$$v"
+	for v in CC C_FITS C_SHARED CXX CXXFLAGS CXX_PARAL FC F_DIRSUFF F_OPT F_PARAL F_SHARED FITSDIR FITSINC PYTHON PROFILE_EDIT SHARP_COPT SHARP_PARAL papersize ps_com pdf_com gif_com  ; do
+	    eval "val=\$$v"
+	    nw=`echo $val | ${WC} -w`
+	    [ $nw -le 1 ] && echo "$v=$val" || echo "$v='$val'"
 	done
 	echo 
 	echo "Missing values are determined by the script, depending on previous choices."

@@ -191,7 +191,7 @@ for i = 0,nsig-1 do begin
     exten = extension+i
     if (exten gt n_ext) then begin
         message,/info,' WARNING: Required extension does not exist in file: '+fitsfile
-        message,/info,'          Output data will be shorted than expected.'
+        message,/info,'          Output data will be shorter than expected.'
         goto, skip
     endif else begin
         nsig_eff +=1

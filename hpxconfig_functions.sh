@@ -48,8 +48,8 @@
 #                CC,            (used in C/sharp/C++/F90/healpy) 
 #                C_FITS, C_SHARED       (C)                      
 #                CXX,                           (C++/    healpy) 
-#                CXXFLAGS                       (C++)            
-#                SHARP_COPT               (sharp)                
+#                CXXFLAGS, CXX_PARAL            (C++)            
+#                SHARP_COPT, SHARP_PARAL        (sharp)                
 #                FC, F_DIRSUFF, F_OPT, F_PARAL, F_SHARED   (F90) 
 #                FITSDIR,               (C/      C++/F90)        
 #                FITSINC,               (C/      C++)            
@@ -62,6 +62,7 @@
 # 2020-01-14: removed spurious \r in a some comments
 # 2020-01-23: removed bashism, improved FITSDIR behavior
 # 2021-01-26: better handling of libcfitsio without libcurl
+# 2021-04-06: added SHARP_PARAL and CXX_PARAL
 #=====================================
 #=========== General usage ===========
 #=====================================
@@ -305,7 +306,7 @@ processAutoList(){
     touch    ${autofile}
     #
     [ $do_profile -eq 1 ] && fillFile 9 1 ${autofile}
-    [ $do_sharp   -eq 1 ] && fillFile 7 2 ${autofile}
+    [ $do_sharp   -eq 1 ] && fillFile 7 3 ${autofile}
     if [ $do_c    -eq 1 ]; then
 	if [ `isTrue $C_FITS` -eq 1 ]; then
 	    fillFile 2 8 ${autofile}
@@ -313,7 +314,7 @@ processAutoList(){
 	    fillFile 2 5 ${autofile}
 	fi
     fi
-    [ $do_cxx -eq 1 ]    && fillFile 4 6  ${autofile}
+    [ $do_cxx -eq 1 ]    && fillFile 4 7  ${autofile}
     [ $do_f90 -eq 1 ]    && fillFile 3 13 ${autofile}
     [ $do_idl -eq 1 ]    && fillFile 1 4  ${autofile}
     [ $do_healpy -eq 1 ] && fillFile 5 3  ${autofile}
@@ -562,10 +563,12 @@ setSharpDefaults () {
     SHARPBLD=${SHARPDIR}/build
     npgc=`$CC -V 2>&1          | ${GREP} PGI | ${WC} -l` # PGI C
     if [ $npgc != 0 ] ; then
-	SHARP_COPT="${SHARP_COPT--O3 -fast -mp}" # -O3 -fast -mp  unless already defined
+	#SHARP_COPT="${SHARP_COPT--O3 -fast -mp}" # -O3 -fast -mp  unless already defined
+	SHARP_COPT="${SHARP_COPT--O3 -fast}" # -O3 -fast  unless already defined (-mp added by configure unless called with --disable-openmp)
     else
 	#SHARP_COPT="-DMULTIARCH -O3 -ffast-math -fopenmp" # reserve for multiplatform compilation
-	SHARP_COPT="${SHARP_COPT--O3 -ffast-math -march=native -fopenmp}" # -O3 -ffast-math -march=native -fopenmp unless already defined
+	#SHARP_COPT="${SHARP_COPT--O3 -ffast-math -march=native -fopenmp}" # -O3 -ffast-math -march=native -fopenmp unless already defined
+	SHARP_COPT="${SHARP_COPT--O3 -ffast-math -march=native}" # -O3 -ffast-math -march=native unless already defined (-fopenmp added by configure unless called with --disable-openmp)
     fi
     SHARP_LDFLAGS=""
     if [ "${OS}" = "Darwin" -a `isTrue ${USE_ATRPATH}` -eq 1 ]; then
@@ -584,17 +587,39 @@ askSharpUserMisc () {
     [ $INTERACTIVE -eq 0 ] && echo $answer
     [ "x$answer" != "x" ] && CC=$answer
 
+    nclang=`$CC --version 2>&1 | ${GREP}  'clang' | ${WC} -l`
     echo "enter options for C compiler: "
     echo "For optimal performance, this should include '-ffast-math'"
     echo "and '-march=native' (in gcc or clang, or your compiler's equivalent options)."
     echo "(If you are using gcc or clang and you want to produce a portable,"
     echo "high-performance library, you can also replace '-march=native'"
     echo "by '-DMULTIARCH'.)"
+    if [ $nclang != 0 ] ; then
+	echo "If your clang compiler supports OpenMP, include flags like -fopenmp=libiomp5"
+    else
+	echo "No need to include OpenMP flags, which will be dealt with later on."
+    fi
     #echoLn "[$CFLAGS]: "
     echoLn "[$SHARP_COPT]: "
     read answer
     [ $INTERACTIVE -eq 0 ] && echo $answer
     [ "x$answer" != "x" ] && SHARP_COPT=$answer
+
+    echo "Do you want a parallel implementation of libsharp ?"
+    echo " 0) No  (serial) "
+    echo " 1) Yes (parallel with OpenMP)"
+    echoLn "Enter choice                                    [$SHARP_PARAL]: "
+    read answer
+    [ $INTERACTIVE -eq 0 ] && echo $answer
+    [ ${SHARP_PARAL} -eq 0 -a `isTrue ${answer}`  -eq 1 ] && SHARP_PARAL=1
+    [ ${SHARP_PARAL} -eq 1 -a `isFalse ${answer}` -eq 1 ] && SHARP_PARAL=0
+    if [ $SHARP_PARAL -eq 1 ] ; then
+	SHARPOPENMP="--enable-openmp"
+	echo "A parallel implementation of libsharp will be used"
+    else
+	SHARPOPENMP="--disable-openmp"
+	echo "A  serial  implementation of libsharp will be used"
+    fi
 }
 #-------------
 editSharpMakefile () {
@@ -608,7 +633,7 @@ editSharpMakefile () {
     (\rm -rf ${SHARPBLD}; \
     mkdir ${SHARPBLD}; \
     cd ${SHARPBLD}; \
-    CC="${CC}" CFLAGS="${SHARP_COPT}" LDFLAGS="${SHARP_LDFLAGS}" ${SHARPCDIR}/configure --prefix=${SHARPPREFIX} || crashAndBurn) || crashAndBurn
+    CC="${CC}" CFLAGS="${SHARP_COPT}" LDFLAGS="${SHARP_LDFLAGS}" ${SHARPCDIR}/configure --prefix=${SHARPPREFIX} ${SHARPOPENMP} || crashAndBurn) || crashAndBurn
     echo "done."
     echo 
     echo "edit top Makefile for libsharp ..."
@@ -624,7 +649,7 @@ editSharpMakefile () {
 	${SED} "s|^SHARPBLD.*|SHARPBLD =${SHARPBLD}|" |\
 	${SED} "s|^SHARPLIB.*|SHARPLIB =${SHARPLIB}|" |\
 	${SED} "s|^SHARPMKF.*|SHARPMKF =${SHARPMKF}|" |\
-	${SED} "s|^# sharp configuration.*|# sharp configuration: (rm -rf ${SHARPBLD}; mkdir ${SHARPBLD}; cd ${SHARPBLD}; CC=\"${CC}\" CFLAGS=\"${SHARP_COPT}\" LDFLAGS=\"${SHARP_LDFLAGS}\" ${SHARPCDIR}/configure --prefix=${SHARPPREFIX})|" > Makefile
+	${SED} "s|^# sharp configuration.*|# sharp configuration: (rm -rf ${SHARPBLD}; mkdir ${SHARPBLD}; cd ${SHARPBLD}; CC=\"${CC}\" CFLAGS=\"${SHARP_COPT}\" LDFLAGS=\"${SHARP_LDFLAGS}\" ${SHARPCDIR}/configure --prefix=${SHARPPREFIX} ${SHARPOPENMP})|" > Makefile
 
 #     mv -f Makefile Makefile_tmp
 #     ${CAT} Makefile_tmp |\
@@ -671,11 +696,13 @@ test_Sharp () {
 #-------------
 setCppDefaults () {
 
-    CFLAGS="-O3 -fopenmp"
+    #CFLAGS="-O3 -fopenmp"
+    CFLAGS="-O3"
 
     CXXBLD=${CXXDIR}/build
     CXX_LDFLAGS=""
-    CXXFLAGS="${CXXFLAGS--O3 -fopenmp}" # -O3 -fopenmp unless already defined
+    # CXXFLAGS="${CXXFLAGS--O3 -fopenmp}" # -O3 -fopenmp unless already defined
+    CXXFLAGS="${CXXFLAGS--O3}" # -O3  unless already defined
     if [ "${OS}" = "Darwin" -a `isTrue ${USE_ATRPATH}` -eq 1 ]; then
 	CXX_LDFLAGS="-Wl,-install_name,@rpath/libhealpix_cxx.2.dylib"
 	# requires to add -Wl,-rpath,${HEALPIX}/lib to C++ flags ($CXXFLAGS)
@@ -700,13 +727,35 @@ askCppUserMisc () {
     read answer
     [ $INTERACTIVE -eq 0 ] && echo $answer
     [ "x$answer" != "x" ] && CXX=$answer
+    ncxxlang=`$CXX --version 2>&1 | ${GREP}  'clang' | ${WC} -l`
 
-    echoLn "enter options for C++ compiler [$CXXFLAGS]: "
+    if [ $ncxxlang != 0 ] ; then
+	echo "enter options for C++ compiler (if your clang compiler supports OpenMP, include flags like -fopenmp=libiomp5)."
+    else
+	echo "enter options for C++ compiler (no need to include OpenMP flags, which will be dealt with later on)."
+    fi
+    echoLn  "[$CXXFLAGS]: "
     read answer
     [ $INTERACTIVE -eq 0 ] && echo $answer
     [ "x$answer" != "x" ] && CXXFLAGS=$answer
 
 
+    echo "Do you want a parallel implementation of HEALPix/C++ library and codes ?"
+    echo " 0) No  (serial) "
+    echo " 1) Yes (parallel with OpenMP)"
+    echoLn "Enter choice                                    [$CXX_PARAL]: "
+    read answer
+    [ $INTERACTIVE -eq 0 ] && echo $answer
+    [ ${CXX_PARAL} -eq 0 -a `isTrue ${answer}`  -eq 1 ] && CXX_PARAL=1
+    [ ${CXX_PARAL} -eq 1 -a `isFalse ${answer}` -eq 1 ] && CXX_PARAL=0
+    if [ $CXX_PARAL -eq 1 ] ; then
+	CXXOPENMP="--enable-openmp"
+	echo "A parallel implementation of HEALPix/C++ will be used"
+    else
+	CXXOPENMP="--disable-openmp"
+	echo "A  serial  implementation of HEALPix/C++ will be used"
+    fi
+    
     #echo "${FITSINC} ${FITSDIR}"
     CFITSIO_CFLAGS=""
     echoLn "enter path to fitsio.h"
@@ -743,7 +792,7 @@ editCppMakefile () {
     (\rm -rf ${CXXBLD}; \
     mkdir ${CXXBLD}; \
     cd ${CXXBLD}; \
-    CC="${CC}" CFLAGS="${CFLAGS}" CXX="${CXX}" CXXFLAGS="${CXXFLAGS}" LDFLAGS="${CXX_LDFLAGS}" SHARP_CFLAGS="-I${HEALPIX}/include" SHARP_LIBS="-L${HEALPIX}/lib -lsharp" CFITSIO_CFLAGS="${CFITSIO_CFLAGS}" CFITSIO_LIBS="${CFITSIO_LIBS}" ${CXXDIR}/configure --prefix=${CXXPREFIX} || crashAndBurn)
+    CC="${CC}" CFLAGS="${CFLAGS}" CXX="${CXX}" CXXFLAGS="${CXXFLAGS}" LDFLAGS="${CXX_LDFLAGS}" SHARP_CFLAGS="-I${HEALPIX}/include" SHARP_LIBS="-L${HEALPIX}/lib -lsharp" CFITSIO_CFLAGS="${CFITSIO_CFLAGS}" CFITSIO_LIBS="${CFITSIO_LIBS}" ${CXXDIR}/configure --prefix=${CXXPREFIX} ${CXXOPENMP} || crashAndBurn)
     echo "done"
 
     echo 
@@ -760,7 +809,7 @@ editCppMakefile () {
 
     mv -f Makefile Makefile_tmp
     ${CAT} Makefile_tmp |\
-	${SED} "s|^# C++ configuration.*$|# C++ configuration: (rm -rf ${CXXBLD} ; mkdir ${CXXBLD} ; cd ${CXXBLD}; CC=\"${CC}\" CFLAGS=\"${CFLAGS}\" CXX=\"${CXX}\" CXXFLAGS=\"${CXXFLAGS}\"  LDFLAGS=\"${CXX_LDFLAGS}\" SHARP_CFLAGS=\"-I${HEALPIX}/include\" SHARP_LIBS=\"-L${HEALPIX}/lib -lsharp\" CFITSIO_CFLAGS=\"${CFITSIO_CFLAGS}\" CFITSIO_LIBS=\"${CFITSIO_LIBS}\" ${CXXDIR}/configure --prefix=${CXXPREFIX})|"> Makefile
+	${SED} "s|^# C++ configuration.*$|# C++ configuration: (rm -rf ${CXXBLD} ; mkdir ${CXXBLD} ; cd ${CXXBLD}; CC=\"${CC}\" CFLAGS=\"${CFLAGS}\" CXX=\"${CXX}\" CXXFLAGS=\"${CXXFLAGS}\"  LDFLAGS=\"${CXX_LDFLAGS}\" SHARP_CFLAGS=\"-I${HEALPIX}/include\" SHARP_LIBS=\"-L${HEALPIX}/lib -lsharp\" CFITSIO_CFLAGS=\"${CFITSIO_CFLAGS}\" CFITSIO_LIBS=\"${CFITSIO_LIBS}\" ${CXXDIR}/configure --prefix=${CXXPREFIX} ${CXXOPENMP})|"> Makefile
 
 #     mv -f Makefile Makefile_tmp
 #     ${CAT} Makefile_tmp |\
@@ -1641,8 +1690,8 @@ askOpenMP () {
     echoLn "Enter choice                                      [$OpenMP]: "
     read answer
 #    [ "x$answer" != "x" ] && OpenMP="$answer"
-    [ {$OPenMP} = 0 -a `isTrue ${answer}`  = 1 ] && OpenMP=1
-    [ {$OPenMP} = 1 -a `isFalse ${answer}` = 1 ] && OpenMP=0
+    [ ${OpenMP} -eq 0 -a `isTrue ${answer}`  -eq 1 ] && OpenMP=1
+    [ ${OpenMP} -eq 1 -a `isFalse ${answer}` -eq 1 ] && OpenMP=0
     if [ $OpenMP = 1 ] ; then
 
 	# deal with C and F90 flags
@@ -2733,8 +2782,10 @@ setTopDefaults() {
     #echo "HEALPIX ${HEALPIX}"
     SHARPPREFIX=$HEALPIX
     SHARPLDIR=${SHARPPREFIX}/lib
+    SHARP_PARAL="${SHARP_PARAL-1}"   # 1 unless already defined
     CXXPREFIX=$HEALPIX
     CXXDIR=${HEALPIX}/src/cxx
+    CXX_PARAL="${CXX_PARAL-1}"   # 1 unless already defined
 
     USE_ATRPATH="${USE_ATRPATH-0}" # if set (on MacOS), use @rpath for location of libsharp.dylib, libhealpix_cxx.dylib, libhealpix.dylib
     NOPROFILEYET=1

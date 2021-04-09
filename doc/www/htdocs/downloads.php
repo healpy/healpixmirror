@@ -55,7 +55,10 @@ an empty email with only &quot;<kbd>subscribe</kbd>&quot; on the Subject line.
 <A id="top"></A>
 The recommended channel for obtaining and installing the latest HEALPix software is to download the <em>source</em> package from the <a href="https://sourceforge.net/projects/healpix/">SourceForge Download page</a> under the GNU General Public License, version2 <a href="https://www.gnu.org/licenses/gpl-2.0.html">(GPLv2)</a>, and follow the <a href="documentation.php">installation directions</a>.<br>
 The source code of past, latest and forthcoming releases can be browsed on <a href="https://sourceforge.net/p/healpix/code/HEAD/tree/">SourceForge SVN repository</a>.<br>
-Prepackaged or precompiled HEALPix packages can also be found in various places, with variable delays, for e.g. MacOSX (<a href="https://www.macports.org/ports.php?by=name&substr=healpix">MacPorts</a>, <a href="https://github.com/brewsci/homebrew-science/blob/master/Formula/healpix.rb">HomeBrew</a>) and Linux (<a href="https://fr2.rpmfind.net/linux/rpm2html/search.php?query=healpix&submit=Search+...">RPM</a>) systems, under the <a href="https://www.gnu.org/licenses/gpl-2.0.html">same GPLv2 licensing scheme</a>.
+Prepackaged or precompiled HEALPix packages can also be found in various places, with variable delays, for e.g. MacOSX 
+(<a href="https://www.macports.org/ports.php?by=name&substr=healpix">MacPorts</a>, 
+<a href="https://formulae.brew.sh/formula/healpix">HomeBrew</a>) 
+and Linux (<a href="https://fr2.rpmfind.net/linux/rpm2html/search.php?query=healpix&submit=Search+...">RPM</a>) systems, under the <a href="https://www.gnu.org/licenses/gpl-2.0.html">same GPLv2 licensing scheme</a>.
 </p>
 
 <p>

@@ -80,7 +80,7 @@ allocate(map(0:nside2npix(nside)-1,1:3)) \\
 allocate(alm(1:3, 0:lmax, 0:lmax)\\
 dw8 = 1.0\_dp \\
 z = sin(10.0\_dp * \htmlref{DEG2RAD}{sub:healpix_types}) \\
-call map2alm(nside, lmax, lmax, map, alm, ($\backslash$ z, -z $\backslash$) , dw8) \\
+call map2alm(nside, lmax, lmax, map, alm, (/ z, -z /) , dw8) \\
 %, plm(0:(lmax+1)*(lmax+2)*nside-1))  \\
 }
 {

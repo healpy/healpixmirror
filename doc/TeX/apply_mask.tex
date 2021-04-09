@@ -49,7 +49,7 @@ zbounds\mytarget{sub:apply_mask:zbounds}(1:2)  \hskip 4cm OPTIONAL& DP & IN & se
 \begin{example}
 {
 s = sin(15.0\_dp * \mylink{sub:healpix_types:deg2rad}{DEG2RAD}) \\
-call \thedocid (map, 1, zbounds=($\backslash$ s, -s $\backslash$) )  \\
+call \thedocid (map, 1, zbounds=(/ s, -s /) )  \\
 }
 {
 Will set to 0 pixels of the input (RING ordered) map lying in the strip $|b| \le 15^o$.

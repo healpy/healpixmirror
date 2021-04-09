@@ -92,7 +92,7 @@ a uniform weight of 1. Note:
 \begin{example}
 {
 s = sin(15.0\_dp * \mylink{sub:healpix_types:deg2rad}{DEG2RAD}) \\
-call \thedocid (128, map, 1, 2, multipoles, ($\backslash$ s, -s $\backslash$) )  \\
+call \thedocid (128, map, 1, 2, multipoles, (/ s, -s /) )  \\
 }
 {
 Will compute and remove the best fit monopole and dipole from a map with

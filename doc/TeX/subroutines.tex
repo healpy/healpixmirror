@@ -232,17 +232,13 @@ $\mathbf{\phi}$ & The azimuthal angle on the sphere, $\phi\in[0,2\pi[$.\\
 %--------------------------------------------
 %-------------------------------------------- CHANGES
 %--------------------------------------------
-\section[Changes between releases 3.60 and \hpxversion]{Changes between releases 3.60 and
-\hpxversion} %2020-??
-\label{sub:new3p70}
+\section[Changes between releases 3.70 and \hpxversion]{Changes between releases 3.70 and \hpxversion} %2020-??
+\label{sub:new3p71}
 \begin{itemize}
-\item Addition of the subroutines
-\htmlref{\texttt{read\_fits\_partial}}{sub:read_fits_partial}
-and 
-\htmlref{\texttt{write\_fits\_partial}}{sub:write_fits_partial} 
-to read and write FITS files containing polarized or unpolarized maps defined on a fraction of the sky.
+\item Improvement of \htmlref{{\tt query\_disc}}{sub:query_disc} routine in \mylink{sub:query_disc:inclusive}{\tt inclusive} mode,
+\item correction of bugs preventing the compilation with versions 10.* of {\tt gfortran},
+%\item fixed bug affecting \htmlref{{\tt map2gif}}{fac:map2gif} when compiled with versions 10.* of {\tt gfortran} and {\tt gcc}.
 \end{itemize}
-
 %--------------------------------------------
 \section{Older Changes}
 %--------------------------------------------
@@ -250,8 +246,18 @@ to read and write FITS files containing polarized or unpolarized maps defined on
 \compresstext
 %--------------------------------------------
 %--------------------------------------------
-\subsection[Changes between releases 3.00 and 3.60]{Changes between releases 3.00 and 3.60}
+\subsection[Changes between releases 3.00 and 3.70]{Changes between releases 3.00 and 3.70}
 %--------------------------------------------
+
+\subsubsection{Version 3.70} %2020-07
+\label{sub:new3p70}
+\begin{itemize}\compresslist
+\item Addition of the subroutines
+\htmlref{\texttt{read\_fits\_partial}}{sub:read_fits_partial}
+and 
+\htmlref{\texttt{write\_fits\_partial}}{sub:write_fits_partial} 
+to read and write FITS files containing polarized or unpolarized maps defined on a fraction of the sky.
+\end{itemize}
 
 \subsubsection{Version 3.60} %2019-12
 \label{sub:new3p60}

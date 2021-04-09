@@ -245,16 +245,12 @@ with $X,Y \in \{T,E,B\}$.
 %--------------------------------------------
 %-------------------------------------------- CHANGES
 %--------------------------------------------
-\section[Changes between releases 3.60 and \hpxversion]{%
-Changes between releases 3.60 and \hpxversion}
+\section[Changes between releases 3.70 and \hpxversion]{%
+Changes between releases 3.70 and \hpxversion}
 \begin{itemize}
-\item Addition of the subroutines
-\mylinkext{sub:read_fits_partial}{\texttt{read\_fits\_partial}},
-and 
-\mylinkext{sub:write_fits_partial}{\texttt{write\_fits\_partial}},
-to read and write
-polarized or unpolarized map defined on a fraction of the sky.
+\item fixed bug affecting \htmlref{{\tt map2gif}}{fac:map2gif} when compiled with versions 10.* of {\tt gfortran} and {\tt gcc}.
 \end{itemize}
+
 
 %--------------------------------------------
 \section[Older Changes]{Older Changes}
@@ -264,6 +260,19 @@ polarized or unpolarized map defined on a fraction of the sky.
 {\mysmaller%
 \compresstext
 %
+%
+%-------------------------
+\subsubsection{Version 3.70} % 2020-07
+\begin{itemize}
+\item Addition of the subroutines
+\mylinkext{sub:read_fits_partial}{\texttt{read\_fits\_partial}},
+and 
+\mylinkext{sub:write_fits_partial}{\texttt{write\_fits\_partial}},
+to read and write
+polarized or unpolarized map defined on a fraction of the sky.
+\end{itemize}
+%
+%-------------------------
 \subsubsection{Version 3.60}
 \begin{itemize}
 \item Faster Spherical Harmonics Transforms 

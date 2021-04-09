@@ -245,30 +245,35 @@ in \linklatexhtml{the Installation Document}{install.pdf}{install.htm} for more 
 %%%%%%%
 \newpage
 
-\section{Changes in release \hpxversion} %2020-??
+\section{Changes in release \hpxversion} %2020-09??
 %--------------------------------
 \begin{itemize}
+%--------------------------------
+\item Improvement to the \htmlref{{\tt query\_disc}}{idl:query_disc} routine in \mylink{idl:query_disc:inclusive}{{\tt inclusive}} mode
+%
+%--------------------------------
+\end{itemize}
+%--------------------------------
+
+
+\section{Previous changes}
+{\mysmaller%% (itemize)
+\compresstext
+\subsubsection{Changes between release 3.60 and 3.70}%2020-07
+%--------------------------------
+\begin{itemize}\compresslist %--------0
 %--------------------------------
 \item Addition of 
 \htmlref{\texttt{read\_fits\_partial}}{idl:read_fits_partial}  and 
 \htmlref{\texttt{write\_fits\_partial}}{idl:write_fits_partial} 
 to read and write FITS files containing polarized or unpolarized maps defined on a fraction of the sky.
-% \item \htmlref{{\tt azeqview, cartview, gnomview, mollview,
-% orthview}}{idl:mollview} visualization routines: support for color and thickness in \mylink{idl:mollview:outline}{\texttt{outline}} keyword
-%\item Update of the required
-%    \htmladdnormallink{\texttt{IDL-astron} library}{https://idlastro.gsfc.nasa.gov/homepage.html}
-%    routines, and \htmladdnormallink{\texttt{Coyote}}{http://www.idlcoyote.com} library
-%    routines (2019-10-30).
 %--------------------------------
-\end{itemize}
+\end{itemize} %--------0
 %--------------------------------
-
-\section{Previous changes}
-{\mysmaller%% (itemize)
-\compresstext
+%
 \subsubsection{Changes between release 3.50 and 3.60}%2019-12
 %--------------------------------
-\begin{itemize} %--------0
+\begin{itemize}\compresslist %--------0
 %--------------------------------
 \item addition of \htmlref{\texttt{outline\_earth}}{idl:outline_earth} to create a structure outlining Earth features such as coastlines, rivers, country boundaries, ...
 \item \htmlref{{\tt azeqview, cartview, gnomview, mollview,
@@ -280,20 +285,20 @@ orthview}}{idl:mollview} visualization routines: support for color and thickness
 %--------------------------------
 \end{itemize} %--------0
 %--------------------------------
-
+%
 \subsubsection{Changes between releases 3.40 and 3.50}%2018-12
 %--------------------------------
-\begin{itemize} %--------0
+\begin{itemize}\compresslist %--------0
 %--------------------------------
 \item \htmlref{{\tt fits2cl}}{idl:fits2cl}: addition of \mylink{idl:fits2cl:planck3}{{\tt /PLANCK3}} keyword to read the fiducial $\Lambda$-CDM $C(\ell)$ model which best fits the 2018 Planck data analysis (available from \htmladdnormallink{\texttt{Healpix/data/planck2018\_lcdm\_cl\_v3.fits}}{\srcurl data/planck2018_lcdm_cl_v3.fits});
 \item \htmlref{\texttt{rotate\_coord}}{idl:rotate_coord}: addition of optional variable \mylink{idl:rotate_coord:delta_psi}{{\tt Delta\_Psi}} containing rotation of polarization on output, and of keyword \mylink{idl:rotate_coord:free_norm}{{\tt Free\_Norm}} to deal with un-normalized input coordinate vectors
 %--------------------------------
 \end{itemize} %--------0
 %--------------------------------
-
+%
 \subsubsection{Changes between releases 3.31 and 3.40}%2018-06
 %--------------------------------
-\begin{itemize} %--------0
+\begin{itemize}\compresslist %--------0
 %--------------------------------
 \item The routines \htmlref{\texttt{ianafast}}{idl:ianafast} and \htmlref{\texttt{ismoothing}}{idl:ismoothing}
 can now use pixel-based quadrature weights. Addition of the supporting functions 
@@ -315,7 +320,7 @@ An equivalent python facility \texttt{change\_polcconv.py} is now available as w
 %
 \item \htmlref{{\tt azeqview, cartview, gnomview, mollview,
 orthview}}{idl:mollview} visualization routines:
-\begin{itemize} %--------1
+\begin{itemize}\compresslist %--------1
    \item addition of the keywords 
 	\mylink{idl:mollview:customize}{{\tt CUSTOMIZE}} and 
 	\mylink{idl:mollview:default_settings}{{\tt DEFAULT\_SETTINGS}}
@@ -334,11 +339,10 @@ orthview}}{idl:mollview} visualization routines:
 %--------------------------------
 \end{itemize} %--------0
 %--------------------------------
-
-
+%
 \subsubsection{Changes between releases 3.30 and 3.31}
 %--------------------------------
-\begin{itemize} %--------0
+\begin{itemize}\compresslist %--------0
 %--------------------------------
 	\item Improved support for \htmlref{GDL}{install:using_gdl};
 %(see \htmlref{Using GDL instead of IDL}{install:using_gdl})
@@ -349,16 +353,15 @@ orthview}}{idl:mollview} visualization routines:
 %--------------------------------
 \end{itemize} %--------0
 %--------------------------------
-
+%
 \subsubsection{Changes between releases 3.20 and 3.30}
 %--------------------------------
-\begin{itemize} %--------0
+\begin{itemize}\compresslist %--------0
 %--------------------------------
-
 %
 \item \htmlref{{\tt azeqview, cartview, gnomview, mollview,
 orthview}}{idl:mollview} visualization routines:
-\begin{itemize} %--------1
+\begin{itemize}\compresslist %--------1
  \item addition of \mylink{idl:mollview:pdf}{{\tt PDF}} keyword for production of Adobe PDF outputs;
  \item addition of \mylink{idl:mollview:latex}{{\tt LATEX}} keyword for genuine 
  or emulated \LaTeX\ processing of character strings;
@@ -386,11 +389,11 @@ to read best fit $C(\ell)$ model to Planck 2015 data.
 %--------------------------------
 \end{itemize} %--------0
 %--------------------------------
-
+%
 %-------------------------------------------
 \subsubsection{Changes between releases 3.11 and 3.20}
 %-------------------------------------------
-\begin{itemize}%--------0
+\begin{itemize}\compresslist%--------0
 %
 \item addition of \htmlref{{\tt ialteralm}}{{idl:ialteralm}} to modify Spherical
 Harmonics coefficients ($a_{\ell m}$).
@@ -400,7 +403,7 @@ current color table to one used in Planck 2013 publications.
 %
 \item \htmlref{{\tt cartview, gnomview, mollview,
 orthview}}{idl:mollview}: 
-\begin{itemize}  %--------1
+\begin{itemize}\compresslist  %--------1
 \item addition of  
 \mylink{idl:mollview:bad_color}{{\tt BAD\_COLOR}},
 \mylink{idl:mollview:bg_color}{{\tt BG\_COLOR}} and
@@ -426,7 +429,7 @@ defined in \htmlref{{\tt planck\_colors}}{{idl:planck_colors}}
 %-------------------------------------------
 \subsubsection{Changes between releases 3.00 and 3.11}
 %--------------------------------
-\begin{itemize}%--------0
+\begin{itemize}\compresslist%--------0
 %--------------------------------
 
 %Several routines have been added or improved since version 3.00, as listed below.
@@ -434,7 +437,7 @@ defined in \htmlref{{\tt planck\_colors}}{{idl:planck_colors}}
 %\begin{itemize}
 %
 \item Latest edition (version 3.11)
-\begin{itemize} %--------1
+\begin{itemize}\compresslist %--------1
 	\item %
 		\htmlref{{\tt ang2pix\_ring}}{{idl:pix_tools}} and
 		\htmlref{{\tt pix2ang\_nest}}{{idl:pix_tools}} routines
@@ -442,7 +445,7 @@ defined in \htmlref{{\tt planck\_colors}}{{idl:planck_colors}}
 \end{itemize} %--------1
 %
 \item Previous edition (version 3.10)
-\begin{itemize} %--------1
+\begin{itemize}\compresslist %--------1
 	\item bug corrections: 
 	\htmlref{{\tt query\_disc}}{{idl:query_disc}}: correct handling of empty disc; 
 	\htmlref{{\tt bin\_llcl}}{{idl:bin_llcl}}: correct handling of optional argument.
@@ -472,10 +475,10 @@ to read best fit $C(\ell)$ model to Planck 2013 + external data.
 
 \subsubsection{Changes between releases 2.20 and 3.00}
 %--------------------------------
-\begin{itemize}%--------0
+\begin{itemize}\compresslist%--------0
 %--------------------------------
 \item Previous edition (version 3.0)
-\begin{itemize} %--------1
+\begin{itemize}\compresslist %--------1
 %
 	\item New routines to go from circular beam profile to transfer function
 (\htmlref{{\tt beam2bl}}{idl:beam2bl}), 
@@ -535,10 +538,10 @@ pixels on the sphere.
 
 
 %--------------------------------
-\begin{itemize}%--------0
+\begin{itemize}\compresslist%--------0
 %--------------------------------
 \item Recent edition (versions 2.20 and 2.20a)
-  \begin{itemize}%--------1
+  \begin{itemize}\compresslist %--------1
 	\item \htmlref{{\tt fits2cl}}{idl:fits2cl}: addition of {\tt WMAP1} and
 {\tt WMAP5} keywords to read
 	best fit $C(\ell)$ model to WMAP 1st and 5yr data respectively,
@@ -550,9 +553,9 @@ symbols definition.
   \end{itemize}%--------1
 
 \item Recent editions (versions 2.15 and 2.15a)
-  \begin{itemize}%--------1
+  \begin{itemize}\compresslist %--------1
 	\item \htmlref{{\tt cartview, gnomview, mollview, orthview}}{idl:mollview}:
-        \begin{itemize} %--------2
+        \begin{itemize}\compresslist %--------2
 		\item export of projected map into a FITS file (\mylink{idl:mollview:fits}{{\tt FITS}} keyword), or an
 IDL array (\mylink{idl:mollview:fits}{{\tt MAP\_OUT}} option) now available with all viewing routines,
 		\item added \mylink{idl:mollview:charthick}{{\tt CHARTHICK}}
@@ -576,9 +579,9 @@ BAD\_DATA} keyword added to FITS header;
 
 
 \item Previous edition (version 2.14a)
- \begin{itemize} %--------1
+ \begin{itemize}\compresslist %--------1
 	\item \htmlref{{\tt cartview, gnomview, mollview, orthview}}{idl:mollview}:
-        \begin{itemize} %--------2
+        \begin{itemize}\compresslist %--------2
 		\item {\tt OUTLINE=}, {\tt GRATICULE=}, {\tt IGRATICULE=} work
 again with virtual windows ({\tt WINDOW}$<0$)
 		\item {\tt YPOS=} and {\tt RETAIN=} keywords active again
@@ -600,11 +603,11 @@ accept lower case values; {\tt /SILENT} keyword added.
  \end{itemize} %--------1
 
 \item Old edition (version 2.13)
-   \begin{itemize} %--------1
+   \begin{itemize}\compresslist %--------1
 	\item new \htmlref{{\tt healpix\_doc}}{idl:healpix_doc} routine to
 browse HTML and PDF documentations
 	\item \htmlref{{\tt cartview, gnomview, mollview, orthview}}{idl:mollview}:
-        \begin{itemize} %--------2
+        \begin{itemize}\compresslist %--------2
 		\item introduction of the {\tt TRUECOLORS=} keyword to generate
 color image from 3 channel map
 		\item extended capability of the {\tt TRANSPARENT=} keyword
@@ -627,21 +630,21 @@ W8DIR=} keyword.
    \end{itemize} %--------1
 
 \item Older editions (versions 2.11 and 2.12a)
-   \begin{itemize} %--------1
+   \begin{itemize}\compresslist %--------1
 	\item \htmlref{{\tt ianafast}}{idl:ianafast}, 
               \htmlref{{\tt ismoothing}}{idl:ismoothing}, 
               \htmlref{{\tt isynfast}}{idl:isynfast}: the {\tt
 TMPDIR} keyword now works properly, and {\tt \$IDL\_TMPDIR} is used as the
 default temporary directory ; more stable behaviour of these routines
 	\item \htmlref{{\tt ud\_grade}}{idl:ud_grade}: 
-	\begin{itemize}  %--------2
+	\begin{itemize}\compresslist  %--------2
 		\item correctly flags bad output pixels with {\tt bad\_data}
 value when upgrading maps
 		\item cut sky map: improved, faster routine, now works for Nside $>$
 8192
 	\end{itemize} %--------2
 	\item \htmlref{{\tt cartview, gnomview, mollview, orthview}}{idl:mollview}:
-        \begin{itemize} %--------2
+        \begin{itemize}\compresslist %--------2
 		\item using a virtual window (ie, setting {\tt WINDOW} to a
 negative value) now allows faster generation of GIF and PNG files (especially useful over remote connections); 
 		\item addition of {\tt RETAIN=} keyword; 
@@ -657,7 +660,7 @@ leaving these routines
 	keyword for 3D rendering
 	\item issues warning when non-integer pixel indexes are fed to \htmlref{{\tt nest2ring, ring2nest, pix2ang\_*, pix2vec\_*,}}{idl:pix_tools}   ...
 	\item {\tt ximview}:
-		\begin{itemize} %--------2
+		\begin{itemize}\compresslist %--------2
 		\item fixed problem with cut-sky FITS files
 		\item color scale bar added to PNG output
 		\item version 0.6.2, fixed bug in pixel coordinates
@@ -668,7 +671,7 @@ leaving these routines
 
 %
 \item New routines in version 2.10 include
-\begin{itemize} %--------1
+\begin{itemize}\compresslist %--------1
  \item {{\tt ximview}}: visualisation routine developed by J. P. Leahy intended for quick-look inspection of HEALPix images 
 (as well as ordinary 2-D images) at the level of individual pixels. Features
 include panning, zooming, blinking, image statistics and peak finding.
@@ -692,9 +695,9 @@ FITS file
 \end{itemize} %--------1	
 %
 \item Routines with extended/improved user interface or new functionalities include
- \begin{itemize} %--------1
+ \begin{itemize}\compresslist %--------1
   \item \htmlref{{\tt mollview, gnomview, cartview, orthview}}{idl:mollview}: 
-  \begin{itemize} %--------2
+  \begin{itemize}\compresslist %--------2
    \item {\tt ONLINE} keyword is now redundant, 
    \item introduction of {\tt GLSIZE} and {\tt IGLSIZE} to
   	control automatic labeling of graticules,
@@ -720,7 +723,7 @@ FITS file
   \end{itemize} %--------1
 %
  \item Miscellaneous
-  \begin{itemize} %--------1
+  \begin{itemize}\compresslist %--------1
     \item \htmlref{{\tt mollcursor, gnomcursor...}}{idl:mollcursor}: an X11 patch is
 given so that these routines work under Mac OS X 10.4 and 10.5.
   \end{itemize} %--------1

@@ -232,7 +232,7 @@ on
 <a href="http://adsabs.harvard.edu/cgi-bin/nph-ref_query?bibcode=2005ApJ...622..759G&amp;refs=CITATIONS&amp;db_key=AST">ADS Classic</a>
 &amp; -->
 
-<a href="https://ui.adsabs.harvard.edu/#search/q=full%3Ahealpix&sort=date%20desc">ADS&nbsp;(Astrophysics)</a>,
+<a href="https://ui.adsabs.harvard.edu/#search/q=full%3A%28healpix+OR+healpy%29&sort=date+desc">ADS&nbsp;(Astrophysics)</a>,
 
 <!-- ADS 2.0 now deprecated
 &amp;

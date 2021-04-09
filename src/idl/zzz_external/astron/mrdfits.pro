@@ -384,6 +384,7 @@
 ;       V2.22  Handle 64 bit variable length binary tables WL   April 2014
 ;       V2.23  Use 64 bit for  very large files  WL  April 2014
 ;       V2.24  Binary table is allowed to have zero columns  WL  September 2018
+;       V2.25  Use long64 for ASCII table integers longer than I12 WL   October 2020
 ;-
 PRO mrd_fxpar, hdr, xten, nfld, nrow, rsize, fnames, fforms, scales, offsets
 compile_opt idl2, hidden
@@ -750,7 +751,7 @@ end
 ; Return the currrent version string for MRDFITS
 function mrd_version
 compile_opt idl2, hidden
-    return, '2.23 '
+    return, '2.25 '
 end
 ;=====================================================================
 ; END OF GENERAL UTILITY FUNCTIONS ===================================
@@ -843,9 +844,9 @@ compile_opt idl2, hidden
                 
         endif else begin
                 
-   
 
            if typarr[i] eq 'I' then begin
+                    if lenarr[i] GT 12 then table.(i) = long64(flds) else $
                     table.(i) =  long(flds)
             endif else if typarr[i] eq 'E' || typarr[i] eq 'F' then begin
                     table.(i) = float(flds)
@@ -854,6 +855,7 @@ compile_opt idl2, hidden
              endif else if typarr[i] eq 'A' then begin
                     table.(i) = flds
             endif
+            
         endelse
     endfor
 
@@ -975,16 +977,17 @@ compile_opt idl2, hidden
 		    strtrim(i+1,2),/CON
                 status = -1
                 return
-       endif	       
+       endif
+; Special test for long64 integers       
+       if (ftype EQ 'I') && (lenarr[i]	GT 12)  then sclstr[j] = -9223372036854775808LL   
        fvalues[i] = ftype NE 'A' ? sclstr[j] : $
 	                  'string(replicate(32b,'+strtrim(flen,2)+'))'
                                                
-         
     endfor
     
     if scaling then $
         scaling = ~array_equal(scales,1.0d0) || ~array_equal(offsets,0.0)
-   
+
     if ~scaling && ~keyword_set(columns) then begin
         table = mrd_struct(fnames, fvalues, nrows, structyp=structyp, $
            silent=silent)
@@ -2561,7 +2564,7 @@ function mrdfits, file, extension, header,      $
     compile_opt idl2    
     ;   Let user know version if MRDFITS being used.
     if keyword_set(version) then $
-        print,'MRDFITS: Version '+mrd_version() + 'April 24, 2014'
+        print,'MRDFITS: Version '+mrd_version() + 'October 29, 2020'
         
       
     if N_elements(error_action) EQ 0 then error_action = 2

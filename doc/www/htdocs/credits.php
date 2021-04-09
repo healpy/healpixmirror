@@ -171,6 +171,7 @@
                       <li>    John Arballo    			</li>
                       <li>    Marc Ashdown   			</li>
                       <li>    Carlo Baccigalupi   		</li>
+		      <li>    Roger 		de Belsunce	</li>
 		      <li>    Karim 		Benabed   	</li> 
 		      <li>    Aur&eacute;lien 	Benoit-L&eacute;vy   	</li> 
 		      <li>    Jean-Philippe 	Bernard	  	</li>
@@ -181,7 +182,6 @@
 		      <li>    Anthony 		Challinor 	</li>
                       <li>    St&eacute;phane Colombi   	</li>
 		      <li>    Alain Coulais			</li>
-                      <li>    Giancarlo de Gasperis   		</li>
 		      <li>    Clive Dickinson     		</li>
                       <li>    Herv&eacute; Dole   		</li>
                       <li>    Olivier Dor&eacute;  	 	</li>
@@ -191,6 +191,7 @@
                       <li>    Pablo Fosalba	   		</li>
                       <li>    Silvia 		Galli   	</li>
                       <li>    Ken 		Ganga   	</li>
+                      <li>    Giancarlo de Gasperis   		</li>
                       <li>    Tuhin 		Ghosh   	</li>
                       <li>    Giovanna 		Giardino   	</li>
                       <li>    Jean-Christophe 	Hamilton   	</li>
@@ -199,6 +200,7 @@
                       <li>    Tess 		Jaffe   	</li>
 		      <li>    Reijo 		Keskitalo 	</li>
                       <li>    Alex              Kim   		</li>
+                      <li>    Ted               Kisner   	</li>
                     </ul>
                 </td>
 <!--
@@ -208,7 +210,6 @@
 -->
                 <td style="width:350px; vertical-align:top">
                     <ul>
-                      <li>    Ted               Kisner   	</li>
 		      <li>    Masakazu A.R. Kobayashi		</li>
 		      <li>    Eiichiro Komatsu			</li>
 		      <li>    Wayne Landsman			</li>
@@ -231,15 +232,18 @@
                       <li>    Nicolas Ponthieu   		</li>
                       <li>    Torsti Poutanen   		</li>
                       <li>    Simon Prunet   			</li>
+		      <li>    Sasha 		Rahlin		</li>
                       <li>    Benoit Revenu   			</li>
 		      <li>    Christophe Ringeval		</li>
 		      <li>    Cyrille 		Rosset		</li>
                       <li>    Rosa Ruiloba   			</li>
                       <li>    David N. Spergel   		</li>
                       <li>    Radek Stompor   			</li>
+                      <li>    Dan		Suson  		</li>
                       <li>    Giovanna Tinetti   		</li>
                       <li>    Maurizio Tomasi   		</li>
                       <li>    Wen Zhao   			</li>
+		      <li>    Houri 		Ziaeepour	</li>
                     </ul>
                 </td>
               </tr>

@@ -109,9 +109,10 @@ updateVersion () {
   mv  $tmpfile $infile
   grep VERSION $infile
 #   infile='src/cxx/autotools/configure.ac'
-#   echoBlu "editing ${infile}"
-#   cat $infile | sed "s|AC_INIT.*|AC_INIT([healpix_cxx], [$version])|g" > $tmpfile
-#   mv $tmpfile $infile
+  infile='src/cxx/configure.ac'
+  echoBlu "editing ${infile}"
+  cat $infile | sed "s|AC_INIT.*|AC_INIT([healpix_cxx], [$version])|g" > $tmpfile
+  mv $tmpfile $infile
 
   infile='src/cxx/README.compilation'
   echoBlu "editing ${infile}"

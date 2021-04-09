@@ -492,13 +492,13 @@ among
 \item If the environment variables 
       \texttt{CC}                 (C compiler, relevant for C,C++,F90,healpy,sharp),
       \texttt{C\_FITS}, \texttt{C\_SHARED} (\mylink{install:C:config}{C}),
-      \texttt{CXX}, \texttt{CXXFLAGS}      (\mylink{install:cpp_config}{C++}),
+      \texttt{CXX}, \texttt{CXXFLAGS}, \texttt{CXX\_PARAL}      (\mylink{install:cpp_config}{C++}),
       \texttt{FC},  \texttt{F\_DIRSUFF}, \texttt{F\_OPT}, 
       \texttt{F\_PARAL}, \texttt{F\_SHARED}         (\mylink{install:f90:config}{F90}),
       \texttt{FITSDIR},   \texttt{FITSINC}   (C,C++,F90),
       \texttt{PYTHON}             (\mylink{install:healpy:config}{healpy}),
       \texttt{PROFILE\_EDIT} (\mylink{install:profile}{profile}),
-      \texttt{SHARP\_COPT} (\mylink{install:libsharp:config}{sharp}),
+      \texttt{SHARP\_COPT}, \texttt{SHARP\_PARAL} (\mylink{install:libsharp:config}{sharp}),
   and \texttt{papersize}, \texttt{ps\_com}, \texttt{pdf\_com}, \texttt{gif\_com}  (\mylink{install:idlgdlconfig}{IDL})
 %see configure -h
 are defined prior to calling the \texttt{configure} script, they will change the
@@ -577,6 +577,7 @@ The environment variables \texttt{CC}, \texttt{CXX}, \texttt{CXXFLAGS}, \texttt{
 can be used to customize the whole process. If the latter two are not explicitely set, 
 the autoconf configure script will look for a \texttt{cfitsio} installation on its own.\\
 The configuration of \mylink{install:libsharp:config}{\texttt{libsharp}} will be also taken care of at this stage.\\
+The \mylink{install:configure:boolean}{boolean} variable \texttt{CXX\_PARAL}, introduced in version 3.71 and defaulting to 1 (=true), controls whether the code will be parallelized (with OpenMP) or not. To obtain a serial implementation of the code, set \texttt{CXX\_PARAL=0} and make sure no OpenMP related flags appear in \texttt{CXXFLAGS}.\\
 At odds with previous versions, the C++ binaries, libraries and header files will be installed in 
 \texttt{\$\{HEALPIX\}/bin}, 
 \texttt{\$\{HEALPIX\}/lib} and 
@@ -676,14 +677,18 @@ and will be configured (only once) at the same time as any of the C++ or Fortran
 The environment variables \texttt{CC} and \texttt{SHARP\_COPT} can be used to set respectively
 the C compiler and its options proposed during the interactive or automated configuration process.\\
 For optimal performance, the C compilation flags should include \texttt{-ffast-math}
-and \texttt{-march=native} (or your compiler's equivalent options).
+and \texttt{-march=native} (or your compiler's equivalent options), and may look like
+\texttt{SHARP\_COPT='-O3 -ffast-math -march=native -fopenmp'} (multi-worded values must be enclosed in quotes).\\
 If you are using \texttt{gcc} or \texttt{clang} (see below) and you want to produce a portable,
 high-performance library, and if you compiler and assembler support it,
 you can also replace \texttt{-march=native} by \texttt{-DMULTIARCH}.\\
 If you are using \texttt{clang} to compile \texttt{libsharp},
 make sure it supports OpenMP (as in version 3.7 or more), and that OpenMP
-is enabled (possibly requiring the flag \texttt{-fopemp=libomp} instead of the usual \texttt{-fopemp}
+is enabled explicitly among the compiler options
+(possibly requiring the flag \texttt{-fopemp=libomp} or \texttt{-fopemp=libiomp5} 
+instead of the usual \texttt{-fopemp}
 or by specifying the location of the OpenMP libraries during compilation and at run time).\\
+The \mylink{install:configure:boolean}{boolean} variable \texttt{SHARP\_PARAL}, introduced in version 3.71 and defaulting to 1 (=true), controls whether the library will be parallelized (with OpenMP) or not. To obtain a serial implementation of \texttt{libsharp}, set \texttt{SHARP\_PARAL=0} and make sure no OpenMP related flags appear in \texttt{SHARP\_COPT}.\\
 After compilation and installation (which, for \texttt{libsharp} only,
  are done as early as the \texttt{configure} step) 
 the resulting library will be in
@@ -1371,7 +1376,7 @@ type
 \end{itemize}
 \item with Xquartz (default under Moutain Lion (10.8.*), Mavericks (10.9.*) and Yosemite (10.10.*), 
 available for download for 
-El Capitan (10.11.*), Sierra (10.12.*), High Sierra (10.13.*), Mojave (10.14.*) and Catalina (10.15.*)):\\
+El Capitan (10.11.*), Sierra (10.12.*), High Sierra (10.13.*), Mojave (10.14.*), Catalina (10.15.*) and Big Sur (11.0.*)):\\
 {\texttt{defaults write org.macosforge.xquartz.X11 wm\_click\_through -bool true}}
 \item with MacPort's X11 (package xorg-server):\\
 {\texttt{defaults write org.macports.X11 wm\_click\_through -bool true}}
@@ -1647,9 +1652,9 @@ However, the \mylinkext{idl:mollview:latex}{\texttt{Latex}} keyword will work pr
 \section{Appendix I: Recent Changes and New Features}
 \label{sec:newfeatures}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% BEGIN LATEST CHANGES %%%%%%%%%%%%%
-\subsection{Bug corrections and Improvements in Version \hpxversion}%2020-07-24
-\label{sec:v361}\mytarget{install:v361}
-\label{sec:v370}\mytarget{install:v370}
+\subsection{Bug corrections and Improvements in Version \hpxversion}%2020-09??
+\label{sec:v371}\mytarget{install:v371}
+%------------
 % \subsubsection[General]{General}
 % \subsubsection[C]{\linklatexhtml{C}{csub.pdf}{csub.htm}}
 % \subsubsection[C++]{\htmladdnormallink{C++}{\healpixwebpage/html/index_cxx.htm}}
@@ -1659,19 +1664,55 @@ However, the \mylinkext{idl:mollview:latex}{\texttt{Latex}} keyword will work pr
 % \subsubsection[IDL]{\linklatexhtml{IDL}{idl.pdf}{idl.htm}}
 % \subsubsection[Java]{\htmladdnormallink{Java}{\healpixwebpage/html/java/index.html}}
 % \subsubsection[Python]{\htmladdnormallink{Python}{https://healpy.readthedocs.io/en/latest/}}
-%
+%------------
+% \subsubsection[General]{General}
+% \subsubsection[C]{\linklatexhtml{C}{csub.pdf}{csub.htm}}
+% \subsubsection[C++]{\htmladdnormallink{C++}{\healpixwebpage/html/index_cxx.htm}}
+% \subsubsection[Fortran 90]{%
+%  	Fortran 90 \linklatexhtml{facilities}{facilities.pdf}{facilities.htm} and
+%  	\linklatexhtml{subroutines}{subroutines.pdf}{subroutines.htm}}
 \subsubsection[General]{General}
+\begin{itemize}
+\item addition of \mylink{install:libsharp:config}{\texttt{SHARP\_PARAL}} and 
+\mylink{install:cpp_config}{\texttt{CXX\_PARAL}} to control the parallel implementation of the \texttt{libsharp} library and C++ library and codes.
+\end{itemize}
+\subsubsection[Fortran 90]{Fortran 90 facilities and subroutines}
+\begin{itemize}
+\item Improvement of \htmlref{{\tt query\_disc}}{sub:query_disc} routine in \mylinkext{sub:query_disc:inclusive}{\tt inclusive} mode,
+\item correction of bugs preventing the compilation with versions 10.* of {\tt gfortran},
+\item fixed bug affecting \htmlref{{\tt map2gif}}{fac:map2gif} when compiled with versions 10.* of {\tt gfortran} and {\tt gcc}.
+\end{itemize}
+% \subsubsection[IDL]{\linklatexhtml{IDL}{idl.pdf}{idl.htm}}
+\subsubsection[IDL]{IDL}
+\begin{itemize}
+\item Improvement of \htmlref{{\tt query\_disc}}{idl:query_disc} routine in \mylinkext{idl:query_disc:inclusive}{\tt inclusive} mode
+\end{itemize}
+
+% \subsubsection[Java]{\htmladdnormallink{Java}{\healpixwebpage/html/java/index.html}}
+% \subsubsection[Python]{\htmladdnormallink{Python}{https://healpy.readthedocs.io/en/latest/}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% END LATEST CHANGES %%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% ------
+%----------------------------------------------------
+\section{Appendix II: Older changes (versions 3.00 to 3.70)}
+%
+{\mytiny{%
+%
+\tinysubsection*{Bug corrections and Improvements in Version 3.70 (2020-07)}%2020-07-24
+\label{sec:v361}\mytarget{install:v361}
+\label{sec:v370}\mytarget{install:v370}
+%
+\tinysubsubsection*{General}
 \begin{itemize}
    \item Fixed several bugs in the \mylink{install:configure}{\texttt{configure}} script
    \item Documentation now available in \mylink{install:healpix_doc}{EPUB format}
 \end{itemize}
-%
-% \subsubsection[C]{\linklatexhtml{C}{csub.pdf}{csub.htm}}
-% \subsubsection[C++]{\htmladdnormallink{C++}{\healpixwebpage/html/index_cxx.htm}}
-%
-\subsubsection[Fortran 90]{Fortran 90 facilities and subroutines}
-%  	Fortran 90 \linklatexhtml{facilities}{facilities.pdf}{facilities.htm} and
-%  	\linklatexhtml{subroutines}{subroutines.pdf}{subroutines.htm}}
+\tinysubsubsection*{Fortran 90 \linklatexhtml{facilities}{facilities.pdf}{facilities.htm} and
+ 	\linklatexhtml{subroutines}{subroutines.pdf}{subroutines.htm}}
 \begin{itemize}
     \item Addition of the subroutines
     \htmlref{\texttt{read\_fits\_partial}}{sub:read_fits_partial} and 
@@ -1679,8 +1720,7 @@ However, the \mylinkext{idl:mollview:latex}{\texttt{Latex}} keyword will work pr
     to read and write FITS files containing polarized or unpolarized maps defined on a fraction of the sky (see \url{\hpxfitsdoc}).
 \end{itemize}
 %
-\subsubsection[IDL]{IDL}
-%	\linklatexhtml{IDL}{idl.pdf}{idl.htm}}
+\tinysubsubsection*{\linklatexhtml{IDL}{idl.pdf}{idl.htm}}
 \begin{itemize}
    \item Addition of 
    \htmlref{\texttt{read\_fits\_partial}}{idl:read_fits_partial}  and 
@@ -1693,10 +1733,10 @@ However, the \mylinkext{idl:mollview:latex}{\texttt{Latex}} keyword will work pr
 \end{itemize}
 %
 % \subsubsection[Java]{\htmladdnormallink{Java}{\healpixwebpage/html/java/index.html}}
-\subsubsection[Python]{\htmladdnormallink{Python}{https://healpy.readthedocs.io/en/latest/}}
+\tinysubsubsection*{\htmladdnormallink{Python}{https://healpy.readthedocs.io/en/latest/}}
 \begin{itemize}
 \item Switch to 
-	\htmladdnormallink{\texttt{healpy \hpyversion}}{\hpysite/releases} 
+	\htmladdnormallink{\texttt{healpy 1.14.0}}{\hpysite/releases} 
 	(\htmladdnormallink{CHANGELOG}{\hpysite/blob/master/CHANGELOG.rst})
 \begin{itemize}
 \item Line Integral Convolution plots to plot polarization,
@@ -1708,24 +1748,11 @@ However, the \mylinkext{idl:mollview:latex}{\texttt{Latex}} keyword will work pr
 \end{itemize}
 \end{itemize}
 % END of optional healpy
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% END LATEST CHANGES %%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%
-% ------
-%----------------------------------------------------
-\section{Appendix II: Older changes (versions 3.00 to 3.60)}
-%
-{\mytiny{%
-%
+%---------------
 \tinysubsection*{Bug corrections and Improvements in Version 3.60 (2019-12)}%2019-12
 \label{sec:v360}
 \mytarget{install:v360}
-
+%
 \tinysubsubsection*{General}
 \begin{itemize}
 \item The computation time of a map synthesis or analysis has been reduced
