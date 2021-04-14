@@ -435,10 +435,10 @@ contains
 
 
   ! define routine with SP I/O
-#include "fits_s_inc.f90"
+#include "fits_s_inc.F90"
 
   ! define routine with DP I/O
-#include "fits_d_inc.f90"
+#include "fits_d_inc.F90"
 
 
 

@@ -13,7 +13,7 @@ incpix = convert_inplace_1d_inc.f90 \
 	apply_mask_inc.f90 \
 	pixel_routines.F90
 
-incfits = fits_s_inc.f90 fits_d_inc.f90
+incfits = fits_s_inc.F90 fits_d_inc.F90
 
 incudgrade = udgrade_s_inc.f90 udgrade_d_inc.f90
 
@@ -123,10 +123,10 @@ alm_map_ss_inc.F90: alm_map_template.F90 gen_alm_code
 alm_map_dd_inc.F90: alm_map_template.F90 gen_alm_code alm_map_ss_inc.F90
 	@./gen_alm_code
 
-fits_s_inc.f90: fits_template.f90 gen_fits_code
+fits_s_inc.F90: fits_template.F90 gen_fits_code
 	@./gen_fits_code
 
-fits_d_inc.f90: fits_template.f90 gen_fits_code fits_s_inc.f90
+fits_d_inc.F90: fits_template.F90 gen_fits_code fits_s_inc.F90
 	@./gen_fits_code
 
 udgrade_s_inc.f90: udgrade_template.f90 gen_udgrade_code
