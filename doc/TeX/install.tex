@@ -577,7 +577,7 @@ The environment variables \texttt{CC}, \texttt{CXX}, \texttt{CXXFLAGS}, \texttt{
 can be used to customize the whole process. If the latter two are not explicitely set, 
 the autoconf configure script will look for a \texttt{cfitsio} installation on its own.\\
 The configuration of \mylink{install:libsharp:config}{\texttt{libsharp}} will be also taken care of at this stage.\\
-The \mylink{install:configure:boolean}{boolean} variable \texttt{CXX\_PARAL}, introduced in version 3.71 and defaulting to 1 (=true), controls whether the code will be parallelized (with OpenMP) or not. To obtain a serial implementation of the code, set \texttt{CXX\_PARAL=0} and make sure no OpenMP related flags appear in \texttt{CXXFLAGS}.\\
+The \mylink{install:configure:boolean}{boolean} variable \texttt{CXX\_PARAL}, introduced in version 3.80 and defaulting to 1 (=true), controls whether the code will be parallelized (with OpenMP) or not. To obtain a serial implementation of the code, set \texttt{CXX\_PARAL=0} and make sure no OpenMP related flags appear in \texttt{CXXFLAGS}.\\
 At odds with previous versions, the C++ binaries, libraries and header files will be installed in 
 \texttt{\$\{HEALPIX\}/bin}, 
 \texttt{\$\{HEALPIX\}/lib} and 
@@ -688,7 +688,7 @@ is enabled explicitly among the compiler options
 (possibly requiring the flag \texttt{-fopemp=libomp} or \texttt{-fopemp=libiomp5} 
 instead of the usual \texttt{-fopemp}
 or by specifying the location of the OpenMP libraries during compilation and at run time).\\
-The \mylink{install:configure:boolean}{boolean} variable \texttt{SHARP\_PARAL}, introduced in version 3.71 and defaulting to 1 (=true), controls whether the library will be parallelized (with OpenMP) or not. To obtain a serial implementation of \texttt{libsharp}, set \texttt{SHARP\_PARAL=0} and make sure no OpenMP related flags appear in \texttt{SHARP\_COPT}.\\
+The \mylink{install:configure:boolean}{boolean} variable \texttt{SHARP\_PARAL}, introduced in version 3.80 and defaulting to 1 (=true), controls whether the library will be parallelized (with OpenMP) or not. To obtain a serial implementation of \texttt{libsharp}, set \texttt{SHARP\_PARAL=0} and make sure no OpenMP related flags appear in \texttt{SHARP\_COPT}.\\
 After compilation and installation (which, for \texttt{libsharp} only,
  are done as early as the \texttt{configure} step) 
 the resulting library will be in
@@ -1553,7 +1553,8 @@ are available for Linux, Windows, MacOSX and more from
 \url{\flsitea}.
 
 Most of the IDL routines and features have been implemented, with a few exceptions 
-(like \texttt{xloadct}, or \texttt{xyouts} with TrueType fonts) and the restrictions listed below.
+(like \texttt{xloadct}%, or \texttt{xyouts} with TrueType fonts
+) and the restrictions listed below.
 
 \subsubsection*{FL+\healpix specific requirements}
 To fully enjoy FL capabilities
@@ -1652,7 +1653,8 @@ However, the \mylinkext{idl:mollview:latex}{\texttt{Latex}} keyword will work pr
 \section{Appendix I: Recent Changes and New Features}
 \label{sec:newfeatures}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% BEGIN LATEST CHANGES %%%%%%%%%%%%%
-\subsection{Bug corrections and Improvements in Version \hpxversion}%2020-09??
+\subsection{Bug corrections and Improvements in Version \hpxversion}%2021-04??
+\label{sec:v380}\mytarget{install:v380}
 \label{sec:v371}\mytarget{install:v371}
 %------------
 % \subsubsection[General]{General}
@@ -1673,23 +1675,42 @@ However, the \mylinkext{idl:mollview:latex}{\texttt{Latex}} keyword will work pr
 %  	\linklatexhtml{subroutines}{subroutines.pdf}{subroutines.htm}}
 \subsubsection[General]{General}
 \begin{itemize}
-\item addition of \mylink{install:libsharp:config}{\texttt{SHARP\_PARAL}} and 
-\mylink{install:cpp_config}{\texttt{CXX\_PARAL}} to control the parallel implementation of the \texttt{libsharp} library and C++ library and codes.
+\item addition of 
+\mylink{install:libsharp:config}{\texttt{SHARP\_PARAL}} and 
+\mylink{install:cpp_config}{\texttt{CXX\_PARAL}} 
+to control the parallel implementation of the \texttt{libsharp} library and C++ library and codes.
 \end{itemize}
+%
+% % \subsubsection[C++]{\htmladdnormallink{C++}{\healpixwebpage/html/index_cxx.htm}}
+%\subsubsection[C++]{C++}
+%\begin{itemize}
+%\end{itemize}
+%
 \subsubsection[Fortran 90]{Fortran 90 facilities and subroutines}
 \begin{itemize}
 \item Improvement of \htmlref{{\tt query\_disc}}{sub:query_disc} routine in \mylinkext{sub:query_disc:inclusive}{\tt inclusive} mode,
 \item correction of bugs preventing the compilation with versions 10.* of {\tt gfortran},
 \item fixed bug affecting \htmlref{{\tt map2gif}}{fac:map2gif} when compiled with versions 10.* of {\tt gfortran} and {\tt gcc}.
 \end{itemize}
+%
 % \subsubsection[IDL]{\linklatexhtml{IDL}{idl.pdf}{idl.htm}}
 \subsubsection[IDL]{IDL}
 \begin{itemize}
-\item Improvement of \htmlref{{\tt query\_disc}}{idl:query_disc} routine in \mylinkext{idl:query_disc:inclusive}{\tt inclusive} mode
+\item Improvement of \htmlref{{\tt query\_disc}}{idl:query_disc} routine in \mylinkext{idl:query_disc:inclusive}{\tt inclusive} mode;
+\item update of the required
+    \htmladdnormallink{\texttt{IDL-astron} library}{https://idlastro.gsfc.nasa.gov/homepage.html}
+    routines, and \htmladdnormallink{\texttt{Coyote}}{http://www.idlcoyote.com} library
+    routines (2021-04-08).%
 \end{itemize}
 
 % \subsubsection[Java]{\htmladdnormallink{Java}{\healpixwebpage/html/java/index.html}}
-% \subsubsection[Python]{\htmladdnormallink{Python}{https://healpy.readthedocs.io/en/latest/}}
+% % \subsubsection[Python]{\htmladdnormallink{Python}{https://healpy.readthedocs.io/en/latest/}}
+\subsubsection[Python]{Python}
+\begin{itemize}
+\item Switch to 
+	\htmladdnormallink{\texttt{healpy 1.15.0}}{\hpysite/releases} 
+	(\htmladdnormallink{CHANGELOG}{\hpysite/blob/master/CHANGELOG.rst})
+\end{itemize}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% END LATEST CHANGES %%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
