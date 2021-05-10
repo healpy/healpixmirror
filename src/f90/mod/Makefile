@@ -109,7 +109,7 @@ $(OD)/alm_tools.o:alm_tools.F90  $(incalm)
 
 $(OD)/fitstools.o: fitstools.F90 $(incfits)
 
-$(OD)/udgrade_nr.o: udgrade_nr.f90 $(incudgrade)
+$(OD)/udgrade_nr.o: udgrade_nr.F90 $(incudgrade)
 
 $(OD)/num_rec.o: num_rec.F90 $(incnumrec)
 

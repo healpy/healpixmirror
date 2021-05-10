@@ -59,10 +59,10 @@ module udgrade_nr
 contains
 
   ! include SP implementation of routines
-  include 'udgrade_s_inc.f90'
+#include "udgrade_s_inc.f90"
   
   ! include DP implementation of routines
-  include 'udgrade_d_inc.f90'
+#include "udgrade_d_inc.f90"
 
 
 end module udgrade_nr
