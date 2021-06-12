@@ -144,6 +144,7 @@ template<typename T> void map2alm_spin
    Alm<xcomplex<T> > &alm1, Alm<xcomplex<T> > &alm2,
    int spin, const arr<double> &weight, bool add_alm)
   {
+  planck_assert (spin>0, "map2alm_spin: spin must be positive");
   planck_assert (map1.Scheme()==RING,
     "map2alm_spin: maps must be in RING scheme");
   planck_assert (map1.conformable(map2),
@@ -176,6 +177,7 @@ template<typename T> void alm2map_spin_adjoint
    Alm<xcomplex<T> > &alm1, Alm<xcomplex<T> > &alm2,
    int spin, bool add_alm)
   {
+  planck_assert (spin>0, "alm2map_spin_adjoint: spin must be positive");
   planck_assert (map1.Scheme()==RING,
     "alm2map_spin_adjoint: maps must be in RING scheme");
   planck_assert (map1.conformable(map2),
@@ -207,6 +209,7 @@ template<typename T> void map2alm_spin_iter2
    Alm<xcomplex<T> > &alm1, Alm<xcomplex<T> > &alm2,
    int spin, double err_abs, double err_rel)
   {
+  planck_assert (spin>0, "map2alm_spin: spin must be positive");
   arr<double> wgt(2*map1.Nside());
   wgt.fill(1);
   Healpix_Map<T> map1b(map1), map2b(map2);
@@ -443,6 +446,7 @@ template<typename T> void alm2map_spin
   (const Alm<xcomplex<T> > &alm1, const Alm<xcomplex<T> > &alm2,
    Healpix_Map<T> &map1, Healpix_Map<T> &map2, int spin, bool add_map)
   {
+  planck_assert (spin>0, "alm2map_spin: spin must be positive");
   planck_assert (map1.Scheme()==RING,
     "alm2map_spin: maps must be in RING scheme");
   planck_assert (map1.conformable(map2),
