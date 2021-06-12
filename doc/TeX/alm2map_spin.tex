@@ -77,7 +77,7 @@ nsmax\mytarget{sub:alm2map_spin:nsmax} & I4B & IN & the $\nside$ value of the ma
 nlmax\mytarget{sub:alm2map_spin:nlmax} & I4B & IN & the maximum $\ell$ value used for the $a_{\ell m}$. \\
 nmmax\mytarget{sub:alm2map_spin:nmmax} & I4B & IN & the maximum $m$ value used for the $a_{\ell m}$. \\
 spin\mytarget{sub:alm2map_spin:spin} & I4B & IN & spin $s$ of the maps to be generated (only its absolute value
-is relevant). \\
+is relevant; must not be zero). \\
 alm\mytarget{sub:alm2map_spin:alm}(1:2, 0:nlmax, 0:nmmax) & SPC/ DPC & IN & The ${_{|s|}}a^+_{\ell m}$ and ${_{|s|}}a^-_{\ell m}$ values to make the map
                    from.\\
 map\mytarget{sub:alm2map_spin:map}(0:12*nsmax**2-1, 1:2) & SP/ DP & OUT & ${_{|s|}}S^+$ and ${_{|s|}}S^-$ output maps\\
