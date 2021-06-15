@@ -79,7 +79,7 @@ nsmax\mytarget{sub:map2alm_spin:nsmax} & I4B & IN & the $\nside$ value of the ma
 nlmax\mytarget{sub:map2alm_spin:nlmax} & I4B & IN & the maximum $\ell$ value for the analysis. \\
 nmmax\mytarget{sub:map2alm_spin:nmmax} & I4B & IN & the maximum $m$ value for the analysis. \\
 spin\mytarget{sub:map2alm_spin:spin} & I4B & IN & the spin $s$ of the maps to be analysed (only its absolute
-value is relevant; must not be zero).\\
+value is relevant; must be $<100$).\\
 map\mytarget{sub:map2alm_spin:map}(0:12*nsmax**2-1, 1:2) & SP/ DP & IN & ${_{|s|}}S^+$ and ${_{|s|}}S^-$ input maps\\
 alm\mytarget{sub:map2alm_spin:alm}(1:2, 0:nlmax, 0:nmmax) & SPC/ DPC & OUT & The ${_{|s|}}a^+_{\ell m}$ and
 ${_{|s|}}a^-_{\ell m}$ output values. \\

@@ -1682,21 +1682,35 @@ to control the parallel implementation of the \texttt{libsharp} library and C++ 
 \end{itemize}
 %
 % % \subsubsection[C++]{\htmladdnormallink{C++}{\healpixwebpage/html/index_cxx.htm}}
-%\subsubsection[C++]{C++}
-%\begin{itemize}
-%\end{itemize}
+\subsubsection[C++]{C++}
+\begin{itemize}
+\item the line-integral convolution interface is now accessible not only from the command line, but also via C++ calls, to allow calling from \texttt{healpy};
+\item some internals were restructured to allow easier integration with \htmladdnormallink{\texttt{SWIG}}{http://www.swig.org}
+\end{itemize}
 %
 \subsubsection[Fortran 90]{Fortran 90 facilities and subroutines}
 \begin{itemize}
-\item Improvement of \htmlref{{\tt query\_disc}}{sub:query_disc} routine in \mylinkext{sub:query_disc:inclusive}{\tt inclusive} mode,
-\item correction of bugs preventing the compilation with versions 10.* of {\tt gfortran},
+\item Improvement of \htmlref{\texttt{query\_disc}}{sub:query_disc} routine in \mylinkext{sub:query_disc:inclusive}{\tt inclusive} mode,
+\item the routines 
+ \htmlref{\texttt{alm2map\_spin}}{sub:alm2map_spin} and 
+ \htmlref{\texttt{map2alm\_spin}}{sub:map2alm_spin} now calls the faster
+ \htmlref{\texttt{alm2map}}{sub:alm2map} and 
+ \htmlref{\texttt{map2alm}}{sub:map2alm} when invoked with a vanishing spin ($s=0$), 
+ while keeping the spin-specific sign convention,
+% \item the routines 
+%  \htmlref{\texttt{alm2map\_spin}}{sub:alm2map_spin} and 
+%  \htmlref{\texttt{map2alm\_spin}}{sub:map2alm_spin} now runs only for spin values $|s|>0$ 
+%  (the faster routines 
+%  \htmlref{\texttt{alm2map}}{sub:alm2map} and 
+%  \htmlref{\texttt{map2alm}}{sub:map2alm} should be used instead when $s=0$),
+\item correction of bugs preventing the compilation with versions 10.* of \texttt{gfortran},
 \item fixed bug affecting \htmlref{{\tt map2gif}}{fac:map2gif} when compiled with versions 10.* of {\tt gfortran} and {\tt gcc}.
 \end{itemize}
 %
 % \subsubsection[IDL]{\linklatexhtml{IDL}{idl.pdf}{idl.htm}}
 \subsubsection[IDL]{IDL}
 \begin{itemize}
-\item Improvement of \htmlref{{\tt query\_disc}}{idl:query_disc} routine in \mylinkext{idl:query_disc:inclusive}{\tt inclusive} mode;
+\item Improvement of \htmlref{\texttt{query\_disc}}{idl:query_disc} routine in \mylinkext{idl:query_disc:inclusive}{\tt inclusive} mode;
 \item update of the required
     \htmladdnormallink{\texttt{IDL-astron} library}{https://idlastro.gsfc.nasa.gov/homepage.html}
     routines, and \htmladdnormallink{\texttt{Coyote}}{http://www.idlcoyote.com} library

@@ -327,7 +327,7 @@
 
     real(DP), dimension(1:2)         :: zbounds_in
     integer(I4B) :: l, m, ith                          ! alm related
-    integer(I8B) :: istart_south, istart_north, npix   ! map related
+    integer(I8B) :: istart_south, istart_north, npix, p! map related
     integer(I4B) :: nrings, nphmx
 
     real(DP),     dimension(1:4)              :: b_even, b_odd
@@ -354,13 +354,27 @@
 #ifdef USE_SHARP
     zbounds_in = (/-1.d0 , 1.d0/)
     if (present(zbounds)) zbounds_in = zbounds
-
+!     aspin = abs(spin)
+!     if ((aspin>0).and.(aspin<=100)) then
+!       call sharp_hp_alm2map_spin_x_KLOAD(nsmax,nlmax,nmmax,aspin, &
+!         alm(1:2,0:nlmax,0:nmmax),map(0:12*nsmax*nsmax-1,1:2), zbounds_in)
+!       return
+!     endif
+    ! 2021-06-15: use scalar routine when s=0
     aspin = abs(spin)
-    if ((aspin>0).and.(aspin<=100)) then
-      call sharp_hp_alm2map_spin_x_KLOAD(nsmax,nlmax,nmmax,aspin, &
-        alm(1:2,0:nlmax,0:nmmax),map(0:12*nsmax*nsmax-1,1:2), zbounds_in)
-      return
+    npix  = (12_I8B*nsmax)*nsmax
+    if (aspin > 0) then
+       call sharp_hp_alm2map_spin_x_KLOAD(nsmax,nlmax,nmmax,aspin, &
+            alm(1:2,0:nlmax,0:nmmax),map(0:npix-1,1:2), zbounds_in)
+    else
+       call sharp_hp_alm2map_x_KLOAD(nsmax,nlmax,nmmax,&
+            alm(1:1,0:nlmax,0:nmmax),map(0:npix-1,1), zbounds_in)
+       do p = 0_I8B, npix - 1_I8B
+          map(p,1) = -map(p,1) ! mimic alm sign convention of alm2map_spin
+          map(p,2) = 0.0_KMAP  ! unused for s=0
+       enddo
     endif
+    return
 #endif
     !=======================================================================
 
@@ -2695,12 +2709,29 @@
     if (present(w8ring))  w8ring_in  = w8ring
 
 #ifdef USE_SHARP
+!     aspin = abs(spin)
+!     if ((aspin>0).and.(aspin<=100)) then
+!       call sharp_hp_map2alm_spin_x_KLOAD(nsmax,nlmax,nmmax,aspin, &
+!         map(0:12*nsmax*nsmax-1,1:2),alm(1:2,0:nlmax,0:nmmax),zbounds_in,w8ring_in)
+!       return
+!     endif
+    ! 2021-06-15: use scalar routine when s=0
     aspin = abs(spin)
-    if ((aspin>0).and.(aspin<=100)) then
-      call sharp_hp_map2alm_spin_x_KLOAD(nsmax,nlmax,nmmax,aspin, &
-        map(0:12*nsmax*nsmax-1,1:2),alm(1:2,0:nlmax,0:nmmax),zbounds_in,w8ring_in)
-      return
+    npix  = (12_I8B*nsmax)*nsmax
+    if (aspin > 0) then
+       call sharp_hp_map2alm_spin_x_KLOAD(nsmax,nlmax,nmmax,aspin, &
+            map(0:npix-1,1:2),alm(1:2,0:nlmax,0:nmmax),zbounds_in,w8ring_in)
+    else
+       call sharp_hp_map2alm_x_KLOAD(nsmax,nlmax,nmmax, &
+            map(0:npix-1,1),alm(1:1,0:nlmax,0:nmmax),zbounds_in,w8ring_in)
+       do l=0,nlmax
+          do m=l,nmmax
+             alm(1,l,m) = -alm(1,l,m) ! implement alm sign convention of map2alm_spin
+             alm(2,l,m) = 0.0_DPC     ! unused for s=0
+          enddo
+       enddo
     endif
+    return
 #endif
 
     ! Healpix definitions
