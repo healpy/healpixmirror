@@ -45,7 +45,6 @@ void X(map2alm_spin) (int nside, int lmax, int mmax, int spin,
 
   CHECK_STACK_ALIGN(8);
   UTIL_ASSERT(spin>0, "spin must not be zero");
-  UTIL_ASSERT(spin<100, "spin must be < 100");
   sharp_make_healpix_geom_info_2 (nside, wgt, zbounds[0], zbounds[1], &ginfo);
   sharp_make_rectangular_alm_info (lmax,mmax,2,&ainfo);
 
@@ -112,7 +111,6 @@ void X(alm2map_spin) (int nside, int lmax, int mmax, int spin,
 
   CHECK_STACK_ALIGN(8);
   UTIL_ASSERT(spin>0, "spin must not be zero");
-  UTIL_ASSERT(spin<100, "spin must be < 100");
   // sharp_make_healpix_geom_info (nside, 1, &ginfo);
   int i,nrings=4*nside-1;
   double *wgt=RALLOC(double,nrings);

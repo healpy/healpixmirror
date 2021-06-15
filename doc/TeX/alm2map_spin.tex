@@ -54,7 +54,11 @@ The two (real) maps produced by \thedocid\ are defined respectively as
 %
 With these definitions, ${_2}a^{+}$, ${_2}a^{-}$, ${_2}S^+$ and ${_2}S^-$
 match \healpix polarization $a^E, a^B, Q$ and $U$ respectively. However, for
-$s=0$, $\ _{0}a^+_{\ell m} = -a^T_{\ell m}$, $\ _{0}a^-_{\ell m} = 0$, $\ {_0}S^+ = T$, $\ {_0}S^- = 0.$}
+$s=0$, $\ _{0}a^+_{\ell m} = -a^T_{\ell m}$, $\ _{0}a^-_{\ell m} = 0$, $\ {_0}S^+ = T$, $\ {_0}S^- = 0.$
+
+When dealing only with scalar quantities, like temperature or intensity maps, having a spin $s=0$, it is
+highly recommended, and much more memory-efficient, to use directly the routine \htmlref{alm2map}{sub:alm2map}, rather then setting \texttt{spin}$=0$ in \thedocid.
+}
 {\modAlmTools}
 \end{facility}
 
@@ -77,7 +81,7 @@ nsmax\mytarget{sub:alm2map_spin:nsmax} & I4B & IN & the $\nside$ value of the ma
 nlmax\mytarget{sub:alm2map_spin:nlmax} & I4B & IN & the maximum $\ell$ value used for the $a_{\ell m}$. \\
 nmmax\mytarget{sub:alm2map_spin:nmmax} & I4B & IN & the maximum $m$ value used for the $a_{\ell m}$. \\
 spin\mytarget{sub:alm2map_spin:spin} & I4B & IN & spin $s$ of the maps to be generated (only its absolute value
-is relevant; must be $<100$). \\
+is relevant). \\
 alm\mytarget{sub:alm2map_spin:alm}(1:2, 0:nlmax, 0:nmmax) & SPC/ DPC & IN & The ${_{|s|}}a^+_{\ell m}$ and ${_{|s|}}a^-_{\ell m}$ values to make the map
                    from.\\
 map\mytarget{sub:alm2map_spin:map}(0:12*nsmax**2-1, 1:2) & SP/ DP & OUT & ${_{|s|}}S^+$ and ${_{|s|}}S^-$ output maps\\

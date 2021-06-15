@@ -54,6 +54,9 @@ With these definitions, ${_2}a^{+}$, ${_2}a^{-}$, ${_2}S^+$ and ${_2}S^-$
 match \healpix  polarization $a^E, a^B, Q$ and $U$ respectively. However, for
 $s=0$, $\ _{0}a^+_{\ell m} = -a^T_{\ell m}$, $\ _{0}a^-_{\ell m} = 0$, $\ {_0}S^+ = T$, $\
 {_0}S^- = 0.$
+
+When dealing only with scalar quantities, like temperature or intensity maps, having a spin $s=0$, it is
+highly recommended, and much more memory-efficient, to use directly the routine \htmlref{map2alm}{sub:map2alm}, rather then setting \texttt{spin}$=0$ in \thedocid.
 }
 {\modAlmTools}
 \end{facility}
@@ -79,7 +82,7 @@ nsmax\mytarget{sub:map2alm_spin:nsmax} & I4B & IN & the $\nside$ value of the ma
 nlmax\mytarget{sub:map2alm_spin:nlmax} & I4B & IN & the maximum $\ell$ value for the analysis. \\
 nmmax\mytarget{sub:map2alm_spin:nmmax} & I4B & IN & the maximum $m$ value for the analysis. \\
 spin\mytarget{sub:map2alm_spin:spin} & I4B & IN & the spin $s$ of the maps to be analysed (only its absolute
-value is relevant; must be $<100$).\\
+value is relevant).\\
 map\mytarget{sub:map2alm_spin:map}(0:12*nsmax**2-1, 1:2) & SP/ DP & IN & ${_{|s|}}S^+$ and ${_{|s|}}S^-$ input maps\\
 alm\mytarget{sub:map2alm_spin:alm}(1:2, 0:nlmax, 0:nmmax) & SPC/ DPC & OUT & The ${_{|s|}}a^+_{\ell m}$ and
 ${_{|s|}}a^-_{\ell m}$ output values. \\
@@ -135,7 +138,7 @@ are returned in alm.
   properly allocated		
   \end{sulist}
 %Note: Starting with \htmlref{version 2.20}{sub:new2p20}, {\tt libpsht} routines will be called if $0<|s|\le100$.
-Note: Starting with \htmlref{version 3.10}{sub:new3p10}, {\tt libsharp} routines will be called if $0<|s|\le100$.
+%Note: Starting with \htmlref{version 3.10}{sub:new3p10}, {\tt libsharp} routines will be called if $0<|s|\le100$.
 \end{modules}
 
 \begin{related}
