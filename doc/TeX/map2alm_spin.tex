@@ -51,12 +51,12 @@ coefficients for $m<0$ are given by
 \end{align}
 %
 With these definitions, ${_2}a^{+}$, ${_2}a^{-}$, ${_2}S^+$ and ${_2}S^-$
-match \healpix  polarization $a^E, a^B, Q$ and $U$ respectively. However, for
+match \healpix  polarization $a^E, a^B, Q$ and $U$ respectively. \textbf{However}, for
 $s=0$, $\ _{0}a^+_{\ell m} = -a^T_{\ell m}$, $\ _{0}a^-_{\ell m} = 0$, $\ {_0}S^+ = T$, $\
 {_0}S^- = 0.$
 
 When dealing only with scalar quantities, like temperature or intensity maps, having a spin $s=0$, it is
-highly recommended, and much more memory-efficient, to use directly the routine \htmlref{map2alm}{sub:map2alm}, rather then setting \texttt{spin}$=0$ in \thedocid.
+highly recommended, and much more memory-efficient, to use directly the routine \htmlref{map2alm}{sub:map2alm}, rather then setting \mylink{sub:alm2map_spin:spin}{\texttt{spin}}$=0$ in \thedocid.
 }
 {\modAlmTools}
 \end{facility}
@@ -139,6 +139,7 @@ are returned in alm.
   \end{sulist}
 %Note: Starting with \htmlref{version 2.20}{sub:new2p20}, {\tt libpsht} routines will be called if $0<|s|\le100$.
 %Note: Starting with \htmlref{version 3.10}{sub:new3p10}, {\tt libsharp} routines will be called if $0<|s|\le100$.
+Note: Starting with \htmlref{version 3.80}{sub:new3p80}, some {\tt libsharp} routines will be called for any $|s|$ value.
 \end{modules}
 
 \begin{related}

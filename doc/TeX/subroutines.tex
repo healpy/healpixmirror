@@ -232,23 +232,16 @@ $\mathbf{\phi}$ & The azimuthal angle on the sphere, $\phi\in[0,2\pi[$.\\
 %--------------------------------------------
 %-------------------------------------------- CHANGES
 %--------------------------------------------
-\section[Changes between releases 3.70 and \hpxversion]{Changes between releases 3.70 and \hpxversion} %2020-??
+\section[Changes between releases 3.70 and \hpxversion]{Changes between releases 3.70 and \hpxversion} %2020-06-23?
+\label{sub:new3p80}
 \label{sub:new3p71}
 \begin{itemize}
 \item Improvement of \htmlref{\texttt{query\_disc}}{sub:query_disc} routine in \mylink{sub:query_disc:inclusive}{\tt inclusive} mode,
 \item the routines 
  \htmlref{\texttt{alm2map\_spin}}{sub:alm2map_spin} and 
- \htmlref{\texttt{alm2map\_spin}}{sub:alm2map_spin} and 
- \htmlref{\texttt{map2alm\_spin}}{sub:map2alm_spin} now calls the faster
+ \htmlref{\texttt{map2alm\_spin}}{sub:map2alm_spin} now accept any (integer) spin values $|s|\ge0$, but the scalar routines
  \htmlref{\texttt{alm2map}}{sub:alm2map} and 
- \htmlref{\texttt{map2alm}}{sub:map2alm} when invoked with a vanishing spin ($s=0$), 
- while keeping the spin-specific sign convention,
-% \item the routines 
-%  \htmlref{\texttt{alm2map\_spin}}{sub:alm2map_spin} and 
-%  \htmlref{\texttt{map2alm\_spin}}{sub:map2alm_spin} now runs only for spin values $|s|>0$ 
-%  (the faster routines 
-%  \htmlref{\texttt{alm2map}}{sub:alm2map} and 
-%  \htmlref{\texttt{map2alm}}{sub:map2alm} should be used instead when $s=0$),
+ \htmlref{\texttt{map2alm}}{sub:map2alm} are still recommended for vanishing spin ($s=0$), 
 \item correction of bugs preventing the compilation with versions 10.* of \texttt{gfortran},
 %\item fixed bug affecting \htmlref{{\tt map2gif}}{fac:map2gif} when compiled with versions 10.* of {\tt gfortran} and {\tt gcc}.
 \end{itemize}
