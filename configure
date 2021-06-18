@@ -130,7 +130,8 @@ for i in $args ; do
 	echo "     idl:     configures IDL + required items, same as profile,idl;"
 	echo "     sharp:   forces the (re-)configuration, compilation and installation of"
 	echo "          libsharp (required by F90 and C++);"
-	echo "     profile: configures user or system configuration files (required C,C++,F90,IDL);"
+	echo "     profile: configures user or system configuration files "
+	echo "          (required by C,C++,F90,IDL);"
 	echo "     healpy:  configures healpy;"
 	echo
 	echo "  for instance $0 --auto=cxx,f90  will configure  "

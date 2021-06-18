@@ -338,11 +338,13 @@ The  \textbf{Python} \texttt{healpy} package requires
 \begin{tabular}{p{0.3\hsize} p{0.6\hsize}} \hline  
   \textbf{Software Package} & \textbf{Source} \\ \hline
                             &                          \\ %%% for presentation
-Python 2.7, or 3.5--3.6         & \url{https://www.python.org}
+Python 3.6 or more         & \url{https://www.python.org}
 			\\
 Numpy 1.13 or more         & \url{https://numpy.scipy.org}
 			\\
 Matplotlib 0.91.2 or more         & \url{https://matplotlib.sourceforge.net}
+			\\
+Cython 			& \url{https://cython.org}
 			\\
 Astropy.io.fits         & \url{https://www.astropy.org}
 			\\
@@ -353,9 +355,9 @@ Astropy.io.fits         & \url{https://www.astropy.org}
 
 While not required, the 
 \texttt{IPython} (\url{https://ipython.org})
-and 
-\texttt{Cython} (\url{https://cython.org})
-softwares can also be useful.
+and
+\texttt{jupyter} (\url{https://jupyter.org})
+interfaces can also be useful.
 
 % For convenience we provide the freely available FFTPACK\footnote{At 
 % {\tt
@@ -1678,7 +1680,8 @@ However, the \mylinkext{idl:mollview:latex}{\texttt{Latex}} keyword will work pr
 \item addition of 
 \mylink{install:libsharp:config}{\texttt{SHARP\_PARAL}} and 
 \mylink{install:cpp_config}{\texttt{CXX\_PARAL}} 
-to control the parallel implementation of the \texttt{libsharp} library and C++ library and codes.
+to control the parallel implementation of the \texttt{libsharp} library and C++ library and codes;
+\item \mylink{install:healpy:config}{\texttt{PYTHON}} now defaults to \texttt{python3}
 \end{itemize}
 %
 % % \subsubsection[C++]{\htmladdnormallink{C++}{\healpixwebpage/html/index_cxx.htm}}

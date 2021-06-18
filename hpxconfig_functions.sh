@@ -938,7 +938,8 @@ Healpy_config () {  # for healpy 1.7.0
     python_version=`${CAT} ${tmpfile} | ${AWK} '{print \$2}'` # current version (2nd field)
     #python_reqrd="2.4" # minimal version supported
     #python_reqrd="2.6" # minimal version supported
-    python_reqrd="2.7" # minimal version supported (1.12.8)
+    #python_reqrd="2.7" # minimal version supported (1.12.8)
+    python_reqrd="3.6"  # minimal version supported (1.15.0)
     p_v1=`echo ${python_version} | ${AWK} '{print $1*10}'`
     p_v2=`echo ${python_reqrd}   | ${AWK} '{print $1*10}'`
     ${RM} ${tmpfile}
@@ -2770,7 +2771,7 @@ setTopDefaults() {
     NM="nm"
     PRINTF="printf"
     #PWD="pwd"
-    PYTHON="${PYTHON-python}" # python unless already defined
+    PYTHON="${PYTHON-python3}" # python3 unless already defined
     RM="/bin/rm -f"
     RMDIR="rmdir"
     SED="sed"
