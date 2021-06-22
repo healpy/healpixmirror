@@ -1655,7 +1655,7 @@ However, the \mylinkext{idl:mollview:latex}{\texttt{Latex}} keyword will work pr
 \section{Appendix I: Recent Changes and New Features}
 \label{sec:newfeatures}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% BEGIN LATEST CHANGES %%%%%%%%%%%%%
-\subsection{Bug corrections and Improvements in Version \hpxversion}%2021-04??
+\subsection{Bug corrections and Improvements in Version \hpxversion}%2021-06-22
 \label{sec:v380}\mytarget{install:v380}
 \label{sec:v371}\mytarget{install:v371}
 %------------
@@ -1721,17 +1721,17 @@ to control the parallel implementation of the \texttt{libsharp} library and C++ 
 	\htmladdnormallink{\texttt{healpy 1.15.0}}{\hpysite/releases} 
 	(\htmladdnormallink{CHANGELOG}{\hpysite/blob/master/CHANGELOG.rst})
 \begin{itemize}
-\item Drop support for Python 2.7-3.5
-\item Improvements of the build system
-\item Automatically build wheels for Linux/MacOS on Github actions
-\item `write\_map` keeps dtype of input map array instead of float32 ; `read\_map` keeps dtype of FITS file instead of upcasting to float64 ; `write\_cl` uses dtype of input cl instead of float64
-\item Flip sign for spin-0 `alm2map\_spin` and `map2alm\_spin` ; fixed `map2alm\_spin` bug for masked input
-\item Support transparency in plotting with the `alpha` parameter
-\item Experimental `projview` function to plot maps using projections from `matplotlib`
-\item Removed the note that we will change order of cl in `synfast` and `synalm`, we will leave `new=False` default
-\item Support nested maps `hp.smoothing`; fixed indexing issue in `bl2beam`
-\item Changed all warnings to using the `logging` module, deprecated all `verbose` keywords
+\item \texttt{write\_map} keeps dtype of input map array instead of float32; \texttt{read\_map} keeps dtype of FITS file instead of upcasting to float64; \texttt{write\_cl} uses dtype of input cl instead of float64
+\item Changed all warnings to using the \texttt{logging} module, deprecated all \texttt{verbose} keywords
+\item Flip sign for spin-0 \texttt{alm2map\_spin} and \texttt{map2alm\_spin}; fixed \texttt{map2alm\_spin} bug for masked input
+\item Support transparency in plotting with the \texttt{alpha} parameter
+\item Experimental \texttt{projview} function to plot maps using projections from \texttt{matplotlib}
+\item Removed the note that we will change order of cl in \texttt{synfast} and \texttt{synalm}, we will leave \texttt{new=False} default
+\item Added convenience functions \texttt{order2npix} and \texttt{npix2order}
+\item Support nested maps \texttt{hp.smoothing}; fixed indexing issue in \texttt{bl2beam}
 \item Allow OBJECT FITS header not to be a string
+\item Drop support for Python 2.7-3.5; Improvements of the build system; Automatically build wheels for Linux/MacOS on Github actions
+\item and other minor bug fixes ...
 \end{itemize}
 \end{itemize}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% END LATEST CHANGES %%%%%%%%%%%%%

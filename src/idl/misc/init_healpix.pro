@@ -73,7 +73,7 @@ healpix_sysvar = '!HEALPIX'
 version = '3.80'
 
 ; release data
-date = '2021-05-15'
+date = '2021-06-22'
 
 
 ; Healpix directory
