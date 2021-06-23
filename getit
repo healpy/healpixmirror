@@ -38,6 +38,7 @@ healpyrepo="https://github.com/healpy/healpy.git"
 # https://pypi.debian.net/healpy/healpy-${healpytag}.tar.gz
 #
 healpyarchive="https://github.com/healpy/healpy/releases/download/${healpytag}/"
+#healpyarchive_alt="https://github.com/healpy/healpy/archive/refs/tags/"
 #healpyarchive_alt="https://github.com/healpy/healpy/archive/" # partial package (no cfitsio/, no healpy/src/_*.cpp)
 #healpyarchive="/Users/hivon/healpy/"
 ##
