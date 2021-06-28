@@ -25,6 +25,13 @@
 ;  For more information about HEALPix see http://healpix.sourceforge.net
 ;
 ; -----------------------------------------------------------------------------
+;+
+; line = hpx_add_parameter(keyword, value, ...)
+;
+; 2021-06-28: added a workaround for GDL, in which expand_path does not behave as IDL
+;
+;-
+; ----------------------------------------------
 function hpx_add_parameter, keyword, value, default=default, expand_path=expand, skip_if_not_set = skip, ifempty=ifempty, force_output=force_output
 
 
@@ -37,7 +44,9 @@ if (defined(value) || defined(default)) then begin
     endif else begin
         stvalue = string(value)
     endelse
-    if keyword_set(expand) then stvalue  = expand_path(stvalue)
+    if keyword_set(expand) then begin
+        if (~is_gdl() || stvalue ne NoFile) then stvalue  = expand_path(stvalue)
+    endif
 endif else begin
 ; no value, no default
     stvalue = ''

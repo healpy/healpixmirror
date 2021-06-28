@@ -11,12 +11,12 @@
  libraries apply for these procedures.
 
  o  ./astron/ : required routines from  THE IDL ASTRONOMY USER'S LIBRARY 
-    (http://idlastro.gsfc.nasa.gov/homepage.html)
+    (https://idlastro.gsfc.nasa.gov/homepage.html)
     including their supporting D. Fanning's COYOTE routines 
     (http://www.idlcoyote.com/documents/programs.php)
 
  o  ./cgis/ : required routines from the COBE cgis library
-    (http://space.gsfc.nasa.gov/astro/cobe/cgis.html)
+    (used to be in http://space.gsfc.nasa.gov/astro/cobe/cgis.html)
 
  o ./obsolete_astron/ : routines from the Astron library which are now considered
    obsolete, but may still be needed by Healpix (or by user-developped applications).
@@ -279,3 +279,5 @@ FITS_INFO FXADDPAR MATCH MRDFITS SXADDPAR SXPAR WRITEFITS
 
  2021-04-08
 
+------------
+2021-06:28: home made edition of MRDFITS.pro to work with FL
