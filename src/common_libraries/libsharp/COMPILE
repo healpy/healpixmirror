@@ -33,7 +33,7 @@ with versions 6 and 7) on an x86_64 platform, the build machinery can compile
 the time-critical functions for several different architectures (SSE2, AVX,
 AVX2, FMA3, FMA4, AVX512F), and the appropriate implementation will be selected
 at runtime.
-This feature is enabled automatically by the configure cript on x86_64
+This feature is enabled automatically by the configure script on x86_64
 platforms. If it fails, please use the "--disable-multiarch" flag in the
 configure invocation.
 If this feature is enabled, please do _not_ specify "-march=native" or

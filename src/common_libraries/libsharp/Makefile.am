@@ -44,7 +44,7 @@ endif
 # - Always increase the revision value.
 # - Increase the current value whenever an interface has been added, removed or changed.
 # - Increase the age value only if the changes made to the ABI are backward compatible.
-libsharp_la_LDFLAGS = -version-info 1:1:0
+libsharp_la_LDFLAGS = -version-info 2:2:0
 
 nobase_include_HEADERS = \
   libsharp/sharp.h \
