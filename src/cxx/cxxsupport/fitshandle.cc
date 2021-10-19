@@ -799,8 +799,6 @@ class cfitsio_checker
       float fitsversion;
       planck_assert(fits_get_version(&fitsversion),
         "error calling fits_get_version()");
-      int v_header  = nearest<int>(1000.*CFITSIO_VERSION),
-          v_library = nearest<int>(1000.*fitsversion);
       /* CFITSIO 4.x switched to a three version format (4.0.0), as opposed
        * to previous two-number versions (3.47). Version 4 defines a new macro
        * CFITSIO_MICRO to track the patch level in the version. We check if
@@ -815,6 +813,8 @@ class cfitsio_checker
              << dataToString(v_header*1.0E-6) << ") and linked library (v"
              << dataToString(v_library*1.0E-6) << ")." << endl << endl;
 #else
+      int v_header  = nearest<int>(1000.*CFITSIO_VERSION),
+          v_library = nearest<int>(1000.*fitsversion);
       if (v_header!=v_library)
         cerr << endl << "WARNING: version mismatch between CFITSIO header (v"
              << dataToString(v_header*0.001) << ") and linked library (v"
