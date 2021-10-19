@@ -188,11 +188,11 @@ General</A>
 
 <UL>
 <LI>addition of 
-<A HREF="#install:libsharp:config"><SPAN  style="font-family:monospace">SHARP_PARAL</SPAN></A> and 
-<A HREF="#install:cpp_config"><SPAN  style="font-family:monospace">CXX_PARAL</SPAN></A> 
+<A HREF="./html/install.htm#install:libsharp:config"><SPAN  style="font-family:monospace">SHARP_PARAL</SPAN></A> and 
+<A HREF="./html/install.htm#install:cpp_config"><SPAN  style="font-family:monospace">CXX_PARAL</SPAN></A> 
 to control the parallel implementation of the <SPAN  style="font-family:monospace">libsharp</SPAN> library and C++ library and codes;
 </LI>
-<LI><A HREF="#install:healpy:config"><SPAN  style="font-family:monospace">PYTHON</SPAN></A> now defaults to <SPAN  style="font-family:monospace">python3</SPAN>
+<LI><A HREF="./html/install.htm#install:healpy:config"><SPAN  style="font-family:monospace">PYTHON</SPAN></A> now defaults to <SPAN  style="font-family:monospace">python3</SPAN>
 </LI>
 </UL>
 <A HREF=#top>    Back to Top</A><br><br>
@@ -311,7 +311,7 @@ General</A>
 </h4>
 
 <UL>
-<LI>Fixed several bugs in the <A HREF="#install:configure"><SPAN  style="font-family:monospace">configure</SPAN></A> script
+<LI>Fixed several bugs in the <A HREF="./html/install.htm#install:configure"><SPAN  style="font-family:monospace">configure</SPAN></A> script
 </LI>
 <LI>Documentation now available in EPUB format
 </LI>
@@ -406,7 +406,7 @@ General</A>
 with the same memory footprint and numerical accuracy as previously, thanks to
 <UL><LI>
  major performance increase for Spherical Harmonics Transforms 
-in the <A HREF="#install:libsharp:config"><SPAN  style="font-family:monospace">libsharp</SPAN></A> C-written library
+in the <A HREF="./html/install.htm#install:libsharp:config"><SPAN  style="font-family:monospace">libsharp</SPAN></A> C-written library
 called by the C++, F90, IDL and python routines and facilities,
 thanks to ideas of Keiichi Ishioka
   (<kbd><A ID="tex2html_360_1"
@@ -420,14 +420,14 @@ and personal communication);
 
 <P>
 <LI>
- The <A HREF="#install:configure"><SPAN  style="font-family:monospace">configure</SPAN></A> script will ensure
+ The <A HREF="./html/install.htm#install:configure"><SPAN  style="font-family:monospace">configure</SPAN></A> script will ensure
 a single and seamless configuration, compilation and installation
-of the <A HREF="#install:libsharp:config"><SPAN  style="font-family:monospace">libsharp</SPAN></A> library, 
+of the <A HREF="./html/install.htm#install:libsharp:config"><SPAN  style="font-family:monospace">libsharp</SPAN></A> library, 
 even if several language implementations of <b>HEALPix</b> are compiled.
 
 <P>
 <LI>
- The <A HREF="#install:configure"><SPAN  style="font-family:monospace">configure</SPAN></A> script now supports
+ The <A HREF="./html/install.htm#install:configure"><SPAN  style="font-family:monospace">configure</SPAN></A> script now supports
 an automated mode beside the usual interactive mode, and some environment variables
 can be used to customize its behavior in both modes 
 (eg, choice of compilers and their options).
@@ -440,9 +440,9 @@ can be used to customize its behavior in both modes
   HREF="http://healpix.sourceforge.net/html/index_cxx.htm">C++</A>
 </h4>
 <UL><LI>
- Link to the new and faster <A HREF="#install:libsharp:config"><SPAN  style="font-family:monospace">libsharp</SPAN></A> library
+ Link to the new and faster <A HREF="./html/install.htm#install:libsharp:config"><SPAN  style="font-family:monospace">libsharp</SPAN></A> library
   <LI>
- Simpler configuration <A HREF="#install:cpp_config">with the systematic use of <SPAN  style="font-family:monospace">autotools</SPAN></A>
+ Simpler configuration <A HREF="./html/install.htm#install:cpp_config">with the systematic use of <SPAN  style="font-family:monospace">autotools</SPAN></A>
   <LI>
  The C++ binaries, libraries and header files now installed in 
 <SPAN  style="font-family:monospace">${HEALPIX}/bin</SPAN>, 
@@ -460,7 +460,7 @@ and
   HREF="./html/subroutines.htm">subroutines</A>
 </h4>
 <UL><LI>
- Link to the new and faster <A HREF="#install:libsharp:config"><SPAN  style="font-family:monospace">libsharp</SPAN></A> library
+ Link to the new and faster <A HREF="./html/install.htm#install:libsharp:config"><SPAN  style="font-family:monospace">libsharp</SPAN></A> library
   <LI>
  Some external C routines replaced by Fortran 2003 extensions.
 </UL>
@@ -483,7 +483,7 @@ routines
   HREF="./html/idl_outline_earth.htm"><SPAN  style="font-family:monospace">outline_earth</SPAN></A>
 to create a structure outlining Earth features such as coastlines, rivers, country boundaries, ...
   <LI>
- <A HREF="#idl:mollview"><kbd>azeqview, cartview, gnomview, mollview,
+ <A HREF="./html/idl_mollview.htm"><kbd>azeqview, cartview, gnomview, mollview,
 orthview</kdb></A> visualization routines: support for color and thickness in <SPAN  style="font-family:monospace">outline</SPAN> keyword
   <LI>
  Update of the required
