@@ -36,6 +36,10 @@ AC_OPENMP
 CXXFLAGS="$CXXFLAGS $OPENMP_CFLAGS"
 AC_LANG_POP([C++])
 
+PKG_CHECK_MODULES([ZLIB], [zlib], , [ZLIB_LIBS=-lz])
+CFLAGS="$CFLAGS $ZLIB_CFLAGS"
+LIBS="$LIBS $ZLIB_LIBS"
+
 dnl
 dnl Determine the compiler flags (CFITSIO_CFLAGS)
 dnl and linker flags (CFITSIO_LIBS) required to build against libcfitsio.
