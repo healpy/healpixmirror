@@ -1,8 +1,9 @@
 <h2>HEALPix Software</h2>
 <p>
+  2022-01-28: <a href="downloads.php">HEALPix 3.81 released</a><br />
   2021-06-22: <a href="downloads.php">HEALPix 3.80 released</a><br />
   2020-07-24: <a href="downloads.php">HEALPix 3.70 released</a><br />
-  2019-12-18: <a href="downloads.php">HEALPix 3.60 released</a><br />
+<!--  2019-12-18: <a href="downloads.php">HEALPix 3.60 released</a><br /> -->
 <!--  2018-12-06: <a href="downloads.php">HEALPix 3.50 released</a><br /> -->
 <!--  2018-06-22: <a href="downloads.php">HEALPix 3.40 released</a><br /> -->
 <!--  2017-01-06: Fixed dangling links in <a href="documentation.php">web-based documentation</a><br /> -->

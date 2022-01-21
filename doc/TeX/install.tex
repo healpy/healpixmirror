@@ -244,7 +244,7 @@ manipulation routines are provided in \textbf{IDL} (please note
 that at least version \idlversion is required), \textbf{Java} and \textbf{Python}. Some of the \healpix routines are
 also available in \textbf{C}. \\
 Starting with version 3.0, the
-\linklatexhtml{healpy}{\gdlsite}{\gdlsite}
+\linklatexhtml{healpy}{\hpysite}{\hpysite}
 (HEALPix in \textbf{Python}) library has been integrated into \healpix releases. Since it
 is, to a large extent, a
 wrapper to the C++ routines, installing it also requires a C++ compiler (on top
@@ -1655,7 +1655,7 @@ However, the \mylinkext{idl:mollview:latex}{\texttt{Latex}} keyword will work pr
 \section{Appendix I: Recent Changes and New Features}
 \label{sec:newfeatures}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% BEGIN LATEST CHANGES %%%%%%%%%%%%%
-\subsection{Bug corrections and Improvements in Version \hpxversion}%2021-10-??
+\subsection{Bug corrections and Improvements in Version \hpxversion}%2022-01-??
 %------------
 % \subsubsection[General]{General}
 % \subsubsection[C]{\linklatexhtml{C}{csub.pdf}{csub.htm}}
@@ -1687,8 +1687,15 @@ However, the \mylinkext{idl:mollview:latex}{\texttt{Latex}} keyword will work pr
 \subsubsection[Python]{Python}
 \begin{itemize}
 \item Switch to 
-	\htmladdnormallink{\texttt{healpy 1.??.??}}{\hpysite/releases} 
+	\htmladdnormallink{\texttt{healpy 1.15.1}}{\hpysite/releases} 
 	(\htmladdnormallink{CHANGELOG}{\hpysite/blob/master/CHANGELOG.rst})
+\begin{itemize}
+    \item new function {\texttt{blm\_gauss}} to generate alm of a gaussian beam,
+    \item implement rotation in the graticule of {\texttt{projview}},
+    \item explain how to create a local datapath for pixel weights,
+    \item improvement on is\_seq to avoid {\texttt{synalm}} breaking on JAX input arrays, added unit tests,
+    \item upgraded HEALPix C++ sources to HEALPix 3.81, fixing incompatibility with CFITSIO 4
+\end{itemize}
 \end{itemize}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% END LATEST CHANGES %%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

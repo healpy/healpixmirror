@@ -154,6 +154,11 @@ python wrapper to HEALPix (now included in HEALPix package)
 </li>
 
 <li>
+<a href="https://mhealpy.readthedocs.io">mhealpy</a>: 
+a python wrapper around Healpy for multi-resolution datasets
+</li>
+
+<li>
 <a href="https://www.apc.univ-paris7.fr/APC_CS/Recherche/Adamis/MIDAS09/software/s2hat/s2hat.html">S2Hat</a>:
 Scalable Spherical Harmonics transforms
 </li>
@@ -166,7 +171,7 @@ cut-sky, beam smoothing, noise contamination...
 
 <li>
 <a href="https://github.com/damonge/NaMaster">NaMaster</a>:
-Power spectrum extraction using MASTER approach, on full sky and flat sky.
+Power spectrum extraction using MASTER approach, on curved sky and flat sky.
 </li>
 
 <!-- commented out 2016-09-13

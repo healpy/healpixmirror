@@ -26,7 +26,7 @@ echoRed (){
 #---------------
 
 WRKDIR="/tmp"
-healpytag="1.15.0"
+healpytag="1.15.1"
 healpytag_git=""
 #healpytag_git=${healpytag}
 healpygit=0 # 1: uses GIT, 0: uses tar.gz
@@ -38,9 +38,10 @@ healpyrepo="https://github.com/healpy/healpy.git"
 # https://pypi.debian.net/healpy/healpy-${healpytag}.tar.gz
 #
 healpyarchive="https://github.com/healpy/healpy/releases/download/${healpytag}/"
+# from https://files.pythonhosted.org/packages/ec/75/8e8e546ef8f173555ce097ba98487a510f6a56764ed28ea3e6d11ad684cf/healpy-1.15.1.tar.gz to /Users/hivon/healpy
 #healpyarchive_alt="https://github.com/healpy/healpy/archive/refs/tags/"
 #healpyarchive_alt="https://github.com/healpy/healpy/archive/" # partial package (no cfitsio/, no healpy/src/_*.cpp)
-#healpyarchive="/Users/hivon/healpy/"
+healpyarchive="/Users/hivon/healpy/"
 ##
 mixed=0
 if [ "$mixed" = "1" ]; then
