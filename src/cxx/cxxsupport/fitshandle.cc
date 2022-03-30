@@ -806,19 +806,19 @@ class cfitsio_checker
        * If it is, we adapt to the new value returned by 'fits_get_version'.
        */
 #ifdef CFITSIO_MICRO
-      int v_header  = nearest<int>(1E6*CFITSIO_MAJOR + 1000.*CFITSIO_MINOR + CFITSIO_MICRO),
-          v_library = nearest<int>(1E6*fitsversion);
+      int v_header  = nearest<int>(10000*CFITSIO_MAJOR + 100*CFITSIO_MINOR + CFITSIO_MICRO),
+          v_library = nearest<int>(10000*fitsversion);
       if (v_header!=v_library)
         cerr << endl << "WARNING: version mismatch between CFITSIO header (v"
-             << dataToString(v_header*1.0E-6) << ") and linked library (v"
-             << dataToString(v_library*1.0E-6) << ")." << endl << endl;
+             << dataToString(v_header*1.0E-4) << ") and linked library (v"
+             << dataToString(v_library*1.0E-4) << ")." << endl << endl;
 #else
-      int v_header  = nearest<int>(1000.*CFITSIO_VERSION),
-          v_library = nearest<int>(1000.*fitsversion);
+      int v_header  = nearest<int>(100*CFITSIO_VERSION),
+          v_library = nearest<int>(100*fitsversion);
       if (v_header!=v_library)
         cerr << endl << "WARNING: version mismatch between CFITSIO header (v"
-             << dataToString(v_header*0.001) << ") and linked library (v"
-             << dataToString(v_library*0.001) << ")." << endl << endl;
+             << dataToString(v_header*0.01) << ") and linked library (v"
+             << dataToString(v_library*0.01) << ")." << endl << endl;
 #endif
       }
   };
