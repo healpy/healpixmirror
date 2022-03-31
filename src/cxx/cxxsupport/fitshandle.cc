@@ -810,8 +810,8 @@ class cfitsio_checker
           v_library = nearest<int>(10000*fitsversion);
       if (v_header!=v_library)
         cerr << endl << "WARNING: version mismatch between CFITSIO header (v"
-             << dataToString(v_header*1.0E-4) << ") and linked library (v"
-             << dataToString(v_library*1.0E-4) << ")." << endl << endl;
+             << dataToString(v_header) << ") and linked library (v"
+             << dataToString(v_library) << ")." << endl << endl;
 #else
       int v_header  = nearest<int>(100*CFITSIO_VERSION),
           v_library = nearest<int>(100*fitsversion);
