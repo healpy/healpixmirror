@@ -251,7 +251,8 @@ subroutine input_map8_KLOAD(filename, map, npixtot, nmaps, &
           enddo
        endif
        if (present(units)) then
-          do imap=1,min(size(units),nmaps-1)
+!          do imap=1,min(size(units),nmaps-1) ! 2022-06-10
+          do imap=1,min(size(units),nmaps)
              call get_card(hbuffer,'TUNIT'//string(imap+1,format='(i0.0)'), units(imap))
           enddo
        endif

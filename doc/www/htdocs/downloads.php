@@ -90,6 +90,18 @@ For any problem, question or comment, see the <a href="support.php">Support</a> 
 <A id="tocl"></A>
 
 <ul CLASS="ChildLinks">
+<!-- ****** Begin TOC of 3.81 ***** -->
+<LI><A ID="tex2html_381_3"
+  HREF="#SECTION_381_10000000000000000">Bug corrections and Improvements in Version 3.81</A>
+<UL>
+<LI><A ID="tex2html_381_4"
+  HREF="#SECTION_381_11000000000000000">C++</A>
+<LI><A ID="tex2html_381_5"
+  HREF="#SECTION_381_12000000000000000">IDL</A>
+<LI><A ID="tex2html_381_6"
+  HREF="#SECTION_381_13000000000000000">Python</A>
+</UL><!-- ****** END TOC of 3.81 ***** -->
+
 <!-- ****** Begin TOC of 3.80 ***** -->
 <LI><A ID="tex2html_380_12"
   HREF="#SECTION_380_10000000000000000">Bug corrections and Improvements in Version 3.80</A>
@@ -121,7 +133,7 @@ For any problem, question or comment, see the <a href="support.php">Support</a> 
 </UL>
 <!-- ****** END TOC of 3.70 ***** -->
 
-<!-- ****** Begin TOC of 3.60 ***** -->
+<!--   ================ comment out 3.60 ============
 <LI><A ID="tex2html_360_15"
   HREF="#SECTION_360_10000000000000000">Bug corrections and Improvements in Version 3.60</A>
 <UL>
@@ -136,7 +148,7 @@ For any problem, question or comment, see the <a href="support.php">Support</a> 
 <LI><A ID="tex2html_360_20"
   HREF="#SECTION_360_15000000000000000">Python</A>
 </UL>
-<!-- ****** END TOC of 3.60 ***** -->
+        ================ comment out 3.60 ============ --> 
 
 <!--   ================ comment out 3.50 ============
 <LI><A ID="tex2html_350_26"
@@ -151,7 +163,7 @@ For any problem, question or comment, see the <a href="support.php">Support</a> 
 <LI><A ID="tex2html_350_30"
   HREF="#SECTION_350_14000000000000000">Python</A>
 </UL>
-        ================ comment out 3.40 ============ --> 
+        ================ comment out 3.50 ============ --> 
 
 <!--   ================ comment out 3.40 ============
 <LI><A id="tex2html_340_33"
@@ -173,6 +185,63 @@ For any problem, question or comment, see the <a href="support.php">Support</a> 
 <!--End of Table of Child-Links-->
 
 <p>
+
+<!-- ******************************************************  -->
+<!-- *** 3.81 ********************************************** -->
+
+<h3><A ID="SECTION_381_10000000000000000"></A><A ID="sec:v381"></A>
+<BR>
+Bug corrections and Improvements in Version 3.81
+</h3>
+
+<h4><A ID="SECTION_381_11000000000000000">
+C++</A>
+</h4>
+
+<UL>
+<LI>Cfitsio 4.0.0 (Jul 2021) and higher now properly supported
+</LI>
+</UL>
+<A HREF=#top>    Back to Top</A><br><br>
+
+
+<h4><A ID="SECTION_381_12000000000000000">
+IDL</A>
+</h4>
+
+<UL>
+<LI>Introduced workarounds for some minor GDL and FL limitations.
+</LI>
+</UL>
+<A HREF=#top>    Back to Top</A><br><br>
+
+
+<h4><A ID="SECTION_381_13000000000000000">
+Python</A>
+</h4>
+
+<UL>
+<LI>Switch to 
+	<A ID="tex2html_381_1"
+  HREF="https://github.com/healpy/healpy/releases"><SPAN  style="font-family:monospace">healpy 1.15.2</SPAN></A>
+(<A ID="tex2html_381_2"
+  HREF="https://github.com/healpy/healpy/blob/master/CHANGELOG.rst">CHANGELOG</A>)
+
+<UL>
+<LI>new function <SPAN  style="font-family:monospace">blm_gauss</SPAN> to generate alm of a gaussian beam,
+</LI>
+<LI>implement rotation in the graticule of <SPAN  style="font-family:monospace">projview</SPAN>,
+</LI>
+<LI>explain how to create a local datapath for pixel weights,
+</LI>
+<LI>improvement on is_seq to avoid <SPAN  style="font-family:monospace">synalm</SPAN> breaking on JAX input arrays, added unit tests,
+</LI>
+<LI>upgraded HEALPix C++ sources to HEALPix 3.81, fixing incompatibility with CFITSIO 4
+</LI>
+</UL>
+</LI>
+</UL>
+<A HREF=#top>    Back to Top</A><br><br>
 
 <!-- ******************************************************  -->
 <!-- *** 3.80 ********************************************** -->
@@ -391,133 +460,6 @@ library
 <A HREF=#top>    Back to Top</A><br><br>
 
 <!-- *** 3.60 ********************************************** -->
-
-<h3><A ID="SECTION_360_10000000000000000">
-Bug corrections and Improvements in Version 3.60</A>
-</h3>
-<P>
-
-<h4><A ID="SECTION_360_11000000000000000">
-General</A>
-</h4>
-<UL><LI>
- The computation time of a map synthesis or analysis has been reduced
-(for instance, by at least 30% at <SPAN CLASS="MATH"><I>N</I><SUB><I>side</I></SUB>=2048</SPAN> and <SPAN CLASS="MATH"><I>l</I><SUB><I>max</I></SUB>=4096</SPAN>),
-with the same memory footprint and numerical accuracy as previously, thanks to
-<UL><LI>
- major performance increase for Spherical Harmonics Transforms 
-in the <A HREF="./html/install.htm#install:libsharp:config"><SPAN  style="font-family:monospace">libsharp</SPAN></A> C-written library
-called by the C++, F90, IDL and python routines and facilities,
-thanks to ideas of Keiichi Ishioka
-  (<kbd><A ID="tex2html_360_1"
-  HREF="https://doi.org/10.2151/jmsj.2018-019">https://doi.org/10.2151/jmsj.2018-019</A></kbd> 
-and personal communication);
-<LI>
- the possibility of building the <SPAN  style="font-family:monospace">libsharp</SPAN> library with simultaneous support for different x86 CPU
-  features (SSE2, AVX, AVX2, FMA3, FMA4, AVX512F); the appropriate set of
-  subroutines being selected automatically at runtime.
-</UL>
-
-<P>
-<LI>
- The <A HREF="./html/install.htm#install:configure"><SPAN  style="font-family:monospace">configure</SPAN></A> script will ensure
-a single and seamless configuration, compilation and installation
-of the <A HREF="./html/install.htm#install:libsharp:config"><SPAN  style="font-family:monospace">libsharp</SPAN></A> library, 
-even if several language implementations of <b>HEALPix</b> are compiled.
-
-<P>
-<LI>
- The <A HREF="./html/install.htm#install:configure"><SPAN  style="font-family:monospace">configure</SPAN></A> script now supports
-an automated mode beside the usual interactive mode, and some environment variables
-can be used to customize its behavior in both modes 
-(eg, choice of compilers and their options).
-</UL>
-<A HREF=#top>    Back to Top</A><br><br>
-
-<h4><A ID="SECTION_360_12000000000000000"></A>
-<BR>
-<A ID="tex2html_360_2"
-  HREF="http://healpix.sourceforge.net/html/index_cxx.htm">C++</A>
-</h4>
-<UL><LI>
- Link to the new and faster <A HREF="./html/install.htm#install:libsharp:config"><SPAN  style="font-family:monospace">libsharp</SPAN></A> library
-  <LI>
- Simpler configuration <A HREF="./html/install.htm#install:cpp_config">with the systematic use of <SPAN  style="font-family:monospace">autotools</SPAN></A>
-  <LI>
- The C++ binaries, libraries and header files now installed in 
-<SPAN  style="font-family:monospace">${HEALPIX}/bin</SPAN>, 
-<SPAN  style="font-family:monospace">${HEALPIX}/lib</SPAN> and 
-<SPAN  style="font-family:monospace">${HEALPIX}/include</SPAN> directories respectively.
-  <LI>
- Added documentation for the module <SPAN  style="font-family:monospace">needlet_tool</SPAN>.
-</UL>
-<A HREF=#top>    Back to Top</A><br><br>
-
-<h4><A ID="SECTION_360_13000000000000000">Fortran 90</A> <A ID="tex2html_360_3"
-  HREF="./html/facilities.htm">facilities</A>
-and
- 	<A ID="tex2html_360_4"
-  HREF="./html/subroutines.htm">subroutines</A>
-</h4>
-<UL><LI>
- Link to the new and faster <A HREF="./html/install.htm#install:libsharp:config"><SPAN  style="font-family:monospace">libsharp</SPAN></A> library
-  <LI>
- Some external C routines replaced by Fortran 2003 extensions.
-</UL>
-<A HREF=#top>    Back to Top</A><br><br>
-
-<h4><A ID="SECTION_360_14000000000000000"></A>
-<BR>
-<A ID="tex2html_360_5"
-  HREF="./html/idl.htm">IDL</A>
-</h4>
-<UL><LI>
- Faster <A ID="tex2html_360_6"
-  HREF="./html/idl_isynfast.htm"><SPAN  style="font-family:monospace">isynfast</SPAN></A>, <A ID="tex2html_360_7"
-  HREF="./html/idl_ianafast.htm"><SPAN  style="font-family:monospace">ianafast</SPAN></A>, <A ID="tex2html_360_8"
-  HREF="./html/idl_ismoothing.htm"><SPAN  style="font-family:monospace">ismoothing</SPAN></A>
-routines
-
-<LI>
- addition of <A ID="tex2html_360_9"
-  HREF="./html/idl_outline_earth.htm"><SPAN  style="font-family:monospace">outline_earth</SPAN></A>
-to create a structure outlining Earth features such as coastlines, rivers, country boundaries, ...
-  <LI>
- <A HREF="./html/idl_mollview.htm"><kbd>azeqview, cartview, gnomview, mollview,
-orthview</kdb></A> visualization routines: support for color and thickness in <SPAN  style="font-family:monospace">outline</SPAN> keyword
-  <LI>
- Update of the required
-    <A ID="tex2html_360_10"
-  HREF="https://idlastro.gsfc.nasa.gov/homepage.html"><SPAN  style="font-family:monospace">IDL-astron</SPAN> library</A>
-routines, and <A ID="tex2html_360_11"
-  HREF="http://www.idlcoyote.com"><SPAN  style="font-family:monospace">Coyote</SPAN></A>
-library
-    routines (2019-10-30).
-</UL>
-<A HREF=#top>    Back to Top</A><br><br>
-
-<h4><A ID="SECTION_360_15000000000000000"></A>
-<BR>
-<A ID="tex2html_360_12"
-  HREF="https://healpy.readthedocs.io/en/latest/">Python</A>
-</h4>
-<UL><LI>
- Switch to 
-	<A ID="tex2html_360_13"
-  HREF="https://github.com/healpy/healpy/releases"><SPAN  style="font-family:monospace">healpy 1.13.0 </SPAN></A>
-(<A ID="tex2html_360_14"
-  HREF="https://github.com/healpy/healpy/blob/master/CHANGELOG.rst">CHANGELOG</A>)
-<UL><LI>
-
-different handling of default dtype in <SPAN  style="font-family:monospace">read_cl</SPAN>, <SPAN  style="font-family:monospace">write_cl</SPAN> and <SPAN  style="font-family:monospace">read_map</SPAN>
-<LI>
- implemented <SPAN  style="font-family:monospace">dist2holes</SPAN>, distance from pixel center to closest invalid pixel
-<LI>
- allow not-power-of-2 <SPAN CLASS="MATH"><I>N</I><SUB><I>side</I></SUB></SPAN> for RING
-</UL>
-</UL>
-<A HREF=#top>    Back to Top</A><br><br>
-
 
 <!-- *** 3.50 ********************************************** -->
 
