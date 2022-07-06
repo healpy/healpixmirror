@@ -2526,6 +2526,8 @@ subroutine input_map8_KLOAD(filename, map, npixtot, nmaps, &
     if (status == 202) then ! obs_npix not found
        obs_npix = int(nrows, kind=i8b) * repeat
        status = 0
+       print*,'Keyword OBS_NPIX not found in '//trim(filename)
+       print*,'Will assume OBS_NPIX='//trim(string(obs_npix,format='(i0.0)'))//' instead.' ! necessary to do a printout with gfortran (on M1), 2022-07-06
     endif
 
     npix   = min(npixtot, obs_npix)
