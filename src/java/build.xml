@@ -106,7 +106,7 @@
   </target>
   <target name="docs" description="Create the Javadocs">
    <javadoc destdir="${docs}" failonerror="true" use="true"
-      additionalparam='-breakiterator -quiet -tag copyright:a:"Copyright:" -link https://docs.oracle.com/en/java/javase/7/docs/api'
+      additionalparam='-breakiterator -quiet -tag copyright:a:"Copyright:" -link https://docs.oracle.com/en/java/javase/17/docs/api'
       classpathref="cpfits">
       <packageset dir="${src}" defaultexcludes="yes">
         <exclude name="**/test/**" />
