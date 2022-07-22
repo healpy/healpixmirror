@@ -1586,18 +1586,28 @@ EOF
     #CFITSIOVREQ="3.14"            # required  version of CFITSIO (in Healpix 3.00)
     CFITSIOVREQ="3.20"            # required  version of CFITSIO (in Healpix 3.30)
     CFITSIOVREC="3.44"            # recommended  version of CFITSIO (according to NASA)
+    CFITSIOVARM="4.01"            # stands for 4.1.0, required by F90 on Apple's ARM M1 and M2 chips
     # run if executable
     if [ -x ${tmpfile}.x ]; then
 	CFITSIOVERSION=`${tmpfile}.x` || CFITSIOVERSION=-1 # available version of CFITSIO
 	v1=`echo ${CFITSIOVERSION} | ${AWK} '{print $1*1000}'` # multiply by 1000 to get integer
 	v2=`echo ${CFITSIOVREQ}    | ${AWK} '{print $1*1000}'`
 	v3=`echo ${CFITSIOVREC}    | ${AWK} '{print $1*1000}'`
+	v4=`echo ${CFITSIOVARM}    | ${AWK} '{print $1*1000}'`
 	if [ $v1 -lt 0   ]; then
 	    echo
 	    echo "The code compiled with"
 	    echo "${FC} ${FFLAGS_}  ${tmpfile}${suffix} -o ${tmpfile}.x -L${FITSDIR} -l${LIBFITS} ${CFITSIOCURL} ${F90_WLRPATH_}"
 	    echo "can not be executed."
 	    echo "(missing shared/dynamic library ?)"
+	    crashAndBurn
+	fi
+	if [ $v1 -lt $v4  -a   "${HARDWARE}" = "arm64" ]; then
+	    echo
+	    echo "CFITSIO version in ${FITSDIR}/lib${LIBFITS}.a  is  $CFITSIOVERSION "
+	    echo "CFITSIO >= ${CFITSIOVARM} is expected for Healpix-F90 on Apple ARM chips"
+	    echo
+	    ${RM} ${tmpfile}.*
 	    crashAndBurn
 	fi
 	if [ $v1 -lt $v2 ]; then
@@ -2776,7 +2786,8 @@ setTopDefaults() {
     RMDIR="rmdir"
     SED="sed"
     WC="wc"
-    OS=`uname -s`
+    OS=`uname -s`       # Linux, Darwin, ...
+    HARDWARE=`uname -m` # x86_64, arm64, ...
     WHEREIS="whereis"
 
     HEALPIX=`pwd`

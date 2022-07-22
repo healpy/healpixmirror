@@ -5142,33 +5142,41 @@
           rms_c1 = ZERO
           rms_c2 = ZERO
           rms_c3 = ZERO
+          ! compute rms_g2 (E->E) and rms_c2 (E->B)
           if (cls_tt(l) > ZERO) then
              var_g2 = cls_gg(l) - (cls_tg(l)/cls_tt(l))*cls_tg(l) ! to avoid underflow
-             ! test for consistency but make sure it is not due to round off error
-             if (var_g2 <= ZERO) then
-                if (abs(var_g2) > abs(1.e-8*cls_gg(l))) then
-                   print*,code//'> Inconsistent TT, GG and TG spectra at l=',l
-                   call fatal_error
-                else ! only round off error, keep going
-                   var_g2 = ZERO
-                endif
-             endif
-             rms_c1 = cls_tc(l) / sqrt( cls_tt(l) )
-             if (var_g2 > ZERO) then
-                rms_g2 = sqrt( var_g2 )
-                rms_c2 = ( cls_gc(l) - cls_tc(l) * (cls_tg(l) / cls_tt(l)) ) / rms_g2
-             endif
-             var_c3 = cls_cc(l) - rms_c1**2 - rms_c2**2
-             if (var_c3 <= ZERO) then
-                if (abs(var_c3) > abs(1.e-8*cls_cc(l))) then
-                   print*,code//'> Inconsistent spectra at l=',l
-                   call fatal_error
-                else ! only round off error, keep going
-                   var_c3 = ZERO
-                endif
-             endif
-             rms_c3 = sqrt( var_c3 )
+          else
+             var_g2 = cls_gg(l)
           endif
+          ! test for consistency but make sure it is not due to round off error
+          if (var_g2 <= ZERO) then
+             if (abs(var_g2) > abs(1.e-8*cls_gg(l))) then
+                print*,code//'> Inconsistent TT, GG and TG spectra at l=',l
+                call fatal_error
+             else ! only round off error, keep going
+                var_g2 = ZERO
+             endif
+          endif
+          if (var_g2 > ZERO) then
+             rms_g2 = sqrt( var_g2 )
+             if (cls_tt(l) > ZERO) then
+                rms_c2 = ( cls_gc(l) - cls_tc(l) * (cls_tg(l) / cls_tt(l)) ) / rms_g2
+             else
+                rms_c2 = cls_gc(l) / rms_g2
+             endif
+          endif
+          ! compute rms_c3 (B->B)
+          if (cls_tt(l) > ZERO)   rms_c1 = cls_tc(l) / sqrt( cls_tt(l) )
+          var_c3 = cls_cc(l) - rms_c1**2 - rms_c2**2
+          if (var_c3 <= ZERO) then
+             if (abs(var_c3) > abs(1.e-8*cls_cc(l))) then
+                print*,code//'> Inconsistent TT, TG, TC, GC spectra at l=',l
+                call fatal_error
+             else ! only round off error, keep going
+                var_c3 = ZERO
+             endif
+          endif
+          rms_c3 = sqrt( var_c3 )
 
           !           ------ m = 0 ------
           zeta2_r = rand_gauss(rng_handle)

@@ -275,15 +275,14 @@ various environment variables and aliases to make the use of the
 The \healpix \textbf{Fortran 90}, \textbf{C++}, \textbf{C} and \textbf{Python} distributions also
 require the publicly available CFITSIO library. Note that the 
 \textbf{Fortran 90} routines require 
-%version 3.14 or more (post March 2009) 
 version 3.20 or more (post August 2009) 
-of CFITSIO. Out of security concerns, the CFITSIO developers recommend using version 3.44 (April 2018) or more.
+of CFITSIO on most platforms, except on Apple's ARM (M1 and M2) chips, which
+require version 4.1.0 (March 2022) or more. Out of security concerns, the CFITSIO developers recommend using version 3.44 (April 2018) or more.
 
 \begin{tabular}{p{0.3\hsize} p{0.6\hsize}} \hline  
   \textbf{Software Package} & \textbf{Source} \\ \hline
                             &                          \\ %%% for presentation
-%  CFITSIO V 3.14 or more 
-  CFITSIO V 3.20 (3.44) or more 
+  CFITSIO V 3.44 (4.1.0) or more 
            & \url{https://heasarc.gsfc.nasa.gov/fitsio/}
                             \\ 
                                    &                          \\ \hline %%% for presentation
@@ -1292,6 +1291,10 @@ and the paths provided during the \healpix configuration must be
 \texttt{FITSINC=\$\{HEADAS\}/include})
 where PLATFORM depends on your computer and operating system and may look like \texttt{x86\_64-pc-linux-gnu-libc2.29}.
 
+\subsubsection*{CFITSIO, Fortran codes and Apple's ARM chips}
+If \healpixns-F90  codes (or any other Fortran code) are linked with cfitsio on Apple's
+ARM chips (M1 and M2), then version 4.1.0 (March 2022) or above of cfitsio must
+be used, see Section~\ref{sec:requirements}.
 
 % \subsection{fft.f compilation}
 

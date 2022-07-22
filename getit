@@ -26,7 +26,8 @@ echoRed (){
 #---------------
 
 WRKDIR="/tmp"
-healpytag="1.15.2"
+#healpytag="1.15.2"
+healpytag="1.16.0"
 healpytag_git=""
 #healpytag_git=${healpytag}
 healpygit=0 # 1: uses GIT, 0: uses tar.gz
@@ -55,7 +56,8 @@ else
     healpixbranch_cxx=${healpixbranch}
     healpixbranch_java=${healpixbranch}
 fi
-healpixrepo="svn://svn.code.sf.net/p/healpix/code/" # read-only
+#healpixrepo="svn://svn.code.sf.net/p/healpix/code/" # read-only
+healpixrepo="svn+ssh://hivon@svn.code.sf.net/p/healpix/code/" # read-only
 #healpixrepo="https://healpix.svn.sourceforge.net/svnroot/healpix/"
 #
 #
@@ -88,7 +90,8 @@ if [ ${doit} = 1 ] ; then
 
     cd ${WRKDIR}
     echoGrn "-------------------- HEALPix ------------------"
-    svn co     ${healpixrepo}${healpixbranch}               Healpix_${VERSION}
+    echo "svn co     ${healpixrepo}${healpixbranch}               Healpix_${VERSION}"
+    svn co     ${healpixrepo}${healpixbranch}               Healpix_${VERSION}  || exit
     if [ ${healpixbranch_cxx} != ${healpixbranch} ] ; then
 	echoGrn "-------------------- C++ ------------------"
 	\rm -rf Healpix_${VERSION}/src/cxx
