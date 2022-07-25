@@ -70,10 +70,10 @@ pro init_healpix, verbose=verbose
 healpix_sysvar = '!HEALPIX'
 
 ; Healpix version
-version = '3.80'
+version = '3.82'
 
 ; release data
-date = '2021-06-22'
+date = '2022-07-29'
 
 
 ; Healpix directory

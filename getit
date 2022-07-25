@@ -27,7 +27,7 @@ echoRed (){
 
 WRKDIR="/tmp"
 #healpytag="1.15.2"
-healpytag="1.16.0"
+healpytag="1.16.1"
 healpytag_git=""
 #healpytag_git=${healpytag}
 healpygit=0 # 1: uses GIT, 0: uses tar.gz

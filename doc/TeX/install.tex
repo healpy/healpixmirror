@@ -1658,7 +1658,7 @@ However, the \mylinkext{idl:mollview:latex}{\texttt{Latex}} keyword will work pr
 \section{Appendix I: Recent Changes and New Features}
 \label{sec:newfeatures}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% BEGIN LATEST CHANGES %%%%%%%%%%%%%
-\subsection{Bug corrections and Improvements in Version \hpxversion}%2022-01-??
+\subsection{Bug corrections and Improvements in Version \hpxversion}%2022-07-??
 %------------
 % \subsubsection[General]{General}
 % \subsubsection[C]{\linklatexhtml{C}{csub.pdf}{csub.htm}}
@@ -1670,12 +1670,53 @@ However, the \mylinkext{idl:mollview:latex}{\texttt{Latex}} keyword will work pr
 % \subsubsection[Java]{\htmladdnormallink{Java}{\healpixwebpage/html/java/index.html}}
 % \subsubsection[Python]{\htmladdnormallink{Python}{https://healpy.readthedocs.io/en/latest/}}
 %------------
-% \subsubsection[General]{General}
-% \subsubsection[C]{\linklatexhtml{C}{csub.pdf}{csub.htm}}
-% \subsubsection[C++]{\htmladdnormallink{C++}{\healpixwebpage/html/index_cxx.htm}}
-% \subsubsection[Fortran 90]{%
-%  	Fortran 90 \linklatexhtml{facilities}{facilities.pdf}{facilities.htm} and
-%  	\linklatexhtml{subroutines}{subroutines.pdf}{subroutines.htm}}
+\subsubsection[General]{General}
+\subsubsection[C]{\linklatexhtml{C}{csub.pdf}{csub.htm}}
+\begin{itemize}
+  \item corrected documentation of \texttt{pix2vec} routines
+\end{itemize}
+\subsubsection[C++]{\htmladdnormallink{C++}{\healpixwebpage/html/index_cxx.htm}}
+\begin{itemize}
+ \item Cfitsio 4.1.0 (March 2022) and higher now properly supported
+\end{itemize}
+\subsubsection[Fortran 90]{%
+	Fortran 90 \linklatexhtml{facilities}{facilities.pdf}{facilities.htm} and
+	\linklatexhtml{subroutines}{subroutines.pdf}{subroutines.htm}}
+      \begin{itemize}
+      \item bug corrections in
+        \htmlref{\texttt{input\_map}}{sub:input_map} and
+        \htmlref{\texttt{read\_fits\_partial}}{sub:read_fits_partial}
+      \end{itemize}
+\subsubsection[IDL]{\linklatexhtml{IDL}{idl.pdf}{idl.htm}}
+      \begin{itemize}
+      \item bug corrections in
+        \htmlref{\texttt{read\_fits\_map}}{read_fits_map} and
+        \htmlref{\texttt{read\_tqu}}{read_tqu}
+      \end{itemize}
+% \subsubsection[Java]{\htmladdnormallink{Java}{\healpixwebpage/html/java/index.html}}
+\subsubsection[Python]{\htmladdnormallink{Python}{https://healpy.readthedocs.io/en/latest/}}
+\begin{itemize}
+\item Switch to 
+	\htmladdnormallink{\texttt{healpy 1.16.1}}{\hpysite/releases} 
+	(\htmladdnormallink{CHANGELOG}{\hpysite/blob/master/CHANGELOG.rst})
+\begin{itemize}
+    \item Updated CFITSIO included in healpy to 4.1.0, necessary for compatibility with Apple ARM chips
+    \item Update HEALPix C++ sources to revision 1206 (just maintenance commits)
+    \item Do not normalize binary arrays
+    \item Fix unncessary log warning message in plots
+    \item Fixed double application of margins in visualization functions when using subplot syntax and implemented margins parameter for mollview, orthview, and azeqview when subplot syntax is not used
+    \item Fixed reuse\_axes=True for cartview and gnomview
+    \item New features in projview: subplots, remove monopole-dipole, labels, tickmarks, graticule, Planck and WMAP colormaps
+    \item Fixed the CFITSIO version mismatch warning
+    \item Added colorbar ticks and normalization
+\end{itemize}
+\end{itemize}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% END LATEST CHANGES %%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Bug corrections and Improvements in Version 3.81}%2022-01-25
 \label{sec:v381}\mytarget{install:v381}
 \subsubsection[C++]{C++}
 \begin{itemize}
@@ -1700,11 +1741,6 @@ However, the \mylinkext{idl:mollview:latex}{\texttt{Latex}} keyword will work pr
     \item upgraded HEALPix C++ sources to HEALPix 3.81, fixing incompatibility with CFITSIO 4
 \end{itemize}
 \end{itemize}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% END LATEST CHANGES %%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \subsection{Bug corrections and Improvements in Version 3.80}%2021-06-22
 \label{sec:v380}\mytarget{install:v380}
