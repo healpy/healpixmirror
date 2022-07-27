@@ -50,7 +50,7 @@
 #                CXX,                           (C++/    healpy) 
 #                CXXFLAGS, CXX_PARAL            (C++)            
 #                SHARP_COPT, SHARP_PARAL        (sharp)                
-#                FC, F_DIRSUFF, F_OPT, F_PARAL, F_SHARED   (F90) 
+#                FC, F_AR, F_DIRSUFF, F_OPT, F_PARAL, F_SHARED   (F90) 
 #                FITSDIR,               (C/      C++/F90)        
 #                FITSINC,               (C/      C++)            
 #                PYTHON                                 (healpy) 
@@ -1372,7 +1372,7 @@ idl_config () {
 #   editF90Makefile: create makefile from template
 #   generateConfF90File: generates configuration file for F90
 #   offerF90Compilation: propose to perform F90 compilation
-#   f90_shared: deal with shared F90 library
+#   ask_f90_shared, apply_f90_shared: deal with shared F90 library
 #   writeF90pkgconfigFile: writes pkg-config (.pc) file for F90 library
 #   f90_config: top routine for F90
 #
@@ -1391,7 +1391,7 @@ setF90Defaults () {
     FPP="-D"
     PARALL=""
     PRFLAGS=""
-    F90_AR="ar rv"
+    F_AR="ar rv"
     FTYPE=""
     PPFLAGS=""
     FF64=""
@@ -1510,8 +1510,7 @@ checkFitsioCurl () {
 		CFITSIOCURL="-lcurl"
  		CURLCONFIG='curl-config' # use curl-config to find non /usr/lib*/ installations
  		testcurl=`${WHEREIS} ${CURLCONFIG}`
-		#echo "TESTCURL:  $testcurl"
-		if [ "x${testcurl}" != "x" -a "x{testcurl}" != "x${CURLCONFIG}:" ] ; then
+		if [ "x${testcurl}" != "x" -a "x${testcurl}" != "x${CURLCONFIG}:" ] ; then
 		    #pathcurl=`${CURLCONFIG} --prefix`
 		    #pcloc=${pathcurl:0:2} # bashism !!
 		    pathcurl=`${CURLCONFIG} --libs`
@@ -1521,9 +1520,20 @@ checkFitsioCurl () {
  			CFITSIOCURL="${PATHCURL} ${CFITSIOCURL}"
  		    fi
 		fi
+		# compile test code
+		echo "(testing ${CFITSIOCURL})"
+		tmpfile=to_be_removed
+		suffix=.c
+		${CAT} > ${tmpfile}${suffix} <<EOF
+int main() { }
+EOF
+		${RM} ${tmpfile}
+		${CC} ${CFITSIOCURL} ${tmpfile}${suffix} -o ${tmpfile}  >  ${DEVNULL} 2>&1
+		if [ ! -s ${tmpfile} ]; then
+		    CFITSIOCURL=""
+		fi
+		${RM} ${tmpfile}
 
-		# adding -lcurl is necessary if the cfitsio library is static
-		#echo "WARNING: his version of CFITSIO must be linked with libcurl (flag -lcurl will be added)"
 	    fi
 	fi
     fi
@@ -1653,12 +1663,12 @@ GuessF90Compiler () {
 	    OFLAGS="-fast-O"
 	    PRFLAGS="-mp";;
 	Linux)
-	    F90_AR="ar -rsv" # archive with index table
+	    F_AR="ar -rsv" # archive with index table
   	    OFLAGS="-O"
 	    IdentifyF90Compiler;;
 	Darwin)
   	    OFLAGS="-O"
-	    F90_AR="libtool -static -s -o"  # archive with index table
+	    F_AR="libtool -static -s -o"  # archive with index table
 	    IdentifyF90Compiler;;
 	OSF*)
 	    OS="OSF"
@@ -1959,7 +1969,7 @@ IdentifyF90Compiler () {
 		CFLAGS="$CFLAGS -DRS6000" # to combine C and F90
 		FPP="-WF,-D"
 		PRFLAGS="-qsmp=omp" # Open MP enabled
-		F90_AR="ar -rsv" # archive with index table
+		F_AR="ar -rsv" # archive with index table
 		FF64="-q64"
 		CF64="-q64"
 		AR64="-X64"
@@ -2047,7 +2057,7 @@ add64bitF90Flags () {
 	if [ "x$answer" = "xy" -o "x$answer" = "xY" ]; then
 	    FFLAGS="$FFLAGS $FF64"
 	    CFLAGS="$CFLAGS $CF64"
-	    F90_AR="$F90_AR $AR64"
+	    F_AR="$F_AR $AR64"
 	fi
     fi
 }
@@ -2273,10 +2283,10 @@ askUserMisc () {
     fi
     echo "  C subroutines will be compiled with $CC $CFLAGS"
 
-    echoLn "enter command for library archiving [$F90_AR]: "
+    echoLn "enter command for library archiving [$F_AR]: "
     read answer
     [ $INTERACTIVE -eq 0 ] && echo $answer
-    [ "x$answer" != "x" ] && F90_AR="$answer"
+    [ "x$answer" != "x" ] && F_AR="$answer"
 
     echoLn "enter full name of cfitsio library [lib${LIBFITS}.a]: "
     read answer
@@ -2360,7 +2370,7 @@ editF90Makefile () {
 	${SED} "s|^F90_INCDIR.*$|F90_INCDIR	= $F90_INCDIR_H|" |\
 	${SED} "s|^F90_LIBDIR.*$|F90_LIBDIR	= $F90_LIBDIR_H|" |\
 	${SED} "s|^F90_BUILDDIR.*$|F90_BUILDDIR	= $F90_BUILDDIR_H|" |\
-	${SED} "s|^F90_AR.*$|F90_AR        = $F90_AR|" |\
+	${SED} "s|^F90_AR.*$|F90_AR        = $F_AR|" |\
 	${SED} "s|^F90_MODDIR[[:space:]=].*$|F90_MODDIR	= \"$MODDIR\"|" |\
 	${SED} "s|^F90_MOD[[:space:]=].*$|F90_MOD	= $MOD|" |\
 	${SED} "s|^F90_PPFLAGS.*$|F90_PPFLAGS	= $PPFLAGS|" |\
@@ -2443,7 +2453,7 @@ offerF90Compilation () {
 }
 
 # -----------------------------------------------------------------
-f90_shared () {
+ask_f90_shared () {
     echo " "
     echo " Experimental feature: "
     echoLn "A static library is produced by default. Do you rather want a shared/dynamic library ?"
@@ -2457,30 +2467,34 @@ f90_shared () {
 	[ `isTrue ${answer}` -eq 1 ] && DO_F90_SHARED=1  || DO_F90_SHARED=0
     fi
     [ $INTERACTIVE -eq 0 ] && echo $answer
-#     echo "============================"
-#     echo "F_SHARED =  ${F_SHARED}"
-#     echo "answer=${answer}."  
-#     echo "DO_F90_SHARED =  ${DO_F90_SHARED}"
-#     #echo `isTrue ${answer}` `isFalse ${answer}`
-#     echo "============================"
-    if [ ${DO_F90_SHARED} -eq 1 ]; then
+    #     echo "============================"
+    #     echo "F_SHARED =  ${F_SHARED}"
+    #     echo "answer=${answer}."  
+    #     echo "DO_F90_SHARED =  ${DO_F90_SHARED}"
+    #     #echo `isTrue ${answer}` `isFalse ${answer}`
+    #     echo "============================"
+}
+
+apply_f90_shared () {
+    #if [ ${DO_F90_SHARED} -eq 1 ]; then
+    if [ "$1" = "1" ]; then
 	case $OS in
 	    Darwin)
 		F90_LIBSUFFIX=".dylib"
 		if [ `isTrue ${USE_ATRPATH}` -eq 1 ]; then
-		    F90_AR="${FC} ${F90PIC} -dynamiclib -Wl,-undefined,dynamic_lookup -Wl,-rpath,\$(F90_LIBDIR) -o "
+		    F_AR="${FC} ${F90PIC} -dynamiclib -Wl,-undefined,dynamic_lookup -Wl,-rpath,\$(F90_LIBDIR) -o "
 		    F90_FLAGNAMELIB="-Wl,-install_name,@rpath/"
 		else
-		    F90_AR="${FC} ${F90PIC} -dynamiclib -Wl,-undefined,dynamic_lookup -o "
+		    F_AR="${FC} ${F90PIC} -dynamiclib -Wl,-undefined,dynamic_lookup -o "
 		    F90_FLAGNAMELIB=""
 		fi
 		;;
 	    Linux)
-		F90_AR="${FC} ${F90PIC} -shared -o "
+		F_AR="${FC} ${F90PIC} -shared -o "
 		F90_FLAGNAMELIB="-Wl,-soname,"
 		F90_LIBSUFFIX=".so";;
 	    *)
-		F90_AR="${FC} ${F90PIC} -shared -o "
+		F_AR="${FC} ${F90PIC} -shared -o "
 		F90_FLAGNAMELIB="-Wl,-soname,"
 		F90_LIBSUFFIX=".so";;
 	esac
@@ -2540,7 +2554,8 @@ f90_config () {
     askOpenMP
     askF90PIC
     patchF90
-    f90_shared
+    ask_f90_shared
+    apply_f90_shared ${DO_F90_SHARED}
     #makeProfile
     generateConfF90File
     editF90Makefile

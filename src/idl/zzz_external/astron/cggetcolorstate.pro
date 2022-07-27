@@ -71,6 +71,7 @@
 ;     Change History::
 ;        Written, 5 Nov 2013, as a combination of DecomposedColor and GetDecomposedState, which
 ;           have both been retired from the Coyote Library.
+;        Fix typo in Get_decomposed for Mac  W. Landsman/G. Duvert June 2021
 ;
 ; :Copyright:
 ;     Copyright (c) 2010-2013, Fanning Software Consulting, Inc.
@@ -134,7 +135,7 @@ FUNCTION cgGetColorState, device, DEPTH=depth
         
         'MAC': BEGIN
             IF (Float(!Version.Release) GE 5.2) THEN BEGIN
-                Device, Get_Decomposed=decomposedState, GET_VISUAL_DEPTH=depth
+                Device, Get_Decomposed=decomposed, GET_VISUAL_DEPTH=depth
             ENDIF ELSE BEGIN
                 decomposed = 0
                 depth = 8
