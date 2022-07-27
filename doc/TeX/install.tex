@@ -494,7 +494,7 @@ among
       \texttt{CC}                 (C compiler, relevant for C,C++,F90,healpy,sharp),
       \texttt{C\_FITS}, \texttt{C\_SHARED} (\mylink{install:C:config}{C}),
       \texttt{CXX}, \texttt{CXXFLAGS}, \texttt{CXX\_PARAL}      (\mylink{install:cpp_config}{C++}),
-      \texttt{FC},  \texttt{F\_DIRSUFF}, \texttt{F\_OPT}, 
+      \texttt{FC},  \texttt{F\_AR}, \texttt{F\_DIRSUFF}, \texttt{F\_OPT}, 
       \texttt{F\_PARAL}, \texttt{F\_SHARED}         (\mylink{install:f90:config}{F90}),
       \texttt{FITSDIR},   \texttt{FITSINC}   (C,C++,F90),
       \texttt{PYTHON}             (\mylink{install:healpy:config}{healpy}),
@@ -608,7 +608,8 @@ information.}.
 From our experience,
 we have not found significant accumulation of numerical error even
 when using the most aggressive optimisation level available. \\
-The environment variable \texttt{FITSDIR}, \texttt{CC}, \texttt{FC}, \texttt{F\_DIRSUFF}, \texttt{F\_OPT}, 
+The environment variable \texttt{FITSDIR}, \texttt{CC}, \texttt{FC},
+\texttt{F\_AR}, \texttt{F\_DIRSUFF}, \texttt{F\_OPT}, 
 \texttt{F\_SHARED} (\mylink{install:configure:boolean}{boolean}) and \texttt{F\_PARAL} (\mylink{install:configure:boolean}{boolean}) can be used to customize the configuration.\\
 The configuration of \mylink{install:libsharp:config}{\texttt{libsharp}} will be also taken care of at this stage.\\
 If the \healpix configuration file is sourced as described in \S\ref{subsub:conf}, the full path to the F90
@@ -1381,7 +1382,8 @@ type
 \end{itemize}
 \item with Xquartz (default under Moutain Lion (10.8.*), Mavericks (10.9.*) and Yosemite (10.10.*), 
 available for download for 
-El Capitan (10.11.*), Sierra (10.12.*), High Sierra (10.13.*), Mojave (10.14.*), Catalina (10.15.*) and Big Sur (11.0.*)):\\
+El Capitan (10.11.*), Sierra (10.12.*), High Sierra (10.13.*), Mojave (10.14.*),
+Catalina (10.15.*), Big Sur (11.0.*) and Monterey (12.*)):\\
 {\texttt{defaults write org.macosforge.xquartz.X11 wm\_click\_through -bool true}}
 \item with MacPort's X11 (package xorg-server):\\
 {\texttt{defaults write org.macports.X11 wm\_click\_through -bool true}}
@@ -1659,57 +1661,62 @@ However, the \mylinkext{idl:mollview:latex}{\texttt{Latex}} keyword will work pr
 \label{sec:newfeatures}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% BEGIN LATEST CHANGES %%%%%%%%%%%%%
 \subsection{Bug corrections and Improvements in Version \hpxversion}%2022-07-??
-%------------
+% ------------
 % \subsubsection[General]{General}
 % \subsubsection[C]{\linklatexhtml{C}{csub.pdf}{csub.htm}}
 % \subsubsection[C++]{\htmladdnormallink{C++}{\healpixwebpage/html/index_cxx.htm}}
 % \subsubsection[Fortran]{%
-% 	Fortran 90 \linklatexhtml{facilities}{facilities.pdf}{facilities.htm} and
-% 	\linklatexhtml{subroutines}{subroutines.pdf}{subroutines.htm}}
+% Fortran 90 \linklatexhtml{facilities}{facilities.pdf}{facilities.htm} and
+% \linklatexhtml{subroutines}{subroutines.pdf}{subroutines.htm}}
 % \subsubsection[IDL]{\linklatexhtml{IDL}{idl.pdf}{idl.htm}}
 % \subsubsection[Java]{\htmladdnormallink{Java}{\healpixwebpage/html/java/index.html}}
 % \subsubsection[Python]{\htmladdnormallink{Python}{https://healpy.readthedocs.io/en/latest/}}
 %------------
-\subsubsection[General]{General}
+% \subsubsection[General]{General}
 \subsubsection[C]{\linklatexhtml{C}{csub.pdf}{csub.htm}}
 \begin{itemize}
-  \item corrected documentation of \texttt{pix2vec} routines
+\item corrected documentation of \texttt{pix2vec} routines
 \end{itemize}
 \subsubsection[C++]{\htmladdnormallink{C++}{\healpixwebpage/html/index_cxx.htm}}
 \begin{itemize}
- \item Cfitsio 4.1.0 (March 2022) and higher now properly supported
+\item Cfitsio 4.1.0 (March 2022) and higher now properly supported
 \end{itemize}
 \subsubsection[Fortran 90]{%
-	Fortran 90 \linklatexhtml{facilities}{facilities.pdf}{facilities.htm} and
-	\linklatexhtml{subroutines}{subroutines.pdf}{subroutines.htm}}
-      \begin{itemize}
-      \item bug corrections in
-        \htmlref{\texttt{input\_map}}{sub:input_map} and
-        \htmlref{\texttt{read\_fits\_partial}}{sub:read_fits_partial}
-      \end{itemize}
+  Fortran 90 \linklatexhtml{facilities}{facilities.pdf}{facilities.htm} and
+  \linklatexhtml{subroutines}{subroutines.pdf}{subroutines.htm}}
+\begin{itemize}
+\item bug corrections in
+  \htmlref{\texttt{input\_map}}{sub:input_map} and
+  \htmlref{\texttt{read\_fits\_partial}}{sub:read_fits_partial}
+\end{itemize}
 \subsubsection[IDL]{\linklatexhtml{IDL}{idl.pdf}{idl.htm}}
-      \begin{itemize}
-      \item bug corrections in
-        \htmlref{\texttt{read\_fits\_map}}{read_fits_map} and
-        \htmlref{\texttt{read\_tqu}}{read_tqu}
-      \end{itemize}
+\begin{itemize}
+\item bug corrections in
+  \htmlref{\texttt{read\_fits\_map}}{idl:read_fits_map} and
+  \htmlref{\texttt{read\_tqu}}{idl:read_tqu}
+\item update of the required
+  \htmladdnormallink{\texttt{IDL-astron} library}{https://idlastro.gsfc.nasa.gov/homepage.html}
+    routines, and \htmladdnormallink{\texttt{Coyote}}{http://www.idlcoyote.com} library
+    routines (2022-07-27).%
+\end{itemize}
+    
 % \subsubsection[Java]{\htmladdnormallink{Java}{\healpixwebpage/html/java/index.html}}
 \subsubsection[Python]{\htmladdnormallink{Python}{https://healpy.readthedocs.io/en/latest/}}
 \begin{itemize}
 \item Switch to 
-	\htmladdnormallink{\texttt{healpy 1.16.1}}{\hpysite/releases} 
-	(\htmladdnormallink{CHANGELOG}{\hpysite/blob/master/CHANGELOG.rst})
-\begin{itemize}
-    \item Updated CFITSIO included in healpy to 4.1.0, necessary for compatibility with Apple ARM chips
-    \item Update HEALPix C++ sources to revision 1206 (just maintenance commits)
-    \item Do not normalize binary arrays
-    \item Fix unncessary log warning message in plots
-    \item Fixed double application of margins in visualization functions when using subplot syntax and implemented margins parameter for mollview, orthview, and azeqview when subplot syntax is not used
-    \item Fixed reuse\_axes=True for cartview and gnomview
-    \item New features in projview: subplots, remove monopole-dipole, labels, tickmarks, graticule, Planck and WMAP colormaps
-    \item Fixed the CFITSIO version mismatch warning
-    \item Added colorbar ticks and normalization
-\end{itemize}
+  \htmladdnormallink{\texttt{healpy 1.16.1}}{\hpysite/releases} 
+  (\htmladdnormallink{CHANGELOG}{\hpysite/blob/master/CHANGELOG.rst})
+  \begin{itemize}
+  \item Updated CFITSIO included in healpy to 4.1.0, necessary for compatibility with Apple ARM chips
+  \item Update HEALPix C++ sources to revision 1206 (just maintenance commits)
+  \item Do not normalize binary arrays
+  \item Fix unncessary log warning message in plots
+  \item Fixed double application of margins in visualization functions when using subplot syntax and implemented margins parameter for mollview, orthview, and azeqview when subplot syntax is not used
+  \item Fixed reuse\_axes=True for cartview and gnomview
+  \item New features in projview: subplots, remove monopole-dipole, labels, tickmarks, graticule, Planck and WMAP colormaps
+  \item Fixed the CFITSIO version mismatch warning
+  \item Added colorbar ticks and normalization
+  \end{itemize}
 \end{itemize}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% END LATEST CHANGES %%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
