@@ -240,12 +240,16 @@ and
 </h4>
 
 <UL>
-<LI>bug corrections in
+<LI>Bug corrections in
   <A ID="tex2html_382_5"
   HREF="./html/sub_input_map.htm"><SPAN  style="font-family:monospace">input_map</SPAN></A>
 and
   <A ID="tex2html_382_6"
-  HREF="./html/sub_read_fits_partial.htm"><SPAN  style="font-family:monospace">read_fits_partial</SPAN></A>
+  HREF="./html/sub_read_fits_partial.htm"><SPAN  style="font-family:monospace">read_fits_partial</SPAN></A>,
+</LI>
+<LI>added a workaround for a bug detected in Apple-ARM-chips implementation of gfortran 11.
+</LI>
+<LI>Note that cfitsio 4.1.0 or higher is required for Fortran codes running on Apple's ARM chips
 </LI>
 </UL>
 <A HREF=#top>    Back to Top</A><br><br>
