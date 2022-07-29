@@ -14,7 +14,7 @@ RedirectMatch 301 ^/src/trunk/(.*)$ https://sourceforge.net/p/healpix/code/HEAD/
 # RedirectMatch 301 ^/src/3.71/(.*)$  https://sourceforge.net/p/healpix/code/HEAD/tree/trunk/$1
 # RedirectMatch 301 ^/src/3.80/(.*)$  https://sourceforge.net/p/healpix/code/HEAD/tree/trunk/$1
 # RedirectMatch 301 ^/src/3.81/(.*)$  https://sourceforge.net/p/healpix/code/HEAD/tree/trunk/$1
-RedirectMatch 301 ^/src/3.82/(.*)$  https://sourceforge.net/p/healpix/code/HEAD/tree/trunk/$1
+# RedirectMatch 301 ^/src/3.82/(.*)$  https://sourceforge.net/p/healpix/code/HEAD/tree/trunk/$1
 RedirectMatch 301 ^/src/4.00/(.*)$  https://sourceforge.net/p/healpix/code/HEAD/tree/trunk/$1
 # ----------------------------------
 # released version. To tagged branch
@@ -24,4 +24,4 @@ RedirectMatch 301 ^/src/4.00/(.*)$  https://sourceforge.net/p/healpix/code/HEAD/
 # RedirectMatch 301 ^/src/3.71/(.*)$  https://sourceforge.net/p/healpix/code/HEAD/tree/branches/branch_v371rXXXX/$1
 # RedirectMatch 301 ^/src/3.80/(.*)$  https://sourceforge.net/p/healpix/code/HEAD/tree/branches/branch_v380r1183/$1
 RedirectMatch 301 ^/src/3.81/(.*)$  https://sourceforge.net/p/healpix/code/HEAD/tree/branches/branch_v381r1201/$1
-RedirectMatch 301 ^/src/3.82/(.*)$  https://sourceforge.net/p/healpix/code/HEAD/tree/branches/branch_v382r14??/$1
+RedirectMatch 301 ^/src/3.82/(.*)$  https://sourceforge.net/p/healpix/code/HEAD/tree/branches/branch_v382r1223/$1
