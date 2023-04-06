@@ -940,8 +940,10 @@ Healpy_config () {  # for healpy 1.7.0
     #python_reqrd="2.6" # minimal version supported
     #python_reqrd="2.7" # minimal version supported (1.12.8)
     python_reqrd="3.6"  # minimal version supported (1.15.0)
-    p_v1=`echo ${python_version} | ${AWK} '{print $1*10}'`
-    p_v2=`echo ${python_reqrd}   | ${AWK} '{print $1*10}'`
+    #p_v1=`echo ${python_version} | ${AWK} '{print $1*10}'` # does not work properly for eg 3.10
+    #p_v2=`echo ${python_reqrd}   | ${AWK} '{print $1*10}'`
+    p_v1=`echo ${python_version} | ${AWK} -F. '{print $1*10000+$2*100+$3}'`
+    p_v2=`echo ${python_reqrd}   | ${AWK} -F. '{print $1*10000+$2*100+$3}'`
     ${RM} ${tmpfile}
     if [ ${p_v1} -lt ${p_v2} ]; then
 	echo
