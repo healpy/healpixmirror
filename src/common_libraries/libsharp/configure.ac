@@ -1,4 +1,4 @@
-AC_INIT([libsharp], [1.0.0])
+AC_INIT([libsharp],[1.0.0])
 AM_INIT_AUTOMAKE([foreign subdir-objects -Wall -Werror])
 AM_MAINTAINER_MODE([enable])
 
@@ -20,7 +20,7 @@ dnl
 m4_ifdef([AM_SILENT_RULES], [AM_SILENT_RULES([yes])])
 
 
-AC_PROG_CC_C99
+m4_version_prereq(2.70, [AC_PROG_CC], [AC_PROG_CC_C99])
 AC_OPENMP
 CPPFLAGS="$CPPFLAGS $OPENMP_CFLAGS"
 CFLAGS="$CFLAGS $OPENMP_CFLAGS"
@@ -28,7 +28,7 @@ CFLAGS="$CFLAGS $OPENMP_CFLAGS"
 # adding the lib to the files to link
 LIBS="-lm"
 
-AC_PROG_LIBTOOL
+LT_INIT
 
 tmpval=`echo $CFLAGS | grep -c '\-DMULTIARCH'`
 AM_CONDITIONAL([HAVE_MULTIARCH], [test $tmpval -gt 0])

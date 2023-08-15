@@ -275,15 +275,14 @@ various environment variables and aliases to make the use of the
 The \healpix \textbf{Fortran 90}, \textbf{C++}, \textbf{C} and \textbf{Python} distributions also
 require the publicly available CFITSIO library. Note that the 
 \textbf{Fortran 90} routines require 
-%version 3.14 or more (post March 2009) 
 version 3.20 or more (post August 2009) 
-of CFITSIO. Out of security concerns, the CFITSIO developers recommend using version 3.44 (April 2018) or more.
+of CFITSIO on most platforms, except on Apple's ARM (M1 and M2) chips, which
+require version 4.1.0 (March 2022) or more. Out of security concerns, the CFITSIO developers recommend using version 3.44 (April 2018) or more.
 
 \begin{tabular}{p{0.3\hsize} p{0.6\hsize}} \hline  
   \textbf{Software Package} & \textbf{Source} \\ \hline
                             &                          \\ %%% for presentation
-%  CFITSIO V 3.14 or more 
-  CFITSIO V 3.20 (3.44) or more 
+  CFITSIO V 3.44 (4.1.0) or more 
            & \url{https://heasarc.gsfc.nasa.gov/fitsio/}
                             \\ 
                                    &                          \\ \hline %%% for presentation
@@ -495,7 +494,7 @@ among
       \texttt{CC}                 (C compiler, relevant for C,C++,F90,healpy,sharp),
       \texttt{C\_FITS}, \texttt{C\_SHARED} (\mylink{install:C:config}{C}),
       \texttt{CXX}, \texttt{CXXFLAGS}, \texttt{CXX\_PARAL}      (\mylink{install:cpp_config}{C++}),
-      \texttt{FC},  \texttt{F\_DIRSUFF}, \texttt{F\_OPT}, 
+      \texttt{FC},  \texttt{F\_AR}, \texttt{F\_DIRSUFF}, \texttt{F\_OPT}, 
       \texttt{F\_PARAL}, \texttt{F\_SHARED}         (\mylink{install:f90:config}{F90}),
       \texttt{FITSDIR},   \texttt{FITSINC}   (C,C++,F90),
       \texttt{PYTHON}             (\mylink{install:healpy:config}{healpy}),
@@ -609,7 +608,8 @@ information.}.
 From our experience,
 we have not found significant accumulation of numerical error even
 when using the most aggressive optimisation level available. \\
-The environment variable \texttt{FITSDIR}, \texttt{CC}, \texttt{FC}, \texttt{F\_DIRSUFF}, \texttt{F\_OPT}, 
+The environment variable \texttt{FITSDIR}, \texttt{CC}, \texttt{FC},
+\texttt{F\_AR}, \texttt{F\_DIRSUFF}, \texttt{F\_OPT}, 
 \texttt{F\_SHARED} (\mylink{install:configure:boolean}{boolean}) and \texttt{F\_PARAL} (\mylink{install:configure:boolean}{boolean}) can be used to customize the configuration.\\
 The configuration of \mylink{install:libsharp:config}{\texttt{libsharp}} will be also taken care of at this stage.\\
 If the \healpix configuration file is sourced as described in \S\ref{subsub:conf}, the full path to the F90
@@ -1292,6 +1292,10 @@ and the paths provided during the \healpix configuration must be
 \texttt{FITSINC=\$\{HEADAS\}/include})
 where PLATFORM depends on your computer and operating system and may look like \texttt{x86\_64-pc-linux-gnu-libc2.29}.
 
+\subsubsection*{CFITSIO, Fortran codes and Apple's ARM chips}
+If \healpixns-F90  codes (or any other Fortran code) are linked with cfitsio on Apple's
+ARM chips (M1 and M2), then version 4.1.0 (March 2022) or above of cfitsio must
+be used, see Section~\ref{sec:requirements}.
 
 % \subsection{fft.f compilation}
 
@@ -1378,7 +1382,8 @@ type
 \end{itemize}
 \item with Xquartz (default under Moutain Lion (10.8.*), Mavericks (10.9.*) and Yosemite (10.10.*), 
 available for download for 
-El Capitan (10.11.*), Sierra (10.12.*), High Sierra (10.13.*), Mojave (10.14.*), Catalina (10.15.*) and Big Sur (11.0.*)):\\
+El Capitan (10.11.*), Sierra (10.12.*), High Sierra (10.13.*), Mojave (10.14.*),
+Catalina (10.15.*), Big Sur (11.0.*) and Monterey (12.*)):\\
 {\texttt{defaults write org.macosforge.xquartz.X11 wm\_click\_through -bool true}}
 \item with MacPort's X11 (package xorg-server):\\
 {\texttt{defaults write org.macports.X11 wm\_click\_through -bool true}}
@@ -1655,24 +1660,72 @@ However, the \mylinkext{idl:mollview:latex}{\texttt{Latex}} keyword will work pr
 \section{Appendix I: Recent Changes and New Features}
 \label{sec:newfeatures}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% BEGIN LATEST CHANGES %%%%%%%%%%%%%
-\subsection{Bug corrections and Improvements in Version \hpxversion}%2022-01-??
-%------------
+\subsection{Bug corrections and Improvements in Version \hpxversion}%2022-07-??
+% ------------
 % \subsubsection[General]{General}
 % \subsubsection[C]{\linklatexhtml{C}{csub.pdf}{csub.htm}}
 % \subsubsection[C++]{\htmladdnormallink{C++}{\healpixwebpage/html/index_cxx.htm}}
 % \subsubsection[Fortran]{%
-% 	Fortran 90 \linklatexhtml{facilities}{facilities.pdf}{facilities.htm} and
-% 	\linklatexhtml{subroutines}{subroutines.pdf}{subroutines.htm}}
+% Fortran 90 \linklatexhtml{facilities}{facilities.pdf}{facilities.htm} and
+% \linklatexhtml{subroutines}{subroutines.pdf}{subroutines.htm}}
 % \subsubsection[IDL]{\linklatexhtml{IDL}{idl.pdf}{idl.htm}}
 % \subsubsection[Java]{\htmladdnormallink{Java}{\healpixwebpage/html/java/index.html}}
 % \subsubsection[Python]{\htmladdnormallink{Python}{https://healpy.readthedocs.io/en/latest/}}
 %------------
 % \subsubsection[General]{General}
-% \subsubsection[C]{\linklatexhtml{C}{csub.pdf}{csub.htm}}
-% \subsubsection[C++]{\htmladdnormallink{C++}{\healpixwebpage/html/index_cxx.htm}}
-% \subsubsection[Fortran 90]{%
-%  	Fortran 90 \linklatexhtml{facilities}{facilities.pdf}{facilities.htm} and
-%  	\linklatexhtml{subroutines}{subroutines.pdf}{subroutines.htm}}
+\subsubsection[C]{\linklatexhtml{C}{csub.pdf}{csub.htm}}
+\begin{itemize}
+\item Corrected documentation of \htmlref{\texttt{pix2vec}}{csub:pix_tools} routines
+\end{itemize}
+\subsubsection[C++]{\htmladdnormallink{C++}{\healpixwebpage/html/index_cxx.htm}}
+\begin{itemize}
+\item Cfitsio 4.1.0 (March 2022) and higher now properly supported
+\end{itemize}
+\subsubsection[Fortran 90]{%
+  Fortran 90 \linklatexhtml{facilities}{facilities.pdf}{facilities.htm} and
+  \linklatexhtml{subroutines}{subroutines.pdf}{subroutines.htm}}
+\begin{itemize}
+\item Bug corrections in
+  \htmlref{\texttt{input\_map}}{sub:input_map} and
+  \htmlref{\texttt{read\_fits\_partial}}{sub:read_fits_partial},
+ \item added a workaround for a bug detected in Apple-ARM-chips implementation of gfortran 11.
+ \item Note that cfitsio 4.1.0 or higher is required for Fortran codes running on Apple's ARM chips
+\end{itemize}
+\subsubsection[IDL]{\linklatexhtml{IDL}{idl.pdf}{idl.htm}}
+\begin{itemize}
+\item bug corrections in
+  \htmlref{\texttt{read\_fits\_map}}{idl:read_fits_map} and
+  \htmlref{\texttt{read\_tqu}}{idl:read_tqu}
+\item update of the required
+  \htmladdnormallink{\texttt{IDL-astron} library}{https://idlastro.gsfc.nasa.gov/homepage.html}
+    routines, and \htmladdnormallink{\texttt{Coyote}}{http://www.idlcoyote.com} library
+    routines (2022-07-27).%
+\end{itemize}
+    
+% \subsubsection[Java]{\htmladdnormallink{Java}{\healpixwebpage/html/java/index.html}}
+\subsubsection[Python]{\htmladdnormallink{Python}{https://healpy.readthedocs.io/en/latest/}}
+\begin{itemize}
+\item Switch to 
+  \htmladdnormallink{\texttt{healpy 1.16.1}}{\hpysite/releases} 
+  (\htmladdnormallink{CHANGELOG}{\hpysite/blob/master/CHANGELOG.rst})
+  \begin{itemize}
+  \item Updated CFITSIO included in healpy to 4.1.0, necessary for compatibility with Apple ARM chips
+  \item Update HEALPix C++ sources to revision 1206 (just maintenance commits)
+  \item Do not normalize binary arrays
+  \item Fix unncessary log warning message in plots
+  \item Fixed double application of margins in visualization functions when using subplot syntax and implemented margins parameter for mollview, orthview, and azeqview when subplot syntax is not used
+  \item Fixed reuse\_axes=True for cartview and gnomview
+  \item New features in projview: subplots, remove monopole-dipole, labels, tickmarks, graticule, Planck and WMAP colormaps
+  \item Fixed the CFITSIO version mismatch warning
+  \item Added colorbar ticks and normalization
+  \end{itemize}
+\end{itemize}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% END LATEST CHANGES %%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Bug corrections and Improvements in Version 3.81}%2022-01-25
 \label{sec:v381}\mytarget{install:v381}
 \subsubsection[C++]{C++}
 \begin{itemize}
@@ -1697,11 +1750,6 @@ However, the \mylinkext{idl:mollview:latex}{\texttt{Latex}} keyword will work pr
     \item upgraded HEALPix C++ sources to HEALPix 3.81, fixing incompatibility with CFITSIO 4
 \end{itemize}
 \end{itemize}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% END LATEST CHANGES %%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \subsection{Bug corrections and Improvements in Version 3.80}%2021-06-22
 \label{sec:v380}\mytarget{install:v380}

@@ -90,6 +90,23 @@ For any problem, question or comment, see the <a href="support.php">Support</a> 
 <A id="tocl"></A>
 
 <ul CLASS="ChildLinks">
+<!-- ****** Begin TOC of 3.82 ***** -->
+
+<LI><A ID="tex2html_382_15"
+  HREF="#SECTION_382_10000000000000000">Bug corrections and Improvements in Version 3.82</A>
+<UL>
+<LI><A ID="tex2html_382_16"
+  HREF="#SECTION_382_11000000000000000">C</A>
+<LI><A ID="tex2html_382_17"
+  HREF="#SECTION_382_12000000000000000">C++</A>
+<LI><A ID="tex2html_382_18"
+  HREF="#SECTION_382_13000000000000000">Fortran 90</A>
+<LI><A ID="tex2html_382_19"
+  HREF="#SECTION_382_14000000000000000">IDL</A>
+<LI><A ID="tex2html_382_20"
+  HREF="#SECTION_382_15000000000000000">Python</A>
+</UL><!-- ****** END TOC of 3.82 ***** -->
+
 <!-- ****** Begin TOC of 3.81 ***** -->
 <LI><A ID="tex2html_381_3"
   HREF="#SECTION_381_10000000000000000">Bug corrections and Improvements in Version 3.81</A>
@@ -118,7 +135,7 @@ For any problem, question or comment, see the <a href="support.php">Support</a> 
   HREF="#SECTION_380_15000000000000000">Python</A>
 </UL><!-- ****** END TOC of 3.80 ***** -->
 
-<!-- ****** Begin TOC of 3.70 ***** -->
+<!--   ================ comment out 3.70 ============
 <LI><A ID="tex2html_370_12"
   HREF="#SECTION_370_10000000000000000">Bug corrections and Improvements in Version 3.70</A>
 <UL>
@@ -131,7 +148,7 @@ For any problem, question or comment, see the <a href="support.php">Support</a> 
 <LI><A ID="tex2html_370_16"
   HREF="#SECTION_370_14000000000000000">Python</A>
 </UL>
-<!-- ****** END TOC of 3.70 ***** -->
+        ================ comment out 3.70 ============ --> 
 
 <!--   ================ comment out 3.60 ============
 <LI><A ID="tex2html_360_15"
@@ -186,6 +203,122 @@ For any problem, question or comment, see the <a href="support.php">Support</a> 
 
 <p>
 
+<!-- ******************************************************  -->
+<!-- *** 3.82 ********************************************** -->
+<h3><A ID="SECTION_382_10000000000000000">
+Bug corrections and Improvements in Version 3.82</A>
+</h3>
+<h4><A ID="SECTION_382_11000000000000000"></A>
+<BR>
+<A ID="tex2html_382_1"
+  HREF="./html/csub.htm">C</A>
+</h4>
+
+<UL>
+<LI>corrected documentation of <SPAN  style="font-family:monospace">pix2vec</SPAN> routines
+</LI>
+</UL>
+<A HREF=#top>    Back to Top</A><br><br>
+
+<h4><A ID="SECTION_382_12000000000000000"></A>
+<BR>
+<A ID="tex2html_382_2"
+  HREF="http://healpix.sourceforge.net/html/index_cxx.htm">C++</A>
+</h4>
+
+<UL>
+<LI>Cfitsio 4.1.0 (March 2022) and higher now properly supported
+</LI>
+</UL>
+<A HREF=#top>    Back to Top</A><br><br>
+
+<h4>Fortran 90 <A ID="tex2html_382_3"
+  HREF="./html/facilities.htm">facilities</A>
+and
+  <A ID="tex2html_382_4"
+  HREF="./html/subroutines.htm">subroutines</A>
+</h4>
+
+<UL>
+<LI>Bug corrections in
+  <A ID="tex2html_382_5"
+  HREF="./html/sub_input_map.htm"><SPAN  style="font-family:monospace">input_map</SPAN></A>
+and
+  <A ID="tex2html_382_6"
+  HREF="./html/sub_read_fits_partial.htm"><SPAN  style="font-family:monospace">read_fits_partial</SPAN></A>,
+</LI>
+<LI>added a workaround for a bug detected in Apple-ARM-chips implementation of gfortran 11.
+</LI>
+<LI>Note that cfitsio 4.1.0 or higher is required for Fortran codes running on Apple's ARM chips
+</LI>
+</UL>
+<A HREF=#top>    Back to Top</A><br><br>
+
+<h4><A ID="SECTION_382_14000000000000000"></A>
+<BR>
+<A ID="tex2html_382_7"
+  HREF="./html/idl.htm">IDL</A>
+</h4>
+
+<UL>
+<LI>bug corrections in
+  <A ID="tex2html_382_8"
+  HREF="./html/idl_read_fits_map.htm"><SPAN  style="font-family:monospace">read_fits_map</SPAN></A>
+and
+  <A ID="tex2html_382_9"
+  HREF="./html/idl_read_tqu.htm"><SPAN  style="font-family:monospace">read_tqu</SPAN></A>
+</LI>
+<LI>update of the required
+  <A ID="tex2html_382_10"
+  HREF="https://idlastro.gsfc.nasa.gov/homepage.html"><SPAN  style="font-family:monospace">IDL-astron</SPAN> library</A>
+routines, and <A ID="tex2html_382_11"
+  HREF="http://www.idlcoyote.com"><SPAN  style="font-family:monospace">Coyote</SPAN></A>
+library
+    routines (2022-07-27).</LI>
+</UL>
+<A HREF=#top>    Back to Top</A><br><br>
+
+<P>
+
+<h4><A ID="SECTION_382_15000000000000000"></A>
+<BR>
+<A ID="tex2html_382_12"
+  HREF="https://healpy.readthedocs.io/en/latest/">Python</A>
+</h4>
+
+<UL>
+<LI>Switch to 
+  <A ID="tex2html_382_13"
+  HREF="https://github.com/healpy/healpy/releases"><SPAN  style="font-family:monospace">healpy 1.16.1</SPAN></A>
+(<A ID="tex2html_382_14"
+  HREF="https://github.com/healpy/healpy/blob/master/CHANGELOG.rst">CHANGELOG</A>)
+
+<UL>
+<LI>Updated CFITSIO included in healpy to 4.1.0, necessary for compatibility with Apple ARM chips
+</LI>
+<LI>Update HEALPix C++ sources to revision 1206 (just maintenance commits)
+</LI>
+<LI>Do not normalize binary arrays
+</LI>
+<LI>Fix unncessary log warning message in plots
+</LI>
+<LI>Fixed double application of margins in visualization functions when using subplot syntax and implemented margins parameter for mollview, orthview, and azeqview when subplot syntax is not used
+</LI>
+<LI>Fixed reuse_axes=True for cartview and gnomview
+</LI>
+<LI>New features in projview: subplots, remove monopole-dipole, labels, tickmarks, graticule, Planck and WMAP colormaps
+</LI>
+<LI>Fixed the CFITSIO version mismatch warning
+</LI>
+<LI>Added colorbar ticks and normalization
+  
+</LI>
+</UL>
+</LI>
+</UL>
+<A HREF=#top>    Back to Top</A><br><br>
+
+							
 <!-- ******************************************************  -->
 <!-- *** 3.81 ********************************************** -->
 
@@ -370,94 +503,6 @@ Python</A>
 <A HREF=#top>    Back to Top</A><br><br>
 
 <!-- *** 3.70 ********************************************** -->
-
-<h3><A ID="SECTION_370_10000000000000000">
-Bug corrections and Improvements in Version 3.70</A>
-</h3>
-
-<h4><A ID="SECTION_370_11000000000000000">
-General</A>
-</h4>
-
-<UL>
-<LI>Fixed several bugs in the <A HREF="./html/install.htm#install:configure"><SPAN  style="font-family:monospace">configure</SPAN></A> script
-</LI>
-<LI>Documentation now available in EPUB format
-</LI>
-</UL>
-<A HREF=#top>    Back to Top</A><br><br>
-
-<h4><A ID="SECTION_370_12000000000000000">
-Fortran 90 facilities and subroutines</A>
-</h4>
-
-<UL>
-<LI>Addition of the subroutines
-    <A ID="tex2html_370_2"
-  HREF="./html/sub_read_fits_partial.htm"><SPAN  style="font-family:monospace">read_fits_partial</SPAN></A>
-and 
-    <A ID="tex2html_370_3"
-  HREF="./html/sub_write_fits_partial.htm"><SPAN  style="font-family:monospace">write_fits_partial</SPAN></A>
-to read and write FITS files containing polarized or unpolarized maps defined on a fraction of the sky (see <kbd><A ID="tex2html_370_1"
-  HREF="https://healpix.sourceforge.io/data/examples/healpix_fits_specs.pdf">https://healpix.sourceforge.io/data/examples/healpix_fits_specs.pdf</A></kbd>).
-</LI>
-</UL>
-<A HREF=#top>    Back to Top</A><br><br>
-
-<h4><A ID="SECTION_370_13000000000000000">
-IDL</A>
-</h4>
-
-<UL>
-<LI>Addition of 
-   <A ID="tex2html_370_5"
-  HREF="./html/idl_read_fits_partial.htm"><SPAN  style="font-family:monospace">read_fits_partial</SPAN></A>
-and 
-   <A ID="tex2html_370_6"
-  HREF="./html/idl_write_fits_partial.htm"><SPAN  style="font-family:monospace">write_fits_partial</SPAN></A>
-to read and write FITS files containing polarized or unpolarized maps defined on a fraction of the sky (see <kbd><A ID="tex2html_370_4"
-  HREF="https://healpix.sourceforge.io/data/examples/healpix_fits_specs.pdf">https://healpix.sourceforge.io/data/examples/healpix_fits_specs.pdf</A></kbd>).
-</LI>
-<LI>Update of the required
-    <A ID="tex2html_370_7"
-  HREF="https://idlastro.gsfc.nasa.gov/homepage.html"><SPAN  style="font-family:monospace">IDL-astron</SPAN> library</A>
-routines, and <A ID="tex2html_370_8"
-  HREF="http://www.idlcoyote.com"><SPAN  style="font-family:monospace">Coyote</SPAN></A>
-library
-    routines (2020-07-15).
-</LI>
-</UL>
-<A HREF=#top>    Back to Top</A><br><br>
-
-<h4><A ID="SECTION_370_14000000000000000"></A>
-<A ID="tex2html_370_9"
-  HREF="https://healpy.readthedocs.io/en/latest/">Python</A>
-</h4>
-
-<UL>
-<LI>Switch to 
-	<A ID="tex2html_370_10"
-  HREF="https://github.com/healpy/healpy/releases"><SPAN  style="font-family:monospace">healpy 1.14.0</SPAN></A>
-(<A ID="tex2html_370_11"
-  HREF="https://github.com/healpy/healpy/blob/master/CHANGELOG.rst">CHANGELOG</A>)
-
-<UL>
-<LI>Line Integral Convolution plots to plot polarization,
-</LI>
-<LI>fixed FITS files that were left open,
-</LI>
-<LI>increased precision in coordinate transforms,
-</LI>
-<LI>fix propagation on mmax in smoothing,
-</LI>
-<LI>reworked verbose,
-</LI>
-<LI>and many other improvements and bugs fixes ...
-</LI>
-</UL>
-</LI>
-</UL>
-<A HREF=#top>    Back to Top</A><br><br>
 
 <!-- *** 3.60 ********************************************** -->
 

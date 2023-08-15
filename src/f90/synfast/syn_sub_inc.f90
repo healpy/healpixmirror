@@ -121,7 +121,7 @@
   character(len=100)                  :: chline
   type(planck_rng) :: rng_handle
 
-  integer(i4b) :: deriv, n_pols, n_maps
+  integer(i4b) :: deriv, n_pols, n_maps, n_clin
   character(len=20) :: coordsys = ' '
   real(DP), dimension(1:2) :: zbounds
 !  real :: ttime0, ttime1, ttime2
@@ -397,6 +397,8 @@
   if (input_cl) then
      polar_cl =     polar  ! 0 or 1: input 1 or 4 field spectrum
      !polar_cl = 2 * polar  ! 0 or 2; input 1 or 6 field spectrum
+     !junk = getsize_fits(infile, nmaps=n_clin)
+     !if (n_clin == 6) polar_cl = 2*polar ! input 1 or 6 spectra
      call create_alm(nsmax, nlmax, nmmax, polar_cl, &
           & infile, rng_handle, fwhm_arcmin, &
           & alm_TGC, header_PS, windowfile, units=units_alm, beam_file=beam_file)

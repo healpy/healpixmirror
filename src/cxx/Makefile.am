@@ -129,7 +129,7 @@ libhealpix_cxx_la_LIBADD = $(SHARP_LIBS) $(CFITSIO_LIBS)
 # - Always increase the revision value.
 # - Increase the current value whenever an interface has been added, removed or changed.
 # - Increase the age value only if the changes made to the ABI are backward compatible.
-libhealpix_cxx_la_LDFLAGS = -version-info 3:3:0
+libhealpix_cxx_la_LDFLAGS = -version-info 3:4:0
 
 bin_PROGRAMS = alm2map_cxx anafast_cxx calc_powspec hotspots_cxx map2tga \
   median_filter_cxx mult_alm rotalm_cxx smoothing_cxx syn_alm_cxx udgrade_cxx \

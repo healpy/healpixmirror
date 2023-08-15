@@ -1,4 +1,4 @@
-AC_INIT([healpix_cxx], [3.81.1])
+AC_INIT([healpix_cxx],[3.82.0])
 AM_INIT_AUTOMAKE([foreign subdir-objects -Wall -Werror])
 AM_MAINTAINER_MODE([enable])
 
@@ -24,7 +24,7 @@ dnl Enable silent build rules if this version of Automake supports them
 dnl
 m4_ifdef([AM_SILENT_RULES], [AM_SILENT_RULES([yes])])
 
-AC_PROG_CC_C99
+m4_version_prereq(2.70, [AC_PROG_CC], [AC_PROG_CC_C99])
 AC_OPENMP
 CPPFLAGS="$CPPFLAGS $OPENMP_CFLAGS"
 CFLAGS="$CFLAGS $OPENMP_CFLAGS"
@@ -120,7 +120,7 @@ AC_CHECK_HEADERS([libsharp/sharp.h], [:], AC_MSG_ERROR([could not find the libsh
 CFLAGS=$save_CFLAGS
 LIBS=$save_LIBS
 
-AC_PROG_LIBTOOL
+LT_INIT
 
 dnl
 dnl Create pkgconfig .pc file.

@@ -189,7 +189,8 @@ if (filetype eq 3) then begin
     message,/info,'WARNING: input file '+filename+' is in partial sky format, which can be read properly with READ_FITS_PARTIAL.'
     message,/info,'Here a full sky map will be generated, replacing missing data with 0.'
     read_fits_partial, filename, pix, tmp, extension=extension_id
-    ncol = (size(tmp,/dim))[1]
+    ; ncol = (size(tmp,/dim))[1]  ; corrected 2022-06-29
+    ncol = (size(tmp,/n_dims) gt 1) ? (size(tmp,/dim))[1] : 1
     T_sky = make_array(nside2npix(nside), ncol, type=size(tmp,/type))
     for i=0,ncol-1 do T_sky[pix,i] = tmp[*,i]
 endif else begin

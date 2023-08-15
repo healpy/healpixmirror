@@ -51,9 +51,9 @@
               <br>
               <br>
               The following releases of the HEALPix software (Versions 1.20 to 
-							      3.80) 
+							      3.81) 
 		and the current one (Version 
-				     3.81) benefited
+				     3.82) benefited
               from:
 		<ul>
 		<li>

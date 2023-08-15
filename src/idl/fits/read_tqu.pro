@@ -42,13 +42,13 @@ if (filetype eq 3) then begin
         message,/info,level=level,'Here a full sky map will be generated, replacing missing data with 0.'
     endif
     read_fits_partial, file, pix, tmp, extension=extension_id, xhdr=header
-    ncol = (size(tmp,/dim))[1]
+    ; ncol = (size(tmp,/dim))[1] ; corrected 2022-06-29
+    ncol = (size(tmp,/n_dims) gt 1) ? (size(tmp,/dim))[1] : 1
     map = make_array(nside2npix(nside), ncol, type=size(tmp,/type))
     for i=0,ncol-1 do map[pix,i] = tmp[*,i]
 endif else begin
     selectread, file, map, extension=extension_id, no_pdu=no_pdu, header=header
 endelse
-
 
 return
 end

@@ -555,7 +555,8 @@ sub do_env_mylist{
     local($imagemark,$mark,$item_len,$desc_len,$mark_len,$mark_size);
     $imagemark = &set_mylist_marker($bullet) if ($bullet);
 
-    $* = 1;
+    #$* = 1;
+    use re '/m';   # 2022-07-20
     local($Maxlength) = 99999;
     local($i,@items_done);
     print "[";
@@ -594,7 +595,8 @@ sub do_env_mylist{
 		$_=$';
 	}
     }
-    $* = 0;
+    #$* = 0;  # 2022-07-20
+    no re '/m';
     $_ = join('',@items_done, $_); undef @items_done;
 
     #RRM: cannot have anything before the first <LI>
@@ -606,7 +608,7 @@ sub do_env_mylist{
 	$preitems =~ s/<P( [^>]*)?>//g;
 	$preitems = "\n".$preitems if $preitems;
     }
-    $/ = $savedRS; $* = 0;	# Multiline matching OFF
+    $/ = $savedRS; no re '/m' ; # $* = 0;	# Multiline matching OFF  # 2022-07-20
 
     $_ = '<DT>'.$_ unless (/^\s*<D(D|T)/);
     print "]";
@@ -624,7 +626,7 @@ sub do_env_mylist_bullet{
     local($imagemark,$mark,$item_len,$desc_len,$mark_len,$mark_size);
     $imagemark = &set_mylist_marker($bullet) if ($bullet);
 
-    $* = 1;
+    use re '/m' ; #$* = 1;  # 2022-07-20
     local($Maxlength) = 99999;
     local($i,@items_done);
     print "[";
@@ -660,7 +662,7 @@ sub do_env_mylist_bullet{
 		$_=$';
 	}
     }
-    $* = 0;
+    no re '/m' ; # $* = 0; # 2022-07-20
     $_ = join('',@items_done, $_); undef @items_done;
 
     #RRM: cannot have anything before the first <LI>
@@ -672,7 +674,7 @@ sub do_env_mylist_bullet{
 	$preitems =~ s/<P( [^>]*)?>//g;
 	$preitems = "\n".$preitems if $preitems;
     }
-    $/ = $savedRS; $* = 0;	# Multiline matching OFF
+    $/ = $savedRS; no re '/m' ; # $* = 0;	# Multiline matching OFF  # 2022-07-20
 
     $_ = '<DT>'.$_ unless (/^\s*<D(D|T)/);
     print "]";
@@ -785,7 +787,8 @@ sub do_env_eqnarray {
 #	    if (s/\\lefteqn$OP(\d+)$CP(.*)$OP\1$CP/ $2 /) {
 	    if (s/\\lefteqn//) {
 		$return .= "\"LEFT\" COLSPAN=\"3\">";
-		$* =1; s/(^\s*|$html_specials{'&'}|\s*$)//g; $*=0;
+		# $* =1; s/(^\s*|$html_specials{'&'}|\s*$)//g; $*=0;
+		use re '/m' ; s/(^\s*|$html_specials{'&'}|\s*$)//g; no re '/m' ; # 2022-07-20
 		if (($NO_SIMPLE_MATH)||($doimage)||($failed)) {
 		    $_ = (($_)? &process_math_in_latex(
 		        "indisplay" , '', '', $doimage.$_ ):'');
@@ -810,7 +813,8 @@ sub do_env_eqnarray {
 
 	    # left column, set using \displaystyle
 	    $thismath = shift(@cols); $failed = 0;
-	    $* =1; $thismath =~ s/(^\s*|\s*$)//g; $*=0;
+	    #$* =1; $thismath =~ s/(^\s*|\s*$)//g; $*=0;  # 2022-07-20
+	    use re '/m' ; $thismath =~ s/(^\s*|\s*$)//g; no re '/m' ;  # 2022-07-20
 	    if (($NO_SIMPLE_MATH)||($doimage)||($failed)) {
 		$thismath = (($thismath ne '')? &process_math_in_latex(
 		    "indisplay" , '', '', $doimage.$thismath ):'');
@@ -830,7 +834,8 @@ sub do_env_eqnarray {
 
 	    # center column, set using \textstyle
 	    $thismath = shift(@cols); $failed = 0;
-	    $* =1; $thismath =~ s/(^\s*|\s*$)//g; $*=0;
+	    # $* =1; $thismath =~ s/(^\s*|\s*$)//g; $*=0;   # 2022-07-20
+	    use re '/m' ; $thismath =~ s/(^\s*|\s*$)//g; no re '/m';   # 2022-07-20
 	    if (($NO_SIMPLE_MATH)||($doimage)||($failed)) {
 		$thismath = (($thismath ne '')? &process_math_in_latex(
 		    "indisplay" , 'text', '', $doimage.$thismath ):'');
@@ -850,7 +855,8 @@ sub do_env_eqnarray {
 
 	    # right column, set using \displaystyle
 	    $thismath = shift(@cols); $failed = 0;
-	    $* =1; $thismath =~ s/(^\s*|\s*$)//g; $*=0;
+	    # $* =1; $thismath =~ s/(^\s*|\s*$)//g; $*=0;    # 2022-07-20
+	    use re '/m' ; $thismath =~ s/(^\s*|\s*$)//g; no re '/m';    # 2022-07-20
 	    if (($NO_SIMPLE_MATH)||($doimage)||($failed)) {
 		$thismath = (($thismath ne '')? &process_math_in_latex(
 		    "indisplay" , '', '', $doimage.$thismath ):'');

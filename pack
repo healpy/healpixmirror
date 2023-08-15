@@ -325,6 +325,7 @@ ln -s ../../${docautodir}/pdf  .
 ln -s ../../${docautodir}/html .
 ln -s ../../${docautodir}/epub .
 make crossref || exit
+make crossref || exit
 make crosshtml > /dev/null || exit
 make epub || exit
 cd $here
