@@ -15,6 +15,7 @@
 ;    2008-02-24   E. Hivon        Use path_sep(/search) to separate directories
 ;    2008-03-17   E. Hivon        Use IDL_PATH to set !path
 ;    2008-10-24   E. Hivon	  Print welcome message
+;    2023-12-13   E. Hivon        Make sure to delete internal variables upon exit
 ;
 ;*********************************************************************
 ;
@@ -66,11 +67,11 @@
 ; compile routines
 ;
 ; check that init_healpix is accessible
-pathtab = expand_path(!path,/array)
-junk = file_search(pathtab+path_sep()+'init_healpix.pro', count=count)
+__hsu_pathtab__ = expand_path(!path,/array)
+__hsu_junk__ = file_search(__hsu_pathtab__+path_sep()+'init_healpix.pro', count=__hsu_count__)
 
 ; run init_healpix to define Healpix variables, and print welcome message
-if (count gt 0) then begin $
+if (__hsu_count__ gt 0) then begin $
 	init_healpix & $
 	print,'**************************' & $
 	print,' Welcome to Healpix '+!healpix.version & $
@@ -81,7 +82,9 @@ endif else begin $
 	print,'!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!' & $
 endelse
 
-if (count gt 0 && is_gdl()) then !PROMPT = 'HGDL> '
+if (__hsu_count__ gt 0 && is_gdl()) then !PROMPT = 'HGDL> '
+
+delvar, __hsu_count__, __hsu_junk__, __hsu_pathtab__
 
 ;
 ; return to interactive mode
