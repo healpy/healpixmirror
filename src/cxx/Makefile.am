@@ -67,7 +67,8 @@ src_healpix_cxx= \
   Healpix_cxx/moc_query.cc \
   Healpix_cxx/weight_utils.h \
   Healpix_cxx/weight_utils.cc \
-  Healpix_cxx/mask_tools.cc
+  Healpix_cxx/mask_tools.cc \
+  Healpix_cxx/alice3.cc
 src_healpix_cxx_fits= \
   Healpix_cxx/healpix_data_io.cc \
   Healpix_cxx/healpix_data_io.h \
@@ -163,7 +164,7 @@ compute_weights_SOURCES = Healpix_cxx/compute_weights.cc Healpix_cxx/compute_wei
 compute_weights_LDADD = libhealpix_cxx.la
 needlet_tool_SOURCES = Healpix_cxx/needlet_tool.cc Healpix_cxx/needlet_tool_module.cc
 needlet_tool_LDADD = libhealpix_cxx.la
-alice3_SOURCES = Healpix_cxx/alice3.cc
+alice3_SOURCES = Healpix_cxx/alice3_main.cc
 alice3_LDADD = libhealpix_cxx.la
 hpxtest_SOURCES=Healpix_cxx/hpxtest.cc
 hpxtest_LDADD = libhealpix_cxx.la

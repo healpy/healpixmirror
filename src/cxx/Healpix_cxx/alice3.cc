@@ -29,56 +29,44 @@
  *  \author David Larson \author Martin Reinecke
  */
 
-#include <iostream>
-#include "announce.h"
-#include "paramfile.h"
-#include "healpix_map_fitsio.h"
+#include "alice3.h"
 #include "lsconstants.h"
 #include "arr.h"
-#include "fitshandle.h"
 #include "vec3.h"
-#include "string_utils.h"
 #include "alm.h"
 #include "alm_healpix_tools.h"
-#include "planck_rng.h"
 #include "healpix_map.h"
 
 using namespace std;
 
-class PolarizationHolder
+void PolarizationHolder::getQU(const pointing &p, double &q, double &u) const
   {
-  public:
-    Healpix_Map<double> Q, U;
+  fix_arr<int,4> pix;
+  fix_arr<double,4> wgt;
+  Q.get_interpol(p,pix,wgt);
+  q=u=0.f;
+  for (tsize i=0;i<4;++i) {q+=Q[pix[i]]*wgt[i];u+=U[pix[i]]*wgt[i]; }
+  }
 
-    void getQU(const pointing &p, double &q, double &u) const
-      {
-      fix_arr<int,4> pix;
-      fix_arr<double,4> wgt;
-      Q.get_interpol(p,pix,wgt);
-      q=u=0.f;
-      for (tsize i=0;i<4;++i) {q+=Q[pix[i]]*wgt[i];u+=U[pix[i]]*wgt[i]; }
-      }
+vec3 PolarizationHolder::getQUDir(const vec3 &loc) const
+  {
+  double q,u;
+  getQU(loc,q,u);
+  vec3 east(1,0,0);
+  if (abs(loc.x)+abs(loc.y) > 0.0)
+    east = vec3(-loc.y,loc.x,0).Norm();
+  vec3 north = crossprod(loc, east);
+  double angle = 0.5*safe_atan2(u,q);
+  return north*(-cos(angle)) + east*sin(angle);
+  }
 
-    vec3 getQUDir(const vec3 &loc) const
-      {
-      double q,u;
-      getQU(loc,q,u);
-      vec3 east(1,0,0);
-      if (abs(loc.x)+abs(loc.y) > 0.0)
-        east = vec3(-loc.y,loc.x,0).Norm();
-      vec3 north = crossprod(loc, east);
-      double angle = 0.5*safe_atan2(u,q);
-      return north*(-cos(angle)) + east*sin(angle);
-      }
-
-    // Return the magnitude of the polarization at some pointing.
-    double getQUMagnitude(const pointing& p) const
-      {
-      double q,u;
-      getQU(p,q,u);
-      return sqrt(q*q + u*u);
-      }
-  };
+// Return the magnitude of the polarization at some pointing.
+double PolarizationHolder::getQUMagnitude(const pointing& p) const
+  {
+  double q,u;
+  getQU(p,q,u);
+  return sqrt(q*q + u*u);
+  }
 
 /*! Steps from loc in direction dir for an angle theta and updates loc and dir. */
 void get_step(const PolarizationHolder &ph, vec3 &loc, vec3 &dir, double theta)
@@ -218,69 +206,4 @@ void lic_main(const Healpix_Map<double> &Q, const Healpix_Map<double> &U, const 
   mag.minmax(mmin,mmax);
   for (int i=0; i<mag.Npix(); ++i)
     mag[i]=1.0-(mag[i]-mmin)/(mmax-mmin);
-  }
-
-int main(int argc, const char** argv)
-  {
-  module_startup ("alice3", argc, argv);
-  paramfile params (getParamsFromCmdline(argc,argv));
-
-  Healpix_Map<double> Q, U;
-  // Load a polarized fits file, with Q and U as the second
-  // and third columns (the standard form).
-  read_Healpix_map_from_fits(params.find<string>("in"), Q, 2, 2);
-  read_Healpix_map_from_fits(params.find<string>("in"), U, 3, 2);
-
-  int nside = params.find<int>("nside");
-  int steps = params.find<int>("steps",100);
-  double step_radian=arcmin2rad*params.find<double>("step_arcmin",10.);
-  int kernel_steps = params.find<int>("kernel_steps",50);
-  double polmin = params.find<double>("polmin",-1e30),
-        polmax = params.find<double>("polmax",1e30);
-  string out = params.find<string>("out");
-
-  Healpix_Map<double> th(nside,RING,SET_NSIDE);
-  if (params.param_present("texture"))
-    read_Healpix_map_from_fits(params.find<string>("texture"),th);
-  else
-    {
-    planck_rng rng(params.find<int>("rand_seed",42));
-    if (params.param_present("ell"))
-      {
-      int ell = params.find<int>("ell");
-      if (ell<0) ell=2*nside;
-      Alm<xcomplex<double> > a(ell,ell);
-      a.SetToZero();
-      cout << "Background texture using ell = " << ell << endl;
-
-      a(ell,0)=fcomplex(rng.rand_gauss(),0.);
-      for (int m=0; m<=ell; m++)
-        { a(ell,m).real(rng.rand_gauss()); a(ell,m).imag(rng.rand_gauss()); }
-      alm2map(a, th);
-      }
-    else
-      {
-      for (int i=0; i<th.Npix(); i++)
-        th[i] = rng.rand_uni() - 0.5;
-      }
-    }
-
-  Healpix_Map<double> hit(nside,RING,SET_NSIDE),
-                     tex(nside,RING,SET_NSIDE),
-                     mag(nside,RING,SET_NSIDE);
-
-  {
-  PolarizationHolder ph;
-  ph.Q = Q;
-  ph.U = U;
-
-  for (int i=0; i<mag.Npix(); i++)
-    tex[i] = th.interpolated_value(mag.pix2ang(i));
-  write_Healpix_map_to_fits(out+"_background.fits",tex,PLANCK_FLOAT32);
-  }
-
-  lic_main(Q, U, th, hit, tex, mag, steps, kernel_steps, step_radian, polmin, polmax);
-
-  write_Healpix_map_to_fits(out+"_texture.fits",tex,PLANCK_FLOAT32);
-  write_Healpix_map_to_fits(out+"_mod_texture.fits",mag,PLANCK_FLOAT32);
   }
