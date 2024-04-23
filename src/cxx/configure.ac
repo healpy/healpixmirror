@@ -50,11 +50,7 @@ dnl
 dnl Now check for cfitsio using pkg-config. If cfitsio is not found with
 dnl pkg-config, CFITSIO_LIBS defaults to "-lcfitsio".
 dnl
-dnl FIXME: Use PKG_CHECK_MODULES_STATIC to pick up additional dependencies
-dnl until cfitsio gains a modernized automake/libtool build system.
-dnl See https://github.com/HEASARC/cfitsio/issues/18,
-dnl https://github.com/healpy/healpy/pull/917.
-PKG_CHECK_MODULES_STATIC([CFITSIO], [cfitsio], , [CFITSIO_LIBS=-lcfitsio])
+PKG_CHECK_MODULES([CFITSIO], [cfitsio], , [CFITSIO_LIBS=-lcfitsio])
 dnl
 dnl With pkg-config < 0.24, PKG_CHECK_MODULES does not AC_SUBST the _CFLAGS
 dnl and _LIBS variables.
