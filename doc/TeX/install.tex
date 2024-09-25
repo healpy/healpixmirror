@@ -1660,7 +1660,7 @@ However, the \mylinkext{idl:mollview:latex}{\texttt{Latex}} keyword will work pr
 \section{Appendix I: Recent Changes and New Features}
 \label{sec:newfeatures}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% BEGIN LATEST CHANGES %%%%%%%%%%%%%
-\subsection{Bug corrections and Improvements in Version \hpxversion}%2022-07-??
+\subsection{Bug corrections and Improvements in Version \hpxversion}%2024-10-??
 % ------------
 % \subsubsection[General]{General}
 % \subsubsection[C]{\linklatexhtml{C}{csub.pdf}{csub.htm}}
@@ -1671,7 +1671,46 @@ However, the \mylinkext{idl:mollview:latex}{\texttt{Latex}} keyword will work pr
 % \subsubsection[IDL]{\linklatexhtml{IDL}{idl.pdf}{idl.htm}}
 % \subsubsection[Java]{\htmladdnormallink{Java}{\healpixwebpage/html/java/index.html}}
 % \subsubsection[Python]{\htmladdnormallink{Python}{https://healpy.readthedocs.io/en/latest/}}
+% ------------
+\subsubsection[General]{General}
+\begin{itemize}
+  \item Support for intel \texttt{ifx} compiler
+  \item Proper detection of \texttt{python} versions above 3.9
+\end{itemize}
+% \subsubsection[C]{\linklatexhtml{C}{csub.pdf}{csub.htm}}
+\subsubsection[C++]{\htmladdnormallink{C++}{\healpixwebpage/html/index_cxx.htm}}
+\begin{itemize}
+\item bug fix in \texttt{query\_polygon} where pixels might be missing in some situations
+  where polygon edges were parallel to the equator.
+  (\url{https://github.com/healpy/healpy/issues/904}).
+\item bug fix in \texttt{query\_disc\_inclusive} where pixels could be missing at locations
+  exactly azimuthally opposite to the disc center.
+  (\url{https://github.com/healpy/healpy/issues/968})
+\end{itemize}
+% \subsubsection[Fortran]{%
+% Fortran 90 \linklatexhtml{facilities}{facilities.pdf}{facilities.htm} and
+% \linklatexhtml{subroutines}{subroutines.pdf}{subroutines.htm}}
+% \subsubsection[IDL]{\linklatexhtml{IDL}{idl.pdf}{idl.htm}}
+% \subsubsection[Java]{\htmladdnormallink{Java}{\healpixwebpage/html/java/index.html}}
+\subsubsection[Python]{\htmladdnormallink{Python}{https://healpy.readthedocs.io/en/latest/}}
+\begin{itemize}
+\item Switch to 
+  \htmladdnormallink{\texttt{healpy \hpyversion}}{\hpysite/releases} 
+  (\htmladdnormallink{CHANGELOG}{\hpysite/blob/master/CHANGELOG.rst})
+  \begin{itemize}
+  \item scipy and matplotlib are now optional dependencies
+  \item wheels available for MacOS arm64
+  \item now supports $ 3.9 \le$ \texttt{python}$\le 3.12$.
+  \item addition of \texttt{resize\_alm}
+\end{itemize}
+\end{itemize}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% END LATEST CHANGES %%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %------------
+\subsection{Bug corrections and Improvements in Version 3.82}%2022-07-??
 % \subsubsection[General]{General}
 \subsubsection[C]{\linklatexhtml{C}{csub.pdf}{csub.htm}}
 \begin{itemize}
@@ -1720,11 +1759,6 @@ However, the \mylinkext{idl:mollview:latex}{\texttt{Latex}} keyword will work pr
   \item Added colorbar ticks and normalization
   \end{itemize}
 \end{itemize}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% END LATEST CHANGES %%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Bug corrections and Improvements in Version 3.81}%2022-01-25
 \label{sec:v381}\mytarget{install:v381}
 \subsubsection[C++]{C++}
