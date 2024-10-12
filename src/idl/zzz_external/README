@@ -11,12 +11,12 @@
  libraries apply for these procedures.
 
  o  ./astron/ : required routines from  THE IDL ASTRONOMY USER'S LIBRARY 
-    (https://idlastro.gsfc.nasa.gov/homepage.html)
+    (https://github.com/wlandsman/IDLAstro)
     including their supporting D. Fanning's COYOTE routines 
-    (http://www.idlcoyote.com/documents/programs.php)
+    (now in https://asd.gsfc.nasa.gov/archive/idlastro/ftp/coyote_astron.tar.gz)
 
  o  ./cgis/ : required routines from the COBE cgis library
-    (used to be in http://space.gsfc.nasa.gov/astro/cobe/cgis.html)
+    (https://lambda.gsfc.nasa.gov/product/cobe/cgis.cfm)
 
  o ./obsolete_astron/ : routines from the Astron library which are now considered
    obsolete, but may still be needed by Healpix (or by user-developped applications).
@@ -27,7 +27,7 @@
  o ./epstopdf/ : Perl script to turn (encapsulated) PostScript file into PDF
      and its documentation
      see ./epstopdf/README  for details
-   (added 2015-03)
+   (added 2015-03, updated 2024-09)
 
  o ./textoidl/ : IDL routines to emulate a subset of TeX commands in IDL
      see ./textoidl/README  for details
@@ -38,6 +38,7 @@
  updated 2007-05-15
  updated 2013-02-08
  updated 2017-06-20
+ updated 2024-09-30
  AJB, KMG, EH
 
 ----------------
@@ -286,8 +287,17 @@ FITS_INFO FXADDPAR MATCH MRDFITS SXADDPAR SXPAR WRITEFITS
 2 routines updated in astron(11)   CGGETCOLORSTATE FITS_INFO
   mrdfits was not updated as it fails some tests
 
- (10) This version of astron requires IDL v6.4 or newer.
+ (11) This version of astron requires IDL v6.4 or newer.
       Done with version 2022-07-27
 
  2022-07-27
 
+----------------
+
+2 routines updated in astron(12)   MRDFITS FXBREAD
+
+ (12) This version of astron requires IDL v6.4 or newer.
+      Done with version 2022-11-22
+
+ 2024-09-27
+ EH

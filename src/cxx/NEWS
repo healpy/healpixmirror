@@ -2,6 +2,9 @@ Changes since 3.82:
 - bug fix in query_polygon where pixels might be missing in some situations
   where polygon edges were parallel to the equator.
   (https://github.com/healpy/healpy/issues/904).
+- bug fix in query_disc_inclusive where pixels could be missing at locations
+  exactly azimuthally opposite to the disc center.
+  (https://github.com/healpy/healpy/issues/968)
 
 Changes since 3.50:
 - Configuration mechanism was completely switched to autotools

@@ -918,7 +918,7 @@ Cpp_config () {
 
 
 #-------------
-Healpy_config () {  # for healpy 1.7.0
+Healpy_config () {  # for healpy >= 1.7.0
 
     HPY_PYTHON="$PYTHON"
     tmpfile=to_be_removed
@@ -939,7 +939,8 @@ Healpy_config () {  # for healpy 1.7.0
     #python_reqrd="2.4" # minimal version supported
     #python_reqrd="2.6" # minimal version supported
     #python_reqrd="2.7" # minimal version supported (1.12.8)
-    python_reqrd="3.6"  # minimal version supported (1.15.0)
+    #python_reqrd="3.6"  # minimal version supported (1.15.0)
+    python_reqrd="3.9"  # minimal version supported (1.17.3)
     #p_v1=`echo ${python_version} | ${AWK} '{print $1*10}'` # does not work properly for eg 3.10
     #p_v2=`echo ${python_reqrd}   | ${AWK} '{print $1*10}'`
     p_v1=`echo ${python_version} | ${AWK} -F. '{print $1*10000+$2*100+$3}'`
@@ -1596,16 +1597,18 @@ EOF
     FFLAGS_=`eval echo ${FFLAGS_}` # ${} -> value
     ${FC} ${FFLAGS_}  ${tmpfile}${suffix} -o ${tmpfile}.x -L${FITSDIR} -l${LIBFITS} ${CFITSIOCURL} ${F90_WLRPATH_}
     #CFITSIOVREQ="3.14"            # required  version of CFITSIO (in Healpix 3.00)
-    CFITSIOVREQ="3.20"            # required  version of CFITSIO (in Healpix 3.30)
-    CFITSIOVREC="3.44"            # recommended  version of CFITSIO (according to NASA)
-    CFITSIOVARM="4.01"            # stands for 4.1.0, required by F90 on Apple's ARM M1 and M2 chips
+    #CFITSIOVREQ="3.20"            # required  version of CFITSIO (in Healpix 3.30)
+    #CFITSIOVREC="3.44"            # recommended  version of CFITSIO (according to NASA)
+    CFITSIOVREQ="3.44"             # required
+    CFITSIOVREC="4.2.0"            # recommended  version of CFITSIO (according to NASA)
+    CFITSIOVARM="4.1.0"            # required by F90 on Apple's ARM M1 and M2 chips
     # run if executable
     if [ -x ${tmpfile}.x ]; then
 	CFITSIOVERSION=`${tmpfile}.x` || CFITSIOVERSION=-1 # available version of CFITSIO
-	v1=`echo ${CFITSIOVERSION} | ${AWK} '{print $1*1000}'` # multiply by 1000 to get integer
-	v2=`echo ${CFITSIOVREQ}    | ${AWK} '{print $1*1000}'`
-	v3=`echo ${CFITSIOVREC}    | ${AWK} '{print $1*1000}'`
-	v4=`echo ${CFITSIOVARM}    | ${AWK} '{print $1*1000}'`
+	v1=`echo ${CFITSIOVERSION} | ${AWK} -F. '{print $1*10000+$2*100+$3}'` # deal with x.y.z
+	v2=`echo ${CFITSIOVREQ}    | ${AWK} -F. '{print $1*10000+$2*100+$3}'`
+	v3=`echo ${CFITSIOVREC}    | ${AWK} -F. '{print $1*10000+$2*100+$3}'`
+	v4=`echo ${CFITSIOVARM}    | ${AWK} -F. '{print $1*10000+$2*100+$3}'`
 	if [ $v1 -lt 0   ]; then
 	    echo
 	    echo "The code compiled with"
