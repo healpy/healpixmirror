@@ -273,16 +273,20 @@ various environment variables and aliases to make the use of the
 \healpix package simpler. 
 
 The \healpix \textbf{Fortran 90}, \textbf{C++}, \textbf{C} and \textbf{Python} distributions also
-require the publicly available CFITSIO library. Note that the 
-\textbf{Fortran 90} routines require 
-version 3.20 or more (post August 2009) 
-of CFITSIO on most platforms, except on Apple's ARM (M1 and M2) chips, which
-require version 4.1.0 (March 2022) or more. Out of security concerns, the CFITSIO developers recommend using version 3.44 (April 2018) or more.
+require the publicly available CFITSIO library.
+Versions 4.2.0 (Nov 2022) or higher are recommended since they simultaneously meet
+\textbf{Fortran 90} routines requirements, fix previous security vulnerabilities
+and are compatible with Apple's ARM chips.
+% Note that the 
+% \textbf{Fortran 90} routines require 
+% version 3.20 or more (post August 2009) 
+% of CFITSIO on most platforms, except on Apple's ARM (M1 and M2) chips, which
+% require version 4.1.0 (March 2022) or more. Out of security concerns, the CFITSIO developers recommend using version 3.44 (April 2018) or more.
 
 \begin{tabular}{p{0.3\hsize} p{0.6\hsize}} \hline  
   \textbf{Software Package} & \textbf{Source} \\ \hline
                             &                          \\ %%% for presentation
-  CFITSIO V 3.44 (4.1.0) or more 
+  CFITSIO V 4.2.0 or more 
            & \url{https://heasarc.gsfc.nasa.gov/fitsio/}
                             \\ 
                                    &                          \\ \hline %%% for presentation
@@ -322,7 +326,9 @@ FL \flversion or more         &
 
 As it was already the case in version 1.20, users no longer need to acquire the
 \textbf{IDL}
-Astronomy User's Library (\url{https://idlastro.gsfc.nasa.gov/homepage.html})
+Astronomy User's Library
+%(\url{https://idlastro.gsfc.nasa.gov/homepage.html})
+(\url{https://github.com/wlandsman/IDLAstro})
 or the COBE (IDL) Analysis Software (\url{https://lambda.gsfc.nasa.gov/product/cobe/cgis.cfm}),
 although we do recommend these packages to the user.
 The 100-odd routines required for version \hpxversion\ are contained in the
@@ -337,9 +343,9 @@ The  \textbf{Python} \texttt{healpy} package requires
 \begin{tabular}{p{0.3\hsize} p{0.6\hsize}} \hline  
   \textbf{Software Package} & \textbf{Source} \\ \hline
                             &                          \\ %%% for presentation
-Python 3.6 or more         & \url{https://www.python.org}
+Python 3.9 or more         & \url{https://www.python.org}
 			\\
-Numpy 1.13 or more         & \url{https://numpy.scipy.org}
+Numpy 2.0 or more         & \url{https://numpy.scipy.org}
 			\\
 Matplotlib 0.91.2 or more         & \url{https://matplotlib.sourceforge.net}
 			\\
@@ -959,7 +965,9 @@ Some {\bf free} Fortran90/95 compilers that can be used to compile \healpix are 
 They all support the few Fortran 2003 features used in \healpixns. 
     \begin{itemize}
 %
-      \item {\bf Intel Fortran} compiler (\texttt{ifort}) for Linux based computers (versions
+      \item {\bf Intel Fortran} compilers for Linux based computers \texttt{ifx}
+        (since version 2021) and previously
+        \texttt{ifort} (versions
 11.* to 19.*\footnote{problems have been reported with one of the code (\texttt{sky\_ng\_sim}) when compiled with
 \texttt{ifort 14.0.1.106}}) \hfill \\
          \url{https://software.intel.com/en-us/fortran-compilers}
@@ -1383,8 +1391,13 @@ type
 \item with Xquartz (default under Moutain Lion (10.8.*), Mavericks (10.9.*) and Yosemite (10.10.*), 
 available for download for 
 El Capitan (10.11.*), Sierra (10.12.*), High Sierra (10.13.*), Mojave (10.14.*),
-Catalina (10.15.*), Big Sur (11.0.*) and Monterey (12.*)):\\
-{\texttt{defaults write org.macosforge.xquartz.X11 wm\_click\_through -bool true}}
+Catalina (10.15.*), Big Sur (11.*),  Monterey (12.*),  Ventura (13.*), Sonoma
+(14.*) and Sequoia (15.*)):\\
+{\texttt{defaults write org.macosforge.xquartz.X11 wm\_click\_through -bool
+    true}} for Xquartz $\le$ 2.7.*, %https://www.xquartz.org/FAQs.html
+or \\
+{\texttt{defaults write org.xquartz.X11 wm\_click\_through -bool true}}\\
+for Xquartz $\ge$ 2.8.*
 \item with MacPort's X11 (package xorg-server):\\
 {\texttt{defaults write org.macports.X11 wm\_click\_through -bool true}}
 \end{itemize}
@@ -1660,7 +1673,7 @@ However, the \mylinkext{idl:mollview:latex}{\texttt{Latex}} keyword will work pr
 \section{Appendix I: Recent Changes and New Features}
 \label{sec:newfeatures}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% BEGIN LATEST CHANGES %%%%%%%%%%%%%
-\subsection{Bug corrections and Improvements in Version \hpxversion}%2022-07-??
+\subsection{Bug corrections and Improvements in Version \hpxversion}%2024-10-??
 % ------------
 % \subsubsection[General]{General}
 % \subsubsection[C]{\linklatexhtml{C}{csub.pdf}{csub.htm}}
@@ -1671,7 +1684,52 @@ However, the \mylinkext{idl:mollview:latex}{\texttt{Latex}} keyword will work pr
 % \subsubsection[IDL]{\linklatexhtml{IDL}{idl.pdf}{idl.htm}}
 % \subsubsection[Java]{\htmladdnormallink{Java}{\healpixwebpage/html/java/index.html}}
 % \subsubsection[Python]{\htmladdnormallink{Python}{https://healpy.readthedocs.io/en/latest/}}
+% ------------
+\subsubsection[General]{General}
+\begin{itemize}
+  \item Support for intel \texttt{ifx} compiler
+  \item Proper detection of \texttt{python} versions above 3.9
+\end{itemize}
+% \subsubsection[C]{\linklatexhtml{C}{csub.pdf}{csub.htm}}
+\subsubsection[C++]{\htmladdnormallink{C++}{\healpixwebpage/html/index_cxx.htm}}
+\begin{itemize}
+\item bug fix in \texttt{query\_polygon} where pixels might be missing in some situations
+  where polygon edges were parallel to the equator.
+  (\url{https://github.com/healpy/healpy/issues/904}).
+\item bug fix in \texttt{query\_disc\_inclusive} where pixels could be missing at locations
+  exactly azimuthally opposite to the disc center.
+  (\url{https://github.com/healpy/healpy/issues/968})
+\end{itemize}
+% \subsubsection[Fortran]{%
+% Fortran 90 \linklatexhtml{facilities}{facilities.pdf}{facilities.htm} and
+% \linklatexhtml{subroutines}{subroutines.pdf}{subroutines.htm}}
+\subsubsection[IDL]{\linklatexhtml{IDL}{idl.pdf}{idl.htm}}
+\begin{itemize}
+\item update of the required
+  \htmladdnormallink{\texttt{IDL-astron} library}{https://github.com/wlandsman/IDLAstro}
+    routines (2024-09-27).%
+\end{itemize}
+% \subsubsection[Java]{\htmladdnormallink{Java}{\healpixwebpage/html/java/index.html}}
+\subsubsection[Python]{\htmladdnormallink{Python}{https://healpy.readthedocs.io/en/latest/}}
+\begin{itemize}
+\item Switch to 
+  \htmladdnormallink{\texttt{healpy \hpyversion}}{\hpysite/releases} 
+  (\htmladdnormallink{CHANGELOG}{\hpysite/blob/master/CHANGELOG.rst})
+  \begin{itemize}
+  \item scipy and matplotlib are now optional dependencies
+  \item wheels available for MacOS arm64
+  \item now supports $ 3.9 \le$ \texttt{python}$\le 3.12$.
+  \item addition of \texttt{resize\_alm}
+  \item bugs correction in ????
+\end{itemize}
+\end{itemize}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% END LATEST CHANGES %%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %------------
+\subsection{Bug corrections and Improvements in Version 3.82}%2022-07-??
 % \subsubsection[General]{General}
 \subsubsection[C]{\linklatexhtml{C}{csub.pdf}{csub.htm}}
 \begin{itemize}
@@ -1720,11 +1778,6 @@ However, the \mylinkext{idl:mollview:latex}{\texttt{Latex}} keyword will work pr
   \item Added colorbar ticks and normalization
   \end{itemize}
 \end{itemize}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% END LATEST CHANGES %%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Bug corrections and Improvements in Version 3.81}%2022-01-25
 \label{sec:v381}\mytarget{install:v381}
 \subsubsection[C++]{C++}

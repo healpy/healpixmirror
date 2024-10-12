@@ -67,7 +67,8 @@ src_healpix_cxx= \
   Healpix_cxx/moc_query.cc \
   Healpix_cxx/weight_utils.h \
   Healpix_cxx/weight_utils.cc \
-  Healpix_cxx/mask_tools.cc
+  Healpix_cxx/mask_tools.cc \
+  Healpix_cxx/alice3.cc
 src_healpix_cxx_fits= \
   Healpix_cxx/healpix_data_io.cc \
   Healpix_cxx/healpix_data_io.h \
@@ -129,7 +130,7 @@ libhealpix_cxx_la_LIBADD = $(SHARP_LIBS) $(CFITSIO_LIBS)
 # - Always increase the revision value.
 # - Increase the current value whenever an interface has been added, removed or changed.
 # - Increase the age value only if the changes made to the ABI are backward compatible.
-libhealpix_cxx_la_LDFLAGS = -version-info 3:4:0
+libhealpix_cxx_la_LDFLAGS = -version-info 4:5:0
 
 bin_PROGRAMS = alm2map_cxx anafast_cxx calc_powspec hotspots_cxx map2tga \
   median_filter_cxx mult_alm rotalm_cxx smoothing_cxx syn_alm_cxx udgrade_cxx \
@@ -163,7 +164,7 @@ compute_weights_SOURCES = Healpix_cxx/compute_weights.cc Healpix_cxx/compute_wei
 compute_weights_LDADD = libhealpix_cxx.la
 needlet_tool_SOURCES = Healpix_cxx/needlet_tool.cc Healpix_cxx/needlet_tool_module.cc
 needlet_tool_LDADD = libhealpix_cxx.la
-alice3_SOURCES = Healpix_cxx/alice3.cc
+alice3_SOURCES = Healpix_cxx/alice3_main.cc
 alice3_LDADD = libhealpix_cxx.la
 hpxtest_SOURCES=Healpix_cxx/hpxtest.cc
 hpxtest_LDADD = libhealpix_cxx.la

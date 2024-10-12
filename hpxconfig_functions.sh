@@ -918,7 +918,7 @@ Cpp_config () {
 
 
 #-------------
-Healpy_config () {  # for healpy 1.7.0
+Healpy_config () {  # for healpy >= 1.7.0
 
     HPY_PYTHON="$PYTHON"
     tmpfile=to_be_removed
@@ -939,7 +939,8 @@ Healpy_config () {  # for healpy 1.7.0
     #python_reqrd="2.4" # minimal version supported
     #python_reqrd="2.6" # minimal version supported
     #python_reqrd="2.7" # minimal version supported (1.12.8)
-    python_reqrd="3.6"  # minimal version supported (1.15.0)
+    #python_reqrd="3.6"  # minimal version supported (1.15.0)
+    python_reqrd="3.9"  # minimal version supported (1.17.3)
     #p_v1=`echo ${python_version} | ${AWK} '{print $1*10}'` # does not work properly for eg 3.10
     #p_v2=`echo ${python_reqrd}   | ${AWK} '{print $1*10}'`
     p_v1=`echo ${python_version} | ${AWK} -F. '{print $1*10000+$2*100+$3}'`
@@ -1596,16 +1597,18 @@ EOF
     FFLAGS_=`eval echo ${FFLAGS_}` # ${} -> value
     ${FC} ${FFLAGS_}  ${tmpfile}${suffix} -o ${tmpfile}.x -L${FITSDIR} -l${LIBFITS} ${CFITSIOCURL} ${F90_WLRPATH_}
     #CFITSIOVREQ="3.14"            # required  version of CFITSIO (in Healpix 3.00)
-    CFITSIOVREQ="3.20"            # required  version of CFITSIO (in Healpix 3.30)
-    CFITSIOVREC="3.44"            # recommended  version of CFITSIO (according to NASA)
-    CFITSIOVARM="4.01"            # stands for 4.1.0, required by F90 on Apple's ARM M1 and M2 chips
+    #CFITSIOVREQ="3.20"            # required  version of CFITSIO (in Healpix 3.30)
+    #CFITSIOVREC="3.44"            # recommended  version of CFITSIO (according to NASA)
+    CFITSIOVREQ="3.44"             # required
+    CFITSIOVREC="4.2.0"            # recommended  version of CFITSIO (according to NASA)
+    CFITSIOVARM="4.1.0"            # required by F90 on Apple's ARM M1 and M2 chips
     # run if executable
     if [ -x ${tmpfile}.x ]; then
 	CFITSIOVERSION=`${tmpfile}.x` || CFITSIOVERSION=-1 # available version of CFITSIO
-	v1=`echo ${CFITSIOVERSION} | ${AWK} '{print $1*1000}'` # multiply by 1000 to get integer
-	v2=`echo ${CFITSIOVREQ}    | ${AWK} '{print $1*1000}'`
-	v3=`echo ${CFITSIOVREC}    | ${AWK} '{print $1*1000}'`
-	v4=`echo ${CFITSIOVARM}    | ${AWK} '{print $1*1000}'`
+	v1=`echo ${CFITSIOVERSION} | ${AWK} -F. '{print $1*10000+$2*100+$3}'` # deal with x.y.z
+	v2=`echo ${CFITSIOVREQ}    | ${AWK} -F. '{print $1*10000+$2*100+$3}'`
+	v3=`echo ${CFITSIOVREC}    | ${AWK} -F. '{print $1*10000+$2*100+$3}'`
+	v4=`echo ${CFITSIOVARM}    | ${AWK} -F. '{print $1*10000+$2*100+$3}'`
 	if [ $v1 -lt 0   ]; then
 	    echo
 	    echo "The code compiled with"
@@ -1894,7 +1897,7 @@ IdentifyF90Compiler () {
 	DO_F90_SHARED=0 # do NOT know how to create a shared library
         nima=`$FC -V 2>&1 | ${GREP} -i imagine1 | ${WC} -l`
         nnag=`$FC -V 2>&1 | ${GREP} -i nagware  | ${WC} -l`
-        nifc=`$FC -V 2>&1 | ${GREP} -i intel    | ${WC} -l`
+        nifc=`$FC -V 2>&1 | ${GREP} -io intel    | ${WC} -l`
         #npgf=`$FC -V 2>&1 | ${GREP} -i portland | ${WC} -l`
         npgf=`$FC -V 2>&1 | ${GREP} PGI | ${WC} -l`
 	nlah=`$FC --version 2>&1 | ${GREP} -i lahey | ${WC} -l`
@@ -1920,28 +1923,39 @@ IdentifyF90Compiler () {
 		FI8FLAG="-double" # change default INTEGER and FLOAT to 64 bits
 		MODDIR="-mdir " # output location of modules
         elif [ $nifc != 0 ] ; then
-		ifc_modules
-                FCNAME="Intel Fortran Compiler"
-		junk=`$FC -v 2>&1 | grep -i version | sed "s|[ifort,version,Version, ]||g"`
-		intelversion=`echo $junk | awk -F. '{print $1}'`
-		#if [ $intelversion -le 17 ] ; then # old syntax, supported up to version 17 included
-		if [ $intelversion -lt 15 ] ; then # old syntax, supported up to version 17 included
-		    FFLAGS="$IFCINC -cm -w -sox -vec_report0"
-		    PRFLAGS="-openmp -openmp_report0" # Open MP enabled # June 2007
-		else # new syntax, supported since version 15, required in 18
-		    FFLAGS="$IFCINC -cm -w -sox -qopt-report=0"
-		    PRFLAGS="-qopenmp" # Open MP enabled # Sept 2017
-		fi
-		MOD="$IFCMOD"
-		FTYPE="$IFCVERSION"
+	    ifc_modules
+	    nifort=`$FC --version | ${GREP} -io ifort | ${WC} -l`
+	    nifx=`$FC --version | ${GREP} -io ifx | ${WC} -l`
+	    junk=`$FC -v 2>&1 | grep -i version | sed "s|[ifort,ifx,version,Version, ]||g"`
+	    intelversion=`echo $junk | awk -F. '{print $1}'`
+	    #if [ $intelversion -le 17 ] ; then # old syntax, supported up to version 17 included
+	    if [ $intelversion -lt 15 ] ; then # old syntax, supported up to version 17 included
+		FFLAGS="$IFCINC -cm -w -sox -vec_report0"
+		PRFLAGS="-openmp -openmp_report0" # Open MP enabled # June 2007
+	    elif [ $intelversion -lt 2020 ] ; then # new syntax, supported since version 15, required in 18
+		FFLAGS="$IFCINC -qopt-report=0"
+		PRFLAGS="-qopenmp" # Open MP enabled # Sept 2017
+	    else
+		FFLAGS="$IFCINC -qopt-report=0"
+		PRFLAGS="-qopenmp" # Open MP enabled
+	    fi
+	    MOD="$IFCMOD"
+	    FTYPE="$IFCVERSION"
+	    if [ $nifx != 0 ] ; then
+		FCNAME="Intel Fortran Compiler (ifx)"
+		EMULATE_IFORT_DEFAULTS="-assume noieee_compares,nan_compares"
+  		OFLAGS="-O3 -xHost ${EMULATE_IFORT_DEFAULTS}"
+	    else
+		FCNAME="Intel Fortran Compiler (ifort)"
   		OFLAGS="-O3"
-		FI8FLAG="-i8" # change default INTEGER to 64 bits
-##		FI8FLAG="-integer-size 64" # change default INTEGER to 64 bits
-		CFLAGS="$CFLAGS -DINTEL_COMPILER" # to combine C and F90
-		MODDIR="-module " # output location of modules
-		[ $OS = "Linux" ]  && F90_WLRPATH="-Wl,-R"
-		[ $OS = "Darwin" ] && F90_WLRPATH="-Wl,-rpath,"
-		DO_F90_SHARED=1
+	    fi
+	    FI8FLAG="-i8" # change default INTEGER to 64 bits
+	    ##		FI8FLAG="-integer-size 64" # change default INTEGER to 64 bits
+	    CFLAGS="$CFLAGS -DINTEL_COMPILER" # to combine C and F90
+	    MODDIR="-module " # output location of modules
+	    [ $OS = "Linux" ]  && F90_WLRPATH="-Wl,-R"
+	    [ $OS = "Darwin" ] && F90_WLRPATH="-Wl,-rpath,"
+	    DO_F90_SHARED=1
         elif [ $npgf != 0 ] ; then
                 #FCNAME="Portland Group Compiler"
                 FCNAME="PGI Compiler"

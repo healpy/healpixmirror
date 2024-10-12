@@ -1,4 +1,4 @@
-AC_INIT([healpix_cxx],[3.82.0])
+AC_INIT([healpix_cxx],[3.83.0])
 AM_INIT_AUTOMAKE([foreign subdir-objects -Wall -Werror])
 AM_MAINTAINER_MODE([enable])
 
@@ -36,10 +36,6 @@ AC_OPENMP
 CXXFLAGS="$CXXFLAGS $OPENMP_CFLAGS"
 AC_LANG_POP([C++])
 
-PKG_CHECK_MODULES([ZLIB], [zlib], , [ZLIB_LIBS=-lz])
-CFLAGS="$CFLAGS $ZLIB_CFLAGS"
-LIBS="$LIBS $ZLIB_LIBS"
-
 dnl
 dnl Determine the compiler flags (CFITSIO_CFLAGS)
 dnl and linker flags (CFITSIO_LIBS) required to build against libcfitsio.
@@ -55,10 +51,6 @@ dnl Now check for cfitsio using pkg-config. If cfitsio is not found with
 dnl pkg-config, CFITSIO_LIBS defaults to "-lcfitsio".
 dnl
 PKG_CHECK_MODULES([CFITSIO], [cfitsio], , [CFITSIO_LIBS=-lcfitsio])
-dnl
-dnl Linking against libcfitsio requires libm too.
-dnl
-CFITSIO_LIBS="$CFITSIO_LIBS -lm"
 dnl
 dnl With pkg-config < 0.24, PKG_CHECK_MODULES does not AC_SUBST the _CFLAGS
 dnl and _LIBS variables.
