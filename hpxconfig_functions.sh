@@ -53,7 +53,7 @@
 #                FC, F_AR, F_DIRSUFF, F_OPT, F_PARAL, F_SHARED   (F90) 
 #                FITSDIR,               (C/      C++/F90)        
 #                FITSINC,               (C/      C++)            
-#                PYTHON                                 (healpy) 
+#                PYTHON, PIPARGS                       (healpy) 
 #                PROFILE_EDIT           (profile)                
 #                papersize, ps_com, pdf_com, gif_com       (IDL) 
 #             to define proposed default values.
@@ -317,7 +317,7 @@ processAutoList(){
     [ $do_cxx -eq 1 ]    && fillFile 4 7  ${autofile}
     [ $do_f90 -eq 1 ]    && fillFile 3 13 ${autofile}
     [ $do_idl -eq 1 ]    && fillFile 1 4  ${autofile}
-    [ $do_healpy -eq 1 ] && fillFile 5 3  ${autofile}
+    [ $do_healpy -eq 1 ] && fillFile 5 4  ${autofile}
     fillFile 0 0 ${autofile} # to exit gracefully
 
     do_profile=0
@@ -925,6 +925,7 @@ Healpy_config () {  # for healpy >= 1.7.0
     HPY_SETUP='setup.py' # default setup
     HPY_SETUP2='setup2.py' # backup setup
     HPY_DIR='src/healpy/'
+    HPY_PIPARGS="$PIPARGS"
 
     # ask for python command
     echoLn "Enter python command [$HPY_PYTHON] "
@@ -940,7 +941,8 @@ Healpy_config () {  # for healpy >= 1.7.0
     #python_reqrd="2.6" # minimal version supported
     #python_reqrd="2.7" # minimal version supported (1.12.8)
     #python_reqrd="3.6"  # minimal version supported (1.15.0)
-    python_reqrd="3.9"  # minimal version supported (1.17.3)
+    #python_reqrd="3.9"  # minimal version supported (1.17.3)
+    python_reqrd="3.10"  # minimal version supported (1.18.0)
     #p_v1=`echo ${python_version} | ${AWK} '{print $1*10}'` # does not work properly for eg 3.10
     #p_v2=`echo ${python_reqrd}   | ${AWK} '{print $1*10}'`
     p_v1=`echo ${python_version} | ${AWK} -F. '{print $1*10000+$2*100+$3}'`
@@ -989,6 +991,12 @@ Healpy_config () {  # for healpy >= 1.7.0
     [ "x$answer" != "x" ] && CXX=$answer
     HPY_CXX="${CXX}"
 
+    echoLn "enter arguments to pip command [$PIPARGS]: "
+    read answer
+    [ $INTERACTIVE -eq 0 ] && echo $answer
+    [ "x$answer" != "x" ] && PIPARGS=$answer
+    HPY_PIPARGS="${PIPARGS}"
+
     # apply
     editHealpyMakefile
 
@@ -1005,6 +1013,7 @@ editHealpyMakefile () {
 	${SED} "s|^HPY_SETUP.*$|HPY_SETUP    = ${HPY_SETUP}|" |\
 	${SED} "s|^HPY_PYTHON.*$|HPY_PYTHON   = ${HPY_PYTHON}|" |\
 	${SED} "s|^HPY_VARS.*$|HPY_VARS     = ${HPY_VARS}|" |\
+	${SED} "s|^HPY_PIPARGS.*$|HPY_PIPARGS    = ${HPY_PIPARGS}|" |\
 	${SED} "s|^ALL\(.*\) healpy-void\(.*\)|ALL\1 healpy-all \2|" |\
 	${SED} "s|^TESTS\(.*\) healpy-void\(.*\)|TESTS\1 healpy-test \2|" |\
 	${SED} "s|^CLEAN\(.*\) healpy-void\(.*\)|CLEAN\1 healpy-clean \2|" |\
@@ -2812,6 +2821,7 @@ setTopDefaults() {
     NM="nm"
     PRINTF="printf"
     #PWD="pwd"
+    PIPARGS=${PIPARGS-install . --user} # "install . --user" unless already defined
     PYTHON="${PYTHON-python3}" # python3 unless already defined
     RM="/bin/rm -f"
     RMDIR="rmdir"
