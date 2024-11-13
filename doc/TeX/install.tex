@@ -673,16 +673,17 @@ The \texttt{./configure} script will ask for the Python command you want to use
 meets the \texttt{healpy} requirements (see above), as well as for C and C++
 compilers,
 and finally the list of arguments you want to pass to the \texttt{pip} command. The latter default value is
-\texttt{``install . \doubledash user''}  where the \texttt{\doubledash user} flag can be dropped if
-the installation is made system wide (by a root user) or in a virtual
+\texttt{``install . \doubledash user''},  where the dot (\texttt{.}) refers to
+the local \texttt{healpy} source directory (\texttt{\$\{HEALPIX\}/src/healpy}). The \texttt{\doubledash user} flag can be dropped if
+the installation is made system-wide (by a root user) or in a virtual
 environnement (like for instance in \texttt{conda}),
 while the flag \texttt{-e} or  \texttt{\doubledash editable} can be inserted (ie, looking
-like \texttt{``install -e . \doubledash user''}) to keep the installed package editable.\\
+like \texttt{'install -e . \doubledash user'}) to keep the installed package editable.\\
 The environment variables \texttt{PYTHON}, \texttt{C}, \texttt{CXX} and
 \texttt{PIPARGS} can be used to customize the configuration process.\\
 Note that during the compilation with \texttt{make} (see below), the
 \texttt{pip} command will prompt a {\em fresh} compilation of the
- \texttt{src/cxx/*} libraries, with all the options necessary to Python linkage, and
+ \texttt{\$\{HEALPIX\}/src/cxx/*} libraries, with all the options necessary to Python linkage, and
  can be done independently of the C++ installation described above.\\
 Note also that the \texttt{healpy} compilation will very likely 
 require an active network connection in order
@@ -1688,7 +1689,7 @@ However, the \mylinkext{idl:mollview:latex}{\texttt{Latex}} keyword will work pr
 \section{Appendix I: Recent Changes and New Features}
 \label{sec:newfeatures}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% BEGIN LATEST CHANGES %%%%%%%%%%%%%
-\subsection{Bug corrections and Improvements in Version \hpxversion}%2024-10-??
+\subsection{Bug corrections and Improvements in Version \hpxversion}%3.83 2024-11-15??
 % ------------
 % \subsubsection[General]{General}
 % \subsubsection[C]{\linklatexhtml{C}{csub.pdf}{csub.htm}}
