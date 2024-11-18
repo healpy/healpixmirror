@@ -37,8 +37,7 @@
               <u>Anthony J. Banday</u>
               (then at <a href="https://www.mpa-garching.mpg.de">Max Planck Institut f&#252;r Astrophysik (MPA)</a>,
 
-              Garching, Germany, now at <a href="http://www.cesr.fr/?lang=en">Centre d&#039;Etude 
-	       Spatiale du Rayonnement</a>, Toulouse, France) 
+	       Garching, Germany, now at <a href="https://www.irap.omp.eu/en/homepage-en/">Institut de recherche en astrophysique et Plan&eacute;tologie (IRAP)</a>, Toulouse, France) 
 
 	     and <u>Matthias Bartelmann</u> (then at MPA, now at
  		
@@ -51,9 +50,9 @@
               <br>
               <br>
               The following releases of the HEALPix software (Versions 1.20 to 
-							      3.81) 
+							      3.82) 
 		and the current one (Version 
-				     3.82) benefited
+				     3.83) benefited
               from:
 		<ul>
 		<li>
