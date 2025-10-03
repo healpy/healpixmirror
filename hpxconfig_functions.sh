@@ -63,6 +63,7 @@
 # 2020-01-23: removed bashism, improved FITSDIR behavior
 # 2021-01-26: better handling of libcfitsio without libcurl
 # 2021-04-06: added SHARP_PARAL and CXX_PARAL
+# 2025-10-03: works smoothly with libcfitsio.so (or libcfitsio.dylib) instead of libcfitsio.a
 #=====================================
 #=========== General usage ===========
 #=====================================
@@ -417,7 +418,8 @@ askCUserMisc () {
 	echoLn "enter full name of cfitsio library [lib${LIBFITS}.a]: "
 	read answer
 	[ $INTERACTIVE -eq 0 ] && echo $answer
-	[ "x$answer" != "x" ] && LIBFITS=`${BASENAME} $answer ".a" | ${SED} "s/^lib//"`
+	#[ "x$answer" != "x" ] && LIBFITS=`${BASENAME} $answer ".a" | ${SED} "s/^lib//"`
+        [ "x$answer" != "x" ] && LIBFITS=`${BASENAME} $answer  | ${SED} "s/^lib//" | ${SED} "s/.a$//" | ${SED} "s/.so$//" | ${SED} "s/.dylib$//"  `
 
 	findFITSLib $LIBDIR $FITSDIR
 	echoLn "enter location of cfitsio library [$FITSDIR]: "
@@ -428,9 +430,11 @@ askCUserMisc () {
 
 	[ "x$C_WLRPATH" != "x" ] && C_WLRPATH="${C_WLRPATH}${FITSDIR}"
 
-	lib="${FITSDIR}/lib${LIBFITS}.a"
-	if [ ! -r $lib ]; then
-	    echo "error: fits library $lib not found"
+	#lib="${FITSDIR}/lib${LIBFITS}.a"
+	#if [ ! -r $lib ]; then
+	lib="${FITSDIR}/lib${LIBFITS}"
+	if [ ! -r ${lib}.a -a  ! -r ${lib}.so -a ! -r ${lib}.dylib ]; then
+	    echo "error: fits library ${lib}.a, ${lib}.so, ${lib}.dylib not found"
 	    crashAndBurn
 	fi
 	checkFitsioCurl $lib
@@ -2316,7 +2320,8 @@ askUserMisc () {
     echoLn "enter full name of cfitsio library [lib${LIBFITS}.a]: "
     read answer
     [ $INTERACTIVE -eq 0 ] && echo $answer
-    [ "x$answer" != "x" ] && LIBFITS=`${BASENAME} $answer ".a" | ${SED} "s/^lib//"`
+    #[ "x$answer" != "x" ] && LIBFITS=`${BASENAME} $answer ".a" | ${SED} "s/^lib//"`
+    [ "x$answer" != "x" ] && LIBFITS=`${BASENAME} $answer  | ${SED} "s/^lib//" | ${SED} "s/.a$//" | ${SED} "s/.so$//" | ${SED} "s/.dylib$//"  `
 
     findFITSLib $LIBDIR $FITSDIR
     echoLn "enter location of cfitsio library [$FITSDIR]: "
@@ -2325,10 +2330,12 @@ askUserMisc () {
     [ "x$answer" != "x" ] && FITSDIR=$answer
     fullPath FITSDIR
 
-    lib="${FITSDIR}/lib${LIBFITS}.a"
-    if [ ! -r $lib ]; then
+    #lib="${FITSDIR}/lib${LIBFITS}.a"
+    #if [ ! -r $lib ]; then
+    lib="${FITSDIR}/lib${LIBFITS}"
+    if [ ! -r ${lib}.a -a  ! -r ${lib}.so -a ! -r ${lib}.dylib ]; then
 	echo
-	echo "error: fits library $lib not found"
+	echo "error: fits library ${lib}.a, ${lib}.so, ${lib}.dylib not found"
 	echo
 	crashAndBurn
     fi
