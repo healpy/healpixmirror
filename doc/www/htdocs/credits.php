@@ -8,7 +8,8 @@
 		<u>Krzysztof M. G&oacute;rski</u> at the
               <a href="http://www.tac.dk/">(now defunct) Theoretical Astrophysics Center (TAC)</a>
 
-              in Copenhagen, Denmark (he is currently at <a href="https://www.jpl.nasa.gov">Jet Propulsion Laboratory, JPL</a>).  
+              in Copenhagen.
+	      <!-- , Denmark (he is currently at <a href="https://www.jpl.nasa.gov">Jet Propulsion Laboratory, JPL</a>).-->
 	<br>
 	     Early development
               of the HEALPix concept and initial implementation was made in
@@ -22,8 +23,9 @@
               <u>Benjamin D. Wandelt</u>, then at the TAC (now at
 	      <!-- 	
               <a href="https://illinois.edu/index.html">University of Illinois at Urbana-Champaign</a> 
-		-->
               <a href="http://www.iap.fr/?langue=en">IAP</a>),
+		-->
+	      <a href="https://www.jhu.edu">Johns Hopkins University</a>),
 
               has contributed critically to the further development of HEALPix
               and related mathematical methods. 

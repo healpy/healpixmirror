@@ -22,6 +22,13 @@ The
 </li>
 
 <li>
+Some of the <a href="https://act.princeton.edu">Atacama Cosmology Telescope</a>
+(ACT)
+<a href="https://lambda.gsfc.nasa.gov/product/act/act_dr6.02/act_dr6.02_maps_prod_table.html">DR6 maps
+are available in HEALPix format</a>
+</li>
+
+<li>
 Unofficial low-resolution <a href="https://faun.rc.fas.harvard.edu/ameisner/wssa/healpix.html">WISE 12 micron full-sky dust maps</a>
 </li>
 
@@ -218,6 +225,11 @@ by Anthony J. Banday
 </li>
 -->
 
+<li>
+<a href="https://git.ligo.org/stochastic-public/stochastic/-/tree/master/PyStoch?ref_type=heads">PyStoch</a>:
+mapping of Stochastic Gravitational Waves Background
+</li>
+
 <!--   ******ASCL******  -->
 <li  style="margin-top:1.5em">
 <a href="https://ascl.net/code/search/healpix">Codes related to HEALPix</a> (<a href="https://ascl.net/1107.018">ascl:1107.018</a>) in 
@@ -233,7 +245,9 @@ Astrophysics Source Code Library.
 Published articles using HEALPix: 
 <ul>
 <li>
-First HEALPix paper: <a href="https://ui.adsabs.harvard.edu/abs/2005ApJ...622..759G/abstract">K.M. G&oacute;rski et al., 2005, ApJ, 622, p759</a><br>(among the 10 <a href="http://cococubed.asu.edu/journal_pages/top50.shtml">most cited astronomical articles</a> published in 2005)
+First HEALPix paper: <a href="https://ui.adsabs.harvard.edu/abs/2005ApJ...622..759G/abstract">K.M. G&oacute;rski et al., 2005, ApJ, 622, p759</a><br>(among the 10
+<!--a href="http://cococubed.asu.edu/journal_pages/top50.shtml"-->
+<a href="https://cococubed.com/journal_pages/top50.shtml">most cited astronomical articles</a> published in 2005)
 </li>
 <li>HEALPix 
 on 
@@ -258,8 +272,8 @@ on
 
 and
 
-<a href="https://scholar.google.com/scholar?scisbd=2&q=healpix&hl=en&as_sdt=0,5">Google Scholar</a>
-
+<!-- a href="https://scholar.google.com/scholar?scisbd=2&q=healpix&hl=en&as_sdt=0,5">Google Scholar</a -->
+<a href="https://scholar.google.com/scholar?hl=en&scisbd=2&as_sdt=0%2C5&q=healpix+OR+healpy&btnG=">Google Scholar</a>
  (Multidisciplinary)
 
 </li>
