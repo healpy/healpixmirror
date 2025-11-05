@@ -25,7 +25,7 @@
  */
 
 /*
- *  Copyright (C) 2003-2016 Max-Planck-Society
+ *  Copyright (C) 2003-2024 Max-Planck-Society
  *  Author: Martin Reinecke
  */
 
@@ -216,8 +216,17 @@ template<typename I> template<typename I2>
       double x = (cosrbig-z*z0)*xa;
       double ysq = 1-z*z-x*x;
       double dphi=-1;
+      bool fullcircle = false;
       if (ysq<=0) // no intersection, ring completely inside or outside
-        dphi = (fct==1) ? 0: pi-1e-15;
+        {
+        if (fct==1)
+          dphi = 0;
+        else
+          {
+          fullcircle = true;
+          dphi = pi-1e-15;
+          }
+        }
       else
         dphi = atan2(sqrt(ysq),x);
       if (dphi>0)
@@ -231,6 +240,16 @@ template<typename I> template<typename I2>
 
         I ip_lo = ifloor<I>(nr*inv_twopi*(ptg.phi-dphi) - shift)+1;
         I ip_hi = ifloor<I>(nr*inv_twopi*(ptg.phi+dphi) - shift);
+        if (fullcircle)  // make sure we test the entire ring
+          {
+          if (ip_hi-ip_lo<nr-1)
+            {
+            if (ip_lo>0)
+              --ip_lo;
+            else
+              ++ip_hi;
+            }
+          }
 
         if (fct>1)
           {
@@ -417,24 +436,27 @@ template<typename I> template<typename I2>
         {
         double x = (cosrbig[j]-z*z0[j])*xa[j];
         double ysq = 1.-z*z-x*x;
-        double dphi = (ysq<=0) ? pi-1e-15 : atan2(sqrt(ysq),x);
-        I ip_lo = ifloor<I>(nr*inv_twopi*(ptg[j].phi-dphi) - shift)+1;
-        I ip_hi = ifloor<I>(nr*inv_twopi*(ptg[j].phi+dphi) - shift);
-        if (fct>1)
+        if (ysq>0)
           {
-          while ((ip_lo<=ip_hi) && check_pixel_ring
-            (*this,b2,ip_lo,nr,ipix1,fct,z0[j],ptg[j].phi,cosrsmall[j],cpix[j]))
-            ++ip_lo;
-          while ((ip_hi>ip_lo) && check_pixel_ring
-            (*this,b2,ip_hi,nr,ipix1,fct,z0[j],ptg[j].phi,cosrsmall[j],cpix[j]))
-            --ip_hi;
+          double dphi = atan2(sqrt(ysq),x);
+          I ip_lo = ifloor<I>(nr*inv_twopi*(ptg[j].phi-dphi) - shift)+1;
+          I ip_hi = ifloor<I>(nr*inv_twopi*(ptg[j].phi+dphi) - shift);
+          if (fct>1)
+            {
+            while ((ip_lo<=ip_hi) && check_pixel_ring
+              (*this,b2,ip_lo,nr,ipix1,fct,z0[j],ptg[j].phi,cosrsmall[j],cpix[j]))
+              ++ip_lo;
+            while ((ip_hi>ip_lo) && check_pixel_ring
+              (*this,b2,ip_hi,nr,ipix1,fct,z0[j],ptg[j].phi,cosrsmall[j],cpix[j]))
+              --ip_hi;
+            }
+          if (ip_hi>=nr)
+            { ip_lo-=nr; ip_hi-=nr;}
+          if (ip_lo<0)
+            tr.remove(ipix1+ip_hi+1,ipix1+ip_lo+nr);
+          else
+            tr.intersect(ipix1+ip_lo,ipix1+ip_hi+1);
           }
-        if (ip_hi>=nr)
-          { ip_lo-=nr; ip_hi-=nr;}
-        if (ip_lo<0)
-          tr.remove(ipix1+ip_hi+1,ipix1+ip_lo+nr);
-        else
-          tr.intersect(ipix1+ip_lo,ipix1+ip_hi+1);
         }
       pixset.append(tr);
       }

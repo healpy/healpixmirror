@@ -36,12 +36,15 @@ function is_fl
 ;   http://www.fawlty.uhostall.com/
 ;
 ;   2017-06-02
-;
+;   2024-10-25 works for old (~<0.97.49) and new (~0.97.54) FL
 ;-
 
 
-flag = 0
-;#fl flag++  ; only seen by FL
+flag_old = 0
+;#fl flag_old++  ; only seen by (old) FL
 
+defsysv,'!FL', exists=flag_new  ; only defined in (new) FL
+
+flag = flag_old or flag_new
 return, flag
 end

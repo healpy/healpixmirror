@@ -216,6 +216,7 @@ echoRed (){
     }
 #---------------
 
+tstart=`date`
 revision=`svnversion . | sed "s|[A-Z]*||g"`
 echo "Revision=${revision}"
 setTopDefaults
@@ -274,9 +275,9 @@ echoRed "cleaning up C++..."
 cd src/cxx
 autoreconf -i  # Healpix 3.60 and more
 cd docsrc
-doxygen cxxsupport.dox
+/usr/local/bin/doxygen cxxsupport.dox
 mv htmldoc cxxsupport
-doxygen Healpix_cxx.dox
+/usr/local/bin/doxygen Healpix_cxx.dox
 mv htmldoc Healpix_cxx
 \rm *.dox
 \rm *.tag # ??? double check ???
@@ -311,6 +312,9 @@ echoRed "remove old and new web sites"
 
 echoRed "removing change logs..."
 find . -name ChangeLog -exec \rm -f {} \;
+
+echoRed "removing .gitignore ..."
+find . -name .gitignore -exec \rm -f {} \;
 
 echoRed "generating documentations"
 # recreate directory receiving doc from doc/TeX/Makefile
@@ -443,6 +447,8 @@ echo "SVN url: svn://svn.code.sf.net/p/healpix/code/branches/" >> ${rnfile}
 echo "SVN revision: ${revision}" >> ${rnfile}
 cat $rnfile
 cd ${here}
+tend=`date`
+echo "$tstart ... $tend"
 
 exit
 

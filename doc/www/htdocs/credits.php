@@ -8,7 +8,8 @@
 		<u>Krzysztof M. G&oacute;rski</u> at the
               <a href="http://www.tac.dk/">(now defunct) Theoretical Astrophysics Center (TAC)</a>
 
-              in Copenhagen, Denmark (he is currently at <a href="https://www.jpl.nasa.gov">Jet Propulsion Laboratory, JPL</a>).  
+              in Copenhagen.
+	      <!-- , Denmark (he is currently at <a href="https://www.jpl.nasa.gov">Jet Propulsion Laboratory, JPL</a>).-->
 	<br>
 	     Early development
               of the HEALPix concept and initial implementation was made in
@@ -22,8 +23,9 @@
               <u>Benjamin D. Wandelt</u>, then at the TAC (now at
 	      <!-- 	
               <a href="https://illinois.edu/index.html">University of Illinois at Urbana-Champaign</a> 
-		-->
               <a href="http://www.iap.fr/?langue=en">IAP</a>),
+		-->
+	      <a href="https://www.jhu.edu">Johns Hopkins University</a>),
 
               has contributed critically to the further development of HEALPix
               and related mathematical methods. 
@@ -37,8 +39,7 @@
               <u>Anthony J. Banday</u>
               (then at <a href="https://www.mpa-garching.mpg.de">Max Planck Institut f&#252;r Astrophysik (MPA)</a>,
 
-              Garching, Germany, now at <a href="http://www.cesr.fr/?lang=en">Centre d&#039;Etude 
-	       Spatiale du Rayonnement</a>, Toulouse, France) 
+	       Garching, Germany, now at <a href="https://www.irap.omp.eu/en/homepage-en/">Institut de recherche en astrophysique et Plan&eacute;tologie (IRAP)</a>, Toulouse, France) 
 
 	     and <u>Matthias Bartelmann</u> (then at MPA, now at
  		
@@ -51,9 +52,9 @@
               <br>
               <br>
               The following releases of the HEALPix software (Versions 1.20 to 
-							      3.81) 
+							      3.82) 
 		and the current one (Version 
-				     3.82) benefited
+				     3.83) benefited
               from:
 		<ul>
 		<li>

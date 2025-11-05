@@ -864,6 +864,18 @@ void check_issue_229 (Healpix_Ordering_Scheme scheme)
     }
   }
 
+void check_issue_968 ()
+  {
+  cout << "checking issue #968" << endl;
+  int nside=4;
+  Healpix_Base base (nside,RING,SET_NSIDE);
+  pointing ptg(174*pi/180., 45*pi/180.);
+  vector<int> res;
+  base.query_disc_inclusive (ptg, 9.9*pi/180., res, 4);
+  if (find(res.begin(), res.end(), 190) == res.end())
+    FAIL(cout << "  PROBLEM: issue 968" << endl)
+  }
+
 void check_query_disc_strict (Healpix_Ordering_Scheme scheme)
   {
   cout << "testing whether all pixels found by query_disc() really" << endl
@@ -1586,6 +1598,7 @@ int main(int argc, const char **argv)
   check_query_polygon<int64>();
   check_ringweights();
   check_fullweights();
+  check_issue_968();
 #ifdef UNITTESTS
   if (errcount>0) planck_fail("unit test errors");
 #endif

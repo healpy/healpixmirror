@@ -13,6 +13,7 @@
 # 2014-01-06: deal with latest version
 # 2016-08-22: detect duplicates
 # Note: do not use github because it does not include the Coyote directory
+# 2024-09-27: switch to github (with a hand made link to coyote directory)
 #
 # directory with new routines
 set dir = /Applications/itt/external_contributions/astron/pro/

@@ -1,8 +1,9 @@
 # -*- Makefile -*-
 # for a better html result, do 'make pdf' right before 'make html' (so that the aux file of the former can be used by the latter)
-TEX	:= latex
-DVIPS   := dvips
-PDFTEX  := pdflatex
+#TEX	:= latex
+#DVIPS   := dvips
+PDFTEX  := /usr/local/texlive/2018/bin/x86_64-darwin/pdflatex
+#PDFTEX  := /usr/local/texlive/2024/bin/universal-darwin/pdflatex
 TEXFLAGS := 
 DVIFLAGS :=
 PDFFLAGS :=
@@ -39,6 +40,7 @@ SHORTEN     := ./shorten_section_tag.sh
 INSERTFAVICONS := ./insert_favicons.sh
 CSSFILE     := common.css
 COLORS = 1
+START=`date`
 
 # put last the ones referring to the others
 docs  := intro.tex csub.tex idl.tex subroutines.tex facilities.tex install.tex
@@ -160,14 +162,14 @@ install.html: $(style) healpix.perl cssfile
 	mkdir -p $(HTMLDIR)
 	-cp $(HTMLDIR)/*labels.pl /tmp
 	-$(LATEX2HTML) $(L2HFLAGS) -toc_depth 8 -split 3 -prefix $(FULL) -external_file ./$(FULL)  -t $(TITLE) $(LONGTITLES)    $(FULL)
-	###-$(EQNFIX)      $(HTMLDIR)/$(PREFIX) 1> /dev/null 2>&1
+####	####-$(EQNFIX)      $(HTMLDIR)/$(PREFIX) 1> /dev/null 2>&1
 	-$(FIXHTML5)    $(HTMLDIR)/$(PREFIX)
 	-$(SHORTEN)	$(HTMLDIR)/$(PREFIX)
 	-$(IMPROVEHTML) $(HTMLDIR)/$(PREFIX)
 	-$(INSERTFAVICONS) $(HTMLDIR)/$(PREFIX)
 	mv -f $(HTMLDIR)/WARNINGS $(HTMLDIR)/WARNINGS_$(FULL)
 	ln -sf $(CSSFILE)          $(HTMLDIR)/$(FULL).css
-	#######ln -sf $(PREFIX)$(TTL).htm $(HTMLDIR)/$(FULL).htm
+###	#######ln -sf $(PREFIX)$(TTL).htm $(HTMLDIR)/$(FULL).htm
 	-cp $(HTMLDIR)/*labels.pl /tmp
 	@echo "created$(BLUE_COLOR) $(HTMLDIR)/$(FULL).htm $(NO_COLOR)"
 
@@ -183,7 +185,7 @@ intro.html: $(style) healpix.perl cssfile
 	mkdir -p $(HTMLDIR)
 	-cp $(HTMLDIR)/*labels.pl /tmp
 	-$(LATEX2HTML) $(L2HFLAGS) -toc_depth 8 -split 4 -prefix $(PREFIX) -external_file ./$(FULL) -t $(TITLE) $(LONGTITLES) $(FULL)
-	###-$(EQNFIX)      $(HTMLDIR)/$(PREFIX) 1> /dev/null 2>&1
+##	###-$(EQNFIX)      $(HTMLDIR)/$(PREFIX) 1> /dev/null 2>&1
 	-$(FIXHTML5)    $(HTMLDIR)/$(PREFIX)
 	-$(SHORTEN)	$(HTMLDIR)/$(PREFIX)
 	-$(IMPROVEHTML) $(HTMLDIR)/$(PREFIX)
@@ -207,7 +209,7 @@ idl.html: $(style) healpix.perl cssfile
 	mkdir -p $(HTMLDIR)
 	-cp $(HTMLDIR)/*labels.pl /tmp
 	-$(LATEX2HTML) $(L2HFLAGS) -toc_depth 8 -split 4 -prefix $(PREFIX) -external_file ./$(FULL) -t $(TITLE) $(LONGTITLES) $(FULL)
-	###-$(EQNFIX)      $(HTMLDIR)/$(PREFIX) 1> /dev/null 2>&1
+###	###-$(EQNFIX)      $(HTMLDIR)/$(PREFIX) 1> /dev/null 2>&1
 	-$(FIXHTML5)    $(HTMLDIR)/$(PREFIX)
 	-$(SHORTEN)	$(HTMLDIR)/$(PREFIX)
 	-$(IMPROVEHTML) $(HTMLDIR)/$(PREFIX)
@@ -231,7 +233,7 @@ subroutines.html: $(style) healpix.perl cssfile
 	mkdir -p $(HTMLDIR)
 	-cp $(HTMLDIR)/*labels.pl /tmp
 	-$(LATEX2HTML) $(L2HFLAGS) -toc_depth 4 -toc_stars -split 4 -prefix $(PREFIX) -external_file ./$(FULL) -t $(TITLE) $(LONGTITLES) $(FULL)
-	###-$(EQNFIX)      $(HTMLDIR)/$(PREFIX) 1> /dev/null 2>&1
+###	###-$(EQNFIX)      $(HTMLDIR)/$(PREFIX) 1> /dev/null 2>&1
 	-$(FIXHTML5)    $(HTMLDIR)/$(PREFIX)
 	-$(SHORTEN)	$(HTMLDIR)/$(PREFIX)
 	-$(IMPROVEHTML) $(HTMLDIR)/$(PREFIX)
@@ -255,7 +257,7 @@ facilities.html: $(style) healpix.perl cssfile
 	mkdir -p $(HTMLDIR)
 	-cp $(HTMLDIR)/*labels.pl /tmp
 	-$(LATEX2HTML) $(L2HFLAGS) -toc_depth 8 -split 4 -prefix $(PREFIX) -external_file ./$(FULL) -t $(TITLE) $(LONGTITLES) $(FULL)
-	###-$(EQNFIX)      $(HTMLDIR)/$(PREFIX) 1> /dev/null 2>&1
+###	###-$(EQNFIX)      $(HTMLDIR)/$(PREFIX) 1> /dev/null 2>&1
 	-$(FIXHTML5)    $(HTMLDIR)/$(PREFIX)
 	-$(SHORTEN)	$(HTMLDIR)/$(PREFIX)
 	-$(IMPROVEHTML) $(HTMLDIR)/$(PREFIX)
@@ -279,7 +281,7 @@ csub.html: $(style) healpix.perl cssfile
 	mkdir -p $(HTMLDIR)
 	-cp $(HTMLDIR)/*labels.pl /tmp
 	-$(LATEX2HTML) $(L2HFLAGS) -toc_depth 8 -split 4 -prefix $(PREFIX) -external_file ./$(FULL) -t $(TITLE) $(LONGTITLES) $(FULL)
-	###-$(EQNFIX)      $(HTMLDIR)/$(PREFIX) 1> /dev/null 2>&1
+###	###-$(EQNFIX)      $(HTMLDIR)/$(PREFIX) 1> /dev/null 2>&1
 	-$(FIXHTML5)    $(HTMLDIR)/$(PREFIX)
 	-$(SHORTEN)	$(HTMLDIR)/$(PREFIX)
 	-$(IMPROVEHTML) $(HTMLDIR)/$(PREFIX)
@@ -299,7 +301,7 @@ epub: main.html
 	@echo "$(GREEN_COLOR)==================================$(NO_COLOR)"
 	$(EBOOK)
 	@mkdir -p $(EPUBDIR)
-	#@cp $(epub) $(EPUBDIR)
+###	#@cp $(epub) $(EPUBDIR)
 
 intro.epub: 
 	$(EBOOK) intro
@@ -348,6 +350,7 @@ allpdf: empty crossref
 
 all: empty crossref crosshtml epub
 	@echo "$(GREEN_COLOR)        All PDF+HTML+EPUB Done !      $(NO_COLOR)"
+	@echo $(START) ... `date`
 
 package: all
 	cd $(DOCDIR) ; \
